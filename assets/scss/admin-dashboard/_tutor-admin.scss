@@ -151,6 +151,10 @@ table.tutor-table.tutor-table-with-checkbox {
 	}
 }
 
+body.tutor-backend {
+	background-color: #f5f5f5;
+}
+
 /*----------------------------------
 	Component containers
 ----------------------------------*/
@@ -1740,10 +1744,6 @@ h2.tutor-page-heading {
 	display: flex;
 	align-items: center;
 	padding: 0 0 30px 0;
-}
-
-.tutor-wp-dashboard-filter-items {
-	display: inherit;
 }
 
 //a-to-z-sorting icon

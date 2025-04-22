@@ -45,23 +45,70 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 $add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
 $navbar_data    = array(
 	'page_title'   => $courses->page_title,
-	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
-	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'New Course', 'tutor' ),
 	'button_url'   => '#',
 	'button_class' => 'tutor-create-new-course',
 );
 
+$status_options = $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter );
+
+$categories       = get_terms(
+	array(
+		'taxonomy' => CourseModel::COURSE_CATEGORY,
+		'orderby'  => 'term_id',
+		'order'    => 'DESC',
+	)
+);
+$category_options = array(
+	array(
+		'key'   => '',
+		'title' => __( 'All Categories', 'tutor' ),
+	),
+);
+if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+	foreach ( $categories as $category ) {
+		$category_options[] = array(
+			'key'   => $category->slug,
+			'title' => $category->name,
+		);
+	}
+}
+
 /**
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'     => $courses->bulk_action,
-	'bulk_actions'    => $courses->prepare_bulk_actions(),
-	'ajax_action'     => 'tutor_course_list_bulk_action',
-	'filters'         => true,
-	'category_filter' => true,
+	'bulk_action'  => $courses->bulk_action,
+	'bulk_actions' => $courses->prepare_bulk_actions(),
+	'ajax_action'  => 'tutor_course_list_bulk_action',
+	'filters'      => apply_filters(
+		'tutor_course_list_before_filter_items',
+		array(
+			array(
+				'label'      => __( 'Status', 'tutor' ),
+				'field_type' => 'select',
+				'field_name' => 'data',
+				'options'    => $status_options,
+				'value'      => Input::get( 'data', 'all' ),
+			),
+			array(
+				'label'      => __( 'Category', 'tutor' ),
+				'field_type' => 'select',
+				'field_name' => 'category',
+				'options'    => $category_options,
+				'searchable' => true,
+				'value'      => Input::get( 'category', '' ),
+			),
+			array(
+				'label'      => __( 'Publish Date', 'tutor' ),
+				'field_type' => 'date',
+				'field_name' => 'date',
+				'show_label' => true,
+				'value'      => Input::get( 'date', '' ),
+			),
+		),
+	),
 );
 
 
@@ -158,8 +205,8 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/course-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/course-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
