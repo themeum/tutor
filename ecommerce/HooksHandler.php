@@ -506,10 +506,28 @@ class HooksHandler {
 		$user_id      = $order_data['user_id'];
 		$billing_info = ( new BillingController( false ) )->get_billing_info( $user_id );
 
+		$meta_value = array();
+		if ( $billing_info ) {
+			$meta_value = wp_json_encode( $meta_value );
+		} else {
+			/**
+			 * Store user data as billing info
+			 * If user has no billing info during order like manual enrollment from CSV.
+			 */
+			$user_data  = get_userdata( $user_id );
+			$meta_value = wp_json_encode(
+				array(
+					'billing_first_name' => $user_data->first_name,
+					'billing_last_name'  => $user_data->last_name,
+					'billing_email'      => $user_data->user_email,
+				)
+			);
+		}
+
 		OrderMetaModel::add_meta(
 			$order_id,
 			OrderModel::META_KEY_BILLING_ADDRESS,
-			wp_json_encode( $billing_info )
+			$meta_value
 		);
 	}
 }
