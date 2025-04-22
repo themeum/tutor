@@ -100,6 +100,19 @@ class CourseModel {
 	}
 
 	/**
+	 * Get tutor post types
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param int|\WP_POST $post the post id or object.
+     *
+	 * @return bool
+	 */
+	public static function get_post_types( $post ) {
+		return apply_filters( 'tutor_check_course_post_type', get_post_type( $post ) );
+	}
+
+	/**
 	 * Get courses
 	 *
 	 * @since 1.0.0
@@ -244,21 +257,28 @@ class CourseModel {
 	 * Get courses by a instructor
 	 *
 	 * @since 1.0.0
+	 * @since 3.5.0 param $post_types added.
 	 *
 	 * @param integer      $instructor_id instructor id.
 	 * @param array|string $post_status post status.
 	 * @param integer      $offset offset.
 	 * @param integer      $limit limit.
 	 * @param boolean      $count_only count or not.
+	 * @param array        $post_types array of post types.
 	 *
 	 * @return array|null|object
 	 */
-	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false ) {
+	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false, $post_types = array() ) {
 		global $wpdb;
 		$offset           = sanitize_text_field( $offset );
 		$limit            = sanitize_text_field( $limit );
 		$instructor_id    = tutils()->get_user_id( $instructor_id );
-		$course_post_type = tutor()->course_post_type;
+
+		if ( ! count( $post_types ) ) {
+			$post_types = array( tutor()->course_post_type );
+		}
+
+		$post_types       = QueryHelper::prepare_in_clause( $post_types );
 
 		if ( empty( $post_status ) || 'any' == $post_status ) {
 			$where_post_status = '';
@@ -280,12 +300,11 @@ class CourseModel {
 					AND $wpdb->usermeta.meta_key = %s
 					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
 			WHERE	1 = 1 {$where_post_status}
-				AND $wpdb->posts.post_type = %s
+				AND $wpdb->posts.post_type IN ({$post_types})
 				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
 			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
 			$instructor_id,
 			'_tutor_instructor_course_id',
-			$course_post_type,
 			$instructor_id,
 			$instructor_id
 		);
@@ -333,7 +352,7 @@ class CourseModel {
 		$course  = get_post( $course_id );
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
-		if ( ! $course || self::POST_TYPE !== $course->post_type || $user_id !== (int) $course->post_author ) {
+		if ( ! $course || ! self::get_post_types( $course_id ) || $user_id !== (int) $course->post_author ) {
 			return false;
 		}
 
@@ -405,7 +424,7 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function delete_course( $post_id ) {
-		if ( get_post_type( $post_id ) !== tutor()->course_post_type ) {
+		if ( ! self::get_post_types( $post_id ) ) {
 			return false;
 		}
 

@@ -477,6 +477,10 @@ class CouponController extends BaseController {
 		$list_order    = Input::get( 'order', 'DESC' );
 		$list_order_by = 'id';
 
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+			$where_clause['applies_to'] = $this->model->get_course_bundle_applies_to( true );
+		}
+
 		return $this->model->get_coupons( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}
 

@@ -402,7 +402,10 @@ const styles = {
     padding: ${spacing[8]};
   `,
   inputWrapperListItem: css`
+    position: sticky;
+    top: 0px;
     padding: 0px;
+    background-color: inherit;
   `,
   leftIcon: css`
     position: absolute;
@@ -529,7 +532,7 @@ const styles = {
     background-color: ${colorTokens.background.white};
     list-style-type: none;
     box-shadow: ${shadow.popover};
-    padding: ${spacing[4]} 0;
+    margin: ${spacing[4]} 0;
     margin: 0;
     max-height: 400px;
     border: 1px solid ${colorTokens.stroke.border};

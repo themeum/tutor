@@ -8186,7 +8186,8 @@ class Utils {
 			$enrolled_info = $this->is_enrolled( $course_id, $student_id );
 
 			if ( $enrolled_info ) {
-				$enrolled_date_gmt = $enrolled_info->post_date_gmt;
+				$enrolled_date_gmt = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ), $course_id, $assignment_id );
+				$enrolled_date_gmt = date( DateTimeHelper::FORMAT_MYSQL, $enrolled_date_gmt );
 			}
 		}
 
