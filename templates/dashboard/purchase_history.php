@@ -168,10 +168,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								</td>
 								<td>
 									<div class="tutor-fs-7">
-										<?php
-										$total_price = 'paddle' === $order->payment_method ? $order->total_price - $order->tax_amount : $order->total_price;
-										echo esc_html( tutor_get_formatted_price( $total_price ) );
-										?>
+										<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
 									</div>
 								</td>
 								<td>
