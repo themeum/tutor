@@ -164,6 +164,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             render={(controllerProps) => (
               <FormInputWithContent
                 {...controllerProps}
+                type="number"
                 label={__('Passing Grade', 'tutor')}
                 helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
                 content="%"
@@ -353,6 +354,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
+                  type="number"
                   label={__('Set Character Limit for Open-Ended/Essay Answers', 'tutor')}
                   selectOnFocus
                 />
