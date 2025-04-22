@@ -336,33 +336,46 @@ class Shortcode {
 		$current_page = $current_page >= 1 ? $current_page : 1;
 
 		$show_filter         = isset( $atts['filter'] ) ? 'on' === $atts['filter'] : tutor_utils()->get_option( 'instructor_list_show_filter', false );
+		$category_limit      = (int) isset( $atts['category_limit'] ) ? $atts['category_limit'] : 0;
+		$show_empty_category = isset( $atts['show_empty_category'] ) ? '1' === $atts['show_empty_category'] : false;
 		$atts['show_filter'] = $show_filter;
 
 		// Get instructor list to sow.
 		$payload                = $this->prepare_instructor_list( $current_page, $atts );
 		$payload['show_filter'] = $show_filter;
 
+		//empty category filter
+		$empty_category = 'AND taxonomy.count != 0';
+
 		ob_start();
 		tutor_load_template( 'shortcode.tutor-instructor', $payload );
 		$content = ob_get_clean();
 
+		if ( $category_limit ) {
+			$category_limit = "LIMIT {$category_limit}";
+		} else {
+			$category_limit = '';
+		}
+
+		if ( $show_empty_category ) {
+			$empty_category = '';
+		}
+
 		if ( $show_filter ) {
-			$limit           = 8;
 			$course_taxonomy = CourseModel::COURSE_CATEGORY;
 			$course_cats     = $wpdb->get_results(
+				//phpcs:ignore
 				$wpdb->prepare(
 					"SELECT
 						* 
 					FROM {$wpdb->terms} AS term
-					
 					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
 						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-
-					ORDER BY term.term_id DESC
-					LIMIT %d
+					WHERE 1=1 {$empty_category}
+					ORDER BY taxonomy.count DESC
+					{$category_limit}
 					",
 					$course_taxonomy,
-					$limit
 				)
 			);
 
