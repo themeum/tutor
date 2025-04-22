@@ -436,6 +436,7 @@ final class Tutor {
 	 */
 	private $permalink;
 
+
 	/**
 	 * Run the TUTOR
 	 *

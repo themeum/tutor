@@ -30,11 +30,11 @@
 		"post-install-cmd": [
 			"composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal",
 			"if [ ! -d \"tutor-droip\" ]; then git clone https://github.com/themeum/tutor-droip.git tutor-droip; fi",
-            "cd tutor-droip && composer install && npm install"
+			"cd tutor-droip && composer install && npm install"
 		],
 		"post-update-cmd": [
-            "if [ ! -d \"tutor-droip\" ]; then git clone https://github.com/themeum/tutor-droip.git tutor-droip; fi",
-            "cd tutor-droip && composer update && npm install"
-        ]
-	}   
+			"if [ ! -d \"tutor-droip\" ]; then git clone https://github.com/themeum/tutor-droip.git tutor-droip; fi",
+			"cd tutor-droip && composer update && npm install"
+		]
+	}
 }
