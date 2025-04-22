@@ -80,6 +80,15 @@ class CheckoutController {
 	public $coupon_model;
 
 	/**
+	 * Instance of order controller.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @var OrderController
+	 */
+	public $order_ctrl;
+
+	/**
 	 * Constructor.
 	 *
 	 * Initializes the Checkout class, sets the page title, and optionally registers
@@ -94,6 +103,7 @@ class CheckoutController {
 	 */
 	public function __construct( $register_hooks = true ) {
 		$this->coupon_model = new CouponModel();
+		$this->order_ctrl   = new OrderController( false );
 
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
@@ -438,6 +448,7 @@ class CheckoutController {
 		$response['plan_info'] = $plan_info;
 
 		$response['coupon_type']       = $coupon_type;
+		$response['coupon_code']       = $is_coupon_applied ? $coupon->coupon_code : null;
 		$response['coupon_title']      = $coupon_title;
 		$response['is_coupon_applied'] = $is_coupon_applied;
 
@@ -581,7 +592,16 @@ class CheckoutController {
 				}
 			}
 
-			$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
+			$order_data = $this->order_ctrl->create_order(
+				$current_user_id,
+				$items,
+				OrderModel::PAYMENT_UNPAID,
+				$order_type,
+				$checkout_data->coupon_code,
+				$args,
+				false
+			);
+
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {
 					try {
