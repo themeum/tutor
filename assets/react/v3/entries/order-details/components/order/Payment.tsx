@@ -1,3 +1,8 @@
+import DiscountModal from '@OrderComponents/modals/DiscountModal';
+import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
+import RefundModal from '@OrderComponents/modals/RefundModal';
+import { useOrderContext } from '@OrderContexts/order-context';
+import type { PaymentStatus } from '@OrderServices/order';
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -6,11 +11,6 @@ import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import DiscountModal from '@OrderComponents/modals/DiscountModal';
-import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
-import RefundModal from '@OrderComponents/modals/RefundModal';
-import { useOrderContext } from '@OrderContexts/order-context';
-import type { PaymentStatus } from '@OrderServices/order';
 import { calculateDiscountValue, formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
@@ -20,10 +20,16 @@ import { PaymentBadge } from './PaymentBadge';
 function PaymentActionButton({
   status,
   onClick,
+  total_price,
 }: {
   status: PaymentStatus;
   onClick: (buttonType: 'refund' | 'mark-as-paid') => void;
+  total_price: number;
 }) {
+  if (total_price <= 0) {
+    return null;
+  }
+
   switch (status) {
     case 'paid':
     case 'partially-refunded':
@@ -224,6 +230,7 @@ function Payment() {
         <div css={styles.markAsPaid}>
           <PaymentActionButton
             status={order.payment_status}
+            total_price={order.total_price}
             onClick={(buttonType) => {
               if (buttonType === 'refund') {
                 return showModal({
