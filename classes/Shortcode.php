@@ -344,7 +344,7 @@ class Shortcode {
 		$payload                = $this->prepare_instructor_list( $current_page, $atts );
 		$payload['show_filter'] = $show_filter;
 
-		//empty category filter
+		// empty category filter.
 		$empty_category = 'AND taxonomy.count != 0';
 
 		ob_start();
@@ -363,8 +363,8 @@ class Shortcode {
 
 		if ( $show_filter ) {
 			$course_taxonomy = CourseModel::COURSE_CATEGORY;
+			//phpcs:ignore
 			$course_cats     = $wpdb->get_results(
-				//phpcs:ignore
 				$wpdb->prepare(
 					"SELECT
 						* 
