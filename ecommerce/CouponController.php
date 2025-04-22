@@ -128,6 +128,40 @@ class CouponController extends BaseController {
 	}
 
 	/**
+	 * Check if applies to items exist and are valid
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $data The data to validate.
+	 *
+	 * @return bool Whether applies to items exist and are valid
+	 */
+	private function has_applies_to_items( $data ) {
+		return isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
+	}
+
+	/**
+	 * Validate applies to item
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $data The data to validate.
+	 *
+	 * @return void send wp_json response when validation fails
+	 */
+	public function validate_applies_to_item( $data ) {
+		$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
+
+		if ( $is_specific_applies_to && ! $this->has_applies_to_items( $data ) ) {
+			$this->json_response(
+				__( 'Add items first', 'tutor' ),
+				null,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
+	}
+
+	/**
 	 * Handle ajax request for creating coupon
 	 *
 	 * @since 3.0.0
@@ -152,6 +186,8 @@ class CouponController extends BaseController {
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
+
+		$this->validate_applies_to_item( $data );
 
 		if ( $this->model->get_coupon( array( 'coupon_code' => $data['coupon_code'] ) ) ) {
 			$this->json_response(
@@ -224,7 +260,10 @@ class CouponController extends BaseController {
 			);
 		}
 
+		$this->validate_applies_to_item( $data );
+
 		unset( $data['coupon_id'] );
+		unset( $data['coupon_type'] );
 
 		if ( ! isset( $data['expire_date_gmt'] ) ) {
 			$data['expire_date_gmt'] = null;
@@ -238,7 +277,8 @@ class CouponController extends BaseController {
 			if ( $update ) {
 				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
 				$this->model->delete_applies_to( $coupon_data->coupon_code );
-				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
+
+				if ( $this->has_applies_to_items( $data ) ) {
 					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code );
 				}
 
@@ -437,6 +477,10 @@ class CouponController extends BaseController {
 		$list_order    = Input::get( 'order', 'DESC' );
 		$list_order_by = 'id';
 
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+			$where_clause['applies_to'] = $this->model->get_course_bundle_applies_to( true );
+		}
+
 		return $this->model->get_coupons( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}
 
@@ -561,7 +605,7 @@ class CouponController extends BaseController {
 		$applications = $this->model->get_formatted_coupon_applications( $coupon_data );
 
 		// Set applies to items.
-		$coupon_data->applies_to_items = $applications;
+		$coupon_data->applies_to_items = apply_filters( 'tutor_coupon_details_applies_to_items_response', $applications, $coupon_data );
 
 		// Set coupon usage.
 		$coupon_data->coupon_usage = $this->model->get_coupon_usage_count( $coupon_data->coupon_code );
