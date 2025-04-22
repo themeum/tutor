@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let showTax               = true;    
 
     if (checkoutPageWrapper) {
-
         const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
         const paymentMethodElem    = paymentMethodWrapper?.innerHTML;
         const payNowBtn            = document.querySelector('#tutor-checkout-pay-now-button');
@@ -15,9 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const paymentTypeInput     = document.querySelector("input[name=payment_type]");
      
         // Handle payment method selection.
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             if (e.target.closest(".tutor-checkout-payment-options")) {
-
                 const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
                 const paymentOptions        = paymentOptionsWrapper.querySelectorAll("label");
                 
@@ -52,13 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
             }
-        });
 
-        // If only one payment available, keep selected.
-        handleSinglePaymentOptionSelection();
-
-        // Handle toggle coupon form button click
-        document.addEventListener('click', (e) => {
+            // Handle toggle coupon form button click
             if (e.target.closest("#tutor-toggle-coupon-button")) {
                 const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
                 const applyCouponInput = applyCouponForm?.querySelector("input");
@@ -69,27 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyCouponForm.classList.add('tutor-d-none');
                 }
             }
-        });
 
-        // Enter event listener on coupon field.
-
-        /**
-         * Apply coupon on enter coupon field.
-         */
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.closest("input[name=coupon_code]")) {
-                e.preventDefault();
-                const btnApply = e.target.parentNode.querySelector("#tutor-apply-coupon-button");
-                btnApply?.click();
-            }
-        });
-
-        /**
-         * Handle apply coupon button.
-         * 
-         * @since 3.5.0
-         */
-        document.addEventListener('click', async (e) => {
+            // Handle apply coupon button.
             if (e.target.closest("#tutor-apply-coupon-button")) {
                 const url = new URL(window.location.href);
                 const plan = url.searchParams.get('plan');
@@ -137,10 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyCouponButton.classList.remove('is-loading');
                 }
             }
-        });
 
-        // Handle coupon remove button click
-        document.addEventListener('click', async (e) => {
+            // Handle coupon remove button click
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
                 document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
@@ -154,6 +126,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // If only one payment available, keep selected.
+        handleSinglePaymentOptionSelection();
+
+        // Apply coupon on enter coupon field.
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.closest("input[name=coupon_code]")) {
+                e.preventDefault();
+                const btnApply = e.target.parentNode.querySelector("#tutor-apply-coupon-button");
+                btnApply?.click();
+            }
+        });
 
         // Validate checkout form.
         const tutorCheckoutForm = document.getElementById('tutor-checkout-form');
