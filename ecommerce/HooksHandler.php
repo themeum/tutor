@@ -522,7 +522,7 @@ class HooksHandler {
 
 		$meta_value = array();
 		if ( $billing_info ) {
-			$meta_value = wp_json_encode( $meta_value );
+			$meta_value = wp_json_encode( $billing_info );
 		} else {
 			/**
 			 * Store user data as billing info
