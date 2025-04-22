@@ -363,7 +363,6 @@ class Shortcode {
 
 		if ( $show_filter ) {
 			$course_taxonomy = CourseModel::COURSE_CATEGORY;
-			//phpcs:ignore
 			$course_cats     = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT
@@ -371,10 +370,7 @@ class Shortcode {
 					FROM {$wpdb->terms} AS term
 					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
 						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-					WHERE 1=1 {$empty_category}
-					ORDER BY taxonomy.count DESC
-					{$category_limit}
-					",
+					WHERE 1=1 {$empty_category} ORDER BY taxonomy.count DESC {$category_limit}", //phpcs:ignore
 					$course_taxonomy,
 				)
 			);
