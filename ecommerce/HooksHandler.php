@@ -45,6 +45,15 @@ class HooksHandler {
 	private $order_activities_model;
 
 	/**
+	 * Coupon controller instance
+	 *
+	 * @since 3.5.0
+	 *
+	 * @var CouponController
+	 */
+	private $coupon_ctrl;
+
+	/**
 	 * Register hooks & resolve props
 	 *
 	 * @since 3.0.0
@@ -52,6 +61,7 @@ class HooksHandler {
 	public function __construct() {
 		$this->order_activities_model = new OrderActivitiesModel();
 		$this->order_model            = new OrderModel();
+		$this->coupon_ctrl            = new CouponController( false );
 
 		// Register hooks.
 		add_filter( 'tutor_course_sell_by', array( $this, 'alter_course_sell_by' ) );
@@ -252,7 +262,7 @@ class HooksHandler {
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
 		// Store coupon usage.
-		( new CouponController( false ) )->store_coupon_usage( $order_id );
+		$this->coupon_ctrl->store_coupon_usage( $order_id );
 	}
 
 	/**
@@ -460,7 +470,7 @@ class HooksHandler {
 			}
 
 			// Store coupon usage.
-			( new CouponController( false ) )->store_coupon_usage( $order_id );
+			$this->coupon_ctrl->store_coupon_usage( $order_id );
 		}
 		return $order_data;
 	}
