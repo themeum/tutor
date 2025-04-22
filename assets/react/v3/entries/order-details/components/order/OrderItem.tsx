@@ -1,9 +1,9 @@
+import type { OrderSummaryItem } from '@OrderServices/order';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import coursePlaceholder from '@SharedImages/course-placeholder.png';
-import type { OrderSummaryItem } from '@OrderServices/order';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -71,6 +71,8 @@ const styles = {
     width: 48px;
     height: 48px;
     border-radius: ${borderRadius[4]};
+    object-fit: cover;
+    object-position: center;
   `,
   discount: css`
     display: flex;
