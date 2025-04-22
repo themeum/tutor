@@ -48,20 +48,20 @@ const FormMultiLevelInput = ({
   helpText,
   optionsWrapperStyle,
 }: FormMultiLevelInputProps) => {
-  const createCategoryMutation = useCreateCategoryMutation();
-  const [isOpen, setIsOpen] = useState(false);
-  const [hasCategories, setHasCategories] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
-  const debouncedSearchValue = useDebounce(searchValue, 300);
-  const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
-  const { ref: scrollElementRef, isScrolling } = useIsScrolling<HTMLDivElement>();
-
   const form = useFormWithGlobalError<{
     name: string;
     parent: number | null;
+    search: string;
   }>({
     shouldFocusError: true,
   });
+  const searchValue = form.watch('search');
+  const debouncedSearchValue = useDebounce(searchValue, 300);
+  const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
+  const createCategoryMutation = useCreateCategoryMutation();
+  const [isOpen, setIsOpen] = useState(false);
+  const [hasCategories, setHasCategories] = useState(false);
+  const { ref: scrollElementRef, isScrolling } = useIsScrolling<HTMLDivElement>();
 
   useEffect(() => {
     if (!categoryListQuery.isLoading && (categoryListQuery.data || []).length > 0) {
@@ -88,6 +88,15 @@ const FormMultiLevelInput = ({
 
   const treeOptions = generateTree(categoryListQuery.data ?? []);
 
+  const handlePortalClose = () => {
+    setIsOpen(false);
+    form.reset({
+      name: '',
+      parent: null,
+      search: searchValue,
+    });
+  };
+
   const handleCreateCategory = (data: FieldValues) => {
     if (data.name) {
       createCategoryMutation.mutate({
@@ -95,8 +104,7 @@ const FormMultiLevelInput = ({
         ...(data.parent && { parent: data.parent }),
       });
 
-      form.reset();
-      setIsOpen(false);
+      handlePortalClose();
     }
   };
 
@@ -115,20 +123,26 @@ const FormMultiLevelInput = ({
             <div css={[styles.options, optionsWrapperStyle]}>
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
                 <Show when={hasCategories || debouncedSearchValue}>
-                  <div css={styles.searchInput}>
-                    <div css={styles.searchIcon}>
-                      <SVGIcon name="search" width={24} height={24} />
-                    </div>
-                    <input
-                      type="text"
-                      placeholder={__('Search', 'tutor')}
-                      value={searchValue}
-                      disabled={disabled || loading}
-                      onChange={(e) => {
-                        setSearchValue(e.target.value);
-                      }}
-                    />
-                  </div>
+                  <Controller
+                    name="search"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <div css={styles.searchInput}>
+                        <div css={styles.searchIcon}>
+                          <SVGIcon name="search" width={24} height={24} />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder={__('Search', 'tutor')}
+                          value={searchValue}
+                          disabled={disabled || loading}
+                          onChange={(e) => {
+                            controllerProps.field.onChange(e.target.value);
+                          }}
+                        />
+                      </div>
+                    )}
+                  />
                 </Show>
 
                 <Show when={!categoryListQuery.isLoading && !loading} fallback={<LoadingSection />}>
@@ -179,7 +193,7 @@ const FormMultiLevelInput = ({
               </Show>
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={handlePortalClose} onEscape={handlePortalClose}>
               <div
                 css={[styles.categoryFormWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
                 ref={popoverRef}
@@ -208,14 +222,7 @@ const FormMultiLevelInput = ({
                 />
 
                 <div css={styles.categoryFormButtons}>
-                  <Button
-                    variant="text"
-                    size="small"
-                    onClick={() => {
-                      setIsOpen(false);
-                      form.reset();
-                    }}
-                  >
+                  <Button variant="text" size="small" onClick={handlePortalClose}>
                     {__('Cancel', 'tutor')}
                   </Button>
                   <Button
