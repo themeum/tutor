@@ -143,13 +143,11 @@ if ( isset( $data ) ) : ?>
 				<?php endif; ?>
 
 				<a class="tutor-wp-dashboard-filter-order" href="<?php echo esc_url( $order_link ); ?>">
-					<?php
-					if ( 'ASC' === $current_order ) {
-						require_once tutor()->path . 'assets/icons/sorting-asc.svg';
-					} else {
-						require_once tutor()->path . 'assets/icons/sorting-desc.svg';
-					}
-					?>
+					<?php if ( 'ASC' === $current_order ) : ?> 
+						<i class="tutor-icon-sorting-asc"></i>
+					<?php else : ?>
+						<i class="tutor-icon-sorting-desc"></i>
+					<?php endif; ?>
 				</a>
 
 				<form action="" method="get" id="tutor-admin-search-filter-form">

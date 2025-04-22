@@ -1798,3 +1798,76 @@ h2.tutor-page-heading {
 .wp-submenu li a[href="admin.php?page=create-course"] {
     display: none!important;
 }
+
+.table-dashboard-course-list {
+	tr {
+		th {
+			border-top: 1px solid #E6E6E6;
+			border-bottom: 1px solid #F5F5F5;
+			font-weight: 400;
+			background-color: #ffffff;
+			padding: 14px 16px;
+
+			&:first-child {
+				border-left: 1px solid #E6E6E6;
+
+				.rtl * {
+					border-left: none;
+					border-right: 1px solid #E6E6E6;
+				}
+			}
+
+			&:last-child {
+				border-right: 1px solid #E6E6E6;
+
+				.rtl & {
+					border-right: none;
+					border-left: 1px solid #E6E6E6;
+				}
+			}
+
+			&:nth-child(2) {
+				padding-left: 0px;
+			}
+		}
+
+		td {
+			border-bottom: 1px solid #F5F5F5;
+			padding: 16px 12px;
+			
+			&:first-child {
+				border-left: 1px solid #E6E6E6;
+
+				.rtl & {
+					border-left: none;
+					border-right: 1px solid #E6E6E6;
+				}
+			}
+
+			&:last-child {
+				border-right: 1px solid #E6E6E6;
+
+				.rtl & {
+					border-right: none;
+					border-left: 1px solid #E6E6E6;
+				}
+			}
+
+			&:nth-child(2) {
+				padding-left: 0px;
+			}
+		}
+
+		&:last-child td {
+			border-bottom: 1px solid #E6E6E6;
+		}
+	}
+
+	.tutor-form-check-input {
+		border-width: 1px;
+	}
+
+	.tutor-avatar {
+		box-shadow: none;
+	}
+}

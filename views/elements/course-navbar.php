@@ -31,16 +31,16 @@ if ( isset( $data ) && count( $data ) ) : ?>
 			if ( isset( $data['modal_target'] ) && '' !== $data['modal_target'] ) :
 				?>
 				<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-					<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-d-flex tutor-align-center tutor-gap-4px <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
-						<?php require_once tutor()->path . 'assets/icons/add-docs.svg'; ?>
+					<button class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
+						<i class="tutor-icon-add-course"></i>
 						<span><?php echo esc_html( $data['button_title'] ); ?></span>
 					</button>
 				<?php endif; ?>
 			<?php else : ?>
 				<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 					<?php do_action( 'tutor_data_list_navbar_button' ); ?>
-					<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-md tutor-d-flex tutor-align-center tutor-gap-4px <?php echo esc_attr( $button_class ); ?>">
-						<?php require_once tutor()->path . 'assets/icons/add-docs.svg'; ?>
+					<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>">
+						<i class="tutor-icon-add-course"></i>
 						<span><?php echo esc_html( $data['button_title'] ); ?></span>
 					</a>
 				<?php endif; ?>

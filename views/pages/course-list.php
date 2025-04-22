@@ -211,9 +211,8 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 	<div class="tutor-admin-body">
-		<div class="tutor-mt-24">
+		<div class="tutor-mt-16">
 			<div class="tutor-table-responsive">
-
 				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
@@ -284,8 +283,8 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 										<div class="tutor-d-flex tutor-align-center tutor-gap-2">
 											<a href="<?php echo esc_url( $edit_link ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
-													<div class="tutor-ratio tutor-ratio-16x9">
-														<img class="tutor-radius-6" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+													<div class="tutor-ratio tutor-ratio-3x2">
+														<img class="tutor-radius-3 <?php echo esc_attr( 'course-bundle' === $post->post_type ? 'tutor-bundle-list-thumb' : '' ); ?>" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 													</div>
 												</div>
 											</a>
@@ -295,43 +294,39 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 													<?php echo esc_html( $post->post_title ); ?>
 												</a>
 
-												<div class="tutor-meta tutor-mt-4">
 												<?php ob_start(); ?>
-													<span>
+												<div class="tutor-meta tutor-gap-1 tutor-mt-4">
+													<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
+														<i class="tutor-icon-topic"></i>
 														<?php esc_html_e( 'Topic:', 'tutor' ); ?>
-														<span class="tutor-meta-value">
-															<?php echo esc_html( $count_topic ); ?>
-														</span>
-													</span>
+														<span class="tutor-meta-value"><?php echo esc_html( $count_topic ); ?></span>
+													</div>
 
-													<span>
+													<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
+														<i class="tutor-icon-lesson"></i>
 														<?php esc_html_e( 'Lesson:', 'tutor' ); ?>
-														<span class="tutor-meta-value">
-															<?php echo esc_html( $count_lesson ); ?>
-														</span>
-													</span>
+														<span class="tutor-meta-value"><?php echo esc_html( $count_lesson ); ?></span>
+													</div>
 
-													<span>
+													<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
+														<i class="tutor-icon-quiz-2"></i>
 														<?php esc_html_e( 'Quiz:', 'tutor' ); ?>
-														<span class="tutor-meta-value">
-															<?php echo esc_html( $count_quiz ); ?>
-														</span>
-													</span>
+														<span class="tutor-meta-value"><?php echo esc_html( $count_quiz ); ?></span>
+													</div>
 
-													<span>
+													<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
+														<i class="tutor-icon-assignment-2"></i>
 														<?php esc_html_e( 'Assignment:', 'tutor' ); ?>
-														<span class="tutor-meta-value">
-															<?php echo esc_html( $count_assignment ); ?>
-														</span>
-													</span>
-													<?php echo wp_kses_post( apply_filters( 'tutor_filter_course_list_meta', ob_get_clean(), $post ) ); ?>
+														<span class="tutor-meta-value"><?php echo esc_html( $count_assignment ); ?></span>
+													</div>
 												</div>
+												<?php echo wp_kses_post( apply_filters( 'tutor_course_list_meta', ob_get_clean(), $post ) ); ?>
 											</div>
 										</div>
 									</td>
 
 									<td>
-										<span class="tutor-fw-normal tutor-fs-7">
+										<span class="tutor-fw-medium tutor-fs-7 tutor-color-hints">
 											<?php
 												$terms = wp_get_post_terms( $post->ID, CourseModel::COURSE_CATEGORY );
 											if ( count( $terms ) ) {
@@ -343,10 +338,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 										</span>
 									</td>
 									<td>
-										<div class="tutor-fs-7">
+										<div class="tutor-fw-medium tutor-fs-7 tutor-color-hints tutor-text-nowrap">
 											<?php
 												$price = tutor_utils()->get_course_price( $post->ID );
-											if ( null == $price ) {
+											if ( null === $price ) {
 												esc_html_e( 'Free', 'tutor' );
 											} else {
 												echo $price; //phpcs:ignore
@@ -374,10 +369,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 									<td>
 										<div class="tutor-fw-normal">
-											<div class="tutor-fs-7 tutor-mb-4">
+											<div class="tutor-fs-7 tutor-mb-4 tutor-color-black tutor-text-nowrap">
 												<?php echo esc_html( tutor_i18n_get_formated_date( $post->post_date, get_option( 'date_format' ) ) ); ?>
 											</div>
-											<div class="tutor-fs-8 tutor-color-muted">
+											<div class="tutor-fs-7 tutor-color-subdued">
 												<?php echo esc_html( tutor_i18n_get_formated_date( $post->post_date, get_option( 'time_format' ) ) ); ?>
 											</div>
 										</div>
