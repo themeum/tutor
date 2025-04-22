@@ -1,21 +1,23 @@
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import type { FormControllerProps } from '@TutorShared/utils/form';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
-import { isRTL } from '@TutorShared/config/constants';
-import Show from '@TutorShared/controls/Show';
-import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities } from '@TutorShared/utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTagsInputProps extends FormControllerProps<Tag[] | null> {
@@ -178,7 +180,7 @@ const FormTagsInput = ({
   );
 };
 
-export default FormTagsInput;
+export default withVisibilityControl(FormTagsInput);
 
 const styles = {
   mainWrapper: css`

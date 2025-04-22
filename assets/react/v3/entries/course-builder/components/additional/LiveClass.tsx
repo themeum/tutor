@@ -30,6 +30,7 @@ import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
 import liveClassPro2x from '@SharedImages/pro-placeholders/live-class-2x.webp';
 import liveClassPro from '@SharedImages/pro-placeholders/live-class.webp';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -203,7 +204,7 @@ const LiveClass = () => {
   );
 };
 
-export default LiveClass;
+export default withVisibilityControl(LiveClass);
 
 const styles = {
   label: css`

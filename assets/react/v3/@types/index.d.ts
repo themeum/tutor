@@ -57,6 +57,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tinymce: any;
     _tutorobject: {
+      ID: number;
       ajaxurl: string;
       site_url: string;
       home_url: string;
@@ -80,6 +81,15 @@ declare global {
       is_admin: string;
       is_admin_bar_showing: string;
       max_upload_size: string;
+      content_change_event: string;
+      is_tutor_course_edit: string;
+      assignment_max_file_allowed: string;
+      current_page: string;
+      quiz_answer_display_time: string;
+      is_ssl: string;
+      course_list_page_url: string;
+      course_post_type: string;
+      local: string;
       difficulty_levels: {
         label: string;
         value: string;
@@ -119,7 +129,6 @@ declare global {
           user_status: string;
           display_name: string;
         };
-        ID: number;
         caps: {
           [key: string]: boolean;
         };
@@ -130,14 +139,6 @@ declare global {
         };
         filter: null;
       };
-      content_change_event: string;
-      is_tutor_course_edit: string;
-      assignment_max_file_allowed: string;
-      current_page: string;
-      quiz_answer_display_time: string;
-      is_ssl: string;
-      course_list_page_url: string;
-      course_post_type: string;
       settings?: {
         monetize_by: 'wc' | 'tutor' | 'edd';
         enable_course_marketplace: 'on' | 'off';
@@ -165,7 +166,9 @@ declare global {
         decimal_separator: string;
         no_of_decimal: string;
       };
-      local: string;
+      visibility_control?: {
+        course_builder?: Record<string, string>;
+      };
     };
     wpApiSettings: {
       nonce: string;
