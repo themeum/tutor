@@ -131,8 +131,6 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               control={form.control}
               rules={{
                 ...requiredRule(),
-                max: 20,
-                min: 0,
                 validate: (value) => {
                   if (value >= 0 && value <= 20) {
                     return true;
