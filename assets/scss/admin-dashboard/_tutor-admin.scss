@@ -1837,6 +1837,7 @@ h2.tutor-page-heading {
 			
 			&:first-child {
 				border-left: 1px solid #E6E6E6;
+				padding: 16px;
 
 				.rtl & {
 					border-left: none;
@@ -1869,5 +1870,9 @@ h2.tutor-page-heading {
 
 	.tutor-avatar {
 		box-shadow: none;
+	}
+
+	.tutor-pagination {
+		border-color: #e0e2ea;
 	}
 }

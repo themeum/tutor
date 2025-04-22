@@ -211,9 +211,9 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 	<div class="tutor-admin-body">
-		<div class="tutor-mt-16">
+		<div class="table-dashboard-course-list tutor-mt-16">
 			<div class="tutor-table-responsive">
-				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
+				<table class="tutor-table tutor-table-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>
@@ -454,7 +454,6 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 					?>
 				</div>
 			</div>
-			<!-- end table responsive -->
 		</div>
 	</div>
 </div>
