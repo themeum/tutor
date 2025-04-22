@@ -633,10 +633,6 @@ class OrderModel {
 			$billing_address = json_decode( $billing_address );
 		}
 
-		if ( empty( $billing_address ) ) {
-			return null;
-		}
-
 		$data = (object) array(
 			'first_name' => $billing_address->billing_first_name ?? '',
 			'last_name'  => $billing_address->billing_last_name ?? '',
