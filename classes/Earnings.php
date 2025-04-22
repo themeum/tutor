@@ -10,10 +10,10 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\QueryHelper;
-use Tutor\Models\OrderModel;
 use TUTOR\Singleton;
+use Tutor\Models\OrderModel;
 use Tutor\Traits\EarningData;
+use Tutor\Helpers\QueryHelper;
 
 /**
  * Manage earnings
@@ -164,7 +164,7 @@ class Earnings extends Singleton {
 					$fees_amount = ( $total_price * $fees_amount ) / 100;
 				}
 
-				$course_price_grand_total = $total_price - $fees_amount;
+				$course_price_grand_total = ( $total_price > $fees_amount ) ? $total_price - $fees_amount : 0;
 			}
 
 			$fees_deduct_data = array(
@@ -384,5 +384,4 @@ class Earnings extends Singleton {
 			tutor_log( $th );
 		}
 	}
-
 }
