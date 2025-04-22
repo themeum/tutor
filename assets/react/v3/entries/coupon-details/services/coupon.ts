@@ -99,7 +99,7 @@ export interface GetCouponResponse {
   discount_type: 'percentage' | 'flat';
   discount_amount: string;
   applies_to: CouponAppliesTo;
-  applies_to_items: Course[] | CourseCategory[];
+  applies_to_items: Course[] | CourseCategory[] | MembershipPlan[];
   total_usage_limit: string | null;
   per_user_usage_limit: string | null;
   purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';

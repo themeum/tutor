@@ -15,7 +15,7 @@ import { Addons } from '@TutorShared/config/constants';
 import { typography } from '@TutorShared/config/typography';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isAddonEnabled } from '@TutorShared/utils/util';
+import { formatSubscriptionRepeatUnit, isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
@@ -25,7 +25,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
 const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);
 const isSubscriptionActive = isTutorProActive && isAddonEnabled(Addons.SUBSCRIPTION);
-const isMembershipOnlyMode = isSubscriptionActive && tutorConfig.settings?.membership_only_mode;
 
 const discountTypeOptions = [
   { label: __('Percent', 'tutor'), value: 'percentage' },
@@ -40,11 +39,11 @@ const appliesToOptions = [
         { label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' },
       ]
     : []),
-  ...(isMembershipOnlyMode ? [{ label: __('All membership plans', 'tutor'), value: 'memberships' }] : []),
+  ...(isSubscriptionActive ? [{ label: __('All membership plans', 'tutor'), value: 'all_membership_plans' }] : []),
   { label: __('Specific courses', 'tutor'), value: 'specific_courses' },
   ...(displayBundle ? [{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' }] : []),
   { label: __('Specific category', 'tutor'), value: 'specific_category' },
-  ...(isMembershipOnlyMode
+  ...(isSubscriptionActive
     ? [
         {
           label: __('Specific membership plans', 'tutor'),
@@ -215,7 +214,13 @@ function CouponDiscount() {
                   {Number(item.sale_price) > 0 && (
                     <span css={styles.discountPrice}>{formatPrice(Number(item.regular_price))}</span>
                   )}
-                  /<span css={styles.recurringInterval}>{item.recurring_interval}</span>
+                  /
+                  <span css={styles.recurringInterval}>
+                    {formatSubscriptionRepeatUnit({
+                      unit: item.recurring_interval,
+                      value: Number(item.recurring_value),
+                    })}
+                  </span>
                 </div>
               }
               handleDeleteClick={() => removesSelectedItem('membershipPlans', item.id)}

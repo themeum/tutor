@@ -400,64 +400,74 @@ export const formatSubscriptionRepeatUnit = ({
   value,
   useLySuffix = false,
   capitalize = true,
+  showSingular = false,
 }: {
-  unit: Omit<DurationUnit, 'hour'>;
+  unit: DurationUnit | 'until_cancellation';
   value: number;
   useLySuffix?: boolean;
   capitalize?: boolean;
+  showSingular?: boolean;
 }) => {
-  let result: string = '';
-
-  switch (unit) {
-    case 'hour':
-      result =
-        value > 1
-          ? sprintf(__('%d hours', 'tutor-pro'), value)
-          : useLySuffix
-            ? __('hourly', 'tutor-pro')
-            : __('hour', 'tutor-pro');
-      break;
-    case 'day':
-      result =
-        value > 1
-          ? sprintf(__('%d days', 'tutor-pro'), value)
-          : useLySuffix
-            ? __('daily', 'tutor-pro')
-            : __('day', 'tutor-pro');
-      break;
-    case 'week':
-      result =
-        value > 1
-          ? sprintf(__('%d weeks', 'tutor-pro'), value)
-          : useLySuffix
-            ? __('weekly', 'tutor-pro')
-            : __('week', 'tutor-pro');
-      break;
-    case 'month':
-      result =
-        value > 1
-          ? sprintf(__('%d months', 'tutor-pro'), value)
-          : useLySuffix
-            ? __('monthly', 'tutor-pro')
-            : __('month', 'tutor-pro');
-      break;
-    case 'year':
-      result =
-        value > 1
-          ? sprintf(__('%d years', 'tutor-pro'), value)
-          : useLySuffix
-            ? __('yearly', 'tutor-pro')
-            : __('year', 'tutor-pro');
-      break;
-    case 'until_cancellation':
-      result = __('Until Cancellation', 'tutor-pro');
-      break;
+  if (unit === 'until_cancellation') {
+    const result = __('Until Cancellation', 'tutor-pro');
+    return capitalize ? capitalizeWords(result) : result;
   }
 
-  return capitalize
-    ? result
-        .split(' ')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ')
-    : result;
+  const unitFormats = {
+    hour: {
+      plural: __('%d hours', 'tutor-pro'),
+      singular: __('%d hour', 'tutor-pro'),
+      suffix: __('hourly', 'tutor-pro'),
+      base: __('hour', 'tutor-pro'),
+    },
+    day: {
+      plural: __('%d days', 'tutor-pro'),
+      singular: __('%d day', 'tutor-pro'),
+      suffix: __('daily', 'tutor-pro'),
+      base: __('day', 'tutor-pro'),
+    },
+    week: {
+      plural: __('%d weeks', 'tutor-pro'),
+      singular: __('%d week', 'tutor-pro'),
+      suffix: __('weekly', 'tutor-pro'),
+      base: __('week', 'tutor-pro'),
+    },
+    month: {
+      plural: __('%d months', 'tutor-pro'),
+      singular: __('%d month', 'tutor-pro'),
+      suffix: __('monthly', 'tutor-pro'),
+      base: __('month', 'tutor-pro'),
+    },
+    year: {
+      plural: __('%d years', 'tutor-pro'),
+      singular: __('%d year', 'tutor-pro'),
+      suffix: __('yearly', 'tutor-pro'),
+      base: __('year', 'tutor-pro'),
+    },
+  };
+
+  if (!unitFormats[unit]) {
+    return '';
+  }
+
+  let result = '';
+
+  if (value > 1) {
+    result = sprintf(unitFormats[unit].plural, value);
+  } else if (showSingular) {
+    result = sprintf(unitFormats[unit].singular, value);
+  } else if (useLySuffix) {
+    result = unitFormats[unit].suffix;
+  } else {
+    result = unitFormats[unit].base;
+  }
+
+  return capitalize ? capitalizeWords(result) : result;
+};
+
+const capitalizeWords = (text: string): string => {
+  return text
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 };
