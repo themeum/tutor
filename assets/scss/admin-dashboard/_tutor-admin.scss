@@ -1810,10 +1810,11 @@ h2.tutor-page-heading {
 			border-bottom: 1px solid #F5F5F5;
 			font-weight: 400;
 			background-color: #ffffff;
-			padding: 14px 16px;
+			padding: 14px 12px;
 
 			&:first-child {
 				border-left: 1px solid #E6E6E6;
+				padding: 16px;
 
 				.rtl * {
 					border-left: none;
