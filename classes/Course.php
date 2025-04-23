@@ -290,6 +290,7 @@ class Course extends Tutor_Base {
 
 		$wp_query->set_404();
 		status_header( 404 );
+		nocache_headers();
 		return $content;
 	}
 
