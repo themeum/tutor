@@ -61,7 +61,13 @@ class Students_List {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Students', 'tutor' );
+		add_action(
+			'init',
+			function() {
+				$this->page_title = __( 'Students', 'tutor' );
+			}
+		);
+
 		/**
 		 * Handle bulk action
 		 *
