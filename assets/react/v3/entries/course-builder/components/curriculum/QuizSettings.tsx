@@ -356,19 +356,12 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.short_answer_characters_limit"
               control={form.control}
-              rules={{
-                ...requiredRule(),
-                validate: (value) => {
-                  if (value < 1) {
-                    return __('Character limit must be greater than 0', 'tutor');
-                  }
-                  return true;
-                },
-              }}
+              rules={requiredRule()}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
                   type="number"
+                  helpText={__("Set '0' for no limit", 'tutor')}
                   label={__('Set Character Limit for Short Answers', 'tutor')}
                   selectOnFocus
                 />
@@ -378,19 +371,12 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.open_ended_answer_characters_limit"
               control={form.control}
-              rules={{
-                ...requiredRule(),
-                validate: (value) => {
-                  if (value < 1) {
-                    return __('Character limit must be greater than 0', 'tutor');
-                  }
-                  return true;
-                },
-              }}
+              rules={requiredRule()}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
                   type="number"
+                  helpText={__("Set '0' for no limit", 'tutor')}
                   label={__('Set Character Limit for Open-Ended/Essay Answers', 'tutor')}
                   selectOnFocus
                 />
