@@ -114,8 +114,8 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<?php if ( false === $is_main_instructor ) : ?>
 						<div class="tutor-course-co-author-badge"><?php esc_html_e( 'Co-author', 'tutor' ); ?></div>
 						<?php endif; ?>
-
 						<div class="tutor-card-body">
+							<?php do_action('tutor_my_courses_before_meta', get_the_ID() ) ?>
 							<div class="tutor-meta tutor-mb-8">
 								<span>
 									<?php echo esc_html( get_the_date() ); ?> <?php echo esc_html( get_the_time() ); ?>
