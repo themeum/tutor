@@ -15,10 +15,10 @@ use TUTOR\Input;
 
 if ( isset( $data ) ) : ?>
 <div class="tutor-admin-container tutor-admin-container-lg">
-	<div class="tutor-wp-dashboard-course-filter tutor-justify-<?php echo esc_attr( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ? 'between' : 'end' ); ?>">
+	<div class="tutor-wp-dashboard-course-filter tutor-justify-<?php echo esc_attr( ! empty( $data['bulk_action'] ) ? 'between' : 'end' ); ?>">
 		<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
 		<form id="tutor-admin-bulk-action-form" action method="post">
-			<input type="hidden" name="action" value="<?php echo esc_html( $data['ajax_action'] ); ?>" />
+			<input type="hidden" name="action" value="<?php echo esc_attr( $data['ajax_action'] ); ?>" />
 			<div class="tutor-d-flex">
 				<div class="tutor-mr-12">
 					<select name="bulk-action" title="Please select an action" class="tutor-form-control tutor-form-select">
@@ -36,13 +36,13 @@ if ( isset( $data ) ) : ?>
 		</form>
 		<?php endif; ?>
 		<?php
-		$search_query  = Input::get( 'search', '' );
-		$current_order = Input::get( 'order', 'DESC' );
+		$search_query  = Input::get( 'search', '', Input::TYPE_STRING );
+		$current_order = Input::get( 'order', 'DESC', Input::TYPE_STRING );
 		$order_link    = add_query_arg( 'order', 'ASC' === $current_order ? 'DESC' : 'ASC', tutor()->current_url );
 
-		$current_page = Input::get( 'page', '' );
-		$sub_page     = Input::get( 'sub_page', '' );
-		$current_tab  = Input::get( 'tab', '' );
+		$current_page = Input::get( 'page', '', Input::TYPE_STRING );
+		$sub_page     = Input::get( 'sub_page', '', Input::TYPE_STRING );
+		$current_tab  = Input::get( 'tab', '', Input::TYPE_STRING );
 		if ( '' === $sub_page && '' !== $current_tab ) {
 			$sub_page = $current_tab;
 		}
@@ -60,7 +60,7 @@ if ( isset( $data ) ) : ?>
 			array_filter(
 				$data['filters'],
 				function( $filter ) {
-					$value = Input::get( $filter['field_name'] );
+					$value = Input::get( $filter['field_name'], '', Input::TYPE_STRING );
 					return null !== $value && '' !== $value;
 				}
 			)
@@ -73,7 +73,7 @@ if ( isset( $data ) ) : ?>
 				<div class="tutor-wp-dashboard-filters tutor-dropdown-parent">
 					<button type="button" class="tutor-wp-dashboard-filters-button <?php echo esc_attr( $filters_count > 0 ? 'active' : '' ); ?>" action-tutor-dropdown="toggle">
 						<i class="tutor-icon-slider-horizontal"></i>
-						<span class="tutor-fs-6 tutor-color-secondary"><?php esc_attr_e( 'Filters', 'tutor' ); ?></span>
+						<span class="tutor-fs-6 tutor-color-secondary"><?php esc_html_e( 'Filters', 'tutor' ); ?></span>
 						<?php if ( $filters_count > 0 ) : ?>
 						<span class="tutor-wp-dashboard-filters-line"></span>
 						<span class="tutor-wp-dashboard-filters-count"><?php echo esc_html( $filters_count ); ?></span>
@@ -92,7 +92,7 @@ if ( isset( $data ) ) : ?>
 							<?php foreach ( $data['filters'] as $filter ) : ?>
 								<?php if ( 'date' === $filter['field_type'] ) : ?>
 									<div class="tutor-wp-dashboard-filters-item">
-										<?php if ( isset( $filter['label'] ) && isset( $filter['show_label'] ) && true === $filter['show_label'] ) : ?>
+										<?php if ( isset( $filter['label'] ) && ! empty( $filter['show_label'] ) ) : ?>
 											<label class="tutor-form-label">
 												<?php echo esc_html( $filter['label'] ); ?>
 											</label>
@@ -108,12 +108,12 @@ if ( isset( $data ) ) : ?>
 									</div>
 								<?php elseif ( 'select' === $filter['field_type'] ) : ?>
 									<div class="tutor-wp-dashboard-filters-item">
-										<?php if ( isset( $filter['label'] ) && isset( $filter['show_label'] ) && true === $filter['show_label'] ) : ?>
+										<?php if ( isset( $filter['label'] ) && ! empty( $filter['show_label'] ) ) : ?>
 											<label class="tutor-form-label">
 												<?php echo esc_html( $filter['label'] ); ?>
 											</label>
 										<?php endif; ?>
-										<select name="<?php echo esc_attr( $filter['field_name'] ); ?>" class="tutor-form-control tutor-form-select tutor-filter-select" <?php echo isset( $filter['searchable'] ) && true === $filter['searchable'] ? 'data-searchable' : ''; ?>>
+										<select name="<?php echo esc_attr( $filter['field_name'] ); ?>" class="tutor-form-control tutor-form-select tutor-filter-select" <?php echo ! empty( $filter['searchable'] ) ? 'data-searchable' : ''; ?>>
 											<?php if ( count( $filter['options'] ) ) : ?>
 												<?php foreach ( $filter['options'] as $option ) : ?>
 													<option value="<?php echo esc_attr( $option['key'] ); ?>" <?php selected( $filter['value'], $option['key'], 'selected' ); ?>>
@@ -164,7 +164,7 @@ if ( isset( $data ) ) : ?>
 				<?php
 				if ( isset( $data['filters'] ) ) {
 					foreach ( $data['filters'] as $key => $filter ) {
-						$query_value = Input::get( $filter['field_name'], '' );
+						$query_value = Input::get( $filter['field_name'], '', Input::TYPE_STRING );
 						if ( ! strlen( $query_value ) ) {
 							continue;
 						}

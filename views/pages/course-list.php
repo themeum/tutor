@@ -341,7 +341,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 										<div class="tutor-fw-medium tutor-fs-7 tutor-color-hints tutor-text-nowrap">
 											<?php
 												$price = tutor_utils()->get_course_price( $post->ID );
-											if ( null === $price ) {
+											if ( is_null( $price ) ) {
 												esc_html_e( 'Free', 'tutor' );
 											} else {
 												echo $price; //phpcs:ignore
