@@ -328,7 +328,6 @@ class Shortcode {
 	 * @return string
 	 */
 	public function tutor_instructor_list( $atts ) {
-		global $wpdb;
 		! is_array( $atts ) ? $atts = array() : 0;
 
 		$current_page = (int) tutor_utils()->array_get( 'instructor-page', $_GET, 1 );
@@ -344,47 +343,25 @@ class Shortcode {
 		$payload                = $this->prepare_instructor_list( $current_page, $atts );
 		$payload['show_filter'] = $show_filter;
 
-		// empty category filter.
-		$empty_category = 'AND taxonomy.count != 0';
-
 		ob_start();
 		tutor_load_template( 'shortcode.tutor-instructor', $payload );
 		$content = ob_get_clean();
 
-		if ( $category_limit ) {
-			$category_limit = "LIMIT {$category_limit}";
-		} else {
-			$category_limit = '';
-		}
-
-		if ( $show_empty_category ) {
-			$empty_category = '';
-		}
-
 		if ( $show_filter ) {
 			$course_taxonomy = CourseModel::COURSE_CATEGORY;
-			$course_cats     = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT
-						* 
-					FROM {$wpdb->terms} AS term
-					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
-						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-					WHERE 1=1 {$empty_category} ORDER BY taxonomy.count DESC {$category_limit}", //phpcs:ignore
-					$course_taxonomy,
-				)
+			$term_args       = array(
+				'taxonomy'   => $course_taxonomy,
+				'hide_empty' => ! $show_empty_category,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+				'number'     => $category_limit ?: 0,
 			);
 
-			$all_cats = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT
-						COUNT(*) as total 
-					FROM {$wpdb->terms} AS term
-						INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
-							ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-					ORDER BY term.term_id DESC
-					",
-					$course_taxonomy
+			$course_cats = get_terms( $term_args );
+			$all_cats    = wp_count_terms(
+				array(
+					'taxonomy'   => $course_taxonomy,
+					'hide_empty' => false,
 				)
 			);
 
