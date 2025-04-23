@@ -354,7 +354,7 @@ class Shortcode {
 				'hide_empty' => ! $show_empty_category,
 				'orderby'    => 'count',
 				'order'      => 'DESC',
-				'number'     => $category_limit ?: 0,
+				'number'     => $category_limit,
 			);
 
 			$course_cats = get_terms( $term_args );
