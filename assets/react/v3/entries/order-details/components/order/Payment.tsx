@@ -30,19 +30,20 @@ function PaymentActionButton({
 }) {
   const { payment_status, net_payment } = order || {};
 
-  if (net_payment <= 0) {
-    return null;
-  }
-
   switch (payment_status) {
     case 'paid':
     case 'partially-refunded':
-    case 'failed':
+    case 'failed': {
+      if (net_payment <= 0) {
+        return null;
+      }
+
       return (
         <Button variant="tertiary" size="small" isOutlined onClick={() => onClick('refund')}>
           {__('Refund', 'tutor')}
         </Button>
       );
+    }
     case 'unpaid':
       return (
         <Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
