@@ -15,10 +15,6 @@ export const createGlobalCss = () => css`
     #wpcontent {
       padding-left: 0;
     }
-
-    &:not(.tutor-backend-tutor-addons) #wpbody {
-      background-color: ${colorTokens.background.default};
-    }
   }
 
   *,

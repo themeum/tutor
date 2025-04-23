@@ -122,9 +122,9 @@ $filters = array(
 									</td>
 
 									<td>
-										<div class="tutor-fs-7">
+										<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-table-link tutor-fs-7">
 											<?php echo esc_html( $coupon->coupon_title ); ?>
-										</div>
+										</a>
 									</td>
 
 									<td>
