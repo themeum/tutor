@@ -268,6 +268,30 @@ class Course extends Tutor_Base {
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
+		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
+	}
+
+	/**
+	 * Handle schedule courses preview for instructors.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param \WP_Post $content the preview post content.
+	 *
+	 * @return \WP_Post
+	 */
+	public function handle_schedule_courses( $content ) {
+		global $wp_query;
+		$course_coming_soon_enabled = (int) get_post_meta( $content->ID, '_tutor_course_enable_coming_soon', true );
+		$is_instructor              = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $content->ID, true );
+		if ( ! CourseModel::get_post_types( $content ) || current_user_can( 'administrator' ) || $is_instructor || $course_coming_soon_enabled ) {
+			return $content;
+		}
+
+		$wp_query->set_404();
+		status_header( 404 );
+		nocache_headers();
+		return $content;
 	}
 
 	/**
