@@ -28,9 +28,9 @@ function PaymentActionButton({
   order: Order;
   onClick: (buttonType: 'refund' | 'mark-as-paid') => void;
 }) {
-  const { payment_status, total_price } = order || {};
+  const { payment_status, net_payment } = order || {};
 
-  if (total_price <= 0) {
+  if (net_payment <= 0) {
     return null;
   }
 
