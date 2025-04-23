@@ -13,6 +13,20 @@ document.addEventListener('DOMContentLoaded', function () {
 	const commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
 	const commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
 
+	const filterSelectItems = document.querySelectorAll('.tutor-filter-select');
+	filterSelectItems.forEach((item) => {
+		item.addEventListener('change', (e) => {
+			const name = e.target.name;
+			const value = e.target.value;
+
+			if (value.length) {
+				window.location = urlPrams(name, value);
+			} else {
+				window.location = deleteUrlPram(name);
+			}
+		}, { once: true });
+	});
+
 	const filterCourse = document.getElementById('tutor-backend-filter-course');
 	if (filterCourse) {
 		filterCourse.addEventListener(
@@ -51,11 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 		{ once: true },
 	);
-	
+
 	const filterCouponStatus = document.getElementById('tutor-backend-filter-coupon-status');
 
 	filterCouponStatus?.addEventListener(
-		'change', 
+		'change',
 		(e) => {
 			window.location = urlPrams('coupon-status', e.target.value);
 		},
@@ -174,6 +188,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		const params = url.searchParams;
 		params.set(type, val);
 		params.set('paged', 1);
+		return url;
+	}
+
+	function deleteUrlPram(name) {
+		const url = new URL(window.location.href);
+		const params = url.searchParams;
+		params.delete(name);
 		return url;
 	}
 
