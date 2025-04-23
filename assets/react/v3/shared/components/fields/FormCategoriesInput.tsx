@@ -359,7 +359,7 @@ const styles = {
     line-height: ${spacing[32]};
     position: relative;
     z-index: ${zIndex.positive};
-    margin-left: ${spacing[20]};
+    margin-inline: ${spacing[20]} ${spacing[16]};
 
     &:after {
       content: '';
