@@ -45,18 +45,12 @@ $results            = CourseModel::get_courses_by_instructor( $current_user_id, 
 $show_course_delete = true;
 $post_type_query    = Input::get( 'type', '' );
 $post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
-$tabs_link = array(
-	'publish'  => 'my-courses',
-	'pending'  => 'my-courses/pending-courses',
-	'draft'    => 'my-courses/draft-courses',
-	'future'   => 'my-courses/schedule-courses'
-);
 
-$tabs_title = array(
-	'publish'  => __( 'Publish', 'tutor' ),
-	'pending'  => __( 'Pending', 'tutor' ),
-	'draft'    => __( 'Draft', 'tutor' ),
-	'future'   => __( 'Schedule', 'tutor' ),
+$tabs = array(
+	'publish'  => array( 'title' => __( 'Publish', 'tutor' ), 'link' => 'my-courses' ),
+	'pending'  => array( 'title' => __( 'Pending', 'tutor' ), 'link' => 'my-courses/pending-courses' ),
+	'draft'    => array( 'title' => __( 'Draft', 'tutor' ), 'link' => 'my-courses/draft-courses' ),
+	'future'   => array( 'title' => __( 'Schedule', 'tutor' ), 'link' => 'my-courses/schedule-courses' ),
 );
 
 if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
@@ -72,10 +66,10 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	<div class="tutor-dashboard-content-inner">
 		<div class="tutor-mb-32 tutor-w-100">
 			<ul class="tutor-nav">
-				<?php foreach( $tabs_link as $key => $value ) : ?>
+				<?php foreach( $tabs as $key => $tab ) : ?>
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( $value === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $value ) ) ); ?>">
-						<?php echo esc_html( $tabs_title[$key] ); ?> <?php echo esc_html( '(' . $count_map[$key] . ')' ); ?>
+					<a class="tutor-nav-link<?php echo esc_attr( $tab['link'] === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $tab['link'] ) ) ); ?>">
+						<?php echo esc_html( $tab['title'] ); ?> <?php echo esc_html( '(' . $count_map[$key] . ')' ); ?>
 					</a>
 				</li>
 				<?php endforeach; ?>
