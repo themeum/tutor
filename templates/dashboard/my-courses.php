@@ -78,7 +78,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				</li>
 				
 			</ul>
-			<?php do_action( 'tutor_my_courses_filter' ); ?>
+			<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
 		</div>
 	
 		<!-- Course list -->
