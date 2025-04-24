@@ -315,6 +315,10 @@ window.jQuery(document).ready($ => {
             ? _tutorobject.quiz_options.short_answer_characters_limit
             : _tutorobject.quiz_options.open_ended_answer_characters_limit;
 
+        if (!limit) {
+            return;
+        }
+
         var remaining = limit - value.length;
 
         if (remaining < 1) {
