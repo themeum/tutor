@@ -1,4 +1,4 @@
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
 
 import {
   type Coupon,
@@ -89,7 +89,6 @@ export default Main;
 
 const styles = {
   wrapper: css`
-    background-color: ${colorTokens.background.default};
     margin-left: ${spacing[20]};
 
     ${Breakpoint.mobile} {

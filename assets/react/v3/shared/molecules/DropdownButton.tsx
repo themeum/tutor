@@ -505,13 +505,14 @@ const styles = {
     ${typography.body()};
     color: ${colorTokens.text.primary};
     width: 100%;
-    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
+    padding: ${spacing[6]} ${spacing[16]} ${spacing[6]} ${spacing[20]};
     transition: background-color 0.3s ease-in-out;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
-    border: 2px solid transparent;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
 
     ${isDanger &&
     css`
@@ -525,7 +526,7 @@ const styles = {
 
     :focus,
     :active {
-      border-color: ${colorTokens.stroke.brand};
+      outline-color: ${colorTokens.stroke.brand};
     }
 
     ${disabled &&

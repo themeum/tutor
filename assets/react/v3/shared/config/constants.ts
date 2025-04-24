@@ -149,11 +149,11 @@ export const VisibilityControlKeys = {
       COURSE_BENEFITS: 'course_builder.additional_course_benefits',
       COURSE_TARGET_AUDIENCE: 'course_builder.additional_course_target_audience',
       TOTAL_COURSE_DURATION: 'course_builder.additional_total_course_duration',
-      COURSE_MATERIALS_INCLUDES: 'course_builder.additional_course_materials_includes',
+      COURSE_MATERIALS_INCLUDES: 'course_builder.additional_course_material_includes',
       COURSE_REQUIREMENTS: 'course_builder.additional_course_requirements',
       CERTIFICATES: 'course_builder.additional_certificate',
       ATTACHMENTS: 'course_builder.additional_attachments',
       SCHEDULE_LIVE_CLASS: 'course_builder.additional_schedule_live_class',
     },
   },
-};
+} as const;

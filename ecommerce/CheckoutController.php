@@ -282,7 +282,7 @@ class CheckoutController {
 
 			$is_coupon_applicable = false;
 			if ( Settings::is_coupon_usage_enabled() && is_object( $coupon ) ) {
-				$is_coupon_applicable = ! $item['sale_price'] && $this->coupon_model->is_coupon_applicable( $coupon, $item_id );
+				$is_coupon_applicable = ! $item['sale_price'] && $this->coupon_model->is_coupon_applicable( $coupon, $item_id, $order_type );
 				if ( $is_coupon_applicable ) {
 					$item['is_coupon_applied'] = $is_coupon_applicable;
 					$item['coupon_code']       = $coupon->coupon_code;
@@ -395,7 +395,7 @@ class CheckoutController {
 		if ( $coupon ) {
 			foreach ( $items as $item ) {
 				if ( ! $is_coupon_applicable ) {
-					$is_coupon_applicable = $this->coupon_model->is_coupon_applicable( $coupon, $item['item_id'] );
+					$is_coupon_applicable = $this->coupon_model->is_coupon_applicable( $coupon, $item['item_id'], $order_type );
 				}
 			}
 			if ( $is_coupon_applicable ) {

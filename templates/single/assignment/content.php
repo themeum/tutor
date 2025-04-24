@@ -45,7 +45,7 @@ $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true
 
 // Get enrolled data.
 $enrolled_info   = tutor_utils()->is_enrolled( $course_id, $user_id );
-$enrollment_time = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ), $course_id, $post_id );
+$enrollment_time = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ?? '' ), $course_id, $post_id );
 
 /**
  * Convert assignment time
