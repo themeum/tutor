@@ -59,7 +59,12 @@ class Instructors_List {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Instructor', 'tutor' );
+		add_action(
+			'init',
+			function() {
+				$this->page_title = __( 'Instructor', 'tutor' );
+			}
+		);
 
 		/**
 		 * Handle bulk action

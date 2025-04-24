@@ -312,6 +312,30 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.5.0 - April 29, 2025
+
+New: Introducing a trial feature for the membership plans (Pro)
+New: Allow Admin to download Invoice for both Single & Subscription purchases (Pro)
+New: Paddle payment gateway integration (Pro)
+
+Update: Coupon application support for the Membership plan (Pro)
+Update: Merge the course & bundle (Pro)
+Update: WPML Compatibility Issue (Pro)
+Update: Assignment unlock date should be determined by the content drip schedule. (Pro)
+Update: Implement Search Functionality in Course Builder Categories Input
+
+Fix: Date Picker Bug in Zoom Meeting/Course Scheduler for GMT-3/-4/-5/-6 Time Zones (Pro)
+Fix: PHP Fatal error in assignment list if different date format is selected (Pro)
+Fix: User can create specific course coupon without selecting any course
+Fix: Conflicts are occurring during course creation due to identical sub-category names.
+Fix: A course changed from paid to free still appears in bundles as paid. (Pro)
+Fix: Translation Notice error
+Fix: Coupon usage track not working in some cases
+Fix: In the tutor instructor list (shortcode) category filter is not working
+Fix: Several addressed issues related with earning, fees & tax has been fixed to make the report system accurate (Pro)
+Fix: Quiz answer explanation not showing (Pro)
+Fix: After importing the quiz attempts automatically converts to 10 event when set 0 (Pro)
+
 = 3.4.2 - April 15, 2025
 
 Fix: Resolved the 'Invalid video source' issue.

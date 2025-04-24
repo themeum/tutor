@@ -33,6 +33,10 @@ const useVisibilityControl = (visibilityKey: string = ''): boolean => {
     const primaryRole = userRoles.includes('administrator') ? 'admin' : 'instructor';
     const keyWithRole = `${key}_${primaryRole}`;
 
+    if (!Object.keys(visibilitySettings).includes(keyWithRole)) {
+      return true;
+    }
+
     return visibilitySettings[keyWithRole] === 'on';
   }, [visibilityKey]);
 };
