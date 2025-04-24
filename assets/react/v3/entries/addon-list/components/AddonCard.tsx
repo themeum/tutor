@@ -106,6 +106,7 @@ function AddonCard({ addon }: { addon: Addon }) {
                   }
                 }}
                 disabled={enableDisableAddon.isPending}
+                loading={enableDisableAddon.isPending}
               />
             </Show>
           </div>
