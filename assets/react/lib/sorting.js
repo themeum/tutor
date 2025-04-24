@@ -38,6 +38,12 @@ window.addEventListener('DOMContentLoaded', function () {
 				return priceA - priceB;
 			}
 
+			const numberA = parseFloat(valueA);
+			const numberB = parseFloat(valueB);
+			if (!isNaN(numberA) && !isNaN(numberB)) {
+				return numberA - numberB;
+			};
+
 			// Fallback: string comparison
 			return valueA.localeCompare(valueB, undefined, { sensitivity: 'base' });
 		};
