@@ -28,12 +28,6 @@ class Announcements {
 	 */
 
 	use Backend_Page_Trait;
-	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
 
 	/**
 	 * Bulk Action
@@ -49,7 +43,6 @@ class Announcements {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Announcements', 'tutor' );
 		/**
 		 * Handle bulk action
 		 *
@@ -57,6 +50,22 @@ class Announcements {
 		 */
 		add_action( 'wp_ajax_tutor_announcement_bulk_action', array( $this, 'announcement_bulk_action' ) );
 	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Announcements', 'tutor' );
+		}
+	}
+
 
 	/**
 	 * Prepare bulk actions that will show on dropdown options
@@ -126,5 +135,4 @@ class Announcements {
 		}
 		return false;
 	}
-
 }

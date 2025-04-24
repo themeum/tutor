@@ -55,8 +55,6 @@ class Quiz_Attempts_List {
 	 * @param boolean $register_hook should register hook or not.
 	 */
 	public function __construct( $register_hook = true ) {
-
-		$this->page_title = __( 'Quiz Attempts', 'tutor' );
 		if ( ! $register_hook ) {
 			return;
 		}
@@ -77,6 +75,21 @@ class Quiz_Attempts_List {
 		add_action( 'tutor_quiz/attempt_ended', array( new QuizAttempts(), 'delete_cache' ) );
 		add_action( 'tutor_quiz/attempt_deleted', array( new QuizAttempts(), 'delete_cache' ) );
 		add_action( 'tutor_quiz/answer/review/after', array( new QuizAttempts(), 'delete_cache' ) );
+	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Quiz Attempts', 'tutor' );
+		}
 	}
 
 	/**
