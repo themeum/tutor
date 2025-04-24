@@ -259,8 +259,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 								$count_quiz       = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['tutor_quiz'] : 0;
 								$count_assignment = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['tutor_assignments'] : 0;
 								$count_topic      = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['topics'] : 0;
-								$thumbnail_id     = (int) get_post_thumbnail_id( $post->ID );
-								$thumbnail        = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail', false ) : tutor()->url . 'assets/images/placeholder.svg';
+								$thumbnail        = get_tutor_course_thumbnail_src( 'post-thumbnail', $post->ID );
 
 								/**
 								 * Prevent re-query for same author details inside loop
