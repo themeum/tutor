@@ -358,12 +358,6 @@ class Shortcode {
 			);
 
 			$course_cats = get_terms( $term_args );
-			$all_cats    = wp_count_terms(
-				array(
-					'taxonomy'   => $course_taxonomy,
-					'hide_empty' => false,
-				)
-			);
 
 			$attributes = $payload;
 			unset( $attributes['instructors'] );
@@ -372,7 +366,6 @@ class Shortcode {
 				'show_filter' => $show_filter,
 				'content'     => $content,
 				'categories'  => $course_cats,
-				'all_cats'    => $all_cats,
 				'attributes'  => array_merge( $atts, $attributes ),
 			);
 

@@ -10,7 +10,6 @@
  */
 
 $category_id      = '';
-$total_categories = isset( $all_cats ) ? $all_cats : 0;
 $categories       = isset( $categories ) ? $categories : array();
 $limit            = 8;
 $show_more        = false;
@@ -20,7 +19,7 @@ $short_by         = array(
 	'popular'  => __( 'Popular', 'tutor' ),
 );
 
-if ( $total_categories && $total_categories > $limit ) {
+if ( count( $categories ) > $limit ) {
 	$show_more = true;
 }
 
