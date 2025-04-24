@@ -156,4 +156,4 @@ export const VisibilityControlKeys = {
       SCHEDULE_LIVE_CLASS: 'course_builder.additional_schedule_live_class',
     },
   },
-};
+} as const;
