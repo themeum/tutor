@@ -75,7 +75,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				<?php foreach( $tabs_link as $key => $value ) : ?>
 				<li class="tutor-nav-item">
 					<a class="tutor-nav-link<?php echo esc_attr( $value === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $value ) ) ); ?>">
-						<?php echo $tabs_title[$key]; ?> <?php echo esc_html( '(' . $count_map[$key] . ')' ); ?>
+						<?php echo esc_html( $tabs_title[$key] ); ?> <?php echo esc_html( '(' . $count_map[$key] . ')' ); ?>
 					</a>
 				</li>
 				<?php endforeach; ?>
