@@ -55,13 +55,8 @@ class Quiz_Attempts_List {
 	 * @param boolean $register_hook should register hook or not.
 	 */
 	public function __construct( $register_hook = true ) {
-		add_action(
-			'init',
-			function() {
-				$this->page_title = __( 'Quiz Attempts', 'tutor' );
-			}
-		);
 
+		$this->page_title = __( 'Quiz Attempts', 'tutor' );
 		if ( ! $register_hook ) {
 			return;
 		}
@@ -187,7 +182,7 @@ class Quiz_Attempts_List {
 				$attempt_cache->set_cache();
 			}
 		}
-
+		
 		$all      = $count_obj->pass + $count_obj->fail + $count_obj->pending;
 		$pass     = $count_obj->pass;
 		$fail     = $count_obj->fail;
@@ -210,7 +205,7 @@ class Quiz_Attempts_List {
 	 * @return array
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
-		$url   = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
+		$url   = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link());
 		$stats = $this->get_quiz_attempts_stat();
 
 		$tabs = array(

@@ -89,13 +89,7 @@ class CouponController extends BaseController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		add_action(
-			'init',
-			function() {
-				$this->page_title = __( 'Coupons', 'tutor' );
-			}
-		);
-
+		$this->page_title = __( 'Coupons', 'tutor' );
 		$this->model      = new CouponModel();
 
 		if ( $register_hooks ) {

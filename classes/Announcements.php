@@ -49,13 +49,7 @@ class Announcements {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action(
-			'init',
-			function() {
-				$this->page_title = __( 'Announcements', 'tutor' );
-			}
-		);
-
+		$this->page_title = __( 'Announcements', 'tutor' );
 		/**
 		 * Handle bulk action
 		 *
