@@ -47,10 +47,22 @@ $post_type_query    = Input::get( 'type', '' );
 $post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
 
 $tabs = array(
-	'publish'  => array( 'title' => __( 'Publish', 'tutor' ), 'link' => 'my-courses' ),
-	'pending'  => array( 'title' => __( 'Pending', 'tutor' ), 'link' => 'my-courses/pending-courses' ),
-	'draft'    => array( 'title' => __( 'Draft', 'tutor' ), 'link' => 'my-courses/draft-courses' ),
-	'future'   => array( 'title' => __( 'Schedule', 'tutor' ), 'link' => 'my-courses/schedule-courses' ),
+	'publish' => array(
+		'title' => __( 'Publish', 'tutor' ),
+		'link'  => 'my-courses',
+	),
+	'pending' => array(
+		'title' => __( 'Pending', 'tutor' ),
+		'link'  => 'my-courses/pending-courses',
+	),
+	'draft'   => array(
+		'title' => __( 'Draft', 'tutor' ),
+		'link'  => 'my-courses/draft-courses',
+	),
+	'future'  => array(
+		'title' => __( 'Schedule', 'tutor' ),
+		'link'  => 'my-courses/schedule-courses',
+	),
 );
 
 if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
@@ -66,10 +78,10 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	<div class="tutor-dashboard-content-inner">
 		<div class="tutor-mb-32 tutor-w-100">
 			<ul class="tutor-nav">
-				<?php foreach( $tabs as $key => $tab ) : ?>
+				<?php foreach ( $tabs as $key => $tab ) : ?>
 				<li class="tutor-nav-item">
 					<a class="tutor-nav-link<?php echo esc_attr( $tab['link'] === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $tab['link'] ) ) ); ?>">
-						<?php echo esc_html( $tab['title'] ); ?> <?php echo esc_html( '(' . $count_map[$key] . ')' ); ?>
+						<?php echo esc_html( $tab['title'] ); ?> <?php echo esc_html( '(' . $count_map[ $key ] . ')' ); ?>
 					</a>
 				</li>
 				<?php endforeach; ?>
@@ -114,7 +126,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<div class="tutor-course-co-author-badge"><?php esc_html_e( 'Co-author', 'tutor' ); ?></div>
 						<?php endif; ?>
 						<div class="tutor-card-body">
-							<?php do_action('tutor_my_courses_before_meta', get_the_ID() ) ?>
+							<?php do_action( 'tutor_my_courses_before_meta', get_the_ID() ); ?>
 							<div class="tutor-meta tutor-mb-8">
 								<span>
 									<?php echo esc_html( get_the_date() ); ?> <?php echo esc_html( get_the_time() ); ?>
