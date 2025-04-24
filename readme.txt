@@ -315,6 +315,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 = 3.5.0 - April 29, 2025
 
 New: Introduced a trial feature for membership plans. (Pro)
+New: Introduced course builder fields visibility control (Pro)
 New: Admins can now download invoices for both single and subscription-based purchases. (Pro)
 New: Added Paddle as a new payment gateway integration. (Pro)
 Update: Enabled coupon application support for membership plans. (Pro)
