@@ -44,7 +44,13 @@ class Withdraw_Requests_List {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Withdraw Request', 'tutor' );
+		add_action(
+			'init',
+			function() {
+				$this->page_title = __( 'Withdraw Request', 'tutor' );
+			}
+		);
+
 		/**
 		 * Approve or reject withdraw request
 		 */

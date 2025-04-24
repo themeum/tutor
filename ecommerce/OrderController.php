@@ -83,8 +83,14 @@ class OrderController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->page_title = __( 'Orders', 'tutor' );
-		$this->model      = new OrderModel();
+		add_action(
+			'init',
+			function() {
+				$this->page_title = __( 'Orders', 'tutor' );
+			}
+		);
+
+		$this->model = new OrderModel();
 
 		if ( $register_hooks ) {
 			/**

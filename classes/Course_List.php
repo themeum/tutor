@@ -51,7 +51,13 @@ class Course_List {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Courses', 'tutor' );
+		add_action(
+			'init',
+			function() {
+				$this->page_title = __( 'Courses', 'tutor' );
+			}
+		);
+
 		/**
 		 * Handle bulk action
 		 *
