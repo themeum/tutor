@@ -924,7 +924,7 @@ class CouponModel {
 			}
 		}
 
-		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id, $applications );
+		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id, $applications, $is_membership_plan );
 	}
 
 	/**
