@@ -338,7 +338,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 										</span>
 									</td>
 									<td>
-										<div class="tutor-fw-medium tutor-fs-7 tutor-color-hints tutor-text-nowrap">
+										<div class="tutor-fw-medium tutor-fs-7 tutor-color-hints">
 											<?php
 												$price = tutor_utils()->get_course_price( $post->ID );
 											if ( is_null( $price ) ) {

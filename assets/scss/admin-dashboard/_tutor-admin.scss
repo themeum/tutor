@@ -139,6 +139,7 @@
 	select.tutor-form-control,
 	.tutor-form-select {
 		padding-right: 36px !important;
+		margin: 0px;
 	}
 }
 
@@ -1801,6 +1802,12 @@ h2.tutor-page-heading {
 
 .wp-submenu li a[href="admin.php?page=create-course"] {
     display: none!important;
+}
+
+.tutor-form-check-input.tutor-bulk-checkbox, 
+.tutor-form-check-input#tutor-bulk-checkbox-all {
+	height: 20px;
+	width: 20px;
 }
 
 .tutor-dashboard-course-list {
