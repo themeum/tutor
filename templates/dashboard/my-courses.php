@@ -54,7 +54,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	</div>
 	
 	<div class="tutor-dashboard-content-inner">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-32 tutor-w-100">
 			<ul class="tutor-nav">
 				<li class="tutor-nav-item">
 					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ); ?>">
@@ -76,7 +76,9 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<?php esc_html_e( 'Schedule', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['future'] . ')' ); ?>
 					</a>
 				</li>
+				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
 			</ul>
+			
 		</div>
 	
 		<!-- Course list -->
