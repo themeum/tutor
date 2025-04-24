@@ -314,27 +314,25 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.5.0 - April 29, 2025
 
-New: Introducing a trial feature for the membership plans (Pro)
-New: Allow Admin to download Invoice for both Single & Subscription purchases (Pro)
-New: Paddle payment gateway integration (Pro)
-
-Update: Coupon application support for the Membership plan (Pro)
-Update: Merge the course & bundle (Pro)
-Update: WPML Compatibility Issue (Pro)
-Update: Assignment unlock date should be determined by the content drip schedule. (Pro)
-Update: Implement Search Functionality in Course Builder Categories Input
-
-Fix: Date Picker Bug in Zoom Meeting/Course Scheduler for GMT-3/-4/-5/-6 Time Zones (Pro)
-Fix: PHP Fatal error in assignment list if different date format is selected (Pro)
-Fix: User can create specific course coupon without selecting any course
-Fix: Conflicts are occurring during course creation due to identical sub-category names.
-Fix: A course changed from paid to free still appears in bundles as paid. (Pro)
-Fix: Translation Notice error
-Fix: Coupon usage track not working in some cases
-Fix: In the tutor instructor list (shortcode) category filter is not working
-Fix: Several addressed issues related with earning, fees & tax has been fixed to make the report system accurate (Pro)
-Fix: Quiz answer explanation not showing (Pro)
-Fix: After importing the quiz attempts automatically converts to 10 event when set 0 (Pro)
+New: Introduced a trial feature for membership plans. (Pro)
+New: Admins can now download invoices for both single and subscription-based purchases. (Pro)
+New: Added Paddle as a new payment gateway integration. (Pro)
+Update: Enabled coupon application support for membership plans. (Pro)
+Update: Courses and bundles have been merged for a more unified experience. (Pro)
+Update: Resolved WPML compatibility issues. (Pro)
+Update: Assignment unlock dates now follow the content drip schedule. (Pro)
+Update: Implemented a search functionality in the Course Builder's category input.
+Fix: Fixed date picker bugs in Zoom meetings and course scheduler for GMT-3/-4/-5/-6 time zones. (Pro)
+Fix: Resolved PHP fatal error in assignment lists when different date formats are selected. (Pro)
+Fix: Users can no longer create course-specific coupons without selecting a course.
+Fix: Fixed subcategory name conflicts during course creation.
+Fix: Addressed an issue where a course changed from paid to free still appeared as paid in bundles. (Pro)
+Fix: Fixed translation notice errors.
+Fix: Resolved an issue where coupon usage tracking wasn't working in some cases.
+Fix: Fixed category filter not working in the tutor instructor list shortcode.
+Fix: Multiple issues related to earnings, fees, and tax reporting have been fixed for more accurate reports. (Pro)
+Fix: Fixed a bug where quiz answer explanations were not displaying. (Pro)
+Fix: Resolved an issue where quiz attempt limits were automatically set to 10 after import, even when set to 0. (Pro)
 
 = 3.4.2 - April 15, 2025
 
