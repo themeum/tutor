@@ -53,6 +53,8 @@ class Admin {
 
 		// Admin Footer Text.
 		add_filter( 'admin_footer_text', array( $this, 'admin_footer_text' ), 1 );
+		// Register Course Widget.
+		add_action( 'widgets_init', array( $this, 'register_course_widget' ) );
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
@@ -61,8 +63,6 @@ class Admin {
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
 		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
-
-		add_action( 'widgets_init', array( $this, 'register_course_widget' ) );
 	}
 
 	/**
@@ -593,7 +593,7 @@ class Admin {
 	 * @return void
 	 */
 	public function register_course_widget() {
-		register_widget( Course_Widget::class );
+		register_widget( 'Tutor\Course_Widget' );
 	}
 
 	/**

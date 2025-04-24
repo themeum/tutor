@@ -518,6 +518,7 @@ final class Tutor {
 		$this->gutenberg             = new Gutenberg();
 		$this->course_settings_tabs  = new Course_Settings_Tabs();
 		$this->withdraw              = new Withdraw();
+		$this->course_widget         = new Course_Widget();
 		$this->upgrader              = new Upgrader();
 		$this->dashboard             = new Dashboard();
 		$this->form_handler          = new FormHandler();
