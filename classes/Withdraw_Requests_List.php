@@ -251,15 +251,4 @@ class Withdraw_Requests_List {
 			)
 		);
 	}
-
-	/**
-	 * Get page title
-	 *
-	 * @since 3.5.0
-	 *
-	 * @return string
-	 */
-	public function get_page_title() {
-		return __( 'Withdraw Request', 'tutor' );
-	}
 }
