@@ -62,13 +62,6 @@ class CouponController extends BaseController {
 	use JsonResponse;
 
 	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
-
-	/**
 	 * Bulk Action
 	 *
 	 * @var $bulk_action
@@ -89,7 +82,6 @@ class CouponController extends BaseController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->page_title = __( 'Coupons', 'tutor' );
 		$this->model      = new CouponModel();
 
 		if ( $register_hooks ) {
@@ -115,6 +107,22 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_apply_coupon', array( $this, 'ajax_apply_coupon' ) );
 		}
 	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Coupons', 'tutor' );
+		}
+	}
+
 
 	/**
 	 * Get coupon model object
@@ -476,6 +484,10 @@ class CouponController extends BaseController {
 
 		$list_order    = Input::get( 'order', 'DESC' );
 		$list_order_by = 'id';
+
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+			$where_clause['applies_to'] = $this->model->get_course_bundle_applies_to( true );
+		}
 
 		return $this->model->get_coupons( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}

@@ -25,7 +25,8 @@
 				dropdownParent.classList.add('is-open');
 			}
 		} else {
-			const restrictedDataAttributes = ['data-tutor-copy-target'];
+			const restrictedDataAttributes = ['data-tutor-copy-target', 'data-tutor-dropdown-persistent'];
+			const closeDataAttributes = 'data-tutor-dropdown-close';
 			const isRestricted = restrictedDataAttributes.some(
 				(restrictedDataAttribute) => {
 					return (
@@ -35,7 +36,7 @@
 				},
 			);
 
-			if (!isRestricted) {
+			if (!isRestricted || e.target.hasAttribute(closeDataAttributes) || e.target.closest(`[${closeDataAttributes}]`)) {
 				document
 					.querySelectorAll('.tutor-dropdown-parent')
 					.forEach((dropdownParent) => {

@@ -1,20 +1,20 @@
 import '../front/_select_dd_search';
+import './quiz-attempts';
 import './segments/color-preset';
+import './segments/column-filter';
 import './segments/editor_full';
 import './segments/filter';
 import ajaxHandler from './segments/filter';
 import './segments/image-preview';
 import './segments/import-export';
 import './segments/lib';
+import './segments/manage-api-keys';
+import './segments/multiple_email_input';
 import './segments/navigation';
 import './segments/options';
 import './segments/reset';
 import './segments/withdraw';
-import './segments/column-filter';
-import './segments/multiple_email_input';
-import './quiz-attempts';
 import './wp-events-subscriber';
-import './segments/manage-api-keys';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {
@@ -464,19 +464,6 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	//add checkbox class for style
-	var tutorCheckbox = $('.tutor-table .tutor-form-check-input');
-	if (tutorCheckbox) {
-		tutorCheckbox.parent().addClass('tutor-option-field-row');
-	}
-	const tdWithRadio = document.querySelectorAll("td[id^='tutor-student-course-'] .tutor-form-check");
-	tdWithRadio.forEach((item) => {
-		if (item) {
-			if (item.classList.contains('tutor-option-field-row')) {
-				item.classList.remove('tutor-option-field-row');
-			}
-		}
-	});
 	/**
 	 * If Tutor course edit then show tutor menu as active
 	 *

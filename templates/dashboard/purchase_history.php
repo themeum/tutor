@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 
 // Global variables.
 $user_id     = get_current_user_id();

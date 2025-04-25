@@ -4,23 +4,25 @@ import { useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import { tutorConfig } from '@TutorShared/config/config';
+import { isRTL, TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import type { FormControllerProps } from '@TutorShared/utils/form';
-import { styleUtils } from '@TutorShared/utils/style-utils';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 
 import Show from '@TutorShared/controls/Show';
-import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import type { User } from '@TutorShared/services/users';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
-import FormFieldWrapper from './FormFieldWrapper';
 
 import profileImage from '@SharedImages/profile-photo.png';
-import { tutorConfig } from '@TutorShared/config/config';
-import { isRTL, TutorRoles } from '@TutorShared/config/constants';
-import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
-import type { User } from '@TutorShared/services/users';
+
+import FormFieldWrapper from './FormFieldWrapper';
 
 export interface UserOption extends User {
   isRemoveAble?: boolean;
@@ -383,7 +385,7 @@ const FormSelectUser = ({
   );
 };
 
-export default FormSelectUser;
+export default withVisibilityControl(FormSelectUser);
 
 const styles = {
   mainWrapper: css`
@@ -400,7 +402,10 @@ const styles = {
     padding: ${spacing[8]};
   `,
   inputWrapperListItem: css`
+    position: sticky;
+    top: 0px;
     padding: 0px;
+    background-color: inherit;
   `,
   leftIcon: css`
     position: absolute;
@@ -527,7 +532,7 @@ const styles = {
     background-color: ${colorTokens.background.white};
     list-style-type: none;
     box-shadow: ${shadow.popover};
-    padding: ${spacing[4]} 0;
+    margin: ${spacing[4]} 0;
     margin: 0;
     max-height: 400px;
     border: 1px solid ${colorTokens.stroke.border};

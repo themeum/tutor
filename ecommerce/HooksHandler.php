@@ -45,6 +45,15 @@ class HooksHandler {
 	private $order_activities_model;
 
 	/**
+	 * Coupon controller instance
+	 *
+	 * @since 3.5.0
+	 *
+	 * @var CouponController
+	 */
+	private $coupon_ctrl;
+
+	/**
 	 * Register hooks & resolve props
 	 *
 	 * @since 3.0.0
@@ -52,6 +61,7 @@ class HooksHandler {
 	public function __construct() {
 		$this->order_activities_model = new OrderActivitiesModel();
 		$this->order_model            = new OrderModel();
+		$this->coupon_ctrl            = new CouponController( false );
 
 		// Register hooks.
 		add_filter( 'tutor_course_sell_by', array( $this, 'alter_course_sell_by' ) );
@@ -252,7 +262,7 @@ class HooksHandler {
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
 		// Store coupon usage.
-		( new CouponController( false ) )->store_coupon_usage( $order_id );
+		$this->coupon_ctrl->store_coupon_usage( $order_id );
 	}
 
 	/**
@@ -447,8 +457,9 @@ class HooksHandler {
 	 */
 	public function handle_free_checkout( array $order_data ) {
 		if ( empty( $order_data['total_price'] ) && OrderModel::TYPE_SINGLE_ORDER === $order_data['order_type'] ) {
-			$user_id = $order_data['user_id'];
-			$items   = $order_data['items'];
+			$order_id = $order_data['id'];
+			$user_id  = $order_data['user_id'];
+			$items    = $order_data['items'];
 			foreach ( $items as $item ) {
 				add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
@@ -457,6 +468,9 @@ class HooksHandler {
 					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
 				}
 			}
+
+			// Store coupon usage.
+			$this->coupon_ctrl->store_coupon_usage( $order_id );
 		}
 		return $order_data;
 	}
@@ -506,10 +520,28 @@ class HooksHandler {
 		$user_id      = $order_data['user_id'];
 		$billing_info = ( new BillingController( false ) )->get_billing_info( $user_id );
 
+		$meta_value = '{}';
+		if ( $billing_info ) {
+			$meta_value = wp_json_encode( $billing_info );
+		} else {
+			/**
+			 * Store user data as billing info
+			 * If user has no billing info during order like manual enrollment from CSV.
+			 */
+			$user_data  = get_userdata( $user_id );
+			$meta_value = wp_json_encode(
+				array(
+					'billing_first_name' => $user_data->first_name,
+					'billing_last_name'  => $user_data->last_name,
+					'billing_email'      => $user_data->user_email,
+				)
+			);
+		}
+
 		OrderMetaModel::add_meta(
 			$order_id,
 			OrderModel::META_KEY_BILLING_ADDRESS,
-			wp_json_encode( $billing_info )
+			$meta_value
 		);
 	}
 }

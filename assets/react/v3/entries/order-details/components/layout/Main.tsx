@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 
-import Container from '@TutorShared/components/Container';
 import Activities from '@OrderComponents/order/Activities';
 import Notes from '@OrderComponents/order/Notes';
 import Payment from '@OrderComponents/order/Payment';
@@ -8,8 +7,9 @@ import PaymentInfo from '@OrderComponents/order/PaymentInfo';
 import Student from '@OrderComponents/order/Student';
 import Summary from '@OrderComponents/order/Summary';
 import { OrderProvider } from '@OrderContexts/order-context';
+import Container from '@TutorShared/components/Container';
 
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
 import { isDefined } from '@TutorShared/utils/types';
 import { getQueryParam } from '@TutorShared/utils/url';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
@@ -48,7 +48,6 @@ export default Main;
 
 const styles = {
   wrapper: css`
-    background-color: ${colorTokens.background.default};
     margin-left: ${spacing[20]};
 
     ${Breakpoint.mobile} {

@@ -238,3 +238,8 @@ export interface MembershipPlan {
     total_courses: number;
   }[];
 }
+
+interface VisibilityProps {
+  visibilityKey?: string;
+}
+export type WithVisibilityProps<T> = T & VisibilityProps;

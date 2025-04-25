@@ -43,6 +43,28 @@ $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
 $results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type );
 $show_course_delete = true;
+$post_type_query    = Input::get( 'type', '' );
+$post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
+
+$tabs = array(
+	'publish' => array(
+		'title' => __( 'Publish', 'tutor' ),
+		'link'  => 'my-courses',
+	),
+	'pending' => array(
+		'title' => __( 'Pending', 'tutor' ),
+		'link'  => 'my-courses/pending-courses',
+	),
+	'draft'   => array(
+		'title' => __( 'Draft', 'tutor' ),
+		'link'  => 'my-courses/draft-courses',
+	),
+	'future'  => array(
+		'title' => __( 'Schedule', 'tutor' ),
+		'link'  => 'my-courses/schedule-courses',
+	),
+);
+
 if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
 	$show_course_delete = false;
 }
@@ -54,29 +76,18 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	</div>
 	
 	<div class="tutor-dashboard-content-inner">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-32 tutor-w-100">
 			<ul class="tutor-nav">
+				<?php foreach ( $tabs as $key => $tab ) : ?>
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ); ?>">
-						<?php esc_html_e( 'Publish', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['publish'] . ')' ); ?>
+					<a class="tutor-nav-link<?php echo esc_attr( $tab['link'] === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $tab['link'] ) ) ); ?>">
+						<?php echo esc_html( $tab['title'] ); ?> <?php echo esc_html( '(' . $count_map[ $key ] . ')' ); ?>
 					</a>
 				</li>
-				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/pending-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ); ?>">
-						<?php esc_html_e( 'Pending', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['pending'] . ')' ); ?>
-					</a>
-				</li>
-				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/draft-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ); ?>">
-						<?php esc_html_e( 'Draft', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['draft'] . ')' ); ?>
-					</a>
-				</li>
-				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/schedule-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ); ?>">
-						<?php esc_html_e( 'Schedule', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['future'] . ')' ); ?>
-					</a>
-				</li>
+				<?php endforeach; ?>
+				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
 			</ul>
+			
 		</div>
 	
 		<!-- Course list -->
@@ -114,8 +125,8 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<?php if ( false === $is_main_instructor ) : ?>
 						<div class="tutor-course-co-author-badge"><?php esc_html_e( 'Co-author', 'tutor' ); ?></div>
 						<?php endif; ?>
-
 						<div class="tutor-card-body">
+							<?php do_action( 'tutor_my_courses_before_meta', get_the_ID() ); ?>
 							<div class="tutor-meta tutor-mb-8">
 								<span>
 									<?php echo esc_html( get_the_date() ); ?> <?php echo esc_html( get_the_time() ); ?>
