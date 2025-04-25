@@ -975,7 +975,7 @@ class CouponModel {
 		 * @since 3.0.0
 		 */
 		if ( 0 === $regular_price_item_count ) {
-			$is_meet_requirement = false;
+			//$is_meet_requirement = false;
 		}
 
 		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $item_id );
