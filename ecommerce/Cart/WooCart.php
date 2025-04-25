@@ -64,6 +64,19 @@ class WooCart extends BaseCart implements CartInterface {
 	}
 
 	/**
+	 * Get cart items
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return array Array of objects
+	 */
+	public function get_cart_items(): array {
+		$items = array();
+		// @TODO need to implement this.
+		return $items;
+	}
+
+	/**
 	 * Get cart page url to view the cart
 	 *
 	 * @since 3.5.0
