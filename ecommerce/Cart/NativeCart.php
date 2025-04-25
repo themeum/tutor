@@ -60,6 +60,30 @@ class NativeCart extends BaseCart implements CartInterface {
 	}
 
 	/**
+	 * Get cart items
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return array Array of objects
+	 */
+	public function get_cart_items(): array {
+		$items      = array();
+		$cart_items = $this->cart_model->get_cart_items( $this->user_id );
+		if ( is_array( $cart_items ) && ! empty( $cart_items['courses']['results'] ) ) {
+			foreach ( $cart_items['courses']['results'] as $cart_item ) {
+				$item = (object) array(
+					'id'    => $cart_item->ID,
+					'title' => $cart_item->post_title,
+				);
+
+				$items[] = $item;
+			}
+		}
+
+		return $items;
+	}
+
+	/**
 	 * Get cart page url to view the cart
 	 *
 	 * @since 3.5.0

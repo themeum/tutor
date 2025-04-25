@@ -24,6 +24,15 @@ interface CartInterface {
 	public function add( int $item_id ): bool;
 
 	/**
+	 * Get cart items
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return array Array of object
+	 */
+	public function get_cart_items(): array;
+
+	/**
 	 * Get cart url to view the cart
 	 *
 	 * @since 3.5.0

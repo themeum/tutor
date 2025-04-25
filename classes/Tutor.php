@@ -657,6 +657,7 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-template-hook.php';
 		include tutor()->path . 'includes/translate-text.php';
 		include tutor()->path . 'includes/country.php';
+		include tutor()->path . 'includes/ecommerce-functions.php';
 
 		if ( ! function_exists( 'is_plugin_active' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
