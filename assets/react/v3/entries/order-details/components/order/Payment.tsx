@@ -1,38 +1,49 @@
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import For from '@TutorShared/controls/For';
-import Show from '@TutorShared/controls/Show';
+
 import DiscountModal from '@OrderComponents/modals/DiscountModal';
 import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
 import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
-import type { PaymentStatus } from '@OrderServices/order';
+import type { Order } from '@OrderServices/order';
+
+import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { calculateDiscountValue, formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+
 import { PaymentBadge } from './PaymentBadge';
 
 function PaymentActionButton({
-  status,
+  order,
   onClick,
 }: {
-  status: PaymentStatus;
+  order: Order;
   onClick: (buttonType: 'refund' | 'mark-as-paid') => void;
 }) {
-  switch (status) {
+  const { payment_status, net_payment } = order || {};
+
+  switch (payment_status) {
     case 'paid':
     case 'partially-refunded':
-    case 'failed':
+    case 'failed': {
+      if (net_payment <= 0) {
+        return null;
+      }
+
       return (
         <Button variant="tertiary" size="small" isOutlined onClick={() => onClick('refund')}>
           {__('Refund', 'tutor')}
         </Button>
       );
+    }
     case 'unpaid':
       return (
         <Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
@@ -223,7 +234,7 @@ function Payment() {
 
         <div css={styles.markAsPaid}>
           <PaymentActionButton
-            status={order.payment_status}
+            order={order}
             onClick={(buttonType) => {
               if (buttonType === 'refund') {
                 return showModal({

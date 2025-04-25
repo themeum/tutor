@@ -1,12 +1,12 @@
 <?php
 /**
- * Checkbox items template for full width type field.
+ * Checkbox without label template
  *
  * @package Tutor\Views
  * @subpackage Tutor\Settings
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.5.0
  */
 
 $key    = $field['key'] ?? '';
@@ -26,11 +26,6 @@ $checked = 'on' === $value ? 'checked' : '';
 $field_name = $this->get_field_name( $field );
 ?>
 <div class="tutor-form-check">
-	<?php if ( ! empty( $field['label'] ) ) : ?>
-	<span class="label-before">
-		<?php echo esc_html( $field['label'] ); ?>
-	</span>
-	<?php endif; ?>
 	<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>" value="<?php echo esc_attr( $value ); ?>">
 	<input type="checkbox" value="<?php echo esc_attr( $value ); ?>" class="tutor-form-toggle-input tutor-form-check-input" <?php echo esc_attr( $checked ); ?>>
 </div>

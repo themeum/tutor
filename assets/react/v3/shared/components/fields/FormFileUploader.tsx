@@ -10,8 +10,9 @@ import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/con
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
-import { IconCollection } from '@TutorShared/icons/types';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
@@ -205,7 +206,7 @@ const FormFileUploader = ({
   );
 };
 
-export default FormFileUploader;
+export default withVisibilityControl(FormFileUploader);
 
 const styles = {
   wrapper: ({ hasFiles }: { hasFiles: boolean }) => css`

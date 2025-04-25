@@ -1876,7 +1876,7 @@ class Options_V2 {
 	 */
 	public function blocks( $blocks = array() ) {
 		ob_start();
-		include tutor()->path . 'views/options/option_blocks.php';
+		include apply_filters( 'tutor_settings_block_template_path', tutor()->path . 'views/options/option_blocks.php', $blocks );
 		return ob_get_clean();
 	}
 
@@ -1894,10 +1894,11 @@ class Options_V2 {
 		ob_start();
 		$blocks = $section['blocks'];
 		if ( isset( $section['template'] ) ) {
-			include tutor()->path . "views/options/template/{$section['template']}.php";
+			include apply_filters( 'tutor_option_template_path', tutor()->path . "views/options/template/{$section['template']}.php", $section['template'] );
 		}
 		return ob_get_clean();
 	}
+
 
 	/**
 	 * Load template inside template directory
@@ -1915,5 +1916,32 @@ class Options_V2 {
 			require tutor()->path . "views/options/template/{$template_slug}";
 		}
 		return ob_get_clean();
+	}
+
+	/**
+	 * Get field name
+	 *
+	 * It's useful when a field has event key like course.lessons
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $field Option field array.
+	 *
+	 * @return string
+	 */
+	public function get_field_name( array $field ) {
+		$events     = $field['event'] ?? null;
+		$field_name = 'tutor_option';
+		if ( $events ) {
+			$events = explode( '.', $events );
+			foreach ( $events as $event ) {
+				$field_name .= '[' . $event . ']';
+			}
+			$field_name .= '[' . $field['key'] . ']';
+		} else {
+			$field_name .= '[' . $field['key'] . ']';
+		}
+
+		return $field_name;
 	}
 }

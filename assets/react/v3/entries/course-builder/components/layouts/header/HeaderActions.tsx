@@ -390,7 +390,7 @@ const HeaderActions = () => {
       </Show>
 
       <Show
-        when={dropdownItems().length > 1}
+        when={dropdownItems().length > 0}
         fallback={
           <Button
             data-cy="course-builder-submit-button"
