@@ -1,8 +1,22 @@
 <?php
+/**
+ * Activity logger
+ *
+ * @package Tutor\ActivityLogger
+ *
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 3.5.0
+ */
 
 namespace Tutor;
 
-class ActivityLogger implements Singleton {
+/**
+ * Log activities
+ *
+ * @since 3.5.0
+ */
+class Logger implements Singleton {
 
 	/**
 	 * Log file
