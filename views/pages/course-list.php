@@ -90,7 +90,7 @@ $filters = array(
 				'field_type' => 'select',
 				'field_name' => 'data',
 				'options'    => $status_options,
-				'value'      => Input::get( 'data', 'all' ),
+				'value'      => Input::get( 'data', '' ),
 			),
 			array(
 				'label'      => __( 'Category', 'tutor' ),
@@ -302,7 +302,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 													</div>
 
 													<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
-														<i class="tutor-icon-lesson"></i>
+														<i class="tutor-icon-note"></i>
 														<?php esc_html_e( 'Lesson:', 'tutor' ); ?>
 														<span class="tutor-meta-value"><?php echo esc_html( $count_lesson ); ?></span>
 													</div>
@@ -314,7 +314,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 													</div>
 
 													<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
-														<i class="tutor-icon-assignment-2"></i>
+														<i class="tutor-icon-report-time"></i>
 														<?php esc_html_e( 'Assignment:', 'tutor' ); ?>
 														<span class="tutor-meta-value"><?php echo esc_html( $count_assignment ); ?></span>
 													</div>

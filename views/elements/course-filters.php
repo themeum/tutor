@@ -80,10 +80,10 @@ if ( isset( $data ) ) : ?>
 						<?php endif; ?>
 					</button>
 
-					<div class="tutor-dropdown" data-tutor-dropdown-persistent>
+					<form class="tutor-dropdown tutor-admin-dashboard-filter-form" data-tutor-dropdown-persistent>
 						<div class="tutor-d-flex tutor-justify-between tutor-mb-16">
 							<span class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Filters', 'tutor' ); ?></span>
-							<button class="tutor-btn tutor-btn-ghost" data-tutor-dropdown-close>
+							<button type="button" class="tutor-btn tutor-btn-ghost" data-tutor-dropdown-close>
 								<i class="tutor-icon-times"></i>
 							</button>
 						</div>
@@ -97,7 +97,7 @@ if ( isset( $data ) ) : ?>
 												<?php echo esc_html( $filter['label'] ); ?>
 											</label>
 										<?php endif; ?>
-										<div class="tutor-v2-date-picker">
+										<div class="tutor-v2-date-picker" data-prevent_redirect="1" data-is_clearable="1" data-input_name="<?php echo esc_attr( $filter['field_name'] ); ?>">
 											<div class="tutor-form-wrap">
 												<span class="tutor-form-icon tutor-form-icon-reverse">
 													<span class="tutor-icon-calender-line" aria-hidden="true"></span>
@@ -113,7 +113,7 @@ if ( isset( $data ) ) : ?>
 												<?php echo esc_html( $filter['label'] ); ?>
 											</label>
 										<?php endif; ?>
-										<select name="<?php echo esc_attr( $filter['field_name'] ); ?>" class="tutor-form-control tutor-form-select tutor-filter-select" <?php echo ! empty( $filter['searchable'] ) ? 'data-searchable' : ''; ?>>
+										<select name="<?php echo esc_attr( $filter['field_name'] ); ?>" class="tutor-form-control tutor-form-select" <?php echo ! empty( $filter['searchable'] ) ? 'data-searchable' : ''; ?>>
 											<?php if ( count( $filter['options'] ) ) : ?>
 												<?php foreach ( $filter['options'] as $option ) : ?>
 													<option value="<?php echo esc_attr( $option['key'] ); ?>" <?php selected( $filter['value'], $option['key'], 'selected' ); ?>>
@@ -132,14 +132,12 @@ if ( isset( $data ) ) : ?>
 							<?php endforeach; ?>
 						</div>
 
-						<?php if ( $filters_count > 0 ) : ?>
 						<div class="tutor-d-flex tutor-justify-end tutor-mt-16">
-							<a class="tutor-btn tutor-btn-sm tutor-btn-outline-primary" href="<?php echo esc_url( $url ); ?>">
-								<?php esc_html_e( 'Clear Filters', 'tutor' ); ?>
-							</a>
+							<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+								<?php esc_html_e( 'Apply Filters', 'tutor' ); ?>
+							</button>
 						</div>
-						<?php endif; ?>
-					</div>
+					</form>
 				</div>
 				<?php endif; ?>
 

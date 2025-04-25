@@ -90,28 +90,25 @@
   content: "\f918";
 }
 .tutor-icon-sorting-desc:before {
-  content: "\e919";
+  content: "\f919";
 }
 .tutor-icon-sorting-asc:before {
-  content: "\e920";
+  content: "\f920";
 }
-.tutor-icon-add-bundle:before {
-  content: "\e921";
+.tutor-icon-note:before {
+  content: "\f921";
 }
-.tutor-icon-add-course:before {
-  content: "\e922";
+.tutor-icon-add-document:before {
+  content: "\f922";
 }
 .tutor-icon-topic:before {
-  content: "\e923";
+  content: "\f923";
 }
 .tutor-icon-quiz-2:before {
-  content: "\e924";
+  content: "\f924";
 }
-.tutor-icon-lesson:before {
-  content: "\e925";
-}
-.tutor-icon-assignment-2:before {
-  content: "\e926";
+.tutor-icon-bundle:before {
+  content: "\f925";
 }
 
 /* tutor old fonts */
