@@ -389,6 +389,7 @@ const styles = {
   `,
   addNewButton: css`
     ${styleUtils.resetButton};
+    ${typography.small('medium')};
     color: ${colorTokens.brand.blue};
     padding: 0 ${spacing[8]};
     display: flex;
