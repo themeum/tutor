@@ -63,13 +63,6 @@ class OrderController {
 	use JsonResponse;
 
 	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
-
-	/**
 	 * Constructor.
 	 *
 	 * Initializes the Orders class, sets the page title, and optionally registers
@@ -83,14 +76,7 @@ class OrderController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		add_action(
-			'init',
-			function() {
-				$this->page_title = __( 'Orders', 'tutor' );
-			}
-		);
-
-		$this->model = new OrderModel();
+		$this->model      = new OrderModel();
 
 		if ( $register_hooks ) {
 			/**
@@ -141,6 +127,21 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
+		}
+	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Orders', 'tutor' );
 		}
 	}
 

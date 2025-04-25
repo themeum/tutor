@@ -33,7 +33,9 @@ class Course_Widget extends \WP_Widget {
 		parent::__construct(
 			'tutor_course_widget', // Base ID.
 			_x( 'Tutor Course', 'widget title', 'tutor' ),
-			array( 'description' => _x( 'Display courses wherever widget support is available.', 'widget description', 'tutor' ) )
+			array(
+				'description' => _x( 'Display courses wherever widget support is available.', 'widget description', 'tutor' ),
+			)
 		);
 	}
 
