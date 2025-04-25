@@ -31,13 +31,6 @@ class Course_List {
 	use Backend_Page_Trait;
 
 	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
-
-	/**
 	 * Bulk Action
 	 *
 	 * @var $bulk_action
@@ -51,13 +44,6 @@ class Course_List {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		add_action(
-			'init',
-			function() {
-				$this->page_title = __( 'Courses', 'tutor' );
-			}
-		);
-
 		/**
 		 * Handle bulk action
 		 *
@@ -76,6 +62,21 @@ class Course_List {
 		 * @since v2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_course_delete', array( $this, 'tutor_course_delete' ) );
+	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Courses', 'tutor' );
+		}
 	}
 
 	/**

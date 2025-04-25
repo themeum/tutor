@@ -72,7 +72,11 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 		?>
         <?php echo apply_filters( 'tutor_after_course_details_tutor_add_to_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
 	</div>
-	<?php if ( $is_course_in_user_cart && ! $buy_now ) { ?>
+	<?php
+	ob_start();
+	if ( $is_course_in_user_cart && ! $buy_now ) {
+		?>
+		
 		<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-mt-24 tutor-btn-lg tutor-btn-block <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
 			<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 		</a>
@@ -86,7 +90,6 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 		</div>
 		<?php
 	} else {
-			ob_start();
 		?>
 	<div class="tutor-mt-24">
 		<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
@@ -95,5 +98,5 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 		</button>
 	</div>
 		<?php
-			echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), $course_id ); //phpcs:ignore --already filtered
 	}
+	echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), $course_id ); //phpcs:ignore --already filtered
