@@ -34,7 +34,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 					?>
 					<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 						<button class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
-							<i class="tutor-icon-add-course"></i>
+							<i class="tutor-icon-add-document"></i>
 							<span><?php echo esc_html( $data['button_title'] ); ?></span>
 						</button>
 					<?php endif; ?>
@@ -42,7 +42,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 					<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 						<?php do_action( 'tutor_data_list_navbar_button' ); ?>
 						<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>">
-							<i class="tutor-icon-add-course"></i>
+							<i class="tutor-icon-add-document"></i>
 							<span><?php echo esc_html( $data['button_title'] ); ?></span>
 						</a>
 					<?php endif; ?>
