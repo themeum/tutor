@@ -46,7 +46,20 @@ class Logger extends Singleton {
 	 * @return void
 	 */
 	public function log( $title ) {
-		$data = array(
+		global $wp_filesystem;
+
+		// Ensure WP_Filesystem is loaded.
+		if ( ! function_exists( 'request_filesystem_credentials' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+
+		if ( ! WP_Filesystem() ) {
+			error_log( 'Failed to initialize WP_Filesystem.' );
+			return;
+		}
+
+		// Prepare log data.
+		$data     = array(
 			'timestamp' => current_time( 'mysql' ),
 			'method'    => wp_unslash( $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN' ),
 			'uri'       => wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ),
@@ -54,16 +67,28 @@ class Logger extends Singleton {
 			'title'     => $title,
 			'trace'     => $this->get_sanitized_backtrace(),
 		);
-
 		$log_line = json_encode( $data, JSON_PRETTY_PRINT ) . PHP_EOL;
 
-		// Create log file if it doesn't exist.
-		if ( ! file_exists( $this->log_file ) ) {
-			touch( $this->log_file );
+		// Check if the log file exists, create if not.
+		if ( ! $wp_filesystem->exists( $this->log_file ) ) {
+			$created = $wp_filesystem->put_contents( $this->log_file, '', FS_CHMOD_FILE );
+			if ( ! $created ) {
+				error_log( 'Failed to create log file: ' . $this->log_file );
+				return;
+			}
 		}
 
-		file_put_contents( $this->log_file, $log_line, FILE_APPEND );
+		// Check if the log file is writable.
+		if ( ! $wp_filesystem->is_writable( $this->log_file ) ) {
+			error_log( 'Log file is not writable: ' . $this->log_file );
+			return;
+		}
+
+		// Read existing content and append the new line.
+		$current_content = $wp_filesystem->get_contents( $this->log_file );
+		$wp_filesystem->put_contents( $this->log_file, $current_content . $log_line, FS_CHMOD_FILE );
 	}
+
 
 	/**
 	 * Get backtrace data

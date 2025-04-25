@@ -952,7 +952,7 @@ if ( ! function_exists( 'tutor_log' ) ) {
 	 *
 	 * @since 3.5.0 $arg Arg param added.
 	 *
-	 * @param mixed $arg A log title either string|Exception.
+	 * @param mixed $title A log title either string|Exception.
 	 *
 	 * @return void
 	 */
