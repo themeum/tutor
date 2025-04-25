@@ -2585,6 +2585,8 @@ class Utils {
 	 * @return int enrolled id
 	 */
 	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
+
+		tutor_log( "Enrollement attempt for course id: {$course_id}, user id: {$user_id}" );
 		$enrolled_id = 0;
 		if ( ! $course_id ) {
 			return $enrolled_id;
@@ -2623,6 +2625,7 @@ class Utils {
 		$is_enrolled = wp_insert_post( $enroll_data );
 		if ( $is_enrolled ) {
 
+			tutor_log( "Enrollment done. Enrollment id: {$is_enrolled} course id: {$course_id} user id: {$user_id}" );
 			// Run this hook for both of pending and completed enrollment.
 			$fire_hook ? do_action( 'tutor_after_enroll', $course_id, $is_enrolled ) : null;
 
@@ -2709,6 +2712,8 @@ class Utils {
 					)
 				);
 
+				tutor_log( "Enrollment deleted. Course id: { $course_id} {$user_id}" );
+
 				// Delete Related Meta Data.
 				delete_post_meta( $enrolled->ID, '_tutor_enrolled_by_product_id' );
 				$order_id = get_post_meta( $enrolled->ID, '_tutor_enrolled_by_order_id', true );
@@ -2745,6 +2750,8 @@ class Utils {
 						'post_parent' => $course_id,
 					)
 				);
+
+				tutor_log( "Enrollment canceled. Update status: {$cancel_status} Course id: { $course_id} {$user_id}" );
 
 				/**
 				 * Added for third-party
@@ -10045,6 +10052,8 @@ class Utils {
 				$status
 			)
 		);
+
+		tutor_log( "Enrollment updated. Update status: {$status}, enrollment id: $enrollment_ids_in" );
 
 		if ( $trigger_hook ) {
 			// Run action hook.

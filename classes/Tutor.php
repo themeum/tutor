@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
+#[\AllowDynamicProperties]
 final class Tutor {
 	/**
 	 * Tutor version
@@ -545,6 +546,7 @@ final class Tutor {
 		$this->instructor_list = new Instructors_List();
 		$this->course_embed    = new Course_Embed();
 		$this->rest_auth       = new RestAuth();
+		$this->logger          = Logger::get_instance();
 
 		/**
 		 * New Course Builder.

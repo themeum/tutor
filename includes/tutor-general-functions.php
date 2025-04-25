@@ -14,6 +14,7 @@ use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Course;
+use Tutor\Logger;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -949,23 +950,19 @@ if ( ! function_exists( 'tutor_log' ) ) {
 	 * @since 1.0.0
 	 * @since 3.0.0 exception logging support added.
 	 *
+	 * @since 3.5.0 $arg Arg param added.
+	 *
+	 * @param mixed $arg A log title either string|Exception.
+	 *
 	 * @return void
 	 */
-	function tutor_log() {
-		$arg_list = func_get_args();
-
-		foreach ( $arg_list as $data ) {
-			ob_start();
-
-			if ( $data instanceof Exception ) {
-				var_dump( $data->getMessage() );
-				var_dump( $data->getTraceAsString() );
-			} else {
-				var_dump( $data );
-			}
-
-			error_log( ob_get_clean() );
+	function tutor_log( $title ) {
+		if ( $title instanceof Exception ) {
+			$title = $title->getMessage();
 		}
+
+		$logger = tutor_lms()->logger;
+		$logger->log( $title );
 	}
 }
 
