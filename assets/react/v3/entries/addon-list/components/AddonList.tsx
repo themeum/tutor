@@ -20,13 +20,13 @@ function AddonList() {
   });
 
   const { activeAddons, availableAddons } = addonsList.reduce(
-    (acc, addon) => {
+    (addonGroups, addon) => {
       if (addon.is_enabled && !addon.required_settings) {
-        acc.activeAddons.push(addon);
+        addonGroups.activeAddons.push(addon);
       } else {
-        acc.availableAddons.push(addon);
+        addonGroups.availableAddons.push(addon);
       }
-      return acc;
+      return addonGroups;
     },
     { activeAddons: [] as Addon[], availableAddons: [] as Addon[] },
   );
