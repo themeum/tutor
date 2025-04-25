@@ -21,13 +21,12 @@ if ( ! function_exists( 'tutor_add_to_cart' ) ) {
 	 * @return object {success, message, body}
 	 */
 	function tutor_add_to_cart( int $item_id ) {
-		$monetization      = tutor_utils()->get_option( 'monetize_by' );
 		$response          = new stdClass();
 		$response->success = true;
 		$response->message = __( 'Course added to cart', 'tutor' );
 		$response->body    = null;
 		try {
-			$cart = CartFactory::create_cart( $monetization );
+			$cart = tutor_get_cart_object();
 			if ( $cart->add( $item_id ) ) {
 				$response->body = $cart->get_cart_url();
 			} else {
@@ -52,9 +51,8 @@ if ( ! function_exists( 'tutor_get_cart_url' ) ) {
 	 * @return string
 	 */
 	function tutor_get_cart_url() {
-		$monetization = tutor_utils()->get_option( 'monetize_by' );
 		try {
-			$cart = CartFactory::create_cart( $monetization );
+			$cart = tutor_get_cart_object();
 			return $cart->get_cart_url();
 		} catch ( \Throwable $th ) {
 			return $th->getMessage();
