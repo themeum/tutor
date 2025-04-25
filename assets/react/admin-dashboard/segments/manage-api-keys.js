@@ -1,5 +1,5 @@
 import tutorFormData from "../../helper/tutor-formdata";
-import ajaxHandler from "./filter";
+import ajaxHandler from "../../helper/ajax-handler";
 
 const { __ } = wp.i18n;
 

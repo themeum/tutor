@@ -3,8 +3,6 @@
  *
  * @since v2.0.3
  */
-import ajaxHandler from '../../admin-dashboard/segments/filter';
-const { __, _x, _n, _nx } = wp.i18n;
 document.addEventListener('DOMContentLoaded', function() {
 
     // Course save draft

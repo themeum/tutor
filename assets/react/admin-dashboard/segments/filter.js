@@ -7,6 +7,7 @@
  * @package Filter / sorting
  * @since v2.0.0
  */
+import ajaxHandler from '../../helper/ajax-handler';
 const { __, _x, _n, _nx } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -286,32 +287,4 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		};
 	}
-	/**
-	 * Handle ajax request show toast message on success | failure
-	 *
-	 * @param {*} formData including action and all form fields
-	 */
-	async function ajaxHandler(formData) {
-		try {
-			const post = await fetch(window._tutorobject.ajaxurl, {
-				method: 'POST',
-				body: formData,
-			});
-			return post;
-		} catch (error) {
-			tutor_toast(__('Operation failed', 'tutor'), error, 'error');
-		}
-	}
 });
-
-export default async function ajaxHandler(formData) {
-	try {
-		const post = await fetch(window._tutorobject.ajaxurl, {
-			method: 'POST',
-			body: formData,
-		});
-		return post;
-	} catch (error) {
-		tutor_toast(__('Operation failed', 'tutor'), error, 'error');
-	}
-}
