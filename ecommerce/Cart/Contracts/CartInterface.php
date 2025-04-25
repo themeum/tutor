@@ -24,13 +24,13 @@ interface CartInterface {
 	public function add( int $item_id ): bool;
 
 	/**
-	 * Get cart page url to view the cart
+	 * Get cart url to view the cart
 	 *
 	 * @since 3.5.0
 	 *
 	 * @return string
 	 */
-	public function get_page_url(): string;
+	public function get_cart_url(): string;
 
 	/**
 	 * Get cart error message

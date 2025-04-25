@@ -66,7 +66,7 @@ class NativeCart extends BaseCart implements CartInterface {
 	 *
 	 * @return string
 	 */
-	public function get_page_url(): string {
+	public function get_cart_url(): string {
 		return CartController::get_page_url();
 	}
 

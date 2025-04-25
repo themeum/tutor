@@ -70,7 +70,7 @@ class WooCart extends BaseCart implements CartInterface {
 	 *
 	 * @return string
 	 */
-	public function get_page_url(): string {
+	public function get_cart_url(): string {
 		return wc_get_cart_url();
 	}
 
