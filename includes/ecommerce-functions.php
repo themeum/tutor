@@ -18,17 +18,27 @@ if ( ! function_exists( 'tutor_add_to_cart' ) ) {
 	 *
 	 * @param int $item_id Item id.
 	 *
-	 * @return object {success, message, body}
+	 * @return object {success, message, data: {cart_url, items, total_count} }
 	 */
 	function tutor_add_to_cart( int $item_id ) {
 		$response          = new stdClass();
 		$response->success = true;
 		$response->message = __( 'Course added to cart', 'tutor' );
-		$response->body    = null;
+		$response->data    = null;
+
 		try {
 			$cart = tutor_get_cart_object();
 			if ( $cart->add( $item_id ) ) {
-				$response->body = $cart->get_cart_url();
+				// Prepare data.
+				$cart_url = $cart->get_cart_url();
+				$items    = $cart->get_cart_items();
+				$data     = (object) array(
+					'cart_url'    => $cart_url,
+					'items'       => $items,
+					'total_count' => count( $items ),
+				);
+
+				$response->data = $data;
 			} else {
 				$response->success = false;
 				$response->message = $cart->get_error();
