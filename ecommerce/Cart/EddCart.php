@@ -47,6 +47,33 @@ class EddCart extends BaseCart implements CartInterface {
 	}
 
 	/**
+	 * Remove an item from cart
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param integer $item_id Item id to add to cart.
+	 *
+	 * @return boolean
+	 */
+	public function remove( int $item_id ): bool {
+		// @TODO
+		return false;
+	}
+
+	/**
+	 * Clear the cart entirely
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return boolean
+	 */
+	public function clear_cart(): bool {
+		// @TODO
+		return false;
+	}
+
+
+	/**
 	 * Get cart items
 	 *
 	 * @since 3.5.0

@@ -24,6 +24,26 @@ interface CartInterface {
 	public function add( int $item_id ): bool;
 
 	/**
+	 * Remove an item from cart
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param integer $item_id Item id to add to cart.
+	 *
+	 * @return boolean
+	 */
+	public function remove( int $item_id ): bool;
+
+	/**
+	 * Clear the cart entirely
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return boolean
+	 */
+	public function clear_cart(): bool;
+
+	/**
 	 * Get cart items
 	 *
 	 * @since 3.5.0
