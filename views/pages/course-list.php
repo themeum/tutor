@@ -90,7 +90,7 @@ $filters = array(
 				'field_type' => 'select',
 				'field_name' => 'data',
 				'options'    => $status_options,
-				'value'      => Input::get( 'data', 'all' ),
+				'value'      => Input::get( 'data', '' ),
 			),
 			array(
 				'label'      => __( 'Category', 'tutor' ),

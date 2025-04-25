@@ -28,6 +28,31 @@ document.addEventListener('DOMContentLoaded', function () {
 		}, { once: true });
 	});
 
+	const filterForms = document.querySelectorAll('.tutor-admin-dashboard-filter-form');
+	filterForms.forEach((form) => {
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			const formData = new FormData(e.target);
+			const data = Object.fromEntries(formData);
+
+			const url = new URL(window.location.href);
+			const params = url.searchParams;
+			params.set('paged', 1);
+
+			for (const key in data) {
+				const value = data[key];
+				if (value) {
+					params.set(key, value);
+				} else {
+					params.delete(key);
+				}
+			}
+
+			window.location = url;
+		});
+	});
+
 	const filterCourse = document.getElementById('tutor-backend-filter-course');
 	if (filterCourse) {
 		filterCourse.addEventListener(
