@@ -91,6 +91,25 @@ if ( ! function_exists( 'tutor_get_cart_items' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_is_item_in_cart' ) ) {
+	/**
+	 * Get cart items
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param int $item_id Item id to check.
+	 *
+	 * @return bool
+	 */
+	function tutor_is_item_in_cart( int $item_id ) {
+		try {
+			return tutor_get_cart_object()->is_item_exists( $item_id );
+		} catch ( \Throwable $th ) {
+			return false;
+		}
+	}
+}
+
 if ( ! function_exists( 'tutor_get_cart_object' ) ) {
 	/**
 	 * Get cart items
