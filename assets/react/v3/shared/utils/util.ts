@@ -1,5 +1,5 @@
 import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { addMinutes, format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,11 +7,12 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { type Addons, DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
+  type DurationUnit,
   type InjectedField,
   type PaginatedParams,
   type WPPostStatus,
   isDefined,
-  isObject
+  isObject,
 } from '@TutorShared/utils/types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
@@ -390,6 +391,83 @@ export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedFi
 
 export const decodeHtmlEntities = (text: string) => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(text, "text/html");
-  return doc.body.textContent || "";
+  const doc = parser.parseFromString(text, 'text/html');
+  return doc.body.textContent || '';
+};
+
+export const formatSubscriptionRepeatUnit = ({
+  unit = 'hour',
+  value,
+  useLySuffix = false,
+  capitalize = true,
+  showSingular = false,
+}: {
+  unit: DurationUnit | 'until_cancellation';
+  value: number;
+  useLySuffix?: boolean;
+  capitalize?: boolean;
+  showSingular?: boolean;
+}) => {
+  if (unit === 'until_cancellation') {
+    const result = __('Until Cancellation', 'tutor-pro');
+    return capitalize ? capitalizeWords(result) : result;
+  }
+
+  const unitFormats = {
+    hour: {
+      plural: __('%d hours', 'tutor-pro'),
+      singular: __('%d hour', 'tutor-pro'),
+      suffix: __('hourly', 'tutor-pro'),
+      base: __('hour', 'tutor-pro'),
+    },
+    day: {
+      plural: __('%d days', 'tutor-pro'),
+      singular: __('%d day', 'tutor-pro'),
+      suffix: __('daily', 'tutor-pro'),
+      base: __('day', 'tutor-pro'),
+    },
+    week: {
+      plural: __('%d weeks', 'tutor-pro'),
+      singular: __('%d week', 'tutor-pro'),
+      suffix: __('weekly', 'tutor-pro'),
+      base: __('week', 'tutor-pro'),
+    },
+    month: {
+      plural: __('%d months', 'tutor-pro'),
+      singular: __('%d month', 'tutor-pro'),
+      suffix: __('monthly', 'tutor-pro'),
+      base: __('month', 'tutor-pro'),
+    },
+    year: {
+      plural: __('%d years', 'tutor-pro'),
+      singular: __('%d year', 'tutor-pro'),
+      suffix: __('yearly', 'tutor-pro'),
+      base: __('year', 'tutor-pro'),
+    },
+  };
+
+  if (!unitFormats[unit]) {
+    return '';
+  }
+
+  let result = '';
+
+  if (value > 1) {
+    result = sprintf(unitFormats[unit].plural, value);
+  } else if (showSingular) {
+    result = sprintf(unitFormats[unit].singular, value);
+  } else if (useLySuffix) {
+    result = unitFormats[unit].suffix;
+  } else {
+    result = unitFormats[unit].base;
+  }
+
+  return capitalize ? capitalizeWords(result) : result;
+};
+
+const capitalizeWords = (text: string): string => {
+  return text
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 };

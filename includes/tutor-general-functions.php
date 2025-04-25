@@ -1213,6 +1213,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 		$conditional_buttons = (object) array(
 			'show_enroll_btn'              => false,
 			'show_add_to_cart_btn'         => false,
+			'show_view_cart_btn'           => false,
 			'show_start_learning_btn'      => false,
 			'show_continue_learning_btn'   => false,
 			'show_complete_course_btn'     => false,
@@ -1263,7 +1264,11 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 			} else {
 				$is_paid_course = tutor_utils()->is_course_purchasable( $course_id );
 				if ( $is_paid_course ) {
-					$conditional_buttons->show_add_to_cart_btn = true;
+					if ( tutor_is_item_in_cart( $course_id ) ) {
+						$conditional_buttons->show_view_cart_btn = true;
+					} else {
+						$conditional_buttons->show_add_to_cart_btn = true;
+					}
 				} else {
 					$conditional_buttons->show_enroll_btn = true;
 				}
@@ -1751,5 +1756,4 @@ if ( ! function_exists( 'tutor_is_local_env' ) ) {
 		);
 	}
 }
-
 

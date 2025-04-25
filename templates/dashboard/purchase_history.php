@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 
 // Global variables.
 $user_id     = get_current_user_id();
@@ -23,8 +23,8 @@ $time_period = $active;
 $start_date  = Input::get( 'start_date', '' );
 $end_date    = Input::get( 'end_date', '' );
 
-$paged    = Input::get( 'current_page', 1, Input::TYPE_INT );
-$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$paged    = Input::get( 'current_page', 1, Input::TYPE_INT );//phpcs:ignore
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );//phpcs:ignore
 $offset   = ( $per_page * $paged ) - $per_page;
 if ( '' !== $start_date ) {
 	$start_date = tutor_get_formated_date( 'Y-m-d', $start_date );
@@ -144,7 +144,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										$object_title = get_the_title( $course_id );
 										if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type ) {
 											$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
-											$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $item->id );
+											$plan_info = apply_filters( 'tutor_get_plan_info', null, $item->id );
 											if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
 												$object_title = $plan_info->plan_name;
 											} else {
@@ -197,13 +197,13 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					</tbody>
 					<?php else : ?>
 					<tbody>
-							<?php foreach ( $orders as $order ) : ?>
+							<?php foreach ( $orders as $order ) : //phpcs:ignore ?>
 								<?php
 								if ( 'wc' === $monetize_by ) {
 									$wc_order          = wc_get_order( $order->ID );
 									$price             = tutor_utils()->tutor_price( $wc_order->get_total() );
 									$raw_price         = $wc_order->get_total();
-									$status            = $order->post_status;
+									$status            = $order->post_status;//phpcs:ignore
 									$badge_class       = 'primary';
 									$order_status_text = '';
 
@@ -237,7 +237,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									$edd_order         = edd_get_payment( $order->ID );
 									$price             = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
 									$raw_price         = $edd_order->total;
-									$status            = $edd_order->status_nicename;
+									$status            = $edd_order->status_nicename;//phpcs:ignore
 									$badge_class       = 'primary';
 									$order_status_text = $status;
 								}
