@@ -1,4 +1,5 @@
 import '../admin-dashboard/segments/lib';
+import '../admin-dashboard/segments/filter';
 import sprintf from '../helper/sprintf';
 import './_select_dd_search';
 import './course/index';
