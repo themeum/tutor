@@ -166,10 +166,6 @@ if ( isset( $data ) ) : ?>
 						if ( empty( $query_value ) ) {
 							continue;
 						}
-
-						if ( 'post-type' === $filter['field_name'] && 'course-bundle' === $query_value ) {
-							$query_value = 'Bundles';
-						}
 						?>
 						<div class="tutor-wp-dashboard-filter-tag">
 							<?php echo esc_html( $filter['label'] ); ?>: <?php echo esc_html( $query_value ); ?>
