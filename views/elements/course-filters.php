@@ -160,11 +160,20 @@ if ( isset( $data ) ) : ?>
 			<?php if ( $filters_count > 0 || strlen( $search_query ) > 0 ) : ?>
 			<div class="tutor-d-flex tutor-flex-wrap tutor-align-center tutor-justify-end tutor-gap-1">
 				<?php
-				if ( isset( $data['filters'] ) ) {
+				if ( ! empty( $data['filters'] ) ) {
 					foreach ( $data['filters'] as $key => $filter ) {
 						$query_value = Input::get( $filter['field_name'], '', Input::TYPE_STRING );
 						if ( empty( $query_value ) ) {
 							continue;
+						}
+
+						if ( ! empty( $filter['options'] ) ) {
+							foreach ( $filter['options'] as $option ) {
+								if ( $option['key'] === $query_value ) {
+									$query_value = $option['title'];
+									break;
+								}
+							}
 						}
 						?>
 						<div class="tutor-wp-dashboard-filter-tag">
