@@ -110,6 +110,9 @@
 .tutor-icon-bundle:before {
   content: "\f925";
 }
+.tutor-icon-plus-light:before {
+  content: "\f926";
+}
 
 /* tutor old fonts */
   
