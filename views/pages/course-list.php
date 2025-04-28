@@ -279,7 +279,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 
 									<td>
-										<div class="tutor-d-flex tutor-align-center tutor-gap-2">
+										<div class="tutor-d-flex tutor-align-center tutor-gap-12px">
 											<a href="<?php echo esc_url( $edit_link ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
 													<div class="tutor-ratio tutor-ratio-3x2">
@@ -325,16 +325,18 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 
 									<td>
-										<span class="tutor-fw-medium tutor-fs-7 tutor-color-hints">
-											<?php
-												$terms = wp_get_post_terms( $post->ID, CourseModel::COURSE_CATEGORY );
-											if ( count( $terms ) ) {
-												echo esc_html( implode( ', ', array_column( $terms, 'name' ) ) . '&nbsp;' );
-											} else {
-												echo '...';
-											}
-											?>
-										</span>
+										<?php
+										$terms = wp_get_post_terms( $post->ID, CourseModel::COURSE_CATEGORY );
+										$category_text = '';
+										if ( count( $terms ) ) {
+											$category_text = implode( ', ', array_column( $terms, 'name' ) ) . '&nbsp;';
+										} else {
+											$category_text = '...';
+										}
+										?>
+										<div title="<?php echo esc_attr( $category_text ); ?>" class="tutor-fw-medium tutor-fs-7 tutor-color-hints tutor-text-ellipsis-2-lines">
+											<?php echo esc_html( $category_text ); ?>
+										</div>
 									</td>
 									<td>
 										<div class="tutor-fw-medium tutor-fs-7 tutor-color-hints">
@@ -359,7 +361,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												tutor_utils()->allowed_avatar_tags()
 											)
 											?>
-											<div class="tutor-ml-12">
+											<div class="tutor-ml-8">
 												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $author_details, true ) ); ?>">
 													<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 												</a>
@@ -378,7 +380,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 
 									<td>
-										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
+										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 													<?php
@@ -399,7 +401,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												<i class="icon1 tutor-icon-eye-bold"></i>
 												<i class="icon2 tutor-icon-angle-down"></i>
 											</div>
-											<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
+											<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-ml-4" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
 												<?php esc_html_e( 'View', 'tutor' ); ?>
 											</a>
 											<div class="tutor-dropdown-parent">
