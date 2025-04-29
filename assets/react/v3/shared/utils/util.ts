@@ -113,10 +113,10 @@ export const hasDuplicateEntries = <T>(items: T[], callback: (item: T) => string
 };
 
 export const generateTree = (data: Category[], parent = 0): CategoryWithChildren[] => {
-  const parentExists = data.some((node) => node.id === parent);
+  const isParentPresent = data.some((node) => node.id === parent);
 
   return data
-    .filter((node) => (parentExists ? node.parent === parent : true))
+    .filter((node) => (isParentPresent ? node.parent === parent : true))
     .reduce<CategoryWithChildren[]>((tree, node) => [...tree, { ...node, children: generateTree(data, node.id) }], []);
 };
 
