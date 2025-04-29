@@ -95,7 +95,7 @@ const FormMultiLevelSelect = ({
                 autoComplete="off"
                 readOnly
                 disabled={disabled || options.length === 0}
-                value={Array.isArray(field.value) ? '' : (options.find((item) => item.id === field.value)?.name ?? '')}
+                value={field.value ? categoryListQuery.data?.find((option) => option.id === field.value)?.name : ''}
                 placeholder={placeholder}
               />
               <button
