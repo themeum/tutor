@@ -27,8 +27,8 @@
 					</button>
 				</div>
 			</div>
-			<div class="tutor-pr-lg-80">
-				<img src="<?php echo esc_url( tutor()->url . 'assets/images/course-empty-state.png' ); ?>" alt="Create Course" style="max-width: 130px;">
+			<div class="tutor-pr-lg-40">
+				<img src="<?php echo esc_url( tutor()->url . 'assets/images/course-empty-state.svg' ); ?>" alt="Create Course">
 			</div>
 		</div>
 		<div class="tutor-px-32 tutor-py-40 tutor-divider-top" style="background-color: #f8f8f8;">
