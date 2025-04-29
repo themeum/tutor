@@ -18,37 +18,34 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.closest(".tutor-checkout-payment-options")) {
                 const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
                 const paymentOptions        = paymentOptionsWrapper.querySelectorAll("label");
+
+                // Remove active class.
+                paymentOptions.forEach(item => item.classList.remove('active'));
+                // Add active class to the selected option.
+                const clickedOption = e.target.closest("label");
+                clickedOption.classList.add('active');
                 
-                paymentOptions.forEach((option) => {
-                    option.addEventListener('click', (e) => {
-                    
-                        // Remove active class.
-                        paymentOptions.forEach(item => item.classList.remove('active'));
-                        // Add active class to the selected option.
-                        option.classList.add('active');
+                paymentTypeInput.value = clickedOption.dataset.paymentType;
+                const inputCouponCode  = document.querySelector('[name=coupon_code]');
+                const couponCode       = inputCouponCode?.value || '';
+                const isPaddleSelected = clickedOption.firstElementChild.value === 'paddle';
 
-                        paymentTypeInput.value = option.dataset.paymentType;     
-                        const inputCouponCode  = document.querySelector('[name=coupon_code]');
-                        const couponCode       = inputCouponCode?.value || '';
+                /**
+                 * If the selected payment method is Paddle, we need to hide the tax.
+                 * If the selected payment method is not Paddle, we need to show the tax.
+                 */
+                if (isPaddleSelected === showTax) {
+                    updateCheckoutData(couponCode, null, null, isPaddleSelected ? 0 : 1);
+                    showTax = !isPaddleSelected;
+                }
 
-                        if (option.firstElementChild.value === 'paddle') {
-                            updateCheckoutData(couponCode, null, null, 0);
-                            showTax = false;
-
-                        } else if(!showTax) {                  
-                            updateCheckoutData(couponCode, null, null, 1);
-                            showTax = true;                       
-                        }    
-                        
-                        const paymentInstructions = option.dataset.paymentInstruction;
-                        if (paymentInstructions) {
-                            document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                            document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
-                        } else {
-                            document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
-                        }
-                    });
-                });
+                const paymentInstructions = clickedOption.dataset.paymentInstruction;
+                if (paymentInstructions) {
+                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                } else {
+                    document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                }
             }
 
             // Handle toggle coupon form button click

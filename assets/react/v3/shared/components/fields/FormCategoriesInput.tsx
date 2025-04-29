@@ -124,7 +124,7 @@ const FormMultiLevelInput = ({
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
-                <Show when={hasCategories || debouncedSearchValue}>
+                <Show when={!disabled && (hasCategories || debouncedSearchValue)}>
                   <Controller
                     name="search"
                     control={form.control}
