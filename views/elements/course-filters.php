@@ -133,7 +133,7 @@ if ( isset( $data ) ) : ?>
 						</div>
 
 						<div class="tutor-d-flex tutor-justify-end tutor-mt-16">
-							<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+							<button type="submit" class="tutor-btn tutor-btn-outline-primary">
 								<?php esc_html_e( 'Apply Filters', 'tutor' ); ?>
 							</button>
 						</div>
