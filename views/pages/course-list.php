@@ -196,7 +196,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 }
 
 $total_course_count = $the_query->found_posts;
-if ( 0 === $the_query->found_posts ) {
+if ( 0 === $total_course_count ) {
 	$total_list_args    = array(
 		'post_type'   => tutor()->course_post_type,
 		'post_status' => array( 'publish', 'pending', 'draft', 'private', 'future', 'trash' ),
@@ -204,10 +204,10 @@ if ( 0 === $the_query->found_posts ) {
 	);
 	$total_list_query   = Course_List::course_list_query( $total_list_args, get_current_user_id(), 'any' );
 	$total_course_count = $total_list_query->found_posts;
-}
 
-if ( 0 === $total_course_count ) {
-	$navbar_data['hide_action_buttons'] = true;
+	if ( 0 === $total_course_count ) {
+		$navbar_data['hide_action_buttons'] = true;
+	}
 }
 ?>
 
