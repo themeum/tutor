@@ -470,6 +470,12 @@
 		background: var(--color) !important;
 		color: #fff;
 		border-color: var(--color) !important;
+
+		.rtl & {
+			right: auto;
+			left: 10px;
+		}
+
 		&:hover {
 			--color: hsl(0, 0%, 50%);
 			background: var(--color) !important;
