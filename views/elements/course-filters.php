@@ -67,7 +67,7 @@ if ( isset( $data ) ) : ?>
 		);
 		?>
 
-		<div class="tutor-wp-dashboard-filter-right">
+		<div class="tutor-wp-dashboard-filter-right tutor-d-flex tutor-flex-wrap tutor-gap-1 <?php echo esc_attr( $filters_count > 2 ? 'tutor-flex-column' : 'tutor-flex-row-reverse' ); ?>">
 			<div class="tutor-d-flex tutor-flex-wrap tutor-align-center tutor-justify-end tutor-gap-1 tutor-ml-16">
 				<?php if ( isset( $data['filters'] ) ) : ?>
 				<div class="tutor-wp-dashboard-filters tutor-dropdown-parent">
@@ -133,7 +133,7 @@ if ( isset( $data ) ) : ?>
 						</div>
 
 						<div class="tutor-d-flex tutor-justify-end tutor-mt-16">
-							<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+							<button type="submit" class="tutor-btn tutor-btn-outline-primary">
 								<?php esc_html_e( 'Apply Filters', 'tutor' ); ?>
 							</button>
 						</div>
@@ -159,29 +159,53 @@ if ( isset( $data ) ) : ?>
 
 			<?php if ( $filters_count > 0 || strlen( $search_query ) > 0 ) : ?>
 			<div class="tutor-d-flex tutor-flex-wrap tutor-align-center tutor-justify-end tutor-gap-1">
-				<?php
-				if ( isset( $data['filters'] ) ) {
-					foreach ( $data['filters'] as $key => $filter ) {
-						$query_value = Input::get( $filter['field_name'], '', Input::TYPE_STRING );
-						if ( empty( $query_value ) ) {
-							continue;
-						}
-						?>
-						<div class="tutor-wp-dashboard-filter-tag">
-							<?php echo esc_html( $filter['label'] ); ?>: <?php echo esc_html( $query_value ); ?>
-
-							<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'], tutor()->current_url ) ); ?>">
-								<i class="tutor-icon-times"></i>
-							</a>
-						</div>
-						<?php
-					}
-				}
-				?>
-
-				<a class="tutor-btn tutor-btn-sm tutor-btn-outline-primary" href="<?php echo esc_url( $url ); ?>">
-					<?php esc_html_e( 'Clear Filters', 'tutor' ); ?>
+				<a class="tutor-color-subdued tutor-px-8 tutor-py-4" href="<?php echo esc_url( $url ); ?>">
+					<?php esc_html_e( 'Clear All', 'tutor' ); ?>
 				</a>
+
+				<div class="tutor-wp-dashboard-filter-tag-wrapper">
+					<?php
+					if ( ! empty( $data['filters'] ) ) {
+						foreach ( $data['filters'] as $key => $filter ) {
+							$query_value = Input::get( $filter['field_name'], '', Input::TYPE_STRING );
+							if ( empty( $query_value ) ) {
+								continue;
+							}
+							?>
+
+							<?php if ( ! empty( $filter['options'] ) ) : ?>
+							<div class="tutor-wp-dashboard-filter-tag-dropdown">
+								<select name="<?php echo esc_attr( $filter['field_name'] ); ?>" class="tutor-form-control tutor-form-select tutor-filter-select" <?php echo ! empty( $filter['searchable'] ) ? 'data-searchable' : ''; ?>>
+									<?php if ( count( $filter['options'] ) ) : ?>
+										<?php foreach ( $filter['options'] as $option ) : ?>
+											<option value="<?php echo esc_attr( $option['key'] ); ?>" <?php selected( $filter['value'], $option['key'], 'selected' ); ?>>
+												<?php echo esc_html( $option['title'] ); ?>
+												<?php if ( isset( $option['value'] ) ) : ?>
+													(<?php echo esc_html( $option['value'] ); ?>)
+												<?php endif; ?>
+											</option>
+										<?php endforeach; ?>
+									<?php else : ?>
+										<option value=""><?php esc_html_e( 'No record found', 'tutor' ); ?></option>
+									<?php endif; ?>
+								</select>
+								<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'], tutor()->current_url ) ); ?>">
+									<i class="tutor-icon-times"></i>
+								</a>
+							</div>
+							<?php else : ?>
+							<div class="tutor-wp-dashboard-filter-tag">
+								<span><?php echo esc_html( $filter['label'] ); ?>: <?php echo esc_html( $query_value ); ?></span>
+								<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'], tutor()->current_url ) ); ?>">
+									<i class="tutor-icon-times"></i>
+								</a>
+							</div>
+							<?php endif; ?>
+							<?php
+						}
+					}
+					?>
+				</div>
 			</div>
 			<?php endif; ?>
 		</div>

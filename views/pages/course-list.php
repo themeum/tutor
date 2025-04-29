@@ -111,7 +111,6 @@ $filters = array(
 	),
 );
 
-
 $args = array(
 	'post_type'      => tutor()->course_post_type,
 	'orderby'        => 'ID',
@@ -129,9 +128,6 @@ if ( 'all' === $active_tab || 'mine' === $active_tab ) {
 	$args['post_status'] = array( $status );
 }
 
-if ( 'mine' === $active_tab ) {
-	$args['author'] = get_current_user_id();
-}
 $date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
 
 //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -198,20 +194,36 @@ $show_course_delete = false;
 if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 	$show_course_delete = true;
 }
+
+$total_course_count = $the_query->found_posts;
+if ( 0 === $total_course_count ) {
+	$total_list_args    = array(
+		'post_type'   => tutor()->course_post_type,
+		'post_status' => array( 'publish', 'pending', 'draft', 'private', 'future', 'trash' ),
+		'author'      => current_user_can( 'administrator' ) ? null : get_current_user_id(),
+	);
+	$total_list_query   = Course_List::course_list_query( $total_list_args, get_current_user_id(), 'any' );
+	$total_course_count = $total_list_query->found_posts;
+
+	if ( 0 === $total_course_count ) {
+		$navbar_data['hide_action_buttons'] = true;
+	}
+}
 ?>
 
 <div class="tutor-admin-wrap">
 	<?php
-		/**
-		 * Load Templates with data.
-		 */
-		$navbar_template  = tutor()->path . 'views/elements/course-navbar.php';
+	$navbar_template = tutor()->path . 'views/elements/course-navbar.php';
+	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+
+	if ( $total_course_count > 0 ) {
 		$filters_template = tutor()->path . 'views/elements/course-filters.php';
-		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
+	}
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-dashboard-course-list tutor-mt-16">
+			<?php if ( $the_query->have_posts() ) : ?>
 			<div class="tutor-table-responsive">
 				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
 					<thead class="tutor-text-sm tutor-text-400">
@@ -246,7 +258,6 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 					</thead>
 
 					<tbody>
-						<?php if ( $the_query->have_posts() ) : ?>
 							<?php
 							$course_ids       = array_column( $the_query->posts, 'ID' );
 							$course_meta_data = tutor_utils()->get_course_meta_data( $course_ids );
@@ -279,7 +290,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 
 									<td>
-										<div class="tutor-d-flex tutor-align-center tutor-gap-2">
+										<div class="tutor-d-flex tutor-align-center tutor-gap-12px">
 											<a href="<?php echo esc_url( $edit_link ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
 													<div class="tutor-ratio tutor-ratio-3x2">
@@ -325,16 +336,18 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 
 									<td>
-										<span class="tutor-fw-medium tutor-fs-7 tutor-color-hints">
-											<?php
-												$terms = wp_get_post_terms( $post->ID, CourseModel::COURSE_CATEGORY );
-											if ( count( $terms ) ) {
-												echo esc_html( implode( ', ', array_column( $terms, 'name' ) ) . '&nbsp;' );
-											} else {
-												echo '...';
-											}
-											?>
-										</span>
+										<?php
+										$terms         = wp_get_post_terms( $post->ID, CourseModel::COURSE_CATEGORY );
+										$category_text = '';
+										if ( count( $terms ) ) {
+											$category_text = implode( ', ', array_column( $terms, 'name' ) ) . '&nbsp;';
+										} else {
+											$category_text = '...';
+										}
+										?>
+										<div title="<?php echo esc_attr( $category_text ); ?>" class="tutor-fw-medium tutor-fs-7 tutor-color-hints tutor-text-ellipsis-2-lines">
+											<?php echo esc_html( $category_text ); ?>
+										</div>
 									</td>
 									<td>
 										<div class="tutor-fw-medium tutor-fs-7 tutor-color-hints">
@@ -359,7 +372,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												tutor_utils()->allowed_avatar_tags()
 											)
 											?>
-											<div class="tutor-ml-12">
+											<div class="tutor-ml-8">
 												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $author_details, true ) ); ?>">
 													<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
 												</a>
@@ -378,7 +391,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 
 									<td>
-										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
+										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
 												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
 													<?php
@@ -399,7 +412,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												<i class="icon1 tutor-icon-eye-bold"></i>
 												<i class="icon2 tutor-icon-angle-down"></i>
 											</div>
-											<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
+											<a class="tutor-btn tutor-btn-tertiary tutor-btn-sm tutor-ml-4" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
 												<?php esc_html_e( 'View', 'tutor' ); ?>
 											</a>
 											<div class="tutor-dropdown-parent">
@@ -426,13 +439,6 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									</td>
 								</tr>
 							<?php endforeach; ?>
-						<?php else : ?>
-							<tr>
-								<td colspan="100%" class="column-empty-state">
-									<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-								</td>
-							</tr>
-						<?php endif; ?>
 					</tbody>
 				</table>
 
@@ -453,6 +459,17 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 					?>
 				</div>
 			</div>
+			<?php else : ?>
+				<?php
+				$empty_state_template = tutor()->path . 'views/elements/course-empty-state.php';
+				tutor_load_template_from_custom_path(
+					$empty_state_template,
+					array(
+						'show_empty_state_create' => 0 === $total_course_count,
+					)
+				);
+				?>
+			<?php endif; ?>
 		</div>
 	</div>
 </div>

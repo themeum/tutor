@@ -6,7 +6,7 @@
  * @subpackage Tutor\ViewElements
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.5.0
  */
 
 if ( isset( $data ) && count( $data ) ) : ?>
@@ -26,6 +26,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 				<?php endif; ?>
 			</div>
 
+			<?php if ( ! isset( $data['hide_action_buttons'] ) || false === $data['hide_action_buttons'] ) : ?>
 			<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 				<?php
 				// If modal target set then button will be set as modal button otherwise url button.
@@ -34,7 +35,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 					?>
 					<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 						<button class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
-							<i class="tutor-icon-add-document"></i>
+							<i class="tutor-icon-plus-light"></i>
 							<span><?php echo esc_html( $data['button_title'] ); ?></span>
 						</button>
 					<?php endif; ?>
@@ -42,12 +43,13 @@ if ( isset( $data ) && count( $data ) ) : ?>
 					<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 						<?php do_action( 'tutor_data_list_navbar_button' ); ?>
 						<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="tutor-btn tutor-btn-primary tutor-d-flex tutor-align-center tutor-gap-1 <?php echo esc_attr( $button_class ); ?>">
-							<i class="tutor-icon-add-document"></i>
+							<i class="tutor-icon-plus-light"></i>
 							<span><?php echo esc_html( $data['button_title'] ); ?></span>
 						</a>
 					<?php endif; ?>
 				<?php endif; ?>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 </div>
