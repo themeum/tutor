@@ -89,6 +89,11 @@ const FormMultiLevelInput = ({
   });
 
   const treeOptions = generateTree(categoryListQuery.data ?? []);
+  console.log({
+    data: categoryListQuery.data?.length,
+    treeOptions: generateTree(categoryListQuery.data ?? []),
+    length: treeOptions.length,
+  });
 
   const handlePortalClose = () => {
     setIsOpen(false);
