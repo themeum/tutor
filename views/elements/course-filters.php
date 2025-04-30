@@ -38,7 +38,7 @@ if ( isset( $data ) ) : ?>
 		<?php
 		$search_query  = Input::get( 'search', '', Input::TYPE_STRING );
 		$current_order = Input::get( 'order', 'DESC', Input::TYPE_STRING );
-		$order_link    = add_query_arg( 'order', 'ASC' === $current_order ? 'DESC' : 'ASC', tutor()->current_url );
+		$order_link    = add_query_arg( 'order', 'ASC' === $current_order ? 'DESC' : 'ASC' );
 
 		$current_page = Input::get( 'page', '', Input::TYPE_STRING );
 		$sub_page     = Input::get( 'sub_page', '', Input::TYPE_STRING );
@@ -189,14 +189,14 @@ if ( isset( $data ) ) : ?>
 										<option value=""><?php esc_html_e( 'No record found', 'tutor' ); ?></option>
 									<?php endif; ?>
 								</select>
-								<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'], tutor()->current_url ) ); ?>">
+								<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'] ) ); ?>">
 									<i class="tutor-icon-times"></i>
 								</a>
 							</div>
 							<?php else : ?>
 							<div class="tutor-wp-dashboard-filter-tag">
 								<span><?php echo esc_html( $filter['label'] ); ?>: <?php echo esc_html( $query_value ); ?></span>
-								<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'], tutor()->current_url ) ); ?>">
+								<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'] ) ); ?>">
 									<i class="tutor-icon-times"></i>
 								</a>
 							</div>
