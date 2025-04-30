@@ -122,6 +122,9 @@ $height-sm: 38px;
 
 		&-options {
 			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
 			padding: 8px 0px;
 			margin: 0;
 			overflow-y: auto;
