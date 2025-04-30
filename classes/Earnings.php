@@ -170,7 +170,7 @@ class Earnings extends Singleton {
 			}
 
 			$fees_deduct_data = array(
-				'deduct_fees_amount' => $fees_amount > $total_price ? $total_price : $fees_amount,
+				'deduct_fees_amount' => $fees_amount,
 				'deduct_fees_name'   => $fees_name,
 				'deduct_fees_type'   => $fees_type,
 			);
