@@ -173,7 +173,19 @@ if ( isset( $data ) ) : ?>
 							}
 							?>
 
-							<?php if ( ! empty( $filter['options'] ) ) : ?>
+							<?php if ( 'date' === $filter['field_type'] ) : ?>
+							<div class="tutor-wp-dashboard-filter-tag">
+								<div class="tutor-d-flex tutor-gap-4px tutor-align-center">
+									<span><?php echo esc_html( $filter['label'] ); ?>:</span>
+									<div class="tutor-v2-date-picker" data-input_name="<?php echo esc_attr( $filter['field_name'] ); ?>">
+										<input class="tutor-form-control" placeholder="<?php esc_attr_e( 'Loading...', 'tutor' ); ?>">
+									</div>
+								</div>
+								<a href="<?php echo esc_url( remove_query_arg( $filter['field_name'] ) ); ?>">
+									<i class="tutor-icon-times"></i>
+								</a>
+							</div>
+							<?php elseif ( 'select' === $filter['field_type'] && ! empty( $filter['options'] ) ) : ?>
 							<div class="tutor-wp-dashboard-filter-tag-dropdown">
 								<select name="<?php echo esc_attr( $filter['field_name'] ); ?>" class="tutor-form-control tutor-form-select tutor-filter-select" <?php echo ! empty( $filter['searchable'] ) ? 'data-searchable' : ''; ?>>
 									<?php if ( count( $filter['options'] ) ) : ?>
