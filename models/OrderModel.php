@@ -79,9 +79,10 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const META_ENROLLMENT_FEE = 'plan_enrollment_fee';
-	const META_TRIAL_FEE      = 'plan_trial_fee';
-	const META_PLAN_INFO      = 'plan_info';
+	const META_ENROLLMENT_FEE      = 'plan_enrollment_fee';
+	const META_TRIAL_FEE           = 'plan_trial_fee';
+	const META_PLAN_INFO           = 'plan_info';
+	const META_IS_PLAN_TRIAL_ORDER = 'is_plan_trial_order';
 
 	/**
 	 * Tax type constants
