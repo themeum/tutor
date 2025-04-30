@@ -11,12 +11,12 @@
 namespace Tutor\Models;
 
 use Exception;
-use Tutor\Ecommerce\BillingController;
+use Tutor\Ecommerce\Tax;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
+use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\OrderActivitiesController;
-use Tutor\Ecommerce\Tax;
 
 /**
  * OrderModel Class
@@ -949,15 +949,13 @@ class OrderModel {
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
-		} else {
-			if ( $time_period ) {
-				if ( 'today' === $time_period ) {
-					$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
-				} elseif ( 'monthly' === $time_period ) {
-					$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
-				} else {
-					$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
-				}
+		} elseif ( $time_period ) {
+			if ( 'today' === $time_period ) {
+				$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
+			} elseif ( 'monthly' === $time_period ) {
+				$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
+			} else {
+				$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
 			}
 		}
 
@@ -1206,10 +1204,8 @@ class OrderModel {
 			if ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
-		} else {
-			if ( $user_id ) {
+		} elseif ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-			}
 		}
 
 		// Refund query logic remains the same.
@@ -1739,12 +1735,10 @@ class OrderModel {
 						}
 					}
 				}
-			} else {
-				if ( tutor_utils()->count( $order_items ) ) {
+			} elseif ( tutor_utils()->count( $order_items ) ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-					if ( tutor_utils()->is_enrolled( $course_id ) ) {
-						$is_enrolled_any_course = true;
-					}
+				if ( tutor_utils()->is_enrolled( $course_id ) ) {
+					$is_enrolled_any_course = true;
 				}
 			}
 		}
@@ -1845,5 +1839,69 @@ class OrderModel {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Retrieves statements for a specific user.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $post_type_in_clause SQL clause to filter the course post types.
+	 * @param string $course_query SQL query string to further filter the courses .
+	 * @param string $date_query SQL query string to filter by date range.
+	 * @param int    $user_id The user ID for which the statements are being retrieved.
+	 * @param int    $offset The offset for pagination.
+	 * @param int    $limit The number of rows to return.
+	 *
+	 * @return array
+	 */
+	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit ): array {
+		global $wpdb;
+
+		//phpcs:disable
+		$statements = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+					orders.total_price AS order_total_price,
+					orders.tax_amount AS order_tax_amount,
+					orders.tax_type AS order_tax_type,
+					statements.*, 
+					course.post_title AS course_title
+				FROM {$wpdb->prefix}tutor_earnings AS statements
+					LEFT JOIN {$wpdb->prefix}tutor_orders AS orders 
+					ON statements.order_id = orders.id		
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = statements.course_id 
+					AND course.post_type IN ({$post_type_in_clause})
+				WHERE statements.user_id = %d
+				{$course_query}
+				{$date_query}
+				ORDER BY statements.created_at DESC
+				LIMIT %d, %d
+			",
+				$user_id,
+				$offset,
+				$limit
+			)
+		);
+		//phpcs:enable
+
+		$total_statements = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*)
+				FROM {$wpdb->prefix}tutor_earnings AS statements
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = statements.course_id
+					AND course.post_type IN ({$post_type_in_clause})
+				WHERE statements.user_id = %d
+				{$course_query}
+				{$date_query}
+			",
+				$user_id
+			)
+		);
+
+		return array(
+			'statements'       => $statements,
+			'total_statements' => $total_statements,
+		);
 	}
 }
