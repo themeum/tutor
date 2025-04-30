@@ -31,7 +31,9 @@
 				(restrictedDataAttribute) => {
 					return (
 						e.target.hasAttribute(restrictedDataAttribute) ||
-						e.target.closest(`[${restrictedDataAttribute}]`)
+						e.target.closest(`[${restrictedDataAttribute}]`) ||
+						e.target.closest('.react-datepicker') ||
+						e.target.classList.contains('react-datepicker__close-icon')
 					);
 				},
 			);

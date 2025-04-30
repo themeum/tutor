@@ -336,7 +336,7 @@ class Shortcode {
 
 		$show_filter         = isset( $atts['filter'] ) ? 'on' === $atts['filter'] : tutor_utils()->get_option( 'instructor_list_show_filter', false );
 		$category_limit      = (int) isset( $atts['category_limit'] ) ? $atts['category_limit'] : 0;
-		$show_empty_category = isset( $atts['show_empty_category'] ) ? '1' == $atts['show_empty_category'] : false;
+		$hide_empty_category = isset( $atts['hide_empty_category'] ) ? '1' == $atts['hide_empty_category'] : false;
 		$atts['show_filter'] = $show_filter;
 
 		// Get instructor list to sow.
@@ -351,7 +351,7 @@ class Shortcode {
 			$course_taxonomy = CourseModel::COURSE_CATEGORY;
 			$term_args       = array(
 				'taxonomy'   => $course_taxonomy,
-				'hide_empty' => ! $show_empty_category,
+				'hide_empty' => $hide_empty_category,
 				'orderby'    => 'count',
 				'order'      => 'DESC',
 				'number'     => $category_limit,

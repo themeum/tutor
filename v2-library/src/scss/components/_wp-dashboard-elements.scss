@@ -68,10 +68,12 @@
 	}
 
 	.tutor-wp-dashboard-filter-right {
-		display: flex;
-    	flex-direction: row-reverse;
-    	flex-wrap: wrap;
-		gap: 8px;
+		body:not(.rtl) & {
+			&.tutor-flex-column .tutor-wp-dashboard-filter-tag-dropdown:last-child .tutor-form-select-dropdown {
+				left: auto;
+				right: 0px;
+			}
+		}
 	}
 
 	.tutor-wp-dashboard-filter-order {
@@ -141,10 +143,70 @@
 		}
 	}
 
+	.tutor-wp-dashboard-filter-tag-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+
+		select.tutor-form-control {
+			width: 100px !important;
+		}
+
+		.tutor-form-select {
+			font-size: 14px !important;
+			color: #41454F !important;
+			border: none !important;
+			border-top-right-radius: 0px !important;
+			border-bottom-right-radius: 0px !important;
+			min-width: auto !important;
+			line-height: 24px !important;
+
+			.rtl & {
+				border-top-right-radius: 6px !important;
+				border-bottom-right-radius: 6px !important;
+				border-top-left-radius: 0px !important;
+				border-bottom-left-radius: 0px !important;
+			}
+		}
+	}
+
+	.tutor-wp-dashboard-filter-tag-dropdown {
+		display: flex;
+		align-items: center;
+		gap: 1px;
+
+		a {
+			flex-shrink: 0;
+			background-color: #ffffff;
+			color: #9197A8;
+			border-top-right-radius: 6px;
+			border-bottom-right-radius: 6px;
+			height: 40px;
+			width: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: color 0.25 ease-in-out;
+			z-index: 1;
+
+			.rtl & {
+				border-top-right-radius: 0px;
+				border-bottom-right-radius: 0px;
+				border-top-left-radius: 6px;
+				border-bottom-left-radius: 6px;
+			}
+
+			&:hover {
+				color: var(--tutor-color-primary);
+			}
+		}
+	}
+
 	.tutor-wp-dashboard-filter-tag {
 		background-color: #ffffff;
 		border-radius: 4px;
-		padding: 4px 4px 4px 8px;
+		padding: 10px 8px 10px 12px;
 		display: flex;
 		align-items: center;
 		gap: 4px;
@@ -155,7 +217,7 @@
 		text-transform: capitalize;
 
 		.rtl & {
-			padding: 4px 8px 4px 4px;
+			padding: 10px 12px 10px 8px;
 		}
 
 		a {

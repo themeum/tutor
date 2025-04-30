@@ -1,4 +1,4 @@
-const { default: ajaxHandler } = require("../admin-dashboard/segments/filter");
+import ajaxHandler from "../helper/ajax-handler";
 
 
 /**

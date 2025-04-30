@@ -1,4 +1,4 @@
-import ajaxHandler from '../../admin-dashboard/segments/filter';
+import ajaxHandler from '../../helper/ajax-handler';
 jQuery(document).ready(function ($) {
 	$('.tutor-sortable-list').sortable();
 });
