@@ -44,7 +44,7 @@ trait JsonResponse {
 	 *
 	 * @return void
 	 */
-	public function response_bad_request( string $message = null ) {
+	public function response_bad_request( ?string $message = null ) {
 		$this->json_response( $message ?? __( 'Bad request', 'tutor' ), null, 400 );
 	}
 

@@ -248,7 +248,7 @@ final class DateTimeHelper {
 	 *
 	 * @return string
 	 */
-	public static function get_gmt_to_user_timezone_date( string $gmt_date, string $format = null, $user = 0 ): string {
+	public static function get_gmt_to_user_timezone_date( string $gmt_date, ?string $format = null, $user = 0 ): string {
 		$default_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
 		$format         = is_null( $format ) ? $default_format : $format;
 
