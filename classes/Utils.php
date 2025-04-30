@@ -9594,7 +9594,7 @@ class Utils {
 	 *
 	 * @return string formated date-time.
 	 */
-	public function convert_date_into_wp_timezone( string $date, string $format = null ): string {
+	public function convert_date_into_wp_timezone( string $date, ?string $format = null ): string {
 		$date = new \DateTime( $date );
 		$date->setTimezone( wp_timezone() );
 		return $date->format( ! is_null( $format ) ? $format : get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
