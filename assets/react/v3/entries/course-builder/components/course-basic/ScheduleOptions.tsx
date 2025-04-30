@@ -133,7 +133,7 @@ const ScheduleOptions = () => {
                 validate: {
                   invalidDateRule: invalidDateRule,
                   futureDate: (value) => {
-                    if (isBefore(new Date(`${value}`), startOfDay(new Date()))) {
+                    if (isBefore(new Date(`${value} +T00:00:00`), startOfDay(new Date()))) {
                       return __('Schedule date should be in the future.', 'tutor');
                     }
                     return true;
