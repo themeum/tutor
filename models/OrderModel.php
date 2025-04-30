@@ -1862,7 +1862,11 @@ class OrderModel {
 		$statements = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
-					orders.total_price AS order_total_price,
+					IF (
+					orders.total_price,
+					orders.total_price, 
+					statements.course_price_total
+					) AS order_total_price,
 					orders.tax_amount AS order_tax_amount,
 					orders.tax_type AS order_tax_type,
 					statements.*, 
