@@ -25,14 +25,15 @@ $status_map = array(
 );
 
 // Set currently required course status fo rcurrent tab.
-$status = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : CourseModel::STATUS_PUBLISH;
+$status    = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : CourseModel::STATUS_PUBLISH;
+$post_type = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );
 
 // Get counts for course tabs.
 $count_map = array(
-	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true ),
-	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true ),
-	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true ),
-	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true ),
+	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $post_type ),
+	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $post_type ),
+	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $post_type ),
+	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $post_type ),
 );
 
 $course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
@@ -40,9 +41,30 @@ $courseCols         = null === $course_archive_arg ? tutor_utils()->get_option( 
 $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
-
-$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
+$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type );
 $show_course_delete = true;
+$post_type_query    = Input::get( 'type', '' );
+$post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
+
+$tabs = array(
+	'publish' => array(
+		'title' => __( 'Publish', 'tutor' ),
+		'link'  => 'my-courses',
+	),
+	'pending' => array(
+		'title' => __( 'Pending', 'tutor' ),
+		'link'  => 'my-courses/pending-courses',
+	),
+	'draft'   => array(
+		'title' => __( 'Draft', 'tutor' ),
+		'link'  => 'my-courses/draft-courses',
+	),
+	'future'  => array(
+		'title' => __( 'Schedule', 'tutor' ),
+		'link'  => 'my-courses/schedule-courses',
+	),
+);
+
 if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
 	$show_course_delete = false;
 }
@@ -54,29 +76,18 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	</div>
 	
 	<div class="tutor-dashboard-content-inner">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-32 tutor-w-100">
 			<ul class="tutor-nav">
+				<?php foreach ( $tabs as $key => $tab ) : ?>
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ); ?>">
-						<?php esc_html_e( 'Publish', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['publish'] . ')' ); ?>
+					<a class="tutor-nav-link<?php echo esc_attr( $tab['link'] === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $tab['link'] ) ) ); ?>">
+						<?php echo esc_html( $tab['title'] ); ?> <?php echo esc_html( '(' . $count_map[ $key ] . ')' ); ?>
 					</a>
 				</li>
-				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/pending-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ); ?>">
-						<?php esc_html_e( 'Pending', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['pending'] . ')' ); ?>
-					</a>
-				</li>
-				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/draft-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ); ?>">
-						<?php esc_html_e( 'Draft', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['draft'] . ')' ); ?>
-					</a>
-				</li>
-				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/schedule-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ); ?>">
-						<?php esc_html_e( 'Schedule', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['future'] . ')' ); ?>
-					</a>
-				</li>
+				<?php endforeach; ?>
+				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
 			</ul>
+			
 		</div>
 	
 		<!-- Course list -->
@@ -101,6 +112,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 					$course_duration    = get_tutor_course_duration_context( $post->ID, true );
 					$course_students    = tutor_utils()->count_enrolled_users_by_course();
 					$is_main_instructor = CourseModel::is_main_instructor( $post->ID );
+					$course_edit_link   = apply_filters( 'tutor_dashboard_course_list_edit_link', tutor_utils()->course_edit_link( $post->ID, tutor()->has_pro ? 'frontend' : 'backend' ), $post );
 					?>
 
 					<div id="<?php echo esc_attr( $row_id ); ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
@@ -113,8 +125,8 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<?php if ( false === $is_main_instructor ) : ?>
 						<div class="tutor-course-co-author-badge"><?php esc_html_e( 'Co-author', 'tutor' ); ?></div>
 						<?php endif; ?>
-
 						<div class="tutor-card-body">
+							<?php do_action( 'tutor_my_courses_before_meta', get_the_ID() ); ?>
 							<div class="tutor-meta tutor-mb-8">
 								<span>
 									<?php echo esc_html( get_the_date() ); ?> <?php echo esc_html( get_the_time() ); ?>
@@ -183,7 +195,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									</span>
 								</div>
 								<div class="tutor-iconic-btn-group tutor-mr-n8">
-									<a href="<?php echo esc_url( tutor_utils()->course_edit_link( $post->ID, tutor()->has_pro ? 'frontend' : 'backend' ) ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
+									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
 										<i class="tutor-icon-edit" area-hidden="true"></i>
 									</a>
 									<div class="tutor-dropdown-parent">

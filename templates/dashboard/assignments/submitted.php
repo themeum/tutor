@@ -104,9 +104,7 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 						$not_evaluated             = '' === $given_mark;
 						$status                    = 'pending';
 						$button_text               = __( 'Evaluate', 'tutor' );
-						$date_format               = get_option( 'date_format' );
-						$time_format               = get_option( 'time_format' );
-						$deadline_date             = tutor_utils()->get_assignment_deadline_date( $assignment->comment_post_ID, $date_format . ' ' . $time_format , __( 'No Limit', 'tutor' ), $assignment->user_id, $assignment->comment_parent );
+						$deadline_date             = tutor_utils()->get_assignment_deadline_date_in_gmt( $assignment->comment_post_ID, __( 'No Limit', 'tutor' ), $assignment->user_id, $assignment->comment_parent );
 
 						if ( ! empty( $given_mark ) || ! $not_evaluated ) {
 							$status      = (int) $given_mark >= (int) $pass_mark ? 'pass' : 'fail';

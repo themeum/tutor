@@ -89,6 +89,30 @@
 .tutor-icon-book-open-line:before {
   content: "\f918";
 }
+.tutor-icon-sorting-desc:before {
+  content: "\f919";
+}
+.tutor-icon-sorting-asc:before {
+  content: "\f920";
+}
+.tutor-icon-note:before {
+  content: "\f921";
+}
+.tutor-icon-add-document:before {
+  content: "\f922";
+}
+.tutor-icon-topic:before {
+  content: "\f923";
+}
+.tutor-icon-quiz-2:before {
+  content: "\f924";
+}
+.tutor-icon-bundle:before {
+  content: "\f925";
+}
+.tutor-icon-plus-light:before {
+  content: "\f926";
+}
 
 /* tutor old fonts */
   

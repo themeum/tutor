@@ -1,4 +1,4 @@
-import ajaxHandler from '../../admin-dashboard/segments/filter';
+import ajaxHandler from '../../helper/ajax-handler';
 import tutorFormData from '../../helper/tutor-formdata';
 const { __ } = wp.i18n;
 

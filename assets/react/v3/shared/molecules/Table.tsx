@@ -5,7 +5,6 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { getRandom, range } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
-import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import type { ReactNode } from 'react';
 
 interface BaseColumn {
@@ -57,7 +56,7 @@ export interface TableProps<TableItem> {
   querySortProperty?: string;
   querySortDirection?: 'asc' | 'desc';
   onSortClick?: (sortProperty: string) => void;
-  renderInLastRow?: EmotionJSX.Element;
+  renderInLastRow?: ReactNode;
   rowStyle?: SerializedStyles;
 }
 
@@ -235,6 +234,7 @@ const styles = {
   table: css`
     width: 100%;
     border-collapse: collapse;
+    border: none;
   `,
   tableRow: ({ isBordered, isStriped }: { isBordered: boolean; isStriped: boolean }) => css`
     ${isBordered &&
@@ -254,6 +254,7 @@ const styles = {
     background-color: ${colorTokens.background.white};
     color: ${colorTokens.text.primary};
     padding: 0 ${spacing[16]};
+    border: none;
   `,
   bodyTr: ({ colors, isSelected, isRounded }: { colors: Colors; isSelected: boolean; isRounded: boolean }) => {
     const {
@@ -289,5 +290,6 @@ const styles = {
   td: css`
     ${typography.body()};
     padding: ${spacing[16]};
+    border: none;
   `,
 };

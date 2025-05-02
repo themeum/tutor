@@ -25,17 +25,20 @@
 				dropdownParent.classList.add('is-open');
 			}
 		} else {
-			const restrictedDataAttributes = ['data-tutor-copy-target'];
+			const restrictedDataAttributes = ['data-tutor-copy-target', 'data-tutor-dropdown-persistent'];
+			const closeDataAttributes = 'data-tutor-dropdown-close';
 			const isRestricted = restrictedDataAttributes.some(
 				(restrictedDataAttribute) => {
 					return (
 						e.target.hasAttribute(restrictedDataAttribute) ||
-						e.target.closest(`[${restrictedDataAttribute}]`)
+						e.target.closest(`[${restrictedDataAttribute}]`) ||
+						e.target.closest('.react-datepicker') ||
+						e.target.classList.contains('react-datepicker__close-icon')
 					);
 				},
 			);
 
-			if (!isRestricted) {
+			if (!isRestricted || e.target.hasAttribute(closeDataAttributes) || e.target.closest(`[${closeDataAttributes}]`)) {
 				document
 					.querySelectorAll('.tutor-dropdown-parent')
 					.forEach((dropdownParent) => {

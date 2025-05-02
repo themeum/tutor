@@ -122,6 +122,9 @@ $height-sm: 38px;
 
 		&-options {
 			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
 			padding: 8px 0px;
 			margin: 0;
 			overflow-y: auto;
@@ -321,7 +324,7 @@ select.tutor-form-control,
 	}
 }
 
-.tutor-form-check-input {
+.tutor-form-check-input.tutor-form-check-input {
 	display: inline-block;
 	vertical-align: top;
 	background-color: var(--tutor-color-white);

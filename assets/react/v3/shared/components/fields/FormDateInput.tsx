@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { format, isValid, parseISO } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { useRef, useState } from 'react';
 import { DayPicker, type Formatters } from 'react-day-picker';
 
@@ -46,6 +46,14 @@ const createFormatters = (): Partial<Formatters> | undefined => {
   };
 };
 
+const parseDate = (dateString?: string) => {
+  if (!dateString) return undefined;
+
+  return isValid(new Date(dateString))
+    ? new Date(dateString.length === 10 ? dateString + 'T00:00:00' : dateString)
+    : undefined;
+};
+
 const FormDateInput = ({
   label,
   field,
@@ -62,9 +70,8 @@ const FormDateInput = ({
 }: FormDateInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const isValidDate = isValid(new Date(field.value));
-  const parsedISODate = isValidDate ? parseISO(format(new Date(field.value), DateFormats.yearMonthDay)) : new Date();
-  const fieldValue = isValidDate ? format(parsedISODate, dateFormat) : '';
+  const parsedDate = parseDate(field.value);
+  const fieldValue = parsedDate ? format(parsedDate, dateFormat) : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -75,6 +82,9 @@ const FormDateInput = ({
     setIsOpen(false);
     inputRef.current?.focus();
   };
+
+  const parsedDisabledBefore = parseDate(disabledBefore);
+  const parsedDisabledAfter = parseDate(disabledAfter);
 
   return (
     <FormFieldWrapper
@@ -136,13 +146,14 @@ const FormDateInput = ({
               >
                 <DayPicker
                   dir={isRTL ? 'rtl' : 'ltr'}
+                  animate
                   mode="single"
                   formatters={createFormatters()}
                   disabled={[
-                    !!disabledBefore && { before: parseISO(disabledBefore) },
-                    !!disabledAfter && { after: parseISO(disabledAfter) },
+                    !!parsedDisabledBefore && { before: parsedDisabledBefore },
+                    !!parsedDisabledAfter && { after: parsedDisabledAfter },
                   ]}
-                  selected={isValidDate ? parsedISODate : undefined}
+                  selected={parsedDate}
                   onSelect={(value) => {
                     if (value) {
                       const formattedDate = format(value, DateFormats.yearMonthDay);
@@ -158,9 +169,9 @@ const FormDateInput = ({
                   showOutsideDays
                   captionLayout="dropdown"
                   autoFocus
-                  defaultMonth={isValidDate ? parsedISODate : new Date()}
-                  startMonth={disabledBefore ? parseISO(disabledBefore) : new Date(new Date().getFullYear() - 10, 0)}
-                  endMonth={disabledAfter ? parseISO(disabledAfter) : new Date(new Date().getFullYear() + 10, 11)}
+                  defaultMonth={parsedDate || new Date()}
+                  startMonth={parsedDisabledBefore || new Date(new Date().getFullYear() - 10, 0)}
+                  endMonth={parsedDisabledAfter || new Date(new Date().getFullYear() + 10, 11)}
                   weekStartsOn={wp.date?.getSettings().l10n.startOfWeek}
                 />
               </div>

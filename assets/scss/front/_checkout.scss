@@ -287,6 +287,21 @@
 		right: 0px;
 		padding: 0px;
 	}
+
+	.tutor-plan-trial-price {
+		background-color: #F5FBF7;
+		display: flex;
+		justify-content: space-between;
+		align-items: start;
+		padding: 8px;
+		border-radius: 4px;
+
+		.tutor-plan-trial-icon-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
 }
 
 .tutor-checkout-billing {

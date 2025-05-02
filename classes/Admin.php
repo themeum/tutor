@@ -593,7 +593,7 @@ class Admin {
 	 * @return void
 	 */
 	public function register_course_widget() {
-		register_widget( 'Tutor\Course_Widget' );
+		register_widget( Course_Widget::class );
 	}
 
 	/**

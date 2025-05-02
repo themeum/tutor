@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.4.2
+Stable tag: 3.5.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,29 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.5.0 - April 30, 2025
+
+New: Introduced a trial feature for membership plans. (Pro)
+New: Introduced course builder fields visibility control (Pro)
+New: Admins can now download invoices for both single and subscription-based purchases. (Pro)
+New: Added Paddle as a new payment gateway integration. (Pro)
+Update: Enabled coupon application support for membership plans. (Pro)
+Update: Courses and bundles have been merged for a more unified experience. (Pro)
+Update: Resolved WPML compatibility issues. (Pro)
+Update: Assignment unlock dates now follow the content drip schedule. (Pro)
+Update: Implemented a search functionality in the Course Builder’s category input.
+Fix: Fixed timezone issue on the date picker.
+Fix: Resolved PHP fatal error in assignment lists when different date formats are selected. (Pro)
+Fix: Users can no longer create course-specific coupons without selecting a course.
+Fix: Fixed subcategory name conflicts during course creation.
+Fix: Addressed an issue where a course changed from paid to free still appeared as paid in bundles. (Pro)
+Fix: Fixed translation notice errors.
+Fix: Resolved an issue where coupon usage tracking wasn’t working in some cases.
+Fix: Fixed category filter not working in the tutor instructor list shortcode.
+Fix: Multiple issues related to earnings, fees, and tax reporting have been fixed for more accurate reports. (Pro)
+Fix: Fixed a bug where quiz answer explanations were not displaying. (Pro)
+Fix: Resolved an issue where quiz settings data wasn’t imported properly. (Pro)
 
 = 3.4.2 - April 15, 2025
 

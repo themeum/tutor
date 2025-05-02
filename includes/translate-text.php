@@ -100,6 +100,10 @@ function tutor_get_translate_text() {
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
+		'trial' => array(
+			'badge' => 'warning',
+			'text'  => __( 'Trial', 'tutor' ),
+		),
 		'on-hold'    => array(
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),

@@ -1,4 +1,4 @@
-import ajaxHandler from "../../../admin-dashboard/segments/filter";
+import ajaxHandler from "../../../helper/ajax-handler";
 const { __ } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function () {

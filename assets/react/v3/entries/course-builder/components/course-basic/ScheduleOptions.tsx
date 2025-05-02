@@ -23,6 +23,7 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
@@ -132,7 +133,7 @@ const ScheduleOptions = () => {
                 validate: {
                   invalidDateRule: invalidDateRule,
                   futureDate: (value) => {
-                    if (isBefore(new Date(`${value}`), startOfDay(new Date()))) {
+                    if (isBefore(new Date(`${value} +T00:00:00`), startOfDay(new Date()))) {
                       return __('Schedule date should be in the future.', 'tutor');
                     }
                     return true;
@@ -307,7 +308,7 @@ const ScheduleOptions = () => {
   );
 };
 
-export default ScheduleOptions;
+export default withVisibilityControl(ScheduleOptions);
 
 const styles = {
   scheduleOptions: css`

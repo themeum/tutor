@@ -131,7 +131,9 @@ class Tax {
 
 		if ( self::is_tax_included_in_price() ) {
 			// Tax = (Tax Rate X Price) / (1 + Tax Rate).
-			$tax = $amount - ( $rate * $amount ) / ( 1 + $rate );
+			// Amount Without Tax = Amount With Tax / (1 + Tax Rate).
+			$tax_rate = $rate / 100;
+			$tax      = ( $tax_rate * $amount ) / ( 1 + $tax_rate );
 		} else {
 			try {
 				$tax = $amount * ( $rate / 100 );
@@ -272,7 +274,6 @@ class Tax {
 
 			return $state_rate;
 		}
-
 	}
 
 	/**

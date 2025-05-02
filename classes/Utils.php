@@ -13,6 +13,7 @@ namespace TUTOR;
 use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -8157,23 +8158,20 @@ class Utils {
 	}
 
 	/**
-	 * Return the assignment deadline date based on duration and assignment creation date
+	 * Return the assignment deadline date in gmt based on duration and assignment creation date
 	 *
 	 * @since 1.8.0
 	 * @since 3.4.0 param $student_id and $course_id added.
+	 * @since 3.5.0 param $format removed.
 	 *
 	 * @param int   $assignment_id assignment id.
-	 * @param mixed $format format.
 	 * @param mixed $fallback fallback.
 	 * @param int   $student_id the student id.
 	 * @param int   $course_id  the course id.
 	 *
 	 * @return string|false
 	 */
-	public function get_assignment_deadline_date( $assignment_id, $format = null, $fallback = null, $student_id = 0, $course_id = 0 ) {
-
-		! $format ? $format = 'j F, Y, g:i a' : 0;
-
+	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0 ) {
 		$value = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
 		$time  = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
 
@@ -8188,7 +8186,8 @@ class Utils {
 			$enrolled_info = $this->is_enrolled( $course_id, $student_id );
 
 			if ( $enrolled_info ) {
-				$enrolled_date_gmt = $enrolled_info->post_date_gmt;
+				$enrolled_date_gmt = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ), $course_id, $assignment_id );
+				$enrolled_date_gmt = date( DateTimeHelper::FORMAT_MYSQL, $enrolled_date_gmt );
 			}
 		}
 
@@ -8199,7 +8198,7 @@ class Utils {
 		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
 
-		return date_format( $date, $format );
+		return date_format( $date, DateTimeHelper::FORMAT_MYSQL );
 	}
 
 	/**
@@ -8391,7 +8390,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
-		return current_user_can( 'edit_tutor_course', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
+		return User::is_admin( $user_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
 	}
 
 
@@ -9595,7 +9594,7 @@ class Utils {
 	 *
 	 * @return string formated date-time.
 	 */
-	public function convert_date_into_wp_timezone( string $date, string $format = null ): string {
+	public function convert_date_into_wp_timezone( string $date, ?string $format = null ): string {
 		$date = new \DateTime( $date );
 		$date->setTimezone( wp_timezone() );
 		return $date->format( ! is_null( $format ) ? $format : get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );

@@ -64,7 +64,7 @@ const questionTypeOptions: {
     isPro: false,
   },
   {
-    label: __('Open Ended/ Essay', 'tutor'),
+    label: __('Open Ended/Essay', 'tutor'),
     value: 'open_ended',
     icon: 'quizEssay',
     isPro: false,

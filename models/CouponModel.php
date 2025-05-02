@@ -11,8 +11,6 @@
 namespace Tutor\Models;
 
 use TUTOR\Course;
-use Tutor\Ecommerce\Settings;
-use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -54,6 +52,9 @@ class CouponModel {
 	const APPLIES_TO_SPECIFIC_COURSES        = 'specific_courses';
 	const APPLIES_TO_SPECIFIC_BUNDLES        = 'specific_bundles';
 	const APPLIES_TO_SPECIFIC_CATEGORY       = 'specific_category';
+
+	const APPLIES_TO_ALL_MEMBERSHIP_PLANS      = 'all_membership_plans';
+	const APPLIES_TO_SPECIFIC_MEMBERSHIP_PLANS = 'specific_membership_plans';
 
 	/**
 	 * Coupon purchase requirement
@@ -206,14 +207,16 @@ class CouponModel {
 	}
 
 	/**
-	 * Get all coupon applies to
+	 * Get course bundle applies to.
 	 *
-	 * @since 3.0.0
+	 * @since 3.5.0
+	 *
+	 * @param bool $only_keys get only keys or not.
 	 *
 	 * @return array
 	 */
-	public static function get_coupon_applies_to() {
-		return array(
+	public static function get_course_bundle_applies_to( $only_keys = false ) {
+		$list = array(
 			self::APPLIES_TO_ALL_COURSES_AND_BUNDLES => __( 'All courses and bundles', 'tutor' ),
 			self::APPLIES_TO_ALL_COURSES             => __( 'All courses', 'tutor' ),
 			self::APPLIES_TO_ALL_BUNDLES             => __( 'All bundles', 'tutor' ),
@@ -221,6 +224,39 @@ class CouponModel {
 			self::APPLIES_TO_SPECIFIC_BUNDLES        => __( 'Specific bundles', 'tutor' ),
 			self::APPLIES_TO_SPECIFIC_CATEGORY       => __( 'Specific category', 'tutor' ),
 		);
+
+		return $only_keys ? array_keys( $list ) : $list;
+	}
+
+	/**
+	 * Get all coupon applies to
+	 *
+	 * @since 3.0.0
+	 * @since 3.5.0 refactor, $only_keys param and filter hook added.
+	 *
+	 * @param bool $only_keys only keys or not.
+	 *
+	 * @return array
+	 */
+	public static function get_coupon_applies_to( $only_keys = false ) {
+		$list = self::get_course_bundle_applies_to();
+		$list = apply_filters( 'tutor_coupon_applies_to', $list );
+
+		return $only_keys ? array_keys( $list ) : $list;
+	}
+
+	/**
+	 * Get applies to label by key.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $key Applies to key.
+	 *
+	 * @return string
+	 */
+	public static function get_coupon_applies_to_label( $key ) {
+		$applies_to = self::get_coupon_applies_to();
+		return isset( $applies_to[ $key ] ) ? $applies_to[ $key ] : '';
 	}
 
 	/**
@@ -301,8 +337,14 @@ class CouponModel {
 	 * @return mixed true|false on insert, void if not insert-able
 	 */
 	public function insert_applies_to( string $applies_to, array $applies_to_ids, $coupon_code ) {
-		$specific_applies = array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY );
-		if ( in_array( $applies_to, $specific_applies ) ) {
+		$specific_applies = array(
+			self::APPLIES_TO_SPECIFIC_BUNDLES,
+			self::APPLIES_TO_SPECIFIC_COURSES,
+			self::APPLIES_TO_SPECIFIC_CATEGORY,
+			self::APPLIES_TO_SPECIFIC_MEMBERSHIP_PLANS,
+		);
+
+		if ( in_array( $applies_to, $specific_applies, true ) ) {
 			$data = array();
 
 			foreach ( $applies_to_ids as $id ) {
@@ -512,6 +554,15 @@ class CouponModel {
 		return $this->process_coupon_data( $coupon_data );
 	}
 
+	/**
+	 * Get coupon details by coupon code.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string|integer $coupon_code coupon code.
+	 *
+	 * @return object|false return coupon data as an object if found, or false if not found.
+	 */
 	public function get_coupon_by_code( $coupon_code ) {
 		$coupon_data = QueryHelper::get_row(
 			$this->table_name,
@@ -551,6 +602,15 @@ class CouponModel {
 		return $coupons['results'];
 	}
 
+	/**
+	 * Process coupon data.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon_data coupon data.
+	 *
+	 * @return object
+	 */
 	private function process_coupon_data( $coupon_data ) {
 		$coupon_data->id                  = (int) $coupon_data->id;
 		$coupon_data->usage_limit_status  = ! empty( $coupon_data->total_usage_limit ) ? true : false;
@@ -717,6 +777,24 @@ class CouponModel {
 	}
 
 	/**
+	 * Get automatic coupon for checkout.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return object|null
+	 */
+	private function get_automatic_coupon_for_checkout() {
+		$args = array(
+			'coupon_type'   => self::TYPE_AUTOMATIC,
+			'coupon_status' => self::STATUS_ACTIVE,
+			'applies_to'    => $this->get_course_bundle_applies_to( true ),
+		);
+
+		$args = apply_filters( 'tutor_automatic_coupon_args_for_checkout', $args );
+		return $this->get_coupon( $args );
+	}
+
+	/**
 	 * Get coupon details for checkout.
 	 *
 	 * @param string $coupon_code coupon code.
@@ -726,12 +804,7 @@ class CouponModel {
 	public function get_coupon_details_for_checkout( $coupon_code = '' ) {
 		$coupon = null;
 		if ( empty( $coupon_code ) ) {
-			$coupon = $this->get_coupon(
-				array(
-					'coupon_type'   => self::TYPE_AUTOMATIC,
-					'coupon_status' => self::STATUS_ACTIVE,
-				)
-			);
+			$coupon = $this->get_automatic_coupon_for_checkout();
 		} else {
 			$coupon = $this->get_coupon(
 				array(
@@ -787,16 +860,25 @@ class CouponModel {
 	 * Applicable is getting determined by the coupon applies_to value
 	 *
 	 * @since 3.0.0
+	 * @since 3.5.0 param $order_type added.
 	 *
 	 * @param object $coupon Coupon object.
 	 * @param int    $object_id Course/Bundle id.
+	 * @param string $order_type order type.
 	 *
 	 * @return bool
 	 */
-	public function is_coupon_applicable( object $coupon, int $object_id ): bool {
+	public function is_coupon_applicable( object $coupon, int $object_id, string $order_type ): bool {
 		$is_applicable = false;
 
-		$object_id = apply_filters( 'tutor_subscription_course_by_plan', $object_id );
+		$is_membership_plan = false;
+		if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			$plan_info          = apply_filters( 'tutor_get_plan_info', null, $object_id );
+			$is_membership_plan = $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan;
+			if ( ! $is_membership_plan ) {
+				$object_id = apply_filters( 'tutor_subscription_course_by_plan', $object_id );
+			}
+		}
 
 		$course_post_type = tutor()->course_post_type;
 		$bundle_post_type = 'course-bundle';
@@ -805,39 +887,44 @@ class CouponModel {
 		$applies_to   = $coupon->applies_to;
 		$applications = $this->get_coupon_applications( $coupon->coupon_code );
 
-		switch ( $applies_to ) {
-			case self::APPLIES_TO_ALL_COURSES_AND_BUNDLES:
-				$is_applicable = true;
-				break;
+		/**
+		 * Logic for course, bundle, subscriptions (course and bundle wise).
+		 */
+		if ( OrderModel::TYPE_SINGLE_ORDER === $order_type || ( OrderModel::TYPE_SUBSCRIPTION === $order_type && ! $is_membership_plan ) ) {
+			switch ( $applies_to ) {
+				case self::APPLIES_TO_ALL_COURSES_AND_BUNDLES:
+					$is_applicable = true;
+					break;
 
-			case self::APPLIES_TO_ALL_COURSES:
-			case self::APPLIES_TO_SPECIFIC_COURSES:
-				if ( self::APPLIES_TO_ALL_COURSES === $applies_to ) {
-					$is_applicable = $object_type === $course_post_type;
-				} else {
-					$is_applicable = in_array( $object_id, $applications );
-				}
-				break;
+				case self::APPLIES_TO_ALL_COURSES:
+				case self::APPLIES_TO_SPECIFIC_COURSES:
+					if ( self::APPLIES_TO_ALL_COURSES === $applies_to ) {
+						$is_applicable = $object_type === $course_post_type;
+					} else {
+						$is_applicable = in_array( $object_id, $applications );
+					}
+					break;
 
-			case self::APPLIES_TO_ALL_BUNDLES:
-			case self::APPLIES_TO_SPECIFIC_BUNDLES:
-				if ( self::APPLIES_TO_ALL_BUNDLES === $applies_to ) {
-					$is_applicable = $object_type === $bundle_post_type;
-				} else {
-					$is_applicable = in_array( $object_id, $applications );
-				}
-				break;
+				case self::APPLIES_TO_ALL_BUNDLES:
+				case self::APPLIES_TO_SPECIFIC_BUNDLES:
+					if ( self::APPLIES_TO_ALL_BUNDLES === $applies_to ) {
+						$is_applicable = $object_type === $bundle_post_type;
+					} else {
+						$is_applicable = in_array( $object_id, $applications );
+					}
+					break;
 
-			case self::APPLIES_TO_SPECIFIC_CATEGORY:
-				$course_categories = wp_get_post_terms( $object_id, CourseModel::COURSE_CATEGORY );
-				if ( ! is_wp_error( $course_categories ) ) {
-					$term_ids      = array_column( $course_categories, 'term_id' );
-					$is_applicable = count( array_intersect( $applications, $term_ids ) );
-				}
-				break;
+				case self::APPLIES_TO_SPECIFIC_CATEGORY:
+					$course_categories = wp_get_post_terms( $object_id, CourseModel::COURSE_CATEGORY );
+					if ( ! is_wp_error( $course_categories ) ) {
+						$term_ids      = array_column( $course_categories, 'term_id' );
+						$is_applicable = count( array_intersect( $applications, $term_ids ) );
+					}
+					break;
+			}
 		}
 
-		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id );
+		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id, $applications, $is_membership_plan );
 	}
 
 	/**
@@ -965,6 +1052,7 @@ class CouponModel {
 
 		if ( is_array( $result ) && count( $result ) ) {
 			$response = array_column( $result, 'reference_id' );
+			$response = array_map( 'intval', $response );
 		}
 
 		return $response;
@@ -999,7 +1087,8 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $id Application id.
+	 * @param int    $id Application id.
+	 * @param string $applies_to Applies to.
 	 *
 	 * @return array
 	 */
@@ -1044,7 +1133,16 @@ class CouponModel {
 	 * @return boolean
 	 */
 	public function is_specific_applies_to( string $applies_to ) {
-		return in_array( $applies_to, array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY ) );
+		return in_array(
+			$applies_to,
+			array(
+				self::APPLIES_TO_SPECIFIC_BUNDLES,
+				self::APPLIES_TO_SPECIFIC_COURSES,
+				self::APPLIES_TO_SPECIFIC_CATEGORY,
+				self::APPLIES_TO_SPECIFIC_MEMBERSHIP_PLANS,
+			),
+			true
+		);
 	}
 
 	/**
