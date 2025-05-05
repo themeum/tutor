@@ -1,13 +1,13 @@
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormTimeInput from '@Components/fields/FormTimeInput';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { Coupon } from '@CouponServices/coupon';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -24,12 +24,6 @@ function CouponValidity() {
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Validity', 'tutor')}</BoxTitle>
-        <BoxSubtitle>
-          {__(
-            'Define the active period for this coupon. Leaving the end date blank will make the coupon valid indefinitely',
-            'tutor',
-          )}
-        </BoxSubtitle>
       </div>
 
       <Box css={[styleUtils.boxReset, styles.validityWrapper]}>
@@ -55,6 +49,7 @@ function CouponValidity() {
             <FormCheckbox
               {...controllerProps}
               label={__('Set end date', 'tutor')}
+              description={__('Leaving the end date blank will make the coupon valid indefinitely.', 'tutor')}
               onChange={(value) => {
                 if (!value) {
                   form.setValue('end_date', '');
@@ -96,30 +91,30 @@ export default CouponValidity;
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   validityWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   dateTimeWrapper: css`
-		display: flex;
-		gap: ${spacing[12]};
-		width: fit-content;
-	`,
+    display: flex;
+    gap: ${spacing[12]};
+    width: fit-content;
+  `,
   dateTimeTitle: css`
-		color: ${colorTokens.text.title};
-	`,
+    color: ${colorTokens.text.title};
+  `,
   setEndDateLabel: css`
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+  `,
 };

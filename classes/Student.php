@@ -38,7 +38,7 @@ class Student {
 	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'register_student' ) );
 		add_filter( 'get_avatar_url', array( $this, 'filter_avatar' ), 10, 3 );
-		add_action( 'tutor_action_tutor_social_profile', array( $this, 'tutor_social_profile' ) );
+		add_action( 'wp_ajax_tutor_social_profile', array( $this, 'tutor_social_profile' ) );
 		add_action( 'wp_ajax_tutor_profile_password_reset', array( $this, 'tutor_reset_password' ) );
 		add_action( 'wp_ajax_tutor_update_profile', array( $this, 'update_profile' ) );
 	}
@@ -194,7 +194,7 @@ class Student {
 		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
 		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
-		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
+		$tutor_profile_bio       = wp_kses( Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST ), tutor_utils()->allowed_profile_bio_tags() );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 		$timezone                = Input::post( 'timezone', '' );
 
@@ -206,23 +206,14 @@ class Student {
 			'last_name'    => $last_name,
 			'display_name' => $display_name,
 		);
-		$user_id  = wp_update_user( $userdata );
+
+		$user_id = wp_update_user( $userdata );
 
 		if ( ! is_wp_error( $user_id ) ) {
 			update_user_meta( $user_id, User::PHONE_NUMBER_META, $phone_number );
 			update_user_meta( $user_id, User::PROFILE_BIO_META, $tutor_profile_bio );
 			update_user_meta( $user_id, User::PROFILE_JOB_TITLE_META, $tutor_profile_job_title );
 			update_user_meta( $user_id, User::TIMEZONE_META, $timezone );
-
-			$tutor_user_social = tutor_utils()->tutor_user_social_icons();
-			foreach ( $tutor_user_social as $key => $social ) {
-				$user_social_value = sanitize_text_field( tutor_utils()->input_old( $key ) );
-				if ( $user_social_value ) {
-					update_user_meta( $user_id, $key, $user_social_value );
-				} else {
-					delete_user_meta( $user_id, $key );
-				}
-			}
 		}
 
 		do_action( 'tutor_profile_update_after', $user_id );
@@ -339,7 +330,8 @@ class Student {
 				delete_user_meta( $user_id, $key );
 			}
 		}
-		wp_safe_redirect( wp_get_raw_referer() );
+
+		wp_send_json_success( array( 'message' => __( 'Social Profile Updated', 'tutor' ) ) );
 		die();
 	}
 }

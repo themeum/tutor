@@ -1,10 +1,10 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import type { FormControllerProps } from '@Utils/form';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import type { OptionWithImage } from '@Utils/types';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { OptionWithImage } from '@TutorShared/utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormImageRadioGroupProps<T> extends FormControllerProps<T> {
@@ -44,57 +44,53 @@ export default FormImageRadioGroup;
 
 const styles = {
   wrapper: css`
-		display: grid;
-		grid-template-columns: repeat(4, minmax(64px, 1fr));
-		gap: ${spacing[12]};
-		margin-top: ${spacing[4]};
-	`,
+    display: grid;
+    grid-template-columns: repeat(4, minmax(64px, 1fr));
+    gap: ${spacing[12]};
+    margin-top: ${spacing[4]};
+  `,
   item: (isActive: boolean) => css`
-		${styleUtils.resetButton};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-		width: 100%;
-		cursor: pointer;
+    ${styleUtils.resetButton};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
 
-		input {
-			appearance: none;
-		}
-		
-		p {
-			${typography.small()};
-			width: 100%;
-			${styleUtils.textEllipsis};
-			color: ${colorTokens.text.subdued};
-			text-align: center;
-		}
+    input {
+      appearance: none;
+    }
 
-		&:hover {
-			${
-        !isActive &&
-        css`
-				img {
-					border-color: ${colorTokens.stroke.hover};
-				}
-			`
-      }
-		}
+    p {
+      ${typography.small()};
+      width: 100%;
+      ${styleUtils.textEllipsis};
+      color: ${colorTokens.text.subdued};
+      text-align: center;
+    }
 
-		img {
-			border-radius: ${borderRadius[6]};
-			border: 2px solid ${colorTokens.stroke.border};
-			outline: 2px solid transparent;
-			outline-offset: 2px;
-			transition: border-color 0.3s ease;
+    &:hover,
+    &:focus-visible {
+      ${!isActive &&
+      css`
+        img {
+          border-color: ${colorTokens.stroke.hover};
+        }
+      `}
+    }
 
-			${
-        isActive &&
-        css`
-				outline-color: ${colorTokens.stroke.magicAi};
-			`
-      }
-		}
+    img {
+      border-radius: ${borderRadius[6]};
+      border: 2px solid ${colorTokens.stroke.border};
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
 
-		
-	`,
+      ${isActive &&
+      css`
+        outline-color: ${colorTokens.stroke.magicAi};
+      `}
+    }
+  `,
 };

@@ -1,11 +1,12 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import routes from '@CourseBuilderConfig/routes';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { useCurrentPath } from '@Hooks/useCurrentPath';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { isRTL } from '@TutorShared/config/constants';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { useCurrentPath } from '@TutorShared/hooks/useCurrentPath';
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
@@ -84,20 +85,29 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
           size="small"
           onClick={handlePreviousClick}
           buttonCss={css`
-          padding: ${spacing[6]};
-        `}
+            padding: ${spacing[4]};
+            svg {
+              color: ${colorTokens.icon.default};
+            }
+          `}
           disabled={previousIndex < 0}
         >
-          <SVGIcon name="chevronLeft" height={18} width={18} />
+          <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} height={24} width={24} />
         </Button>
       </Show>
       <Show when={currentIndex < steps.length - 1 && postTitle}>
         <Button
           variant="tertiary"
-          icon={<SVGIcon name="chevronRight" />}
+          icon={<SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} height={24} width={24} />}
           iconPosition="right"
           size="small"
           onClick={handleNextClick}
+          buttonCss={css`
+            padding: ${spacing[4]} ${spacing[4]} ${spacing[4]} ${spacing[12]};
+            svg {
+              color: ${colorTokens.icon.default};
+            }
+          `}
           disabled={!postTitle || nextIndex >= steps.length}
         >
           {__('Next', 'tutor')}
@@ -117,9 +127,5 @@ const styles = {
     height: 32px;
     align-items: center;
     gap: ${spacing[16]};
-
-    & > button:last-of-type {
-      padding-right: ${spacing[8]};
-    }
   `,
 };

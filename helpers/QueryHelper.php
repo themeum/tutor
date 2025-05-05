@@ -18,26 +18,21 @@ class QueryHelper {
 	/**
 	 * Insert data in the table
 	 *
+	 * @since 2.0.7
+	 * @since 3.2.0 sanitize_mapping param added to override sanitize function to specific keys.
+	 *
 	 * @param string $table  table name.
 	 * @param array  $data | data to insert in the table.
+	 * @param array  $sanitize_mapping sanitize mapping.
 	 *
-	 * @return int, inserted id.
-	 *
-	 * @since v2.0.7
-	 *
-	 * @since 3.0.0
+	 * @return int inserted id.
 	 *
 	 * @throws \Exception Database error if occur.
 	 */
-	public static function insert( string $table, array $data ): int {
+	public static function insert( string $table, array $data, array $sanitize_mapping = array() ): int {
 		global $wpdb;
-		// Sanitize text field.
-		$data = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$data
-		);
+
+		$data = \TUTOR\Input::sanitize_array( $data, $sanitize_mapping );
 
 		$insert = $wpdb->insert(
 			$table,
@@ -54,40 +49,29 @@ class QueryHelper {
 	/**
 	 * Update data
 	 *
+	 * @since 2.0.7
+	 * @since 3.2.0 IN clause support added.
+	 *
 	 * @param string $table  table name.
 	 * @param array  $data | data to update in the table.
 	 * @param array  $where | condition array.
 	 *
-	 * @return bool, true on success false on failure
-	 *
-	 * @since v2.0.7
+	 * @return bool  true on success false on failure
 	 */
 	public static function update( string $table, array $data, array $where ): bool {
 		global $wpdb;
-		// Sanitize text field.
-		$data = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$data
-		);
 
-		$where = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$where
-		);
+		$set_clause   = self::prepare_set_clause( $data );
+		$where_clause = self::build_where_clause( $where );
 
-		$wpdb->update(
-			$table,
-			$data,
-			$where
-		);
+		// phpcs:ignore
+		$query = $wpdb->prepare( "UPDATE {$table} {$set_clause} WHERE {$where_clause} AND 1 = %d", 1 );
+
+		// phpcs:ignore
+		$wpdb->query( $query );
 
 		if ( $wpdb->last_error ) {
 			error_log( $wpdb->last_error );
-
 			return false;
 		}
 
@@ -231,40 +215,116 @@ class QueryHelper {
 	public static function make_clause( array $where ) {
 		list ( $field, $operator, $value ) = $where;
 
-		if ( 'IN' === strtoupper( $operator ) ) {
+		$upper_operator = strtoupper( $operator );
+		if ( in_array( $upper_operator, array( 'IN', 'NOT IN' ), true ) ) {
 			$value = '(' . self::prepare_in_clause( $value ) . ')';
 		}
 
-		return "{$field} {$operator} {$value}";
+		return "{$field} {$upper_operator} {$value}";
+	}
+
+	/**
+	 * Check operator is supported.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $operator operator like =, !=, > , < etc.
+	 *
+	 * @return boolean
+	 */
+	public static function is_support_operator( $operator ) {
+		$operator = strtoupper( $operator );
+
+		return in_array(
+			$operator,
+			array(
+				'=',
+				'!=',
+				'<>',
+				'>',
+				'<',
+				'>=',
+				'<=',
+				'LIKE',
+				'NOT LIKE',
+				'IN',
+				'NOT IN',
+				'IS',
+				'IS NOT',
+				'BETWEEN',
+				'NOT BETWEEN',
+			),
+			true
+		);
 	}
 
 	/**
 	 * Build where clause string
 	 *
-	 * @param   array $where assoc array with field and value.
-	 * @return  string
-	 *
 	 * @since 2.0.9
+	 * @since 3.0.0 Null value support added, if need to check with null: [name => 'null']
+	 * @since 3.5.0 All common SQL comparison operators support added.
+	 *              $where = array(
+	 *                  'id'         => ['BETWEEN', [10, 20]],
+	 *                  'status'     => ['!=', 'draft'],
+	 *                  'email'      => ['LIKE', '%@gmail.com'],
+	 *                  'type'       => ['NOT IN', ['test', 'sample']],
+	 *                  'age'        => ['>=', 18],
+	 *                  'active'     => true,
+	 *                  'deleted_at' => 'null',
+	 *                  'role'       => 'editor',
+	 *              )
 	 *
-	 * @since 3.0.0
-	 * Null value support added, if need to check with
-	 * null: [name => 'null'] we can pass
+	 * @param   array $where assoc array with field and value.
+	 *
+	 * @return  string
 	 */
 	public static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
-			if ( is_array( $value ) ) {
-				$value = array( $field, 'IN', $value );
+			if ( is_array( $value ) && isset( $value[0] ) && is_string( $value[0] ) && self::is_support_operator( $value[0] ) ) {
+				$operator = strtoupper( $value[0] );
+				$val      = $value[1];
+				switch ( $operator ) {
+					case 'IN':
+					case 'NOT IN':
+						if ( is_array( $val ) ) {
+							$clause = array( $field, $operator, $val );
+						}
+						break;
+
+					case 'BETWEEN':
+					case 'NOT BETWEEN':
+						if ( is_array( $val ) && count( $val ) === 2 ) {
+							$val1   = is_numeric( $val[0] ) ? $val[0] : "'" . $val[0] . "'";
+							$val2   = is_numeric( $val[1] ) ? $val[1] : "'" . $val[1] . "'";
+							$clause = array( $field, $operator, "{$val1} AND {$val2}" );
+						}
+						break;
+
+					case 'IS':
+					case 'IS NOT':
+						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : "'" . $val . "'";
+						$clause = array( $field, $operator, $val );
+						break;
+
+					default: // =, !=, <, >, <=, >=, LIKE, NOT LIKE, <>
+						$val    = is_numeric( $val ) ? $val : "'" . $val . "'";
+						$clause = array( $field, $operator, $val );
+						break;
+				}
+			} elseif ( is_array( $value ) ) {
+				$clause = array( $field, 'IN', $value );
 			} else {
-				if ( 'null' == $value ) {
-					$value = array( $field, 'IS', 'NULL');
+				if ( 'null' === strtolower( $value ) ) {
+					$clause = array( $field, 'IS', 'NULL' );
 				} else {
-					$value = is_numeric( $value ) ? $value : "'" . $value . "'";
-					$value = array( $field, '=', $value );
+					$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
+					$clause = array( $field, '=', $value );
 				}
 			}
 
-			$arr[] = self::make_clause( $value );
+			$arr[] = self::make_clause( $clause );
 		}
 
 		return implode( ' AND ', $arr );
@@ -502,8 +562,14 @@ class QueryHelper {
 			if ( is_array( $value ) ) {
 				continue;
 			}
-			$value = esc_sql( sanitize_text_field( $value ) );
-			$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
+
+			if ( is_null( $value ) ) {
+				$set  .= "$key = null";
+			} else {
+				$value = esc_sql( sanitize_text_field( $value ) );
+				$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
+			}
+			
 			$set .= ",";
 		}
 		return rtrim( $set, ',' );

@@ -10,16 +10,17 @@
 
 namespace Tutor\Ecommerce;
 
+use TUTOR\Input;
+use TUTOR\Earnings;
+use Tutor\Models\OrderModel;
 use TUTOR\Backend_Page_Trait;
 use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\ValidationHelper;
-use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
-use Tutor\Models\OrderActivitiesModel;
-use Tutor\Models\OrderModel;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\OrderActivitiesModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -62,13 +63,6 @@ class OrderController {
 	use JsonResponse;
 
 	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
-
-	/**
 	 * Constructor.
 	 *
 	 * Initializes the Orders class, sets the page title, and optionally registers
@@ -82,8 +76,7 @@ class OrderController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->page_title = __( 'Orders', 'tutor' );
-		$this->model      = new OrderModel();
+		$this->model = new OrderModel();
 
 		if ( $register_hooks ) {
 			/**
@@ -134,6 +127,21 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
+		}
+	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Orders', 'tutor' );
 		}
 	}
 
@@ -198,23 +206,17 @@ class OrderController {
 		$subtotal_price = 0;
 		$total_price    = 0;
 
-		// Add enrollment fee with total & subtotal price.
-		if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
-			$plan = apply_filters( 'tutor_checkout_plan_info', null, $items[0]['item_id'] );
-			if ( $plan ) {
-				$item_price     = $this->model::calculate_order_price( $items );
-				$subtotal_price = $item_price->subtotal;
-				$total_price    = $item_price->total;
-
-				if ( $this->model::TYPE_SUBSCRIPTION === $order_type && $plan->enrollment_fee ) {
-					$subtotal_price += $plan->enrollment_fee;
-					$total_price    += $plan->enrollment_fee;
-				}
-			}
-		} else {
+		if ( $this->model::TYPE_SINGLE_ORDER === $order_type ) {
 			$item_price     = $this->model::calculate_order_price( $items );
 			$subtotal_price = $item_price->subtotal;
 			$total_price    = $item_price->total;
+		} else {
+			// For subscription and renewal order.
+			$prices = apply_filters( 'tutor_create_order_prices_for_subscription', null, $items, $order_type, $user_id );
+			if ( $prices ) {
+				$subtotal_price = $prices->subtotal_price;
+				$total_price    = $prices->total_price;
+			}
 		}
 
 		$order_data = array(
@@ -241,22 +243,25 @@ class OrderController {
 			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
 		}
 
-		/**
-		 * Tax calculation for order.
-		 */
-		$tax_rate = Tax::get_user_tax_rate( $user_id );
-		if ( $tax_rate ) {
-			$order_data['tax_type']   = Tax::get_tax_type();
-			$order_data['tax_rate']   = $tax_rate;
-			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+		$calculate_tax = apply_filters( 'tutor_calculate_order_tax', true, $args );
 
-			if ( ! Tax::is_tax_included_in_price() ) {
-				$total_price              += $order_data['tax_amount'];
-				$order_data['total_price'] = $total_price;
-				$order_data['net_payment'] = $total_price;
+		if ( $calculate_tax ) {
+			/**
+			 * Tax calculation for order.
+			 */
+			$tax_rate = Tax::get_user_tax_rate( $user_id );
+			if ( $tax_rate ) {
+				$order_data['tax_type']   = Tax::get_tax_type();
+				$order_data['tax_rate']   = $tax_rate;
+				$order_data['tax_amount'] = Tax::calculate_tax( $order_data['total_price'], $tax_rate );
+
+				if ( ! Tax::is_tax_included_in_price() ) {
+					$total_price              += $order_data['tax_amount'];
+					$order_data['total_price'] = $total_price;
+					$order_data['net_payment'] = $total_price;
+				}
 			}
 		}
-
 		// Update data with arguments.
 		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
 
@@ -485,8 +490,6 @@ class OrderController {
 			'meta_value' => wp_json_encode( $meta_value ),
 		);
 
-		do_action( 'tutor_before_order_refund', $params );
-
 		// Validate request.
 		$validation = $this->validate( $params );
 		if ( ! $validation->success ) {
@@ -531,7 +534,19 @@ class OrderController {
 
 			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status );
 
-			$this->json_response( __( 'Order refund successful', 'tutor' ) );
+			$order_data->payment_status = $update_data['payment_status'];
+			$order_data->order_status   = $update_data['order_status'];
+			do_action( 'tutor_after_order_refund', $order_id, $amount, $reason );
+
+			$res_msg = __( 'Order refund successful', 'tutor' );
+
+			try {
+				$this->refund_from_payment_gateway( $order_id, $amount, $reason );
+				$this->json_response( $res_msg );
+			} catch ( \Throwable $th ) {
+				$res_msg = __( 'Order refunded successfully, but pending payment gateway issuance.', 'tutor' );
+				$this->json_response( $res_msg );
+			}
 		} else {
 			$this->json_response(
 				__( 'Failed to make refund', 'tutor' ),
@@ -539,7 +554,6 @@ class OrderController {
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
-
 	}
 
 	/**
@@ -674,7 +688,7 @@ class OrderController {
 				);
 			}
 
-			do_action( 'tutor_after_add_order_discount', $request );
+			do_action( 'tutor_after_add_order_discount', $order, $discount_amount );
 
 			$this->json_response( __( 'Order discount successful added', 'tutor' ) );
 		} catch ( \Throwable $th ) {
@@ -684,7 +698,6 @@ class OrderController {
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
-
 	}
 
 	/**
@@ -732,7 +745,7 @@ class OrderController {
 	 * @since 3.0.0
 	 */
 	public function tabs_key_value(): array {
-		$url = get_pagenum_link();
+		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$date           = Input::get( 'date', '' );
 		$payment_status = Input::get( 'payment-status', '' );
@@ -1015,6 +1028,30 @@ class OrderController {
 	}
 
 	/**
+	 * Filter discount data if monetization is Tutor
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id Current user id.
+	 * @param string $period  Period for filter refund data.
+	 * @param string $start_date Filter start date.
+	 * @param string $end_date Filter end date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_discount_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
+		// Sanitize params.
+		$user_id    = is_admin() ? 0 : $user_id;
+		$period     = Input::sanitize( $period );
+		$start_date = Input::sanitize( $start_date );
+		$end_date   = Input::sanitize( $end_date );
+		$course_id  = (int) $course_id;
+
+		return $this->model->get_discounts_by_user( $user_id, $period, $start_date, $end_date, $course_id );
+	}
+
+	/**
 	 * Filter refund data if monetization is Tutor
 	 *
 	 * @since 3.0.0
@@ -1029,7 +1066,7 @@ class OrderController {
 	 */
 	public function get_refund_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
 		// Sanitize params.
-		$user_id    = (int) $user_id ? $user_id : get_current_user_id();
+		$user_id    = is_admin() ? 0 : $user_id;
 		$period     = Input::sanitize( $period );
 		$start_date = Input::sanitize( $start_date );
 		$end_date   = Input::sanitize( $end_date );
@@ -1072,4 +1109,65 @@ class OrderController {
 		return ValidationHelper::validate( $validation_rules, $data );
 	}
 
+	/**
+	 * Process refund from payment gateway
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param int    $order_id Order id.
+	 * @param string $amount Refund amount.
+	 * @param string $reason Refund reason.
+	 *
+	 * @throws \Throwable If an error occurs during the refund process.
+	 *
+	 * @return void
+	 */
+	public function refund_from_payment_gateway( $order_id, $amount, $reason ) {
+		$order = $this->model->get_order_by_id( $order_id );
+		if ( $order && ! $this->model->is_manual_payment( $order->payment_method ) ) {
+			$refund_data = $this->prepare_refund_data( $order, $amount, $reason );
+			try {
+				$payment_gateway_ref = Ecommerce::payment_gateways_with_ref( $order->payment_method );
+				if ( $payment_gateway_ref ) {
+					$gateway_obj = Ecommerce::get_payment_gateway_object( $payment_gateway_ref['gateway_class'] );
+					$gateway_obj->make_refund( $refund_data );
+				}
+			} catch ( \Throwable $th ) {
+				throw $th;
+			}
+		}
+	}
+
+	/**
+	 * Prepare refund data
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param object $order Order object.
+	 * @param string $amount Raw amount.
+	 * @param string $reason Refund reason.
+	 *
+	 * @return object
+	 */
+	public function prepare_refund_data( $order, $amount, $reason ) {
+		$currency = tutor_get_currencies_info_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) );
+
+		$refund_data = array(
+			'type'            => 'refund',
+			'amount'          => $amount,
+			'payment_payload' => $order->payment_payloads, // JSON string representing the  payment payload.
+			'order_id'        => $order->id,
+			'reason'          => $reason,
+			'refund_type'     => $order->net_payment == $amount ? 'full' : 'partial',
+			'currency'        => (object) array(
+				'code'         => $currency['code'],
+				'symbol'       => $currency['symbol'],
+				'name'         => $currency['name'],
+				'locale'       => $currency['locale'],
+				'numeric_code' => $currency['numeric_code'],
+			),
+		);
+
+		return (object) $refund_data;
+	}
 }

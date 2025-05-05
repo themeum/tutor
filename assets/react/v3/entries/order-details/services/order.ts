@@ -1,9 +1,10 @@
-import { useToast } from '@Atoms/Toast';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { Prettify } from '@Utils/types';
+import { useToast } from '@TutorShared/atoms/Toast';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import type { Prettify } from '@TutorShared/utils/types';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
 
 interface OrderSummary {
   id: number;
@@ -93,6 +94,7 @@ export interface Order {
   id: number;
   payment_status: PaymentStatus;
   payment_method: string;
+  payment_method_readable: string;
   payment_payloads: string | null;
   order_status: OrderStatus;
   order_type: string;
@@ -102,7 +104,7 @@ export interface Order {
   discount_amount: number;
   discount_reason: string;
   discount_type: DiscountType;
-  tax_type?: string|null;
+  tax_type?: string | null;
   tax_rate?: number;
   tax_amount?: number;
   total_price: number;
@@ -114,7 +116,7 @@ export interface Order {
   transaction_id?: string | null;
   activities?: Activity[];
   coupon_code?: string | null;
-  coupon_amount?: number|null;
+  coupon_amount?: number | null;
   created_by: string;
   updated_by?: string;
   created_at_gmt: string;
@@ -122,6 +124,12 @@ export interface Order {
   updated_at_gmt?: string;
   updated_at_readable?: string;
   subscription_fees?: SubscriptionFees[];
+}
+
+interface Response {
+  data: unknown;
+  message: string;
+  status_code: number;
 }
 
 const getOrderDetails = (orderId: number) => {
@@ -139,7 +147,7 @@ export const useOrderDetailsQuery = (orderId: number) => {
 };
 
 const postAdminComment = (params: { order_id: number; comment: string }) => {
-  return wpAjaxInstance.post(endpoints.ADMIN_COMMENT, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ADMIN_COMMENT, params);
 };
 
 export const useAdminCommentMutation = () => {
@@ -147,18 +155,18 @@ export const useAdminCommentMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: postAdminComment,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Comment added successfully.') });
+      showToast({ type: 'success', message: response.message });
     },
     onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
 
 const markAsPaid = (params: { order_id: number; note: string }) => {
-  return wpAjaxInstance.post(endpoints.ORDER_MARK_AS_PAID, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ORDER_MARK_AS_PAID, params);
 };
 
 export const useMarkAsPaidMutation = () => {
@@ -166,18 +174,18 @@ export const useMarkAsPaidMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: markAsPaid,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Order marked as paid', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
     onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
 
 const refundOrder = (params: { order_id: number; reason: string; is_remove_enrolment: boolean }) => {
-  return wpAjaxInstance.post(endpoints.ORDER_REFUND, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ORDER_REFUND, params);
 };
 
 export const useRefundOrderMutation = () => {
@@ -186,12 +194,12 @@ export const useRefundOrderMutation = () => {
 
   return useMutation({
     mutationFn: refundOrder,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Order refunded successfully', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
-    onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -203,7 +211,7 @@ interface DiscountPayload {
   discount_reason: string;
 }
 const addOrderDiscount = (payload: DiscountPayload) => {
-  return wpAjaxInstance.post(endpoints.ADD_ORDER_DISCOUNT, payload);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ADD_ORDER_DISCOUNT, payload);
 };
 
 export const useOrderDiscountMutation = () => {
@@ -211,18 +219,18 @@ export const useOrderDiscountMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: addOrderDiscount,
-    onSuccess() {
+    onSuccess(response) {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Discount added successfully.', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
     onError(error) {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
 
 const cancelOrder = (params: { order_id: number; cancel_reason: string }) => {
-  return wpAjaxInstance.post(endpoints.ORDER_CANCEL, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ORDER_CANCEL, params);
 };
 
 export const useCancelOrderMutation = () => {
@@ -230,12 +238,12 @@ export const useCancelOrderMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: cancelOrder,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Order cancelled successfully.', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
     onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };

@@ -1,28 +1,30 @@
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { useModal } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 
-import { typography } from '@Config/typography';
 import type { Coupon } from '@CouponServices/coupon';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import coursePlaceholder from '@Images/course-placeholder.png';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
+import { Addons } from '@TutorShared/config/constants';
+import { typography } from '@TutorShared/config/typography';
+import { formatPrice } from '@TutorShared/utils/currency';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { formatSubscriptionRepeatUnit, isAddonEnabled } from '@TutorShared/utils/util';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import type { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Addons } from '@Config/constants';
 
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
 const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);
+const isSubscriptionActive = isTutorProActive && isAddonEnabled(Addons.SUBSCRIPTION);
 
 const discountTypeOptions = [
   { label: __('Percent', 'tutor'), value: 'percentage' },
@@ -31,11 +33,24 @@ const discountTypeOptions = [
 
 const appliesToOptions = [
   { label: __('All courses', 'tutor'), value: 'all_courses' },
-  ...(displayBundle ? [{ label: __('All bundles', 'tutor'), value: 'all_bundles' }] : []),
-  ...(displayBundle ? [{ label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' }] : []),
+  ...(displayBundle
+    ? [
+        { label: __('All bundles', 'tutor'), value: 'all_bundles' },
+        { label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' },
+      ]
+    : []),
+  ...(isSubscriptionActive ? [{ label: __('All membership plans', 'tutor'), value: 'all_membership_plans' }] : []),
   { label: __('Specific courses', 'tutor'), value: 'specific_courses' },
   ...(displayBundle ? [{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' }] : []),
   { label: __('Specific category', 'tutor'), value: 'specific_category' },
+  ...(isSubscriptionActive
+    ? [
+        {
+          label: __('Specific membership plans', 'tutor'),
+          value: 'specific_membership_plans',
+        },
+      ]
+    : []),
 ];
 
 function CouponDiscount() {
@@ -48,6 +63,14 @@ function CouponDiscount() {
   const courses = form.watch('courses') ?? [];
   const bundles = form.watch('bundles') ?? [];
   const categories = form.watch('categories') ?? [];
+  const membershipPlans = form.watch('membershipPlans') ?? [];
+
+  const modalType = {
+    specific_courses: 'courses',
+    specific_bundles: 'bundles',
+    specific_category: 'categories',
+    specific_membership_plans: 'membershipPlans',
+  } as const;
 
   function removesSelectedItem(type: string, id: number) {
     if (type === 'courses') {
@@ -68,15 +91,18 @@ function CouponDiscount() {
         categories?.filter((item) => item.id !== id),
       );
     }
+    if (type === 'membershipPlans') {
+      form.setValue(
+        type,
+        membershipPlans?.filter((item) => item.id !== id),
+      );
+    }
   }
 
   return (
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Discount', 'tutor')}</BoxTitle>
-        <BoxSubtitle>
-          {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
-        </BoxSubtitle>
       </div>
       <div css={styles.discountTypeWrapper}>
         <Controller
@@ -84,7 +110,7 @@ function CouponDiscount() {
           control={form.control}
           rules={requiredRule()}
           render={(controllerProps) => (
-            <FormSelectInput {...controllerProps} label={__('Discount type', 'tutor')} options={discountTypeOptions} />
+            <FormSelectInput {...controllerProps} label={__('Discount Type', 'tutor')} options={discountTypeOptions} />
           )}
         />
         <Controller
@@ -97,7 +123,7 @@ function CouponDiscount() {
               type="number"
               label={__('Discount Value', 'tutor')}
               placeholder="0"
-              content={discountType === 'flat' ? tutor_currency?.symbol ?? '$' : '%'}
+              content={discountType === 'flat' ? (tutor_currency?.symbol ?? '$') : '%'}
               contentCss={styleUtils.inputCurrencyStyle}
             />
           )}
@@ -117,6 +143,7 @@ function CouponDiscount() {
           {courses?.map((item) => (
             <AppliesToItem
               key={item.id}
+              type="courses"
               image={item.image}
               title={item.title}
               subTitle={
@@ -144,6 +171,7 @@ function CouponDiscount() {
           {bundles?.map((item) => (
             <AppliesToItem
               key={item.id}
+              type="bundles"
               image={item.image}
               title={item.title}
               subTitle={
@@ -163,6 +191,7 @@ function CouponDiscount() {
           {categories?.map((item) => (
             <AppliesToItem
               key={item.id}
+              type="categories"
               image={item.image}
               title={item.title}
               subTitle={`${item.total_courses} ${__('Courses', 'tutor')}`}
@@ -172,8 +201,38 @@ function CouponDiscount() {
         </div>
       )}
 
+      {appliesTo === 'specific_membership_plans' && membershipPlans.length > 0 && (
+        <div css={styles.selectedWrapper}>
+          {form.watch('membershipPlans')?.map((item) => (
+            <AppliesToItem
+              key={item.id}
+              type="membershipPlans"
+              title={item.plan_name}
+              subTitle={
+                <div css={styles.price}>
+                  <span>{formatPrice(Number(item.sale_price) || Number(item.regular_price))}</span>
+                  {Number(item.sale_price) > 0 && (
+                    <span css={styles.discountPrice}>{formatPrice(Number(item.regular_price))}</span>
+                  )}
+                  /
+                  <span css={styles.recurringInterval}>
+                    {formatSubscriptionRepeatUnit({
+                      unit: item.recurring_interval,
+                      value: Number(item.recurring_value),
+                    })}
+                  </span>
+                </div>
+              }
+              handleDeleteClick={() => removesSelectedItem('membershipPlans', item.id)}
+            />
+          ))}
+        </div>
+      )}
+
       <Show
-        when={appliesTo === 'specific_courses' || appliesTo === 'specific_bundles' || appliesTo === 'specific_category'}
+        when={['specific_courses', 'specific_bundles', 'specific_category', 'specific_membership_plans'].includes(
+          appliesTo,
+        )}
       >
         <Button
           variant="tertiary"
@@ -184,13 +243,8 @@ function CouponDiscount() {
             showModal({
               component: CouponSelectItemModal,
               props: {
-                title: __('Selected items', 'tutor'),
-                type:
-                  appliesTo === 'specific_category'
-                    ? 'categories'
-                    : appliesTo === 'specific_courses'
-                      ? 'courses'
-                      : 'bundles',
+                title: __('Select items', 'tutor'),
+                type: modalType[appliesTo as keyof typeof modalType],
                 form,
               },
               closeOnOutsideClick: true,
@@ -207,17 +261,22 @@ function CouponDiscount() {
 export default CouponDiscount;
 
 interface AppliesToItemProps {
-  image: string;
+  type: 'courses' | 'bundles' | 'categories' | 'membershipPlans';
+  image?: string;
   title: string;
   subTitle: string | ReactNode;
   handleDeleteClick: () => void;
 }
 
-function AppliesToItem({ image, title, subTitle, handleDeleteClick }: AppliesToItemProps) {
+function AppliesToItem({ type, image, title, subTitle, handleDeleteClick }: AppliesToItemProps) {
   return (
     <div css={styles.selectedItem}>
       <div css={styles.selectedThumb}>
-        <img src={image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+        {type !== 'membershipPlans' ? (
+          <img src={image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+        ) : (
+          <SVGIcon name="crownOutlined" width={32} height={32} />
+        )}
       </div>
       <div css={styles.selectedContent}>
         <div css={styles.selectedTitle}>{title}</div>
@@ -234,69 +293,76 @@ function AppliesToItem({ image, title, subTitle, handleDeleteClick }: AppliesToI
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   discountTypeWrapper: css`
-		display: flex;
-		gap: ${spacing[20]};
-	`,
+    display: flex;
+    gap: ${spacing[20]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   addCoursesButton: css`
-		width: fit-content;
-		color: ${colorTokens.text.brand};
+    width: fit-content;
+    color: ${colorTokens.text.brand};
 
-		svg {
-			color: ${colorTokens.text.brand};
-		}
-	`,
+    svg {
+      color: ${colorTokens.text.brand};
+    }
+  `,
   price: css`
-		display: flex;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    gap: ${spacing[4]};
+  `,
   discountPrice: css`
-		text-decoration: line-through;
-	`,
+    text-decoration: line-through;
+  `,
   selectedWrapper: css`
-		border: 1px solid ${colorTokens.stroke.divider};
-		border-radius: ${borderRadius[6]};
-	`,
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius[6]};
+  `,
   selectedItem: css`
-		padding: ${spacing[12]};
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-		
-		&:not(:last-child) {
-			border-bottom: 1px solid ${colorTokens.stroke.divider};
-		}
-	`,
+    padding: ${spacing[12]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+
+    &:not(:last-child) {
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    }
+  `,
   selectedContent: css`
-		width: 100%;
-	`,
+    width: 100%;
+  `,
   selectedTitle: css`
-		${typography.small()};
-		color: ${colorTokens.text.primary};
-		margin-bottom: ${spacing[4]};
-	`,
+    ${typography.small()};
+    color: ${colorTokens.text.primary};
+    margin-bottom: ${spacing[4]};
+  `,
   selectedSubTitle: css`
-		${typography.small()};
-		color: ${colorTokens.text.hints};
-	`,
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+  `,
   selectedThumb: css`
-		height: 48px;
-	`,
+    height: 48px;
+    color: ${colorTokens.icon.hints};
+    ${styleUtils.flexCenter()};
+    flex-shrink: 0;
+  `,
   thumbnail: css`
-		width: 48px;
-		height: 48px;
-		border-radius: ${borderRadius[4]};
-	`,
+    width: 48px;
+    height: 48px;
+    border-radius: ${borderRadius[4]};
+  `,
   startingFrom: css`
-		color: ${colorTokens.text.hints};
-	`,
+    color: ${colorTokens.text.hints};
+  `,
+  recurringInterval: css`
+    text-transform: capitalize;
+    color: ${colorTokens.text.hints};
+  `,
 };

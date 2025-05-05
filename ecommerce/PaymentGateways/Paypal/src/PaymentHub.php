@@ -42,6 +42,7 @@ class PaymentHub
 	 */
 	protected function boot()
 	{
+
 		$container = Factory::getContainer();
 		$container->set(Application::class, function() {
 			$app = new Application();
@@ -65,7 +66,7 @@ class PaymentHub
 			);
 
 			if (!$paymentInstance->check()) {
-				throw new InvalidConfigurationException(sprintf('Invalid payment configuration found for the payment %s', $this->payment));
+				throw new InvalidConfigurationException(sprintf('%s payment method is not configured properly! Contact with Site Administrator.', ucfirst($configInstance->getName())));
 			}
 
 			$paymentInstance->setup();

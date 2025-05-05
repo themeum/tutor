@@ -1,19 +1,22 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { type IconCollection, type Option, isDefined } from '@Utils/types';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import { type IconCollection } from '@TutorShared/icons/types';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type Option, isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 
-import Show from '@Controls/Show';
-import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
@@ -68,12 +71,15 @@ const FormSelectInput = <T,>({
   isAiOutline = false,
   selectOnFocus,
 }: FormSelectInputProps<T>) => {
-  const getInitialValue = () =>
-    options.find((item) => item.value === field.value) || {
-      label: '',
-      value: '',
-      description: '',
-    };
+  const getInitialValue = useCallback(
+    () =>
+      options.find((item) => item.value === field.value) || {
+        label: '',
+        value: '',
+        description: '',
+      },
+    [field.value, options],
+  );
 
   const hasDescription = useMemo(() => options.some((option) => isDefined(option.description)), [options]);
 
@@ -84,6 +90,7 @@ const FormSelectInput = <T,>({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const optionRef = useRef<HTMLLIElement>(null);
+  const activeItemRef = useRef<HTMLLIElement>(null);
 
   const selections = useMemo(() => {
     if (isSearchable) {
@@ -107,18 +114,48 @@ const FormSelectInput = <T,>({
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
+
+  const handleOptionSelect = (option: Option<T>, event?: React.MouseEvent) => {
+    event?.stopPropagation();
+
+    if (!option.disabled) {
+      field.onChange(option.value);
+      onChange(option);
+      setSearchText('');
+      setIsSearching(false);
+      setIsOpen(false);
+    }
+  };
+
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: selections,
+    isOpen,
+    selectedValue: field.value,
+    onSelect: handleOptionSelect,
+    onClose: () => {
+      setIsOpen(false);
+      setIsSearching(false);
+      setSearchText('');
+    },
+  });
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [isOpen, activeIndex]);
 
   return (
     <FormFieldWrapper
@@ -140,28 +177,14 @@ const FormSelectInput = <T,>({
         return (
           <div css={styles.mainWrapper}>
             <div css={styles.inputWrapper(isAiOutline)} ref={triggerRef}>
-              <div css={styles.leftIcon({ hasDescription })}>
+              <div css={styles.leftIcon}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
                   {(iconName) => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
                 </Show>
               </div>
 
-              <div
-                css={{
-                  width: '100%',
-                }}
-                onClick={() => {
-                  setIsOpen((previousState) => !previousState);
-                  inputRef.current?.focus();
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === '') {
-                    setIsOpen((previousState) => !previousState);
-                    inputRef.current?.focus();
-                  }
-                }}
-              >
+              <div css={{ width: '100%' }}>
                 <input
                   {...restInputProps}
                   {...additionalAttributes}
@@ -186,6 +209,23 @@ const FormSelectInput = <T,>({
                   placeholder={placeholder}
                   value={isSearching ? searchText : inputValue}
                   title={inputValue}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsOpen((previousState) => !previousState);
+                    inputRef.current?.focus();
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+
+                      setIsOpen((previousState) => !previousState);
+                      inputRef.current?.focus();
+                    }
+
+                    if (event.key === 'Tab') {
+                      setIsOpen(false);
+                    }
+                  }}
                   onFocus={
                     selectOnFocus && isSearchable
                       ? (event) => {
@@ -212,13 +252,14 @@ const FormSelectInput = <T,>({
 
               {!hideCaret && !loading && (
                 <button
+                  tabIndex={-1}
                   type="button"
                   css={styles.caretButton({ isOpen })}
                   onClick={() => {
                     setIsOpen((previousState) => !previousState);
                     inputRef.current?.focus();
                   }}
-                  disabled={readOnly || options.length === 0}
+                  disabled={disabled || readOnly || options.length === 0}
                 >
                   <SVGIcon name="chevronDown" width={20} height={20} />
                 </button>
@@ -232,12 +273,17 @@ const FormSelectInput = <T,>({
                 setIsSearching(false);
                 setSearchText('');
               }}
+              onEscape={() => {
+                setIsOpen(false);
+                setIsSearching(false);
+                setSearchText('');
+              }}
             >
               <div
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },
@@ -250,26 +296,30 @@ const FormSelectInput = <T,>({
                     when={selections.length > 0}
                     fallback={<li css={styles.emptyState}>{__('No options available', 'tutor')}</li>}
                   >
-                    {selections.map((option) => (
+                    {selections.map((option, index) => (
                       <li
                         key={String(option.value)}
-                        ref={option.value === field.value ? optionRef : null}
+                        ref={option.value === field.value ? optionRef : activeIndex === index ? activeItemRef : null}
                         css={styles.optionItem({
                           isSelected: option.value === field.value,
+                          isActive: index === activeIndex,
+                          isDisabled: !!option.disabled,
                         })}
                       >
                         <button
                           type="button"
                           css={styles.label}
-                          onClick={() => {
-                            field.onChange(option.value);
-                            onChange(option);
-
-                            setSearchText('');
-                            setIsSearching(false);
-                            setIsOpen(false);
+                          onClick={(event) => {
+                            if (!option.disabled) {
+                              handleOptionSelect(option, event);
+                            }
                           }}
+                          disabled={option.disabled}
                           title={option.label}
+                          onMouseOver={() => setActiveIndex(index)}
+                          onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
+                          onFocus={() => setActiveIndex(index)}
+                          aria-selected={activeIndex === index}
                         >
                           <Show when={option.icon}>
                             <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
@@ -323,10 +373,9 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    
-    ${
-      isAiOutline &&
-      css`
+
+    ${isAiOutline &&
+    css`
       &::before {
         content: '';
         position: absolute;
@@ -334,31 +383,22 @@ const styles = {
         background: ${colorTokens.ai.gradient_1};
         color: ${colorTokens.text.primary};
         border: 1px solid transparent;
-        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        -webkit-mask:
+          linear-gradient(#fff 0 0) padding-box,
+          linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
         border-radius: 6px;
       }
-    `
-    }
+    `}
   `,
-  leftIcon: ({
-    hasDescription = false,
-  }: {
-    hasDescription: boolean;
-  }) => css`
+  leftIcon: css`
     position: absolute;
     left: ${spacing[8]};
-    top: ${spacing[4]};
+    ${styleUtils.display.flex()};
+    align-items: center;
+    height: 100%;
     color: ${colorTokens.icon.default};
-
-		${
-      hasDescription &&
-      css`
-			top: calc(${spacing[12]});
-		`
-    }
-		
   `,
   input: ({
     hasLeftIcon,
@@ -382,79 +422,61 @@ const styles = {
       background-color: transparent;
       background-color: ${colorTokens.background.white};
 
-      ${
-        hasLeftIcon &&
-        css`
-          padding-left: ${spacing[48]};
-        `
-      }
+      ${hasLeftIcon &&
+      css`
+        padding-left: ${spacing[48]};
+      `}
 
-      ${
-        hasDescription &&
-        css`
-          &.tutor-input-field {
-            height: 56px;
-            padding-bottom: ${spacing[24]}
-          };
-        `
-      }
+      ${hasDescription &&
+      css`
+        &.tutor-input-field {
+          height: 56px;
+          padding-bottom: ${spacing[24]};
+        }
+      `}
 
-      ${
-        hasError &&
-        css`
+      ${hasError &&
+      css`
         background-color: ${colorTokens.background.status.errorFail};
-      `
-      }
+      `}
 
-      ${
-        isAiOutline &&
-        css`
+      ${isAiOutline &&
+      css`
         position: relative;
         border: none;
         background: transparent;
-      `
-      }
+      `}
 
       :focus {
         ${styleUtils.inputFocus};
 
-        ${
-          isMagicAi &&
-          css`
+        ${isMagicAi &&
+        css`
           outline-color: ${colorTokens.stroke.magicAi};
           background-color: ${colorTokens.background.magicAi[8]};
-        `
-        }
+        `}
 
-        ${
-          hasError &&
-          css`
+        ${hasError &&
+        css`
           border-color: ${colorTokens.stroke.danger};
           background-color: ${colorTokens.background.status.errorFail};
-        `
-        }
+        `}
       }
     }
   `,
-  description: ({
-    hasLeftIcon,
-  }: {
-    hasLeftIcon: boolean;
-  }) => css`
-		${typography.small()};
-		${styleUtils.text.ellipsis(1)}
-		color: ${colorTokens.text.hints};
-		position: absolute;
-		bottom: ${spacing[8]};
-		padding-inline: calc(${spacing[16]} + 1px) ${spacing[32]};
+  description: ({ hasLeftIcon }: { hasLeftIcon: boolean }) => css`
+    ${typography.small()};
+    ${styleUtils.text.ellipsis(1)}
+    color: ${colorTokens.text.hints};
+    position: absolute;
+    bottom: ${spacing[8]};
+    padding-inline: calc(${spacing[16]} + 1px) ${spacing[32]};
 
-		${
-      hasLeftIcon &&
-      css`
-			padding-left: calc(${spacing[48]} + 1px);
-		`
-    }
-	`,
+    ${hasLeftIcon &&
+    css`
+      padding-left: calc(${spacing[48]} + 1px);
+    `}
+  `,
   listLabel: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
@@ -476,16 +498,14 @@ const styles = {
         justify-content: center;
       }
 
-      ${
-        !isDisabled &&
-        css`
+      ${!isDisabled &&
+      css`
         color: ${colorTokens.text.title};
 
         &:hover {
           text-decoration: underline;
         }
-      `
-      }
+      `}
     }
   `,
   optionsWrapper: css`
@@ -502,15 +522,22 @@ const styles = {
     max-height: 500px;
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
 
-    ${
-      !removeOptionsMinWidth &&
-      css`
+    ${!removeOptionsMinWidth &&
+    css`
       min-width: 200px;
-    `
-    }
+    `}
   `,
-  optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
+  optionItem: ({
+    isSelected = false,
+    isActive = false,
+    isDisabled = false,
+  }: {
+    isSelected: boolean;
+    isActive: boolean;
+    isDisabled: boolean;
+  }) => css`
     ${typography.body()};
     min-height: 36px;
     height: 100%;
@@ -518,15 +545,21 @@ const styles = {
     display: flex;
     align-items: center;
     transition: background-color 0.3s ease-in-out;
-    cursor: pointer;
+    cursor: ${isDisabled ? 'not-allowed' : 'pointer'};
+    opacity: ${isDisabled ? 0.5 : 1};
+
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+    `}
 
     &:hover {
-      background-color: ${colorTokens.background.hover};
+      background-color: ${!isDisabled && colorTokens.background.hover};
     }
 
-    ${
-      isSelected &&
-      css`
+    ${!isDisabled &&
+    isSelected &&
+    css`
       background-color: ${colorTokens.background.active};
       position: relative;
 
@@ -540,12 +573,12 @@ const styles = {
         background-color: ${colorTokens.action.primary.default};
         border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
       }
-    `
-    }
+    `}
   `,
   label: css`
     ${styleUtils.resetButton};
-		${styleUtils.text.ellipsis(1)}
+    ${styleUtils.text.ellipsis(1)};
+    color: ${colorTokens.text.title};
     width: 100%;
     height: 100%;
     display: flex;
@@ -557,6 +590,13 @@ const styles = {
     line-height: ${lineHeight[24]};
     word-break: break-all;
     cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      color: ${colorTokens.text.title};
+    }
 
     span {
       flex-shrink: 0;
@@ -580,21 +620,30 @@ const styles = {
   caretButton: ({ isOpen = false }: { isOpen: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
-    top: 0;
-    bottom: 0;
-    right: ${spacing[8]};
-    margin: auto 0;
+    right: ${spacing[4]};
     display: flex;
     align-items: center;
-		transition: transform 0.3s ease-in-out;
-		color: ${colorTokens.icon.default};
-		
-		${
-      isOpen &&
-      css`
-      transform: rotate(180deg);
-    `
+    transition: transform 0.3s ease-in-out;
+    color: ${colorTokens.icon.default};
+    border-radius: ${borderRadius[4]};
+    padding: ${spacing[6]};
+    height: 100%;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
     }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+    }
+
+    ${isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   emptyState: css`
     ${styleUtils.flexCenter()};

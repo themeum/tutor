@@ -154,8 +154,6 @@ gulp.task('watch', function () {
 			gulp.parallel('tutor_admin', 'tutor_setup')();
 		} else if (e.history[0].includes('/frontend-dashboard/')) {
 			gulp.parallel('tutor_front_dashboard')();
-		} else if (e.history[0].includes('/course-builder/')) {
-			gulp.parallel('tutor_course_builder')();
 		} else if (e.history[0].includes('modules/')) {
 			gulp.parallel('tutor_front', 'tutor_admin', 'tutor_front_dashboard')();
 		} else {
@@ -224,6 +222,7 @@ gulp.task('copy', function () {
 			'!./LICENSE.txt',
 			'!./*.lock',
 			'!./*.js',
+			'!./*.mjs',
 			'!./*.json',
 			'!yarn-error.log',
 			'!bin/**',
@@ -242,12 +241,15 @@ gulp.task('copy', function () {
 			'!vendor/webmozart/**',
 			'!vendor/yoast/**',
 			'!.phpunit.result.cache',
-			'!.travis.yml',
+			'!*.yml',
+			'!*.yaml',
 			'!phpunit.xml.dist',
 			'!phpunit.xml',
 			'!phpcs.xml',
 			'!phpcs.xml.dist',
 			'!./tutor-droip/**',
+			'!./cypress/**',
+			'!./cypress.config.ts',
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });
@@ -261,7 +263,7 @@ gulp.task('copy-fonts', function () {
 		.pipe(gulp.dest(ASSETS_FONTS_DIR));
 });
 
-gulp.task("copy-tutor-droip", function() {
+gulp.task("copy-tutor-droip", function () {
 	return gulp
 		.src("tutor-droip/dist/**")
 		.pipe(gulp.dest("build/tutor/tutor-droip"));

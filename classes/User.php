@@ -41,6 +41,7 @@ class User {
 	const COVER_PHOTO_META       = '_tutor_cover_photo';
 	const PROFILE_BIO_META       = '_tutor_profile_bio';
 	const PROFILE_JOB_TITLE_META = '_tutor_profile_job_title';
+	const TUTOR_STUDENT_META     = '_is_tutor_student';
 
 	/**
 	 * User model
@@ -158,31 +159,51 @@ class User {
 	 * @return boolean
 	 */
 	public static function is_student( $user_id = 0 ) {
-		return self::has_any_role( array( self::STUDENT ), $user_id );
+		$is_tutor_student = get_user_meta( tutor_utils()->get_user_id( $user_id ), self::TUTOR_STUDENT_META, true );
+		return $is_tutor_student ? true : false;
 	}
 
 	/**
 	 * Check user is admin.
 	 *
 	 * @since 2.2.0
+	 * @since 3.2.0 user_id param added.
+	 *
+	 * @param int $user_id user id.
 	 *
 	 * @return boolean
 	 */
-	public static function is_admin() {
-		return current_user_can( self::ADMIN );
+	public static function is_admin( $user_id = 0 ) {
+		return user_can( tutor_utils()->get_user_id( $user_id ), self::ADMIN );
 	}
 
 	/**
 	 * Check current user is instructor.
 	 *
 	 * @since 2.2.0
+	 * @since 3.2.0 user_id param added.
 	 *
+	 * @param int  $user_id user id.
 	 * @param bool $is_approved instructor is approved or not.
 	 *
 	 * @return boolean
 	 */
-	public static function is_instructor( $is_approved = true ) {
-		return tutils()->is_instructor( 0, $is_approved );
+	public static function is_instructor( $user_id = 0, $is_approved = true ) {
+		return tutils()->is_instructor( $user_id, $is_approved );
+	}
+
+	/**
+	 * Check current user is only instructor as admin also has instructor role.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param int  $user_id user id.
+	 * @param bool $is_approved instructor is approved or not.
+	 *
+	 * @return boolean
+	 */
+	public static function is_only_instructor( $user_id = 0, $is_approved = true ) {
+		return ! self::is_admin( $user_id ) && self::is_instructor( $user_id, $is_approved );
 	}
 
 	/**

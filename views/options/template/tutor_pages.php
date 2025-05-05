@@ -58,7 +58,7 @@ $tutor_pages = tutor_utils()->tutor_pages();
 					<div class="tutor-d-flex tutor-align-center">
 						<span class='tutor-icon-circle-mark tutor-color-success'></span>
 						<span class='tutor-mx-4'>/</span>
-						<span><?php echo esc_html( $page->post_name ); ?></span>
+						<span><?php echo esc_html( urldecode( $page->post_name ) ); ?></span>
 						<span class="tutor-ml-8">
 							<a href="<?php echo esc_url( get_permalink( $page ) ); ?>" class="tutor-iconic-btn" target="_blank">
 								<i class="tutor-icon-external-link"></i>

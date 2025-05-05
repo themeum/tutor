@@ -2,25 +2,32 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
-import { useToast } from '@Atoms/Toast';
 import type {
   QuizFeedbackMode,
   QuizLayoutView,
   QuizQuestionsOrder,
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
+import { useToast } from '@TutorShared/atoms/Toast';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { authApiInstance, wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import { normalizeLineEndings } from '@Utils/util';
-import type { ContentDripType, TutorMutationResponse } from './course';
-import type { ContentType, ID } from './curriculum';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { convertToErrorMessage, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 
-export type QuizDataStatus = 'new' | 'update' | 'no_change';
+import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import type { ContentDripType } from './course';
+import type { ContentType } from './curriculum';
+
+export const QuizDataStatus = {
+  NEW: 'new',
+  UPDATE: 'update',
+  NO_CHANGE: 'no_change',
+} as const;
+
+export type QuizDataStatus = (typeof QuizDataStatus)[keyof typeof QuizDataStatus];
 
 export type QuizQuestionType =
   | 'true_false'
@@ -62,7 +69,7 @@ export interface QuizQuestion {
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: boolean;
-    randomize_options: boolean;
+    randomize_question: boolean;
     question_mark: number;
     show_question_mark: boolean;
     has_multiple_correct_answer: boolean;
@@ -81,7 +88,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: '0' | '1';
-    randomize_options: '0' | '1';
+    randomize_question: '0' | '1';
     question_mark: number;
     show_question_mark: '0' | '1';
     has_multiple_correct_answer?: '0' | '1';
@@ -94,9 +101,9 @@ interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' |
   questions: QuizQuestionsForPayload[];
   quiz_option: Omit<QuizDetailsResponse['quiz_option'], 'content_drip_settings'> & {
     content_drip_settings?: {
-      unlock_date: string;
-      after_xdays_of_enroll: number;
-      prerequisites: ID[];
+      unlock_date?: string;
+      after_xdays_of_enroll?: number;
+      prerequisites?: ID[] | string;
     };
     quiz_type?: string;
   };
@@ -107,6 +114,9 @@ interface QuizPayload {
   payload: QuizResponseWithStatus;
   deleted_question_ids?: ID[];
   deleted_answer_ids?: ID[];
+  'content_drip_settings[unlock_date]'?: string;
+  'content_drip_settings[after_xdays_of_enroll]'?: number;
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface QuizDetailsResponse {
@@ -140,7 +150,7 @@ export interface QuizDetailsResponse {
 }
 export interface QuizForm {
   ID: ID;
-  _data_status: 'new' | 'update' | 'no_change';
+  _data_status: QuizDataStatus;
   quiz_title: string;
   quiz_description: string;
   quiz_option: {
@@ -197,39 +207,42 @@ export interface H5PContentResponse {
   output: H5PContent[];
 }
 
-export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
+export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
   const calculateQuizDataStatus = (answer: QuizQuestionOption) => {
     if (answer.image_url) {
-      return answer.answer_view_format === 'text_image' ? 'no_change' : 'update';
+      return answer.answer_view_format === 'text_image' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
     }
 
-    return answer.answer_view_format === 'text' ? 'no_change' : 'update';
+    return answer.answer_view_format === 'text' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
   };
 
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
     if (question.question_settings) {
       question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
       question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
-      question.question_settings.randomize_options = !!Number(question.question_settings.randomize_options);
+      question.question_settings.randomize_question = !!Number(question.question_settings.randomize_question);
     }
     question.question_answers = question.question_answers.map((answer) => ({
       ...answer,
-      _data_status: 'no_change',
+      _data_status: calculateQuizDataStatus(answer),
       is_saved: true,
+      answer_view_format: answer.image_url ? 'text_image' : 'text',
     }));
     question.question_description = normalizeLineEndings(question.question_description) || '';
-    question.answer_explanation = normalizeLineEndings(question.answer_explanation) || '';
+    question.answer_explanation =
+      question.answer_explanation === '<p><br data-mce-bogus="1"></p>'
+        ? ''
+        : normalizeLineEndings(question.answer_explanation) || '';
 
     switch (question.question_type) {
       case 'single_choice': {
         return {
           ...question,
-          _data_status: 'update',
+          _data_status: QuizDataStatus.UPDATE,
           question_type: 'multiple_choice',
           question_answers: question.question_answers.map((answer) => ({
             ...answer,
-            _data_status: calculateQuizDataStatus(answer),
-            answer_view_format: answer.image_url ? 'text_image' : 'text',
+            _data_status: QuizDataStatus.UPDATE,
           })),
           question_settings: {
             ...question.question_settings,
@@ -241,12 +254,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'multiple_choice': {
         return {
           ...question,
-          _data_status: question.question_settings.has_multiple_correct_answer ? 'no_change' : 'update',
-          question_answers: question.question_answers.map((answer) => ({
-            ...answer,
-            _data_status: calculateQuizDataStatus(answer),
-            answer_view_format: answer.image_url ? 'text_image' : 'text',
-          })),
+          _data_status: question.question_settings.has_multiple_correct_answer
+            ? QuizDataStatus.NO_CHANGE
+            : QuizDataStatus.UPDATE,
           question_settings: {
             ...question.question_settings,
             has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer
@@ -258,7 +268,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'matching': {
         return {
           ...question,
-          _data_status: question.question_settings.is_image_matching ? 'no_change' : 'update',
+          _data_status: question.question_settings.is_image_matching ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE,
           question_settings: {
             ...question.question_settings,
             is_image_matching: question.question_settings.is_image_matching
@@ -270,8 +280,12 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'image_matching': {
         return {
           ...question,
-          _data_status: 'update',
+          _data_status: QuizDataStatus.UPDATE,
           question_type: 'matching',
+          question_answers: question.question_answers.map((answer) => ({
+            ...answer,
+            _data_status: QuizDataStatus.UPDATE,
+          })),
           question_settings: {
             ...question.question_settings,
             question_type: 'matching',
@@ -282,33 +296,33 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       default:
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: QuizDataStatus.NO_CHANGE,
         } as QuizQuestion;
     }
   };
 
   return {
     ID: quiz.ID,
-    _data_status: 'no_change',
-    quiz_title: quiz.post_title || '',
-    quiz_description: quiz.post_content || '',
+    _data_status: QuizDataStatus.NO_CHANGE,
+    quiz_title: quiz.post_title ?? '',
+    quiz_description: quiz.post_content ?? '',
     quiz_option: {
       time_limit: {
-        time_value: quiz.quiz_option.time_limit.time_value || 0,
-        time_type: quiz.quiz_option.time_limit.time_type || 'minutes',
+        time_value: quiz.quiz_option.time_limit.time_value ?? 0,
+        time_type: quiz.quiz_option.time_limit.time_type ?? 'minutes',
       },
       hide_quiz_time_display: quiz.quiz_option.hide_quiz_time_display === '1',
-      feedback_mode: quiz.quiz_option.feedback_mode || 'retry',
-      attempts_allowed: quiz.quiz_option.attempts_allowed || 10,
+      feedback_mode: quiz.quiz_option.feedback_mode ?? 'retry',
+      attempts_allowed: quiz.quiz_option.attempts_allowed ?? 10,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
-      passing_grade: quiz.quiz_option.passing_grade || 80,
-      max_questions_for_answer: quiz.quiz_option.max_questions_for_answer || 10,
+      passing_grade: quiz.quiz_option.passing_grade ?? 80,
+      max_questions_for_answer: quiz.quiz_option.max_questions_for_answer ?? 10,
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
-      question_layout_view: quiz.quiz_option.question_layout_view || '',
-      questions_order: quiz.quiz_option.questions_order || 'rand',
+      question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
+      questions_order: quiz.quiz_option.questions_order ?? 'rand',
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
-      short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit || 200,
-      open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit || 500,
+      short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,
+      open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit ?? 500,
       content_drip_settings: quiz.quiz_option.content_drip_settings || {
         unlock_date: '',
         after_xdays_of_enroll: 0,
@@ -318,6 +332,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     questions: (quiz.questions || []).map((question) => convertedQuestion(question)),
     deleted_question_ids: [],
     deleted_answer_ids: [],
+    ...Object.fromEntries(slotFields.map((key) => [key, quiz[key as keyof QuizDetailsResponse]])),
   };
 };
 
@@ -326,6 +341,8 @@ export const convertQuizFormDataToPayload = (
   topicId: ID,
   contentDripType: ContentDripType,
   courseId: ID,
+  questionsSlotFields: string[],
+  settingsSlotFields: string[],
 ): QuizPayload => {
   return {
     course_id: courseId,
@@ -340,7 +357,11 @@ export const convertQuizFormDataToPayload = (
         feedback_mode: formData.quiz_option.feedback_mode,
         hide_question_number_overview: formData.quiz_option.hide_question_number_overview ? '1' : '0',
         hide_quiz_time_display: formData.quiz_option.hide_quiz_time_display ? '1' : '0',
-        max_questions_for_answer: formData.quiz_option.max_questions_for_answer,
+        max_questions_for_answer:
+          isAddonEnabled(Addons.H5P_INTEGRATION) &&
+          formData.questions.every((question) => question.question_type === 'h5p')
+            ? formData.questions.length
+            : formData.quiz_option.max_questions_for_answer,
         open_ended_answer_characters_limit: formData.quiz_option.open_ended_answer_characters_limit,
         pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
         passing_grade: formData.quiz_option.passing_grade,
@@ -358,7 +379,19 @@ export const convertQuizFormDataToPayload = (
             pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
           }),
         ...(isAddonEnabled(Addons.CONTENT_DRIP) && {
-          content_drip_settings: formData.quiz_option.content_drip_settings,
+          content_drip_settings: {
+            ...(contentDripType === 'unlock_by_date' && {
+              unlock_date: formData.quiz_option.content_drip_settings.unlock_date,
+            }),
+            ...(contentDripType === 'specific_days' && {
+              after_xdays_of_enroll: formData.quiz_option.content_drip_settings.after_xdays_of_enroll,
+            }),
+            ...(contentDripType === 'after_finishing_prerequisites' && {
+              prerequisites: formData.quiz_option.content_drip_settings.prerequisites?.length
+                ? formData.quiz_option.content_drip_settings.prerequisites
+                : '',
+            }),
+          },
         }),
         ...(isAddonEnabled(Addons.H5P_INTEGRATION) &&
           formData.questions.every((question) => question.question_type === 'h5p') && {
@@ -381,7 +414,7 @@ export const convertQuizFormDataToPayload = (
             answer_required: question.question_settings.answer_required ? '1' : '0',
             question_mark: question.question_settings.question_mark,
             question_type: question.question_type as QuizQuestionType,
-            randomize_options: question.question_settings.randomize_options ? '1' : '0',
+            randomize_question: question.question_settings.randomize_question ? '1' : '0',
             show_question_mark: question.question_settings.show_question_mark ? '1' : '0',
             ...(question.question_type === 'multiple_choice' && {
               has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer ? '1' : '0',
@@ -412,11 +445,28 @@ export const convertQuizFormDataToPayload = (
                 answer_order: answer.answer_order,
               }) as QuizQuestionOption,
           ),
+          ...Object.fromEntries(questionsSlotFields.map((key) => [key, question[key as keyof QuizQuestion]])),
         };
       }),
     },
     deleted_question_ids: formData.deleted_question_ids,
     deleted_answer_ids: formData.deleted_answer_ids,
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': formData.quiz_option.content_drip_settings.unlock_date,
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]':
+          formData.quiz_option.content_drip_settings.after_xdays_of_enroll,
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': formData.quiz_option.content_drip_settings.prerequisites?.length
+          ? formData.quiz_option.content_drip_settings.prerequisites
+          : '',
+      }),
+    ...Object.fromEntries(settingsSlotFields.map((key) => [key, formData[key as keyof QuizForm]])),
   };
 };
 
@@ -435,7 +485,7 @@ export const convertQuizQuestionFormDataToPayloadForUpdate = (data: QuizQuestion
 };
 
 const importQuiz = (payload: ImportQuizPayload) => {
-  return authApiInstance.post<
+  return wpAjaxInstance.post<
     string,
     {
       data: {
@@ -443,10 +493,7 @@ const importQuiz = (payload: ImportQuizPayload) => {
       };
       success: boolean;
     }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'quiz_import_data',
-    ...payload,
-  });
+  >(endpoints.QUIZ_IMPORT_DATA, payload);
 };
 
 export const useImportQuizMutation = () => {
@@ -473,7 +520,7 @@ export const useImportQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },
@@ -481,7 +528,7 @@ export const useImportQuizMutation = () => {
 };
 
 const exportQuiz = (quizId: ID) => {
-  return authApiInstance.post<
+  return wpAjaxInstance.post<
     string,
     {
       data: {
@@ -490,8 +537,7 @@ const exportQuiz = (quizId: ID) => {
       };
       success: boolean;
     }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'quiz_export_data',
+  >(endpoints.QUIZ_EXPORT_DATA, {
     quiz_id: quizId,
   });
 };
@@ -527,7 +573,7 @@ export const useExportQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },
@@ -535,10 +581,7 @@ export const useExportQuizMutation = () => {
 };
 
 const saveQuiz = (payload: QuizPayload) => {
-  return wpAjaxInstance.post<QuizPayload, TutorMutationResponse<QuizDetailsResponse>>(endpoints.SAVE_QUIZ, {
-    action: 'tutor_quiz_builder_save',
-    ...payload,
-  });
+  return wpAjaxInstance.post<QuizPayload, TutorMutationResponse<QuizDetailsResponse>>(endpoints.SAVE_QUIZ, payload);
 };
 
 export const useSaveQuizMutation = () => {
@@ -562,7 +605,7 @@ export const useSaveQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },
@@ -570,9 +613,8 @@ export const useSaveQuizMutation = () => {
 };
 
 const getQuizDetails = (quizId: ID) => {
-  return authApiInstance.post<ID, AxiosResponse<QuizDetailsResponse>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_details',
-    quiz_id: quizId,
+  return wpAjaxInstance.get<QuizDetailsResponse>(endpoints.GET_QUIZ_DETAILS, {
+    params: { quiz_id: quizId },
   });
 };
 
@@ -589,29 +631,30 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
     return null;
   }
 
-  if (dataStatus === 'new') {
-    return 'new';
+  if (dataStatus === QuizDataStatus.NEW) {
+    return QuizDataStatus.NEW;
   }
 
-  if ((dataStatus === 'update' || dataStatus === 'no_change') && currentStatus === 'update') {
-    return 'update';
+  if (
+    (dataStatus === QuizDataStatus.UPDATE || dataStatus === QuizDataStatus.NO_CHANGE) &&
+    currentStatus === QuizDataStatus.UPDATE
+  ) {
+    return QuizDataStatus.UPDATE;
   }
 
-  return 'no_change';
+  return QuizDataStatus.NO_CHANGE;
 };
 
 const getH5PQuizContents = (search: string) => {
-  return wpAjaxInstance
-    .post<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT, {
-      search_filter: search,
-    })
-    .then((response) => response.data);
+  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT, {
+    search_filter: search,
+  });
 };
 
 export const useGetH5PQuizContentsQuery = (search: string, contentType: ContentType) => {
   return useQuery({
     queryKey: ['H5PQuizContents', search],
-    queryFn: () => getH5PQuizContents(search),
+    queryFn: () => getH5PQuizContents(search).then((response) => response.data),
     enabled: contentType === 'tutor_h5p_quiz',
   });
 };
@@ -638,8 +681,7 @@ export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: ContentType) 
 };
 
 const deleteQuiz = (quizId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_delete',
+  return wpAjaxInstance.post<string, TutorMutationResponse<ID>>(endpoints.DELETE_QUIZ, {
     quiz_id: quizId,
   });
 };
@@ -664,7 +706,7 @@ export const useDeleteQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },

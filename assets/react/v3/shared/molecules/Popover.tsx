@@ -1,6 +1,7 @@
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { AnimationType } from '@Hooks/useAnimation';
-import { Portal, type arrowPosition, usePortalPopover } from '@Hooks/usePortalPopover';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { Portal, type arrowPosition, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { css } from '@emotion/react';
 import type React from 'react';
 import type { RefObject } from 'react';
@@ -13,6 +14,7 @@ interface PopoverProps<T> {
   gap?: number;
   maxWidth?: string;
   closePopover: () => void;
+  closeOnEscape?: boolean;
   animationType?: AnimationType;
   hideArrow?: boolean;
 }
@@ -25,6 +27,7 @@ const Popover = <T extends HTMLElement>({
   gap,
   maxWidth,
   closePopover,
+  closeOnEscape = true,
   animationType = AnimationType.slideLeft,
   hideArrow,
 }: PopoverProps<T>) => {
@@ -36,11 +39,20 @@ const Popover = <T extends HTMLElement>({
   });
 
   return (
-    <Portal isOpen={isOpen} onClickOutside={closePopover} animationType={animationType}>
+    <Portal
+      isOpen={isOpen}
+      onClickOutside={closePopover}
+      animationType={animationType}
+      onEscape={closeOnEscape ? closePopover : undefined}
+    >
       <div
         css={[
           styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
-          { left: position.left, top: position.top, maxWidth: maxWidth ?? triggerWidth },
+          {
+            [isRTL ? 'right' : 'left']: position.left,
+            top: position.top,
+            maxWidth: maxWidth ?? triggerWidth,
+          },
         ]}
         ref={popoverRef}
       >
@@ -57,20 +69,18 @@ const styles = {
     z-index: ${zIndex.dropdown};
 
     &::before {
-      ${
-        arrow &&
-        !hideArrow &&
-        css`
+      ${arrow &&
+      !hideArrow &&
+      css`
         content: '';
         position: absolute;
         border: ${spacing[8]} solid transparent;
 
         ${arrow === 'left' && styles.arrowLeft}
         ${arrow === 'right' && styles.arrowRight}
-        ${arrow === 'top' && styles.arrowTop}
-        ${arrow === 'bottom' && styles.arrowBottom}
-      `
-      }
+          ${arrow === 'top' && styles.arrowTop}
+          ${arrow === 'bottom' && styles.arrowBottom}
+      `}
     }
   `,
   arrowLeft: css`

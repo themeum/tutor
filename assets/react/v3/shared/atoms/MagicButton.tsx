@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
 import React from 'react';
 
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { type VariantProps, createVariation } from '@Utils/create-variation';
-import { styleUtils } from '@Utils/style-utils';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { type VariantProps, createVariation } from '@TutorShared/utils/create-variation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import LoadingSpinner from './LoadingSpinner';
 
 interface MagicButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
@@ -53,8 +54,8 @@ const styles = {
     transition: box-shadow 0.5s ease;
 
     &:focus-visible {
-      outline: none;
-      box-shadow: ${shadow.button};
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
     }
 
     &:disabled {
@@ -65,15 +66,15 @@ const styles = {
       border-color: ${colorTokens.stroke.disable};
     }
   `,
-  default: css`
-    background: ${colorTokens.ai.gradient_1};
+  default: (isRTL: boolean) => css`
+    background: ${!isRTL ? colorTokens.ai.gradient_1 : colorTokens.ai.gradient_1_rtl};
     color: ${colorTokens.text.white};
 
     &::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: ${colorTokens.ai.gradient_2};
+      background: ${!isRTL ? colorTokens.ai.gradient_2 : colorTokens.ai.gradient_2_rtl};
       opacity: 0;
       transition: opacity 0.5s ease;
     }
@@ -92,26 +93,30 @@ const styles = {
     }
   `,
   outline: css`
-		position: relative;
-		&::before {
-			content: '';
-			position: absolute;
-			inset: 0;
-			background: ${colorTokens.ai.gradient_1};
-			color: ${colorTokens.text.primary};
-			border: 1px solid transparent;
-      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-			-webkit-mask-composite: xor;
-			mask-composite: exclude;
-		}
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: ${colorTokens.ai.gradient_1};
+      color: ${colorTokens.text.primary};
+      border: 1px solid transparent;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
 
-		&:hover {
-			&::before {
-				background: ${colorTokens.ai.gradient_2};
-			}
-		}
-	`,
+    &:hover {
+      &::before {
+        background: ${colorTokens.ai.gradient_2};
+      }
+    }
+  `,
   primaryOutline: css`
     border: 1px solid ${colorTokens.brand.blue};
     color: ${colorTokens.brand.blue};
@@ -136,13 +141,13 @@ const styles = {
   `,
   plain: css`
     span {
-      background: ${colorTokens.text.ai.gradient};
+      background: ${!isRTL ? colorTokens.text.ai.gradient : colorTokens.ai.gradient_1_rtl};
       background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
 
       &:hover {
-        background: ${colorTokens.ai.gradient_2};
+        background: ${!isRTL ? colorTokens.ai.gradient_2 : colorTokens.ai.gradient_2_rtl};
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
@@ -168,16 +173,16 @@ const styles = {
     true: css`
       border-radius: ${borderRadius[54]};
 
-			&::before {
-				border-radius: ${borderRadius[54]};
-			}
+      &::before {
+        border-radius: ${borderRadius[54]};
+      }
     `,
     false: css`
       border-radius: ${borderRadius[4]};
 
-			&::before {
-				border-radius: ${borderRadius[4]};
-			}
+      &::before {
+        border-radius: ${borderRadius[4]};
+      }
     `,
   },
 };
@@ -186,7 +191,7 @@ const buttonVariants = createVariation(
   {
     variants: {
       variant: {
-        default: styles.default,
+        default: styles.default(isRTL),
         primary: styles.primary,
         secondary: styles.secondary,
         outline: styles.outline,

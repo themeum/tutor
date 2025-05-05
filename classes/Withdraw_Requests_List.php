@@ -19,16 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Withdraw_Requests_List {
-
-	/**
-	 * Page title
-	 *
-	 * @since 1.0.0
-	 *
-	 * @var string
-	 */
-	public $page_title;
-
 	/**
 	 * List page slug
 	 *
@@ -44,11 +34,25 @@ class Withdraw_Requests_List {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Withdraw Request', 'tutor' );
 		/**
 		 * Approve or reject withdraw request
 		 */
 		add_action( 'wp_ajax_tutor_admin_withdraw_action', array( $this, 'update_withdraw_status' ) );
+	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Withdraw Requests', 'tutor' );
+		}
 	}
 
 	/**
@@ -66,29 +70,29 @@ class Withdraw_Requests_List {
 		$pending  = self::tabs_data( 'pending', $date, $search );
 		$rejected = self::tabs_data( 'rejected', $date, $search );
 
-		$url  = get_pagenum_link();
+		$url  = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 		$tabs = array(
 			array(
 				'key'   => 'all',
-				'title' => __( 'All', 'tutor-pro' ),
+				'title' => __( 'All', 'tutor' ),
 				'value' => $approved + $pending + $rejected,
 				'url'   => $url . '&data=all',
 			),
 			array(
 				'key'   => 'approved',
-				'title' => __( 'Approved', 'tutor-pro' ),
+				'title' => __( 'Approved', 'tutor' ),
 				'value' => $approved,
 				'url'   => $url . '&data=approved',
 			),
 			array(
 				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor-pro' ),
+				'title' => __( 'Pending', 'tutor' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
 			),
 			array(
 				'key'   => 'rejected',
-				'title' => __( 'Rejected', 'tutor-pro' ),
+				'title' => __( 'Rejected', 'tutor' ),
 				'value' => $rejected,
 				'url'   => $url . '&data=rejected',
 			),
@@ -247,5 +251,4 @@ class Withdraw_Requests_List {
 			)
 		);
 	}
-
 }

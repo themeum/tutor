@@ -24,26 +24,222 @@
 			margin-top: 20px;
 		}
 	}
-}
 
-.tutor-wp-dashboard-filter-items {
-	gap: 24px;
-	.tutor-form-label {
-		@extend .text-medium-caption;
-		color: var(--tutor-color-secondary);
+	.tutor-form-select-label {
+		display: inline-block;
+		white-space: nowrap;
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		vertical-align: middle;
+	}
+
+	.tutor-wp-dashboard-filter-items {
+		gap: 24px;
+		.tutor-form-label {
+			@extend .text-medium-caption;
+			color: var(--tutor-color-secondary);
+		}
 	}
 }
 
+.tutor-wp-dashboard-course-header {
+	border-bottom: 1px solid $border-color-secondary;
+	padding: 16px 0px;
+	margin-bottom: 24px;
 
+	&-inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
+}
 
-.tutor-course-builder {
-	&-zoom-meeting-list {
-		&-item {
-			padding: 24px 0px;
-			border-bottom: 1px solid var(--tutor-border-color);
+.tutor-wp-dashboard-course-filter {
+	display: flex;
+	align-items: start;
+	gap: 24px;
 
-			&:first-child {
-				padding-top: 0;
+	@include breakpoint-max(mobile) {
+		flex-direction: column;
+		gap: 16px;
+	}
+
+	.tutor-wp-dashboard-filter-right {
+		body:not(.rtl) & {
+			&.tutor-flex-column .tutor-wp-dashboard-filter-tag-dropdown:last-child .tutor-form-select-dropdown {
+				left: auto;
+				right: 0px;
+			}
+		}
+	}
+
+	.tutor-wp-dashboard-filter-order {
+		font-size: 16px;
+		line-height: 1.5;
+		background-color: #ffffff;
+		color: #9197A8;
+		border: 1px solid var(--tutor-border-color);
+		border-radius: 6px;
+		padding: 11px 11px;
+		cursor: pointer;
+		display: flex;
+	}
+
+	.tutor-wp-dashboard-filters {
+		position: relative;
+
+		&-button {
+			background-color: #ffffff;
+			color: #212327;
+			border: 1px solid var(--tutor-border-color);
+			border-radius: 6px;
+			padding: 6px 12px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+
+			&.active {
+				padding: 4px 6px 4px 12px;
+				
+				.rtl & {
+					padding: 4px 12px 4px 6px;
+				}
+			}
+
+			i {
+				color: #9197A8;
+			}
+		}
+
+		&-line {
+			height: 24px;
+			width: 1px;
+			background: $border-color-secondary;
+			border-radius: 4px;
+		}
+
+		&-count {
+			background-color: #D2DBF5;
+			color: var(--tutor-color-primary);
+			border-radius: 4px;
+			padding: 8px 12px;
+		}
+
+		.tutor-dropdown {
+			min-width: 266px;
+			padding: 16px;
+			border: none;
+			border-radius: 6px;
+			top: calc(100% + 2px);
+		}
+
+		.tutor-form-label {
+			margin-bottom: 4px;
+			font-weight: 400;
+		}
+	}
+
+	.tutor-wp-dashboard-filter-tag-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	.tutor-wp-dashboard-filter-tag-dropdown {
+		display: flex;
+		align-items: center;
+		border-radius: 4px;
+		background-color: #ffffff;
+
+		select.tutor-form-control {
+			width: 100px !important;
+		}
+
+		.tutor-form-select {
+			background-color: transparent !important;
+			font-size: 14px !important;
+			color: #41454F !important;
+			border: none !important;
+			border-radius: 0px !important;
+			min-width: auto !important;
+			line-height: 24px !important;
+		}
+
+		a {
+			flex-shrink: 0;
+			font-size: 14px;
+			color: #9197A8;
+			border-left: 1px solid #f5f5f5;
+			height: 40px;
+			width: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: color 0.25 ease-in-out;
+
+			.rtl & {
+				border-left: none;
+				border-right: 1px solid #f5f5f5;
+			}
+
+			&:hover {
+				color: var(--tutor-color-primary);
+			}
+		}
+	}
+
+	.tutor-wp-dashboard-filter-tag {
+		background-color: #ffffff;
+		border-radius: 4px;
+		display: flex;
+		align-items: center;
+		font-size: 14px;
+		line-height: 18px;
+		color: var(--tutor-color-secondary);
+		text-transform: capitalize;
+		padding-left: 12px;
+		
+		.rtl & {
+			padding-left: 0px;
+			padding-right: 12px;
+		}
+
+		a {
+			height: 40px;
+			width: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #9197A8;
+			border-left: 1px solid #f5f5f5;
+			transition: color 0.25 ease-in-out;
+
+			&:hover {
+				color: var(--tutor-color-primary);
+			}
+
+			.rtl & {
+				border-left: none;
+				border-right: 1px solid #f5f5f5;
+			}
+		}
+
+		.tutor-v2-date-picker {
+			input.tutor-form-control {
+				font-size: 14px !important;
+				border: none !important;
+				width: 90px;
+				padding: 0px !important;
+				margin: 0px !important;
+				background-color: transparent;
+			}
+
+			.tutor-form-icon {
+				display: none;
 			}
 		}
 	}

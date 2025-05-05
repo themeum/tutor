@@ -1,8 +1,6 @@
-/*
-Reset to default for settings individual page
-*/
-
-const optionForm = document.querySelector('#tutor-option-form');
+/**
+ * Reset to default for settings individual page
+ */
 readyState_complete(() => {
 	typeof resetConfirmation === 'function' ? resetConfirmation() : '';
 	typeof modalResetOpen === 'function' ? modalResetOpen() : '';
@@ -27,27 +25,28 @@ const modalResetOpen = () => {
 }
 
 const resetConfirmation = () => {
+	const { __, sprintf } = wp.i18n;
 	const resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 	resetDefaultBtn.forEach((resetBtn, index) => {
 		resetBtn.onclick = (event) => {
 			if (!event.detail || event.detail == 1) {
 				event.preventDefault();
-				var resetPage = resetBtn.dataset.reset;
-				let resetTitle = resetBtn.dataset.resetFor.replace('_', ' ').toUpperCase();
-				var formData = new FormData();
+				resetBtn.classList.add('is-loading');
+				const resetPage = resetBtn.dataset.reset;
+				const resetTitle = resetBtn.dataset.resetFor.replace('_', ' ').toUpperCase();
+
+				const formData = new FormData();
 				formData.append('action', 'reset_settings_data');
 				formData.append('reset_page', resetPage);
 				formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
 				const xhttp = new XMLHttpRequest();
 				xhttp.open('POST', _tutorobject.ajaxurl, true);
 				xhttp.send(formData);
 				xhttp.onreadystatechange = function () {
 					if (xhttp.readyState === 4) {
-						modalConfirmation.classList.remove('tutor-is-active');
 						let pageData = JSON.parse(xhttp.response).data;
-
 						pageData.forEach((item) => {
-
 							const field_types_associate = ['color_preset', 'upload_full', 'checkbox_notification', 'checkgroup', 'group_radio_full_3', 'group_radio', 'radio_vertical', 'checkbox_horizontal', 'radio_horizontal', 'radio_horizontal_full', 'checkbox_vertical', 'toggle_switch', 'toggle_switch_button', 'text', 'textarea', 'email', 'hidden', 'select', 'number'];
 
 							if (field_types_associate.includes(item.type)) {
@@ -180,32 +179,34 @@ const resetConfirmation = () => {
 								}
 							}
 						});
+
 						setTimeout(() => {
-							tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success');
-							if(document.getElementById('save_tutor_option')){
+							resetBtn.classList.remove('is-loading');
+							tutor_toast(__('Reset Successful', 'tutor'), sprintf(__('All modified settings of %s have been changed to default.', 'tutor'), resetTitle), 'success');
+							modalConfirmation.classList.remove('tutor-is-active');
+							document.body.classList.remove('tutor-modal-open');
+							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = false;
 							}
-						}, 300)
-
-						document.body.classList.remove('tutor-modal-open');
+						}, 300);
 					}
-
-				};
-			};
-
-		};
+				}
+			}
+		}
 	});
 }
-
-
 
 const elementByName = (key) => {
 	return document.getElementsByName(key);
 };
 
+/**
+ * Enable save button if any input changes
+ */
+const optionForm = document.querySelector('#tutor-option-form');
 if (null !== optionForm) {
 	optionForm.addEventListener('input', (event) => {
-		if(document.getElementById('save_tutor_option')){
+		if (document.getElementById('save_tutor_option')) {
 			document.getElementById('save_tutor_option').disabled = false;
 		}
 	});

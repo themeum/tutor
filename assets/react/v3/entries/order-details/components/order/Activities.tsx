@@ -1,20 +1,18 @@
-import Alert from '@Atoms/Alert';
-import { Box, BoxTitle } from '@Atoms/Box';
-import Button from '@Atoms/Button';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import Alert from '@TutorShared/atoms/Alert';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+import Button from '@TutorShared/atoms/Button';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useOrderContext } from '@OrderContexts/order-context';
 import { useAdminCommentMutation } from '@OrderServices/order';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
 import { Controller } from 'react-hook-form';
 
 function Activities() {
@@ -48,7 +46,7 @@ function Activities() {
                 render={(props) => (
                   <FormTextareaInput
                     {...props}
-                    label={__('Add a comment (Only you and other staff can see comments)', 'tutor')}
+                    label={__('Add a comment (Only admin can see comments.)', 'tutor')}
                     placeholder={__('Write a comment for this order...', 'tutor')}
                     rows={3}
                   />
@@ -69,9 +67,7 @@ function Activities() {
                       <span>{activity.created_at_readable}</span>
                       <span>{activity.message}</span>
                       <Show when={activity.cancel_reason}>
-                        <Alert type="info">
-                          {activity.cancel_reason}
-                        </Alert>
+                        <Alert type="info">{activity.cancel_reason}</Alert>
                       </Show>
                     </div>
                   </div>

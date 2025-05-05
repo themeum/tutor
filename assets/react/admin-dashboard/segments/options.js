@@ -1,7 +1,4 @@
-
 import { get_response_message } from '../../helper/response';
-import tutorFormData from '../../helper/tutor-formdata';
-import ajaxHandler from './filter';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -140,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (emailField.value && false === validateEmail(emailField.value)) {
 				emailField.style.borderColor = 'red';
 				emailField.focus();
-				tutor_toast('Warning', invalidMessage, 'error');
+				tutor_toast(__('Warning', 'tutor'), invalidMessage, 'error');
 			} else {
 				formSubmit = true;
 			}
@@ -188,6 +185,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		if (0 !== inputEmailFields.length) {
 			checkEmailFieldsOnSubmit(inputEmailFields);
 		}
+
+
+		// Only keep action and properties that starts with tutor_option
+		data = Object.fromEntries(
+			Object.entries(data).filter(([key, value]) => {
+				return key === 'action' || key.startsWith('tutor_option');
+			})
+		);
 
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
@@ -378,15 +383,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	function highlightSearchedItem(dataKey) {
 		const target = document.querySelector(`#${dataKey}`);
 		const targetEl = target && target.querySelector(`[tutor-option-name]`);
-		const scrollTargetEl = target && target.parentNode.querySelector('.tutor-option-field-row');
 
-		if (scrollTargetEl) {
+		if (targetEl) {
 			targetEl.classList.add('isHighlighted');
 			setTimeout(() => {
 				targetEl.classList.remove('isHighlighted');
 			}, 6000);
 
-			scrollTargetEl.scrollIntoView({
+			targetEl.scrollIntoView({
 				behavior: 'smooth',
 				block: 'center',
 				inline: 'nearest',
@@ -534,37 +538,27 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (monetization_field) {
 		const monetized_by = monetization_field?.value;
 		const revenue_sharing_checkbox = document.querySelector("[data-toggle-fields=sharing_percentage]");
-		const revenue_sharing_engines = ['tutor', 'wc', 'edd'];
+		const revenue_sharing_engines = ['tutor', 'wc', 'edd', 'pmpro', 'restrict-content-pro'];
 
 		const woocommerce_block = document.querySelector(".tutor-option-single-item.woocommerce");
 		const currency_block = document.querySelector(".tutor-option-single-item.ecommerce_currency");
 		const revenue_sharing_block = document.querySelector(".tutor-option-single-item.revenue_sharing");
 		const fees_block = document.querySelector(".tutor-option-single-item.fees");
 		const withdraw_block = document.querySelector(".tutor-option-single-item.withdraw");
+		const invoice_block = document.querySelector(".tutor-option-single-item.ecommerce_invoice");
 
 		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
 		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
-		
-		// Select native ecommerce nav items
-		const payment_nav_item = document.querySelector("[data-tab=ecommerce_payment]")?.parentElement;
-		const checkout_nav_item = document.querySelector("[data-tab=ecommerce_checkout]")?.parentElement;		
-		const subscription_nav_item = document.querySelector("[data-tab=ecommerce_subscription]")?.parentElement;		
-		const tax_nav_item = document.querySelector("[data-tab=ecommerce_tax]")?.parentElement;		
 
 		showHideOption(woocommerce_block, () => monetized_by === 'wc');
 		showHideOption(currency_block, () => monetized_by === 'tutor');
 		showHideOption(cart_page_field, () => monetized_by === 'tutor');
 		showHideOption(checkout_page_field, () => monetized_by === 'tutor');
+		showHideOption(invoice_block, () => monetized_by === 'tutor');
 
 		showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(monetized_by));
 		showHideOption(fees_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
 		showHideOption(withdraw_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
-
-		// Hide and show native ecommerce nav items
-		showHideOption(payment_nav_item, () => monetized_by === 'tutor');
-		showHideOption(checkout_nav_item, () => monetized_by === 'tutor');
-		showHideOption(subscription_nav_item, () => monetized_by === 'tutor');
-		showHideOption(tax_nav_item, () => monetized_by === 'tutor');
 
 		// Handle monetization fields on change.
 		monetization_field.onchange = (e) => {
@@ -573,16 +567,11 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(currency_block, () => value === 'tutor');
 			showHideOption(cart_page_field, () => value === 'tutor');
 			showHideOption(checkout_page_field, () => value === 'tutor');
+			showHideOption(invoice_block, () => value === 'tutor');
 
 			showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(value));
 			showHideOption(fees_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
 			showHideOption(withdraw_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
-
-			// Hide and show native ecommerce nav items
-			showHideOption(payment_nav_item, () => value === 'tutor');
-			showHideOption(checkout_nav_item, () => value === 'tutor');
-			showHideOption(subscription_nav_item, () => value === 'tutor');
-			showHideOption(tax_nav_item, () => value === 'tutor');
 		}
 	}
 
@@ -630,4 +619,23 @@ document.addEventListener('DOMContentLoaded', function () {
 			icon.className = isPassword ? 'tutor-icon-eye-bold' : 'tutor-icon-eye-slash-bold';
 		});
 	});
+
+	/**
+	 * Tutor option withdraw bank transfer instruction hide and show
+	 * 
+	 * @since 3.0.0
+	 */
+	const bankTransferInput = document.querySelector('#tutor_check_bank_transfer_withdraw');
+	const bankTransferInstruction = document.querySelector('#field_tutor_bank_transfer_withdraw_instruction');
+	if (bankTransferInput && bankTransferInstruction) {
+		if (!bankTransferInput.checked) {
+			bankTransferInstruction.classList.add('tutor-d-none');
+			bankTransferInstruction.previousElementSibling?.classList.add('tutor-option-no-bottom-border');
+		}
+
+		bankTransferInput.addEventListener('change', (e) => {
+			bankTransferInstruction.classList.toggle('tutor-d-none', !e.target.checked);
+			bankTransferInstruction.previousElementSibling?.classList.toggle('tutor-option-no-bottom-border', !e.target.checked);
+		});
+	}
 });

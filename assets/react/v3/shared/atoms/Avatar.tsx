@@ -1,5 +1,5 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 
 interface AvatarProps {
@@ -49,40 +49,40 @@ export function AvatarFallback({ name }: { name: string }) {
 
 const styles = {
   avatar: css`
-		width: 32px;
-		height: 32px;
-		position: relative;
-		border-radius: ${borderRadius.circle};
-		overflow: hidden;
-		border: 1px solid ${colorTokens.stroke.border};
+    width: 32px;
+    height: 32px;
+    position: relative;
+    border-radius: ${borderRadius.circle};
+    overflow: hidden;
+    border: 1px solid ${colorTokens.stroke.border};
 
-		img {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	`,
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  `,
   wrapper: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+  `,
   placeholder: css`
-		width: 32px;
-		height: 32px;
-		background-color: ${colorTokens.action.primary.wp};
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border-radius: ${borderRadius.circle};
-		color: ${colorTokens.text.white};
-		text-transform: uppercase;
-	`,
+    width: 32px;
+    height: 32px;
+    background-color: ${colorTokens.action.primary.wp};
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: ${borderRadius.circle};
+    color: ${colorTokens.text.white};
+    text-transform: uppercase;
+  `,
   name: css`
-		${typography.body()};
-		color: ${colorTokens.brand.blue};
-	`,
+    ${typography.body()};
+    color: ${colorTokens.brand.blue};
+  `,
 };

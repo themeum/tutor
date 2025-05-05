@@ -1,5 +1,5 @@
-import Skeleton from '@Atoms/Skeleton';
-import { spacing } from '@Config/styles';
+import Skeleton from '@TutorShared/atoms/Skeleton';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 const TitleSkeleton = () => {
@@ -14,9 +14,9 @@ const TitleSkeleton = () => {
 export default TitleSkeleton;
 const styles = {
   wrapper: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-		width: 100%;
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+    width: 100%;
+  `,
 };

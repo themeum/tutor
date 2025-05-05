@@ -29,7 +29,7 @@ if ( isset( $data ) ) : ?>
 						<input type="hidden" name="action" value="<?php echo esc_html( $data['ajax_action'] ); ?>" />
 						<div class="tutor-d-flex">
 							<div class="tutor-mr-12">
-								<select name="bulk-action" title="Please select an action" class="tutor-form-select">
+								<select name="bulk-action" title="Please select an action" class="tutor-form-control tutor-form-select">
 									<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
 										<option value="<?php echo esc_attr( $v['value'] ); ?>">
 											<?php echo esc_html( $v['option'] ); ?>
@@ -48,7 +48,7 @@ if ( isset( $data ) ) : ?>
 				<?php
 				$courses    = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 				$terms_arg  = array(
-					'taxonomy' => 'course-category',
+					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'orderby'  => 'term_id',
 					'order'    => 'DESC',
 				);
@@ -92,12 +92,13 @@ if ( isset( $data ) ) : ?>
 					$search        = Input::get( 'search', '' );
 					$category_slug = Input::get( 'category', '' );
 					?>
+					<?php do_action( 'tutor_data_list_before_filter_items' ); ?>
 					<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Course', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-course" data-searchable>
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-course" data-searchable>
 								<?php if ( count( $courses ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Courses', 'tutor' ); ?>
@@ -118,7 +119,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Category', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-category" data-searchable>
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-category" data-searchable>
 								<?php if ( count( $categories ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Category', 'tutor' ); ?>
@@ -140,7 +141,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-payment-status" data-search="no">
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-payment-status" data-search="no">
 								<option value="">
 									<?php esc_html_e( 'Select', 'tutor' ); ?>
 								</option>
@@ -161,7 +162,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
 								<option value="">
 									<?php esc_html_e( 'Select', 'tutor' ); ?>
 								</option>
@@ -183,7 +184,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Sort By', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-order" data-search="no">
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-order" data-search="no">
 								<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
 									<?php esc_html_e( 'DESC', 'tutor' ); ?>
 								</option>
@@ -198,7 +199,14 @@ if ( isset( $data ) ) : ?>
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Date', 'tutor' ); ?>
 						</label>
-						<div class="tutor-v2-date-picker"></div>
+						<div class="tutor-v2-date-picker">
+							<div class="tutor-form-wrap">
+								<span class="tutor-form-icon tutor-form-icon-reverse">
+									<span class="tutor-icon-calender-line" aria-hidden="true"></span>
+								</span>
+								<input class="tutor-form-control" placeholder="<?php esc_attr_e( 'Loading...', 'tutor' ); ?>">
+							</div>
+						</div>
 					</div>
 					<div class="tutor-wp-dashboard-filter-item">
 						<form action="" method="get" id="tutor-admin-search-filter-form">
@@ -207,7 +215,7 @@ if ( isset( $data ) ) : ?>
 							</label>
 							<div class="tutor-form-wrap">
 								<span class="tutor-form-icon"><span class="tutor-icon-search" area-hidden="true"></span></span>
-								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php echo esc_html( wp_unslash( $search ) ); ?>" />
+								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_html( wp_unslash( $search ) ); ?>" />
 							</div>
 						</form>
 					</div>

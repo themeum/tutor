@@ -1,42 +1,49 @@
 import {
+  closestCenter,
   DndContext,
   type DragEndEvent,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
   type UniqueIdentifier,
-  closestCenter,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
-import Popover from '@Molecules/Popover';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { useModal } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { H5PContent, QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import {
+  type H5PContent,
+  QuizDataStatus,
+  type QuizForm,
+  type QuizQuestion,
+  type QuizQuestionType,
+} from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
-import { nanoid, noop } from '@Utils/util';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { type IconCollection } from '@TutorShared/icons/types';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
   label: string;
@@ -45,7 +52,7 @@ const questionTypeOptions: {
   isPro: boolean;
 }[] = [
   {
-    label: __('True/ False', 'tutor'),
+    label: __('True/False', 'tutor'),
     value: 'true_false',
     icon: 'quizTrueFalse',
     isPro: false,
@@ -57,7 +64,7 @@ const questionTypeOptions: {
     isPro: false,
   },
   {
-    label: __('Open Ended/ Essay', 'tutor'),
+    label: __('Open Ended/Essay', 'tutor'),
     value: 'open_ended',
     icon: 'quizEssay',
     isPro: false,
@@ -96,11 +103,7 @@ const questionTypeOptions: {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const QuestionList = ({
-  isEditing,
-}: {
-  isEditing: boolean;
-}) => {
+const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const questionListRef = useRef<HTMLDivElement>(null);
@@ -120,7 +123,6 @@ const QuestionList = ({
     name: 'questions',
   });
 
-  const { showToast } = useToast();
   const { showModal } = useModal();
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -151,9 +153,10 @@ const QuestionList = ({
 
     const questionId = nanoid();
     appendQuestion({
-      _data_status: 'new',
+      _data_status: QuizDataStatus.NEW,
       question_id: questionId,
-      question_title: questionType === 'h5p' ? content?.title : `Question ${questionFields.length + 1}`,
+      question_title:
+        questionType === 'h5p' ? content?.title : sprintf(__('Question %d', 'tutor'), questionFields.length + 1),
       question_description: questionType === 'h5p' ? content?.id : '',
       question_type: questionType,
       question_answers:
@@ -161,7 +164,7 @@ const QuestionList = ({
           ? [
               {
                 answer_id: nanoid(),
-                _data_status: 'new',
+                _data_status: QuizDataStatus.NEW,
                 is_saved: true,
                 answer_title: __('True', 'tutor'),
                 is_correct: '1',
@@ -174,7 +177,7 @@ const QuestionList = ({
               {
                 answer_id: nanoid(),
                 is_saved: true,
-                _data_status: 'new',
+                _data_status: QuizDataStatus.NEW,
                 answer_title: __('False', 'tutor'),
                 is_correct: '0',
                 answer_order: 2,
@@ -187,7 +190,7 @@ const QuestionList = ({
           : questionType === 'fill_in_the_blank'
             ? [
                 {
-                  _data_status: 'new',
+                  _data_status: QuizDataStatus.NEW,
                   is_saved: false,
                   answer_id: nanoid(),
                   answer_title: '',
@@ -207,7 +210,7 @@ const QuestionList = ({
         answer_required: false,
         question_mark: contentType === 'tutor_h5p_quiz' ? 0 : 1,
         question_type: questionType,
-        randomize_options: false,
+        randomize_question: false,
         show_question_mark: false,
       },
     } as QuizQuestion);
@@ -232,12 +235,12 @@ const QuestionList = ({
     const convertedQuestion: QuizQuestion = {
       ...data,
       question_id: nanoid(),
-      _data_status: 'new',
+      _data_status: QuizDataStatus.NEW,
       question_title: `${currentQuestion.question_title} (copy)`,
       question_answers: currentQuestion.question_answers.map((answer) => ({
         ...answer,
         answer_id: nanoid(),
-        _data_status: 'new',
+        _data_status: QuizDataStatus.NEW,
       })),
     };
     const duplicateQuestionIndex = index + 1;
@@ -252,7 +255,7 @@ const QuestionList = ({
       setValidationError(null);
     }
 
-    if (question._data_status !== 'new') {
+    if (question._data_status !== QuizDataStatus.NEW) {
       form.setValue('deleted_question_ids', [...form.getValues('deleted_question_ids'), question.question_id]);
     }
   };
@@ -268,13 +271,13 @@ const QuestionList = ({
     moveQuestion(activeIndex, overIndex);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (questionListRef.current) {
       questionListRef.current.style.maxHeight = `${
         window.innerHeight - questionListRef.current.getBoundingClientRect().top
       }px`;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questionListRef.current, isEditing]);
 
   if (!form.getValues('quiz_title')) {
@@ -286,6 +289,7 @@ const QuestionList = ({
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
         <button
+          data-cy="add-question"
           ref={addButtonRef}
           type="button"
           onClick={() => {
@@ -313,15 +317,7 @@ const QuestionList = ({
       <div ref={questionListRef} css={styles.questionList}>
         <Show
           when={questions.length > 0}
-          fallback={
-            <div
-              css={css`
-                padding-left: ${spacing[28]};
-              `}
-            >
-              {__('No questions added yet.', 'tutor')}
-            </div>
-          }
+          fallback={<div css={styles.emptyQuestionText}>{__('No questions added yet.', 'tutor')}</div>}
         >
           <DndContext
             sensors={sensors}
@@ -376,7 +372,7 @@ const QuestionList = ({
         <Popover
           gap={4}
           maxWidth={'240px'}
-          arrow="top"
+          arrow={CURRENT_VIEWPORT.isAboveTablet ? 'top' : CURRENT_VIEWPORT.isAboveMobile ? 'right' : 'absoluteCenter'}
           triggerRef={addButtonRef}
           isOpen={isOpen}
           closePopover={() => setIsOpen(false)}
@@ -404,8 +400,10 @@ const QuestionList = ({
               >
                 <button key={option.value} type="button" css={styles.questionTypeOption} disabled onClick={noop}>
                   <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
-                  <span>{option.label}</span>
-                  <ProBadge size="small" content={__('Pro', 'tutor')} />
+                  <div>
+                    <span>{option.label}</span>
+                    <ProBadge size="small" content={__('Pro', 'tutor')} />
+                  </div>
                 </button>
               </Show>
             ))}
@@ -434,12 +432,27 @@ const styles = {
       ${styleUtils.resetButton};
       width: 32px;
       height: 32px;
+      border-radius: ${borderRadius[6]};
+
+      &:focus,
+      &:active,
+      &:hover {
+        background: none;
+      }
 
       svg {
         color: ${colorTokens.action.primary.default};
         width: 100%;
         height: 100%;
       }
+
+      :focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+      }
+    }
+
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[16]};
     }
   `,
   questionList: css`
@@ -460,13 +473,27 @@ const styles = {
   `,
   questionTypeOption: css`
     ${styleUtils.resetButton};
+    color: ${colorTokens.text.title};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
     transition: background-color 0.3s ease-in-out;
     display: flex;
     align-items: center;
-    gap: ${spacing[4]};
+    gap: ${spacing[10]};
     border: 2px solid transparent;
+
+    div {
+      ${styleUtils.display.flex()};
+      align-items: center;
+      gap: ${spacing[4]};
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.title};
+    }
 
     :disabled {
       cursor: not-allowed;
@@ -486,5 +513,10 @@ const styles = {
     :active:enabled {
       border-color: ${colorTokens.stroke.brand};
     }
+  `,
+  emptyQuestionText: css`
+    ${typography.small()};
+    color: ${colorTokens.text.subdued};
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[28]};
   `,
 };

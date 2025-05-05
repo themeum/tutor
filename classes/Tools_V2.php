@@ -79,11 +79,7 @@ class Tools_V2 {
 	 */
 	public function load_tools_page() {
 		$tools_fields = $this->get_tools_fields();
-		$tutor_setup  = array( 'tutor-setup' => $tools_fields['tutor-setup'] );
-		unset( $tools_fields['tutor-setup'] );
-		$tools_fields = array_merge( $tools_fields, $tutor_setup );
-
-		$active_tab = Input::get( 'sub_page', 'status' );
+		$active_tab   = Input::get( 'sub_page', 'status' );
 		include tutor()->path . '/views/options/tools.php';
 	}
 
@@ -338,15 +334,6 @@ class Tools_V2 {
 				'view_path' => tutor()->path . 'views/pages/tools/',
 				'icon'      => 'tutor-icon-api',
 				'blocks'    => array(
-					'block' => array(),
-				),
-			),
-			'tutor-setup'    => array(
-				'label'  => __( 'Setup Wizard', 'tutor' ),
-				'slug'   => 'tutor-setup',
-				'desc'   => __( 'Setup Wizard Settings', 'tutor' ),
-				'icon'   => 'tutor-icon-earth',
-				'blocks' => array(
 					'block' => array(),
 				),
 			),

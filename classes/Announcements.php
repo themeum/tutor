@@ -28,12 +28,6 @@ class Announcements {
 	 */
 
 	use Backend_Page_Trait;
-	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
 
 	/**
 	 * Bulk Action
@@ -49,7 +43,6 @@ class Announcements {
 	 * @return void
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Announcements', 'tutor' );
 		/**
 		 * Handle bulk action
 		 *
@@ -57,6 +50,22 @@ class Announcements {
 		 */
 		add_action( 'wp_ajax_tutor_announcement_bulk_action', array( $this, 'announcement_bulk_action' ) );
 	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Announcements', 'tutor' );
+		}
+	}
+
 
 	/**
 	 * Prepare bulk actions that will show on dropdown options
@@ -82,13 +91,21 @@ class Announcements {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
-		$update   = self::delete_announcements( $action, $bulk_ids );
+
+		// prevent instructor to delete admin announcement.
+		$bulk_ids = array_filter(
+			explode( ',', $bulk_ids ),
+			function ( $announcement_id ) {
+				return tutor_utils()->can_user_manage( 'announcement', $announcement_id );
+			}
+		);
+		$update   = self::delete_announcements( $action, implode( ',', $bulk_ids ) );
 		return true === $update ? wp_send_json_success() : wp_send_json_error();
 	}
 
@@ -118,5 +135,4 @@ class Announcements {
 		}
 		return false;
 	}
-
 }

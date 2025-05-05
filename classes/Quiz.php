@@ -196,7 +196,7 @@ class Quiz {
 			'question_type'      => $type,
 			'question_mark'      => 1,
 			'answer_required'    => 0,
-			'randomize_options'  => 0,
+			'randomize_question' => 0,
 			'show_question_mark' => 0,
 		);
 
@@ -319,7 +319,7 @@ class Quiz {
 					wp_send_json_error();
 				}
 			} else {
-				wp_send_json_error( __( 'Invalid quiz info' ) );
+				wp_send_json_error( __( 'Invalid quiz info', 'tutor' ) );
 			}
 		}
 		wp_send_json_error();
@@ -593,22 +593,7 @@ class Quiz {
 				$total_question_marks = $wpdb->get_var( $query );
 				//phpcs:enable
 
-				// Check if h5p addon is enabled.
-				if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-					// Update the total marks to include the marks from h5p questions.
-					foreach ( $question_ids as $question_id ) {
-						$question       = QuizModel::get_quiz_question_by_id( $question_id );
-						$question_type  = $question->question_type;
-						$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
-
-						if ( 'h5p' === $question_type ) {
-							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
-								$h5p_attempt_answer    = $attempt_result[0];
-								$total_question_marks += $h5p_attempt_answer->max_score;
-							}
-						}
-					}
-				}
+				$total_question_marks = apply_filters( 'tutor_filter_update_before_question_mark', $total_question_marks, $question_ids, $user_id, $attempt_id );
 
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
@@ -787,6 +772,8 @@ class Quiz {
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
 					$total_marks  += $question_mark;
 
+					$total_marks = apply_filters( 'tutor_filter_quiz_total_marks', $total_marks, $question_id, $question_type, $user_id, $attempt_id );
+
 					$answers_data = array(
 						'user_id'         => $user_id,
 						'quiz_id'         => $attempt->quiz_id,
@@ -807,21 +794,8 @@ class Quiz {
 						$answers_data['is_correct'] = null;
 						$review_required            = true;
 					}
-					// Check if h5p addon is enabled.
-					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-						// Check if it is a h5p question.
-						if ( 'h5p' === $question_type ) {
-							$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
-							// Set the h5p question answer to tutor quiz attempt result.
-							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
-								$h5p_question_answer           = $attempt_result[0];
-								$answers_data['question_mark'] = $h5p_question_answer->max_score;
-								$answers_data['achieved_mark'] = $h5p_question_answer->raw_score;
-								$answers_data['is_correct']    = $h5p_question_answer->max_score === $h5p_question_answer->raw_score;
-								$total_marks                  += $h5p_question_answer->raw_score;
-							}
-						}
-					}
+
+					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				}
@@ -886,6 +860,30 @@ class Quiz {
 	}
 
 	/**
+	 * Get quiz total marks.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $quiz_id quiz id.
+	 *
+	 * @return int|float
+	 */
+	public static function get_quiz_total_marks( $quiz_id ) {
+		global $wpdb;
+
+		$total_marks = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(question_mark) total_marks 
+				FROM {$wpdb->prefix}tutor_quiz_questions
+				WHERE quiz_id=%d",
+				$quiz_id
+			)
+		);
+
+		return floatval( $total_marks );
+	}
+
+	/**
 	 * Quiz timeout by ajax
 	 *
 	 * @since 1.0.0
@@ -905,8 +903,11 @@ class Quiz {
 
 			$data = array(
 				'attempt_status'   => 'attempt_timeout',
-				'attempt_ended_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
+				'total_marks'      => self::get_quiz_total_marks( $quiz_id ),
+				'earned_marks'     => 0,
+				'attempt_ended_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
 			);
+
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $data, array( 'attempt_id' => $attempt->attempt_id ) );
 
 			do_action( 'tutor_quiz_timeout', $attempt_id, $quiz_id, $attempt->user_id );
@@ -1131,6 +1132,8 @@ class Quiz {
 		}
 
 		$data = QuizModel::get_quiz_details( $quiz_id );
+
+		$data = apply_filters( 'tutor_quiz_details_response', $data, $quiz_id );
 
 		$this->json_response(
 			__( 'Quiz data fetched successfully', 'tutor' ),

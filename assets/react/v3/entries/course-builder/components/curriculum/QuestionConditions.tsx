@@ -2,26 +2,27 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormInput from '@Components/fields/FormInput';
-import FormSwitch from '@Components/fields/FormSwitch';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionType,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { type IconCollection } from '@TutorShared/icons/types';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const questionTypes = {
   true_false: {
-    label: __('True/ False', 'tutor'),
+    label: __('True/False', 'tutor'),
     icon: 'quizTrueFalse',
   },
   multiple_choice: {
@@ -29,7 +30,7 @@ const questionTypes = {
     icon: 'quizMultiChoice',
   },
   open_ended: {
-    label: __('Open Ended/ Essay', 'tutor'),
+    label: __('Open Ended/Essay', 'tutor'),
     icon: 'quizEssay',
   },
   fill_in_the_blank: {
@@ -58,14 +59,15 @@ const questionTypes = {
   },
 };
 
+type QuestionTypes = Omit<QuizQuestionType, 'single_choice' | 'image_matching'>;
+
+const supportRandomize: QuestionTypes[] = ['multiple_choice', 'matching', 'image_answering'];
+
 const QuestionConditions = () => {
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as Omit<
-    QuizQuestionType,
-    'single_choice' | 'image_matching'
-  >;
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as QuestionTypes;
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   if (!activeQuestionId) {
@@ -104,12 +106,26 @@ const QuestionConditions = () => {
                 <FormSwitch
                   {...controllerProps}
                   label={__('Multiple Correct Answer', 'tutor')}
-                  onChange={() => {
-                    calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  onChange={(value) => {
+                    if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
-                        calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                        calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
+                    }
+
+                    // Reset all answers to incorrect on multiple correct answer toggle from true to false
+                    if (!value) {
+                      form.setValue(
+                        `questions.${activeQuestionIndex}.question_answers`,
+                        form.getValues(`questions.${activeQuestionIndex}.question_answers`).map((answer) => {
+                          return {
+                            ...answer,
+                            is_correct: '0' as '0' | '1',
+                          };
+                        }),
+                      );
+                    }
                   }}
                 />
               )}
@@ -126,12 +142,17 @@ const QuestionConditions = () => {
                 <FormSwitch
                   {...controllerProps}
                   label={__('Image Matching', 'tutor')}
-                  onChange={() => {
-                    calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  onChange={(value) => {
+                    if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
-                        calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                        calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
+                    }
+
+                    if (validationError?.type === 'question' && !value) {
+                      setValidationError(null);
+                    }
                   }}
                 />
               )}
@@ -148,35 +169,39 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Answer Required', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
           />
 
-          <Controller
-            control={form.control}
-            name={
-              `questions.${activeQuestionIndex}.question_settings.randomize_options` as 'questions.0.question_settings.randomize_options'
-            }
-            render={(controllerProps) => (
-              <FormSwitch
-                {...controllerProps}
-                label={__('Randomize Choice', 'tutor')}
-                onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
-                    form.setValue(
-                      `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
-                    );
-                }}
-              />
-            )}
-          />
+          <Show when={supportRandomize.includes(activeQuestionType)}>
+            <Controller
+              control={form.control}
+              name={
+                `questions.${activeQuestionIndex}.question_settings.randomize_question` as 'questions.0.question_settings.randomize_question'
+              }
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Randomize Choice', 'tutor')}
+                  onChange={() => {
+                    if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
+                      form.setValue(
+                        `questions.${activeQuestionIndex}._data_status`,
+                        calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                      );
+                    }
+                  }}
+                />
+              )}
+            />
+          </Show>
 
           <Controller
             control={form.control}
@@ -189,20 +214,20 @@ const QuestionConditions = () => {
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
-                label={__('Point For This Answer', 'tutor')}
+                label={__('Point For This Question', 'tutor')}
                 type="number"
                 isInlineLabel
                 placeholder="0"
-                selectOnFocus
                 style={css`
                   max-width: 80px;
                 `}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
@@ -218,14 +243,21 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Display Points', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
+          />
+
+          <CourseBuilderInjectionSlot
+            section="Curriculum.Quiz.bottom_of_question_sidebar"
+            namePrefix={`questions.${activeQuestionIndex}.`}
+            form={form}
           />
         </div>
       </div>

@@ -1,13 +1,13 @@
-import AtomCheckbox from '@Atoms/CheckBox';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
+import AtomCheckbox from '@TutorShared/atoms/CheckBox';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface CheckboxProps extends FormControllerProps<boolean> {
-  label?: string;
+  label?: string | React.ReactNode;
   description?: string;
   value?: string;
   onChange?: (value: boolean) => void;
@@ -28,7 +28,7 @@ const FormCheckbox = ({
   labelCss,
 }: CheckboxProps) => {
   return (
-    <FormFieldWrapper field={field} fieldState={fieldState} disabled={disabled} isHidden={isHidden}>
+    <FormFieldWrapper field={field} fieldState={fieldState} isHidden={isHidden}>
       {(inputProps) => {
         const { css, ...restInputProps } = inputProps;
 
@@ -40,6 +40,7 @@ const FormCheckbox = ({
               inputCss={css}
               labelCss={labelCss}
               value={value}
+              disabled={disabled}
               checked={field.value}
               label={label}
               onChange={() => {
@@ -62,9 +63,9 @@ export default FormCheckbox;
 
 const styles = {
   description: css`
-    ${typography.body()}
-    color: ${colorTokens.text.subdued};
-    padding-left: ${spacing[28]};
+    ${typography.small()}
+    color: ${colorTokens.text.hints};
+    padding-left: 30px;
     margin-top: ${spacing[6]};
   `,
 };

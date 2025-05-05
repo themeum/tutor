@@ -4,28 +4,29 @@ import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInput from '@Components/fields/FormInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import Show from '@Controls/Show';
 import { type ZoomMeeting, type ZoomMeetingFormData, useSaveZoomMeetingMutation } from '@CourseBuilderServices/course';
-import { type ID, useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
+import { useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import Show from '@TutorShared/controls/Show';
+import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID, isDefined } from '@TutorShared/utils/types';
+import { invalidTimeRule } from '@TutorShared/utils/validation';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
@@ -52,14 +53,15 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       meeting_summary: currentMeeting?.post_content ?? '',
       meeting_date: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.yearMonthDay) : '',
       meeting_time: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.hoursMinutes) : '',
-      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '60',
+      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '40',
       meeting_duration_unit: currentMeeting?.meeting_data.duration_unit ?? 'min',
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
       auto_recording: currentMeeting?.meeting_data.settings?.auto_recording ?? 'none',
       meeting_password: currentMeeting?.meeting_data.password ?? '',
-      meeting_host: Object.values(meetingHost)[0],
+      meeting_host: Object.keys(meetingHost).length === 1 ? Object.keys(meetingHost)[0] : '',
     },
     shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const saveZoomMeeting = useSaveZoomMeetingMutation();
@@ -67,6 +69,11 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
   const timezones = tutorConfig.timezones;
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
     label: timezones[key],
+    value: key,
+  }));
+
+  const hostOptions = Object.keys(meetingHost).map((key) => ({
+    label: meetingHost[key],
     value: key,
   }));
 
@@ -81,7 +88,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       course_id: courseId,
       meeting_title: formData.meeting_name,
       meeting_summary: formData.meeting_summary,
-      meeting_date: format(new Date(formData.meeting_date), DateFormats.yearMonthDay),
+      meeting_date: formData.meeting_date,
       meeting_time: formData.meeting_time,
       meeting_duration: Number(formData.meeting_duration),
       meeting_duration_unit: formData.meeting_duration_unit,
@@ -89,7 +96,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       auto_recording: formData.auto_recording,
       meeting_password: formData.meeting_password,
       click_form: topicId ? 'course_builder' : 'metabox',
-      meeting_host: Object.keys(meetingHost)[0],
+      meeting_host: formData.meeting_host,
     });
 
     if (response.data) {
@@ -98,7 +105,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(currentMeeting)) {
       meetingForm.reset({
@@ -111,7 +117,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
         meeting_timezone: currentMeeting.meeting_data.timezone,
         auto_recording: currentMeeting.meeting_data.settings?.auto_recording ?? 'none',
         meeting_password: currentMeeting.meeting_data.password,
-        meeting_host: Object.values(meetingHost)[0],
+        meeting_host: currentMeeting.meeting_data.host_id,
       });
     }
 
@@ -122,6 +128,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMeeting]);
 
   return (
@@ -139,7 +146,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 {...controllerProps}
                 label={__('Meeting Name', 'tutor')}
                 placeholder={__('Enter meeting name', 'tutor')}
-                selectOnFocus
               />
             )}
           />
@@ -183,6 +189,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               control={meetingForm.control}
               rules={{
                 required: __('Time is required', 'tutor'),
+                validate: invalidTimeRule,
               }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
@@ -196,7 +203,13 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                   required: __('Duration is required', 'tutor'),
                 }}
                 render={(controllerProps) => (
-                  <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" selectOnFocus />
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Meeting Duration', 'tutor')}
+                    placeholder={__('Duration', 'tutor')}
+                    type="number"
+                    selectOnFocus
+                  />
                 )}
               />
               <Controller
@@ -208,9 +221,10 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 render={(controllerProps) => (
                   <FormSelectInput
                     {...controllerProps}
+                    label={<span>&nbsp;</span>}
                     options={[
-                      { label: 'Minutes', value: 'min' },
-                      { label: 'Hours', value: 'hr' },
+                      { label: __('Minutes', 'tutor'), value: 'min' },
+                      { label: __('Hours', 'tutor'), value: 'hr' },
                     ]}
                   />
                 )}
@@ -222,13 +236,13 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
             name="meeting_timezone"
             control={meetingForm.control}
             rules={{
-              required: __('Time zone is required', 'tutor'),
+              required: __('Timezone is required', 'tutor'),
             }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
                 label={__('Timezone', 'tutor')}
-                placeholder={__('Select time zone', 'tutor')}
+                placeholder={__('Select timezone', 'tutor')}
                 options={timeZonesOptions}
                 selectOnFocus
                 isSearchable
@@ -244,10 +258,10 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
-                label={__('Auto recording', 'tutor')}
+                label={__('Auto Recording', 'tutor')}
                 placeholder={__('Select auto recording option', 'tutor')}
                 options={[
-                  { label: __('No Recordings', 'tutor'), value: 'none' },
+                  { label: __('No recordings', 'tutor'), value: 'none' },
                   { label: __('Local', 'tutor'), value: 'local' },
                   { label: __('Cloud', 'tutor'), value: 'cloud' },
                 ]}
@@ -268,7 +282,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 placeholder={__('Enter meeting password', 'tutor')}
                 type="password"
                 isPassword
-                selectOnFocus
               />
             )}
           />
@@ -280,12 +293,14 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               required: __('Meeting host is required', 'tutor'),
             }}
             render={(controllerProps) => (
-              <FormInput
+              <FormSelectInput
                 {...controllerProps}
                 label={__('Meeting Host', 'tutor')}
                 placeholder={__('Enter meeting host', 'tutor')}
-                disabled
+                options={hostOptions}
+                disabled={isDefined(currentMeeting)}
                 selectOnFocus
+                isSearchable
               />
             )}
           />
@@ -297,6 +312,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
           {__('Cancel', 'tutor')}
         </Button>
         <Button
+          data-cy="save-zoom-meeting"
           loading={saveZoomMeeting.isPending}
           variant="primary"
           size="small"
@@ -351,11 +367,9 @@ const styles = {
     gap: ${spacing[8]};
     z-index: ${zIndex.positive};
 
-    ${
-      isScrolling &&
-      css`
-        box-shadow: ${shadow.scrollable};
-      `
-    }
+    ${isScrolling &&
+    css`
+      box-shadow: ${shadow.scrollable};
+    `}
   `,
 };

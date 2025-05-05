@@ -1,13 +1,5 @@
-import Container from '@Components/Container';
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
 
-import { DateFormats } from '@Config/constants';
-import CouponDiscount from '@CouponComponents/coupon/CouponDiscount';
-import CouponInfo from '@CouponComponents/coupon/CouponInfo';
-import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
-import CouponPreview from '@CouponComponents/coupon/CouponPreview';
-import CouponValidity from '@CouponComponents/coupon/CouponValidity';
-import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
 import {
   type Coupon,
   type Course,
@@ -15,13 +7,17 @@ import {
   couponInitialValue,
   useCouponDetailsQuery,
 } from '@CouponServices/coupon';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { DateFormats } from '@TutorShared/config/constants';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type MembershipPlan } from '@TutorShared/utils/types';
+import { convertGMTtoLocalDate } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
-import { convertGMTtoLocalDate } from '@Utils/util';
+const MainContent = lazy(() => import('./MainContent'));
 
 function Main() {
   const params = new URLSearchParams(window.location.search);
@@ -31,7 +27,7 @@ function Main() {
   const couponDetailsQuery = useCouponDetailsQuery(Number(courseId));
 
   useEffect(() => {
-    const couponData = couponDetailsQuery.data?.data;
+    const couponData = couponDetailsQuery.data;
     if (couponData) {
       form.reset.call(null, {
         id: couponData.id,
@@ -46,6 +42,10 @@ function Main() {
         bundles: couponData.applies_to === 'specific_bundles' ? (couponData.applies_to_items as Course[]) : [],
         categories:
           couponData.applies_to === 'specific_category' ? (couponData.applies_to_items as CourseCategory[]) : [],
+        membershipPlans:
+          couponData.applies_to === 'specific_membership_plans'
+            ? (couponData.applies_to_items as MembershipPlan[])
+            : [],
         usage_limit_status: couponData.total_usage_limit !== '0',
         total_usage_limit: couponData.total_usage_limit,
         per_user_limit_status: couponData.per_user_usage_limit !== '0',
@@ -77,20 +77,9 @@ function Main() {
     <div css={styles.wrapper}>
       <FormProvider {...form}>
         <Topbar />
-        <Container>
-          <div css={styles.content}>
-            <div css={styles.left}>
-              <CouponInfo />
-              <CouponDiscount />
-              <CouponUsageLimitation />
-              <PurchaseRequirements />
-              <CouponValidity />
-            </div>
-            <div css={styles.right}>
-              <CouponPreview />
-            </div>
-          </div>
-        </Container>
+        <Suspense fallback={<LoadingSection />}>
+          <MainContent />
+        </Suspense>
       </FormProvider>
     </div>
   );
@@ -100,7 +89,11 @@ export default Main;
 
 const styles = {
   wrapper: css`
-    background-color: ${colorTokens.background.default};
+    margin-left: ${spacing[20]};
+
+    ${Breakpoint.mobile} {
+      margin-left: ${spacing[12]};
+    }
   `,
 
   content: css`
@@ -110,11 +103,20 @@ const styles = {
     grid-template-columns: 1fr 342px;
     gap: ${spacing[36]};
     margin-top: ${spacing[32]};
+    padding-inline: ${spacing[8]};
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr 280px;
+    }
+
+    ${Breakpoint.mobile} {
+      grid-template-columns: 1fr;
+    }
   `,
   left: css`
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
   `,
-  right: css``,
 };

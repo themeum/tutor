@@ -2,9 +2,9 @@ import {
   MagicImageGenerationProvider,
   type StyleType,
   useMagicImageGeneration,
-} from '@Components/magic-ai-image/ImageContext';
-import { ImageGeneration } from '@Components/magic-ai-image/ImageGeneration';
-import MagicFill from '@Components/magic-ai-image/MagicFill';
+} from '@TutorShared/components/magic-ai-image/ImageContext';
+import { ImageGeneration } from '@TutorShared/components/magic-ai-image/ImageGeneration';
+import MagicFill from '@TutorShared/components/magic-ai-image/MagicFill';
 import type { ControllerFieldState, ControllerRenderProps, FieldValues, Path } from 'react-hook-form';
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
@@ -34,7 +34,7 @@ function RenderModalContent() {
 
 const AIImageModal = <T extends FieldValues>({ title, icon, closeModal, field, fieldState }: AIImageModalProps<T>) => {
   return (
-    <BasicModalWrapper onClose={closeModal} title={title} icon={icon}>
+    <BasicModalWrapper onClose={closeModal} title={title} icon={icon} maxWidth={1000}>
       <MagicImageGenerationProvider field={field} fieldState={fieldState} onCloseModal={closeModal}>
         <RenderModalContent />
       </MagicImageGenerationProvider>

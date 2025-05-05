@@ -1,14 +1,19 @@
-import { borderRadius, colorTokens, containerMaxWidth, fontFamily, fontSize, shadow, spacing } from '@Config/styles';
+import {
+  borderRadius,
+  colorTokens,
+  containerMaxWidth,
+  fontFamily,
+  fontSize,
+  shadow,
+  spacing,
+} from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
+import { typography } from '../config/typography';
 
 export const createGlobalCss = () => css`
   body:not(.tutor-screen-backend-settings) {
     #wpcontent {
       padding-left: 0;
-    }
-
-    #wpbody {
-      background-color: ${colorTokens.background.default};
     }
   }
 
@@ -24,7 +29,8 @@ export const createGlobalCss = () => css`
   }
   body {
     margin: 0;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
+    height: 100%;
   }
 
   main {
@@ -49,6 +55,15 @@ export const createGlobalCss = () => css`
 
   a {
     background-color: transparent;
+
+    &:hover {
+      color: inherit;
+    }
+  }
+
+  li {
+    list-style: none;
+    margin: 0;
   }
 
   abbr[title] {
@@ -202,6 +217,7 @@ export const createGlobalCss = () => css`
   :is(h1, h2, h3, h4, h5, h6, p) {
     padding: 0;
     margin: 0;
+    text-transform: unset;
   }
 
   table {
@@ -242,10 +258,11 @@ export const styleUtils = {
     background: none;
     border: none;
     outline: none;
+    box-shadow: none;
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     cursor: pointer;
   `,
   cardInnerSection: css`
@@ -328,6 +345,7 @@ export const styleUtils = {
   },
   text: {
     ellipsis: (lines = 1) => css`
+      white-space: normal;
       display: -webkit-box;
       -webkit-line-clamp: ${lines};
       -webkit-box-orient: vertical;
@@ -357,7 +375,7 @@ export const styleUtils = {
   `,
   dateAndTimeWrapper: css`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5.5fr 4.5fr;
     border-radius: ${borderRadius[6]};
 
     &:focus-within {
@@ -433,5 +451,159 @@ export const styleUtils = {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  `,
+  actionButton: css`
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    text-align: inherit;
+    color: ${colorTokens.icon.default};
+    display: flex;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+
+    :hover:not(:disabled),
+    :focus:not(:disabled),
+    :active:not(:disabled) {
+      background: none;
+      color: ${colorTokens.icon.brand};
+    }
+
+    :disabled {
+      color: ${colorTokens.icon.disable.background};
+      cursor: not-allowed;
+    }
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+      border-radius: ${borderRadius[2]};
+    }
+  `,
+  backButton: css`
+    background-color: transparent;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid ${colorTokens.border.neutral};
+    border-radius: ${borderRadius[4]};
+    outline: none;
+    color: ${colorTokens.icon.default};
+    transition: color 0.3s ease-in-out;
+    cursor: pointer;
+
+    :hover {
+      color: ${colorTokens.icon.hover};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+  `,
+  optionCheckButton: css`
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    text-align: inherit;
+    font-family: ${fontFamily.inter};
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: ${borderRadius.circle};
+    opacity: 0;
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+    }
+  `,
+  optionCounter: ({ isEditing, isSelected = false }: { isEditing: boolean; isSelected?: boolean }) => css`
+    height: ${spacing[24]};
+    width: ${spacing[24]};
+    border-radius: ${borderRadius.min};
+    ${typography.caption('medium')};
+    color: ${colorTokens.text.subdued};
+    background-color: ${colorTokens.background.default};
+    text-align: center;
+    ${isSelected &&
+    !isEditing &&
+    css`
+      background-color: ${colorTokens.bg.white};
+    `}
+  `,
+  optionDragButton: ({ isOverlay }: { isOverlay: boolean }) => css`
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    text-align: inherit;
+    font-family: ${fontFamily.inter};
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(90deg);
+    color: ${colorTokens.icon.default};
+    cursor: grab;
+    place-self: center center;
+    border-radius: ${borderRadius[2]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
+    ${isOverlay &&
+    css`
+      cursor: grabbing;
+    `}
+  `,
+  optionInputWrapper: css`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: ${spacing[12]};
+
+    input,
+    textarea {
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      margin: 0;
+      text-align: inherit;
+      font-family: ${fontFamily.inter};
+      ${typography.caption()};
+      flex: 1;
+      color: ${colorTokens.text.subdued};
+      padding: ${spacing[4]} ${spacing[10]};
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius[6]};
+      resize: vertical;
+      cursor: text;
+
+      &:focus {
+        box-shadow: none;
+        border-color: ${colorTokens.stroke.default};
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
+    }
   `,
 };

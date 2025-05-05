@@ -2,16 +2,16 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import type { ReactNode } from 'react';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { nanoid } from '@Utils/util';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import { borderRadius, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { nanoid } from '@TutorShared/utils/util';
 
 interface InputOptions {
   variant: unknown;
@@ -117,7 +117,7 @@ const FormFieldWrapper = <T,>({
   );
 
   return (
-    <div css={styles.container({ disabled, isHidden })}>
+    <div css={styles.container({ disabled, isHidden })} data-cy="form-field-wrapper">
       <div css={styles.inputContainer(isInlineLabel)}>
         {(label || helpText) && (
           <div css={styles.labelContainer}>
@@ -163,7 +163,7 @@ const FormFieldWrapper = <T,>({
         )}
       </div>
       {fieldState.error?.message && (
-        <p css={styles.errorLabel(!!fieldState.error)}>
+        <p css={styles.errorLabel(!!fieldState.error, isInlineLabel)}>
           <SVGIcon style={styles.alertIcon} name="info" width={20} height={20} /> {fieldState.error.message}
         </p>
       )}
@@ -181,19 +181,15 @@ const styles = {
     background: inherit;
     width: 100%;
 
-    ${
-      disabled &&
-      css`
+    ${disabled &&
+    css`
       opacity: 0.5;
-    `
-    }
+    `}
 
-    ${
-      isHidden &&
-      css`
+    ${isHidden &&
+    css`
       display: none;
-    `
-    }
+    `}
   `,
   inputContainer: (isInlineLabel: boolean) => css`
     display: flex;
@@ -201,18 +197,17 @@ const styles = {
     gap: ${spacing[4]};
     width: 100%;
 
-    ${
-      isInlineLabel &&
-      css`
+    ${isInlineLabel &&
+    css`
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
       gap: ${spacing[12]};
-    `
-    }
+    `}
   `,
   input: (options: InputOptions) => css`
     &.tutor-input-field {
+      ${typography.body('regular')};
       width: 100%;
       border-radius: ${borderRadius[6]};
       border: 1px solid ${colorTokens.stroke.default};
@@ -224,46 +219,36 @@ const styles = {
         height: 40px;
       }
 
-      ${
-        options.hasHelpText &&
-        css`
+      ${options.hasHelpText &&
+      css`
         padding: 0 ${spacing[32]} 0 ${spacing[12]};
-      `
-      }
+      `}
 
-      ${
-        options.removeBorder &&
-        css`
+      ${options.removeBorder &&
+      css`
         border-radius: 0;
         border: none;
         box-shadow: none;
-      `
-      }
+      `}
 
-      ${
-        options.isSecondary &&
-        css`
+      ${options.isSecondary &&
+      css`
         border-color: transparent;
-      `
-      }
+      `}
 
       :focus {
         ${styleUtils.inputFocus};
 
-        ${
-          options.isMagicAi &&
-          css`
+        ${options.isMagicAi &&
+        css`
           outline-color: ${colorTokens.stroke.magicAi};
           background-color: ${colorTokens.background.magicAi[8]};
-        `
-        } 
+        `}
 
-        ${
-          options.hasFieldError &&
-          css`
+        ${options.hasFieldError &&
+        css`
           border-color: ${colorTokens.stroke.danger};
-        `
-        }
+        `}
       }
 
       ::-webkit-outer-spin-button,
@@ -276,44 +261,41 @@ const styles = {
         ${typography.caption('regular')};
         color: ${colorTokens.text.hints};
 
-        ${
-          options.isSecondary &&
-          css`
+        ${options.isSecondary &&
+        css`
           color: ${colorTokens.text.hints};
-        `
-        }
+        `}
       }
 
-      ${
-        options.hasFieldError &&
-        css`
+      ${options.hasFieldError &&
+      css`
         border-color: ${colorTokens.stroke.danger};
         background-color: ${colorTokens.background.status.errorFail};
-      `
-      }
+      `}
 
-      ${
-        options.readOnly &&
-        css`
+      ${options.readOnly &&
+      css`
         border-color: ${colorTokens.background.disable};
         background-color: ${colorTokens.background.disable};
-      `
-      }
+      `}
     }
-    
   `,
-  errorLabel: (hasError: boolean) => css`
+  errorLabel: (hasError: boolean, isInlineLabel: boolean) => css`
     ${typography.small()};
     line-height: ${lineHeight[20]};
     display: flex;
     align-items: start;
     margin-top: ${spacing[4]};
-    ${
-      hasError &&
-      css`
+
+    ${isInlineLabel &&
+    css`
+      justify-content: end;
+    `}
+
+    ${hasError &&
+    css`
       color: ${colorTokens.text.status.onHold};
-    `
-    }
+    `}
     & svg {
       margin-right: ${spacing[2]};
       transform: rotate(180deg);
@@ -331,29 +313,39 @@ const styles = {
   `,
   label: (isInlineLabel: boolean, replaceEntireLabel: boolean) => css`
     ${typography.caption()};
+    margin: 0px;
     width: ${replaceEntireLabel ? '100%' : 'auto'};
     color: ${colorTokens.text.title};
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
 
-    ${
-      isInlineLabel &&
-      css`
+    ${isInlineLabel &&
+    css`
       ${typography.caption()};
-    `
-    }
+    `}
   `,
   aiButton: css`
     ${styleUtils.resetButton};
     width: 32px;
     height: 32px;
+    border-radius: ${borderRadius[4]};
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     :disabled {
       cursor: not-allowed;
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
     }
   `,
   inputWrapper: css`

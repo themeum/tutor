@@ -72,10 +72,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar">
 					<?php
-					echo wp_kses(
-						tutor_utils()->get_tutor_avatar( $user_id, 'xl' ),
-						tutor_utils()->allowed_avatar_tags()
-					);
+					tutor_utils()->get_tutor_avatar( $user_id, 'xl', true )
 					?>
 				</div>
 
@@ -144,7 +141,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							<?php else : ?>
 							<a href="#" class="tutor-btn tutor-btn-outline-primary tutor-create-new-course">
 								<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i>
-								<?php esc_html_e( 'Create a New Course', 'tutor' ); ?>
+								<?php esc_html_e( 'New Course', 'tutor' ); ?>
 							</a>
 					<?php endif; ?>
 						<?php

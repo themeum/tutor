@@ -1,7 +1,7 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';
@@ -54,7 +54,7 @@ const styles = {
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
-		max-height: 90vh;
+    max-height: 90vh;
 
     ${Breakpoint.smallTablet} {
       width: 90%;

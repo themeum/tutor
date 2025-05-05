@@ -1,5 +1,5 @@
-import { colorTokens, shadow, spacing } from '@Config/styles';
-import { nanoid } from '@Utils/util';
+import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { nanoid } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
 
@@ -64,7 +64,7 @@ const styles = {
     align-items: center;
     cursor: pointer;
     user-select: none;
-		position: relative;
+    position: relative;
   `,
   checkbox: ({
     hasLabel,
@@ -86,12 +86,10 @@ const styles = {
       font-size: 14px;
       display: inline-flex;
       align-items: center;
-      ${
-        hasLabel &&
-        css`
+      ${hasLabel &&
+      css`
         margin-right: ${spacing[10]};
-      `
-      }
+      `}
     }
 
     & + span::before {
@@ -114,17 +112,14 @@ const styles = {
       background-color: ${colorTokens.brand.blue};
       border: 0.5px solid ${colorTokens.background.default};
 
-      ${
-        disabled &&
-        css`
+      ${disabled &&
+      css`
         background-color: ${colorTokens.icon.disable};
-      `
-      }
+      `}
     }
 
-    ${
-      isIndeterminate &&
-      css`
+    ${isIndeterminate &&
+    css`
       & + span::before {
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='2' fill='none'%3E%3Crect width='10' height='1.5' y='.25' fill='%23fff' rx='.75'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
@@ -133,8 +128,7 @@ const styles = {
         background-color: ${colorTokens.brand.blue};
         border: 0.5px solid ${colorTokens.background.default};
       }
-    `
-    }
+    `}
   `,
 };
 

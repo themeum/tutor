@@ -1,15 +1,16 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { DateFormats, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useSelectKeyboardNavigation } from '../../hooks/useSelectKeyboardNavigation';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTimeInputProps extends FormControllerProps<string> {
@@ -35,10 +36,7 @@ const FormTimeInput = ({
 }: FormTimeInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-  });
+  const activeItemRef = useRef<HTMLLIElement | null>(null);
 
   const options = useMemo(() => {
     const start = setMinutes(setHours(new Date(), 0), 0);
@@ -54,6 +52,28 @@ const FormTimeInput = ({
 
     return range.map((date) => format(date, DateFormats.hoursMinutes));
   }, [interval]);
+
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    isDropdown: true,
+  });
+
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: options.map((option) => ({ label: option, value: option })),
+    isOpen,
+    selectedValue: field.value,
+    onSelect: (selectedOption) => {
+      field.onChange(selectedOption.value);
+      setIsOpen(false);
+    },
+    onClose: () => setIsOpen(false),
+  });
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, [isOpen, activeIndex]);
 
   return (
     <FormFieldWrapper
@@ -72,9 +92,23 @@ const FormTimeInput = ({
             <div css={styles.wrapper} ref={triggerRef}>
               <input
                 {...restInputProps}
+                ref={field.ref}
                 css={[css, styles.input]}
                 type="text"
-                onFocus={() => setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsOpen((previousState) => !previousState);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen((previousState) => !previousState);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
+                  }
+                }}
                 value={field.value ?? ''}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -92,15 +126,27 @@ const FormTimeInput = ({
               )}
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
-                css={[styles.popover, { left: position.left, top: position.top, maxWidth: triggerWidth }]}
+                css={[
+                  styles.popover,
+                  {
+                    [isRTL ? 'right' : 'left']: position.left,
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
                 ref={popoverRef}
               >
                 <ul css={styles.list}>
                   {options.map((option, index) => {
                     return (
-                      <li key={index} css={styles.listItem}>
+                      <li
+                        key={index}
+                        css={styles.listItem}
+                        ref={activeIndex === index ? activeItemRef : null}
+                        data-active={activeIndex === index}
+                      >
                         <button
                           type="button"
                           css={styles.itemButton}
@@ -108,6 +154,11 @@ const FormTimeInput = ({
                             field.onChange(option);
                             setIsOpen(false);
                           }}
+                          onMouseOver={() => setActiveIndex(index)}
+                          onMouseLeave={() => {
+                            index !== activeIndex && setActiveIndex(-1);
+                          }}
+                          onFocus={() => setActiveIndex(index)}
                         >
                           {option}
                         </button>
@@ -130,7 +181,8 @@ const styles = {
   wrapper: css`
     position: relative;
 
-    :hover {
+    &:hover,
+    &:focus-within {
       & > button {
         opacity: 1;
       }
@@ -170,6 +222,10 @@ const styles = {
     align-items: center;
     transition: background-color 0.3s ease-in-out;
 
+    &[data-active='true'] {
+      background-color: ${colorTokens.background.hover};
+    }
+
     :hover {
       background-color: ${colorTokens.background.hover};
     }
@@ -180,6 +236,13 @@ const styles = {
     margin: ${spacing[4]} ${spacing[12]};
     width: 100%;
     height: 100%;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.primary};
+    }
   `,
   clearButton: css`
     position: absolute;
@@ -190,7 +253,10 @@ const styles = {
     height: 32px;
     ${styleUtils.flexCenter()};
     opacity: 0;
-    transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
+    border-radius: ${borderRadius[2]};
 
     :hover {
       background-color: ${colorTokens.background.hover};

@@ -24,7 +24,9 @@ class CourseModel {
 	 *
 	 * @var string
 	 */
-	const POST_TYPE = 'courses';
+	const POST_TYPE       = 'courses';
+	const COURSE_CATEGORY = 'course-category';
+	const COURSE_TAG      = 'course-tag';
 
 	const STATUS_PUBLISH    = 'publish';
 	const STATUS_DRAFT      = 'draft';
@@ -95,6 +97,19 @@ class CourseModel {
 		}
 
 		return (int) $count_obj->{$status};
+	}
+
+	/**
+	 * Get tutor post types
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param int|\WP_POST $post the post id or object.
+     *
+	 * @return bool
+	 */
+	public static function get_post_types( $post ) {
+		return apply_filters( 'tutor_check_course_post_type', get_post_type( $post ) );
 	}
 
 	/**
@@ -172,7 +187,7 @@ class CourseModel {
 			$default_args['author'] = get_current_user_id();
 		}
 
-		$args = wp_parse_args( $args, $default_args );
+		$args = wp_parse_args( $args, apply_filters( 'tutor_get_course_list_filter_args', $default_args ) );
 
 		return new \WP_Query( $args );
 	}
@@ -242,21 +257,28 @@ class CourseModel {
 	 * Get courses by a instructor
 	 *
 	 * @since 1.0.0
+	 * @since 3.5.0 param $post_types added.
 	 *
 	 * @param integer      $instructor_id instructor id.
 	 * @param array|string $post_status post status.
 	 * @param integer      $offset offset.
 	 * @param integer      $limit limit.
 	 * @param boolean      $count_only count or not.
+	 * @param array        $post_types array of post types.
 	 *
 	 * @return array|null|object
 	 */
-	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false ) {
+	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false, $post_types = array() ) {
 		global $wpdb;
 		$offset           = sanitize_text_field( $offset );
 		$limit            = sanitize_text_field( $limit );
 		$instructor_id    = tutils()->get_user_id( $instructor_id );
-		$course_post_type = tutor()->course_post_type;
+
+		if ( ! count( $post_types ) ) {
+			$post_types = array( tutor()->course_post_type );
+		}
+
+		$post_types       = QueryHelper::prepare_in_clause( $post_types );
 
 		if ( empty( $post_status ) || 'any' == $post_status ) {
 			$where_post_status = '';
@@ -278,12 +300,11 @@ class CourseModel {
 					AND $wpdb->usermeta.meta_key = %s
 					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
 			WHERE	1 = 1 {$where_post_status}
-				AND $wpdb->posts.post_type = %s
+				AND $wpdb->posts.post_type IN ({$post_types})
 				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
 			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
 			$instructor_id,
 			'_tutor_instructor_course_id',
-			$course_post_type,
 			$instructor_id,
 			$instructor_id
 		);
@@ -331,7 +352,7 @@ class CourseModel {
 		$course  = get_post( $course_id );
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
-		if ( ! $course || self::POST_TYPE !== $course->post_type || $user_id !== (int) $course->post_author ) {
+		if ( ! $course || ! self::get_post_types( $course_id ) || $user_id !== (int) $course->post_author ) {
 			return false;
 		}
 
@@ -403,7 +424,7 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function delete_course( $post_id ) {
-		if ( get_post_type( $post_id ) !== tutor()->course_post_type ) {
+		if ( ! self::get_post_types( $post_id ) ) {
 			return false;
 		}
 
@@ -447,9 +468,7 @@ class CourseModel {
 			return false;
 		}
 
-		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( $post_id, 0 );
-		}
+		do_action( 'tutor_before_delete_course_content', $post_id, 0 );
 
 		global $wpdb;
 
@@ -473,9 +492,7 @@ class CourseModel {
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
 
-						if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-							\TutorPro\H5P\Utils::delete_h5p_quiz_statements_by_id( $content_id );
-						}
+						do_action( 'tutor_before_delete_quiz_content', $content_id, null );
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
@@ -614,6 +631,9 @@ class CourseModel {
 	 *
 	 * Meta key removed and default meta query updated
 	 *
+	 * @since 3.0.1
+	 * Course::COURSE_PRICE_META meta key exists clause added
+	 *
 	 * @param array $args wp_query args.
 	 *
 	 * @return \WP_Query
@@ -627,9 +647,15 @@ class CourseModel {
 			'offset'         => 0,
 			'post_status'    => 'publish',
 			'meta_query'     => array(
-				'paid_clause' => array(
-					'key'   => Course::COURSE_PRICE_TYPE_META,
-					'value' => array( 'paid', 'subscription' ),
+				'relation' => 'AND',
+				array(
+					'key'     => Course::COURSE_PRICE_TYPE_META,
+					'value'   => Course::PRICE_TYPE_SUBSCRIPTION,
+					'compare' => '!=',
+				),
+				array(
+					'key'     => Course::COURSE_PRICE_META,
+					'compare' => 'EXISTS',
 				),
 			),
 		);

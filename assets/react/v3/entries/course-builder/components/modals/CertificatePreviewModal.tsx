@@ -2,14 +2,15 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import type { Certificate } from '@CourseBuilderServices/course';
-import { styleUtils } from '@Utils/style-utils';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 export interface CertificatePreviewModalProps {
   certificates: Certificate[];
@@ -37,7 +38,6 @@ const CertificatePreviewModal = ({
 
   const nextIndex = Math.min(certificates.length, currentCertificateIndex + 1);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowLeft') {
@@ -56,6 +56,7 @@ const CertificatePreviewModal = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCertificateIndex, certificates]);
 
   useEffect(() => {
@@ -128,7 +129,7 @@ const CertificatePreviewModal = ({
             onClick={() => handleNavigate('previous')}
             disabled={previousIndex < 0}
           >
-            <SVGIcon name="chevronLeft" width={40} height={40} />
+            <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={40} height={40} />
           </button>
           <Button
             variant="primary"
@@ -146,7 +147,7 @@ const CertificatePreviewModal = ({
             onClick={() => handleNavigate('next')}
             disabled={nextIndex > certificates.length - 1}
           >
-            <SVGIcon name="chevronRight" width={40} height={40} />
+            <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={40} height={40} />
           </button>
         </div>
       </div>
@@ -164,12 +165,17 @@ const styles = {
     justify-content: center;
     align-items: center;
     gap: ${spacing[16]};
+    position: relative;
   `,
   content: css`
     ${styleUtils.display.flex('column')};
     justify-content: center;
     align-items: center;
     object-fit: contain;
+    max-width: 80vw;
+    max-height: calc(100vh - 200px);
+    width: 100%;
+    height: 100%;
   `,
   certificateAndActions: css`
     position: relative;
@@ -177,9 +183,10 @@ const styles = {
     justify-content: center;
     align-items: center;
     gap: ${spacing[20]};
+    height: 100%;
   `,
   certificate: css`
-    max-height: 80dvh;
+    width: 100%;
     height: 100%;
     object-fit: contain;
   `,
@@ -190,6 +197,10 @@ const styles = {
     bottom: 0;
     ${styleUtils.display.flex('column')};
     justify-content: space-between;
+
+    ${Breakpoint.smallMobile} {
+      right: -${spacing[32]};
+    }
   `,
   actionButton: css`
     place-self: center start;
@@ -197,6 +208,12 @@ const styles = {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
 
     svg {
       color: ${colorTokens.action.secondary.default};
@@ -209,8 +226,7 @@ const styles = {
   editButton: css`
     place-self: center end;
   `,
-  navigatorWrapper: css`
-  `,
+  navigatorWrapper: css``,
   navigator: css`
     ${styleUtils.display.flex()};
     gap: ${spacing[16]};
@@ -223,7 +239,7 @@ const styles = {
     svg {
       color: ${colorTokens.icon.default};
     }
-    
+
     :disabled {
       cursor: not-allowed;
       svg {

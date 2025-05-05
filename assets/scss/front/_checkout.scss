@@ -1,4 +1,6 @@
 .tutor-checkout-page {
+	padding: 40px 0px;
+
 	input[type="text"],
 	input[type="email"],
 	select {
@@ -7,41 +9,20 @@
 		text-indent: 0;
 	}
 
-	.tutor-checkout-billing {
-		background-color: #f9fafc;
-		padding: 80px 15px 80px 64px;
-		height: 100%;
-
-		@include breakpoint-max(desktop) {
-			padding: 40px 15px;
-		}
-
-		.tutor-checkout-billing-inner {
-			max-width: 500px;
-		}
+	.tutor-checkout-container {
+		max-width: 1032px;
+		margin: 0 auto;
 	}
 
 	.tutor-checkout-details {
-		font-size: 1rem;
-		padding: 80px 64px 80px 15px;
-		max-width: 560px;
-		margin-left: auto;
-
-		@include breakpoint-max(desktop) {
-			padding: 60px 15px 40px 15px;
-		}
-
 		.tutor-checkout-details-inner {
-			border: 1px solid var(--tutor-border-color);
-			border-radius: 6px;
-
-			@include breakpoint-max(desktop) {
-				margin: 0 auto;
-			}
+			background-color: #FAFAFA;
+			border-radius: 5px;
+			padding: 24px 24px 12px 24px;
 		}
 	}
 	.tutor-checkout-detail-item {
-		padding: 32px;
+		padding: 24px 0px;
 		&:not(:last-child) {
 			border-bottom: 1px solid var(--tutor-border-color);
 		}
@@ -55,6 +36,8 @@
 		gap: 24px;
 	}
 	.tutor-checkout-course-item {
+		display: flex;
+		flex-direction: column;
 		color: var(--tutor-body-color);
 	}
 	.tutor-checkout-course-content {
@@ -63,26 +46,51 @@
 		justify-content: space-between;
 		gap: 56px;
 	}
+	.tutor-checkout-course-thumb-title {
+		display: grid;
+		grid-template-columns: 56px 1fr;
+		align-items: start;
+		gap: 8px;
+
+		img {
+			max-width: 100%;
+			border-radius: 3px;
+			margin-top: 6px;
+		}
+	}
 	.tutor-checkout-enrollment-fee {
 		display: flex;
 		align-items: start;
 		justify-content: space-between;
 		font-size: 14px;
+		margin-top: 16px;
 	}
 	.tutor-checkout-course-bundle-badge {
+		width: fit-content;
 		display: inline-block;
 		font-size: 11px;
 		line-height: 16px;
-		background-color: #7a078d;
+		background-color: #9342E7;
 		color: #ffffff;
 		border-radius: 13px;
 		padding: 0px 6px;
+	}
+	.tutor-checkout-course-plan-badge {
+		width: fit-content;
+		display: inline-block;
+		font-size: 11px;
+		line-height: 14px;
+		font-weight: 500;
+		background-color: #F0F1F5;
+		color: #41454F;
+		border-radius: 2px;
+		padding: 4px 8px;
 	}
 	.tutor-checkout-course-title {
 		font-weight: 500;
 		font-size: 16px;
 		line-height: 26px;
-		margin-bottom: 8px;
+		margin: 0px;
 
 		a {
 			color: var(--tutor-body-color);
@@ -119,6 +127,7 @@
 			outline: none;
 			padding: 0;
 			cursor: pointer;
+			font-size: 14px;
 		}
 	}
 	.tutor-checkout-discount-price {
@@ -164,64 +173,9 @@
 		}
 	}
 
-	.tutor-checkout-payment-options {
-		display: flex;
-		flex-direction: column;
-		border: 1px solid var(--tutor-border-color);
-		border-radius: 6px;
-		background-color: #ffffff;
-
-		.tutor-checkout-payment-item {
-			border: none;
-			background-color: transparent;
-			display: flex;
-			align-items: center;
-			gap: 12px;
-			padding: 16px;
-			cursor: pointer;
-			line-height: 24px;
-
-			&:not(:last-child) {
-				border-bottom: 1px solid var(--tutor-border-color);
-			}
-
-			.tutor-payment-item-content {
-				display: flex;
-				gap: 6px;
-				width: 100%;
-				font-size: 16px;
-				font-weight: 600;
-				color: #212529;
-
-				img{
-					max-width: 24px;
-				}
-			}
-
-			&.active {
-				background-color: #E9EDFB;
-				box-shadow: 0px 0px 0px 1px #7391f0;
-				border-color: transparent;
-
-				&:first-of-type {
-					border-top-left-radius: 6px;
-					border-top-right-radius: 6px;
-				}
-
-				&:last-of-type {
-					border-bottom-left-radius: 6px;
-					border-bottom-right-radius: 6px;
-				}
-			}
-		}
-
-		.tutor-alert {
-			margin: -1px;
-		}
-	}
-
 	.tutor-payment-instructions {
-		background-color: #ffffff;
+		background-color: #fafafa;
+		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		padding: 16px;
 		margin-top: 16px;
@@ -325,5 +279,145 @@
 				font-weight: 600;
 			}
 		}
+	}
+
+	.tutor-checkout-spinner {
+		position: absolute;
+		top: 12px;
+		right: 0px;
+		padding: 0px;
+	}
+
+	.tutor-plan-trial-price {
+		background-color: #F5FBF7;
+		display: flex;
+		justify-content: space-between;
+		align-items: start;
+		padding: 8px;
+		border-radius: 4px;
+
+		.tutor-plan-trial-icon-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
+}
+
+.tutor-checkout-billing {
+	.tutor-billing-fields {
+		.tutor-form-label {
+			display: none;
+		}
+		.tutor-mb-16 {
+			margin: 0!important;
+		}
+
+		.tutor-form-control {
+			border-radius: 0px;
+			height: 40px;
+		}
+
+		.tutor-col-12:not(:last-of-type) .tutor-form-control {
+			border-bottom: none!important;
+		}
+
+		.tutor-col-12:first-of-type .tutor-form-control {
+			border-top-left-radius: 6px;
+		}
+
+		.tutor-col-12:last-of-type .tutor-form-control {
+			border-bottom-left-radius: 6px;
+			border-bottom-right-radius: 6px;
+		}
+
+		@include breakpoint-min(desktop) {
+			.tutor-col-sm-6:nth-of-type(odd) .tutor-form-control {
+				border-right: none!important;
+			}
+
+			.tutor-col-12:nth-of-type(2) .tutor-form-control {
+				border-top-right-radius: 6px;
+			}
+		}
+
+		@include breakpoint-minmax(576, 767) {
+			.tutor-col-sm-6:nth-of-type(odd) .tutor-form-control {
+				border-right: none!important;
+			}
+
+			.tutor-col-12:nth-of-type(2) .tutor-form-control {
+				border-top-right-radius: 6px;
+			}
+		}
+
+		@include breakpoint-minmax(768, 991) {
+			.tutor-col-12:first-of-type .tutor-form-control {
+				border-top-right-radius: 6px;
+			}
+		}
+
+		@include breakpoint-max(575) {
+			.tutor-col-12:first-of-type .tutor-form-control {
+				border-top-right-radius: 6px;
+			}
+		}
+	}
+}
+
+.tutor-checkout-payment-options {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--tutor-border-color);
+	border-radius: 6px;
+	background-color: #ffffff;
+
+	.tutor-checkout-payment-item {
+		border: none;
+		margin: 0px;
+		background-color: transparent;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 16px;
+		cursor: pointer;
+		line-height: 24px;
+
+		&:not(:last-child) {
+			border-bottom: 1px solid var(--tutor-border-color);
+		}
+
+		.tutor-payment-item-content {
+			display: flex;
+			gap: 6px;
+			width: 100%;
+			font-size: 16px;
+			font-weight: 600;
+			color: #212529;
+
+			img{
+				max-width: 24px;
+			}
+		}
+
+		&.active {
+			background-color: #E9EDFB;
+			box-shadow: 0px 0px 0px 1px #7391f0;
+			border-color: transparent;
+
+			&:first-of-type {
+				border-top-left-radius: 6px;
+				border-top-right-radius: 6px;
+			}
+
+			&:last-of-type {
+				border-bottom-left-radius: 6px;
+				border-bottom-right-radius: 6px;
+			}
+		}
+	}
+
+	.tutor-alert {
+		margin: -1px;
 	}
 }

@@ -1,17 +1,19 @@
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing } from '@/v3/shared/config/styles';
-import { typography } from '@/v3/shared/config/typography';
 import { css } from '@emotion/react';
 
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+
 interface TopicDragOverlayProps {
-  topicTitle: string;
+  title: string;
 }
 
-const TopicDragOverlay = ({ topicTitle }: TopicDragOverlayProps) => {
+const TopicDragOverlay = ({ title }: TopicDragOverlayProps) => {
   return (
     <div css={styles.wrapper}>
       <SVGIcon name="dragVertical" width={24} height={24} />
-      <span>{topicTitle}</span>
+      <span>{title}</span>
     </div>
   );
 };

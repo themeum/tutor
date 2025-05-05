@@ -16,7 +16,8 @@ tutor_utils()->tutor_custom_header();
 $order_status;
 $order_id;
 $error_msg = Input::get( 'error_message' );
-?>
+$back_url  = wp_get_referer() ? wp_get_referer() : CheckoutController::get_page_url();?>
+
 <div class="tutor-container tutor-order-status-wrapper">
 	<div class="tutor-d-flex tutor-flex-column tutor-align-center tutor-gap-2 tutor-px-20 tutor-py-80 tutor-text-center">
 		<div class="tutor-order-status-icon">
@@ -33,7 +34,7 @@ $error_msg = Input::get( 'error_message' );
 		</div>
 
 		<div class="tutor-order-status-actions">
-			<a href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>" class="tutor-btn tutor-btn-primary">
+			<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-primary">
 				<?php esc_html_e( 'Back to Checkout', 'tutor' ); ?>
 			</a>
 		</div>

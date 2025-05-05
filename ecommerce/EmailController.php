@@ -259,10 +259,14 @@ class EmailController {
 	 * @param string $to_key to key like email_to_students, email_to_teachers, email_to_admin.
 	 * @param string $trigger_key trigger name.
 	 *
+	 * @since 3.2.3
+	 *
+	 * @param int    $recipient the receiver id.
+	 *
 	 * @return array
 	 */
-	public function get_option_data( $to_key, $trigger_key ) {
-		$email_data   = get_option( 'email_template_data' );
+	public function get_option_data( $to_key, $trigger_key, $recipient ) {
+		$email_data   = apply_filters( 'tutor_pro_user_email_template_option', get_option( 'email_template_data' ), $recipient );
 		$default_data = $this->get_email_data();
 
 		return isset( $email_data[ $to_key ][ $trigger_key ] ) ? $email_data[ $to_key ][ $trigger_key ] : $default_data[ $to_key ][ $trigger_key ];
@@ -388,10 +392,9 @@ class EmailController {
 	 * @return void
 	 */
 	private function send_email_to( $recipient_type, $email_type, $recipients, $order_id ) {
-		$site_url    = get_bloginfo( 'url' );
-		$site_name   = get_bloginfo( 'name' );
-		$option_data = $this->get_option_data( $recipient_type, $email_type );
 
+		$site_url   = get_bloginfo( 'url' );
+		$site_name  = get_bloginfo( 'name' );
 		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 		$recipients = array_unique( $recipients );
 		foreach ( $recipients as $recipient ) {
@@ -401,9 +404,25 @@ class EmailController {
 				continue;
 			}
 
-			$user_data = get_userdata( $recipient );
-			$header    = 'Content-Type: ' . $this->get_content_type() . "\r\n";
-			$header    = apply_filters( 'new_order_email_header', $header );
+			/**
+			 * Notification preference check for student.
+			 *
+			 * @since 3.1.0
+			 */
+			if ( self::TO_STUDENTS === $recipient_type ) {
+				$trigger_name = $email_type;
+				$user_id      = $recipient;
+
+				$notification_enabled = apply_filters( 'tutor_is_notification_enabled_for_user', true, 'email', self::TO_STUDENTS, $trigger_name, $user_id );
+				if ( ! $notification_enabled ) {
+					continue;
+				}
+			}
+
+			$user_data   = get_userdata( $recipient );
+			$option_data = $this->get_option_data( $recipient_type, $email_type, $recipient );
+			$header      = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+			$header      = apply_filters( 'new_order_email_header', $header );
 
 			$replacable['{testing_email_notice}'] = '';
 			$replacable['{user_name}']            = tutor_utils()->get_user_name( $user_data );
@@ -414,7 +433,7 @@ class EmailController {
 				$plan                        = ( new PlanModel() )->get_plan( $order_data->items[0]->id );
 				$replacable['{course_name}'] = $plan->plan_name;
 			} else {
-				$replacable['{course_name}'] = count( $order_data->items ) > 1 ? _n( 'Course', 'Courses', count( $order_data->items ) ) : $order_data->items[0]->title;
+				$replacable['{course_name}'] = count( $order_data->items ) > 1 ? _n( 'Course', 'Courses', count( $order_data->items ), 'tutor' ) : $order_data->items[0]->title;
 			}
 
 			$replacable['{admin_order_url}'] = admin_url( 'admin.php?page=tutor_orders&action=edit&id=' . $order_id );
@@ -520,7 +539,7 @@ class EmailController {
 					'label'       => __( 'Order status updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_STUDENTS,
-					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
 					'subject'     => __( 'Your Order Status Has Been Updated to {order_status} ', 'tutor' ),
 					'heading'     => __( 'Your Order Status Has Been Updated to {order_status}', 'tutor' ),
 					'message'     => wp_json_encode(
@@ -553,7 +572,7 @@ class EmailController {
 					'label'       => __( 'New order placed', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_new_' . self::TO_TEACHERS,
-					'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
+					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
 					'subject'     => __( 'A New Student Has Enrolled in Your Course! 🎉', 'tutor' ),
 					'heading'     => __( 'A New Student Has Enrolled in Your Course!', 'tutor' ),
 					'message'     => wp_json_encode(
@@ -582,7 +601,7 @@ class EmailController {
 					'label'       => __( 'Order status updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_TEACHERS,
-					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
 					'subject'     => __( 'Instructor Notice: Your Student\'s Order Status is Now {order_status}', 'tutor' ),
 					'heading'     => __( 'Instructor Notice: Your Student\'s Order Status is Now {order_status}', 'tutor' ),
 					'message'     => wp_json_encode(
@@ -638,7 +657,7 @@ class EmailController {
 					'label'       => __( 'Order status updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_ADMIN,
-					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
 					'subject'     => __( 'An Order\'s Status Has Been Updated to {order_status}', 'tutor' ),
 					'heading'     => __( 'An Order\'s Status Has Been Updated to {order_status}', 'tutor' ),
 					'message'     => wp_json_encode(

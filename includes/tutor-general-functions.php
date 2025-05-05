@@ -248,7 +248,7 @@ if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
 
 		foreach ( $tags as $tag ) {
 
-			$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
+			$has_in_term = has_term( $tag->term_id, CourseModel::COURSE_TAG, $post_ID );
 
 			$output .= '<option value="' . esc_attr( $tag->name ) . '" ' . selected( $has_in_term, true, false ) . '>' . esc_html( $tag->name ) . '</option>';
 
@@ -377,7 +377,7 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 		if ( tutor_utils()->count( $tags ) ) {
 			$output .= '<ul class="tax-input-course-tag">';
 			foreach ( $tags as $tag ) {
-				$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
+				$has_in_term = has_term( $tag->term_id, CourseModel::COURSE_TAG, $post_ID );
 
 				$output .= '<li class="tax-input-course-tag-item tax-input-course-tag-item-' . $tag->term_id . '"><label class="course-tag-checkbox"> <input type="checkbox" name="' . $input_name . '" value="' . $tag->term_id . '" ' . checked( $has_in_term, true, false ) . ' /> <span>' . $tag->name . '</span> </label>';
 
@@ -1213,6 +1213,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 		$conditional_buttons = (object) array(
 			'show_enroll_btn'              => false,
 			'show_add_to_cart_btn'         => false,
+			'show_view_cart_btn'           => false,
 			'show_start_learning_btn'      => false,
 			'show_continue_learning_btn'   => false,
 			'show_complete_course_btn'     => false,
@@ -1241,7 +1242,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 				$is_completed_course = tutor_utils()->is_completed_course( $course_id, $user_id );
 				$course_progress     = (int) tutor_utils()->get_course_completed_percent( $course_id, $user_id );
 
-				if ( $course_progress > 0 || $course_progress < 100 ) {
+				if ( $course_progress > 0 && $course_progress < 100 ) {
 					$conditional_buttons->show_continue_learning_btn = true;
 				}
 
@@ -1263,7 +1264,11 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 			} else {
 				$is_paid_course = tutor_utils()->is_course_purchasable( $course_id );
 				if ( $is_paid_course ) {
-					$conditional_buttons->show_add_to_cart_btn = true;
+					if ( tutor_is_item_in_cart( $course_id ) ) {
+						$conditional_buttons->show_view_cart_btn = true;
+					} else {
+						$conditional_buttons->show_add_to_cart_btn = true;
+					}
 				} else {
 					$conditional_buttons->show_enroll_btn = true;
 				}
@@ -1448,6 +1453,13 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 					continue;
 				}
 
+				$name                = $method['name'];
+				$basename            = "tutor-{$name}/tutor-{$name}.php";
+				$is_plugin_activated = is_plugin_active( $basename );
+				if ( ! $is_manual && 'paypal' !== $name && ! $is_plugin_activated ) {
+					continue;
+				}
+
 				$fields = $method['fields'];
 				unset( $method['fields'] );
 
@@ -1467,7 +1479,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		}
 	}
 
-	if ( ! function_exists( 'tutor_get_supported_payment_gateways' ) ) {
+	if ( ! function_exists( 'tutor_get_subscription_supported_payment_gateways' ) ) {
 		/**
 		 * Get all supported gateways
 		 *
@@ -1475,19 +1487,18 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * plan id provided.
 		 *
 		 * @since 3.0.0
-		 *
-		 * @param int $plan_id Plan id.
+		 * @since 3.4.0 plan_id param removed
 		 *
 		 * @return array
 		 */
-		function tutor_get_supported_payment_gateways( int $plan_id = 0 ) {
+		function tutor_get_subscription_supported_payment_gateways() {
 			$payment_gateways = tutor_get_all_active_payment_gateways();
 
 			$supported_gateways = array();
 			foreach ( $payment_gateways as $gateway ) {
 				$support_subscription = $gateway['support_subscription'] ?? false;
 
-				if ( $plan_id && ! $support_subscription ) {
+				if ( ! $support_subscription ) {
 					continue;
 				}
 
@@ -1562,7 +1573,7 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 				<?php endif; ?>
 			</div>
 			<?php if ( $price_data->show_price_with_tax ) : ?>
-			<div class="tutor-course-price-tax tutor-color-muted"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
+			<div class="tutor-course-price-tax tutor-fs-8 tutor-fw-normal tutor-color-black"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
 			<?php endif; ?>
 		<?php
 		$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
@@ -1662,3 +1673,87 @@ if ( ! function_exists( 'tutor_is_dev_mode' ) ) {
 		return defined( 'TUTOR_DEV_MODE' ) && TUTOR_DEV_MODE;
 	}
 }
+
+if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
+	/**
+	 * Redirect after payment with status and message
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $status Success or error status of payment.
+	 * @param int    $order_id Order ID.
+	 * @param string $message Success/error message to display.
+	 *
+	 * @return void
+	 */
+	function tutor_redirect_after_payment( $status, $order_id, $message = '' ) {
+		$query_params = array(
+			'tutor_order_placement' => $status,
+			'order_id'              => $order_id,
+		);
+
+		if ( $message ) {
+			if ( 'success' === $status ) {
+				$query_params['success_message'] = $message;
+			} else {
+				$query_params['error_message'] = $message;
+			}
+		}
+
+		wp_safe_redirect( apply_filters( 'tutor_redirect_url_after_checkout', add_query_arg( $query_params, home_url() ), $status, $order_id ) );
+		exit();
+	}
+}
+
+if ( ! function_exists( 'tutor_split_amounts' ) ) {
+	/**
+	 * Split amounts into parts for admin & instructor
+	 *
+	 * Amount split will be proportionally based on
+	 * admin commission rate & instructor commission rate.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $amounts Single amount or list of amount array. For ex: [12,20,100].
+	 *
+	 * @return array
+	 */
+	function tutor_split_amounts( $amounts ) {
+		$amounts = is_array( $amounts ) ? $amounts : array( $amounts );
+
+		$admin_amount      = 0;
+		$instructor_amount = 0;
+
+		$sharing_enabled = tutor_utils()->get_option( 'enable_revenue_sharing' );
+		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
+		$admin_rate      = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
+
+		foreach ( $amounts as $amount ) {
+			$instructor_amount = $instructor_rate > 0 ? ( ( $amount * $instructor_rate ) / 100 ) : 0;
+			$admin_amount      = $admin_rate > 0 ? ( ( $amount * $admin_rate ) / 100 ) : 0;
+		}
+
+		return array(
+			'admin'      => $admin_amount,
+			'instructor' => $instructor_amount,
+		);
+	}
+}
+
+if ( ! function_exists( 'tutor_is_local_env' ) ) {
+	/**
+	 * Check if the current environment is local.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @return bool True if the current environment is local, false otherwise.
+	 */
+	function tutor_is_local_env() {
+		$site_url = site_url();
+		return (
+			strpos( $site_url, '.local' ) !== false ||
+			strpos( $site_url, 'localhost' ) !== false
+		);
+	}
+}
+

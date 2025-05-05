@@ -62,13 +62,6 @@ class CouponController extends BaseController {
 	use JsonResponse;
 
 	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
-
-	/**
 	 * Bulk Action
 	 *
 	 * @var $bulk_action
@@ -89,7 +82,6 @@ class CouponController extends BaseController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->page_title = __( 'Coupons', 'tutor' );
 		$this->model      = new CouponModel();
 
 		if ( $register_hooks ) {
@@ -117,6 +109,22 @@ class CouponController extends BaseController {
 	}
 
 	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Coupons', 'tutor' );
+		}
+	}
+
+
+	/**
 	 * Get coupon model object
 	 *
 	 * @since 3.0.0
@@ -125,6 +133,40 @@ class CouponController extends BaseController {
 	 */
 	public function get_model() {
 		return $this->model;
+	}
+
+	/**
+	 * Check if applies to items exist and are valid
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $data The data to validate.
+	 *
+	 * @return bool Whether applies to items exist and are valid
+	 */
+	private function has_applies_to_items( $data ) {
+		return isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
+	}
+
+	/**
+	 * Validate applies to item
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $data The data to validate.
+	 *
+	 * @return void send wp_json response when validation fails
+	 */
+	public function validate_applies_to_item( $data ) {
+		$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
+
+		if ( $is_specific_applies_to && ! $this->has_applies_to_items( $data ) ) {
+			$this->json_response(
+				__( 'Add items first', 'tutor' ),
+				null,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
 	}
 
 	/**
@@ -152,6 +194,8 @@ class CouponController extends BaseController {
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
+
+		$this->validate_applies_to_item( $data );
 
 		if ( $this->model->get_coupon( array( 'coupon_code' => $data['coupon_code'] ) ) ) {
 			$this->json_response(
@@ -224,15 +268,13 @@ class CouponController extends BaseController {
 			);
 		}
 
+		$this->validate_applies_to_item( $data );
+
 		unset( $data['coupon_id'] );
+		unset( $data['coupon_type'] );
 
-		// Convert start & expire date time into gmt.
-		if ( isset( $data['start_date_gmt'] ) ) {
-			get_gmt_from_date( $data['start_date_gmt'] );
-		}
-
-		if ( isset( $data['expire_date_gmt'] ) ) {
-			get_gmt_from_date( $data['expire_date_gmt'] );
+		if ( ! isset( $data['expire_date_gmt'] ) ) {
+			$data['expire_date_gmt'] = null;
 		}
 
 		// Set updated by.
@@ -243,7 +285,8 @@ class CouponController extends BaseController {
 			if ( $update ) {
 				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
 				$this->model->delete_applies_to( $coupon_data->coupon_code );
-				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
+
+				if ( $this->has_applies_to_items( $data ) ) {
 					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code );
 				}
 
@@ -291,7 +334,7 @@ class CouponController extends BaseController {
 				$list = $this->get_application_list( $applies_to, $limit, $offset, $search_term );
 				if ( $list ) {
 					$this->json_response(
-						__( 'Coupon application list retrieved successfully!' ),
+						__( 'Coupon application list retrieved successfully!', 'tutor' ),
 						$list
 					);
 				} else {
@@ -366,7 +409,7 @@ class CouponController extends BaseController {
 	 * @since 3.0.0
 	 */
 	public function tabs_key_value(): array {
-		$url = get_pagenum_link();
+		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$date          = Input::get( 'date', '' );
 		$coupon_status = Input::get( 'coupon-status', '' );
@@ -441,6 +484,10 @@ class CouponController extends BaseController {
 
 		$list_order    = Input::get( 'order', 'DESC' );
 		$list_order_by = 'id';
+
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+			$where_clause['applies_to'] = $this->model->get_course_bundle_applies_to( true );
+		}
 
 		return $this->model->get_coupons( $where_clause, $search_term, $limit, $offset, $list_order_by, $list_order );
 	}
@@ -566,7 +613,7 @@ class CouponController extends BaseController {
 		$applications = $this->model->get_formatted_coupon_applications( $coupon_data );
 
 		// Set applies to items.
-		$coupon_data->applies_to_items = $applications;
+		$coupon_data->applies_to_items = apply_filters( 'tutor_coupon_details_applies_to_items_response', $applications, $coupon_data );
 
 		// Set coupon usage.
 		$coupon_data->coupon_usage = $this->model->get_coupon_usage_count( $coupon_data->coupon_code );
@@ -658,7 +705,7 @@ class CouponController extends BaseController {
 
 			$total_arg = array(
 				'fields'     => 'ids',
-				'taxonomy'   => 'course-category',
+				'taxonomy'   => CourseModel::COURSE_CATEGORY,
 				'hide_empty' => true,
 			);
 
@@ -769,7 +816,12 @@ class CouponController extends BaseController {
 					'coupon_code' => $order->coupon_code,
 					'user_id'     => $order->user_id,
 				);
-				$this->model->store_coupon_usage( $data );
+
+				try {
+					$this->model->store_coupon_usage( $data );
+				} catch ( \Throwable $th ) {
+					tutor_log( $th );
+				}
 			}
 		}
 	}

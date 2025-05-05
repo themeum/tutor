@@ -15,21 +15,21 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import FormTrueFalse from '@Components/fields/quiz/FormTrueFalse';
+import FormTrueFalse from '@CourseBuilderComponents/fields/quiz/FormTrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -71,8 +71,8 @@ const TrueFalse = () => {
   const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
     const updatedOptions = currentOptions.map((item) => ({
       ...item,
-      ...(calculateQuizDataStatus(item._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       is_correct: item.answer_id === option.answer_id ? '1' : '0',
     })) as QuizQuestionOption[];
@@ -80,7 +80,6 @@ const TrueFalse = () => {
     replaceOption(updatedOptions);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
@@ -101,8 +100,8 @@ const TrueFalse = () => {
       if (index !== changedOptionIndex) {
         updatedOptions[index] = {
           ...option,
-          ...(calculateQuizDataStatus(option._data_status, 'update') && {
-            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+          ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+            _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
           }),
           is_correct: '0' as '0' | '1',
         };
@@ -110,6 +109,7 @@ const TrueFalse = () => {
     }
 
     form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentOptions]);
 
   return (
@@ -193,11 +193,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
   `,
-  option: ({
-    isSelected,
-  }: {
-    isSelected: boolean;
-  }) => css`
+  option: ({ isSelected }: { isSelected: boolean }) => css`
     ${styleUtils.display.flex()};
     ${typography.caption('medium')};
     align-items: center;
@@ -219,22 +215,15 @@ const styles = {
       }
     }
 
-
-    ${
-      isSelected &&
-      css`
-        [data-check-icon] {
-          opacity: 1;
-          color: ${colorTokens.bg.success};
-        }
-      `
-    }
+    ${isSelected &&
+    css`
+      [data-check-icon] {
+        opacity: 1;
+        color: ${colorTokens.bg.success};
+      }
+    `}
   `,
-  optionLabel: ({
-    isSelected,
-  }: {
-    isSelected: boolean;
-  }) => css`
+  optionLabel: ({ isSelected }: { isSelected: boolean }) => css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -256,17 +245,15 @@ const styles = {
       }
     }
 
-    ${
-      isSelected &&
-      css`
-        background-color: ${colorTokens.background.success.fill40};
-        color: ${colorTokens.text.primary};
+    ${isSelected &&
+    css`
+      background-color: ${colorTokens.background.success.fill40};
+      color: ${colorTokens.text.primary};
 
-        &:hover {
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
-        }
-      `
-    }
+      &:hover {
+        box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
+      }
+    `}
   `,
   optionDragButton: css`
     ${styleUtils.resetButton}
@@ -275,5 +262,12 @@ const styles = {
     color: ${colorTokens.icon.default};
     cursor: grab;
     place-self: center center;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
   `,
 };

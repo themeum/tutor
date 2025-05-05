@@ -1,9 +1,11 @@
-import Switch from '@Atoms/Switch';
-import { spacing } from '@Config/styles';
-import type { FormControllerProps } from '@Utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
-
 import type { ReactNode } from 'react';
+
+import Switch from '@TutorShared/atoms/Switch';
+import { spacing } from '@TutorShared/config/styles';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 export type labelPositionType = 'left' | 'right';
@@ -65,7 +67,7 @@ const FormSwitch = ({
   );
 };
 
-export default FormSwitch;
+export default withVisibilityControl(FormSwitch);
 
 const styles = {
   wrapper: css`

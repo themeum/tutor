@@ -36,7 +36,6 @@ class TutorEDD extends Tutor_Base {
 			return;
 		}
 
-		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ) );
 
 		/**
@@ -60,12 +59,12 @@ class TutorEDD extends Tutor_Base {
 	 */
 	public function add_options( $attr ) {
 		$attr['tutor_edd'] = array(
-			'label'    => __( 'EDD', 'tutor-edd' ),
+			'label'    => __( 'EDD', 'tutor' ),
 
 			'sections' => array(
 				'general' => array(
-					'label'  => __( 'General', 'tutor-edd' ),
-					'desc'   => __( 'Tutor Course Attachments Settings', 'tutor-edd' ),
+					'label'  => __( 'General', 'tutor' ),
+					'desc'   => __( 'Tutor Course Attachments Settings', 'tutor' ),
 					'fields' => array(
 						'enable_tutor_edd' => array(
 							'type'  => 'checkbox',
@@ -94,28 +93,6 @@ class TutorEDD extends Tutor_Base {
 			$arr['edd'] = __( 'Easy Digital Downloads', 'tutor' );
 		}
 		return $arr;
-	}
-
-	/**
-	 * Register meta box
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function register_meta_box() {
-		tutor_meta_box_wrapper( 'tutor-attached-edd-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
-	}
-
-	/**
-	 * MetaBox for Lesson Modal Edit Mode
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function course_add_product_metabox() {
-		include tutor()->path . 'views/metabox/course-add-edd-product-metabox.php';
 	}
 
 	/**
@@ -156,10 +133,13 @@ class TutorEDD extends Tutor_Base {
 		}
 
 		$course_id      = tutor_utils()->get_post_id( $course_id );
-		$has_product_id = get_post_meta( $course_id, '_tutor_course_product_id', true );
-		if ( $has_product_id ) {
+		$price_type     = tutor_utils()->price_type( $course_id );
+		$has_product_id = tutor_utils()->get_course_product_id( $course_id );
+
+		if ( Course::PRICE_TYPE_PAID === $price_type && $has_product_id ) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -176,7 +156,6 @@ class TutorEDD extends Tutor_Base {
 		if ( tutils()->has_edd() ) {
 			return edd_price( $product_id, false );
 		}
-		
 	}
 
 	/**

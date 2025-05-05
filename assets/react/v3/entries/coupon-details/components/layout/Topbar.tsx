@@ -1,24 +1,24 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { TutorBadge } from '@Atoms/TutorBadge';
-import Container from '@Components/Container';
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import { useFormContext } from 'react-hook-form';
+
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
+import Container from '@TutorShared/components/Container';
+
 import {
   type Coupon,
   convertFormDataToPayload,
   useCreateCouponMutation,
   useUpdateCouponMutation,
 } from '@CouponServices/coupon';
-import { styleUtils } from '@Utils/style-utils';
-import { makeFirstCharacterUpperCase } from '@Utils/util';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { format } from 'date-fns';
-import { useFormContext } from 'react-hook-form';
+import config from '@TutorShared/config/config';
+import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { makeFirstCharacterUpperCase } from '@TutorShared/utils/util';
 
 export const TOPBAR_HEIGHT = 96;
 
@@ -37,31 +37,33 @@ function Topbar() {
   const createCouponMutation = useCreateCouponMutation();
   const updateCouponMutation = useUpdateCouponMutation();
 
-  async function handleSubmit(data: Coupon) {
+  const handleSubmit = async (data: Coupon) => {
     const payload = convertFormDataToPayload(data);
+
     if (data.id) {
       updateCouponMutation.mutate(payload);
-    } else {
-      createCouponMutation.mutate(payload);
+      return;
     }
-  }
 
-  function handleGoBack() {
-    window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_coupons`;
-  }
+    createCouponMutation.mutate(payload);
+  };
+
+  const handleGoBack = () => {
+    window.location.href = config.TUTOR_COUPONS_PAGE;
+  };
 
   return (
     <div css={styles.wrapper}>
       <Container>
         <div css={styles.innerWrapper}>
           <div css={styles.left}>
-            <button type="button" css={styles.backButton} onClick={handleGoBack}>
+            <button type="button" css={styleUtils.backButton} onClick={handleGoBack}>
               <SVGIcon name="arrowLeft" width={26} height={26} />
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>
-                  {courseId ? __('Update coupon', 'tutor') : __('Create coupon', 'tutor')}
+                <h4 css={styles.headerTitle}>
+                  {courseId ? __('Update Coupon', 'tutor') : __('Create Coupon', 'tutor')}
                 </h4>
                 <TutorBadge variant={statusVariant[coupon.coupon_status]}>
                   {makeFirstCharacterUpperCase(coupon.coupon_status)}
@@ -83,11 +85,7 @@ function Topbar() {
               >
                 {() => (
                   <p css={styles.updateMessage}>
-                    {sprintf(
-                      __('Updated by %s at %s', 'tutor'),
-                      coupon.coupon_update_by,
-                      coupon.updated_at_readable
-                    )}
+                    {sprintf(__('Updated by %s at %s', 'tutor'), coupon.coupon_update_by, coupon.updated_at_readable)}
                   </p>
                 )}
               </Show>
@@ -98,6 +96,7 @@ function Topbar() {
               {__('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-coupon"
               variant="primary"
               loading={createCouponMutation.isPending || updateCouponMutation.isPending}
               onClick={form.handleSubmit(handleSubmit)}
@@ -115,50 +114,58 @@ export default Topbar;
 
 const styles = {
   wrapper: css`
-		height: ${TOPBAR_HEIGHT}px;
-		background: ${colorTokens.background.white};
-		position: sticky;
-		top: 32px;
-		z-index: ${zIndex.positive};
-	`,
-  innerWrapper: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		height: 100%;
-	`,
-  headerContent: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-	`,
-  left: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
-  right: css`
-		display: flex;
-		gap: ${spacing[12]};
-	`,
-  updateMessage: css`
-		${typography.body()};
-		color: ${colorTokens.text.subdued};
-	`,
-  backButton: css`
-		${styleUtils.resetButton};
-		background-color: transparent;
-		width: 32px;
-		height: 32px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border: 1px solid ${colorTokens.border.neutral};
-		border-radius: ${borderRadius[4]};
-		color: ${colorTokens.icon.default};
-		transition: color 0.3s ease-in-out;
+    height: ${TOPBAR_HEIGHT}px;
+    background: ${colorTokens.background.white};
+    border: 1px solid ${colorTokens.stroke.divider};
+    position: sticky;
+    top: 32px;
+    z-index: ${zIndex.positive};
 
-		:hover {
-			color: ${colorTokens.icon.hover};
-		}
-	`,
+    ${Breakpoint.mobile} {
+      position: unset;
+      padding-inline: ${spacing[8]};
+    }
+
+    ${Breakpoint.smallMobile} {
+      height: auto;
+    }
+  `,
+  innerWrapper: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding-inline: ${spacing[8]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[12]};
+      flex-direction: column;
+      gap: ${spacing[8]};
+    }
+  `,
+  headerContent: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
+  headerTitle: css`
+    ${typography.heading5('medium')};
+
+    ${Breakpoint.smallMobile} {
+      ${typography.heading6('medium')};
+    }
+  `,
+  left: css`
+    display: flex;
+    gap: ${spacing[16]};
+    width: 100%;
+  `,
+  right: css`
+    display: flex;
+    gap: ${spacing[12]};
+  `,
+  updateMessage: css`
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
+  `,
 };

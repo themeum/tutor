@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
@@ -75,7 +76,7 @@ $available_status = array(
 		<div class="tutor-mt-24">
 			<div class="tutor-table-responsive">
 
-				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
+				<table class="tutor-table tutor-table-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>
@@ -116,7 +117,7 @@ $available_status = array(
 					<tbody>
 						<?php if ( is_array( $orders ) && count( $orders ) ) : ?>
 							<?php
-							foreach ( $orders as $key => $order ) :
+							foreach ( $orders as $key => $order ) : //phpcs:ignore
 								$user_data = get_userdata( $order->user_id );
 								?>
 								<tr>
@@ -127,9 +128,9 @@ $available_status = array(
 									</td>
 
 									<td>
-										<div class="tutor-fs-7">
+										<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-table-link tutor-fs-7">
 											<?php echo esc_html( '#' . $order->id ); ?>
-										</div>
+										</a>
 									</td>
 
 									<td>
@@ -156,7 +157,16 @@ $available_status = array(
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
+											<?php echo esc_html( Ecommerce::get_payment_method_label( $order->payment_method ?? '' ) ); ?>
+											<?php if ( ! empty( $order->transaction_id ) ) : ?>
+												<br>
+												<span class="tutor-fw-normal tutor-fs-8 tutor-color-muted">
+													<?php
+													/* translators: %s: transaction id */
+													echo esc_html( sprintf( __( 'Trx ID: %s', 'tutor' ), $order->transaction_id ) );
+													?>
+												</span>
+											<?php endif; ?>
 										</div>
 									</td>
 
@@ -171,9 +181,12 @@ $available_status = array(
 										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
 									</td>
 									<td>
-										<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-											<?php esc_html_e( 'Edit', 'tutor' ); ?>
-										</a>
+										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+											<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+												<?php esc_html_e( 'Edit', 'tutor' ); ?>
+											</a>
+											<?php do_action( 'tutor_after_order_edit_link', $order ); ?>
+										</div>
 									</td>
 								</tr>
 							<?php endforeach; ?>

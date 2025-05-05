@@ -1,20 +1,19 @@
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { useOrderContext } from '@OrderContexts/order-context';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useCancelOrderMutation } from '@OrderServices/order';
-import type { Option } from '@Utils/types';
-import { requiredRule } from '@Utils/validation';
+import type { Option } from '@TutorShared/utils/types';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface CancelOrderModalProps extends ModalProps {
@@ -39,10 +38,9 @@ const reasonOptions: (Option<CancellationReason> & { explanation?: string })[] =
   {
     label: __('Customer changed or canceled order', 'tutor'),
     value: 'customer_changed_or_canceled_order',
-    explanation: __(
-      'The customer has modified or canceled their order. This action indicates that the customer has either updated their order details or decided to cancel their order entirely. Please review the order history for specific changes or cancellation details.',
-      'tutor'
-    ),
+    explanation:
+      // prettier-ignore
+      __('The customer has modified or canceled their order. This action indicates that the customer has either updated their order details or decided to cancel their order entirely. Please review the order history for specific changes or cancellation details.', 'tutor'),
   },
   {
     label: __('Payment declined', 'tutor'),
@@ -52,10 +50,9 @@ const reasonOptions: (Option<CancellationReason> & { explanation?: string })[] =
   {
     label: __('Fraudulent order', 'tutor'),
     value: 'fraudulent_order',
-    explanation: __(
-      'The order has been flagged as fraudulent. This action indicates that the order has been identified as potentially fraudulent and requires immediate attention. Please investigate the order details and take appropriate measures to prevent any unauthorized transactions.',
-      'tutor'
-    ),
+    explanation:
+      // prettier-ignore
+      __('The order has been flagged as fraudulent. This action indicates that the order has been identified as potentially fraudulent and requires immediate attention. Please investigate the order details and take appropriate measures to prevent any unauthorized transactions.', 'tutor'),
   },
   {
     label: __('Courses unavailable', 'tutor'),
@@ -80,22 +77,24 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
   const reasonValue = form.watch('reason');
   const explanation =
     reasonOptions.find((item) => item.value === reasonValue)?.explanation ??
-    __(
-      'Please select a reason for the order cancellation. Your input is valuable for understanding the cause.',
-      'tutor'
-    );
+    // prettier-ignore
+    __('Please select a reason for the order cancellation. Your input is valuable for understanding the cause.', 'tutor');
+
+  useEffect(() => {
+    form.setFocus('reason');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           const response = await cancelOrderMutation.mutateAsync({
             order_id: order_id,
             cancel_reason:
               values.reason === 'other'
                 ? values.note
-                : reasonOptions.find((item) => item.value === values.reason)?.explanation ?? '',
+                : (reasonOptions.find((item) => item.value === values.reason)?.explanation ?? ''),
           });
 
           if (response) {
@@ -113,7 +112,7 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
             render={(props) => (
               <FormSelectInput
                 {...props}
-                label={__('Reason for cancellation', 'tutor')}
+                label={__('Reason for Cancellation', 'tutor')}
                 options={reasonOptions}
                 placeholder={__('Select a reason', 'tutor')}
               />
@@ -170,10 +169,6 @@ const styles = {
     strong {
       color: ${colorTokens.text.title};
     }
-  `,
-
-  form: css`
-    width: 480px;
   `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};

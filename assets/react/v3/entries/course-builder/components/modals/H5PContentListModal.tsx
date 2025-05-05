@@ -4,25 +4,26 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import Table from '@Molecules/Table';
-import type { Column } from '@Molecules/Table';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import type { Column } from '@TutorShared/molecules/Table';
+import Table from '@TutorShared/molecules/Table';
 
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
-import Checkbox from '@Atoms/CheckBox';
-import { DateFormats } from '@Config/constants';
-import { colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { type ContentType, type ID, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
+import { type ContentType, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
 import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
-import { useDebounce } from '@Hooks/useDebounce';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import { DateFormats } from '@TutorShared/config/constants';
+import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
 
 interface H5PContentListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -83,7 +84,7 @@ const H5PContentListModal = ({
           )}
         </div>
       ),
-      Cell: (item, index) => {
+      Cell: (item) => {
         return (
           <div css={typography.caption()}>
             <Checkbox
@@ -138,50 +139,49 @@ const H5PContentListModal = ({
     <BasicModalWrapper
       title={selectedContents.length > 0 ? sprintf(__('%s  selected', 'tutor'), selectedContents.length) : title}
       onClose={() => closeModal({ action: 'CLOSE' })}
+      maxWidth={920}
     >
-      <div css={styles.modalWrapper}>
-        <div css={styles.searchWrapper}>
-          <Controller
-            control={form.control}
-            name="search"
-            render={(controllerProps) => (
-              <FormInputWithContent
-                {...controllerProps}
-                placeholder={__('Search by title', 'tutor')}
-                showVerticalBar={false}
-                content={<SVGIcon name="search" width={24} height={24} />}
-              />
-            )}
-          />
-        </div>
-        <div css={styles.tableWrapper}>
-          <Table
-            columns={columns}
-            data={filteredContent || []}
-            loading={getH5PQuizzesQuery.isLoading || getH5PContentsQuery.isLoading}
-          />
-        </div>
-
-        <Show when={filteredContent?.length}>
-          <div css={styles.footer}>
-            <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-              {__('Cancel', 'tutor')}
-            </Button>
-            <Button
-              type="submit"
-              size="small"
-              variant="primary"
-              onClick={() => {
-                onAddContent(selectedContents);
-                closeModal({ action: 'CONFIRM' });
-              }}
-              disabled={!selectedContents.length}
-            >
-              {__('Add', 'tutor')}
-            </Button>
-          </div>
-        </Show>
+      <div css={styles.searchWrapper}>
+        <Controller
+          control={form.control}
+          name="search"
+          render={(controllerProps) => (
+            <FormInputWithContent
+              {...controllerProps}
+              placeholder={__('Search by title', 'tutor')}
+              showVerticalBar={false}
+              content={<SVGIcon name="search" width={24} height={24} />}
+            />
+          )}
+        />
       </div>
+      <div css={styles.tableWrapper}>
+        <Table
+          columns={columns}
+          data={filteredContent || []}
+          loading={getH5PQuizzesQuery.isLoading || getH5PContentsQuery.isLoading}
+        />
+      </div>
+
+      <Show when={filteredContent?.length}>
+        <div css={styles.footer}>
+          <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
+            {__('Cancel', 'tutor')}
+          </Button>
+          <Button
+            type="submit"
+            size="small"
+            variant="primary"
+            onClick={() => {
+              onAddContent(selectedContents);
+              closeModal({ action: 'CONFIRM' });
+            }}
+            disabled={!selectedContents.length}
+          >
+            {__('Add', 'tutor')}
+          </Button>
+        </div>
+      </Show>
     </BasicModalWrapper>
   );
 };
@@ -189,9 +189,6 @@ const H5PContentListModal = ({
 export default H5PContentListModal;
 
 const styles = {
-  modalWrapper: css`
-    width: 920px;
-  `,
   searchWrapper: css`
     display: flex;
     padding: ${spacing[20]};

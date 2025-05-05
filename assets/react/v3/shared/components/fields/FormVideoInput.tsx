@@ -1,33 +1,38 @@
 import { css } from '@emotion/react';
+import type { UseMutationResult } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { rgba } from 'polished';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import ImageInput from '@Atoms/ImageInput';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-
-import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, fontWeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import type { Option } from '@Utils/types';
+import Button from '@TutorShared/atoms/Button';
+import ImageInput from '@TutorShared/atoms/ImageInput';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
   convertYouTubeDurationToSeconds,
   covertSecondsToHMS,
+  generateVideoThumbnail,
   getExternalVideoDuration,
   getVimeoVideoDuration,
 } from '@CourseBuilderUtils/utils';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { VideoRegex, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type IconCollection } from '@TutorShared/icons/types';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { TutorMutationResponse } from '@TutorShared/utils/types';
+import { requiredRule } from '@TutorShared/utils/validation';
+
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -37,11 +42,13 @@ export interface CourseVideo {
   source_video_id: string;
   poster: string;
   poster_url: string;
+  source_html5: string;
   source_external_url: string;
   source_shortcode: string;
   source_youtube: string;
   source_vimeo: string;
   source_embedded: string;
+  [key: string]: string | undefined;
 }
 
 interface URLFormData {
@@ -57,35 +64,42 @@ type FormVideoInputProps = {
   infoText?: string;
   supportedFormats?: string[];
   loading?: boolean;
-  onGetDuration?: (duration: {
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }) => void;
+  onGetDuration?: (duration: { hours: number; minutes: number; seconds: number }) => void;
 } & FormControllerProps<CourseVideo | null>;
 
-const videoSources =
-  (tutorConfig.settings?.supported_video_sources &&
-    (Array.isArray(tutorConfig.settings?.supported_video_sources)
-      ? tutorConfig.settings?.supported_video_sources
-      : [tutorConfig.settings?.supported_video_sources])) ||
-  [];
+interface GetVideoDuration {
+  source: string;
+  url: string;
+  getYouTubeVideoDurationMutation: UseMutationResult<
+    TutorMutationResponse<{
+      duration: string;
+    }>,
+    Error,
+    string,
+    unknown
+  >;
+}
 
-const videoSourceLabels: Record<string, string> = {
-  external_url: __('External URL', 'tutor'),
-  shortcode: __('Shortcode', 'tutor'),
-  youtube: __('YouTube', 'tutor'),
-  vimeo: __('Vimeo', 'tutor'),
-  embedded: __('Embedded', 'tutor'),
+const videoSourceOptions = tutorConfig.supported_video_sources || [];
+const videoSourcesSelectOptions = videoSourceOptions.filter((option) => option.value !== 'html5');
+const videoSources = videoSourceOptions.map((item) => item.value);
+
+const thumbnailGeneratorSources = ['vimeo', 'youtube', 'html5'];
+
+const placeholderMap = {
+  youtube: __('Paste YouTube Video URL', 'tutor'),
+  vimeo: __('Paste Vimeo Video URL', 'tutor'),
+  external_url: __('Paste External Video URL', 'tutor'),
+  shortcode: __('Paste Video Shortcode', 'tutor'),
+  embedded: __('Paste Embedded Video Code', 'tutor'),
 };
 
-const videoSourceOptions = videoSources.reduce((options, source) => {
-  const label = videoSourceLabels[source];
-  if (label) {
-    options.push({ label, value: source });
-  }
-  return options;
-}, [] as Option<string>[]);
+const videoIconMap = {
+  youtube: 'youtube',
+  vimeo: 'vimeo',
+  shortcode: 'shortcode',
+  embedded: 'coding',
+};
 
 const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<CourseVideo>) => {
   const defaultValue = {
@@ -93,6 +107,7 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
     source_video_id: '',
     poster: '',
     poster_url: '',
+    source_html5: '',
     source_external_url: '',
     source_shortcode: '',
     source_youtube: '',
@@ -101,6 +116,56 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
   };
 
   return fieldValue ? { ...fieldValue, ...update } : { ...defaultValue, ...update };
+};
+
+const videoValidation = {
+  youtube: (url: string) => {
+    const match = url.match(VideoRegex.YOUTUBE);
+    return match && match[7].length === 11 ? match[7] : null;
+  },
+  vimeo: (url: string) => {
+    const match = url.match(VideoRegex.VIMEO);
+    return match?.[5] || null;
+  },
+  shortcode: (code: string) => {
+    return code.match(VideoRegex.SHORTCODE) ? code : null;
+  },
+  url: (url: string) => {
+    return url.match(VideoRegex.EXTERNAL_URL) ? url : null;
+  },
+};
+
+const getVideoDuration = async ({ source, url, getYouTubeVideoDurationMutation }: GetVideoDuration) => {
+  try {
+    let seconds = 0;
+
+    switch (source) {
+      case 'vimeo':
+        seconds = (await getVimeoVideoDuration(url)) ?? 0;
+        break;
+      case 'html5':
+      case 'external_url':
+        seconds = (await getExternalVideoDuration(url)) ?? 0;
+        break;
+      case 'youtube': {
+        const videoId = videoValidation.youtube(url);
+        if (videoId) {
+          const response = await getYouTubeVideoDurationMutation.mutateAsync(videoId);
+          seconds = convertYouTubeDurationToSeconds(response.data.duration);
+        }
+        break;
+      }
+    }
+
+    if (seconds) {
+      const duration = covertSecondsToHMS(Math.floor(seconds));
+      return duration;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting video duration:', error);
+    return null;
+  }
 };
 
 const FormVideoInput = ({
@@ -115,80 +180,20 @@ const FormVideoInput = ({
   loading,
   onGetDuration,
 }: FormVideoInputProps) => {
-  if (!videoSources.length) {
-    return (
-      <div
-        css={styles.emptyMedia({
-          hasVideoSource: false,
-        })}
-      >
-        <p css={styles.warningText}>
-          <SVGIcon name="info" height={20} width={20} />
-          {__('No video source selected', 'tutor')}
-        </p>
-
-        <Button
-          buttonCss={styles.selectFromSettingsButton}
-          variant="secondary"
-          size="small"
-          icon={<SVGIcon name="linkExternal" height={24} width={24} />}
-          onClick={() => {
-            window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
-          }}
-        >
-          {__('Select from settings', 'tutor')}
-        </Button>
-      </div>
-    );
-  }
-
-  const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
-      videoSource: videoSourceOptions[0]?.value || '',
+      videoSource: videoSourcesSelectOptions[0]?.value || '',
       videoUrl: '',
     },
   });
   const getYouTubeVideoDurationMutation = useGetYouTubeVideoDuration();
-
-  const videoSource = form.watch('videoSource') || '';
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!fieldValue) {
-      return;
-    }
-
-    if (!fieldValue.source) {
-      form.setValue('videoSource', videoSourceOptions[0]?.value);
-      form.setValue('videoUrl', fieldValue[`source_${videoSourceOptions[0]?.value}` as keyof CourseVideo] || '');
-      return;
-    }
-
-    const isVideoSourceAvailable = videoSources.includes(fieldValue.source);
-
-    if (!isVideoSourceAvailable) {
-      field.onChange(updateFieldValue(fieldValue, { source: '' }));
-      return;
-    }
-
-    form.setValue('videoSource', fieldValue.source);
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo]);
-  }, [fieldValue]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!videoSource) {
-      return;
-    }
-
-    if (!fieldValue?.[`source_${videoSource}` as keyof CourseVideo]) {
-      form.setValue('videoUrl', '');
-      return;
-    }
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo]);
-  }, [videoSource]);
-
+  const [isThumbnailLoading, setIsThumbnailLoading] = useState(false);
+  const [duration, setDuration] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+  const [localPoster, setLocalPoster] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
   const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
@@ -200,39 +205,233 @@ const FormVideoInput = ({
     },
   });
 
-  const handleUpload = (type: 'video' | 'poster') => {
-    const uploader = window.wp.media({
-      library: {
-        type: type === 'video' ? (supportedFormats || []).map((format) => `video/${format}`).join(',') : 'image',
-      },
-    });
+  const handleVideoFileUpdate = async (files: WPMedia | WPMedia[] | null) => {
+    if (!files) {
+      return;
+    }
 
-    uploader.open();
-    uploader.on('select', () => {
-      const attachment = uploader.state().get('selection').first().toJSON();
-      const updateData =
-        type === 'video'
-          ? { source: 'html5', source_video_id: attachment.id }
-          : { poster: attachment.id, poster_url: attachment.url };
+    const file = Array.isArray(files) ? files[0] : files;
+    const updateData = {
+      source: 'html5',
+      source_video_id: file.id.toString(),
+      source_html5: file.url,
+    };
+    field.onChange(updateFieldValue(field.value, updateData));
+    onChange?.(updateFieldValue(field.value, updateData));
 
-      if (type === 'video' && onGetDuration) {
-        getExternalVideoDuration(attachment.url).then((duration) => {
-          if (duration) {
-            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-          }
-        });
+    try {
+      setIsThumbnailLoading(true);
+      resetImageSelection();
+      const posterUrl = await generateVideoThumbnail('external_url', file.url);
+      const duration = await getExternalVideoDuration(file.url);
+
+      if (!duration) {
+        return;
+      }
+      setDuration(covertSecondsToHMS(Math.floor(duration)));
+      if (onGetDuration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
       }
 
-      field.onChange(updateFieldValue(fieldValue, updateData));
-      onChange?.(updateFieldValue(fieldValue, updateData));
-    });
+      if (posterUrl) {
+        setLocalPoster(posterUrl);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsThumbnailLoading(false);
+    }
+  };
+
+  const { openMediaLibrary: openVideoLibrary, resetFiles: resetVideoSelection } = useWPMedia({
+    options: {
+      type: supportedFormats?.length ? supportedFormats.map((format) => `video/${format}`).join(',') : 'video',
+    },
+    onChange: handleVideoFileUpdate,
+  });
+
+  const { openMediaLibrary: openImageLibrary, resetFiles: resetImageSelection } = useWPMedia({
+    options: {
+      type: 'image',
+    },
+    onChange: (files) => {
+      if (!files) {
+        return;
+      }
+
+      const file = Array.isArray(files) ? files[0] : files;
+      const updateData = {
+        poster: file.id.toString(),
+        poster_url: file.url,
+      };
+      field.onChange(updateFieldValue(field.value, updateData));
+      onChange?.(updateFieldValue(field.value, updateData));
+    },
+    initialFiles: field.value?.poster
+      ? { id: Number(field.value.poster), url: field.value.poster_url, title: '' }
+      : null,
+  });
+
+  const videoSource = form.watch('videoSource') || '';
+  const fieldValue = field.value;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!fieldValue) {
+      return;
+    }
+
+    if (!fieldValue.source) {
+      form.setValue('videoSource', videoSourcesSelectOptions[0]?.value);
+      form.setValue('videoUrl', fieldValue[`source_${videoSourcesSelectOptions[0]?.value}` as keyof CourseVideo] || '');
+      return;
+    }
+
+    const isVideoSourceAvailable = videoSources.includes(fieldValue.source);
+
+    if (!isVideoSourceAvailable) {
+      field.onChange(updateFieldValue(fieldValue, { source: '' }));
+      return;
+    }
+
+    form.setValue('videoSource', fieldValue.source);
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
+
+    if (!fieldValue.poster_url && thumbnailGeneratorSources.includes(fieldValue.source)) {
+      const source = fieldValue.source as 'vimeo' | 'youtube' | 'html5';
+      setIsThumbnailLoading(true);
+      generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
+        .then((url) => {
+          setIsThumbnailLoading(false);
+          setLocalPoster(url);
+        })
+        .finally(() => {
+          setIsThumbnailLoading(false);
+        });
+    }
+
+    if (Object.values(duration).some((value) => value > 0)) {
+      return;
+    }
+
+    if (fieldValue.source === 'vimeo') {
+      getVimeoVideoDuration(fieldValue['source_vimeo' as keyof CourseVideo] || '')
+        .then((duration) => {
+          if (!duration) {
+            return;
+          }
+
+          setDuration(covertSecondsToHMS(Math.floor(duration)));
+
+          if (onGetDuration) {
+            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    if (['external_url', 'html5'].includes(fieldValue.source)) {
+      getExternalVideoDuration(fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '')
+        .then((duration) => {
+          if (!duration) {
+            return;
+          }
+
+          setDuration(covertSecondsToHMS(Math.floor(duration)));
+
+          if (onGetDuration) {
+            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    if (fieldValue.source === 'youtube' && tutorConfig.settings?.youtube_api_key_exist) {
+      const videoId = videoValidation.youtube(fieldValue['source_youtube' as keyof CourseVideo] || '') ?? '';
+      getYouTubeVideoDurationMutation.mutateAsync(videoId).then((response) => {
+        const duration = response.data.duration;
+        if (!duration) {
+          return;
+        }
+
+        const seconds = convertYouTubeDurationToSeconds(duration);
+
+        setDuration(covertSecondsToHMS(Math.floor(seconds)));
+
+        if (onGetDuration) {
+          onGetDuration(covertSecondsToHMS(Math.floor(seconds)));
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fieldValue]);
+
+  if (!videoSources.length) {
+    return (
+      <div css={styles.emptyMediaWrapper}>
+        <Show when={label}>
+          <label>{label}</label>
+        </Show>
+
+        <div
+          css={styles.emptyMedia({
+            hasVideoSource: false,
+          })}
+        >
+          <p css={styles.warningText}>
+            <SVGIcon name="info" height={20} width={20} />
+            {__('No video source selected', 'tutor')}
+          </p>
+
+          <Button
+            buttonCss={styles.selectFromSettingsButton}
+            variant="secondary"
+            size="small"
+            icon={<SVGIcon name="linkExternal" height={24} width={24} />}
+            onClick={() => {
+              window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
+            }}
+          >
+            {__('Select from settings', 'tutor')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const handleUpload = (type: 'video' | 'poster') => {
+    if (type === 'video') {
+      openVideoLibrary();
+      return;
+    }
+    openImageLibrary();
   };
 
   const handleClear = (type: 'video' | 'poster') => {
-    const updateData = type === 'video' ? { source: '' } : { poster: '', poster_url: '' };
-    field.onChange(updateFieldValue(fieldValue, updateData));
+    const updateData =
+      type === 'video'
+        ? { source: '', source_video_id: '', poster: '', poster_url: '' }
+        : { poster: '', poster_url: '' };
+    const updatedValue = updateFieldValue(fieldValue, updateData);
+    if (type === 'video') {
+      resetVideoSelection();
+    } else {
+      resetImageSelection();
+    }
+
+    field.onChange(updatedValue);
+    setLocalPoster('');
+    setDuration({
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    });
     if (onChange) {
-      onChange(updateFieldValue(fieldValue, updateData));
+      onChange(updatedValue);
     }
   };
 
@@ -246,103 +445,56 @@ const FormVideoInput = ({
   };
 
   const handleDataFromUrl = async (data: URLFormData) => {
-    const sourceMap: { [key: string]: string } = {
-      external: 'external_url',
-      shortcode: 'shortcode',
-      youtube: 'youtube',
-      vimeo: 'vimeo',
-      embedded: 'embedded',
-    };
-
-    const source = sourceMap[data.videoSource] || 'external_url';
-    const updatedValue = {
-      source,
-      [`source_${source}`]: data.videoUrl,
-    };
-
-    field.onChange(updateFieldValue(fieldValue, updatedValue));
-    onChange?.(updateFieldValue(fieldValue, updatedValue));
-    setIsOpen(false);
-
+    setIsThumbnailLoading(true);
     try {
-      if (source === 'vimeo') {
-        const duration = await getVimeoVideoDuration(data.videoUrl);
-        if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-        }
+      const { videoSource: source, videoUrl: url } = data;
+      const updatedValue = {
+        source,
+        [`source_${source}`]: url,
+      };
+
+      field.onChange(updateFieldValue(fieldValue, updatedValue));
+      onChange?.(updateFieldValue(fieldValue, updatedValue));
+      setIsOpen(false);
+
+      const [duration, thumbnail] = await Promise.all([
+        getVideoDuration({ source, url, getYouTubeVideoDurationMutation }),
+        thumbnailGeneratorSources.includes(source)
+          ? generateVideoThumbnail(source as 'youtube' | 'vimeo' | 'external_url' | 'html5', url)
+          : null,
+      ]);
+
+      if (duration) {
+        setDuration(duration);
+        onGetDuration?.(duration);
       }
 
-      if (source === 'external_url') {
-        const duration = await getExternalVideoDuration(data.videoUrl);
-
-        if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-        }
+      if (thumbnail) {
+        setLocalPoster(thumbnail);
       }
-
-      if (source === 'youtube') {
-        const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-        const match = data.videoUrl.match(regExp);
-        const videoId = match && match[7].length === 11 ? match[7] : '';
-        const response = await getYouTubeVideoDurationMutation.mutateAsync(videoId);
-
-        const duration = response.data.duration;
-        const seconds = convertYouTubeDurationToSeconds(duration);
-
-        if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(seconds)));
-        }
-      }
-    } catch (error) {
-      console.error(error);
+    } finally {
+      setIsThumbnailLoading(false);
     }
   };
 
   const validateVideoUrl = (url: string) => {
-    const value = url.trim();
-    const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    const videoUrl = url.trim();
+    if (videoSource === 'embedded') return true;
 
-    if (form.watch('videoSource') === 'shortcode') {
-      const regExp = /^\[.*\]$/;
-      const match = value.match(regExp);
-
-      if (!match) {
-        return __('Invalid Shortcode', 'tutor');
-      }
-
-      return true;
+    if (videoSource === 'shortcode') {
+      return videoValidation.shortcode(videoUrl) ? true : __('Invalid Shortcode', 'tutor');
     }
 
-    if (!regex.test(value)) {
+    if (!videoValidation.url(videoUrl)) {
       return __('Invalid URL', 'tutor');
     }
 
-    if (form.watch('videoSource') === 'youtube') {
-      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-      const match = value.match(regExp);
-      if (!match || match[7].length !== 11) {
-        return __('Invalid YouTube URL', 'tutor');
-      }
-
-      return true;
+    if (videoSource === 'youtube' && !videoValidation.youtube(videoUrl)) {
+      return __('Invalid YouTube URL', 'tutor');
     }
 
-    if (form.watch('videoSource') === 'vimeo') {
-      const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-      const match = value.match(regExp);
-
-      if (!match || !match[5]) {
-        return __('Invalid Vimeo URL', 'tutor');
-      }
-    }
-
-    if (form.watch('videoSource') === 'embedded') {
-      const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
-      const match = value.match(regExp);
-
-      if (!match || !match[1]) {
-        return __('Invalid Embedded URL', 'tutor');
-      }
+    if (videoSource === 'vimeo' && !videoValidation.vimeo(videoUrl)) {
+      return __('Invalid Vimeo URL', 'tutor');
     }
 
     return true;
@@ -353,150 +505,181 @@ const FormVideoInput = ({
       <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
         {() => {
           return (
-            <Show
-              when={!loading}
-              fallback={
-                <div css={styles.emptyMedia({ hasVideoSource: true })}>
-                  <LoadingOverlay />
-                </div>
-              }
-            >
+            <div ref={triggerRef}>
               <Show
-                when={isVideoAvailable()}
+                when={!loading}
                 fallback={
-                  <div
-                    ref={triggerRef}
-                    css={styles.emptyMedia({
-                      hasVideoSource: true,
-                    })}
-                  >
-                    <Show when={videoSources.includes('html5')}>
-                      <Button
-                        variant="secondary"
-                        icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
-                        onClick={() => {
-                          handleUpload('video');
-                        }}
-                      >
-                        {buttonText}
-                      </Button>
-                    </Show>
-                    <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
-                      <Show
-                        when={!videoSources.includes('html5')}
-                        fallback={
-                          <button
-                            type="button"
-                            css={styles.urlButton}
+                  <div css={styles.emptyMedia({ hasVideoSource: true })}>
+                    <LoadingOverlay />
+                  </div>
+                }
+              >
+                <Show
+                  when={isVideoAvailable()}
+                  fallback={
+                    <div
+                      css={styles.emptyMedia({
+                        hasVideoSource: true,
+                      })}
+                    >
+                      <Show when={videoSources.includes('html5')}>
+                        <Button
+                          data-cy="upload-media"
+                          size="small"
+                          variant="secondary"
+                          icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
+                          onClick={() => {
+                            handleUpload('video');
+                          }}
+                        >
+                          {buttonText}
+                        </Button>
+                      </Show>
+                      <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
+                        <Show
+                          when={!videoSources.includes('html5')}
+                          fallback={
+                            <button
+                              data-cy="add-from-url"
+                              type="button"
+                              css={styles.urlButton}
+                              onClick={() => {
+                                setIsOpen((previousState) => !previousState);
+                              }}
+                            >
+                              {__('Add from URL', 'tutor')}
+                            </button>
+                          }
+                        >
+                          <Button
+                            data-cy="add-from-url"
+                            size="small"
+                            variant="secondary"
+                            icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
                             onClick={() => {
                               setIsOpen((previousState) => !previousState);
                             }}
                           >
                             {__('Add from URL', 'tutor')}
-                          </button>
-                        }
-                      >
-                        <Button
-                          variant="secondary"
-                          icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
-                          onClick={() => {
-                            setIsOpen((previousState) => !previousState);
-                          }}
-                        >
-                          {__('Add from URL', 'tutor')}
-                        </Button>
+                          </Button>
+                        </Show>
                       </Show>
-                    </Show>
 
-                    <Show when={videoSources.includes('html5')}>
-                      <p css={styles.infoTexts}>{infoText}</p>
-                    </Show>
-                  </div>
-                }
-              >
-                {(media) => {
-                  return (
-                    <div css={styles.previewWrapper}>
-                      <div css={styles.videoInfoWrapper}>
-                        <div css={styles.videoInfoCard}>
-                          <SVGIcon name="video" height={40} width={40} />
+                      <Show when={videoSources.includes('html5')}>
+                        <p css={styles.infoTexts}>{infoText}</p>
+                      </Show>
+                    </div>
+                  }
+                >
+                  {() => {
+                    return (
+                      <div css={styles.previewWrapper} data-cy="media-preview">
+                        <div css={styles.videoInfoWrapper}>
+                          <div css={styles.videoInfoCard}>
+                            <SVGIcon
+                              name={
+                                (videoIconMap[fieldValue?.source as keyof typeof videoIconMap] as IconCollection) ||
+                                'video'
+                              }
+                              height={36}
+                              width={36}
+                            />
 
-                          <div css={styles.videoInfo}>
-                            <div css={styles.videoInfoTitle}>
-                              <div css={styleUtils.text.ellipsis(1)}>{__('Video added', 'tutor')}</div>
+                            <div css={styles.videoInfo}>
+                              <div css={styles.videoInfoTitle}>
+                                <div css={styleUtils.text.ellipsis(1)}>
+                                  {thumbnailGeneratorSources.includes(fieldValue?.source || '')
+                                    ? fieldValue?.[`source_${fieldValue.source}` as keyof CourseVideo]
+                                    : videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <button
-                          type="button"
-                          css={styles.removeButton}
-                          onClick={() => {
-                            handleClear('video');
-                          }}
+                          <div css={styles.actionButtons}>
+                            <Show when={videoSource !== 'html5'}>
+                              <button
+                                type="button"
+                                css={styleUtils.actionButton}
+                                onClick={() => {
+                                  setIsOpen(true);
+                                }}
+                              >
+                                <SVGIcon name="edit" height={24} width={24} />
+                              </button>
+                            </Show>
+                            <button
+                              data-cy="remove-video"
+                              type="button"
+                              css={styleUtils.actionButton}
+                              onClick={() => {
+                                handleClear('video');
+                              }}
+                            >
+                              <SVGIcon name="cross" height={24} width={24} />
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          css={styles.imagePreview({
+                            hasImageInput: thumbnailGeneratorSources.includes(fieldValue?.source || ''),
+                          })}
                         >
-                          <SVGIcon name="cross" height={24} width={24} />
-                        </button>
+                          <Show
+                            when={thumbnailGeneratorSources.includes(fieldValue?.source || '')}
+                            fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
+                          >
+                            <ImageInput
+                              value={
+                                fieldValue
+                                  ? {
+                                      id: Number(fieldValue.poster) || 0,
+                                      url: fieldValue.poster_url || localPoster,
+                                      title: '',
+                                    }
+                                  : null
+                              }
+                              loading={isThumbnailLoading}
+                              isClearAble={!!fieldValue?.poster}
+                              disabled={['vimeo', 'youtube'].includes(fieldValue?.source || '')}
+                              uploadHandler={() => handleUpload('poster')}
+                              clearHandler={() => handleClear('poster')}
+                              buttonText={__('Upload Thumbnail', 'tutor')}
+                              infoText={__('Upload a thumbnail image for your video', 'tutor')}
+                              emptyImageCss={styles.thumbImage}
+                              previewImageCss={styles.thumbImage}
+                              overlayCss={styles.thumbImage}
+                              replaceButtonText={__('Replace Thumbnail', 'tutor')}
+                            />
+
+                            <Show when={duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0}>
+                              <div css={styles.duration}>
+                                {duration.hours > 0 && `${duration.hours}h`} {duration.minutes}m {duration.seconds}s
+                              </div>
+                            </Show>
+                          </Show>
+                        </div>
                       </div>
-                      <div
-                        css={styles.imagePreview({
-                          isHTMLVideo: fieldValue?.source === 'html5',
-                        })}
-                      >
-                        <Show
-                          when={fieldValue?.source === 'html5'}
-                          fallback={
-                            <div css={styles.urlData}>
-                              <p>
-                                <span>{`${__('Source', 'tutor')}: `}</span>
-                                {`${
-                                  videoSourceOptions.find((option) => option.value === form.watch('videoSource'))
-                                    ?.label || ''
-                                }`}
-                              </p>
-                              <p>
-                                <span>{`${__('URL', 'tutor')}: `}</span>
-                                {`${form.watch('videoUrl')}`}
-                              </p>
-                            </div>
-                          }
-                        >
-                          <ImageInput
-                            value={
-                              fieldValue
-                                ? {
-                                    id: Number(fieldValue.poster),
-                                    url: fieldValue.poster_url,
-                                    title: '',
-                                  }
-                                : null
-                            }
-                            uploadHandler={() => handleUpload('poster')}
-                            clearHandler={() => handleClear('poster')}
-                            buttonText={__('Upload Thumbnail', 'tutor')}
-                            infoText={__('Upload a thumbnail image for your video', 'tutor')}
-                            emptyImageCss={styles.thumbImage}
-                            previewImageCss={styles.thumbImage}
-                            overlayCss={styles.thumbImage}
-                            replaceButtonText={__('Replace Thumbnail', 'tutor')}
-                          />
-                        </Show>
-                      </div>
-                    </div>
-                  );
-                }}
+                    );
+                  }}
+                </Show>
               </Show>
-            </Show>
+            </div>
           );
         }}
       </FormFieldWrapper>
-      <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} animationType={AnimationType.fadeIn}>
+      <Portal
+        isOpen={isOpen}
+        onClickOutside={() => setIsOpen(false)}
+        onEscape={() => setIsOpen(false)}
+        animationType={AnimationType.fadeIn}
+      >
         <div
           ref={popoverRef}
           css={[
             styles.popover,
             {
-              left: position.left,
+              [isRTL ? 'right' : 'left']: position.left,
               top: triggerRef.current?.getBoundingClientRect().top,
               maxWidth: triggerRef.current?.offsetWidth,
             },
@@ -506,12 +689,12 @@ const FormVideoInput = ({
             <Controller
               control={form.control}
               name="videoSource"
-              rules={{ required: __('This field is required', 'tutor') }}
+              rules={{ ...requiredRule() }}
               render={(controllerProps) => {
                 return (
                   <FormSelectInput
                     {...controllerProps}
-                    options={videoSourceOptions}
+                    options={videoSourcesSelectOptions}
                     disabled={videoSourceOptions.length <= 1}
                     placeholder={__('Select source', 'tutor')}
                     hideCaret={videoSourceOptions.length <= 1}
@@ -523,18 +706,19 @@ const FormVideoInput = ({
               control={form.control}
               name="videoUrl"
               rules={{
-                required: __('This field is required', 'tutor'),
+                ...requiredRule(),
                 validate: validateVideoUrl,
               }}
               render={(controllerProps) => {
                 return (
                   <FormTextareaInput
                     {...controllerProps}
+                    inputCss={css`
+                      border-style: dashed;
+                    `}
                     rows={2}
                     placeholder={
-                      form.watch('videoSource') === 'shortcode'
-                        ? __('Enter shortcode', 'tutor')
-                        : __('Enter URL', 'tutor')
+                      placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')
                     }
                   />
                 );
@@ -551,7 +735,12 @@ const FormVideoInput = ({
               >
                 {__('Cancel', 'tutor')}
               </Button>
-              <Button variant="secondary" size="small" onClick={form.handleSubmit(handleDataFromUrl)}>
+              <Button
+                data-cy="submit-url"
+                variant="secondary"
+                size="small"
+                onClick={form.handleSubmit(handleDataFromUrl)}
+              >
                 {__('Ok', 'tutor')}
               </Button>
             </div>
@@ -562,14 +751,19 @@ const FormVideoInput = ({
   );
 };
 
-export default FormVideoInput;
+export default withVisibilityControl(FormVideoInput);
 
 const styles = {
-  emptyMedia: ({
-    hasVideoSource = false,
-  }: {
-    hasVideoSource: boolean;
-  }) => css`
+  emptyMediaWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+
+    label {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+  `,
+  emptyMedia: ({ hasVideoSource = false }: { hasVideoSource: boolean }) => css`
     width: 100%;
     height: 164px;
     display: flex;
@@ -581,15 +775,13 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.background.status.warning};
 
-    ${
-      hasVideoSource &&
-      css`
-        background-color: ${colorTokens.bg.white};
-      `
-    }
+    ${hasVideoSource &&
+    css`
+      background-color: ${colorTokens.bg.white};
+    `}
   `,
   infoTexts: css`
-    ${typography.small()};
+    ${typography.tiny()};
     color: ${colorTokens.text.subdued};
   `,
   warningText: css`
@@ -607,15 +799,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[12]};
     gap: ${spacing[8]};
-
-    p {
-      word-break: break-all;
-    }
-
-    span {
-      font-weight: ${fontWeight.semiBold};
-      color: ${colorTokens.text.hints};
-    }
+    word-break: break-all;
   `,
   previewWrapper: css`
     width: 100%;
@@ -623,6 +807,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
     overflow: hidden;
+    background-color: ${colorTokens.bg.white};
   `,
   videoInfoWrapper: css`
     ${styleUtils.display.flex()};
@@ -637,6 +822,7 @@ const styles = {
     gap: ${spacing[8]};
 
     svg {
+      flex-shrink: 0;
       color: ${colorTokens.icon.hover};
     }
   `,
@@ -649,31 +835,17 @@ const styles = {
     ${typography.caption('medium')}
     word-break: break-all;
   `,
-  fileExtension: css`
-    flex-shrink: 0;
-  `,
-  videoInfoSubtitle: css`
-    ${typography.tiny('regular')}
-    ${styleUtils.display.flex()};
-    align-items: center;
-    gap: ${spacing[8]};
-    color: ${colorTokens.text.hints};
-
-    svg {
-      color: ${colorTokens.icon.default};
-    }
-  `,
-  imagePreview: ({
-    isHTMLVideo,
-  }: {
-    isHTMLVideo: boolean;
-  }) => css`
+  imagePreview: ({ hasImageInput }: { hasImageInput: boolean }) => css`
     width: 100%;
     max-height: 168px;
     position: relative;
     overflow: hidden;
-    background-color: ${colorTokens.bg.white};
-    ${!isHTMLVideo && styleUtils.overflowYAuto};
+    background-color: ${colorTokens.background.default};
+    ${!hasImageInput &&
+    css`
+      ${styleUtils.overflowYAuto};
+    `};
+    scrollbar-gutter: auto;
 
     &:hover {
       [data-hover-buttons-wrapper] {
@@ -681,45 +853,44 @@ const styles = {
       }
     }
   `,
-  thumbImage: css`
-    border-radius: 0;
-    border: none;
-  `,
   duration: css`
+    ${typography.tiny()};
     position: absolute;
     bottom: ${spacing[12]};
     right: ${spacing[12]};
-    padding: ${spacing[2]} ${spacing[4]};
-    ${typography.tiny('regular')};
+    background-color: rgba(0, 0, 0, 0.5);
     color: ${colorTokens.text.white};
-    border-radius: ${borderRadius[2]};
-    background-color: ${rgba(colorTokens.color.black.main, 0.5)};
+    padding: ${spacing[4]} ${spacing[8]};
+    border-radius: ${borderRadius[6]};
+    pointer-events: none;
   `,
-  hoverPreview: css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: ${spacing[8]};
-    opacity: 0;
-    position: absolute;
-    inset: 0;
-    background-color: ${rgba(colorTokens.color.black.main, 0.6)};
-    border-radius: ${borderRadius[8]};
-
-    button {
-      box-shadow: ${shadow.button};
-    }
+  thumbImage: css`
+    border-radius: 0;
+    border: none;
   `,
   urlButton: css`
     ${styleUtils.resetButton};
     ${typography.small('medium')};
     color: ${colorTokens.text.brand};
+    border-radius: ${borderRadius[2]};
+    padding: 0 ${spacing[4]};
     margin-bottom: ${spacing[8]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.brand};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
   `,
-  removeButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
+  actionButtons: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[4]};
   `,
   popover: css`
     position: absolute;

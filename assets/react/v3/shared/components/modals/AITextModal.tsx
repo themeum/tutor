@@ -1,24 +1,3 @@
-import Button from '@Atoms/Button';
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { OptionList } from '@Components/magic-ai-content/OptionList';
-import { PromptControls } from '@Components/magic-ai-content/PromptControls';
-import SkeletonLoader from '@Components/magic-ai-content/SkeletonLoader';
-import { inspirationPrompts } from '@Components/magic-ai-image/ImageContext';
-import { type ChatFormat, type ChatLanguage, type ChatTone, languageOptions, toneOptions } from '@Config/magic-ai';
-import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import {
-  type ModificationType,
-  useMagicTextGenerationMutation,
-  useModifyContentMutation,
-} from '@CourseBuilderServices/magic-ai';
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import Popover from '@Molecules/Popover';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -29,12 +8,46 @@ import {
   type FieldValues,
   type Path,
 } from 'react-hook-form';
+
+import Button from '@TutorShared/atoms/Button';
+import MagicButton from '@TutorShared/atoms/MagicButton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
+
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { OptionList } from '@TutorShared/components/magic-ai-content/OptionList';
+import { PromptControls } from '@TutorShared/components/magic-ai-content/PromptControls';
+import SkeletonLoader from '@TutorShared/components/magic-ai-content/SkeletonLoader';
+
+import {
+  type ChatFormat,
+  type ChatLanguage,
+  type ChatTone,
+  languageOptions,
+  toneOptions,
+} from '@TutorShared/config/magic-ai';
+import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import {
+  type ModificationType,
+  useMagicTextGenerationMutation,
+  useModifyContentMutation,
+} from '@TutorShared/services/magic-ai';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { copyToClipboard } from '@TutorShared/utils/util';
+
+import { isRTL } from '@TutorShared/config/constants';
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
 
 interface AITextModalProps<T extends FieldValues> extends ModalProps {
   field: ControllerRenderProps<T, Path<T>>;
   fieldState: ControllerFieldState;
+  characters?: number;
+  format?: ChatFormat;
   is_html?: boolean;
   fieldLabel?: string;
   fieldPlaceholder?: string;
@@ -48,12 +61,26 @@ export interface GenerateTextFieldProps {
   format: ChatFormat;
 }
 
+const inspirationPrompts = [
+  __('Mastering Digital Marketing: A Complete Guide', 'tutor'),
+  __('The Ultimate Photoshop Course for Beginners', 'tutor'),
+  __('Python Programming: From Zero to Hero', 'tutor'),
+  __('Creative Writing Essentials: Unlock Your Storytelling Potential', 'tutor'),
+  __('The Complete Guide to Web Development with React', 'tutor'),
+  __('Master Public Speaking: Deliver Powerful Presentations', 'tutor'),
+  __('Excel for Business: From Basics to Advanced Analytics', 'tutor'),
+  __('Fitness Fundamentals: Build Strength and Confidence', 'tutor'),
+  __('Photography Made Simple: Capture Stunning Shots', 'tutor'),
+  __('Financial Freedom: Learn the Basics of Investing', 'tutor'),
+];
+
 const AITextModal = <T extends FieldValues>({
   title,
   icon,
   closeModal,
   field,
-  fieldState,
+  format = 'essay',
+  characters = 250,
   is_html = false,
   fieldLabel = '',
   fieldPlaceholder = '',
@@ -61,10 +88,10 @@ const AITextModal = <T extends FieldValues>({
   const form = useFormWithGlobalError<GenerateTextFieldProps>({
     defaultValues: {
       prompt: '',
-      characters: 250,
+      characters: characters,
       language: 'english',
       tone: 'formal',
-      format: 'essay',
+      format: format,
     },
   });
   const magicTextGenerationMutation = useMagicTextGenerationMutation();
@@ -136,15 +163,14 @@ const AITextModal = <T extends FieldValues>({
     }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('prompt');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={closeModal} title={title} icon={icon}>
+    <BasicModalWrapper onClose={closeModal} title={title} icon={icon} maxWidth={524}>
       <form
-        css={styles.wrapper}
         onSubmit={form.handleSubmit(async (values) => {
           const response = await magicTextGenerationMutation.mutateAsync({ ...values, is_html });
 
@@ -181,7 +207,7 @@ const AITextModal = <T extends FieldValues>({
               }}
             >
               <SVGIcon name="bulbLine" />
-              {__('Inspire me', 'tutor')}
+              {__('Inspire Me', 'tutor')}
             </button>
           </div>
           <Show
@@ -198,7 +224,7 @@ const AITextModal = <T extends FieldValues>({
                         onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
                         disabled={pointer === 0}
                       >
-                        <SVGIcon name="chevronLeft" width={20} height={20} />
+                        <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={20} height={20} />
                       </Button>
 
                       <div css={styles.pageInfo}>
@@ -210,7 +236,7 @@ const AITextModal = <T extends FieldValues>({
                         onClick={() => setPointer((previous) => Math.min(content.length - 1, previous + 1))}
                         disabled={pointer === content.length - 1}
                       >
-                        <SVGIcon name="chevronRight" width={20} height={20} />
+                        <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={20} height={20} />
                       </Button>
                     </Show>
                   </div>
@@ -221,7 +247,7 @@ const AITextModal = <T extends FieldValues>({
                         return;
                       }
                       const currentContent = content[pointer];
-                      await navigator.clipboard.writeText(currentContent);
+                      await copyToClipboard(currentContent);
                       setIsCopied(true);
                       setTimeout(() => {
                         setIsCopied(false);
@@ -233,7 +259,9 @@ const AITextModal = <T extends FieldValues>({
                         name="checkFilled"
                         width={20}
                         height={20}
-                        style={css`color: ${colorTokens.text.success} !important;`}
+                        style={css`
+                          color: ${colorTokens.text.success} !important;
+                        `}
                       />
                     </Show>
                   </Button>
@@ -253,10 +281,10 @@ const AITextModal = <T extends FieldValues>({
                   roundedFull={false}
                   onClick={() => handleContentModification('make_shorter')}
                 >
-                  {__('Make shorter', 'tutor')}
+                  {__('Make Shorter', 'tutor')}
                 </MagicButton>
                 <MagicButton variant="outline" roundedFull={false} ref={toneRef} onClick={() => setPopover('tone')}>
-                  {__('Change tone', 'tutor')}
+                  {__('Change Tone', 'tutor')}
                   <SVGIcon name="chevronDown" width={16} height={16} />
                 </MagicButton>
                 <MagicButton
@@ -273,21 +301,21 @@ const AITextModal = <T extends FieldValues>({
                   roundedFull={false}
                   onClick={() => handleContentModification('write_as_bullets')}
                 >
-                  {__('Write as bullets', 'tutor')}
+                  {__('Write as Bullets', 'tutor')}
                 </MagicButton>
                 <MagicButton
                   variant="outline"
                   roundedFull={false}
                   onClick={() => handleContentModification('make_longer')}
                 >
-                  {__('Make longer', 'tutor')}
+                  {__('Make Longer', 'tutor')}
                 </MagicButton>
                 <MagicButton
                   variant="outline"
                   roundedFull={false}
                   onClick={() => handleContentModification('simplify_language')}
                 >
-                  {__('Simplify language', 'tutor')}
+                  {__('Simplify Language', 'tutor')}
                 </MagicButton>
               </div>
             </Show>
@@ -332,7 +360,7 @@ const AITextModal = <T extends FieldValues>({
                 disabled={magicTextGenerationMutation.isPending || !prompt || modifyContentMutation.isPending}
               >
                 <SVGIcon name="magicWand" width={24} height={24} />
-                {__('Generate now', 'tutor')}
+                {__('Generate Now', 'tutor')}
               </MagicButton>
             }
           >
@@ -341,7 +369,7 @@ const AITextModal = <T extends FieldValues>({
               type="submit"
               disabled={magicTextGenerationMutation.isPending || !prompt || modifyContentMutation.isPending}
             >
-              {__('Generate again', 'tutor')}
+              {__('Generate Again', 'tutor')}
             </MagicButton>
             <MagicButton
               variant="primary"
@@ -353,7 +381,7 @@ const AITextModal = <T extends FieldValues>({
                 closeModal();
               }}
             >
-              {__('Use this', 'tutor')}
+              {__('Use This', 'tutor')}
             </MagicButton>
           </Show>
         </div>
@@ -364,89 +392,96 @@ const AITextModal = <T extends FieldValues>({
 
 export default AITextModal;
 const styles = {
-  wrapper: css`
-		width: 524px;
-	`,
   container: css`
-		padding: ${spacing[20]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-	`,
+    padding: ${spacing[20]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+  `,
   fieldsWrapper: css`
-		position: relative;
-		textarea {
+    position: relative;
+    textarea {
       padding-bottom: ${spacing[40]} !important;
     }
-	`,
+  `,
   footer: css`
-		padding: ${spacing[12]} ${spacing[16]};
-		display: flex;
-		align-items: center;
-		justify-content: end;
-		gap: ${spacing[10]};
-		box-shadow: 0px 1px 0px 0px #E4E5E7 inset;
+    padding: ${spacing[12]} ${spacing[16]};
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: ${spacing[10]};
+    box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
 
-		button {
-			width: fit-content;
-		}
-	`,
+    button {
+      width: fit-content;
+    }
+  `,
   pageInfo: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-		
-		& > span {
-			font-weight: ${fontWeight.medium};
-			color: ${colorTokens.text.primary};
-		}
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+
+    & > span {
+      font-weight: ${fontWeight.medium};
+      color: ${colorTokens.text.primary};
+    }
+  `,
   inspireButton: css`
-		${styleUtils.resetButton};	
-		${typography.small()};
-		position: absolute;
-		height: 28px;
-		bottom: ${spacing[12]};
-		left: ${spacing[12]};
-		border: 1px solid ${colorTokens.stroke.brand};
-		border-radius: ${borderRadius[4]};
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		color: ${colorTokens.text.brand};
-		padding-inline: ${spacing[12]};
-		background-color: ${colorTokens.background.white};
+    ${styleUtils.resetButton};
+    ${typography.small()};
+    position: absolute;
+    height: 28px;
+    bottom: ${spacing[12]};
+    left: ${spacing[12]};
+    border: 1px solid ${colorTokens.stroke.brand};
+    border-radius: ${borderRadius[4]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    color: ${colorTokens.text.brand};
+    padding-inline: ${spacing[12]};
+    background-color: ${colorTokens.background.white};
 
-		&:hover {
-			background-color: ${colorTokens.background.brand};
-			color: ${colorTokens.text.white};
-		}
-	`,
+    &:hover {
+      background-color: ${colorTokens.background.brand};
+      color: ${colorTokens.text.white};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      background-color: ${colorTokens.background.disable};
+      color: ${colorTokens.text.disable};
+    }
+  `,
   navigation: css`
-		margin-left: -${spacing[8]};
-		display: flex;
-		align-items: center;
-	`,
+    margin-left: -${spacing[8]};
+    display: flex;
+    align-items: center;
+  `,
   content: css`
-		${typography.caption()};
-		height: 180px;
-		overflow-y: auto;
-		background-color: ${colorTokens.background.magicAi.default};
-		border-radius: ${borderRadius[6]};
-		padding: ${spacing[6]} ${spacing[12]};
-		color: ${colorTokens.text.magicAi};
-	`,
+    ${typography.caption()};
+    height: 180px;
+    overflow-y: auto;
+    background-color: ${colorTokens.background.magicAi.default};
+    border-radius: ${borderRadius[6]};
+    padding: ${spacing[6]} ${spacing[12]};
+    color: ${colorTokens.text.magicAi};
+  `,
   actionBar: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  `,
   otherActions: css`
-		display: flex;
-		gap: ${spacing[10]};
-		flex-wrap: wrap;
+    display: flex;
+    gap: ${spacing[10]};
+    flex-wrap: wrap;
 
-		& > button {
-			width: fit-content;
-		}
-	`,
+    & > button {
+      width: fit-content;
+    }
+  `,
 };

@@ -59,7 +59,8 @@ trait PaymentUrlsTrait {
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_cancelled_url_args', $args );
 
-		return add_query_arg( $args, home_url() );
+		$url = defined( 'TUTOR_ECOMMERCE_CANCEL_URL' ) ? TUTOR_ECOMMERCE_CANCEL_URL : home_url();
+		return add_query_arg( $args, $url );
 	}
 
 	/**
@@ -73,7 +74,7 @@ trait PaymentUrlsTrait {
 	public function get_field_value( array $config, string $field_name ) {
 		$value = '';
 		foreach ( $config['fields'] as $field ) {
-			if ( $field['name'] === $field_name ) {
+			if ( isset( $field['name'] ) && $field['name'] === $field_name ) {
 				$value = $field['value'] ?? '';
 				break;
 			}

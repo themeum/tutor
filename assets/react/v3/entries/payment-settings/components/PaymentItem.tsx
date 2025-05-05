@@ -2,37 +2,51 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { useModal } from '@Components/modals/Modal';
-import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
-import { animateLayoutChanges } from '@Utils/dndkit';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+
+import {
+  borderRadius,
+  Breakpoint,
+  colorTokens,
+  fontWeight,
+  lineHeight,
+  shadow,
+  spacing,
+  zIndex,
+} from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isObject } from '@TutorShared/utils/types';
+import { requiredRule } from '@TutorShared/utils/validation';
+
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import Badge from '../atoms/Badge';
+import { usePaymentContext } from '../contexts/payment-context';
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import {
+  type PaymentMethod,
+  type PaymentSettings,
   getWebhookUrl,
   manualMethodFields,
   useInstallPaymentMutation,
   useRemovePaymentMutation,
-  type PaymentMethod,
-  type PaymentSettings,
 } from '../services/payment';
-import StaticConfirmationModal from './modals/StaticConfirmationModal';
-import Badge from '../atoms/Badge';
-import { isObject } from '@Utils/types';
-import { usePaymentContext } from '../contexts/payment-context';
-import Alert from '@/v3/shared/atoms/Alert';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -44,10 +58,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
   const { payment_gateways } = usePaymentContext();
   const { showModal } = useModal();
   const form = useFormContext<PaymentSettings>();
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
   const paymentFormFields = data.is_manual
     ? manualMethodFields
-    : payment_gateways.find((item) => item.name === data.name)?.fields ?? [];
+    : (payment_gateways.find((item) => item.name === data.name)?.fields ?? []);
 
   const installPaymentMutation = useInstallPaymentMutation();
   const removePaymentMutation = useRemovePaymentMutation();
@@ -73,66 +88,127 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     });
   };
 
+  const hasEmptyFields = form
+    .getValues(`payment_methods.${paymentIndex}.fields`)
+    .some((field) => !['icon', 'webhook_url'].includes(field.name) && !field.value);
+
+  useEffect(() => {
+    if (hasEmptyFields) {
+      form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasEmptyFields]);
+
+  const handleRemovePayment = async () => {
+    const { action } = await showModal({
+      component: ConfirmationModal,
+      props: {
+        title: sprintf(__('Remove %s', 'tutor'), data.label),
+        description: __('Are you sure you want to remove this payment method?', 'tutor'),
+      },
+      depthIndex: zIndex.highest,
+    });
+
+    if (action === 'CONFIRM') {
+      if (data.is_manual) {
+        form.setValue(
+          'payment_methods',
+          (form.getValues('payment_methods') ?? []).filter((_, index) => index !== paymentIndex),
+          {
+            shouldDirty: true,
+          },
+        );
+      } else {
+        const response = await removePaymentMutation.mutateAsync({
+          slug: data.name,
+        });
+
+        if (response.status_code === 200) {
+          form.setValue(
+            'payment_methods',
+            (form.getValues('payment_methods') ?? []).filter((_, index) => index !== paymentIndex),
+          );
+
+          // Save settings
+          setTimeout(() => {
+            document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+            document.getElementById('save_tutor_option')?.click();
+          }, 100);
+        }
+      }
+    }
+  };
+
+  const paymentActionTray = (
+    <div css={styles.cardActions}>
+      <Show when={data.update_available}>
+        <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
+          {__('Update available', 'tutor')}
+        </Badge>
+        <Button
+          variant="text"
+          size="small"
+          icon={<SVGIcon name="update" width={24} height={24} />}
+          onClick={async () => {
+            const response = await installPaymentMutation.mutateAsync({
+              slug: data.name,
+              action_type: 'upgrade',
+            });
+
+            if (response.status_code === 200) {
+              form.setValue(`payment_methods.${paymentIndex}.update_available`, false, { shouldDirty: true });
+            }
+          }}
+          loading={installPaymentMutation.isPending}
+        >
+          {__('Update now', 'tutor')}
+        </Button>
+      </Show>
+      <Show when={!data.is_manual && !data.is_installed}>
+        <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
+          {__('Plugin not installed', 'tutor')}
+        </Badge>
+      </Show>
+      <Controller
+        name={`payment_methods.${paymentIndex}.is_active`}
+        control={form.control}
+        render={(controllerProps) => (
+          <FormSwitch
+            {...controllerProps}
+            onChange={async (value) => {
+              const isValid = await form.trigger(`payment_methods.${paymentIndex}.fields`);
+
+              if (value && !isValid) {
+                form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
+                setIsCollapsed(false);
+                return;
+              }
+            }}
+          />
+        )}
+      />
+    </div>
+  );
+
   return (
-    <div
-      {...attributes}
-      css={styles.wrapper({
-        isOverlay,
-      })}
-      ref={setNodeRef}
-    >
-      <button
-        {...listeners}
-        type="button"
-        css={styles.dragButton({
-          isOverlay,
-        })}
-        data-drag-button
-      >
+    <div {...attributes} css={styles.wrapper({ isOverlay })} ref={setNodeRef}>
+      <button {...listeners} type="button" css={styles.dragButton({ isOverlay })} data-drag-button>
         <SVGIcon width={24} height={24} name="dragVertical" />
       </button>
 
       <Card
         title={data.label}
         titleIcon={data.icon}
-        subscription={data.support_subscription}
-        actionTray={
-          <div css={styles.cardActions}>
-            <Show when={data.update_available}>
-              <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
-                {__('Update available', 'tutor')}
-              </Badge>
-              <Button
-                variant="text"
-                size="small"
-                icon={<SVGIcon name="update" width={24} height={24} />}
-                onClick={async () => {
-                  const response = await installPaymentMutation.mutateAsync({
-                    slug: data.name,
-                    action_type: 'upgrade',
-                  });
-
-                  if (response.status_code === 200) {
-                    form.setValue(`payment_methods.${paymentIndex}.update_available`, false, { shouldDirty: true });
-                  }
-                }}
-                loading={installPaymentMutation.isPending}
-              >
-                {__('Update now', 'tutor')}
-              </Button>
-            </Show>
-            <Controller
-              name={`payment_methods.${paymentIndex}.is_active`}
-              control={form.control}
-              render={(controllerProps) => <FormSwitch {...controllerProps} />}
-            />
-          </div>
-        }
+        toggleCollapse={() => {
+          setIsCollapsed(!isCollapsed);
+        }}
         style={style}
         hasBorder
         noSeparator
-        collapsed
+        collapsed={isDragging || isCollapsed}
         dataAttribute="data-card"
+        subscription={data.support_subscription}
+        actionTray={paymentActionTray}
       >
         <div css={styles.paymentWrapper}>
           <div css={styles.fieldWrapper}>
@@ -143,8 +219,16 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               <For each={paymentFormFields}>
                 {(field, index) => (
                   <Controller
+                    key={field.name}
                     name={`payment_methods.${paymentIndex}.fields.${index}.value`}
                     control={form.control}
+                    rules={
+                      ['icon', 'webhook_url'].includes(field.name || '')
+                        ? {
+                            required: false,
+                          }
+                        : { ...requiredRule() }
+                    }
                     render={(controllerProps) => {
                       switch (field.type) {
                         case 'select':
@@ -155,9 +239,9 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               options={
                                 isObject(field.options)
                                   ? convertToOptions(field.options as Record<string, string>)
-                                  : field.options ?? []
+                                  : (field.options ?? [])
                               }
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                             />
                           );
 
@@ -168,7 +252,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               type="password"
                               isPassword
                               label={field.label}
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                             />
                           );
 
@@ -196,7 +280,8 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                             <FormImageInput
                               {...controllerProps}
                               label={field.label}
-                              size="small"
+                              buttonText={__('Upload Image', 'tutor')}
+                              infoText={__('Recommended size: 48x48', 'tutor')}
                               previewImageCss={styles.previewImage}
                               onChange={(value) => {
                                 form.setValue(`payment_methods.${paymentIndex}.icon`, value?.url ?? '');
@@ -209,7 +294,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                             <FormInput
                               {...controllerProps}
                               label={field.label}
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                               onChange={(value) => {
                                 if (data.is_manual) {
                                   form.setValue(`payment_methods.${paymentIndex}.label`, String(value));
@@ -229,45 +314,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               variant="danger"
               buttonCss={styles.removeButton}
               loading={removePaymentMutation.isPending}
-              onClick={async () => {
-                const { action } = await showModal({
-                  component: StaticConfirmationModal,
-                  props: {
-                    title: sprintf(__('Remove %s', 'tutor'), data.label),
-                    description: __('Are you sure you want to remove this payment method?', 'tutor'),
-                  },
-                  depthIndex: zIndex.highest,
-                });
-
-                if (action === 'CONFIRM') {
-                  if (data.is_manual) {
-                    form.setValue(
-                      'payment_methods',
-                      form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
-                      {
-                        shouldDirty: true,
-                      }
-                    );
-                  } else {
-                    const response = await removePaymentMutation.mutateAsync({
-                      slug: data.name,
-                    });
-
-                    if (response.status_code === 200) {
-                      form.setValue(
-                        'payment_methods',
-                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex)
-                      );
-
-                      // Save settings
-                      setTimeout(() => {
-                        document.getElementById('save_tutor_option')?.removeAttribute('disabled');
-                        document.getElementById('save_tutor_option')?.click();
-                      }, 100);
-                    }
-                  }
-                }
-              }}
+              onClick={handleRemovePayment}
             >
               {__('Remove', 'tutor')}
             </Button>
@@ -300,13 +347,14 @@ const styles = {
   cardActions: css`
     display: flex;
     align-items: center;
+    gap: ${spacing[8]};
 
     & > div {
       width: auto;
     }
 
     button {
-      margin-right: ${spacing[24]};
+      margin-right: ${spacing[16]};
       line-height: ${lineHeight[16]};
       color: ${colorTokens.brand.blue};
       font-weight: ${fontWeight.medium};
@@ -340,6 +388,9 @@ const styles = {
     input[type='text'],
     input[type='password'] {
       min-width: 350px;
+      ${Breakpoint.mobile} {
+        min-width: 250px;
+      }
     }
   `,
   dragButton: ({ isOverlay }: { isOverlay: boolean }) => css`

@@ -1,16 +1,17 @@
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
-import { type ReactNode, useEffect, useRef, useState } from 'react';
-
-import SVGIcon from '@Atoms/SVGIcon';
-
-import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
-
-import { isDefined } from '@Utils/types';
 import { __ } from '@wordpress/i18n';
+import { type ReactNode, useEffect, useRef } from 'react';
+
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import {} from '@TutorShared/hooks/useAnimation';
+import { isDefined } from '@TutorShared/utils/types';
 import Badge from '../atoms/Badge';
 
 interface CardProps {
@@ -24,6 +25,7 @@ interface CardProps {
   noSeparator?: boolean;
   dataAttribute?: string;
   style?: React.CSSProperties;
+  toggleCollapse: () => void;
 }
 
 const Card = ({
@@ -37,8 +39,8 @@ const Card = ({
   noSeparator = false,
   style = {},
   dataAttribute,
+  toggleCollapse,
 }: CardProps) => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const additionalAttributes = {
@@ -47,30 +49,41 @@ const Card = ({
 
   const [collapseAnimation, collapseAnimate] = useSpring(
     {
-      height: !isCollapsed ? cardRef.current?.scrollHeight : 0,
-      opacity: !isCollapsed ? 1 : 0,
+      height: !collapsed ? cardRef.current?.scrollHeight : 0,
+      opacity: !collapsed ? 1 : 0,
       overflow: 'hidden',
       config: {
         duration: 300,
         easing: (t) => t * (2 - t),
       },
     },
-    [isCollapsed]
+    [collapsed],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (isDefined(cardRef.current)) {
-      collapseAnimate.start({
-        height: !isCollapsed ? cardRef.current.scrollHeight : 0,
-        opacity: !isCollapsed ? 1 : 0,
-      });
-    }
-  }, [isCollapsed]);
+    if (!cardRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const [entry] = entries;
+      if (entry) {
+        collapseAnimate.start({
+          height: !collapsed ? cardRef.current?.scrollHeight : 0,
+          opacity: !collapsed ? 1 : 0,
+        });
+      }
+    });
+
+    resizeObserver.observe(cardRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [collapsed]);
 
   return (
     <div css={styles.wrapper(hasBorder)} {...additionalAttributes} style={style}>
-      <div css={styles.headerWrapper(isCollapsed || noSeparator)}>
+      <div css={styles.headerWrapper(collapsed || noSeparator)}>
         <h5 css={styles.title}>
           <span css={styles.titleIcon}>
             {titleIcon ? (
@@ -87,11 +100,7 @@ const Card = ({
 
         <div css={styles.actions}>
           <Show when={actionTray}>{actionTray}</Show>
-          <button
-            type="button"
-            css={styles.collapseButton({ isCollapsed })}
-            onClick={() => setIsCollapsed(!isCollapsed)}
-          >
+          <button type="button" css={styles.collapseButton({ isCollapsed: collapsed })} onClick={toggleCollapse}>
             <SVGIcon name="change" width={24} height={24} />
           </button>
         </div>

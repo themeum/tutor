@@ -32,7 +32,7 @@
 						<p></p>
 					</div>
 					<div class="tutor-announcement-detail-date-info">
-						<label for=""><?php esc_html_e( 'Publish Date' ); ?></label>
+						<label for=""><?php esc_html_e( 'Publish Date', 'tutor' ); ?></label>
 						<p></p>
 					</div>
 				</div>

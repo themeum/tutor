@@ -1,13 +1,12 @@
-import { useToast } from '@Atoms/Toast';
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import { authApiInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import type { PaginatedParams, PaginatedResult } from '@Utils/types';
-import { convertToGMT } from '@Utils/util';
+import { useToast } from '@TutorShared/atoms/Toast';
+import config from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import type { MembershipPlan, PaginatedParams, PaginatedResult } from '@TutorShared/utils/types';
+import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { convertToErrorMessage } from '../../course-builder/utils/utils';
 
 export type CouponType = 'code' | 'automatic';
 
@@ -34,9 +33,11 @@ export type CouponAppliesTo =
   | 'all_courses_and_bundles'
   | 'all_courses'
   | 'all_bundles'
+  | 'all_membership_plans'
   | 'specific_courses'
   | 'specific_bundles'
-  | 'specific_category';
+  | 'specific_category'
+  | 'specific_membership_plans';
 
 export interface Coupon {
   id?: number;
@@ -50,6 +51,7 @@ export interface Coupon {
   courses?: Course[];
   categories?: CourseCategory[];
   bundles?: Course[];
+  membershipPlans?: MembershipPlan[];
   usage_limit_status: boolean;
   total_usage_limit: string | null;
   per_user_limit_status: boolean;
@@ -97,7 +99,7 @@ export interface GetCouponResponse {
   discount_type: 'percentage' | 'flat';
   discount_amount: string;
   applies_to: CouponAppliesTo;
-  applies_to_items: Course[] | CourseCategory[];
+  applies_to_items: Course[] | CourseCategory[] | MembershipPlan[];
   total_usage_limit: string | null;
   per_user_usage_limit: string | null;
   purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
@@ -126,6 +128,7 @@ export const couponInitialValue: Coupon = {
   courses: [],
   categories: [],
   bundles: [],
+  membershipPlans: [],
   usage_limit_status: false,
   total_usage_limit: '',
   per_user_limit_status: false,
@@ -155,6 +158,9 @@ function getAppliesToItemIds(data: Coupon) {
   if (data.applies_to === 'specific_category') {
     return data.categories?.map((item) => item.id) ?? [];
   }
+  if (data.applies_to === 'specific_membership_plans') {
+    return data.membershipPlans?.map((item) => item.id) ?? [];
+  }
   return [];
 }
 
@@ -173,8 +179,8 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
     discount_amount: data.discount_amount,
     applies_to: data.applies_to,
     applies_to_items: getAppliesToItemIds(data),
-    total_usage_limit: data.usage_limit_status ? data.total_usage_limit ?? '0' : '0',
-    per_user_usage_limit: data.per_user_limit_status ? data.per_user_usage_limit ?? '0' : '0',
+    total_usage_limit: data.usage_limit_status ? (data.total_usage_limit ?? '0') : '0',
+    per_user_usage_limit: data.per_user_limit_status ? (data.per_user_usage_limit ?? '0') : '0',
     ...(data.purchase_requirement && {
       purchase_requirement: data.purchase_requirement,
     }),
@@ -196,9 +202,10 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
 }
 
 const getCouponDetails = (couponId: number) => {
-  return authApiInstance.post<GetCouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_details',
-    id: couponId,
+  return wpAjaxInstance.get<GetCouponResponse>(endpoints.GET_COUPON_DETAILS, {
+    params: {
+      id: couponId,
+    },
   });
 };
 
@@ -206,7 +213,7 @@ export const useCouponDetailsQuery = (couponId: number) => {
   return useQuery({
     enabled: !!couponId,
     queryKey: ['CouponDetails', couponId],
-    queryFn: () => getCouponDetails(couponId),
+    queryFn: () => getCouponDetails(couponId).then((res) => res.data),
   });
 };
 
@@ -217,10 +224,7 @@ interface CouponResponse {
 }
 
 const createCoupon = (payload: CouponPayload) => {
-  return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_create',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CouponPayload, CouponResponse>(endpoints.CREATE_COUPON, payload);
 };
 
 export const useCreateCouponMutation = () => {
@@ -229,7 +233,7 @@ export const useCreateCouponMutation = () => {
   return useMutation({
     mutationFn: createCoupon,
     onSuccess: (response) => {
-      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_coupons`;
+      window.location.href = config.TUTOR_COUPONS_PAGE;
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
@@ -239,10 +243,7 @@ export const useCreateCouponMutation = () => {
 };
 
 const updateCoupon = (payload: CouponPayload) => {
-  return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_update',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CouponPayload, CouponResponse>(endpoints.UPDATE_COUPON, payload);
 };
 
 export const useUpdateCouponMutation = () => {
@@ -268,9 +269,10 @@ interface GetAppliesToParam extends PaginatedParams {
 }
 
 const getAppliesToList = (params: GetAppliesToParam) => {
-  return authApiInstance.post<PaginatedResult<Course | CourseCategory>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_applies_to_list',
-    ...params,
+  return wpAjaxInstance.get<PaginatedResult<Course | CourseCategory>>(endpoints.COUPON_APPLIES_TO, {
+    params: {
+      ...params,
+    },
   });
 };
 
@@ -278,10 +280,6 @@ export const useAppliesToQuery = (params: GetAppliesToParam) => {
   return useQuery({
     queryKey: ['AppliesTo', params],
     placeholderData: keepPreviousData,
-    queryFn: () => {
-      return getAppliesToList(params).then((res) => {
-        return res.data;
-      });
-    },
+    queryFn: () => getAppliesToList(params).then((res) => res.data),
   });
 };

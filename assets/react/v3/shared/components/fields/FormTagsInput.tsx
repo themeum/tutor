@@ -1,18 +1,23 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Checkbox from '@Atoms/CheckBox';
-import Chip from '@Atoms/Chip';
-import Show from '@Controls/Show';
-import { useDebounce } from '@Hooks/useDebounce';
-import { type Tag, useCreateTagMutation, useTagListQuery } from '@Services/tags';
-import { __ } from '@wordpress/i18n';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import Chip from '@TutorShared/atoms/Chip';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { decodeHtmlEntities } from '@TutorShared/utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTagsInputProps extends FormControllerProps<Tag[] | null> {
@@ -93,7 +98,20 @@ const FormTagsInput = ({
               <input
                 {...restInputProps}
                 css={[inputCss, styles.input]}
-                onClick={() => setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsOpen((previousState) => !previousState);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen((previousState) => !previousState);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
+                  }
+                }}
                 autoComplete="off"
                 readOnly={readOnly}
                 placeholder={placeholder}
@@ -107,17 +125,21 @@ const FormTagsInput = ({
             {fieldValue.length > 0 && (
               <div css={styles.tagsWrapper}>
                 {fieldValue.map((tag: Tag) => (
-                  <Chip key={tag.id} label={tag.name} onClick={() => handleCheckboxChange(false, tag)} />
+                  <Chip
+                    key={tag.id}
+                    label={decodeHtmlEntities(tag.name)}
+                    onClick={() => handleCheckboxChange(false, tag)}
+                  />
                 ))}
               </div>
             )}
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },
@@ -141,7 +163,7 @@ const FormTagsInput = ({
                     {tags.map((tag) => (
                       <li key={String(tag.id)} css={styles.optionItem}>
                         <Checkbox
-                          label={tag.name}
+                          label={decodeHtmlEntities(tag.name)}
                           checked={!!fieldValue.find((item) => item.id === tag.id)}
                           onChange={(checked) => handleCheckboxChange(checked, tag)}
                         />
@@ -158,7 +180,7 @@ const FormTagsInput = ({
   );
 };
 
-export default FormTagsInput;
+export default withVisibilityControl(FormTagsInput);
 
 const styles = {
   mainWrapper: css`
@@ -208,15 +230,15 @@ const styles = {
     padding: ${spacing[4]} 0;
     margin: 0;
     max-height: 400px;
+    border: 1px solid ${colorTokens.stroke.border};
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
 
-    ${
-      !removeOptionsMinWidth &&
-      css`
+    ${!removeOptionsMinWidth &&
+    css`
       min-width: 200px;
-    `
-    }
+    `}
   `,
   optionItem: css`
     min-height: 40px;
@@ -245,8 +267,11 @@ const styles = {
     width: 100%;
     padding: ${spacing[8]};
 
+    &:focus,
+    &:active,
     &:hover {
       background-color: ${colorTokens.background.hover};
+      color: ${colorTokens.text.primary};
     }
   `,
 };

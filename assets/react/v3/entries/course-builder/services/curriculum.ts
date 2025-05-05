@@ -1,18 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import type { AxiosResponse } from 'axios';
 
-import { useToast } from '@Atoms/Toast';
-import type { Media } from '@Components/fields/FormImageInput';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type { GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
-import { authApiInstance, wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import { convertToErrorMessage } from '../utils/utils';
-import type { H5PContentResponse } from './quiz';
+import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
+import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
+import { useToast } from '@TutorShared/atoms/Toast';
+import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-export type ID = string | number;
+import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
+import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
+import { Addons } from '@TutorShared/config/constants';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
 
 export type ContentType =
   | 'tutor-google-meet'
@@ -33,7 +35,7 @@ export interface Content {
 }
 
 export interface Lesson extends Content {
-  attachments: Media[];
+  attachments: WPMedia[];
   thumbnail: string;
   thumbnail_id: ID;
   available_on: string;
@@ -52,7 +54,7 @@ export interface Lesson extends Content {
   };
 }
 export interface Assignment extends Content {
-  attachments: Media[];
+  attachments: WPMedia[];
   assignment_option: {
     time_duration: {
       time: string;
@@ -98,14 +100,14 @@ export interface LessonPayload {
   description: string;
   thumbnail_id: ID | null;
 
-  'video[source]': string;
-  'video[source_video_id]': ID;
-  'video[poster]': string;
-  'video[source_external_url]': string;
-  'video[source_shortcode]': string;
-  'video[source_youtube]': string;
-  'video[source_vimeo]': string;
-  'video[source_embedded]': string;
+  'video[source]'?: string;
+  'video[source_video_id]'?: ID;
+  'video[poster]'?: string;
+  'video[source_external_url]'?: string;
+  'video[source_shortcode]'?: string;
+  'video[source_youtube]'?: string;
+  'video[source_vimeo]'?: string;
+  'video[source_embedded]'?: string;
 
   'video[runtime][hours]': number;
   'video[runtime][minutes]': number;
@@ -115,7 +117,7 @@ export interface LessonPayload {
   tutor_attachments: ID[];
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: string;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface AssignmentPayload {
@@ -133,7 +135,7 @@ export interface AssignmentPayload {
 
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: string;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface ContentDuplicatePayload {
@@ -161,10 +163,99 @@ export interface ZoomMeetingDetailsPayload {
   topic_id: ID;
 }
 
+export const convertLessonDataToPayload = (
+  data: LessonForm,
+  lessonId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType,
+  slotFields: string[],
+): LessonPayload => {
+  return {
+    ...(lessonId && { lesson_id: lessonId }),
+    topic_id: topicId,
+    title: data.title,
+    description: data.description,
+    thumbnail_id: data.thumbnail?.id ?? null,
+    ...(data.video
+      ? Object.fromEntries(
+          Object.entries(data.video).map(([key, value]) => [
+            `video[${key}]`,
+            key === 'source' && !value ? '-1' : key === 'poster_url' && !data.video?.poster ? '' : value,
+          ]),
+        )
+      : {}),
+    'video[runtime][hours]': data.duration.hour || 0,
+    'video[runtime][minutes]': data.duration.minute || 0,
+    'video[runtime][seconds]': data.duration.second || 0,
+    ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
+    tutor_attachments: (data.tutor_attachments || []).map((attachment) => attachment.id),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites?.length
+          ? data.content_drip_settings.prerequisites
+          : '',
+      }),
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, data[key as keyof LessonForm] || ''];
+      }),
+    ),
+  };
+};
+
+export const convertAssignmentDataToPayload = (
+  data: AssignmentForm,
+  assignmentId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType,
+  slotFields: string[],
+): AssignmentPayload => {
+  return {
+    ...(assignmentId && { assignment_id: assignmentId }),
+    topic_id: topicId,
+    title: data.title,
+    summary: data.summary,
+    attachments: (data.attachments || []).map((attachment) => attachment.id),
+    'assignment_option[time_duration][time]': data.time_duration.time,
+    'assignment_option[time_duration][value]': data.time_duration.value,
+    'assignment_option[total_mark]': data.total_mark,
+    'assignment_option[pass_mark]': data.pass_mark,
+    'assignment_option[upload_files_limit]': data.upload_files_limit,
+    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
+
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites?.length
+          ? data.content_drip_settings.prerequisites
+          : '',
+      }),
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, data[key as keyof AssignmentForm] || ''];
+      }),
+    ),
+  };
+};
+
 const getCourseTopic = (courseId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<CourseTopic[]>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_course_contents',
-    course_id: courseId,
+  return wpAjaxInstance.get<CourseTopic[]>(endpoints.GET_COURSE_CONTENTS, {
+    params: { course_id: courseId },
   });
 };
 
@@ -186,10 +277,7 @@ export const useCourseTopicQuery = (courseId: ID) => {
 };
 
 const saveTopic = (payload: TopicPayload) => {
-  return authApiInstance.post<TopicPayload, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_save_topic',
-    ...payload,
-  });
+  return wpAjaxInstance.post<TopicPayload, TutorMutationResponse<ID>>(endpoints.SAVE_TOPIC, payload);
 };
 
 export const useSaveTopicMutation = () => {
@@ -216,8 +304,7 @@ export const useSaveTopicMutation = () => {
 };
 
 const deleteTopic = (topicId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_delete_topic',
+  return wpAjaxInstance.post<string, TutorMutationResponse<number>>(endpoints.DELETE_TOPIC, {
     topic_id: topicId,
   });
 };
@@ -238,7 +325,7 @@ export const useDeleteTopicMutation = (courseId: ID) => {
         queryClient.setQueryData(['Topic', courseId], (oldData: CourseTopic[]) => {
           const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as CourseTopic[];
 
-          return oldDataCopy.filter((topic) => topic.id !== topicId);
+          return oldDataCopy.filter((topic) => String(topic.id) !== String(topicId));
         });
       }
     },
@@ -253,10 +340,8 @@ export const useDeleteTopicMutation = (courseId: ID) => {
 };
 
 const getLessonDetails = (lessonId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<Lesson>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_lesson_details',
-    topic_id: topicId,
-    lesson_id: lessonId,
+  return wpAjaxInstance.get<Lesson>(endpoints.GET_LESSON_DETAILS, {
+    params: { topic_id: topicId, lesson_id: lessonId },
   });
 };
 
@@ -269,10 +354,7 @@ export const useLessonDetailsQuery = (lessonId: ID, topicId: ID) => {
 };
 
 const saveLesson = (payload: LessonPayload) => {
-  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse<number>>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_save_lesson',
-    ...payload,
-  });
+  return wpAjaxInstance.post<TutorMutationResponse<number>>(endpoints.SAVE_LESSON, payload);
 };
 
 export const useSaveLessonMutation = (courseId: ID) => {
@@ -303,8 +385,7 @@ export const useSaveLessonMutation = (courseId: ID) => {
 };
 
 const deleteContent = (lessonId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_delete_lesson',
+  return wpAjaxInstance.post<string, TutorMutationResponse<ID>>(endpoints.DELETE_TOPIC_CONTENT, {
     lesson_id: lessonId,
   });
 };
@@ -334,15 +415,12 @@ export const useDeleteContentMutation = () => {
 };
 
 const updateCourseContentOrder = (payload: CourseContentOrderPayload) => {
-  return authApiInstance.post<
+  return wpAjaxInstance.post<
     CourseContentOrderPayload,
     {
       success: boolean;
     }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'tutor_update_course_content_order',
-    ...payload,
-  });
+  >(endpoints.UPDATE_COURSE_CONTENT_ORDER, payload);
 };
 
 export const useUpdateCourseContentOrderMutation = () => {
@@ -357,10 +435,8 @@ export const useUpdateCourseContentOrderMutation = () => {
 };
 
 const getAssignmentDetails = (assignmentId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<Assignment>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_assignment_details',
-    topic_id: topicId,
-    assignment_id: assignmentId,
+  return wpAjaxInstance.get<Assignment>(endpoints.GET_ASSIGNMENT_DETAILS, {
+    params: { topic_id: topicId, assignment_id: assignmentId },
   });
 };
 
@@ -373,10 +449,7 @@ export const useAssignmentDetailsQuery = (assignmentId: ID, topicId: ID) => {
 };
 
 const saveAssignment = (payload: AssignmentPayload) => {
-  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_assignment_save',
-    ...payload,
-  });
+  return wpAjaxInstance.post<string, TutorMutationResponse<number>>(endpoints.SAVE_ASSIGNMENT, payload);
 };
 
 export const useSaveAssignmentMutation = (courseId: ID) => {
@@ -407,10 +480,7 @@ export const useSaveAssignmentMutation = (courseId: ID) => {
 };
 
 const duplicateContent = (payload: ContentDuplicatePayload) => {
-  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_duplicate_content',
-    ...payload,
-  });
+  return wpAjaxInstance.post<string, TutorMutationResponse<number>>(endpoints.DUPLICATE_CONTENT, payload);
 };
 
 /**
@@ -448,7 +518,7 @@ export const useDuplicateContentMutation = (quizId?: ID) => {
     },
     onError: (error: ErrorResponse, payload) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
 
@@ -462,10 +532,8 @@ export const useDuplicateContentMutation = (quizId?: ID) => {
 };
 
 const getZoomMeetingDetails = (meetingId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<ZoomMeeting>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_zoom_meeting_details',
-    meeting_id: meetingId,
-    topic_id: topicId,
+  return wpAjaxInstance.get<ZoomMeeting>(endpoints.GET_ZOOM_MEETING_DETAILS, {
+    params: { meeting_id: meetingId, topic_id: topicId },
   });
 };
 
@@ -478,10 +546,8 @@ export const useZoomMeetingDetailsQuery = (meetingId: ID, topicId: ID) => {
 };
 
 const getGoogleMeetDetails = (meetingId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<GoogleMeet>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_google_meet_meeting_details',
-    meeting_id: meetingId,
-    topic_id: topicId,
+  return wpAjaxInstance.get<GoogleMeet>(endpoints.GET_GOOGLE_MEET_DETAILS, {
+    params: { meeting_id: meetingId, topic_id: topicId },
   });
 };
 
@@ -494,17 +560,15 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
 };
 
 const getH5PLessonContents = (search: string) => {
-  return wpAjaxInstance
-    .post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
-      search_filter: search,
-    })
-    .then((response) => response.data);
+  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
+    search_filter: search,
+  });
 };
 
 export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
   return useQuery({
     queryKey: ['H5PLessonContents', search],
-    queryFn: () => getH5PLessonContents(search),
+    queryFn: () => getH5PLessonContents(search).then((response) => response.data),
     enabled: contentType === 'lesson',
   });
 };

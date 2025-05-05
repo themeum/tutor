@@ -1,20 +1,23 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { Category, CategoryWithChildren } from '@Services/category';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { generateTree } from '@Utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import { useState } from 'react';
-
+import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
+
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useCategoryListQuery, type CategoryWithChildren } from '@TutorShared/services/category';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
+
+import Show from '@TutorShared/controls/Show';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiLevelSelectProps extends FormControllerProps<number | null> {
-  options: Category[];
   label?: string;
   disabled?: boolean;
   loading?: boolean;
@@ -34,26 +37,35 @@ const FormMultiLevelSelect = ({
   loading,
   placeholder,
   helpText,
-  options,
   isInlineLabel,
   clearable,
   listItemsLabel,
   optionsWrapperStyle,
 }: FormMultiLevelSelectProps) => {
-  const treeOptions = generateTree(options);
   const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSearchValue = useDebounce(searchValue, 300);
+  const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
+  const options = generateTree(categoryListQuery.data ?? []);
 
-  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [options.length],
   });
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchValue('');
+    }
+  }, [isOpen]);
 
   return (
     <FormFieldWrapper
       label={label}
       field={field}
       fieldState={fieldState}
-      disabled={disabled}
+      disabled={disabled || options.length === 0}
       loading={loading}
       placeholder={placeholder}
       helpText={helpText}
@@ -66,38 +78,79 @@ const FormMultiLevelSelect = ({
               <input
                 {...inputProps}
                 type="text"
-                onFocus={() => setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsOpen(true);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen(true);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
+                  }
+                }}
                 autoComplete="off"
-                readOnly={true}
-                value={Array.isArray(field.value) ? '' : options.find((item) => item.id === field.value)?.name ?? ''}
+                readOnly
+                disabled={disabled || options.length === 0}
+                value={field.value ? categoryListQuery.data?.find((option) => option.id === field.value)?.name : ''}
                 placeholder={placeholder}
               />
               <button
+                tabIndex={-1}
                 type="button"
-                css={styleUtils.resetButton}
+                disabled={disabled || options.length === 0}
+                aria-label={__('Toggle options', 'tutor')}
+                css={styles.toggleIcon(isOpen)}
                 onClick={() => {
                   setIsOpen((prev) => !prev);
                 }}
               >
-                <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon(isOpen)} />
+                <SVGIcon name="chevronDown" width={20} height={20} />
               </button>
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
-              <div css={[styles.categoryWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
+              <div
+                css={[styles.categoryWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                ref={popoverRef}
+                style={{
+                  maxWidth: triggerWidth,
+                }}
+              >
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}
-                <div css={[styles.options, optionsWrapperStyle]}>
-                  {treeOptions.map((option) => (
-                    <Branch
-                      key={option.id}
-                      option={option}
-                      onChange={(id) => {
-                        field.onChange(id);
-                        setIsOpen(false);
-                      }}
-                    />
-                  ))}
+                <div css={styles.searchInput}>
+                  <div css={styles.searchIcon}>
+                    <SVGIcon name="search" width={24} height={24} />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder={__('Search', 'tutor')}
+                    value={searchValue}
+                    onChange={(event) => {
+                      setSearchValue(event.target.value);
+                    }}
+                  />
                 </div>
+                <Show
+                  when={options.length > 0}
+                  fallback={<div css={styles.notFound}>{__('No categories found.', 'tutor')}</div>}
+                >
+                  <div css={[styles.options, optionsWrapperStyle]}>
+                    {options.map((option) => (
+                      <Branch
+                        key={option.id}
+                        option={option}
+                        onChange={(id) => {
+                          field.onChange(id);
+                          setIsOpen(false);
+                        }}
+                      />
+                    ))}
+                  </div>
+                </Show>
 
                 {clearable && (
                   <div css={styles.clearButton}>
@@ -126,9 +179,10 @@ export default FormMultiLevelSelect;
 interface BranchProps {
   option: CategoryWithChildren;
   onChange: (item: number) => void;
+  level?: number; // Add level prop
 }
 
-export const Branch = ({ option, onChange }: BranchProps) => {
+export const Branch = ({ option, onChange, level = 0 }: BranchProps) => {
   const hasChildren = option.children.length > 0;
 
   const renderBranches = () => {
@@ -137,14 +191,14 @@ export const Branch = ({ option, onChange }: BranchProps) => {
     }
 
     return option.children.map((child) => {
-      return <Branch key={child.id} option={child} onChange={onChange} />;
+      return <Branch key={child.id} option={child} onChange={onChange} level={level + 1} />;
     });
   };
 
   return (
-    <div css={styles.branchItem}>
-      <button type="button" onClick={() => onChange(option.id)}>
-        {option.name}
+    <div css={styles.branchItem(level)}>
+      <button type="button" onClick={() => onChange(option.id)} title={option.name}>
+        {decodeHtmlEntities(option.name)}
       </button>
 
       {renderBranches()}
@@ -158,46 +212,103 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
+    border: 1px solid ${colorTokens.stroke.border};
     padding: ${spacing[8]} 0;
     min-width: 275px;
   `,
   options: css`
     max-height: 455px;
-    overflow-y: auto;
+    ${styleUtils.overflowYAuto};
   `,
-  branchItem: css`
+  notFound: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    ${typography.caption('regular')};
+    padding: ${spacing[8]} ${spacing[16]};
+    color: ${colorTokens.text.hints};
+  `,
+  searchInput: css`
+    position: sticky;
+    top: 0;
+    padding: ${spacing[8]} ${spacing[16]};
+
+    input {
+      ${typography.body('regular')};
+      width: 100%;
+      border-radius: ${borderRadius[6]};
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: ${spacing[4]} ${spacing[16]} ${spacing[4]} ${spacing[32]};
+      color: ${colorTokens.text.title};
+      appearance: textfield;
+
+      :focus {
+        ${styleUtils.inputFocus};
+      }
+    }
+  `,
+  searchIcon: css`
+    position: absolute;
+    left: ${spacing[24]};
+    top: 50%;
+    transform: translateY(-50%);
+    color: ${colorTokens.icon.default};
+    display: flex;
+  `,
+  branchItem: (level: number) => css`
     position: relative;
     z-index: ${zIndex.positive};
-    padding-left: ${spacing[24]};
 
     button {
       ${styleUtils.resetButton};
+      ${typography.body('regular')};
+      ${styleUtils.text.ellipsis(1)};
+      color: ${colorTokens.text.title};
+      padding-left: calc(${spacing[24]} + ${spacing[24]} * ${level});
       line-height: ${lineHeight[36]};
+      padding-right: ${spacing[16]};
       width: 100%;
 
-      &:hover {
-        color: ${colorTokens.text.brand};
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: ${colorTokens.background.hover};
+        color: ${colorTokens.text.title};
       }
     }
   `,
   toggleIcon: (isOpen: boolean) => css`
+    ${styleUtils.resetButton};
     position: absolute;
-    top: 12px;
-    right: ${spacing[12]};
+    top: ${spacing[4]};
+    right: ${spacing[4]};
+    display: flex;
+    align-items: center;
     transition: transform 0.3s ease-in-out;
+    color: ${colorTokens.icon.default};
+    padding: ${spacing[6]};
 
-    ${
-      isOpen &&
-      css`
-      transform: rotate(180deg);
-    `
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
     }
+
+    ${isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   inputWrapper: css`
     position: relative;
+
+    input:read-only {
+      background-color: inherit;
+    }
   `,
   clearButton: css`
     padding: ${spacing[8]} ${spacing[24]};
+    box-shadow: ${shadow.dividerTop};
 
     & > button {
       padding: 0;

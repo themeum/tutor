@@ -2,25 +2,26 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-import AITextModal from '@Components/modals/AITextModal';
-import { useModal } from '@Components/modals/Modal';
-import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
+import AITextModal from '@TutorShared/components/modals/AITextModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
-import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { parseNumberOnly } from '@Utils/util';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { parseNumberOnly } from '@TutorShared/utils/util';
 
-import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
-import generateText from '@Images/pro-placeholders/generate-text.webp';
+import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
+import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -82,6 +83,7 @@ const FormInput = ({
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
   const { showModal } = useModal();
+  const ref = useRef<HTMLInputElement>(null);
 
   let inputValue = field.value ?? '';
   let characterCount:
@@ -102,6 +104,43 @@ const FormInput = ({
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
   };
 
+  const handleAiButtonClick = () => {
+    if (!isTutorPro) {
+      showModal({
+        component: ProIdentifierModal,
+        props: {
+          image: generateText,
+          image2x: generateText2x,
+        },
+      });
+    } else if (!hasOpenAiAPIKey) {
+      showModal({
+        component: SetupOpenAiModal,
+        props: {
+          image: generateText,
+          image2x: generateText2x,
+        },
+      });
+    } else {
+      showModal({
+        component: AITextModal,
+        isMagicAi: true,
+        props: {
+          title: __('AI Studio', 'tutor'),
+          icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+          characters: 120,
+          field,
+          fieldState,
+          format: 'title',
+          is_html: false,
+          fieldLabel: __('Create a Compelling Title', 'tutor'),
+          fieldPlaceholder: __('Describe the main focus of your course in a few words', 'tutor'),
+        },
+      });
+      onClickAiButton?.();
+    }
+  };
+
   return (
     <FormFieldWrapper
       label={label}
@@ -119,71 +158,10 @@ const FormInput = ({
       isInlineLabel={isInlineLabel}
       inputStyle={style}
       generateWithAi={generateWithAi}
-      onClickAiButton={() => {
-        if (!isTutorPro) {
-          showModal({
-            component: ProIdentifierModal,
-            props: {
-              title: (
-                <>
-                  {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-                  <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                </>
-              ),
-              image: generateText,
-              image2x: generateText2x,
-              featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
-              features: [
-                __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
-                __(
-                  'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                  'tutor',
-                ),
-                __(
-                  'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
-                  'tutor',
-                ),
-                __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
-              ],
-              footer: (
-                <Button
-                  onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
-                  icon={<SVGIcon name="crown" width={24} height={24} />}
-                >
-                  {__('Get Tutor LMS Pro', 'tutor')}
-                </Button>
-              ),
-            },
-          });
-        } else if (!hasOpenAiAPIKey) {
-          showModal({
-            component: SetupOpenAiModal,
-            props: {
-              image: generateText,
-              image2x: generateText2x,
-            },
-          });
-        } else {
-          showModal({
-            component: AITextModal,
-            isMagicAi: true,
-            props: {
-              title: __('AI Studio', 'tutor'),
-              icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-              field,
-              fieldState,
-              is_html: true,
-              fieldLabel: __('Create a Compelling Title', 'tutor'),
-              fieldPlaceholder: __('Describe the main focus of your course in a few words', 'tutor'),
-            },
-          });
-          onClickAiButton?.();
-        }
-      }}
+      onClickAiButton={handleAiButtonClick}
       isMagicAi={isMagicAi}
     >
       {(inputProps) => {
-        const ref = useRef<HTMLInputElement>(null);
         return (
           <>
             <div css={styles.container(isClearable || isPassword)}>
@@ -226,13 +204,6 @@ const FormInput = ({
                   ref.current.select();
                 }}
               />
-              {isClearable && !!field.value && (
-                <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
-                    <SVGIcon name="timesAlt" />
-                  </Button>
-                </div>
-              )}
               <Show when={isPassword}>
                 <div css={styles.eyeButtonWrapper}>
                   <button
@@ -246,7 +217,7 @@ const FormInput = ({
               </Show>
               <Show when={isClearable && !!field.value && fieldType !== 'password'}>
                 <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
+                  <Button variant="text" onClick={() => field.onChange('')}>
                     <SVGIcon name="timesAlt" />
                   </Button>
                 </div>
@@ -259,52 +230,63 @@ const FormInput = ({
   );
 };
 
-export default FormInput;
+export default withVisibilityControl(FormInput);
 
 const styles = {
   container: (isClearable: boolean) => css`
-		position: relative;
-		display: flex;
+    position: relative;
+    display: flex;
 
-		input {
-			&.tutor-input-field {
+    input {
+      &.tutor-input-field {
         ${isClearable && `padding-right: ${spacing[36]};`};
       }
-		}
-	`,
+    }
+  `,
   clearButton: css`
-		position: absolute;
-		right: ${spacing[2]};
-		top: ${spacing[2]};
-		width: 36px;
-		height: 36px;
-		border-radius: ${borderRadius[2]};
-		background: transparent;
+    position: absolute;
+    right: ${spacing[4]};
+    top: ${spacing[4]};
+    width: 32px;
+    height: 32px;
+    background: transparent;
 
-		button {
-			padding: ${spacing[10]};
-		}
-	`,
+    button {
+      padding: ${spacing[8]};
+      border-radius: ${borderRadius[2]};
+    }
+  `,
   eyeButtonWrapper: css`
-		position: absolute;
-		display: flex;
-		right: ${spacing[8]};
-		top: 50%;
-		transform: translateY(-50%);
-		border-radius: ${borderRadius[2]};
-		background: transparent;
-	`,
+    position: absolute;
+    display: flex;
+    right: ${spacing[4]};
+    top: 50%;
+    transform: translateY(-50%);
+  `,
 
   eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
-		${styleUtils.resetButton}
-		${styleUtils.flexCenter()}
+    ${styleUtils.resetButton}
+    ${styleUtils.flexCenter()}
     color: ${colorTokens.icon.default};
+    padding: ${spacing[4]};
+    border-radius: ${borderRadius[2]};
+    background: transparent;
 
-		${
-      type !== 'password' &&
-      css`
-			color: ${colorTokens.icon.brand};
-		`
+    ${type !== 'password' &&
+    css`
+      color: ${colorTokens.icon.brand};
+    `}
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
     }
-	`,
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 2px;
+    }
+  `,
 };

@@ -242,7 +242,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 						</div>
 					</th>
 					<th width="17%">
-						<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+						<?php esc_html_e( 'Date', 'tutor' ); ?>
 					</th>
 				<?php else : ?>
 					<th width="17%">
@@ -377,5 +377,5 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 
 
 <?php
-	tutor_announcement_modal( 'tutor_announcement_new', __( 'Create Announcement' ), $courses );
+	tutor_announcement_modal( 'tutor_announcement_new', __( 'Create Announcement', 'tutor' ), $courses );
 ?>

@@ -1,11 +1,12 @@
-import Button, { type ButtonIconPosition, type ButtonSize, type ButtonVariant } from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { MAX_FILE_SIZE } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import { getFileExtensionFromName } from '@Utils/util';
+import Button, { type ButtonIconPosition, type ButtonSize, type ButtonVariant } from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { MAX_FILE_SIZE } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getFileExtensionFromName } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import type React from 'react';
 import { useRef } from 'react';
 
@@ -42,9 +43,9 @@ export const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUpl
 
     for (const file of [...files]) {
       if (!acceptedTypes.includes(getFileExtensionFromName(file.name))) {
-        errorMessages.push('Invalid file type');
+        errorMessages.push(__('Invalid file type', 'tutor'));
       } else if (file.size > MAX_FILE_SIZE) {
-        errorMessages.push('Maximum upload size exceeded');
+        errorMessages.push(__('Maximum upload size exceeded', 'tutor'));
       } else {
         validFiles.push(file);
       }
@@ -57,6 +58,8 @@ export const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUpl
     if (errorMessages.length) {
       onError(errorMessages);
     }
+
+    event.target.value = '';
   };
 
   return { fileInputRef, handleChange };
@@ -100,7 +103,7 @@ const styles = {
     justify-content: center;
     align-items: center;
     flex: 1;
-    gap: ${spacing[12]}; ;
+    gap: ${spacing[12]};
   `,
   fileInput: css`
     display: none;

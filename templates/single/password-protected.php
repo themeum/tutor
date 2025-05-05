@@ -8,17 +8,17 @@
  * @since 3.0.0
  */
 
-$course_id   = get_the_ID();
-$is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
-
+$course_id      = get_the_ID();
+$is_enrolled    = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
+$password_error = get_transient( 'tutor_post_password_error' );
 ?>
-<?php get_header(); ?>
+<?php tutor_utils()->tutor_custom_header(); ?>
 
 <div class="tutor-container tutor-password-protected-course">
 	<?php ( isset( $is_enrolled ) && $is_enrolled ) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
 	<?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 
-	<div class="tutor-modal show">
+	<div class="tutor-modal tutor-is-active">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window" style="max-width: 834px;">
 			<div class="tutor-modal-content tutor-bg-white tutor-p-40">
@@ -42,6 +42,8 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 									<?php esc_html_e( 'Enter your password', 'tutor' ); ?>
 								</label>
 								<input type="password" name="post_password" class="tutor-form-control" />
+								<input type="hidden" name="course_id" value="<?php echo esc_attr( $course_id ); ?>" />
+								<?php echo ! empty( $password_error ) ? '<span class="tutor-color-danger tutor-fs-7 tutor-fw-medium">' . esc_html( $password_error ) . '</span>' : ''; ?>
 							</div>
 							<div class="tutor-d-flex tutor-gap-1">
 								<input type="checkbox" id="tutor-protected-show-password" class="tutor-form-check-input">
@@ -59,5 +61,5 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 		</div>
 	</div>
 </div>
-
-<?php get_footer(); ?>
+<?php delete_transient( 'tutor_post_password_error' ); ?>
+<?php tutor_utils()->tutor_custom_footer(); ?>

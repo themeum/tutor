@@ -1,4 +1,4 @@
-import type { LocalStorage } from '@Config/constants';
+import type { LocalStorage } from '@TutorShared/config/constants';
 
 export const getStorageItem = (key: LocalStorage) => {
   if (typeof window !== 'undefined') {

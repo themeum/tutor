@@ -5,13 +5,23 @@
 .tutor-admin {
 	&-wrap {
 		margin-left: -20px;
+		.rtl & {
+			margin-left: 0px;
+			margin-right: -20px;
+		}
 		
 		@include breakpoint-max(782) {
 			margin-left: -10px;
+			.rtl & {
+				margin-left: 0px;
+				margin-right: -10px;
+			}
 		}
 
 		// reset
-		* {
+		*,
+		::after,
+		::before {
 			box-sizing: border-box;
 		}
 
@@ -46,6 +56,10 @@
 		margin-right: auto;
 		padding-left: 20px;
 		padding-right: 20px;
+
+		&-lg {
+			max-width: 1380px;
+		}
 
 		&-sm {
 			max-width: 760px;
@@ -103,10 +117,20 @@
 		&-icon {
 			&:not(.tutor-form-icon-reverse) ~ .tutor-form-control {
 				padding-left: 40px !important;
+				
+				.rtl & {
+					padding-left: 16px !important;
+					padding-right: 40px !important;
+				}
 			}
 
 			&-reverse ~ .tutor-form-control {
 				padding-right: 40px !important;
+
+				.rtl & {
+					padding-right: 16px !important;
+					padding-left: 40px !important;
+				}
 			}
 		}
 	}
@@ -115,6 +139,7 @@
 	select.tutor-form-control,
 	.tutor-form-select {
 		padding-right: 36px !important;
+		margin: 0px;
 	}
 }
 
@@ -129,6 +154,10 @@ table.tutor-table.tutor-table-with-checkbox {
 	& li a[href=tutor-setup] {
 		display: none;
 	}
+}
+
+body.tutor-backend {
+	background-color: #f5f5f5;
 }
 
 /*----------------------------------
@@ -514,29 +543,6 @@ a.addon-buynow-link {
 	color: #fff;
 	padding: 5px 10px;
 	display: inline-block;
-}
-
-/**
-  Add-ons list
-   */
-
-.tutor-addons-list {
-	background-color: #fff;
-	min-height: 500px;
-	padding: 20px;
-}
-
-.tutor-addons-list .plugin-icon {
-	height: 120px !important;
-	width: auto !important;
-}
-
-.tutor-addons-list .plugin-card .desc {
-	margin-right: 0;
-}
-
-.tutor-addons-list .plugin-card .name {
-	margin-right: 50px;
 }
 
 /* RTL Style for name and desc */
@@ -984,7 +990,7 @@ a:has(> span.tutor-get-pro-text ) {
 	}
 }
 
-span.tutor-addons-text{
+.tutor-text-orange {
 	color: orange;
 }
 
@@ -1745,10 +1751,6 @@ h2.tutor-page-heading {
 	padding: 0 0 30px 0;
 }
 
-.tutor-wp-dashboard-filter-items {
-	display: inherit;
-}
-
 //a-to-z-sorting icon
 .tutor-table-rows-sorting {
 	cursor: pointer;
@@ -1798,6 +1800,95 @@ h2.tutor-page-heading {
     line-height: 15px;
 }
 
-a:has(> span.tutor-create-course ) {
-	display: none!important;
+.wp-submenu li a[href="admin.php?page=create-course"] {
+    display: none!important;
+}
+
+.tutor-form-check-input.tutor-bulk-checkbox, 
+.tutor-form-check-input#tutor-bulk-checkbox-all {
+	height: 20px;
+	width: 20px;
+}
+
+.tutor-text-ellipsis-2-lines {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+.tutor-dashboard-course-list {
+	tr {
+		th {
+			border-top: 1px solid #E6E6E6;
+			border-bottom: 1px solid #F5F5F5;
+			font-weight: 400;
+			color: #636363;
+			background-color: #ffffff;
+			padding: 14px 12px;
+
+			&:first-child {
+				border-left: 1px solid #E6E6E6;
+				padding: 16px;
+
+				.rtl * {
+					border-left: none;
+					border-right: 1px solid #E6E6E6;
+				}
+			}
+
+			&:last-child {
+				border-right: 1px solid #E6E6E6;
+
+				.rtl & {
+					border-right: none;
+					border-left: 1px solid #E6E6E6;
+				}
+			}
+
+			&:nth-child(2) {
+				padding-left: 0px;
+			}
+		}
+
+		td {
+			border-bottom: 1px solid #F5F5F5;
+			padding: 16px 12px;
+			
+			&:first-child {
+				border-left: 1px solid #E6E6E6;
+				padding: 16px;
+
+				.rtl & {
+					border-left: none;
+					border-right: 1px solid #E6E6E6;
+				}
+			}
+
+			&:last-child {
+				border-right: 1px solid #E6E6E6;
+
+				.rtl & {
+					border-right: none;
+					border-left: 1px solid #E6E6E6;
+				}
+			}
+
+			&:nth-child(2) {
+				padding-left: 0px;
+			}
+		}
+
+		&:last-child td {
+			border-bottom: 1px solid #E6E6E6;
+		}
+	}
+
+	.tutor-form-check-input {
+		border-width: 1px;
+	}
+
+	.tutor-avatar {
+		box-shadow: none;
+	}
 }

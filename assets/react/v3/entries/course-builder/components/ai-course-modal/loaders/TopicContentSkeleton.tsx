@@ -1,5 +1,5 @@
-import Skeleton from '@Atoms/Skeleton';
-import { spacing } from '@Config/styles';
+import Skeleton from '@TutorShared/atoms/Skeleton';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 const TopicContentSkeleton = () => {
@@ -24,14 +24,14 @@ const TopicContentSkeleton = () => {
 export default TopicContentSkeleton;
 const styles = {
   group: css`
-		display: flex;
-		gap: ${spacing[16]};
-		align-items: center;
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+    align-items: center;
+  `,
   spacer: css`
-		margin-left: ${spacing[16]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-	`,
+    margin-left: ${spacing[16]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+  `,
 };

@@ -1,20 +1,20 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-import type { Media } from '@Components/fields/FormImageInput';
+import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type IconCollection } from '@TutorShared/icons/types';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 export type WpMediaDetails = {
   id: number;
@@ -29,13 +29,13 @@ export type WpMediaDetails = {
 
 type FormFileUploaderProps = {
   label?: string;
-  onChange?: (media: Media[] | Media | null) => void;
+  onChange?: (media: WPMedia[] | WPMedia | null) => void;
   helpText?: string;
   buttonText?: string;
   selectMultiple?: boolean;
   maxFiles?: number;
   maxFileSize?: number; // in bytes
-} & FormControllerProps<Media[] | Media | null>;
+} & FormControllerProps<WPMedia[] | WPMedia | null>;
 
 const iconMapping: { [key: string]: string[] } = {
   iso: ['iso'],
@@ -91,101 +91,27 @@ const FormFileUploader = ({
   maxFileSize,
   maxFiles,
 }: FormFileUploaderProps) => {
-  const { showToast } = useToast();
-
-  const wpMedia = window.wp.media({
-    multiple: selectMultiple ? 'add' : false,
-  });
-
   const fieldValue = field.value;
+  const { openMediaLibrary, resetFiles } = useWPMedia({
+    options: { multiple: selectMultiple, maxFiles, maxFileSize },
+    onChange: (files) => {
+      field.onChange(files);
+      if (onChange) {
+        onChange(files);
+      }
+    },
+    initialFiles: fieldValue ? (Array.isArray(fieldValue) ? fieldValue : [fieldValue]) : [],
+  });
 
   const uploadHandler = () => {
-    wpMedia.open();
+    openMediaLibrary();
   };
 
-  wpMedia.on('open', () => {
-    const selection = wpMedia.state().get('selection');
-    const ids = Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : [];
-    if (ids.length > 0) {
-      for (const id of ids) {
-        const attachment = window.wp.media.attachment(id);
-        selection.add(attachment ? [attachment] : []);
-      }
-    }
-  });
-
-  wpMedia.on('select', () => {
-    const selected = wpMedia.state().get('selection').toJSON();
-
-    const existingFileIds = new Set(
-      Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : [],
-    );
-
-    const newFiles = selected.reduce((allFiles: Media[], file: WpMediaDetails) => {
-      if (maxFileSize && file.filesizeInBytes && file.filesizeInBytes > maxFileSize) {
-        showToast({
-          message: sprintf(__('%s size exceeds the limit', 'tutor'), file.title),
-          type: 'danger',
-        });
-        return allFiles;
-      }
-
-      if (existingFileIds.has(file.id)) {
-        return allFiles;
-      }
-
-      const newFile: Media = {
-        id: file.id,
-        title: file.title,
-        url: file.url,
-        name: file.title,
-        size: file.filesizeHumanReadable,
-        size_bytes: file.filesizeInBytes,
-        ext: file.filename.split('.').pop(),
-      };
-
-      if (!selectMultiple) {
-        return [newFile];
-      }
-
-      allFiles.push(newFile);
-      return allFiles;
-    }, []);
-
-    const totalFiles = fieldValue ? (Array.isArray(fieldValue) ? fieldValue.length : 1) : 0 + newFiles.length;
-
-    if (maxFiles && totalFiles > maxFiles) {
-      showToast({
-        message: sprintf(__('You can not upload more than %d files in total', 'tutor'), maxFiles),
-        type: 'danger',
-      });
-      return;
-    }
-
-    if (selectMultiple) {
-      const updatedValue = Array.isArray(fieldValue)
-        ? [...fieldValue, ...newFiles]
-        : fieldValue
-          ? [fieldValue, ...newFiles]
-          : newFiles;
-      field.onChange(updatedValue);
-
-      if (onChange) {
-        onChange(updatedValue);
-      }
-    } else {
-      field.onChange(newFiles[0] || null);
-
-      if (onChange) {
-        onChange(newFiles[0] || null);
-      }
-    }
-  });
-
   const clearHandler = (fileId: number) => {
+    resetFiles();
     if (selectMultiple) {
       const newFiles = (Array.isArray(fieldValue) ? fieldValue : fieldValue ? [fieldValue] : []).filter(
-        (file: Media) => file.id !== fileId,
+        (file) => file.id !== fileId,
       );
       field.onChange(newFiles.length > 0 ? newFiles : null);
 
@@ -266,6 +192,7 @@ const FormFileUploader = ({
                     icon={<SVGIcon name="attach" height={24} width={24} />}
                     variant="secondary"
                     onClick={uploadHandler}
+                    data-cy="upload-media"
                   >
                     {buttonText}
                   </Button>
@@ -279,28 +206,22 @@ const FormFileUploader = ({
   );
 };
 
-export default FormFileUploader;
+export default withVisibilityControl(FormFileUploader);
 
 const styles = {
-  wrapper: ({
-    hasFiles,
-  }: {
-    hasFiles: boolean;
-  }) => css`
+  wrapper: ({ hasFiles }: { hasFiles: boolean }) => css`
     display: flex;
     flex-direction: column;
     position: relative;
-    
-    ${
-      hasFiles &&
-      css`
-        background-color: ${colorTokens.background.white};
-        padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
-        border: 1px solid ${colorTokens.stroke.default};
-        border-radius: ${borderRadius.card};
-        gap: ${spacing[8]};
-      `
-    }
+
+    ${hasFiles &&
+    css`
+      background-color: ${colorTokens.background.white};
+      padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius.card};
+      gap: ${spacing[8]};
+    `}
   `,
   attachmentsWrapper: css`
     max-height: 260px;
@@ -319,9 +240,16 @@ const styles = {
       opacity: 0;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       background: ${colorTokens.background.hover};
 
+      button {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       button {
         opacity: 1;
       }
@@ -356,17 +284,11 @@ const styles = {
       color: ${colorTokens.icon.default};
     }
   `,
-  uploadButtonWrapper: ({
-    hasFiles,
-  }: {
-    hasFiles: boolean;
-  }) => css`
-    ${
-      hasFiles &&
-      css`
-        margin-right: ${spacing[16]};
-      `
-    }
+  uploadButtonWrapper: ({ hasFiles }: { hasFiles: boolean }) => css`
+    ${hasFiles &&
+    css`
+      margin-right: ${spacing[16]};
+    `}
   `,
   uploadButton: css`
     width: 100%;
@@ -376,10 +298,9 @@ const styles = {
     color: ${colorTokens.icon.default};
   `,
   removeButton: css`
-    ${styleUtils.resetButton};
-    ${styleUtils.flexCenter()};
-    width: 24px;
-    height: 24px;
-    color: ${colorTokens.icon.hover};
+    ${styleUtils.crossButton};
+    background: none;
+    transition: none;
+    flex-shrink: 0;
   `,
 };

@@ -65,6 +65,7 @@ if ( $product ) {
 			?>
             <?php echo apply_filters( 'tutor_course_details_wc_add_to_cart_price', ob_get_clean(), $product ); //phpcs:ignore ?>
 		</div>
+		<?php ob_start(); ?>
 		<form action="<?php echo esc_url( apply_filters( 'tutor_course_add_to_cart_form_action', get_permalink( get_the_ID() ) ) ); ?>" method="post" enctype="multipart/form-data">
 			<button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>"  class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-add-to-cart-button <?php echo esc_attr( $required_loggedin_class ); ?>">
 				<span class="btn-icon tutor-icon-cart-filled"></span>
@@ -72,6 +73,7 @@ if ( $product ) {
 			</button>
 		</form>
 		<?php
+		echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), get_the_ID() ); //phpcs:ignore
 	}
 } else {
 	?>

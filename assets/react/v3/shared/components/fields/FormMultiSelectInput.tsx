@@ -1,19 +1,22 @@
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Checkbox from '@Atoms/CheckBox';
-import Chip from '@Atoms/Chip';
-import Show from '@Controls/Show';
-import { useDebounce } from '@Hooks/useDebounce';
-import { __ } from '@wordpress/i18n';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import Chip from '@TutorShared/atoms/Chip';
+import { isRTL } from '@TutorShared/config/constants';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import type { Option } from '@TutorShared/utils/types';
+
 import FormFieldWrapper from './FormFieldWrapper';
-import type { Option } from '@Utils/types';
-import For from '@Controls/For';
 
 interface FormMultiSelectInputProps extends FormControllerProps<string[] | null> {
   label?: string;
@@ -45,7 +48,7 @@ const FormMultiSelectInput = ({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(debouncedSearchText.toLowerCase())
+    option.label.toLowerCase().includes(debouncedSearchText.toLowerCase()),
   );
 
   const [isOpen, setIsOpen] = useState(false);
@@ -105,12 +108,12 @@ const FormMultiSelectInput = ({
               </div>
             )}
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },
@@ -197,12 +200,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
 
-    ${
-      !removeOptionsMinWidth &&
-      css`
+    ${!removeOptionsMinWidth &&
+    css`
       min-width: 200px;
-    `
-    }
+    `}
   `,
   optionItem: css`
     min-height: 40px;

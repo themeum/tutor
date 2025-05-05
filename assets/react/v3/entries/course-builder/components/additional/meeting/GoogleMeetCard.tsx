@@ -3,20 +3,20 @@ import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Popover from '@Molecules/Popover';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
-import { DateFormats } from '@Config/constants';
+import { DateFormats } from '@TutorShared/config/constants';
 import { type GoogleMeet, useDeleteGoogleMeetMutation } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 import GoogleMeetForm from './GoogleMeetForm';
 
 interface GoogleMeetMeetingCardProps {
@@ -106,7 +106,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
               <button
                 ref={triggerRef}
                 type="button"
-                css={styles.actionButton}
+                css={styleUtils.actionButton}
                 data-visually-hidden
                 onClick={() => setIsOpen(true)}
               >
@@ -114,7 +114,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
               </button>
               <button
                 type="button"
-                css={styles.actionButton}
+                css={styleUtils.actionButton}
                 data-visually-hidden
                 onClick={() => {
                   setIsDeletePopoverOpen(true);
@@ -170,11 +170,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
 export default GoogleMeetMeetingCard;
 
 const styles = {
-  card: ({
-    isPopoverOpen = false,
-  }: {
-    isPopoverOpen: boolean;
-  }) => css`
+  card: ({ isPopoverOpen = false }: { isPopoverOpen: boolean }) => css`
     ${styleUtils.display.flex('column')}
     padding: ${spacing[8]} ${spacing[12]} ${spacing[12]} ${spacing[12]};
     gap: ${spacing[8]};
@@ -185,26 +181,30 @@ const styles = {
       transition: opacity 0.3s ease-in-out;
     }
 
-    ${
-      isPopoverOpen &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-        .date-time {
-          background: none;
-        }
-      `
-    }
-
-    &:hover {
+    ${isPopoverOpen &&
+    css`
       background-color: ${colorTokens.background.hover};
       [data-visually-hidden] {
         opacity: 1;
       }
       .date-time {
         background: none;
+      }
+    `}
+
+    &:hover, &:focus-within {
+      background-color: ${colorTokens.background.hover};
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+      .date-time {
+        background: none;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
       }
     }
   `,
@@ -242,11 +242,5 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    display: flex;
-    cursor: pointer;
   `,
 };

@@ -1,27 +1,30 @@
-import FormInput from '@Components/fields/FormInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Card from '@Molecules/Card';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Card from '@TutorShared/molecules/Card';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 
-import { Addons } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { Addons } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 
@@ -40,21 +43,26 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const queryClient = useQueryClient();
 
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
+  const quizSettingsValidationErrorLength = Object.keys(form.formState.errors).length;
 
   return (
     <div css={styles.settings}>
-      <Card title={__('Basic Settings', 'tutor')} collapsedAnimationDependencies={[feedbackMode, prerequisites.length]}>
+      <Card
+        title={__('Basic Settings', 'tutor')}
+        collapsedAnimationDependencies={[feedbackMode, prerequisites?.length, quizSettingsValidationErrorLength]}
+      >
         <div css={styles.formWrapper}>
           <Show when={contentType !== 'tutor_h5p_quiz'}>
             <div css={styles.timeWrapper}>
               <Controller
                 name="quiz_option.time_limit.time_value"
                 control={form.control}
+                rules={requiredRule()}
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={__('Time limit', 'tutor')}
+                    label={__('Time Limit', 'tutor')}
                     helpText={__('Set a time limit for this quiz. A value of “0” indicates no time limit', 'tutor')}
                     selectOnFocus
                   />
@@ -66,6 +74,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 render={(controllerProps) => (
                   <FormSelectInput
                     {...controllerProps}
+                    label={<>&nbsp;</>}
                     options={[
                       { label: __('Seconds', 'tutor'), value: 'seconds' },
                       { label: __('Minutes', 'tutor'), value: 'minutes' },
@@ -83,13 +92,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.hide_quiz_time_display"
               control={form.control}
-              render={(controllerProps) => (
-                <FormSwitch
-                  {...controllerProps}
-                  label={__('Display Quiz time', 'tutor')}
-                  helpText={__('Show the time limit during the quiz', 'tutor')}
-                />
-              )}
+              render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Hide Quiz Time', 'tutor')} />}
             />
 
             <Controller
@@ -104,12 +107,12 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     {
                       label: __('Default', 'tutor'),
                       value: 'default',
-                      description: __('Answers shown after quiz is finished', 'tutor'),
+                      description: __('Answers are shown after finishing the quiz.', 'tutor'),
                     },
                     {
                       label: __('Reveal Mode', 'tutor'),
                       value: 'reveal',
-                      description: __('Show the answer after attempting the quiz.', 'tutor'),
+                      description: __('Show answer after attempting the question.', 'tutor'),
                     },
                     {
                       label: __('Retry', 'tutor'),
@@ -126,16 +129,24 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.attempts_allowed"
               control={form.control}
-              rules={{ max: 20, min: 0 }}
+              rules={{
+                ...requiredRule(),
+                validate: (value) => {
+                  if (value >= 0 && value <= 20) {
+                    return true;
+                  }
+                  return __('Allowed attempts must be between 0 and 20', 'tutor');
+                },
+              }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
                   type="number"
                   label={__('Attempts Allowed', 'tutor')}
-                  helpText={__(
-                    'Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts',
-                    'tutor',
-                  )}
+                  helpText={
+                    // prettier-ignore
+                    __('Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts', 'tutor')
+                  }
                   selectOnFocus
                 />
               )}
@@ -146,14 +157,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.pass_is_required"
               control={form.control}
+              rules={requiredRule()}
               render={(controllerProps) => (
                 <FormSwitch
                   {...controllerProps}
                   label={__('Passing is Required', 'tutor')}
-                  helpText={__(
-                    'By enabling this option, the student must have to pass it to access the next quiz',
-                    'tutor',
-                  )}
+                  helpText={
+                    // prettier-ignore
+                    __( 'By enabling this option, the student must have to pass it to access the next quiz', 'tutor')
+                  }
                 />
               )}
             />
@@ -162,9 +174,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           <Controller
             name="quiz_option.passing_grade"
             control={form.control}
+            rules={requiredRule()}
             render={(controllerProps) => (
               <FormInputWithContent
                 {...controllerProps}
+                type="number"
                 label={__('Passing Grade', 'tutor')}
                 helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
                 content="%"
@@ -177,16 +191,17 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           <Show when={contentType !== 'tutor_h5p_quiz'}>
             <Controller
               name="quiz_option.max_questions_for_answer"
+              rules={requiredRule()}
               control={form.control}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
                   type="number"
                   label={__('Max Question Allowed to Answer', 'tutor')}
-                  helpText={__(
-                    'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
-                    'tutor',
-                  )}
+                  helpText={
+                    // prettier-ignore
+                    __('Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included', 'tutor')
+                  }
                   selectOnFocus
                 />
               )}
@@ -208,7 +223,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         {__('Available after days', 'tutor')}
                       </div>
                     }
-                    helpText={__('This lesson will be available after the given number of days', 'tutor')}
+                    helpText={__('This quiz will be available after the given number of days.', 'tutor')}
                     placeholder="0"
                     selectOnFocus
                   />
@@ -230,10 +245,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       </div>
                     }
                     placeholder={__('Select Unlock Date', 'tutor')}
-                    helpText={__(
-                      'This lesson will be available from the given date. Leave empty to make it available immediately',
-                      'tutor',
-                    )}
+                    helpText={
+                      // prettier-ignore
+                      __('This quiz will be available from the given date. Leave empty to make it available immediately.', 'tutor')
+                    }
                   />
                 )}
               />
@@ -257,7 +272,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       topics.reduce((topics, topic) => {
                         topics.push({
                           ...topic,
-                          contents: topic.contents.filter((content) => content.ID !== quizId),
+                          contents: topic.contents.filter((content) => String(content.ID) !== String(quizId)),
                         });
 
                         return topics;
@@ -273,7 +288,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
         </div>
       </Card>
 
-      <Card title={__('Advanced Settings', 'tutor')}>
+      <Card
+        title={__('Advanced Settings', 'tutor')}
+        collapsedAnimationDependencies={[quizSettingsValidationErrorLength]}
+      >
         <div css={styles.formWrapper}>
           <Controller
             name="quiz_option.quiz_auto_start"
@@ -299,7 +317,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     placeholder={__('Select an option', 'tutor')}
                     options={[
                       { label: __('Single question', 'tutor'), value: 'single_question' },
-                      { label: __('Question Pagination', 'tutor'), value: 'question_pagination' },
+                      { label: __('Question pagination', 'tutor'), value: 'question_pagination' },
                       { label: __('Question below each other', 'tutor'), value: 'question_below_each_other' },
                     ]}
                   />
@@ -331,11 +349,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               name="quiz_option.hide_question_number_overview"
               control={form.control}
               render={(controllerProps) => (
-                <FormSwitch
-                  {...controllerProps}
-                  label={__('Question number visibility', 'tutor')}
-                  helpText={__('Hide question number overview', 'tutor')}
-                />
+                <FormSwitch {...controllerProps} label={__('Hide Question Number', 'tutor')} />
               )}
             />
 
@@ -346,11 +360,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 <FormInput
                   {...controllerProps}
                   type="number"
-                  label={__('Set a character limit for Short Answers', 'tutor')}
-                  helpText={__(
-                    'Student will place answer in short answer question type within this characters limit.',
-                    'tutor',
-                  )}
+                  label={__('Set Character Limit for Short Answers', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -362,8 +372,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
-                  label={__('Open-Ended/Essay questions answer character limit', 'tutor')}
-                  helpText={__('Set a character limit for open-ended/essay answers', 'tutor')}
+                  type="number"
+                  label={__('Set Character Limit for Open-Ended/Essay Answers', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -371,6 +381,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           </Show>
         </div>
       </Card>
+
+      <CourseBuilderInjectionSlot section="Curriculum.Quiz.bottom_of_settings" form={form} />
     </div>
   );
 };
@@ -388,12 +400,16 @@ const styles = {
   `,
   timeWrapper: css`
     ${styleUtils.display.flex()}
-    align-items: flex-end;
+    align-items: flex-start;
     gap: ${spacing[8]};
   `,
   questionLayoutAndOrder: css`
     ${styleUtils.display.flex()}
     gap: ${spacing[20]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+    }
   `,
   contentDripLabel: css`
     display: flex;

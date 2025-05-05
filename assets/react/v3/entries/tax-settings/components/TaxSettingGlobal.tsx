@@ -1,6 +1,6 @@
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import { colorTokens, fontSize, fontWeight, spacing } from '@Config/styles';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+import { colorTokens, fontSize, fontWeight, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -9,8 +9,6 @@ import { TaxCollectionProcess, type TaxSettings } from '../services/tax';
 
 function TaxSettingGlobal() {
   const form = useFormContext<TaxSettings>();
-  const { watch } = form;
-  const isTaxIncludedInPrice = watch('is_tax_included_in_price');
 
   const taxCollectionProcessOptions = [
     {
@@ -18,7 +16,7 @@ function TaxSettingGlobal() {
       value: TaxCollectionProcess.isTaxIncludedInPrice,
     },
     {
-      label: __('Tax should be calculated & display in the checkout page', 'tutor'),
+      label: __('Tax should be calculated and displayed on the checkout page', 'tutor'),
       value: TaxCollectionProcess.taxIsNotIncluded,
     },
   ];
@@ -28,8 +26,8 @@ function TaxSettingGlobal() {
       <div>
         <Card>
           <CardHeader
-            title={__('Global tax settings', 'tutor')}
-            subtitle={__('Configure how tax is displayed and how it appears on your product listings.', 'tutor')}
+            title={__('Global Tax Settings', 'tutor')}
+            subtitle={__('Set how taxes are displayed and applied to your courses.', 'tutor')}
           />
           <div css={styles.radioGroupWrapper}>
             <div>
@@ -40,7 +38,6 @@ function TaxSettingGlobal() {
                   return (
                     <FormRadioGroup
                       {...controllerProps}
-                      label={__('How would you like to collect tax?', 'tutor')}
                       options={taxCollectionProcessOptions}
                       wrapperCss={styles.radioGroupWrapperCss}
                     />
@@ -61,10 +58,10 @@ function TaxSettingGlobal() {
                         labelCss={styles.checkboxLabel}
                       />
                       <span css={styles.checkboxSubText}>
-                        {__(
-                          'Show prices with tax included, so customers see the final amount they’ll pay upfront',
-                          'tutor',
-                        )}
+                        {
+                          // prettier-ignore
+                          __('Show prices with tax included, so customers see the final amount they’ll pay upfront.', 'tutor')
+                        }
                       </span>
                     </div>
                   );

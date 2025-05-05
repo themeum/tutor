@@ -1,12 +1,10 @@
-import type collection from '@Config/icon-list';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
+import type { RegisterOptions } from 'react-hook-form';
 
 export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
 
-export type IconCollection = keyof typeof collection;
-
-export const localHasOwnProperty = <T extends {}>(obj: T, key: PropertyKey): key is keyof T => {
+export const localHasOwnProperty = <T extends object>(obj: T, key: PropertyKey): key is keyof T => {
   return key in obj;
 };
 
@@ -112,8 +110,136 @@ export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
 
-export interface WPResponse<T> {
+export type ID = number | string;
+
+export interface TutorMutationResponse<T> {
   data: T;
   message: string;
   status_code: AxiosResponse['status'];
 }
+
+export interface WPUser {
+  user_id: number;
+  display_name: string;
+  user_email: string;
+  avatar_url: string;
+}
+
+export type WPPostStatus = 'publish' | 'private' | 'draft' | 'future' | 'pending' | 'trash';
+export type TutorSellingOption = 'subscription' | 'one_time' | 'both';
+
+export interface TutorCategory {
+  term_id: number;
+  name: string;
+  slug: string;
+  term_group: number;
+  term_taxonomy_id: number;
+  taxonomy: string;
+  description: string;
+  parent: number;
+  count: number;
+  filter: string;
+}
+
+export type InjectionSlots = {
+  Basic: 'after_description' | 'after_settings';
+  Curriculum: {
+    Lesson: 'after_description' | 'bottom_of_sidebar';
+    Quiz: 'after_question_description' | 'bottom_of_question_sidebar' | 'bottom_of_settings';
+    Assignment: 'after_description' | 'bottom_of_sidebar';
+  };
+  Additional: 'after_certificates' | 'bottom_of_sidebar';
+};
+
+export type SectionStructure = {
+  [K in keyof InjectionSlots]: K extends 'Curriculum'
+    ? { [C in keyof InjectionSlots[K]]: `${C & string}.${InjectionSlots[K][C] & string}` }
+    : `${K}.${InjectionSlots[K] & string}`;
+};
+
+type Path<T> = T extends object
+  ? {
+      [K in keyof T]: T[K] extends object ? `${string & K}.${Path<T[K]> & string}` : T[K];
+    }[keyof T]
+  : never;
+
+export type SectionPath = Path<SectionStructure>;
+
+export type FieldType =
+  | 'text'
+  | 'number'
+  | 'password'
+  | 'textarea'
+  | 'select'
+  | 'radio'
+  | 'checkbox'
+  | 'switch'
+  | 'date'
+  | 'time'
+  | 'image'
+  | 'video'
+  | 'uploader'
+  | 'WPEditor';
+
+export interface InjectedField {
+  name: string;
+  type: FieldType;
+  options?: Array<{ label: string; value: string }>;
+  label?: string;
+  placeholder?: string;
+  rules?: Exclude<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>;
+  priority?: number;
+}
+
+export interface InjectedContent {
+  component: ReactNode;
+  priority?: number;
+}
+
+export interface Editor {
+  label: string;
+  link: string;
+  name: string;
+}
+
+export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
+
+export interface MembershipPlan {
+  id: number;
+  payment_type: string;
+  plan_type: string;
+  restriction_mode: string | null;
+  plan_name: string;
+  description: string | null;
+  is_enabled: '1' | '0';
+  is_featured: string;
+  featured_text: string | null;
+  recurring_value: string;
+  recurring_interval: Exclude<DurationUnit, 'hour'>;
+  recurring_limit: string;
+  plan_duration: string;
+  regular_price: string;
+  sale_price: string;
+  sale_price_from: string | null;
+  sale_price_to: string | null;
+  provide_certificate: string;
+  enrollment_fee: string;
+  trial_fee: string;
+  trial_value: string;
+  trial_interval: Extract<DurationUnit, 'hour' | 'day'>;
+  plan_order: string;
+  plan_id: string;
+  object_name: string;
+  object_id: string;
+  categories: {
+    id: number;
+    title: string;
+    image: string;
+    total_courses: number;
+  }[];
+}
+
+interface VisibilityProps {
+  visibilityKey?: string;
+}
+export type WithVisibilityProps<T> = T & VisibilityProps;

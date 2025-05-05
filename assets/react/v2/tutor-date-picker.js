@@ -1,25 +1,29 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
-import TutorDatepicker from '../../../v2-library/src/components/datapicker/TutorDatepicker';
+
+const TutorDatepicker = lazy(() => import('../../../v2-library/src/components/datapicker/TutorDatepicker'));
 
 function DatePicker() {
+    const { __ } = wp.i18n;
+
+    const fallbackElement = (
+        <div class="tutor-form-wrap">
+            <span class="tutor-form-icon tutor-form-icon-reverse">
+                <span class="tutor-icon-calender-line" aria-hidden="true"></span>
+            </span>
+            <input class="tutor-form-control" placeholder={__('Loading...', 'tutor')} />
+        </div>
+    );
+
     const wrappers = document.querySelectorAll('.tutor-v2-date-picker');
     for (let wrapper of wrappers) {
-        if (wrapper) {
-            let disablePastDate = false;
-            const { dataset = {} } = wrapper;
-            /**
-             * If has tutor-disable-past-date then disable past
-             * date selection
-             * 
-             * @since v2.1.0
-             */
-            if (wrapper.hasAttribute('tutor-disable-past-date')) {
-                disablePastDate = true;
-            }
-            const root = createRoot(wrapper);
-            root.render(<TutorDatepicker {...dataset} disablePastDate={disablePastDate} />);
-        }
+        const { dataset = {} } = wrapper;
+        const root = createRoot(wrapper);
+        root.render(
+            <Suspense fallback={fallbackElement}>
+                <TutorDatepicker {...dataset} />
+            </Suspense>
+        );
     }
 }
 

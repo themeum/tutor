@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
-import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-import { colorTokens, zIndex } from '@Config/styles';
-import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
-import { nanoid, noop } from '@Utils/util';
+import { colorTokens, zIndex } from '@TutorShared/config/styles';
+import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 const styles = {
   backdrop: ({ magicAi = false }: { magicAi?: boolean }) => css`
@@ -13,14 +13,19 @@ const styles = {
     inset: 0;
     z-index: ${zIndex.negative};
 
-    ${
-      magicAi &&
-      css`
-      background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.4) 18.05%, rgba(255, 100, 113, 0.4) 30.25%, rgba(207, 110, 189, 0.4) 55.42%, rgba(164, 119, 209, 0.4) 71.66%, rgba(62, 100, 222, 0.4) 97.9%);
+    ${magicAi &&
+    css`
+      background: linear-gradient(
+        73.09deg,
+        rgba(255, 150, 69, 0.4) 18.05%,
+        rgba(255, 100, 113, 0.4) 30.25%,
+        rgba(207, 110, 189, 0.4) 55.42%,
+        rgba(164, 119, 209, 0.4) 71.66%,
+        rgba(62, 100, 222, 0.4) 97.9%
+      );
       opacity: 1;
-      backdrop-filter: blur(10px); 
-    `
-    }
+      backdrop-filter: blur(10px);
+    `}
   `,
   container: css`
     z-index: ${zIndex.highest};
@@ -50,16 +55,24 @@ type ModalContextType = {
     component: React.FunctionComponent<P>;
     props?: Omit<P, 'closeModal'>;
     closeOnOutsideClick?: boolean;
+    closeOnEscape?: boolean;
     isMagicAi?: boolean;
     depthIndex?: number;
+    id?: string;
   }): Promise<NonNullable<Parameters<P['closeModal']>[0]> | PromiseResolvePayload<'CLOSE'>>;
   closeModal(data?: PromiseResolvePayload): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateModal<C extends React.FunctionComponent<any>>(
+    id: string,
+    newProps: Partial<Omit<React.ComponentProps<C>, 'closeModal'>>,
+  ): void;
   hasModalOnStack?: boolean;
 };
 
 const ModalContext = React.createContext<ModalContextType>({
-  showModal: () => Promise.resolve({ action: 'CLOSE' }),
+  showModal: () => Promise.resolve({ action: 'CLOSE' as const }),
   closeModal: noop,
+  updateModal: noop,
   hasModalOnStack: false,
 });
 
@@ -69,12 +82,13 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   const [state, setState] = useState<{
     modals: {
       id: string;
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       component: React.FunctionComponent<any>;
       props?: { [key: string]: unknown };
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
+      closeOnEscape?: boolean;
       isMagicAi?: boolean;
       depthIndex?: number;
     }[];
@@ -83,7 +97,15 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(
-    ({ component, props, closeOnOutsideClick = false, isMagicAi = false, depthIndex = zIndex.modal }) => {
+    ({
+      component,
+      props,
+      closeOnOutsideClick = false,
+      closeOnEscape = true,
+      isMagicAi = false,
+      depthIndex = zIndex.modal,
+      id,
+    }) => {
       return new Promise((resolve) => {
         setState((previousState) => ({
           ...previousState,
@@ -94,7 +116,8 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               props,
               resolve,
               closeOnOutsideClick,
-              id: nanoid(),
+              closeOnEscape,
+              id: id || nanoid(),
               depthIndex,
               isMagicAi,
             },
@@ -116,7 +139,27 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     });
   }, []);
 
+  const updateModal = useCallback<ModalContextType['updateModal']>((id, newProps) => {
+    setState((prevState) => {
+      const modalIndex = prevState.modals.findIndex((modal) => modal.id === id);
+      if (modalIndex === -1) return prevState;
+
+      const updatedModals = [...prevState.modals];
+      const modal = updatedModals[modalIndex];
+      updatedModals[modalIndex] = {
+        ...modal,
+        props: {
+          ...modal.props,
+          ...newProps,
+        },
+      };
+
+      return { ...prevState, modals: updatedModals };
+    });
+  }, []);
+
   const { transitions } = useAnimation({
+    keys: (modal) => modal.id,
     data: state.modals,
     animationType: AnimationType.slideUp,
     animationDuration: 250,
@@ -126,20 +169,51 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     return state.modals.length > 0;
   }, [state.modals]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const currentlyOpenPopovers = document.querySelectorAll('.tutor-portal-popover');
+
+      if (
+        event.key === 'Escape' &&
+        state.modals[state.modals.length - 1]?.closeOnEscape &&
+        !currentlyOpenPopovers.length
+      ) {
+        closeModal({ action: 'CLOSE' });
+      }
+    };
+
+    if (state.modals.length > 0) {
+      document.addEventListener('keydown', handleKeyDown, true);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.modals.length, closeModal]);
+
   return (
-    <ModalContext.Provider value={{ showModal, closeModal, hasModalOnStack }}>
+    <ModalContext.Provider value={{ showModal, closeModal, updateModal, hasModalOnStack }}>
       {children}
-      {transitions((style, modal) => {
+      {transitions((style, modal, _, index) => {
         return (
           <div
+            data-cy="tutor-modal"
+            key={modal.id}
             css={[
               styles.container,
               {
-                zIndex: modal.depthIndex,
+                zIndex: modal.depthIndex || zIndex.modal + index,
               },
             ]}
           >
-            <AnimatedDiv style={style} hideOnOverflow={false}>
+            <AnimatedDiv
+              style={{
+                ...style,
+                width: '100%',
+              }}
+              hideOnOverflow={false}
+            >
               {React.createElement(modal.component, { ...modal.props, closeModal })}
             </AnimatedDiv>
             <div

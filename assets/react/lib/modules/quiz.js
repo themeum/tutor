@@ -37,7 +37,7 @@ window.jQuery(document).ready(($) => {
 					return;
 				}
 
-				tutor_toast('Error!', get_response_message(data), 'error');
+				tutor_toast(__('Error!', 'tutor'), get_response_message(data), 'error');
 			},
 			complete: function() {
 				$that.removeClass('is-loading');

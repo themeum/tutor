@@ -9,6 +9,8 @@
  * @since 1.4.3
  */
 
+$course_id = get_the_ID();
+
 do_action( 'tutor_course/loop/before_content' );
 
 do_action( 'tutor_course/loop/badge' );
@@ -52,7 +54,7 @@ do_action( 'tutor_course/loop/after_enrolled_progress' );
 
 do_action( 'tutor_course/loop/before_footer' );
 do_action( 'tutor_course/loop/footer' );
-do_action( 'tutor_course/loop/after_footer' );
+do_action( 'tutor_course/loop/after_footer', $course_id );
 
 do_action( 'tutor_course/loop/after_content' );
 

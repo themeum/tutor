@@ -5,21 +5,21 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import ThreeDots from '@Molecules/ThreeDots';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { IconCollection } from '@TutorShared/icons/types';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface QuestionProps {
   question: QuizQuestion;
@@ -93,7 +93,6 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         ref.current = element;
       }}
       style={style}
-      tabIndex={-1}
       onClick={() => {
         if (activeQuestionId === question.question_id) {
           return;
@@ -129,7 +128,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
     >
       <div css={styles.iconAndSerial({ isDragging: isOverlay })} data-icon-serial>
         <span data-serial>{index + 1}</span>
-        <button data-drag-icon {...listeners} type="button" css={styleUtils.resetButton}>
+        <button data-drag-icon {...listeners} type="button" css={styles.dragButton}>
           <SVGIcon data-drag-icon name="dragVertical" width={24} height={24} />
         </button>
         <SVGIcon
@@ -212,14 +211,16 @@ const styles = {
     isDragging: boolean;
     isThreeDotsOpen: boolean;
   }) => css`
-    padding: ${spacing[10]} ${spacing[8]} ${spacing[10]}  ${spacing[28]};
+    padding: ${spacing[10]} ${spacing[8]} ${spacing[10]} ${spacing[28]};
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[12]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     cursor: pointer;
-    transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    transition:
+      border 0.3s ease-in-out,
+      background-color 0.3s ease-in-out;
 
     [data-three-dots] {
       opacity: 0;
@@ -227,29 +228,29 @@ const styles = {
       svg {
         color: ${colorTokens.icon.default};
       }
+
+      :focus-visible {
+        opacity: 1;
+      }
     }
 
-    ${
-      isActive &&
-      css`
-        color: ${colorTokens.text.brand};
-        background-color: ${colorTokens.background.white};
-        [data-icon-serial] {
-          border-top-right-radius: 3px;
-          border-bottom-right-radius: 3px;
-          border-color: transparent;
-        }
-      `
-    }
+    ${isActive &&
+    css`
+      color: ${colorTokens.text.brand};
+      background-color: ${colorTokens.background.white};
+      [data-icon-serial] {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border-color: transparent;
+      }
+    `}
 
-    ${
-      isThreeDotsOpen &&
-      css`
-        [data-three-dots] {
-          opacity: 1;
-        }
-      `
-    }
+    ${isThreeDotsOpen &&
+    css`
+      [data-three-dots] {
+        opacity: 1;
+      }
+    `}
 
     :hover {
       background-color: ${colorTokens.background.hover};
@@ -273,24 +274,36 @@ const styles = {
       }
     }
 
-    ${
-      isDragging &&
-      css`
-        box-shadow: ${shadow.drag};
-        background-color: ${colorTokens.background.white};
-        border-radius: ${borderRadius.card};
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -2px;
+      border-radius: ${borderRadius.card};
 
-        :hover {
-          background-color: ${colorTokens.background.white};
-        }
-      `
+      [data-three-dots] {
+        opacity: 1;
+      }
+    }
+
+    ${isDragging &&
+    css`
+      box-shadow: ${shadow.drag};
+      background-color: ${colorTokens.background.white};
+      border-radius: ${borderRadius.card};
+
+      :hover {
+        background-color: ${colorTokens.background.white};
+      }
+    `}
+
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[8]} ${spacing[8]} ${spacing[8]} ${spacing[8]};
+
+      [data-three-dots] {
+        opacity: 1;
+      }
     }
   `,
-  iconAndSerial: ({
-    isDragging = false,
-  }: {
-    isDragging: boolean;
-  }) => css`
+  iconAndSerial: ({ isDragging = false }: { isDragging: boolean }) => css`
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -308,7 +321,7 @@ const styles = {
     }
 
     [data-question-icon] {
-      flex-shrink: 0;    
+      flex-shrink: 0;
     }
 
     svg {
@@ -323,11 +336,7 @@ const styles = {
       flex-grow: 1;
     }
   `,
-  questionTitle: ({
-    isActive = false,
-  }: {
-    isActive: boolean;
-  }) => css`
+  questionTitle: ({ isActive = false }: { isActive: boolean }) => css`
     ${typography.small(isActive ? 'medium' : 'regular')};
     color: ${isActive ? colorTokens.text.brand : colorTokens.text.subdued};
     flex-grow: 1;
@@ -336,5 +345,14 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
+  `,
+  dragButton: css`
+    ${styleUtils.resetButton};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
   `,
 };

@@ -1,10 +1,10 @@
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
-import type { ErrorResponse } from '@/v3/shared/utils/form';
-import { tutorConfig } from '@Config/config';
-import type { Addons } from '@Config/constants';
+import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
+import { VideoRegex } from '@TutorShared/config/constants';
+import { type ID } from '@TutorShared/utils/types';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
@@ -12,22 +12,16 @@ export const getCourseId = () => {
   return Number(courseId);
 };
 
-type Addon = `${Addons}`;
-
-export const isAddonEnabled = (addon: Addon) => {
-  return !!tutorConfig.addons_data.find((item) => item.base_name === addon)?.is_enabled;
-};
-
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
   const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
   const match = videoUrl.match(regExp);
   const videoId = match ? match[5] : null;
-  const jsonUrl = `http${tutorConfig.is_ssl}://vimeo.com/api/v2/video/${videoId}.xml`;
+  const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
 
   try {
     const response = await fetch(jsonUrl);
     if (!response.ok) {
-      throw new Error('Failed to fetch the video data');
+      throw new Error(__('Failed to fetch the video data', 'tutor'));
     }
 
     const textData = await response.text();
@@ -87,7 +81,7 @@ export const validateQuizQuestion = (
 ):
   | {
       message: string;
-      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+      type: QuizValidationErrorType;
     }
   | true => {
   if (activeQuestionIndex !== -1) {
@@ -142,7 +136,7 @@ export const validateQuizQuestion = (
         if (!everyOptionHasImage) {
           return {
             message: __('Please add images to all options.', 'tutor'),
-            type: 'save_option',
+            type: 'question',
           };
         }
       } else {
@@ -160,41 +154,135 @@ export const validateQuizQuestion = (
   return true;
 };
 
-export const determinePostStatus = (
-  postStatus: 'trash' | 'future' | 'draft',
-  postVisibility: 'private' | 'password_protected',
-) => {
-  if (postStatus === 'trash') {
-    return 'trash';
-  }
-
-  if (postVisibility === 'private') {
-    return 'private';
-  }
-
-  if (postStatus === 'future') {
-    return 'future';
-  }
-
-  if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
-    return 'publish';
-  }
-
-  return postStatus;
+export const getIdWithoutPrefix = (prefix: string, id: ID) => {
+  return id.toString().replace(prefix, '');
 };
 
-export const convertToSlug = (value: string) => {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
-};
+/**
+ * Generates a thumbnail from different video sources
+ * @param {string} source - Video source type ('youtube', 'vimeo', 'external_url', 'html5')
+ * @param {string} url - Video URL
+ * @returns {Promise<string>} - Base64 encoded thumbnail image
+ */
+export const generateVideoThumbnail = async (
+  source: 'youtube' | 'vimeo' | 'external_url' | 'html5',
+  url: string,
+): Promise<string> => {
+  if (source === 'youtube') {
+    const match = url.match(VideoRegex.YOUTUBE);
+    const videoId = match && match[7].length === 11 ? match[7] : '';
 
-export const convertToErrorMessage = (error: ErrorResponse) => {
-  let errorMessage = error.response.data.message;
-  if (error.response.data.status_code === 422 && error.response.data.data && Array.isArray(error.response.data.data)) {
-    errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   }
-  return errorMessage || __('Something went wrong', 'tutor');
+
+  if (source === 'vimeo') {
+    try {
+      const vimeoId = url.split('/').pop();
+      const response = await fetch(`https://vimeo.com/api/v2/video/${vimeoId}.json`);
+      const data = await response.json();
+      return data[0].thumbnail_large;
+    } catch (error) {
+      throw new Error(`Failed to get Vimeo thumbnail. Error: ${error}`);
+    }
+  }
+
+  if (source === 'external_url' || source === 'html5') {
+    return new Promise((resolve, reject) => {
+      try {
+        // Create video element
+        const video = document.createElement('video');
+        video.muted = true;
+        video.style.cssText =
+          'position: fixed; left: 0; top: 0; width: 1px; height: 1px; object-fit: contain; z-index: -1;';
+        video.crossOrigin = 'Anonymous';
+
+        // Create canvas element
+        const canvas = document.createElement('canvas');
+
+        // Track loading states
+        let isMetadataLoaded = false;
+        let isDataLoaded = false;
+        let isSuspended = false;
+        let isSeeked = false;
+
+        const cleanup = () => {
+          video.src = '';
+          video.remove();
+          canvas.remove();
+          clearTimeout(timeoutId);
+        };
+
+        const attemptSnapshot = () => {
+          if (isMetadataLoaded && isDataLoaded && isSuspended && isSeeked) {
+            try {
+              canvas.height = video.videoHeight;
+              canvas.width = video.videoWidth;
+
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                throw new Error(__('Failed to get canvas context', 'tutor'));
+              }
+
+              ctx.drawImage(video, 0, 0);
+
+              const thumbnail = canvas.toDataURL('image/png');
+              cleanup();
+              resolve(thumbnail);
+            } catch (error) {
+              cleanup();
+              const errorMessage = error instanceof Error ? error.message : __('Unknown error occurred', 'tutor');
+              reject(new Error(`Thumbnail generation failed: ${errorMessage}`));
+            }
+          }
+        };
+
+        // Setup event listeners
+        video.addEventListener('loadedmetadata', () => {
+          isMetadataLoaded = true;
+          if (!video.currentTime || video.currentTime < 2) {
+            video.currentTime = 2; // Take snapshot at 2 seconds
+          }
+        });
+
+        video.addEventListener('loadeddata', () => {
+          isDataLoaded = true;
+          attemptSnapshot();
+        });
+
+        video.addEventListener('suspend', () => {
+          isSuspended = true;
+          attemptSnapshot();
+        });
+
+        video.addEventListener('seeked', () => {
+          isSeeked = true;
+          attemptSnapshot();
+        });
+
+        video.addEventListener('error', (error) => {
+          cleanup();
+          reject(new Error(`Video loading failed: ${error.message}`));
+        });
+
+        // Set timeout
+        // 30 seconds is a reasonable maximum time to wait for video metadata and frame capture
+        const timeoutId = setTimeout(() => {
+          cleanup();
+          reject(new Error(__('Thumbnail generation timed out', 'tutor')));
+        }, 30000);
+
+        // Add elements to DOM
+        document.body.appendChild(video);
+        document.body.appendChild(canvas);
+
+        // Start loading the video
+        video.src = url;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        reject(new Error(`Thumbnail generation failed: ${errorMessage}`));
+      }
+    });
+  }
+
+  throw new Error(__('Unsupported video source', 'tutor'));
 };

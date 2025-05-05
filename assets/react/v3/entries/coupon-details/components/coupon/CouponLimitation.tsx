@@ -1,11 +1,11 @@
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormInput from '@Components/fields/FormInput';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { Coupon } from '@CouponServices/coupon';
-import { requiredRule } from '@Utils/validation';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -18,10 +18,7 @@ function CouponLimitation() {
   return (
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
-        <BoxTitle>{__('Usage limitation', 'tutor')}</BoxTitle>
-        <BoxSubtitle>
-          {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
-        </BoxSubtitle>
+        <BoxTitle>{__('Usage Limitation', 'tutor')}</BoxTitle>
       </div>
       <div css={styles.couponWrapper}>
         <div css={styles.limitWrapper}>
@@ -31,7 +28,7 @@ function CouponLimitation() {
             render={(controllerProps) => (
               <FormCheckbox
                 {...controllerProps}
-                label={__('Limit number of times this discount can be used in total', 'tutor')}
+                label={__('Limit number of times this coupon can be used in total', 'tutor')}
                 labelCss={styles.checkBoxLabel}
               />
             )}
@@ -58,7 +55,7 @@ function CouponLimitation() {
             render={(controllerProps) => (
               <FormCheckbox
                 {...controllerProps}
-                label={__('Limit number of times this discount can be used by a customer', 'tutor')}
+                label={__('Limit number of times this coupon can be used by a customer', 'tutor')}
                 labelCss={styles.checkBoxLabel}
               />
             )}
@@ -85,26 +82,26 @@ export default CouponLimitation;
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   limitWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
   checkBoxLabel: css`
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+  `,
   limitInput: css`
-		width: fit-content;
-		margin-left: ${spacing[28]};
-	`,
+    width: fit-content;
+    margin-left: ${spacing[28]};
+  `,
 };

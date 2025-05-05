@@ -1,6 +1,9 @@
 import '../../../v2-library/src/js/main';
-import ajaxHandler from '../admin-dashboard/segments/filter';
+import ajaxHandler from '../helper/ajax-handler';
 import tutorFormData from "../helper/tutor-formdata";
+
+const { __ } = wp.i18n;
+window.defaultErrorMessage = __( 'Something went wrong', 'tutor' );
 
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};
@@ -15,7 +18,6 @@ window.tutor_get_nonce_data = function(send_key_value) {
 };
 
 window.tutor_popup = function($, icon) {
-	const { __ } = wp.i18n;
 	var $this = this;
 	var element;
 
@@ -246,7 +248,7 @@ jQuery(document).ready(function($) {
 					return;
 				}
 
-				tutor_toast('Error!', message, 'error');
+				tutor_toast(__('Error!', 'tutor'), message, 'error');
 			},
 			complete: function() {
 				$that.removeClass('is-loading');
@@ -395,7 +397,7 @@ jQuery.fn.serializeObject = function() {
  * 
  * @since 1.0.0
  */
-window.tutor_toast = function( title, description, type, autoClose = true ) {
+window.tutor_toast = function( title, description, type, autoClose = true ) {	
 	if ( ! jQuery('.tutor-toast-parent').length ) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
 	}
@@ -404,10 +406,10 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 				: type == 'error' ? 'danger'
 				: type == 'warning' ? 'warning' : 'primary';
 	
-	let icon = 	type == 'success' ? 'tutor-icon-mark'
-				: type == 'error' ? 'tutor-icon-times' : 'tutor-icon-circle-info-o';
+	let icon = 	type == 'success' ? 'tutor-icon-circle-mark-line'
+				: type == 'error' ? 'tutor-icon-circle-times-line' : 'tutor-icon-circle-info-o';
 	
-	let hasDescription = ( description !== undefined && description !== null && description.trim() !== '' )
+	let hasDescription = ( description !== undefined && description !== null && String(description).trim() !== '' )
 
 	let content = jQuery(`
 		<div class="tutor-notification tutor-is-${alert} tutor-mb-16">
@@ -419,12 +421,12 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 			<p class="${ ! hasDescription ? 'tutor-d-none' : '' }">${description}</p>
 			</div>
 			<button class="tutor-notification-close">
-				<i class="fas fa-times"></i>
+				<i class="tutor-icon-times"></i>
 			</button>
 		</div>
     `);
 
-	content.find('.tutor-noti-close').click(function() {
+	content.find('.tutor-notification-close').click(function() {
 		content.remove();
 	});
 
@@ -449,7 +451,7 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
  * @param {string} unsafeText HTML string
  * @returns string
  */
-window.tutor_esc_html = function (unsafeText) {
+export function tutor_esc_html(unsafeText) {
 	let safeHTML = ''
 	let div = document.createElement('div');
 	/**
@@ -463,15 +465,17 @@ window.tutor_esc_html = function (unsafeText) {
 
 	return safeHTML;
 }
+window.tutor_esc_html = tutor_esc_html;
 
-
-window.tutor_esc_attr = function(str) {
+export function tutor_esc_attr(str) {
     return str.replace(/&/g, '&amp;')
               .replace(/"/g, '&quot;')
               .replace(/'/g, '&#039;')
               .replace(/</g, '&lt;')
               .replace(/>/g, '&gt;');
 }
+
+window.tutor_esc_attr = tutor_esc_attr;
 
 // enable custom selector when modal opens
 window.addEventListener('tutor_modal_shown', (e) => {
@@ -482,21 +486,26 @@ window.addEventListener('tutor_modal_shown', (e) => {
  * Create new draft course
  * @since 3.0.0
  */
-const createNewCourse = document.querySelector('a.tutor-create-new-course');
-if (createNewCourse) {
-	createNewCourse.onclick = async (e) => {
+const createNewCourseButtons = document.querySelectorAll('a.tutor-create-new-course,button.tutor-create-new-course,li.tutor-create-new-course a');
+createNewCourseButtons.forEach((button) => {
+	button.addEventListener('click', async (e) => {
 		e.preventDefault();
 		const { __ } = wp.i18n;
+		const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
 		
 		try {
-			createNewCourse.classList.add('is-loading');
-			createNewCourse.style.pointerEvents = 'none';
+			// For wp-admin bar quick create.
+			if (e.target.classList.contains('ab-item')) {
+				e.target.innerHTML = 'Creating...'
+			}
 
-			const from_dashboard = createNewCourse.classList.contains('tutor-dashboard-create-course')
+			button.classList.add('is-loading');
+			button.style.pointerEvents = 'none';
+
+			const from_dashboard = button.classList.contains('tutor-dashboard-create-course')
 			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
 			const post = await ajaxHandler(formData);
 
-			const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
 			const { status_code, data, message } = await post.json();
 			if (status_code === 201) {
 				window.location = data;
@@ -506,9 +515,8 @@ if (createNewCourse) {
 		} catch (error) {
 			tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
 		} finally {
-			createNewCourse.removeAttribute('disabled');
-			createNewCourse.classList.remove('is-loading');
+			button.removeAttribute('disabled');
+			button.classList.remove('is-loading');
 		}
-		
-	}
-}
+	});
+});

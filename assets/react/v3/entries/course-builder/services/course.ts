@@ -1,24 +1,30 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import type { AxiosResponse } from 'axios';
+import { format, isBefore, isValid, parseISO } from 'date-fns';
 
-import { useToast } from '@Atoms/Toast';
-import type { Media } from '@Components/fields/FormImageInput';
-import type { UserOption } from '@Components/fields/FormSelectUser';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
-import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
+import { useToast } from '@TutorShared/atoms/Toast';
+import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
+import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-import { Addons } from '@/v3/shared/config/constants';
-import { convertToGMT } from '@/v3/shared/utils/util';
-import { tutorConfig } from '@Config/config';
-import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import type { Tag } from '@Services/tags';
-import type { InstructorListResponse, User } from '@Services/users';
-import { authApiInstance, wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, DateFormats } from '@TutorShared/config/constants';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type Course } from '@TutorShared/services/course';
+import type { Tag } from '@TutorShared/services/tags';
+import type { InstructorListResponse, User } from '@TutorShared/services/users';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import {
+  type Editor,
+  type ID,
+  type Prettify,
+  type TutorCategory,
+  type TutorMutationResponse,
+  type TutorSellingOption,
+  type WPPostStatus,
+} from '@TutorShared/utils/types';
+import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -31,18 +37,18 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingType = 'free' | 'paid';
-export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
+type CourseSellingOption = Prettify<TutorSellingOption | 'membership' | 'all'>;
 
 export interface CourseFormData {
   post_date: string;
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: 'publish' | 'private' | 'draft' | 'future';
+  post_status: WPPostStatus;
   visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
-  thumbnail: Media | null;
+  thumbnail: WPMedia | null;
   video: CourseVideo;
   course_price_type: string;
   course_price: string;
@@ -62,17 +68,30 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
-  course_attachments: Media[] | null;
+  course_attachments: WPMedia[] | null;
   isContentDripEnabled: boolean;
   contentDripType: ContentDripType;
   course_product_id: string;
   course_product_name: string;
   preview_link: string;
-  course_prerequisites: PrerequisiteCourses[];
+  course_prerequisites: Course[];
   tutor_course_certificate_template: string;
   enable_tutor_bp: boolean;
   bp_attached_group_ids: string[];
   editor_used: Editor;
+  isScheduleEnabled: boolean;
+  showScheduleForm: boolean;
+  schedule_date: string;
+  schedule_time: string;
+  enable_coming_soon: boolean;
+  coming_soon_thumbnail: WPMedia | null;
+  enable_curriculum_preview: boolean; // Only when coming-soon is enabled
+  course_enrollment_period: boolean;
+  enrollment_starts_date: string;
+  enrollment_starts_time: string;
+  enrollment_ends_date: string;
+  enrollment_ends_time: string;
+  pause_enrollment: boolean;
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -95,6 +114,7 @@ export const courseDefaultData: CourseFormData = {
     source_video_id: '',
     poster: '',
     poster_url: '',
+    source_html5: '',
     source_external_url: '',
     source_shortcode: '',
     source_youtube: '',
@@ -104,7 +124,7 @@ export const courseDefaultData: CourseFormData = {
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
-  course_selling_option: 'subscription',
+  course_selling_option: 'one_time',
   course_categories: [],
   course_tags: [],
   course_instructors: [],
@@ -130,16 +150,29 @@ export const courseDefaultData: CourseFormData = {
   enable_tutor_bp: false,
   bp_attached_group_ids: [],
   editor_used: {
-    label: '',
+    name: 'classic',
+    label: __('Classic Editor', 'tutor'),
     link: '',
-    name: '',
   },
+  isScheduleEnabled: false,
+  showScheduleForm: false,
+  schedule_date: '',
+  schedule_time: '',
+  enable_coming_soon: false,
+  coming_soon_thumbnail: null,
+  enable_curriculum_preview: false,
+  course_enrollment_period: false,
+  enrollment_starts_date: '',
+  enrollment_starts_time: '',
+  enrollment_ends_date: '',
+  enrollment_ends_time: '',
+  pause_enrollment: false,
 };
 
 export interface CoursePayload {
   course_id?: number;
-  post_date: string;
-  post_date_gmt: string;
+  post_date?: string;
+  post_date_gmt?: string;
   post_title: string;
   post_name: string;
   post_content?: string;
@@ -185,11 +218,15 @@ export interface CoursePayload {
   'video[source_embedded]'?: string;
   tutor_attachments: number[];
   bp_attached_group_ids: string[];
-}
 
-interface CourseDetailsPayload {
-  action: string;
-  course_id: number;
+  // when course is scheduled
+  enable_coming_soon?: '1' | '0';
+  coming_soon_thumbnail_id?: number;
+  enable_curriculum_preview?: '1' | '0';
+  'course_settings[course_enrollment_period]'?: string;
+  'course_settings[enrollment_starts_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
+  'course_settings[enrollment_ends_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
+  'course_settings[pause_enrollment]'?: string;
 }
 
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
@@ -205,6 +242,7 @@ export interface ZoomMeeting {
     duration: number;
     timezone: string;
     password: string;
+    host_id: string;
     start_url: string;
     duration_unit: 'min' | 'hr';
     settings: {
@@ -227,12 +265,6 @@ export interface GoogleMeet {
     timezone: string;
     meet_link: string;
   };
-}
-
-export interface Editor {
-  label: string;
-  link: string;
-  name: string;
 }
 
 export interface CourseDetailsResponse {
@@ -270,25 +302,11 @@ export interface CourseDetailsResponse {
   post_mime_type: string;
   comment_count: string;
   filter: string;
-  // biome-ignore lint/suspicious/noExplicitAny: <Allow for now>
-  ancestors: any[];
+  ancestors: unknown[];
   page_template: string;
-  // biome-ignore lint/suspicious/noExplicitAny: <Allow for now>
-  post_category: any[];
-  // biome-ignore lint/suspicious/noExplicitAny: <Allow for now>
-  tags_input: any[];
-  course_categories: {
-    term_id: number;
-    name: string;
-    slug: string;
-    term_group: number;
-    term_taxonomy_id: number;
-    taxonomy: string;
-    description: string;
-    parent: number;
-    count: number;
-    filter: string;
-  }[];
+  post_category: unknown[];
+  tags_input: unknown[];
+  course_categories: TutorCategory[];
   course_tags: {
     term_id: number;
     name: string;
@@ -316,15 +334,17 @@ export interface CourseDetailsResponse {
   course_requirements: string;
   course_target_audience: string;
   course_material_includes: string;
-  course_sale_price: string;
   course_settings: {
     maximum_students: number;
     content_drip_type: ContentDripType;
     enable_content_drip: number;
     enrollment_expiry: number;
     enable_tutor_bp: 1 | 0;
+    course_enrollment_period: string;
+    enrollment_starts_at: string;
+    enrollment_ends_at: string;
+    pause_enrollment: string;
   };
-  step_completion_status: Record<CourseBuilderSteps, boolean>;
   course_pricing: {
     price: string;
     product_id: string;
@@ -338,21 +358,20 @@ export interface CourseDetailsResponse {
   course_prerequisites: PrerequisiteCourses[];
   course_certificate_template: string;
   course_certificates_templates: Certificate[];
-  course_attachments: Media[];
+  course_attachments: WPMedia[];
   zoom_users: {
     [key: string]: string;
   };
-  zoom_timezones: {
-    [key: string]: string;
-  };
   zoom_meetings: ZoomMeeting[];
-  google_meet_timezones: {
-    [key: string]: string;
-  };
   google_meet_meetings: GoogleMeet[];
   bp_attached_groups: string[];
   editor_used: Editor;
   editors: Editor[];
+  total_enrolled_student: number;
+  enable_coming_soon: '1' | '0';
+  coming_soon_thumbnail: string;
+  coming_soon_thumbnail_id: number;
+  enable_curriculum_preview: '1' | '0';
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -392,28 +411,13 @@ export interface WcProduct {
   post_title: string;
 }
 
-interface GetProductsPayload {
-  action: string;
-  exclude_linked_products: boolean;
-}
-
-interface WcProductDetailsPayload {
-  action: string;
-  product_id: string;
-}
-
 interface WcProductDetailsResponse {
   name: string;
   regular_price: string;
   sale_price: string;
 }
 
-interface GetPrerequisiteCoursesPayload {
-  action: string;
-  exclude: string[];
-}
-
-export interface PrerequisiteCourses {
+interface PrerequisiteCourses {
   id: number;
   post_title: string;
   featured_image: string;
@@ -468,10 +472,15 @@ interface GoogleMeetMeetingDeletePayload {
   'event-id': string;
 }
 
-export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
+export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: string[]): CoursePayload => {
   return {
-    post_date: data.post_date,
-    post_date_gmt: convertToGMT(new Date(data.post_date)),
+    ...(data.isScheduleEnabled && {
+      post_date: format(
+        new Date(`${data.schedule_date} ${data.schedule_time}`),
+        DateFormats.yearMonthDayHourMinuteSecond24H,
+      ),
+      post_date_gmt: convertToGMT(new Date(`${data.schedule_date} ${data.schedule_time}`)),
+    }),
     post_title: data.post_title,
     post_name: data.post_name,
     ...(data.editor_used.name === 'classic' && {
@@ -486,8 +495,8 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
         'pricing[product_id]': data.course_product_id,
       }),
 
-    course_price: Number(data.course_price) ?? 0,
-    course_sale_price: Number(data.course_sale_price) ?? 0,
+    course_price: Number(data.course_price) || 0,
+    course_sale_price: Number(data.course_sale_price) || 0,
     course_selling_option: data.course_selling_option,
 
     course_categories: data.course_categories ?? [],
@@ -522,22 +531,51 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
 
     _tutor_course_additional_data_edit: true,
     _tutor_attachments_main_edit: true,
-    ...(data.video.source && {
-      'video[source]': data.video.source,
-      'video[source_video_id]': data.video.source_video_id,
-      'video[poster]': data.video.poster,
-      'video[source_external_url]': data.video.source_external_url,
-      'video[source_shortcode]': data.video.source_shortcode,
-      'video[source_youtube]': data.video.source_youtube,
-      'video[source_vimeo]': data.video.source_vimeo,
-      'video[source_embedded]': data.video.source_embedded,
-    }),
+    ...(data.video.source
+      ? Object.fromEntries(
+          Object.entries(data.video).map(([key, value]) => [
+            `video[${key}]`,
+            key === 'poster_url' && !data.video.poster ? '' : value,
+          ]),
+        )
+      : {}),
     tutor_attachments: (data.course_attachments || []).map((item) => item.id) ?? [],
     bp_attached_group_ids: data.bp_attached_group_ids,
+    ...(isBefore(new Date(), new Date(`${data.schedule_date} ${data.schedule_time}`)) && {
+      enable_coming_soon: data.enable_coming_soon ? '1' : '0',
+      coming_soon_thumbnail_id: data.coming_soon_thumbnail?.id ?? 0,
+      enable_curriculum_preview: data.enable_curriculum_preview ? '1' : '0',
+    }),
+    'course_settings[course_enrollment_period]': data.course_enrollment_period ? 'yes' : 'no',
+    'course_settings[enrollment_starts_at]': isValid(
+      new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
+    )
+      ? convertToGMT(
+          new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
+          DateFormats.yearMonthDayHourMinuteSecond24H,
+        )
+      : '',
+    'course_settings[enrollment_ends_at]': isValid(
+      new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
+    )
+      ? convertToGMT(
+          new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
+          DateFormats.yearMonthDayHourMinuteSecond24H,
+        )
+      : '',
+    'course_settings[pause_enrollment]': data.pause_enrollment ? 'yes' : 'no',
+    ...Object.fromEntries(
+      slot_fields.map((key) => {
+        return [key, data[key as keyof CourseFormData]];
+      }),
+    ),
   };
 };
 
-export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
+export const convertCourseDataToFormData = (
+  courseDetails: CourseDetailsResponse,
+  slotFields: string[],
+): CourseFormData => {
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -566,21 +604,18 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       url: courseDetails.thumbnail,
     },
     video: {
-      source: courseDetails.video.source ?? '',
-      source_video_id: courseDetails.video.source_video_id ?? '',
-      poster: courseDetails.video.poster ?? '',
-      poster_url: courseDetails.video.poster_url ?? '',
-      source_external_url: courseDetails.video.source_external_url ?? '',
-      source_shortcode: courseDetails.video.source_shortcode ?? '',
-      source_youtube: courseDetails.video.source_youtube ?? '',
-      source_vimeo: courseDetails.video.source_vimeo ?? '',
-      source_embedded: courseDetails.video.source_embedded ?? '',
+      ...courseDetails.video,
+      source: Object.values(tutorConfig.supported_video_sources).find(
+        (item) => item.value === courseDetails.video.source,
+      )
+        ? courseDetails.video.source
+        : '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
     course_price_type: !courseDetails.course_pricing.type ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
-    course_selling_option: courseDetails.course_selling_option ?? 'both',
+    course_selling_option: courseDetails.course_selling_option || 'one_time',
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
     course_tags: courseDetails.course_tags.map((item) => {
       return {
@@ -600,7 +635,13 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_requirements: courseDetails.course_requirements,
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1,
-    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type || '' : '',
+    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP)
+      ? ['unlock_by_date', 'specific_days', 'unlock_sequentially', 'after_finishing_prerequisites'].includes(
+          courseDetails.course_settings.content_drip_type,
+        )
+        ? courseDetails.course_settings.content_drip_type
+        : ''
+      : '',
     course_product_id:
       String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:
@@ -617,100 +658,59 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
         return instructors;
       }, [] as UserOption[]) ?? [],
     preview_link: courseDetails.preview_link ?? '',
-    course_prerequisites: courseDetails.course_prerequisites ?? [],
+    course_prerequisites: (courseDetails.course_prerequisites ?? []).map((course) => ({
+      id: course.id,
+      title: course.post_title,
+      image: course.featured_image,
+      is_purchasable: false,
+      regular_price: '',
+      sale_price: '',
+    })),
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
     enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
     editor_used: courseDetails.editor_used,
-  };
-};
-
-export const convertLessonDataToPayload = (
-  data: LessonForm,
-  lessonId: ID,
-  topicId: ID,
-  contentDripType: ContentDripType,
-): LessonPayload => {
-  return {
-    ...(lessonId && { lesson_id: lessonId }),
-    topic_id: topicId,
-    title: data.title,
-    description: data.description,
-    thumbnail_id: data.thumbnail?.id ?? null,
-
-    'video[source]': data.video?.source || '-1',
-    'video[source_video_id]': data.video?.source_video_id || '',
-    'video[poster]': data.video?.poster || '',
-    'video[source_external_url]': data.video?.source_external_url || '',
-    'video[source_shortcode]': data.video?.source_shortcode || '',
-    'video[source_youtube]': data.video?.source_youtube || '',
-    'video[source_vimeo]': data.video?.source_vimeo || '',
-    'video[source_embedded]': data.video?.source_embedded || '',
-
-    'video[runtime][hours]': data.duration.hour || 0,
-    'video[runtime][minutes]': data.duration.minute || 0,
-    'video[runtime][seconds]': data.duration.second || 0,
-    ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
-    tutor_attachments: (data.tutor_attachments || []).map((attachment) => attachment.id),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_by_date' && {
-        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+    isScheduleEnabled: isBefore(new Date(), new Date(courseDetails.post_date)),
+    showScheduleForm: !isBefore(new Date(), new Date(courseDetails.post_date)),
+    schedule_date: !isBefore(parseISO(courseDetails.post_date), new Date())
+      ? format(parseISO(courseDetails.post_date), DateFormats.yearMonthDay)
+      : '',
+    schedule_time: !isBefore(parseISO(courseDetails.post_date), new Date())
+      ? format(parseISO(courseDetails.post_date), DateFormats.hoursMinutes)
+      : '',
+    enable_coming_soon: courseDetails.enable_coming_soon === '1',
+    coming_soon_thumbnail: {
+      id: Number(courseDetails.coming_soon_thumbnail_id),
+      title: '',
+      url: courseDetails.coming_soon_thumbnail,
+    },
+    enable_curriculum_preview: courseDetails.enable_curriculum_preview === '1',
+    course_enrollment_period: courseDetails.course_settings.course_enrollment_period === 'yes',
+    enrollment_starts_date: isValid(new Date(courseDetails.course_settings.enrollment_starts_at))
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_starts_at), DateFormats.yearMonthDay)
+      : '',
+    enrollment_starts_time: isValid(new Date(courseDetails.course_settings.enrollment_starts_at))
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_starts_at), DateFormats.hoursMinutes)
+      : '',
+    enrollment_ends_date: isValid(new Date(courseDetails.course_settings.enrollment_ends_at))
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_ends_at), DateFormats.yearMonthDay)
+      : '',
+    enrollment_ends_time: isValid(new Date(courseDetails.course_settings.enrollment_ends_at))
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_ends_at), DateFormats.hoursMinutes)
+      : '',
+    pause_enrollment: courseDetails.course_settings.pause_enrollment === 'yes',
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, courseDetails[key as keyof CourseDetailsResponse]];
       }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'specific_days' && {
-        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
-      }),
-  };
-};
-
-export const convertAssignmentDataToPayload = (
-  data: AssignmentForm,
-  assignmentId: ID,
-  topicId: ID,
-  contentDripType: ContentDripType,
-): AssignmentPayload => {
-  return {
-    ...(assignmentId && { assignment_id: assignmentId }),
-    topic_id: topicId,
-    title: data.title,
-    summary: data.summary,
-    attachments: (data.attachments || []).map((attachment) => attachment.id),
-    'assignment_option[time_duration][time]': data.time_duration.time,
-    'assignment_option[time_duration][value]': data.time_duration.value,
-    'assignment_option[total_mark]': data.total_mark,
-    'assignment_option[pass_mark]': data.pass_mark,
-    'assignment_option[upload_files_limit]': data.upload_files_limit,
-    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
-
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_by_date' && {
-        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'specific_days' && {
-        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
-      }),
+    ),
   };
 };
 
 const createCourse = (payload: CoursePayload) => {
   return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.CREATED_COURSE, payload);
 };
-
-export interface TutorMutationResponse<T> {
-  data: T;
-  message: string;
-  status_code: number;
-}
 
 interface TutorDeleteResponse {
   data: {
@@ -735,10 +735,7 @@ export const useCreateCourseMutation = () => {
 };
 
 const updateCourse = (payload: CoursePayload) => {
-  return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_update_course',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.UPDATE_COURSE, payload);
 };
 
 export const useUpdateCourseMutation = () => {
@@ -767,9 +764,10 @@ export const useUpdateCourseMutation = () => {
 };
 
 const getCourseDetails = (courseId: number) => {
-  return authApiInstance.post<CourseDetailsPayload, AxiosResponse<CourseDetailsResponse>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_course_details',
-    course_id: courseId,
+  return wpAjaxInstance.get<CourseDetailsResponse>(endpoints.GET_COURSE_DETAILS, {
+    params: {
+      course_id: courseId,
+    },
   });
 };
 
@@ -785,10 +783,11 @@ export const useCourseDetailsQuery = (courseId: number) => {
 };
 
 const getWcProducts = (courseId?: string) => {
-  return authApiInstance.post<GetProductsPayload, AxiosResponse<WcProduct[]>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_get_wc_products',
-    exclude_linked_products: true,
-    ...(courseId && { course_id: courseId }),
+  return wpAjaxInstance.get<WcProduct[]>(endpoints.GET_WC_PRODUCTS, {
+    params: {
+      exclude_linked_products: true,
+      ...(courseId && { course_id: courseId }),
+    },
   });
 };
 
@@ -801,10 +800,8 @@ export const useGetWcProductsQuery = (monetizeBy: 'tutor' | 'wc' | 'edd' | undef
 };
 
 const getProductDetails = (productId: string, courseId: string) => {
-  return authApiInstance.post<WcProductDetailsPayload, AxiosResponse<WcProductDetailsResponse>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_get_wc_product',
-    product_id: productId,
-    course_id: courseId,
+  return wpAjaxInstance.get<WcProductDetailsResponse>(endpoints.GET_WC_PRODUCT_DETAILS, {
+    params: { product_id: productId, course_id: courseId },
   });
 };
 
@@ -821,29 +818,8 @@ export const useWcProductDetailsQuery = (
   });
 };
 
-const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
-  return authApiInstance.post<GetPrerequisiteCoursesPayload, AxiosResponse<PrerequisiteCourses[]>>(
-    endpoints.ADMIN_AJAX,
-    {
-      action: 'tutor_course_list',
-      exclude: excludedCourseIds,
-    },
-  );
-};
-
-export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
-  return useQuery({
-    queryKey: ['PrerequisiteCourses', excludedCourseIds],
-    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
-    enabled: isPrerequisiteAddonEnabled,
-  });
-};
-
 const saveZoomMeeting = (payload: ZoomMeetingPayload) => {
-  return authApiInstance.post<ZoomMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_zoom_save_meeting',
-    ...payload,
-  });
+  return wpAjaxInstance.post<ZoomMeetingPayload, TutorMutationResponse<number>>(endpoints.SAVE_ZOOM_MEETING, payload);
 };
 
 export const useSaveZoomMeetingMutation = () => {
@@ -868,10 +844,6 @@ export const useSaveZoomMeetingMutation = () => {
           });
         }
       }
-
-      queryClient.invalidateQueries({
-        queryKey: ['ZoomMeeting', response.data],
-      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
@@ -880,8 +852,7 @@ export const useSaveZoomMeetingMutation = () => {
 };
 
 const deleteZoomMeeting = (meetingId: string) => {
-  return authApiInstance.post<number, TutorDeleteResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_zoom_delete_meeting',
+  return wpAjaxInstance.post<number, TutorDeleteResponse>(endpoints.DELETE_ZOOM_MEETING, {
     meeting_id: meetingId,
   });
 };
@@ -929,10 +900,10 @@ const saveGoogleMeet = (payload: GoogleMeetMeetingPayload) => {
     meeting_attendees_enroll_students: payload.meeting_attendees_enroll_students,
     attendees: payload.attendees,
   };
-  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_google_meet_new_meeting',
-    ...convertedPayload,
-  });
+  return wpAjaxInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(
+    endpoints.SAVE_GOOGLE_MEET,
+    convertedPayload,
+  );
 };
 
 export const useSaveGoogleMeetMutation = () => {
@@ -961,8 +932,7 @@ export const useSaveGoogleMeetMutation = () => {
 };
 
 const deleteGoogleMeet = (postId: string, eventId: string) => {
-  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_google_meet_delete',
+  return wpAjaxInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.DELETE_GOOGLE_MEET, {
     'post-id': postId,
     'event-id': eventId,
   });
@@ -984,32 +954,6 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
       queryClient.invalidateQueries({
         queryKey: ['Topic', Number(courseId)],
       });
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: convertToErrorMessage(error) });
-    },
-  });
-};
-
-const saveOpenAiSettingsKey = (payload: { chatgpt_api_key: string; chatgpt_enable: 1 | 0 }) => {
-  return wpAjaxInstance.post<
-    {
-      chatgpt_api_key: string;
-      chatgpt_enable: 'on' | 'off';
-    },
-    TutorMutationResponse<null>
-  >(endpoints.OPEN_AI_SAVE_SETTINGS, {
-    ...payload,
-  });
-};
-
-export const useSaveOpenAiSettingsMutation = () => {
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: saveOpenAiSettingsKey,
-    onSuccess: (response) => {
-      showToast({ type: 'success', message: __(response.message, 'tutor') });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });

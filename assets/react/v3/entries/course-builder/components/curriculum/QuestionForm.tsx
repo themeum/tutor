@@ -3,11 +3,11 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Alert from '@Atoms/Alert';
+import Alert from '@TutorShared/atoms/Alert';
 
-import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
-import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
-import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
+import FormAnswerExplanation from '@CourseBuilderComponents/fields/FormAnswerExplanation';
+import FormQuestionDescription from '@CourseBuilderComponents/fields/FormQuestionDescription';
+import FormQuestionTitle from '@CourseBuilderComponents/fields/FormQuestionTitle';
 
 import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
@@ -17,20 +17,24 @@ import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/questio
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import {
-  type QuizDataStatus,
+  calculateQuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionType,
-  calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { usePrevious } from '@Hooks/usePrevious';
-import { styleUtils } from '@Utils/style-utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { usePrevious } from '@TutorShared/hooks/usePrevious';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import emptyStateImage2x from '@Images/quiz-empty-state-2x.webp';
-import emptyStateImage from '@Images/quiz-empty-state.webp';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import emptyStateImage2x from '@SharedImages/quiz-empty-state-2x.webp';
+import emptyStateImage from '@SharedImages/quiz-empty-state.webp';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, contentType } = useQuizModalContext();
@@ -75,10 +79,10 @@ const QuestionForm = () => {
         />
 
         <p css={styles.emptyStateText}>
-          {__(
-            'Taking a quiz is like a mini workout for brain. Let’s create some engaging quizzes for your students!',
-            'tutor',
-          )}
+          {
+            // prettier-ignore
+            __('Enter a quiz title to begin. Choose from a variety of question types to keep things interesting!', 'tutor')
+          }
         </p>
       </div>
     );
@@ -101,12 +105,14 @@ const QuestionForm = () => {
                 placeholder={__('Write your question here..', 'tutor')}
                 disabled={contentType === 'tutor_h5p_quiz'}
                 onChange={() => {
-                  calculateQuizDataStatus(dataStatus, 'update') &&
+                  if (calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
+                selectOnFocus={questions[activeQuestionIndex]?._data_status === QuizDataStatus.NEW}
               />
             )}
           />
@@ -130,21 +136,28 @@ const QuestionForm = () => {
                   placeholder={__('Description (optional)', 'tutor')}
                   disabled={contentType === 'tutor_h5p_quiz'}
                   onChange={() => {
-                    calculateQuizDataStatus(dataStatus, 'update') &&
+                    if (calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE)) {
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
-                        calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                        calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
+                    }
                   }}
                 />
               )}
             />
           </Show>
+
+          <CourseBuilderInjectionSlot
+            section="Curriculum.Quiz.after_question_description"
+            namePrefix={`questions.${activeQuestionIndex}.`}
+            form={form}
+          />
         </div>
       </div>
 
       <Show when={validationError}>
-        <div ref={alertRef} css={styles.alertWrapper}>
+        <div key={Math.random()} ref={alertRef} css={styles.alertWrapper}>
           <Alert type="danger" icon="warning">
             {validationError?.message}
           </Alert>
@@ -153,7 +166,7 @@ const QuestionForm = () => {
 
       {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching' | 'h5p'>]}
 
-      <Show when={activeQuestionType !== 'h5p'}>
+      <Show when={isTutorPro && activeQuestionType !== 'h5p'}>
         <div css={styles.questionAnswer}>
           <Controller
             control={form.control}
@@ -164,11 +177,12 @@ const QuestionForm = () => {
                 label={__('Answer Explanation', 'tutor')}
                 placeholder={__('Write answer explanation...', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(dataStatus, 'update') &&
+                  if (calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
@@ -186,7 +200,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     padding-right: ${spacing[48]};
     gap: ${spacing[16]};
-    animation:  ${isSameQuestion ? undefined : 'fadeIn 0.25s ease-in-out'};
+    animation: ${isSameQuestion ? undefined : 'fadeIn 0.25s ease-in-out'};
 
     @keyframes fadeIn {
       from {
@@ -196,12 +210,20 @@ const styles = {
         opacity: 1;
       }
     }
+
+    ${Breakpoint.smallMobile} {
+      padding-right: ${spacing[8]};
+    }
   `,
   questionWithIndex: css`
     ${styleUtils.display.flex('row')};
     align-items: flex-start;
     padding-left: ${spacing[40]};
     gap: ${spacing[4]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   questionIndex: css`
     margin-top: ${spacing[10]};
@@ -218,17 +240,21 @@ const styles = {
     padding: ${spacing[4]} ${spacing[8]};
     ${typography.caption()};
     color: ${colorTokens.text.white};
-    background-color: #2575BE;
+    background-color: #2575be;
     border-radius: ${borderRadius.card};
     width: fit-content;
     font-family: 'Fire Code', monospace;
   `,
   questionAnswer: css`
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   emptyState: css`
     ${styleUtils.flexCenter('column')};
-    padding-left: ${spacing[40]}; 
+    padding-left: ${spacing[40]};
     padding-right: ${spacing[48]};
     gap: ${spacing[16]};
   `,
@@ -244,14 +270,23 @@ const styles = {
   `,
   alertWrapper: css`
     padding-left: ${spacing[40]};
-    animation: fadeIn 0.25s ease-in-out;
+    animation: shake 0.3s linear;
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
+    @keyframes shake {
+      0% {
+        transform: translateX(0);
       }
-      to {
-        opacity: 1;
+      25% {
+        transform: translateX(-5px);
+      }
+      50% {
+        transform: translateX(5px);
+      }
+      75% {
+        transform: translateX(-5px);
+      }
+      100% {
+        transform: translateX(0);
       }
     }
   `,

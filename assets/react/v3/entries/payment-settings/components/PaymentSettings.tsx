@@ -1,31 +1,28 @@
-import Show from '@Controls/Show';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
-import {
-  convertPaymentMethods,
-  initialPaymentSettings,
-  type PaymentSettings,
-  usePaymentSettingsQuery,
-} from '../services/payment';
-import PaymentMethods from './PaymentMethods';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import ManualPaymentModal from './modals/ManualPaymentModal';
-import { useModal } from '@Components/modals/Modal';
-import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
-import ProBadge from '@Atoms/ProBadge';
-import { tutorConfig } from '@Config/config';
+
+import Button from '@TutorShared/atoms/Button';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
+
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, colorTokens, fontSize, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+
 import { usePaymentContext } from '../contexts/payment-context';
-import StaticConfirmationModal from './modals/StaticConfirmationModal';
+import { type PaymentSettings, convertPaymentMethods, initialPaymentSettings } from '../services/payment';
+import PaymentMethods from './PaymentMethods';
+import ManualPaymentModal from './modals/ManualPaymentModal';
+import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
 
 const TaxSettingsPage = () => {
-  const { payment_gateways } = usePaymentContext();
+  const { payment_gateways, payment_settings } = usePaymentContext();
   const { showModal } = useModal();
 
   const form = useFormWithGlobalError<PaymentSettings>({
@@ -33,33 +30,37 @@ const TaxSettingsPage = () => {
       ...initialPaymentSettings,
       payment_methods: convertPaymentMethods([], payment_gateways),
     },
+    mode: 'all',
   });
   const { reset } = form;
   const formData = form.watch();
 
-  const paymentSettingsQuery = usePaymentSettingsQuery();
+  const tutorOptionSaved = () => {
+    reset(form.getValues());
+  };
+
+  useEffect(() => {
+    window.addEventListener('tutor_option_saved', tutorOptionSaved);
+    return () => window.removeEventListener('tutor_option_saved', tutorOptionSaved);
+  }, []);
 
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
-      form.reset(form.getValues(), { keepValues: true });
     }
   }, [form.formState.isDirty]);
 
   useEffect(() => {
-    if (paymentSettingsQuery.data) {
-      const methods = convertPaymentMethods(paymentSettingsQuery.data.payment_methods, payment_gateways);
+    if (payment_settings) {
+      const methods = convertPaymentMethods(payment_settings.payment_methods ?? [], payment_gateways);
 
       reset({
-        ...paymentSettingsQuery.data,
+        ...payment_settings,
         payment_methods: methods,
       });
     }
-  }, [reset, paymentSettingsQuery.data]);
-
-  if (paymentSettingsQuery.isLoading) {
-    return <LoadingSection />;
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [reset, payment_settings]);
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
@@ -71,13 +72,12 @@ const TaxSettingsPage = () => {
           icon={<SVGIcon name="rotate" width={22} height={22} />}
           onClick={async () => {
             const { action } = await showModal({
-              component: StaticConfirmationModal,
+              component: ConfirmationModal,
               props: {
                 title: __('Reset to Default Settings?', 'tutor'),
-                description: __(
-                  'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.',
-                  'tutor'
-                ),
+                description:
+                  // prettier-ignore
+                  __( 'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.', 'tutor'),
                 confirmButtonText: __('Reset', 'tutor'),
               },
               depthIndex: zIndex.highest,
@@ -118,7 +118,7 @@ const TaxSettingsPage = () => {
                     });
                   }}
                 >
-                  {__('Connect more gateway', 'tutor')}
+                  {__('Add New Gateway', 'tutor')}
                 </Button>
               }
             >
@@ -130,7 +130,7 @@ const TaxSettingsPage = () => {
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled
                 >
-                  {__('Connect more gateway', 'tutor')}
+                  {__('Add New Gateway', 'tutor')}
                 </Button>
               </ProBadge>
             </Show>
@@ -151,7 +151,7 @@ const TaxSettingsPage = () => {
                 });
               }}
             >
-              {__('Add manual method', 'tutor')}
+              {__('Add Manual Payment', 'tutor')}
             </Button>
           </div>
         </div>
@@ -206,6 +206,10 @@ const styles = {
   buttonWrapper: css`
     display: flex;
     gap: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+    }
   `,
   noPaymentMethod: css`
     ${typography.caption()};

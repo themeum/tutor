@@ -1,5 +1,5 @@
-import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing } from '@TutorShared/config/styles';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, createRef, useEffect, useRef, useState } from 'react';
 
@@ -73,7 +73,6 @@ const Tabs = <T extends string | number>({
                 onChange(tab.value);
               }}
               css={styles.tabButton({ isActive: activeTab === tab.value, orientation })}
-              tabIndex={activeTab === tab.value ? 0 : -1}
               disabled={disabled || tab.disabled}
               type="button"
               role="tab"
@@ -110,14 +109,12 @@ const styles = {
     flex-wrap: wrap;
     box-shadow: ${shadow.tabs};
 
-    ${
-      orientation === 'vertical' &&
-      css`
+    ${orientation === 'vertical' &&
+    css`
       flex-direction: column;
       align-items: start;
       box-shadow: none;
-    `
-    }
+    `}
   `,
   indicator: (property: ItemProperty, orientation: OrientationType) => css`
     width: ${property.width}px;
@@ -129,16 +126,19 @@ const styles = {
     border-radius: ${borderRadius[4]} ${borderRadius[4]} 0 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 
-    ${
-      orientation === 'vertical' &&
-      css`
+    :dir(rtl) {
+      left: auto;
+      right: ${property.left}px;
+    }
+
+    ${orientation === 'vertical' &&
+    css`
       width: 3px;
       height: ${property.height}px;
       top: ${property.top}px;
       bottom: auto;
       border-radius: 0 ${borderRadius[4]} ${borderRadius[4]} 0;
-    `
-    }
+    `}
   `,
   tabButton: ({ isActive, orientation }: { isActive: boolean; orientation: OrientationType }) => css`
     ${styleUtils.resetButton};
@@ -153,23 +153,35 @@ const styles = {
     min-width: 130px;
     position: relative;
     transition: color 0.3s ease-in-out;
+    border-radius: 0px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      color: ${colorTokens.text.subdued};
+      box-shadow: none;
+    }
 
     & > svg {
       color: ${colorTokens.icon.default};
     }
 
-    ${
-      orientation === 'vertical' &&
-      css`
+    ${orientation === 'vertical' &&
+    css`
       width: 100%;
       border-bottom: 1px solid ${colorTokens.stroke.border};
       justify-content: flex-start;
-    `
-    }
 
-    ${
-      isActive &&
-      css`
+      &:hover,
+      &:focus,
+      &:active {
+        border-bottom: 1px solid ${colorTokens.stroke.border};
+      }
+    `}
+
+    ${isActive &&
+    css`
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.primary};
 
@@ -180,8 +192,7 @@ const styles = {
       & > svg {
         color: ${colorTokens.icon.brand};
       }
-    `
-    }
+    `}
 
     &:disabled {
       color: ${colorTokens.text.disable};
@@ -189,6 +200,12 @@ const styles = {
       &::before {
         background: ${colorTokens.text.disable};
       }
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -2px;
+      border-radius: ${borderRadius[4]};
     }
   `,
   activeBadge: css`

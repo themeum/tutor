@@ -1,16 +1,15 @@
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import For from '@Controls/For';
-import { typography } from '@Config/typography';
-import { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
-import { colorTokens, shadow, spacing } from '@Config/styles';
+import Alert from '@TutorShared/atoms/Alert';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { PaymentSettings } from '../../services/payment';
-import PaymentGatewayItem from '../PaymentGatewayItem';
+import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 import { usePaymentContext } from '../../contexts/payment-context';
-import Show from '@Controls/Show';
-import Alert from '@Atoms/Alert';
+import { type PaymentSettings } from '../../services/payment';
+import PaymentGatewayItem from '../PaymentGatewayItem';
 
 interface PaymentGatewaysModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -21,21 +20,19 @@ const PaymentGatewaysModal = ({ closeModal, title, form }: PaymentGatewaysModalP
   const { payment_gateways, errorMessage } = usePaymentContext();
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
-      <div css={styles.contentWrapper}>
-        <div css={styles.modalBody}>
-          <Show when={!errorMessage} fallback={<Alert>{errorMessage}</Alert>}>
-            <For each={payment_gateways}>
-              {(gateway) => (
-                <PaymentGatewayItem
-                  data={gateway}
-                  onInstallSuccess={() => closeModal({ action: 'CONFIRM' })}
-                  form={form}
-                />
-              )}
-            </For>
-          </Show>
-        </div>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={620}>
+      <div css={styles.modalBody}>
+        <Show when={!errorMessage} fallback={<Alert>{errorMessage}</Alert>}>
+          <For each={payment_gateways}>
+            {(gateway) => (
+              <PaymentGatewayItem
+                data={gateway}
+                onInstallSuccess={() => closeModal({ action: 'CONFIRM' })}
+                form={form}
+              />
+            )}
+          </For>
+        </Show>
       </div>
     </BasicModalWrapper>
   );
@@ -44,9 +41,6 @@ const PaymentGatewaysModal = ({ closeModal, title, form }: PaymentGatewaysModalP
 export default PaymentGatewaysModal;
 
 const styles = {
-  contentWrapper: css`
-    width: 620px;
-  `,
   modalBody: css`
     display: flex;
     flex-direction: column;

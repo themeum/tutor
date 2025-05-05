@@ -1,38 +1,49 @@
-import { Box, BoxTitle } from '@Atoms/Box';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
-import { colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
+
 import DiscountModal from '@OrderComponents/modals/DiscountModal';
 import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
 import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
-import type { PaymentStatus } from '@OrderServices/order';
-import { calculateDiscountValue, formatPrice } from '@Utils/currency';
-import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import type { Order } from '@OrderServices/order';
+
+import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { calculateDiscountValue, formatPrice } from '@TutorShared/utils/currency';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+
 import { PaymentBadge } from './PaymentBadge';
 
 function PaymentActionButton({
-  status,
+  order,
   onClick,
 }: {
-  status: PaymentStatus;
+  order: Order;
   onClick: (buttonType: 'refund' | 'mark-as-paid') => void;
 }) {
-  switch (status) {
+  const { payment_status, net_payment } = order || {};
+
+  switch (payment_status) {
     case 'paid':
     case 'partially-refunded':
-    case 'failed':
+    case 'failed': {
+      if (net_payment <= 0) {
+        return null;
+      }
+
       return (
         <Button variant="tertiary" size="small" isOutlined onClick={() => onClick('refund')}>
           {__('Refund', 'tutor')}
         </Button>
       );
+    }
     case 'unpaid':
       return (
         <Button variant="primary" size="small" isOutlined onClick={() => onClick('mark-as-paid')}>
@@ -57,18 +68,18 @@ function Payment() {
       </BoxTitle>
       <div css={styles.content}>
         <Box bordered css={styleUtils.boxReset}>
-          {order.subscription_fees?.map((item) =>
-            <div css={styles.item({ action: 'regular' })}>
+          {order.subscription_fees?.map((item, idx) => (
+            <div key={idx} css={styles.item({ action: 'regular' })}>
               <div>{item.title}</div>
               <div>-</div>
               <div>{formatPrice(Number(item.value))}</div>
             </div>
-          )}
+          ))}
 
           <div css={styles.item({ action: 'regular' })}>
             <div>{__('Subtotal', 'tutor')}</div>
             <div>
-              {order.items.length} {__('Items', 'tutor')}
+              {order.items.length} {__('Item(s)', 'tutor')}
             </div>
             <div>{formatPrice(order.subtotal_price)}</div>
           </div>
@@ -146,7 +157,16 @@ function Payment() {
               </div>
               <div>
                 {order.discount_reason ?? '-'}
-                <strong> ({`${order.discount_type === 'percentage' ? `${order.discount_amount}%` : formatPrice(order.discount_amount)}`})</strong>
+                <strong>
+                  {' '}
+                  (
+                  {`${
+                    order.discount_type === 'percentage'
+                      ? `${order.discount_amount}%`
+                      : formatPrice(order.discount_amount)
+                  }`}
+                  )
+                </strong>
               </div>
               <div>
                 -
@@ -155,12 +175,12 @@ function Payment() {
                     discount_amount: order.discount_amount,
                     discount_type: order.discount_type,
                     total: order.subtotal_price,
-                  })
+                  }),
                 )}
               </div>
             </Show>
           </div>
-          <Show when={order.tax_amount && order.tax_type==='exclusive'}>
+          <Show when={order.tax_amount && order.tax_type === 'exclusive'}>
             <div css={styles.item({ action: 'regular' })}>
               <div>{__('Estimated tax', 'tutor')}</div>
               <div>{order.tax_rate}%</div>
@@ -182,7 +202,7 @@ function Payment() {
             <div>{__('Total Paid', 'tutor')}</div>
             <div css={styles.includeTax}>
               <Show when={order.tax_type === 'inclusive'}>
-                {sprintf(__('Incl. tax %s', 'tutor' ), order.tax_amount ? formatPrice( order.tax_amount ) : 0)}
+                {sprintf(__('Incl. tax %s', 'tutor'), order.tax_amount ? formatPrice(order.tax_amount) : 0)}
               </Show>
             </div>
             <div>{formatPrice(order.total_price)}</div>
@@ -214,7 +234,7 @@ function Payment() {
 
         <div css={styles.markAsPaid}>
           <PaymentActionButton
-            status={order.payment_status}
+            order={order}
             onClick={(buttonType) => {
               if (buttonType === 'refund') {
                 return showModal({
@@ -224,6 +244,7 @@ function Payment() {
                     available_amount: order.refunds?.length ? order.net_payment : order.total_price,
                     order_id: order.id,
                     order_type: order.order_type,
+                    payment_method: order.payment_method,
                   },
                 });
               }
@@ -265,19 +286,12 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
-    &:hover {
-      button {
-        opacity: 1;
-      }
-    }
   `,
   editDiscountButton: css`
     ${styleUtils.resetButton};
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: 0.3s ease opacity;
     color: ${colorTokens.icon.brand};
   `,
   item: ({ action = 'regular' }: { action: 'regular' | 'bold' | 'destructive' }) => css`
@@ -325,7 +339,7 @@ const styles = {
     color: ${colorTokens.brand.blue};
   `,
   includeTax: css`
-      ${typography.caption()};
-      color: ${colorTokens.text.subdued};
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
   `,
 };

@@ -1,13 +1,13 @@
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import { tutorConfig } from '@Config/config';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+import { tutorConfig } from '@TutorShared/config/config';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import type { Coupon } from '@CouponServices/coupon';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -27,7 +27,7 @@ function PurchaseRequirements() {
       value: 'minimum_purchase',
     },
     {
-      label: __('Minimum quantity of items', 'tutor'),
+      label: __('Minimum quantity of courses', 'tutor'),
       value: 'minimum_quantity',
     },
   ];
@@ -35,8 +35,7 @@ function PurchaseRequirements() {
   return (
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
-        <BoxTitle>{__('Minimum purchase requirements', 'tutor')}</BoxTitle>
-        <BoxSubtitle>{__('Set the minimum purchase amount/quantity for this coupon to be valid', 'tutor')}</BoxSubtitle>
+        <BoxTitle>{__('Minimum Purchase Requirements', 'tutor')}</BoxTitle>
       </div>
       <Controller
         name="purchase_requirement"
@@ -91,23 +90,23 @@ export default PurchaseRequirements;
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   requirementInput: css`
-		width: 30%;
-		margin-left: ${spacing[28]};
-		margin-top: ${spacing[8]};
-	`,
+    width: 30%;
+    margin-left: ${spacing[28]};
+    margin-top: ${spacing[8]};
+  `,
   radioGroupWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
 };

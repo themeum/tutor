@@ -1,12 +1,12 @@
-import { type ModalProps, useModal } from '@/v3/shared/components/modals/Modal';
-import { styleUtils } from '@/v3/shared/utils/style-utils';
-import Button from '@Atoms/Button';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { europeanUnionData, getStatesByCountryAsOptions, isEuropeanUnion } from '@Utils/countries';
-import { requiredRule } from '@Utils/validation';
+import Button from '@TutorShared/atoms/Button';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
+import { colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { europeanUnionData, getStatesByCountryAsOptions, isEuropeanUnion } from '@TutorShared/utils/countries';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, type UseFormReturn } from 'react-hook-form';
@@ -142,7 +142,7 @@ const styles = {
   modalWrapperStyle: css`
     position: relative;
     width: 100%;
-    min-width: 560px;
+    max-width: 560px;
   `,
   modalBody: css`
     display: flex;

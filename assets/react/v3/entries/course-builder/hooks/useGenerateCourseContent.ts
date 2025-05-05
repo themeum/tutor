@@ -1,13 +1,28 @@
 import {
-  type Topic,
-  useContentGenerationContext,
-} from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
-import {
   useGenerateCourseContentMutation,
   useGenerateCourseTopicContentMutation,
   useGenerateCourseTopicNamesMutation,
   useGenerateQuizQuestionsMutation,
-} from '@CourseBuilderServices/magic-ai';
+} from '@TutorShared/services/magic-ai';
+import {
+  type Topic,
+  useContentGenerationContext,
+} from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
+import { fetchImageUrlAsBase64 } from '@TutorShared/utils/util';
+
+import courseGenerationPlaceholderBlue from '@SharedImages/course-generation-placeholders/course-generation-placeholder-blue.webp';
+import courseGenerationPlaceholderGreen from '@SharedImages/course-generation-placeholders/course-generation-placeholder-green.webp';
+import courseGenerationPlaceholderPurple from '@SharedImages/course-generation-placeholders/course-generation-placeholder-purple.webp';
+import courseGenerationPlaceholderRed from '@SharedImages/course-generation-placeholders/course-generation-placeholder-red.webp';
+import courseGenerationPlaceholderRust from '@SharedImages/course-generation-placeholders/course-generation-placeholder-rust.webp';
+
+const courseGenerationPlaceholders = [
+  courseGenerationPlaceholderBlue,
+  courseGenerationPlaceholderRed,
+  courseGenerationPlaceholderRust,
+  courseGenerationPlaceholderGreen,
+  courseGenerationPlaceholderPurple,
+];
 
 export const useGenerateCourseContent = () => {
   const { abortControllerRef, updateContents, updateLoading, updateErrors, updateAbortStatus } =
@@ -49,6 +64,13 @@ export const useGenerateCourseContent = () => {
 
       const courseTitle = response.data;
       updateContents({ title: courseTitle, prompt }, pointer);
+
+      try {
+        const featuredImageResponse = await fetchImageUrlAsBase64(
+          courseGenerationPlaceholders[Math.floor(Math.random() * courseGenerationPlaceholders.length)],
+        );
+        updateContents({ featured_image: featuredImageResponse }, pointer);
+      } catch (error) {}
 
       try {
         const descriptionResponse = await generateCourseDescriptionMutation.mutateAsync({

@@ -18,7 +18,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 	<div class="tutor-admin-header is-sticky">
 		<div class="tutor-row tutor-align-center">
 			<div class="tutor-col-md-3 tutor-col-lg-4 tutor-mb-16 tutor-mb-md-0">
-				<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Settings', 'tutor' ); ?></span>
+				<span class="tutor-fs-4 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Settings', 'tutor' ); ?></span>
 			</div>
 			<div class="tutor-col-md-5 tutor-col-xl-6 tutor-mb-24 tutor-mb-md-0">
 				<div class="tutor-options-search tutor-form-wrap">
@@ -41,7 +41,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		<form class="tutor-option-form" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-row tutor-gx-lg-0">
-				<div class="tutor-col-12 tutor-col-sm-2 tutor-col-lg-3 tutor-border-right">
+				<div class="tutor-col-12 tutor-col-sm-2 tutor-col-lg-3 <?php echo esc_attr( is_rtl() ? 'tutor-border-left' : 'tutor-border-right' ); ?>">
 					<div class="tutor-pt-16 tutor-pb-40 tutor-position-sticky" style="top: 97px;">
 						<div class="tutor-pr-20">
 							<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" tutor-option-tabs>
@@ -66,6 +66,10 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 											<ul class="tutor-option-submenu-nav">
 											<?php
 											foreach ( $section['submenu'] as $key => $menu_item ) :
+												// If not monetized by native, then ecommerce submenu will be hidden.
+												if ( Ecommerce::MONETIZE_BY !== $monetize_by && 'ecommerce' === explode( '_', $key )[0] ) {
+													continue;
+												}
 												$active_class = $active_tab === $key ? ' is-active' : '';
 												?>
 												<li class="tutor-nav-item">
@@ -119,6 +123,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 									?>
 									</div>
 									<?php
+									do_action( 'tutor_after_option_sub_section', $key, $section );
 								endforeach;
 							endif;
 

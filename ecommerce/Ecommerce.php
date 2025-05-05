@@ -202,4 +202,23 @@ class Ecommerce {
 		/* translators: %s: payment gateway */
 		return sprintf( __( '%s payment method is not configured properly. Please contact with site administrator!', 'tutor' ), ucfirst( $payment_method ) );
 	}
+
+	/**
+	 * Get payment method label.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $payment_method payment method name.
+	 *
+	 * @return string
+	 */
+	public static function get_payment_method_label( $payment_method ) {
+		$payment_method_labels = array(
+			'paypal' => __( 'PayPal', 'tutor' ),
+		);
+
+		$payment_method_labels = apply_filters( 'tutor_payment_method_labels', $payment_method_labels );
+
+		return $payment_method_labels[ $payment_method ] ?? ucfirst( $payment_method );
+	}
 }

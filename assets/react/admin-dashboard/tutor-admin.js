@@ -1,22 +1,20 @@
 import '../front/_select_dd_search';
-import './addons-list/addons-list-main';
-import './segments/addonlist';
+import './quiz-attempts';
 import './segments/color-preset';
+import './segments/column-filter';
 import './segments/editor_full';
 import './segments/filter';
-import ajaxHandler from './segments/filter';
 import './segments/image-preview';
 import './segments/import-export';
 import './segments/lib';
+import './segments/manage-api-keys';
+import './segments/multiple_email_input';
 import './segments/navigation';
 import './segments/options';
 import './segments/reset';
 import './segments/withdraw';
-import './segments/column-filter';
-import './segments/multiple_email_input';
-import './quiz-attempts';
 import './wp-events-subscriber';
-import './segments/manage-api-keys';
+import ajaxHandler from '../helper/ajax-handler';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {
@@ -25,16 +23,6 @@ document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 		const checkbox = button.querySelector('input[type="checkbox"]');
 		checkbox.checked = !checkbox.checked;
 		checkbox.dispatchEvent(new Event('change', { bubbles: true }));
-	});
-});
-
-const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
-toggleChange.forEach((element) => {
-	element.addEventListener('change', (e) => {
-		let check_value = element.previousElementSibling;
-		if (check_value) {
-			check_value.value == 'on' ? (check_value.value = 'off') : (check_value.value = 'on');
-		}
 	});
 });
 
@@ -476,19 +464,6 @@ jQuery(document).ready(function ($) {
 		}
 	});
 
-	//add checkbox class for style
-	var tutorCheckbox = $('.tutor-table .tutor-form-check-input');
-	if (tutorCheckbox) {
-		tutorCheckbox.parent().addClass('tutor-option-field-row');
-	}
-	const tdWithRadio = document.querySelectorAll("td[id^='tutor-student-course-'] .tutor-form-check");
-	tdWithRadio.forEach((item) => {
-		if (item) {
-			if (item.classList.contains('tutor-option-field-row')) {
-				item.classList.remove('tutor-option-field-row');
-			}
-		}
-	});
 	/**
 	 * If Tutor course edit then show tutor menu as active
 	 *

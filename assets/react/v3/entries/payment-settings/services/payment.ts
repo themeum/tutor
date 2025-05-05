@@ -1,11 +1,11 @@
-import { useToast } from '@Atoms/Toast';
-import { tutorConfig } from '@Config/config';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
+import { useToast } from '@TutorShared/atoms/Toast';
+import { tutorConfig } from '@TutorShared/config/config';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { Option } from '@TutorShared/utils/types';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { Option } from '@Utils/types';
-import { convertToErrorMessage } from '../../course-builder/utils/utils';
 
 export interface PaymentField {
   name: string;
@@ -25,15 +25,19 @@ export interface PaymentMethod {
   support_subscription: boolean;
   update_available?: boolean;
   is_installable?: boolean;
+  is_installed?: boolean;
   is_manual?: boolean;
   fields: PaymentField[];
 }
 
 export interface PaymentSettings {
-  payment_methods: PaymentMethod[];
+  payment_methods?: PaymentMethod[];
 }
 
 export const getWebhookUrl = (gateway: string) => {
+  if (gateway === 'authorizenet') {
+    return `${tutorConfig.home_url}/wp-json/tutor/v1/ecommerce-webhook/${gateway}`;
+  }
   return `${tutorConfig.home_url}/wp-json/tutor/v1/ecommerce-webhook?payment_method=${gateway}`;
 };
 
@@ -44,7 +48,7 @@ export const initialPaymentSettings: PaymentSettings = {
 export const manualMethodFields: PaymentField[] = [
   {
     name: 'method_name',
-    label: __('Payment Method Name', 'tutor'),
+    label: __('Title', 'tutor'),
     type: 'text',
     value: '',
   },
@@ -59,15 +63,8 @@ export const manualMethodFields: PaymentField[] = [
     },
   },
   {
-    name: 'additional_details',
-    label: __('Additional details', 'tutor'),
-    type: 'textarea',
-    hint: __('Briefly describe this payment option. (e.g., Bank Transfer, Cash on Delivery).', 'tutor'),
-    value: '',
-  },
-  {
     name: 'payment_instructions',
-    label: __('Payment instructions', 'tutor'),
+    label: __('Payment Instructions', 'tutor'),
     type: 'textarea',
     hint: __('Provide clear, step-by-step instructions on how to complete the payment.', 'tutor'),
     value: '',
@@ -80,15 +77,21 @@ export const convertPaymentMethods = (methods: PaymentMethod[], gateways: Paymen
   // Update methods with data from gateways api
   const updatedMethods = methods.map((method) => {
     const gateway = gatewayMap.get(method.name);
-    return gateway ? { ...gateway, is_active: method.is_active, fields: method.fields } : method;
+    return gateway
+      ? {
+          ...gateway,
+          is_active: method.is_active,
+          fields: [...method.fields, ...gateway.fields.filter((i) => !method.fields.find((j) => j.name === i.name))],
+        }
+      : method;
   });
 
   // Add any new methods from installed gateways that are not already in methods
-  gatewayMap.forEach((gateway) => {
+  for (const gateway of gatewayMap.values()) {
     if (gateway.is_installed && !updatedMethods.some((method) => method.name === gateway.name)) {
       updatedMethods.push({ ...gateway, fields: gateway.fields.map(({ name, value }) => ({ name, value })) });
     }
-  });
+  }
 
   return updatedMethods;
 };

@@ -34,7 +34,18 @@ class Settings {
 		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
 		add_action( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
 		add_action( 'wp_ajax_tutor_payment_gateways', array( $this, 'ajax_tutor_payment_gateways' ) );
+	}
 
+
+	/**
+	 * Check if buy now setting is enabled.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_buy_now_enabled() {
+		return (bool) tutor_utils()->get_option( OptionKeys::BUY_NOW, false );
 	}
 
 	/**
@@ -105,7 +116,7 @@ class Settings {
 					array(
 						'key'            => OptionKeys::CURRENCY_CODE,
 						'type'           => 'select',
-						'label'          => __( 'Currency Symbol', 'tutor' ),
+						'label'          => __( 'Currency', 'tutor' ),
 						'select_options' => false,
 						'options'        => self::get_currency_options(),
 						'default'        => 'USD',
@@ -117,10 +128,7 @@ class Settings {
 						'type'           => 'select',
 						'label'          => __( 'Currency Position', 'tutor' ),
 						'select_options' => false,
-						'options'        => array(
-							'left'  => 'Left',
-							'right' => 'Right',
-						),
+						'options'        => self::get_currency_position_options(),
 						'default'        => 'left',
 						'desc'           => __( 'Set the position of the currency symbol.', 'tutor' ),
 					),
@@ -174,7 +182,7 @@ class Settings {
 		 */
 		$arr['ecommerce_payment'] = array(
 			'label'    => __( 'Payment Methods', 'tutor' ),
-			'slug'     => 'automate_payment_gateway',
+			'slug'     => 'ecommerce_payment',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
 			'icon'     => 'tutor-icon-credit-card',
@@ -200,7 +208,7 @@ class Settings {
 		 * Tax settings will be generated from react app.
 		 */
 		$arr['ecommerce_tax'] = array(
-			'label'    => __( 'Tax', 'tutor' ),
+			'label'    => __( 'Taxes', 'tutor' ),
 			'slug'     => 'ecommerce_tax',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
@@ -239,8 +247,15 @@ class Settings {
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
 							'type'    => 'toggle_switch',
 							'label'   => __( 'Enable Coupon Code', 'tutor' ),
+							'default' => 'on',
+							'desc'    => __( 'Allow users to apply the coupon code during checkout.', 'tutor' ),
+						),
+						array(
+							'key'     => OptionKeys::BUY_NOW,
+							'type'    => 'toggle_switch',
+							'label'   => __( 'Enable "Buy Now" Button', 'tutor' ),
 							'default' => 'off',
-							'desc'    => __( 'Enable this option to allow users to apply a coupon code while checkout.', 'tutor' ),
+							'desc'    => __( 'Allow users to purchase courses directly without adding them to the cart.', 'tutor' ),
 						),
 					),
 				),
@@ -314,6 +329,20 @@ class Settings {
 			$options[ $currency['code'] ] = $currency['code'] . ' (' . $currency['symbol'] . ')';
 		}
 		return $options;
+	}
+
+	/**
+	 * Currency position options
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_currency_position_options() {
+		return array(
+			'left'  => __( 'Left', 'tutor' ),
+			'right' => __( 'Right', 'tutor' ),
+		);
 	}
 
 	/**
@@ -412,10 +441,10 @@ class Settings {
 
 			$default_gateway = array(
 				'name'                 => 'paypal',
-				'label'                => 'Paypal',
+				'label'                => 'PayPal',
 				'is_installed'         => true,
-				'is_active'            => true,
-				'icon'                 => tutor()->plugin_url . 'assets/images/paypal.svg',
+				'is_active'            => false,
+				'icon'                 => tutor()->url . 'assets/images/paypal.svg',
 				'support_subscription' => true,
 				'fields'               => self::get_paypal_config_fields(),
 			);
@@ -442,6 +471,7 @@ class Settings {
 			'client_id'      => 'secret_key',
 			'secret_id'      => 'secret_key',
 			'webhook_id'     => 'secret_key',
+			'webhook_url'    => 'webhook_url',
 		);
 	}
 
@@ -460,7 +490,7 @@ class Settings {
 			if ( 'environment' === $key ) {
 				$config_fields[] = array(
 					'name'    => $key,
-					'label'   => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label'   => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor' ),//phpcs:ignore
 					'type'    => $type,
 					'options' => array(
 						'test' => __( 'Test', 'tutor' ),
@@ -472,7 +502,7 @@ class Settings {
 				$config_fields[] = array(
 					'name'  => $key,
 					'type'  => $type,
-					'label' => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label' => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-' ),//phpcs:ignore
 					'value' => '',
 				);
 			}

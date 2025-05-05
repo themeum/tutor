@@ -10,10 +10,10 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\QueryHelper;
-use Tutor\Models\OrderModel;
 use TUTOR\Singleton;
+use Tutor\Models\OrderModel;
 use Tutor\Traits\EarningData;
+use Tutor\Helpers\QueryHelper;
 
 /**
  * Manage earnings
@@ -83,16 +83,50 @@ class Earnings extends Singleton {
 		$order_details = $order_model->get_order_by_id( $order_id );
 		$items         = is_object( $order_details ) && property_exists( $order_details, 'items' ) ? $order_details->items : array();
 
-		if ( is_array( $items ) && count( $items ) ) {
-			foreach ( $items as $item ) {
-				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
-				$course_id   = $item->id;
+		$deducted_amount = $order_details->refund_amount + $order_details->coupon_amount;
+		if ( $order_details->discount_amount ) {
+			$discount_amount  = $order_model->calculate_discount_amount( $order_details->discount_type, $order_details->discount_amount, $order_details->subtotal_price );
+			$deducted_amount += $discount_amount;
+		}
 
-				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
-					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
+		if ( is_array( $items ) && count( $items ) ) {
+
+			foreach ( $items as $item ) {
+
+				$subtotal_price  = $item->regular_price;
+				$item_sold_price = $order_model->get_item_sold_price( $item->id, false );
+
+				try {
+					$per_earning_refund = $order_details->subtotal_price
+										? ( $deducted_amount * $subtotal_price ) / $order_details->subtotal_price
+										: 0;
+				} catch ( \Throwable $th ) {
+					tutor_log( $th );
+					$per_earning_refund = 0;
 				}
 
-				$this->earning_data = $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_details->order_status );
+				// Split deduct amount fro admin & instructor.
+				$split_deduction = tutor_split_amounts( $per_earning_refund );
+
+				// Split earnings.
+				$split_earnings = tutor_split_amounts( $subtotal_price );
+
+				// Deduct earnings.
+				$admin_amount      = $split_earnings['admin'] - $split_deduction['admin'];
+				$instructor_amount = $split_earnings['instructor'] - $split_deduction['instructor'];
+
+				$course_id = $item->id;
+
+				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
+					$plan_info = apply_filters( 'tutor_get_plan_info', null, $course_id );
+					if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
+						$course_id = null;
+					} else {
+						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
+					}
+				}
+
+				$this->earning_data[] = $this->prepare_earning_data( $item_sold_price, $course_id, $order_id, $order_details->order_status, $admin_amount, $instructor_amount );
 			}
 		}
 	}
@@ -106,20 +140,25 @@ class Earnings extends Singleton {
 	 * @param int    $course_id Connected course id.
 	 * @param int    $order_id Order id.
 	 * @param string $order_status Order status.
+	 * @param string $admin_amount Admin amount.
+	 * @param string $instructor_amount Instructor status.
 	 *
 	 * @return array
 	 */
-	public function prepare_earning_data( $total_price, $course_id, $order_id, $order_status ) {
+	public function prepare_earning_data( $total_price, $course_id, $order_id, $order_status, $admin_amount, $instructor_amount ) {
 		$fees_deduct_data      = array();
 		$tutor_earning_fees    = tutor_utils()->get_option( 'fee_amount_type' );
 		$enable_fees_deducting = tutor_utils()->get_option( 'enable_fees_deducting' );
 
 		$course_price_grand_total = $total_price;
 
+		// Site maintenance fees.
+		$fees_amount = 0;
+
 		// Deduct predefined amount (percent or fixed).
 		if ( $enable_fees_deducting ) {
 			$fees_name   = tutor_utils()->get_option( 'fees_name', '' );
-			$fees_amount = (int) tutor_utils()->avalue_dot( 'fees_amount', $tutor_earning_fees );
+			$fees_amount = (float) tutor_utils()->avalue_dot( 'fees_amount', $tutor_earning_fees );
 			$fees_type   = tutor_utils()->avalue_dot( 'fees_type', $tutor_earning_fees );
 
 			if ( $fees_amount > 0 ) {
@@ -127,7 +166,7 @@ class Earnings extends Singleton {
 					$fees_amount = ( $total_price * $fees_amount ) / 100;
 				}
 
-				$course_price_grand_total = $total_price - $fees_amount;
+				$course_price_grand_total = max( $total_price - $fees_amount, 0 );
 			}
 
 			$fees_deduct_data = array(
@@ -137,13 +176,19 @@ class Earnings extends Singleton {
 			);
 		}
 
+		if ( $fees_amount ) {
+			list( $admin_fees, $instructor_fees ) = array_values( tutor_split_amounts( $fees_amount ) );
+
+			// Deduct fees.
+			$admin_amount      -= $admin_fees;
+			$instructor_amount -= $instructor_fees;
+		}
+
 		// Distribute amount between admin and instructor.
-		$sharing_enabled   = tutor_utils()->get_option( 'enable_revenue_sharing' );
-		$instructor_rate   = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
-		$admin_rate        = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
-		$commission_type   = 'percent';
-		$instructor_amount = $instructor_rate > 0 ? ( ( $course_price_grand_total * $instructor_rate ) / 100 ) : 0;
-		$admin_amount      = $admin_rate > 0 ? ( ( $course_price_grand_total * $admin_rate ) / 100 ) : 0;
+		$sharing_enabled = tutor_utils()->get_option( 'enable_revenue_sharing' );
+		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
+		$admin_rate      = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
+		$commission_type = 'percent';
 
 		// Course author id.
 		$user_id = get_post_field( 'post_author', $course_id );
@@ -151,15 +196,16 @@ class Earnings extends Singleton {
 		// (Use Pro Filter - Start)
 		// The response must be same array structure.
 		// Do not change used variable names here, or change in both of here and pro plugin
-		$pro_arg         = array(
+		$pro_arg = array(
 			'user_id'                  => $user_id,
 			'instructor_rate'          => $instructor_rate,
 			'admin_rate'               => $admin_rate,
-			'instructor_amount'        => $instructor_amount,
-			'admin_amount'             => $admin_amount,
+			'instructor_amount'        => max( 0, $instructor_amount ),
+			'admin_amount'             => max( 0, $admin_amount ),
 			'course_price_grand_total' => $course_price_grand_total,
 			'commission_type'          => $commission_type,
 		);
+
 		$pro_calculation = apply_filters( 'tutor_pro_earning_calculator', $pro_arg );
 		extract( $pro_calculation ); //phpcs:ignore
 		// (Use Pro Filter - End).
@@ -188,6 +234,23 @@ class Earnings extends Singleton {
 	}
 
 	/**
+	 * Get order earnings
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return mixed Array of objects on success
+	 */
+	public function get_order_earnings( int $order_id ) {
+		return QueryHelper::get_all(
+			$this->earning_table,
+			array( 'order_id' => $order_id ),
+			'earning_id'
+		);
+	}
+
+	/**
 	 * Store earnings
 	 *
 	 * @since 3.0.0
@@ -201,8 +264,11 @@ class Earnings extends Singleton {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
+		$inserted_id = 0;
 		try {
-			$inserted_id = QueryHelper::insert( $this->earning_table, $this->earning_data );
+			foreach ( $this->earning_data as $earning ) {
+				$inserted_id = QueryHelper::insert( $this->earning_table, $earning );
+			}
 		} catch ( \Throwable $th ) {
 			throw new \Exception( $th->getMessage() );
 		}
@@ -249,11 +315,17 @@ class Earnings extends Singleton {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
-		return QueryHelper::update(
+		$update = QueryHelper::update(
 			$this->earning_table,
 			$this->earning_data,
-			array( 'id' => $earning_id )
+			array( 'earning_id' => $earning_id )
 		);
+
+		if ( $update ) {
+			$this->earning_data = null;
+		}
+
+		return $update;
 	}
 
 	/**
@@ -273,6 +345,22 @@ class Earnings extends Singleton {
 	}
 
 	/**
+	 * Delete earning by order id
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return bool true|false
+	 */
+	public function delete_earning_by_order( $order_id ) {
+		return QueryHelper::delete(
+			$this->earning_table,
+			array( 'order_id' => $order_id )
+		);
+	}
+
+	/**
 	 * Before storing earning this method will check if
 	 * earning exist for the given order id. If found it will
 	 * remove then store.
@@ -288,12 +376,14 @@ class Earnings extends Singleton {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
-		$earning = $this->is_exist_order_earning( $this->order_id );
-		if ( $earning ) {
-			$this->delete_earning( $earning->earning_id );
+		if ( $this->is_exist_order_earning( $this->order_id ) ) {
+			$this->delete_earning_by_order( $this->order_id );
 		}
 
-		return $this->store_earnings();
+		try {
+			return $this->store_earnings();
+		} catch ( \Throwable $th ) {
+			tutor_log( $th );
+		}
 	}
-
 }

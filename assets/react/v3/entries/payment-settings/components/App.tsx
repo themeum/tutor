@@ -2,14 +2,13 @@ import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
-import ToastProvider from '@Atoms/Toast';
+import ToastProvider from '@TutorShared/atoms/Toast';
+import RTLProvider from '@TutorShared/components/RTLProvider';
+import { ModalProvider } from '@TutorShared/components/modals/Modal';
+import { createGlobalCss } from '@TutorShared/utils/style-utils';
 
-import RTLProvider from '@Components/RTLProvider';
-import { ModalProvider } from '@Components/modals/Modal';
-
-import { createGlobalCss } from '@Utils/style-utils';
-import PaymentSettings from './PaymentSettings';
 import { PaymentProvider } from '../contexts/payment-context';
+import PaymentSettings from './PaymentSettings';
 
 function App() {
   const [queryClient] = useState(
@@ -26,7 +25,7 @@ function App() {
             networkMode: 'always',
           },
         },
-      })
+      }),
   );
 
   return (

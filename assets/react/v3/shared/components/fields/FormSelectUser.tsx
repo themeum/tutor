@@ -1,25 +1,29 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { tutorConfig } from '@TutorShared/config/config';
+import { isRTL, TutorRoles } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 
-import Show from '@Controls/Show';
-import { useDebounce } from '@Hooks/useDebounce';
-import { noop } from '@Utils/util';
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import type { User } from '@TutorShared/services/users';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
+
+import profileImage from '@SharedImages/profile-photo.png';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
-import { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
-import profileImage from '@Images/profile-photo.png';
-import type { User } from '@Services/users';
 export interface UserOption extends User {
   isRemoveAble?: boolean;
 }
@@ -68,7 +72,7 @@ const FormSelectUser = ({
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
-  const isCurrentUserAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isCurrentUserAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -98,6 +102,36 @@ const FormSelectUser = ({
     dependencies: [filteredOption.length],
   });
 
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: filteredOption.map((option) => ({
+      label: option.name,
+      value: option,
+    })),
+    isOpen,
+    onSelect: (selectedUser) => {
+      handleUserSelection(selectedUser.value);
+    },
+    onClose: () => {
+      setIsOpen(false);
+      setSearchText('');
+    },
+    selectedValue: Array.isArray(inputValue) ? null : inputValue,
+  });
+
+  const handleUserSelection = (instructor: UserOption) => {
+    const selectedValue = isInstructorMode
+      ? {
+          ...instructor,
+          isRemoveAble: true,
+        }
+      : instructor;
+    const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
+    field.onChange(newValue);
+    setSearchText('');
+    onChange(newValue);
+    setIsOpen(false);
+  };
+
   const handleDeleteSelection = (id: number) => {
     if (Array.isArray(inputValue)) {
       const updatedValue = inputValue.filter((item) => item.id !== id);
@@ -106,6 +140,17 @@ const FormSelectUser = ({
       onChange(updatedValue);
     }
   };
+
+  const activeItemRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [isOpen, activeIndex]);
 
   return (
     <FormFieldWrapper
@@ -157,7 +202,20 @@ const FormSelectUser = ({
                   </div>
                   <input
                     {...restInputProps}
-                    onClick={() => setIsOpen((previousState) => !previousState)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      setIsOpen((previousState) => !previousState);
+                    }}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault();
+                        setIsOpen((previousState) => !previousState);
+                      }
+
+                      if (event.key === 'Tab') {
+                        setIsOpen(false);
+                      }
+                    }}
                     className="tutor-input-field"
                     css={[inputCss, styles.input]}
                     autoComplete="off"
@@ -228,12 +286,16 @@ const FormSelectUser = ({
                 setIsOpen(false);
                 setSearchText('');
               }}
+              onEscape={() => {
+                setIsOpen(false);
+                setSearchText('');
+              }}
             >
               <div
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },
@@ -272,8 +334,16 @@ const FormSelectUser = ({
                       </li>
                     }
                   >
-                    {filteredOption.map((instructor) => (
-                      <li key={String(instructor.id)} css={styles.optionItem}>
+                    {filteredOption.map((instructor, index) => (
+                      <li
+                        key={String(instructor.id)}
+                        css={styles.optionItem}
+                        data-active={activeIndex === index}
+                        onMouseOver={() => setActiveIndex(index)}
+                        onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
+                        ref={activeIndex === index ? activeItemRef : null}
+                        onFocus={() => setActiveIndex(index)}
+                      >
                         <button
                           type="button"
                           css={styles.label}
@@ -290,6 +360,7 @@ const FormSelectUser = ({
                             onChange(newValue);
                             setIsOpen(false);
                           }}
+                          aria-selected={activeIndex === index}
                         >
                           <img
                             src={instructor.avatar_url ? instructor.avatar_url : profileImage}
@@ -314,7 +385,7 @@ const FormSelectUser = ({
   );
 };
 
-export default FormSelectUser;
+export default withVisibilityControl(FormSelectUser);
 
 const styles = {
   mainWrapper: css`
@@ -331,7 +402,10 @@ const styles = {
     padding: ${spacing[8]};
   `,
   inputWrapperListItem: css`
+    position: sticky;
+    top: 0px;
     padding: 0px;
+    background-color: inherit;
   `,
   leftIcon: css`
     position: absolute;
@@ -374,25 +448,39 @@ const styles = {
     justify-content: space-between;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[12]};
     border: 1px solid transparent;
-    border-radius: ${borderRadius[4]};
+    border-radius: ${borderRadius.input};
     background-color: ${colorTokens.bg.white};
 
-    ${
-      isDefaultItem &&
-      css`
-      border-color: ${colorTokens.stroke.divider};
-      cursor: pointer;
-    `
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: ${colorTokens.bg.white};
     }
+
+    &:focus {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
+    ${isDefaultItem &&
+    css`
+      border-color: ${colorTokens.stroke.default};
+      cursor: pointer;
+    `}
 
     &:hover {
       border-color: ${colorTokens.stroke.divider};
 
       [data-instructor-delete-button] {
-        display: block;
+        opacity: 1;
       }
     }
-    
+
+    ${Breakpoint.smallTablet} {
+      [data-instructor-delete-button] {
+        opacity: 1;
+      }
+    }
   `,
   instructorInfo: css`
     display: flex;
@@ -420,16 +508,23 @@ const styles = {
     width: 100%;
   `,
   instructorDeleteButton: css`
-    ${styleUtils.resetButton};
-    display: flex;
-    height: 32px;
-    width: 32px;
+    ${styleUtils.crossButton};
     color: ${colorTokens.icon.default};
-    border-radius: ${borderRadius[2]};
-    display: none;
+    opacity: 0;
+    transition: none;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: ${colorTokens.bg.white};
+    }
 
     &:focus {
       box-shadow: ${shadow.focus};
+    }
+
+    :focus-visible {
+      opacity: 1;
     }
   `,
   options: css`
@@ -437,11 +532,13 @@ const styles = {
     background-color: ${colorTokens.background.white};
     list-style-type: none;
     box-shadow: ${shadow.popover};
-    padding: ${spacing[4]} 0;
+    margin: ${spacing[4]} 0;
     margin: 0;
     max-height: 400px;
+    border: 1px solid ${colorTokens.stroke.border};
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
     min-width: 200px;
   `,
   optionItem: css`
@@ -453,6 +550,10 @@ const styles = {
     align-items: center;
     transition: background-color 0.3s ease-in-out;
     cursor: pointer;
+
+    &[data-active='true'] {
+      background-color: ${colorTokens.background.hover};
+    }
 
     &:hover {
       background-color: ${colorTokens.background.hover};
@@ -469,6 +570,18 @@ const styles = {
     line-height: ${lineHeight[24]};
     word-break: break-all;
     cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -2px;
+      border-radius: ${borderRadius[6]};
+    }
   `,
   optionsContainer: css`
     position: absolute;
@@ -487,12 +600,10 @@ const styles = {
     color: ${colorTokens.icon.default};
     transition: transform 0.3s ease-in-out;
 
-    ${
-      isOpen &&
-      css`
-        transform: rotate(180deg);
-      `
-    }
+    ${isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   noUserFound: css`
     padding: ${spacing[8]};

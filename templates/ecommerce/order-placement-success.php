@@ -23,12 +23,12 @@ $order_id;
 			<?php esc_html_e( 'Order Confirmed', 'tutor' ); ?>
 		</h2>
 		<p class="tutor-fs-6 tutor-color-secondary">
-			<?php esc_html_e( 'You will receive an order confirmation email shortly', 'tutor' ); ?>
+			<?php echo esc_html( apply_filters( 'tutor_order_placement_success_message', __( 'You will receive an order confirmation email shortly', 'tutor' ), $order_id, $order_status ) ); ?>
 		</p>
 		</div>
 
 		<div class="tutor-d-flex tutor-gap-2">
-			<a href="<?php echo esc_url( home_url( 'courses' ) ); ?>" class="tutor-btn tutor-btn-primary">
+			<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-btn tutor-btn-primary">
 				<?php esc_html_e( 'Continue Shopping', 'tutor' ); ?>
 			</a>
 			<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) ); ?>" class="tutor-btn tutor-btn-secondary">

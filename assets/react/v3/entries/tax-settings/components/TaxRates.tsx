@@ -1,12 +1,12 @@
-import Show from '@/v3/shared/controls/Show';
-import { getCountryByCode, getStateByCode, isEuropeanUnion } from '@/v3/shared/utils/countries';
-import Button from '@Atoms/Button';
-import Checkbox from '@Atoms/CheckBox';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import { colorTokens, fontSize, fontWeight, spacing } from '@Config/styles';
-import Table, { type Column } from '@Molecules/Table';
-import { styleUtils } from '@Utils/style-utils';
+import Button from '@TutorShared/atoms/Button';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import { colorTokens, fontSize, fontWeight, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import Table, { type Column } from '@TutorShared/molecules/Table';
+import { getCountryByCode, getStateByCode, isEuropeanUnion } from '@TutorShared/utils/countries';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
@@ -36,17 +36,17 @@ export default function TaxRates() {
   const activeCountryAllStates = getCountryByCode(activeCountry ?? '')?.states ?? [];
 
   let tableData: ColumnDataType[] = activeCountry
-    ? rates
+    ? (rates
         .find((rate) => String(rate.country) === String(activeCountry))
         ?.states?.map((state) => ({
           locationId: getStateByCode(activeCountry, Number(state.id))?.id ?? '',
           rate: state?.rate,
-        })) ?? []
-    : rates?.map((countryObj) => ({
+        })) ?? [])
+    : (rates?.map((countryObj) => ({
         locationId: getCountryByCode(countryObj.country)?.numeric_code ?? '',
         rate: countryObj?.rate,
         emoji: getCountryByCode(countryObj.country)?.emoji,
-      })) ?? [];
+      })) ?? []);
 
   const isEU = isEuropeanUnion(activeCountry ?? '');
 
@@ -78,8 +78,8 @@ export default function TaxRates() {
       Header: isSingleCountry ? __('Region', 'tutor') : __('Countries', 'tutor'),
       Cell: (item) => {
         let name = activeCountry
-          ? getStateByCode(activeCountry, Number(item.locationId))?.name ?? ''
-          : getCountryByCode(`${item.locationId}`)?.name ?? '';
+          ? (getStateByCode(activeCountry, Number(item.locationId))?.name ?? '')
+          : (getCountryByCode(`${item.locationId}`)?.name ?? '');
 
         if (isSingleCountry) {
           name = getCountryByCode(`${item.locationId}`)?.name ?? '';
@@ -282,7 +282,7 @@ export default function TaxRates() {
           });
         }}
       >
-        {__('Add region', 'tutor')}
+        {__('Add Region', 'tutor')}
       </Button>
     );
   }
@@ -293,12 +293,8 @@ export default function TaxRates() {
     <>
       <Card>
         <CardHeader
-          title={activeCountry ? __('Regions & tax rates', 'tutor') : __('Regional tax rates', 'tutor')}
-          subtitle={
-            activeCountry
-              ? __('Add region you want to collect tax & their tax rates', 'tutor')
-              : __('Add the destinations in this region', 'tutor')
-          }
+          title={__('Tax Regions & Rates', 'tutor')}
+          subtitle={__('Specify regions and their applicable tax rates.', 'tutor')}
         />
         <div css={styleUtils.cardInnerSection}>
           <Show when={activeCountry && activeCountryAllStates?.length}>
@@ -334,11 +330,11 @@ export default function TaxRates() {
                           onClick={() => {
                             openCountryTaxRateModal({
                               form,
-                              title: __('Add state & VAT rate', 'tutor'),
+                              title: __('Add State & VAT Rate', 'tutor'),
                             });
                           }}
                         >
-                          {__('Add state', 'tutor')}
+                          {__('Add State', 'tutor')}
                         </Button>
                       </Show>
                     }

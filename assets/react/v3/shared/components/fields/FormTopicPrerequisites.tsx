@@ -2,23 +2,25 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import EmptyState from '@Molecules/EmptyState';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import type { Content, CourseTopic, ID } from '@CourseBuilderServices/curriculum';
-import { useDebounce } from '@Hooks/useDebounce';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import type { Content, CourseTopic } from '@CourseBuilderServices/curriculum';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 
-import notFound2x from '@Images/not-found-2x.webp';
-import notFound from '@Images/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
+import notFound from '@SharedImages/not-found.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -78,7 +80,7 @@ const FormTopicPrerequisites = ({
   isSearchable = false,
   helpText,
 }: FormTopicPrerequisitesProps) => {
-  const inputValue = field.value ?? [];
+  const inputValue = field.value || [];
   const selectedIds = inputValue.map((item) => String(item));
   const selectedOptions = options.reduce((contents, topic) => {
     return topic.contents.reduce((selectedContents, content) => {
@@ -174,7 +176,20 @@ const FormTopicPrerequisites = ({
                 </div>
                 <input
                   {...restInputProps}
-                  onClick={() => setIsOpen((previousState) => !previousState)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsOpen((previousState) => !previousState);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      setIsOpen((previousState) => !previousState);
+                    }
+
+                    if (event.key === 'Tab') {
+                      setIsOpen(false);
+                    }
+                  }}
                   className="tutor-input-field"
                   css={[inputCss, styles.input]}
                   autoComplete="off"
@@ -205,7 +220,7 @@ const FormTopicPrerequisites = ({
             >
               <div css={styles.courseList}>
                 <For each={selectedOptions}>
-                  {(content, index) => (
+                  {(content) => (
                     <div
                       key={content.ID}
                       css={styles.groupItems({
@@ -229,7 +244,7 @@ const FormTopicPrerequisites = ({
                           {content.post_title}
                         </span>
                         <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
-                          <span css={typography.tiny()}>
+                          <span data-question-count css={typography.tiny()}>
                             {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
                           </span>
                         </Show>
@@ -254,12 +269,16 @@ const FormTopicPrerequisites = ({
                 setIsOpen(false);
                 setSearchText('');
               }}
+              onEscape={() => {
+                setIsOpen(false);
+                setSearchText('');
+              }}
             >
               <div
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },
@@ -308,14 +327,14 @@ const FormTopicPrerequisites = ({
                                     width={24}
                                     height={24}
                                     style={css`
-                                        color: ${icons[content.post_type].color};
-                                      `}
+                                      color: ${icons[content.post_type].color};
+                                    `}
                                   />
                                   <span css={styles.title} title={content.post_title}>
                                     {content.post_title}
                                   </span>
                                   <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
-                                    <span css={typography.tiny()}>
+                                    <span data-question-count css={typography.tiny()}>
                                       {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
                                     </span>
                                   </Show>
@@ -408,6 +427,12 @@ const styles = {
     border-radius: ${borderRadius.circle};
     background: ${colorTokens.background.white};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: ${colorTokens.background.white};
+    }
+
     svg {
       color: ${colorTokens.icon.default};
       transition: color 0.3s ease-in-out;
@@ -441,11 +466,7 @@ const styles = {
     padding-inline: ${spacing[10]};
     margin-bottom: ${spacing[8]};
   `,
-  groupItems: ({
-    onPopover,
-  }: {
-    onPopover: boolean;
-  }) => css`
+  groupItems: ({ onPopover }: { onPopover: boolean }) => css`
     position: relative;
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
@@ -467,26 +488,30 @@ const styles = {
       opacity: 0;
     }
 
-    ${
-      !onPopover &&
-      css`
-        box-shadow: ${shadow.card};
-      `
-    }
+    ${!onPopover &&
+    css`
+      box-shadow: ${shadow.card};
+    `}
 
-    :hover {
+    &:hover,
+    &:focus,
+    &:active {
       background-color: ${colorTokens.background.hover};
 
-      ${
-        !onPopover &&
-        css`
-          background-color: ${colorTokens.background.white};
-          border-color: ${colorTokens.stroke.default};
+      ${!onPopover &&
+      css`
+        background-color: ${colorTokens.background.white};
+        border-color: ${colorTokens.stroke.default};
 
-          [data-visually-hidden] {
-            opacity: 1;
-          }
-        `
+        [data-visually-hidden] {
+          opacity: 1;
+        }
+      `}
+    }
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
       }
     }
   `,
@@ -497,22 +522,29 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
   `,
-  iconAndTitle: ({
-    onPopover,
-  }: {
-    onPopover: boolean;
-  }) => css`
+  iconAndTitle: ({ onPopover }: { onPopover: boolean }) => css`
     ${styleUtils.text.ellipsis(1)};
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
-    flex-grow: 1;
 
-    ${
-      onPopover &&
-      css`
-        padding-left: ${spacing[16]};
-      `
+    ${onPopover &&
+    css`
+      padding-left: ${spacing[16]};
+    `}
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    span {
+      text-align: left;
+      ${styleUtils.text.ellipsis(1)};
+    }
+
+    [data-question-count] {
+      flex-shrink: 0;
+      text-decoration: none;
     }
   `,
 };

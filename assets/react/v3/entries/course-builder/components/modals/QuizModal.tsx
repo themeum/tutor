@@ -3,23 +3,23 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
 
-import FormInput from '@Components/fields/FormInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Tabs from '@Molecules/Tabs';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Tabs from '@TutorShared/molecules/Tabs';
 
 import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionConditions';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
+import FormQuestionTitle from '@CourseBuilderComponents/fields/FormQuestionTitle';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import {
   type QuizForm,
@@ -29,18 +29,20 @@ import {
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
 
-import { modal } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { CURRENT_VIEWPORT, modal } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
-import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
+import type { ContentType } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { isDefined } from '@Utils/types';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type ID, isDefined } from '@TutorShared/utils/types';
+import { findSlotFields } from '@TutorShared/utils/util';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;
@@ -69,6 +71,7 @@ const QuizModal = ({
   contentDripType,
   contentType,
 }: QuizModalProps) => {
+  const { fields } = useCourseBuilderSlot();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
@@ -109,9 +112,8 @@ const QuizModal = ({
     shouldFocusError: true,
   });
 
-  const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isFormDirty) {
@@ -126,17 +128,21 @@ const QuizModal = ({
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFormDirty]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!getQuizDetailsQuery.data) {
       return;
     }
 
-    const convertedData = convertQuizResponseToFormData(getQuizDetailsQuery.data);
+    const convertedData = convertQuizResponseToFormData(
+      getQuizDetailsQuery.data,
+      findSlotFields({ fields: fields.Curriculum.Quiz }),
+    );
 
     form.reset(convertedData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getQuizDetailsQuery.data]);
 
   const onQuizFormSubmit = async (
@@ -153,8 +159,7 @@ const QuizModal = ({
       setActiveTab('details');
 
       Promise.resolve().then(() => {
-        form.trigger('quiz_title');
-        form.setFocus('quiz_title');
+        form.trigger('quiz_title', { shouldFocus: true });
       });
 
       return;
@@ -180,44 +185,59 @@ const QuizModal = ({
     }
 
     setIsEdit(false);
-    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId);
+    const payload = convertQuizFormDataToPayload(
+      data,
+      topicId,
+      contentDripType,
+      courseId,
+      findSlotFields(
+        { fields: fields.Curriculum.Quiz, slotKey: 'after_question_description' },
+        { fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_question_sidebar' },
+      ),
+      findSlotFields({ fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_settings' }),
+    );
 
     const response = await saveQuizMutation.mutateAsync(payload);
 
     if (response.data) {
       setIsEdit(false);
       closeModal({ action: 'CONFIRM' });
+      form.reset();
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isEdit) {
       form.setFocus('quiz_title');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''} contentType={contentType || 'tutor_quiz'}>
-        {(activeQuestionIndex, setValidationError) => (
+        {({ activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError }) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-            title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
-            subtitle={subtitle}
+            title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+            subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
+            maxWidth={1218}
             headerChildren={
               <Tabs
-                wrapperCss={css`
-                height: ${modal.HEADER_HEIGHT}px;
-              `}
+                wrapperCss={styles.tabsWrapper}
                 activeTab={activeTab}
                 tabList={[
                   {
-                    label: __('Question Details', 'tutor'),
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Question Details', 'tutor') : '',
                     value: 'details',
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="text" width={24} height={24} /> : null,
                   },
-                  { label: __('Settings', 'tutor'), value: 'settings' },
+                  {
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Settings', 'tutor') : '',
+                    value: 'settings',
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="settings" width={24} height={24} /> : null,
+                  },
                 ]}
                 onChange={(tab) => setActiveTab(tab)}
               />
@@ -238,32 +258,33 @@ const QuizModal = ({
                     }}
                     ref={cancelRef}
                   >
-                    {quizId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+                    {quizId
+                      ? CURRENT_VIEWPORT.isAboveSmallMobile
+                        ? __('Discard Changes', 'tutor')
+                        : __('Discard', 'tutor')
+                      : __('Cancel', 'tutor')}
                   </Button>
                   <Show
                     when={activeTab === 'settings' || quizId}
                     fallback={
-                      <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                      <Button
+                        data-cy="quiz-next"
+                        variant="primary"
+                        size="small"
+                        onClick={() => setActiveTab('settings')}
+                      >
                         {__('Next', 'tutor')}
                       </Button>
                     }
                   >
                     <Button
+                      data-cy="save-quiz"
                       loading={saveQuizMutation.isPending}
                       variant="primary"
                       size="small"
-                      onClick={async () => {
-                        if (activeQuestionIndex < 0) {
-                          await form.handleSubmit((data) =>
-                            onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                          )();
-                          return;
-                        }
-
-                        await form.handleSubmit((data) =>
-                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                        )();
-                      }}
+                      onClick={form.handleSubmit((data) =>
+                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                      )}
                     >
                       {__('Save', 'tutor')}
                     </Button>
@@ -278,30 +299,24 @@ const QuizModal = ({
                   <div css={styles.left}>
                     <Show when={activeTab === 'details'}>
                       <div css={styles.quizTitleWrapper}>
-                        <Show
-                          when={isEdit}
-                          fallback={
-                            <div css={styles.quizNameWithButton}>
-                              <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
-                              <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
-                                <SVGIcon name="edit" width={24} height={24} />
-                              </Button>
-                            </div>
-                          }
-                        >
-                          <div css={styles.quizForm}>
-                            <Controller
-                              control={form.control}
-                              name="quiz_title"
-                              rules={{ required: __('Quiz title is required', 'tutor') }}
-                              render={(controllerProps) => (
-                                <FormInput
-                                  {...controllerProps}
-                                  placeholder={__('Add quiz title', 'tutor')}
-                                  selectOnFocus
-                                />
-                              )}
-                            />
+                        <div css={styles.quizForm}>
+                          <Controller
+                            control={form.control}
+                            name="quiz_title"
+                            rules={{ required: __('Quiz title is required', 'tutor') }}
+                            render={(controllerProps) => (
+                              <FormQuestionTitle
+                                {...controllerProps}
+                                placeholder={__('Add quiz title', 'tutor')}
+                                size="small"
+                                isEdit={isEdit}
+                                onToggleEdit={(isEdit) => {
+                                  setIsEdit(isEdit);
+                                }}
+                              />
+                            )}
+                          />
+                          <Show when={isEdit}>
                             <Controller
                               control={form.control}
                               name="quiz_description"
@@ -330,6 +345,7 @@ const QuizModal = ({
                                 {__('Cancel', 'tutor')}
                               </Button>
                               <Button
+                                data-cy="save-quiz-title"
                                 loading={saveQuizMutation.isPending}
                                 variant="secondary"
                                 type="submit"
@@ -345,8 +361,8 @@ const QuizModal = ({
                                 {__('Ok', 'tutor')}
                               </Button>
                             </div>
-                          </div>
-                        </Show>
+                          </Show>
+                        </div>
                       </div>
 
                       <QuestionList isEditing={isEdit} />
@@ -371,10 +387,10 @@ const QuizModal = ({
               triggerRef={cancelRef}
               closePopover={() => setIsConfirmationOpen(false)}
               maxWidth="258px"
-              title={__(`Your quiz has unsaved changes. If you cancel, you'll lose your progress.`, 'tutor')}
+              title={__('Your quiz has unsaved changes. If you cancel, you will lose your progress.', 'tutor')}
               message={__('Are you sure you want to continue?', 'tutor')}
               animationType={AnimationType.slideUp}
-              arrow="top"
+              arrow={CURRENT_VIEWPORT.isAboveMobile ? 'top' : 'absoluteCenter'}
               positionModifier={{ top: -50, left: quizId ? 88 : activeTab === 'settings' ? 30 : 26 }}
               hideArrow
               confirmButton={{
@@ -387,7 +403,16 @@ const QuizModal = ({
               }}
               onConfirmation={() => {
                 form.reset();
-                !quizId && closeModal();
+                setValidationError(null);
+
+                if (
+                  !getQuizDetailsQuery.data?.questions.find((question) => question.question_id === activeQuestionId)
+                ) {
+                  setActiveQuestionId('');
+                }
+                if (!quizId) {
+                  closeModal();
+                }
               }}
             />
           </ModalWrapper>
@@ -400,36 +425,48 @@ const QuizModal = ({
 export default QuizModal;
 
 const styles = {
-  wrapper: ({
-    activeTab,
-    isH5pQuiz,
-  }: {
-    activeTab: QuizTabs;
-    isH5pQuiz: boolean;
-  }) => css`
-    width: 1218px;
+  wrapper: ({ activeTab, isH5pQuiz }: { activeTab: QuizTabs; isH5pQuiz: boolean }) => css`
+    width: 100%;
     display: grid;
     grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '352px 1fr 280px') : '1fr'};
     height: 100%;
+
+    ${Breakpoint.smallTablet} {
+      width: 100%;
+      grid-template-columns: 1fr;
+      height: max-content;
+    }
+  `,
+  tabsWrapper: css`
+    height: ${modal.HEADER_HEIGHT}px;
+
+    ${Breakpoint.smallMobile} {
+      button {
+        min-width: auto;
+      }
+    }
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
   `,
-  content: ({
-    activeTab,
-  }: {
-    activeTab: QuizTabs;
-  }) => css`
+  content: ({ activeTab }: { activeTab: QuizTabs }) => css`
     ${styleUtils.overflowYAuto};
     padding: ${spacing[32]} 0 ${spacing[48]} ${spacing[6]};
 
-		${
-      activeTab === 'settings' &&
-      css`
-			  padding-top: ${spacing[24]};
-        padding-inline: 352px 352px; // 352px is the width of the left and right side
-		  `
-    }
+    ${activeTab === 'settings' &&
+    css`
+      padding-top: ${spacing[24]};
+      padding-inline: 352px 352px; // 352px is the width of the left and right side
+
+      ${Breakpoint.smallTablet} {
+        padding: ${spacing[16]} ${spacing[8]} ${spacing[24]} ${spacing[8]};
+        margin: 0 auto;
+      }
+
+      ${Breakpoint.smallMobile} {
+        padding-top: ${spacing[8]};
+      }
+    `}
   `,
   right: css`
     ${styleUtils.overflowYAuto};
@@ -442,6 +479,10 @@ const styles = {
     color: ${colorTokens.text.subdued};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[16]} ${spacing[28]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
+
+    ${Breakpoint.smallTablet} {
+      padding: ${spacing[8]};
+    }
   `,
   quizNameWithButton: css`
     display: inline-flex;
@@ -452,7 +493,22 @@ const styles = {
       display: none;
     }
 
-    :hover {
+    :hover,
+    :focus-within {
+      button {
+        display: block;
+      }
+    }
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      border-radius: ${borderRadius[6]};
+      button {
+        display: block;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       button {
         display: block;
       }

@@ -1,12 +1,11 @@
-import { spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
-import { css } from '@emotion/react';
+import { type SerializedStyles, css } from '@emotion/react';
+import { useLayoutEffect, useRef } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import AITextModal from '@Components/modals/AITextModal';
-import { useModal } from '@Components/modals/Modal';
-import { __ } from '@wordpress/i18n';
+import { spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTextareaInputProps extends FormControllerProps<string | null> {
@@ -25,7 +24,9 @@ interface FormTextareaInputProps extends FormControllerProps<string | null> {
   enableResize?: boolean;
   isSecondary?: boolean;
   isMagicAi?: boolean;
-  generateWithAi?: boolean;
+  inputCss?: SerializedStyles;
+  maxHeight?: number;
+  autoResize?: boolean;
 }
 
 const DEFAULT_ROWS = 6;
@@ -48,16 +49,37 @@ const FormTextareaInput = ({
   enableResize = true,
   isSecondary = false,
   isMagicAi = false,
-  generateWithAi = false,
+  inputCss,
+  maxHeight,
+  autoResize = false,
 }: FormTextareaInputProps) => {
   const inputValue = field.value ?? '';
-  const { showModal } = useModal();
+
+  const ref = useRef<HTMLTextAreaElement>(null);
 
   let characterCount: { maxLimit: number; inputCharacter: number } | undefined = undefined;
 
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
+
+  const adjustHeight = () => {
+    if (ref.current) {
+      if (maxHeight) {
+        ref.current.style.maxHeight = `${maxHeight}px`;
+      }
+
+      ref.current.style.height = 'auto';
+      ref.current.style.height = `${ref.current.scrollHeight}px`;
+    }
+  };
+
+  useLayoutEffect(() => {
+    if (autoResize) {
+      adjustHeight();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <FormFieldWrapper
@@ -73,33 +95,21 @@ const FormTextareaInput = ({
       characterCount={characterCount}
       isSecondary={isSecondary}
       isMagicAi={isMagicAi}
-      generateWithAi={generateWithAi}
-      onClickAiButton={() => {
-        showModal({
-          component: AITextModal,
-          isMagicAi: true,
-          props: {
-            title: __('AI Studio', 'tutor'),
-            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-            field,
-            fieldState,
-            is_html: true,
-            fieldLabel: __('Craft Your Course Description', 'tutor'),
-            fieldPlaceholder: __(
-              'Provide a brief overview of your course topic, target audience, and key takeaways',
-              'tutor',
-            ),
-          },
-        });
-      }}
     >
       {(inputProps) => {
         return (
           <>
-            <div css={styles.container(enableResize)}>
+            <div css={styles.container(enableResize, inputCss)}>
               <textarea
                 {...field}
                 {...inputProps}
+                ref={(element) => {
+                  field.ref(element);
+                  // @ts-ignore
+                  ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+                }}
+                style={{ maxHeight: maxHeight ? `${maxHeight}px` : 'none' }}
+                className="tutor-input-field"
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -111,6 +121,10 @@ const FormTextareaInput = ({
 
                   if (onChange) {
                     onChange(value);
+                  }
+
+                  if (autoResize) {
+                    adjustHeight();
                   }
                 }}
                 onKeyDown={(event) => {
@@ -128,10 +142,10 @@ const FormTextareaInput = ({
   );
 };
 
-export default FormTextareaInput;
+export default withVisibilityControl(FormTextareaInput);
 
 const styles = {
-  container: (enableResize = false) => css`
+  container: (enableResize = false, inputCss?: SerializedStyles) => css`
     position: relative;
     display: flex;
 
@@ -141,12 +155,14 @@ const styles = {
       padding: ${spacing[8]} ${spacing[12]};
       resize: none;
 
-      ${
-        enableResize &&
-        css`
-        resize: vertical;
-      `
+      &.tutor-input-field {
+        ${inputCss};
       }
+
+      ${enableResize &&
+      css`
+        resize: vertical;
+      `}
     }
   `,
 };

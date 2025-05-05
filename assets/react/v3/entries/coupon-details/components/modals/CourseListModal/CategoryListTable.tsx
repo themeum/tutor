@@ -1,28 +1,26 @@
-import Checkbox from '@Atoms/CheckBox';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { usePaginatedTable } from '@Hooks/usePaginatedTable';
-import Paginator from '@Molecules/Paginator';
-import Table, { type Column } from '@Molecules/Table';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { borderRadius, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { css } from '@emotion/react';
 
 import { type Coupon, type CourseCategory, useAppliesToQuery } from '@CouponServices/coupon';
-import coursePlaceholder from '@Images/course-placeholder.png';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 
 interface CategoryListTableProps {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<Coupon, any, undefined>;
 }
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
-  const categoryList = form.watch('categories') ?? [];
-  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
-    updateQueryParams: false,
-  });
+  const selectedCategories = form.watch('categories') ?? [];
+  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
   const categoryListQuery = useAppliesToQuery({
     applies_to: 'specific_category',
     offset,
@@ -30,21 +28,34 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
     filter: pageInfo.filter,
   });
 
+  const fetchedCategories = (categoryListQuery.data?.results ?? []) as CourseCategory[];
+
   function toggleSelection(isChecked = false) {
-    form.setValue('categories', isChecked ? (categoryListQuery.data?.results as CourseCategory[]) : []);
+    const selectedCategoryIds = selectedCategories.map((category) => category.id);
+    const fetchedCategoryIds = fetchedCategories.map((category) => category.id);
+
+    if (isChecked) {
+      const newCategories = fetchedCategories.filter((category) => !selectedCategoryIds.includes(category.id));
+      form.setValue('categories', [...selectedCategories, ...newCategories]);
+      return;
+    }
+
+    const newCategories = selectedCategories.filter((category) => !fetchedCategoryIds.includes(category.id));
+    form.setValue('categories', newCategories);
   }
 
   function handleAllIsChecked() {
-    return (
-      categoryList.length === categoryListQuery.data?.results.length &&
-      categoryList?.every((item) => categoryListQuery.data?.results?.map((result) => result.id).includes(item.id))
-    );
+    return fetchedCategories.every((category) => selectedCategories.map((course) => course.id).includes(category.id));
   }
 
   const columns: Column<CourseCategory>[] = [
     {
       Header: categoryListQuery.data?.results.length ? (
-        <Checkbox onChange={toggleSelection} checked={handleAllIsChecked()} label={__('Category', 'tutor')} />
+        <Checkbox
+          onChange={toggleSelection}
+          checked={categoryListQuery.isLoading || categoryListQuery.isRefetching ? false : handleAllIsChecked()}
+          label={__('Category', 'tutor')}
+        />
       ) : (
         __('Category', 'tutor')
       ),
@@ -53,8 +64,8 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const filteredItems = categoryList.filter((course) => course.id !== item.id);
-                const isNewItem = filteredItems?.length === categoryList.length;
+                const filteredItems = selectedCategories.filter((course) => course.id !== item.id);
+                const isNewItem = filteredItems?.length === selectedCategories.length;
 
                 if (isNewItem) {
                   form.setValue('categories', [...filteredItems, item]);
@@ -62,7 +73,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
                   form.setValue('categories', filteredItems);
                 }
               }}
-              checked={categoryList.map((course) => course.id).includes(item.id)}
+              checked={selectedCategories.map((course) => course.id).includes(item.id)}
             />
             <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('course item', 'tutor')} />
             <div css={styles.courseItem}>
@@ -115,33 +126,33 @@ export default CategoryListTable;
 
 const styles = {
   tableActions: css`
-		padding: ${spacing[20]};
-	`,
+    padding: ${spacing[20]};
+  `,
   tableWrapper: css`
-		max-height: calc(100vh - 350px);
-		overflow: auto;
-	`,
+    max-height: calc(100vh - 350px);
+    overflow: auto;
+  `,
   paginatorWrapper: css`
-		margin: ${spacing[20]} ${spacing[16]};
-	`,
+    margin: ${spacing[20]} ${spacing[16]};
+  `,
   checkboxWrapper: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
   courseItem: css`
-		${typography.caption()};
-		margin-left: ${spacing[4]};
-	`,
+    ${typography.caption()};
+    margin-left: ${spacing[4]};
+  `,
   thumbnail: css`
-		width: 48px;
-		height: 48px;
-		border-radius: ${borderRadius[4]};
-	`,
+    width: 48px;
+    height: 48px;
+    border-radius: ${borderRadius[4]};
+  `,
   errorMessage: css`
-		height: 100px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	`,
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
 };

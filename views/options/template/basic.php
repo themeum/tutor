@@ -18,8 +18,10 @@ foreach ( $section['blocks'] as $blocks ) :
 	do_action( 'tutor_before_basic_option_single_item', $blocks_slug, $blocks );
 	if ( empty( $blocks['label'] ) ) :
 		?>
-		<?php echo $this->blocks( $blocks ); //phpcs:ignore ?>
-		<?php do_action( 'tutor_inside_basic_option_single_item', $blocks_slug, $blocks ); ?>
+		<div class="tutor-option-single-item tutor-mb-32">
+			<?php echo $this->blocks( $blocks ); //phpcs:ignore ?>
+			<?php do_action( 'tutor_inside_basic_option_single_item', $blocks_slug, $blocks ); ?>
+		</div>
 	<?php else : ?>
 		<?php
 			echo $this->blocks( $blocks ); //phpcs:ignore

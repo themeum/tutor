@@ -2,18 +2,18 @@ import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { useModal } from '@Components/modals/Modal';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import CertificatePreviewModal from '@CourseBuilderComponents/modals/CertificatePreviewModal';
 
-import Show from '@Controls/Show';
+import Show from '@TutorShared/controls/Show';
 import type { Certificate, CourseDetailsResponse } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface CertificateCardProps {
   selectedCertificate: string;
@@ -34,7 +34,7 @@ const CertificateCard = ({
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const certificatesData =
-    courseDetails?.course_certificates_templates.filter(
+    (courseDetails?.course_certificates_templates ?? []).filter(
       (certificate) =>
         certificate.orientation === orientation &&
         (data.is_default ? certificate.is_default === true : certificate.is_default === false),
@@ -115,13 +115,7 @@ const CertificateCard = ({
 export default CertificateCard;
 
 const styles = {
-  wrapper: ({
-    isSelected = false,
-    isLandScape = false,
-  }: {
-    isSelected: boolean;
-    isLandScape: boolean;
-  }) => css`
+  wrapper: ({ isSelected = false, isLandScape = false }: { isSelected: boolean; isLandScape: boolean }) => css`
     ${styleUtils.centeredFlex};
     background-color: ${colorTokens.surface.courseBuilder};
     max-height: ${isLandScape ? '154px' : '217px'};
@@ -138,20 +132,18 @@ const styles = {
       left: 0;
       right: 0;
       bottom: 0;
-      border-radius: ${borderRadius.card};;
+      border-radius: ${borderRadius.card};
     }
 
-    ${
-      isSelected &&
-      css`
-        [data-overlay] {
-          background: ${colorTokens.brand.blue};
-          opacity: 0.1;
-        }
-      `
-    }
+    ${isSelected &&
+    css`
+      [data-overlay] {
+        background: ${colorTokens.brand.blue};
+        opacity: 0.1;
+      }
+    `}
 
-    &:hover {
+    &:hover, &:focus-within {
       border-color: ${colorTokens.stroke.brand};
 
       [data-footer-actions] {
@@ -162,7 +154,7 @@ const styles = {
         background: ${colorTokens.brand.blue};
         opacity: 0.1;
       }
-  }
+    }
   `,
   emptyCard: css`
     ${styleUtils.flexCenter()};
@@ -196,11 +188,7 @@ const styles = {
     border-bottom-left-radius: ${borderRadius.card};
     border-bottom-right-radius: ${borderRadius.card};
   `,
-  checkIcon: ({
-    isSelected = false,
-  }: {
-    isSelected: boolean;
-  }) => css`
+  checkIcon: ({ isSelected = false }: { isSelected: boolean }) => css`
     opacity: ${isSelected ? 1 : 0};
     position: absolute;
     top: -14px;

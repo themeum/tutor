@@ -1,24 +1,19 @@
-import collection from '@Config/icon-list';
-import type { Category, CategoryWithChildren } from '@Services/category';
-import {
-  addMinutes,
-  differenceInDays,
-  endOfMonth,
-  endOfYear,
-  format,
-  isSameDay,
-  isToday,
-  isYesterday,
-  startOfMonth,
-  startOfYear,
-  subMonths,
-  subYears,
-} from 'date-fns';
-import type { DateRange } from 'react-day-picker';
+import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
+import { __, sprintf } from '@wordpress/i18n';
+import { addMinutes, format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
-import { DateFormats } from '@Config/constants';
-import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
+import { tutorConfig } from '@TutorShared/config/config';
+import { type Addons, DateFormats } from '@TutorShared/config/constants';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import {
+  type DurationUnit,
+  type InjectedField,
+  type PaginatedParams,
+  type WPPostStatus,
+  isDefined,
+  isObject,
+} from '@TutorShared/utils/types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {
@@ -38,10 +33,6 @@ export const isFileOrBlob = (value: unknown): value is Blob | File => {
 
 export const getValueInArray = <T>(value: T | T[] | undefined): T[] => {
   return Array.isArray(value) ? value : value ? [value] : [];
-};
-
-export const getIcon = (name: IconCollection) => {
-  return collection[name];
 };
 
 // Generate unique id
@@ -87,7 +78,9 @@ export const moveTo = <T>(arr: T[], fromIndex: number, toIndex: number) => {
     }
 
     const [item] = newArr.splice(mutatingFromIndex, 1);
-    item && newArr.splice(mutatingToIndex, 0, item);
+    if (item) {
+      newArr.splice(mutatingToIndex, 0, item);
+    }
   }
 
   return newArr;
@@ -119,10 +112,32 @@ export const hasDuplicateEntries = <T>(items: T[], callback: (item: T) => string
   return false;
 };
 
-export const generateTree = (data: Category[], parent = 0): CategoryWithChildren[] => {
-  return data
-    .filter((node) => node.parent === parent)
-    .reduce<CategoryWithChildren[]>((tree, node) => [...tree, { ...node, children: generateTree(data, node.id) }], []);
+export const generateTree = (
+  data: Category[],
+  parent = 0,
+  processedIds: Set<number> = new Set(),
+): CategoryWithChildren[] => {
+  const categoryIds = new Set(data.map((category) => category.id));
+
+  const levelNodes = data.filter((node) => {
+    if (processedIds.has(node.id)) {
+      return false;
+    }
+
+    if (parent === 0) {
+      return node.parent === 0 || !categoryIds.has(node.parent);
+    }
+
+    return node.parent === parent;
+  });
+
+  return levelNodes.reduce<CategoryWithChildren[]>((tree, node) => {
+    processedIds.add(node.id);
+
+    const children = generateTree(data, node.id, processedIds);
+
+    return [...tree, { ...node, children }];
+  }, []);
 };
 
 export const getCategoryLeftBarHeight = (isLastChild: boolean, totalChildren: number) => {
@@ -160,50 +175,6 @@ export const mapInBetween = (
   expectedMax: number,
 ) => {
   return ((value - originalMin) * (expectedMax - expectedMin)) / (originalMax - originalMin) + expectedMin;
-};
-
-export const getActiveDateRange = (range: DateRange | undefined) => {
-  if (!range || !range.from) {
-    return;
-  }
-
-  if (isToday(range.from) && !range.to) {
-    return 'today';
-  }
-
-  if (isYesterday(range.from) && !range.to) {
-    return 'yesterday';
-  }
-
-  if (range.to) {
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 6) {
-      return 'last_seven_days';
-    }
-
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 29) {
-      return 'last_thirty_days';
-    }
-
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 89) {
-      return 'last_ninety_days';
-    }
-
-    if (
-      isSameDay(startOfMonth(subMonths(new Date(), 1)), range.from) &&
-      isSameDay(endOfMonth(subMonths(new Date(), 1)), range.to)
-    ) {
-      return 'last_month';
-    }
-
-    if (
-      isSameDay(startOfYear(subYears(new Date(), 1)), range.from) &&
-      isSameDay(endOfYear(subYears(new Date(), 1)), range.to)
-    ) {
-      return 'last_year';
-    }
-
-    return;
-  }
 };
 
 export const extractIdOnly = <T extends { id: number }>(data: T[]) => {
@@ -288,17 +259,17 @@ export const formatSeconds = (seconds: number) => {
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };
-export const getObjectKeys = <T extends {}>(object: T) => {
+export const getObjectKeys = <T extends object>(object: T) => {
   if (!isDefined(object) || !isObject(object)) {
     return [] as (keyof T)[];
   }
   return Object.keys(object) as (keyof T)[];
 };
 
-export const getObjectValues = <T extends {}, K extends keyof T = keyof T>(object: T): T[K][] => {
+export const getObjectValues = <T extends object, K extends keyof T = keyof T>(object: T): T[K][] => {
   return Object.values(object);
 };
-export const getObjectEntries = <T extends {}, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
+export const getObjectEntries = <T extends object, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
   return Object.entries(object) as [K, T[K]][];
 };
 
@@ -354,4 +325,171 @@ export const copyToClipboard = (text: string) => {
       }
     }
   });
+};
+
+export const convertToErrorMessage = (error: ErrorResponse) => {
+  let errorMessage = error.response.data.message;
+  if (error.response.data.status_code === 422 && error.response.data.data) {
+    errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
+  }
+  return errorMessage || __('Something went wrong', 'tutor');
+};
+
+export const fetchImageUrlAsBase64 = async (url: string): Promise<string> => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+      reader.readAsDataURL(blob);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  } catch (error) {
+    throw new Error(`Failed to fetch and convert image: ${error}`);
+  }
+};
+
+export const determinePostStatus = (postStatus: WPPostStatus, postVisibility: 'private' | 'password_protected') => {
+  if (postStatus === 'trash') {
+    return 'trash';
+  }
+
+  if (postVisibility === 'private') {
+    return 'private';
+  }
+
+  if (postStatus === 'future') {
+    return 'future';
+  }
+
+  if (postVisibility === 'password_protected' && postStatus !== 'draft') {
+    return 'publish';
+  }
+
+  return postStatus;
+};
+
+export type Addon = `${Addons}`;
+
+export const isAddonEnabled = (addon: Addon) => {
+  return !!tutorConfig.addons_data.find((item) => item.base_name === addon)?.is_enabled;
+};
+
+export const convertToSlug = (value: string): string => {
+  return value
+    .normalize('NFKD') // Normalize accented characters into base forms + diacritics
+    .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
+    .toLowerCase()
+    .replace(
+      // eslint-disable-next-line no-misleading-character-class
+      /[^a-z0-9\u0020-\u007F\u00A0-\u00FF\u0100-\u017F\u0180-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u0900-\u097F\u0E00-\u0E7F\u0B80-\u0BFF\u10A0-\u10FF\u0530-\u058F\u0980-\u09FF\u4E00-\u9FFF\u3000-\u303F\uAC00-\uD7AF\s-]/g,
+      '',
+    ) // Retain letters and combining marks
+    .replace(/\s+/g, '-') // Replace spaces with dashes
+    .replace(/-+/g, '-') // Replace multiple dashes with a single one
+    .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
+};
+
+export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedField[]>; slotKey?: string }[]) => {
+  const slotFields: string[] = [];
+  fieldArgs.forEach((arg) => {
+    if (arg.slotKey) {
+      arg.fields[arg.slotKey].forEach((i) => {
+        slotFields.push(i.name);
+      });
+    } else {
+      Object.keys(arg.fields).forEach((i) => {
+        arg.fields[i].forEach((j) => {
+          slotFields.push(j.name);
+        });
+      });
+    }
+  });
+
+  return slotFields;
+};
+
+export const decodeHtmlEntities = (text: string) => {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(text, 'text/html');
+  return doc.body.textContent || '';
+};
+
+export const formatSubscriptionRepeatUnit = ({
+  unit = 'hour',
+  value,
+  useLySuffix = false,
+  capitalize = true,
+  showSingular = false,
+}: {
+  unit: DurationUnit | 'until_cancellation';
+  value: number;
+  useLySuffix?: boolean;
+  capitalize?: boolean;
+  showSingular?: boolean;
+}) => {
+  if (unit === 'until_cancellation') {
+    const result = __('Until Cancellation', 'tutor-pro');
+    return capitalize ? capitalizeWords(result) : result;
+  }
+
+  const unitFormats = {
+    hour: {
+      plural: __('%d hours', 'tutor-pro'),
+      singular: __('%d hour', 'tutor-pro'),
+      suffix: __('hourly', 'tutor-pro'),
+      base: __('hour', 'tutor-pro'),
+    },
+    day: {
+      plural: __('%d days', 'tutor-pro'),
+      singular: __('%d day', 'tutor-pro'),
+      suffix: __('daily', 'tutor-pro'),
+      base: __('day', 'tutor-pro'),
+    },
+    week: {
+      plural: __('%d weeks', 'tutor-pro'),
+      singular: __('%d week', 'tutor-pro'),
+      suffix: __('weekly', 'tutor-pro'),
+      base: __('week', 'tutor-pro'),
+    },
+    month: {
+      plural: __('%d months', 'tutor-pro'),
+      singular: __('%d month', 'tutor-pro'),
+      suffix: __('monthly', 'tutor-pro'),
+      base: __('month', 'tutor-pro'),
+    },
+    year: {
+      plural: __('%d years', 'tutor-pro'),
+      singular: __('%d year', 'tutor-pro'),
+      suffix: __('yearly', 'tutor-pro'),
+      base: __('year', 'tutor-pro'),
+    },
+  };
+
+  if (!unitFormats[unit]) {
+    return '';
+  }
+
+  let result = '';
+
+  if (value > 1) {
+    result = sprintf(unitFormats[unit].plural, value);
+  } else if (showSingular) {
+    result = sprintf(unitFormats[unit].singular, value);
+  } else if (useLySuffix) {
+    result = unitFormats[unit].suffix;
+  } else {
+    result = unitFormats[unit].base;
+  }
+
+  return capitalize ? capitalizeWords(result) : result;
+};
+
+const capitalizeWords = (text: string): string => {
+  return text
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 };

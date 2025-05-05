@@ -100,7 +100,7 @@ class Template extends Tutor_Base {
 			$queried_object = get_queried_object();
 			if ( $queried_object instanceof \WP_Post ) {
 				$page_id               = $queried_object->ID;
-				$selected_archive_page = (int) tutor_utils()->get_option( 'course_archive_page' );
+				$selected_archive_page = (int) apply_filters( 'tutor_filter_course_archive_page', tutor_utils()->get_option( 'course_archive_page' ) );
 
 				if ( $page_id === $selected_archive_page ) {
 					$paged        = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
@@ -123,6 +123,7 @@ class Template extends Tutor_Base {
 			if ( ( $post_type === $this->course_post_type || ! empty( $course_category ) ) ) {
 				$query->set( 'posts_per_page', $courses_per_page );
 				$query->set( 'post_type', apply_filters( 'tutor_course_archive_post_types', array( $this->course_post_type ) ) );
+				$query = apply_filters( 'tutor_limit_course_archive_list_filter', $query );
 
 				$course_filter = 'newest_first';
 				if ( ! empty( Input::get( 'tutor_course_filter', '' ) ) ) {
@@ -130,11 +131,11 @@ class Template extends Tutor_Base {
 				}
 				switch ( $course_filter ) {
 					case 'newest_first':
-						$query->set( 'orderby', 'ID' );
+						$query->set( 'orderby', 'post_date' );
 						$query->set( 'order', 'desc' );
 						break;
 					case 'oldest_first':
-						$query->set( 'orderby', 'ID' );
+						$query->set( 'orderby', 'post_date' );
 						$query->set( 'order', 'asc' );
 						break;
 					case 'course_title_az':

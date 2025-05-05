@@ -1,45 +1,45 @@
 import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Popover from '@Molecules/Popover';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { useModal } from '@Components/modals/Modal';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import {
   type ContentType,
-  type ID,
   useDeleteContentMutation,
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
-import { noop } from '@Utils/util';
+import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { type IconCollection } from '@TutorShared/icons/types';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { ID } from '@TutorShared/utils/types';
+import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicContentProps {
   type: ContentType;
@@ -77,8 +77,20 @@ const icons = {
   },
 } as const;
 
+const confirmationMessages = {
+  tutor_assignments:
+    // prettier-ignore
+    __('Are you sure you want to delete this assignment? All existing assignment submissions will be permanently deleted.', 'tutor'),
+  tutor_quiz:
+    // prettier-ignore
+    __('Are you sure you want to delete this quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
+  tutor_h5p_quiz:
+    // prettier-ignore
+    __( 'Are you sure you want to delete this interactive quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
+} as const;
+
 const modalComponent: {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
 } = {
   lesson: LessonModal,
@@ -112,7 +124,11 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
 const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = false }: TopicContentProps) => {
-  const courseDetails = useCourseDetails();
+  const topicId = getIdWithoutPrefix('topic-', topic.id);
+  const contentId = getIdWithoutPrefix('content-', content.id);
+
+  const queryClient = useQueryClient();
+  const courseDetails = queryClient.getQueryData(['CourseDetails', Number(courseId)]) as CourseDetailsResponse;
   const form = useFormContext<CourseFormData>();
   const [meetingType, setMeetingType] = useState<'tutor_zoom_meeting' | 'tutor-google-meet' | null>(null);
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
@@ -123,6 +139,9 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const icon = icons[type];
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: content.id,
+    data: {
+      type: 'content',
+    },
     animateLayoutChanges,
   });
 
@@ -141,23 +160,24 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const exportQuizMutation = useExportQuizMutation();
 
   const handleShowModalOrPopover = () => {
-    const isContentType = type as keyof typeof modalComponent;
-    if (modalComponent[isContentType]) {
+    const contentType = type as keyof typeof modalComponent;
+    if (modalComponent[contentType]) {
       showModal({
-        component: modalComponent[isContentType],
+        component: modalComponent[contentType],
         props: {
           contentDripType: form.watch('contentDripType'),
-          topicId: topic.id,
-          lessonId: content.id,
-          assignmentId: content.id,
-          quizId: content.id,
-          title: modalTitle[isContentType],
-          subtitle: `${__('Topic')}: ${topic.title}`,
-          icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
+          topicId: topicId,
+          lessonId: contentId,
+          assignmentId: contentId,
+          quizId: contentId,
+          title: modalTitle[contentType],
+          subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
+          icon: <SVGIcon name={modalIcon[contentType]} height={24} width={24} />,
           ...(type === 'tutor_h5p_quiz' && {
             contentType: 'tutor_h5p_quiz',
           }),
         },
+        closeOnEscape: !['tutor_quiz', 'tutor_h5p_quiz'].includes(type),
       });
     }
     if (type === 'tutor_zoom_meeting') {
@@ -171,13 +191,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
   const handleDelete = async () => {
     if (['lesson', 'tutor_assignments'].includes(type)) {
-      await deleteContentMutation.mutateAsync(content.id);
+      await deleteContentMutation.mutateAsync(contentId);
     } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type)) {
-      await deleteQuizMutation.mutateAsync(content.id);
+      await deleteQuizMutation.mutateAsync(contentId);
     } else if (type === 'tutor-google-meet') {
-      await deleteGoogleMeetMutation.mutateAsync(content.id);
+      await deleteGoogleMeetMutation.mutateAsync(contentId);
     } else if (type === 'tutor_zoom_meeting') {
-      await deleteZoomMeetingMutation.mutateAsync(content.id);
+      await deleteZoomMeetingMutation.mutateAsync(contentId);
     }
 
     setIsDeletePopoverOpen(false);
@@ -202,7 +222,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
     duplicateContentMutation.mutateAsync({
       course_id: courseId,
-      content_id: content.id,
+      content_id: contentId,
       content_type: convertedContentType[type as Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
     });
     onCopy?.();
@@ -213,7 +233,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       <div
         {...attributes}
         css={styles.wrapper({
-          isDragging: isOverlay,
+          isDragging,
+          isOverlay,
           isActive: meetingType === type || isDeletePopoverOpen || duplicateContentMutation.isPending,
         })}
         ref={setNodeRef}
@@ -226,8 +247,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
               width={24}
               height={24}
               style={css`
-								color: ${icon.color};
-							`}
+                color: ${icon.color};
+              `}
             />
           </div>
           <div data-bar-icon>
@@ -236,7 +257,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
             <Show when={(type === 'tutor_quiz' || type === 'tutor_h5p_quiz') && !!content.total_question}>
-              <span data-question-count>({content.total_question} Questions)</span>
+              <span data-question-count>({sprintf(__('%s Questions', 'tutor'), content.total_question)})</span>
             </Show>
           </p>
         </div>
@@ -250,9 +271,9 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                   <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
                     <button
                       type="button"
-                      css={styles.actionButton}
+                      css={styleUtils.actionButton}
                       onClick={() => {
-                        exportQuizMutation.mutate(content.id);
+                        exportQuizMutation.mutate(contentId);
                       }}
                     >
                       <SVGIcon name="export" width={24} height={24} />
@@ -261,7 +282,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                 }
               >
                 <ProBadge size="tiny">
-                  <button type="button" css={styles.actionButton} disabled onClick={noop}>
+                  <button type="button" css={styleUtils.actionButton} disabled onClick={noop}>
                     <SVGIcon name="export" width={24} height={24} />
                   </button>
                 </ProBadge>
@@ -269,7 +290,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
             </Tooltip>
           </Show>
           <Tooltip content={__('Edit', 'tutor')} delay={200}>
-            <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
+            <button
+              data-cy={`edit-${type}`}
+              ref={editButtonRef}
+              type="button"
+              css={styleUtils.actionButton}
+              onClick={handleShowModalOrPopover}
+            >
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
@@ -279,13 +306,18 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                 <Show
                   when={!isTutorPro}
                   fallback={
-                    <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                    <button
+                      data-cy={`duplicate-${type}`}
+                      type="button"
+                      css={styleUtils.actionButton}
+                      onClick={handleDuplicate}
+                    >
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   }
                 >
                   <ProBadge size="tiny">
-                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                    <button disabled type="button" css={styleUtils.actionButton} onClick={noop}>
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   </ProBadge>
@@ -295,9 +327,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           </Show>
           <Tooltip content={__('Delete', 'tutor')} delay={200}>
             <button
+              data-cy={`delete-${type}`}
               ref={deleteRef}
               type="button"
-              css={styles.actionButton}
+              css={styleUtils.actionButton}
               onClick={() => {
                 setIsDeletePopoverOpen(true);
               }}
@@ -310,32 +343,41 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       <Popover
         triggerRef={editButtonRef}
         isOpen={meetingType !== null}
-        closePopover={() => setMeetingType(null)}
+        closePopover={noop}
         maxWidth="306px"
+        closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
             data={null}
-            topicId={topic.id}
+            topicId={topicId}
             meetingHost={courseDetails?.zoom_users || {}}
             onCancel={() => setMeetingType(null)}
-            meetingId={content.id}
+            meetingId={contentId}
           />
         </Show>
         <Show when={meetingType === 'tutor-google-meet'}>
-          <GoogleMeetForm data={null} topicId={topic.id} onCancel={() => setMeetingType(null)} meetingId={content.id} />
+          <GoogleMeetForm data={null} topicId={topicId} onCancel={() => setMeetingType(null)} meetingId={contentId} />
         </Show>
       </Popover>
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         isLoading={
-          deleteContentMutation.isPending || deleteQuizMutation.isPending || deleteGoogleMeetMutation.isPending
+          deleteContentMutation.isPending ||
+          deleteQuizMutation.isPending ||
+          deleteGoogleMeetMutation.isPending ||
+          deleteZoomMeetingMutation.isPending
         }
         triggerRef={deleteRef}
         closePopover={noop}
         maxWidth="258px"
         title={sprintf(__('Delete "%s"', 'tutor'), content.title)}
-        message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
+        message={
+          confirmationMessages[type as keyof typeof confirmationMessages] ||
+          __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')
+        }
         animationType={AnimationType.slideUp}
         arrow="auto"
         hideArrow
@@ -360,9 +402,11 @@ export default TopicContent;
 const styles = {
   wrapper: ({
     isDragging = false,
+    isOverlay = false,
     isActive: isMeetingSelected = false,
   }: {
     isDragging: boolean;
+    isOverlay: boolean;
     isActive: boolean;
   }) => css`
     width: 100%;
@@ -379,7 +423,8 @@ const styles = {
       height: 24px;
     }
 
-    :hover {
+    :hover,
+    :focus-within {
       border-color: ${colorTokens.stroke.border};
       background-color: ${colorTokens.background.white};
 
@@ -391,30 +436,27 @@ const styles = {
       }
 
       [data-actions] {
-        opacity: 1;
+        opacity: ${isDragging ? 0 : 1};
       }
     }
 
-    ${
-      isMeetingSelected &&
-      css`
-        border-color: ${colorTokens.stroke.border};
-        background-color: ${colorTokens.background.white};
-        [data-content-icon] {
-          display: flex;
-        }
-        [data-bar-icon] {
-          display: none;
-        }
-        [data-actions] {
-          opacity: 1;
-        }
-      `
-    }
+    ${isMeetingSelected &&
+    css`
+      border-color: ${colorTokens.stroke.border};
+      background-color: ${colorTokens.background.white};
+      [data-content-icon] {
+        display: flex;
+      }
+      [data-bar-icon] {
+        display: none;
+      }
+      [data-actions] {
+        opacity: 1;
+      }
+    `}
 
-    ${
-      isDragging &&
-      css`
+    ${isOverlay &&
+    css`
       box-shadow: ${shadow.drag};
       border-color: ${colorTokens.stroke.border};
       background-color: ${colorTokens.background.white};
@@ -422,7 +464,12 @@ const styles = {
       [data-actions] {
         opacity: 1;
       }
-    `
+    `}
+
+    ${Breakpoint.smallTablet} {
+      [data-actions] {
+        opacity: 1;
+      }
     }
   `,
   title: css`
@@ -432,6 +479,13 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
     cursor: pointer;
+
+    span {
+      &:first-of-type {
+        ${styleUtils.text.ellipsis(2)}
+      }
+    }
+
     [data-question-count] {
       color: ${colorTokens.text.hints};
     }
@@ -446,9 +500,8 @@ const styles = {
     [data-bar-icon] {
       display: none;
     }
-    ${
-      isDragging &&
-      css`
+    ${isDragging &&
+    css`
       [data-content-icon] {
         display: none;
       }
@@ -456,8 +509,7 @@ const styles = {
         display: block;
       }
       cursor: grabbing;
-    `
-    }
+    `}
   `,
   actions: css`
     display: flex;
@@ -465,15 +517,5 @@ const styles = {
     align-items: start;
     gap: ${spacing[8]};
     justify-content: end;
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    display: flex;
-
-    :disabled {
-      color: ${colorTokens.icon.disable.background};
-      cursor: not-allowed;
-    }
   `,
 };

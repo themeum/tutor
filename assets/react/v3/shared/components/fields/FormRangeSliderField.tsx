@@ -1,9 +1,9 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useDebounce } from '@Hooks/useDebounce';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import FormFieldWrapper from './FormFieldWrapper';
@@ -124,75 +124,71 @@ const FormRangeSliderField = ({
 export default FormRangeSliderField;
 const styles = {
   wrapper: (hasBorder: boolean) => css`
-		display: grid;
-		grid-template-columns: 1fr 45px;
-		gap: ${spacing[20]};
-		align-items: center;
-		${
-      hasBorder &&
-      css`
-			border: 1px solid ${colorTokens.stroke.disable};
-			border-radius: ${borderRadius[6]};
-			padding: ${spacing[12]} ${spacing[10]} ${spacing[12]} ${spacing[16]};
-		`
-    }
-	`,
+    display: grid;
+    grid-template-columns: 1fr 45px;
+    gap: ${spacing[20]};
+    align-items: center;
+    ${hasBorder &&
+    css`
+      border: 1px solid ${colorTokens.stroke.disable};
+      border-radius: ${borderRadius[6]};
+      padding: ${spacing[12]} ${spacing[10]} ${spacing[12]} ${spacing[16]};
+    `}
+  `,
   track: css`
-		position: relative;
-		height: 4px;
-		background-color: ${colorTokens.bg.gray20};
-		border-radius: ${borderRadius[50]};
-		width: 100%;
-		flex-shrink: 0;
+    position: relative;
+    height: 4px;
+    background-color: ${colorTokens.bg.gray20};
+    border-radius: ${borderRadius[50]};
+    width: 100%;
+    flex-shrink: 0;
     cursor: pointer;
-	`,
+  `,
   fill: css`
-		position: absolute;
-		left: 0;
-		top: 0;
-		height: 100%;
-		background: ${colorTokens.ai.gradient_1};
-		width: 50%;
-		border-radius: ${borderRadius[50]};
-	`,
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: ${colorTokens.ai.gradient_1};
+    width: 50%;
+    border-radius: ${borderRadius[50]};
+  `,
   thumb: (isMagicAi: boolean) => css`
-		position: absolute;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		width: 20px;
-		height: 20px;
-		border-radius: ${borderRadius.circle};
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border-radius: ${borderRadius.circle};
 
-		&::before {
-			content: '';
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			width: 8px;
-			height: 8px;
-			transform: translate(-50%, -50%);
-			border-radius: ${borderRadius.circle};
-			background-color: ${colorTokens.background.white};
-			cursor: pointer;
-		}
-
-		${
-      isMagicAi &&
-      css`
-			background: ${colorTokens.ai.gradient_1};
-		`
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 8px;
+      transform: translate(-50%, -50%);
+      border-radius: ${borderRadius.circle};
+      background-color: ${colorTokens.background.white};
+      cursor: pointer;
     }
-	`,
-  input: css`
-		${typography.caption('medium')};
-		height: 32px;
-		border: 1px solid ${colorTokens.stroke.border};
-		border-radius: ${borderRadius[6]};
-		text-align: center;
-		color: ${colorTokens.text.primary};
 
-		&:focus-visible {
-			${styleUtils.inputFocus};
-		}
-	`,
+    ${isMagicAi &&
+    css`
+      background: ${colorTokens.ai.gradient_1};
+    `}
+  `,
+  input: css`
+    ${typography.caption('medium')};
+    height: 32px;
+    border: 1px solid ${colorTokens.stroke.border};
+    border-radius: ${borderRadius[6]};
+    text-align: center;
+    color: ${colorTokens.text.primary};
+
+    &:focus-visible {
+      ${styleUtils.inputFocus};
+    }
+  `,
 };

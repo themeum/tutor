@@ -2,14 +2,14 @@ import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { type ReactNode, useEffect, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { isDefined } from '@Utils/types';
+import { isDefined } from '@TutorShared/utils/types';
 
 interface CardProps {
   children: ReactNode;
@@ -21,7 +21,7 @@ interface CardProps {
   noSeparator?: boolean;
   hideArrow?: boolean;
   isAlternative?: boolean;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   collapsedAnimationDependencies?: any[];
 }
 
@@ -53,7 +53,6 @@ const Card = ({
     [isCollapsed, ...(collapsedAnimationDependencies || [])],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(cardRef.current)) {
       collapseAnimate.start({
@@ -61,6 +60,7 @@ const Card = ({
         opacity: !isCollapsed ? 1 : 0,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCollapsed, ...(collapsedAnimationDependencies || [])]);
 
   return (
@@ -106,72 +106,67 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
-    ${
-      hasBorder &&
-      css`
-				box-shadow: none;
-				border: 1px solid ${colorTokens.stroke.divider};
-    	`
-    }
+    ${hasBorder &&
+    css`
+      box-shadow: none;
+      border: 1px solid ${colorTokens.stroke.divider};
+    `}
   `,
   headerWrapper: (collapsed: boolean, isAlternative: boolean) => css`
-		padding: ${spacing[8]};
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: ${spacing[4]};
+    padding: ${spacing[8]};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: ${spacing[4]};
 
-		${
-      !collapsed &&
-      css`
-				border-bottom: 1px solid ${colorTokens.stroke.divider};;
-			`
-    }
+    ${!collapsed &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
 
-    ${
-      isAlternative &&
-      css`
-        padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
-      `
-    }
-	`,
+    ${isAlternative &&
+    css`
+      padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
+    `}
+  `,
   headerAndAction: css`
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	`,
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
   header: css`
-		display: flex;
-		flex-direction: column;
-		padding: ${spacing[4]} ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    padding: ${spacing[4]} ${spacing[16]};
+  `,
   subtitle: css`
-		${typography.caption()};
-		color: ${colorTokens.text.subdued};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
+  `,
   title: css`
-		${typography.body('medium')};
-		color: ${colorTokens.text.primary};
-		display: flex;
-		align-items: center;
-	`,
-  collapseButton: ({
-    isCollapsed,
-  }: {
-    isCollapsed: boolean;
-  }) => css`
-		${styleUtils.resetButton};
-		display: flex;
-		align-items: center;
-		transition: transform 0.3s ease-in-out;
+    ${typography.body('medium')};
+    color: ${colorTokens.text.primary};
+    display: flex;
+    align-items: center;
+  `,
+  collapseButton: ({ isCollapsed }: { isCollapsed: boolean }) => css`
+    ${styleUtils.resetButton};
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
 
-		${
-      isCollapsed &&
-      css`
-			transform: rotate(180deg);
-		`
+    ${isCollapsed &&
+    css`
+      transform: rotate(180deg);
+    `}
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
     }
-	`,
+  `,
   arrowUpDown: css`
     color: ${colorTokens.icon.default};
     display: flex;
@@ -179,11 +174,11 @@ const styles = {
     align-items: center;
   `,
   cardBody: css`
-		padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[24]};
-	`,
+    padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[24]};
+  `,
   actions: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+  `,
 };

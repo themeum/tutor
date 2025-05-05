@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$course_id  = get_the_ID();
 $product_id = tutor_utils()->get_course_product_id();
 $product    = wc_get_product( $product_id );
 
@@ -42,7 +43,7 @@ $defaults = array(
 		' ',
 		array_filter(
 			array(
-				'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block tutor-nowrap-ellipsis ',
+				'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ',
 				'product_type_' . $product->get_type(),
 				$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button ' : '',
 				$ajax_add_to_cart_class,
@@ -82,6 +83,7 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 				),
 				$product,
 				$args
-			)
+			),
+			$course_id
 		);
 

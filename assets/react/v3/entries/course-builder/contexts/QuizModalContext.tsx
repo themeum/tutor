@@ -2,8 +2,11 @@ import type React from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
+import type { ContentType } from '@CourseBuilderServices/curriculum';
 import type { QuizForm, QuizQuestion } from '@CourseBuilderServices/quiz';
+import { type ID } from '@TutorShared/utils/types';
+
+export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
 
 interface QuizModalContextProps {
   activeQuestionIndex: number;
@@ -13,12 +16,12 @@ interface QuizModalContextProps {
   contentType: ContentType;
   validationError: {
     message: string;
-    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    type: QuizValidationErrorType;
   } | null;
   setValidationError: React.Dispatch<
     React.SetStateAction<{
       message: string;
-      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+      type: QuizValidationErrorType;
     } | null>
   >;
 }
@@ -41,20 +44,27 @@ export const QuizModalContextProvider = ({
 }: {
   children:
     | React.ReactNode
-    | ((
-        item: NonNullable<number>,
+    | (({
+        activeQuestionIndex,
+        activeQuestionId,
+        setActiveQuestionId,
+        setValidationError,
+      }: {
+        activeQuestionIndex: NonNullable<number>;
+        activeQuestionId: ID;
+        setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
         setValidationError: React.Dispatch<
           React.SetStateAction<{
             message: string;
-            type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+            type: QuizValidationErrorType;
           } | null>
-        >,
-      ) => React.ReactNode);
+        >;
+      }) => React.ReactNode);
   quizId: ID;
   contentType: ContentType;
   validationError?: {
     message: string;
-    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    type: QuizValidationErrorType;
   } | null;
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
@@ -63,12 +73,11 @@ export const QuizModalContextProvider = ({
   const previousQuestions = useRef<QuizQuestion[]>(questions);
   const [validationError, setValidationError] = useState<{
     message: string;
-    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    type: QuizValidationErrorType;
   } | null>(propsValidationError || null);
 
   const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (questions.length === 0) {
       setActiveQuestionId('');
@@ -85,6 +94,7 @@ export const QuizModalContextProvider = ({
     }
 
     previousQuestions.current = questions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions.length]);
 
   useEffect(() => {
@@ -105,7 +115,14 @@ export const QuizModalContextProvider = ({
         contentType,
       }}
     >
-      {typeof children === 'function' ? children(activeQuestionIndex, setValidationError) : children}
+      {typeof children === 'function'
+        ? children({
+            activeQuestionIndex,
+            activeQuestionId,
+            setActiveQuestionId,
+            setValidationError,
+          })
+        : children}
     </QuizModalContext.Provider>
   );
 };

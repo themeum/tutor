@@ -21,7 +21,7 @@ use TUTOR\Input;
 
 	<?php if ( count( $data['filter_period'] ) ) : ?>
 
-		<div class="tutor-d-flex tutor-align-center tutor-justify-between">
+		<div class="tutor-d-flex tutor-align-center tutor-mb-24 tutor-mb-sm-0">
 			<?php foreach ( $data['filter_period'] as $key => $value ) : ?>
 				<?php $active_class = $active === $value['type'] ? 'primary' : 'outline-primary'; ?>
 				<a href="<?php echo esc_url( $value['url'] ); ?>" class="tutor-btn tutor-btn-<?php echo esc_attr( $active_class ); ?> tutor-mr-16">

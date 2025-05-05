@@ -1,14 +1,16 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import type { ButtonSize } from '@TutorShared/atoms/Button';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import type { Media } from '@Components/fields/FormImageInput';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+
 import { LoadingOverlay } from './LoadingSpinner';
 
 export type ImageInputSize = 'large' | 'regular' | 'small';
@@ -17,7 +19,7 @@ interface ImageInputProps {
   buttonText?: string;
   infoText?: string;
   size?: ImageInputSize;
-  value: Media | null;
+  value: WPMedia | null;
   uploadHandler: () => void;
   clearHandler: () => void;
   emptyImageCss?: SerializedStyles;
@@ -25,7 +27,15 @@ interface ImageInputProps {
   overlayCss?: SerializedStyles;
   replaceButtonText?: string;
   loading?: boolean;
+  disabled?: boolean;
+  isClearAble?: boolean;
 }
+
+const sizeMap: Record<ImageInputSize, ButtonSize> = {
+  large: 'regular',
+  regular: 'small',
+  small: 'small',
+};
 
 const ImageInput = ({
   buttonText = __('Upload Media', 'tutor'),
@@ -39,12 +49,19 @@ const ImageInput = ({
   overlayCss,
   replaceButtonText,
   loading,
+  disabled = false,
+  isClearAble = true,
 }: ImageInputProps) => {
   return (
     <Show
       when={!loading}
       fallback={
-        <div css={[styles.emptyMedia(size)]}>
+        <div
+          css={styles.emptyMedia({
+            size,
+            isDisabled: disabled,
+          })}
+        >
           <LoadingOverlay />
         </div>
       }
@@ -53,20 +70,38 @@ const ImageInput = ({
         when={value?.url}
         fallback={
           <div
-            css={[styles.emptyMedia(size), emptyImageCss]}
+            aria-disabled={disabled}
+            css={[
+              styles.emptyMedia({
+                size,
+                isDisabled: disabled,
+              }),
+              emptyImageCss,
+            ]}
             onClick={(event) => {
               event.stopPropagation();
+
+              if (disabled) {
+                return;
+              }
+
               uploadHandler();
             }}
             onKeyDown={(event) => {
-              if (event.key === 'Enter') {
+              if (!disabled && event.key === 'Enter') {
                 event.preventDefault();
                 uploadHandler();
               }
             }}
           >
             <SVGIcon name="addImage" width={32} height={32} />
-            <Button variant="text" buttonContentCss={styles.buttonText}>
+            <Button
+              disabled={disabled}
+              size={sizeMap[size]}
+              variant="secondary"
+              buttonContentCss={styles.buttonText}
+              data-cy="upload-media"
+            >
               {buttonText}
             </Button>
             <Show when={infoText}>
@@ -77,30 +112,47 @@ const ImageInput = ({
       >
         {(url) => {
           return (
-            <div css={[styles.previewWrapper(size), previewImageCss]}>
+            <div
+              css={[
+                styles.previewWrapper({
+                  size,
+                  isDisabled: disabled,
+                }),
+                previewImageCss,
+              ]}
+              data-cy="media-preview"
+            >
               <img src={url} alt={value?.title} css={styles.imagePreview} />
               <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
                 <Button
+                  disabled={disabled}
                   variant="secondary"
-                  size={size}
-                  buttonCss={css`margin-top: ${spacing[16]};`}
+                  size={sizeMap[size]}
+                  buttonCss={css`
+                    margin-top: ${isClearAble && spacing[16]};
+                  `}
                   onClick={(event) => {
                     event.stopPropagation();
                     uploadHandler();
                   }}
+                  data-cy="replace-media"
                 >
                   {replaceButtonText || __('Replace Image', 'tutor')}
                 </Button>
-                <Button
-                  variant="text"
-                  size={size}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    clearHandler();
-                  }}
-                >
-                  {__('Remove', 'tutor')}
-                </Button>
+                <Show when={isClearAble}>
+                  <Button
+                    disabled={disabled}
+                    variant="text"
+                    size={sizeMap[size]}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      clearHandler();
+                    }}
+                    data-cy="clear-media"
+                  >
+                    {__('Remove', 'tutor')}
+                  </Button>
+                </Show>
               </div>
             </div>
           );
@@ -113,7 +165,7 @@ const ImageInput = ({
 export default ImageInput;
 
 const styles = {
-  emptyMedia: (size: ImageInputSize) => css`
+  emptyMedia: ({ size, isDisabled }: { size: ImageInputSize; isDisabled: boolean }) => css`
     width: 100%;
     height: 168px;
     display: flex;
@@ -125,33 +177,30 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.bg.white};
     overflow: hidden;
-    cursor: pointer;
+    cursor: ${isDisabled ? 'not-allowed' : 'pointer'};
 
-    ${
-      size === 'small' &&
-      css`
+    ${size === 'small' &&
+    css`
       width: 168px;
-    `
-    }
+    `}
 
     svg {
       color: ${colorTokens.icon.default};
     }
 
     &:hover svg {
-      color: ${colorTokens.brand.blue};
+      color: ${!isDisabled && colorTokens.brand.blue};
     }
   `,
   buttonText: css`
     color: ${colorTokens.text.brand};
   `,
   infoTexts: css`
-    ${typography.small()};
+    ${typography.tiny()};
     color: ${colorTokens.text.subdued};
-    max-width: 200px;
     text-align: center;
   `,
-  previewWrapper: (size: ImageInputSize) => css`
+  previewWrapper: ({ size, isDisabled }: { size: ImageInputSize; isDisabled: boolean }) => css`
     width: 100%;
     height: 168px;
     border: 1px solid ${colorTokens.stroke.default};
@@ -160,23 +209,22 @@ const styles = {
     position: relative;
     background-color: ${colorTokens.bg.white};
 
-    ${
-      size === 'small' &&
-      css`
+    ${size === 'small' &&
+    css`
       width: 168px;
-    `
-    }
+    `}
 
     &:hover {
       [data-hover-buttons-wrapper] {
-        opacity: 1;
+        display: ${isDisabled ? 'none' : 'flex'};
+        opacity: ${isDisabled ? 0 : 1};
       }
     }
   `,
   imagePreview: css`
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
   `,
   hoverPreview: css`
     display: flex;
@@ -193,7 +241,7 @@ const styles = {
       box-shadow: ${shadow.button};
     }
 
-    button:last-of-type {
+    button:last-of-type:not(:only-of-type) {
       color: ${colorTokens.text.white};
       box-shadow: none;
     }

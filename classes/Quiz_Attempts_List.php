@@ -33,12 +33,6 @@ class Quiz_Attempts_List {
 	 */
 
 	use Backend_Page_Trait;
-	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
 
 	/**
 	 * Bulk Action
@@ -55,8 +49,6 @@ class Quiz_Attempts_List {
 	 * @param boolean $register_hook should register hook or not.
 	 */
 	public function __construct( $register_hook = true ) {
-
-		$this->page_title = __( 'Quiz Attempts', 'tutor' );
 		if ( ! $register_hook ) {
 			return;
 		}
@@ -77,6 +69,21 @@ class Quiz_Attempts_List {
 		add_action( 'tutor_quiz/attempt_ended', array( new QuizAttempts(), 'delete_cache' ) );
 		add_action( 'tutor_quiz/attempt_deleted', array( new QuizAttempts(), 'delete_cache' ) );
 		add_action( 'tutor_quiz/answer/review/after', array( new QuizAttempts(), 'delete_cache' ) );
+	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Quiz Attempts', 'tutor' );
+		}
 	}
 
 	/**
@@ -143,8 +150,7 @@ class Quiz_Attempts_List {
 				$select_stmt = "SELECT COUNT( DISTINCT attempt_id)
 								FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 								INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
-								INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans  
-										ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
+								INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
 
 				$count_obj->pass = (int) $wpdb->get_var(
 					$wpdb->prepare(
@@ -206,7 +212,7 @@ class Quiz_Attempts_List {
 	 * @return array
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
-		$url   = get_pagenum_link();
+		$url   = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link());
 		$stats = $this->get_quiz_attempts_stat();
 
 		$tabs = array(
@@ -267,7 +273,7 @@ class Quiz_Attempts_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -279,6 +285,17 @@ class Quiz_Attempts_List {
 				return (int) trim( $id );
 			},
 			$bulk_ids
+		);
+
+		// prevent instructor to remove quiz attempt from admin.
+		$bulk_ids = array_filter(
+			$bulk_ids,
+			function ( $attempt_id ) {
+				$attempt   = tutor_utils()->get_attempt( $attempt_id );
+				$user_id   = get_current_user_id();
+				$course_id = $attempt && is_object( $attempt ) ? $attempt->course_id : 0;
+				return $course_id && tutor_utils()->can_user_edit_course( $user_id, $course_id );
+			}
 		);
 
 		switch ( $bulk_action ) {

@@ -1,15 +1,15 @@
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
-import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
+import { borderRadius, Breakpoint, colorTokens, fontSize, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { convertToSlug } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -19,7 +19,7 @@ interface FormEditableAliasProps extends FormControllerProps<string> {
   baseURL: string;
 }
 
-const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEditableAliasProps) => {
+const FormEditableAlias = ({ field, fieldState, label = '', baseURL, onChange }: FormEditableAliasProps) => {
   const { value = '' } = field;
   const fullUrl = `${baseURL}/${value}`;
   const [isEditing, setIsEditing] = useState(false);
@@ -60,6 +60,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                   <div css={styles.editWrapper}>
                     <input
                       {...inputProps}
+                      className="tutor-input-field"
                       css={styles.editable}
                       type="text"
                       value={editValue}
@@ -75,6 +76,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       onClick={() => {
                         setIsEditing(false);
                         field.onChange(convertToSlug(editValue.replace(baseURL, '')));
+                        onChange?.(convertToSlug(editValue.replace(baseURL, '')));
                       }}
                     >
                       {__('Save', 'tutor')}
@@ -107,17 +109,29 @@ const styles = {
     min-height: 32px;
     align-items: center;
     gap: ${spacing[4]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+      gap: ${spacing[4]};
+      align-items: flex-start;
+    }
   `,
   label: css`
     flex-shrink: 0;
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
+    margin: 0px;
   `,
   linkWrapper: css`
     display: flex;
     align-items: center;
     width: fit-content;
     font-size: ${fontSize[14]};
+
+    ${Breakpoint.smallMobile} {
+      gap: ${spacing[4]};
+      flex-wrap: wrap;
+    }
   `,
   link: css`
     ${typography.caption()};
@@ -136,7 +150,7 @@ const styles = {
     border-radius: ${borderRadius[4]};
 
     :focus {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus}
     }
   `,
   editIcon: css`
@@ -159,22 +173,27 @@ const styles = {
     width: fit-content;
   `,
   editable: css`
-    ${typography.caption()}
-    background: ${colorTokens.background.white};
-    width: 208px;
-    height: 32px;
-    border: 1px solid ${colorTokens.stroke.default};
-    padding: ${spacing[8]} ${spacing[12]};
-    border-radius: ${borderRadius[6]};
-    margin-right: ${spacing[8]};
-    outline: none;
-    border: 1px solid ${colorTokens.stroke.default};
+    &.tutor-input-field {
+      ${typography.caption()}
+      background: ${colorTokens.background.white};
+      width: 208px;
+      height: 32px;
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: ${spacing[8]} ${spacing[12]};
+      border-radius: ${borderRadius.input};
+      margin-right: ${spacing[8]};
+      outline: none;
 
-    :focus {
-      ${styleUtils.inputFocus}
+      &:focus {
+        border-color: ${colorTokens.stroke.default};
+        box-shadow: none;
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
     }
   `,
   saveBtn: css`
+    flex-shrink: 0;
     margin-right: ${spacing[8]};
   `,
   cancelButton: css`

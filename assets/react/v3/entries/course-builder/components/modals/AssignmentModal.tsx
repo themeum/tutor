@@ -4,36 +4,41 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import type { Media } from '@Components/fields/FormImageInput';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
-import FormWPEditor from '@Components/fields/FormWPEditor';
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { type ContentDripType, convertAssignmentDataToPayload } from '@CourseBuilderServices/course';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type CourseTopic,
-  type ID,
+  convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
+  type Assignment,
+  type CourseTopic,
 } from '@CourseBuilderServices/curriculum';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { normalizeLineEndings } from '@Utils/util';
-import { maxLimitRule } from '@Utils/validation';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type ID } from '@TutorShared/utils/types';
+import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -47,7 +52,7 @@ type TimeLimitUnit = 'weeks' | 'days' | 'hours';
 export interface AssignmentForm {
   title: string;
   summary: string;
-  attachments: Media[];
+  attachments: WPMedia[];
   time_duration: {
     value: string;
     time: TimeLimitUnit;
@@ -92,6 +97,9 @@ const AssignmentModal = ({
   subtitle,
   contentDripType,
 }: AssignmentModalProps) => {
+  const { fields } = useCourseBuilderSlot();
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const getAssignmentDetailsQuery = useAssignmentDetailsQuery(assignmentId, topicId);
   const saveAssignmentMutation = useSaveAssignmentMutation(courseId);
   const queryClient = useQueryClient();
@@ -122,9 +130,8 @@ const AssignmentModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (assignmentDetails) {
       form.reset(
@@ -145,6 +152,12 @@ const AssignmentModal = ({
             after_xdays_of_enroll: assignmentDetails?.content_drip_settings?.after_xdays_of_enroll || '',
             prerequisites: assignmentDetails?.content_drip_settings?.prerequisites || [],
           },
+          ...Object.fromEntries(
+            findSlotFields({ fields: fields.Curriculum.Lesson }).map((key) => [
+              key,
+              assignmentDetails[key as keyof Assignment],
+            ]),
+          ),
         },
         {
           keepDirty: false,
@@ -159,10 +172,17 @@ const AssignmentModal = ({
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignmentDetails]);
 
   const onSubmit = async (data: AssignmentForm) => {
-    const payload = convertAssignmentDataToPayload(data, assignmentId, topicId, contentDripType);
+    const payload = convertAssignmentDataToPayload(
+      data,
+      assignmentId,
+      topicId,
+      contentDripType,
+      findSlotFields({ fields: fields.Curriculum.Assignment }),
+    );
     const response = await saveAssignmentMutation.mutateAsync(payload);
 
     if (response.status_code === 200 || response.status_code === 201) {
@@ -174,8 +194,8 @@ const AssignmentModal = ({
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
       icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-      title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
-      subtitle={subtitle}
+      title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+      subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
       maxWidth={1070}
       actions={
         isFormDirty && (
@@ -184,12 +204,17 @@ const AssignmentModal = ({
               variant="text"
               size="small"
               onClick={() => {
-                assignmentId ? form.reset() : closeModal({ action: 'CLOSE' });
+                if (assignmentId) {
+                  form.reset();
+                } else {
+                  closeModal({ action: 'CLOSE' });
+                }
               }}
             >
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-assignment"
               loading={saveAssignmentMutation.isPending}
               variant="primary"
               size="small"
@@ -217,8 +242,8 @@ const AssignmentModal = ({
                     {...controllerProps}
                     label={__('Title', 'tutor')}
                     placeholder={__('Enter Assignment Title', 'tutor')}
+                    generateWithAi={!isTutorPro || isOpenAiEnabled}
                     isClearable
-                    selectOnFocus
                   />
                 )}
               />
@@ -229,11 +254,14 @@ const AssignmentModal = ({
                 render={(controllerProps) => (
                   <FormWPEditor
                     {...controllerProps}
-                    label={__('Summary', 'tutor')}
-                    placeholder={__('Enter Assignment Summary', 'tutor')}
+                    label={__('Content', 'tutor')}
+                    placeholder={__('Enter Assignment Content', 'tutor')}
+                    generateWithAi={!isTutorPro || isOpenAiEnabled}
                   />
                 )}
               />
+
+              <CourseBuilderInjectionSlot section="Curriculum.Assignment.after_description" form={form} />
             </div>
           </div>
 
@@ -266,7 +294,7 @@ const AssignmentModal = ({
                           {__('Available after days', 'tutor')}
                         </div>
                       }
-                      helpText={__('This lesson will be available after the given number of days.', 'tutor')}
+                      helpText={__('This assignment will be available after the given number of days.', 'tutor')}
                       placeholder="0"
                       selectOnFocus
                     />
@@ -288,10 +316,10 @@ const AssignmentModal = ({
                         </div>
                       }
                       placeholder={__('Select Unlock Date', 'tutor')}
-                      helpText={__(
-                        'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __('This assignment will be available from the given date. Leave empty to make it available immediately.', 'tutor')
+                      }
                     />
                   )}
                 />
@@ -313,10 +341,10 @@ const AssignmentModal = ({
                       placeholder={__('Select Prerequisite', 'tutor')}
                       options={
                         topics.reduce((topics, topic) => {
-                          if (topic.id === topicId) {
+                          if (String(topic.id) === String(topicId)) {
                             topics.push({
                               ...topic,
-                              contents: topic.contents.filter((content) => content.ID !== assignmentId),
+                              contents: topic.contents.filter((content) => String(content.ID) !== String(assignmentId)),
                             });
                           } else {
                             topics.push(topic);
@@ -340,7 +368,7 @@ const AssignmentModal = ({
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={__('Time limit', 'tutor')}
+                    label={__('Time Limit', 'tutor')}
                     placeholder="0"
                     dataAttribute="data-time-limit"
                     selectOnFocus
@@ -369,9 +397,8 @@ const AssignmentModal = ({
                 <FormInput
                   {...controllerProps}
                   type="number"
-                  label={__('Total points', 'tutor')}
+                  label={__('Total Points', 'tutor')}
                   placeholder="0"
-                  helpText={__('Maximum points a student can score', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -392,9 +419,8 @@ const AssignmentModal = ({
                 <FormInput
                   {...controllerProps}
                   type="number"
-                  label={__('Minimum pass points', 'tutor')}
+                  label={__('Minimum Pass Points', 'tutor')}
                   placeholder="0"
-                  helpText={__('Minimum points required for the student to pass this assignment', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -408,11 +434,11 @@ const AssignmentModal = ({
                   {...controllerProps}
                   placeholder="0"
                   type="number"
-                  label={__('File upload Limit', 'tutor')}
-                  helpText={__(
-                    'Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.',
-                    'tutor',
-                  )}
+                  label={__('File Upload Limit', 'tutor')}
+                  helpText={
+                    // prettier-ignore
+                    __('Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.','tutor')
+                  }
                   selectOnFocus
                 />
               )}
@@ -425,14 +451,15 @@ const AssignmentModal = ({
                 <FormInputWithContent
                   {...controllerProps}
                   type="number"
-                  label={__('Maximum file size limit', 'tutor')}
+                  label={__('Maximum File Size Limit', 'tutor')}
                   placeholder="0"
                   content={__('MB', 'tutor')}
                   contentPosition="right"
-                  helpText={__('Define maximum file size attachment in MB', 'tutor')}
                 />
               )}
             />
+
+            <CourseBuilderInjectionSlot section="Curriculum.Assignment.bottom_of_sidebar" form={form} />
           </div>
         </Show>
       </div>
@@ -444,12 +471,21 @@ export default AssignmentModal;
 
 const styles = {
   wrapper: css`
-    width: 1070px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 338px;
+    width: 100%;
     height: 100%;
     padding-inline: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+      padding-inline: ${spacing[24]};
+    }
+
+    ${Breakpoint.mobile} {
+      padding-inline: ${spacing[16]};
+    }
   `,
   assignmentInfo: css`
     padding-block: ${spacing[24]};
@@ -460,6 +496,11 @@ const styles = {
     position: sticky;
     top: 0;
     z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
+
+    ${Breakpoint.smallTablet} {
+      position: unset;
+      padding-right: 0;
+    }
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};
@@ -468,6 +509,11 @@ const styles = {
     gap: ${spacing[16]};
     padding-block: ${spacing[24]};
     padding-left: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      border-left: none;
+      padding-left: 0;
+    }
   `,
   timeLimit: css`
     display: grid;

@@ -43,6 +43,10 @@ $course_id         = tutor_utils()->get_course_id_by_subcontent( $course_content
 // Get total content count.
 $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 
+// Get enrolled data.
+$enrolled_info   = tutor_utils()->is_enrolled( $course_id, $user_id );
+$enrollment_time = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ?? '' ), $course_id, $post_id );
+
 /**
  * Convert assignment time
  *
@@ -97,9 +101,11 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				$total_mark        = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' );
 				$pass_mark         = tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
 				$file_upload_limit = tutor_utils()->get_assignment_option( get_the_ID(), 'upload_file_size_limit' );
+				
 
 				global $post;
 				$assignment_created_time = strtotime( $post->post_date_gmt );
+				$deadline_time           = $enrollment_time < $assignment_created_time ? $assignment_created_time : $enrollment_time;
 				$time_duration_in_sec    = 0;
 
 				if ( isset( $time_duration['value'] ) && isset( $time_duration['time'] ) ) {
@@ -120,7 +126,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				}
 
 				$time_duration_in_sec = $time_duration_in_sec * (int) $time_duration['value'];
-				$remaining_time       = $assignment_created_time + $time_duration_in_sec;
+				$remaining_time       = $deadline_time + $time_duration_in_sec;
 				$now                  = time();
 				$remaining            = $now - $remaining_time;
 				?>
@@ -497,7 +503,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 								$alert_template,
 								array(
 									'alert_class' => 'tutor-alert tutor-danger',
-									'message'     => __( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor_pro' ),
+									'message'     => __( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor' ),
 									'icon'        => ' tutor-icon-circle-times-line',
 								)
 							);

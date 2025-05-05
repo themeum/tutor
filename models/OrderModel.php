@@ -11,9 +11,12 @@
 namespace Tutor\Models;
 
 use Exception;
-use Tutor\Ecommerce\OrderActivitiesController;
-use Tutor\Helpers\DateTimeHelper;
+use Tutor\Ecommerce\Tax;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\DateTimeHelper;
+use Tutor\Ecommerce\BillingController;
+use Tutor\Ecommerce\OrderActivitiesController;
 
 /**
  * OrderModel Class
@@ -48,14 +51,48 @@ class OrderModel {
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
 
 	/**
+	 * Payment methods
+	 *
+	 * @since 3.5.0
+	 *
+	 * @var string
+	 */
+	const PAYMENT_METHOD_MANUAL = 'manual';
+	const PAYMENT_METHOD_FREE   = 'free';
+
+	/**
 	 * Order Meta keys for history & refunds
 	 *
 	 * @since 3.0.0
 	 *
 	 * @var string
 	 */
-	const META_KEY_HISTORY = 'history';
-	const META_KEY_REFUND  = 'refund';
+	const META_KEY_HISTORY         = 'history';
+	const META_KEY_REFUND          = 'refund';
+	const META_KEY_ORDER_ID        = 'tutor_order_id_';
+	const META_KEY_BILLING_ADDRESS = 'billing_address';
+
+	/**
+	 * Order meta for subscription order.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @var string
+	 */
+	const META_ENROLLMENT_FEE      = 'plan_enrollment_fee';
+	const META_TRIAL_FEE           = 'plan_trial_fee';
+	const META_PLAN_INFO           = 'plan_info';
+	const META_IS_PLAN_TRIAL_ORDER = 'is_plan_trial_order';
+
+	/**
+	 * Tax type constants
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const TAX_TYPE_EXCLUSIVE = 'exclusive';
+	const TAX_TYPE_INCLUSIVE = 'inclusive';
 
 
 	/**
@@ -68,6 +105,28 @@ class OrderModel {
 	const TYPE_SINGLE_ORDER = 'single_order';
 	const TYPE_SUBSCRIPTION = 'subscription';
 	const TYPE_RENEWAL      = 'renewal';
+
+
+	/**
+	 * Transient constants
+	 *
+	 * @since 3.0.0
+	 */
+	const TRANSIENT_ORDER_BADGE_COUNT = 'tutor_order_badge_count';
+
+	/**
+	 * Order placement success
+	 *
+	 * @since 3.0.0
+	 */
+	const ORDER_PLACEMENT_SUCCESS = 'success';
+
+	/**
+	 * Order placement failed
+	 *
+	 * @since 3.0.0
+	 */
+	const ORDER_PLACEMENT_FAILED = 'failed';
 
 	/**
 	 * Order table name
@@ -125,6 +184,63 @@ class OrderModel {
 		return $this->table_name;
 	}
 
+	/**
+	 * Get recalculated order tax data.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int|object $order the order id or object.
+	 *
+	 * @return array
+	 */
+	public function get_recalculated_order_tax_data( $order ) {
+		$order       = self::get_order( $order );
+		$total_price = $order->total_price;
+		$tax_rate    = Tax::get_user_tax_rate( $order->user_id );
+		$order_data  = array();
+		if ( $tax_rate ) {
+			$order_data['tax_type']   = Tax::get_tax_type();
+			$order_data['tax_rate']   = $tax_rate;
+			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+
+			if ( ! Tax::is_tax_included_in_price() ) {
+				$total_price              += $order_data['tax_amount'];
+				$order_data['total_price'] = $total_price;
+				$order_data['net_payment'] = $total_price;
+			}
+		}
+
+		return $order_data;
+	}
+
+	/**
+	 * Get order item display price.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param object $item order item object.
+	 *
+	 * @return string
+	 */
+	public function get_order_item_display_price( $item ) {
+		$display_price = is_numeric( $item->sale_price )
+						? $item->sale_price
+						: ( is_numeric( $item->discount_price ) ? $item->discount_price : $item->regular_price );
+		return $display_price;
+	}
+
+	/**
+	 * Check order item has sale price or discount price
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param object $item order item object.
+	 *
+	 * @return boolean
+	 */
+	public function has_order_item_sale_price( $item ) {
+		return is_numeric( $item->sale_price ) || is_numeric( $item->discount_price );
+	}
 
 	/**
 	 * Get all order statuses
@@ -323,7 +439,7 @@ class OrderModel {
 		$student->name            = $user_info->data->display_name;
 		$student->email           = $user_info->data->user_email;
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
-		$student->billing_address = $this->get_tutor_customer_data( $order_data->user_id );
+		$student->billing_address = $this->get_order_billing_address( $order_id, $order_data->user_id );
 		$student->image           = get_avatar_url( $order_data->user_id );
 
 		$order_data->student = $student;
@@ -337,11 +453,12 @@ class OrderModel {
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
 
-		$order_data->created_at_readable = DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->created_at_gmt );
-		$order_data->updated_at_readable = empty( $order_data->updated_at_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->updated_at_gmt );
+		$order_data->payment_method_readable = Ecommerce::get_payment_method_label( $order_data->payment_method );
+		$order_data->created_at_readable     = DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->created_at_gmt );
+		$order_data->updated_at_readable     = empty( $order_data->updated_at_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->updated_at_gmt );
 
-		$order_data->created_by = get_userdata( $order_data->created_by )->display_name;
-		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name;
+		$order_data->created_by = get_userdata( $order_data->created_by )->display_name ?? '';
+		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name ?? '';
 
 		$order_activities_model = new OrderActivitiesModel();
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
@@ -351,6 +468,51 @@ class OrderModel {
 		unset( $student->billing_address->user_id );
 
 		return apply_filters( 'tutor_order_details', $order_data );
+	}
+
+	/**
+	 * Get order data
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param int|object $order order id or object.
+	 *
+	 * @return object
+	 */
+	public static function get_order( $order ) {
+		if ( is_numeric( $order ) ) {
+			$order = ( new self() )->get_order_by_id( $order );
+		}
+
+		return $order;
+	}
+
+	/**
+	 * Check order is subscription order
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param int|object $order order id or object.
+	 *
+	 * @return boolean
+	 */
+	public static function is_subscription_order( $order ) {
+		$order = self::get_order( $order );
+		return $order && self::TYPE_SUBSCRIPTION === $order->order_type;
+	}
+
+	/**
+	 * Check order is single order
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param int|object $order order id or object.
+	 *
+	 * @return boolean
+	 */
+	public static function is_single_order( $order ) {
+		$order = self::get_order( $order );
+		return $order && self::TYPE_SINGLE_ORDER === $order->order_type;
 	}
 
 	/**
@@ -382,6 +544,10 @@ class OrderModel {
 
 		if ( $trigger_hooks ) {
 			do_action( 'tutor_order_payment_status_changed', $order_id, self::PAYMENT_UNPAID, self::PAYMENT_PAID );
+
+			$order           = $this->get_order_by_id( $order_id );
+			$discount_amount = $this->calculate_discount_amount( $order->discount_type, $order->discount_amount, $order->subtotal_price );
+			do_action( 'tutor_after_order_mark_as_paid', $order, $discount_amount );
 		}
 
 		return true;
@@ -437,7 +603,6 @@ class OrderModel {
 
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
-				$course->sale_price    = (float) $course->sale_price;
 				$course->image         = get_the_post_thumbnail_url( $course->id );
 			}
 		}
@@ -448,46 +613,42 @@ class OrderModel {
 	}
 
 	/**
-	 * Retrieve tutor customer data by user ID.
+	 * Get order billing address with fallback customer billing address record support.
+	 * It'll return order billing address if found, otherwise it'll return customer billing address record.
 	 *
-	 * This function fetches customer data from the 'tutor_customers' table based on
-	 * the given user ID. It utilizes a helper function from the QueryHelper class
-	 * to perform the database query.
+	 * @since 3.5.0
 	 *
-	 * The function returns the customer data as an object.
+	 * @param int $order_id order id.
+	 * @param int $user_id order id.
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
-	 * @param int $user_id The ID of the user to retrieve customer data for.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return object|null The customer data retrieved from the database.
+	 * @return object
 	 */
-	public function get_tutor_customer_data( $user_id ) {
-		global $wpdb;
+	public static function get_order_billing_address( $order_id, $user_id ) {
+		$billing_address = OrderMetaModel::get_meta_value( $order_id, self::META_KEY_BILLING_ADDRESS, true );
 
-		// Retrieve customer data for the given user ID from the 'tutor_customers' table.
-		$customer_data = QueryHelper::get_row( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $user_id ), 'id' );
-
-		if ( empty( $customer_data ) ) {
-			return null;
+		/**
+		 * Fallback data from customer billing record.
+		 */
+		if ( false === $billing_address ) {
+			$billing_address = ( new BillingController( false ) )->get_billing_info( $user_id );
+		} else {
+			$billing_address = json_decode( $billing_address );
 		}
 
-		$return_data = (object) array(
-			'id'       => $customer_data->id,
-			'user_id'  => $customer_data->user_id,
-			'name'     => $customer_data->billing_first_name . ' ' . $customer_data->billing_last_name,
-			'email'    => $customer_data->billing_email,
-			'phone'    => $customer_data->billing_phone,
-			'address'  => $customer_data->billing_address,
-			'city'     => $customer_data->billing_city,
-			'state'    => $customer_data->billing_state,
-			'country'  => $customer_data->billing_country,
-			'zip_code' => $customer_data->billing_zip_code,
+		$data = (object) array(
+			'first_name' => $billing_address->billing_first_name ?? '',
+			'last_name'  => $billing_address->billing_last_name ?? '',
+			'full_name'  => trim( ( $billing_address->billing_first_name ?? '' ) . ' ' . ( $billing_address->billing_last_name ?? '' ) ),
+			'email'      => $billing_address->billing_email ?? '',
+			'phone'      => $billing_address->billing_phone ?? '',
+			'address'    => $billing_address->billing_address ?? '',
+			'country'    => $billing_address->billing_country ?? '',
+			'state'      => $billing_address->billing_state ?? '',
+			'city'       => $billing_address->billing_city ?? '',
+			'zip_code'   => $billing_address->billing_zip_code ?? '',
 		);
 
-		return $return_data;
+		return $data;
 	}
 
 	/**
@@ -787,19 +948,18 @@ class OrderModel {
 		$date_range_clause  = '';
 
 		if ( $start_date && $end_date ) {
-			$date_range_clause = "AND created_at_gmt BETWEEN DATE( '$start_date') AND DATE( '$end_date')";
-		} else {
-			if ( $time_period ) {
-				if ( 'today' === $time_period ) {
-					$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
-				} elseif ( 'monthly' === $time_period ) {
-					$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
-				} else {
-					$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
-				}
+			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
+		} elseif ( $time_period ) {
+			if ( 'today' === $time_period ) {
+				$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
+			} elseif ( 'monthly' === $time_period ) {
+				$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
+			} else {
+				$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
 			}
 		}
 
+		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT
 				SQL_CALC_FOUND_ROWS
@@ -817,12 +977,175 @@ class OrderModel {
 		);
 
 		$results = $wpdb->get_results( $query );
+		//phpcs:enable
 
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		} else {
 			$response['results']     = $results;
 			$response['total_count'] = is_array( $results ) && count( $results ) ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Get total discounts by user_id (instructor), optionally can set period ( today | monthly| yearly )
+	 *
+	 * Optionally can set start date & end date to get enrollment list from date range
+	 *
+	 * If period or date range not pass then it will return all time enrollment list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id User id, if user not have admin access
+	 * then only this user's refund amount will fetched.
+	 * @param string $period Time period.
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_discounts_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = 0 ): array {
+		$response = array(
+			'discounts'       => array(),
+			'total_discounts' => 0,
+		);
+
+		global $wpdb;
+
+		$user_clause       = '';
+		$date_range_clause = '';
+		$period_clause     = '';
+		$course_clause     = '';
+		$group_clause      = ' GROUP BY DATE(date_format) ';
+		$discount_clause   = 'o.coupon_amount as total';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = $wpdb->prepare(
+				'AND o.created_at_gmt BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
+		} else {
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( 'today' !== $period ) {
+			$group_clause = ' GROUP BY MONTH(date_format) ';
+		}
+
+		if ( $course_id ) {
+			$course_clause   = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+			$discount_clause = 'i.regular_price - i.discount_price AS total';
+		}
+
+		$item_table = $wpdb->prefix . 'tutor_order_items';
+
+		if ( $course_id ) {
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
+
+			//phpcs:disable
+			$discounts = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+						i.item_id AS course_id,
+						SUM(
+							COALESCE(o.coupon_amount, 0) +
+							COALESCE(
+								IF(
+									o.discount_type = 'percentage', 
+									COALESCE(o.subtotal_price * (o.discount_amount / 100), 0), 
+									COALESCE(o.discount_amount, 0)
+								), 
+								0
+							)
+						) AS total,
+						o.created_at_gmt AS date_format
+					FROM 
+						{$this->table_name} o
+					JOIN 
+						{$item_table} i ON o.id = i.order_id
+					JOIN 
+						{$wpdb->posts} c
+						ON c.ID = i.item_id
+						AND c.post_type = %s
+					WHERE 
+						1 = 1
+						AND i.item_id = %d
+						{$user_clause}
+						{$period_clause}
+						{$date_range_clause}
+					{$group_clause}
+					",
+					tutor()->course_post_type,
+					$course_id
+				)
+			);
+			//phpcs:enable
+		} else {
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( "AND %d = (SELECT user_id FROM {$wpdb->tutor_earnings} WHERE order_status = 'completed' LIMIT 1) ", $user_id );
+			}
+
+			//phpcs:disable
+			$discounts = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+					SUM(
+						COALESCE(o.coupon_amount, 0) +
+						COALESCE(
+							IF(
+								o.discount_type = 'percentage', 
+								COALESCE(o.subtotal_price * (o.discount_amount / 100), 0), 
+								COALESCE(o.discount_amount, 0)
+							), 
+							0
+						)
+					) AS total,
+					o.created_at_gmt AS date_format
+					FROM {$this->table_name} AS o
+					WHERE 1 = %d
+					AND o.order_status = 'completed'
+					{$user_clause}
+					{$period_clause}
+					{$date_range_clause}
+					{$course_clause}
+					{$group_clause}
+					HAVING total > 0
+					",
+					1
+				)
+			);
+			//phpcs:enable
+		}
+
+		$total_discount = 0;
+		$discount_items = array();
+
+		$response = array(
+			'discounts'       => array(),
+			'total_discounts' => 0,
+		);
+
+		if ( $discounts ) {
+			foreach ( $discounts as $discount ) {
+				$total_discount  += $discount->total;
+				$discount_items[] = $discount;
+
+				// Split each discount.
+				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
+
+				$discount->total = is_admin() ? $admin_discount : $instructor_discount;
+			}
+
+			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
+
+			$response['discounts']       = $discount_items;
+			$response['total_discounts'] = is_admin() ? $admin_total : $instructor_total;
 		}
 
 		return $response;
@@ -859,6 +1182,7 @@ class OrderModel {
 		$period_clause     = '';
 		$course_clause     = '';
 		$commission_clause = '';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -866,49 +1190,112 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
+			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
 		} else {
 			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
 		}
 
-		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
-			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+		if ( 'today' !== $period ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
 		}
 
 		if ( $course_id ) {
-			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
+		} elseif ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
-		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
-		if ( $commission ) {
-			$commission_clause = $wpdb->prepare(
-				'COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100, 0) AS total',
-				$commission
-			);
-		} else {
-			$commission_clause = 'COALESCE(SUM(o.refund_amount), 0) AS total';
-		}
-
+		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
-		$refunds    = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 
-				{$commission_clause},
-				created_at_gmt AS date_format
-				FROM {$this->table_name} AS o
-				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
-				WHERE 1 = %d
-				{$user_clause}
-				{$period_clause}
-				{$date_range_clause}
-				{$course_clause}",
-				1
-			)
-		);
+
+		if ( $course_id ) {
+			//phpcs:disable
+			$refunds = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+						i.item_id AS course_id,
+						ROUND(
+							SUM(
+								o.refund_amount * 
+								(
+									CASE 
+										WHEN i.discount_price THEN i.discount_price
+										WHEN i.sale_price > 0 THEN i.sale_price
+										ELSE i.regular_price
+									END / o.total_price
+								)
+							), 2
+						) AS total
+					FROM 
+						{$this->table_name} o
+					JOIN 
+						{$item_table} i ON o.id = i.order_id
+					JOIN 
+						{$wpdb->posts} c
+						ON c.ID = i.item_id
+						AND c.post_type = %s
+					WHERE 
+						o.refund_amount > 0
+						AND i.item_id = %d
+						{$user_clause}
+						{$period_clause}
+						{$date_range_clause}
+					{$group_clause},
+					i.item_id
+					",
+					tutor()->course_post_type,
+					$course_id
+				)
+			);
+			//phpcs:enable
+		} else {
+			$earning_table = $wpdb->tutor_earnings;
+			if ( $user_id ) {
+				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} LIMIT 1)";
+			}
+
+			//phpcs:disable
+			$refunds = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+					COALESCE(SUM(o.refund_amount), 0) AS total,
+					created_at_gmt AS date_format
+					FROM {$this->table_name} AS o
+					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+					WHERE 1 = %d
+					AND o.refund_amount > %d
+					{$user_clause}
+					{$period_clause}
+					{$date_range_clause}
+					{$group_clause},
+					o.id",
+					1,
+					0
+				)
+			);
+			//phpcs:enable
+		}
+
+		$total_refund = 0;
 
 		foreach ( $refunds as $refund ) {
-			$response['total_refunds'] += $refund->total;
+			$total_refund += $refund->total;
+
+			// Update total amount from list.
+			$split_refund  = (object) tutor_split_amounts( $refund->total );
+			$refund->total = is_admin() ? $split_refund->admin : $split_refund->instructor;
 		}
+
+		$split_total_refund = (object) tutor_split_amounts( $total_refund );
+
+		$response = array(
+			'refunds'       => $refunds,
+			'total_refunds' => is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
+		);
 
 		return $response;
 	}
@@ -1021,12 +1408,16 @@ class OrderModel {
 			$message = '';
 
 			if ( self::ORDER_CANCELLED === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as cancelled', 'tutor' ) : sprintf( __( 'Order marked as cancelled by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_COMPLETED === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as completed', 'tutor' ) : sprintf( __( 'Order marked as completed by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_INCOMPLETE === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : sprintf( __( 'Order marked as incomplete by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_TRASH === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : sprintf( __( 'Order marked as trash by %s', 'tutor' ), $user_name );
 			}
 
@@ -1225,6 +1616,51 @@ class OrderModel {
 	}
 
 	/**
+	 * Check has exclusive type tax.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order order object.
+	 *
+	 * @return boolean
+	 */
+	public static function has_exclusive_tax( $order ) {
+		return self::TAX_TYPE_EXCLUSIVE === $order->tax_type && $order->tax_rate > 0 && $order->tax_amount > 0;
+	}
+
+	/**
+	 * Check has inclusive type tax.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order order object.
+	 *
+	 * @return boolean
+	 */
+	public static function has_inclusive_tax( $order ) {
+		return self::TAX_TYPE_INCLUSIVE === $order->tax_type && $order->tax_rate > 0 && $order->tax_amount > 0;
+	}
+
+	/**
+	 * Get an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $item_id Item id.
+	 *
+	 * @return mixed
+	 */
+	public function get_item( int $item_id ) {
+		return QueryHelper::get_row(
+			$this->order_item_table,
+			array(
+				'item_id' => $item_id,
+			),
+			'id'
+		);
+	}
+
+	/**
 	 * Get sellable price
 	 *
 	 * @since 3.0.0
@@ -1238,16 +1674,238 @@ class OrderModel {
 	public static function get_item_sellable_price( $regular_price, $sale_price = null, $discount_price = null ) {
 		// Ensure prices are numeric and properly formatted.
 		$sellable_price = (
-			! is_null( $sale_price ) && $sale_price > 0
+			! empty( $sale_price )
 			? $sale_price
 			: (
-				! is_null( $discount_price ) && $discount_price >= 0
+				( ! is_null( $discount_price ) && '' !== $discount_price ) && $discount_price >= 0
 				? $discount_price
 				: $regular_price
 			)
 		);
 
-		return tutor_get_locale_price( $sellable_price );
+		return $sellable_price;
 	}
 
+	/**
+	 * Get item sold price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $item_id Item id.
+	 * @param bool  $format Item id.
+	 *
+	 * @return mixed item sellable price
+	 */
+	public static function get_item_sold_price( $item_id, $format = true ) {
+		$item = ( new self() )->get_item( $item_id );
+
+		if ( $item ) {
+			$sold_price = self::get_item_sellable_price( $item->regular_price, $item->sale_price, $item->discount_price );
+
+			return $format ? tutor_get_formatted_price( $sold_price ) : $sold_price;
+		}
+
+		return 0;
+	}
+
+	/**
+	 * Should show pay btn to the user
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order Order object.
+	 *
+	 * @return boolean
+	 */
+	public static function should_show_pay_btn( object $order ) {
+		$order_items            = ( new self() )->get_order_items_by_id( $order->id );
+		$is_enrolled_any_course = false;
+		$is_incomplete_payment  = ! empty( $order->payment_method ) && self::ORDER_INCOMPLETE === $order->order_status;
+		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : true;
+
+		if ( $is_incomplete_payment && ! $is_manual_payment && $order_items ) {
+			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
+				foreach ( $order_items as $item ) {
+					$course_id = $item->id;
+					if ( $course_id ) {
+						$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+						if ( $is_enrolled ) {
+							$is_enrolled_any_course = true;
+							break;
+						}
+					}
+				}
+			} elseif ( tutor_utils()->count( $order_items ) ) {
+					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
+				if ( tutor_utils()->is_enrolled( $course_id ) ) {
+					$is_enrolled_any_course = true;
+				}
+			}
+		}
+
+		return apply_filters( 'tutor_should_show_pay_btn', $is_incomplete_payment && ! $is_manual_payment && ! $is_enrolled_any_course );
+	}
+
+	/**
+	 * Check is manual payment
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $method_name Payment method name.
+	 *
+	 * @return boolean
+	 */
+	public static function is_manual_payment( $method_name ) {
+		$payment_methods = tutor_get_manual_payment_gateways();
+
+		$is_manual_payment = false;
+		foreach ( $payment_methods as $payment_method ) {
+			$is_manual_payment = $payment_method->name === $method_name;
+		}
+
+		return $is_manual_payment;
+	}
+
+	/**
+	 * Render pay button
+	 *
+	 * @since 3.0.1
+	 *
+	 * @param int|object $order Order id or object.
+	 *
+	 * @return void
+	 */
+	public static function render_pay_button( $order ) {
+
+		if ( is_numeric( $order ) ) {
+			$order = ( new self() )->get_order_by_id( $order );
+		}
+
+		$show_pay_button = self::should_show_pay_btn( $order );
+
+		if ( ! self::should_active_pay_button( $order, $show_pay_button ) && $show_pay_button ) : ?>
+
+			<div class="tooltip-wrap tooltip-icon">	
+				<span class="tooltip-txt tooltip-left">
+					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
+				</span>
+			</div>
+			<?php
+		elseif ( $show_pay_button ) :
+			ob_start();
+			?>
+
+			<form method="post">
+				<?php tutor_nonce_field(); ?>
+				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+
+				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+					<?php esc_html_e( 'Pay', 'tutor' ); ?>
+				</button>				
+			</form>
+
+			<?php
+			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
+		endif;
+	}
+
+	/**
+	 * Checks if the Repay Order-Time expired based on stored expiry time.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param object $order The order object containing order details.
+	 * @param bool   $show_pay_button Whether the pay button should be shown.
+	 *
+	 * @return bool Returns true if the order is expired or expiry time is not set, otherwise false.
+	 */
+	private static function should_active_pay_button( $order, $show_pay_button ) {
+
+		$current_time = time();
+		$meta_key     = self::META_KEY_ORDER_ID . $order->id;
+		$user_id      = get_current_user_id();
+		$expiry_time  = get_user_meta( $user_id, $meta_key, true );
+
+		if ( $expiry_time ) {
+
+			// If the time is expired or the order is paid then delete the meta key.
+			if ( $expiry_time < $current_time || ! $show_pay_button ) {
+				delete_user_meta( $user_id, $meta_key );
+				return true;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Retrieves statements for a specific user.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $post_type_in_clause SQL clause to filter the course post types.
+	 * @param string $course_query SQL query string to further filter the courses .
+	 * @param string $date_query SQL query string to filter by date range.
+	 * @param int    $user_id The user ID for which the statements are being retrieved.
+	 * @param int    $offset The offset for pagination.
+	 * @param int    $limit The number of rows to return.
+	 *
+	 * @return array
+	 */
+	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit ): array {
+		global $wpdb;
+
+		//phpcs:disable
+		$statements = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+					IF (
+					orders.total_price,
+					orders.total_price, 
+					statements.course_price_total
+					) AS order_total_price,
+					orders.tax_amount AS order_tax_amount,
+					orders.tax_type AS order_tax_type,
+					statements.*, 
+					course.post_title AS course_title
+				FROM {$wpdb->prefix}tutor_earnings AS statements
+					LEFT JOIN {$wpdb->prefix}tutor_orders AS orders 
+					ON statements.order_id = orders.id		
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = statements.course_id 
+					AND course.post_type IN ({$post_type_in_clause})
+				WHERE statements.user_id = %d
+				{$course_query}
+				{$date_query}
+				ORDER BY statements.created_at DESC
+				LIMIT %d, %d
+			",
+				$user_id,
+				$offset,
+				$limit
+			)
+		);
+		//phpcs:enable
+
+		$total_statements = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*)
+				FROM {$wpdb->prefix}tutor_earnings AS statements
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = statements.course_id
+					AND course.post_type IN ({$post_type_in_clause})
+				WHERE statements.user_id = %d
+				{$course_query}
+				{$date_query}
+			",
+				$user_id
+			)
+		);
+
+		return array(
+			'statements'       => $statements,
+			'total_statements' => $total_statements,
+		);
+	}
 }

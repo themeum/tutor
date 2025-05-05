@@ -1,14 +1,13 @@
-import { zIndex } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useModal } from '@Components/modals/Modal';
-import { noop } from '@Utils/util';
-import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
-
-const ANIMATION_DURATION_WITH_THRESHOLD = 200;
+import FocusTrap from '@TutorShared/components/FocusTrap';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { zIndex } from '@TutorShared/config/styles';
+import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 enum ArrowPosition {
   left = 'left',
@@ -17,6 +16,7 @@ enum ArrowPosition {
   bottom = 'bottom',
   middle = 'middle',
   auto = 'auto',
+  absoluteCenter = 'absoluteCenter',
 }
 export type arrowPosition = `${ArrowPosition}`;
 interface PopoverHookArgs<T> {
@@ -29,7 +29,7 @@ interface PopoverHookArgs<T> {
     top: number;
     left: number;
   };
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: any[];
 }
 
@@ -119,6 +119,10 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
         top: heightDifference < 0 ? 0 : heightDifference / 2,
         left: Math.floor(triggerRect.left - popoverWidth / 2 + triggerRect.width / 2),
       },
+      absoluteCenter: {
+        top: Math.floor(viewPortHeight / 2 - popoverHeight / 2),
+        left: Math.floor(viewPortWidth / 2 - popoverWidth / 2),
+      },
     };
 
     const arrowPositions = {
@@ -127,6 +131,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
       left: positions.right,
       right: positions.left,
       middle: positions.middle,
+      absoluteCenter: positions.absoluteCenter,
     };
 
     if (arrow !== ArrowPosition.auto) {
@@ -158,6 +163,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     }
 
     setPosition({ ...calculatedPosition, arrowPlacement });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerRef, popoverRef, triggerWidth, isOpen, gap, arrow, isDropdown, ...dependencies]);
 
   return { position, triggerWidth, triggerRef, popoverRef };
@@ -167,18 +173,32 @@ interface PortalProps {
   isOpen: boolean;
   children: ReactNode;
   onClickOutside?: () => void;
+  onEscape?: () => void;
   animationType?: AnimationType;
 }
 
 let portalCount = 0;
 
-export const Portal = ({ isOpen, children, onClickOutside, animationType = AnimationType.slideDown }: PortalProps) => {
+export const Portal = ({
+  isOpen,
+  children,
+  onClickOutside,
+  onEscape,
+  animationType = AnimationType.slideDown,
+}: PortalProps) => {
   const { hasModalOnStack } = useModal();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onEscape?.();
+      }
+    };
     if (isOpen) {
       portalCount++;
       document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', handleKeyDown, true);
     }
 
     return () => {
@@ -189,7 +209,10 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
       if (!hasModalOnStack && portalCount === 0) {
         document.body.style.overflow = 'initial';
       }
+
+      document.removeEventListener('keydown', handleKeyDown, true);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, hasModalOnStack]);
 
   const { transitions } = useAnimation({
@@ -201,17 +224,19 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
     if (openState) {
       return createPortal(
         <AnimatedDiv css={styles.wrapper} style={style}>
-          <div className="tutor-portal-popover" role="presentation">
-            <div
-              css={styles.backdrop}
-              onKeyUp={noop}
-              onClick={(event) => {
-                event.stopPropagation();
-                onClickOutside?.();
-              }}
-            />
-            {children}
-          </div>
+          <FocusTrap>
+            <div className="tutor-portal-popover" role="presentation">
+              <div
+                css={styles.backdrop}
+                onKeyUp={noop}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onClickOutside?.();
+                }}
+              />
+              {children}
+            </div>
+          </FocusTrap>
         </AnimatedDiv>,
         document.body,
       );

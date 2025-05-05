@@ -1,9 +1,9 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import { parseNumberOnly } from '@Utils/util';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { parseNumberOnly } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type FocusEvent, type KeyboardEvent, useEffect, useId, useRef } from 'react';
 
@@ -100,7 +100,7 @@ const TextInput = ({
 
         {variant === 'search' && (
           <span css={styles.searchIcon}>
-            <SVGIcon name="search" width={20} height={20} />
+            <SVGIcon name="search" width={24} height={24} />
           </span>
         )}
 
@@ -188,10 +188,12 @@ const styles = {
   `,
   rightIconButton: css`
     position: absolute;
-    right: 0;
-    top: 0;
+    right: ${spacing[4]};
+    top: ${spacing[4]};
+
     button {
-      padding: ${spacing[8]};
+      padding: ${spacing[4]};
+      border-radius: ${borderRadius[2]};
     }
   `,
   searchIcon: css`

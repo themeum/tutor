@@ -1,19 +1,20 @@
-import Button from '@Atoms/Button';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { type Discount, useOrderDiscountMutation } from '@OrderServices/order';
-import { formatPrice } from '@Utils/currency';
-import { requiredRule } from '@Utils/validation';
+import Button from '@TutorShared/atoms/Button';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { formatPrice } from '@TutorShared/utils/currency';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface DiscountModalProps extends ModalProps {
@@ -56,10 +57,14 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
     return Math.max(0, discountedPrice).toFixed(2);
   }, [type, value, total_price]);
 
+  useEffect(() => {
+    form.setFocus('type');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit((values) => {
           orderDiscountMutation.mutate({
             order_id,
@@ -82,7 +87,9 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
                   label={__('Discount Type', 'tutor')}
                   options={discountTypeOptions}
                   placeholder={__('Select discount type', 'tutor')}
-                  onChange={ ()=>{ form.setFocus('amount') }}
+                  onChange={() => {
+                    form.setFocus('amount');
+                  }}
                 />
               )}
             />
@@ -106,6 +113,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
                   {...props}
                   label={__('Discount Value', 'tutor')}
                   content={content}
+                  contentCss={type === 'flat' ? styleUtils.inputCurrencyStyle : undefined}
                   type="number"
                   selectOnFocus
                 />
@@ -125,7 +133,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
               render={(props) => (
                 <FormInput
                   {...props}
-                  label={__('Discount reason', 'tutor')}
+                  label={__('Discount Reason', 'tutor')}
                   placeholder={__('Enter the reason of this discount', 'tutor')}
                 />
               )}
@@ -136,7 +144,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
-          <Button type="submit" size="small" variant="WP" loading={orderDiscountMutation.isPending}>
+          <Button type="submit" size="small" variant="primary" loading={orderDiscountMutation.isPending}>
             {__('Apply', 'tutor')}
           </Button>
         </div>
@@ -163,9 +171,6 @@ const styles = {
   `,
   reason: css`
     margin-top: ${spacing[12]};
-  `,
-  form: css`
-    width: 480px;
   `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};

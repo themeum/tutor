@@ -11,10 +11,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 
 // Global variables.
 $user_id     = get_current_user_id();
@@ -23,8 +23,8 @@ $time_period = $active;
 $start_date  = Input::get( 'start_date', '' );
 $end_date    = Input::get( 'end_date', '' );
 
-$paged    = Input::get( 'current_page', 1, Input::TYPE_INT );
-$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$paged    = Input::get( 'current_page', 1, Input::TYPE_INT );//phpcs:ignore
+$per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );//phpcs:ignore
 $offset   = ( $per_page * $paged ) - $per_page;
 if ( '' !== $start_date ) {
 	$start_date = tutor_get_formated_date( 'Y-m-d', $start_date );
@@ -99,11 +99,11 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 		<div class="tutor-table-responsive">
 			<table class="tutor-table">
 				<thead>
-					<th width="10%">
+					<th width="8%">
 						<?php esc_html_e( 'Order ID', 'tutor' ); ?>
 					</th>
 					<th width="30%">
-						<?php esc_html_e( 'Course Name', 'tutor' ); ?>
+						<?php esc_html_e( 'Name', 'tutor' ); ?>
 					</th>
 					<th>
 						<?php esc_html_e( 'Date', 'tutor' ); ?>
@@ -112,11 +112,13 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 						<?php esc_html_e( 'Price', 'tutor' ); ?>
 					</th>
 					<th>
-						<?php esc_html_e( 'Method', 'tutor' ); ?>
-					</th>
-					<th>
 						<?php esc_html_e( 'Status', 'tutor' ); ?>
 					</th>
+					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+					<th>
+						<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
+					</th>
+					<?php endif; ?>
 					<th></th>
 				</thead>
 				<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
@@ -125,7 +127,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 						if ( is_array( $orders ) && count( $orders ) ) :
 							?>
 							<?php
-							foreach ( $orders as $order ) :
+							foreach ( $orders as $order ) : //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 								?>
 								<tr>
 								<td>
@@ -138,13 +140,21 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									<?php
 									$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 									foreach ( $items as $item ) {
-										$course_id = $item->id;
-										if ( OrderModel::TYPE_SUBSCRIPTION ) {
-											$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+										$course_id    = $item->id; // For single order course, bundle.
+										$object_title = get_the_title( $course_id );
+										if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type ) {
+											$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+											$plan_info = apply_filters( 'tutor_get_plan_info', null, $item->id );
+											if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
+												$object_title = $plan_info->plan_name;
+											} else {
+												$object_title = get_the_title( $object_id );
+											}
 										}
+
 										?>
 										<li>
-										<?php echo esc_html( get_the_title( $course_id ) ); ?>
+										<?php echo esc_html( $object_title ); ?>
 										</li>
 										<?php
 									}
@@ -152,7 +162,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									</div>
 								</td>
 								<td>
-									<div class="tutor-fs-7">
+									<div class="tutor-fs-7 tutor-text-nowrap">
 									<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
 									</div>
 								</td>
@@ -162,14 +172,22 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									</div>
 								</td>
 								<td>
+								<?php
+									echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) );
+								?>
+								</td>
+								<td>
 									<div class="tutor-fs-7">
-										<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
+										<?php echo esc_html( Ecommerce::get_payment_method_label( $order->payment_method ?? '' ) ); ?>
 									</div>
 								</td>
 								<td>
-								<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) ); ?>
-								</td>
-								<td>
+									<div class="tutor-d-flex tutor-gap-1 tutor-justify-end">
+										<?php
+										OrderModel::render_pay_button( $order );
+										do_action( 'tutor_dashboard_invoice_button', $order );
+										?>
+									</div>
 								</td>
 								</tr>
 							<?php endforeach; ?>
@@ -179,13 +197,13 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					</tbody>
 					<?php else : ?>
 					<tbody>
-							<?php foreach ( $orders as $order ) : ?>
+							<?php foreach ( $orders as $order ) : //phpcs:ignore ?>
 								<?php
 								if ( 'wc' === $monetize_by ) {
 									$wc_order          = wc_get_order( $order->ID );
 									$price             = tutor_utils()->tutor_price( $wc_order->get_total() );
 									$raw_price         = $wc_order->get_total();
-									$status            = $order->post_status;
+									$status            = $order->post_status;//phpcs:ignore
 									$badge_class       = 'primary';
 									$order_status_text = '';
 
@@ -219,7 +237,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									$edd_order         = edd_get_payment( $order->ID );
 									$price             = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
 									$raw_price         = $edd_order->total;
-									$status            = $edd_order->status_nicename;
+									$status            = $edd_order->status_nicename;//phpcs:ignore
 									$badge_class       = 'primary';
 									$order_status_text = $status;
 								}
@@ -263,7 +281,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										<?php if ( 'wc-pending' === $status ) : ?>
 										<a href="<?php echo esc_url( $pay_now_url ); ?>" 
 											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-mr-8">
-											<?php esc_html_e( 'Pay', 'tutor-pro' ); ?>	
+											<?php esc_html_e( 'Pay', 'tutor' ); ?>	
 										</a>
 										<?php endif; ?>
 										<a href="javascript:;" class="tutor-export-purchase-history tutor-iconic-btn tutor-iconic-btn-secondary" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
@@ -278,21 +296,21 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			</table>
 		</div>
 
-		<?php
-			$pagination_data = array(
-				'total_items' => $total_orders,
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			);
+					<?php
+					$pagination_data = array(
+						'total_items' => $total_orders,
+						'per_page'    => $per_page,
+						'paged'       => $paged,
+					);
 
-			$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
+					$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
 
-			if ( $total_page > 1 ) {
-				$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
-	<?php else : ?>
-		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+					if ( $total_page > 1 ) {
+						$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
+						tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+					}
+					?>
+					<?php else : ?>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	<?php endif; ?>
 </div>

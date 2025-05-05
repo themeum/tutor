@@ -31,13 +31,6 @@ class Course_List {
 	use Backend_Page_Trait;
 
 	/**
-	 * Page Title
-	 *
-	 * @var $page_title
-	 */
-	public $page_title;
-
-	/**
 	 * Bulk Action
 	 *
 	 * @var $bulk_action
@@ -51,7 +44,6 @@ class Course_List {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		$this->page_title = __( 'Courses', 'tutor' );
 		/**
 		 * Handle bulk action
 		 *
@@ -70,6 +62,21 @@ class Course_List {
 		 * @since v2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_course_delete', array( $this, 'tutor_course_delete' ) );
+	}
+
+	/**
+	 * Page title fallback
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $name Property name.
+	 *
+	 * @return string
+	 */
+	public function __get( $name ) {
+		if ( 'page_title' === $name ) {
+			return esc_html__( 'Courses', 'tutor' );
+		}
 	}
 
 	/**
@@ -122,7 +129,7 @@ class Course_List {
 	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $category_slug, $course_id, $date, $search ): array {
-		$url = get_pagenum_link();
+		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$all       = self::count_course( 'all', $category_slug, $course_id, $date, $search );
 		$mine      = self::count_course( 'mine', $category_slug, $course_id, $date, $search );
@@ -135,7 +142,7 @@ class Course_List {
 
 		$tabs = array(
 			array(
-				'key'   => 'all',
+				'key'   => '',
 				'title' => __( 'All', 'tutor' ),
 				'value' => $all,
 				'url'   => $url . '&data=all',
@@ -256,14 +263,14 @@ class Course_List {
 		if ( '' !== $category_slug ) {
 			$args['tax_query'] = array(
 				array(
-					'taxonomy' => 'course-category',
+					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'field'    => 'slug',
 					'terms'    => $category_slug,
 				),
 			);
 		}
 
-		$the_query = new \WP_Query( $args );
+		$the_query = self::course_list_query( $args, $user_id, $status );
 
 		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
 
@@ -323,12 +330,7 @@ class Course_List {
 
 		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
 
-		$update_status ? wp_send_json_success() : wp_send_json_error(
-			array(
-				'message' => 'Could not update course status',
-				'tutor',
-			)
-		);
+		$update_status ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not update course status', 'tutor' ) ) );
 
 		exit;
 	}
@@ -373,7 +375,7 @@ class Course_List {
 			}
 		}
 
-		if ( CourseModel::POST_TYPE !== $course->post_type ) {
+		if ( ! CourseModel::get_post_types( $course ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -524,5 +526,22 @@ class Course_List {
 	public static function is_public( int $course_id ): bool {
 		$is_public = get_post_meta( $course_id, '_tutor_is_public_course', true );
 		return 'yes' === $is_public ? true : false;
+	}
+
+	/**
+	 * Query for obtaining course list.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array  $args the query args.
+	 * @param int    $user_id the user id.
+	 * @param string $status the post status.
+	 *
+	 * @return \WP_Query
+	 */
+	public static function course_list_query( $args, $user_id, $status ) {
+
+		$course_list_query = new \WP_Query( apply_filters( 'tutor_admin_course_list', $args, $user_id, $status ) );
+		return $course_list_query;
 	}
 }

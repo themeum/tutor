@@ -1,13 +1,13 @@
 import { type SerializedStyles, css } from '@emotion/react';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 import React, { type MouseEvent, type ReactNode, useRef } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import Popover from './Popover';
 
@@ -67,6 +67,7 @@ interface ThreeDotsProps {
   isInverse?: boolean;
   hideArrow?: boolean;
   size?: 'small' | 'medium';
+  closeOnEscape?: boolean;
 }
 
 const ThreeDots = ({
@@ -82,9 +83,11 @@ const ThreeDots = ({
   isInverse = false,
   hideArrow = false,
   size = 'medium',
+  closeOnEscape = true,
   ...props
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
+
   return (
     <>
       <button
@@ -106,6 +109,7 @@ const ThreeDots = ({
         closePopover={closePopover}
         animationType={animationType}
         hideArrow={hideArrow}
+        closeOnEscape={closeOnEscape}
       >
         <div css={styles.wrapper({ size })}>
           {React.Children.map(children, (child) => {
@@ -129,28 +133,16 @@ ThreeDots.Option = ThreeDotsOption;
 export default ThreeDots;
 
 const styles = {
-  wrapper: ({
-    size = 'medium',
-  }: {
-    size: 'small' | 'medium';
-  }) => css`
+  wrapper: ({ size = 'medium' }: { size: 'small' | 'medium' }) => css`
     padding-block: ${spacing[8]};
     position: relative;
 
-    ${
-      size === 'small' &&
-      css`
-        padding-block: ${spacing[4]};
-      `
-    }
+    ${size === 'small' &&
+    css`
+      padding-block: ${spacing[4]};
+    `}
   `,
-  option: ({
-    isTrash = false,
-    size = 'medium',
-  }: {
-    isTrash: boolean;
-    size: 'small' | 'medium';
-  }) => css`
+  option: ({ isTrash = false, size = 'medium' }: { isTrash: boolean; size: 'small' | 'medium' }) => css`
     ${styleUtils.resetButton};
     ${typography.body()};
 
@@ -162,18 +154,23 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.primary};
+    }
+
     svg {
       flex-shrink: 0;
       color: ${colorTokens.icon.default};
     }
-    
-    ${
-      size === 'small' &&
-      css`
-        padding: ${spacing[8]} ${spacing[16]};
-        ${typography.small('medium')};
-      `
-    }
+
+    ${size === 'small' &&
+    css`
+      padding: ${spacing[8]} ${spacing[16]};
+      ${typography.small('medium')};
+    `}
 
     :hover:not(:disabled) {
       background-color: ${colorTokens.background.hover};
@@ -191,12 +188,11 @@ const styles = {
 
       svg {
         color: ${colorTokens.icon.disable.background};
-      } 
+      }
     }
 
-    ${
-      isTrash &&
-      css`
+    ${isTrash &&
+    css`
       color: ${colorTokens.text.error};
       svg {
         color: ${colorTokens.icon.error};
@@ -219,7 +215,12 @@ const styles = {
           color: ${colorTokens.icon.error};
         }
       }
-    `
+    `}
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -4px;
+      border-radius: ${borderRadius.input};
     }
   `,
   button: ({ isOpen = false, isInverse = false, isDisabled = false }) => css`
@@ -244,28 +245,34 @@ const styles = {
       }
     }
 
-    ${
-      isOpen &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        svg {
-          color: ${colorTokens.icon.brand};
-        }
-      `
+    &:focus,
+    &:active {
+      background: none;
     }
 
-    ${
-      isInverse &&
-      css`
-        background-color: ${colorTokens.background.white};
-        :hover {
-          background-color: ${colorTokens.background.white};
-          svg {
-            color: ${!isDisabled && colorTokens.icon.brand};
-          }
-        }
-      `
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
     }
+
+    ${isOpen &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      svg {
+        color: ${colorTokens.icon.brand};
+      }
+    `}
+
+    ${isInverse &&
+    css`
+      background-color: ${colorTokens.background.white};
+      :hover {
+        background-color: ${colorTokens.background.white};
+        svg {
+          color: ${!isDisabled && colorTokens.icon.brand};
+        }
+      }
+    `}
 
     :disabled {
       cursor: not-allowed;

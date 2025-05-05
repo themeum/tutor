@@ -1,13 +1,13 @@
-import Show from '@/v3/shared/controls/Show';
-import { getCountryByCode } from '@/v3/shared/utils/countries';
-import Button from '@Atoms/Button';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import taxBanner from '@Images/tax-banner.png';
-import { styleUtils } from '@Utils/style-utils';
+import taxBanner from '@SharedImages/tax-banner.png';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { getCountryByCode } from '@TutorShared/utils/countries';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
@@ -72,7 +72,7 @@ const TaxSettingsPage = () => {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <Show when={activeCountry} fallback={<h6 css={styles.title}>{__('Tax', 'tutor')}</h6>}>
+      <Show when={activeCountry} fallback={<h6 css={styles.title}>{__('Taxes', 'tutor')}</h6>}>
         {(countryCode) => {
           return (
             <Button
@@ -97,9 +97,9 @@ const TaxSettingsPage = () => {
               <EmptyState
                 emptyStateImage={taxBanner}
                 imageAltText={__('Tax Banner', 'tutor')}
-                title={__('Apply Tax During Checkout', 'tutor')}
+                title={__('Configure Tax Rates', 'tutor')}
                 content={__('Start configuring the tax settings to set up and manage the tax rates.', 'tutor')}
-                buttonText={__('Add taxable country', 'tutor')}
+                buttonText={__('Add tax region', 'tutor')}
                 action={() => {
                   openCountrySelectModal({
                     form,

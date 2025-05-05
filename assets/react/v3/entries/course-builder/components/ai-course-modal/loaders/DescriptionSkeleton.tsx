@@ -1,5 +1,5 @@
-import Skeleton from '@Atoms/Skeleton';
-import { spacing } from '@Config/styles';
+import Skeleton from '@TutorShared/atoms/Skeleton';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 const DescriptionSkeleton = () => {
@@ -29,10 +29,10 @@ const DescriptionSkeleton = () => {
 export default DescriptionSkeleton;
 const styles = {
   wrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		width: 100%;
-		margin-top: ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    width: 100%;
+    margin-top: ${spacing[16]};
+  `,
 };

@@ -1,12 +1,16 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { modal } from '@Config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';
+
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
+import FocusTrap from '@TutorShared/components/FocusTrap';
+
+import { modal } from '@TutorShared/config/constants';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface ModalWrapperProps {
   children: React.ReactNode;
@@ -40,88 +44,84 @@ const ModalWrapper = ({
   }, []);
 
   return (
-    <div
-      css={styles.container({
-        maxWidth,
-      })}
-    >
+    <FocusTrap>
       <div
-        css={styles.header({
-          hasHeaderChildren: !!headerChildren,
+        css={styles.container({
+          maxWidth,
         })}
       >
-        <Show
-          when={entireHeader}
-          fallback={
-            <>
-              <div css={styles.headerContent}>
-                <div css={styles.iconWithTitle}>
-                  <Show when={icon}>{icon}</Show>
-                  <Show when={title}>
-                    <h6 css={styles.title} title={typeof title === 'string' ? title : ''}>
-                      {title}
-                    </h6>
+        <div
+          css={styles.header({
+            hasHeaderChildren: !!headerChildren,
+          })}
+        >
+          <Show
+            when={entireHeader}
+            fallback={
+              <>
+                <div css={styles.headerContent}>
+                  <div css={styles.iconWithTitle}>
+                    <Show when={icon}>{icon}</Show>
+                    <Show when={title}>
+                      <h6 css={styles.title} title={typeof title === 'string' ? title : ''}>
+                        {title}
+                      </h6>
+                    </Show>
+                  </div>
+                  <Show when={subtitle}>
+                    <span css={styles.subtitle}>{subtitle}</span>
                   </Show>
                 </div>
-                <Show when={subtitle}>
-                  <span css={styles.subtitle}>{subtitle}</span>
-                </Show>
-              </div>
-              <div css={styles.headerChildren}>
-                <Show when={headerChildren}>{headerChildren}</Show>
-              </div>
-              <div css={styles.actionsWrapper}>
-                <Show
-                  when={actions}
-                  fallback={
-                    <button type="button" css={styles.closeButton} onClick={onClose}>
-                      <SVGIcon name="times" width={14} height={14} />
-                    </button>
-                  }
-                >
-                  {actions}
-                </Show>
-              </div>
-            </>
-          }
-        >
-          {entireHeader}
-        </Show>
+                <div css={styles.headerChildren}>
+                  <Show when={headerChildren}>{headerChildren}</Show>
+                </div>
+                <div css={styles.actionsWrapper}>
+                  <Show
+                    when={actions}
+                    fallback={
+                      <button type="button" css={styles.closeButton} onClick={onClose}>
+                        <SVGIcon name="times" width={14} height={14} />
+                      </button>
+                    }
+                  >
+                    {actions}
+                  </Show>
+                </div>
+              </>
+            }
+          >
+            {entireHeader}
+          </Show>
+        </div>
+        <div css={styles.content}>
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </div>
       </div>
-      <div css={styles.content}>{children}</div>
-    </div>
+    </FocusTrap>
   );
 };
 
 export default ModalWrapper;
 
 const styles = {
-  container: ({
-    maxWidth,
-  }: {
-    maxWidth?: number;
-  }) => css`
+  container: ({ maxWidth }: { maxWidth?: number }) => css`
     position: relative;
     background: ${colorTokens.background.white};
-    margin: ${spacing[24]};
-    margin-top: ${modal.MARGIN_TOP}px;
+    margin: ${modal.MARGIN_TOP}px auto ${spacing[24]};
     height: 100%;
     max-width: ${maxWidth}px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
     bottom: 0;
-		z-index: ${zIndex.modal};
+    z-index: ${zIndex.modal};
+    width: 100%;
 
     ${Breakpoint.smallTablet} {
       width: 90%;
     }
   `,
-  header: ({
-    hasHeaderChildren,
-  }: {
-    hasHeaderChildren: boolean;
-  }) => css`
+  header: ({ hasHeaderChildren }: { hasHeaderChildren: boolean }) => css`
     display: grid;
     grid-template-columns: ${hasHeaderChildren ? '1fr auto 1fr' : '1fr auto auto'};
     gap: ${spacing[8]};
@@ -139,13 +139,8 @@ const styles = {
     gap: ${spacing[12]};
     padding-left: ${spacing[24]};
 
-    & span {
-      ::before {
-        content: '';
-        border-left: 1px solid ${colorTokens.icon.hints};
-        margin-right: ${spacing[12]};
-        border-radius: ${borderRadius[14]};
-      }
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[16]};
     }
   `,
   headerChildren: css`
@@ -161,17 +156,25 @@ const styles = {
   title: css`
     ${typography.heading6('medium')};
     color: ${colorTokens.text.title};
+    text-transform: none;
+    letter-spacing: normal;
   `,
   subtitle: css`
     ${styleUtils.text.ellipsis(1)}
     ${typography.caption()};
     color: ${colorTokens.text.hints};
+    padding-left: ${spacing[12]};
+    border-left: 1px solid ${colorTokens.icon.hints};
   `,
   actionsWrapper: css`
     place-self: center end;
     display: inline-flex;
     gap: ${spacing[16]};
     padding-right: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-right: ${spacing[16]};
+    }
   `,
   closeButton: css`
     ${styleUtils.resetButton};
@@ -182,6 +185,12 @@ const styles = {
     height: 32px;
     border-radius: ${borderRadius.circle};
     background: ${colorTokens.background.white};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: ${colorTokens.background.white};
+    }
 
     svg {
       color: ${colorTokens.icon.default};

@@ -1,16 +1,16 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import Container from '@Components/Container';
-import { useModal } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
 import { OrderBadge } from '@OrderComponents/order/OrderBadge';
 import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
 import { useOrderContext } from '@OrderContexts/order-context';
-import { styleUtils } from '@Utils/style-utils';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Container from '@TutorShared/components/Container';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -27,7 +27,7 @@ function Topbar() {
     if (redirectUrl) {
       window.location.href = decodeURIComponent(redirectUrl);
     } else {
-      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_orders`;
+      window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_orders`;
     }
   }
 
@@ -36,12 +36,12 @@ function Topbar() {
       <Container>
         <div css={styles.innerWrapper}>
           <div css={styles.left}>
-            <button type="button" css={styles.backButton} onClick={handleGoBack}>
+            <button type="button" css={styleUtils.backButton} onClick={handleGoBack}>
               <SVGIcon name="arrowLeft" width={26} height={26} />
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
+                <h4 css={styles.headerTitle}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
                 <Show when={order.payment_status}>
                   <PaymentBadge status={order.payment_status} />
                 </Show>
@@ -53,21 +53,13 @@ function Topbar() {
                 when={order.updated_at_readable}
                 fallback={
                   <p css={styles.updateMessage}>
-                    {sprintf(
-                      __('Created by %s at %s', 'tutor'),
-                      order.created_by,
-                      order.created_at_readable
-                    )}
+                    {sprintf(__('Created by %s at %s', 'tutor'), order.created_by, order.created_at_readable)}
                   </p>
                 }
               >
                 {(date) => (
                   <p css={styles.updateMessage}>
-                    {sprintf(
-                      __('Updated by %s at %s', 'tutor'),
-                      order.updated_by,
-                      date
-                    )}
+                    {sprintf(__('Updated by %s at %s', 'tutor'), order.updated_by, date)}
                   </p>
                 )}
               </Show>
@@ -86,6 +78,9 @@ function Topbar() {
                   },
                 });
               }}
+              buttonCss={css`
+                flex-shrink: 0;
+              `}
             >
               {__('Cancel Order', 'tutor')}
             </Button>
@@ -102,41 +97,52 @@ const styles = {
   wrapper: css`
     height: ${TOPBAR_HEIGHT}px;
     background: ${colorTokens.background.white};
+    border: 1px solid ${colorTokens.stroke.divider};
+    position: sticky;
+    top: 32px;
+    z-index: ${zIndex.positive};
+
+    ${Breakpoint.mobile} {
+      position: unset;
+      padding-inline: ${spacing[8]};
+    }
+
+    ${Breakpoint.smallMobile} {
+      height: auto;
+    }
   `,
   innerWrapper: css`
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    padding-inline: ${spacing[8]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[12]};
+      flex-direction: column;
+      gap: ${spacing[8]};
+    }
   `,
   headerContent: css`
     display: flex;
     align-items: center;
     gap: ${spacing[16]};
   `,
+  headerTitle: css`
+    ${typography.heading5('medium')};
+
+    ${Breakpoint.smallMobile} {
+      ${typography.heading6('medium')};
+    }
+  `,
   left: css`
     display: flex;
     gap: ${spacing[16]};
+    width: 100%;
   `,
   updateMessage: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
-  `,
-  backButton: css`
-    ${styleUtils.resetButton};
-    background-color: transparent;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid ${colorTokens.border.neutral};
-    border-radius: ${borderRadius[4]};
-    color: ${colorTokens.icon.default};
-    transition: color 0.3s ease-in-out;
-
-    :hover {
-      color: ${colorTokens.icon.hover};
-    }
   `,
 };

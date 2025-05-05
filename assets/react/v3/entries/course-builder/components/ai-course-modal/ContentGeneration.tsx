@@ -3,24 +3,24 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
-import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import { GradientLoadingSpinner } from '@TutorShared/atoms/LoadingSpinner';
+import MagicButton from '@TutorShared/atoms/MagicButton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
 
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { Addons } from '@Config/constants';
-import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/magic-ai';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
-import { getObjectKeys, getObjectValues } from '@Utils/util';
+import { useSaveAIGeneratedCourseContentMutation } from '@TutorShared/services/magic-ai';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { Addons, isRTL } from '@TutorShared/config/constants';
+import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getObjectKeys, getObjectValues, isAddonEnabled } from '@TutorShared/utils/util';
 
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import ContentAccordion from './ContentAccordion';
@@ -29,8 +29,10 @@ import ContentSkeleton from './loaders/ContentSkeleton';
 import DescriptionSkeleton from './loaders/DescriptionSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
-import aiStudioError2x from '@Images/ai-studio-error-2x.webp';
-import aiStudioError from '@Images/ai-studio-error.webp';
+import aiStudioError2x from '@SharedImages/ai-studio-error-2x.webp';
+import aiStudioError from '@SharedImages/ai-studio-error.webp';
+
+import ImageSkeleton from './loaders/ImageSkeleton';
 
 interface LoadingStep {
   loading_label: string;
@@ -58,21 +60,21 @@ const defaultSteps: Record<keyof Loading, LoadingStep> = {
   },
   topic: {
     loading_label: __('Now generating topic names...', 'tutor'),
-    completed_label: __('Course topics generated', 'tutor'),
-    error_label: __('Error generating topics', 'tutor'),
+    completed_label: __('Course topics generated.', 'tutor'),
+    error_label: __('Error generating topics.', 'tutor'),
     completed: false,
     hasError: false,
   },
   content: {
     loading_label: __('Now generating course contents...', 'tutor'),
-    completed_label: __('Course contents generated', 'tutor'),
+    completed_label: __('Course contents generated.', 'tutor'),
     error_label: __('Error generating course contents.', 'tutor'),
     completed: false,
     hasError: false,
   },
   quiz: {
     loading_label: __('Now generating quiz questions...', 'tutor'),
-    completed_label: __('Quiz questions generated', 'tutor'),
+    completed_label: __('Quiz questions generated.', 'tutor'),
     error_label: __('Error generating quiz questions.', 'tutor'),
     completed: false,
     hasError: false,
@@ -130,12 +132,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     boxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [currentLoading, currentErrors]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isCreateNewCourse) {
       formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       form.setFocus('prompt');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCreateNewCourse]);
 
   const isLoading = getObjectValues(currentLoading).some((item) => item);
@@ -175,6 +177,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             <div css={styles.leftContentWrapper}>
+              <Show when={!currentLoading.title} fallback={<ImageSkeleton />}>
+                <div css={styles.imageWrapper}>
+                  <img src={currentContent.featured_image} alt={currentContent.title} />
+                </div>
+              </Show>
+
               <Show when={!currentLoading.description} fallback={<DescriptionSkeleton />}>
                 <div css={styles.section}>
                   <h5>{__('Course Info', 'tutor')}</h5>
@@ -204,7 +212,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 disabled={pointer === 0 || isLoading}
                 onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
               >
-                <SVGIcon name="chevronLeft" width={20} height={20} />
+                <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={20} height={20} />
               </Button>
               <div css={styles.navigatorContent}>
                 <span>{pointer + 1}</span>
@@ -216,7 +224,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 disabled={pointer >= contents.length - 1 || isLoading}
                 onClick={() => setPointer((previous) => Math.min(contents.length - 1, previous + 1))}
               >
-                <SVGIcon name="chevronRight" width={20} height={20} />
+                <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={20} height={20} />
               </Button>
             </div>
           </Show>
@@ -251,7 +259,9 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                           (hasErrors && __('Error generating course content', 'tutor')) ||
                           __('Generated course content', 'tutor')}
                       </h6>
-                      <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
+                      <Show when={contents[index].prompt}>
+                        {(prompt) => <p css={styles.subtitle}>&quot;{prompt}&quot;</p>}
+                      </Show>
                       <div css={styles.items}>
                         <Show
                           when={isLoadingItem}
@@ -394,7 +404,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                             }}
                           >
                             <SVGIcon name="magicWand" width={24} height={24} />
-                            {__('Generate a new course', 'tutor')}
+                            {__('Generate a New Course', 'tutor')}
                           </MagicButton>
                         </Show>
 
@@ -410,7 +420,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                           }}
                         >
                           <SVGIcon name="tryAgain" width={24} height={24} />
-                          {__('Regenerate course', 'tutor')}
+                          {__('Regenerate Course', 'tutor')}
                         </MagicButton>
                       </div>
                     </div>
@@ -491,7 +501,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     </MagicButton>
                     <MagicButton type="submit" disabled={isLoading || !promptValue}>
                       <SVGIcon name="magicWand" width={24} height={24} />
-                      {__('Generate now', 'tutor')}
+                      {__('Generate Now', 'tutor')}
                     </MagicButton>
                   </div>
                 </form>
@@ -503,7 +513,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             <MagicButton
               variant="primary_outline"
               onClick={() => {
-                isLoading ? cancelGeneration() : onClose();
+                if (isLoading) {
+                  cancelGeneration();
+                } else {
+                  onClose();
+                }
               }}
             >
               {isLoading ? __('Stop Generation', 'tutor') : __('Cancel', 'tutor')}
@@ -520,7 +534,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 showToast({ type: 'success', message: __('Course content stored into a local file.', 'tutor') });
               }}
             >
-              {__('Append the course', 'tutor')}
+              {__('Append the Course', 'tutor')}
             </MagicButton>
           </div>
         </div>
@@ -533,274 +547,272 @@ export default ContentGeneration;
 
 const styles = {
   container: css`
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
     justify-content: center;
     align-items: end;
-	`,
+  `,
   navigator: css`
-		display: flex;
-		align-items: center;
-		margin-left: -${spacing[16]};
-		margin-bottom: ${spacing[16]};
-	`,
+    display: flex;
+    align-items: center;
+    margin-left: -${spacing[16]};
+    margin-bottom: ${spacing[16]};
+  `,
   navigatorContent: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		
-		span {
-			${typography.caption()};
-		}
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
 
-		span:first-of-type {
-			color: ${colorTokens.text.primary};
-		}
-	`,
+    span {
+      ${typography.caption()};
+    }
+
+    span:first-of-type {
+      color: ${colorTokens.text.primary};
+    }
+  `,
   wrapper: css`
-		display: flex;
-		gap: ${spacing[28]};
-		height: calc(100vh - ${spacing[56]});
-		width: 1300px;
-		${Breakpoint.smallTablet} {
-			width: 90%;
-			gap: ${spacing[16]};
-		}
-	`,
+    display: flex;
+    gap: ${spacing[28]};
+    height: calc(100vh - ${spacing[56]});
+    width: 1300px;
+
+    ${Breakpoint.smallTablet} {
+      width: 90%;
+      gap: ${spacing[16]};
+      flex-wrap: wrap-reverse;
+      ${styleUtils.overflowYAuto};
+    }
+  `,
   regenerateForm: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    width: 100%;
 
-		button {
-			width: auto;
-		}
-	`,
+    button {
+      width: auto;
+    }
+  `,
   formButtons: css`
-		display: flex;
-		width: 100%;
-		justify-content: end;
-		align-items: center;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
   leftContentWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		padding-inline: ${spacing[40]};
-		margin-top: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    padding-inline: ${spacing[40]};
+    margin-top: ${spacing[8]};
+  `,
   box: ({ deactivated, hasError, isActive }: { deactivated: boolean; hasError: boolean; isActive: boolean }) => css`
-		width: 100%;
-		border-radius: ${borderRadius[8]};
-		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
-		padding: ${spacing[16]} ${spacing[12]};
-		display: flex;
-		gap: ${spacing[12]};
-		transition: border 0.3s ease;
+    width: 100%;
+    border-radius: ${borderRadius[8]};
+    border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
+    padding: ${spacing[16]} ${spacing[12]};
+    display: flex;
+    gap: ${spacing[12]};
+    transition: border 0.3s ease;
     position: relative;
-		
-		svg {
-			flex-shrink: 0;
-		}
 
-		${
-      deactivated &&
-      css`
-			[data-check-icon] {
-				color: ${colorTokens.icon.disable.muted} !important;
-			}
-		`
+    svg {
+      flex-shrink: 0;
     }
 
-		${
-      !deactivated &&
-      css`
-			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
-			`
-    }
+    ${deactivated &&
+    css`
+      [data-check-icon] {
+        color: ${colorTokens.icon.disable.muted} !important;
+      }
+    `}
 
-    ${
-      isActive &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-      `
-    }
+    ${!deactivated &&
+    css`
+      border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
+    `}
+
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+    `}
 
 		:hover {
-			border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
+      border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
       background-color: ${!isActive && colorTokens.background.hover};
-		}
-	`,
+    }
+  `,
   boxFooter: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-		justify-content: end;
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+    justify-content: end;
 
-		button {
-			width: auto;
-		}
-	`,
+    button {
+      width: auto;
+    }
+  `,
   rightContents: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		overflow-y: auto;
-		height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    overflow-y: auto;
+    height: 100%;
     padding-right: ${spacing[20]};
     ${styleUtils.overflowYAuto};
-	`,
+  `,
   rightFooter: css`
-		margin-top: auto;
-		padding-top: ${spacing[16]};
+    margin-top: auto;
+    padding-top: ${spacing[16]};
     padding-right: ${spacing[20]};
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: ${spacing[12]};
+  `,
   subtitle: css`
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+  `,
   boxContent: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-		width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    width: 100%;
 
-		h6 {
-			${typography.body('medium')};
-			color: ${colorTokens.color.black.main};
-		}
+    h6 {
+      ${typography.body('medium')};
+      color: ${colorTokens.color.black.main};
+    }
 
-		p {
-			${typography.caption('medium')};
-			color: ${colorTokens.text.title};
-		}
-	`,
+    p {
+      ${typography.caption('medium')};
+      color: ${colorTokens.text.title};
+    }
+  `,
   items: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-		position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+    position: relative;
 
     [data-error='true'] {
-      color: ${colorTokens.icon.error}
+      color: ${colorTokens.icon.error};
     }
-	`,
+  `,
   item: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-		${styleUtils.textEllipsis};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+    ${styleUtils.textEllipsis};
 
-		svg {
-			color: ${colorTokens.stroke.success.fill70};
+    svg {
+      color: ${colorTokens.stroke.success.fill70};
 
       [data-error='true'] {
         color: ${colorTokens.icon.error};
       }
-		}
-	`,
+    }
+  `,
   section: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
 
-		& > h5 {
-			${typography.heading6('medium')};
-			color: ${colorTokens.text.primary};
-			height: 42px;
-			border-bottom: 1px solid ${colorTokens.stroke.border};
-		}
-	`,
+    & > h5 {
+      ${typography.heading6('medium')};
+      color: ${colorTokens.text.primary};
+      height: 42px;
+      border-bottom: 1px solid ${colorTokens.stroke.border};
+    }
+  `,
   content: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		
-		h6 {
-			${typography.caption()};
-			color: ${colorTokens.text.primary};
-		}
-	`,
-  left: css`
-		width: 792px;
-		background-color: ${colorTokens.background.white};
-		border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		overflow-y: auto;
-		padding-bottom: ${spacing[32]};
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
 
-		${Breakpoint.smallTablet} {
-			width: 80%;
-		}
-	`,
+    h6 {
+      ${typography.caption()};
+      color: ${colorTokens.text.primary};
+    }
+  `,
+  left: css`
+    width: 792px;
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    overflow-y: auto;
+    padding-bottom: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      width: 100%;
+    }
+  `,
   right: css`
-		width: 480px;
-		height: 100%;
-		background-color: ${colorTokens.background.white};
-		border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
-		padding: ${spacing[24]} ${spacing[0]} ${spacing[24]} ${spacing[20]};
+    width: 480px;
+    height: 100%;
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
+    padding: ${spacing[24]} ${spacing[0]} ${spacing[24]} ${spacing[20]};
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
-		${Breakpoint.smallTablet} {
-			width: 20%;
-		}
-	`,
+    ${Breakpoint.smallTablet} {
+      width: 100%;
+      border-radius: ${borderRadius[12]};
+    }
+  `,
   title: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-		color: ${colorTokens.icon.default};
-		z-index: ${zIndex.header};
-		min-height: 40px;	
-		padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};	
-		background-color: ${colorTokens.background.white};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+    color: ${colorTokens.icon.default};
+    z-index: ${zIndex.header};
+    min-height: 40px;
+    padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};
+    background-color: ${colorTokens.background.white};
 
     svg {
       flex-shrink: 0;
       color: ${colorTokens.text.ai.purple};
     }
 
-		& > h5 {
-			${typography.heading5('medium')};
-			${styleUtils.textEllipsis};
-			color: ${colorTokens.text.ai.purple};
-		}
-	`,
+    & > h5 {
+      ${typography.heading5('medium')};
+      ${styleUtils.textEllipsis};
+      color: ${colorTokens.text.ai.purple};
+    }
+  `,
   imageWrapper: css`
-		width: 100%;
-		height: 390px;
-		border-radius: ${borderRadius[10]};
-		overflow: hidden;
-		position: relative;
-		flex-shrink: 0;
+    width: 100%;
+    height: 390px;
+    border-radius: ${borderRadius[10]};
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
 
-		img {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	`,
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  `,
   errorWrapper: css`
     ${styleUtils.flexCenter('column')};
     height: 100%;
@@ -819,11 +831,7 @@ const styles = {
     color: ${colorTokens.text.error};
     margin-inline: ${spacing[96]};
   `,
-  overlayButton: ({
-    hasAnyContent,
-  }: {
-    hasAnyContent: boolean;
-  }) => css`
+  overlayButton: ({ hasAnyContent }: { hasAnyContent: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
     top: 0;
@@ -831,12 +839,10 @@ const styles = {
     width: 100%;
     height: 100%;
 
-    ${
-      !hasAnyContent &&
-      css`
-        cursor: default;
-      `
-    }
+    ${!hasAnyContent &&
+    css`
+      cursor: default;
+    `}
 
     :disabled {
       cursor: default;

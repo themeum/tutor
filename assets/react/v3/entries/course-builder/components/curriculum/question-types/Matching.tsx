@@ -16,16 +16,17 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import FormMatching from '@Components/fields/quiz/FormMatching';
+import FormMatching from '@CourseBuilderComponents/fields/quiz/FormMatching';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { colorTokens, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid, noop } from '@Utils/util';
+import { QuizDataStatus, type QuizForm, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -66,10 +67,35 @@ const Matching = () => {
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
+  const handleAddOption = () => {
+    appendOption(
+      {
+        _data_status: QuizDataStatus.NEW,
+        is_saved: false,
+        answer_id: nanoid(),
+        answer_title: '',
+        is_correct: '0',
+        belongs_question_id: activeQuestionId,
+        belongs_question_type: imageMatching ? 'image_matching' : 'matching',
+        answer_order: optionsFields.length,
+        answer_two_gap_match: '',
+        answer_view_format: '',
+      },
+      {
+        shouldFocus: true,
+        focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
+      },
+    );
+
+    if (validationError?.type === 'add_option') {
+      setValidationError(null);
+    }
+  };
+
   const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
     const duplicateOption: QuizQuestionOption = {
       ...data,
-      _data_status: 'new',
+      _data_status: QuizDataStatus.NEW,
       is_saved: true,
       answer_id: nanoid(),
       answer_title: `${data.answer_title} (copy)`,
@@ -82,7 +108,7 @@ const Matching = () => {
   const handleDeleteOption = (index: number, option: QuizQuestionOption) => {
     removeOption(index);
 
-    if (option._data_status !== 'new') {
+    if (option._data_status !== QuizDataStatus.NEW) {
       form.setValue('deleted_answer_ids', [...form.getValues('deleted_answer_ids'), option.answer_id]);
     }
   };
@@ -165,37 +191,16 @@ const Matching = () => {
         )}
       </DndContext>
 
-      <button
-        type="button"
-        onClick={() => {
-          appendOption(
-            {
-              _data_status: 'new',
-              is_saved: false,
-              answer_id: nanoid(),
-              answer_title: '',
-              is_correct: '0',
-              belongs_question_id: activeQuestionId,
-              belongs_question_type: imageMatching ? 'image_matching' : 'matching',
-              answer_order: optionsFields.length,
-              answer_two_gap_match: '',
-              answer_view_format: '',
-            },
-            {
-              shouldFocus: true,
-              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
-            },
-          );
-
-          if (validationError?.type === 'add_option') {
-            setValidationError(null);
-          }
-        }}
-        css={styles.addOptionButton}
-      >
-        <SVGIcon name="plus" height={24} width={24} />
-        {__('Add Option', 'tutor')}
-      </button>
+      <div>
+        <Button
+          variant="text"
+          onClick={handleAddOption}
+          buttonContentCss={styles.addOptionButton}
+          icon={<SVGIcon name="plus" height={24} width={24} />}
+        >
+          {__('Add Option', 'tutor')}
+        </Button>
+      </div>
     </div>
   );
 };
@@ -207,15 +212,13 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   addOptionButton: css`
-    ${styleUtils.resetButton}
-    ${styleUtils.display.flex()}
-    align-items: center;
-    gap: ${spacing[8]};
     color: ${colorTokens.text.brand};
-    margin-left: ${spacing[8]};
-    margin-top: ${spacing[28]};
 
     svg {
       color: ${colorTokens.icon.brand};
