@@ -11,6 +11,11 @@
   thead {
     th {
       font-weight: 400;
+      background: var(--tutor-color-white);
+      
+      i {
+        vertical-align: middle;
+      }
     }
   }
 }

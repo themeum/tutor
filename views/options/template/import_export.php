@@ -13,37 +13,37 @@
 
 <!-- An array for export checkbox with name and label, cna be nested and will use it for rendering in modal -->
 <?php
-$default_checkbox_value = '0';
+$default_checkbox_value = '1';
 
 $export_checkboxes = array(
 	'courses'         => array(
 		'label'          => __( 'Courses', 'tutor' ),
-		'count'          => tutor_utils()->get_courses_count(),
+		'count'          => 0,
 		'name'           => 'courses',
 		'value'          => $default_checkbox_value,
-		'keep_user_data' => true,
+		'keep_user_data' => $default_checkbox_value,
 		'children'       => array(
 			'lessons'     => array(
 				'label' => __( 'Lessons', 'tutor' ),
-				'count' => tutor_utils()->get_lessons_count(),
+				'count' => 0,
 				'name'  => 'lessons',
 				'value' => $default_checkbox_value,
 			),
 			'quizzes'     => array(
 				'label' => __( 'Quizzes', 'tutor' ),
-				'count' => tutor_utils()->get_quizzes_count(),
+				'count' => 0,
 				'name'  => 'quizzes',
 				'value' => $default_checkbox_value,
 			),
 			'assignments' => array(
 				'label' => __( 'Assignments', 'tutor' ),
-				'count' => tutor_utils()->get_assignments_count(),
+				'count' => 0,
 				'name'  => 'assignments',
 				'value' => $default_checkbox_value,
 			),
 			'resources'   => array(
 				'label' => __( 'Resources', 'tutor' ),
-				'count' => tutor_utils()->get_resources_count(),
+				'count' => 0,
 				'name'  => 'resources',
 				'value' => $default_checkbox_value,
 			),
@@ -51,15 +51,16 @@ $export_checkboxes = array(
 	),
 	'bundles'         => array(
 		'label'          => __( 'Bundles', 'tutor' ),
-		'count'          => tutor_utils()->get_bundles_count(),
+		'count'          => 0,
 		'name'           => 'bundles',
 		'value'          => $default_checkbox_value,
-		'keep_user_data' => true,
+		'keep_user_data' => $default_checkbox_value,
 	),
 	'users'           => array(
 		'label' => __( 'Users List', 'tutor' ),
 		'count' => tutor_utils()->get_users_count(),
 		'name'  => 'users',
+		'count' => 0,
 		'value' => $default_checkbox_value,
 	),
 	'global_settings' => array(
@@ -87,7 +88,7 @@ function render_export_checkboxes( $checkboxes ) {
 			<div class="tutor-option-field-row">
 				<div class="tutor-px-20">
 					<label class="tutor-form-check">
-					<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>" value="1"> <?php 
+					<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $checkbox['value'] ); ?>" <?php checked( '1', $checkbox['value'] ); ?>> <?php 
 							if ( isset($count) && (is_numeric($count) || (!empty($count) && is_string($count)))) {
 								// translators: %s: label, %d: count
 								echo sprintf( __( '%s (%d)', 'tutor' ), esc_html( $label ), esc_html( $count ) );
@@ -97,7 +98,7 @@ function render_export_checkboxes( $checkboxes ) {
 						?>
 					</label>
 					<?php
-					if ( isset( $checkbox['children'] ) && is_array( $checkbox['children'] ) ) {
+					if ( $checkbox['value'] && isset( $checkbox['children'] ) && is_array( $checkbox['children'] ) ) {
 						?>
 						<div class="item-wrapper tutor-mt-8 tutor-mb-0">
 							<div class="children-row tutor-px-16">
@@ -108,7 +109,7 @@ function render_export_checkboxes( $checkboxes ) {
 									$child_name  = $child_checkbox['name'];
 									?>
 									<label class="tutor-form-check">
-										<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>_<?php echo esc_attr( $child_name ); ?>" value="1" <?php echo checked( 1, isset( $_POST[ 'export_' . esc_attr( $name ) . '_' . esc_attr( $child_name ) ] ) ? $_POST[ 'export_' . esc_attr( $name ) . '_' . esc_attr( $child_name ) ] : 0, true ); ?>><?php echo sprintf( __( '%s (%d)', 'tutor' ), esc_html( $child_label ), esc_html( $child_count ) ); ?>
+										<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>_<?php echo esc_attr( $child_name ); ?>" value="<?php echo esc_attr( $child_checkbox['value'] ); ?>" <?php checked( '1', $child_checkbox['value'] ); ?>><?php echo sprintf( __( '%s (%d)', 'tutor' ), esc_html( $child_label ), esc_html( $child_count ) ); ?>
 									</label>
 									<?php
 								}
@@ -116,11 +117,11 @@ function render_export_checkboxes( $checkboxes ) {
 							</div>
 
 							<?php
-							if ( isset( $checkbox['keep_user_data'] ) && $checkbox['keep_user_data'] ) {
+							if ( isset( $checkbox['keep_user_data'] ) ) {
 								?>
 								<div class="children-row" style="background-color: rgba(var(--tutor-color-primary-rgb), 0.03);">
 									<label class="tutor-form-check">
-										<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>_keep_user_data" value="1"> <?php esc_html_e( 'Keep User Data', 'tutor' ); ?>
+										<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>_keep_user_data" value="<?php echo esc_attr( $checkbox['keep_user_data'] ); ?>" <?php checked( '1', $checkbox['keep_user_data'] ); ?>> <?php esc_html_e( 'Keep User Data', 'tutor' ); ?>
 									</label>
 								</div>
 								<?php
@@ -220,6 +221,7 @@ function render_export_checkboxes( $checkboxes ) {
 					</th>
 					<th>
 						<?php esc_attr_e( 'Date', 'tutor' ); ?>
+						<i class="tutor-icon-sort" aria-hidden="true"></i>
 					</th>
 					<th />
 				</tr>
@@ -227,7 +229,7 @@ function render_export_checkboxes( $checkboxes ) {
 			<tbody>
 				<?php
 				$tutor_import_export_history = 
-				// Generate mock data for testing
+				// Mock data for testing
 				array(
 					'1' => array(
 						'title'      => 'Courses',
@@ -253,7 +255,6 @@ function render_export_checkboxes( $checkboxes ) {
 				);
 				if ( $tutor_import_export_history ) :
 					foreach ( $tutor_import_export_history as $key => $option_data ) :
-						$datetype_class = 'saved' === $option_data['datatype'] ? ' label-primary' : ' label-default';
 						?>
 						<tr>
 							<td>
@@ -268,7 +269,7 @@ function render_export_checkboxes( $checkboxes ) {
 								$type       = 'import' === $option_data['type'] ? esc_html__( 'Imported', 'tutor' ) : esc_html__( 'Exported', 'tutor' );
 								?>
 								<div class="tutor-fs-7 tutor-fw-medium tutor-text-c <?php echo esc_attr( $type_class ); ?>">
-									<i class="tutor-icon-<?php echo esc_attr( $option_data['type'] ); ?> tutor-mr-4 <?php echo esc_attr( $type_icon ); ?>" area-hidden="true"></i>
+									<i class="tutor-icon-<?php echo esc_attr( $option_data['type'] ); ?> tutor-mr-4 <?php echo esc_attr( $type_icon ); ?>" aria-hidden="true"></i>
 									<?php echo esc_html( $type ); ?>
 								</div>
 							</td>
@@ -285,7 +286,7 @@ function render_export_checkboxes( $checkboxes ) {
 							<td>
 								<div class="tutor-dropdown-parent tutor-ml-16">
 									<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-										<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+										<span class="tutor-icon-kebab-menu" aria-hidden="true"></span>
 									</button>
 									<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 										<?php
@@ -293,7 +294,7 @@ function render_export_checkboxes( $checkboxes ) {
 											?>
 											<li>
 												<a href="javascript:;" class="tutor-dropdown-item apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php esc_attr_e( 'Yes, Restore Settings', 'tutor' ); ?>" data-heading="<?php esc_attr_e( 'Restore Previous Settings?', 'tutor' ); ?>" data-message="<?php esc_attr_e( 'WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor' ); ?>" data-id="<?php echo esc_attr( $key ); ?>">
-													<span class="tutor-mr-8" area-hidden="true">✓</span>
+													<span class="tutor-mr-8" aria-hidden="true">✓</span>
 													<span><?php esc_html_e( 'Apply Settings', 'tutor' ); ?></span>
 												</a>
 											</li>
@@ -302,13 +303,13 @@ function render_export_checkboxes( $checkboxes ) {
 										?>
 										<li>
 											<a href="javascript:;" class="tutor-dropdown-item export_single_settings" data-id="<?php echo esc_attr( $key ); ?>">
-												<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
+												<span class="tutor-icon-archive tutor-mr-8" aria-hidden="true"></span>
 												<span><?php esc_html_e( 'Download', 'tutor' ); ?></span>
 											</a>
 										</li>
 										<li>
 											<a href="javascript:;" class="tutor-dropdown-item delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="<?php esc_attr_e( 'Yes, Delete Settings', 'tutor' ); ?>" data-heading="<?php esc_attr_e( 'Delete This Settings?', 'tutor' ); ?>" data-message="<?php esc_attr_e( 'WARNING! This will remove the settings history data from your system, please proceed with caution.', 'tutor' ); ?>" data-id="<?php echo esc_attr( $key ); ?>">
-												<span class="icon tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
+												<span class="icon tutor-icon-trash-can-bold tutor-mr-8" aria-hidden="true"></span>
 												<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 											</a>
 										</li>
@@ -339,12 +340,12 @@ function render_export_checkboxes( $checkboxes ) {
 					<span class="tutor-color-primary tutor-fw-medium"><?php esc_html_e( 'Exporter', 'tutor' ); ?></span>
 
 					<button class="tutor-btn tutor-btn-primary tutor-btn-sm" data-tutor-modal-target="tutor-export-data-modal">
-						<i class="tutor-icon-export tutor-mr-4" area-hidden="true"></i>
+						<i class="tutor-icon-export tutor-mr-4" aria-hidden="true"></i>
 						<?php esc_html_e( 'Export', 'tutor' ); ?>
 					</button>
 				</div>
 				<button class="tutor-iconic-btn tutor-modal-close tutor-flex-shrink-0" data-tutor-modal-close>
-					<span class="tutor-icon-times" area-hidden="true"></span>
+					<span class="tutor-icon-times" aria-hidden="true"></span>
 				</button>
 			</div>
 
