@@ -79,8 +79,7 @@ class OrderMetaModel {
 	 * @return int|bool Meta ID if the key didn't exist, true on successful update, false on failure.
 	 */
 	public static function update_meta( $order_id, $meta_key, $meta_value ) {
-		$self       = new self();
-		$meta_value = maybe_serialize( $meta_value );
+		$self = new self();
 
 		if ( self::get_meta( $order_id, $meta_key ) ) {
 			$current_time    = current_time( 'mysql', true );
@@ -89,7 +88,7 @@ class OrderMetaModel {
 			return QueryHelper::update(
 				$self->table_name,
 				array(
-					'meta_value'     => $meta_value,
+					'meta_value'     => maybe_serialize( $meta_value ),
 					'updated_at_gmt' => $current_time,
 					'updated_by'     => $current_user_id,
 				),
