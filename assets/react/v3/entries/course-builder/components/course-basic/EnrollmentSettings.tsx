@@ -126,6 +126,16 @@ const EnrollmentSettings = () => {
                 {...controllerProps}
                 label={__('Course Enrollment Period', 'tutor')}
                 loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                onChange={(isTrue) => {
+                  if (!isTrue) {
+                    form.clearErrors([
+                      'enrollment_starts_date',
+                      'enrollment_starts_time',
+                      'enrollment_ends_date',
+                      'enrollment_ends_time',
+                    ]);
+                  }
+                }}
               />
             )}
           />
