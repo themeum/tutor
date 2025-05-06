@@ -100,7 +100,7 @@ function render_export_checkboxes( $checkboxes ) {
 					if ( isset( $checkbox['children'] ) && is_array( $checkbox['children'] ) ) {
 						?>
 						<div class="item-wrapper tutor-mt-8 tutor-mb-0">
-							<div class="tutor-option-field-row tutor-px-16 tutor-grid-3">
+							<div class="children-row tutor-px-16">
 								<?php
 								foreach ( $checkbox['children'] as $child_key => $child_checkbox ) {
 									$child_label = $child_checkbox['label'];
@@ -118,7 +118,7 @@ function render_export_checkboxes( $checkboxes ) {
 							<?php
 							if ( isset( $checkbox['keep_user_data'] ) && $checkbox['keep_user_data'] ) {
 								?>
-								<div class="tutor-option-field-row" style="background-color: rgba(var(--tutor-color-primary-rgb), 0.03);">
+								<div class="children-row" style="background-color: rgba(var(--tutor-color-primary-rgb), 0.03);">
 									<label class="tutor-form-check">
 										<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>_keep_user_data" value="1"> <?php esc_html_e( 'Keep User Data', 'tutor' ); ?>
 									</label>
