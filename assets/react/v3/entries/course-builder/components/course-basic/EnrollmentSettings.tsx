@@ -246,7 +246,7 @@ const EnrollmentSettings = () => {
                       name="enrollment_ends_date"
                       control={form.control}
                       rules={{
-                        ...requiredRule,
+                        ...requiredRule(),
                         validate: {
                           invalidDate: invalidDateRule,
                           checkEndDate: (value) => {
@@ -271,7 +271,7 @@ const EnrollmentSettings = () => {
                       name="enrollment_ends_time"
                       control={form.control}
                       rules={{
-                        ...requiredRule,
+                        ...requiredRule(),
                         validate: {
                           invalidTime: invalidTimeRule,
                           checkEndTime: (value) => {
