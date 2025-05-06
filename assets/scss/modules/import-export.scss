@@ -1,0 +1,8 @@
+.tutor-option-single-item.item-variation-dragndrop .item-wrapper.tutor-import-drag-drop {
+  border: none;
+  padding: 0px;
+
+  .drag-drop-zone {
+    @include getDashedBorder(1px, 10px, var(--tutor-border-color));
+  }
+}
