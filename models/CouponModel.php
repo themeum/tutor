@@ -853,7 +853,7 @@ class CouponModel {
 	public function is_coupon_valid( object $coupon ): bool {
 		global $coupon_apply_error_msg;
 		if ( self::STATUS_INACTIVE === $coupon->coupon_status || self::STATUS_TRASH === $coupon->coupon_status ) {
-			$coupon_apply_error_msg = __( 'Invalid coupon', 'tutor' );
+			$coupon_apply_error_msg = $this->get_coupon_failed_error_msg( 'invalid' );
 			return false;
 		}
 
@@ -932,8 +932,7 @@ class CouponModel {
 		}
 
 		if ( ! $is_applicable ) {
-			// translators: $applies_to.
-			$coupon_apply_error_msg = sprintf( __( 'This coupon is only applicable to %s', 'tutor' ), str_replace( '_', ' ', $applies_to ) );
+			$coupon_apply_error_msg = $this->get_coupon_failed_error_msg( 'specific_applicable', str_replace( '_', ' ', $applies_to ) );
 		}
 
 		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id, $applications, $is_membership_plan );
@@ -980,13 +979,11 @@ class CouponModel {
 			$min_quantity        = $coupon->purchase_requirement_value;
 			$is_meet_requirement = count( $item_ids ) >= $min_quantity;
 			if ( ! $is_meet_requirement ) {
-				// translators: $min_quantity.
-				$coupon_apply_error_msg = sprintf( __( 'This coupon requires a minimum quantity of %d', 'tutor' ), $min_quantity );
+				$coupon_apply_error_msg = $this->get_coupon_failed_error_msg( 'minimum_quantity', $min_quantity );
 			}
 		} elseif ( self::REQUIREMENT_MINIMUM_PURCHASE === $coupon->purchase_requirement && $total_price < $min_amount ) {
-			$is_meet_requirement = false;
-			// translators: $min_amount.
-			$coupon_apply_error_msg = sprintf( __( 'This coupon requires a minimum purchase of %s', 'tutor' ), tutor_get_formatted_price( $min_amount ) );
+			$is_meet_requirement    = false;
+			$coupon_apply_error_msg = $this->get_coupon_failed_error_msg( 'minimum_purchase', tutor_get_formatted_price( $min_amount ) );
 		}
 
 		/**
@@ -1020,7 +1017,7 @@ class CouponModel {
 		// Check if the current time is within the start and expiry dates.
 		$has_validity = ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
 		if ( ! $has_validity ) {
-			$coupon_apply_error_msg = __( 'This coupon is no longer valid.', 'tutor' );
+			$coupon_apply_error_msg = $this->get_coupon_failed_error_msg( 'expired' );
 		}
 
 		return $has_validity;
@@ -1048,7 +1045,7 @@ class CouponModel {
 			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
 			if ( $coupon_usage_count >= $total_usage_limit ) {
 				$has_limit              = false;
-				$coupon_apply_error_msg = __( 'This coupon has reached its usage limit.', 'tutor' );
+				$coupon_apply_error_msg = $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' );
 			}
 		}
 
@@ -1056,7 +1053,7 @@ class CouponModel {
 			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
 				$has_limit              = false;
-				$coupon_apply_error_msg = __( 'You have reached the maximum usage limit for this coupon.', 'tutor' );
+				$coupon_apply_error_msg = $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' );
 			}
 		}
 
@@ -1206,5 +1203,31 @@ class CouponModel {
 	 */
 	public function delete_coupon_usage( array $where ) {
 		return QueryHelper::delete( $this->coupon_usage_table, $where );
+	}
+
+	/**
+	 * Get coupon failed error message
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param string $key Error key.
+	 * @param string $variable Variable for placeholder.
+	 *
+	 * @return string
+	 */
+	public function get_coupon_failed_error_msg( string $key, $variable = '' ) {
+		$error_messages = array(
+			'not_found'                 => __( 'Coupon not found', 'tutor' ),
+			'expired'                   => __( 'Coupon expired', 'tutor' ),
+			'invalid'                   => __( 'Coupon invalid', 'tutor' ),
+			'usage_limit_exceeded'      => __( 'Coupon usage limit exceeded', 'tutor' ),
+			'user_usage_limit_exceeded' => __( 'Coupon user usage limit exceeded', 'tutor' ),
+			'minimum_purchase'          => sprintf( __( 'This coupon requires a minimum purchase %s', 'tutor' ), $variable ), //phpcs:ignore
+			'minimum_quantity'          => sprintf( __( 'This coupon requires minimum quantity %d', 'tutor' ), $variable ), //phpcs:ignore
+			'not_applicable'            => sprintf( __( 'Coupon not applicable %s', 'tutor' ), $variable ), //phpcs:ignore
+			'specific_applicable'       => sprintf( __( 'This coupon is only applicable to %s', 'tutor' ), $variable ), //phpcs:ignore
+		);
+
+		return $error_messages[ $key ] ?? '';
 	}
 }

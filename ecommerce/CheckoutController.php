@@ -380,7 +380,7 @@ class CheckoutController {
 			$selected_coupon = $this->coupon_model->get_coupon_details_for_checkout( $coupon_code );
 			global $coupon_apply_error_msg;
 			if ( ! $selected_coupon ) {
-				$coupon_apply_error_msg = __( 'Invalid coupon', 'tutor' );
+				$coupon_apply_error_msg = $this->coupon_model->get_coupon_failed_error_msg( 'not_found' );
 			}
 		}
 

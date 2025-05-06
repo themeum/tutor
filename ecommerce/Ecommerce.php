@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use TUTOR\Course;
 use Tutor\Ecommerce\PaymentHandler;
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 use Tutor\PaymentGateways\Configs\PaypalConfig;
 use Tutor\PaymentGateways\GatewayFactory;
 use Tutor\PaymentGateways\PaypalGateway;
@@ -78,7 +79,7 @@ class Ecommerce {
 		add_action(
 			'init',
 			function() {
-				$GLOBALS['coupon_apply_error_msg'] = __( 'This coupon code is not applicable', 'tutor' );
+				$GLOBALS['coupon_apply_error_msg'] = ( new CouponModel() )->get_coupon_failed_error_msg( 'not_applicable' );
 			}
 		);
 	}
