@@ -6,3 +6,71 @@
     @include getDashedBorder(1px, 10px, var(--tutor-border-color));
   }
 }
+
+.tutor-table-responsive .tutor-table.table-import-export-history {
+  thead {
+    th {
+      font-weight: 400;
+    }
+  }
+}
+
+#tutor-export-data-modal {
+  .tutor-modal-window {
+    max-width: 826px;
+    max-height: 823px;
+
+    .tutor-modal-content {
+      width: 100%;
+      height: 100%;
+
+      .tutor-modal-header {
+        background-color: #F5F5F5;
+      }
+
+      .tutor-modal-title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-inline: 104px;
+      }
+
+      .tutor-modal-body {
+        margin-inline: 104px;
+      }
+
+      .tutor-option-single-item {
+        .item-wrapper {
+          padding-inline: 0;
+          padding-block: 16px;
+
+          .tutor-form-check+.tutor-form-check {
+            margin-left: 0px;
+          }
+
+          .setting-checkboxes {
+            padding-block: 4px;
+          }
+        }
+
+        .tutor-option-field-row {
+          padding-block: 8px;
+
+          .item-wrapper {
+            padding: 0px;
+            padding-inline: 0px;
+            padding-bottom: 0px;
+
+            .tutor-option-field-row {
+              padding-inline: 16px;
+              padding-block: 16px;
+              grid-auto-flow: unset;
+              gap: 8px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
