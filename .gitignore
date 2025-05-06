@@ -50,6 +50,7 @@ cypress/fixtures/assets
 **/beforeEach*.png
 launch.json
 /tutor-droip
+/includes/droip
 
 # Copilot Instructions
 .github/copilot-instructions.md
