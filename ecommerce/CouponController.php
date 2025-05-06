@@ -779,8 +779,9 @@ class CouponController extends BaseController {
 					$checkout_data
 				);
 			} else {
+				global $coupon_apply_error_msg;
 				$this->json_response(
-					__( 'Coupon code is not applicable!', 'tutor' ),
+					$coupon_apply_error_msg,
 					null,
 					HttpHelper::STATUS_BAD_REQUEST
 				);

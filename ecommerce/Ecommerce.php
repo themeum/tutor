@@ -73,6 +73,14 @@ class Ecommerce {
 		new HooksHandler();
 		new EmailController();
 		new PaymentHandler();
+
+		// Globals.
+		add_action(
+			'init',
+			function() {
+				$GLOBALS['coupon_apply_error_msg'] = __( 'This coupon code is not applicable', 'tutor' );
+			}
+		);
 	}
 
 	/**

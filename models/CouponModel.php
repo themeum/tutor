@@ -156,9 +156,6 @@ class CouponModel {
 		$this->table_name              = $wpdb->prefix . $this->table_name;
 		$this->coupon_usage_table      = $wpdb->prefix . $this->coupon_usage_table;
 		$this->coupon_applies_to_table = $wpdb->prefix . $this->coupon_applies_to_table;
-
-		global $coupon_apply_error_msg;
-		$coupon_apply_error_msg = __( 'This coupon code is not applicable', 'tutor' );
 	}
 
 	/**
@@ -854,6 +851,12 @@ class CouponModel {
 	 * @return bool
 	 */
 	public function is_coupon_valid( object $coupon ): bool {
+		global $coupon_apply_error_msg;
+		if ( self::STATUS_INACTIVE === $coupon->coupon_status || self::STATUS_TRASH === $coupon->coupon_status ) {
+			$coupon_apply_error_msg = __( 'Invalid coupon', 'tutor' );
+			return false;
+		}
+
 		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, get_current_user_id() );
 	}
 
@@ -872,8 +875,9 @@ class CouponModel {
 	 * @return bool
 	 */
 	public function is_coupon_applicable( object $coupon, int $object_id, string $order_type ): bool {
-		$is_applicable = false;
+		global $coupon_apply_error_msg;
 
+		$is_applicable      = false;
 		$is_membership_plan = false;
 		if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
 			$plan_info          = apply_filters( 'tutor_get_plan_info', null, $object_id );
@@ -927,6 +931,11 @@ class CouponModel {
 			}
 		}
 
+		if ( ! $is_applicable ) {
+			// translators: $applies_to.
+			$coupon_apply_error_msg = sprintf( __( 'This coupon is only applicable to %s', 'tutor' ), str_replace( '_', ' ', $applies_to ) );
+		}
+
 		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id, $applications, $is_membership_plan );
 	}
 
@@ -942,6 +951,8 @@ class CouponModel {
 	 * @return boolean
 	 */
 	public function is_coupon_requirement_meet( $item_id, object $coupon, $order_type = OrderModel::TYPE_SINGLE_ORDER ) {
+		global $coupon_apply_error_msg;
+
 		$is_meet_requirement = true;
 		$item_ids            = is_array( $item_id ) ? $item_id : array( $item_id );
 
@@ -970,7 +981,7 @@ class CouponModel {
 			$is_meet_requirement = count( $item_ids ) >= $min_quantity;
 			if ( ! $is_meet_requirement ) {
 				// translators: $min_quantity.
-				$coupon_apply_error_msg = sprintf( __( 'This coupon requires a minimum %s  quantify', 'tutor' ), tutor_get_formatted_price( $min_quantity ) );
+				$coupon_apply_error_msg = sprintf( __( 'This coupon requires a minimum quantity of %d', 'tutor' ), $min_quantity );
 			}
 		} elseif ( self::REQUIREMENT_MINIMUM_PURCHASE === $coupon->purchase_requirement && $total_price < $min_amount ) {
 			$is_meet_requirement = false;
@@ -1000,6 +1011,8 @@ class CouponModel {
 	 * @return boolean
 	 */
 	public function has_coupon_validity( object $coupon ): bool {
+		global $coupon_apply_error_msg;
+
 		$now         = time();
 		$start_date  = strtotime( $coupon->start_date_gmt );
 		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : 0;
@@ -1024,6 +1037,8 @@ class CouponModel {
 	 * @return bool true if has usage limit otherwise false
 	 */
 	public function has_user_usage_limit( object $coupon, int $user_id ): bool {
+		global $coupon_apply_error_msg;
+
 		$has_limit = true;
 
 		$total_usage_limit = (int) $coupon->total_usage_limit;
