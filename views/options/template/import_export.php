@@ -161,7 +161,7 @@ function render_export_checkboxes( $checkboxes ) {
 							<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none import-settings" accept=".json" />
 							<span><?php esc_html_e( 'Choose a file', 'tutor' ); ?></span>
 						</label>
-						<span class="file-info"></span>
+						<span class="file-info tutor-d-none"></span>
 					</div>
 					<div class="subtitle">
 						<span>
@@ -372,51 +372,111 @@ function render_export_checkboxes( $checkboxes ) {
 <div id="tutor-import-data-modal" class="tutor-modal tutor-modal-scrollable">
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
-		<form id="tutor-export-data-form" class="tutor-modal-content" autocomplete="off" method="post">
-			<div class="tutor-modal-header">
-				<div class="tutor-modal-title">
-					<span class="tutor-fw-medium tutor-fs-7"><?php esc_html_e( 'Import CSV', 'tutor' ); ?></span>
+		<form id="tutor-import-data-form" class="tutor-modal-content" autocomplete="off" method="post">
+			<div id="import-initial">
+				<div class="tutor-modal-header">
+					<div class="tutor-modal-title">
+						<span class="tutor-fw-medium tutor-fs-7"><?php esc_html_e( 'Import CSV', 'tutor' ); ?></span>
+					</div>
+					<button class="tutor-iconic-btn tutor-modal-close tutor-flex-shrink-0" data-tutor-modal-close>
+						<span class="tutor-icon-times" aria-hidden="true"></span>
+					</button>
 				</div>
-				<button class="tutor-iconic-btn tutor-modal-close tutor-flex-shrink-0" data-tutor-modal-close>
-					<span class="tutor-icon-times" aria-hidden="true"></span>
-				</button>
-			</div>
 
-			<div class="tutor-modal-body">
-				<div class="tutor-d-flex tutor-flex-column tutor-mb-20 tutor-gap-1">
-					<label class="tutor-d-flex tutor-align-center tutor-justify-between">
-						<span>
-							<?php esc_html_e( 'Validated', 'tutor' ); ?>
-						</span>
-						<div class="tutor-badge-label label-success  tutor-d-none" id="validation-status"></div>
-					</label>
-					<div class="attached-file-info">
-						<span class="file-icon">
-							<i class="tutor-icon-file-json" aria-hidden="true"></i>
-						</span>
-
-						<span class="file-name-and-action">
-							<span class="file-name-and-size tutor-d-flex tutor-flex-column">
-								<span class="file-name tutor-fw-medium tutor-fs-8" id="file-name"></span>
-								<span class="file-size tutor-fs-8" id="file-size"></span>
+				<div class="tutor-modal-body">
+					<div class="tutor-d-flex tutor-flex-column tutor-mb-20 tutor-gap-1">
+						<label class="tutor-d-flex tutor-align-center tutor-justify-between">
+							<span>
+								<?php esc_html_e( 'Validated', 'tutor' ); ?>
 							</span>
-							<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-mt-8">
-								<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none import-settings" accept=".json" />
-								<span><?php esc_html_e( 'Replace', 'tutor' ); ?></span>
-							</label>
+							<div class="tutor-badge-label label-success  tutor-d-none" id="validation-status"></div>
+						</label>
+						<div class="attached-file-info">
+							<span class="file-icon">
+								<i class="tutor-icon-file-json" aria-hidden="true"></i>
+							</span>
+
+							<span class="file-name-and-action">
+								<span class="file-name-and-size tutor-d-flex tutor-flex-column">
+									<span class="file-name tutor-fw-medium tutor-fs-8" id="file-name"></span>
+									<span class="file-size tutor-fs-8" id="file-size"></span>
+								</span>
+								<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-mt-8">
+									<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none import-settings" accept=".json" />
+									<span><?php esc_html_e( 'Replace', 'tutor' ); ?></span>
+								</label>
+							</span>
+						</div>
+					</div>
+
+					<div class="import-warning">
+						<i class="tutor-icon-warning" aria-hidden="true"></i>
+						<span class="tutor-fs-7 tutor-fw-medium">
+							<?php esc_html_e( 'WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor' ); ?>
 						</span>
+					</div>
+				</div>
+
+				<div class="tutor-modal-footer">
+					<div class="tutor-ml-auto">
+						<button class="tutor-btn tutor-btn-text tutor-btn-sm" data-tutor-modal-close>
+							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						</button>
+						<button class="tutor-btn tutor-btn-primary tutor-btn-sm" id="tutor-import-data-btn">
+							<?php esc_html_e( 'Import', 'tutor' ); ?>
+						</button>
 					</div>
 				</div>
 			</div>
 
-			<div class="tutor-modal-footer">
-				<div class="tutor-ml-auto">
-					<button class="tutor-btn tutor-btn-text tutor-btn-sm" data-tutor-modal-close>
-						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+			<div id="import-inprogress" class="tutor-d-none">
+				<div class="tutor-modal-body">
+					<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-w-100">
+						<div class="tutor-fs-7 tutor-color-black tutor-mb-16 tutor-mx-20">
+							<?php esc_html_e( 'Importing...', 'tutor' ); ?>
+						</div>
+
+						<div class="tutor-badge-label label-success tutor-mb-16" id="import-status">
+							<?php esc_html_e( 'In Progress', 'tutor' ); ?>
+						</div>
+					</div>
+					<div class="tutor-text-secondary">
+						<div id="file-name"></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="import-success" class="tutor-d-none">
+				<div class="tutor-modal-body tutor-text-center">
+					<div class="tutor-d-flex tutor-flex-column tutor-justify-center tutor-align-center tutor-w-100">
+						<div class="tutor-fs-5 tutor-color-black tutor-mb-16">
+							<?php esc_html_e( 'Settings Import Successful!', 'tutor' ); ?>
+						</div>
+
+						<div class="tutor-fs-7 tutor-color-black tutor-mb-16">
+							<?php echo sprintf( __('You have successfully imported a “%s”', 'tutor'), '<span id="file-name"></span>' ); ?>
+						</div>
+						<button class="tutor-btn tutor-btn-primary tutor-btn-sm" data-tutor-modal-close>
+							<?php esc_html_e( 'Okay', 'tutor' ); ?>
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<div id="import-error" class="tutor-d-none">
+				<div class="tutor-modal-header">
+					<div class="tutor-modal-title">
+						<span class="tutor-fw-medium tutor-fs-7"><?php esc_html_e( 'Import Error', 'tutor' ); ?></span>
+					</div>
+					<button class="tutor-iconic-btn tutor-modal-close tutor-flex-shrink-0" data-tutor-modal-close>
+						<span class="tutor-icon-times" aria-hidden="true"></span>
 					</button>
-					<button class="tutor-btn tutor-btn-primary tutor-btn-sm" id="tutor-import-data-btn">
-						<?php esc_html_e( 'Import', 'tutor' ); ?>
-					</button>
+				</div>
+
+				<div class="tutor-modal-body">
+					<div class="tutor-fs-7 tutor-color-black tutor-mb-16 tutor-mx-20">
+						<?php esc_html_e( 'An error occurred during import.', 'tutor' ); ?>
+					</div>
 				</div>
 			</div>
 		</form>

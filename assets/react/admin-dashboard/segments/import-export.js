@@ -199,7 +199,6 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 	var fr = new FileReader();
 	fr.readAsText(files.item(0));
 	fr.onload = function (e) {
-		console.log('here')
 		var tutor_options = e.target.result;
 		var formData = new FormData();
 		formData.append('action', 'tutor_import_settings');
@@ -209,10 +208,29 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 		const xhttp = new XMLHttpRequest();
 		xhttp.open('POST', _tutorobject.ajaxurl);
 		xhttp.send(formData);
+
+		const importInitialElement = modalElement.querySelector('#import-initial');
+		const inprogressElement = modalElement.querySelector('#import-inprogress');
+		const successElement = modalElement.querySelector('#import-success');
+		const errorElement = modalElement.querySelector('#import-error');
+
+		importInitialElement.classList.add('tutor-d-none');
+		inprogressElement.classList.remove('tutor-d-none');
+
+
 		xhttp.onreadystatechange = function () {
 			if (xhttp.readyState === 4) {
-				modalElement.classList.remove('tutor-is-active');
-				document.body.classList.remove("tutor-modal-open");
+				inprogressElement.classList.add('tutor-d-none');
+				successElement.classList.remove('tutor-d-none');
+				errorElement.classList.add('tutor-d-none');
+
+				if (xhttp.status !== 200) {
+					inprogressElement.classList.add('tutor-d-none');
+					successElement.classList.add('tutor-d-none');
+					errorElement.classList.remove('tutor-d-none');
+					return false;
+				}
+
 				let historyData = JSON.parse(xhttp.response);
 				historyData = historyData.data;
 				tutor_option_history_load(Object.entries(historyData));
@@ -366,7 +384,6 @@ const import_file = () => {
 	const fileInfo = fileElem.parentNode.parentNode.querySelector('.file-info');
 
 	if (fileElem) {
-
 		fileElem.onchange = function () {
 			if (fileElem.files.length > 0) {
 				const fileName = fileElem.files[0].name;
@@ -380,11 +397,20 @@ const import_file = () => {
 					fileElem.value = '';
 					return false;
 				}
-
 				const modalElement = document.getElementById('tutor-import-data-modal');
 				if (modalElement) {
 					modalElement.classList.add('tutor-is-active');
 					document.body.classList.add("tutor-modal-open");
+
+					const importInitialElement = modalElement.querySelector('#import-initial');
+					const inprogressElement = modalElement.querySelector('#import-inprogress');
+					const successElement = modalElement.querySelector('#import-success');
+					const errorElement = modalElement.querySelector('#import-error');
+
+					importInitialElement.classList.remove('tutor-d-none');
+					inprogressElement.classList.add('tutor-d-none');
+					successElement.classList.add('tutor-d-none');
+					errorElement.classList.add('tutor-d-none');
 
 					const validationStatus = modalElement.querySelector('#validation-status');
 					if (validationStatus) {
@@ -392,15 +418,23 @@ const import_file = () => {
 						validationStatus.classList.remove('tutor-d-none');
 					}
 
-					const fileNameElem = modalElement.querySelector('#file-name');
+					const fileNameElem = modalElement.querySelectorAll('#file-name');
 					const fileSizeElem = modalElement.querySelector('#file-size');
 
-					fileNameElem.innerText = fileName;
+					fileNameElem.forEach((elem) => {
+						elem.innerText = fileName;
+					});
 					fileSizeElem.innerText = fileSize;
 
 					const submitButton = modalElement.querySelector('#tutor-import-data-btn');
-					submitButton.onclick = () => {
+					submitButton.onclick = (event) => {
+						event.preventDefault();
 						import_history_data_xhttp(fileElem, modalElement);
+						fileElem.value = '';
+					};
+
+					const cancelButton = modalElement.querySelector('[data-tutor-modal-close]');
+					cancelButton.onclick = () => {
 						fileElem.value = '';
 					};
 				}
