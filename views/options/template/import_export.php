@@ -86,7 +86,7 @@ function render_export_checkboxes( $checkboxes ) {
 			$name  = $checkbox['name'];
 			?>
 			<div class="tutor-option-field-row">
-				<div class="tutor-px-20">
+				<div class="tutor-px-16">
 					<label class="tutor-form-check">
 					<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $checkbox['value'] ); ?>" <?php checked( '1', $checkbox['value'] ); ?>> <?php 
 							if ( isset($count) && (is_numeric($count) || (!empty($count) && is_string($count)))) {
@@ -409,7 +409,7 @@ function render_export_checkboxes( $checkboxes ) {
 						</div>
 					</div>
 
-					<div class="import-warning">
+					<div class="import-warning-alert">
 						<i class="tutor-icon-warning" aria-hidden="true"></i>
 						<span class="tutor-fs-7 tutor-fw-medium">
 							<?php esc_html_e( 'WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor' ); ?>
@@ -430,17 +430,21 @@ function render_export_checkboxes( $checkboxes ) {
 			</div>
 
 			<div id="import-inprogress" class="tutor-d-none">
-				<div class="tutor-modal-body">
-					<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-w-100">
-						<div class="tutor-fs-7 tutor-color-black tutor-mb-16 tutor-mx-20">
+				<div class="tutor-modal-body" style="padding-inline: 90px;">
+					<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-w-100 tutor-mb-4">
+						<div class="tutor-fs-7 tutor-color-black">
 							<?php esc_html_e( 'Importing...', 'tutor' ); ?>
 						</div>
 
-						<div class="tutor-badge-label label-success tutor-mb-16" id="import-status">
+						<div class="tutor-badge-label label-success" id="import-status">
 							<?php esc_html_e( 'In Progress', 'tutor' ); ?>
 						</div>
 					</div>
-					<div class="tutor-text-secondary">
+
+					<div class="progress-bar" id="import-progress-bar">
+					</div>
+					
+					<div class="tutor-text-secondary" style="margin-block: 4px 48px;">
 						<div id="file-name"></div>
 					</div>
 				</div>

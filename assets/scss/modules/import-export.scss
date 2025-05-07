@@ -12,7 +12,7 @@
     th {
       font-weight: 400;
       background: var(--tutor-color-white);
-      
+
       i {
         vertical-align: middle;
       }
@@ -130,7 +130,7 @@
           }
         }
 
-        .import-warning {
+        .import-warning-alert {
           border-radius: 6px;
           background-color: #FDF4E3;
           padding: 20px;
@@ -145,6 +145,49 @@
             font-size: 32px;
             line-height: 1.5;
           }
+        }
+
+        #import-progress-bar {
+          height: 6px;
+          background-color: #0000001A;
+          border-radius: 50px;
+          transition: width 0.5s ease-in-out;
+          width: 100%;
+          position: relative;
+          overflow: hidden;
+          animation: stripe 1s linear infinite;
+          position: relative;
+
+          &:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(45deg,
+                var(--tutor-color-success) 25%,
+                transparent 25%,
+                transparent 50%,
+                var(--tutor-color-success) 50%,
+                var(--tutor-color-success) 75%,
+                transparent 75%,
+                transparent);
+            background-size: 40px 40px;
+            animation: stripe 1s linear infinite;
+          }
+
+
+          @keyframes stripe {
+            0% {
+              background-position: 0 0;
+            }
+
+            100% {
+              background-position: 40px 0;
+            }
+          }
+
         }
       }
     }

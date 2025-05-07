@@ -220,16 +220,16 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 
 		xhttp.onreadystatechange = function () {
 			if (xhttp.readyState === 4) {
-				inprogressElement.classList.add('tutor-d-none');
-				successElement.classList.remove('tutor-d-none');
-				errorElement.classList.add('tutor-d-none');
+				// inprogressElement.classList.add('tutor-d-none');
+				// successElement.classList.remove('tutor-d-none');
+				// errorElement.classList.add('tutor-d-none');
 
-				if (xhttp.status !== 200) {
-					inprogressElement.classList.add('tutor-d-none');
-					successElement.classList.add('tutor-d-none');
-					errorElement.classList.remove('tutor-d-none');
-					return false;
-				}
+				// if (xhttp.status !== 200) {
+				// 	inprogressElement.classList.add('tutor-d-none');
+				// 	successElement.classList.add('tutor-d-none');
+				// 	errorElement.classList.remove('tutor-d-none');
+				// 	return false;
+				// }
 
 				let historyData = JSON.parse(xhttp.response);
 				historyData = historyData.data;
