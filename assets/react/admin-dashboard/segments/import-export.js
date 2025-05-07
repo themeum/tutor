@@ -3,6 +3,7 @@ document.addEventListener('readystatechange', (event) => {
 		export_settings_all();
 		import_file();
 		toggleChildCheckbox();
+		onInitiateExport();
 	}
 	if (event.target.readyState === 'complete') {
 		delete_history_data();
@@ -127,17 +128,85 @@ const export_settings_all = () => {
 	const export_settings = document.querySelector('#tutor_export_settings');
 	if (export_settings) {
 		export_settings.onclick = (e) => {
+			const modalWindowElement = document.querySelector('#tutor-export-data-modal .tutor-modal-window');
+			const modalBodyElement = document.querySelectorAll('#tutor-export-data-modal .tutor-modal-body');
+			const exportInitialElement = document.querySelector('#export-initial');
+			const inprogressElement = document.querySelector('#export-inprogress');
+			const successElement = document.querySelector('#export-success');
+
+			exportInitialElement.classList.remove('tutor-d-none');
+			inprogressElement.classList.add('tutor-d-none');
+			successElement.classList.add('tutor-d-none');
+
 			var formData = new FormData();
 			formData.append('action', 'tutor_export_settings');
 			formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
+			// Collect all checked input fields (checkboxes)
+			const inputs = document.querySelectorAll('input[type="checkbox"]:checked');
+			inputs.forEach((input) => {
+				// If the name ends with [] we can use .append directly
+				if (input.name.endsWith('[]')) {
+					formData.append(input.name, input.value);
+				} else {
+					// Handle nested inputs like export[courses][lessons]
+					formData.append(input.name, input.value);
+				}
+			});
+
 			const xhttp = new XMLHttpRequest();
 			xhttp.open('POST', _tutorobject.ajaxurl, true);
 			xhttp.send(formData);
 
+			modalWindowElement.style.maxWidth = '500px';
+			modalWindowElement.style.maxHeight = 'auto';
+			modalWindowElement.style.width = '100%';
+			modalWindowElement.style.height = 'auto';
+			modalBodyElement.forEach(body => {
+				body.style.marginInline = '0px';
+			});
+			exportInitialElement.classList.add('tutor-d-none');
+			inprogressElement.classList.remove('tutor-d-none');
+			successElement.classList.add('tutor-d-none');
+
 			xhttp.onreadystatechange = function () {
 				if (xhttp.readyState === 4) {
+					if (xhttp.status !== 200) {
+						inprogressElement.classList.add('tutor-d-none');
+						successElement.classList.add('tutor-d-none');
+						return false;
+					}
+
+					inprogressElement.classList.add('tutor-d-none');
+					successElement.classList.remove('tutor-d-none');
+
 					let fileName = 'tutor_options_' + time_now();
-					json_download(xhttp.response, fileName);
+					const exportedFileNameElement = document.querySelectorAll('#exported-file-name');
+					const exportedFileSizeElement = document.querySelector('#exported-file-size');
+					const exportDownloadButton = document.querySelector('#export-download-btn');
+
+					if (exportedFileNameElement.length > 0) {
+						exportedFileNameElement.forEach((elem) => {
+							elem.innerText = fileName;
+						});
+					}
+					if (exportedFileSizeElement) {
+						const fileSize = (xhttp.response.length / 1024).toFixed(2) + ' KB';
+						exportedFileSizeElement.innerText = fileSize;
+					}
+
+					if (exportDownloadButton) {
+						exportDownloadButton.onclick = function () {
+							const modalCloseButton = document.querySelector('[data-tutor-modal-close]');
+							if (modalCloseButton) {
+								modalCloseButton.onclick = function () {
+									modalCloseButton.parentNode.parentNode.classList.remove('tutor-is-active');
+									document.body.classList.remove("tutor-modal-open");
+								}
+							}
+							json_download(xhttp.response, fileName);
+						};
+					}
 				}
 			};
 		};
@@ -387,6 +456,7 @@ const import_file = () => {
 	if (fileElem) {
 		fileElem.onchange = function () {
 			if (fileElem.files.length > 0) {
+				resetImportExportModal('import');
 				const fileName = fileElem.files[0].name;
 				const fileSize = (fileElem.files[0].size / 1024).toFixed(2) + ' KB';
 				const fileType = fileElem.files[0].type;
@@ -465,5 +535,68 @@ const toggleChildCheckbox = () => {
 
 		toggle();
 		checkbox.addEventListener('change', toggle);
+	});
+}
+
+/**
+ * 
+ * @param {'import | export'} type 
+ */
+const resetImportExportModal = (type) => {
+	const EXPORT_MODAL_INITIAL_WIDTH = '826px';
+	const EXPORT_MODAL_INITIAL_HEIGHT = '825px';
+	const EXPORT_MODAL_INITIAL_MARGIN = '104px';
+	const modalElement = document.getElementById(`tutor-${type}-data-modal`);
+	if (!modalElement) return;
+
+	const modalWindowElement = modalElement.querySelector('.tutor-modal-window');
+	const modalBodyElement = modalElement.querySelectorAll('.tutor-modal-body');
+	const initialElement = modalElement.querySelector(`#${type}-initial`);
+	const inprogressElement = modalElement.querySelector(`#${type}-inprogress`);
+	const successElement = modalElement.querySelector(`#${type}-success`);
+	const errorElement = modalElement.querySelector(`#${type}-error`);
+
+	if (type === 'export') {
+		modalWindowElement.style.maxWidth = EXPORT_MODAL_INITIAL_WIDTH;
+		modalWindowElement.style.maxHeight = EXPORT_MODAL_INITIAL_HEIGHT;
+		modalWindowElement.style.width = '100%';
+		modalWindowElement.style.height = '100%';
+		modalBodyElement.forEach(body => {
+			body.style.marginInline = EXPORT_MODAL_INITIAL_MARGIN;
+		});
+	}
+
+	initialElement?.classList.remove('tutor-d-none');
+	inprogressElement?.classList.add('tutor-d-none');
+	successElement?.classList.add('tutor-d-none');
+	errorElement?.classList.add('tutor-d-none');
+	const fileNameElem = modalElement.querySelectorAll('#file-name');
+	const fileSizeElem = modalElement.querySelector('#file-size');
+	fileNameElem.forEach((elem) => {
+		elem.innerText = '';
+	});
+	fileSizeElem.innerText = '';
+
+	const fileInfo = modalElement.querySelector('.file-info');
+	if (fileInfo) {
+		fileInfo.innerText = '';
+	}
+	const validationStatus = modalElement.querySelector('#validation-status');
+	if (validationStatus) {
+		validationStatus.innerText = '';
+		validationStatus.classList.add('tutor-d-none');
+	}
+	const fileElem = modalElement.querySelector('#drag-drop-input');
+	if (fileElem) {
+		fileElem.value = '';
+	}
+}
+
+const onInitiateExport = () => {
+	const exportButton = document.querySelector("[data-tutor-modal-target='tutor-export-data-modal']");
+	if (!exportButton) return;
+
+	exportButton.addEventListener('click', () => {
+		resetImportExportModal('export');
 	});
 }

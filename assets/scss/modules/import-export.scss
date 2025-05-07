@@ -20,6 +20,31 @@
   }
 }
 
+.attached-file-info {
+  display: flex;
+  border: 1px solid #E0E2EA;
+  border-radius: 6px;
+  height: 64px;
+
+  .file-icon {
+    width: 64px;
+    height: 64px;
+    border-right: 1px solid #E0E2EA;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+  }
+
+  .file-name-and-action {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline: 16px 20px;
+  }
+}
+
 #tutor-export-data-modal {
   .tutor-modal-window {
     max-width: 826px;
@@ -104,31 +129,6 @@
       .tutor-modal-body {
         padding: 16px 20px;
         background-color: #F5F5F5;
-
-        .attached-file-info {
-          display: flex;
-          border: 1px solid #E0E2EA;
-          border-radius: 6px;
-          height: 64px;
-
-          .file-icon {
-            width: 64px;
-            height: 64px;
-            border-right: 1px solid #E0E2EA;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 24px;
-          }
-
-          .file-name-and-action {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-inline: 16px 20px;
-          }
-        }
 
         .import-warning-alert {
           border-radius: 6px;

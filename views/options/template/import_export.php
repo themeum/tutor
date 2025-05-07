@@ -336,31 +336,84 @@ function render_export_checkboxes( $checkboxes ) {
 	<div class="tutor-modal-overlay"></div>
 	<div class="tutor-modal-window">
 		<form id="tutor-export-data-form" class="tutor-modal-content" autocomplete="off" method="post">
-			<div class="tutor-modal-header">
-				<div class="tutor-modal-title">
-					<span class="tutor-color-primary tutor-fw-medium"><?php esc_html_e( 'Exporter', 'tutor' ); ?></span>
+			<div id="export-initial">
+				<div class="tutor-modal-header">
+					<div class="tutor-modal-title">
+						<span class="tutor-color-primary tutor-fw-medium"><?php esc_html_e( 'Exporter', 'tutor' ); ?></span>
 
-					<button class="tutor-btn tutor-btn-primary tutor-btn-sm" data-tutor-modal-target="tutor-export-data-modal">
-						<i class="tutor-icon-export tutor-mr-4" aria-hidden="true"></i>
-						<?php esc_html_e( 'Export', 'tutor' ); ?>
+						<button class="tutor-btn tutor-btn-primary tutor-btn-sm" data-tutor-modal-target="tutor-export-data-modal" id="tutor_export_settings">
+							<i class="tutor-icon-export tutor-mr-4" aria-hidden="true"></i>
+							<?php esc_html_e( 'Export', 'tutor' ); ?>
+						</button>
+					</div>
+					<button class="tutor-iconic-btn tutor-modal-close tutor-flex-shrink-0" data-tutor-modal-close>
+						<span class="tutor-icon-times" aria-hidden="true"></span>
 					</button>
 				</div>
-				<button class="tutor-iconic-btn tutor-modal-close tutor-flex-shrink-0" data-tutor-modal-close>
-					<span class="tutor-icon-times" aria-hidden="true"></span>
-				</button>
+
+				<div class="tutor-modal-body">
+					<div class="tutor-option-single-item tutor-mb-32">
+						<div class="item-wrapper">
+							<div class="tutor-fs-7 tutor-color-black tutor-mb-16 tutor-mx-20">
+								<?php esc_html_e( 'What do you want to export?', 'tutor' ); ?>
+							</div>
+							<?php echo render_export_checkboxes( $export_checkboxes ); ?>
+						</div>
+					</div>
+				</div>
 			</div>
 
-			<div class="tutor-modal-body">
-				<?php tutor_nonce_field(); ?>
-				<input type="hidden" name="action" value="tutor_export_settings">
-				<input type="hidden" name="export_type" value="">
-				<input type="hidden" name="export_id" value="">
-				<div class="tutor-option-single-item tutor-mb-32">
-					<div class="item-wrapper">
-						<div class="tutor-fs-7 tutor-color-black tutor-mb-16 tutor-mx-20">
-							<?php esc_html_e( 'What do you want to export?', 'tutor' ); ?>
+			<div id="export-inprogress" class="tutor-d-none">
+				<div class="tutor-modal-body" style="padding-inline: 90px;">
+					<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-w-100 tutor-mb-4">
+						<div class="tutor-fs-7 tutor-color-black">
+							<?php esc_html_e( 'Exporting...', 'tutor' ); ?>
 						</div>
-						<?php echo render_export_checkboxes( $export_checkboxes ); ?>
+
+						<div class="tutor-badge-label label-success" id="export-status">
+							<?php esc_html_e( 'In Progress', 'tutor' ); ?>
+						</div>
+					</div>
+
+					<div class="progress-bar" id="export-progress-bar">
+					</div>
+					
+					<div class="tutor-text-secondary" style="margin-block: 4px 48px;">
+						<div id="file-name"></div>
+					</div>
+				</div>
+			</div>
+
+			<div id="export-success" class="tutor-d-none">
+				<div class="tutor-modal-body tutor-text-center">
+					<div class="tutor-d-flex tutor-flex-column tutor-justify-center tutor-align-center tutor-w-100">
+						<div class="tutor-fs-5 tutor-color-black tutor-mb-16">
+							<?php esc_html_e( 'Your File is Ready to Download!', 'tutor' ); ?>
+						</div>
+
+						<div class="tutor-fs-7 tutor-color-black tutor-mb-16">
+							<?php echo sprintf( __('You have successfully exported a “%s”', 'tutor'), '<span id="exported-file-name"></span>' ); ?>
+						</div>
+						<div class="tutor-d-flex tutor-flex-column tutor-mb-20 tutor-gap-1 tutor-w-100">
+							<div class="attached-file-info tutor-text-left">
+								<span class="file-icon">
+									<i class="tutor-icon-file-json" aria-hidden="true"></i>
+								</span>
+
+								<span class="file-name-and-action">
+									<span class="file-name-and-size tutor-d-flex tutor-flex-column">
+										<span class="file-name tutor-fw-medium tutor-fs-8" id="exported-file-name"></span>
+										<span class="file-size tutor-fs-8" id="exported-file-size"></span>
+									</span>
+									<label class="tutor-btn tutor-btn-secondary tutor-btn-sm">
+										<span id="export-download-btn">
+											<i class="tutor-icon-download tutor-mr-4" aria-hidden="true"></i>
+											<?php esc_html_e( 'Download', 'tutor' ); ?>
+										</span>
+									</label>
+								</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
