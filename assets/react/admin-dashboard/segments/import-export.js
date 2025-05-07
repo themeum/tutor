@@ -1,6 +1,7 @@
 document.addEventListener('readystatechange', (event) => {
 	if (event.target.readyState === 'interactive') {
 		export_settings_all();
+		import_file();
 	}
 	if (event.target.readyState === 'complete') {
 		delete_history_data();
@@ -50,7 +51,7 @@ const load_saved_data = () => {
 	const xhttp = new XMLHttpRequest();
 	xhttp.open('POST', _tutorobject.ajaxurl, true);
 	xhttp.send(formData);
-	xhttp.onreadystatechange = function() {
+	xhttp.onreadystatechange = function () {
 		if (xhttp.readyState === 4) {
 			let historyData = JSON.parse(xhttp.response);
 			historyData = historyData.data;
@@ -132,7 +133,7 @@ const export_settings_all = () => {
 			xhttp.open('POST', _tutorobject.ajaxurl, true);
 			xhttp.send(formData);
 
-			xhttp.onreadystatechange = function() {
+			xhttp.onreadystatechange = function () {
 				if (xhttp.readyState === 4) {
 					let fileName = 'tutor_options_' + time_now();
 					json_download(xhttp.response, fileName);
@@ -153,7 +154,7 @@ const time_now = () => {
 const reset_default_options = () => {
 	const reset_options = document.querySelector('#tutor_reset_options');
 	if (reset_options) {
-		reset_options.onclick = function() {
+		reset_options.onclick = function () {
 			modalConfirmation(reset_options);
 		};
 	}
@@ -167,9 +168,9 @@ const reset_all_settings_xhttp = (modalOpener, modalElement) => {
 	const xhttp = new XMLHttpRequest();
 	xhttp.open('POST', _tutorobject.ajaxurl, true);
 	xhttp.send(formData);
-	xhttp.onreadystatechange = function() {
+	xhttp.onreadystatechange = function () {
 		if (xhttp.readyState === 4) {
-			setTimeout(function() {
+			setTimeout(function () {
 				modalElement.classList.remove('tutor-is-active');
 				document.body.classList.remove("tutor-modal-open");
 				tutor_toast(__('Success', 'tutor'), __('Reset all settings to default successfully!', 'tutor'), 'success');
@@ -197,7 +198,8 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 	}
 	var fr = new FileReader();
 	fr.readAsText(files.item(0));
-	fr.onload = function(e) {
+	fr.onload = function (e) {
+		console.log('here')
 		var tutor_options = e.target.result;
 		var formData = new FormData();
 		formData.append('action', 'tutor_import_settings');
@@ -207,7 +209,7 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 		const xhttp = new XMLHttpRequest();
 		xhttp.open('POST', _tutorobject.ajaxurl);
 		xhttp.send(formData);
-		xhttp.onreadystatechange = function() {
+		xhttp.onreadystatechange = function () {
 			if (xhttp.readyState === 4) {
 				modalElement.classList.remove('tutor-is-active');
 				document.body.classList.remove("tutor-modal-open");
@@ -216,7 +218,7 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 				tutor_option_history_load(Object.entries(historyData));
 				delete_history_data();
 				// import_history_data();
-				setTimeout(function() {
+				setTimeout(function () {
 					tutor_toast(__('Success', 'tutor'), __('Data imported successfully!', 'tutor'), 'success');
 					fileElem.parentNode.parentNode.querySelector('.file-info').innerText = '';
 					fileElem.value = '';
@@ -230,7 +232,7 @@ const export_single_settings = () => {
 	const single_settings = document.querySelectorAll('.export_single_settings');
 	if (single_settings) {
 		for (let i = 0; i < single_settings.length; i++) {
-			single_settings[i].onclick = function(e) {
+			single_settings[i].onclick = function (e) {
 				if (!e.detail || e.detail == 1) {
 					let export_id = single_settings[i].dataset.id;
 					var formData = new FormData();
@@ -243,7 +245,7 @@ const export_single_settings = () => {
 					xhttp.open('POST', _tutorobject.ajaxurl, true);
 					xhttp.send(formData);
 
-					xhttp.onreadystatechange = function() {
+					xhttp.onreadystatechange = function () {
 						if (xhttp.readyState === 4) {
 							let fileName = export_id;
 							json_download(xhttp.response, fileName);
@@ -311,7 +313,7 @@ const apply_settings_xhttp_request = (modelOpener, modalElement) => {
 
 	xhttp.send(formData);
 
-	xhttp.onreadystatechange = function() {
+	xhttp.onreadystatechange = function () {
 		if (xhttp.readyState === 4) {
 			modalElement.classList.remove('tutor-is-active');
 			document.body.classList.remove("tutor-modal-open");
@@ -343,7 +345,7 @@ const delete_settings_xhttp_request = (modelOpener, modalElement) => {
 	const xhttp = new XMLHttpRequest();
 	xhttp.open('POST', _tutorobject.ajaxurl, true);
 	xhttp.send(formData);
-	xhttp.onreadystatechange = function() {
+	xhttp.onreadystatechange = function () {
 		if (xhttp.readyState === 4) {
 			modalElement.classList.remove('tutor-is-active');
 			document.body.classList.remove("tutor-modal-open");
@@ -358,3 +360,53 @@ const delete_settings_xhttp_request = (modelOpener, modalElement) => {
 		}
 	};
 };
+
+const import_file = () => {
+	const fileElem = document.querySelector('#drag-drop-input');
+	const fileInfo = fileElem.parentNode.parentNode.querySelector('.file-info');
+
+	if (fileElem) {
+
+		fileElem.onchange = function () {
+			if (fileElem.files.length > 0) {
+				const fileName = fileElem.files[0].name;
+				const fileSize = (fileElem.files[0].size / 1024).toFixed(2) + ' KB';
+				const fileType = fileElem.files[0].type;
+
+				fileInfo.innerText = fileName;
+
+				if (fileType !== 'application/json') {
+					fileInfo.innerText = 'Please select a valid json file';
+					fileElem.value = '';
+					return false;
+				}
+
+				const modalElement = document.getElementById('tutor-import-data-modal');
+				if (modalElement) {
+					modalElement.classList.add('tutor-is-active');
+					document.body.classList.add("tutor-modal-open");
+
+					const validationStatus = modalElement.querySelector('#validation-status');
+					if (validationStatus) {
+						validationStatus.innerText = "Ready to import";
+						validationStatus.classList.remove('tutor-d-none');
+					}
+
+					const fileNameElem = modalElement.querySelector('#file-name');
+					const fileSizeElem = modalElement.querySelector('#file-size');
+
+					fileNameElem.innerText = fileName;
+					fileSizeElem.innerText = fileSize;
+
+					const submitButton = modalElement.querySelector('#tutor-import-data-btn');
+					submitButton.onclick = () => {
+						import_history_data_xhttp(fileElem, modalElement);
+						fileElem.value = '';
+					};
+				}
+			} else {
+				fileInfo.innerText = '';
+			}
+		};
+	}
+}
