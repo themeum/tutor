@@ -279,7 +279,7 @@ class QueryHelper {
 	 *
 	 * @return  string
 	 */
-	public static function build_where_clause( array $where ) {
+	public static function build_where_clause( array $where, array $raw = array() ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			if ( is_array( $value ) && isset( $value[0] ) && is_string( $value[0] ) && self::is_support_operator( $value[0] ) ) {
@@ -315,16 +315,20 @@ class QueryHelper {
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
-			} else {
-				if ( 'null' === strtolower( $value ) ) {
+			} elseif ( 'null' === strtolower( $value ) ) {
 					$clause = array( $field, 'IS', 'NULL' );
-				} else {
-					$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
-					$clause = array( $field, '=', $value );
-				}
+			} else {
+				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
+				$clause = array( $field, '=', $value );
 			}
 
 			$arr[] = self::make_clause( $clause );
+		}
+
+		if ( is_array( $raw ) && count( $raw ) ) {
+			foreach ( $raw as $query_string ) {
+				$arr[] = $query_string;
+			}
 		}
 
 		return implode( ' AND ', $arr );
@@ -578,7 +582,7 @@ class QueryHelper {
 	/**
 	 * Make sanitized SQL IN clause value from an array
 	 *
-	 * @param array $arr a sequentital array.
+	 * @param array $arr a sequential array.
 	 * @return string
 	 * @since 2.1.1
 	 */
@@ -667,7 +671,8 @@ class QueryHelper {
 		$limit = 10,
 		$offset = 0,
 		string $order = 'DESC',
-		string $output = 'OBJECT'
+		string $output = 'OBJECT',
+		array $raw = []
 	) {
 		global $wpdb;
 
@@ -680,7 +685,7 @@ class QueryHelper {
 			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
 		}
 
-		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
+		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where, $raw) : '';
 
 		if (!empty($search)) {
 			$search_clause = self::build_like_clause( $search );
