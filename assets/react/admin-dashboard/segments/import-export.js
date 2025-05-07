@@ -2,6 +2,7 @@ document.addEventListener('readystatechange', (event) => {
 	if (event.target.readyState === 'interactive') {
 		export_settings_all();
 		import_file();
+		toggleChildCheckbox();
 	}
 	if (event.target.readyState === 'complete') {
 		delete_history_data();
@@ -443,4 +444,26 @@ const import_file = () => {
 			}
 		};
 	}
+}
+
+const toggleChildCheckbox = () => {
+	const parentRows = document.querySelectorAll('.tutor-option-field-row');
+
+	parentRows.forEach((row) => {
+		const checkbox = row.querySelector('input[type="checkbox"]');
+		if (!checkbox) return;
+
+		const wrapper = row.querySelector('.tutor-px-16');
+		if (!wrapper) return;
+
+		const childWrapper = wrapper.querySelector('.item-wrapper');
+		if (!childWrapper) return;
+
+		const toggle = () => {
+			childWrapper.style.display = checkbox.checked ? 'block' : 'none';
+		};
+
+		toggle();
+		checkbox.addEventListener('change', toggle);
+	});
 }

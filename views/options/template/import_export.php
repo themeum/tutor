@@ -88,7 +88,7 @@ function render_export_checkboxes( $checkboxes ) {
 			<div class="tutor-option-field-row">
 				<div class="tutor-px-16">
 					<label class="tutor-form-check">
-					<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $checkbox['value'] ); ?>" <?php checked( '1', $checkbox['value'] ); ?>> <?php 
+					<input type="checkbox" class="tutor-form-check-input" name="export[<?php echo esc_attr( $name ); ?>]" value="<?php echo esc_attr( $checkbox['value'] ); ?>" <?php checked( '1', $checkbox['value'] ); ?>> <?php 
 							if ( isset($count) && (is_numeric($count) || (!empty($count) && is_string($count)))) {
 								// translators: %s: label, %d: count
 								echo sprintf( __( '%s (%d)', 'tutor' ), esc_html( $label ), esc_html( $count ) );
@@ -109,7 +109,7 @@ function render_export_checkboxes( $checkboxes ) {
 									$child_name  = $child_checkbox['name'];
 									?>
 									<label class="tutor-form-check">
-										<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>_<?php echo esc_attr( $child_name ); ?>" value="<?php echo esc_attr( $child_checkbox['value'] ); ?>" <?php checked( '1', $child_checkbox['value'] ); ?>><?php echo sprintf( __( '%s (%d)', 'tutor' ), esc_html( $child_label ), esc_html( $child_count ) ); ?>
+										<input type="checkbox" class="tutor-form-check-input" name="export[<?php echo esc_attr( $name ); ?>][<?php echo esc_attr( $child_name ); ?>]" value="<?php echo esc_attr( $child_checkbox['value'] ); ?>" <?php checked( '1', $child_checkbox['value'] ); ?>><?php echo sprintf( __( '%s (%d)', 'tutor' ), esc_html( $child_label ), esc_html( $child_count ) ); ?>
 									</label>
 									<?php
 								}
@@ -121,7 +121,7 @@ function render_export_checkboxes( $checkboxes ) {
 								?>
 								<div class="children-row" style="background-color: rgba(var(--tutor-color-primary-rgb), 0.03);">
 									<label class="tutor-form-check">
-										<input type="checkbox" class="tutor-form-check-input" name="export_<?php echo esc_attr( $name ); ?>_keep_user_data" value="<?php echo esc_attr( $checkbox['keep_user_data'] ); ?>" <?php checked( '1', $checkbox['keep_user_data'] ); ?>> <?php esc_html_e( 'Keep User Data', 'tutor' ); ?>
+										<input type="checkbox" class="tutor-form-check-input" name="export[<?php echo esc_attr( $name ); ?>][keep_user_data]" value="<?php echo esc_attr( $checkbox['keep_user_data'] ); ?>" <?php checked( '1', $checkbox['keep_user_data'] ); ?>> <?php esc_html_e( 'Keep User Data', 'tutor' ); ?>
 									</label>
 								</div>
 								<?php
