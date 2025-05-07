@@ -1044,7 +1044,7 @@ class CouponModel {
 		if ( $total_usage_limit > 0 ) {
 			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
 			if ( $coupon_usage_count >= $total_usage_limit ) {
-				$has_limit              = false;
+				$has_limit                  = false;
 				$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' );
 			}
 		}
@@ -1052,7 +1052,7 @@ class CouponModel {
 		if ( $user_usage_limit > 0 ) {
 			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
-				$has_limit              = false;
+				$has_limit                  = false;
 				$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' );
 			}
 		}
@@ -1222,13 +1222,16 @@ class CouponModel {
 			'invalid'                   => __( 'Coupon invalid', 'tutor' ),
 			'usage_limit_exceeded'      => __( 'Coupon usage limit exceeded', 'tutor' ),
 			'user_usage_limit_exceeded' => __( 'Coupon user usage limit exceeded', 'tutor' ),
-			// translators: $variable.
+			// translators: %s - Minimum purchase amount (e.g., $50).
 			'minimum_purchase'          => sprintf( __( 'This coupon requires a minimum purchase %s', 'tutor' ), $variable ),
-			// translators: $variable.
-			'minimum_quantity'          => sprintf( __( 'This coupon requires minimum purchase of %1$d %2$s', 'tutor' ), $variable, $variable > 1 ? 'quantities' : 'quantity' ),
-			// translators: $variable.
+
+			// translators: 1 - Quantity number, 2 - 'quantities' or 'quantity'.
+			'minimum_quantity'          => sprintf( __( 'This coupon requires minimum purchase of %1$d %2$s', 'tutor' ), $variable, $variable > 1 ? __( 'quantities', 'tutor' ) : __( 'quantity', 'tutor' ) ),
+
+			// translators: %s - Reason or context where coupon is not applicable.
 			'not_applicable'            => sprintf( __( 'Coupon not applicable %s', 'tutor' ), $variable ),
-			// translators: $variable.
+
+			// translators: %s - List or name of applicable items.
 			'specific_applicable'       => sprintf( __( 'This coupon is only applicable to %s', 'tutor' ), $variable ),
 		);
 
