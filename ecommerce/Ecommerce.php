@@ -43,6 +43,8 @@ class Ecommerce {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 3.6.0 Global variable added
+	 *
 	 * @param bool $register_hooks register hooks.
 	 */
 	public function __construct( $register_hooks = true ) {
@@ -79,7 +81,7 @@ class Ecommerce {
 		add_action(
 			'init',
 			function() {
-				$GLOBALS['coupon_apply_error_msg'] = ( new CouponModel() )->get_coupon_failed_error_msg( 'not_applicable' );
+				$GLOBALS['tutor_coupon_apply_err_msg'] = ( new CouponModel() )->get_coupon_failed_error_msg( 'not_applicable' );
 			}
 		);
 	}
