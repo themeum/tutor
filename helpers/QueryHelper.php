@@ -274,8 +274,11 @@ class QueryHelper {
 	 *                  'deleted_at' => 'null',
 	 *                  'role'       => 'editor',
 	 *              )
+	 * @since 3.6.0 param $raw added to add raw sql queries to where clause.
+	 *              $raw = ['CAST(evaluate_mark.meta_value AS SIGNED) >= CAST(pass_mark.meta_value AS SIGNED']
 	 *
 	 * @param   array $where assoc array with field and value.
+	 * @param   array $raw array of raw queries added to where clause.
 	 *
 	 * @return  string
 	 */
@@ -645,6 +648,7 @@ class QueryHelper {
 	 * Argument should be SQL escaped.
 	 *
 	 * @since 3.0.0
+	 * @since 3.6.0 param $raw for raw query in where clause
 	 *
 	 * @param string $primary_table The primary table name with prefix.
 	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
@@ -656,6 +660,7 @@ class QueryHelper {
 	 * @param int    $offset Offset for pagination.
 	 * @param string $order  DESC or ASC, default is DESC.
 	 * @param string $output  Expected output type, default is OBJECT.
+	 * @param array  $raw array of raw sql queries added to where clause.
 	 *
 	 * @throws \Exception If an error occurred during the query execution.
 	 *
