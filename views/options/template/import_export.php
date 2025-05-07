@@ -157,7 +157,7 @@ function render_export_checkboxes( $checkboxes ) {
 				<div class="drag-drop-zone">
 					<span class="tutor-icon-upload tutor-fs-1 tutor-color-primary"></span>
 					<div>
-						<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-mt-8">
+						<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm">
 							<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none import-settings" accept=".json" />
 							<span><?php esc_html_e( 'Choose a file', 'tutor' ); ?></span>
 						</label>
@@ -401,7 +401,7 @@ function render_export_checkboxes( $checkboxes ) {
 									<span class="file-name tutor-fw-medium tutor-fs-8" id="file-name"></span>
 									<span class="file-size tutor-fs-8" id="file-size"></span>
 								</span>
-								<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-mt-8">
+								<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm">
 									<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none import-settings" accept=".json" />
 									<span><?php esc_html_e( 'Replace', 'tutor' ); ?></span>
 								</label>
