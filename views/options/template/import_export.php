@@ -11,7 +11,7 @@
 
 ?>
 
-<!-- An array for export checkbox with name and label, cna be nested and will use it for rendering in modal -->
+<!-- An array for export checkbox with name and label, can be nested and will use it for rendering in modal -->
 <?php
 $default_checkbox_value = '1';
 
@@ -339,7 +339,12 @@ function render_export_checkboxes( $checkboxes ) {
 			<div id="export-initial">
 				<div class="tutor-modal-header">
 					<div class="tutor-modal-title">
-						<span class="tutor-color-primary tutor-fw-medium"><?php esc_html_e( 'Exporter', 'tutor' ); ?></span>
+						<div class="tutor-color-primary tutor-fw-medium tutor-d-flex tutor-align-center">
+							<img src="<?php echo esc_url( tutor()->url . 'assets/images/images-v2/icons/tutor-lms-logo.svg' ); ?>" alt="<?php esc_html_e( 'TutorLogo', 'tutor' ); ?>" class="tutor-mr-8" style="width: auto; height: 24px;" />
+							<span>
+								<?php esc_html_e( 'Exporter', 'tutor' ); ?>
+							</span>
+						</div>
 
 						<button class="tutor-btn tutor-btn-primary tutor-btn-sm" data-tutor-modal-target="tutor-export-data-modal" id="tutor_export_settings">
 							<i class="tutor-icon-export tutor-mr-4" aria-hidden="true"></i>

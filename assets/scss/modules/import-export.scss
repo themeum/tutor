@@ -125,16 +125,15 @@
     .tutor-modal-content {
       width: 100%;
       border-radius: 8px;
+      background-color: var(--tutor-color-white);
 
       .tutor-modal-header {
-        background-color: #F5F5F5;
         height: 50px;
         padding: 12px 24px 12px 16px;
       }
 
       .tutor-modal-body {
         padding: 16px 20px;
-        background-color: #F5F5F5;
 
         .import-warning-alert {
           border-radius: 6px;
