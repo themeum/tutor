@@ -154,8 +154,8 @@ function render_export_checkboxes( $checkboxes ) {
 	<div class="item-wrapper tutor-import-drag-drop">
 		<div class="tutor-option-field-row tutor-d-block">
 			<div>
-				<div class="drag-drop-zone">
-					<span class="tutor-icon-upload tutor-fs-1 tutor-color-primary"></span>
+				<div class="drag-drop-zone" style="padding-block: 48px;">
+					<img src="<?php echo esc_url( tutor()->url . 'assets/images/import-initial.webp' ); ?>" alt="<?php esc_html_e( 'Import Initial', 'tutor' ); ?>" class="drag-drop-icon" style="width: 53px; height: auto; margin-bottom: 20px;" />
 					<div>
 						<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm">
 							<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none import-settings" accept=".json" />
@@ -364,10 +364,11 @@ function render_export_checkboxes( $checkboxes ) {
 			</div>
 
 			<div id="export-inprogress" class="tutor-d-none">
-				<div class="tutor-modal-body" style="padding-inline: 90px;">
+				<div class="tutor-modal-body tutor-d-flex tutor-flex-column" style="padding: 32px 90px 48px 90px;">
+					<img src="<?php echo esc_url( tutor()->url . 'assets/images/export-inprogress.webp' ); ?>" alt="<?php esc_html_e( 'Export in progress', 'tutor' ); ?>" class="tutor-mt-8" style="width: 120px; height: auto; margin-bottom: 40px; align-self: center;" />
 					<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-w-100 tutor-mb-4">
 						<div class="tutor-fs-7 tutor-color-black">
-							<?php esc_html_e( 'Exporting...', 'tutor' ); ?>
+							<?php esc_html_e( 'Getting your files ready!', 'tutor' ); ?>
 						</div>
 
 						<div class="tutor-badge-label label-success" id="export-status">
@@ -378,8 +379,8 @@ function render_export_checkboxes( $checkboxes ) {
 					<div class="progress-bar" id="export-progress-bar">
 					</div>
 					
-					<div class="tutor-text-secondary" style="margin-block: 4px 48px;">
-						<div id="file-name"></div>
+					<div class="tutor-text-secondary tutor-mt-4">
+						<div id="exported-file-name"></div>
 					</div>
 				</div>
 			</div>
@@ -387,6 +388,7 @@ function render_export_checkboxes( $checkboxes ) {
 			<div id="export-success" class="tutor-d-none">
 				<div class="tutor-modal-body tutor-text-center">
 					<div class="tutor-d-flex tutor-flex-column tutor-justify-center tutor-align-center tutor-w-100">
+						<img src="<?php echo esc_url( tutor()->url . 'assets/images/export-success.webp' ); ?>" alt="<?php esc_html_e( 'Export successful', 'tutor' ); ?>" style="width: 109px; height: auto; margin: 28px 34px; align-self: center;" />
 						<div class="tutor-fs-5 tutor-color-black tutor-mb-16">
 							<?php esc_html_e( 'Your File is Ready to Download!', 'tutor' ); ?>
 						</div>
@@ -405,8 +407,8 @@ function render_export_checkboxes( $checkboxes ) {
 										<span class="file-name tutor-fw-medium tutor-fs-8" id="exported-file-name"></span>
 										<span class="file-size tutor-fs-8" id="exported-file-size"></span>
 									</span>
-									<label class="tutor-btn tutor-btn-secondary tutor-btn-sm">
-										<span id="export-download-btn">
+									<label class="tutor-btn tutor-btn-primary tutor-btn-sm">
+										<span id="export-download-btn" class="tutor-d-flex tutor-align-center">
 											<i class="tutor-icon-download tutor-mr-4" aria-hidden="true"></i>
 											<?php esc_html_e( 'Download', 'tutor' ); ?>
 										</span>
@@ -483,7 +485,8 @@ function render_export_checkboxes( $checkboxes ) {
 			</div>
 
 			<div id="import-inprogress" class="tutor-d-none">
-				<div class="tutor-modal-body" style="padding-inline: 90px;">
+				<div class="tutor-modal-body tutor-d-flex tutor-flex-column tutor-justify-center" style="padding: 48px 90px;">
+					<img src="<?php echo esc_url( tutor()->url . 'assets/images/import-inprogress.webp' ); ?>" alt="<?php esc_html_e( 'Import in progress', 'tutor' ); ?>" class="tutor-mt-8" style="width: 83px; height: auto; margin-bottom: 40px; align-self: center;" />
 					<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-w-100 tutor-mb-4">
 						<div class="tutor-fs-7 tutor-color-black">
 							<?php esc_html_e( 'Importing...', 'tutor' ); ?>
@@ -497,7 +500,7 @@ function render_export_checkboxes( $checkboxes ) {
 					<div class="progress-bar" id="import-progress-bar">
 					</div>
 					
-					<div class="tutor-text-secondary" style="margin-block: 4px 48px;">
+					<div class="tutor-text-secondary" style="margin-top: 4px;">
 						<div id="file-name"></div>
 					</div>
 				</div>
@@ -505,6 +508,7 @@ function render_export_checkboxes( $checkboxes ) {
 
 			<div id="import-success" class="tutor-d-none">
 				<div class="tutor-modal-body tutor-text-center">
+					<img src="<?php echo esc_url( tutor()->url . 'assets/images/import-success.webp' ); ?>" alt="<?php esc_html_e( 'Import successful', 'tutor' ); ?>" style="width: 130px; height: auto; margin: 28px 34px; align-self: center;" />
 					<div class="tutor-d-flex tutor-flex-column tutor-justify-center tutor-align-center tutor-w-100">
 						<div class="tutor-fs-5 tutor-color-black tutor-mb-16">
 							<?php esc_html_e( 'Settings Import Successful!', 'tutor' ); ?>
@@ -513,7 +517,7 @@ function render_export_checkboxes( $checkboxes ) {
 						<div class="tutor-fs-7 tutor-color-black tutor-mb-16">
 							<?php echo sprintf( __('You have successfully imported a “%s”', 'tutor'), '<span id="file-name"></span>' ); ?>
 						</div>
-						<button class="tutor-btn tutor-btn-primary tutor-btn-sm" data-tutor-modal-close>
+						<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-mb-12" data-tutor-modal-close>
 							<?php esc_html_e( 'Okay', 'tutor' ); ?>
 						</button>
 					</div>
@@ -521,18 +525,19 @@ function render_export_checkboxes( $checkboxes ) {
 			</div>
 
 			<div id="import-error" class="tutor-d-none">
-				<div class="tutor-modal-header">
-					<div class="tutor-modal-title">
-						<span class="tutor-fw-medium tutor-fs-7"><?php esc_html_e( 'Import Error', 'tutor' ); ?></span>
-					</div>
-					<button class="tutor-iconic-btn tutor-modal-close tutor-flex-shrink-0" data-tutor-modal-close>
-						<span class="tutor-icon-times" aria-hidden="true"></span>
-					</button>
-				</div>
+				<div class="tutor-modal-body tutor-text-center">
+					<img src="<?php echo esc_url( tutor()->url . 'assets/images/import-error.webp' ); ?>" alt="<?php esc_html_e( 'Import Failed', 'tutor' ); ?>" style="width: 109px; height: auto; margin: 28px 34px; align-self: center;" />
+					<div class="tutor-d-flex tutor-flex-column tutor-justify-center tutor-align-center tutor-w-100">
+						<div class="tutor-fs-5 tutor-color-black tutor-mb-16">
+							<?php esc_html_e( 'Import Failed!', 'tutor' ); ?>
+						</div>
 
-				<div class="tutor-modal-body">
-					<div class="tutor-fs-7 tutor-color-black tutor-mb-16 tutor-mx-20">
-						<?php esc_html_e( 'An error occurred during import.', 'tutor' ); ?>
+						<div class="tutor-fs-7 tutor-color-black tutor-mb-16">
+							<?php echo sprintf( __('You have encountered an error during the import process. Please try again.', 'tutor'), '<span id="file-name"></span>' ); ?>
+						</div>
+						<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-mb-12" data-tutor-modal-close>
+							<?php esc_html_e( 'Okay', 'tutor' ); ?>
+						</button>
 					</div>
 				</div>
 			</div>

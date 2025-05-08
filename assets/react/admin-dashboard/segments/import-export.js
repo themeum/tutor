@@ -169,6 +169,15 @@ const export_settings_all = () => {
 			inprogressElement.classList.remove('tutor-d-none');
 			successElement.classList.add('tutor-d-none');
 
+			let fileName = 'tutor_export_' + time_now();
+			const exportedFileNameElement = document.querySelectorAll('#exported-file-name');
+			const exportedFileSizeElement = document.querySelector('#exported-file-size');
+			const exportDownloadButton = document.querySelector('#export-download-btn');
+
+			exportedFileNameElement.forEach((elem) => {
+				elem.innerText = fileName + '.json';
+			});
+
 			xhttp.onreadystatechange = function () {
 				if (xhttp.readyState === 4) {
 					if (xhttp.status !== 200) {
@@ -180,16 +189,6 @@ const export_settings_all = () => {
 					inprogressElement.classList.add('tutor-d-none');
 					successElement.classList.remove('tutor-d-none');
 
-					let fileName = 'tutor_options_' + time_now();
-					const exportedFileNameElement = document.querySelectorAll('#exported-file-name');
-					const exportedFileSizeElement = document.querySelector('#exported-file-size');
-					const exportDownloadButton = document.querySelector('#export-download-btn');
-
-					if (exportedFileNameElement.length > 0) {
-						exportedFileNameElement.forEach((elem) => {
-							elem.innerText = fileName;
-						});
-					}
 					if (exportedFileSizeElement) {
 						const fileSize = (xhttp.response.length / 1024).toFixed(2) + ' KB';
 						exportedFileSizeElement.innerText = fileSize;
@@ -287,19 +286,18 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 		importInitialElement.classList.add('tutor-d-none');
 		inprogressElement.classList.remove('tutor-d-none');
 
-
 		xhttp.onreadystatechange = function () {
 			if (xhttp.readyState === 4) {
-				inprogressElement.classList.add('tutor-d-none');
-				successElement.classList.remove('tutor-d-none');
-				errorElement.classList.add('tutor-d-none');
-
 				if (xhttp.status !== 200) {
 					inprogressElement.classList.add('tutor-d-none');
 					successElement.classList.add('tutor-d-none');
 					errorElement.classList.remove('tutor-d-none');
 					return false;
 				}
+
+				inprogressElement.classList.add('tutor-d-none');
+				successElement.classList.remove('tutor-d-none');
+				errorElement.classList.add('tutor-d-none');
 
 				let historyData = JSON.parse(xhttp.response);
 				historyData = historyData.data;
@@ -450,6 +448,7 @@ const delete_settings_xhttp_request = (modelOpener, modalElement) => {
 };
 
 const import_file = () => {
+	const { __ } = wp.i18n;
 	const fileElem = document.querySelector('#drag-drop-input');
 	const fileInfo = fileElem.parentNode.parentNode.querySelector('.file-info');
 
@@ -464,8 +463,8 @@ const import_file = () => {
 				fileInfo.innerText = fileName;
 
 				if (fileType !== 'application/json') {
-					fileInfo.innerText = 'Please select a valid json file';
-					fileElem.value = '';
+					fileInfo.innerText =
+						fileElem.value = '';
 					return false;
 				}
 				const modalElement = document.getElementById('tutor-import-data-modal');
@@ -485,7 +484,7 @@ const import_file = () => {
 
 					const validationStatus = modalElement.querySelector('#validation-status');
 					if (validationStatus) {
-						validationStatus.innerText = "Ready to import";
+						validationStatus.innerText = __('Ready to import', 'tutor');
 						validationStatus.classList.remove('tutor-d-none');
 					}
 
@@ -541,13 +540,19 @@ const toggleChildCheckbox = () => {
 /**
  * 
  * @param {'import | export'} type 
+ * 
+ * @description This function resets the import/export modal to its initial state.
+ * 
+ * @returns {void}
  */
 const resetImportExportModal = (type) => {
 	const EXPORT_MODAL_INITIAL_WIDTH = '826px';
 	const EXPORT_MODAL_INITIAL_HEIGHT = '825px';
 	const EXPORT_MODAL_INITIAL_MARGIN = '104px';
 	const modalElement = document.getElementById(`tutor-${type}-data-modal`);
-	if (!modalElement) return;
+	if (!modalElement) {
+		return;
+	}
 
 	const modalWindowElement = modalElement.querySelector('.tutor-modal-window');
 	const modalBodyElement = modalElement.querySelectorAll('.tutor-modal-body');
