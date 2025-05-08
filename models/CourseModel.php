@@ -109,7 +109,7 @@ class CourseModel {
 	 * @since 3.5.0
 	 *
 	 * @param int|\WP_POST $post the post id or object.
-     *
+	 *
 	 * @return bool
 	 */
 	public static function get_post_types( $post ) {
@@ -274,15 +274,15 @@ class CourseModel {
 	 */
 	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false, $post_types = array() ) {
 		global $wpdb;
-		$offset           = sanitize_text_field( $offset );
-		$limit            = sanitize_text_field( $limit );
-		$instructor_id    = tutils()->get_user_id( $instructor_id );
+		$offset        = sanitize_text_field( $offset );
+		$limit         = sanitize_text_field( $limit );
+		$instructor_id = tutils()->get_user_id( $instructor_id );
 
 		if ( ! count( $post_types ) ) {
 			$post_types = array( tutor()->course_post_type );
 		}
 
-		$post_types       = QueryHelper::prepare_in_clause( $post_types );
+		$post_types = QueryHelper::prepare_in_clause( $post_types );
 
 		if ( empty( $post_status ) || 'any' == $post_status ) {
 			$where_post_status = '';
@@ -907,5 +907,43 @@ class CourseModel {
 		);
 
 		return $instructor_ids;
+	}
+
+	public static function count_attachment() {
+		global $wpdb;
+
+		$total_count = 0;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT pm.meta_value
+					FROM `wp_xposts` as p
+					INNER JOIN wp_xpostmeta as pm 
+						ON p.ID = pm.post_id 
+						AND pm.meta_key = '%s' 
+						AND meta_value != %s
+				",
+				'_tutor_attachments',
+				'a:0:{}'
+			)
+		);
+
+		if ( $results ) {
+			foreach ( $results as $row ) {
+				$attachment_ids = maybe_unserialize( $row->meta_value );
+
+				$attachments = get_posts(
+					array(
+						'post_type'      => 'attachment',
+						'post__in'       => $attachment_ids,
+						'posts_per_page' => -1,
+					)
+				);
+
+				$total_count += $attachments->post_count;
+			}
+		}
+
+		return $total_count;
 	}
 }
