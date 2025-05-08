@@ -2948,7 +2948,11 @@ class Utils {
 	 *
 	 * @return array|null|object|void
 	 */
-	public function product_belongs_with_course( $product_id = 0 ) {
+	public function product_belongs_with_course( int $product_id ) {
+		if ( ! $product_id ) {
+			return null;
+		}
+
 		global $wpdb;
 
 		$query = $wpdb->get_row(
