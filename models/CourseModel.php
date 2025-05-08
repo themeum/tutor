@@ -87,11 +87,15 @@ class CourseModel {
 	 *
 	 * @since 2.0.7
 	 *
-	 * @param string $status course status.
+	 * @since 3.6.0 $post_type param added
+	 *
+	 * @param string $status Post status.
+	 * @param string $post_type Post type.
+	 *
 	 * @return int
 	 */
-	public static function count( $status = self::STATUS_PUBLISH ) {
-		$count_obj = wp_count_posts( self::POST_TYPE );
+	public static function count( $status = self::STATUS_PUBLISH, $post_type = self::POST_TYPE ) {
+		$count_obj = wp_count_posts( $post_type );
 		if ( 'all' === $status ) {
 			return array_sum( (array) $count_obj );
 		}
