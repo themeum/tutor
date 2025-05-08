@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use TUTOR\Course;
 use Tutor\Ecommerce\PaymentHandler;
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 use Tutor\PaymentGateways\Configs\PaypalConfig;
 use Tutor\PaymentGateways\GatewayFactory;
 use Tutor\PaymentGateways\PaypalGateway;
@@ -41,6 +42,8 @@ class Ecommerce {
 	 * Construct function to initialize e-commerce classes
 	 *
 	 * @since 3.0.0
+	 *
+	 * @since 3.6.0 Global variable added
 	 *
 	 * @param bool $register_hooks register hooks.
 	 */
@@ -73,6 +76,14 @@ class Ecommerce {
 		new HooksHandler();
 		new EmailController();
 		new PaymentHandler();
+
+		// Globals.
+		add_action(
+			'init',
+			function() {
+				$GLOBALS['tutor_coupon_apply_err_msg'] = ( new CouponModel() )->get_coupon_failed_error_msg( 'not_applicable' );
+			}
+		);
 	}
 
 	/**
