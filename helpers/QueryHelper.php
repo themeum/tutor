@@ -318,11 +318,13 @@ class QueryHelper {
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
-			} elseif ( 'null' === strtolower( $value ) ) {
-					$clause = array( $field, 'IS', 'NULL' );
 			} else {
-				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
-				$clause = array( $field, '=', $value );
+				if ( 'null' === strtolower( $value ) ) {
+					$clause = array( $field, 'IS', 'NULL' );
+				} else {
+					$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
+					$clause = array( $field, '=', $value );
+				}
 			}
 
 			$arr[] = self::make_clause( $clause );
