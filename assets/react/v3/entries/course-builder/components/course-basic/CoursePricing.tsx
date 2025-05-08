@@ -23,6 +23,7 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
@@ -375,7 +376,7 @@ const CoursePricing = () => {
   );
 };
 
-export default CoursePricing;
+export default withVisibilityControl(CoursePricing);
 
 const styles = {
   priceRadioGroup: css`

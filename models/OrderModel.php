@@ -11,11 +11,12 @@
 namespace Tutor\Models;
 
 use Exception;
+use Tutor\Ecommerce\Tax;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
+use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\OrderActivitiesController;
-use Tutor\Ecommerce\Tax;
 
 /**
  * OrderModel Class
@@ -48,7 +49,16 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
-	const PAYMENT_MANUAL             = 'manual';
+
+	/**
+	 * Payment methods
+	 *
+	 * @since 3.5.0
+	 *
+	 * @var string
+	 */
+	const PAYMENT_METHOD_MANUAL = 'manual';
+	const PAYMENT_METHOD_FREE   = 'free';
 
 	/**
 	 * Order Meta keys for history & refunds
@@ -57,9 +67,22 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const META_KEY_HISTORY  = 'history';
-	const META_KEY_REFUND   = 'refund';
-	const META_KEY_ORDER_ID = 'tutor_order_id_';
+	const META_KEY_HISTORY         = 'history';
+	const META_KEY_REFUND          = 'refund';
+	const META_KEY_ORDER_ID        = 'tutor_order_id_';
+	const META_KEY_BILLING_ADDRESS = 'billing_address';
+
+	/**
+	 * Order meta for subscription order.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @var string
+	 */
+	const META_ENROLLMENT_FEE      = 'plan_enrollment_fee';
+	const META_TRIAL_FEE           = 'plan_trial_fee';
+	const META_PLAN_INFO           = 'plan_info';
+	const META_IS_PLAN_TRIAL_ORDER = 'is_plan_trial_order';
 
 	/**
 	 * Tax type constants
@@ -190,6 +213,34 @@ class OrderModel {
 		return $order_data;
 	}
 
+	/**
+	 * Get order item display price.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param object $item order item object.
+	 *
+	 * @return string
+	 */
+	public function get_order_item_display_price( $item ) {
+		$display_price = is_numeric( $item->sale_price )
+						? $item->sale_price
+						: ( is_numeric( $item->discount_price ) ? $item->discount_price : $item->regular_price );
+		return $display_price;
+	}
+
+	/**
+	 * Check order item has sale price or discount price
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param object $item order item object.
+	 *
+	 * @return boolean
+	 */
+	public function has_order_item_sale_price( $item ) {
+		return is_numeric( $item->sale_price ) || is_numeric( $item->discount_price );
+	}
 
 	/**
 	 * Get all order statuses
@@ -388,7 +439,7 @@ class OrderModel {
 		$student->name            = $user_info->data->display_name;
 		$student->email           = $user_info->data->user_email;
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
-		$student->billing_address = $this->get_tutor_customer_data( $order_data->user_id );
+		$student->billing_address = $this->get_order_billing_address( $order_id, $order_data->user_id );
 		$student->image           = get_avatar_url( $order_data->user_id );
 
 		$order_data->student = $student;
@@ -552,7 +603,6 @@ class OrderModel {
 
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
-				$course->sale_price    = (float) $course->sale_price;
 				$course->image         = get_the_post_thumbnail_url( $course->id );
 			}
 		}
@@ -563,46 +613,42 @@ class OrderModel {
 	}
 
 	/**
-	 * Retrieve tutor customer data by user ID.
+	 * Get order billing address with fallback customer billing address record support.
+	 * It'll return order billing address if found, otherwise it'll return customer billing address record.
 	 *
-	 * This function fetches customer data from the 'tutor_customers' table based on
-	 * the given user ID. It utilizes a helper function from the QueryHelper class
-	 * to perform the database query.
+	 * @since 3.5.0
 	 *
-	 * The function returns the customer data as an object.
+	 * @param int $order_id order id.
+	 * @param int $user_id order id.
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
-	 * @param int $user_id The ID of the user to retrieve customer data for.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return object|null The customer data retrieved from the database.
+	 * @return object
 	 */
-	public function get_tutor_customer_data( $user_id ) {
-		global $wpdb;
+	public static function get_order_billing_address( $order_id, $user_id ) {
+		$billing_address = OrderMetaModel::get_meta_value( $order_id, self::META_KEY_BILLING_ADDRESS, true );
 
-		// Retrieve customer data for the given user ID from the 'tutor_customers' table.
-		$customer_data = QueryHelper::get_row( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $user_id ), 'id' );
-
-		if ( empty( $customer_data ) ) {
-			return null;
+		/**
+		 * Fallback data from customer billing record.
+		 */
+		if ( false === $billing_address ) {
+			$billing_address = ( new BillingController( false ) )->get_billing_info( $user_id );
+		} else {
+			$billing_address = json_decode( $billing_address );
 		}
 
-		$return_data = (object) array(
-			'id'       => $customer_data->id,
-			'user_id'  => $customer_data->user_id,
-			'name'     => $customer_data->billing_first_name . ' ' . $customer_data->billing_last_name,
-			'email'    => $customer_data->billing_email,
-			'phone'    => $customer_data->billing_phone,
-			'address'  => $customer_data->billing_address,
-			'city'     => $customer_data->billing_city,
-			'state'    => $customer_data->billing_state,
-			'country'  => $customer_data->billing_country,
-			'zip_code' => $customer_data->billing_zip_code,
+		$data = (object) array(
+			'first_name' => $billing_address->billing_first_name ?? '',
+			'last_name'  => $billing_address->billing_last_name ?? '',
+			'full_name'  => trim( ( $billing_address->billing_first_name ?? '' ) . ' ' . ( $billing_address->billing_last_name ?? '' ) ),
+			'email'      => $billing_address->billing_email ?? '',
+			'phone'      => $billing_address->billing_phone ?? '',
+			'address'    => $billing_address->billing_address ?? '',
+			'country'    => $billing_address->billing_country ?? '',
+			'state'      => $billing_address->billing_state ?? '',
+			'city'       => $billing_address->billing_city ?? '',
+			'zip_code'   => $billing_address->billing_zip_code ?? '',
 		);
 
-		return $return_data;
+		return $data;
 	}
 
 	/**
@@ -903,18 +949,17 @@ class OrderModel {
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
-		} else {
-			if ( $time_period ) {
-				if ( 'today' === $time_period ) {
-					$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
-				} elseif ( 'monthly' === $time_period ) {
-					$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
-				} else {
-					$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
-				}
+		} elseif ( $time_period ) {
+			if ( 'today' === $time_period ) {
+				$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
+			} elseif ( 'monthly' === $time_period ) {
+				$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
+			} else {
+				$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
 			}
 		}
 
+		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT
 				SQL_CALC_FOUND_ROWS
@@ -932,6 +977,7 @@ class OrderModel {
 		);
 
 		$results = $wpdb->get_results( $query );
+		//phpcs:enable
 
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
@@ -1002,6 +1048,7 @@ class OrderModel {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
 
+			//phpcs:disable
 			$discounts = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1038,11 +1085,13 @@ class OrderModel {
 					$course_id
 				)
 			);
+			//phpcs:enable
 		} else {
 			if ( $user_id ) {
 				$user_clause = $wpdb->prepare( "AND %d = (SELECT user_id FROM {$wpdb->tutor_earnings} WHERE order_status = 'completed' LIMIT 1) ", $user_id );
 			}
 
+			//phpcs:disable
 			$discounts = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1071,6 +1120,7 @@ class OrderModel {
 					1
 				)
 			);
+			//phpcs:enable
 		}
 
 		$total_discount = 0;
@@ -1154,16 +1204,15 @@ class OrderModel {
 			if ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
-		} else {
-			if ( $user_id ) {
+		} elseif ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-			}
 		}
 
 		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 
 		if ( $course_id ) {
+			//phpcs:disable
 			$refunds = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1201,12 +1250,14 @@ class OrderModel {
 					$course_id
 				)
 			);
+			//phpcs:enable
 		} else {
 			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
 				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} LIMIT 1)";
 			}
 
+			//phpcs:disable
 			$refunds = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1226,6 +1277,7 @@ class OrderModel {
 					0
 				)
 			);
+			//phpcs:enable
 		}
 
 		$total_refund = 0;
@@ -1683,12 +1735,10 @@ class OrderModel {
 						}
 					}
 				}
-			} else {
-				if ( tutor_utils()->count( $order_items ) ) {
+			} elseif ( tutor_utils()->count( $order_items ) ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-					if ( tutor_utils()->is_enrolled( $course_id ) ) {
-						$is_enrolled_any_course = true;
-					}
+				if ( tutor_utils()->is_enrolled( $course_id ) ) {
+					$is_enrolled_any_course = true;
 				}
 			}
 		}
@@ -1740,22 +1790,23 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		<?php elseif ( $show_pay_button ) : 
+			<?php
+		elseif ( $show_pay_button ) :
 			ob_start();
-		?>
-			
+			?>
+
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
 				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
 				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
-				
+
 				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
 					<?php esc_html_e( 'Pay', 'tutor' ); ?>
 				</button>				
 			</form>
-			
+
 			<?php
-			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );
+			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
 		endif;
 	}
 
@@ -1788,5 +1839,73 @@ class OrderModel {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Retrieves statements for a specific user.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $post_type_in_clause SQL clause to filter the course post types.
+	 * @param string $course_query SQL query string to further filter the courses .
+	 * @param string $date_query SQL query string to filter by date range.
+	 * @param int    $user_id The user ID for which the statements are being retrieved.
+	 * @param int    $offset The offset for pagination.
+	 * @param int    $limit The number of rows to return.
+	 *
+	 * @return array
+	 */
+	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit ): array {
+		global $wpdb;
+
+		//phpcs:disable
+		$statements = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+					IF (
+					orders.total_price,
+					orders.total_price, 
+					statements.course_price_total
+					) AS order_total_price,
+					orders.tax_amount AS order_tax_amount,
+					orders.tax_type AS order_tax_type,
+					statements.*, 
+					course.post_title AS course_title
+				FROM {$wpdb->prefix}tutor_earnings AS statements
+					LEFT JOIN {$wpdb->prefix}tutor_orders AS orders 
+					ON statements.order_id = orders.id		
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = statements.course_id 
+					AND course.post_type IN ({$post_type_in_clause})
+				WHERE statements.user_id = %d
+				{$course_query}
+				{$date_query}
+				ORDER BY statements.created_at DESC
+				LIMIT %d, %d
+			",
+				$user_id,
+				$offset,
+				$limit
+			)
+		);
+		//phpcs:enable
+
+		$total_statements = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT COUNT(*)
+				FROM {$wpdb->prefix}tutor_earnings AS statements
+					INNER JOIN {$wpdb->posts} AS course ON course.ID = statements.course_id
+					AND course.post_type IN ({$post_type_in_clause})
+				WHERE statements.user_id = %d
+				{$course_query}
+				{$date_query}
+			",
+				$user_id
+			)
+		);
+
+		return array(
+			'statements'       => $statements,
+			'total_statements' => $total_statements,
+		);
 	}
 }

@@ -9,11 +9,29 @@
  * @since 2.0.0
  */
 
+$key    = $field['key'] ?? '';
+$events = $field['event'] ?? null;
+if ( $events ) {
+	$key = $field['event'] . '.' . $key;
+}
+
+$value = $this->get( $key );
+if ( empty( $value ) && ! empty( $field['default'] ) ) {
+	$value = $field['default'];
+}
+
+$checked = 'on' === $value ? 'checked' : '';
+
+// Prepare field name.
+$field_name = $this->get_field_name( $field );
 ?>
-<label class="tutor-form-toggle">
+<div class="tutor-form-check">
+	<?php if ( ! empty( $field['label'] ) ) : ?>
 	<span class="label-before">
-		<?php esc_html_e( 'Logged Only', 'tutor' ); ?>
+		<?php echo esc_html( $field['label'] ); ?>
 	</span>
-	<input type="checkbox" class="tutor-form-toggle-input" />
-	<span class="tutor-form-toggle-control"></span>
-</label>
+	<?php endif; ?>
+	<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>" value="<?php echo esc_attr( $value ); ?>">
+	<input type="checkbox" value="<?php echo esc_attr( $value ); ?>" class="tutor-form-toggle-input tutor-form-check-input" <?php echo esc_attr( $checked ); ?>>
+</div>
+

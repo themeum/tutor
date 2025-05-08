@@ -30,7 +30,7 @@ const questionTypes = {
     icon: 'quizMultiChoice',
   },
   open_ended: {
-    label: __('Open Ended/ Essay', 'tutor'),
+    label: __('Open Ended/Essay', 'tutor'),
     icon: 'quizEssay',
   },
   fill_in_the_blank: {

@@ -1,8 +1,10 @@
 import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { nanoid } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent } from 'react';
+import LoadingSpinner from './LoadingSpinner';
 
 type labelPositionType = 'left' | 'right';
 type SwitchSize = 'large' | 'regular' | 'small';
@@ -98,6 +100,23 @@ const styles = {
     width: fit-content;
     flex-direction: ${labelPosition === 'left' ? 'row' : 'row-reverse'};
     column-gap: ${spacing[12]};
+    position: relative;
+  `,
+  spinner: (checked: boolean) => css`
+    display: flex;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    ${checked &&
+    css`
+      right: 3px;
+    `}
+
+    ${!checked &&
+    css`
+      left: 3px;
+    `}
   `,
 };
 
@@ -109,6 +128,7 @@ interface SwitchProps {
   checked?: boolean;
   onChange?: (checked: boolean, event: ChangeEvent<HTMLInputElement>) => void;
   disabled?: boolean;
+  loading?: boolean;
   labelPosition?: labelPositionType;
   labelCss?: SerializedStyles;
   size?: SwitchSize;
@@ -122,6 +142,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>((props: SwitchPro
     value,
     checked,
     disabled,
+    loading,
     onChange,
     labelPosition = 'left',
     labelCss,
@@ -151,6 +172,11 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>((props: SwitchPro
         onChange={handleChange}
         data-input
       />
+      <Show when={loading}>
+        <span css={styles.spinner(!!checked)}>
+          <LoadingSpinner size={size === 'small' ? 12 : 20} />
+        </span>
+      </Show>
     </div>
   );
 });

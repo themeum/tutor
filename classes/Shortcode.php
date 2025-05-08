@@ -328,7 +328,6 @@ class Shortcode {
 	 * @return string
 	 */
 	public function tutor_instructor_list( $atts ) {
-		global $wpdb;
 		! is_array( $atts ) ? $atts = array() : 0;
 
 		$current_page = (int) tutor_utils()->array_get( 'instructor-page', $_GET, 1 );
@@ -336,6 +335,8 @@ class Shortcode {
 		$current_page = $current_page >= 1 ? $current_page : 1;
 
 		$show_filter         = isset( $atts['filter'] ) ? 'on' === $atts['filter'] : tutor_utils()->get_option( 'instructor_list_show_filter', false );
+		$category_limit      = (int) isset( $atts['category_limit'] ) ? $atts['category_limit'] : 0;
+		$hide_empty_category = isset( $atts['hide_empty_category'] ) ? '1' == $atts['hide_empty_category'] : false;
 		$atts['show_filter'] = $show_filter;
 
 		// Get instructor list to sow.
@@ -347,37 +348,16 @@ class Shortcode {
 		$content = ob_get_clean();
 
 		if ( $show_filter ) {
-			$limit           = 8;
 			$course_taxonomy = CourseModel::COURSE_CATEGORY;
-			$course_cats     = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT
-						* 
-					FROM {$wpdb->terms} AS term
-					
-					INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
-						ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-
-					ORDER BY term.term_id DESC
-					LIMIT %d
-					",
-					$course_taxonomy,
-					$limit
-				)
+			$term_args       = array(
+				'taxonomy'   => $course_taxonomy,
+				'hide_empty' => $hide_empty_category,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+				'number'     => $category_limit,
 			);
 
-			$all_cats = $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT
-						COUNT(*) as total 
-					FROM {$wpdb->terms} AS term
-						INNER JOIN {$wpdb->term_taxonomy} AS taxonomy
-							ON taxonomy.term_id = term.term_id AND taxonomy.taxonomy = %s
-					ORDER BY term.term_id DESC
-					",
-					$course_taxonomy
-				)
-			);
+			$course_cats = get_terms( $term_args );
 
 			$attributes = $payload;
 			unset( $attributes['instructors'] );
@@ -386,7 +366,6 @@ class Shortcode {
 				'show_filter' => $show_filter,
 				'content'     => $content,
 				'categories'  => $course_cats,
-				'all_cats'    => $all_cats,
 				'attributes'  => array_merge( $atts, $attributes ),
 			);
 
