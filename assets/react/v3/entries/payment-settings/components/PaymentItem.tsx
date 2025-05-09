@@ -141,9 +141,9 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
   const paymentActionTray = (
     <div css={styles.cardActions}>
-      <Show when={data.update_available}>
+      <Show when={data.is_plugin_active && data.update_available}>
         <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
-          {__('Update available', 'tutor')}
+          {__('Update Available', 'tutor')}
         </Badge>
         <Button
           variant="text"
@@ -161,12 +161,17 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
           }}
           loading={installPaymentMutation.isPending}
         >
-          {__('Update now', 'tutor')}
+          {__('Update Now', 'tutor')}
         </Button>
       </Show>
       <Show when={!data.is_manual && !data.is_installed}>
         <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
-          {__('Plugin not installed', 'tutor')}
+          {__('Plugin Not Installed', 'tutor')}
+        </Badge>
+      </Show>
+      <Show when={!data.is_plugin_active && data.is_installed && !data.is_plugin_active}>
+        <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
+          {__('Plugin Not Activated', 'tutor')}
         </Badge>
       </Show>
       <Controller

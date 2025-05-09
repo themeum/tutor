@@ -136,7 +136,15 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 							</a>
 						</div>
 						<h3 class="banner-title">
-							Welcome to <strong>Tutor LMS <?php echo esc_html( TUTOR_VERSION ); ?>!</strong><br/>Redefining eLearning on WordPress
+						<?php
+						echo wp_kses_post(
+							sprintf(
+							/* translators: %s: Tutor LMS version */
+								__( 'Welcome to <strong>Tutor LMS %s!</strong><br/>Redefining eLearning on WordPress', 'tutor' ),
+								esc_html( TUTOR_VERSION )
+							)
+						);
+						?>
 						</h3>
 					</div>
 				</div>

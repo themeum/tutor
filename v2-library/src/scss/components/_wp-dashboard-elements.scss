@@ -77,13 +77,13 @@
 	}
 
 	.tutor-wp-dashboard-filter-order {
-		font-size: 16px;
+		font-size: 14px;
 		line-height: 1.5;
 		background-color: #ffffff;
 		color: #9197A8;
 		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
-		padding: 11px 11px;
+		padding: 12px;
 		cursor: pointer;
 		display: flex;
 	}
@@ -94,6 +94,7 @@
 		&-button {
 			background-color: #ffffff;
 			color: #212327;
+			font-size: 14px;
 			border: 1px solid var(--tutor-border-color);
 			border-radius: 6px;
 			padding: 6px 12px;
