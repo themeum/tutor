@@ -491,8 +491,7 @@ export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: st
     post_author: data.post_author?.id ?? null,
     'pricing[type]': data.course_price_type,
     ...(data.course_product_id && {
-      'pricing[product_id]':
-        tutorConfig.settings?.monetize_by === 'wc' && data.course_price_type === 'free' ? '-1' : data.course_product_id,
+      'pricing[product_id]': data.course_price_type === 'free' ? '-1' : data.course_product_id,
     }),
 
     course_price: Number(data.course_price) || 0,
