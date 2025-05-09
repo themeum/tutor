@@ -54,6 +54,11 @@ class QueryHelperTest extends \WP_UnitTestCase {
 		$this->assertSame( $expect4, trim( $actual4 ) );
 	}
 
+	/**
+	 * Test QueryHelper::build_where_clause()
+	 *
+	 * @return void
+	 */
 	public function test_prepare_raw_query() {
 		$case_1 = array(
 			array(

@@ -361,7 +361,7 @@ class QueryHelper {
 	public static function prepare_raw_query( $raw_query, $parameters ) {
 		global $wpdb;
 
-		$final_query = $wpdb->prepare( $raw_query, $parameters );
+		$final_query = $wpdb->prepare( $raw_query, $parameters ); //phpcs:ignore
 
 		return $final_query;
 	}
