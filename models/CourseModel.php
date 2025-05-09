@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
+use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
  * CourseModel Class
@@ -992,7 +993,9 @@ class CourseModel {
 				$total_count = tutor_utils()->get_total_quiz();
 				break;
 			case tutor()->assignment_post_type:
-				// @TODO
+				if ( tutor_utils()->is_addon_enabled( 'tutor-assignments' ) ) {
+					$total_count = ( new Assignments( false ) )->get_total_assignment();
+				}
 				break;
 			case 'attachments':
 				$total_count = self::count_attachment();
