@@ -253,7 +253,7 @@ class QueryHelper {
 				'IS NOT',
 				'BETWEEN',
 				'NOT BETWEEN',
-				'RAW'
+				'RAW',
 			),
 			true
 		);
@@ -276,10 +276,10 @@ class QueryHelper {
 	 *                  'role'       => 'editor',
 	 *              )
 	 * @since 3.6.0 Added raw query support. Make sure the query written is not sql injectable.
-	 *				$where = array(
-	 *					'RAW'
-	 *					[ 'username = %s', array( 'test' ) ]
-	 *				)
+	 *              $where = array(
+	 *                  'RAW'
+	 *                  [ 'username = %s', array( 'test' ) ]
+	 *              )
 	 * @param   array $where assoc array with field and value.
 	 *
 	 * @return  string
@@ -313,7 +313,7 @@ class QueryHelper {
 						$clause = array( $field, $operator, $val );
 						break;
 					case 'RAW':
-						if ( is_array( $value[1] ) && 2 === count( $value[1] )  ) {
+						if ( is_array( $value[1] ) && 2 === count( $value[1] ) ) {
 							list( $raw_query, $parameters ) = $value[1];
 							if ( is_array( $parameters ) && count( $parameters ) ) {
 								$parameters  = self::sanitize_assoc_array( $parameters );
