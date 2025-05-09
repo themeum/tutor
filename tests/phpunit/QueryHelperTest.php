@@ -1,4 +1,10 @@
 <?php
+/**
+ * QueryHelper Class Unit Test
+ *
+ * @package Tutor\Test
+ * @since 2.1.9
+ */
 namespace TutorTest;
 
 use Tutor\Helpers\QueryHelper;
