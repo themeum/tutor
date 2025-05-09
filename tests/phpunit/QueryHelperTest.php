@@ -5,6 +5,7 @@
  * @package Tutor\Test
  * @since 2.1.9
  */
+
 namespace TutorTest;
 
 use Tutor\Helpers\QueryHelper;
