@@ -286,6 +286,7 @@ class QueryHelper {
 	public static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
+			$operator = null;
 			if ( is_array( $value ) && isset( $value[0] ) && is_string( $value[0] ) && self::is_support_operator( $value[0] ) ) {
 				$operator = strtoupper( $value[0] );
 				$val      = $value[1];
@@ -333,11 +334,7 @@ class QueryHelper {
 				}
 			}
 
-			if ( 'RAW' === $operator ) {
-				$arr[] = $clause;
-			} else {
-				$arr[] = self::make_clause( $clause );
-			}
+			$arr[] = 'RAW' === $operator ? $clause : self::make_clause( $clause );
 		}
 
 		return implode( ' AND ', $arr );
