@@ -313,6 +313,7 @@ class QueryHelper {
 						$clause = array( $field, $operator, $val );
 						break;
 					case 'RAW':
+						$final_query = '';
 						if ( ! empty( $field ) && is_array( $val ) && count( $val ) ) {
 							$final_query = self::prepare_raw_query( $field, $val );
 						}
