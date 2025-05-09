@@ -65,7 +65,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	 * Test QueryHelper::build_where_clause()
 	 *
 	 * @since 3.6.0
-	 * 
+	 *
 	 * @return void
 	 */
 	public function test_prepare_raw_query() {
