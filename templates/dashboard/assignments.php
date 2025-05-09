@@ -98,7 +98,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? CourseModel::get_cours
 					foreach ( $assignments->results as $item ) :
 						$max_mark      = tutor_utils()->get_assignment_option( $item->ID, 'total_mark' );
 						$course_id     = tutor_utils()->get_course_id_by( 'assignment', $item->ID );
-						$comment_count = Assignments_List::assignment_comment_count( $item->ID );
+						$comment_count = count( Assignments_List::get_submitted_assignments( $item->ID ) );
 						// @TODO: assign post_meta is empty if user don't click on update button (http://prntscr.com/oax4t8) but post status is publish.
 						?>
 						<tr>
