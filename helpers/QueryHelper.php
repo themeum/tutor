@@ -277,8 +277,7 @@ class QueryHelper {
 	 *              )
 	 * @since 3.6.0 Added raw query support. Make sure the query written is not sql injectable.
 	 *              $where = array(
-	 *                  'RAW'
-	 *                  [ 'username = %s', array( 'test' ) ]
+	 *                  'username = %s' =>  [ 'RAW' , array( 'test' ) ]
 	 *              )
 	 * @param   array $where assoc array with field and value.
 	 *
