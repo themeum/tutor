@@ -334,7 +334,7 @@ class QueryHelper {
 				}
 			}
 
-			$arr[] = 'RAW' === $operator ? $clause : self::make_clause( $clause );
+			$arr[] = ( 'RAW' === $operator ) ? $clause : self::make_clause( $clause );
 		}
 
 		return implode( ' AND ', $arr );
@@ -351,6 +351,15 @@ class QueryHelper {
 	 * @return string
 	 */
 	public static function prepare_raw_query( $raw_query, $parameters ) {
+		/**
+		 * Not allowed unsafe SQL control characters  [;, --, /*]
+		 * Allowed safe SQL control characters only.
+		 */
+		$is_safe = preg_match( '/^[a-zA-Z0-9_%\.=\s\'"<>\(\)\-\[\],]+$/', $raw_query );
+		if ( ! $is_safe ) {
+			return '';
+		}
+
 		global $wpdb;
 
 		$final_query = $wpdb->prepare( $raw_query, $parameters ); //phpcs:ignore
