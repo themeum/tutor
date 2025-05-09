@@ -728,9 +728,6 @@ class Course extends Tutor_Base {
 				if ( isset( $params['pricing']['type'] ) ) {
 					update_post_meta( $post_id, self::COURSE_PRICE_TYPE_META, $params['pricing']['type'] );
 				}
-				if ( isset( $params['pricing']['product_id'] ) ) {
-					update_post_meta( $post_id, '_tutor_course_product_id', $params['pricing']['product_id'] );
-				}
 			} catch ( \Throwable $th ) {
 				throw new \Exception( $th->getMessage() );
 			}
@@ -2224,16 +2221,20 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function attach_product_with_course( $post_ID, $post_data ) {
+		/**
+		 * For native monetization, just return
+		 * No need to attach anything.
+		 */
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			return;
+		}
 
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		$product_id  = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
 
-		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
-			return;
-		}
-
 		/**
-		 * Unlink product from course.
+		 * When course moved paid to free
+		 * Unlink product from course and return.
 		 */
 		if ( -1 === $product_id ) {
 			delete_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META );
@@ -2265,16 +2266,15 @@ class Course extends Tutor_Base {
 
 		if ( 'wc' === $monetize_by ) {
 
-			$is_update = ( $attached_product_id && wc_get_product( $attached_product_id ) ) ? true : false;
+			$is_update = ( $product_id && wc_get_product( $product_id ) ) ? true : false;
 
 			if ( $is_update ) {
-				$attached_product_id = $product_id;
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
 
-				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
+				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $product_id );
 				$product_obj = wc_get_product( $product_id );
 				if ( $product_obj->is_type( 'subscription' ) ) {
-					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
+					update_post_meta( $product_id, '_subscription_price', $course_price );
 				}
 
 				// Set course regular & sale price.
