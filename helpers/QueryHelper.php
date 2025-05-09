@@ -314,7 +314,7 @@ class QueryHelper {
 						break;
 					case 'RAW':
 						$final_query = '';
-						if ( ! empty( $field ) && is_array( $val ) && count( $val ) ) {
+						if ( ! empty( $field ) && is_array( $val ) ) {
 							$final_query = self::prepare_raw_query( $field, $val );
 						}
 						$clause = $final_query;
@@ -359,6 +359,10 @@ class QueryHelper {
 		$is_safe = preg_match( '/^[a-zA-Z0-9_%\.=\s\'"<>\(\)\-\[\],]+$/', $raw_query );
 		if ( ! $is_safe ) {
 			return '';
+		}
+
+		if ( ! count( $parameters ) ) {
+			return $raw_query;
 		}
 
 		global $wpdb;
