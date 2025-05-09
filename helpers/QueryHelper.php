@@ -253,6 +253,7 @@ class QueryHelper {
 				'IS NOT',
 				'BETWEEN',
 				'NOT BETWEEN',
+				'RAW'
 			),
 			true
 		);
@@ -274,15 +275,16 @@ class QueryHelper {
 	 *                  'deleted_at' => 'null',
 	 *                  'role'       => 'editor',
 	 *              )
-	 * @since 3.6.0 param $raw added to add raw sql queries to where clause.
-	 *              $raw = ['CAST(evaluate_mark.meta_value AS SIGNED) >= CAST(pass_mark.meta_value AS SIGNED']
-	 *
+	 * @since 3.6.0 Added raw query support. Make sure the query written is not sql injectable.
+	 *				$where = array(
+	 *					'RAW'
+	 *					[ 'username = %s', array( 'test' ) ]
+	 *				)
 	 * @param   array $where assoc array with field and value.
-	 * @param   array $raw array of raw queries added to where clause.
 	 *
 	 * @return  string
 	 */
-	public static function build_where_clause( array $where, array $raw = array() ) {
+	public static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			if ( is_array( $value ) && isset( $value[0] ) && is_string( $value[0] ) && self::is_support_operator( $value[0] ) ) {
@@ -310,7 +312,16 @@ class QueryHelper {
 						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
 						break;
-
+					case 'RAW':
+						if ( is_array( $value[1] ) && 2 === count( $value[1] )  ) {
+							list( $raw_query, $parameters ) = $value[1];
+							if ( is_array( $parameters ) && count( $parameters ) ) {
+								$parameters  = self::sanitize_assoc_array( $parameters );
+								$final_query = self::prepare_raw_query( $raw_query, $parameters );
+							}
+						}
+						$clause = $final_query;
+						break;
 					default: // =, !=, <, >, <=, >=, LIKE, NOT LIKE, <>
 						$val    = is_numeric( $val ) ? $val : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
@@ -327,16 +338,32 @@ class QueryHelper {
 				}
 			}
 
-			$arr[] = self::make_clause( $clause );
-		}
-
-		if ( is_array( $raw ) && count( $raw ) ) {
-			foreach ( $raw as $query_string ) {
-				$arr[] = $query_string;
+			if ( 'RAW' === $operator ) {
+				$arr[] = $clause;
+			} else {
+				$arr[] = self::make_clause( $clause );
 			}
 		}
 
 		return implode( ' AND ', $arr );
+	}
+
+	/**
+	 * Prepare raw query for query helper.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param string $raw_query the query to execute.
+	 * @param array  $parameters the parameters to pass to the query.
+	 *
+	 * @return string
+	 */
+	public static function prepare_raw_query( $raw_query, $parameters ) {
+		global $wpdb;
+
+		$final_query = $wpdb->prepare( $raw_query, $parameters );
+
+		return $final_query;
 	}
 
 	/**
@@ -650,7 +677,6 @@ class QueryHelper {
 	 * Argument should be SQL escaped.
 	 *
 	 * @since 3.0.0
-	 * @since 3.6.0 param $raw for raw query in where clause
 	 *
 	 * @param string $primary_table The primary table name with prefix.
 	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
@@ -662,7 +688,6 @@ class QueryHelper {
 	 * @param int    $offset Offset for pagination.
 	 * @param string $order  DESC or ASC, default is DESC.
 	 * @param string $output  Expected output type, default is OBJECT.
-	 * @param array  $raw array of raw sql queries added to where clause.
 	 *
 	 * @throws \Exception If an error occurred during the query execution.
 	 *
@@ -678,8 +703,7 @@ class QueryHelper {
 		$limit = 10,
 		$offset = 0,
 		string $order = 'DESC',
-		string $output = 'OBJECT',
-		array $raw = []
+		string $output = 'OBJECT'
 	) {
 		global $wpdb;
 
@@ -692,7 +716,7 @@ class QueryHelper {
 			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
 		}
 
-		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where, $raw) : '';
+		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
 
 		if (!empty($search)) {
 			$search_clause = self::build_like_clause( $search );

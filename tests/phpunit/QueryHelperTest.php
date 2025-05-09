@@ -54,6 +54,53 @@ class QueryHelperTest extends \WP_UnitTestCase {
 		$this->assertSame( $expect4, trim( $actual4 ) );
 	}
 
+	public function test_prepare_raw_query() {
+		$case_1 = array(
+			array(
+				'RAW',
+				array(
+					"username = '%s'",
+					array(
+						'admin'
+					)
+				)
+			)
+		);
+
+		$case_2 = array(
+			array(
+				'RAW',
+				array(
+					"age >= %d",
+					array(
+						20
+					)
+				)
+			)
+		);
+
+		$case_3 = array(
+			array(
+				'RAW',
+				array(
+					'%1$s = %2$s',
+					array(
+						"DATE(value)",
+						"CAST(value as date)"
+					)
+				)
+			)
+		);
+
+		$expect_1 = "username = 'admin'";
+		$expect_2 = 'age >= 20';
+		$expect_3  = "DATE(value) = CAST(value as date)";
+
+		$this->assertSame( $expect_1, QueryHelper::build_where_clause( $case_1 ));
+		$this->assertSame( $expect_2, QueryHelper::build_where_clause( $case_2 ));
+		$this->assertSame( $expect_3, QueryHelper::build_where_clause( $case_3 ));
+	}
+
 	/**
 	 * Test QueryHelper::prepare_in_clause
 	 *
