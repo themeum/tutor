@@ -313,12 +313,8 @@ class QueryHelper {
 						$clause = array( $field, $operator, $val );
 						break;
 					case 'RAW':
-						if ( is_array( $value[1] ) && 2 === count( $value[1] ) ) {
-							list( $raw_query, $parameters ) = $value[1];
-							if ( is_array( $parameters ) && count( $parameters ) ) {
-								$parameters  = self::sanitize_assoc_array( $parameters );
-								$final_query = self::prepare_raw_query( $raw_query, $parameters );
-							}
+						if ( ! empty( $field ) && is_array( $val ) && count( $val ) ) {
+							$final_query = self::prepare_raw_query( $field, $val );
 						}
 						$clause = $final_query;
 						break;

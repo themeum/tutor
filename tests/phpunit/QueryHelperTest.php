@@ -70,49 +70,44 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	 */
 	public function test_prepare_raw_query() {
 		$case_1 = array(
-			array(
+			"username = '%s'" => array(
 				'RAW',
 				array(
-					"username = '%s'",
-					array(
-						'admin',
-					),
+					'admin',
 				),
 			),
 		);
 
 		$case_2 = array(
-			array(
+			'age >= %d' => array(
 				'RAW',
 				array(
-					'age >= %d',
-					array(
-						20,
-					),
+					20,
 				),
 			),
 		);
 
 		$case_3 = array(
-			array(
+			'id'          => array(
+				'BETWEEN',
+				array( 10, 20 ),
+			),
+			'%1$s = %2$s' => array(
 				'RAW',
 				array(
-					'%1$s = %2$s',
-					array(
-						'DATE(value)',
-						'CAST(value as date)',
-					),
+					'DATE(value)',
+					'CAST(value as date)',
 				),
 			),
 		);
 
 		$expect_1 = "username = 'admin'";
 		$expect_2 = 'age >= 20';
-		$expect_3 = 'DATE(value) = CAST(value as date)';
+		$expect_3 = 'id BETWEEN 10 AND 20 AND DATE(value) = CAST(value as date)';
 
-		$this->assertSame( $expect_1, QueryHelper::build_where_clause( $case_1 ) );
-		$this->assertSame( $expect_2, QueryHelper::build_where_clause( $case_2 ) );
-		$this->assertSame( $expect_3, QueryHelper::build_where_clause( $case_3 ) );
+		$this->assertEquals( $expect_1, QueryHelper::build_where_clause( $case_1 ) );
+		$this->assertEquals( $expect_2, QueryHelper::build_where_clause( $case_2 ) );
+		$this->assertEquals( $expect_3, QueryHelper::build_where_clause( $case_3 ) );
 	}
 
 	/**
