@@ -44,7 +44,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 		// Since multi-dimension is not allowed post_parent will be omitted.
 		$expect3 = "SET id = 1,title = 'title',status = 'publish'";
 
-        $array4  = array();
+		$array4  = array();
 		$actual4 = QueryHelper::prepare_set_clause( $array4 );
 		$expect4 = '';
 
@@ -61,22 +61,22 @@ class QueryHelperTest extends \WP_UnitTestCase {
 				array(
 					"username = '%s'",
 					array(
-						'admin'
-					)
-				)
-			)
+						'admin',
+					),
+				),
+			),
 		);
 
 		$case_2 = array(
 			array(
 				'RAW',
 				array(
-					"age >= %d",
+					'age >= %d',
 					array(
-						20
-					)
-				)
-			)
+						20,
+					),
+				),
+			),
 		);
 
 		$case_3 = array(
@@ -85,20 +85,20 @@ class QueryHelperTest extends \WP_UnitTestCase {
 				array(
 					'%1$s = %2$s',
 					array(
-						"DATE(value)",
-						"CAST(value as date)"
-					)
-				)
-			)
+						'DATE(value)',
+						'CAST(value as date)',
+					),
+				),
+			),
 		);
 
 		$expect_1 = "username = 'admin'";
 		$expect_2 = 'age >= 20';
-		$expect_3  = "DATE(value) = CAST(value as date)";
+		$expect_3 = 'DATE(value) = CAST(value as date)';
 
-		$this->assertSame( $expect_1, QueryHelper::build_where_clause( $case_1 ));
-		$this->assertSame( $expect_2, QueryHelper::build_where_clause( $case_2 ));
-		$this->assertSame( $expect_3, QueryHelper::build_where_clause( $case_3 ));
+		$this->assertSame( $expect_1, QueryHelper::build_where_clause( $case_1 ) );
+		$this->assertSame( $expect_2, QueryHelper::build_where_clause( $case_2 ) );
+		$this->assertSame( $expect_3, QueryHelper::build_where_clause( $case_3 ) );
 	}
 
 	/**
@@ -109,13 +109,12 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	 */
 	public function test_prepare_in_clause() {
 		$expected_query = "SELECT * from abc WHERE id IN(3,4,5,'hello')";
-		$raw_sql_query  = "SELECT * from abc WHERE id IN(" . QueryHelper::prepare_in_clause( array( 3,4,5,'hello' ) ) . ")";
+		$raw_sql_query  = 'SELECT * from abc WHERE id IN(' . QueryHelper::prepare_in_clause( array( 3, 4, 5, 'hello' ) ) . ')';
 		$this->assertEquals( $expected_query, $raw_sql_query );
 
-		$this->assertEquals( "'A','B','C'", QueryHelper::prepare_in_clause( array( 'A','B','C' ) ) );
-		$this->assertEquals( '10,20,40', QueryHelper::prepare_in_clause( array( 10,20,40 ) ) );
+		$this->assertEquals( "'A','B','C'", QueryHelper::prepare_in_clause( array( 'A', 'B', 'C' ) ) );
+		$this->assertEquals( '10,20,40', QueryHelper::prepare_in_clause( array( 10, 20, 40 ) ) );
 		$this->assertEquals( "'jhon',3,4.55,'adam'", QueryHelper::prepare_in_clause( array( 'jhon', 3, 4.55, 'adam' ) ) );
 		$this->assertEquals( '2,3,5.996', QueryHelper::prepare_in_clause( array( 2, 3, 5.996 ) ) );
 	}
-
 }
