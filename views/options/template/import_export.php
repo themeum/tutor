@@ -16,6 +16,8 @@
 	</div>
 </div>
 
+<div id="import-export-root"></div>
+
 <?php
 tutor_alert(
 	__( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ),
