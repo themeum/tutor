@@ -199,6 +199,7 @@ const styles = {
     gap: ${spacing[12]};
   `,
   title: css`
+    ${typography.body()}
     color: ${colorTokens.text.subdued};
   `,
   history: css`

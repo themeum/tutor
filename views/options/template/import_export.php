@@ -18,63 +18,6 @@
 
 <div id="import-export-root"></div>
 
-<?php
-tutor_alert(
-	__( 'Warning: Importing, Restoring, or Resetting will overwrite ALL existing settings. Please proceed with caution.', 'tutor' ),
-	'warning'
-);
-?>
-
-<div class="tutor-option-single-item tutor-mb-32">
-	<div class="tutor-option-group-title tutor-mb-16">
-		<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Export', 'tutor' ); ?></div>
-	</div>
-
-	<div class="item-wrapper">
-		<div class="tutor-option-field-row">
-			<div class="tutor-option-field-label">
-				<div class="label tutor-fs-6 tutor-color-black"><?php esc_html_e( 'Current Settings', 'tutor' ); ?></div>
-				<div class="desc tutor-fs-8 tutor-fw-medium tutor-color-secondary">
-					<span style="font-weight: 500"><?php esc_html_e( 'Last Update', 'tutor' ); ?>: </span> <?php echo esc_html( get_option( 'tutor_option_update_time' ) ); ?>
-				</div>
-			</div>
-			<div class="tutor-option-field-input">
-				<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" id="tutor_export_settings"><?php esc_html_e( 'Export Settings', 'tutor' ); ?></button>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="tutor-option-single-item tutor-mb-32 item-variation-dragndrop import-setting">
-	<div class="tutor-option-group-title tutor-mb-16">
-		<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Import Settings', 'tutor' ); ?></div>
-	</div>
-	<div class="item-wrapper">
-		<div class="tutor-option-field-row tutor-d-block">
-			<div>
-				<div class="drag-drop-zone">
-					<span class="tutor-icon-upload tutor-fs-1 tutor-color-primary"></span>
-					<div class="title"><?php esc_html_e( 'Drag &amp; Drop your JSON File here', 'tutor' ); ?> </div>
-					<div class="subtitle"><span><?php esc_html_e( 'File Format', 'tutor' ); ?>:</span> .json <br> <?php esc_html_e( 'Or', 'tutor' ); ?></div>
-					<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-mt-8">
-						<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none">
-						<span><?php esc_html_e( 'Choose From Computer', 'tutor' ); ?></span>
-					</label>
-					<span class="file-info"></span>
-				</div>
-			</div>
-			<div class="tutor-option-field-input tutor-mt-16">
-				<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor_import_options" 
-						data-tutor-modal-target="tutor-modal-bulk-action" 
-						data-btntext="<?php esc_attr_e( 'Yes, Import Settings', 'tutor' ); ?>" 
-						data-heading="<?php esc_attr_e( 'Import from Previous Settings?', 'tutor' ); ?>" 
-						data-message="<?php esc_attr_e( 'WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor' ); ?>" 
-						id="tutor_import_options"><?php esc_html_e( 'Update Settings', 'tutor' ); ?></button>
-			</div>
-		</div>
-	</div>
-</div>
-
 <div class="tutor-option-single-item tutor-mb-32 item-variation-table settings-history">
 	<div class="tutor-option-group-title tutor-mb-16">
 		<div class="tutor-fs-6 tutor-color-muted"><?php esc_attr_e( 'Settings History', 'tutor' ); ?></div>
