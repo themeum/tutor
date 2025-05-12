@@ -84,7 +84,8 @@
     "webpack": "^5.22.0",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^4.1.1"
+    "webpack-dev-server": "^4.1.1",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
