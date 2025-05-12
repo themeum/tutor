@@ -1,7 +1,7 @@
 import ajaxHandler from "../../helper/ajax-handler";
-const { __ } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', () => {
+    const { __ } = wp.i18n;
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
     const checkoutPageWrapper = document.querySelector(".tutor-checkout-page");
     let showTax               = true;    

@@ -538,6 +538,9 @@ const styles = {
   dropdownOptionContent: css`
     display: flex;
     align-items: center;
-    white-space: nowrap;
+
+    svg {
+      flex-shrink: 0;
+    }
   `,
 };

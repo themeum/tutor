@@ -253,6 +253,7 @@ class QueryHelper {
 				'IS NOT',
 				'BETWEEN',
 				'NOT BETWEEN',
+				'RAW',
 			),
 			true
 		);
@@ -274,7 +275,10 @@ class QueryHelper {
 	 *                  'deleted_at' => 'null',
 	 *                  'role'       => 'editor',
 	 *              )
-	 *
+	 * @since 3.6.0 Added raw query support. Make sure the query written is not sql injectable.
+	 *              $where = array(
+	 *                  'username = %s' =>  [ 'RAW' , array( 'test' ) ]
+	 *              )
 	 * @param   array $where assoc array with field and value.
 	 *
 	 * @return  string
@@ -282,6 +286,7 @@ class QueryHelper {
 	public static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
+			$operator = null;
 			if ( is_array( $value ) && isset( $value[0] ) && is_string( $value[0] ) && self::is_support_operator( $value[0] ) ) {
 				$operator = strtoupper( $value[0] );
 				$val      = $value[1];
@@ -307,7 +312,13 @@ class QueryHelper {
 						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
 						break;
-
+					case 'RAW':
+						$final_query = '';
+						if ( ! empty( $field ) && is_array( $val ) ) {
+							$final_query = self::prepare_raw_query( $field, $val );
+						}
+						$clause = $final_query;
+						break;
 					default: // =, !=, <, >, <=, >=, LIKE, NOT LIKE, <>
 						$val    = is_numeric( $val ) ? $val : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
@@ -324,10 +335,41 @@ class QueryHelper {
 				}
 			}
 
-			$arr[] = self::make_clause( $clause );
+			$arr[] = ( 'RAW' === $operator ) ? $clause : self::make_clause( $clause );
 		}
 
 		return implode( ' AND ', $arr );
+	}
+
+	/**
+	 * Prepare raw query for query helper.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param string $raw_query the query to execute.
+	 * @param array  $parameters the parameters to pass to the query.
+	 *
+	 * @return string
+	 */
+	public static function prepare_raw_query( $raw_query, $parameters ) {
+		/**
+		 * Not allowed unsafe SQL control characters  [;, --, /*]
+		 * Allowed safe SQL control characters only.
+		 */
+		$is_safe = preg_match( '/^[a-zA-Z0-9_%\.=\s\'"<>\(\)\-\[\],]+$/', $raw_query );
+		if ( ! $is_safe ) {
+			return '';
+		}
+
+		if ( ! count( $parameters ) ) {
+			return $raw_query;
+		}
+
+		global $wpdb;
+
+		$final_query = $wpdb->prepare( $raw_query, $parameters ); //phpcs:ignore
+
+		return $final_query;
 	}
 
 	/**
@@ -578,7 +620,7 @@ class QueryHelper {
 	/**
 	 * Make sanitized SQL IN clause value from an array
 	 *
-	 * @param array $arr a sequentital array.
+	 * @param array $arr a sequential array.
 	 * @return string
 	 * @since 2.1.1
 	 */

@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, _x } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -126,7 +126,7 @@ function editorConfig(
                 },
               },
               {
-                text: _x('Courses', 'tinyMCE button courses', 'tutor'),
+                text: __('Courses', 'tutor'),
                 onclick: () => {
                   editor.windowManager.open({
                     title: __('Courses Shortcode', 'tutor'),
@@ -152,7 +152,7 @@ function editorConfig(
                       {
                         type: 'listbox',
                         name: 'orderby',
-                        label: _x('Order By', 'tinyMCE button order by', 'tutor'),
+                        label: __('Order By', 'tutor'),
                         onselect: () => {},
                         values: [
                           { text: 'ID', value: 'ID' },
@@ -166,7 +166,7 @@ function editorConfig(
                       {
                         type: 'listbox',
                         name: 'order',
-                        label: _x('Order', 'tinyMCE button order', 'tutor'),
+                        label: __('Order', 'tutor'),
                         onselect: () => {},
                         values: [
                           { text: 'DESC', value: 'DESC' },

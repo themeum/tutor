@@ -115,8 +115,8 @@ const EnrollmentSettings = () => {
               deps: [
                 'schedule_date',
                 'schedule_time',
-                'enrollment_starts_date',
-                'enrollment_starts_time',
+                ...(enrollmentStartsDate ? ['enrollment_starts_date' as keyof CourseFormData] : []),
+                ...(enrollmentStartTime ? ['enrollment_starts_time' as keyof CourseFormData] : []),
                 'enrollment_ends_date',
                 'enrollment_ends_time',
               ],
@@ -126,6 +126,16 @@ const EnrollmentSettings = () => {
                 {...controllerProps}
                 label={__('Course Enrollment Period', 'tutor')}
                 loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                onChange={(isTrue) => {
+                  if (!isTrue) {
+                    form.clearErrors([
+                      'enrollment_starts_date',
+                      'enrollment_starts_time',
+                      'enrollment_ends_date',
+                      'enrollment_ends_time',
+                    ]);
+                  }
+                }}
               />
             )}
           />
@@ -139,7 +149,7 @@ const EnrollmentSettings = () => {
                     name="enrollment_starts_date"
                     control={form.control}
                     rules={{
-                      ...requiredRule,
+                      ...requiredRule(),
                       validate: {
                         invalidDate: invalidDateRule,
                         isAfterScheduleDate: (value) => {
@@ -173,7 +183,7 @@ const EnrollmentSettings = () => {
                     name="enrollment_starts_time"
                     control={form.control}
                     rules={{
-                      ...requiredRule,
+                      ...requiredRule(),
                       validate: {
                         invalidTime: invalidTimeRule,
                         isAfterScheduleTime: (value) => {
@@ -236,7 +246,7 @@ const EnrollmentSettings = () => {
                       name="enrollment_ends_date"
                       control={form.control}
                       rules={{
-                        ...requiredRule,
+                        ...requiredRule(),
                         validate: {
                           invalidDate: invalidDateRule,
                           checkEndDate: (value) => {
@@ -261,7 +271,7 @@ const EnrollmentSettings = () => {
                       name="enrollment_ends_time"
                       control={form.control}
                       rules={{
-                        ...requiredRule,
+                        ...requiredRule(),
                         validate: {
                           invalidTime: invalidTimeRule,
                           checkEndTime: (value) => {
