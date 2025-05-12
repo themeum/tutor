@@ -3,12 +3,14 @@ import { __ } from '@wordpress/i18n';
 
 import { type ImportExportHistory } from '@ImportExport/services/import-export';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { format } from 'date-fns';
 import { useState } from 'react';
 
 const History = () => {
@@ -137,7 +139,7 @@ const History = () => {
         </div>
       ),
       Cell: (item) => {
-        return <div>{new Date(item.date).toLocaleDateString()}</div>;
+        return <div>{format(new Date(item.date), DateFormats.monthDayYearHoursMinutes)}</div>;
       },
     },
     {
