@@ -25,5 +25,6 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[20]};
+    padding-bottom: ${spacing[20]};
   `,
 };
