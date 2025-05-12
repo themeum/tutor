@@ -2221,16 +2221,16 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function attach_product_with_course( $post_ID, $post_data ) {
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		$product_id  = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
+
 		/**
 		 * For native monetization, just return
 		 * No need to attach anything.
 		 */
-		if ( tutor_utils()->is_monetize_by_tutor() ) {
+		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return;
 		}
-
-		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
-		$product_id  = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
 
 		/**
 		 * When course moved paid to free
