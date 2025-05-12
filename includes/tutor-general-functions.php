@@ -565,7 +565,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 			return $msg;
 		}
 
-		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
+		$html = '<div class="tutor-alert tutor-' . esc_attr( $type ) . '">
 					<div class="tutor-alert-text">
 						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
 						<span>' . wp_kses( $msg, array( 'div', 'span' ) ) . '</span>
