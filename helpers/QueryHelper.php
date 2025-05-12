@@ -943,4 +943,16 @@ class QueryHelper {
 		return $period_clause;
 	}
 
+	/**
+	 * Get last executed SQL query.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @return string
+	 */
+	public static function get_last_query(){
+		global $wpdb;
+		return $wpdb->last_query;
+	}
+
 }
