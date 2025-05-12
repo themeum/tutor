@@ -1,10 +1,14 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
+import { UploadButton } from '@TutorShared/molecules/FileUploader';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { UploadButton } from '@TutorShared/molecules/FileUploader';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
-import { __ } from '@wordpress/i18n';
+
+import importEmptyStateImage from '@SharedImages/import-export/import-empty-state.webp';
 
 const Import = () => {
   return (
@@ -12,14 +16,9 @@ const Import = () => {
       <div css={styles.title}>{__('Import', 'tutor')}</div>
 
       <div css={styles.fileUpload}>
-        <img
-          src="https://tutor.lms-assets.com/2023/10/03/16/23/20/0c4b8f1d-2a5e-4f7b-8a6c-9d0e1f2b3a5c/file-upload.png"
-          alt="File Upload"
-          width={100}
-          height={100}
-        />
+        <img css={styles.emptyStateImage} src={importEmptyStateImage} alt="File Upload" width={100} height={100} />
 
-        <UploadButton acceptedTypes={['.csv', '.json']} variant="secondary" onError={noop} onUpload={noop}>
+        <UploadButton size="small" acceptedTypes={['.csv', '.json']} variant="secondary" onError={noop} onUpload={noop}>
           {__('Choose a file', 'tutor')}
         </UploadButton>
 
@@ -63,11 +62,17 @@ const styles = {
         linear-gradient(to right, ${colorTokens.stroke.border} 50%, rgba(255, 255, 255, 0) 0%),
         linear-gradient(${colorTokens.stroke.border} 50%, rgba(255, 255, 255, 0) 0%);
       background-size:
-        18px 2px,
-        2px 18px;
+        10px 1px,
+        1px 10px;
       background-position: top, right, bottom, left;
       background-repeat: repeat-x, repeat-y;
     }
+  `,
+  emptyStateImage: css`
+    width: 52px;
+    height: auto;
+    ${styleUtils.objectFit()}
+    margin-bottom: ${spacing[20]};
   `,
   description: css`
     ${typography.tiny()}
