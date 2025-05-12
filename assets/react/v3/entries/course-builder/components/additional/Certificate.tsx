@@ -128,7 +128,9 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   };
 
   const handleCertificateSelection = (certificateKey: string) => {
-    form.setValue('tutor_course_certificate_template', certificateKey);
+    form.setValue('tutor_course_certificate_template', certificateKey, {
+      shouldDirty: true,
+    });
     setSelectedCertificate(certificateKey);
   };
 
