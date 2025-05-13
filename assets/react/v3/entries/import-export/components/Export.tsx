@@ -3,11 +3,14 @@ import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import ExportModal from './modals/ExportModal';
 
 const Export = () => {
+  const { showModal, updateModal, closeModal } = useModal();
   return (
     <div css={styles.wrapper}>
       <div css={styles.title}>{__('Export', 'tutor')}</div>
@@ -21,7 +24,12 @@ const Export = () => {
         </div>
 
         <div>
-          <Button variant="primary" size="small" icon={<SVGIcon name="export" width={24} height={24} />}>
+          <Button
+            variant="primary"
+            size="small"
+            icon={<SVGIcon name="export" width={24} height={24} />}
+            onClick={() => showModal({ id: 'export-modal', component: ExportModal, props: { onClose: closeModal } })}
+          >
             {__('Initiate Export', 'tutor')}
           </Button>
         </div>
