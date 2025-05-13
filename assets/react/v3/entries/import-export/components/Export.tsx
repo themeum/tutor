@@ -14,10 +14,10 @@ const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
 
   const handleImport = (data: ExportFormData) => {
-    updateModal('export-modal', {
-      component: ExportModal,
-      props: { ...data, onClose: closeModal },
-      currentState: 'progress',
+    console.log('Export data:', data);
+
+    updateModal<typeof ExportModal>('export-modal', {
+      currentStep: 'success',
     });
   };
   return (

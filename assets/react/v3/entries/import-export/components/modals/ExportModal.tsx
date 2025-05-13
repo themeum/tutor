@@ -23,6 +23,8 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import exportInProgressImage from '@SharedImages/import-export/export-inprogress.webp';
+import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
+import { formatBytes } from '@TutorShared/utils/util';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -44,7 +46,7 @@ const ExportModal = ({ onClose, onExport, currentStep }: ExportModalProps) => {
     },
   });
 
-  const fileName = `tutor_data_${new Date()}.json`;
+  const fileName = `tutor_data_${Date.now()}.json`;
 
   const getExportableContentQuery = useExportableContentQuery();
   const exportableContent = getExportableContentQuery.data as ExportableContent;
@@ -187,7 +189,7 @@ const ExportModal = ({ onClose, onExport, currentStep }: ExportModalProps) => {
       <div css={styles.progress}>
         <img src={exportInProgressImage} alt={__('Exporting...', 'tutor')} />
         <div css={styles.progressHeader}>
-          <div css={typography.caption()}>{__('Getting your files ready!', 'tutor')}|</div>
+          <div css={typography.caption()}>{__('Getting your files ready!', 'tutor')}</div>
           <div css={styles.progressCount}>{__('In Progress', 'tutor')}</div>
         </div>
         <div css={styles.progressBar} />
@@ -196,42 +198,73 @@ const ExportModal = ({ onClose, onExport, currentStep }: ExportModalProps) => {
     );
   };
 
+  const renderSuccessState = () => {
+    return (
+      <div css={styles.success}>
+        <img src={exportSuccessImage} alt={__('Export completed successfully', 'tutor')} />
+        <div css={styles.successHeader}>
+          <div css={styles.successTitle}>{__('Your File is Ready to Download!', 'tutor')}</div>
+          <div css={styles.successSubtitle}>{__('Click the button below to download your file.', 'tutor')}</div>
+        </div>
+
+        <div css={styles.file}>
+          <div css={styles.fileIcon}>
+            <SVGIcon name="attachmentLine" width={24} height={24} />
+          </div>
+          <div css={styles.fileRight}>
+            <div css={styles.fileDetails}>
+              <div css={styles.fileName}>{fileName}</div>
+              <div css={styles.fileSize}>{formatBytes(1204)}</div>
+            </div>
+
+            <div>
+              <Button variant="primary" size="small" icon={<SVGIcon name="download" width={24} height={24} />}>
+                {__('Download', 'tutor')}
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   const renderModalContent = {
     initial: renderInitialState(),
     progress: renderProgressState(),
-    success: <div>{__('Export completed successfully', 'tutor')}</div>,
+    success: renderSuccessState(),
     error: <div>{__('Export failed', 'tutor')}</div>,
   };
 
   return (
     <BasicModalWrapper
       onClose={onClose}
-      maxWidth={826}
+      maxWidth={currentStep === 'initial' ? 823 : 500}
+      isCloseAble={currentStep !== 'progress'}
       entireHeader={
-        <div css={styles.header}>
-          <div css={styles.headerTitle}>
-            <Logo
-              wrapperCss={css`
-                padding-left: 0;
-              `}
-            />
-            <span>{__('Exporter', 'tutor')}</span>
-          </div>
-          <div>
-            <Button
-              variant="primary"
-              size="small"
-              icon={<SVGIcon name="export" width={24} height={24} />}
-              onClick={() => {
-                form.handleSubmit((data) => {
+        <Show when={currentStep === 'initial'} fallback={<>&nbsp;</>}>
+          <div css={styles.header}>
+            <div css={styles.headerTitle}>
+              <Logo
+                wrapperCss={css`
+                  padding-left: 0;
+                `}
+              />
+              <span>{__('Exporter', 'tutor')}</span>
+            </div>
+            <div>
+              <Button
+                variant="primary"
+                size="small"
+                icon={<SVGIcon name="export" width={24} height={24} />}
+                onClick={form.handleSubmit((data) => {
                   onExport?.(data);
-                })();
-              }}
-            >
-              {__('Export', 'tutor')}
-            </Button>
+                })}
+              >
+                {__('Export', 'tutor')}
+              </Button>
+            </div>
           </div>
-        </div>
+        </Show>
       }
     >
       {renderModalContent[currentStep]}
@@ -314,7 +347,7 @@ const styles = {
 
     img {
       align-self: center;
-      width: 83px;
+      width: 120px;
       height: 'auto';
       object-fit: contain;
       object-position: center;
@@ -377,5 +410,71 @@ const styles = {
   progressInfo: css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
+  `,
+  success: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[32]};
+    padding: ${spacing[32]} ${spacing[24]};
+
+    img {
+      align-self: center;
+      width: 109px;
+      height: auto;
+      object-fit: contain;
+      object-position: center;
+    }
+  `,
+  successHeader: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[8]};
+    align-items: center;
+    text-align: center;
+  `,
+  successTitle: css`
+    ${typography.heading6('medium')};
+  `,
+  successSubtitle: css`
+    ${typography.caption('regular')};
+    color: ${colorTokens.text.subdued};
+  `,
+  file: css`
+    ${styleUtils.display.flex()};
+    height: 64px;
+    border: 1px solid ${colorTokens.stroke.divider};
+    overflow: hidden;
+    border-radius: ${borderRadius[6]};
+    width: 100%;
+  `,
+  fileIcon: css`
+    ${styleUtils.flexCenter()};
+    width: 64px;
+    height: 100%;
+    border-right: 1px solid ${colorTokens.stroke.divider};
+    flex-shrink: 0;
+
+    svg {
+      color: ${colorTokens.icon.hover};
+    }
+  `,
+  fileRight: css`
+    flex-grow: 1;
+    ${styleUtils.display.flex()};
+    justify-content: space-between;
+    align-items: center;
+    padding: ${spacing[10]} ${spacing[16]} ${spacing[10]} ${spacing[20]};
+  `,
+  fileDetails: css`
+    flex-grow: 1;
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
+  fileName: css`
+    ${typography.small('medium')};
+    color: ${colorTokens.text.subdued};
+    ${styleUtils.text.ellipsis(1)};
+  `,
+  fileSize: css`
+    ${typography.tiny()};
+    color: ${colorTokens.text.hints};
   `,
 };
