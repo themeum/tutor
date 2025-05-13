@@ -43,17 +43,11 @@ const Import = () => {
       <div css={styles.fileUpload}>
         <img css={styles.emptyStateImage} src={importInitialImage} alt="File Upload" width={100} height={100} />
 
-        <UploadButton
-          size="small"
-          acceptedTypes={['.csv', '.json']}
-          variant="secondary"
-          onError={noop}
-          onUpload={handleUpload}
-        >
+        <UploadButton size="small" acceptedTypes={['.json']} variant="secondary" onError={noop} onUpload={handleUpload}>
           {__('Choose a file', 'tutor')}
         </UploadButton>
 
-        <div css={styles.description}>{__('Supported format: .CSV, .JSON', 'tutor')}</div>
+        <div css={styles.description}>{__('Supported format: .JSON', 'tutor')}</div>
       </div>
     </div>
   );
