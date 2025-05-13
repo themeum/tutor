@@ -12,13 +12,51 @@ export interface ImportExportHistory {
   date: string;
 }
 
+export interface ExportFormData {
+  courses: boolean;
+  'courses[lesson]': boolean;
+  'courses[tutor_quiz]': boolean;
+  'courses[tutor_assignments]': boolean;
+  'courses[attachments]': boolean;
+  'courses[keepMediaFiles]': boolean;
+  courseBundle: boolean;
+  settings: boolean;
+}
+
+export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
+
+export interface ExportableContent {
+  courses: ExportableSectionWithItems;
+  courseBundle: ExportableSectionWithoutItems;
+  settings: ExportableSectionWithoutItems;
+}
+
+interface ExportableSectionBase {
+  label: string;
+}
+
+interface ExportableSectionWithItems extends ExportableSectionBase {
+  contents: {
+    lesson: string;
+    tutor_quiz: string;
+    tutor_assignments: string;
+    attachments: string;
+  };
+  ids: number[];
+}
+
+interface ExportableSectionWithoutItems extends ExportableSectionBase {
+  contents: [];
+  ids?: number[];
+}
+
 const getExportableContent = () => {
-  return wpAjaxInstance.get(endpoints.GET_EXPORTABLE_CONTENT);
+  return wpAjaxInstance.get<ExportableContent>(endpoints.GET_EXPORTABLE_CONTENT);
 };
 
 export const useExportableContentQuery = () => {
   return useQuery({
     queryKey: ['ExportableContent'],
-    queryFn: () => getExportableContent(),
+    queryFn: () => getExportableContent().then((res) => res.data),
   });
 };

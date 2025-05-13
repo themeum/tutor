@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import { type ExportFormData } from '@ImportExport/services/import-export';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
@@ -11,6 +12,14 @@ import ExportModal from './modals/ExportModal';
 
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
+
+  const handleImport = (data: ExportFormData) => {
+    updateModal('export-modal', {
+      component: ExportModal,
+      props: { ...data, onClose: closeModal },
+      currentState: 'progress',
+    });
+  };
   return (
     <div css={styles.wrapper}>
       <div css={styles.title}>{__('Export', 'tutor')}</div>
@@ -28,7 +37,17 @@ const Export = () => {
             variant="primary"
             size="small"
             icon={<SVGIcon name="export" width={24} height={24} />}
-            onClick={() => showModal({ id: 'export-modal', component: ExportModal, props: { onClose: closeModal } })}
+            onClick={() =>
+              showModal({
+                id: 'export-modal',
+                component: ExportModal,
+                props: {
+                  onClose: closeModal,
+                  currentStep: 'initial',
+                  onExport: handleImport,
+                },
+              })
+            }
           >
             {__('Initiate Export', 'tutor')}
           </Button>

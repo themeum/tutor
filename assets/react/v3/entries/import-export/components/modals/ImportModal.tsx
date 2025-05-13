@@ -10,6 +10,7 @@ import { UploadButton } from '@TutorShared/molecules/FileUploader';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
+import { type ImportExportModalState } from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -19,11 +20,9 @@ import importErrorImage from '@SharedImages/import-export/import-error.webp';
 import importInProgressImage from '@SharedImages/import-export/import-inprogress.webp';
 import importSuccessImage from '@SharedImages/import-export/import-success.webp';
 
-type ImportModalState = 'initial' | 'progress' | 'success' | 'error';
-
 interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon' | 'subtitle'> {
   files: File[];
-  currentStep: ImportModalState;
+  currentStep: ImportExportModalState;
   onClose: () => void;
   onImport: (files: File[]) => void;
 }
@@ -124,7 +123,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
         <img src={importInProgressImage} alt={__('Importing...', 'tutor')} />
         <div css={styles.progressHeader}>
           <div css={typography.caption()}>{renderHeader[currentStep]}</div>
-          <div css={styles.progressCount}>{__('In Progress')}</div>
+          <div css={styles.progressCount}>{__('In Progress', 'tutor')}</div>
         </div>
         <div css={styles.progressBar} />
         <div css={styles.progressInfo}>{file.name}</div>
@@ -132,7 +131,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
     );
   };
 
-  const renderCompletedState = (file: File, state: ImportModalState) => {
+  const renderCompletedState = (file: File, state: ImportExportModalState) => {
     const imageSrc = {
       success: importSuccessImage,
       error: importErrorImage,
@@ -178,7 +177,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
 export default ImportModal;
 
 const styles = {
-  wrapper: ({ state = 'initial' }: { state?: ImportModalState }) => css`
+  wrapper: ({ state = 'initial' }: { state?: ImportExportModalState }) => css`
     max-height: 340px;
     transition: max-height 0.3s ease-in-out;
 
