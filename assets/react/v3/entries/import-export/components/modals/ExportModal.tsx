@@ -30,9 +30,10 @@ interface ExportModalProps extends ModalProps {
   onClose: () => void;
   onExport: (data: ExportFormData) => void;
   currentStep: ImportExportModalState;
+  onDownload?: () => void;
 }
 
-const ExportModal = ({ onClose, onExport, currentStep }: ExportModalProps) => {
+const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: {
       courses: false,
@@ -218,7 +219,12 @@ const ExportModal = ({ onClose, onExport, currentStep }: ExportModalProps) => {
             </div>
 
             <div>
-              <Button variant="primary" size="small" icon={<SVGIcon name="download" width={24} height={24} />}>
+              <Button
+                variant="primary"
+                size="small"
+                icon={<SVGIcon name="download" width={24} height={24} />}
+                onClick={onDownload}
+              >
                 {__('Download', 'tutor')}
               </Button>
             </div>
