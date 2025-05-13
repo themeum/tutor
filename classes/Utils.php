@@ -962,11 +962,14 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 3.6.0 $custom_args param added
+	 *
 	 * @param int $course_id course ID.
+	 * @param array $custom_args Add custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_topics( $course_id = 0 ) {
+	public function get_topics( $course_id = 0, $custom_args = array() ) {
 		$course_id = $this->get_post_id( $course_id );
 
 		$args = array(
@@ -976,6 +979,8 @@ class Utils {
 			'order'          => 'ASC',
 			'posts_per_page' => -1,
 		);
+
+		$args = wp_parse_args( $args, $custom_args );
 
 		$query = new \WP_Query( $args );
 
