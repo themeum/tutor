@@ -1,24 +1,53 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import { useModal } from '@TutorShared/components/modals/Modal';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
+import ImportModal from '@ImportExport/components/modals/ImportModal';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
-import importEmptyStateImage from '@SharedImages/import-export/import-empty-state.webp';
+import importInitialImage from '@SharedImages/import-export/import-initial.webp';
 
 const Import = () => {
+  const { showModal, updateModal, closeModal } = useModal();
+
+  const onImport = () => {
+    updateModal<typeof ImportModal>('import-modal', {
+      currentStep: 'progress',
+    });
+  };
+
+  const handleUpload = (files: File[]) => {
+    showModal({
+      component: ImportModal,
+      id: 'import-modal',
+      props: {
+        files: files,
+        currentStep: 'initial',
+        onClose: closeModal,
+        onImport: onImport,
+      },
+    });
+  };
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.title}>{__('Import', 'tutor')}</div>
 
       <div css={styles.fileUpload}>
-        <img css={styles.emptyStateImage} src={importEmptyStateImage} alt="File Upload" width={100} height={100} />
+        <img css={styles.emptyStateImage} src={importInitialImage} alt="File Upload" width={100} height={100} />
 
-        <UploadButton size="small" acceptedTypes={['.csv', '.json']} variant="secondary" onError={noop} onUpload={noop}>
+        <UploadButton
+          size="small"
+          acceptedTypes={['.csv', '.json']}
+          variant="secondary"
+          onError={noop}
+          onUpload={handleUpload}
+        >
           {__('Choose a file', 'tutor')}
         </UploadButton>
 
