@@ -17,7 +17,7 @@ const Import = () => {
 
   const onImport = () => {
     updateModal<typeof ImportModal>('import-modal', {
-      currentStep: 'completed',
+      currentStep: 'error',
     });
   };
 

@@ -15,10 +15,11 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes } from '@TutorShared/utils/util';
 
+import importErrorImage from '@SharedImages/import-export/import-error.webp';
 import importInProgressImage from '@SharedImages/import-export/import-inprogress.webp';
 import importSuccessImage from '@SharedImages/import-export/import-success.webp';
 
-type ImportModalState = 'initial' | 'progress' | 'completed';
+type ImportModalState = 'initial' | 'progress' | 'success' | 'error';
 
 interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon' | 'subtitle'> {
   files: File[];
@@ -49,7 +50,8 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
   const renderHeader = {
     initial: __('Import File', 'tutor'),
     progress: __('Importing...', 'tutor'),
-    completed: __('Settings Imported Successful!', 'tutor'),
+    success: __('Settings Imported Successful!', 'tutor'),
+    error: __('Import Failed!', 'tutor'),
   };
 
   const renderInitialState = (file: File) => {
@@ -130,12 +132,21 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
     );
   };
 
-  const renderCompletedState = (file: File) => {
+  const renderCompletedState = (file: File, state: ImportModalState) => {
+    const imageSrc = {
+      success: importSuccessImage,
+      error: importErrorImage,
+    };
+    const subtitle = {
+      success: sprintf(__('You have successfully imported a “%s"', 'tutor'), file.name),
+      error: sprintf(__('Failed to import “%s"', 'tutor'), file.name),
+    };
+
     return (
       <div css={styles.completed}>
-        <img src={importSuccessImage} alt={__('Settings Imported Successful!', 'tutor')} />
-        <div css={styles.title}>{__('Settings Imported Successful!', 'tutor')}</div>
-        <div css={styles.subtitle}>{sprintf(__('You have successfully imported a “%s"', 'tutor'), file.name)}</div>
+        <img src={imageSrc[state as keyof typeof imageSrc]} alt={renderHeader[state]} />
+        <div css={styles.title}>{renderHeader[state]}</div>
+        <div css={styles.subtitle}>{subtitle[state as keyof typeof subtitle]}</div>
 
         <Button variant="primary" size="small" onClick={onClose}>
           {__('Okay', 'tutor')}
@@ -147,7 +158,8 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
   const modalBody = {
     initial: renderInitialState(files[0]),
     progress: renderProgressState(files[0]),
-    completed: renderCompletedState(files[0]),
+    success: renderCompletedState(files[0], 'success'),
+    error: renderCompletedState(files[0], 'error'),
   };
 
   return (
@@ -175,9 +187,14 @@ const styles = {
       max-height: 294px;
     `}
 
-    ${state === 'completed' &&
+    ${state === 'success' &&
     css`
       max-height: 443px;
+    `}
+
+    ${state === 'error' &&
+    css`
+      max-height: 336px;
     `}
   `,
   title: css`
