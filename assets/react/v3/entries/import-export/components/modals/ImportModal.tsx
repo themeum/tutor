@@ -16,7 +16,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes } from '@TutorShared/utils/util';
 
 import importInProgressImage from '@SharedImages/import-export/import-inprogress.webp';
-import importSuccessImage from '@SharedImages/import-export/export-success.webp';
+import importSuccessImage from '@SharedImages/import-export/import-success.webp';
 
 type ImportModalState = 'initial' | 'progress' | 'completed';
 
@@ -183,11 +183,13 @@ const styles = {
   title: css`
     ${typography.heading6('medium')};
     text-align: center;
+    margin-top: ${spacing[16]};
   `,
   subtitle: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
     text-align: center;
+    margin-bottom: ${spacing[8]};
   `,
   progress: css`
     width: 100%;
@@ -345,6 +347,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     align-items: center;
     gap: ${spacing[8]};
+    padding-block: ${spacing[40]} ${spacing[32]};
   `,
   completedHeader: css`
     ${styleUtils.display.flex('column')};
