@@ -498,7 +498,7 @@ class Course extends Tutor_Base {
 	 */
 	public function setup_course_categories_tags( $post_id, $params ) {
 		if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
-			$valid_category_ids = $this->validate_term_ids(
+			$valid_category_ids = ValidationHelper::validate_term_ids(
 				$params['course_categories'],
 				CourseModel::COURSE_CATEGORY
 			);
@@ -508,7 +508,7 @@ class Course extends Tutor_Base {
 		}
 
 		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
-			$valid_tag_ids = $this->validate_term_ids(
+			$valid_tag_ids = ValidationHelper::validate_term_ids(
 				$params['course_tags'],
 				CourseModel::COURSE_TAG
 			);
@@ -3080,25 +3080,5 @@ class Course extends Tutor_Base {
 		}
 
 		return $args;
-	}
-
-	/**
-	 * Validate term IDs before setting them.
-	 *
-	 * @since 3.5.0
-	 *
-	 * @param array  $term_ids Term IDs to validate.
-	 * @param string $taxonomy Taxonomy to check against.
-	 *
-	 * @return array Valid term IDs.
-	 */
-	private function validate_term_ids( $term_ids, $taxonomy ) {
-		return array_filter(
-			array_map( 'intval', $term_ids ),
-			function( $term_id ) use ( $taxonomy ) {
-				$term = get_term( $term_id, $taxonomy );
-				return ! is_wp_error( $term ) && $term;
-			}
-		);
 	}
 }
