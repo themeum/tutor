@@ -972,7 +972,7 @@ class Utils {
 	public function get_topics( $course_id = 0, $custom_args = array() ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => 'topics',
 			'post_parent'    => $course_id,
 			'orderby'        => 'menu_order',
@@ -980,7 +980,7 @@ class Utils {
 			'posts_per_page' => -1,
 		);
 
-		$args = wp_parse_args( $args, $custom_args );
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$query = new \WP_Query( $args );
 
@@ -1064,21 +1064,24 @@ class Utils {
 	 *
 	 * @param int $topics_id topics ID.
 	 * @param int $limit limit.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10 ) {
+	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10, $custom_args = array() ) {
 		$topics_id        = $this->get_post_id( $topics_id );
 		$lesson_post_type = tutor()->lesson_post_type;
 		$post_type        = array_unique( apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) ) );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => $post_type,
 			'post_parent'    => $topics_id,
 			'posts_per_page' => $limit,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		return new \WP_Query( $args );
 	}
