@@ -109,6 +109,13 @@ const LessonModal = ({
   const isLessonPreviewVisible = useVisibilityControl(
     VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.LESSON_PREVIEW,
   );
+  const isFeaturedImageVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.FEATURED_IMAGE,
+  );
+  const isVideoVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO);
+  const isExerciseFilesVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.EXERCISE_FILES,
+  );
 
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
@@ -134,6 +141,15 @@ const LessonModal = ({
   });
 
   const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
+
+  const hasRightSidebar = Boolean(
+    contentDripType !== '' ||
+      isVideoPlaybackTimeVisible ||
+      isFeaturedImageVisible ||
+      isVideoVisible ||
+      isExerciseFilesVisible ||
+      (isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && isLessonPreviewVisible),
+  );
 
   useEffect(() => {
     if (lessonDetails && !isLoading) {
@@ -261,11 +277,11 @@ const LessonModal = ({
         )
       }
     >
-      <div css={styles.wrapper}>
+      <div css={styles.wrapper({ hasRightSidebar })}>
         <Show when={!getLessonDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
           {/* This div is required to make the sticky work */}
           <div>
-            <div css={styles.lessonInfo}>
+            <div css={styles.lessonInfo({ hasRightSidebar })}>
               <Controller
                 name="title"
                 control={form.control}
@@ -585,10 +601,10 @@ const LessonModal = ({
 export default LessonModal;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ hasRightSidebar = true }) => css`
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 338px;
+    grid-template-columns: ${hasRightSidebar ? '1fr 338px' : '1fr'};
     height: 100%;
     width: 100%;
     padding-inline: ${spacing[32]};
@@ -602,9 +618,9 @@ const styles = {
       padding-inline: ${spacing[16]};
     }
   `,
-  lessonInfo: css`
+  lessonInfo: ({ hasRightSidebar = true }) => css`
     padding-block: ${spacing[20]};
-    padding-right: ${spacing[32]};
+    padding-right: ${hasRightSidebar && spacing[32]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};

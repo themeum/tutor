@@ -111,6 +111,28 @@ $disabled-color: #e9e9ea !default;
 		}
 	}
 
+	&-tertiary {
+		background-color: #ffffff;
+		color: var(--tutor-color-secondary);
+		border: 1px solid var(--tutor-border-color);
+
+		& [class^="tutor-icon-"] {
+			color: #9197A8;
+		}
+
+		&:hover,
+		&:focus,
+		&:active {
+			background-color: #F5F6FA;
+			color: var(--tutor-color-secondary);
+		}
+
+		&[disabled],
+		&.disabled {
+			background-color: #e9e9ea;
+		}
+	}
+
 	&-danger {
 		background-color: #f44337;
 		color: #ffffff;

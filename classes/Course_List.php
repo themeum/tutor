@@ -142,7 +142,7 @@ class Course_List {
 
 		$tabs = array(
 			array(
-				'key'   => 'all',
+				'key'   => '',
 				'title' => __( 'All', 'tutor' ),
 				'value' => $all,
 				'url'   => $url . '&data=all',

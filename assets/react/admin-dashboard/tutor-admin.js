@@ -4,7 +4,6 @@ import './segments/color-preset';
 import './segments/column-filter';
 import './segments/editor_full';
 import './segments/filter';
-import ajaxHandler from './segments/filter';
 import './segments/image-preview';
 import './segments/import-export';
 import './segments/lib';
@@ -15,6 +14,7 @@ import './segments/options';
 import './segments/reset';
 import './segments/withdraw';
 import './wp-events-subscriber';
+import ajaxHandler from '../helper/ajax-handler';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {

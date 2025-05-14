@@ -391,6 +391,10 @@ class CheckoutController {
 
 		if ( Settings::is_coupon_usage_enabled() ) {
 			$selected_coupon = $this->coupon_model->get_coupon_details_for_checkout( $coupon_code );
+			global $tutor_coupon_apply_err_msg;
+			if ( ! $selected_coupon ) {
+				$tutor_coupon_apply_err_msg = $this->coupon_model->get_coupon_failed_error_msg( 'not_found' );
+			}
 		}
 
 		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );

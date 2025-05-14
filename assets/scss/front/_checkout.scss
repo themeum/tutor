@@ -289,16 +289,11 @@
 	}
 
 	.tutor-plan-trial-price {
-		font-size: 13px;
-		line-height: 21px;
-		font-weight: 500;
-		color: #239C46;
-		background-color: #E5F5EB;
-
+		background-color: #F5FBF7;
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
-		padding: 4px 8px;
+		align-items: start;
+		padding: 8px;
 		border-radius: 4px;
 
 		.tutor-plan-trial-icon-wrapper {

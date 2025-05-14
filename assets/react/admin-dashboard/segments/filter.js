@@ -7,6 +7,7 @@
  * @package Filter / sorting
  * @since v2.0.0
  */
+import ajaxHandler from '../../helper/ajax-handler';
 const { __, _x, _n, _nx } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -25,6 +26,31 @@ document.addEventListener('DOMContentLoaded', function () {
 				window.location = deleteUrlPram(name);
 			}
 		}, { once: true });
+	});
+
+	const filterForms = document.querySelectorAll('.tutor-admin-dashboard-filter-form');
+	filterForms.forEach((form) => {
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			const formData = new FormData(e.target);
+			const data = Object.fromEntries(formData);
+
+			const url = new URL(window.location.href);
+			const params = url.searchParams;
+			params.set('paged', 1);
+
+			for (const key in data) {
+				const value = data[key];
+				if (value) {
+					params.set(key, value);
+				} else {
+					params.delete(key);
+				}
+			}
+
+			window.location = url;
+		});
 	});
 
 	const filterCourse = document.getElementById('tutor-backend-filter-course');
@@ -286,32 +312,4 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		};
 	}
-	/**
-	 * Handle ajax request show toast message on success | failure
-	 *
-	 * @param {*} formData including action and all form fields
-	 */
-	async function ajaxHandler(formData) {
-		try {
-			const post = await fetch(window._tutorobject.ajaxurl, {
-				method: 'POST',
-				body: formData,
-			});
-			return post;
-		} catch (error) {
-			tutor_toast(__('Operation failed', 'tutor'), error, 'error');
-		}
-	}
 });
-
-export default async function ajaxHandler(formData) {
-	try {
-		const post = await fetch(window._tutorobject.ajaxurl, {
-			method: 'POST',
-			body: formData,
-		});
-		return post;
-	} catch (error) {
-		tutor_toast(__('Operation failed', 'tutor'), error, 'error');
-	}
-}

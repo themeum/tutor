@@ -1,5 +1,5 @@
 import '../../../v2-library/src/js/main';
-import ajaxHandler from '../admin-dashboard/segments/filter';
+import ajaxHandler from '../helper/ajax-handler';
 import tutorFormData from "../helper/tutor-formdata";
 
 const { __ } = wp.i18n;
@@ -486,7 +486,7 @@ window.addEventListener('tutor_modal_shown', (e) => {
  * Create new draft course
  * @since 3.0.0
  */
-const createNewCourseButtons = document.querySelectorAll('a.tutor-create-new-course,li.tutor-create-new-course a');
+const createNewCourseButtons = document.querySelectorAll('a.tutor-create-new-course,button.tutor-create-new-course,li.tutor-create-new-course a');
 createNewCourseButtons.forEach((button) => {
 	button.addEventListener('click', async (e) => {
 		e.preventDefault();

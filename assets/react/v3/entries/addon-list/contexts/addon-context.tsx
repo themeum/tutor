@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import { type Addon, useAddonListQuery } from '../services/addons';
 import { tutorConfig } from '@TutorShared/config/config';
+import React, { useState } from 'react';
+import { type Addon, useAddonListQuery } from '../services/addons';
 
 interface AddonContextType {
   addons: Addon[];
@@ -9,6 +8,7 @@ interface AddonContextType {
   setUpdatedAddons: (addon: Addon[]) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
+  isLoading: boolean;
 }
 
 const AddonContext = React.createContext<AddonContextType>({
@@ -17,36 +17,24 @@ const AddonContext = React.createContext<AddonContextType>({
   setUpdatedAddons: () => {},
   searchTerm: '' as string,
   setSearchTerm: () => {},
+  isLoading: false,
 });
 
 export const useAddonContext = () => React.useContext(AddonContext);
 
 export const AddonProvider = ({ children }: { children: React.ReactNode }) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const [addonList, setAddonList] = useState<Addon[]>([]);
   const [updatedAddons, setUpdatedAddons] = useState<Addon[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const addonListQuery = useAddonListQuery();
 
-  useEffect(() => {
-    if (addonListQuery.isLoading) {
-      return;
-    }
+  let addonList = [] as Addon[];
 
-    let baseAddons = [];
-
-    if (isTutorPro && addonListQuery.data) {
-      baseAddons = addonListQuery.data.addons || [];
-    } else {
-      baseAddons = tutorConfig.addons_data;
-    }
-
-    setAddonList(baseAddons);
-  }, [addonListQuery.data, addonListQuery.isLoading, isTutorPro]);
-
-  if (addonListQuery.isLoading) {
-    return <LoadingSection />;
+  if (!isTutorPro) {
+    addonList = tutorConfig.addons_data;
+  } else if (addonListQuery.data) {
+    addonList = addonListQuery.data.addons || [];
   }
 
   return (
@@ -57,6 +45,7 @@ export const AddonProvider = ({ children }: { children: React.ReactNode }) => {
         setUpdatedAddons,
         searchTerm,
         setSearchTerm,
+        isLoading: addonListQuery.isLoading,
       }}
     >
       {children}
