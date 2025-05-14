@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if(response.success){
           target.dataset.status = newStatus;
           let putStatus = target.getElementsByTagName('OPTION')[target.selectedIndex].dataset.status_class;
-          let message = response.data ? response.data.status : "Course status updated ";
+          let message = response.data ? response.data.status : __("Course status updated", "tutor");
           // add new status class
           target.closest(".tutor-form-select-with-icon").setAttribute('class', `tutor-form-select-with-icon ${putStatus}`);
 

@@ -104,7 +104,7 @@ $filters = array(
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</th>
 							<th colspan="2">
-								<?php esc_html_e( 'Uses', 'tutor' ); ?>
+								<?php esc_html_e( 'Usage', 'tutor' ); ?>
 							</th>
 						</tr>
 					</thead>

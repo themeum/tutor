@@ -756,6 +756,10 @@ export const useUpdateCourseMutation = () => {
         queryClient.invalidateQueries({
           queryKey: ['InstructorList', String(response.data)],
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ['WcProducts'],
+        });
       }
     },
     onError: (error: ErrorResponse) => {
