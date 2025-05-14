@@ -29,5 +29,9 @@ export default defineConfig({
     instructor_zoom_account_id: process.env.CYPRESS_instructor_zoom_account_id,
     instructor_zoom_client_id: process.env.CYPRESS_instructor_zoom_client_id,
     instructor_zoom_client_secret: process.env.CYPRESS_instructor_zoom_client_secret,
+    cart: process.env.CYPRESS_tutor_cart_url,
+    woo_commerce_cart: process.env.CYPRESS_woo_commerce_cart_url,
+    checkout: process.env.CYPRESS_tutor_checkout_url,
+    woo_commerce_checkout: process.env.CYPRESS_woo_commerce_checkout_url,
   },
 });

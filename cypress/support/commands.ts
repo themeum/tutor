@@ -58,6 +58,8 @@ declare global {
       doesElementExist: (selector: string) => Chainable<boolean>;
       updateCourse: () => Chainable<void>;
       selectDate: (selector: string) => Chainable<void>;
+      getPHPSelectInput: (name: string, value: string) => Chainable<void>;
+      saveTutorSettings: () => Chainable<void>;
 
       // Course builder commands
       saveTopic(title: string, summary?: string): Chainable<void>;
@@ -949,4 +951,21 @@ Cypress.Commands.add('monetizedBy', () => {
   cy.window().then((win) => {
     return win._tutorobject.settings?.monetize_by;
   });
+});
+
+Cypress.Commands.add('getPHPSelectInput', (name: string, value: string) => {
+  cy.get(`select[name*="${name}"]`).next().click({ force: true });
+  cy.get('.tutor-form-select-options:visible').within(() => {
+    cy.get('span').contains(value).click();
+  });
+});
+
+Cypress.Commands.add('saveTutorSettings', () => {
+  cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+    if (req.body.includes('tutor_option_save')) {
+      req.alias = 'saveSettings';
+    }
+  });
+  cy.get('button#save_tutor_option').click();
+  cy.waitAfterRequest('saveSettings');
 });
