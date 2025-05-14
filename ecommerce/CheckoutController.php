@@ -320,11 +320,13 @@ class CheckoutController {
 	 * @return array
 	 */
 	public function calculate_discount( $items, $discount_type, $discount_value ) {
-		// Filter products without a sale price.
-		$items_without_sale = array_filter( $items, fn( $item ) => empty( $item['sale_price'] ) );
 
-		// Calculate the total regular price of products without a sale price.
-		$total_regular_price = array_sum( array_column( $items_without_sale, 'regular_price' ) );
+		$total_regular_price_coupon_applied = 0;
+		foreach ( $items as $item ) {
+			if ( $this->is_coupon_applied_on_item( $item ) ) {
+				$total_regular_price_coupon_applied += $item['regular_price'];
+			}
+		}
 
 		$final = array();
 		foreach ( $items as $item ) {
@@ -341,9 +343,9 @@ class CheckoutController {
 					$item['discount_amount'] = round( $discount, 2 );
 					$item['discount_price']  = $discount_price;
 
-				} elseif ( 'flat' === $discount_type && $total_regular_price > 0 ) {
+				} elseif ( 'flat' === $discount_type && $total_regular_price_coupon_applied > 0 ) {
 					// Apply a proportional fixed discount based on the regular price.
-					$proportion     = $item['regular_price'] / $total_regular_price;
+					$proportion     = $item['regular_price'] / $total_regular_price_coupon_applied;
 					$discount       = $discount_value * $proportion;
 					$discount_price = $item['regular_price'] - $discount;
 
@@ -389,7 +391,7 @@ class CheckoutController {
 		$is_meet_min_requirement = false;
 		$selected_coupon         = null;
 
-		if ( Settings::is_coupon_usage_enabled() ) {
+		if ( Settings::is_coupon_usage_enabled() && '-1' !== $coupon_code ) {
 			$selected_coupon = $this->coupon_model->get_coupon_details_for_checkout( $coupon_code );
 			global $tutor_coupon_apply_err_msg;
 			if ( ! $selected_coupon ) {
@@ -435,16 +437,14 @@ class CheckoutController {
 			$display_price         = $has_discount_amount ? $item['discount_price'] : $display_price;
 			$item['display_price'] = $display_price;
 
-			if ( $this->is_coupon_applied_on_item( $item ) ) {
-				$sale_discount_amount         = isset( $item['sale_price'] ) ? $item['regular_price'] - $item['sale_price'] : 0;
-				$item['sale_discount_amount'] = $sale_discount_amount;
-				$sale_discount               += $sale_discount_amount;
-			}
+			$sale_discount_amount         = isset( $item['sale_price'] ) ? $item['regular_price'] - $item['sale_price'] : 0;
+			$item['sale_discount_amount'] = $sale_discount_amount;
 
 			$response['items'][] = (object) $item;
 
 			$subtotal_price  += $item['regular_price'];
 			$coupon_discount += $discount_amount;
+			$sale_discount   += $sale_discount_amount;
 
 			$additional_items = $item['additional_items'] ?? array();
 			foreach ( $additional_items as $additional_item ) {

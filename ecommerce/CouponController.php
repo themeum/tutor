@@ -50,6 +50,15 @@ class CouponController extends BaseController {
 	private $model;
 
 	/**
+	 * Checkout controller instance.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @var CheckoutController
+	 */
+	private $checkout_ctrl;
+
+	/**
 	 * Trait for utilities
 	 *
 	 * @var $page_title
@@ -82,7 +91,8 @@ class CouponController extends BaseController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->model      = new CouponModel();
+		$this->model         = new CouponModel();
+		$this->checkout_ctrl = new CheckoutController( false );
 
 		if ( $register_hooks ) {
 			// Register hooks here.
@@ -771,7 +781,7 @@ class CouponController extends BaseController {
 			$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
 			$order_type  = $plan ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-			$checkout_data = ( new CheckoutController( false ) )->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
+			$checkout_data = $this->checkout_ctrl->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
 
 			if ( $checkout_data->is_coupon_applied ) {
 				$this->json_response(
