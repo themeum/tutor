@@ -401,7 +401,7 @@ const AssignmentModal = ({
               render={(controllerProps) => (
                 <FormSwitch
                   {...controllerProps}
-                  label={__('Set deadline from assignment start time', 'tutor')}
+                  label={__('Set Deadline From Assignment Start Time', 'tutor')}
                   helpText={__(
                     "Each student will get their own deadline based on when they start the assignment.",
                     'tutor',
