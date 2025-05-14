@@ -21,7 +21,6 @@ global $wpdb;
 global $next_id;
 global $assignment_submitted_id;
 
-$is_submitted  = false;
 $is_submitting = tutor_utils()->is_assignment_submitting( get_the_ID() );
 
 // Get the comment.
@@ -30,11 +29,6 @@ $user_id              = get_current_user_id();
 $user_data            = get_userdata( $user_id );
 $assignment_comment   = tutor_utils()->get_single_comment_user_post_id( $post_id, $user_id );
 $submitted_assignment = tutor_utils()->is_assignment_submitted( get_the_ID() );
-
-if ( false != $assignment_comment ) {
-	$submitted                                = $assignment_comment->comment_approved;
-	'submitted' == $submitted ? $is_submitted = true : '';
-}
 
 // Get the ID of this content and the corresponding course.
 $course_content_id = get_the_ID();
@@ -59,11 +53,12 @@ function tutor_assignment_convert_seconds( $seconds ) {
 	$dt1 = new DateTime( '@0' );
 	$dt2 = new DateTime( "@$seconds" );
 
-	$diff  = $dt1->diff( $dt2 );
-	$days  = $diff->days;
-	$hours = $diff->h;
+	$diff    = $dt1->diff( $dt2 );
+	$days    = $diff->days;
+	$hours   = $diff->h;
+	$minutes = $diff->i;
 
-	return $days . ' ' . __( 'Days', 'tutor' ) . ', ' . $hours . ' ' . __( 'Hours', 'tutor' );
+	return $days . ' ' . __( 'Days', 'tutor' ) . ', ' . $hours . ' ' . __( 'Hours', 'tutor' ) . ', ' . $minutes . ' ' . __( 'Minutes', 'tutor' );
 }
 
 $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
@@ -101,12 +96,21 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				$total_mark        = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' );
 				$pass_mark         = tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
 				$file_upload_limit = tutor_utils()->get_assignment_option( get_the_ID(), 'upload_file_size_limit' );
-				
 
 				global $post;
 				$assignment_created_time = strtotime( $post->post_date_gmt );
 				$deadline_time           = $enrollment_time < $assignment_created_time ? $assignment_created_time : $enrollment_time;
-				$time_duration_in_sec    = 0;
+
+				$start_assignment_date = null;
+				if ( $assignment_comment && isset( $assignment_comment->comment_date_gmt ) ) {
+					$start_assignment_date = $assignment_comment->comment_date_gmt;
+				}
+
+				if ( ! empty( $time_duration['after_start'] ) && $start_assignment_date ) {
+					$deadline_time = strtotime( $start_assignment_date );
+				}
+
+				$time_duration_in_sec = 0;
 
 				if ( isset( $time_duration['value'] ) && isset( $time_duration['time'] ) ) {
 					switch ( $time_duration['time'] ) {
@@ -129,6 +133,13 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				$remaining_time       = $deadline_time + $time_duration_in_sec;
 				$now                  = time();
 				$remaining            = $now - $remaining_time;
+				$is_expired           = false;
+
+				$time_map = array(
+					'days'  => _n( 'day', 'days', $time_duration['value'], 'tutor' ),
+					'hours' => _n( 'hour', 'hours', $time_duration['value'], 'tutor' ),
+					'weeks' => _n( 'week', 'weeks', $time_duration['value'], 'tutor' ),
+				);
 				?>
 
 			<?php if ( ! $submitted_assignment ) : ?>
@@ -137,7 +148,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 						<div class="tutor-assignment-duration">
 							<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
 							<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
-								<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . __( $time_duration['time'], 'tutor' ) : __( 'No limit', 'tutor' ) ); //phpcs:ignore ?>
+								<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . $time_map[ $time_duration['time'] ] : __( 'No limit', 'tutor' ) ); //phpcs:ignore ?>
 							</span>
 						</div>
 						<div class="tutor-assignmetn-deadline">
@@ -145,10 +156,20 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 							<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
 								<?php
 								if ( 0 != $time_duration['value'] ) {
-									if ( $now > $remaining_time && false == $is_submitted ) {
-										esc_html_e( 'Expired', 'tutor' );
+									if ( ! empty( $time_duration['after_start'] ) && ! $start_assignment_date ) {
+										printf(
+											// translators: %1$s is the number value (e.g., 3), %2$s is the time unit (e.g., days).
+											esc_html__( '%1$s %2$s after you start the assignment', 'tutor' ),
+											esc_html( $time_duration['value'] ),
+											esc_html( $time_map[ $time_duration['time'] ] )
+										);
 									} else {
-										echo esc_html( tutor_assignment_convert_seconds( $remaining ) );
+										if ( $now > $remaining_time && ! $submitted_assignment ) {
+											$is_expired = true;
+											esc_html_e( 'Expired', 'tutor' );
+										} else {
+											echo esc_html( tutor_assignment_convert_seconds( $remaining ) );
+										}
 									}
 								} else {
 									esc_html_e( 'N\\A', 'tutor' );
@@ -175,7 +196,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 			 * Time_duration[value]==0 means no limit
 			 * if have unlimited time then no msg should appear
 			 */
-			if ( ( 0 != $time_duration['value'] ) && ( $now > $remaining_time && false == $is_submitted ) ) :
+			if ( $is_expired ) :
 				?>
 				<div class="quiz-flash-message tutor-mt-24 tutor-mt-sm-32">
 					<div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-center tutor-justify-between">
@@ -485,33 +506,6 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 						</div>
 					</div>
 				<?php endif; ?>
-
-					<?php
-					/**
-					 * If user not submitted assignment and assignment expired
-					 * then show expire message
-					 *
-					 * @since 2.0.0
-					 */
-					if ( ! $is_submitted && 0 != $time_duration['value'] && ( $now > $remaining_time ) ) :
-						?>
-					<div class="tutor-mb-40">
-						<?php
-							$alert_template = tutor()->path . 'templates/global/alert.php';
-						if ( file_exists( $alert_template ) ) {
-							tutor_load_template_from_custom_path(
-								$alert_template,
-								array(
-									'alert_class' => 'tutor-alert tutor-danger',
-									'message'     => __( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor' ),
-									'icon'        => ' tutor-icon-circle-times-line',
-								)
-							);
-						}
-						?>
-					</div>
-				<?php endif; ?>
-
 				<div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
 					<div class="tutor-ar-body tutor-pt-24 tutor-pb-40 tutor-px-16 tutor-px-md-32">
 						<div class="tutor-ar-header tutor-d-flex tutor-justify-between tutor-align-center">
@@ -545,9 +539,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 							if ( tutor_utils()->count( $attached_files ) ) :
 								?>
 									<div class="tutor-attachment-files submited-files tutor-d-flex tutor-flex-column tutor-mt-20 tutor-mt-sm-40">
-									<?php
-									foreach ( $attached_files as $attached_file ) :
-										?>
+										<?php foreach ( $attached_files as $attached_file ) : ?>
 											<div class="tutor-instructor-card tutor-mt-12">
 												<div class="tutor-icard-content">
 													<div class="tutor-fs-6 tutor-color-secondary">
@@ -613,7 +605,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 								<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 								<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
 								<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
-								<button type="submit" id="tutor_assignment_start_btn" class="tutor-btn tutor-btn-primary"<?php echo ( ( 0 != $time_duration['value'] ) && ( $now > $remaining_time ) ) ? ' disabled' : ''; ?>>
+								<button type="submit" id="tutor_assignment_start_btn" class="tutor-btn tutor-btn-primary"<?php echo $is_expired ? ' disabled' : ''; ?>>
 									<?php esc_html_e( 'Start Assignment Submit', 'tutor' ); ?>
 								</button>
 							</form>
