@@ -273,6 +273,46 @@ class EmailController {
 	}
 
 	/**
+	 * Get instructor ids of an order's course, bundle.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param object $order_data order object.
+	 *
+	 * @return array
+	 */
+	private function get_instructor_ids( $order_data ) {
+		$instructor_ids = array();
+		if ( ! isset( $order_data->items ) ) {
+			return $instructor_ids;
+		}
+
+		foreach ( $order_data->items as $item ) {
+			$item      = (object) $item;
+			$item_id   = $item->item_id ?? $item->id;
+			$course_id = null;
+
+			if ( OrderModel::TYPE_SINGLE_ORDER === $order_data->order_type ) {
+				$course_id = $item_id;
+			} else {
+				$plan_info = apply_filters( 'tutor_get_plan_info', null, $item_id );
+				if ( $plan_info && ! $plan_info->is_membership_plan ) {
+					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item_id, $order_data );
+				}
+			}
+
+			if ( $course_id ) {
+				$author_id = (int) get_post_field( 'post_author', $course_id );
+				if ( $author_id ) {
+					$instructor_ids[] = $author_id;
+				}
+			}
+		}
+
+		return $instructor_ids;
+	}
+
+	/**
 	 * Send mail once new order place
 	 *
 	 * @since 3.0.0
@@ -288,23 +328,13 @@ class EmailController {
 
 		$student_ids    = array( $order_data->user_id );
 		$admin_ids      = array();
-		$instructor_ids = array();
+		$instructor_ids = $this->get_instructor_ids( $order_data );
 
 		// Set admin user ids.
 		$admin_users = get_users( array( 'role' => 'administrator' ) );
 
 		foreach ( $admin_users as $admin_user ) {
 			$admin_ids[] = $admin_user->ID;
-		}
-
-		// Set instructor ids.
-		foreach ( $order_data->items as $item ) {
-			$item      = (object) $item;
-			$course_id = $item->item_id;
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type || OrderModel::TYPE_RENEWAL === $order_data->order_type ) {
-				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $order_data );
-			}
-			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
 		if ( tutor()->has_pro ) {
@@ -339,7 +369,8 @@ class EmailController {
 	 */
 	public function order_updated( $order_id, $prev_payment_status, $new_payment_status ) {
 
-		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
+		$order_data        = ( new OrderModel() )->get_order_by_id( $order_id );
+		$order_data->items = (object) $order_data->items;
 
 		if ( OrderModel::PAYMENT_PARTIALLY_REFUNDED === $new_payment_status || ( OrderModel::PAYMENT_REFUNDED === $new_payment_status && OrderModel::ORDER_COMPLETED === $order_data->order_status ) ) {
 			return;
@@ -347,22 +378,13 @@ class EmailController {
 
 		$student_ids    = array( $order_data->user_id );
 		$admin_ids      = array();
-		$instructor_ids = array();
+		$instructor_ids = $this->get_instructor_ids( $order_data );
 
 		// Set admin user ids.
 		$admin_users = get_users( array( 'role' => 'administrator' ) );
 
 		foreach ( $admin_users as $admin_user ) {
 			$admin_ids[] = $admin_user->ID;
-		}
-
-		// Set instructor ids.
-		foreach ( $order_data->items as $item ) {
-			$course_id = $item->id;
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type || OrderModel::TYPE_RENEWAL === $order_data->order_type ) {
-				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $order_data );
-			}
-			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
 		if ( tutor_utils()->get_option( self::TO_STUDENTS . '.order_status_updated' ) ) {

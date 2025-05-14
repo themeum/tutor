@@ -3,6 +3,7 @@ const fs = require('fs');
 const TerserPlugin = require('terser-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
+const nodeExternals = require('webpack-node-externals');
 
 let version = "";
 
@@ -71,6 +72,13 @@ module.exports = (env, options) => {
                     extractComments: false,
                 }),
             ],
+        };
+    }
+
+    if (env['make-pot']) {
+        config.externals = [nodeExternals()];
+        config.optimization = {
+            minimize: false,
         };
     }
 
