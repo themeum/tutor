@@ -35,7 +35,7 @@ const TutorDatepicker = (data) => {
 	};
 
 	useEffect(() => {
-		if (params.has('date')) {
+		if (params.has('date') && !!params.get('date')) {
 			setStartDate(new Date(params.get('date')));
 		}
 	}, []);

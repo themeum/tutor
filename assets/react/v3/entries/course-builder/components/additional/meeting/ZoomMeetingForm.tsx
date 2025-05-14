@@ -88,7 +88,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       course_id: courseId,
       meeting_title: formData.meeting_name,
       meeting_summary: formData.meeting_summary,
-      meeting_date: format(new Date(formData.meeting_date), DateFormats.yearMonthDay),
+      meeting_date: formData.meeting_date,
       meeting_time: formData.meeting_time,
       meeting_duration: Number(formData.meeting_duration),
       meeting_duration_unit: formData.meeting_duration_unit,

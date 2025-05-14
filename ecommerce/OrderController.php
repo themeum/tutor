@@ -76,7 +76,7 @@ class OrderController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->model      = new OrderModel();
+		$this->model = new OrderModel();
 
 		if ( $register_hooks ) {
 			/**
@@ -243,22 +243,25 @@ class OrderController {
 			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
 		}
 
-		/**
-		 * Tax calculation for order.
-		 */
-		$tax_rate = Tax::get_user_tax_rate( $user_id );
-		if ( $tax_rate ) {
-			$order_data['tax_type']   = Tax::get_tax_type();
-			$order_data['tax_rate']   = $tax_rate;
-			$order_data['tax_amount'] = Tax::calculate_tax( $order_data['total_price'], $tax_rate );
+		$calculate_tax = apply_filters( 'tutor_calculate_order_tax', true, $args );
 
-			if ( ! Tax::is_tax_included_in_price() ) {
-				$total_price              += $order_data['tax_amount'];
-				$order_data['total_price'] = $total_price;
-				$order_data['net_payment'] = $total_price;
+		if ( $calculate_tax ) {
+			/**
+			 * Tax calculation for order.
+			 */
+			$tax_rate = Tax::get_user_tax_rate( $user_id );
+			if ( $tax_rate ) {
+				$order_data['tax_type']   = Tax::get_tax_type();
+				$order_data['tax_rate']   = $tax_rate;
+				$order_data['tax_amount'] = Tax::calculate_tax( $order_data['total_price'], $tax_rate );
+
+				if ( ! Tax::is_tax_included_in_price() ) {
+					$total_price              += $order_data['tax_amount'];
+					$order_data['total_price'] = $total_price;
+					$order_data['net_payment'] = $total_price;
+				}
 			}
 		}
-
 		// Update data with arguments.
 		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
 
@@ -551,7 +554,6 @@ class OrderController {
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
-
 	}
 
 	/**
@@ -696,7 +698,6 @@ class OrderController {
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
-
 	}
 
 	/**
@@ -1169,5 +1170,4 @@ class OrderController {
 
 		return (object) $refund_data;
 	}
-
 }

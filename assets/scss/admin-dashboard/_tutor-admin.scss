@@ -1810,12 +1810,20 @@ h2.tutor-page-heading {
 	width: 20px;
 }
 
+.tutor-text-ellipsis-2-lines {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
 .tutor-dashboard-course-list {
 	tr {
 		th {
 			border-top: 1px solid #E6E6E6;
 			border-bottom: 1px solid #F5F5F5;
 			font-weight: 400;
+			color: #636363;
 			background-color: #ffffff;
 			padding: 14px 12px;
 

@@ -166,7 +166,7 @@ class Earnings extends Singleton {
 					$fees_amount = ( $total_price * $fees_amount ) / 100;
 				}
 
-				$course_price_grand_total = ( $total_price > $fees_amount ) ? $total_price - $fees_amount : 0;
+				$course_price_grand_total = max( $total_price - $fees_amount, 0 );
 			}
 
 			$fees_deduct_data = array(

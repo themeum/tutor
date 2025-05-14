@@ -112,10 +112,32 @@ export const hasDuplicateEntries = <T>(items: T[], callback: (item: T) => string
   return false;
 };
 
-export const generateTree = (data: Category[], parent = 0): CategoryWithChildren[] => {
-  return data
-    .filter((node) => node.parent === parent)
-    .reduce<CategoryWithChildren[]>((tree, node) => [...tree, { ...node, children: generateTree(data, node.id) }], []);
+export const generateTree = (
+  data: Category[],
+  parent = 0,
+  processedIds: Set<number> = new Set(),
+): CategoryWithChildren[] => {
+  const categoryIds = new Set(data.map((category) => category.id));
+
+  const levelNodes = data.filter((node) => {
+    if (processedIds.has(node.id)) {
+      return false;
+    }
+
+    if (parent === 0) {
+      return node.parent === 0 || !categoryIds.has(node.parent);
+    }
+
+    return node.parent === parent;
+  });
+
+  return levelNodes.reduce<CategoryWithChildren[]>((tree, node) => {
+    processedIds.add(node.id);
+
+    const children = generateTree(data, node.id, processedIds);
+
+    return [...tree, { ...node, children }];
+  }, []);
 };
 
 export const getCategoryLeftBarHeight = (isLastChild: boolean, totalChildren: number) => {

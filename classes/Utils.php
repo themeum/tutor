@@ -8390,7 +8390,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
-		return current_user_can( 'edit_tutor_course', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
+		return User::is_admin( $user_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
 	}
 
 
@@ -9594,7 +9594,7 @@ class Utils {
 	 *
 	 * @return string formated date-time.
 	 */
-	public function convert_date_into_wp_timezone( string $date, string $format = null ): string {
+	public function convert_date_into_wp_timezone( string $date, ?string $format = null ): string {
 		$date = new \DateTime( $date );
 		$date->setTimezone( wp_timezone() );
 		return $date->format( ! is_null( $format ) ? $format : get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
