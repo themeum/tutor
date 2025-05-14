@@ -17,7 +17,7 @@ const History = () => {
   const [dateSortType, setDateSortType] = useState<'asc' | 'desc'>('asc');
   const [isThreeDotOpenIndex, setThreeDotOpenIndex] = useState<number>(-1);
 
-  // Mock data
+  // @TODO: need to integrate with the API
   const history: ImportExportHistory[] = [
     {
       title: 'Global Settings',
@@ -157,6 +157,7 @@ const History = () => {
             hideArrow={false}
             size="small"
           >
+            {/* @TODO: need to integrate with the API */}
             <Show when={item.isSetting}>
               <ThreeDots.Option
                 size="small"
