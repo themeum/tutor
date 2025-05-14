@@ -986,15 +986,6 @@ class CouponModel {
 			$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'minimum_purchase', tutor_get_formatted_price( $min_amount ) );
 		}
 
-		/**
-		 * If there is no regular price item in the cart, then it's not meet requirement.
-		 *
-		 * @since 3.0.0
-		 */
-		if ( 0 === $regular_price_item_count ) {
-			//$is_meet_requirement = false;
-		}
-
 		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $item_id );
 	}
 
@@ -1126,12 +1117,13 @@ class CouponModel {
 			$post = get_post( $id );
 
 			if ( $post ) {
-				$response = array(
+				$sale_price = get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true );
+				$response   = array(
 					'id'            => $id,
 					'title'         => get_the_title( $id ),
 					'image'         => get_the_post_thumbnail_url( $id ),
 					'regular_price' => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_PRICE_META, true ) ),
-					'sale_price'    => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ) ),
+					'sale_price'    => $sale_price ? tutor_get_formatted_price( $sale_price ) : null,
 				);
 			}
 		} elseif ( term_exists( $id ) ) {
