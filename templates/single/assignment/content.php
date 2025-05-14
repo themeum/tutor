@@ -58,7 +58,7 @@ function tutor_assignment_convert_seconds( $seconds ) {
 	$hours   = $diff->h;
 	$minutes = $diff->i;
 
-	return $days . ' ' . __( 'Days', 'tutor' ) . ', ' . $hours . ' ' . __( 'Hours', 'tutor' ) . ', ' . $minutes . ' ' . __( 'Minutes', 'tutor' );
+	return $days . ' ' . _n( 'Day', 'Days', $days, 'tutor' ) . ', ' . $hours . ' ' . _n( 'Hour', 'Hours', $hours, 'tutor' ) . ', ' . $minutes . ' ' . _n( 'Minute', 'Minutes', $minutes, 'tutor' );
 }
 
 $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
@@ -136,9 +136,9 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				$is_expired           = false;
 
 				$time_map = array(
-					'days'  => _n( 'day', 'days', $time_duration['value'], 'tutor' ),
-					'hours' => _n( 'hour', 'hours', $time_duration['value'], 'tutor' ),
-					'weeks' => _n( 'week', 'weeks', $time_duration['value'], 'tutor' ),
+					'days'  => _n( 'Day', 'Days', $time_duration['value'], 'tutor' ),
+					'hours' => _n( 'Hour', 'Hours', $time_duration['value'], 'tutor' ),
+					'weeks' => _n( 'Week', 'Weeks', $time_duration['value'], 'tutor' ),
 				);
 				?>
 
@@ -161,7 +161,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 											// translators: %1$s is the number value (e.g., 3), %2$s is the time unit (e.g., days).
 											esc_html__( '%1$s %2$s after you start the assignment', 'tutor' ),
 											esc_html( $time_duration['value'] ),
-											esc_html( $time_map[ $time_duration['time'] ] )
+											esc_html( strtolower( $time_map[ $time_duration['time'] ] ) )
 										);
 									} else {
 										if ( $now > $remaining_time && ! $submitted_assignment ) {
