@@ -2234,10 +2234,9 @@ class Course extends Tutor_Base {
 
 		/**
 		 * When course moved paid to free
-		 * Unlink product from course and return.
+		 * Keep the product linked and return.
 		 */
 		if ( -1 === $product_id ) {
-			delete_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META );
 			return;
 		}
 
