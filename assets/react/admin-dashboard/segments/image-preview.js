@@ -104,7 +104,7 @@ const insInput = document.querySelector('input[type=number]#revenue-instructor')
 const adminInput = document.querySelector('input[type=number]#revenue-admin');
 const revenueInputs = document.querySelectorAll('.revenue-percentage input[type=number]');
 const saveButton = document.getElementById('save_tutor_option');
-const { __, _x, _n, _nx } = wp.i18n;
+
 const disableSaveButton = (time) => {
 	setTimeout(() => {
 		if (saveButton) saveButton.disabled = true;
@@ -113,7 +113,7 @@ const disableSaveButton = (time) => {
 
 if (insInput && adminInput && revenueInputs) {
 	insInput.addEventListener('input', (e) => {
-
+		const { __, _x, _n, _nx } = wp.i18n;
 		if (e.target.value <= 100) {
 			adminInput.value = 100 - e.target.value;
 		}
@@ -125,7 +125,7 @@ if (insInput && adminInput && revenueInputs) {
 	});
 
 	adminInput.addEventListener('input', (e) => {
-
+		const { __, _x, _n, _nx } = wp.i18n;
 		if (e.target.value <= 100) {
 			insInput.value = 100 - e.target.value;
 		}
