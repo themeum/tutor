@@ -18,10 +18,12 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
-import { spacing } from '@TutorShared/config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -372,6 +374,29 @@ const CoursePricing = () => {
           <SubscriptionPreview courseId={courseId} />
         </Show>
       </Show>
+
+      <Show when={coursePriceType === 'paid' && isTutorPro}>
+        <div css={styles.taxWrapper}>
+          <label>{__('Tax Collection', 'tutor')}</label>
+
+          <div css={styles.checkboxWrapper}>
+            <Controller
+              name="tax_collection_on_single_purchase"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCheckbox {...controllerProps} label={__('Charge tax on one-time purchase ', 'tutor')} />
+              )}
+            />
+            <Controller
+              name="tax_collection_on_subscription"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCheckbox {...controllerProps} label={__('Charge tax on subscriptions', 'tutor')} />
+              )}
+            />
+          </div>
+        </div>
+      </Show>
     </>
   );
 };
@@ -388,5 +413,18 @@ const styles = {
     display: flex;
     align-items: flex-start;
     gap: ${spacing[16]};
+  `,
+  taxWrapper: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[4]};
+
+    label {
+      ${typography.body()}
+      color: ${colorTokens.text.title};
+    }
+  `,
+  checkboxWrapper: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[4]};
   `,
 };
