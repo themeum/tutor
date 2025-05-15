@@ -88,10 +88,10 @@ function TaxSettingGlobal() {
                         {...controllerProps}
                         label={__('Enable tax control per course & membership plan', 'tutor')}
                         labelCss={styles.checkboxLabel}
-                        description={__(
-                          'Set tax preferences at the individual course or bundle pricing level.',
-                          'tutor',
-                        )}
+                        description={
+                          // prettier-ignore
+                          __('Set tax preferences at the individual course or bundle pricing level.', 'tutor')
+                        }
                       />
                     );
                   }}
