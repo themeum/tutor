@@ -1,16 +1,19 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+
 import { colorTokens, fontSize, fontWeight, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { getCountryByCode, getStateByCode, isEuropeanUnion } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
+
 import Card, { CardHeader } from '../molecules/Card';
 import type { TaxSettings } from '../services/tax';
 import EuropeanUnionTax from './EuropeanUnionTax';
@@ -56,7 +59,6 @@ export default function TaxRates() {
     tableData = [{ locationId: activeCountry, rate: rates[activeCountryIndex].rate }];
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (
       isSingleCountry &&
@@ -71,6 +73,7 @@ export default function TaxRates() {
         activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, apply_on_shipping: false })),
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSingleCountry]);
 
   const columns: Column<ColumnDataType>[] = [
@@ -293,8 +296,11 @@ export default function TaxRates() {
     <>
       <Card>
         <CardHeader
-          title={__('Tax Regions & Rates', 'tutor')}
-          subtitle={__('Specify regions and their applicable tax rates.', 'tutor')}
+          title={__('Tax Rates', 'tutor')}
+          subtitle={__(
+            "Set up tax rates for different regions. These rates will apply based on your customer's location.",
+            'tutor',
+          )}
         />
         <div css={styleUtils.cardInnerSection}>
           <Show when={activeCountry && activeCountryAllStates?.length}>

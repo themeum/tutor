@@ -1,7 +1,18 @@
-import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { ReactNode } from 'react';
+
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+
+interface CardProps {
+  children: ReactNode;
+  hasBorder?: boolean;
+  cardStyle?: SerializedStyles;
+}
+
+const Card = ({ children, hasBorder = false, cardStyle }: CardProps) => {
+  return <div css={[styles.wrapper(hasBorder), cardStyle]}>{children}</div>;
+};
 
 const styles = {
   wrapper: (hasBorder: boolean) => css`
@@ -18,16 +29,6 @@ const styles = {
   `,
 };
 
-interface CardProps {
-  children: ReactNode;
-  hasBorder?: boolean;
-  cardStyle?: SerializedStyles;
-}
-
-const Card = ({ children, hasBorder = false, cardStyle }: CardProps) => {
-  return <div css={[styles.wrapper(hasBorder), cardStyle]}>{children}</div>;
-};
-
 export default Card;
 
 interface CardHeaderProps {
@@ -38,6 +39,25 @@ interface CardHeaderProps {
   noSeparator?: boolean;
   size?: 'regular' | 'small';
 }
+
+export const CardHeader = ({
+  title,
+  subtitle,
+  actionTray,
+  collapsed = false,
+  noSeparator = false,
+  size = 'regular',
+}: CardHeaderProps) => {
+  return (
+    <div css={headerStyles.wrapper(collapsed || noSeparator, size)}>
+      <div css={headerStyles.titleAndAction}>
+        <h5 css={headerStyles.title}>{title}</h5>
+        {actionTray && <div>{actionTray}</div>}
+      </div>
+      {subtitle && <div css={headerStyles.subtitle}>{subtitle}</div>}
+    </div>
+  );
+};
 
 const headerStyles = {
   wrapper: (collapsed: boolean, size: 'regular' | 'small') => css`
@@ -64,31 +84,12 @@ const headerStyles = {
     align-items: center;
   `,
   subtitle: css`
-    ${typography.body()};
+    ${typography.caption()};
     color: ${colorTokens.text.hints};
   `,
   title: css`
-    ${typography.heading6('medium')};
+    ${typography.body('medium')};
     display: flex;
     align-items: center;
   `,
-};
-
-export const CardHeader = ({
-  title,
-  subtitle,
-  actionTray,
-  collapsed = false,
-  noSeparator = false,
-  size = 'regular',
-}: CardHeaderProps) => {
-  return (
-    <div css={headerStyles.wrapper(collapsed || noSeparator, size)}>
-      <div css={headerStyles.titleAndAction}>
-        <h5 css={headerStyles.title}>{title}</h5>
-        {actionTray && <div>{actionTray}</div>}
-      </div>
-      {subtitle && <div css={headerStyles.subtitle}>{subtitle}</div>}
-    </div>
-  );
 };
