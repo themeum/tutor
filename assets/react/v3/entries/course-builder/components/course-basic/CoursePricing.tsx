@@ -376,7 +376,7 @@ const CoursePricing = () => {
         </Show>
       </Show>
 
-      <Show when={coursePriceType === 'paid' && isTutorPro && enableIndividualTaxControl}>
+      <Show when={coursePriceType === 'paid' && enableIndividualTaxControl}>
         <div css={styles.taxWrapper}>
           <label>{__('Tax Collection', 'tutor')}</label>
 
