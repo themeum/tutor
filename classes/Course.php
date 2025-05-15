@@ -669,6 +669,8 @@ class Course extends Tutor_Base {
 				$_POST['course_sale_price'] = $sale_price;
 			}
 		}
+
+		do_action( 'tutor_after_prepare_create_post_meta', $params );
 	}
 
 	/**
@@ -737,7 +739,7 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_id, '_tutor_is_public_course', $params['is_public_course'] ?? 'no' );
 		update_post_meta( $post_id, '_tutor_course_level', $params['course_level'] );
 
-		do_action( 'tutor_after_prepare_update_post_meta', $post_id, $params );
+		do_action( 'tutor_after_prepare_update_post_meta', $params, $post_id );
 	}
 
 	/**
