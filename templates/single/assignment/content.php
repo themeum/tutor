@@ -93,9 +93,17 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 					)
 				);
 
-				$total_mark        = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' );
-				$pass_mark         = tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
-				$file_upload_limit = tutor_utils()->get_assignment_option( get_the_ID(), 'upload_file_size_limit' );
+				if ( ! is_array( $time_duration ) ) {
+					$time_duration = array();
+				}
+
+				$time_unit  = $time_duration['time'] ?? '';
+				$time_value = isset( $time_duration['value'] ) ? (int) $time_duration['value'] : 0;
+
+				$total_mark          = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' );
+				$pass_mark           = tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
+				$file_upload_limit   = tutor_utils()->get_assignment_option( get_the_ID(), 'upload_file_size_limit' );
+				$deadline_from_start = (bool) tutor_utils()->get_assignment_option( get_the_ID(), 'deadline_from_start' );
 
 				global $post;
 				$assignment_created_time = strtotime( $post->post_date_gmt );
@@ -106,14 +114,14 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 					$start_assignment_date = $assignment_comment->comment_date_gmt;
 				}
 
-				if ( ! empty( $time_duration['after_start'] ) && $start_assignment_date ) {
+				if ( $deadline_from_start && $start_assignment_date ) {
 					$deadline_time = strtotime( $start_assignment_date );
 				}
 
 				$time_duration_in_sec = 0;
 
-				if ( isset( $time_duration['value'] ) && isset( $time_duration['time'] ) ) {
-					switch ( $time_duration['time'] ) {
+				if ( $time_value && ! empty( $time_unit ) ) {
+					switch ( $time_unit ) {
 						case 'hours':
 							$time_duration_in_sec = 3600;
 							break;
@@ -129,16 +137,16 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 					}
 				}
 
-				$time_duration_in_sec = $time_duration_in_sec * (int) $time_duration['value'];
+				$time_duration_in_sec = $time_duration_in_sec * $time_value;
 				$remaining_time       = $deadline_time + $time_duration_in_sec;
 				$now                  = time();
 				$remaining            = $now - $remaining_time;
 				$is_expired           = false;
 
 				$time_map = array(
-					'days'  => _n( 'Day', 'Days', $time_duration['value'], 'tutor' ),
-					'hours' => _n( 'Hour', 'Hours', $time_duration['value'], 'tutor' ),
-					'weeks' => _n( 'Week', 'Weeks', $time_duration['value'], 'tutor' ),
+					'days'  => _n( 'Day', 'Days', $time_value, 'tutor' ),
+					'hours' => _n( 'Hour', 'Hours', $time_value, 'tutor' ),
+					'weeks' => _n( 'Week', 'Weeks', $time_value, 'tutor' ),
 				);
 				?>
 
@@ -148,20 +156,20 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 						<div class="tutor-assignment-duration">
 							<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Duration:', 'tutor' ); ?></span>
 							<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
-								<?php echo esc_html( $time_duration['value'] ? $time_duration['value'] . ' ' . $time_map[ $time_duration['time'] ] : __( 'No limit', 'tutor' ) ); //phpcs:ignore ?>
+								<?php echo esc_html( $time_value ? $time_value . ' ' . $time_map[ $time_unit ] : __( 'No limit', 'tutor' ) ); //phpcs:ignore ?>
 							</span>
 						</div>
 						<div class="tutor-assignmetn-deadline">
 							<span class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Deadline:', 'tutor' ); ?></span>
 							<span class="tutor-fs-6 tutor-fw-medium  tutor-color-black">
 								<?php
-								if ( 0 != $time_duration['value'] ) {
-									if ( ! empty( $time_duration['after_start'] ) && ! $start_assignment_date ) {
+								if ( $time_value ) {
+									if ( $deadline_from_start && ! $start_assignment_date ) {
 										printf(
 											// translators: %1$s is the number value (e.g., 3), %2$s is the time unit (e.g., days).
 											esc_html__( '%1$s %2$s after you start the assignment', 'tutor' ),
-											esc_html( $time_duration['value'] ),
-											esc_html( strtolower( $time_map[ $time_duration['time'] ] ) )
+											esc_html( $time_value ),
+											esc_html( strtolower( $time_map[ $time_unit ] ) )
 										);
 									} else {
 										if ( $now > $remaining_time && ! $submitted_assignment ) {
@@ -264,7 +272,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				</div>
 			<?php endif; ?>
 
-			<?php if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) : ?>
+			<?php if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || 0 === $time_value ) ) : ?>
 				<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
 					<form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
@@ -515,7 +523,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
 							<?php
 							$result = Assignments::get_assignment_result( $post_id, $user_id );
-							if ( in_array( $result, array( 'pending', 'fail' ), true ) && ( $remaining_time > $now || 0 == $time_duration['value'] ) ) :
+							if ( in_array( $result, array( 'pending', 'fail' ), true ) && ( $remaining_time > $now || 0 === $time_value ) ) :
 								?>
 								<div class="tutor-ar-btn">
 									<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>"

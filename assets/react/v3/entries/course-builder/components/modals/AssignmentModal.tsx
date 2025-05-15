@@ -57,8 +57,8 @@ export interface AssignmentForm {
   time_duration: {
     value: string;
     time: TimeLimitUnit;
-    after_start: boolean;
   };
+  deadline_from_start: boolean;
   total_mark: number;
   pass_mark: number;
   upload_files_limit: number;
@@ -117,8 +117,8 @@ const AssignmentModal = ({
       time_duration: {
         value: '0',
         time: 'weeks',
-        after_start: false,
       },
+      deadline_from_start: false,
       total_mark: 10,
       pass_mark: 5,
       upload_files_limit: 1,
@@ -145,9 +145,8 @@ const AssignmentModal = ({
           time_duration: {
             value: assignmentDetails.assignment_option.time_duration.value || '0',
             time: (assignmentDetails.assignment_option.time_duration.time as TimeLimitUnit) || 'weeks',
-            after_start:
-              (assignmentDetails.assignment_option.time_duration.after_start === '1' ? true : false) || false,
           },
+          deadline_from_start: assignmentDetails.assignment_option.deadline_from_start === '1' ? true : false,
           total_mark: assignmentDetails.assignment_option.total_mark || 10,
           pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
           upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
@@ -396,14 +395,14 @@ const AssignmentModal = ({
             </div>
 
             <Controller
-              name="time_duration.after_start"
+              name="deadline_from_start"
               control={form.control}
               render={(controllerProps) => (
                 <FormSwitch
                   {...controllerProps}
                   label={__('Set Deadline From Assignment Start Time', 'tutor')}
                   helpText={__(
-                    "Each student will get their own deadline based on when they start the assignment.",
+                    'Each student will get their own deadline based on when they start the assignment.',
                     'tutor',
                   )}
                 />

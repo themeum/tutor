@@ -8176,9 +8176,9 @@ class Utils {
 	 * @return string|false
 	 */
 	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0 ) {
-		$value       = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
-		$time        = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
-		$after_start = $this->get_assignment_option( $assignment_id, 'time_duration.after_start' );
+		$value               = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
+		$time                = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
+		$deadline_from_start = (bool) $this->get_assignment_option( $assignment_id, 'deadline_from_start' );
 
 		if ( ! $value ) {
 			return $fallback;
@@ -8200,7 +8200,7 @@ class Utils {
 
 		$deadline_date = strtotime( $enrolled_date_gmt ) < strtotime( $publish_date_gmt ) ? $publish_date_gmt : $enrolled_date_gmt;
 
-		if ( ! empty( $after_start ) ) {
+		if ( $deadline_from_start ) {
 			$assignment_comment = tutor_utils()->get_single_comment_user_post_id( $assignment_id, $student_id );
 			if ( $assignment_comment && isset( $assignment_comment->comment_date_gmt ) ) {
 				$deadline_date = $assignment_comment->comment_date_gmt;
