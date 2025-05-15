@@ -60,27 +60,25 @@ const CoursePricing = () => {
   const { tutor_currency } = tutorConfig;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const enableIndividualTaxControl = !!tutorConfig.settings?.enable_individual_tax_control;
+  const monetizeBy = tutorConfig.settings?.monetize_by;
 
-  const coursePriceOptions =
-    tutorConfig.settings?.monetize_by === 'wc' ||
-    tutorConfig.settings?.monetize_by === 'tutor' ||
-    tutorConfig.settings?.monetize_by === 'edd'
-      ? [
-          {
-            label: __('Free', 'tutor'),
-            value: 'free',
-          },
-          {
-            label: __('Paid', 'tutor'),
-            value: 'paid',
-          },
-        ]
-      : [
-          {
-            label: __('Free', 'tutor'),
-            value: 'free',
-          },
-        ];
+  const coursePriceOptions = ['wc', 'tutor', 'edd'].includes(monetizeBy || '')
+    ? [
+        {
+          label: __('Free', 'tutor'),
+          value: 'free',
+        },
+        {
+          label: __('Paid', 'tutor'),
+          value: 'paid',
+        },
+      ]
+    : [
+        {
+          label: __('Free', 'tutor'),
+          value: 'free',
+        },
+      ];
 
   const purchaseOptions = [
     {
@@ -105,12 +103,12 @@ const CoursePricing = () => {
     },
   ];
 
-  const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings?.monetize_by, courseId ? String(courseId) : '');
+  const wcProductsQuery = useGetWcProductsQuery(monetizeBy, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
     courseProductId,
     String(courseId),
     coursePriceType,
-    isTutorPro ? tutorConfig.settings?.monetize_by : undefined,
+    isTutorPro ? monetizeBy : undefined,
   );
 
   const wcProductOptions = (data: WcProduct[] | undefined) => {
@@ -142,7 +140,7 @@ const CoursePricing = () => {
       const { course_pricing } = courseDetails || {};
 
       if (
-        tutorConfig.settings?.monetize_by === 'wc' &&
+        monetizeBy === 'wc' &&
         course_pricing?.product_id &&
         course_pricing.product_id !== '0' &&
         !wcProductOptions(wcProductsQuery.data).find(({ value }) => String(value) === String(course_pricing.product_id))
@@ -163,7 +161,7 @@ const CoursePricing = () => {
     const { course_pricing } = courseDetails || {};
 
     if (
-      tutorConfig.settings?.monetize_by === 'edd' &&
+      monetizeBy === 'edd' &&
       course_pricing?.product_id &&
       course_pricing.product_id !== '0' &&
       !tutorConfig.edd_products.find(({ ID }) => String(ID) === String(course_pricing.product_id))
@@ -176,7 +174,7 @@ const CoursePricing = () => {
   }, [tutorConfig.edd_products]);
 
   useEffect(() => {
-    if (tutorConfig.settings?.monetize_by !== 'wc') {
+    if (monetizeBy !== 'wc') {
       return;
     }
 
@@ -224,13 +222,7 @@ const CoursePricing = () => {
         )}
       />
 
-      <Show
-        when={
-          isAddonEnabled(Addons.SUBSCRIPTION) &&
-          tutorConfig.settings?.monetize_by === 'tutor' &&
-          coursePriceType === 'paid'
-        }
-      >
+      <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && monetizeBy === 'tutor' && coursePriceType === 'paid'}>
         <Controller
           name="course_selling_option"
           control={form.control}
@@ -240,7 +232,7 @@ const CoursePricing = () => {
         />
       </Show>
 
-      <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'wc'}>
+      <Show when={coursePriceType === 'paid' && monetizeBy === 'wc'}>
         <Controller
           name="course_product_id"
           control={form.control}
@@ -268,7 +260,7 @@ const CoursePricing = () => {
         />
       </Show>
 
-      <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'edd'}>
+      <Show when={coursePriceType === 'paid' && monetizeBy === 'edd'}>
         <Controller
           name="course_product_id"
           control={form.control}
@@ -300,8 +292,7 @@ const CoursePricing = () => {
         when={
           coursePriceType === 'paid' &&
           !['subscription', 'membership'].includes(selectedPurchaseOption) &&
-          (tutorConfig.settings?.monetize_by === 'tutor' ||
-            (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && courseProductId !== '-1'))
+          (monetizeBy === 'tutor' || (isTutorPro && monetizeBy === 'wc' && courseProductId !== '-1'))
         }
       >
         <div css={styles.coursePriceWrapper}>
@@ -364,19 +355,13 @@ const CoursePricing = () => {
         </div>
       </Show>
 
-      <Show
-        when={
-          isAddonEnabled(Addons.SUBSCRIPTION) &&
-          tutorConfig.settings?.monetize_by === 'tutor' &&
-          coursePriceType === 'paid'
-        }
-      >
+      <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && monetizeBy === 'tutor' && coursePriceType === 'paid'}>
         <Show when={!['one_time', 'membership'].includes(selectedPurchaseOption)}>
           <SubscriptionPreview courseId={courseId} />
         </Show>
       </Show>
 
-      <Show when={coursePriceType === 'paid' && enableIndividualTaxControl}>
+      <Show when={coursePriceType === 'paid' && monetizeBy === 'tutor' && enableIndividualTaxControl}>
         <div css={styles.taxWrapper}>
           <label>{__('Tax Collection', 'tutor')}</label>
 
