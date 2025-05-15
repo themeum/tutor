@@ -17,7 +17,7 @@ const Card = ({ children, hasBorder = false, cardStyle }: CardProps) => {
 const styles = {
   wrapper: (hasBorder: boolean) => css`
     width: 100%;
-    border-radius: ${borderRadius[6]};
+    border-radius: ${borderRadius.card};
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
@@ -61,7 +61,7 @@ export const CardHeader = ({
 
 const headerStyles = {
   wrapper: (collapsed: boolean, size: 'regular' | 'small') => css`
-    padding: ${spacing[16]} ${spacing[24]};
+    padding: ${spacing[16]} ${spacing[20]} ${spacing[12]} ${spacing[20]};
 
     ${size === 'small' &&
     css`

@@ -14,7 +14,8 @@ import Table, { type Column } from '@TutorShared/molecules/Table';
 import { getCountryByCode, getStateByCode, isEuropeanUnion } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import Card, { CardHeader } from '../molecules/Card';
+import { typography } from '@TutorShared/config/typography';
+import Card from '../molecules/Card';
 import type { TaxSettings } from '../services/tax';
 import EuropeanUnionTax from './EuropeanUnionTax';
 import { MoreOptions } from './MoreOptions';
@@ -277,7 +278,9 @@ export default function TaxRates() {
   function renderCountrySelectButton() {
     return (
       <Button
-        variant="secondary"
+        variant="primary"
+        size="small"
+        buttonCss={styles.addRegionButton}
         onClick={() => {
           openCountrySelectModal({
             form,
@@ -295,14 +298,16 @@ export default function TaxRates() {
   ) : (
     <>
       <Card>
-        <CardHeader
-          title={__('Tax Rates', 'tutor')}
-          subtitle={__(
-            "Set up tax rates for different regions. These rates will apply based on your customer's location.",
-            'tutor',
-          )}
-        />
         <div css={styleUtils.cardInnerSection}>
+          <div css={styles.header}>
+            <div css={typography.body('medium')}>{__('Tax Rates', 'tutor')}</div>
+            <div css={styles.subtitle}>
+              {
+                // prettier-ignore
+                __( "Set up tax rates for different regions. These rates will apply based on your customer's location.", 'tutor')
+              }
+            </div>
+          </div>
           <Show when={activeCountry && activeCountryAllStates?.length}>
             <Checkbox
               label={__('Apply single tax rate for entire country', 'tutor')}
@@ -368,6 +373,17 @@ const styles = {
     gap: ${spacing[8]};
     color: ${colorTokens.text.primary};
     font-weight: ${fontWeight.medium};
+  `,
+  header: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
+  addRegionButton: css`
+    padding: ${spacing[8]} ${spacing[16]};
+  `,
+  subtitle: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
   `,
   emoji: css`
     font-size: ${fontSize[24]};

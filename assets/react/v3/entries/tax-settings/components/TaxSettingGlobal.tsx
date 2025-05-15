@@ -110,7 +110,7 @@ const styles = {
   inputGroupWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
-    padding: ${spacing[10]} ${spacing[24]} ${spacing[20]};
+    padding: ${spacing[10]} ${spacing[20]} ${spacing[24]} ${spacing[20]};
   `,
   checkboxLabel: css`
     font-size: ${fontSize[14]};
