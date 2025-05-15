@@ -7,20 +7,21 @@ import { Controller, useFormContext } from 'react-hook-form';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 
-import FormInput from '@TutorShared/components/fields/FormInput';
-import FormSwitch from '@TutorShared/components/fields/FormSwitch';
-
-import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+
+import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
+import EnrollmentSettings from '@CourseBuilderComponents/course-basic/EnrollmentSettings';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Addons, CURRENT_VIEWPORT, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 import type { Option } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
@@ -28,36 +29,58 @@ const courseId = getCourseId();
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
-  const [activeTab, setActiveTab] = useState('general');
   const isCourseDetailsLoading = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
 
+  const isGeneralSettingsVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.BASICS.OPTIONS.GENERAL);
+  const isContentDripSettingsVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.BASICS.OPTIONS.CONTENT_DRIP,
+  );
+  const isEnrollmentSettingsVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.BASICS.OPTIONS.ENROLLMENT,
+  );
+
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
 
-  const tabList: TabItem<string>[] = [
-    {
+  const availableTabs = [
+    isGeneralSettingsVisible && {
       label: __('General', 'tutor'),
       value: 'general',
       icon: <SVGIcon name="settings" width={24} height={24} />,
     },
-    {
+    isContentDripSettingsVisible && {
       label: __('Content Drip', 'tutor'),
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: !!isContentDripActive,
     },
-  ];
-
-  if (isAddonEnabled(Addons.BUDDYPRESS)) {
-    tabList.push({
+    isEnrollmentSettingsVisible && {
+      label: __('Enrollment', 'tutor'),
+      value: 'enrollment',
+      icon: <SVGIcon name="update" width={24} height={24} />,
+    },
+    isAddonEnabled(Addons.BUDDYPRESS) && {
       label: __('BuddyPress', 'tutor'),
       value: 'buddyPress',
       icon: <SVGIcon name="buddyPress" width={24} height={24} />,
       activeBadge: isBuddyPressEnabled,
-    });
+    },
+  ].filter(Boolean) as TabItem<string>[];
+
+  const [activeTab, setActiveTab] = useState(availableTabs[0]?.value || 'general');
+
+  if (!availableTabs.length) {
+    return null;
   }
+
+  const tabList = CURRENT_VIEWPORT.isAboveSmallMobile
+    ? availableTabs
+    : availableTabs.map((tab) => ({
+        ...tab,
+        label: activeTab === tab.value ? tab.label : '',
+      }));
 
   const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
     label: level.label,
@@ -68,14 +91,9 @@ const CourseSettings = () => {
     <div>
       <label css={typography.caption()}>{__('Options', 'tutor')}</label>
 
-      <div css={styles.courseSettings}>
+      <div data-cy="course-settings" css={styles.courseSettings}>
         <Tabs
-          tabList={
-            // this is a hack to only show the tab labels on screens above small mobile
-            CURRENT_VIEWPORT.isAboveSmallMobile
-              ? tabList
-              : tabList.map((tab) => ({ ...tab, label: activeTab === tab.value ? tab.label : '' }))
-          }
+          tabList={tabList}
           activeTab={activeTab}
           onChange={setActiveTab}
           orientation={!CURRENT_VIEWPORT.isAboveSmallMobile ? 'horizontal' : 'vertical'}
@@ -94,23 +112,6 @@ const CourseSettings = () => {
           {activeTab === 'general' && (
             <div css={styles.settingsOptions}>
               <Controller
-                name="maximum_students"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    label={__('Maximum Student', 'tutor')}
-                    helpText={__('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor')}
-                    placeholder="0"
-                    type="number"
-                    isClearable
-                    selectOnFocus
-                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                  />
-                )}
-              />
-
-              <Controller
                 name="course_level"
                 control={form.control}
                 render={(controllerProps) => (
@@ -125,28 +126,6 @@ const CourseSettings = () => {
                   />
                 )}
               />
-
-              <Show when={tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
-                <Controller
-                  name="enrollment_expiry"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInput
-                      {...controllerProps}
-                      label={__('Enrollment Expiration', 'tutor')}
-                      helpText={
-                        // prettier-ignore
-                        __("Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.", 'tutor')
-                      }
-                      placeholder="0"
-                      type="number"
-                      isClearable
-                      selectOnFocus
-                      loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                    />
-                  )}
-                />
-              </Show>
 
               <div css={styles.courseAndQna}>
                 <Controller
@@ -181,6 +160,8 @@ const CourseSettings = () => {
           )}
 
           {activeTab === 'content_drip' && <ContentDripSettings />}
+
+          {activeTab === 'enrollment' && <EnrollmentSettings />}
 
           {activeTab === 'buddyPress' && (
             <div css={styles.settingsOptions}>

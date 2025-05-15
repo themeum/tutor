@@ -542,8 +542,9 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
 		$post_id           = get_the_ID();
 		$size              = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
-		$placeHolderUrl    = tutor()->url . 'assets/images/placeholder.svg';
-		$thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url( $post_thumbnail_id, $size ) : $placeHolderUrl;
+		$placeholder_url   = tutor()->url . 'assets/images/placeholder.svg';
+		$thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url( $post_thumbnail_id, $size ) : $placeholder_url;
+		$thumb_url         = apply_filters( 'tutor_course_thumb_url', $thumb_url, $post_id, $size, $post_thumbnail_id );
 
 		if ( $url ) {
 			return $thumb_url;
@@ -562,6 +563,8 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 	 * @since 1.0.0
 	 * @since 2.2.0 $id param added to provide post id to access outside of post loop.
 	 *
+	 * @since 3.4.1 Attachment src fallback added to show placeholder image
+	 *
 	 * @param string $size size of thumb.
 	 * @param int    $id post id.
 	 *
@@ -570,14 +573,19 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 	function get_tutor_course_thumbnail_src( $size = 'post-thumbnail', $id = 0 ) {
 		$post_id           = $id ? $id : get_the_ID();
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
+		$placeholder_url   = tutor()->url . 'assets/images/placeholder.svg';
 
 		if ( $post_thumbnail_id ) {
 			$size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
 			$src  = wp_get_attachment_image_url( $post_thumbnail_id, $size, false );
+			if ( ! $src ) {
+				$src = $placeholder_url;
+			}
 		} else {
-			$placeholder_url = tutor()->url . 'assets/images/placeholder.svg';
-			$src             = apply_filters( 'tutor_course_thumbnail_placeholder', $placeholder_url, $post_id );
+			$src = apply_filters( 'tutor_course_thumbnail_placeholder', $placeholder_url, $post_id );
 		}
+
+		$src = apply_filters( 'tutor_course_thumb_url', $src, $post_id, $size, $post_thumbnail_id );
 
 		return $src;
 	}
@@ -652,7 +660,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 				tutor_load_template( 'loop.course-price' );
 			}
 		}
-		echo apply_filters( 'tutor_course_loop_price', ob_get_clean() ); //phpcs:ignore -- already escaped inside template file
+		echo apply_filters( 'tutor_course_loop_price', ob_get_clean(), $course_id ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -1046,9 +1054,12 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 		$course_id        = get_the_ID();
 		$course_post_type = tutor()->course_post_type;
 		$queryCourse      = new WP_Query(
-			array(
-				'p'         => $course_id,
-				'post_type' => $course_post_type,
+			apply_filters(
+				'tutor_course_lead_info_args',
+				array(
+					'p'         => $course_id,
+					'post_type' => $course_post_type,
+				)
 			)
 		);
 
@@ -1600,12 +1611,12 @@ if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
 		}
 
 		$args = array(
-			'headline'    => __( 'Permission Denied', 'tutor-pro' ),
-			'message'     => __( 'You don\'t have the right to edit this course', 'tutor-pro' ),
-			'description' => __( 'Please make sure you are logged in to correct account', 'tutor-pro' ),
+			'headline'    => __( 'Permission Denied', 'tutor' ),
+			'message'     => __( 'You don\'t have the right to edit this course', 'tutor' ),
+			'description' => __( 'Please make sure you are logged in to correct account', 'tutor' ),
 			'button'      => array(
 				'url'  => get_permalink( $post_id ),
-				'text' => __( 'View Course', 'tutor-pro' ),
+				'text' => __( 'View Course', 'tutor' ),
 			),
 		);
 

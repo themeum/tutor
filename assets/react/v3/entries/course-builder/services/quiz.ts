@@ -69,7 +69,7 @@ export interface QuizQuestion {
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: boolean;
-    randomize_options: boolean;
+    randomize_question: boolean;
     question_mark: number;
     show_question_mark: boolean;
     has_multiple_correct_answer: boolean;
@@ -88,7 +88,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: '0' | '1';
-    randomize_options: '0' | '1';
+    randomize_question: '0' | '1';
     question_mark: number;
     show_question_mark: '0' | '1';
     has_multiple_correct_answer?: '0' | '1';
@@ -103,7 +103,7 @@ interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' |
     content_drip_settings?: {
       unlock_date?: string;
       after_xdays_of_enroll?: number;
-      prerequisites?: ID[];
+      prerequisites?: ID[] | string;
     };
     quiz_type?: string;
   };
@@ -116,7 +116,7 @@ interface QuizPayload {
   deleted_answer_ids?: ID[];
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: number;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface QuizDetailsResponse {
@@ -207,7 +207,7 @@ export interface H5PContentResponse {
   output: H5PContent[];
 }
 
-export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
+export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
   const calculateQuizDataStatus = (answer: QuizQuestionOption) => {
     if (answer.image_url) {
       return answer.answer_view_format === 'text_image' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
@@ -220,7 +220,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     if (question.question_settings) {
       question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
       question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
-      question.question_settings.randomize_options = !!Number(question.question_settings.randomize_options);
+      question.question_settings.randomize_question = !!Number(question.question_settings.randomize_question);
     }
     question.question_answers = question.question_answers.map((answer) => ({
       ...answer,
@@ -304,25 +304,25 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
   return {
     ID: quiz.ID,
     _data_status: QuizDataStatus.NO_CHANGE,
-    quiz_title: quiz.post_title || '',
-    quiz_description: quiz.post_content || '',
+    quiz_title: quiz.post_title ?? '',
+    quiz_description: quiz.post_content ?? '',
     quiz_option: {
       time_limit: {
-        time_value: quiz.quiz_option.time_limit.time_value || 0,
-        time_type: quiz.quiz_option.time_limit.time_type || 'minutes',
+        time_value: quiz.quiz_option.time_limit.time_value ?? 0,
+        time_type: quiz.quiz_option.time_limit.time_type ?? 'minutes',
       },
       hide_quiz_time_display: quiz.quiz_option.hide_quiz_time_display === '1',
-      feedback_mode: quiz.quiz_option.feedback_mode || 'retry',
-      attempts_allowed: quiz.quiz_option.attempts_allowed || 10,
+      feedback_mode: quiz.quiz_option.feedback_mode ?? 'retry',
+      attempts_allowed: quiz.quiz_option.attempts_allowed ?? 10,
       pass_is_required: quiz.quiz_option.pass_is_required === '1',
-      passing_grade: quiz.quiz_option.passing_grade || 80,
-      max_questions_for_answer: quiz.quiz_option.max_questions_for_answer || 10,
+      passing_grade: quiz.quiz_option.passing_grade ?? 80,
+      max_questions_for_answer: quiz.quiz_option.max_questions_for_answer ?? 10,
       quiz_auto_start: quiz.quiz_option.quiz_auto_start === '1',
-      question_layout_view: quiz.quiz_option.question_layout_view || '',
-      questions_order: quiz.quiz_option.questions_order || 'rand',
+      question_layout_view: quiz.quiz_option.question_layout_view || 'single_question',
+      questions_order: quiz.quiz_option.questions_order ?? 'rand',
       hide_question_number_overview: quiz.quiz_option.hide_question_number_overview === '1',
-      short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit || 200,
-      open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit || 500,
+      short_answer_characters_limit: quiz.quiz_option.short_answer_characters_limit ?? 200,
+      open_ended_answer_characters_limit: quiz.quiz_option.open_ended_answer_characters_limit ?? 500,
       content_drip_settings: quiz.quiz_option.content_drip_settings || {
         unlock_date: '',
         after_xdays_of_enroll: 0,
@@ -332,6 +332,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     questions: (quiz.questions || []).map((question) => convertedQuestion(question)),
     deleted_question_ids: [],
     deleted_answer_ids: [],
+    ...Object.fromEntries(slotFields.map((key) => [key, quiz[key as keyof QuizDetailsResponse]])),
   };
 };
 
@@ -340,6 +341,8 @@ export const convertQuizFormDataToPayload = (
   topicId: ID,
   contentDripType: ContentDripType,
   courseId: ID,
+  questionsSlotFields: string[],
+  settingsSlotFields: string[],
 ): QuizPayload => {
   return {
     course_id: courseId,
@@ -384,7 +387,9 @@ export const convertQuizFormDataToPayload = (
               after_xdays_of_enroll: formData.quiz_option.content_drip_settings.after_xdays_of_enroll,
             }),
             ...(contentDripType === 'after_finishing_prerequisites' && {
-              prerequisites: formData.quiz_option.content_drip_settings.prerequisites,
+              prerequisites: formData.quiz_option.content_drip_settings.prerequisites?.length
+                ? formData.quiz_option.content_drip_settings.prerequisites
+                : '',
             }),
           },
         }),
@@ -409,7 +414,7 @@ export const convertQuizFormDataToPayload = (
             answer_required: question.question_settings.answer_required ? '1' : '0',
             question_mark: question.question_settings.question_mark,
             question_type: question.question_type as QuizQuestionType,
-            randomize_options: question.question_settings.randomize_options ? '1' : '0',
+            randomize_question: question.question_settings.randomize_question ? '1' : '0',
             show_question_mark: question.question_settings.show_question_mark ? '1' : '0',
             ...(question.question_type === 'multiple_choice' && {
               has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer ? '1' : '0',
@@ -440,6 +445,7 @@ export const convertQuizFormDataToPayload = (
                 answer_order: answer.answer_order,
               }) as QuizQuestionOption,
           ),
+          ...Object.fromEntries(questionsSlotFields.map((key) => [key, question[key as keyof QuizQuestion]])),
         };
       }),
     },
@@ -456,8 +462,11 @@ export const convertQuizFormDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': formData.quiz_option.content_drip_settings.prerequisites,
+        'content_drip_settings[prerequisites]': formData.quiz_option.content_drip_settings.prerequisites?.length
+          ? formData.quiz_option.content_drip_settings.prerequisites
+          : '',
       }),
+    ...Object.fromEntries(settingsSlotFields.map((key) => [key, formData[key as keyof QuizForm]])),
   };
 };
 

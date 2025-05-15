@@ -147,7 +147,7 @@
 				<td><?php echo esc_html( $environment['server_info'] ); ?></td>
 			</tr>
 			<tr>
-				<td data-export-label="PHP Version"><?php _e( 'PHP version', 'tutor' ); ?>:</td>
+				<td data-export-label="PHP Version"><?php esc_html_e( 'PHP version', 'tutor' ); ?>:</td>
 				<td class="help"><?php echo tutor_utils()->help_tip( esc_html__( 'The version of PHP installed on your hosting server.', 'tutor' ) ); //phpcs:ignore -- contain safe data ?></td>
 				<td>
 					<?php
@@ -210,9 +210,9 @@
 					<td>
 						<?php
 						if ( version_compare( $environment['mysql_version'], '5.6', '<' ) && ! strstr( $environment['mysql_version_string'], 'MariaDB' ) ) {
-							/* Translators: %1$s: MySQL version, %2$s: Recommended MySQL version. */
 							echo '<mark class="error">
-									<span class="dashicons dashicons-warning"></span> ' .
+							<span class="dashicons dashicons-warning"></span> ' .
+									/* Translators: %1$s: MySQL version, %2$s: Recommended MySQL version. */
 									sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor' ), esc_html( $environment['mysql_version_string'] ), '<a href="https://wordpress.org)/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'tutor' ) . '</a>' ) .
 								'</mark>';
 						} else {
@@ -265,9 +265,9 @@
 					if ( $environment['domdocument_enabled'] ) {
 						echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';
 					} else {
-						/* Translators: %s: classname and link. */
 						echo '<mark class="error">
-							<span class="dashicons dashicons-warning"></span> ' .
+						<span class="dashicons dashicons-warning"></span> ' .
+							/* Translators: %s: classname and link. */
 							sprintf( esc_html__( 'Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'tutor' ), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>' ) .
 						'</mark>';
 					}
@@ -282,9 +282,9 @@
 					if ( $environment['gzip_enabled'] ) {
 						echo '<mark class="yes"><span class="dashicons dashicons-yes"></span></mark>';
 					} else {
-						/* Translators: %s: classname and link. */
 						echo '<mark class="error">
-							<span class="dashicons dashicons-warning"></span> ' .
+						<span class="dashicons dashicons-warning"></span> ' .
+							/* Translators: %s: classname and link. */
 							sprintf( esc_html__( 'Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'tutor' ), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>' ) .
 						'</mark>';
 					}
@@ -301,9 +301,9 @@
 								<span class="dashicons dashicons-yes"></span>
 							</mark>';
 					} else {
-						/* Translators: %s: classname and link. */
 						echo '<mark class="error">
-								<span class="dashicons dashicons-warning"></span> ' .
+						<span class="dashicons dashicons-warning"></span> ' .
+								/* Translators: %s: classname and link. */
 								sprintf( esc_html__( 'Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'tutor' ), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>' ) .
 							'</mark>';
 					}

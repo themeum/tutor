@@ -1,19 +1,22 @@
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import type { FormControllerProps } from '@TutorShared/utils/form';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { decodeHtmlEntities } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -122,7 +125,11 @@ const FormTagsInput = ({
             {fieldValue.length > 0 && (
               <div css={styles.tagsWrapper}>
                 {fieldValue.map((tag: Tag) => (
-                  <Chip key={tag.id} label={tag.name} onClick={() => handleCheckboxChange(false, tag)} />
+                  <Chip
+                    key={tag.id}
+                    label={decodeHtmlEntities(tag.name)}
+                    onClick={() => handleCheckboxChange(false, tag)}
+                  />
                 ))}
               </div>
             )}
@@ -156,7 +163,7 @@ const FormTagsInput = ({
                     {tags.map((tag) => (
                       <li key={String(tag.id)} css={styles.optionItem}>
                         <Checkbox
-                          label={tag.name}
+                          label={decodeHtmlEntities(tag.name)}
                           checked={!!fieldValue.find((item) => item.id === tag.id)}
                           onChange={(checked) => handleCheckboxChange(checked, tag)}
                         />
@@ -173,7 +180,7 @@ const FormTagsInput = ({
   );
 };
 
-export default FormTagsInput;
+export default withVisibilityControl(FormTagsInput);
 
 const styles = {
   mainWrapper: css`
@@ -260,8 +267,11 @@ const styles = {
     width: 100%;
     padding: ${spacing[8]};
 
+    &:focus,
+    &:active,
     &:hover {
       background-color: ${colorTokens.background.hover};
+      color: ${colorTokens.text.primary};
     }
   `,
 };

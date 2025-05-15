@@ -128,7 +128,9 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   };
 
   const handleCertificateSelection = (certificateKey: string) => {
-    form.setValue('tutor_course_certificate_template', certificateKey);
+    form.setValue('tutor_course_certificate_template', certificateKey, {
+      shouldDirty: true,
+    });
     setSelectedCertificate(certificateKey);
   };
 
@@ -137,7 +139,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
       ? ([{ label: __('Templates', 'tutor'), value: 'templates' }] as CertificateTabItem[])
       : []),
     {
-      label: __(`Custom ${CURRENT_VIEWPORT.isAboveSmallMobile ? ' Certificates' : ''}`, 'tutor'),
+      label: CURRENT_VIEWPORT.isAboveSmallMobile ? __('Custom Certificates', 'tutor') : __('Certificates', 'tutor'),
       value: 'custom_certificates',
     },
   ];
@@ -306,6 +308,13 @@ const styles = {
     display: inline-flex;
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

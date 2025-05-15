@@ -30,6 +30,7 @@ import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
 import liveClassPro2x from '@SharedImages/pro-placeholders/live-class-2x.webp';
 import liveClassPro from '@SharedImages/pro-placeholders/live-class.webp';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -110,6 +111,7 @@ const LiveClass = () => {
                 })}
               >
                 <Button
+                  data-cy="create-zoom-meeting"
                   variant="secondary"
                   icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
                   buttonCss={css`
@@ -148,6 +150,7 @@ const LiveClass = () => {
                 })}
               >
                 <Button
+                  data-cy="create-google-meet-link"
                   variant="secondary"
                   icon={<SVGIcon name="googleMeetColorize" width={24} height={24} />}
                   buttonCss={css`
@@ -201,7 +204,7 @@ const LiveClass = () => {
   );
 };
 
-export default LiveClass;
+export default withVisibilityControl(LiveClass);
 
 const styles = {
   label: css`

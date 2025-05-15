@@ -1,15 +1,15 @@
+import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
+import { OrderBadge } from '@OrderComponents/order/OrderBadge';
+import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
+import { useOrderContext } from '@OrderContexts/order-context';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Container from '@TutorShared/components/Container';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
-import { OrderBadge } from '@OrderComponents/order/OrderBadge';
-import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
-import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
@@ -97,9 +97,17 @@ const styles = {
   wrapper: css`
     height: ${TOPBAR_HEIGHT}px;
     background: ${colorTokens.background.white};
+    border: 1px solid ${colorTokens.stroke.divider};
+    position: sticky;
+    top: 32px;
+    z-index: ${zIndex.positive};
+
+    ${Breakpoint.mobile} {
+      position: unset;
+      padding-inline: ${spacing[8]};
+    }
 
     ${Breakpoint.smallMobile} {
-      padding-inline: ${spacing[8]};
       height: auto;
     }
   `,

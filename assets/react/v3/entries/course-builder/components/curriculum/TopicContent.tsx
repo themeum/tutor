@@ -36,8 +36,9 @@ import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorSh
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection, ID } from '@TutorShared/utils/types';
+import type { ID } from '@TutorShared/utils/types';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicContentProps {
@@ -159,19 +160,19 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const exportQuizMutation = useExportQuizMutation();
 
   const handleShowModalOrPopover = () => {
-    const isContentType = type as keyof typeof modalComponent;
-    if (modalComponent[isContentType]) {
+    const contentType = type as keyof typeof modalComponent;
+    if (modalComponent[contentType]) {
       showModal({
-        component: modalComponent[isContentType],
+        component: modalComponent[contentType],
         props: {
           contentDripType: form.watch('contentDripType'),
           topicId: topicId,
           lessonId: contentId,
           assignmentId: contentId,
           quizId: contentId,
-          title: modalTitle[isContentType],
+          title: modalTitle[contentType],
           subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
-          icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
+          icon: <SVGIcon name={modalIcon[contentType]} height={24} width={24} />,
           ...(type === 'tutor_h5p_quiz' && {
             contentType: 'tutor_h5p_quiz',
           }),
@@ -289,7 +290,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
             </Tooltip>
           </Show>
           <Tooltip content={__('Edit', 'tutor')} delay={200}>
-            <button ref={editButtonRef} type="button" css={styleUtils.actionButton} onClick={handleShowModalOrPopover}>
+            <button
+              data-cy={`edit-${type}`}
+              ref={editButtonRef}
+              type="button"
+              css={styleUtils.actionButton}
+              onClick={handleShowModalOrPopover}
+            >
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
@@ -299,7 +306,12 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                 <Show
                   when={!isTutorPro}
                   fallback={
-                    <button type="button" css={styleUtils.actionButton} onClick={handleDuplicate}>
+                    <button
+                      data-cy={`duplicate-${type}`}
+                      type="button"
+                      css={styleUtils.actionButton}
+                      onClick={handleDuplicate}
+                    >
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   }
@@ -315,6 +327,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           </Show>
           <Tooltip content={__('Delete', 'tutor')} delay={200}>
             <button
+              data-cy={`delete-${type}`}
               ref={deleteRef}
               type="button"
               css={styleUtils.actionButton}

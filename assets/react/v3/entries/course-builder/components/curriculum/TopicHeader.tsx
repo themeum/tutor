@@ -164,12 +164,7 @@ const TopicHeader = ({
                   name="title"
                   rules={{ required: __('Title is required', 'tutor') }}
                   render={(controllerProps) => (
-                    <FormInput
-                      {...controllerProps}
-                      placeholder={__('Add a title', 'tutor')}
-                      isSecondary
-                      selectOnFocus
-                    />
+                    <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
                   )}
                 />
               </div>
@@ -180,6 +175,7 @@ const TopicHeader = ({
             <Show when={!isEdit}>
               <Tooltip content={__('Edit', 'tutor')} delay={200}>
                 <button
+                  data-cy="edit-topic"
                   type="button"
                   css={styleUtils.actionButton}
                   disabled={!topic.isSaved}
@@ -201,6 +197,7 @@ const TopicHeader = ({
                     when={!isTutorPro}
                     fallback={
                       <button
+                        data-cy="duplicate-topic"
                         type="button"
                         css={styleUtils.actionButton}
                         disabled={!topic.isSaved}
@@ -222,6 +219,7 @@ const TopicHeader = ({
             <Show when={topic.isSaved}>
               <Tooltip content={__('Delete', 'tutor')} delay={200}>
                 <button
+                  data-cy="delete-topic"
                   type="button"
                   css={styleUtils.actionButton}
                   disabled={!topic.isSaved}
@@ -297,6 +295,7 @@ const TopicHeader = ({
               {__('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-topic"
               loading={saveTopicMutation.isPending}
               variant="secondary"
               size="small"
@@ -420,6 +419,12 @@ const styles = {
 
     :disabled {
       cursor: not-allowed;
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
     }
 
     &:focus-visible {

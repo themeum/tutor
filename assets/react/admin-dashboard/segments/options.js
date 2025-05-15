@@ -1,7 +1,4 @@
-
 import { get_response_message } from '../../helper/response';
-import tutorFormData from '../../helper/tutor-formdata';
-import ajaxHandler from './filter';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -140,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (emailField.value && false === validateEmail(emailField.value)) {
 				emailField.style.borderColor = 'red';
 				emailField.focus();
-				tutor_toast('Warning', invalidMessage, 'error');
+				tutor_toast(__('Warning', 'tutor'), invalidMessage, 'error');
 			} else {
 				formSubmit = true;
 			}
@@ -386,15 +383,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	function highlightSearchedItem(dataKey) {
 		const target = document.querySelector(`#${dataKey}`);
 		const targetEl = target && target.querySelector(`[tutor-option-name]`);
-		const scrollTargetEl = target && target.parentNode.querySelector('.tutor-option-field-row');
 
-		if (scrollTargetEl) {
+		if (targetEl) {
 			targetEl.classList.add('isHighlighted');
 			setTimeout(() => {
 				targetEl.classList.remove('isHighlighted');
 			}, 6000);
 
-			scrollTargetEl.scrollIntoView({
+			targetEl.scrollIntoView({
 				behavior: 'smooth',
 				block: 'center',
 				inline: 'nearest',

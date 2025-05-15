@@ -217,7 +217,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 			</div>
 
 			<div class="tutor-table-responsive">
-				<table class="tutor-table">
+				<table class="tutor-table tutor-table-middle">
 					<thead>
 						<tr>
 							<th width="40%">
@@ -303,7 +303,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 								<td>
 									<?php if ( 'approved' !== $withdraw_history->status && isset( $status_message[ $withdraw_history->status ] ) ) : ?>
 										<span class="tool-tip-container">
-											<div class="tooltip-wrap tooltip-icon tutor-mt-12">
+											<div class="tooltip-wrap tooltip-icon">
 												<span class="tooltip-txt tooltip-left">
 													<?php echo esc_html( $status_message[ $withdraw_history->status ] ); ?>
 												</span>

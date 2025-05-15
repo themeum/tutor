@@ -122,6 +122,9 @@ $height-sm: 38px;
 
 		&-options {
 			list-style: none;
+			display: flex;
+			flex-direction: column;
+			gap: 1px;
 			padding: 8px 0px;
 			margin: 0;
 			overflow-y: auto;
@@ -160,7 +163,11 @@ $height-sm: 38px;
 		position: absolute;
 		top: 0;
 		bottom: 0;
-		left: 0;
+		@if ($is_rtl == true) {
+			right: 0;
+		} @else {
+			left: 0;
+		}
 		font-size: 16px;
 		line-height: 1.4;
 		width: 40px;
@@ -174,16 +181,29 @@ $height-sm: 38px;
 		}
 	
 		&-reverse {
-			right: 0;
-			left: auto;
+			@if ($is_rtl == true) {
+				right: auto;
+				left: 0;
+			} @else {
+				left: auto;
+				right: 0;
+			}
 	
 			& ~ .tutor-form-control {
-				padding-right: 40px !important;
+				@if ($is_rtl == true) {
+					padding-left: 40px !important;
+				} @else {
+					padding-right: 40px !important;
+				}
 			}
 		}
 	
 		&:not(.tutor-form-icon-reverse) ~ .tutor-form-control {
-			padding-left: 40px !important;
+			@if ($is_rtl == true) {
+				padding-right: 40px !important;
+			} @else {
+				padding-left: 40px !important;
+			}
 		}
 	}
 }
@@ -304,7 +324,7 @@ select.tutor-form-control,
 	}
 }
 
-.tutor-form-check-input {
+.tutor-form-check-input.tutor-form-check-input {
 	display: inline-block;
 	vertical-align: top;
 	background-color: var(--tutor-color-white);

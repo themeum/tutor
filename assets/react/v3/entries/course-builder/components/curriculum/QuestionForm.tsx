@@ -30,6 +30,7 @@ import Show from '@TutorShared/controls/Show';
 import { usePrevious } from '@TutorShared/hooks/usePrevious';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import emptyStateImage2x from '@SharedImages/quiz-empty-state-2x.webp';
 import emptyStateImage from '@SharedImages/quiz-empty-state.webp';
 
@@ -146,6 +147,12 @@ const QuestionForm = () => {
               )}
             />
           </Show>
+
+          <CourseBuilderInjectionSlot
+            section="Curriculum.Quiz.after_question_description"
+            namePrefix={`questions.${activeQuestionIndex}.`}
+            form={form}
+          />
         </div>
       </div>
 

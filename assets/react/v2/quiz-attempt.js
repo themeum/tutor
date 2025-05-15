@@ -1,5 +1,4 @@
-const { default: ajaxHandler } = require("../admin-dashboard/segments/filter");
-
+import ajaxHandler from "../helper/ajax-handler";
 
 /**
  * Manage quiz attempt page script
@@ -10,9 +9,8 @@ const { default: ajaxHandler } = require("../admin-dashboard/segments/filter");
  *
  * @since v2.1.0
  */
-const { __ } = wp.i18n;
-
 window.addEventListener('DOMContentLoaded', function() {
+    const { __ } = wp.i18n;
     let targetRow;
     const currentPage = _tutorobject.current_page;
     const modal = document.getElementById('tutor-common-confirmation-modal');

@@ -197,9 +197,11 @@ const styles = {
         &:hover,
         &:focus {
           background-color: ${colorTokens.action.secondary.hover};
+          color: ${colorTokens.text.brand};
         }
         &:active {
           background-color: ${colorTokens.action.secondary.active};
+          color: ${colorTokens.text.brand};
         }
       }
     `,
@@ -273,6 +275,7 @@ const styles = {
       &:not(:disabled) {
         &:hover,
         &:focus {
+          background-color: transparent;
           color: ${colorTokens.text.brand};
 
           svg {
@@ -280,6 +283,7 @@ const styles = {
           }
         }
         &:active {
+          background-color: transparent;
           color: ${colorTokens.text.subdued};
         }
       }

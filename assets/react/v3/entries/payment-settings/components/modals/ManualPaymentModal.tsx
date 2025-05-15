@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
-import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
@@ -55,12 +55,12 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
   }, []);
 
   const onSubmit = (data: PaymentMethod) => {
-    paymentForm.setValue('payment_methods', [...paymentForm.getValues('payment_methods'), data]);
+    paymentForm.setValue('payment_methods', [...(paymentForm.getValues('payment_methods') ?? []), data]);
     closeModal({ action: 'CONFIRM' });
   };
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={620}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={680}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div css={styles.formBody}>
           {manualMethodFields.map((field, index) => {
@@ -113,7 +113,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                   name={`fields.${index}.value`}
                   control={form.control}
                   rules={{ ...requiredRule() }}
-                  render={(controllerProps) => <FormTextareaInput {...controllerProps} label={field.label} rows={5} />}
+                  render={(controllerProps) => <FormWPEditor {...controllerProps} label={field.label} hideMediaButtons hideQuickTags />}
                 />
                 <div css={styles.inputHint}>{field.hint}</div>
               </div>

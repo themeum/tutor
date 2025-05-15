@@ -60,6 +60,7 @@ export interface Assignment extends Content {
       time: string;
       value: string;
     };
+    deadline_from_start: string;
     total_mark: number;
     pass_mark: number;
     upload_files_limit: number;
@@ -117,7 +118,7 @@ export interface LessonPayload {
   tutor_attachments: ID[];
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: string;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface AssignmentPayload {
@@ -128,6 +129,7 @@ export interface AssignmentPayload {
   attachments: ID[];
   'assignment_option[time_duration][time]': string;
   'assignment_option[time_duration][value]': string;
+  'assignment_option[deadline_from_start]': string;
   'assignment_option[total_mark]': number;
   'assignment_option[pass_mark]': number;
   'assignment_option[upload_files_limit]': number;
@@ -135,7 +137,7 @@ export interface AssignmentPayload {
 
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: string;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface ContentDuplicatePayload {
@@ -168,6 +170,7 @@ export const convertLessonDataToPayload = (
   lessonId: ID,
   topicId: ID,
   contentDripType: ContentDripType,
+  slotFields: string[],
 ): LessonPayload => {
   return {
     ...(lessonId && { lesson_id: lessonId }),
@@ -198,8 +201,15 @@ export const convertLessonDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites?.length
+          ? data.content_drip_settings.prerequisites
+          : '',
       }),
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, data[key as keyof LessonForm] || ''];
+      }),
+    ),
   };
 };
 
@@ -208,6 +218,7 @@ export const convertAssignmentDataToPayload = (
   assignmentId: ID,
   topicId: ID,
   contentDripType: ContentDripType,
+  slotFields: string[],
 ): AssignmentPayload => {
   return {
     ...(assignmentId && { assignment_id: assignmentId }),
@@ -217,6 +228,7 @@ export const convertAssignmentDataToPayload = (
     attachments: (data.attachments || []).map((attachment) => attachment.id),
     'assignment_option[time_duration][time]': data.time_duration.time,
     'assignment_option[time_duration][value]': data.time_duration.value,
+    'assignment_option[deadline_from_start]': data.deadline_from_start ? '1' : '0',
     'assignment_option[total_mark]': data.total_mark,
     'assignment_option[pass_mark]': data.pass_mark,
     'assignment_option[upload_files_limit]': data.upload_files_limit,
@@ -232,8 +244,15 @@ export const convertAssignmentDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites?.length
+          ? data.content_drip_settings.prerequisites
+          : '',
       }),
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, data[key as keyof AssignmentForm] || ''];
+      }),
+    ),
   };
 };
 

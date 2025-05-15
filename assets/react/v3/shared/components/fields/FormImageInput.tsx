@@ -10,6 +10,7 @@ import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModa
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 
@@ -145,4 +146,4 @@ const FormImageInput = ({
   );
 };
 
-export default FormImageInput;
+export default withVisibilityControl(FormImageInput);

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 import type React from 'react';
 import { useState } from 'react';
 
@@ -12,19 +12,20 @@ import Tooltip from '@TutorShared/atoms/Tooltip';
 import WPEditor from '@TutorShared/atoms/WPEditor';
 
 import AITextModal from '@TutorShared/components/modals/AITextModal';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
-import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { Editor, IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
+import type { Editor, TutorMutationResponse } from '@TutorShared/utils/types';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
@@ -43,6 +44,8 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   onClickAiButton?: () => void;
   hasCustomEditorSupport?: boolean;
   isMinimal?: boolean;
+  hideMediaButtons?: boolean;
+  hideQuickTags?: boolean;
   editors?: Editor[];
   editorUsed?: Editor;
   isMagicAi?: boolean;
@@ -52,6 +55,8 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   onFullScreenChange?: (isFullScreen: boolean) => void;
   min_height?: number;
   max_height?: number;
+  toolbar1?: string;
+  toolbar2?: string;
 }
 
 interface CustomEditorOverlayProps {
@@ -89,7 +94,7 @@ const CustomEditorOverlay = ({
           loading={loadingButton === 'back_to'}
           onClick={async () => {
             const { action } = await showModal({
-              component: StaticConfirmationModal,
+              component: ConfirmationModal,
               props: {
                 title: __('Back to WordPress Editor', 'tutor'),
                 description: (
@@ -162,6 +167,8 @@ const FormWPEditor = ({
   onClickAiButton,
   hasCustomEditorSupport = false,
   isMinimal = false,
+  hideMediaButtons = false,
+  hideQuickTags = false,
   editors = [],
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
   isMagicAi = false,
@@ -171,11 +178,13 @@ const FormWPEditor = ({
   onFullScreenChange,
   min_height,
   max_height,
+  toolbar1,
+  toolbar2,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
-  const isAdmin = tutorConfig.current_user?.roles.includes(TutorRoles.ADMINISTRATOR);
-  const isInstructor = tutorConfig.current_user?.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+  const isAdmin = tutorConfig.current_user?.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user?.roles?.includes(TutorRoles.TUTOR_INSTRUCTOR);
 
   const [customEditorLoading, setCustomEditorLoading] = useState<string | null>(null);
 
@@ -184,6 +193,7 @@ const FormWPEditor = ({
   );
 
   const hasAvailableCustomEditors = hasCustomEditorSupport && filteredEditors.length > 0;
+  const isOverlayVisible = hasAvailableCustomEditors && editorUsed.name !== 'classic';
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -288,8 +298,8 @@ const FormWPEditor = ({
         }
 
         return (
-          <div css={styles.wrapper}>
-            <Show when={hasCustomEditorSupport && editorUsed.name !== 'classic'}>
+          <div css={styles.wrapper({ isOverlayVisible })}>
+            <Show when={isOverlayVisible}>
               <CustomEditorOverlay
                 editorUsed={editorUsed}
                 onBackToWPEditorClick={onBackToWPEditorClick}
@@ -305,11 +315,15 @@ const FormWPEditor = ({
                 }
               }}
               isMinimal={isMinimal}
+              hideMediaButtons={hideMediaButtons}
+              hideQuickTags={hideQuickTags}
               autoFocus={autoFocus}
               onFullScreenChange={onFullScreenChange}
               readonly={readOnly}
               min_height={min_height}
               max_height={max_height}
+              toolbar1={toolbar1}
+              toolbar2={toolbar2}
             />
           </div>
         );
@@ -321,8 +335,14 @@ const FormWPEditor = ({
 export default FormWPEditor;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ isOverlayVisible = false }) => css`
     position: relative;
+
+    ${isOverlayVisible &&
+    css`
+      overflow: hidden;
+      border-radius: ${borderRadius[6]};
+    `}
   `,
   editorLabel: css`
     display: flex;

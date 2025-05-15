@@ -41,7 +41,7 @@ window.jQuery(document).ready($=>{
             },
             success: resp=>{
                 if(!resp.success) {
-                    tutor_toast('Error!', get_response_message(resp), 'error');
+                    tutor_toast(__('Error!', 'tutor'), get_response_message(resp), 'error');
                     return;
                 }
 
@@ -124,12 +124,12 @@ window.jQuery(document).ready($=>{
         if (_tutorobject.tutor_pro_url && currentEditor !== '') {
             let tinyMCEContent = tinymce.get(currentEditor).getContent();
             if (tinyMCEContent === '') {
-                tutor_toast('Warning!', __( 'Empty Content not Allowed', 'tutor'), 'error');
+                tutor_toast(__('Warning!', 'tutor'), __('Empty Content not Allowed', 'tutor'), 'error');
                 return;
             }
         } else {
             if (answer === '') {
-                tutor_toast('Warning!', __( 'Empty Content not Allowed', 'tutor'), 'error');
+                tutor_toast(__('Warning!', 'tutor'), __('Empty Content not Allowed', 'tutor'), 'error');
                 return;
             }
         }
@@ -150,7 +150,7 @@ window.jQuery(document).ready($=>{
             success: resp => {
                 const {editor_id} = resp.data;
                 if(!resp.success) {
-                    tutor_toast('Error!', get_response_message(resp), 'error');
+                    tutor_toast(__('Error!', 'tutor'), get_response_message(resp), 'error');
                     return;
                 }
 

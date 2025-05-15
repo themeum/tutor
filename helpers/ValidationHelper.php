@@ -5,7 +5,7 @@
  * Provides static helper methods for form validation.
  *
  * @package Tutor\Helper
- * @author  Themum<support@themeum.com>
+ * @author  Themeum<support@themeum.com>
  * @link    https://themeum.com
  * @since   2.6.0
  */
@@ -101,14 +101,14 @@ class ValidationHelper {
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
 								$validation_pass = false;
 								/* translators: %1$s: field name, %2$d: value */
-								$validation_errors[ $key ][] = sprintf( __( '%1$s minimum length is %2$d' ), $key, $nested_rule[1] );
+								$validation_errors[ $key ][] = sprintf( __( '%1$s minimum length is %2$d', 'tutor' ), $key, $nested_rule[1] );
 							}
 							break;
 						case 'max_length':
 							if ( strlen( $data[ $key ] ) > $nested_rules[1] ) {
 								$validation_pass = false;
 								/* translators: %1$s: field name, %2$d: value */
-								$validation_errors[ $key ][] = sprintf( __( '%1$s maximum length is %2$d' ), $key, $nested_rule[1] );
+								$validation_errors[ $key ][] = sprintf( __( '%1$s maximum length is %2$d', 'tutor' ), $key, $nested_rule[1] );
 							}
 							break;
 						case 'mimes':
@@ -321,5 +321,51 @@ class ValidationHelper {
 
 		$record = QueryHelper::get_row( $table, array( $column => $value ), $column );
 		return $record ? true : false;
+	}
+
+	/**
+	 * Get valid tutor post type list
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param string $post_type the post type to get single tutor valid post type
+	 *
+	 * @return array|string
+	 */
+	public static function get_valid_tutor_post_types( $post_type = '' ) {
+		$valid_post_types = array(
+			'course'     => tutor()->course_post_type,
+			'bundle'     => tutor()->bundle_post_type,
+			'lesson'     => tutor()->lesson_post_type,
+			'topics'     => tutor()->topics_post_type,
+			'quiz'       => tutor()->quiz_post_type,
+			'assignment' => tutor()->assignment_post_type,
+		);
+
+		if ( $post_type && isset( $valid_post_types[ $post_type ] ) ) {
+			return $valid_post_types[ $post_type ];
+		}
+
+		return $valid_post_types;
+	}
+
+	/**
+	 * Validate term IDs before setting them.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array  $term_ids Term IDs to validate.
+	 * @param string $taxonomy Taxonomy to check against.
+	 *
+	 * @return array Valid term IDs.
+	 */
+	public static function validate_term_ids( $term_ids, $taxonomy ) {
+		return array_filter(
+			array_map( 'intval', $term_ids ),
+			function ( $term_id ) use ( $taxonomy ) {
+				$term = get_term( $term_id, $taxonomy );
+				return ! is_wp_error( $term ) && $term;
+			}
+		);
 	}
 }

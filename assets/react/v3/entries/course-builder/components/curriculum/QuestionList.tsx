@@ -41,8 +41,8 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
@@ -64,7 +64,7 @@ const questionTypeOptions: {
     isPro: false,
   },
   {
-    label: __('Open Ended/ Essay', 'tutor'),
+    label: __('Open Ended/Essay', 'tutor'),
     value: 'open_ended',
     icon: 'quizEssay',
     isPro: false,
@@ -210,7 +210,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         answer_required: false,
         question_mark: contentType === 'tutor_h5p_quiz' ? 0 : 1,
         question_type: questionType,
-        randomize_options: false,
+        randomize_question: false,
         show_question_mark: false,
       },
     } as QuizQuestion);
@@ -289,6 +289,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
         <button
+          data-cy="add-question"
           ref={addButtonRef}
           type="button"
           onClick={() => {
@@ -399,8 +400,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               >
                 <button key={option.value} type="button" css={styles.questionTypeOption} disabled onClick={noop}>
                   <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
-                  <span>{option.label}</span>
-                  <ProBadge size="small" content={__('Pro', 'tutor')} />
+                  <div>
+                    <span>{option.label}</span>
+                    <ProBadge size="small" content={__('Pro', 'tutor')} />
+                  </div>
                 </button>
               </Show>
             ))}
@@ -430,6 +433,12 @@ const styles = {
       width: 32px;
       height: 32px;
       border-radius: ${borderRadius[6]};
+
+      &:focus,
+      &:active,
+      &:hover {
+        background: none;
+      }
 
       svg {
         color: ${colorTokens.action.primary.default};
@@ -464,13 +473,27 @@ const styles = {
   `,
   questionTypeOption: css`
     ${styleUtils.resetButton};
+    color: ${colorTokens.text.title};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
     transition: background-color 0.3s ease-in-out;
     display: flex;
     align-items: center;
-    gap: ${spacing[4]};
+    gap: ${spacing[10]};
     border: 2px solid transparent;
+
+    div {
+      ${styleUtils.display.flex()};
+      align-items: center;
+      gap: ${spacing[4]};
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.title};
+    }
 
     :disabled {
       cursor: not-allowed;

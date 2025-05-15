@@ -1,10 +1,11 @@
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 
 export const headerHeight = 64;
 export const sidebarWidth = 355;
 export const footerHeight = 56;
 
 export const fontFamily = {
+  inter: "'Inter', sans-serif;",
   roboto: "'Roboto', sans-serif;",
   sfProDisplay: "'SF Pro Display', sans-serif;",
 } as const;

@@ -446,10 +446,17 @@ class User {
 					<img src="<?php echo esc_url( tutor()->url . 'assets/images/icon-info-round.svg' ); ?>"/>
 				</div>
 				<div>
-					<?php echo wp_kses( 'As membership is turned off, students and instructors will not be able to sign up. <strong>Press Enable</strong> or go to <strong>Settings > General > Membership</strong> and enable "Anyone can register".', array( 'strong' => true ) ); ?>
+					<?php
+					echo wp_kses(
+						__( 'As membership is turned off, students and instructors will not be able to sign up. <strong>Press Enable</strong> or go to <strong>Settings > General > Membership</strong> and enable "Anyone can register".', 'tutor' ),
+						array( 'strong' => true )
+					);
+					?>
 				</div>
 				<div>
-					<a href="<?php echo esc_url( add_query_arg( 'tutor-registration', 'enable', $hide_url ) ); ?>"><?php esc_html_e( 'Enable', 'tutor' ); ?></a>
+					<a href="<?php echo esc_url( add_query_arg( 'tutor-registration', 'enable', $hide_url ) ); ?>">
+						<?php esc_html_e( 'Enable', 'tutor' ); ?>
+					</a>
 					<hr/>
 					<a href="<?php echo esc_url( $hide_url ); ?>">
 						<?php esc_html_e( 'Dismiss', 'tutor' ); ?>

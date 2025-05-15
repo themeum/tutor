@@ -2,9 +2,9 @@ import { css } from '@emotion/react';
 
 import { borderRadius, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import type { IconCollection } from '@TutorShared/utils/types';
 
 import Show from '@TutorShared/controls/Show';
+import { IconCollection } from '@TutorShared/icons/types';
 import SVGIcon from './SVGIcon';
 
 type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'primary';

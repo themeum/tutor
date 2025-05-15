@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.2.1
+Stable tag: 3.6.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -312,11 +312,128 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.2.1 - January 21, 2024
+= 3.6.0 - May 27, 2025
+
+New: Added course import/export functionality. (Pro)
+New: Added an option to set assignment expiration behavior. (Pro)
+Update: Improved UI on the pricing page. (Pro)
+Update: Admin cannot create a Zoom meeting for an instructor if the instructor hasn't set up Zoom. (Pro)
+Update: Allow user to use coupon even when course is in sale.
+Update: Replaced generic error with a clear message explaining why a coupon cannot be cleared.
+Fix: Bundle course reorder doesn't work on the frontend after publishing. (Pro)
+Fix: Student assignments are not available for evaluation immediately after submission. (Pro)
+Fix: Enrolled courses remain visible despite expired membership and only disappear upon access. (Pro)
+Fix: Subscription payment history is not persistent across sessions. (Pro)
+Fix: Refunded WooCommerce orders appear as "Processing" on the customer's order history page.
+Fix: Resolved graph display issues on the report page. (Pro)
+Fix: Co-instructors cannot see bundle courses on the "My Courses" page. (Pro)
+Fix: Google login swaps users' first and last names. (Pro)
+Fix: Certificate does not reload automatically after creating a meeting in the course builder. (Pro)
+Fix: For public courses, 'View Pricing' is incorrectly shown on the course list page.
+Fix: Gradebook displays incorrect or inconsistent data. (Pro)
+Fix: Purchasing a paid course unintentionally grants access to another free course.
+
+= 3.5.0 - April 30, 2025
+
+New: Introduced a trial feature for membership plans. (Pro)
+New: Introduced course builder fields visibility control (Pro)
+New: Admins can now download invoices for both single and subscription-based purchases. (Pro)
+New: Added Paddle as a new payment gateway integration. (Pro)
+Update: Enabled coupon application support for membership plans. (Pro)
+Update: Courses and bundles have been merged for a more unified experience. (Pro)
+Update: Resolved WPML compatibility issues. (Pro)
+Update: Assignment unlock dates now follow the content drip schedule. (Pro)
+Update: Implemented a search functionality in the Course Builder’s category input.
+Fix: Fixed timezone issue on the date picker.
+Fix: Resolved PHP fatal error in assignment lists when different date formats are selected. (Pro)
+Fix: Users can no longer create course-specific coupons without selecting a course.
+Fix: Fixed subcategory name conflicts during course creation.
+Fix: Addressed an issue where a course changed from paid to free still appeared as paid in bundles. (Pro)
+Fix: Fixed translation notice errors.
+Fix: Resolved an issue where coupon usage tracking wasn’t working in some cases.
+Fix: Fixed category filter not working in the tutor instructor list shortcode.
+Fix: Multiple issues related to earnings, fees, and tax reporting have been fixed for more accurate reports. (Pro)
+Fix: Fixed a bug where quiz answer explanations were not displaying. (Pro)
+Fix: Resolved an issue where quiz settings data wasn’t imported properly. (Pro)
+
+= 3.4.2 - April 15, 2025
+
+Fix: Resolved the 'Invalid video source' issue.
+Fix: Patched security vulnerabilities in the Tutor editor.
+Fix: Resolved the PDF certificate download issue (Pro).
+
+= 3.4.1 - April 11, 2025
+
+Update: Host selection option added while creating zoom meetings (Pro)
+Fix: Resolved security vulnerabilities on the student profile page
+Fix: Prevented PHP fatal error on the assignment page when no time limit is set (Pro)
+Fix: Bundle course details page now properly displays more than 10 courses (Pro)
+Fix: Guest checkout registration issue when multiple users have the same first and last name (Pro)
+
+= 3.4.0 - March 24, 2025
+
+New: Bulk enrollment support for membership plans (Pro)
+New: "Buy Now" option added, allowing users to purchase without adding courses to the cart
+New: Login option added to the checkout page when guest checkout is enabled (Pro)
+Update: Added maximum student alert message for bulk enrollment (Pro)
+Update: Assignment expiration now follows the enrolment date (Pro)
+Update: Prevents deletion from WP users, removes student status, and cleans up related data
+Update: When a 100% discount coupon is used for a one-time purchase, users are redirected to "Start Learning" without requiring a payment method
+Fix: Users were able to enroll even when the enrolment period hadn’t started or was paused (Pro)
+Fix: Auto-completion failed when a 100% discount coupon was used for a subscription course with Stripe (Pro)
+Fix: Enrollment vulnerability for membership plans (Pro)
+Fix: Zoom meetings added by admins for other instructors were missing from the course interface (Pro)
+Fix: Zoom meeting issues related to time zones (Pro)
+Fix: Instructors couldn’t track the progress of private courses
+Fix: Co-instructors were unable to access scheduled courses (Pro)
+Fix: Currency formatting issue in withdrawal method email templates (Pro)
+Fix: "Invalid Plan" error appeared when duplicating a subscription plan (Pro)
+Fix: Automatic backslashes appeared in answer explanations when using quotation marks (" or ') (Pro)
+Fix: Billing information was reset for guest users (Pro)
+Fix: Instructors could still update courses after their status or role changed (Pro)
+
+= 3.3.1 - March 05, 2025
+
+Fix: Resolved theme style conflicts with the Tutor LMS Course Builder.
+Fix: Fixed password reset email content for guest checkout. (Pro)
+Fix: Ensured accurate deduction of decimal point values from earnings.
+Fix: Fixed the issue of WooCommerce course price appearing on the listing page when monetization is set to Paid Memberships Pro.
+
+= 3.3.0 - March 03, 2025
+
+New: Introduced custom field slots in the course builder for adding custom fields.
+New: Added a setting to sell courses exclusively via membership. (Pro)
+New: Enabled course-specific selling models, allowing sales via single purchase, subscription, membership, or a combination. (Pro)
+New: Added auto-renewal controls for students to manage subscriptions. (Pro)
+New: Added membership analytics to Tutor LMS Reports. (Pro)
+New: Implemented guest checkout, allowing course purchases without an account. (Pro)
+New: Added bulk enrollment via CSV import. (Pro)
+New: Introduced "Coming Soon" courses with custom thumbnails. (Pro)
+New: Added custom enrollment dates and instant pause options. (Pro)
+New: Integrated the 2Checkout payment gateway. (Pro)
+Update: Restored the admin bar in the course builder.
+Fix: Resolved issues with tag-based filtering.
+Fix: Fixed a database error in subscription table creation. (Pro)
+Fix: Corrected quiz randomization settings.
+Fix: Fixed imported settings not applying from JSON files.
+
+= 3.2.2 - February 05, 2025
+
+Update: Added missing translations in both the free and pro versions.
+Update: Improved email template compatibility with WPML. (Pro)
+Fix: Resolved special character display issues in Stripe payments. (Pro)
+Fix: Fixed the "Edit with Elementor" button for Course Bundles. (Pro)
+Fix: Resolved the Zoom meetings auto-activation issue. (Pro)
+Fix: Fixed enrollment issues for password-protected courses.
+Fix: Resolved REST API errors in Tutor LMS Pro. (Pro)
+Fix: Fixed Google Meet authorization issues for instructors. (Pro)
+Fix: Fixed an issue where removed payment methods were still appearing as installed.
+
+= 3.2.1 - January 21, 2025
 
 Fix: Resolved the "Page not found" issue for multilingual courses.
 
-= 3.2.0 - January 20, 2024
+= 3.2.0 - January 20, 2025
 
 New: Added Membership support (Phase 1) in the Native Subscription system. (Pro)
 New: Redesigned the Native Subscription and introduced Subscriptions for Course Bundles. (Pro)

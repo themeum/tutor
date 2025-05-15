@@ -15,10 +15,6 @@ export const createGlobalCss = () => css`
     #wpcontent {
       padding-left: 0;
     }
-
-    &:not(.tutor-backend-tutor-addons) #wpbody {
-      background-color: ${colorTokens.background.default};
-    }
   }
 
   *,
@@ -33,7 +29,8 @@ export const createGlobalCss = () => css`
   }
   body {
     margin: 0;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
+    height: 100%;
   }
 
   main {
@@ -220,6 +217,7 @@ export const createGlobalCss = () => css`
   :is(h1, h2, h3, h4, h5, h6, p) {
     padding: 0;
     margin: 0;
+    text-transform: unset;
   }
 
   table {
@@ -260,10 +258,11 @@ export const styleUtils = {
     background: none;
     border: none;
     outline: none;
+    box-shadow: none;
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     cursor: pointer;
   `,
   cardInnerSection: css`
@@ -346,6 +345,7 @@ export const styleUtils = {
   },
   text: {
     ellipsis: (lines = 1) => css`
+      white-space: normal;
       display: -webkit-box;
       -webkit-line-clamp: ${lines};
       -webkit-box-orient: vertical;
@@ -464,7 +464,10 @@ export const styleUtils = {
     cursor: pointer;
     transition: color 0.3s ease-in-out;
 
-    :hover:not(:disabled) {
+    :hover:not(:disabled),
+    :focus:not(:disabled),
+    :active:not(:disabled) {
+      background: none;
       color: ${colorTokens.icon.brand};
     }
 
@@ -493,6 +496,7 @@ export const styleUtils = {
     outline: none;
     color: ${colorTokens.icon.default};
     transition: color 0.3s ease-in-out;
+    cursor: pointer;
 
     :hover {
       color: ${colorTokens.icon.hover};
@@ -510,7 +514,7 @@ export const styleUtils = {
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     cursor: pointer;
     height: 32px;
     width: 32px;
@@ -542,7 +546,7 @@ export const styleUtils = {
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     cursor: grab;
     display: flex;
     align-items: center;
@@ -552,6 +556,13 @@ export const styleUtils = {
     cursor: grab;
     place-self: center center;
     border-radius: ${borderRadius[2]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
 
     :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
@@ -577,7 +588,7 @@ export const styleUtils = {
       padding: 0;
       margin: 0;
       text-align: inherit;
-      font-family: ${fontFamily.sfProDisplay};
+      font-family: ${fontFamily.inter};
       ${typography.caption()};
       flex: 1;
       color: ${colorTokens.text.subdued};

@@ -13,7 +13,7 @@ export interface Course {
 }
 
 interface CourseListParams extends PaginatedParams {
-  excludedIds: string[];
+  exclude: string[];
 }
 
 const getCourseList = (params: CourseListParams) => {
@@ -27,7 +27,7 @@ export const useCourseListQuery = ({ params, isEnabled }: { params: CourseListPa
     queryKey: ['PrerequisiteCourses', params],
     queryFn: () =>
       getCourseList({
-        excludedIds: params.excludedIds,
+        exclude: params.exclude,
         limit: params.limit,
         offset: params.offset,
         filter: params.filter,

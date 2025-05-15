@@ -73,7 +73,10 @@ $profile_url = tutils()->profile_url( $question->user_id );
 									<p class="review-meta">
 										<a href="<?php echo esc_url( $answer_profile ); ?>"><?php echo esc_attr( $answer->display_name ); ?></a>
 										<span class="tutor-text-mute">
-										<?php echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ) ); ?>
+										<?php
+										/* translators: %s: timestamp */
+										echo esc_html( wp_sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date_gmt ) ) ) );
+										?>
 										</span>
 									</p>
 								</div>

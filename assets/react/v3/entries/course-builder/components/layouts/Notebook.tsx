@@ -402,6 +402,13 @@ const styles = {
     width: ${notebook.MIN_NOTEBOOK_HEIGHT}px;
     height: ${notebook.NOTEBOOK_HEADER}px;
     ${typography.body('bold')};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.primary};
+    }
   `,
   header: ({ isCollapsed, isFloating }: { isCollapsed: boolean; isFloating: boolean }) => css`
     display: flex;

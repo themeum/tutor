@@ -518,7 +518,6 @@ final class Tutor {
 		$this->gutenberg             = new Gutenberg();
 		$this->course_settings_tabs  = new Course_Settings_Tabs();
 		$this->withdraw              = new Withdraw();
-		$this->course_widget         = new Course_Widget();
 		$this->upgrader              = new Upgrader();
 		$this->dashboard             = new Dashboard();
 		$this->form_handler          = new FormHandler();
@@ -658,6 +657,7 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-template-hook.php';
 		include tutor()->path . 'includes/translate-text.php';
 		include tutor()->path . 'includes/country.php';
+		include tutor()->path . 'includes/ecommerce-functions.php';
 
 		if ( ! function_exists( 'is_plugin_active' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -1198,6 +1198,8 @@ final class Tutor {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 3.4.1 Supported video sources added
+	 *
 	 * @return array
 	 */
 	public static function default_options() {
@@ -1242,6 +1244,14 @@ final class Tutor {
 			'decimal_separator'                 => '.',
 			'number_of_decimals'                => '2',
 			'is_coupon_applicable'              => 'on',
+			'supported_video_sources'           => array(
+				'html5',
+				'external_url',
+				'youtube',
+				'vimeo',
+				'embedded',
+				'shortcode',
+			),
 		);
 
 		return $options;

@@ -27,6 +27,7 @@ export const DropdownItem = ({
   onClick,
   buttonContentCss,
   isDanger = false,
+  ...props
 }: DropdownOptionProps) => {
   return (
     <button
@@ -35,7 +36,9 @@ export const DropdownItem = ({
         disabled,
         isDanger,
       })}
+      disabled={disabled}
       onClick={onClick}
+      {...props}
     >
       <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
     </button>
@@ -76,6 +79,7 @@ const DropdownButton = ({
   buttonContentCss,
   dropdownMaxWidth = '140px',
   disabledDropdown = false,
+  ...props
 }: DropdownButtonProps) => {
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -97,6 +101,7 @@ const DropdownButton = ({
           onClick={onClick}
           tabIndex={tabIndex}
           disabled={disabled || loading}
+          {...props}
         >
           {loading && !disabled && (
             <span css={styles.spinner}>
@@ -134,6 +139,7 @@ const DropdownButton = ({
           </span>
         </button>
         <button
+          data-cy="dropdown-trigger"
           ref={dropdownTriggerRef}
           type="button"
           disabled={disabled || disabledDropdown}
@@ -229,11 +235,12 @@ const styles = {
     cursor: pointer;
     user-select: none;
     background-color: transparent;
+    color: ${colorTokens.text.primary};
     border: 0;
     padding: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]} 0 0 ${borderRadius[6]};
     z-index: ${zIndex.level};
-    transition-property: box-shadow, background, opacity;
+    transition-property: box-shadow, background-color, opacity;
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     position: relative;
@@ -255,18 +262,30 @@ const styles = {
       background-color: ${colorTokens.action.primary.default};
       color: ${colorTokens.text.white};
 
-      &:hover:not(:disabled) {
-        background-color: ${colorTokens.action.primary.hover};
+      &:not(:disabled) {
+        &:hover,
+        &:focus {
+          background-color: ${colorTokens.action.primary.hover};
+          color: ${colorTokens.text.white};
+        }
+
+        &:active {
+          background-color: ${colorTokens.action.primary.active};
+          color: ${colorTokens.text.white};
+        }
       }
 
-      &:active:not(:disabled) {
-        background-color: ${colorTokens.action.primary.active};
-      }
-
-      ${disabled &&
+      ${(disabled || loading) &&
       css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: ${colorTokens.action.primary.disable};
+          color: ${colorTokens.text.disable};
+        }
       `}
     `}
 
@@ -483,14 +502,17 @@ const styles = {
   `,
   dropdownOption: ({ disabled, isDanger }: { disabled: boolean; isDanger: boolean }) => css`
     ${styleUtils.resetButton};
+    ${typography.body()};
+    color: ${colorTokens.text.primary};
     width: 100%;
-    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
+    padding: ${spacing[6]} ${spacing[16]} ${spacing[6]} ${spacing[20]};
     transition: background-color 0.3s ease-in-out;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
-    border: 2px solid transparent;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
 
     ${isDanger &&
     css`
@@ -504,7 +526,7 @@ const styles = {
 
     :focus,
     :active {
-      border-color: ${colorTokens.stroke.brand};
+      outline-color: ${colorTokens.stroke.brand};
     }
 
     ${disabled &&
@@ -516,5 +538,9 @@ const styles = {
   dropdownOptionContent: css`
     display: flex;
     align-items: center;
+
+    svg {
+      flex-shrink: 0;
+    }
   `,
 };

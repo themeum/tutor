@@ -259,6 +259,7 @@ export default function SubscriptionItem({
           <Show when={!isExpanded}>
             <Tooltip content={__('Edit', 'tutor')} delay={200}>
               <button
+                data-cy="edit-subscription"
                 type="button"
                 disabled={isFormDirty}
                 onClick={() => !isFormDirty && toggleCollapse(subscription.id)}
@@ -269,7 +270,12 @@ export default function SubscriptionItem({
           </Show>
           <Show when={subscription.isSaved}>
             <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-              <button type="button" disabled={isFormDirty} onClick={handleDuplicateSubscription}>
+              <button
+                data-cy="duplicate-subscription"
+                type="button"
+                disabled={isFormDirty}
+                onClick={handleDuplicateSubscription}
+              >
                 <Show when={!duplicateSubscriptionMutation.isPending} fallback={<LoadingSpinner size={24} />}>
                   <SVGIcon name="copyPaste" width={24} height={24} />
                 </Show>
@@ -277,6 +283,7 @@ export default function SubscriptionItem({
             </Tooltip>
             <Tooltip content={__('Delete', 'tutor')} delay={200}>
               <button
+                data-cy="delete-subscription"
                 ref={deleteButtonRef}
                 type="button"
                 disabled={isFormDirty}

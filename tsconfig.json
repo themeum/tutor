@@ -18,7 +18,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
-    // "types": ["@emotion/react/types/css-prop", "node"],
+    "types": ["node"],
     "typeRoots": ["./node_modules/@types/", "./assets/react/@types"],
     "paths": {
       "@TutorShared/*": ["assets/react/v3/shared/*"],
@@ -39,6 +39,6 @@
       "@AddonList/*": ["assets/react/v3/entries/addon-list/*"]
     }
   },
-  "include": ["./assets/react/v3"],
+  "include": ["./assets/react/v3", "**/*.ts"],
   "exclude": ["node_modules"]
 }

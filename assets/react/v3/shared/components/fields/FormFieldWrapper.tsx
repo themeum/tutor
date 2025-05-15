@@ -117,7 +117,7 @@ const FormFieldWrapper = <T,>({
   );
 
   return (
-    <div css={styles.container({ disabled, isHidden })}>
+    <div css={styles.container({ disabled, isHidden })} data-cy="form-field-wrapper">
       <div css={styles.inputContainer(isInlineLabel)}>
         {(label || helpText) && (
           <div css={styles.labelContainer}>
@@ -313,6 +313,7 @@ const styles = {
   `,
   label: (isInlineLabel: boolean, replaceEntireLabel: boolean) => css`
     ${typography.caption()};
+    margin: 0px;
     width: ${replaceEntireLabel ? '100%' : 'auto'};
     color: ${colorTokens.text.title};
     display: flex;
@@ -335,6 +336,12 @@ const styles = {
 
     :disabled {
       cursor: not-allowed;
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
     }
 
     &:focus-visible {

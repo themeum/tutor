@@ -22,25 +22,29 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type CourseTopic,
   convertLessonDataToPayload,
+  type CourseTopic,
+  type Lesson,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
 import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, CURRENT_VIEWPORT, TutorRoles } from '@TutorShared/config/constants';
+import { Addons, CURRENT_VIEWPORT, TutorRoles, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ID } from '@TutorShared/utils/types';
-import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 
@@ -85,8 +89,8 @@ const LessonModal = ({
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const isClassicEditorEnabled = tutorConfig.enable_lesson_classic_editor === '1';
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
-  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
-  const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+  const isAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user.roles?.includes(TutorRoles.TUTOR_INSTRUCTOR);
 
   const isWpEditorVisible = isClassicEditorEnabled && (isAdmin || (isInstructor && hasWpAdminAccess));
 
@@ -97,6 +101,21 @@ const LessonModal = ({
 
   const { data: lessonDetails, isLoading } = getLessonDetailsQuery;
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
+
+  const { fields } = useCourseBuilderSlot();
+  const isVideoPlaybackTimeVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME,
+  );
+  const isLessonPreviewVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.LESSON_PREVIEW,
+  );
+  const isFeaturedImageVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.FEATURED_IMAGE,
+  );
+  const isVideoVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO);
+  const isExerciseFilesVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.EXERCISE_FILES,
+  );
 
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
@@ -121,7 +140,16 @@ const LessonModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
+
+  const hasRightSidebar = Boolean(
+    contentDripType !== '' ||
+      isVideoPlaybackTimeVisible ||
+      isFeaturedImageVisible ||
+      isVideoVisible ||
+      isExerciseFilesVisible ||
+      (isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && isLessonPreviewVisible),
+  );
 
   useEffect(() => {
     if (lessonDetails && !isLoading) {
@@ -146,6 +174,9 @@ const LessonModal = ({
           after_xdays_of_enroll: lessonDetails?.content_drip_settings?.after_xdays_of_enroll || '',
           prerequisites: lessonDetails?.content_drip_settings?.prerequisites || [],
         },
+        ...Object.fromEntries(
+          findSlotFields({ fields: fields.Curriculum.Lesson }).map((key) => [key, lessonDetails[key as keyof Lesson]]),
+        ),
       });
     }
 
@@ -166,7 +197,13 @@ const LessonModal = ({
   }, [lessonDetails, isLoading]);
 
   const onSubmit = async (data: LessonForm) => {
-    const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
+    const payload = convertLessonDataToPayload(
+      data,
+      lessonId,
+      topicId,
+      contentDripType,
+      findSlotFields({ fields: fields.Curriculum.Lesson }),
+    );
     const response = await saveLessonMutation.mutateAsync(payload);
 
     if (response.data) {
@@ -228,6 +265,7 @@ const LessonModal = ({
               {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-lesson"
               loading={saveLessonMutation.isPending}
               variant="primary"
               size="small"
@@ -239,11 +277,11 @@ const LessonModal = ({
         )
       }
     >
-      <div css={styles.wrapper}>
+      <div css={styles.wrapper({ hasRightSidebar })}>
         <Show when={!getLessonDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
           {/* This div is required to make the sticky work */}
           <div>
-            <div css={styles.lessonInfo}>
+            <div css={styles.lessonInfo({ hasRightSidebar })}>
               <Controller
                 name="title"
                 control={form.control}
@@ -257,7 +295,6 @@ const LessonModal = ({
                     label={__('Name', 'tutor')}
                     placeholder={__('Enter Lesson Name', 'tutor')}
                     generateWithAi={!isTutorPro || isOpenAiEnabled}
-                    selectOnFocus
                     isClearable
                   />
                 )}
@@ -331,6 +368,8 @@ const LessonModal = ({
                   </button>
                 </Show>
               </div>
+
+              <CourseBuilderInjectionSlot section="Curriculum.Lesson.after_description" form={form} />
             </div>
           </div>
 
@@ -347,6 +386,7 @@ const LessonModal = ({
                     __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
                     tutorConfig.max_upload_size,
                   )}
+                  visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.FEATURED_IMAGE}
                 />
               )}
             />
@@ -364,56 +404,62 @@ const LessonModal = ({
                     form.setValue('duration.minute', duration.minutes);
                     form.setValue('duration.second', duration.seconds);
                   }}
+                  visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO}
                 />
               )}
             />
-            <div css={styles.durationWrapper}>
-              <span css={styles.additionLabel}>{__('Video Playback Time', 'tutor')}</span>
-              <div css={styles.duration}>
-                <Controller
-                  name="duration.hour"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      type="number"
-                      content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
-                      contentPosition="right"
-                      placeholder="0"
-                      showVerticalBar={false}
-                    />
-                  )}
-                />
-                <Controller
-                  name="duration.minute"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      type="number"
-                      content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
-                      contentPosition="right"
-                      placeholder="0"
-                      showVerticalBar={false}
-                    />
-                  )}
-                />
-                <Controller
-                  name="duration.second"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      type="number"
-                      content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
-                      contentPosition="right"
-                      placeholder="0"
-                      showVerticalBar={false}
-                    />
-                  )}
-                />
+            <Show when={isVideoPlaybackTimeVisible}>
+              <div css={styles.durationWrapper}>
+                <span css={styles.additionLabel}>{__('Video Playback Time', 'tutor')}</span>
+                <div css={styles.duration}>
+                  <Controller
+                    name="duration.hour"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormInputWithContent
+                        {...controllerProps}
+                        type="number"
+                        content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
+                        contentPosition="right"
+                        placeholder="0"
+                        showVerticalBar={false}
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="duration.minute"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormInputWithContent
+                        {...controllerProps}
+                        type="number"
+                        content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
+                        contentPosition="right"
+                        placeholder="0"
+                        showVerticalBar={false}
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="duration.second"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormInputWithContent
+                        {...controllerProps}
+                        type="number"
+                        content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
+                        contentPosition="right"
+                        placeholder="0"
+                        showVerticalBar={false}
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME}
+                      />
+                    )}
+                  />
+                </div>
               </div>
-            </div>
+            </Show>
 
             <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
               <Show when={contentDripType === 'specific_days'}>
@@ -477,10 +523,10 @@ const LessonModal = ({
                       placeholder={__('Select Prerequisite', 'tutor')}
                       options={
                         topics.reduce((topics, topic) => {
-                          if (topic.id === topicId) {
+                          if (String(topic.id) === String(topicId)) {
                             topics.push({
                               ...topic,
-                              contents: topic.contents.filter((content) => content.ID !== lessonId),
+                              contents: topic.contents.filter((content) => String(content.ID) !== String(lessonId)),
                             });
                           } else {
                             topics.push(topic);
@@ -505,11 +551,12 @@ const LessonModal = ({
                   label={__('Exercise Files', 'tutor')}
                   buttonText={__('Upload Attachment', 'tutor')}
                   selectMultiple
+                  visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.EXERCISE_FILES}
                 />
               )}
             />
 
-            <Show when={!isTutorPro || isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)}>
+            <Show when={!isTutorPro || (isLessonPreviewVisible && isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW))}>
               <div css={styles.lessonPreview}>
                 <Controller
                   name="lesson_preview"
@@ -528,6 +575,7 @@ const LessonModal = ({
                         // prettier-ignore
                         __( 'If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
                       }
+                      visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.LESSON_PREVIEW}
                     />
                   )}
                 />
@@ -541,6 +589,8 @@ const LessonModal = ({
                 </Show>
               </div>
             </Show>
+
+            <CourseBuilderInjectionSlot section="Curriculum.Lesson.bottom_of_sidebar" form={form} />
           </div>
         </Show>
       </div>
@@ -551,10 +601,10 @@ const LessonModal = ({
 export default LessonModal;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ hasRightSidebar = true }) => css`
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 338px;
+    grid-template-columns: ${hasRightSidebar ? '1fr 338px' : '1fr'};
     height: 100%;
     width: 100%;
     padding-inline: ${spacing[32]};
@@ -568,9 +618,9 @@ const styles = {
       padding-inline: ${spacing[16]};
     }
   `,
-  lessonInfo: css`
+  lessonInfo: ({ hasRightSidebar = true }) => css`
     padding-block: ${spacing[20]};
-    padding-right: ${spacing[32]};
+    padding-right: ${hasRightSidebar && spacing[32]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
@@ -615,6 +665,7 @@ const styles = {
 
     :hover:not(:disabled) {
       background: ${colorTokens.background.white};
+      color: #3e64de;
     }
 
     :disabled {

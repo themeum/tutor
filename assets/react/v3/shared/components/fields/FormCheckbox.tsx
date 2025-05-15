@@ -7,7 +7,7 @@ import { type SerializedStyles, css } from '@emotion/react';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface CheckboxProps extends FormControllerProps<boolean> {
-  label?: string;
+  label?: string | React.ReactNode;
   description?: string;
   value?: string;
   onChange?: (value: boolean) => void;
@@ -28,7 +28,7 @@ const FormCheckbox = ({
   labelCss,
 }: CheckboxProps) => {
   return (
-    <FormFieldWrapper field={field} fieldState={fieldState} disabled={disabled} isHidden={isHidden}>
+    <FormFieldWrapper field={field} fieldState={fieldState} isHidden={isHidden}>
       {(inputProps) => {
         const { css, ...restInputProps } = inputProps;
 
@@ -40,6 +40,7 @@ const FormCheckbox = ({
               inputCss={css}
               labelCss={labelCss}
               value={value}
+              disabled={disabled}
               checked={field.value}
               label={label}
               onChange={() => {

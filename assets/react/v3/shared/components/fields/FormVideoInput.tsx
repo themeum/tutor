@@ -22,13 +22,15 @@ import { VideoRegex, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
+import type { TutorMutationResponse } from '@TutorShared/utils/types';
 import { requiredRule } from '@TutorShared/utils/validation';
 
 import FormFieldWrapper from './FormFieldWrapper';
@@ -522,6 +524,7 @@ const FormVideoInput = ({
                     >
                       <Show when={videoSources.includes('html5')}>
                         <Button
+                          data-cy="upload-media"
                           size="small"
                           variant="secondary"
                           icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
@@ -537,6 +540,7 @@ const FormVideoInput = ({
                           when={!videoSources.includes('html5')}
                           fallback={
                             <button
+                              data-cy="add-from-url"
                               type="button"
                               css={styles.urlButton}
                               onClick={() => {
@@ -548,6 +552,7 @@ const FormVideoInput = ({
                           }
                         >
                           <Button
+                            data-cy="add-from-url"
                             size="small"
                             variant="secondary"
                             icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
@@ -568,7 +573,7 @@ const FormVideoInput = ({
                 >
                   {() => {
                     return (
-                      <div css={styles.previewWrapper}>
+                      <div css={styles.previewWrapper} data-cy="media-preview">
                         <div css={styles.videoInfoWrapper}>
                           <div css={styles.videoInfoCard}>
                             <SVGIcon
@@ -604,6 +609,7 @@ const FormVideoInput = ({
                               </button>
                             </Show>
                             <button
+                              data-cy="remove-video"
                               type="button"
                               css={styleUtils.actionButton}
                               onClick={() => {
@@ -729,7 +735,12 @@ const FormVideoInput = ({
               >
                 {__('Cancel', 'tutor')}
               </Button>
-              <Button variant="secondary" size="small" onClick={form.handleSubmit(handleDataFromUrl)}>
+              <Button
+                data-cy="submit-url"
+                variant="secondary"
+                size="small"
+                onClick={form.handleSubmit(handleDataFromUrl)}
+              >
                 {__('Ok', 'tutor')}
               </Button>
             </div>
@@ -740,7 +751,7 @@ const FormVideoInput = ({
   );
 };
 
-export default FormVideoInput;
+export default withVisibilityControl(FormVideoInput);
 
 const styles = {
   emptyMediaWrapper: css`
@@ -864,6 +875,13 @@ const styles = {
     border-radius: ${borderRadius[2]};
     padding: 0 ${spacing[4]};
     margin-bottom: ${spacing[8]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.brand};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

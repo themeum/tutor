@@ -4,7 +4,6 @@ var gulp = require('gulp'),
 	rename = require('gulp-rename'),
 	plumber = require('gulp-plumber'),
 	notify = require('gulp-notify'),
-	wpPot = require('gulp-wp-pot'),
 	clean = require('gulp-clean'),
 	zip = require('gulp-zip'),
 	watch = require("gulp-watch"),
@@ -80,79 +79,6 @@ for (let task in scss_blueprints) {
 	});
 }
 
-var added_texts = [];
-const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/gi;
-const js_files = [
-	'tutor',
-	'tutor-front',
-	'tutor-admin',
-	'tutor-setup',
-	'tutor-course-builder',
-	'tutor-order-details',
-	'tutor-tax-settings',
-	'tutor-coupon'
-].map((f) => 'assets/js/' + f + '.min.js:1').join(', ');
-
-function i18n_makepot(callback, target_dir) {
-	const parent_dir = target_dir || __dirname;
-	var translation_texts = '';
-
-	// Loop through JS files inside js directory
-	fs.readdirSync(parent_dir).forEach(function (file_name) {
-		if (file_name == 'node_modules' || file_name.indexOf('.') === 0) {
-			return;
-		}
-
-		var full_path = parent_dir + '/' + file_name;
-		var stat = fs.lstatSync(full_path);
-
-		if (stat.isDirectory()) {
-			i18n_makepot(null, full_path);
-			return;
-		}
-
-		// Make sure only js and ts extension file to process
-		const extensions = ['.js', '.ts', '.tsx'];
-		if (stat.isFile() && (extensions.includes(path.extname(file_name))) &&
-			(full_path.indexOf('assets/react') > -1 || full_path.indexOf('v2-library/src') > -1)
-		) {
-			var codes = fs.readFileSync(full_path).toString();
-			var lines = codes.split('\n');
-
-			// Loop through every single line in the JS file
-			for (var i = 0; i < lines.length; i++) {
-				var found = lines[i].match(regex);
-				!Array.isArray(found) ? (found = []) : 0;
-
-				// Loop through found translations
-				for (var n = 0; n < found.length; n++) {
-					// Parse the string
-
-					var string = found[n];
-					var delimeter = string[3] == ' ' ? string[4] : string[3];
-					var first_quote = string.indexOf(delimeter) + 1;
-					var second_quote = string.indexOf(delimeter, first_quote);
-					var text = string.slice(first_quote, second_quote);
-
-					if (added_texts.indexOf(text) > -1) {
-						// Avoid duplicate entry
-						continue;
-					}
-
-					added_texts.push(text);
-					translation_texts += '\n#: ' + js_files + '\nmsgid "' + text + '"\nmsgstr ""' + '\n';
-				}
-			}
-		}
-	});
-
-	// Finally append the texts to the pot file
-	var text_domain = path.basename(__dirname);
-	fs.appendFileSync(__dirname + '/languages/' + text_domain.toLowerCase() + '.pot', translation_texts);
-
-	callback ? callback() : 0;
-}
-
 gulp.task('watch', function () {
 	return watch('./**/*.scss', function (e) {
 		if (e.history[0].includes('/front/')) {
@@ -169,21 +95,51 @@ gulp.task('watch', function () {
 	});
 });
 
-gulp.task('makepot', function () {
-	return gulp
-		.src('**/*.php')
-		.pipe(
-			plumber({
-				errorHandler: onError,
-			}),
-		)
-		.pipe(
-			wpPot({
-				domain: 'tutor',
-				package: 'Tutor LMS',
-			}),
-		)
-		.pipe(gulp.dest('languages/tutor.pot'));
+/**
+ * Replace all js sources with the following two
+ * 1. tutor-admin.min.js
+ * 2. tutor-front.min.js
+ * 
+ * @since 3.6.0
+ */
+gulp.task('modify-pot', function (done) {
+	const potFilePath = path.resolve(__dirname, 'languages', 'tutor.pot');
+	const jsFilesPath = '#: assets/js/tutor-admin.min.js:1\n#: assets/js/tutor-front.min.js:1';
+
+	try {
+		const lines = fs.readFileSync(potFilePath, 'utf8').split('\n');
+		const updatedLines = [];
+
+		for (let i = 0; i < lines.length; i++) {
+			const line = lines[i];
+
+			if (line.startsWith('#:')) {
+				const sources = line.substring(2).split(/\s+/).filter(Boolean);
+
+				const phpSources = sources.filter(src => !src.includes('.js'));
+				const jsSources = sources.filter(src => src.includes('.js'));
+
+				if (phpSources.length) {
+					updatedLines.push(`#: ${phpSources.join(' ')}`);
+				}
+
+				if (jsSources.length) {
+					updatedLines.push(jsFilesPath);
+				}
+			} else {
+				updatedLines.push(line);
+			}
+		}
+
+		// Remove duplicate lines
+		const deduplicatedLines = updatedLines.filter((line, i, arr) => line !== arr[i - 1]);
+
+		fs.writeFileSync(potFilePath, deduplicatedLines.join('\n'), 'utf8');
+		done();
+	} catch (err) {
+		console.error('Failed to process .pot file:', err);
+		done(err);
+	}
 });
 
 /**
@@ -248,12 +204,15 @@ gulp.task('copy', function () {
 			'!vendor/webmozart/**',
 			'!vendor/yoast/**',
 			'!.phpunit.result.cache',
-			'!.travis.yml',
+			'!*.yml',
+			'!*.yaml',
 			'!phpunit.xml.dist',
 			'!phpunit.xml',
 			'!phpcs.xml',
 			'!phpcs.xml.dist',
 			'!./tutor-droip/**',
+			'!./cypress/**',
+			'!./cypress.config.ts',
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });
@@ -283,6 +242,6 @@ gulp.task('make-zip', function () {
 /**
  * Export tasks
  */
-exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'copy-fonts', 'copy-tutor-droip', 'make-zip', 'clean-build');
+exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'modify-pot', 'copy', 'copy-fonts', 'copy-tutor-droip', 'make-zip', 'clean-build');
 exports.sass = gulp.parallel(...task_keys);
 exports.default = gulp.parallel(...task_keys, 'watch');

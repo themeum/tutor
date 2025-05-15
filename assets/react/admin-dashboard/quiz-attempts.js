@@ -3,8 +3,7 @@
  *
  * @since v2.0.6
  */
-import ajaxHandler from "./segments/filter";
-const { __, _x, _n, _nx } = wp.i18n;
+import ajaxHandler from "../helper/ajax-handler";
 document.addEventListener('DOMContentLoaded', async function() {
     // Create new course
     const currentPage = _tutorobject.current_page;

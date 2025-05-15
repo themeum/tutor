@@ -1,22 +1,23 @@
-import { type SerializedStyles, css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
+import { useCategoryListQuery, type CategoryWithChildren } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { generateTree } from '@TutorShared/utils/util';
+import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
 
+import Show from '@TutorShared/controls/Show';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiLevelSelectProps extends FormControllerProps<number | null> {
-  options: Category[];
   label?: string;
   disabled?: boolean;
   loading?: boolean;
@@ -36,26 +37,35 @@ const FormMultiLevelSelect = ({
   loading,
   placeholder,
   helpText,
-  options,
   isInlineLabel,
   clearable,
   listItemsLabel,
   optionsWrapperStyle,
 }: FormMultiLevelSelectProps) => {
-  const treeOptions = generateTree(options);
   const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSearchValue = useDebounce(searchValue, 300);
+  const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
+  const options = generateTree(categoryListQuery.data ?? []);
 
-  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [options.length],
   });
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchValue('');
+    }
+  }, [isOpen]);
 
   return (
     <FormFieldWrapper
       label={label}
       field={field}
       fieldState={fieldState}
-      disabled={disabled}
+      disabled={disabled || options.length === 0}
       loading={loading}
       placeholder={placeholder}
       helpText={helpText}
@@ -83,13 +93,16 @@ const FormMultiLevelSelect = ({
                   }
                 }}
                 autoComplete="off"
-                readOnly={true}
-                value={Array.isArray(field.value) ? '' : (options.find((item) => item.id === field.value)?.name ?? '')}
+                readOnly
+                disabled={disabled || options.length === 0}
+                value={field.value ? categoryListQuery.data?.find((option) => option.id === field.value)?.name : ''}
                 placeholder={placeholder}
               />
               <button
                 tabIndex={-1}
                 type="button"
+                disabled={disabled || options.length === 0}
+                aria-label={__('Toggle options', 'tutor')}
                 css={styles.toggleIcon(isOpen)}
                 onClick={() => {
                   setIsOpen((prev) => !prev);
@@ -103,20 +116,41 @@ const FormMultiLevelSelect = ({
               <div
                 css={[styles.categoryWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
                 ref={popoverRef}
+                style={{
+                  maxWidth: triggerWidth,
+                }}
               >
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}
-                <div css={[styles.options, optionsWrapperStyle]}>
-                  {treeOptions.map((option) => (
-                    <Branch
-                      key={option.id}
-                      option={option}
-                      onChange={(id) => {
-                        field.onChange(id);
-                        setIsOpen(false);
-                      }}
-                    />
-                  ))}
+                <div css={styles.searchInput}>
+                  <div css={styles.searchIcon}>
+                    <SVGIcon name="search" width={24} height={24} />
+                  </div>
+                  <input
+                    type="text"
+                    placeholder={__('Search', 'tutor')}
+                    value={searchValue}
+                    onChange={(event) => {
+                      setSearchValue(event.target.value);
+                    }}
+                  />
                 </div>
+                <Show
+                  when={options.length > 0}
+                  fallback={<div css={styles.notFound}>{__('No categories found.', 'tutor')}</div>}
+                >
+                  <div css={[styles.options, optionsWrapperStyle]}>
+                    {options.map((option) => (
+                      <Branch
+                        key={option.id}
+                        option={option}
+                        onChange={(id) => {
+                          field.onChange(id);
+                          setIsOpen(false);
+                        }}
+                      />
+                    ))}
+                  </div>
+                </Show>
 
                 {clearable && (
                   <div css={styles.clearButton}>
@@ -163,8 +197,8 @@ export const Branch = ({ option, onChange, level = 0 }: BranchProps) => {
 
   return (
     <div css={styles.branchItem(level)}>
-      <button type="button" onClick={() => onChange(option.id)}>
-        {option.name}
+      <button type="button" onClick={() => onChange(option.id)} title={option.name}>
+        {decodeHtmlEntities(option.name)}
       </button>
 
       {renderBranches()}
@@ -184,7 +218,41 @@ const styles = {
   `,
   options: css`
     max-height: 455px;
-    overflow-y: auto;
+    ${styleUtils.overflowYAuto};
+  `,
+  notFound: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    ${typography.caption('regular')};
+    padding: ${spacing[8]} ${spacing[16]};
+    color: ${colorTokens.text.hints};
+  `,
+  searchInput: css`
+    position: sticky;
+    top: 0;
+    padding: ${spacing[8]} ${spacing[16]};
+
+    input {
+      ${typography.body('regular')};
+      width: 100%;
+      border-radius: ${borderRadius[6]};
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: ${spacing[4]} ${spacing[16]} ${spacing[4]} ${spacing[32]};
+      color: ${colorTokens.text.title};
+      appearance: textfield;
+
+      :focus {
+        ${styleUtils.inputFocus};
+      }
+    }
+  `,
+  searchIcon: css`
+    position: absolute;
+    left: ${spacing[24]};
+    top: 50%;
+    transform: translateY(-50%);
+    color: ${colorTokens.icon.default};
+    display: flex;
   `,
   branchItem: (level: number) => css`
     position: relative;
@@ -192,12 +260,19 @@ const styles = {
 
     button {
       ${styleUtils.resetButton};
+      ${typography.body('regular')};
+      ${styleUtils.text.ellipsis(1)};
+      color: ${colorTokens.text.title};
       padding-left: calc(${spacing[24]} + ${spacing[24]} * ${level});
       line-height: ${lineHeight[36]};
+      padding-right: ${spacing[16]};
       width: 100%;
 
-      &:hover {
+      &:hover,
+      &:focus,
+      &:active {
         background-color: ${colorTokens.background.hover};
+        color: ${colorTokens.text.title};
       }
     }
   `,
@@ -212,6 +287,13 @@ const styles = {
     color: ${colorTokens.icon.default};
     padding: ${spacing[6]};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
+
     ${isOpen &&
     css`
       transform: rotate(180deg);
@@ -219,9 +301,14 @@ const styles = {
   `,
   inputWrapper: css`
     position: relative;
+
+    input:read-only {
+      background-color: inherit;
+    }
   `,
   clearButton: css`
     padding: ${spacing[8]} ${spacing[24]};
+    box-shadow: ${shadow.dividerTop};
 
     & > button {
       padding: 0;

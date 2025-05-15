@@ -3,6 +3,7 @@ const fs = require('fs');
 const TerserPlugin = require('terser-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
+const nodeExternals = require('webpack-node-externals');
 
 let version = "";
 
@@ -59,15 +60,6 @@ module.exports = (env, options) => {
     if ('production' === mode) {
         config.devtool = false;
         config.optimization = {
-            splitChunks: {
-                cacheGroups: {
-                    shared: {
-                        test: /[\\/]assets[\\/]react[\\/]v3[\\/]shared[\\/]/,
-                        name: 'tutor-shared.min',
-                        chunks: 'all',
-                    },
-                },
-            },
             minimize: true,
             minimizer: [
                 new TerserPlugin({
@@ -80,6 +72,13 @@ module.exports = (env, options) => {
                     extractComments: false,
                 }),
             ],
+        };
+    }
+
+    if (env['make-pot']) {
+        config.externals = [nodeExternals()];
+        config.optimization = {
+            minimize: false,
         };
     }
 
@@ -114,7 +113,13 @@ module.exports = (env, options) => {
                 output: {
                     path: path.resolve(dest_path),
                     filename: '[name].js',
-                    chunkFilename: `lazy-chunks/[name].[contenthash].min.js?v=${version}`,
+                    chunkFilename: (pathData) => {
+                        if (pathData.chunk.name && pathData.chunk.name.startsWith('icon-')) {
+                            const name = pathData.chunk.name.replace(/^icon-/, '');
+                            return `icons/${name}.min.js?ver=${version}`;
+                        }
+                        return `lazy-chunks/[name].[contenthash].min.js?ver=${version}`;
+                    },
                     clean: true,
                 },
                 resolve: {

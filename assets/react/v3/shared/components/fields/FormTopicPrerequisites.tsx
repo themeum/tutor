@@ -80,7 +80,7 @@ const FormTopicPrerequisites = ({
   isSearchable = false,
   helpText,
 }: FormTopicPrerequisitesProps) => {
-  const inputValue = field.value ?? [];
+  const inputValue = field.value || [];
   const selectedIds = inputValue.map((item) => String(item));
   const selectedOptions = options.reduce((contents, topic) => {
     return topic.contents.reduce((selectedContents, content) => {
@@ -427,6 +427,12 @@ const styles = {
     border-radius: ${borderRadius.circle};
     background: ${colorTokens.background.white};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: ${colorTokens.background.white};
+    }
+
     svg {
       color: ${colorTokens.icon.default};
       transition: color 0.3s ease-in-out;
@@ -487,7 +493,9 @@ const styles = {
       box-shadow: ${shadow.card};
     `}
 
-    :hover {
+    &:hover,
+    &:focus,
+    &:active {
       background-color: ${colorTokens.background.hover};
 
       ${!onPopover &&

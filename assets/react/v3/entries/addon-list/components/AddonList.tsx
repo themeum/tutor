@@ -1,4 +1,6 @@
+import { Addon } from '@AddonList/services/addons';
 import { css } from '@emotion/react';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { tutorConfig } from '@TutorShared/config/config';
 import { spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -11,14 +13,27 @@ import FreeBanner from './FreeBanner';
 
 function AddonList() {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const { addons, searchTerm } = useAddonContext();
+  const { addons, searchTerm, isLoading } = useAddonContext();
 
   const addonsList = addons.filter((addon) => {
     return addon.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const activeAddons = addonsList.filter((addon) => !!addon.is_enabled && !addon.required_settings);
-  const availableAddons = addonsList.filter((addon) => !addon.is_enabled || addon.required_settings);
+  const { activeAddons, availableAddons } = addonsList.reduce(
+    (addonGroups, addon) => {
+      if (addon.is_enabled && !addon.required_settings) {
+        addonGroups.activeAddons.push(addon);
+      } else {
+        addonGroups.availableAddons.push(addon);
+      }
+      return addonGroups;
+    },
+    { activeAddons: [] as Addon[], availableAddons: [] as Addon[] },
+  );
+
+  if (isLoading) {
+    return <LoadingSection />;
+  }
 
   if (searchTerm.length && addonsList.length === 0) {
     return <EmptyState />;

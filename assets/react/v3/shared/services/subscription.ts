@@ -8,10 +8,9 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type DurationUnit, type ID, type MembershipPlan, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 
-export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
 type PlanType = 'course' | 'bundle' | 'category' | 'full_site';
 type PaymentType = 'onetime' | 'recurring';
 
@@ -22,7 +21,7 @@ export type Subscription = {
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value: string;
-  recurring_interval: Omit<DurationUnit, 'hour'>;
+  recurring_interval: Exclude<DurationUnit, 'hour'>;
   is_featured: '0' | '1';
   regular_price: string;
   sale_price: string;
@@ -145,7 +144,7 @@ export type SubscriptionPayload = {
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value?: string;
-  recurring_interval?: Omit<DurationUnit, 'hour'>;
+  recurring_interval?: Exclude<DurationUnit, 'hour'>;
   regular_price: string;
   sale_price?: string;
   sale_price_from?: string; // start date
@@ -206,7 +205,7 @@ export const useSaveCourseSubscriptionMutation = (objectId: number) => {
 const deleteCourseSubscription = (objectId: number, subscriptionId: number) => {
   return wpAjaxInstance.post<
     {
-      course_id: number;
+      object_id: number;
       id: number;
     },
     TutorMutationResponse<ID>
@@ -244,12 +243,12 @@ export const useDeleteCourseSubscriptionMutation = (objectId: number) => {
 const duplicateCourseSubscription = (objectId: number, subscriptionId: number) => {
   return wpAjaxInstance.post<
     {
-      course_id: number;
+      object_id: number;
       id: number;
     },
     TutorMutationResponse<ID>
   >(endpoints.DUPLICATE_SUBSCRIPTION, {
-    course_id: objectId,
+    object_id: objectId,
     id: subscriptionId,
   });
 };
@@ -278,15 +277,15 @@ export const useDuplicateCourseSubscriptionMutation = (objectId: number) => {
   });
 };
 
-const sortCourseSubscriptions = (courseId: number, subscriptionIds: number[]) => {
+const sortCourseSubscriptions = (objectId: number, subscriptionIds: number[]) => {
   return wpAjaxInstance.post<
     {
-      course_id: number;
+      object_id: number;
       plan_ids: number[];
     },
     TutorMutationResponse<ID>
   >(endpoints.SORT_SUBSCRIPTION, {
-    course_id: courseId,
+    object_id: objectId,
     plan_ids: subscriptionIds,
   });
 };
@@ -316,5 +315,16 @@ export const useSortCourseSubscriptionsMutation = (objectId: number) => {
         queryKey: ['SubscriptionsList', objectId],
       });
     },
+  });
+};
+
+const getMembershipPlans = () => {
+  return wpAjaxInstance.get<MembershipPlan[]>(endpoints.GET_MEMBERSHIP_PLANS).then((response) => response.data);
+};
+
+export const useMembershipPlansQuery = () => {
+  return useQuery({
+    queryKey: ['MembershipPlans'],
+    queryFn: getMembershipPlans,
   });
 };

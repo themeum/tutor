@@ -24,9 +24,11 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import EmptyState from '@TutorShared/molecules/EmptyState';
 
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
+import TopicDragOverlay from '@CourseBuilderComponents/curriculum/TopicDragOverlay';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
+import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import {
   type Content,
   type CourseContentOrderPayload,
@@ -40,12 +42,11 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
 import { moveTo, nanoid } from '@TutorShared/utils/util';
 
 import curriculumEmptyState2x from '@SharedImages/curriculum-empty-state-2x.webp';
 import curriculumEmptyState from '@SharedImages/curriculum-empty-state.webp';
-import { type ID } from '@TutorShared/utils/types';
-import TopicDragOverlay from '../components/curriculum/TopicDragOverlay';
 
 const courseId = getCourseId();
 
@@ -56,7 +57,7 @@ const Curriculum = () => {
 
   useEffect(() => {
     if (!courseId) {
-      navigate('/', {
+      navigate(CourseBuilderRouteConfigs.Home.buildLink(), {
         replace: true,
       });
     }
@@ -393,6 +394,7 @@ const Curriculum = () => {
                 description={__('Add Topics, Lessons, and Quizzes to get started.', 'tutor')}
                 actions={
                   <Button
+                    data-cy="add-topic"
                     variant="secondary"
                     icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
                     onClick={() => {
@@ -506,6 +508,7 @@ const Curriculum = () => {
         <Show when={topics.length > 0}>
           <div css={styles.addButtonWrapper}>
             <Button
+              data-cy="add-topic"
               variant="secondary"
               icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
               onClick={() => {

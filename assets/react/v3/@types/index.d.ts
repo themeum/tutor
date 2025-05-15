@@ -1,5 +1,46 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type InjectionSlots } from '@TutorShared/utils/types';
+
 export type {};
+
+interface Tutor {
+  readonly CourseBuilder: {
+    readonly Basic: {
+      readonly registerField: (section: InjectionSlots['Basic'], fields: InjectedField | InjectedField[]) => void;
+      readonly registerContent: (section: InjectionSlots['Basic'], contents: InjectedContent) => void;
+    };
+    readonly Curriculum: {
+      readonly Lesson: {
+        readonly registerField: (
+          section: InjectionSlots['Curriculum']['Lesson'],
+          fields: InjectedField | InjectedField[],
+        ) => void;
+        readonly registerContent: (section: InjectionSlots['Curriculum']['Lesson'], contents: InjectedContent) => void;
+      };
+      readonly Quiz: {
+        readonly registerField: (
+          section: InjectionSlots['Curriculum']['Quiz'],
+          fields: InjectedField | InjectedField[],
+        ) => void;
+        readonly registerContent: (section: InjectionSlots['Curriculum']['Quiz'], contents: InjectedContent) => void;
+      };
+      readonly Assignment: {
+        readonly registerField: (
+          section: InjectionSlots['Curriculum']['Assignment'],
+          fields: InjectedField | InjectedField[],
+        ) => void;
+        readonly registerContent: (
+          section: InjectionSlots['Curriculum']['Assignment'],
+          contents: InjectedContent,
+        ) => void;
+      };
+    };
+    readonly Additional: {
+      readonly registerField: (section: InjectionSlots['Additional'], fields: InjectedField | InjectedField[]) => void;
+      readonly registerContent: (section: InjectionSlots['Additional'], contents: InjectedContent) => void;
+    };
+  };
+}
 
 declare module '*.png';
 declare module '*.svg';
@@ -16,6 +57,7 @@ declare global {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tinymce: any;
     _tutorobject: {
+      ID: number;
       ajaxurl: string;
       site_url: string;
       home_url: string;
@@ -39,6 +81,15 @@ declare global {
       is_admin: string;
       is_admin_bar_showing: string;
       max_upload_size: string;
+      content_change_event: string;
+      is_tutor_course_edit: string;
+      assignment_max_file_allowed: string;
+      current_page: string;
+      quiz_answer_display_time: string;
+      is_ssl: string;
+      course_list_page_url: string;
+      course_post_type: string;
+      local: string;
       difficulty_levels: {
         label: string;
         value: string;
@@ -78,7 +129,6 @@ declare global {
           user_status: string;
           display_name: string;
         };
-        ID: number;
         caps: {
           [key: string]: boolean;
         };
@@ -89,14 +139,6 @@ declare global {
         };
         filter: null;
       };
-      content_change_event: string;
-      is_tutor_course_edit: string;
-      assignment_max_file_allowed: string;
-      current_page: string;
-      quiz_answer_display_time: string;
-      is_ssl: string;
-      course_list_page_url: string;
-      course_post_type: string;
       settings?: {
         monetize_by: 'wc' | 'tutor' | 'edd';
         enable_course_marketplace: 'on' | 'off';
@@ -114,6 +156,7 @@ declare global {
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
         instructor_can_publish_course: 'on' | 'off';
         youtube_api_key_exist: boolean;
+        membership_only_mode: boolean;
       };
       tutor_currency: {
         symbol: string;
@@ -123,12 +166,15 @@ declare global {
         decimal_separator: string;
         no_of_decimal: string;
       };
-      local: string;
+      visibility_control?: {
+        course_builder?: Record<string, string>;
+      };
     };
     wpApiSettings: {
       nonce: string;
       root: string;
       versionString: string;
     };
+    Tutor: Tutor;
   }
 }

@@ -11,13 +11,16 @@ import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions
 import Logo from '@CourseBuilderComponents/layouts/header/Logo';
 import Tracker from '@CourseBuilderComponents/layouts/Tracker';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT, TutorRoles, WP_ADMIN_BAR_HEIGHT } from '@TutorShared/config/constants';
 import {
   borderRadius,
   Breakpoint,
@@ -32,11 +35,8 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@SharedImages/pro-placeholders/generate-course.webp';
-import LeaveWithoutSavingModal from '@TutorShared/components/modals/LeaveWithoutSavingModal';
-import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 
 const courseId = getCourseId();
 
@@ -48,10 +48,12 @@ const Header = () => {
 
   const totalEnrolledStudents = (queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse)
     ?.total_enrolled_student;
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+  const isAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -85,15 +87,23 @@ const Header = () => {
   const handleExitButtonClick = () => {
     if (isFormDirty) {
       showModal({
-        component: LeaveWithoutSavingModal,
+        component: ConfirmationModal,
         props: {
-          message: __('You’re about to leave the course creation process without saving your changes.', 'tutor'),
-          redirectUrl: (() => {
-            const isFormWpAdmin = window.location.href.includes('wp-admin');
-
-            return isFormWpAdmin ? tutorConfig.backend_course_list_url : tutorConfig.frontend_course_list_url;
-          })(),
+          title: __('Do you want to exit without saving?', 'tutor'),
+          description: __('You’re about to leave the course creation process without saving your changes.', 'tutor'),
+          confirmButtonText: __('Yes, exit without saving', 'tutor'),
+          confirmButtonVariant: 'danger',
+          cancelButtonText: __('Continue editing', 'tutor'),
+          maxWidth: 445,
         },
+      }).then((result) => {
+        if (result.action === 'CONFIRM') {
+          const isFormWpAdmin = window.location.href.includes('wp-admin');
+
+          window.location.href = isFormWpAdmin
+            ? tutorConfig.backend_course_list_url
+            : tutorConfig.frontend_course_list_url;
+        }
       });
     } else {
       const isFormWpAdmin = window.location.href.includes('wp-admin');
@@ -103,7 +113,7 @@ const Header = () => {
   };
 
   return (
-    <div css={styles.wrapper}>
+    <div css={styles.wrapper(isAdmin || hasWpAdminAccess)}>
       <Logo />
 
       <div css={styles.container}>
@@ -148,7 +158,7 @@ const Header = () => {
 export default Header;
 
 const styles = {
-  wrapper: css`
+  wrapper: (hasAdminBar: boolean) => css`
     height: ${headerHeight}px;
     width: 100%;
     background-color: ${colorTokens.surface.navbar};
@@ -157,7 +167,7 @@ const styles = {
     grid-template-columns: 1fr ${containerMaxWidth}px 1fr;
     align-items: center;
     position: sticky;
-    top: 0;
+    top: ${hasAdminBar ? WP_ADMIN_BAR_HEIGHT : '0px'};
     z-index: ${zIndex.header};
 
     ${Breakpoint.tablet} {
@@ -253,6 +263,8 @@ const styles = {
     }
 
     &:focus {
+      background-color: ${colorTokens.background.status.errorFail};
+      color: ${colorTokens.icon.error};
       box-shadow: ${shadow.focus};
     }
   `,

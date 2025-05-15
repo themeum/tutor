@@ -1,5 +1,5 @@
 import { type SerializedStyles, css } from '@emotion/react';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 import React, { type MouseEvent, type ReactNode, useRef } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -154,6 +154,13 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.primary};
+    }
+
     svg {
       flex-shrink: 0;
       color: ${colorTokens.icon.default};
@@ -236,6 +243,11 @@ const styles = {
       svg {
         color: ${colorTokens.icon.default};
       }
+    }
+
+    &:focus,
+    &:active {
+      background: none;
     }
 
     &:focus-visible {

@@ -8,7 +8,6 @@ import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 
-import FormInput from '@TutorShared/components/fields/FormInput';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
@@ -20,6 +19,7 @@ import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionCond
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
+import FormQuestionTitle from '@CourseBuilderComponents/fields/FormQuestionTitle';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import {
   type QuizForm,
@@ -35,12 +35,14 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import type { ContentType } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type ID, isDefined } from '@TutorShared/utils/types';
+import { findSlotFields } from '@TutorShared/utils/util';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;
@@ -69,6 +71,7 @@ const QuizModal = ({
   contentDripType,
   contentType,
 }: QuizModalProps) => {
+  const { fields } = useCourseBuilderSlot();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
@@ -109,7 +112,7 @@ const QuizModal = ({
     shouldFocusError: true,
   });
 
-  const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -133,7 +136,10 @@ const QuizModal = ({
       return;
     }
 
-    const convertedData = convertQuizResponseToFormData(getQuizDetailsQuery.data);
+    const convertedData = convertQuizResponseToFormData(
+      getQuizDetailsQuery.data,
+      findSlotFields({ fields: fields.Curriculum.Quiz }),
+    );
 
     form.reset(convertedData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -179,7 +185,17 @@ const QuizModal = ({
     }
 
     setIsEdit(false);
-    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId);
+    const payload = convertQuizFormDataToPayload(
+      data,
+      topicId,
+      contentDripType,
+      courseId,
+      findSlotFields(
+        { fields: fields.Curriculum.Quiz, slotKey: 'after_question_description' },
+        { fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_question_sidebar' },
+      ),
+      findSlotFields({ fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_settings' }),
+    );
 
     const response = await saveQuizMutation.mutateAsync(payload);
 
@@ -251,12 +267,18 @@ const QuizModal = ({
                   <Show
                     when={activeTab === 'settings' || quizId}
                     fallback={
-                      <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                      <Button
+                        data-cy="quiz-next"
+                        variant="primary"
+                        size="small"
+                        onClick={() => setActiveTab('settings')}
+                      >
                         {__('Next', 'tutor')}
                       </Button>
                     }
                   >
                     <Button
+                      data-cy="save-quiz"
                       loading={saveQuizMutation.isPending}
                       variant="primary"
                       size="small"
@@ -277,30 +299,24 @@ const QuizModal = ({
                   <div css={styles.left}>
                     <Show when={activeTab === 'details'}>
                       <div css={styles.quizTitleWrapper}>
-                        <Show
-                          when={isEdit}
-                          fallback={
-                            <div role="button" tabIndex={0} css={styles.quizNameWithButton}>
-                              <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
-                              <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
-                                <SVGIcon name="edit" width={24} height={24} />
-                              </Button>
-                            </div>
-                          }
-                        >
-                          <div css={styles.quizForm}>
-                            <Controller
-                              control={form.control}
-                              name="quiz_title"
-                              rules={{ required: __('Quiz title is required', 'tutor') }}
-                              render={(controllerProps) => (
-                                <FormInput
-                                  {...controllerProps}
-                                  placeholder={__('Add quiz title', 'tutor')}
-                                  selectOnFocus
-                                />
-                              )}
-                            />
+                        <div css={styles.quizForm}>
+                          <Controller
+                            control={form.control}
+                            name="quiz_title"
+                            rules={{ required: __('Quiz title is required', 'tutor') }}
+                            render={(controllerProps) => (
+                              <FormQuestionTitle
+                                {...controllerProps}
+                                placeholder={__('Add quiz title', 'tutor')}
+                                size="small"
+                                isEdit={isEdit}
+                                onToggleEdit={(isEdit) => {
+                                  setIsEdit(isEdit);
+                                }}
+                              />
+                            )}
+                          />
+                          <Show when={isEdit}>
                             <Controller
                               control={form.control}
                               name="quiz_description"
@@ -329,6 +345,7 @@ const QuizModal = ({
                                 {__('Cancel', 'tutor')}
                               </Button>
                               <Button
+                                data-cy="save-quiz-title"
                                 loading={saveQuizMutation.isPending}
                                 variant="secondary"
                                 type="submit"
@@ -344,8 +361,8 @@ const QuizModal = ({
                                 {__('Ok', 'tutor')}
                               </Button>
                             </div>
-                          </div>
-                        </Show>
+                          </Show>
+                        </div>
                       </div>
 
                       <QuestionList isEditing={isEdit} />

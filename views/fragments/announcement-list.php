@@ -242,7 +242,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 						</div>
 					</th>
 					<th width="17%">
-						<?php esc_html_e( 'Date', 'tutor-pro' ); ?>
+						<?php esc_html_e( 'Date', 'tutor' ); ?>
 					</th>
 				<?php else : ?>
 					<th width="17%">

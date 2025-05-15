@@ -27,7 +27,7 @@ $bio   = get_user_meta( $uid, '_tutor_profile_bio', true );
 $profile_data = array(
 	array( __( 'Registration Date', 'tutor' ), ( $rdate ? tutor_i18n_get_formated_date( tutor_utils()->get_local_time_from_unix( $rdate ) ) : '' ) ),
 	array( __( 'First Name', 'tutor' ), ( $fname ? $fname : esc_html( '-' ) ) ),
-	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : __( '-' ) ) ),
+	array( __( 'Last Name', 'tutor' ), ( $lname ? $lname : '-' ) ),
 	array( __( 'Username', 'tutor' ), $uname ),
 	array( __( 'Email', 'tutor' ), $email ),
 	array( __( 'Phone Number', 'tutor' ), ( $phone ? $phone : '-' ) ),
@@ -39,18 +39,18 @@ $profile_data = array(
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
 	<?php
-		foreach ( $profile_data as $key => $data ) :
-			?>
+	foreach ( $profile_data as $key => $data ) :
+		?>
 		<div class="tutor-row tutor-mb-24">
 			<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-3">
 				<span class="tutor-fs-6 tutor-color-secondary"><?php echo esc_html( $data[0] ); ?></span>
 			</div>
 			<div class="tutor-col-12 tutor-col-sm-7 tutor-col-lg-9">
-				<?php
-				echo 'Biography' === $data[0] ?
-						'<span class="tutor-fs-6 tutor-color-secondary">' . wp_kses_post( wpautop( $data[1] ) ) . '</span>'
-						: '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">' . esc_html( $data[1] ) . '</span>';
-				?>
+			<?php
+			echo 'Biography' === $data[0] ?
+					'<span class="tutor-fs-6 tutor-color-secondary">' . wp_kses_post( wpautop( $data[1] ) ) . '</span>'
+					: '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">' . esc_html( $data[1] ) . '</span>';
+			?>
 			</div>
 		</div>
 	<?php endforeach; ?>

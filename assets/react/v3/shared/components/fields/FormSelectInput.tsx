@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -11,9 +11,10 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type IconCollection, type Option, isDefined } from '@TutorShared/utils/types';
+import { type Option, isDefined } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
@@ -70,12 +71,15 @@ const FormSelectInput = <T,>({
   isAiOutline = false,
   selectOnFocus,
 }: FormSelectInputProps<T>) => {
-  const getInitialValue = () =>
-    options.find((item) => item.value === field.value) || {
-      label: '',
-      value: '',
-      description: '',
-    };
+  const getInitialValue = useCallback(
+    () =>
+      options.find((item) => item.value === field.value) || {
+        label: '',
+        value: '',
+        description: '',
+      },
+    [field.value, options],
+  );
 
   const hasDescription = useMemo(() => options.some((option) => isDefined(option.description)), [options]);
 
@@ -110,17 +114,14 @@ const FormSelectInput = <T,>({
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   const handleOptionSelect = (option: Option<T>, event?: React.MouseEvent) => {
@@ -258,7 +259,7 @@ const FormSelectInput = <T,>({
                     setIsOpen((previousState) => !previousState);
                     inputRef.current?.focus();
                   }}
-                  disabled={readOnly || options.length === 0}
+                  disabled={disabled || readOnly || options.length === 0}
                 >
                   <SVGIcon name="chevronDown" width={20} height={20} />
                 </button>
@@ -316,9 +317,7 @@ const FormSelectInput = <T,>({
                           disabled={option.disabled}
                           title={option.label}
                           onMouseOver={() => setActiveIndex(index)}
-                          onMouseLeave={() => {
-                            index !== activeIndex && setActiveIndex(-1);
-                          }}
+                          onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
                           onFocus={() => setActiveIndex(index)}
                           aria-selected={activeIndex === index}
                         >
@@ -578,7 +577,8 @@ const styles = {
   `,
   label: css`
     ${styleUtils.resetButton};
-    ${styleUtils.text.ellipsis(1)}
+    ${styleUtils.text.ellipsis(1)};
+    color: ${colorTokens.text.title};
     width: 100%;
     height: 100%;
     display: flex;
@@ -590,6 +590,13 @@ const styles = {
     line-height: ${lineHeight[24]};
     word-break: break-all;
     cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      color: ${colorTokens.text.title};
+    }
 
     span {
       flex-shrink: 0;
@@ -621,6 +628,13 @@ const styles = {
     border-radius: ${borderRadius[4]};
     padding: ${spacing[6]};
     height: 100%;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

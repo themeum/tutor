@@ -3,7 +3,6 @@ import type { UseFormReturn } from 'react-hook-form';
 
 import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { tutorConfig } from '@TutorShared/config/config';
 import { VideoRegex } from '@TutorShared/config/constants';
 import { type ID } from '@TutorShared/utils/types';
 
@@ -17,12 +16,12 @@ export async function getVimeoVideoDuration(videoUrl: string): Promise<number | 
   const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
   const match = videoUrl.match(regExp);
   const videoId = match ? match[5] : null;
-  const jsonUrl = `http${tutorConfig.is_ssl}://vimeo.com/api/v2/video/${videoId}.xml`;
+  const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
 
   try {
     const response = await fetch(jsonUrl);
     if (!response.ok) {
-      throw new Error('Failed to fetch the video data');
+      throw new Error(__('Failed to fetch the video data', 'tutor'));
     }
 
     const textData = await response.text();
@@ -221,7 +220,7 @@ export const generateVideoThumbnail = async (
 
               const ctx = canvas.getContext('2d');
               if (!ctx) {
-                throw new Error('Failed to get canvas context');
+                throw new Error(__('Failed to get canvas context', 'tutor'));
               }
 
               ctx.drawImage(video, 0, 0);
@@ -231,7 +230,7 @@ export const generateVideoThumbnail = async (
               resolve(thumbnail);
             } catch (error) {
               cleanup();
-              const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+              const errorMessage = error instanceof Error ? error.message : __('Unknown error occurred', 'tutor');
               reject(new Error(`Thumbnail generation failed: ${errorMessage}`));
             }
           }
@@ -269,7 +268,7 @@ export const generateVideoThumbnail = async (
         // 30 seconds is a reasonable maximum time to wait for video metadata and frame capture
         const timeoutId = setTimeout(() => {
           cleanup();
-          reject(new Error('Thumbnail generation timed out'));
+          reject(new Error(__('Thumbnail generation timed out', 'tutor')));
         }, 30000);
 
         // Add elements to DOM
@@ -285,5 +284,5 @@ export const generateVideoThumbnail = async (
     });
   }
 
-  throw new Error('Unsupported video source');
+  throw new Error(__('Unsupported video source', 'tutor'));
 };

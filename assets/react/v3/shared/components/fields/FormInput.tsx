@@ -14,6 +14,7 @@ import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
@@ -229,7 +230,7 @@ const FormInput = ({
   );
 };
 
-export default FormInput;
+export default withVisibilityControl(FormInput);
 
 const styles = {
   container: (isClearable: boolean) => css`
@@ -275,6 +276,13 @@ const styles = {
     css`
       color: ${colorTokens.icon.brand};
     `}
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
 
     :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

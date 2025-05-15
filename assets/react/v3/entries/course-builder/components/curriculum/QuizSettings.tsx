@@ -13,6 +13,7 @@ import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
@@ -23,6 +24,7 @@ import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 
@@ -41,12 +43,13 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const queryClient = useQueryClient();
 
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
+  const quizSettingsValidationErrorLength = Object.keys(form.formState.errors).length;
 
   return (
     <div css={styles.settings}>
       <Card
         title={__('Basic Settings', 'tutor')}
-        collapsedAnimationDependencies={[feedbackMode, prerequisites?.length]}
+        collapsedAnimationDependencies={[feedbackMode, prerequisites?.length, quizSettingsValidationErrorLength]}
       >
         <div css={styles.formWrapper}>
           <Show when={contentType !== 'tutor_h5p_quiz'}>
@@ -54,6 +57,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <Controller
                 name="quiz_option.time_limit.time_value"
                 control={form.control}
+                rules={requiredRule()}
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
@@ -70,6 +74,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 render={(controllerProps) => (
                   <FormSelectInput
                     {...controllerProps}
+                    label={<>&nbsp;</>}
                     options={[
                       { label: __('Seconds', 'tutor'), value: 'seconds' },
                       { label: __('Minutes', 'tutor'), value: 'minutes' },
@@ -124,7 +129,15 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.attempts_allowed"
               control={form.control}
-              rules={{ max: 20, min: 0 }}
+              rules={{
+                ...requiredRule(),
+                validate: (value) => {
+                  if (value >= 0 && value <= 20) {
+                    return true;
+                  }
+                  return __('Allowed attempts must be between 0 and 20', 'tutor');
+                },
+              }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
@@ -144,6 +157,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             <Controller
               name="quiz_option.pass_is_required"
               control={form.control}
+              rules={requiredRule()}
               render={(controllerProps) => (
                 <FormSwitch
                   {...controllerProps}
@@ -160,9 +174,11 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           <Controller
             name="quiz_option.passing_grade"
             control={form.control}
+            rules={requiredRule()}
             render={(controllerProps) => (
               <FormInputWithContent
                 {...controllerProps}
+                type="number"
                 label={__('Passing Grade', 'tutor')}
                 helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
                 content="%"
@@ -175,6 +191,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           <Show when={contentType !== 'tutor_h5p_quiz'}>
             <Controller
               name="quiz_option.max_questions_for_answer"
+              rules={requiredRule()}
               control={form.control}
               render={(controllerProps) => (
                 <FormInput
@@ -255,7 +272,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       topics.reduce((topics, topic) => {
                         topics.push({
                           ...topic,
-                          contents: topic.contents.filter((content) => content.ID !== quizId),
+                          contents: topic.contents.filter((content) => String(content.ID) !== String(quizId)),
                         });
 
                         return topics;
@@ -271,7 +288,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
         </div>
       </Card>
 
-      <Card title={__('Advanced Settings', 'tutor')}>
+      <Card
+        title={__('Advanced Settings', 'tutor')}
+        collapsedAnimationDependencies={[quizSettingsValidationErrorLength]}
+      >
         <div css={styles.formWrapper}>
           <Controller
             name="quiz_option.quiz_auto_start"
@@ -352,6 +372,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
+                  type="number"
                   label={__('Set Character Limit for Open-Ended/Essay Answers', 'tutor')}
                   selectOnFocus
                 />
@@ -360,6 +381,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           </Show>
         </div>
       </Card>
+
+      <CourseBuilderInjectionSlot section="Curriculum.Quiz.bottom_of_settings" form={form} />
     </div>
   );
 };
@@ -377,7 +400,7 @@ const styles = {
   `,
   timeWrapper: css`
     ${styleUtils.display.flex()}
-    align-items: flex-end;
+    align-items: flex-start;
     gap: ${spacing[8]};
   `,
   questionLayoutAndOrder: css`

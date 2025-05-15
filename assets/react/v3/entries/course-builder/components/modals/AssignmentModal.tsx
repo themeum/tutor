@@ -18,14 +18,18 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type CourseTopic,
   convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
+  type Assignment,
+  type CourseTopic,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
@@ -34,7 +38,7 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type ID } from '@TutorShared/utils/types';
-import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {
@@ -54,6 +58,7 @@ export interface AssignmentForm {
     value: string;
     time: TimeLimitUnit;
   };
+  deadline_from_start: boolean;
   total_mark: number;
   pass_mark: number;
   upload_files_limit: number;
@@ -94,6 +99,7 @@ const AssignmentModal = ({
   subtitle,
   contentDripType,
 }: AssignmentModalProps) => {
+  const { fields } = useCourseBuilderSlot();
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const getAssignmentDetailsQuery = useAssignmentDetailsQuery(assignmentId, topicId);
@@ -112,6 +118,7 @@ const AssignmentModal = ({
         value: '0',
         time: 'weeks',
       },
+      deadline_from_start: false,
       total_mark: 10,
       pass_mark: 5,
       upload_files_limit: 1,
@@ -126,7 +133,7 @@ const AssignmentModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
   useEffect(() => {
     if (assignmentDetails) {
@@ -139,6 +146,7 @@ const AssignmentModal = ({
             value: assignmentDetails.assignment_option.time_duration.value || '0',
             time: (assignmentDetails.assignment_option.time_duration.time as TimeLimitUnit) || 'weeks',
           },
+          deadline_from_start: assignmentDetails.assignment_option.deadline_from_start === '1' ? true : false,
           total_mark: assignmentDetails.assignment_option.total_mark || 10,
           pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
           upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
@@ -148,6 +156,12 @@ const AssignmentModal = ({
             after_xdays_of_enroll: assignmentDetails?.content_drip_settings?.after_xdays_of_enroll || '',
             prerequisites: assignmentDetails?.content_drip_settings?.prerequisites || [],
           },
+          ...Object.fromEntries(
+            findSlotFields({ fields: fields.Curriculum.Lesson }).map((key) => [
+              key,
+              assignmentDetails[key as keyof Assignment],
+            ]),
+          ),
         },
         {
           keepDirty: false,
@@ -166,7 +180,13 @@ const AssignmentModal = ({
   }, [assignmentDetails]);
 
   const onSubmit = async (data: AssignmentForm) => {
-    const payload = convertAssignmentDataToPayload(data, assignmentId, topicId, contentDripType);
+    const payload = convertAssignmentDataToPayload(
+      data,
+      assignmentId,
+      topicId,
+      contentDripType,
+      findSlotFields({ fields: fields.Curriculum.Assignment }),
+    );
     const response = await saveAssignmentMutation.mutateAsync(payload);
 
     if (response.status_code === 200 || response.status_code === 201) {
@@ -198,6 +218,7 @@ const AssignmentModal = ({
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-assignment"
               loading={saveAssignmentMutation.isPending}
               variant="primary"
               size="small"
@@ -227,7 +248,6 @@ const AssignmentModal = ({
                     placeholder={__('Enter Assignment Title', 'tutor')}
                     generateWithAi={!isTutorPro || isOpenAiEnabled}
                     isClearable
-                    selectOnFocus
                   />
                 )}
               />
@@ -244,6 +264,8 @@ const AssignmentModal = ({
                   />
                 )}
               />
+
+              <CourseBuilderInjectionSlot section="Curriculum.Assignment.after_description" form={form} />
             </div>
           </div>
 
@@ -323,10 +345,10 @@ const AssignmentModal = ({
                       placeholder={__('Select Prerequisite', 'tutor')}
                       options={
                         topics.reduce((topics, topic) => {
-                          if (topic.id === topicId) {
+                          if (String(topic.id) === String(topicId)) {
                             topics.push({
                               ...topic,
-                              contents: topic.contents.filter((content) => content.ID !== assignmentId),
+                              contents: topic.contents.filter((content) => String(content.ID) !== String(assignmentId)),
                             });
                           } else {
                             topics.push(topic);
@@ -371,6 +393,21 @@ const AssignmentModal = ({
                 )}
               />
             </div>
+
+            <Controller
+              name="deadline_from_start"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Set Deadline From Assignment Start Time', 'tutor')}
+                  helpText={__(
+                    'Each student will get their own deadline based on when they start the assignment.',
+                    'tutor',
+                  )}
+                />
+              )}
+            />
 
             <Controller
               name="total_mark"
@@ -440,6 +477,8 @@ const AssignmentModal = ({
                 />
               )}
             />
+
+            <CourseBuilderInjectionSlot section="Curriculum.Assignment.bottom_of_sidebar" form={form} />
           </div>
         </Show>
       </div>

@@ -10,10 +10,11 @@ import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/con
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
 
 export type WpMediaDetails = {
   id: number;
@@ -191,6 +192,7 @@ const FormFileUploader = ({
                     icon={<SVGIcon name="attach" height={24} width={24} />}
                     variant="secondary"
                     onClick={uploadHandler}
+                    data-cy="upload-media"
                   >
                     {buttonText}
                   </Button>
@@ -204,7 +206,7 @@ const FormFileUploader = ({
   );
 };
 
-export default FormFileUploader;
+export default withVisibilityControl(FormFileUploader);
 
 const styles = {
   wrapper: ({ hasFiles }: { hasFiles: boolean }) => css`

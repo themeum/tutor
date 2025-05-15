@@ -16,6 +16,7 @@ use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 
 /**
  * Determine active tab
@@ -76,7 +77,7 @@ $filters = array(
 		<div class="tutor-mt-24">
 			<div class="tutor-table-responsive">
 
-				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
+				<table class="tutor-table tutor-table-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>
@@ -86,6 +87,9 @@ $filters = array(
 							</th>
 							<th class="tutor-table-rows-sorting">
 								<?php esc_html_e( 'Name', 'tutor' ); ?>
+							</th>
+							<th>
+								<?php esc_html_e( 'Applies to', 'tutor' ); ?>
 							</th>
 							<th>
 								<?php esc_html_e( 'Discount', 'tutor' ); ?>
@@ -100,7 +104,7 @@ $filters = array(
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</th>
 							<th colspan="2">
-								<?php esc_html_e( 'Uses', 'tutor' ); ?>
+								<?php esc_html_e( 'Usage', 'tutor' ); ?>
 							</th>
 						</tr>
 					</thead>
@@ -118,8 +122,14 @@ $filters = array(
 									</td>
 
 									<td>
-										<div class="tutor-fs-7">
+										<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-table-link tutor-fs-7">
 											<?php echo esc_html( $coupon->coupon_title ); ?>
+										</a>
+									</td>
+
+									<td>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( CouponModel::get_coupon_applies_to_label( $coupon->applies_to ) ); ?>
 										</div>
 									</td>
 

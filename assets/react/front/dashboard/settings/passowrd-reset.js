@@ -1,6 +1,8 @@
 const { get_response_message } = require("../../../helper/response");
 
 window.jQuery(document).ready($=>{
+    const { __ } = wp.i18n;
+    
     $('.tutor-settings-pass-field [name="confirm_new_password"]').on('input', function(){
         let original = $('[name="new_password"]');
         let val = (original.val() || '').trim();
@@ -28,10 +30,10 @@ window.jQuery(document).ready($=>{
                 let {success} = resp;
                 
                 if(success) {
-                    window.tutor_toast('Success', get_response_message(resp), 'success');
+                    window.tutor_toast(__('Success', 'tutor'), get_response_message(resp), 'success');
                     window.location.reload();
                 } else {
-                    window.tutor_toast('Error', get_response_message(resp), 'error');
+                    window.tutor_toast(__('Error', 'tutor'), get_response_message(resp), 'error');
                 }
             },
             complete:()=>{

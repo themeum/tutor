@@ -1,40 +1,54 @@
-import ajaxHandler from "../../admin-dashboard/segments/filter";
-const { __ } = wp.i18n;
+import ajaxHandler from "../../helper/ajax-handler";
 
 document.addEventListener('DOMContentLoaded', () => {
+    const { __ } = wp.i18n;
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
     const checkoutPageWrapper = document.querySelector(".tutor-checkout-page");
+    let showTax               = true;    
 
     if (checkoutPageWrapper) {
-        const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
-        const applyCouponInput = applyCouponForm?.querySelector("input");
-        const applyCouponButton = applyCouponForm?.querySelector("button");
+        const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
+        const paymentMethodElem    = paymentMethodWrapper?.innerHTML;
+        const payNowBtn            = document.querySelector('#tutor-checkout-pay-now-button');
+        const payments             = document.querySelectorAll('.tutor-checkout-payment-item');
+        const paymentTypeInput     = document.querySelector("input[name=payment_type]");
+     
+        // Handle payment method selection.
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest(".tutor-checkout-payment-options")) {
+                const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
+                const paymentOptions        = paymentOptionsWrapper.querySelectorAll("label");
 
-        // Handle payment method click 
-        const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
-        if (paymentOptionsWrapper) {
-            const paymentTypeInput = document.querySelector("input[name=payment_type]");
-            const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
+                // Remove active class.
+                paymentOptions.forEach(item => item.classList.remove('active'));
+                // Add active class to the selected option.
+                const clickedOption = e.target.closest("label");
+                clickedOption.classList.add('active');
+                
+                paymentTypeInput.value = clickedOption.dataset.paymentType;
+                const inputCouponCode  = document.querySelector('[name=coupon_code]');
+                const couponCode       = inputCouponCode?.value || '';
+                const isPaddleSelected = clickedOption.firstElementChild.value === 'paddle';
 
-            paymentOptions.forEach((option) => {
-                option.addEventListener('click', (e) => {
-                    paymentOptions.forEach(item => item.classList.remove('active'));
-                    option.classList.add('active');
-                    paymentTypeInput.value = option.dataset.paymentType;
+                /**
+                 * If the selected payment method is Paddle, we need to hide the tax.
+                 * If the selected payment method is not Paddle, we need to show the tax.
+                 */
+                if (isPaddleSelected === showTax) {
+                    updateCheckoutData(couponCode, null, null, isPaddleSelected ? 0 : 1);
+                    showTax = !isPaddleSelected;
+                }
 
-                    const paymentInstructions = option.dataset.paymentInstruction;
-                    if (paymentInstructions) {
-                        document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                        document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
-                    } else {
-                        document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
-                    }
-                });
-            });
-        }
+                const paymentInstructions = clickedOption.dataset.paymentInstruction;
+                if (paymentInstructions) {
+                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                    document.querySelector('.tutor-payment-instructions').innerHTML = paymentInstructions;
+                } else {
+                    document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                }
+            }
 
-        // Handle toggle coupon form button click
-        document.addEventListener('click', (e) => {
+            // Handle toggle coupon form button click
             if (e.target.closest("#tutor-toggle-coupon-button")) {
                 const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
                 const applyCouponInput = applyCouponForm?.querySelector("input");
@@ -45,25 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyCouponForm.classList.add('tutor-d-none');
                 }
             }
-        });
 
-        // Enter event listener on coupon field.
-
-        /**
-         * Apply coupon on enter coupon field.
-         */
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.closest("input[name=coupon_code]")) {
-                e.preventDefault();
-                const btnApply = e.target.parentNode.querySelector("#tutor-apply-coupon-button");
-                btnApply?.click();
-            }
-        });
-
-        /**
-         * Handle apply coupon button.
-         */
-        document.addEventListener('click', async (e) => {
+            // Handle apply coupon button.
             if (e.target.closest("#tutor-apply-coupon-button")) {
                 const url = new URL(window.location.href);
                 const plan = url.searchParams.get('plan');
@@ -93,7 +90,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (status_code === 200) {
                         tutor_toast(__('Success', 'tutor'), message, 'success');
-                        updateCheckoutData(couponCode);
+                        await updateCheckoutData(couponCode, null, null, showTax ? 1 : 0);
+                        
+                        if (!data.total_price && data.order_type === 'single_order' && paymentMethodElem) {
+                            paymentMethodWrapper.innerHTML = '';
+                            const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
+                            payNowBtn.innerHTML = payNowBtnText;
+                            paymentMethodWrapper.insertAdjacentHTML('beforeend', `<input type='hidden' name='payment_method' value='free' id="tutor-temp-payment-method"/>`);
+                        }
                     } else {
                         tutor_toast(__('Failed', 'tutor'), message, 'error');
                     }
@@ -104,17 +108,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     applyCouponButton.classList.remove('is-loading');
                 }
             }
-        });
 
-        // Handle coupon remove button click
-        document.addEventListener('click', (e) => {
+            // Handle coupon remove button click
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
                 document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
-                updateCheckoutData('');
+                await updateCheckoutData('', null, null, 1);
+                paymentMethodWrapper.innerHTML = paymentMethodElem;
+                const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
+                payNowBtn.innerHTML = payNowBtnText;
+                document.getElementById('tutor-temp-payment-method')?.remove();
+                showTax = true;
+                handleSinglePaymentOptionSelection();
             }
         });
 
+        // If only one payment available, keep selected.
+        handleSinglePaymentOptionSelection();
+
+        // Apply coupon on enter coupon field.
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.target.closest("input[name=coupon_code]")) {
+                e.preventDefault();
+                const btnApply = e.target.parentNode.querySelector("#tutor-apply-coupon-button");
+                btnApply?.click();
+            }
+        });
 
         // Validate checkout form.
         const tutorCheckoutForm = document.getElementById('tutor-checkout-form');
@@ -132,21 +151,37 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Update checkout data.
          * 
-         * @since 3.0.0
+         * @since 3.3.0
          * 
          * @param {string} couponCode coupon code.
+         * @param {string} billingCountry Billing country.
+         * @param {string} billingState Billing state.
+         * @param {string} showTax Hide tax when payment method is Paddle.
          */
-        async function updateCheckoutData(couponCode) {
+        async function updateCheckoutData(couponCode, billingCountry = null, billingState = null, showTax = '1') {
             const url = new URL(window.location.href);
             const plan = url.searchParams.get('plan');
+            const course_id = url.searchParams.get('course_id');
 
             const formData = new FormData();
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
             formData.set('action', 'tutor_get_checkout_html');
             formData.set('coupon_code', couponCode);
+            formData.set('show_tax', showTax);
+            if (billingCountry) {
+                formData.set('billing_country', billingCountry);
+            }
+
+            if (billingState) {
+                formData.set('billing_state', billingState);
+            }
 
             if (plan) {
                 formData.set('plan', plan);
+            }
+
+            if (course_id) {
+                formData.set('course_id', course_id);
             }
 
             const response = await ajaxHandler(formData);
@@ -189,7 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown_billing_country?.addEventListener('change', async (e) => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = e.target.value;
-            const coupon_code = input_coupon_code?.value;
+            const coupon_code = input_coupon_code?.value ? input_coupon_code.value : '';
 
             if (country) {
                 toggleSpinner(e.target, 'show');
@@ -198,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_country', country);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value, showTax ? 1 : 0);
 
                 toggleSpinner(e.target, 'hide');
             }
@@ -208,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = dropdown_billing_country.value;
             const state = e.target.value;
-            const coupon_code = input_coupon_code?.value;
+            const coupon_code = input_coupon_code?.value ? input_coupon_code.value : '';
 
             if (state) {
                 toggleSpinner(e.target, 'show');
@@ -218,10 +253,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_state', state);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value, showTax ? 1 : 0);
 
                 toggleSpinner(e.target, 'hide');
             }
         })
+
+
+        /**
+         * Handles the selection of the Paddle payment method.
+         * 
+         * @since 3.5.0
+         */
+        async function handlePaddlePaymentSelection() {
+            const inputCouponCode = document.querySelector('[name=coupon_code]');
+            const couponCode      = inputCouponCode?.value || '';
+            await updateCheckoutData(couponCode, null, null, 0);
+            showTax = false;
+        }   
+
+        /**
+         * Handles the selection of a single payment option.
+         * 
+         * @returns {void}
+         * @since 3.5.0
+         */
+        function handleSinglePaymentOptionSelection()
+        {
+            // If only one payment available, keep selected.
+            if (payments.length === 1) {
+                payments[0].classList.add('active');
+                payments[0].querySelector('input[name=payment_method]').checked = true;
+                paymentTypeInput.value = payments[0].dataset.paymentType;
+
+                if (payments[0].firstElementChild.value === 'paddle') {
+                    handlePaddlePaymentSelection();
+                }
+
+                const paymentInstructions = payments[0].dataset.paymentInstruction;
+                if (paymentInstructions) {
+                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                }
+            }
+        }
     }
 });

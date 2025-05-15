@@ -154,7 +154,6 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                 {...controllerProps}
                 label={__('Meeting Name', 'tutor')}
                 placeholder={__('Enter meeting name', 'tutor')}
-                selectOnFocus
               />
             )}
           />
@@ -301,6 +300,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
           {__('Cancel', 'tutor')}
         </Button>
         <Button
+          data-cy="save-google-meeting"
           loading={saveGoogleMeetMeeting.isPending}
           variant="primary"
           size="small"

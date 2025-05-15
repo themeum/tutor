@@ -565,7 +565,7 @@ if ( ! function_exists( 'tutor_alert' ) ) {
 			return $msg;
 		}
 
-		$html = '<div class="asas tutor-alert tutor-' . esc_attr( $type ) . '">
+		$html = '<div class="tutor-alert tutor-' . esc_attr( $type ) . '">
 					<div class="tutor-alert-text">
 						<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
 						<span>' . wp_kses( $msg, array( 'div', 'span' ) ) . '</span>
@@ -1213,6 +1213,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 		$conditional_buttons = (object) array(
 			'show_enroll_btn'              => false,
 			'show_add_to_cart_btn'         => false,
+			'show_view_cart_btn'           => false,
 			'show_start_learning_btn'      => false,
 			'show_continue_learning_btn'   => false,
 			'show_complete_course_btn'     => false,
@@ -1263,7 +1264,11 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 			} else {
 				$is_paid_course = tutor_utils()->is_course_purchasable( $course_id );
 				if ( $is_paid_course ) {
-					$conditional_buttons->show_add_to_cart_btn = true;
+					if ( tutor_is_item_in_cart( $course_id ) ) {
+						$conditional_buttons->show_view_cart_btn = true;
+					} else {
+						$conditional_buttons->show_add_to_cart_btn = true;
+					}
 				} else {
 					$conditional_buttons->show_enroll_btn = true;
 				}
@@ -1448,6 +1453,13 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 					continue;
 				}
 
+				$name                = $method['name'];
+				$basename            = "tutor-{$name}/tutor-{$name}.php";
+				$is_plugin_activated = is_plugin_active( $basename );
+				if ( ! $is_manual && 'paypal' !== $name && ! $is_plugin_activated ) {
+					continue;
+				}
+
 				$fields = $method['fields'];
 				unset( $method['fields'] );
 
@@ -1467,7 +1479,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		}
 	}
 
-	if ( ! function_exists( 'tutor_get_supported_payment_gateways' ) ) {
+	if ( ! function_exists( 'tutor_get_subscription_supported_payment_gateways' ) ) {
 		/**
 		 * Get all supported gateways
 		 *
@@ -1475,19 +1487,18 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * plan id provided.
 		 *
 		 * @since 3.0.0
-		 *
-		 * @param int $plan_id Plan id.
+		 * @since 3.4.0 plan_id param removed
 		 *
 		 * @return array
 		 */
-		function tutor_get_supported_payment_gateways( int $plan_id = 0 ) {
+		function tutor_get_subscription_supported_payment_gateways() {
 			$payment_gateways = tutor_get_all_active_payment_gateways();
 
 			$supported_gateways = array();
 			foreach ( $payment_gateways as $gateway ) {
 				$support_subscription = $gateway['support_subscription'] ?? false;
 
-				if ( $plan_id && ! $support_subscription ) {
+				if ( ! $support_subscription ) {
 					continue;
 				}
 
@@ -1689,7 +1700,7 @@ if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
 			}
 		}
 
-		wp_safe_redirect( add_query_arg( $query_params, home_url() ) );
+		wp_safe_redirect( apply_filters( 'tutor_redirect_url_after_checkout', add_query_arg( $query_params, home_url() ), $status, $order_id ) );
 		exit();
 	}
 }
@@ -1745,5 +1756,4 @@ if ( ! function_exists( 'tutor_is_local_env' ) ) {
 		);
 	}
 }
-
 

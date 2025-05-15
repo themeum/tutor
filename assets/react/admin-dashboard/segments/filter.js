@@ -7,11 +7,51 @@
  * @package Filter / sorting
  * @since v2.0.0
  */
-const { __, _x, _n, _nx } = wp.i18n;
+import ajaxHandler from '../../helper/ajax-handler';
 
 document.addEventListener('DOMContentLoaded', function () {
+	const { __, _x, _n, _nx } = wp.i18n;
 	const commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
 	const commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
+
+	const filterSelectItems = document.querySelectorAll('.tutor-filter-select');
+	filterSelectItems.forEach((item) => {
+		item.addEventListener('change', (e) => {
+			const name = e.target.name;
+			const value = e.target.value;
+
+			if (value.length) {
+				window.location = urlPrams(name, value);
+			} else {
+				window.location = deleteUrlPram(name);
+			}
+		}, { once: true });
+	});
+
+	const filterForms = document.querySelectorAll('.tutor-admin-dashboard-filter-form');
+	filterForms.forEach((form) => {
+		form.addEventListener('submit', (e) => {
+			e.preventDefault();
+
+			const formData = new FormData(e.target);
+			const data = Object.fromEntries(formData);
+
+			const url = new URL(window.location.href);
+			const params = url.searchParams;
+			params.set('paged', 1);
+
+			for (const key in data) {
+				const value = data[key];
+				if (value) {
+					params.set(key, value);
+				} else {
+					params.delete(key);
+				}
+			}
+
+			window.location = url;
+		});
+	});
 
 	const filterCourse = document.getElementById('tutor-backend-filter-course');
 	if (filterCourse) {
@@ -51,11 +91,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		},
 		{ once: true },
 	);
-	
+
 	const filterCouponStatus = document.getElementById('tutor-backend-filter-coupon-status');
 
 	filterCouponStatus?.addEventListener(
-		'change', 
+		'change',
 		(e) => {
 			window.location = urlPrams('coupon-status', e.target.value);
 		},
@@ -177,6 +217,13 @@ document.addEventListener('DOMContentLoaded', function () {
 		return url;
 	}
 
+	function deleteUrlPram(name) {
+		const url = new URL(window.location.href);
+		const params = url.searchParams;
+		params.delete(name);
+		return url;
+	}
+
 	/**
 	 * Select all bulk checkboxes
 	 *
@@ -265,32 +312,4 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		};
 	}
-	/**
-	 * Handle ajax request show toast message on success | failure
-	 *
-	 * @param {*} formData including action and all form fields
-	 */
-	async function ajaxHandler(formData) {
-		try {
-			const post = await fetch(window._tutorobject.ajaxurl, {
-				method: 'POST',
-				body: formData,
-			});
-			return post;
-		} catch (error) {
-			tutor_toast(__('Operation failed', 'tutor'), error, 'error');
-		}
-	}
 });
-
-export default async function ajaxHandler(formData) {
-	try {
-		const post = await fetch(window._tutorobject.ajaxurl, {
-			method: 'POST',
-			body: formData,
-		});
-		return post;
-	} catch (error) {
-		tutor_toast(__('Operation failed', 'tutor'), error, 'error');
-	}
-}

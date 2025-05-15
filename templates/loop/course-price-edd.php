@@ -26,7 +26,7 @@ add_filter(
 
 <?php
 	$course_id  = get_the_ID();
-	$enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+	$enroll_btn = '<div class="list-item-button">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">' . __( 'Enroll Course', 'tutor' ) . '</a>', $course_id ) . '</div>';
 	$free_html  = $enroll_btn;
 if ( tutor_utils()->is_course_purchasable() ) {
 		$enroll_btn = tutor_course_loop_add_to_cart( false );
@@ -59,7 +59,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
                         </div>
                     </div>
                     <div class="list-item-button tutor-mt-16 booking-available">
-                        ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . '
+                        ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id ) . '
                     </div>';
 		// @codingStandardsIgnoreEnd
 	}
@@ -89,7 +89,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 				<div class="list-item-button"> 
 			<?php
 				// PHPCS - the variable $enroll_btn holds safe data.
-				echo apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn );// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --safe data
+				echo apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id );// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --safe data
 			?>
 				</div>
 			<?php
