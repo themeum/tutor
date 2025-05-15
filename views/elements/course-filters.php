@@ -83,7 +83,7 @@ if ( isset( $data ) ) : ?>
 					<form class="tutor-dropdown tutor-admin-dashboard-filter-form" data-tutor-dropdown-persistent>
 						<div class="tutor-d-flex tutor-justify-between tutor-mb-16">
 							<span class="tutor-fs-6 tutor-fw-medium"><?php esc_html_e( 'Filters', 'tutor' ); ?></span>
-							<button type="button" class="tutor-btn tutor-btn-ghost" data-tutor-dropdown-close>
+							<button type="button" class="tutor-iconic-btn" data-tutor-dropdown-close>
 								<i class="tutor-icon-times"></i>
 							</button>
 						</div>

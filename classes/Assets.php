@@ -230,6 +230,7 @@ class Assets {
 
 			// @since 3.0.0 add tax react app on the settings page.
 			if ( 'tutor_settings' === $page && ! Input::has( 'edit' ) ) {
+				wp_enqueue_editor();
 				wp_enqueue_script( 'tutor-tax-settings', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 				wp_enqueue_script( 'tutor-payment-settings', tutor()->url . 'assets/js/tutor-payment-settings.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 			}

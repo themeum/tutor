@@ -1,9 +1,8 @@
-import tutorFormData from "../../helper/tutor-formdata";
 import ajaxHandler from "../../helper/ajax-handler";
-
-const { __ } = wp.i18n;
+import tutorFormData from "../../helper/tutor-formdata";
 
 document.addEventListener("DOMContentLoaded", async function() {
+    const { __ } = wp.i18n;
     const defaultErrMsg = __("Something went wrong, please try again after refreshing page", "tutor");
     const keysListWrapper = document.querySelector(".tutor-rest-api-keys-wrapper");
     const listTable = document.querySelector(".tutor-rest-api-keys-wrapper tbody");
