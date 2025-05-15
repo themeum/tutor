@@ -5,7 +5,7 @@
  * @package Tutor\Helpers
  * @author Tutor <support@themeum.com>
  * @link https://tutor.com
- * @since 3.3.3
+ * @since 3.6.0
  */
 
 namespace Tutor\Helpers;
@@ -71,10 +71,9 @@ class TemplateHelper {
 	 * @param string $template_id The ID of the template to download.
 	 */
 	public static function get_template_download_url( $template_id ) {
-		$template_download_endpoint = 'https://tutorlms.com/wp-json/themeum-products/v1/tutor/theme-template-download';
-		$tutor_license_info         = get_option( 'tutor_license_info' );
-		$website_url                = get_site_url();
-		$args                       = array(
+		$tutor_license_info = get_option( 'tutor_license_info' );
+		$website_url        = get_site_url();
+		$args               = array(
 			'body'    => array(
 				'slug'        => $template_id,
 				'website_url' => $website_url,
@@ -84,9 +83,9 @@ class TemplateHelper {
 				'Secret-Key' => 't344d5d71sae7dcb546b8cf55e594808',
 			),
 		);
-		$response                   = wp_remote_post( self::$template_download_endpoint, $args );
-		$response_body              = wp_remote_retrieve_body( $response );
-		$data                       = json_decode( $response_body, true );
+		$response           = wp_remote_post( self::$template_download_endpoint, $args );
+		$response_body      = wp_remote_retrieve_body( $response );
+		$data               = json_decode( $response_body, true );
 		if ( is_wp_error( $response ) ) {
 			self::json_response( $data['response'], null, 400 );
 		}

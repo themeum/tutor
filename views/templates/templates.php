@@ -5,7 +5,7 @@
  * @package Tutor
  * @author Tutor <support@themeum.com>
  * @link https://tutor.com
- * @since 3.3.3
+ * @since 3.6.0
  */
 
 ?>
@@ -21,12 +21,6 @@
 				</div>
 				<div class="tutor-top-left-text tutor-fs-6 tutor-fw-regular"><?php esc_html_e( 'Leverage the collection of magnificent Tutor starter templates to make a jump start.', 'tutor' ); ?></div>
 			</div>
-		</div>
-		<div class="tutor-demo-importer-top-right">
-			<!-- <div class="tutor-template-search-wrapper">
-				<input type="text" placeholder="Search...">
-				<svg class="tutor-template-search-icon" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.858 1.524a5.334 5.334 0 1 0 0 10.667 5.334 5.334 0 0 0 0-10.667ZM0 6.858a6.858 6.858 0 1 1 12.216 4.28l3.56 3.561a.762.762 0 1 1-1.077 1.078l-3.561-3.561A6.858 6.858 0 0 1 0 6.858Z" fill="#9197A8"/></svg>
-			</div> -->
 		</div>
 	</div>
 	<ul class="tutor-demo-importer-list">

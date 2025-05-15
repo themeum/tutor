@@ -5,7 +5,7 @@
  * @package Tutor
  * @author Tutor <support@themeum.com>
  * @link https://tutor.com
- * @since 3.3.3
+ * @since 3.6.0
  */
 
 use Tutor\Helpers\TemplateHelper;
@@ -26,7 +26,6 @@ if ( ! empty( $template_list ) ) {
 			<div class="tutor-import-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
 				<div class="tutor-import-template-name tutor-fs-6 tutor-fw-medium">
 					<span><?php echo esc_html( $template->label ); ?></span>
-					<!-- <span class="tutor-template-badge"> <?php esc_html_e( 'Pro', 'tutor' ); ?> </span> -->
 				</div>
 				<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 					<button class="tutor-btn tutor-btn-sm open-template-live-preview" data-url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>" style="border: 1px solid #ddd;">

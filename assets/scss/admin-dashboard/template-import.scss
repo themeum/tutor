@@ -2,6 +2,17 @@ body {
 	background-color: #f1f1f1;
 }
 
+.tutor-text-truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tutor-import-item-content-title {
+	display: flex;
+	gap: 10px;
+}
+
 body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	font-family: SF Pro Display;
 }

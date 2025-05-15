@@ -145,7 +145,7 @@ class Admin {
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
 
-		// Templates menu @since 3.3.3
+		// Templates menu @since 3.6.0.
 		add_submenu_page( 'tutor', __( 'Templates', 'tutor' ), __( 'Templates', 'tutor' ), 'manage_tutor', 'tutor-templates', array( $this, 'tutor_templates' ) );
 
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
