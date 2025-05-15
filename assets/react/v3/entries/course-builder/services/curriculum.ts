@@ -60,6 +60,7 @@ export interface Assignment extends Content {
       time: string;
       value: string;
     };
+    deadline_from_start: string;
     total_mark: number;
     pass_mark: number;
     upload_files_limit: number;
@@ -128,6 +129,7 @@ export interface AssignmentPayload {
   attachments: ID[];
   'assignment_option[time_duration][time]': string;
   'assignment_option[time_duration][value]': string;
+  'assignment_option[deadline_from_start]': string;
   'assignment_option[total_mark]': number;
   'assignment_option[pass_mark]': number;
   'assignment_option[upload_files_limit]': number;
@@ -226,6 +228,7 @@ export const convertAssignmentDataToPayload = (
     attachments: (data.attachments || []).map((attachment) => attachment.id),
     'assignment_option[time_duration][time]': data.time_duration.time,
     'assignment_option[time_duration][value]': data.time_duration.value,
+    'assignment_option[deadline_from_start]': data.deadline_from_start ? '1' : '0',
     'assignment_option[total_mark]': data.total_mark,
     'assignment_option[pass_mark]': data.pass_mark,
     'assignment_option[upload_files_limit]': data.upload_files_limit,
