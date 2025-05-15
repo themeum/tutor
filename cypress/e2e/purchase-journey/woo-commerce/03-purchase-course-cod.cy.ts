@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { backendUrls } from 'cypress/config/page-urls';
+import { backendUrls, frontendUrls } from 'cypress/config/page-urls';
 
 describe('Purchase Course', () => {
   let orderId: string;
+  let courseSlug: string;
 
   it('should purchase a paid course', () => {
     const billingData = {
@@ -16,7 +17,12 @@ describe('Purchase Course', () => {
 
     cy.readFile('cypress/fixtures/course.json').then((fixture) => {
       const { slug } = fixture;
-      cy.visit(slug);
+      if (!slug) {
+        throw new Error('Course slug not found in fixture');
+      }
+      cy.log(`Course Slug: ${slug}`);
+      courseSlug = slug;
+      cy.visit(courseSlug);
     });
 
     cy.get('button[name=add-to-cart]').click();
@@ -48,9 +54,7 @@ describe('Purchase Course', () => {
     cy.get('input#billing-address_1').clear().type(billingData.address);
     cy.get('input#billing-city').clear().type(billingData.city);
     cy.get('input#billing-postcode').clear().type(billingData.postalCode);
-
     cy.get('.wc-block-components-payment-method-label').contains('Cash on delivery').click();
-
     cy.get('button.wc-block-components-checkout-place-order-button').click();
 
     cy.wait(1000);
@@ -64,12 +68,36 @@ describe('Purchase Course', () => {
       });
   });
 
-  it('should verify the order in WooCommerce', () => {
+  it('should verify the order in WooCommerce and mark as completed', () => {
+    cy.visit(`${Cypress.env('base_url')}${backendUrls.WOOCOMMERCE_ORDERS}`);
+    cy.loginAsAdmin();
+    cy.getByInputName('s').clear().type(orderId);
+    cy.get('input#search-submit').click();
+    cy.wait(1000);
+    cy.get('table>tbody#the-list>tr>td:nth-of-type(1)').contains(orderId).should('exist').click();
+    cy.url().should('include', `page=wc-orders&action=edit&id=${orderId}`);
+    cy.get('#select2-order_status-container').click();
+    cy.get('#select2-order_status-results').contains('Completed').click();
+    cy.get('button.save_order').click();
+  });
+
+  it('should verify the order status', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.WOOCOMMERCE_ORDERS}`);
     cy.loginAsAdmin();
     cy.getByInputName('s').clear().type(orderId);
     cy.get('input#search-submit').click();
     cy.wait(1000);
     cy.get('table>tbody#the-list>tr>td:nth-of-type(1)').contains(orderId).should('exist');
+    cy.get('table>tbody#the-list>tr>td:nth-of-type(3)').contains('Completed').should('exist');
+  });
+
+  it("should be in student's account", () => {
+    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.ENROLLED_COURSES}`);
+    cy.loginAsStudent();
+    cy.get('.tutor-course-name a').then(($links) => {
+      const hrefs = Cypress._.map($links, (el) => el.getAttribute('href'));
+      console.log(hrefs);
+      expect(hrefs).to.include(`${courseSlug}/`);
+    });
   });
 });
