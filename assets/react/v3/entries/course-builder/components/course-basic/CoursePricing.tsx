@@ -5,9 +5,11 @@ import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import {
@@ -18,8 +20,6 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
-import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
