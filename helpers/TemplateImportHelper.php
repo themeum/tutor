@@ -1,6 +1,6 @@
 <?php
 /**
- * TemplateHelper methods
+ * TemplateImportHelper methods
  *
  * @package Tutor\Helpers
  * @author Tutor <support@themeum.com>
@@ -13,9 +13,9 @@ namespace Tutor\Helpers;
 use Tutor\Traits\JsonResponse;
 
 /**
- * TemplateHelper methods
+ * TemplateImportHelper methods
  */
-class TemplateHelper {
+class TemplateImportHelper {
 
 	use JsonResponse;
 
@@ -24,24 +24,59 @@ class TemplateHelper {
 	 *
 	 * @var string
 	 */
-	public static $template_list_endpoint = 'https://tutorlms.com/wp-json/themeum-products/v1/tutor/theme-templates';
+	public $template_list_endpoint;
 
 	/**
 	 * Template download endpoint.
 	 *
 	 * @var string
 	 */
-	public static $template_download_endpoint = 'https://tutorlms.com/wp-json/themeum-products/v1/tutor/theme-template-download';
+	public $template_download_endpoint;
+
+	/**
+	 * Constructor.
+	 *
+	 * @return  void
+	 */
+	public function __construct() {
+		$this->template_list_endpoint     = self::make_url( 'theme-templates' );
+		$this->template_download_endpoint = self::make_url( 'theme-template-download' );
+	}
+
+	/**
+	 * Get base url.
+	 *
+	 * @return string The base URL for the template import API.
+	 */
+	private static function get_base_url() {
+		$url = 'https://tutorlms.com/wp-json/themeum-products/v1/tutor';
+		if ( defined( 'TEMPLATE_IMPORT_BASE_URL' ) && TEMPLATE_IMPORT_BASE_URL ) {
+			$url = TEMPLATE_IMPORT_BASE_URL;
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Make url
+	 *
+	 * @param  string $url_path  url path.
+	 *
+	 * @return  string full url.
+	 */
+	public static function make_url( $url_path ) {
+		return self::get_base_url() . '/' . ltrim( $url_path, '/' );
+	}
 
 	/**
 	 * Get Template list.
 	 *
 	 * @throws \Exception If there is an error fetching or decoding the templates.
 	 */
-	public static function get_template_list() {
+	public function get_template_list() {
 		try {
 			$response             = wp_remote_get(
-				self::$template_list_endpoint,
+				$this->template_list_endpoint,
 				array(
 					'headers' => array(
 						'Secret-Key' => 't344d5d71sae7dcb546b8cf55e594808',
@@ -69,8 +104,10 @@ class TemplateHelper {
 	 * Get Template download url
 	 *
 	 * @param string $template_id The ID of the template to download.
+	 *
+	 * return string The download URL for the specified template.
 	 */
-	public static function get_template_download_url( $template_id ) {
+	public function get_template_download_url( $template_id ) {
 		$tutor_license_info = get_option( 'tutor_license_info' );
 		$website_url        = get_site_url();
 		$args               = array(
@@ -83,7 +120,7 @@ class TemplateHelper {
 				'Secret-Key' => 't344d5d71sae7dcb546b8cf55e594808',
 			),
 		);
-		$response           = wp_remote_post( self::$template_download_endpoint, $args );
+		$response           = wp_remote_post( $this->template_download_endpoint, $args );
 		$response_body      = wp_remote_retrieve_body( $response );
 		$data               = json_decode( $response_body, true );
 		if ( is_wp_error( $response ) ) {

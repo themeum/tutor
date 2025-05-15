@@ -186,7 +186,7 @@ class Admin {
 	 * @since 3.2.2
 	 */
 	public function tutor_templates() {
-		include tutor()->path . 'views/templates/templates.php';
+		include tutor()->path . 'views/template-import/templates.php';
 	}
 
 	/**

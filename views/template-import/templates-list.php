@@ -3,14 +3,15 @@
  * Templates importing listing
  *
  * @package Tutor
+ * @subpackage TemplateImport
  * @author Tutor <support@themeum.com>
  * @link https://tutor.com
  * @since 3.6.0
  */
 
-use Tutor\Helpers\TemplateHelper;
+use Tutor\Helpers\TemplateImportHelper;
 
-$template_list = TemplateHelper::get_template_list();
+$template_list = ( new TemplateImportHelper() )->get_template_list();
 
 $i = 0;
 if ( ! empty( $template_list ) ) {
