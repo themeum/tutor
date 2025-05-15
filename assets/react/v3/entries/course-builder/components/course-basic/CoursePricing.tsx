@@ -59,6 +59,7 @@ const CoursePricing = () => {
 
   const { tutor_currency } = tutorConfig;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const enableIndividualTaxControl = !!tutorConfig.settings?.enable_individual_tax_control;
 
   const coursePriceOptions =
     tutorConfig.settings?.monetize_by === 'wc' ||
@@ -375,7 +376,7 @@ const CoursePricing = () => {
         </Show>
       </Show>
 
-      <Show when={coursePriceType === 'paid' && isTutorPro}>
+      <Show when={coursePriceType === 'paid' && isTutorPro && enableIndividualTaxControl}>
         <div css={styles.taxWrapper}>
           <label>{__('Tax Collection', 'tutor')}</label>
 
