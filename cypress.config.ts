@@ -33,5 +33,11 @@ export default defineConfig({
     woo_commerce_cart: process.env.CYPRESS_woo_commerce_cart_url,
     checkout: process.env.CYPRESS_tutor_checkout_url,
     woo_commerce_checkout: process.env.CYPRESS_woo_commerce_checkout_url,
+    paypal_merchant_email: process.env.CYPRESS_PAYPAL_MERCHANT_EMAIL,
+    paypal_client_id: process.env.CYPRESS_PAYPAL_CLIENT_ID,
+    paypal_secret_id: process.env.CYPRESS_PAYPAL_SECRET_ID,
+    paypal_webhook_id: process.env.CYPRESS_PAYPAL_WEBHOOK_ID,
+    paypal_personal_email: process.env.CYPRESS_PAYPAL_PERSONAL_EMAIL,
+    paypal_personal_password: process.env.CYPRESS_PAYPAL_PERSONAL_PASSWORD,
   },
 });

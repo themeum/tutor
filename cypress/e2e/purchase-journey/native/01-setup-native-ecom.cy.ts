@@ -7,6 +7,9 @@ describe('Native E-Commerce', () => {
       if (req.body.includes('tutor_payment_gateways')) {
         req.alias = 'paymentGateways';
       }
+      if (req.body.includes('tutor_payment_settings')) {
+        req.alias = 'paymentSettings';
+      }
     });
     loginAsAdmin();
   });
@@ -17,9 +20,27 @@ describe('Native E-Commerce', () => {
     cy.saveTutorSettings();
   });
 
-  // it('should setup payment gateways', () => {
-  //   cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_payment`);
-  //   cy.waitAfterRequest('paymentGateways');
-  //   cy.getByInputName('payment_methods.0.is_active').check({ force: true });
-  // });
+  it('should setup paypal payment gateways', () => {
+    cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_payment`);
+    cy.waitAfterRequest('paymentGateways');
+    cy.waitAfterRequest('paymentSettings');
+    cy.get('[data-payment-item-paypal=true] button[data-cy=collapse-button]').click();
+
+    cy.get('[data-payment-item-paypal=true]').within(() => {
+      cy.get('input[name*="fields.1.value"]').clear().type(Cypress.env('paypal_merchant_email'));
+      cy.get('input[name*="fields.2.value"]').clear().type(Cypress.env('paypal_client_id'));
+      cy.get('input[name*="fields.3.value"]').clear().type(Cypress.env('paypal_secret_id'));
+      cy.get('input[name*="fields.4.value"]').clear().type(Cypress.env('paypal_webhook_id'));
+
+      cy.get('input[name*="is_active"]').check({ force: true });
+    });
+
+    cy.saveTutorSettings();
+  });
+
+  it('should disable guest checkout and buy now button', () => {
+    cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_checkout`);
+    cy.toggle('tutor_option[is_enable_buy_now]', '#field_is_enable_buy_now', false);
+    cy.toggle('tutor_option[is_enable_guest_checkout]', '#field_is_enable_guest_checkout', false);
+  });
 });

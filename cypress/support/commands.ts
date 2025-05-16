@@ -37,7 +37,7 @@ declare global {
         apiFieldOption: string,
         dataValueAttribute: string,
       ): Chainable<JQuery<HTMLElement>>;
-      toggle(inputName: string, fieldId: string): Chainable<JQuery<HTMLElement>>;
+      toggle(inputName: string, fieldId: string, state?: boolean | undefined): Chainable<JQuery<HTMLElement>>;
       isEnrolled(): Chainable<JQuery<HTMLElement>>;
       handleCourseStart(): Chainable<JQuery<HTMLElement>>;
       completeLesson(): Chainable<JQuery<HTMLElement>>;
@@ -458,33 +458,46 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add('toggle', (inputName, fieldId) => {
+Cypress.Commands.add('toggle', (inputName, fieldId, state = undefined) => {
   cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
     if (req.body.includes('tutor_option_save')) {
       req.alias = 'ajaxRequest';
     }
   });
-  cy.get(`${fieldId} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`).click();
 
-  cy.getByInputName(`${inputName}`)
-    .invoke('attr', 'value')
-    .then((dataValue) => {
-      cy.contains('Save Changes').click({ force: true });
+  const toggleSelector = `${fieldId} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`;
+  const checkboxSelector = `${fieldId} > .tutor-option-field-input > .tutor-form-toggle > input[type="checkbox"]`;
 
-      cy.wait('@ajaxRequest').then((interception) => {
-        if (interception.response) {
-          expect(interception.response?.body.success).to.equal(true);
-        } else {
-          throw new Error('Response is undefined');
-        }
+  // Check the current toggle state
+  cy.get(checkboxSelector).then(($checkbox) => {
+    const isChecked = $checkbox.prop('checked');
 
-        const requestBody = interception.request.body;
-        const params = new URLSearchParams(requestBody);
-        const tutorOptionId = params.get(`${inputName}`);
+    const shouldToggle = (state && !isChecked) || (!state && isChecked) || state === null; // toggle by default if no explicit state
 
-        expect(tutorOptionId).to.equal(dataValue);
+    if (shouldToggle) {
+      cy.get(toggleSelector).click({ force: true });
+    }
+
+    cy.getByInputName(`${inputName}`)
+      .invoke('attr', 'value')
+      .then((dataValue) => {
+        cy.contains('Save Changes').click({ force: true });
+
+        cy.wait('@ajaxRequest').then((interception) => {
+          if (interception.response) {
+            expect(interception.response?.body.success).to.equal(true);
+          } else {
+            throw new Error('Response is undefined');
+          }
+
+          const requestBody = interception.request.body;
+          const params = new URLSearchParams(requestBody);
+          const tutorOptionId = params.get(`${inputName}`);
+
+          expect(tutorOptionId).to.equal(dataValue);
+        });
       });
-    });
+  });
 });
 
 Cypress.Commands.add('isEnrolled', () => {

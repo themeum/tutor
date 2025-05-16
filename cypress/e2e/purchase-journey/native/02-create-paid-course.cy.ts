@@ -5,7 +5,7 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { backendUrls } from 'cypress/config/page-urls';
 import { loginAsAdmin } from 'cypress/support/auth';
 
-describe('Paid Course Creation for WooCommerce', () => {
+describe('Paid Course Creation for Native E-Commerce', () => {
   let courseId: string;
   let courseData: CourseFormData;
 
@@ -71,7 +71,11 @@ describe('Paid Course Creation for WooCommerce', () => {
   });
 
   it('configures pricing', () => {
-    cy.getByInputName('course_price_type').contains('Paid').click();
+    cy.waitAfterRequest('getCourseDetails');
+
+    cy.getByInputName('course_price_type').should('be.visible').as('priceTypeContainer');
+
+    cy.get('@priceTypeContainer').contains('Paid').should('be.visible').click({ force: true });
 
     cy.isAddonEnabled(Addons.SUBSCRIPTION).then((isEnabled) => {
       cy.window().then((win) => {
@@ -80,11 +84,17 @@ describe('Paid Course Creation for WooCommerce', () => {
         }
       });
     });
-    cy.getByInputName('course_price').type(courseData.course_price);
-    cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
+    cy.getByInputName('course_price').should('be.visible').clear().type(courseData.course_price, { delay: 100 });
+    cy.getByInputName('course_sale_price')
+      .should('be.visible')
+      .clear()
+      .type(courseData.course_sale_price, { delay: 100 });
 
-    cy.get('[data-cy=course-slug]').then((slug) => {
-      const slugValue = slug.text();
+    cy.wait(500);
+
+    cy.get('[data-cy=course-slug]').should('be.visible').invoke('text').as('slugValue');
+
+    cy.get('@slugValue').then((slugValue) => {
       cy.log(`Slug: ${slugValue}`);
       cy.readFile('cypress/fixtures/course.json').then((fixture) => {
         const updatedFixture = { ...fixture, slug: slugValue };
