@@ -50,6 +50,7 @@ export interface TaxSettings {
   is_tax_included_in_price: 0 | 1;
   show_price_with_tax: boolean;
   charge_tax_on_shipping: boolean;
+  enable_individual_tax_control: boolean;
 }
 
 const getTaxSettings = () => {
