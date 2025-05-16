@@ -413,16 +413,25 @@ class CouponController extends BaseController {
 
 		$date          = Input::get( 'date', '' );
 		$coupon_status = Input::get( 'coupon-status', '' );
+		$applies_to    = Input::get( 'applies_to', '' );
 		$search        = Input::get( 'search', '' );
 
 		$where = array();
 
 		if ( ! empty( $date ) ) {
-			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
+			$where['date(created_at_gmt)'] = tutor_get_formated_date( 'Y-m-d', $date );
 		}
 
 		if ( ! empty( $coupon_status ) ) {
 			$where['coupon_status'] = $coupon_status;
+		}
+
+		if ( ! empty( $applies_to ) ) {
+			$where['applies_to'] = $applies_to;
+		}
+
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) && empty( $applies_to ) ) {
+			$where['applies_to'] = $this->model->get_course_bundle_applies_to( true );
 		}
 
 		$coupon_status = $this->model->get_coupon_status();
@@ -490,7 +499,7 @@ class CouponController extends BaseController {
 		$list_order    = Input::get( 'order', 'DESC' );
 		$list_order_by = 'id';
 
-		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) && ! $applies_to ) {
 			$where_clause['applies_to'] = $this->model->get_course_bundle_applies_to( true );
 		}
 
