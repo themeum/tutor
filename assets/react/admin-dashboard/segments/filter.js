@@ -92,16 +92,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		{ once: true },
 	);
 
-	const filterCouponStatus = document.getElementById('tutor-backend-filter-coupon-status');
-
-	filterCouponStatus?.addEventListener(
-		'change',
-		(e) => {
-			window.location = urlPrams('coupon-status', e.target.value);
-		},
-		{ once: true },
-	);
-
 	const filterSearch = document.getElementById('tutor-admin-search-filter-form');
 	const search_field = document.getElementById('tutor-backend-filter-search');
 
