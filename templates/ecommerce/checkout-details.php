@@ -36,18 +36,17 @@ $plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
+$item_ids   = ( $plan_id && $plan_info ) ? array( $plan_info->id ) : array_column( $course_list, 'ID' );
 $order_type = ( $plan_id && $plan_info ) ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-$coupon_code            = Input::sanitize_request_data( 'coupon_code', '' );
+$coupon_code            = apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
 $show_tax               = (int) Input::sanitize_request_data( 'show_tax', 1 );
 $has_manual_coupon_code = ! empty( $coupon_code );
 
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
 $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 
-$item_ids      = ( $plan_id && $plan_info ) ? $plan_info->id : array_column( $course_list, 'ID' );
-$checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code );
-
+$checkout_data   = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code );
 $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_coupon_applied;
 ?>
 
