@@ -7,7 +7,7 @@ import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
 
-import TaxSettingsPage from './TaxSettings';
+import Main from '@ImportExport/components/Main';
 
 function App() {
   const [queryClient] = useState(
@@ -33,7 +33,7 @@ function App() {
         <ToastProvider position="bottom-right">
           <ModalProvider>
             <Global styles={createGlobalCss()} />
-            <TaxSettingsPage />
+            <Main />
           </ModalProvider>
         </ToastProvider>
       </QueryClientProvider>
