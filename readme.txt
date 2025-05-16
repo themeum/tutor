@@ -429,11 +429,11 @@ Fix: Resolved REST API errors in Tutor LMS Pro. (Pro)
 Fix: Fixed Google Meet authorization issues for instructors. (Pro)
 Fix: Fixed an issue where removed payment methods were still appearing as installed.
 
-= 3.2.1 - January 21, 2024
+= 3.2.1 - January 21, 2025
 
 Fix: Resolved the "Page not found" issue for multilingual courses.
 
-= 3.2.0 - January 20, 2024
+= 3.2.0 - January 20, 2025
 
 New: Added Membership support (Phase 1) in the Native Subscription system. (Pro)
 New: Redesigned the Native Subscription and introduced Subscriptions for Course Bundles. (Pro)

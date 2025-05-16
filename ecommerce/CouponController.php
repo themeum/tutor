@@ -477,19 +477,24 @@ class CouponController extends BaseController {
 		$date          = Input::get( 'date', '' );
 		$search_term   = Input::get( 'search', '' );
 		$coupon_status = Input::get( 'coupon-status' );
+		$applies_to    = Input::get( 'applies_to' );
 
 		$where_clause = array();
 
 		if ( $date ) {
-			$where_clause['created_at_gmt'] = tutor_get_formated_date( '', $date );
+			$where_clause['date(created_at_gmt)'] = tutor_get_formated_date( '', $date );
 		}
 
-		if ( ! is_null( $coupon_status ) ) {
+		if ( $coupon_status ) {
 			$where_clause['coupon_status'] = $coupon_status;
 		}
 
 		if ( 'all' !== $active_tab && in_array( $active_tab, array_keys( $this->model->get_coupon_status() ), true ) ) {
 			$where_clause['coupon_status'] = $active_tab;
+		}
+
+		if ( $applies_to ) {
+			$where_clause['applies_to'] = $applies_to;
 		}
 
 		$list_order    = Input::get( 'order', 'DESC' );
