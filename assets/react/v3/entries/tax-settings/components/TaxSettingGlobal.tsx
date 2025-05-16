@@ -1,14 +1,9 @@
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+import { colorTokens, fontSize, fontWeight, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
-
-import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
-import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
-
-import { borderRadius, colorTokens, fontSize, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-
 import Card, { CardHeader } from '../molecules/Card';
 import { TaxCollectionProcess, type TaxSettings } from '../services/tax';
 
@@ -17,14 +12,12 @@ function TaxSettingGlobal() {
 
   const taxCollectionProcessOptions = [
     {
-      label: __('Prices include tax', 'tutor'),
+      label: __('Tax is already included in my prices', 'tutor'),
       value: TaxCollectionProcess.isTaxIncludedInPrice,
-      description: __('Tax rates can still be configured and calculated at checkout.', 'tutor'),
     },
     {
-      label: __('Add tax during checkout', 'tutor'),
+      label: __('Tax should be calculated and displayed on the checkout page', 'tutor'),
       value: TaxCollectionProcess.taxIsNotIncluded,
-      description: __('Display prices without tax—tax will be calculated and shown at checkout.', 'tutor'),
     },
   ];
 
@@ -33,12 +26,11 @@ function TaxSettingGlobal() {
       <div>
         <Card>
           <CardHeader
-            title={__('Tax Settings', 'tutor')}
-            subtitle={__('Choose how taxes are applied and shown on your product prices.', 'tutor')}
+            title={__('Global Tax Settings', 'tutor')}
+            subtitle={__('Set how taxes are displayed and applied to your courses.', 'tutor')}
           />
-          <div css={styles.inputGroupWrapper}>
-            <div css={styles.wrapperWithLabel}>
-              <label>{__('Tax Calculation Method', 'tutor')}</label>
+          <div css={styles.radioGroupWrapper}>
+            <div>
               <Controller
                 control={form.control}
                 name="is_tax_included_in_price"
@@ -53,50 +45,28 @@ function TaxSettingGlobal() {
                 }}
               />
             </div>
-          </div>
-          <div css={styles.inputGroupWrapper}>
-            <div css={styles.wrapperWithLabel}>
-              <label>{__('Advanced Settings', 'tutor')}</label>
-
-              <div css={styles.radioGroupWrapperCss}>
-                <Controller
-                  control={form.control}
-                  name="show_price_with_tax"
-                  render={(controllerProps) => {
-                    return (
-                      <div>
-                        <FormCheckbox
-                          {...controllerProps}
-                          label={__('Show prices with tax included', 'tutor')}
-                          labelCss={styles.checkboxLabel}
-                          description={
-                            // prettier-ignore
-                            __("Display the final price including tax, so customers know exactly what they'll pay upfront.", 'tutor')
-                          }
-                        />
-                      </div>
-                    );
-                  }}
-                />
-
-                <Controller
-                  control={form.control}
-                  name="enable_individual_tax_control"
-                  render={(controllerProps) => {
-                    return (
+            <div css={styles.checkboxWrapper}>
+              <Controller
+                control={form.control}
+                name="show_price_with_tax"
+                render={(controllerProps) => {
+                  return (
+                    <div>
                       <FormCheckbox
                         {...controllerProps}
-                        label={__('Enable tax control per course & membership plan', 'tutor')}
+                        label={__('Display prices inclusive tax', 'tutor')}
                         labelCss={styles.checkboxLabel}
-                        description={
-                          // prettier-ignore
-                          __('Set tax preferences at the individual course or bundle pricing level.', 'tutor')
-                        }
                       />
-                    );
-                  }}
-                />
-              </div>
+                      <span css={styles.checkboxSubText}>
+                        {
+                          // prettier-ignore
+                          __('Show prices with tax included, so customers see the final amount they’ll pay upfront.', 'tutor')
+                        }
+                      </span>
+                    </div>
+                  );
+                }}
+              />
             </div>
           </div>
         </Card>
@@ -107,27 +77,33 @@ function TaxSettingGlobal() {
 
 export default TaxSettingGlobal;
 const styles = {
-  inputGroupWrapper: css`
-    ${styleUtils.display.flex('column')};
+  radioGroupWrapper: css`
+    display: flex;
+    flex-direction: column;
     gap: ${spacing[12]};
-    padding: ${spacing[10]} ${spacing[20]} ${spacing[24]} ${spacing[20]};
+    padding: ${spacing[10]} ${spacing[24]} ${spacing[20]};
   `,
   checkboxLabel: css`
     font-size: ${fontSize[14]};
   `,
-  radioGroupWrapperCss: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[10]};
-    padding: ${spacing[12]};
-    border: 1px solid ${colorTokens.stroke.divider};
-    border-radius: ${borderRadius.card};
-  `,
-  wrapperWithLabel: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
 
-    label {
-      ${typography.caption('medium')};
-    }
+  checkboxSubText: css`
+    font-size: ${fontSize[14]};
+    color: ${colorTokens.text.hints};
+    line-height: ${spacing[24]};
+    font-weight: ${fontWeight.regular};
+    padding-left: 28px;
+  `,
+
+  checkboxWrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
+  radioGroupWrapperCss: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[10]};
+    margin-top: ${spacing[8]};
   `,
 };

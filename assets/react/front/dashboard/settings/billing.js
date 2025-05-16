@@ -1,7 +1,7 @@
 import ajaxHandler from "../../../helper/ajax-handler";
-const { __ } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function () {
+    const { __ } = wp.i18n;
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
     const userBillingForm = document.querySelector('#user_billing_form');
 

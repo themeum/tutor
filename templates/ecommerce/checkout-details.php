@@ -31,23 +31,23 @@ $total_count         = $courses['total_count'];
 $course_id           = (int) Input::sanitize_request_data( 'course_id', 0 );
 $course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
 
-$plan_id   = (int) Input::sanitize_request_data( 'plan' );
-$plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
+$plan_id       = (int) Input::sanitize_request_data( 'plan' );
+$plan_info     = apply_filters( 'tutor_get_plan_info', null, $plan_id );
+$has_plan_info = $plan_id && $plan_info;
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
-$order_type = ( $plan_id && $plan_info ) ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
+$item_ids   = $has_plan_info ? array( $plan_info->id ) : array_column( $course_list, 'ID' );
+$order_type = $has_plan_info ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-$coupon_code            = Input::sanitize_request_data( 'coupon_code', '' );
+$coupon_code            = apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
 $show_tax               = (int) Input::sanitize_request_data( 'show_tax', 1 );
 $has_manual_coupon_code = ! empty( $coupon_code );
 
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
 $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 
-$item_ids      = ( $plan_id && $plan_info ) ? $plan_info->id : array_column( $course_list, 'ID' );
-$checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code );
-
+$checkout_data   = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code );
 $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_coupon_applied;
 ?>
 
@@ -148,21 +148,21 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 			</div>
 			<?php endif ?>
 
-					<?php if ( $show_coupon_box ) : ?>
-			<div class="tutor-checkout-summary-item tutor-have-a-coupon">
-				<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
-				<button type="button" id="tutor-toggle-coupon-button" class="tutor-btn tutor-btn-link">
-						<?php esc_html_e( 'Click here', 'tutor' ); ?>
-				</button>
-			</div>
-			<div class="tutor-apply-coupon-form tutor-d-none">
-				<input type="text" name="coupon_code"
-						<?php if ( 'manual' === $checkout_data->coupon_type && $checkout_data->is_coupon_applied ) : ?>
-						value="<?php echo esc_attr( $coupon_code ); ?>"
-				<?php endif; ?>
-				placeholder="<?php esc_html_e( 'Add coupon code', 'tutor' ); ?>">
-				<button type="button" id="tutor-apply-coupon-button" class="tutor-btn tutor-btn-secondary" data-object-ids="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
-			</div>
+			<?php if ( $show_coupon_box ) : ?>
+				<div class="tutor-checkout-summary-item tutor-have-a-coupon">
+					<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
+					<button type="button" id="tutor-toggle-coupon-button" class="tutor-btn tutor-btn-link">
+							<?php esc_html_e( 'Click here', 'tutor' ); ?>
+					</button>
+				</div>
+				<div class="tutor-apply-coupon-form tutor-d-none">
+					<input type="text" name="coupon_code"
+							<?php if ( 'manual' === $checkout_data->coupon_type && $checkout_data->is_coupon_applied ) : ?>
+							value="<?php echo esc_attr( $coupon_code ); ?>"
+					<?php endif; ?>
+					placeholder="<?php esc_html_e( 'Add coupon code', 'tutor' ); ?>">
+					<button type="button" id="tutor-apply-coupon-button" class="tutor-btn tutor-btn-secondary" data-object-ids="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
+				</div>
 			<?php endif; ?>
 
 			<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper <?php echo esc_attr( $checkout_data->is_coupon_applied ? '' : 'tutor-d-none' ); ?>">
@@ -170,7 +170,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 					<i class="tutor-icon-tag" area-hidden="true"></i>
 					<span><?php echo esc_html( $checkout_data->coupon_title ); ?></span>
 
-					<?php if ( 'manual' === $checkout_data->coupon_type && $checkout_data->is_coupon_applied ) : ?>
+					<?php if ( $checkout_data->is_coupon_applied ) : ?>
 					<button type="button" id="tutor-checkout-remove-coupon" class="tutor-btn">
 						<i class="tutor-icon-times" area-hidden="true"></i>
 					</button>
@@ -210,9 +210,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 							<?php endif ?>
 			</div>
 
-			<?php if ( 'manual' === $checkout_data->coupon_type && $checkout_data->is_coupon_applied ) : ?>
-				<input type="hidden" name="coupon_code" value="<?php echo esc_attr( $coupon_code ); ?>">
-			<?php endif; ?>
+			<input type="hidden" name="coupon_code" value="<?php echo esc_attr( $coupon_code ); ?>">
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
 			<input type="hidden" name="order_type" value="<?php echo esc_attr( $order_type ); ?>">
 		</div>
