@@ -19,6 +19,7 @@ use TUTOR\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Ecommerce\Tax;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -1444,6 +1445,9 @@ class Course extends Tutor_Base {
 		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
 		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
 		$settings['youtube_api_key_exist']   = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
+
+		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
+		$settings['enable_individual_tax_control'] = Tax::get_setting( 'enable_individual_tax_control' );
 
 		$new_data = array( 'settings' => $settings );
 
