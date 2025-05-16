@@ -92,8 +92,6 @@ export interface CourseFormData {
   enrollment_ends_date: string;
   enrollment_ends_time: string;
   pause_enrollment: boolean;
-  tax_collection_on_single_purchase: boolean;
-  tax_collection_on_subscription: boolean;
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -169,8 +167,6 @@ export const courseDefaultData: CourseFormData = {
   enrollment_ends_date: '',
   enrollment_ends_time: '',
   pause_enrollment: false,
-  tax_collection_on_single_purchase: true,
-  tax_collection_on_subscription: true,
 };
 
 export interface CoursePayload {
@@ -231,8 +227,6 @@ export interface CoursePayload {
   'course_settings[enrollment_starts_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
   'course_settings[enrollment_ends_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
   'course_settings[pause_enrollment]'?: string;
-  tax_collection_on_single_purchase?: boolean;
-  tax_collection_on_subscription?: boolean;
 }
 
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
@@ -378,8 +372,6 @@ export interface CourseDetailsResponse {
   coming_soon_thumbnail: string;
   coming_soon_thumbnail_id: number;
   enable_curriculum_preview: '1' | '0';
-  tax_collection_on_single_purchase: boolean;
-  tax_collection_on_subscription: boolean;
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -578,8 +570,6 @@ export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: st
         return [key, data[key as keyof CourseFormData]];
       }),
     ),
-    tax_collection_on_single_purchase: data.tax_collection_on_single_purchase,
-    tax_collection_on_subscription: data.tax_collection_on_subscription,
   };
 };
 
@@ -716,8 +706,6 @@ export const convertCourseDataToFormData = (
         return [key, courseDetails[key as keyof CourseDetailsResponse]];
       }),
     ),
-    tax_collection_on_single_purchase: courseDetails.tax_collection_on_single_purchase ?? true,
-    tax_collection_on_subscription: courseDetails.tax_collection_on_subscription ?? true,
   };
 };
 

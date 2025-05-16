@@ -266,7 +266,7 @@ export const styleUtils = {
     cursor: pointer;
   `,
   cardInnerSection: css`
-    padding: ${spacing[20]} ${spacing[20]} ${spacing[24]} ${spacing[20]};
+    padding: ${spacing[24]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
