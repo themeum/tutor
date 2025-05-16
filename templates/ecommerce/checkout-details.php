@@ -31,13 +31,14 @@ $total_count         = $courses['total_count'];
 $course_id           = (int) Input::sanitize_request_data( 'course_id', 0 );
 $course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
 
-$plan_id   = (int) Input::sanitize_request_data( 'plan' );
-$plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
+$plan_id       = (int) Input::sanitize_request_data( 'plan' );
+$plan_info     = apply_filters( 'tutor_get_plan_info', null, $plan_id );
+$has_plan_info = $plan_id && $plan_info;
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
-$item_ids   = ( $plan_id && $plan_info ) ? array( $plan_info->id ) : array_column( $course_list, 'ID' );
-$order_type = ( $plan_id && $plan_info ) ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
+$item_ids   = $has_plan_info ? array( $plan_info->id ) : array_column( $course_list, 'ID' );
+$order_type = $has_plan_info ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
 $coupon_code            = apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
 $show_tax               = (int) Input::sanitize_request_data( 'show_tax', 1 );
