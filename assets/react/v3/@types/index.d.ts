@@ -157,7 +157,6 @@ declare global {
         instructor_can_publish_course: 'on' | 'off';
         youtube_api_key_exist: boolean;
         membership_only_mode: boolean;
-        enable_individual_tax_control: boolean;
       };
       tutor_currency: {
         symbol: string;
