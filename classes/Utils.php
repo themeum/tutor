@@ -6732,11 +6732,12 @@ class Utils {
 	 *
 	 * @since 1.3.4
 	 *
-	 * @param int $parent parent.
+	 * @param int   $parent parent.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return array
 	 */
-	public function get_course_categories( $parent = 0, $custom_args = array() ) {
+	public function get_course_categories( $parent = 0, $custom_args = array(), $top_level_children = false ) {
 		$default_args = array(
 			'taxonomy'   => CourseModel::COURSE_CATEGORY,
 			'hide_empty' => false,
@@ -6755,15 +6756,28 @@ class Utils {
 
 		$terms = get_terms( $args );
 
-		$children = array();
-		foreach ( $terms as $term ) {
-			if ( is_object( $term ) ) {
-				$term->children             = $this->get_course_categories( $term->term_id );
-				$children[ $term->term_id ] = $term;
-			}
-		}
+        if ( $top_level_children ) {
+            return $terms;
+        }
 
-		return $children;
+        // Build term lookup and hierarchy.
+        $term_lookup     = array();
+        $top_level_terms = array();
+        foreach ( $terms as $term ) {
+            $term_lookup[ $term->id ] = $term;
+            $term->children = array();
+        }
+
+        // Add children.
+        foreach ( $terms as $term ) {
+            if ( $term->parent && isset( $term_lookup[ $term->parent ] ) ) {
+                $term_lookup[ $term->parent ]->children[] = $term;
+            } else {
+                $top_level_terms[] = $term;
+            }
+        }
+
+		return $top_level_terms;
 	}
 
 	/**
@@ -6771,16 +6785,22 @@ class Utils {
 	 *
 	 * @since 1.9.3
 	 *
+     * @since 3.6.0 Custom args param added
+     *
+     * @param array $custom_args Custom args.
+     *
 	 * @return array
 	 */
-	public function get_course_tags() {
-		$args = apply_filters(
+	public function get_course_tags( $custom_args ) {
+		$default_args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
 				'taxonomy'   => CourseModel::COURSE_TAG,
 				'hide_empty' => false,
 			)
 		);
+
+        $args = wp_parse_args( $custom_args, $default_args );
 
 		$terms = get_terms( $args );
 
