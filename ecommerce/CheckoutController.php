@@ -312,6 +312,7 @@ class CheckoutController {
 	 * Calculate discount.
 	 *
 	 * @since 3.0.0
+	 * @since 3.6.0 refactor and inaccurate flat discount distribution.
 	 *
 	 * @param array  $items item array.
 	 * @param string $discount_type discount type. like percentage or fixed.
@@ -320,40 +321,69 @@ class CheckoutController {
 	 * @return array
 	 */
 	public function calculate_discount( $items, $discount_type, $discount_value ) {
-
+		$final                              = array();
+		$coupon_applied_items               = array();
 		$total_regular_price_coupon_applied = 0;
+
 		foreach ( $items as $item ) {
 			if ( $this->is_coupon_applied_on_item( $item ) ) {
+				$coupon_applied_items[]              = $item;
 				$total_regular_price_coupon_applied += $item['regular_price'];
+			} else {
+				$item['discount_amount'] = 0;
+				$final[]                 = $item;
 			}
 		}
 
-		$final = array();
-		foreach ( $items as $item ) {
-			// If product already has a sale price, no discount is applied.
-			if ( ! $this->is_coupon_applied_on_item( $item ) ) {
-				$item['discount_amount'] = 0;
-				$final[]                 = $item;
-			} else {
-				if ( 'percentage' === $discount_type ) {
-					// Apply percentage discount.
-					$discount       = $item['regular_price'] * ( $discount_value / 100 );
-					$discount_price = $item['regular_price'] - $discount;
+		// For flat discount calculation.
+		$cumulative_discount  = 0;
+		$coupon_applied_count = count( $coupon_applied_items );
 
-					$item['discount_amount'] = round( $discount, 2 );
-					$item['discount_price']  = $discount_price;
+		foreach ( $coupon_applied_items as $index => $item ) {
+			$regular_price = $item['regular_price'];
 
-				} elseif ( 'flat' === $discount_type && $total_regular_price_coupon_applied > 0 ) {
-					// Apply a proportional fixed discount based on the regular price.
-					$proportion     = $item['regular_price'] / $total_regular_price_coupon_applied;
-					$discount       = $discount_value * $proportion;
-					$discount_price = $item['regular_price'] - $discount;
+			if ( 'percentage' === $discount_type ) {
+				// Limit percentage value between 0 and 100.
+				$percentage   = max( 0, min( 100, (float) $discount_value ) );
+				$raw_discount = $regular_price * ( $percentage / 100 );
+				$discount     = round( $raw_discount, 2 );
 
-					$item['discount_amount'] = round( $discount, 2 );
-					$item['discount_price']  = round( $discount_price, 2 );
+				// Prevent discount from exceeding the item price.
+				$discount = min( $discount, $regular_price );
+
+				$discount_price = round( $regular_price - $discount, 2 );
+
+				$item['discount_amount'] = $discount;
+				$item['discount_price']  = $discount_price;
+
+			} elseif ( 'flat' === $discount_type && $total_regular_price_coupon_applied > 0 ) {
+				/**
+				 * Apply a proportional fixed discount
+				 * based on the total applied coupon item regular price.
+				 */
+				$proportion = $regular_price / $total_regular_price_coupon_applied;
+				$discount   = $discount_value * $proportion;
+
+				/**
+				 * On last item, fix rounding error.
+				 *
+				 * Example: $100 discount spread over 3 items
+				 * could result in $33.33 + $33.33 + $33.33 = $99.99, losing 1 cent.
+				 */
+				if ( $index === $coupon_applied_count - 1 ) {
+					$discount = $discount_value - $cumulative_discount;
 				}
-				$final[] = $item;
+
+				// Prevent discount from exceeding the item price.
+				$discount       = min( $discount, $regular_price );
+				$discount_price = $regular_price - $discount;
+
+				$item['discount_amount'] = round( $discount, 2 );
+				$item['discount_price']  = round( $discount_price, 2 );
+				$cumulative_discount    += round( $discount, 2 );
 			}
+
+			$final[] = $item;
 		}
 
 		return $final;
