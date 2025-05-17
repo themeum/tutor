@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const paymentInstructions = clickedOption.dataset.paymentInstruction;
                 if (paymentInstructions) {
                     document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                    document.querySelector('.tutor-payment-instructions').innerHTML = paymentInstructions;
                 } else {
                     document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
                 }
@@ -111,9 +111,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Handle coupon remove button click
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
-                document.querySelector('input[name=coupon_code]').value = '';
+                const couponInput = document.querySelector('input[name=coupon_code]');
+                if (couponInput) {
+                  couponInput.value = '-1';
+                }
+
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
-                await updateCheckoutData('', null, null, 1);
+
+                await updateCheckoutData('-1', null, null, 1);
+
                 paymentMethodWrapper.innerHTML = paymentMethodElem;
                 const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
                 payNowBtn.innerHTML = payNowBtnText;

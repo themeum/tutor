@@ -377,7 +377,7 @@ class Settings {
 	 */
 	public static function get_payment_settings() {
 		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
-		$settings = json_decode( stripslashes( $settings ), true );
+		$settings = json_decode( $settings, true );
 
 		return $settings;
 	}

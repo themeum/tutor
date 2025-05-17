@@ -29,6 +29,7 @@ import {
   type CourseTopic,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
@@ -57,6 +58,7 @@ export interface AssignmentForm {
     value: string;
     time: TimeLimitUnit;
   };
+  deadline_from_start: boolean;
   total_mark: number;
   pass_mark: number;
   upload_files_limit: number;
@@ -116,6 +118,7 @@ const AssignmentModal = ({
         value: '0',
         time: 'weeks',
       },
+      deadline_from_start: false,
       total_mark: 10,
       pass_mark: 5,
       upload_files_limit: 1,
@@ -143,6 +146,7 @@ const AssignmentModal = ({
             value: assignmentDetails.assignment_option.time_duration.value || '0',
             time: (assignmentDetails.assignment_option.time_duration.time as TimeLimitUnit) || 'weeks',
           },
+          deadline_from_start: assignmentDetails.assignment_option.deadline_from_start === '1' ? true : false,
           total_mark: assignmentDetails.assignment_option.total_mark || 10,
           pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
           upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
@@ -389,6 +393,21 @@ const AssignmentModal = ({
                 )}
               />
             </div>
+
+            <Controller
+              name="deadline_from_start"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Set Deadline From Assignment Start Time', 'tutor')}
+                  helpText={__(
+                    'Each student will get their own deadline based on when they start the assignment.',
+                    'tutor',
+                  )}
+                />
+              )}
+            />
 
             <Controller
               name="total_mark"
