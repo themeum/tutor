@@ -232,10 +232,8 @@ export interface CoursePayload {
   'course_settings[enrollment_starts_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
   'course_settings[enrollment_ends_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
   'course_settings[pause_enrollment]'?: string;
-  tax_collection?: {
-    tax_on_single: '0' | '1';
-    tax_on_subscription: '0' | '1';
-  };
+  tax_on_single?: '0' | '1';
+  tax_on_subscription?: '0' | '1';
 }
 
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
@@ -584,10 +582,8 @@ export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: st
       }),
     ),
     ...(!!tutorConfig.settings?.enable_individual_tax_control && {
-      tax_collection: {
-        tax_on_single: data.tax_on_single ? '1' : '0',
-        tax_on_subscription: data.tax_on_subscription ? '1' : '0',
-      },
+      tax_on_single: data.tax_on_single ? '1' : '0',
+      tax_on_subscription: data.tax_on_subscription ? '1' : '0',
     }),
   };
 };
