@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import { backendUrls, frontendUrls } from 'cypress/config/page-urls';
 
 // Types
 interface BillingData {
@@ -124,20 +125,7 @@ describe('Purchase Course', () => {
     cy.get(SELECTORS.PAY_NOW_BUTTON).click();
 
     // PayPal checkout process
-    cy.origin('https://www.sandbox.paypal.com/', { args: { orderAmount } }, ({ orderAmount }) => {
-      const extractAmount = (text: string): string => {
-        const regex = /[\d,]+(\.\d+)?/;
-        const match = text.match(regex);
-        if (!match) {
-          throw new Error('Amount not found in the string');
-        }
-        const amount = match[0].replace(/,/g, '');
-        if (isNaN(Number(amount))) {
-          throw new Error('Amount is not a valid number');
-        }
-        return amount;
-      };
-
+    cy.origin('https://www.sandbox.paypal.com/', () => {
       cy.url().then((url) => {
         if (!url.includes('https://www.sandbox.paypal.com/checkoutnow')) return;
 
@@ -145,6 +133,7 @@ describe('Purchase Course', () => {
         cy.get('input[name=login_email]').type(Cypress.env('paypal_personal_email'));
         cy.get('button#btnNext').click();
 
+        cy.wait(2000);
         // Handle secondary authentication if present
         cy.get('body').then((body) => {
           const $body = Cypress.$(body);
@@ -156,17 +145,13 @@ describe('Purchase Course', () => {
         cy.get('input[name=login_password]').type(Cypress.env('paypal_personal_password'));
         cy.get('button#btnLogin').click();
 
-        // Verify amount and complete payment
-        cy.get('[data-testid="header-cart-total"]')
-          .invoke('text')
-          .then((totalText) => {
-            const paypalAmount = extractAmount(totalText);
-            expect(Number(paypalAmount)).to.equal(Number(orderAmount));
-          });
-
         cy.get('button#payment-submit-btn').click();
+
+        cy.wait(2000);
       });
     });
+
+    cy.wait(2000);
 
     // Verify order completion
     cy.url()
@@ -181,36 +166,24 @@ describe('Purchase Course', () => {
     cy.get(SELECTORS.ORDER_HISTORY).click();
   });
 
-  // it('should verify the order in WooCommerce and mark as completed', () => {
-  //   cy.visit(`${Cypress.env('base_url')}${backendUrls.WOOCOMMERCE_ORDERS}`);
-  //   cy.loginAsAdmin();
-  //   cy.getByInputName('s').clear().type(orderId);
-  //   cy.get('input#search-submit').click();
-  //   cy.wait(1000);
-  //   cy.get('table>tbody#the-list>tr>td:nth-of-type(1)').contains(orderId).should('exist').click();
-  //   cy.url().should('include', `page=wc-orders&action=edit&id=${orderId}`);
-  //   cy.get('#select2-order_status-container').click();
-  //   cy.get('#select2-order_status-results').contains('Completed').click();
-  //   cy.get('button.save_order').click();
-  // });
+  it('should verify the order', () => {
+    cy.visit(`${Cypress.env('base_url')}${backendUrls.ORDERS}`);
+    cy.loginAsAdmin();
+    cy.getByInputName('search').clear().type(orderId).type('{enter}');
+    cy.wait(1000);
+    cy.get('table>tbody>tr>td:nth-of-type(2)').contains(orderId).should('exist');
+    cy.get('table>tbody>tr>td:nth-of-type(5)').contains('PayPal').should('exist');
+    cy.get('table>tbody>tr>td:nth-of-type(6)').contains('Paid').should('exist');
+    cy.get('table>tbody>tr>td:nth-of-type(7)').contains('Completed').should('exist');
+    cy.get('table>tbody>tr>td:nth-of-type(8)').contains(orderAmount).should('exist');
+  });
 
-  // it('should verify the order status', () => {
-  //   cy.visit(`${Cypress.env('base_url')}${backendUrls.WOOCOMMERCE_ORDERS}`);
-  //   cy.loginAsAdmin();
-  //   cy.getByInputName('s').clear().type(orderId);
-  //   cy.get('input#search-submit').click();
-  //   cy.wait(1000);
-  //   cy.get('table>tbody#the-list>tr>td:nth-of-type(1)').contains(orderId).should('exist');
-  //   cy.get('table>tbody#the-list>tr>td:nth-of-type(3)').contains('Completed').should('exist');
-  // });
-
-  // it("should be in student's account", () => {
-  //   cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.ENROLLED_COURSES}`);
-  //   cy.loginAsStudent();
-  //   cy.get('.tutor-course-name a').then(($links) => {
-  //     const hrefs = Cypress._.map($links, (el) => el.getAttribute('href'));
-  //     console.log(hrefs);
-  //     expect(hrefs).to.include(`${courseSlug}/`);
-  //   });
-  // });
+  it("should be in student's account", () => {
+    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.ENROLLED_COURSES}`);
+    cy.loginAsStudent();
+    cy.get('.tutor-course-name a').then(($links) => {
+      const hrefs = Cypress._.map($links, (el) => el.getAttribute('href'));
+      expect(hrefs).to.include(`${courseSlug}/`);
+    });
+  });
 });

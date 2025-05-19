@@ -57,4 +57,5 @@ export const backendUrls = {
   REPORTS: '/wp-admin/admin.php?page=tutor_report',
   GRADEBOOK: '/wp-admin/admin.php?page=tutor_gradebook',
   WOOCOMMERCE_ORDERS: '/wp-admin/admin.php?page=wc-orders',
+  ORDERS: '/wp-admin/admin.php?page=tutor_orders',
 };
