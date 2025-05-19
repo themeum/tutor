@@ -251,9 +251,15 @@ class OrderController {
 			 */
 			$tax_rate = Tax::get_user_tax_rate( $user_id );
 			if ( $tax_rate ) {
+				$tax_amount = Tax::calculate_tax( $order_data['total_price'], $tax_rate );
+				if ( isset( $args['tax_exempt_amount'] ) && $args['tax_exempt_amount'] > 0 ) {
+					$tax_amount = $tax_amount - $args['tax_exempt_amount'];
+					unset( $args['tax_exempt_amount'] );
+				}
+
 				$order_data['tax_type']   = Tax::get_tax_type();
 				$order_data['tax_rate']   = $tax_rate;
-				$order_data['tax_amount'] = Tax::calculate_tax( $order_data['total_price'], $tax_rate );
+				$order_data['tax_amount'] = $tax_amount;
 
 				if ( ! Tax::is_tax_included_in_price() ) {
 					$total_price              += $order_data['tax_amount'];
@@ -262,6 +268,7 @@ class OrderController {
 				}
 			}
 		}
+
 		// Update data with arguments.
 		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
 
