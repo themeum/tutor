@@ -16,6 +16,7 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
+  isDefined,
   type Editor,
   type ID,
   type Prettify,
@@ -37,7 +38,7 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingType = 'free' | 'paid';
-type CourseSellingOption = Prettify<TutorSellingOption | 'membership' | 'all'>;
+export type CourseSellingOption = Prettify<TutorSellingOption | 'membership' | 'all'>;
 
 export interface CourseFormData {
   post_date: string;
@@ -378,8 +379,10 @@ export interface CourseDetailsResponse {
   coming_soon_thumbnail: string;
   coming_soon_thumbnail_id: number;
   enable_curriculum_preview: '1' | '0';
-  tax_on_single: '1' | '0';
-  tax_on_subscription: '1' | '0';
+  tax_collection?: {
+    tax_on_single: '1' | '0';
+    tax_on_subscription: '1' | '0';
+  };
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -718,8 +721,12 @@ export const convertCourseDataToFormData = (
         return [key, courseDetails[key as keyof CourseDetailsResponse]];
       }),
     ),
-    tax_on_single: courseDetails.tax_on_single === '1',
-    tax_on_subscription: courseDetails.tax_on_subscription === '1',
+    tax_on_single: isDefined(courseDetails?.tax_collection?.tax_on_single)
+      ? courseDetails.tax_collection.tax_on_single === '1'
+      : true,
+    tax_on_subscription: isDefined(courseDetails?.tax_collection?.tax_on_subscription)
+      ? courseDetails.tax_collection.tax_on_subscription === '1'
+      : true,
   };
 };
 
