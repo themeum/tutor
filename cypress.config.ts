@@ -11,6 +11,7 @@ export default defineConfig({
     baseUrl: process.env.CYPRESS_base_url,
     experimentalRunAllSpecs: true,
     experimentalMemoryManagement: true,
+    experimentalModifyObstructiveThirdPartyCode: true,
   },
 
   viewportHeight: 900,

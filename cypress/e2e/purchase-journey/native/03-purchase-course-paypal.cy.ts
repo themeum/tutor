@@ -62,15 +62,20 @@ describe('Purchase Course', () => {
         if (url.includes('https://www.sandbox.paypal.com/checkoutnow')) {
           cy.get('input[name=login_email]').type(Cypress.env('paypal_personal_email'));
           cy.get('button#btnNext').click();
+
           cy.get('body').then((body) => {
-            if (body.find('.scTrack:secondaryLink').length) {
-              cy.get('.scTrack:secondaryLink').click();
+            const $body = Cypress.$(body); // jQuery-wrapped body
+
+            if ($body.find('a.scTrack.secondaryLink').length) {
+              cy.get('a.scTrack.secondaryLink').click();
             }
           });
-          cy.get('input[name=login_password]').type(Cypress.env('paypal_personal_password'));
-          cy.get('button#btnLogin').click();
 
-          cy.get('button#payment-submit-btn').click();
+          cy.get('input[name=login_password]').type(Cypress.env('paypal_personal_password'));
+          cy.get('button#btnLogin').click({ timeout: 10000 });
+
+          cy.get('button#payment-submit-btn').click({ timeout: 10000 });
+          cy.wait(10000);
         }
       });
     });
