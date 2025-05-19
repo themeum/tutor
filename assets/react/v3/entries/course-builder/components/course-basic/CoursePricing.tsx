@@ -20,9 +20,10 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
@@ -381,6 +382,21 @@ const CoursePricing = () => {
               )}
             />
           </div>
+
+          <Show when={!form.watch('tax_on_single') || !form.watch('tax_on_subscription')}>
+            <div css={styles.taxAlert}>
+              <div css={styles.alertTitle}>
+                <SVGIcon name="warning" width={24} height={24} />
+                <span>{__('Tax is disabled.', 'tutor')}</span>
+              </div>
+              <div css={styles.alertDescription}>
+                {__(
+                  'You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.',
+                  'tutor',
+                )}
+              </div>
+            </div>
+          </Show>
         </div>
       </Show>
     </>
@@ -412,5 +428,30 @@ const styles = {
   checkboxWrapper: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[4]};
+  `,
+  taxAlert: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[8]};
+    margin-top: ${spacing[8]};
+    padding: ${spacing[12]};
+    background-color: ${colorTokens.color.warning[40]};
+    border: 1px solid ${colorTokens.color.warning[50]};
+    border-radius: ${borderRadius[6]};
+  `,
+  alertTitle: css`
+    ${styleUtils.display.flex()}
+    gap: ${spacing[4]};
+    align-items: center;
+    ${typography.caption('medium')};
+    color: ${colorTokens.color.warning[100]};
+
+    svg {
+      color: ${colorTokens.design.warning};
+      flex-shrink: 0;
+    }
+  `,
+  alertDescription: css`
+    ${typography.caption()}
+    color: ${colorTokens.color.warning[100]};
   `,
 };
