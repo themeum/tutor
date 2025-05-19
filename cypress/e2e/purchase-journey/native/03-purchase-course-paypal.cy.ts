@@ -1,11 +1,64 @@
 import { faker } from '@faker-js/faker';
 
+// Types
+interface BillingData {
+  first_name: string;
+  last_name: string;
+  address: string;
+  email: string;
+  city: string;
+  zipcode: string;
+  phone: string;
+}
+
+// Constants
+const SELECTORS = {
+  ADD_TO_CART: 'button#tutor-native-add-to-cart',
+  VIEW_CART: 'a#tutor-native-view-cart',
+  CART_TOTAL: '.tutor-cart-summery-item',
+  CHECKOUT_TOTAL: '.tutor-checkout-summary-item',
+  CHECKOUT_BUTTON: 'a#tutor-native-checkout-button',
+  PAY_NOW_BUTTON: 'button#tutor-checkout-pay-now-button',
+  ORDER_HISTORY: 'a#tutor-native-order-history',
+} as const;
+
+// Utilities
+const extractAmount = (text: string): string => {
+  const regex = /[\d,]+(\.\d+)?/;
+  const match = text.match(regex);
+  if (!match) {
+    throw new Error('Amount not found in the string');
+  }
+  const amount = match[0].replace(/,/g, '');
+  if (isNaN(Number(amount))) {
+    throw new Error('Amount is not a valid number');
+  }
+  return amount;
+};
+
+const fillBillingForm = (data: BillingData) => {
+  const fields = [
+    { name: 'billing_first_name', value: data.first_name },
+    { name: 'billing_last_name', value: data.last_name },
+    { name: 'billing_email', value: data.email },
+    { name: 'billing_city', value: data.city },
+    { name: 'billing_zip_code', value: data.zipcode },
+    { name: 'billing_address', value: data.address },
+    { name: 'billing_phone', value: data.phone },
+  ];
+
+  fields.forEach(({ name, value }) => {
+    cy.getByInputName(name).clear().type(value);
+  });
+};
+
 describe('Purchase Course', () => {
   let orderId: string;
   let courseSlug: string;
+  let orderAmount: string;
 
   it('should purchase a paid course', () => {
-    const billingData = {
+    const billingData: BillingData = {
       first_name: faker.person.firstName(),
       last_name: faker.person.lastName(),
       address: faker.location.streetAddress(),
@@ -15,84 +68,117 @@ describe('Purchase Course', () => {
       phone: faker.phone.number(),
     };
 
+    // Load course and visit
     cy.readFile('cypress/fixtures/course.json').then((fixture) => {
-      const { slug } = fixture;
-      if (!slug) {
-        throw new Error('Course slug not found in fixture');
-      }
-      cy.log(`Course Slug: ${slug}`);
-      courseSlug = slug;
+      if (!fixture.slug) throw new Error('Course slug not found in fixture');
+      courseSlug = fixture.slug;
       cy.visit(courseSlug);
     });
 
-    cy.get('button#tutor-native-add-to-cart').click();
+    // Add to cart flow
+    cy.get(SELECTORS.ADD_TO_CART).click();
     cy.loginAsStudent();
     cy.get('body').then((body) => {
-      if (body.find('a#tutor-native-view-cart').length) {
-        cy.get('a#tutor-native-view-cart').click();
+      if (body.find(SELECTORS.VIEW_CART).length) {
+        cy.get(SELECTORS.VIEW_CART).click();
       } else {
-        cy.get('button#tutor-native-add-to-cart').click();
-        cy.get('a#tutor-native-view-cart').click();
+        cy.get(SELECTORS.ADD_TO_CART).click();
+        cy.get(SELECTORS.VIEW_CART).click();
       }
     });
 
-    cy.wait(1000);
+    // Verify cart total
     cy.url().should('include', Cypress.env('cart'));
+    cy.get(SELECTORS.CART_TOTAL)
+      .contains('Grand total')
+      .parent()
+      .find('div')
+      .eq(1)
+      .invoke('text')
+      .then((grandTotal) => {
+        orderAmount = extractAmount(grandTotal);
+        cy.log('Grand Total:', orderAmount);
+      });
 
-    cy.get('a#tutor-native-checkout-button').click();
-    cy.wait(1000);
+    // Checkout process
+    cy.get(SELECTORS.CHECKOUT_BUTTON).click();
     cy.url().should('include', Cypress.env('checkout'));
 
-    cy.getByInputName('billing_first_name').clear().type(billingData.first_name);
-    cy.getByInputName('billing_last_name').clear().type(billingData.last_name);
-    cy.getByInputName('billing_email').clear().type(billingData.email);
-    cy.getByInputName('billing_city').clear().type(billingData.city);
+    // Verify checkout total
+    cy.get(SELECTORS.CHECKOUT_TOTAL)
+      .contains('Grand Total')
+      .parent()
+      .find('.tutor-checkout-grand-total')
+      .invoke('text')
+      .then((grandTotal) => {
+        const checkoutAmount = extractAmount(grandTotal);
+        expect(checkoutAmount).to.equal(orderAmount);
+      });
+
+    // Fill billing form
+    fillBillingForm(billingData);
     cy.get('select[name="billing_state"]').select(1);
-    cy.getByInputName('billing_zip_code').clear().type(billingData.zipcode);
-    cy.getByInputName('billing_address').clear().type(billingData.address);
-    cy.getByInputName('billing_phone').clear().type(billingData.phone);
     cy.get('input[type="radio"][name="payment_method"][value="paypal"]').check({ force: true });
 
-    cy.get('button#tutor-checkout-pay-now-button').click();
+    // Process payment
+    cy.get(SELECTORS.PAY_NOW_BUTTON).click();
 
-    cy.wait(1000);
+    // PayPal checkout process
+    cy.origin('https://www.sandbox.paypal.com/', { args: { orderAmount } }, ({ orderAmount }) => {
+      const extractAmount = (text: string): string => {
+        const regex = /[\d,]+(\.\d+)?/;
+        const match = text.match(regex);
+        if (!match) {
+          throw new Error('Amount not found in the string');
+        }
+        const amount = match[0].replace(/,/g, '');
+        if (isNaN(Number(amount))) {
+          throw new Error('Amount is not a valid number');
+        }
+        return amount;
+      };
 
-    cy.origin('https://www.sandbox.paypal.com/', () => {
       cy.url().then((url) => {
-        if (url.includes('https://www.sandbox.paypal.com/checkoutnow')) {
-          cy.get('input[name=login_email]').type(Cypress.env('paypal_personal_email'));
-          cy.get('button#btnNext').click();
+        if (!url.includes('https://www.sandbox.paypal.com/checkoutnow')) return;
 
-          cy.get('body').then((body) => {
-            const $body = Cypress.$(body); // jQuery-wrapped body
+        // Login to PayPal
+        cy.get('input[name=login_email]').type(Cypress.env('paypal_personal_email'));
+        cy.get('button#btnNext').click();
 
-            if ($body.find('a.scTrack.secondaryLink').length) {
-              cy.get('a.scTrack.secondaryLink').click();
-            }
+        // Handle secondary authentication if present
+        cy.get('body').then((body) => {
+          const $body = Cypress.$(body);
+          if ($body.find('a.scTrack.secondaryLink').length) {
+            cy.get('a.scTrack.secondaryLink').click();
+          }
+        });
+
+        cy.get('input[name=login_password]').type(Cypress.env('paypal_personal_password'));
+        cy.get('button#btnLogin').click();
+
+        // Verify amount and complete payment
+        cy.get('[data-testid="header-cart-total"]')
+          .invoke('text')
+          .then((totalText) => {
+            const paypalAmount = extractAmount(totalText);
+            expect(Number(paypalAmount)).to.equal(Number(orderAmount));
           });
 
-          cy.get('input[name=login_password]').type(Cypress.env('paypal_personal_password'));
-          cy.get('button#btnLogin').click({ timeout: 10000 });
-
-          cy.get('button#payment-submit-btn').click({ timeout: 10000 });
-          cy.wait(10000);
-        }
+        cy.get('button#payment-submit-btn').click();
       });
     });
 
+    // Verify order completion
     cy.url()
       .should('include', 'tutor_order_placement=success&order_id=')
       .then((url) => {
         const orderIdMatch = url.match(/order_id=(\d+)/);
-        if (orderIdMatch) {
-          orderId = orderIdMatch[1];
-          cy.log(`Order ID: ${orderId}`);
-        } else {
-          throw new Error('Order ID not found in URL');
-        }
+        if (!orderIdMatch) throw new Error('Order ID not found in URL');
+        orderId = orderIdMatch[1];
+        cy.log(`Order ID: ${orderId}`);
       });
 
-    cy.get('a#tutor-native-order-history').click();
+    cy.get(SELECTORS.ORDER_HISTORY).click();
   });
 
   // it('should verify the order in WooCommerce and mark as completed', () => {
