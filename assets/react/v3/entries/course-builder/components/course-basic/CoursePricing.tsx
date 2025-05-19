@@ -15,6 +15,7 @@ import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
+  type CourseSellingOption,
   type WcProduct,
   useGetWcProductsQuery,
   useWcProductDetailsQuery,
@@ -134,6 +135,30 @@ const CoursePricing = () => {
     const uniqueProducts = Array.from(new Map(combinedProducts.map((item) => [item.value, item])).values());
 
     return uniqueProducts;
+  };
+
+  const isTaxDisabled = (
+    selectedOption: CourseSellingOption,
+    taxOnSingle: boolean,
+    taxOnSubscription: boolean,
+  ): boolean => {
+    if (selectedOption === 'membership') {
+      return false;
+    }
+
+    if (['all', 'both'].includes(selectedOption)) {
+      return !taxOnSingle || !taxOnSubscription;
+    }
+
+    if (selectedOption === 'one_time') {
+      return !taxOnSingle;
+    }
+
+    if (selectedOption === 'subscription') {
+      return !taxOnSubscription;
+    }
+
+    return !taxOnSingle && !taxOnSubscription;
   };
 
   useEffect(() => {
@@ -362,28 +387,49 @@ const CoursePricing = () => {
         </Show>
       </Show>
 
-      <Show when={coursePriceType === 'paid' && monetizeBy === 'tutor' && enableIndividualTaxControl}>
+      <Show
+        when={
+          coursePriceType === 'paid' &&
+          monetizeBy === 'tutor' &&
+          enableIndividualTaxControl &&
+          selectedPurchaseOption !== 'membership'
+        }
+      >
         <div css={styles.taxWrapper}>
           <label>{__('Tax Collection', 'tutor')}</label>
 
           <div css={styles.checkboxWrapper}>
-            <Controller
-              name="tax_on_single"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Charge tax on one-time purchase ', 'tutor')} />
-              )}
-            />
-            <Controller
-              name="tax_on_subscription"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Charge tax on subscriptions', 'tutor')} />
-              )}
-            />
+            <Show when={['one_time', 'both', 'all'].includes(selectedPurchaseOption)}>
+              <Controller
+                name="tax_on_single"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Charge tax on one-time purchase ', 'tutor')} />
+                )}
+              />
+            </Show>
+            <Show
+              when={
+                isAddonEnabled(Addons.SUBSCRIPTION) && ['subscription', 'both', 'all'].includes(selectedPurchaseOption)
+              }
+            >
+              <Controller
+                name="tax_on_subscription"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Charge tax on subscription', 'tutor')} />
+                )}
+              />
+            </Show>
           </div>
 
-          <Show when={!form.watch('tax_on_single') || !form.watch('tax_on_subscription')}>
+          <Show
+            when={isTaxDisabled(
+              selectedPurchaseOption,
+              form.getValues('tax_on_single'),
+              form.getValues('tax_on_subscription'),
+            )}
+          >
             <div css={styles.taxAlert}>
               <div css={styles.alertTitle}>
                 <SVGIcon name="warning" width={24} height={24} />

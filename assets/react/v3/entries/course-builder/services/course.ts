@@ -38,7 +38,7 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingType = 'free' | 'paid';
-type CourseSellingOption = Prettify<TutorSellingOption | 'membership' | 'all'>;
+export type CourseSellingOption = Prettify<TutorSellingOption | 'membership' | 'all'>;
 
 export interface CourseFormData {
   post_date: string;
