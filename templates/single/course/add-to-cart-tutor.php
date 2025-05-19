@@ -84,7 +84,7 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 	} elseif ( $buy_now ) {
 		?>
 		<div class="tutor-mt-24">
-			<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>">
+			<a data-cy="tutor-buy-now" href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>">
 				<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
 			</a>
 		</div>

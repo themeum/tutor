@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { backendUrls, frontendUrls } from 'cypress/config/page-urls';
 
+// Types
 interface BillingData {
   first_name: string;
   last_name: string;
@@ -11,6 +12,7 @@ interface BillingData {
   phone: string;
 }
 
+// Constants
 const SELECTORS = {
   ADD_TO_CART: 'button#tutor-native-add-to-cart',
   VIEW_CART: 'a#tutor-native-view-cart',

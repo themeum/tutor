@@ -1,4 +1,6 @@
+import endpoints from '@TutorShared/utils/endpoints';
 import { type Addon } from '@TutorShared/utils/util';
+import { backendUrls } from 'cypress/config/page-urls';
 import { type Interception } from 'cypress/types/net-stubbing';
 
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -75,6 +77,7 @@ declare global {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       waitAfterRequest(alias: string, additionalWaitMs?: number): Chainable<Interception<any, any>>;
       monetizedBy(): Chainable<string>;
+      deleteCourseById(courseId: string): Chainable<void>;
     }
   }
 }
@@ -981,4 +984,23 @@ Cypress.Commands.add('saveTutorSettings', () => {
   });
   cy.get('button#save_tutor_option').click();
   cy.waitAfterRequest('saveSettings');
+});
+
+Cypress.Commands.add('deleteCourseById', (id: string) => {
+  cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+    if (req.body.includes(endpoints.UPDATE_COURSE)) {
+      req.alias = 'updateCourse';
+    }
+  });
+  cy.visit(`${Cypress.env('base_url')}${backendUrls.COURSE_BUILDER}${id}`);
+  cy.loginAsAdmin();
+
+  cy.get('[data-cy=dropdown-trigger]').click();
+  cy.get('.tutor-portal-popover').within(() => {
+    cy.get('[data-cy=move-to-trash]').click();
+  });
+
+  cy.waitAfterRequest('updateCourse');
+  cy.wait(1000);
+  cy.url().should('include', '/wp-admin/admin.php?page=tutor');
 });
