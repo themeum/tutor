@@ -1335,8 +1335,8 @@ class Course extends Tutor_Base {
 		$tax_on_subscription = get_post_meta( $course_id, self::TAX_ON_SUBSCRIPTION_META, true );
 
 		$data['tax_collection'] = array(
-			'tax_on_single'       => '' === $tax_on_single ? 1 : $tax_on_single,
-			'tax_on_subscription' => '' === $tax_on_subscription ? 1 : $tax_on_subscription,
+			'tax_on_single'       => '' === $tax_on_single ? '1' : $tax_on_single,
+			'tax_on_subscription' => '' === $tax_on_subscription ? '1' : $tax_on_subscription,
 		);
 
 		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
