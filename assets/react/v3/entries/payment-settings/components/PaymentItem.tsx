@@ -13,7 +13,7 @@ import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
-import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
@@ -263,14 +263,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           );
 
                         case 'textarea':
-                          return (
-                            <FormTextareaInput
-                              {...controllerProps}
-                              label={field.label}
-                              rows={6}
-                              helpText={field.hint}
-                            />
-                          );
+                          return <FormWPEditor {...controllerProps} label={field.label} helpText={field.hint} hideMediaButtons hideQuickTags />;
 
                         case 'webhook_url':
                           return (
