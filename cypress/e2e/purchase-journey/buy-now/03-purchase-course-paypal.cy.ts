@@ -14,13 +14,11 @@ interface BillingData {
 
 // Constants
 const SELECTORS = {
-  ADD_TO_CART: 'button#tutor-native-add-to-cart',
-  VIEW_CART: 'a#tutor-native-view-cart',
+  BUY_NOW: 'a[data-cy=tutor-buy-now]',
   CART_TOTAL: '.tutor-cart-summery-item',
   CHECKOUT_TOTAL: '.tutor-checkout-summary-item',
-  CHECKOUT_BUTTON: 'a#tutor-native-checkout-button',
   PAY_NOW_BUTTON: 'button#tutor-checkout-pay-now-button',
-  ORDER_HISTORY: 'a#tutor-native-order-history',
+  ORDER_HISTORY: 'a[data-cy=tutor-native-order-history]',
 } as const;
 
 // Utilities
@@ -77,32 +75,10 @@ describe('Purchase Course', () => {
     });
 
     // Add to cart flow
-    cy.get(SELECTORS.ADD_TO_CART).click();
+    cy.get(SELECTORS.BUY_NOW).click();
     cy.loginAsStudent();
-    cy.get('body').then((body) => {
-      if (body.find(SELECTORS.VIEW_CART).length) {
-        cy.get(SELECTORS.VIEW_CART).click();
-      } else {
-        cy.get(SELECTORS.ADD_TO_CART).click();
-        cy.get(SELECTORS.VIEW_CART).click();
-      }
-    });
+    cy.get(SELECTORS.BUY_NOW).click();
 
-    // Verify cart total
-    cy.url().should('include', Cypress.env('cart'));
-    cy.get(SELECTORS.CART_TOTAL)
-      .contains('Grand total')
-      .parent()
-      .find('div')
-      .eq(1)
-      .invoke('text')
-      .then((grandTotal) => {
-        orderAmount = extractAmount(grandTotal);
-        cy.log('Grand Total:', orderAmount);
-      });
-
-    // Checkout process
-    cy.get(SELECTORS.CHECKOUT_BUTTON).click();
     cy.url().should('include', Cypress.env('checkout'));
 
     // Verify checkout total
@@ -112,8 +88,8 @@ describe('Purchase Course', () => {
       .find('.tutor-checkout-grand-total')
       .invoke('text')
       .then((grandTotal) => {
-        const checkoutAmount = extractAmount(grandTotal);
-        expect(checkoutAmount).to.equal(orderAmount);
+        orderAmount = extractAmount(grandTotal);
+        cy.log(`Order Amount: ${orderAmount}`);
       });
 
     // Fill billing form

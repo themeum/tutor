@@ -86,7 +86,6 @@ describe('Purchase Course', () => {
       }
     });
 
-    // Verify cart total
     cy.url().should('include', Cypress.env('cart'));
     cy.get(SELECTORS.CART_TOTAL)
       .contains('Grand total')
