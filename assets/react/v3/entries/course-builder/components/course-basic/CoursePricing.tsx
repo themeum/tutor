@@ -367,14 +367,14 @@ const CoursePricing = () => {
 
           <div css={styles.checkboxWrapper}>
             <Controller
-              name="tax_collection_on_single_purchase"
+              name="tax_on_single"
               control={form.control}
               render={(controllerProps) => (
                 <FormCheckbox {...controllerProps} label={__('Charge tax on one-time purchase ', 'tutor')} />
               )}
             />
             <Controller
-              name="tax_collection_on_subscription"
+              name="tax_on_subscription"
               control={form.control}
               render={(controllerProps) => (
                 <FormCheckbox {...controllerProps} label={__('Charge tax on subscriptions', 'tutor')} />
