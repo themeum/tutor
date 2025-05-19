@@ -578,8 +578,10 @@ export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: st
         return [key, data[key as keyof CourseFormData]];
       }),
     ),
-    tax_on_single: data.tax_on_single ? '1' : '0',
-    tax_on_subscription: data.tax_on_subscription ? '1' : '0',
+    ...(!!tutorConfig.settings?.enable_individual_tax_control && {
+      tax_on_single: data.tax_on_single ? '1' : '0',
+      tax_on_subscription: data.tax_on_subscription ? '1' : '0',
+    }),
   };
 };
 
