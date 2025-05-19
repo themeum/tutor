@@ -1,7 +1,7 @@
 import { backendUrls } from 'cypress/config/page-urls';
 import { loginAsAdmin } from 'cypress/support/auth';
 
-describe('Native E-Commerce Buy Now', () => {
+describe('Native E-Commerce Guest Checkout', () => {
   beforeEach(() => {
     cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`, (req) => {
       if (req.body.includes('tutor_payment_gateways')) {
@@ -41,6 +41,6 @@ describe('Native E-Commerce Buy Now', () => {
   it('should disable guest checkout and enable buy now button', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_checkout`);
     cy.toggle('tutor_option[is_enable_buy_now]', '#field_is_enable_buy_now', true);
-    cy.toggle('tutor_option[is_enable_guest_checkout]', '#field_is_enable_guest_checkout', false);
+    cy.toggle('tutor_option[is_enable_guest_checkout]', '#field_is_enable_guest_checkout', true);
   });
 });

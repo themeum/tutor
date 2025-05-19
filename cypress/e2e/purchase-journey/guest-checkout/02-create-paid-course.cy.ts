@@ -5,15 +5,15 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { backendUrls } from 'cypress/config/page-urls';
 import { loginAsAdmin } from 'cypress/support/auth';
 
-describe('Paid Course Creation for Buy Now', () => {
+describe('Paid Course Creation for Native E-Commerce Guest Checkout', () => {
   let courseId: string;
   let courseData: CourseFormData;
 
   before(() => {
     // @ts-ignore
     courseData = {
-      post_title: 'Native E-Commerce Buy Now Paid Course',
-      post_content: 'This is a paid course created as part of the Native E-Commerce course buy now journey.',
+      post_title: 'Native E-Commerce Guest Checkout Course',
+      post_content: 'This is a paid course created as part of the Native E-Commerce course guest checkout journey.',
       course_price: faker.number.int({ min: 50, max: 1000 }).toString(),
       course_sale_price: faker.number.int({ min: 1, max: 49 }).toString(),
     };
