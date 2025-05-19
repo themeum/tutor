@@ -105,7 +105,7 @@ class CourseModel {
 	 * @since 3.5.0
 	 *
 	 * @param int|\WP_POST $post the post id or object.
-     *
+	 *
 	 * @return bool
 	 */
 	public static function get_post_types( $post ) {
@@ -270,15 +270,15 @@ class CourseModel {
 	 */
 	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false, $post_types = array() ) {
 		global $wpdb;
-		$offset           = sanitize_text_field( $offset );
-		$limit            = sanitize_text_field( $limit );
-		$instructor_id    = tutils()->get_user_id( $instructor_id );
+		$offset        = sanitize_text_field( $offset );
+		$limit         = sanitize_text_field( $limit );
+		$instructor_id = tutils()->get_user_id( $instructor_id );
 
 		if ( ! count( $post_types ) ) {
 			$post_types = array( tutor()->course_post_type );
 		}
 
-		$post_types       = QueryHelper::prepare_in_clause( $post_types );
+		$post_types = QueryHelper::prepare_in_clause( $post_types );
 
 		if ( empty( $post_status ) || 'any' == $post_status ) {
 			$where_post_status = '';
@@ -903,5 +903,19 @@ class CourseModel {
 		);
 
 		return $instructor_ids;
+	}
+
+	/**
+	 * Check tax collection is enabled for single purchase course/bundle
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param int $post_id course or bundle id.
+	 *
+	 * @return boolean
+	 */
+	public static function is_tax_enabled_for_single_purchase( $post_id ) {
+		$data = get_post_meta( $post_id, Course::TAX_ON_SINGLE_META, true );
+		return ( '1' === $data || '' === $data );
 	}
 }
