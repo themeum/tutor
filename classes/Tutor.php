@@ -664,7 +664,7 @@ final class Tutor {
 		}
 
         $is_droip_active  = \is_plugin_active('droip/droip.php');
-        $tutor_droip_path = tutor()->path . 'includes/droip/tutor-droip-elements.php';
+        $tutor_droip_path = tutor()->path . 'includes/droip/droip.php';
         if ($is_droip_active && file_exists($tutor_droip_path)) {
             include $tutor_droip_path;
 		}
