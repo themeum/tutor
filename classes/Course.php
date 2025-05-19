@@ -65,6 +65,13 @@ class Course extends Tutor_Base {
 	const SELLING_OPTION_MEMBERSHIP   = 'membership';
 	const SELLING_OPTION_ALL          = 'all';
 
+	/**
+	 * Tax collection settings meta
+	 *
+	 * @since 3.6.0
+	 */
+	const TAX_ON_SINGLE_META       = 'tutor_tax_on_single';
+	const TAX_ON_SUBSCRIPTION_META = 'tutor_tax_on_subscription';
 
 	/**
 	 * Additional course meta info
@@ -738,6 +745,19 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_id, '_tutor_is_public_course', $params['is_public_course'] ?? 'no' );
 		update_post_meta( $post_id, '_tutor_course_level', $params['course_level'] );
 
+		/**
+		 * Save tax collection settings
+		 *
+		 * @since 3.6.0
+		 */
+		if ( isset( $params['tax_on_single'] ) ) {
+			update_post_meta( $post_id, self::TAX_ON_SINGLE_META, $params['tax_on_single'] );
+		}
+
+		if ( isset( $params['tax_on_subscription'] ) ) {
+			update_post_meta( $post_id, self::TAX_ON_SUBSCRIPTION_META, $params['tax_on_subscription'] );
+		}
+
 		do_action( 'tutor_after_prepare_update_post_meta', $post_id, $params );
 	}
 
@@ -1309,6 +1329,14 @@ class Course extends Tutor_Base {
 				'additional'  => false,
 				'certificate' => false,
 			),
+		);
+
+		$tax_on_single       = get_post_meta( $course_id, self::TAX_ON_SINGLE_META, true );
+		$tax_on_subscription = get_post_meta( $course_id, self::TAX_ON_SUBSCRIPTION_META, true );
+
+		$data['tax_collection'] = array(
+			'tax_on_single'       => '' === $tax_on_single ? 1 : $tax_on_single,
+			'tax_on_subscription' => '' === $tax_on_subscription ? 1 : $tax_on_subscription,
 		);
 
 		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
