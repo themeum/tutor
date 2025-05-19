@@ -284,7 +284,7 @@ class CheckoutController {
 					'sale_price'        => $sale_price ? $sale_price : null,
 					'is_coupon_applied' => false,
 					'coupon_code'       => null,
-					'tax_collection'    => CourseModel::is_tax_enabled_for_single_purchase( $item_id ),
+					'tax_exempt'        => CourseModel::is_tax_enabled_for_single_purchase( $item_id ),
 				);
 			}
 
@@ -416,8 +416,8 @@ class CheckoutController {
 		$coupon_discount = 0;
 		$sale_discount   = 0;
 
-		$tax_excluded_price  = 0;
-		$tax_excluded_amount = 0;
+		$tax_exempt_price  = 0;
+		$tax_exempt_amount = 0;
 
 		$coupon                  = null;
 		$is_coupon_applied       = false;
@@ -484,9 +484,9 @@ class CheckoutController {
 				$subtotal_price += $additional_item['regular_price'] ?? 0;
 			}
 
-			if ( isset( $item['tax_collection'] ) && false === $item['tax_collection'] ) {
-				$tax_excluded_price += $display_price;
-				$tax_excluded_price += array_sum( array_column( $additional_items, 'regular_price' ) );
+			if ( isset( $item['tax_exempt'] ) && false === $item['tax_exempt'] ) {
+				$tax_exempt_price += $display_price;
+				$tax_exempt_price += array_sum( array_column( $additional_items, 'regular_price' ) );
 			}
 		}
 
@@ -494,8 +494,8 @@ class CheckoutController {
 		$tax_rate    = Tax::get_user_tax_rate();
 		$tax_amount  = Tax::calculate_tax( $total_price, $tax_rate );
 
-		$tax_excluded_amount = Tax::calculate_tax( $tax_excluded_price, $tax_rate );
-		$tax_amount          = $tax_amount - $tax_excluded_amount;
+		$tax_exempt_amount = Tax::calculate_tax( $tax_exempt_price, $tax_rate );
+		$tax_amount        = $tax_amount - $tax_exempt_amount;
 
 		$total_price_without_tax = $total_price;
 		if ( ! Tax::is_tax_included_in_price() ) {
