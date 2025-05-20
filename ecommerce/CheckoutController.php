@@ -492,10 +492,13 @@ class CheckoutController {
 
 		$total_price = $subtotal_price - ( $coupon_discount + $sale_discount );
 		$tax_rate    = Tax::get_user_tax_rate();
-		$tax_amount  = Tax::calculate_tax( $total_price, $tax_rate );
+		$tax_amount  = 0;
 
-		$tax_exempt_amount = Tax::calculate_tax( $tax_exempt_price, $tax_rate );
-		$tax_amount        = $tax_amount - $tax_exempt_amount;
+		if ( Tax::should_calculate_tax() ) {
+			$tax_amount        = Tax::calculate_tax( $total_price, $tax_rate );
+			$tax_exempt_amount = Tax::calculate_tax( $tax_exempt_price, $tax_rate );
+			$tax_amount        = $tax_amount - $tax_exempt_amount;
+		}
 
 		$total_price_without_tax = $total_price;
 		if ( ! Tax::is_tax_included_in_price() ) {
