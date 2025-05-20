@@ -47,9 +47,7 @@ const Export = () => {
   useEffect(() => {
     const progress = Number(exportContentResponse?.job_progress);
     if (isError) {
-      updateModal<typeof ExportModal>('export-Modal', {
-        currentStep: 'error',
-      });
+      closeModal();
       return;
     }
 
