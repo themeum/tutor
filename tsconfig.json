@@ -36,7 +36,8 @@
       "@OrderContexts/*": ["assets/react/v3/entries/order-details/contexts/*"],
       "@CouponComponents/*": ["assets/react/v3/entries/coupon-details/components/*"],
       "@CouponServices/*": ["assets/react/v3/entries/coupon-details/services/*"],
-      "@AddonList/*": ["assets/react/v3/entries/addon-list/*"]
+      "@AddonList/*": ["assets/react/v3/entries/addon-list/*"],
+      "@ImportExport/*": ["assets/react/v3/entries/import-export/*"]
     }
   },
   "include": ["./assets/react/v3", "**/*.ts"],

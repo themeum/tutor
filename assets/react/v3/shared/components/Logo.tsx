@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { Breakpoint, spacing } from '@TutorShared/config/styles';
@@ -7,11 +7,15 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import LogoSvg from '@SharedImages/logo.svg';
 
-const Logo = () => {
+interface LogoProps {
+  wrapperCss?: SerializedStyles;
+}
+
+const Logo = ({ wrapperCss }: LogoProps) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
 
   return (
-    <button type="button" css={[styleUtils.resetButton, styles.logo]}>
+    <button type="button" css={[styleUtils.resetButton, styles.logo, wrapperCss]}>
       <Show
         when={isTutorPro && tutorConfig.settings?.course_builder_logo_url}
         fallback={<LogoSvg width={108} height={24} />}
