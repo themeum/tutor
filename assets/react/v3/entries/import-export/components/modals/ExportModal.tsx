@@ -59,6 +59,8 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getExportableContentQuery.isSuccess]);
 
+  const isCoursesChecked = form.watch('courses.isChecked');
+
   const getLabelByFormDateKey = (key: string, showProBadge?: boolean) => {
     let label = '';
     const hasContent = key.includes('[');
@@ -91,7 +93,10 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
     );
   };
 
-  const isCoursesChecked = form.watch('courses.isChecked');
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
 
   const renderInitialState = () => {
     return (
@@ -278,7 +283,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
 
   return (
     <BasicModalWrapper
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth={currentStep === 'initial' ? 823 : 500}
       isCloseAble={currentStep !== 'progress'}
       entireHeader={

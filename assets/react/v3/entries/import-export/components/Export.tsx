@@ -18,7 +18,7 @@ import ExportModal from './modals/ExportModal';
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
 
-  const { data: exportContentResponse, mutateAsync, isError } = useExportContentsMutation();
+  const { data: exportContentResponse, mutateAsync, isError, isPending } = useExportContentsMutation();
 
   const handleImport = (data: ExportFormData) => {
     const payload = convertExportFormDataToPayload(data);
@@ -29,6 +29,20 @@ const Export = () => {
       progress: 0,
     });
   };
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isPending) {
+        e.preventDefault();
+        return;
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isPending]);
 
   useEffect(() => {
     const progress = Number(exportContentResponse?.job_progress);
