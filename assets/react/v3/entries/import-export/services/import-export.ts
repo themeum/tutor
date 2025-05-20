@@ -13,21 +13,42 @@ export interface ImportExportHistory {
 }
 
 export interface ExportFormData {
-  courses: boolean;
-  'courses[lesson]': boolean;
-  'courses[tutor_quiz]': boolean;
-  'courses[tutor_assignments]': boolean;
-  'courses[attachments]': boolean;
-  'courses[keepMediaFiles]': boolean;
-  courseBundle: boolean;
+  courses: {
+    isChecked: boolean;
+    lessons: boolean;
+    assignments: boolean;
+    quizzes: boolean;
+    attachments: boolean;
+    keepMediaFiles: boolean;
+  };
+  bundles: {
+    isChecked: boolean;
+    keepMediaFiles: boolean;
+  };
   settings: boolean;
 }
+
+export const defaultExportFormData: ExportFormData = {
+  courses: {
+    isChecked: false,
+    lessons: false,
+    assignments: false,
+    quizzes: false,
+    attachments: false,
+    keepMediaFiles: false,
+  },
+  bundles: {
+    isChecked: false,
+    keepMediaFiles: false,
+  },
+  settings: false,
+};
 
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
 export interface ExportableContent {
   courses: ExportableSectionWithItems;
-  courseBundle: ExportableSectionWithoutItems;
+  bundles: ExportableSectionWithoutItems;
   settings: ExportableSectionWithoutItems;
 }
 

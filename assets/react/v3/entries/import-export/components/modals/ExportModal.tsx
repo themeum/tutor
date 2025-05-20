@@ -10,6 +10,7 @@ import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper'
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
 import {
+  defaultExportFormData,
   type ExportableContent,
   type ExportFormData,
   type ImportExportModalState,
@@ -35,16 +36,7 @@ interface ExportModalProps extends ModalProps {
 
 const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
-    defaultValues: {
-      courses: false,
-      'courses[lesson]': false,
-      'courses[tutor_quiz]': false,
-      'courses[tutor_assignments]': false,
-      'courses[attachments]': false,
-      'courses[keepMediaFiles]': false,
-      courseBundle: false,
-      settings: false,
-    },
+    defaultValues: defaultExportFormData,
   });
 
   const fileName = `tutor_data_${Date.now()}.json`;
@@ -78,7 +70,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
     );
   };
 
-  const isCoursesChecked = form.watch('courses');
+  const isCoursesChecked = form.watch('courses.isChecked');
 
   const renderInitialState = () => {
     return (
@@ -93,7 +85,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                 <div css={styles.checkboxRow}>
                   <Controller
                     control={form.control}
-                    name="courses"
+                    name="courses.isChecked"
                     render={(controllerProps) => (
                       <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('courses')} />
                     )}
@@ -104,7 +96,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                         <div css={styles.checkboxRow({ isContent: true })}>
                           <Controller
                             control={form.control}
-                            name="courses[lesson]"
+                            name="courses.lessons"
                             render={(controllerProps) => (
                               <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('courses[lesson]')} />
                             )}
@@ -113,7 +105,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                         <div css={styles.checkboxRow({ isContent: true })}>
                           <Controller
                             control={form.control}
-                            name="courses[tutor_quiz]"
+                            name="courses.quizzes"
                             render={(controllerProps) => (
                               <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('courses[tutor_quiz]')} />
                             )}
@@ -122,7 +114,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                         <div css={styles.checkboxRow({ isContent: true })}>
                           <Controller
                             control={form.control}
-                            name="courses[tutor_assignments]"
+                            name="courses.assignments"
                             render={(controllerProps) => (
                               <FormCheckbox
                                 {...controllerProps}
@@ -134,7 +126,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                         <div css={styles.checkboxRow({ isContent: true })}>
                           <Controller
                             control={form.control}
-                            name="courses[attachments]"
+                            name="courses.attachments"
                             render={(controllerProps) => (
                               <FormCheckbox
                                 {...controllerProps}
@@ -148,7 +140,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                       <div css={styles.contentCheckboxFooter}>
                         <Controller
                           control={form.control}
-                          name="courses[keepMediaFiles]"
+                          name="courses.keepMediaFiles"
                           render={(controllerProps) => (
                             <FormCheckbox {...controllerProps} label={__('Keep media files', 'tutor')} />
                           )}
@@ -161,7 +153,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                 <div css={styles.checkboxRow}>
                   <Controller
                     control={form.control}
-                    name="courseBundle"
+                    name="bundles.isChecked"
                     render={(controllerProps) => (
                       <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('course-bundle')} />
                     )}
