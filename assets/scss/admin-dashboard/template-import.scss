@@ -78,7 +78,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 
 	.tutor-demo-importer-list {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(374px, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(274px, 374px));
 		gap: 24px;
 
 		.tutor-import-single-template {
@@ -156,7 +156,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		.tutor-import-modal-content {
 			z-index: 1;
 			width: 550px;
-			min-height: 330px;
+			// min-height: 330px;
 			background: #fff;
 			box-shadow: 0px 0px 1px rgba(9, 30, 66, .31), 0px 4px 8px rgba(9, 30, 66, .25);
 			border-radius: 10px;
