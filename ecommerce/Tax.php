@@ -107,7 +107,7 @@ class Tax {
 	public static function get_setting( $key, $default = false ) {
 		$tax_settings = self::get_settings();
 
-		if ( ! empty( $tax_settings->$key ) ) {
+		if ( isset( $tax_settings->$key ) ) {
 			return $tax_settings->$key;
 		}
 
