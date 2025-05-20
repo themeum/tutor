@@ -26,27 +26,38 @@ const Export = () => {
 
     updateModal<typeof ExportModal>('export-modal', {
       currentStep: 'progress',
+      progress: 0,
     });
   };
 
   useEffect(() => {
-    if (Number(exportContentResponse?.job_progress) < 100) {
+    const progress = Number(exportContentResponse?.job_progress);
+    if (progress < 100) {
       mutateAsync({
         job_id: exportContentResponse?.job_id,
       });
     }
 
-    if (Number(exportContentResponse?.job_progress === 100)) {
+    if (progress > 0 && progress < 100) {
+      updateModal<typeof ExportModal>('export-modal', {
+        currentStep: 'progress',
+        progress,
+      });
+    }
+
+    if (progress === 100) {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
-        onDownload: () => {
+        progress: 100,
+        fileSize: JSON.stringify(exportContentResponse).length,
+        onDownload: (fileName) => {
           const jsonFile = new Blob([JSON.stringify(exportContentResponse)], {
             type: 'application/json',
           });
           const url = URL.createObjectURL(jsonFile);
           const a = document.createElement('a');
           a.href = url;
-          a.download = 'export.json';
+          a.download = fileName;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
@@ -60,6 +71,7 @@ const Export = () => {
         currentStep: 'error',
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportContentResponse, isError]);
 
   return (
@@ -87,6 +99,7 @@ const Export = () => {
                   onClose: closeModal,
                   currentStep: 'initial',
                   onExport: handleImport,
+                  progress: Number(exportContentResponse?.job_progress) || 0,
                 },
               })
             }

@@ -34,17 +34,19 @@ interface ExportModalProps extends ModalProps {
   onClose: () => void;
   onExport: (data: ExportFormData) => void;
   currentStep: ImportExportModalState;
-  onDownload?: () => void;
+  onDownload?: (fileName: string) => void;
+  progress: number;
+  fileSize?: number;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModalProps) => {
+const fileName = `tutor_data_${Date.now()}.json`;
+
+const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fileSize }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: defaultExportFormData,
   });
-
-  const fileName = `tutor_data_${Date.now()}.json`;
 
   const getExportableContentQuery = useExportableContentQuery();
   const exportableContent = getExportableContentQuery.data as ExportableContent;
@@ -224,9 +226,9 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
         <img src={exportInProgressImage} alt={__('Exporting...', 'tutor')} />
         <div css={styles.progressHeader}>
           <div css={typography.caption()}>{__('Getting your files ready!', 'tutor')}</div>
-          <div css={styles.progressCount}>{__('In Progress', 'tutor')}</div>
+          <div css={styles.progressCount}>{progress}%</div>
         </div>
-        <div css={styles.progressBar} />
+        <div css={styles.progressBar({ progress })} />
         <div css={styles.progressInfo}>{fileName}</div>
       </div>
     );
@@ -248,7 +250,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
           <div css={styles.fileRight}>
             <div css={styles.fileDetails}>
               <div css={styles.fileName}>{fileName}</div>
-              <div css={styles.fileSize}>{formatBytes(1204)}</div>
+              <div css={styles.fileSize}>{formatBytes(fileSize || 0)}</div>
             </div>
 
             <div>
@@ -256,7 +258,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                 variant="primary"
                 size="small"
                 icon={<SVGIcon name="download" width={24} height={24} />}
-                onClick={onDownload}
+                onClick={() => onDownload?.(fileName)}
               >
                 {__('Download', 'tutor')}
               </Button>
@@ -331,7 +333,7 @@ const styles = {
     color: ${colorTokens.text.brand};
   `,
   wrapper: css`
-    height: 760px;
+    min-height: 760px;
     padding: ${spacing[32]} 107px ${spacing[32]} 107px;
     background-color: ${colorTokens.surface.courseBuilder};
     border-top: 1px solid ${colorTokens.stroke.divider};
@@ -411,7 +413,7 @@ const styles = {
     color: ${colorTokens.text.success};
     border-radius: ${borderRadius[12]};
   `,
-  progressBar: css`
+  progressBar: ({ progress = 0 }) => css`
     position: relative;
     width: 100%;
     height: 6px;
@@ -429,18 +431,7 @@ const styles = {
       background-color: ${colorTokens.bg.success};
       border-radius: ${borderRadius[50]};
       transition: width 0.3s ease-in;
-      background-image: linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.15) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.15) 50%,
-        rgba(255, 255, 255, 0.15) 75%,
-        transparent 75%,
-        transparent
-      );
-      background-size: 1rem 1rem;
-      animation: progress-stripes 1s linear infinite;
+      width: ${progress}%;
     }
 
     @keyframes progress-stripes {
