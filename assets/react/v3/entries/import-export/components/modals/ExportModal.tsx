@@ -28,6 +28,7 @@ import { formatBytes } from '@TutorShared/utils/util';
 import exportInProgressImage from '@SharedImages/import-export/export-inprogress.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import ProBadge from '@TutorShared/atoms/ProBadge';
+import { useEffect } from 'react';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -47,6 +48,14 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
 
   const getExportableContentQuery = useExportableContentQuery();
   const exportableContent = getExportableContentQuery.data as ExportableContent;
+
+  useEffect(() => {
+    if (getExportableContentQuery.isSuccess && getExportableContentQuery.data) {
+      form.setValue('courses.ids', getExportableContentQuery.data.courses?.ids || []);
+      form.setValue('bundles.ids', getExportableContentQuery.data.bundles?.ids || []);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getExportableContentQuery.isSuccess]);
 
   const getLabelByFormDateKey = (key: string, showProBadge?: boolean) => {
     let label = '';

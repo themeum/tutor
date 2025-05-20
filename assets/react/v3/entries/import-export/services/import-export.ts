@@ -20,6 +20,7 @@ export interface ImportExportHistory {
 export interface ExportFormData {
   courses: {
     isChecked: boolean;
+    ids: number[];
     lessons: boolean;
     assignments: boolean;
     quizzes: boolean;
@@ -28,6 +29,7 @@ export interface ExportFormData {
   };
   bundles: {
     isChecked: boolean;
+    ids: number[];
     keepMediaFiles: boolean;
   };
   settings: boolean;
@@ -36,6 +38,7 @@ export interface ExportFormData {
 export const defaultExportFormData: ExportFormData = {
   courses: {
     isChecked: false,
+    ids: [],
     lessons: false,
     assignments: false,
     quizzes: false,
@@ -44,6 +47,7 @@ export const defaultExportFormData: ExportFormData = {
   },
   bundles: {
     isChecked: false,
+    ids: [],
     keepMediaFiles: false,
   },
   settings: false,
@@ -57,7 +61,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
   if (data.courses.isChecked) {
     payload.export_contents?.push({
       type: 'courses',
-      ids: [],
+      ids: data.courses.ids,
       sub_contents: [
         data.courses.lessons ? 'lesson' : undefined,
         data.courses.quizzes ? 'quiz' : undefined,
@@ -70,7 +74,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
   if (data.bundles.isChecked) {
     payload.export_contents?.push({
       type: 'bundles',
-      ids: [],
+      ids: data.bundles.ids,
       sub_contents: [],
     });
   }
