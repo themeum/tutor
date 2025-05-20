@@ -127,6 +127,8 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
+
+			add_filter( 'tutor_calculate_order_tax_amount', array( $this, 'filter_calculate_single_order_tax_amount' ), 10, 5 );
 		}
 	}
 
@@ -160,6 +162,40 @@ class OrderController {
 		} else {
 			return tutor_utils()->get_tutor_dashboard_url() . '/orders';
 		}
+	}
+
+	/**
+	 * For Single Order
+	 * Filter order tax calculation during create an order.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param int|float $tax_amount tax amount.
+	 * @param int|float $total_price total price.
+	 * @param int|float $tax_rate tax rate.
+	 * @param string    $order_type order type.
+	 * @param array     $items order items.
+	 *
+	 * @return int|float
+	 */
+	public function filter_calculate_single_order_tax_amount( $tax_amount, $total_price, $tax_rate, $order_type, $items ) {
+		if ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+			$tax_exempt_price = 0;
+			$tax_amount       = Tax::calculate_tax( $total_price, $tax_rate );
+
+			foreach ( $items as $item ) {
+				$tax_collection = CourseModel::is_tax_enabled_for_single_purchase( $item['item_id'] ?? 0 );
+				if ( ! $tax_collection ) {
+					$display_price     = $this->model->get_order_item_display_price( (object) $item );
+					$tax_exempt_price += $display_price;
+				}
+			}
+
+			$tax_exempt_amount = Tax::calculate_tax( $tax_exempt_price, $tax_rate );
+			$tax_amount        = $tax_amount - $tax_exempt_amount;
+		}
+
+		return $tax_amount;
 	}
 
 	/**
@@ -251,11 +287,7 @@ class OrderController {
 			 */
 			$tax_rate = Tax::get_user_tax_rate( $user_id );
 			if ( $tax_rate ) {
-				$tax_amount = Tax::calculate_tax( $order_data['total_price'], $tax_rate );
-				if ( isset( $args['tax_exempt_amount'] ) && $args['tax_exempt_amount'] > 0 ) {
-					$tax_amount = $tax_amount - $args['tax_exempt_amount'];
-					unset( $args['tax_exempt_amount'] );
-				}
+				$tax_amount = apply_filters( 'tutor_calculate_order_tax_amount', 0, $total_price, $tax_rate, $order_type, $items );
 
 				$order_data['tax_type']   = Tax::get_tax_type();
 				$order_data['tax_rate']   = $tax_rate;
