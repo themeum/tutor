@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 
 import {
   convertExportFormDataToPayload,
@@ -14,21 +15,52 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import ExportModal from './modals/ExportModal';
 
-// @TODO: need to integrate with the API
-
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
 
-  const exportContentsMutation = useExportContentsMutation();
+  const { data: exportContentResponse, mutateAsync, isError } = useExportContentsMutation();
 
   const handleImport = (data: ExportFormData) => {
     const payload = convertExportFormDataToPayload(data);
-    exportContentsMutation.mutate(payload);
+    mutateAsync(payload);
 
     updateModal<typeof ExportModal>('export-modal', {
       currentStep: 'progress',
     });
   };
+
+  useEffect(() => {
+    if (Number(exportContentResponse?.job_progress) < 100) {
+      mutateAsync({
+        job_id: exportContentResponse?.job_id,
+      });
+    }
+
+    if (Number(exportContentResponse?.job_progress === 100)) {
+      updateModal<typeof ExportModal>('export-modal', {
+        currentStep: 'success',
+        onDownload: () => {
+          const jsonFile = new Blob([JSON.stringify(exportContentResponse)], {
+            type: 'application/json',
+          });
+          const url = URL.createObjectURL(jsonFile);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'export.json';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        },
+      });
+    }
+
+    if (isError) {
+      updateModal<typeof ExportModal>('export-Modal', {
+        currentStep: 'error',
+      });
+    }
+  }, [exportContentResponse, isError]);
 
   return (
     <div css={styles.wrapper}>

@@ -55,7 +55,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
   };
 
   if (data.courses.isChecked) {
-    payload.export_contents.push({
+    payload.export_contents?.push({
       type: 'courses',
       ids: [],
       sub_contents: [
@@ -68,7 +68,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
   }
 
   if (data.bundles.isChecked) {
-    payload.export_contents.push({
+    payload.export_contents?.push({
       type: 'bundles',
       ids: [],
       sub_contents: [],
@@ -76,7 +76,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
   }
 
   if (data.settings) {
-    payload.export_contents.push({
+    payload.export_contents?.push({
       type: 'settings',
       ids: [],
       sub_contents: [],
@@ -131,19 +131,44 @@ interface ExportContentItem {
 }
 
 export interface ExportContentPayload {
-  export_contents: ExportContentItem[];
+  export_contents?: ExportContentItem[];
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-const exportContents = (payload: ExportContentPayload) => {
-  return wpAjaxInstance.post(
-    endpoints.EXPORT_CONTENTS,
-    payload.job_id
-      ? { job_id: payload.job_id }
-      : {
-          export_contents: payload.export_contents,
-        },
-  );
+interface ExportContentResponse {
+  job_id: string;
+  job_progress: number;
+  job_status: string;
+  job_requirements: {
+    type: string;
+    ids: string[];
+    sub_contents: string[];
+  }[];
+  exported_data: {
+    schema_version: string;
+    data: {
+      content_type: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: Record<string, any>;
+    }[];
+  };
+  completed_contents: {
+    courses: string[];
+    bundles: string[];
+    settings: boolean;
+  };
+}
+const exportContents = async (payload: ExportContentPayload) => {
+  return wpAjaxInstance
+    .post<ExportContentResponse>(
+      endpoints.EXPORT_CONTENTS,
+      payload.job_id
+        ? { job_id: payload.job_id }
+        : {
+            export_contents: payload.export_contents,
+          },
+    )
+    .then((res) => res.data);
 };
 
 export const useExportContentsMutation = () => {
