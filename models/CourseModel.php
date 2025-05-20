@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use TUTOR\Course;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -915,6 +916,10 @@ class CourseModel {
 	 * @return boolean
 	 */
 	public static function is_tax_enabled_for_single_purchase( $post_id ) {
+		if ( ! Tax::is_individual_control_enabled() ) {
+			return true;
+		}
+
 		$data = get_post_meta( $post_id, Course::TAX_ON_SINGLE_META, true );
 		return ( '1' === $data || '' === $data );
 	}
