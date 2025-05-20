@@ -6,6 +6,7 @@ import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import Logo from '@TutorShared/components/Logo';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
@@ -16,16 +17,17 @@ import {
   type ImportExportModalState,
   useExportableContentQuery,
 } from '@ImportExport/services/import-export';
-import Logo from '@TutorShared/components/Logo';
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { formatBytes } from '@TutorShared/utils/util';
 
 import exportInProgressImage from '@SharedImages/import-export/export-inprogress.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
-import { formatBytes } from '@TutorShared/utils/util';
+import ProBadge from '@TutorShared/atoms/ProBadge';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -33,6 +35,8 @@ interface ExportModalProps extends ModalProps {
   currentStep: ImportExportModalState;
   onDownload?: () => void;
 }
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
@@ -44,7 +48,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
   const getExportableContentQuery = useExportableContentQuery();
   const exportableContent = getExportableContentQuery.data as ExportableContent;
 
-  const getLabelByFormDateKey = (key: string) => {
+  const getLabelByFormDateKey = (key: string, showProBadge?: boolean) => {
     let label = '';
     const hasContent = key.includes('[');
 
@@ -61,12 +65,18 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
     const [labelText, count = ''] = (label || '').split('(') || [];
 
     return (
-      <span>
-        {labelText}
-        <Show when={count}>
-          <span css={{ color: colorTokens.text.hints }}>{`(${count}`}</span>
+      <div css={styles.checkboxLabel}>
+        <span>
+          {labelText}
+          <Show when={count}>
+            <span css={{ color: colorTokens.text.hints }}>{`(${count}`}</span>
+          </Show>
+        </span>
+
+        <Show when={showProBadge && !isTutorPro}>
+          <ProBadge content={__('Pro', 'tutor')} size="small" />
         </Show>
-      </span>
+      </div>
     );
   };
 
@@ -87,7 +97,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                     control={form.control}
                     name="courses.isChecked"
                     render={(controllerProps) => (
-                      <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('courses')} />
+                      <FormCheckbox
+                        {...controllerProps}
+                        disabled={!isTutorPro}
+                        label={getLabelByFormDateKey('courses', true)}
+                      />
                     )}
                   />
                   <Show when={isCoursesChecked}>
@@ -98,7 +112,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                             control={form.control}
                             name="courses.lessons"
                             render={(controllerProps) => (
-                              <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('courses[lesson]')} />
+                              <FormCheckbox
+                                disabled={!isTutorPro}
+                                {...controllerProps}
+                                label={getLabelByFormDateKey('courses[lesson]', true)}
+                              />
                             )}
                           />
                         </div>
@@ -107,7 +125,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                             control={form.control}
                             name="courses.quizzes"
                             render={(controllerProps) => (
-                              <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('courses[tutor_quiz]')} />
+                              <FormCheckbox
+                                {...controllerProps}
+                                disabled={!isTutorPro}
+                                label={getLabelByFormDateKey('courses[tutor_quiz]', true)}
+                              />
                             )}
                           />
                         </div>
@@ -118,7 +140,8 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                             render={(controllerProps) => (
                               <FormCheckbox
                                 {...controllerProps}
-                                label={getLabelByFormDateKey('courses[tutor_assignments]')}
+                                disabled={!isTutorPro}
+                                label={getLabelByFormDateKey('courses[tutor_assignments]', true)}
                               />
                             )}
                           />
@@ -130,7 +153,8 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                             render={(controllerProps) => (
                               <FormCheckbox
                                 {...controllerProps}
-                                label={getLabelByFormDateKey('courses[attachments]')}
+                                disabled={!isTutorPro}
+                                label={getLabelByFormDateKey('courses[attachments]', true)}
                               />
                             )}
                           />
@@ -142,7 +166,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                           control={form.control}
                           name="courses.keepMediaFiles"
                           render={(controllerProps) => (
-                            <FormCheckbox {...controllerProps} label={__('Keep media files', 'tutor')} />
+                            <FormCheckbox
+                              {...controllerProps}
+                              disabled={!isTutorPro}
+                              label={__('Keep media files', 'tutor')}
+                            />
                           )}
                         />
                       </div>
@@ -155,7 +183,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                     control={form.control}
                     name="bundles.isChecked"
                     render={(controllerProps) => (
-                      <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('course-bundle')} />
+                      <FormCheckbox
+                        {...controllerProps}
+                        disabled={!isTutorPro}
+                        label={getLabelByFormDateKey('course-bundle', true)}
+                      />
                     )}
                   />
                 </div>
@@ -254,6 +286,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload }: ExportModal
                 variant="primary"
                 size="small"
                 icon={<SVGIcon name="export" width={24} height={24} />}
+                disabled={!form.formState.isDirty}
                 onClick={form.handleSubmit((data) => {
                   onExport?.(data);
                 })}
@@ -321,6 +354,11 @@ const styles = {
         border-bottom: 1px solid ${colorTokens.stroke.divider};
       }
     `}
+  `,
+  checkboxLabel: css`
+    ${styleUtils.display.flex()}
+    align-items: center;
+    gap: ${spacing[4]};
   `,
   childCheckboxWrapper: css`
     margin-top: ${spacing[8]};

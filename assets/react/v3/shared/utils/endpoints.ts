@@ -123,6 +123,7 @@ const endpoints = {
 
   // IMPORT EXPORT
   GET_EXPORTABLE_CONTENT: 'tutor_pro_exportable_contents',
+  EXPORT_CONTENTS: 'tutor_pro_export',
 };
 
 export default endpoints;

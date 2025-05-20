@@ -1,7 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { type ErrorResponse } from 'react-router-dom';
+
+import { useToast } from '@TutorShared/atoms/Toast';
+
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type WPUser } from '@TutorShared/utils/types';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 export interface ImportExportHistory {
   title: string;
@@ -44,6 +49,43 @@ export const defaultExportFormData: ExportFormData = {
   settings: false,
 };
 
+export const convertExportFormDataToPayload = (data: ExportFormData): ExportContentPayload => {
+  const payload: ExportContentPayload = {
+    export_contents: [],
+  };
+
+  if (data.courses.isChecked) {
+    payload.export_contents.push({
+      type: 'courses',
+      ids: [],
+      sub_contents: [
+        data.courses.lessons ? 'lesson' : undefined,
+        data.courses.quizzes ? 'quiz' : undefined,
+        data.courses.assignments ? 'tutor_assignments' : undefined,
+        data.courses.attachments ? 'attachment' : undefined,
+      ].filter(Boolean) as ('lesson' | 'tutor_assignments' | 'quiz' | 'attachment')[],
+    });
+  }
+
+  if (data.bundles.isChecked) {
+    payload.export_contents.push({
+      type: 'bundles',
+      ids: [],
+      sub_contents: [],
+    });
+  }
+
+  if (data.settings) {
+    payload.export_contents.push({
+      type: 'settings',
+      ids: [],
+      sub_contents: [],
+    });
+  }
+
+  return payload;
+};
+
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
 export interface ExportableContent {
@@ -63,7 +105,7 @@ interface ExportableSectionWithItems extends ExportableSectionBase {
     tutor_assignments: string;
     attachments: string;
   };
-  ids: number[];
+  ids?: number[];
 }
 
 interface ExportableSectionWithoutItems extends ExportableSectionBase {
@@ -82,4 +124,38 @@ export const useExportableContentQuery = () => {
   });
 };
 
-// @TODO: need to integrate with the API
+interface ExportContentItem {
+  type: 'courses' | 'bundles' | 'settings';
+  ids?: number[];
+  sub_contents?: ('lesson' | 'tutor_assignments' | 'quiz' | 'attachment')[];
+}
+
+export interface ExportContentPayload {
+  export_contents: ExportContentItem[];
+  job_id?: string | number; // need to send back the job id to get the status
+}
+
+const exportContents = (payload: ExportContentPayload) => {
+  return wpAjaxInstance.post(
+    endpoints.EXPORT_CONTENTS,
+    payload.job_id
+      ? { job_id: payload.job_id }
+      : {
+          export_contents: payload.export_contents,
+        },
+  );
+};
+
+export const useExportContentsMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: exportContents,
+    mutationKey: ['ExportContents'],
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: convertToErrorMessage(error),
+        type: 'danger',
+      });
+    },
+  });
+};

@@ -1,7 +1,11 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import { type ExportFormData } from '@ImportExport/services/import-export';
+import {
+  convertExportFormDataToPayload,
+  useExportContentsMutation,
+  type ExportFormData,
+} from '@ImportExport/services/import-export';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
@@ -15,13 +19,17 @@ import ExportModal from './modals/ExportModal';
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
 
+  const exportContentsMutation = useExportContentsMutation();
+
   const handleImport = (data: ExportFormData) => {
-    console.log('Export data:', data);
+    const payload = convertExportFormDataToPayload(data);
+    exportContentsMutation.mutate(payload);
 
     updateModal<typeof ExportModal>('export-modal', {
-      currentStep: 'success',
+      currentStep: 'progress',
     });
   };
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.title}>{__('Export', 'tutor')}</div>
