@@ -8,7 +8,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import Logo from '@TutorShared/components/Logo';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
-import { type ModalProps } from '@TutorShared/components/modals/Modal';
+import { useModal, type ModalProps } from '@TutorShared/components/modals/Modal';
 
 import {
   defaultExportFormData,
@@ -29,6 +29,8 @@ import exportInProgressImage from '@SharedImages/import-export/export-inprogress
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import { useEffect } from 'react';
+import CourseCategorySelectModal from '@TutorShared/components/modals/CourseCategorySelectModal';
+import { type Course } from '@TutorShared/services/course';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -37,6 +39,11 @@ interface ExportModalProps extends ModalProps {
   onDownload?: (fileName: string) => void;
   progress: number;
   fileSize?: number;
+}
+
+interface BulkSelectionFormData {
+  courses: Course[];
+  bundles: Course[];
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -48,8 +55,32 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
     defaultValues: defaultExportFormData,
   });
 
+  const bulkSelectionForm = useFormWithGlobalError<BulkSelectionFormData>({
+    defaultValues: {
+      courses: [],
+      bundles: [],
+    },
+  });
+
+  const { showModal } = useModal();
   const getExportableContentQuery = useExportableContentQuery();
   const exportableContent = getExportableContentQuery.data as ExportableContent;
+
+  const resetBulkSelection = (type: 'courses' | 'bundles') => {
+    if (type === 'courses') {
+      bulkSelectionForm.reset({
+        courses: [],
+        bundles: bulkSelectionForm.getValues('bundles'),
+      });
+    }
+
+    if (type === 'bundles') {
+      bulkSelectionForm.reset({
+        courses: bulkSelectionForm.getValues('courses'),
+        bundles: [],
+      });
+    }
+  };
 
   useEffect(() => {
     if (getExportableContentQuery.isSuccess && getExportableContentQuery.data) {
@@ -61,7 +92,21 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
 
   const isCoursesChecked = form.watch('courses.isChecked');
 
-  const getLabelByFormDateKey = (key: string, showProBadge?: boolean) => {
+  const getLabelByFormDateKey = ({
+    key,
+    bulkSelection = {
+      courses: 0,
+      bundles: 0,
+    },
+    showProBadge = false,
+  }: {
+    key: string;
+    bulkSelection?: {
+      courses: number;
+      bundles: number;
+    };
+    showProBadge?: boolean;
+  }) => {
     let label = '';
     const hasContent = key.includes('[');
 
@@ -70,9 +115,17 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
       const parentKey = key.split('[')[0] as keyof ExportableContent;
       const contents = exportableContent[parentKey].contents as Record<string, string>;
       const contentLabel = contents[contentKey];
-      label = contentLabel;
+      label = bulkSelection?.courses > 0 ? contentLabel?.split('(')[0] : contentLabel;
     } else {
-      label = exportableContent?.[key as keyof ExportableContent]?.label;
+      if (
+        (key === 'courses' && bulkSelection?.courses > 0) ||
+        (key === 'course-bundle' && bulkSelection?.bundles > 0)
+      ) {
+        const count = key === 'courses' ? bulkSelection.courses : bulkSelection.bundles;
+        label = `${exportableContent?.[key as keyof ExportableContent]?.label.split('(')[0]}(${count})`;
+      } else {
+        label = exportableContent?.[key as keyof ExportableContent]?.label;
+      }
     }
 
     const [labelText, count = ''] = (label || '').split('(') || [];
@@ -98,7 +151,14 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
     onClose();
   };
 
-  const renderInitialState = () => {
+  const renderInitialState = ({
+    bulkSelection,
+  }: {
+    bulkSelection: {
+      courses: number;
+      bundles: number;
+    };
+  }) => {
     return (
       <div css={styles.wrapper}>
         <div css={styles.formWrapper}>
@@ -109,17 +169,58 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
             ) : (
               <>
                 <div css={styles.checkboxRow}>
-                  <Controller
-                    control={form.control}
-                    name="courses.isChecked"
-                    render={(controllerProps) => (
-                      <FormCheckbox
-                        {...controllerProps}
-                        disabled={!isTutorPro}
-                        label={getLabelByFormDateKey('courses', true)}
+                  <div css={styles.checkBoxWithButton}>
+                    <div css={styles.checkBoxWithAction}>
+                      <Controller
+                        control={form.control}
+                        name="courses.isChecked"
+                        render={(controllerProps) => (
+                          <FormCheckbox
+                            {...controllerProps}
+                            disabled={!isTutorPro}
+                            label={getLabelByFormDateKey({
+                              key: 'courses',
+                              bulkSelection,
+                              showProBadge: true,
+                            })}
+                          />
+                        )}
                       />
-                    )}
-                  />
+                      <Show when={bulkSelection.courses > 0}>
+                        <Button
+                          variant="danger"
+                          size="small"
+                          onClick={() => resetBulkSelection('courses')}
+                          icon={<SVGIcon name="cross" width={16} height={16} />}
+                        >
+                          {__('Clear Selection', 'tutor')}
+                        </Button>
+                      </Show>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="small"
+                      onClick={() => {
+                        showModal({
+                          component: CourseCategorySelectModal,
+                          props: {
+                            title: __('Select Courses', 'tutor'),
+                            type: 'courses',
+                            form: bulkSelectionForm,
+                            onSelect: (courses) => {
+                              if (courses.length) {
+                                form.setValue('courses.isChecked', true, {
+                                  shouldDirty: true,
+                                });
+                              }
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {__('Select Courses', 'tutor')}
+                    </Button>
+                  </div>
                   <Show when={isCoursesChecked}>
                     <div css={styles.childCheckboxWrapper}>
                       <div css={styles.contentCheckboxWrapper}>
@@ -131,7 +232,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                               <FormCheckbox
                                 disabled={!isTutorPro}
                                 {...controllerProps}
-                                label={getLabelByFormDateKey('courses[lesson]', true)}
+                                label={getLabelByFormDateKey({
+                                  key: 'courses[lesson]',
+                                  bulkSelection,
+                                  showProBadge: true,
+                                })}
                               />
                             )}
                           />
@@ -144,7 +249,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                               <FormCheckbox
                                 {...controllerProps}
                                 disabled={!isTutorPro}
-                                label={getLabelByFormDateKey('courses[tutor_quiz]', true)}
+                                label={getLabelByFormDateKey({
+                                  key: 'courses[tutor_quiz]',
+                                  bulkSelection,
+                                  showProBadge: true,
+                                })}
                               />
                             )}
                           />
@@ -157,7 +266,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                               <FormCheckbox
                                 {...controllerProps}
                                 disabled={!isTutorPro}
-                                label={getLabelByFormDateKey('courses[tutor_assignments]', true)}
+                                label={getLabelByFormDateKey({
+                                  key: 'courses[tutor_assignments]',
+                                  bulkSelection,
+                                  showProBadge: true,
+                                })}
                               />
                             )}
                           />
@@ -170,7 +283,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                               <FormCheckbox
                                 {...controllerProps}
                                 disabled={!isTutorPro}
-                                label={getLabelByFormDateKey('courses[attachments]', true)}
+                                label={getLabelByFormDateKey({
+                                  key: 'courses[attachments]',
+                                  bulkSelection,
+                                  showProBadge: true,
+                                })}
                               />
                             )}
                           />
@@ -195,17 +312,59 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                 </div>
 
                 <div css={styles.checkboxRow}>
-                  <Controller
-                    control={form.control}
-                    name="bundles.isChecked"
-                    render={(controllerProps) => (
-                      <FormCheckbox
-                        {...controllerProps}
-                        disabled={!isTutorPro}
-                        label={getLabelByFormDateKey('course-bundle', true)}
+                  <div css={styles.checkBoxWithButton}>
+                    <div css={styles.checkBoxWithAction}>
+                      <Controller
+                        control={form.control}
+                        name="bundles.isChecked"
+                        render={(controllerProps) => (
+                          <FormCheckbox
+                            {...controllerProps}
+                            disabled={!isTutorPro}
+                            label={getLabelByFormDateKey({
+                              key: 'course-bundle',
+                              bulkSelection,
+                              showProBadge: true,
+                            })}
+                          />
+                        )}
                       />
-                    )}
-                  />
+                      <Show when={bulkSelection.bundles > 0}>
+                        <Button
+                          variant="danger"
+                          size="small"
+                          onClick={() => resetBulkSelection('bundles')}
+                          icon={<SVGIcon name="cross" width={16} height={16} />}
+                        >
+                          {__('Clear Selection', 'tutor')}
+                        </Button>
+                      </Show>
+                    </div>
+
+                    <Button
+                      variant="secondary"
+                      size="small"
+                      onClick={() => {
+                        showModal({
+                          component: CourseCategorySelectModal,
+                          props: {
+                            title: __('Select Bundles', 'tutor'),
+                            type: 'bundles',
+                            form: bulkSelectionForm,
+                            onSelect: (bundles) => {
+                              if (bundles.length) {
+                                form.setValue('bundles.isChecked', true, {
+                                  shouldDirty: true,
+                                });
+                              }
+                            },
+                          },
+                        });
+                      }}
+                    >
+                      {__('Select Bundles', 'tutor')}
+                    </Button>
+                  </div>
                 </div>
 
                 <div css={styles.checkboxRow}>
@@ -213,7 +372,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                     control={form.control}
                     name="settings"
                     render={(controllerProps) => (
-                      <FormCheckbox {...controllerProps} label={getLabelByFormDateKey('settings')} />
+                      <FormCheckbox {...controllerProps} label={getLabelByFormDateKey({ key: 'settings' })} />
                     )}
                   />
                 </div>
@@ -275,7 +434,12 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
   };
 
   const renderModalContent = {
-    initial: renderInitialState(),
+    initial: renderInitialState({
+      bulkSelection: {
+        courses: bulkSelectionForm.getValues('courses').length,
+        bundles: bulkSelectionForm.getValues('bundles').length,
+      },
+    }),
     progress: renderProgressState(),
     success: renderSuccessState(),
     error: <div>{__('Export failed', 'tutor')}</div>,
@@ -304,7 +468,18 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                 icon={<SVGIcon name="export" width={24} height={24} />}
                 disabled={!form.formState.isDirty}
                 onClick={form.handleSubmit((data) => {
-                  onExport?.(data);
+                  const { courses, bundles } = bulkSelectionForm.getValues();
+                  onExport?.({
+                    ...data,
+                    courses: {
+                      ...data.courses,
+                      ids: courses.length ? courses.map((course) => course.id) : data.courses.ids,
+                    },
+                    bundles: {
+                      ...data.bundles,
+                      ids: bundles.length ? bundles.map((bundle) => bundle.id) : data.bundles.ids,
+                    },
+                  });
                 })}
               >
                 {__('Export', 'tutor')}
@@ -375,6 +550,24 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[4]};
+  `,
+  checkBoxWithButton: css`
+    ${styleUtils.display.flex()}
+    justify-content: space-between;
+    align-items: center;
+
+    button {
+      flex-shrink: 0;
+    }
+  `,
+  checkBoxWithAction: css`
+    ${styleUtils.display.flex()}
+    align-items: center;
+    gap: ${spacing[8]};
+
+    button {
+      flex-shrink: 0;
+    }
   `,
   childCheckboxWrapper: css`
     margin-top: ${spacing[8]};

@@ -18,7 +18,7 @@ import ExportModal from './modals/ExportModal';
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
 
-  const { data: exportContentResponse, mutateAsync, isError, isPending } = useExportContentsMutation();
+  const { data: exportContentResponse, mutateAsync, error, isPending, isError } = useExportContentsMutation();
 
   const handleImport = (data: ExportFormData) => {
     const payload = convertExportFormDataToPayload(data);
@@ -46,6 +46,11 @@ const Export = () => {
 
   useEffect(() => {
     const progress = Number(exportContentResponse?.job_progress);
+    if (isError) {
+      closeModal();
+      return;
+    }
+
     if (progress < 100) {
       mutateAsync({
         job_id: exportContentResponse?.job_id,
@@ -79,14 +84,8 @@ const Export = () => {
         },
       });
     }
-
-    if (isError) {
-      updateModal<typeof ExportModal>('export-Modal', {
-        currentStep: 'error',
-      });
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exportContentResponse, isError]);
+  }, [exportContentResponse, error, isError]);
 
   return (
     <div css={styles.wrapper}>

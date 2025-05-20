@@ -15,9 +15,18 @@ interface CourseCategorySelectModalProps extends ModalProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any>;
   type: 'bundles' | 'courses' | 'categories';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onSelect?: (items: any[]) => void;
 }
 
-function CourseCategorySelectModal({ title, closeModal, actions, form, type }: CourseCategorySelectModalProps) {
+function CourseCategorySelectModal({
+  title,
+  closeModal,
+  actions,
+  form,
+  type,
+  onSelect,
+}: CourseCategorySelectModalProps) {
   const _form = useFormWithGlobalError({
     defaultValues: form.getValues(),
   });
@@ -28,6 +37,7 @@ function CourseCategorySelectModal({ title, closeModal, actions, form, type }: C
     form.setValue(type, selectedItems, {
       shouldDirty: true,
     });
+    onSelect?.(selectedItems);
     closeModal({ action: 'CONFIRM' });
   }
 
