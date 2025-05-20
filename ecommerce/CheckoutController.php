@@ -284,7 +284,7 @@ class CheckoutController {
 					'sale_price'        => $sale_price ? $sale_price : null,
 					'is_coupon_applied' => false,
 					'coupon_code'       => null,
-					'tax_exempt'        => CourseModel::is_tax_enabled_for_single_purchase( $item_id ),
+					'tax_collection'    => CourseModel::is_tax_enabled_for_single_purchase( $item_id ),
 				);
 			}
 
@@ -484,7 +484,7 @@ class CheckoutController {
 				$subtotal_price += $additional_item['regular_price'] ?? 0;
 			}
 
-			if ( isset( $item['tax_exempt'] ) && false === $item['tax_exempt'] ) {
+			if ( isset( $item['tax_collection'] ) && false === $item['tax_collection'] ) {
 				$tax_exempt_price += $display_price;
 				$tax_exempt_price += array_sum( array_column( $additional_items, 'regular_price' ) );
 			}
@@ -517,6 +517,7 @@ class CheckoutController {
 		$response['sale_discount']           = $sale_discount;
 		$response['tax_rate']                = $tax_rate;
 		$response['total_price_without_tax'] = $total_price_without_tax;
+		$response['tax_exempt_amount']       = $tax_exempt_amount;
 		$response['tax_amount']              = $tax_amount;
 		$response['total_price']             = $total_price;
 		$response['order_type']              = $order_type;
@@ -623,9 +624,10 @@ class CheckoutController {
 		$args = apply_filters(
 			'tutor_order_create_args',
 			array(
-				'payment_method'  => $payment_method,
-				'coupon_amount'   => $checkout_data->coupon_discount,
-				'discount_amount' => $checkout_data->sale_discount,
+				'payment_method'    => $payment_method,
+				'coupon_amount'     => $checkout_data->coupon_discount,
+				'discount_amount'   => $checkout_data->sale_discount,
+				'tax_exempt_amount' => $checkout_data->tax_exempt_amount,
 			)
 		);
 
