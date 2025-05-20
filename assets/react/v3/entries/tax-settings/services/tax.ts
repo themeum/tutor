@@ -44,6 +44,7 @@ export enum TaxCollectionProcess {
 }
 
 export interface TaxSettings {
+  enable_tax: boolean;
   rates: TaxRate[];
   apply_tax_on: 'product' | 'checkout';
   active_country?: string | null;

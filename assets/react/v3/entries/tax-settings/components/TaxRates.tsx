@@ -14,6 +14,7 @@ import Table, { type Column } from '@TutorShared/molecules/Table';
 import { getCountryByCode, getStateByCode, isEuropeanUnion } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import { typography } from '@TutorShared/config/typography';
 import Card from '../molecules/Card';
 import type { TaxSettings } from '../services/tax';
@@ -297,6 +298,20 @@ export default function TaxRates() {
     <EuropeanUnionTax />
   ) : (
     <>
+      <Card>
+        <div css={styleUtils.cardInnerSection}>
+          <div css={styles.header}>
+            <div css={typography.body('medium')}>{__('Tax Rates and Calculations', 'tutor')}</div>
+          </div>
+          <Controller
+            control={form.control}
+            name="enable_tax"
+            render={(controllerProps) => (
+              <FormCheckbox {...controllerProps} label={__('Enable tax rates and calculations', 'tutor')} />
+            )}
+          />
+        </div>
+      </Card>
       <Card>
         <div css={styleUtils.cardInnerSection}>
           <div css={styles.header}>
