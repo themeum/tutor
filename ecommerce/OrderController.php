@@ -243,7 +243,7 @@ class OrderController {
 			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
 		}
 
-		$calculate_tax = apply_filters( 'tutor_calculate_order_tax', true, $args );
+		$calculate_tax = apply_filters( 'tutor_calculate_order_tax', Tax::should_calculate_tax(), $args );
 
 		if ( $calculate_tax ) {
 			/**
