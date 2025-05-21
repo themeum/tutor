@@ -208,6 +208,13 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                             title: __('Select Courses', 'tutor'),
                             addedCourses: bulkSelectionForm.getValues('courses'),
                             form: bulkSelectionForm,
+                            onSelect: (courses) => {
+                              if (courses.length) {
+                                form.setValue('courses.isChecked', true, {
+                                  shouldDirty: true,
+                                });
+                              }
+                            },
                           },
                         });
                       }}
