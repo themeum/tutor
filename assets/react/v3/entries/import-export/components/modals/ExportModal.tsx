@@ -85,7 +85,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
   useEffect(() => {
     if (getExportableContentQuery.isSuccess && getExportableContentQuery.data) {
       form.setValue('courses.ids', getExportableContentQuery.data.courses?.ids || []);
-      form.setValue('bundles.ids', getExportableContentQuery.data.bundles?.ids || []);
+      form.setValue('bundles.ids', getExportableContentQuery.data['course-bundle']?.ids || []);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getExportableContentQuery.isSuccess]);

@@ -73,7 +73,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
 
   if (data.bundles.isChecked) {
     payload.export_contents?.push({
-      type: 'bundles',
+      type: 'course-bundle',
       ids: data.bundles.ids,
       sub_contents: [],
     });
@@ -94,7 +94,7 @@ export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error
 
 export interface ExportableContent {
   courses: ExportableSectionWithItems;
-  bundles: ExportableSectionWithoutItems;
+  'course-bundle': ExportableSectionWithoutItems;
   settings: ExportableSectionWithoutItems;
 }
 
@@ -129,7 +129,7 @@ export const useExportableContentQuery = () => {
 };
 
 interface ExportContentItem {
-  type: 'courses' | 'bundles' | 'settings';
+  type: 'courses' | 'course-bundle' | 'settings';
   ids?: number[];
   sub_contents?: ('lesson' | 'tutor_assignments' | 'quiz' | 'attachment')[];
 }
