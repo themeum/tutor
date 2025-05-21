@@ -60,7 +60,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
   };
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={680}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={620}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <div css={styles.formBody}>
           {manualMethodFields.map((field, index) => {
@@ -113,7 +113,13 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                   name={`fields.${index}.value`}
                   control={form.control}
                   rules={{ ...requiredRule() }}
-                  render={(controllerProps) => <FormWPEditor {...controllerProps} label={field.label} hideMediaButtons hideQuickTags />}
+                  render={(controllerProps) => (
+                    <FormWPEditor
+                      {...controllerProps}
+                      label={field.label}
+                      toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
+                    />
+                  )}
                 />
                 <div css={styles.inputHint}>{field.hint}</div>
               </div>

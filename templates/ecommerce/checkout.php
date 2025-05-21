@@ -107,7 +107,7 @@ $is_checkout_page = true;
 										$is_manual = $gateway['is_manual'] ?? false;
 										if ( $is_manual ) {
 											?>
-											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ?? '' ); ?>">
+											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( base64_encode( $gateway['payment_instructions'] ?? '' ) ); ?>">
 												<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input"  required>
 												<div class="tutor-payment-item-content">
 												<?php if ( ! empty( $icon ) ) : ?>
