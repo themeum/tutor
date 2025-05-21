@@ -31,6 +31,7 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import CourseCategorySelectModal from '@TutorShared/components/modals/CourseCategorySelectModal';
 import { type Course } from '@TutorShared/services/course';
 import { useEffect } from 'react';
+import CourseListModal from './CourseListModal';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -202,18 +203,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                       size="small"
                       onClick={() => {
                         showModal({
-                          component: CourseCategorySelectModal,
+                          component: CourseListModal,
                           props: {
                             title: __('Select Courses', 'tutor'),
-                            type: 'courses',
+                            addedCourses: bulkSelectionForm.getValues('courses'),
                             form: bulkSelectionForm,
-                            onSelect: (courses) => {
-                              if (courses.length) {
-                                form.setValue('courses.isChecked', true, {
-                                  shouldDirty: true,
-                                });
-                              }
-                            },
                           },
                         });
                       }}
