@@ -115,6 +115,28 @@ class Tax {
 	}
 
 	/**
+	 * Check individual tax control is enabled or not.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_individual_control_enabled() {
+		return self::get_setting( 'enable_individual_tax_control', false );
+	}
+
+	/**
+	 * Should calculate tax or not.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @return boolean
+	 */
+	public static function should_calculate_tax() {
+		return self::get_setting( 'enable_tax', true ) && self::is_tax_configured();
+	}
+
+	/**
 	 * Calculate tax.
 	 *
 	 * @since 3.0.0
