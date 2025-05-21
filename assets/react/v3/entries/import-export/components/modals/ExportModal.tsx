@@ -12,10 +12,10 @@ import { useModal, type ModalProps } from '@TutorShared/components/modals/Modal'
 
 import {
   defaultExportFormData,
+  useExportableContentQuery,
   type ExportableContent,
   type ExportFormData,
   type ImportExportModalState,
-  useExportableContentQuery,
 } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -28,9 +28,10 @@ import { formatBytes } from '@TutorShared/utils/util';
 import exportInProgressImage from '@SharedImages/import-export/export-inprogress.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import ProBadge from '@TutorShared/atoms/ProBadge';
-import { useEffect } from 'react';
 import CourseCategorySelectModal from '@TutorShared/components/modals/CourseCategorySelectModal';
 import { type Course } from '@TutorShared/services/course';
+import { useEffect } from 'react';
+import CourseListModal from './CourseListModal';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -202,18 +203,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                       size="small"
                       onClick={() => {
                         showModal({
-                          component: CourseCategorySelectModal,
+                          component: CourseListModal,
                           props: {
                             title: __('Select Courses', 'tutor'),
-                            type: 'courses',
+                            addedCourses: bulkSelectionForm.getValues('courses'),
                             form: bulkSelectionForm,
-                            onSelect: (courses) => {
-                              if (courses.length) {
-                                form.setValue('courses.isChecked', true, {
-                                  shouldDirty: true,
-                                });
-                              }
-                            },
                           },
                         });
                       }}
@@ -513,7 +507,8 @@ const styles = {
     color: ${colorTokens.text.brand};
   `,
   wrapper: css`
-    min-height: 760px;
+    height: calc(100vh - 140px);
+    max-height: 680px;
     padding: ${spacing[32]} 107px ${spacing[32]} 107px;
     background-color: ${colorTokens.surface.courseBuilder};
     border-top: 1px solid ${colorTokens.stroke.divider};

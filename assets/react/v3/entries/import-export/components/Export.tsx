@@ -139,6 +139,7 @@ const styles = {
   export: css`
     ${styleUtils.display.flex()}
     justify-content: space-between;
+    gap: ${spacing[8]};
     align-items: center;
     padding: ${spacing[24]};
     border: 1px solid ${colorTokens.stroke.divider};

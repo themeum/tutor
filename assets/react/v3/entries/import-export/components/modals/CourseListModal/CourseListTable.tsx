@@ -1,54 +1,58 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import type { UseFormReturn } from 'react-hook-form';
+import { __ } from '@wordpress/i18n';
+import { type UseFormReturn } from 'react-hook-form';
 
+import SearchField from '@ImportExport/components/modals/CourseListModal/SearchField';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import Paginator from '@TutorShared/molecules/Paginator';
-import Table, { type Column } from '@TutorShared/molecules/Table';
-
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
-import { type Course, useCourseCategoryQuery } from '@TutorShared/services/course_category';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
+import { type Course, useCourseListQuery } from '@TutorShared/services/course';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
-import SearchField from './SearchField';
 
 interface CourseListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<any>;
-  type: 'bundles' | 'courses';
+  form: UseFormReturn<{ courses: Course[] }, any, undefined>;
 }
 
-const CourseListTable = ({ type, form }: CourseListTableProps) => {
-  const selectedCourses: Course[] = form.watch(type) || [];
+const CourseListTable = ({ form }: CourseListTableProps) => {
+  const selectedCourses = form.watch('courses') || [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
-  const courseListQuery = useCourseCategoryQuery({
-    applies_to: type === 'courses' ? 'specific_courses' : 'specific_bundles',
-    offset,
-    limit: itemsPerPage,
-    filter: pageInfo.filter,
+
+  const courseListQuery = useCourseListQuery({
+    params: {
+      offset,
+      limit: itemsPerPage,
+      filter: pageInfo.filter,
+      exclude: [],
+    },
+    isEnabled: true,
   });
+
   const fetchedCourses = (courseListQuery.data?.results ?? []) as Course[];
 
-  function toggleSelection(isChecked = false) {
+  const toggleSelection = (isChecked = false) => {
     const selectedCourseIds = selectedCourses.map((course) => course.id);
     const fetchedCourseIds = fetchedCourses.map((course) => course.id);
 
     if (isChecked) {
       const newCourses = fetchedCourses.filter((course) => !selectedCourseIds.includes(course.id));
-      form.setValue(type, [...selectedCourses, ...newCourses]);
+      form.setValue('courses', [...selectedCourses, ...newCourses]);
       return;
     }
 
     const newCourses = selectedCourses.filter((course) => !fetchedCourseIds.includes(course.id));
-    form.setValue(type, newCourses);
-  }
+    form.setValue('courses', newCourses);
+  };
 
-  function handleAllIsChecked() {
+  const handleAllIsChecked = () => {
     return fetchedCourses.every((course) => selectedCourses.map((course) => course.id).includes(course.id));
-  }
+  };
 
   const columns: Column<Course>[] = [
     {
@@ -56,7 +60,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
         <Checkbox
           onChange={toggleSelection}
           checked={courseListQuery.isLoading || courseListQuery.isRefetching ? false : handleAllIsChecked()}
-          label={type === 'courses' ? __('Courses', 'tutor') : __('Bundles', 'tutor')}
+          label={__('Name', 'tutor-pro')}
           labelCss={styles.checkboxLabel}
         />
       ) : (
@@ -71,35 +75,17 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
                 const isNewItem = filteredItems?.length === selectedCourses.length;
 
                 if (isNewItem) {
-                  form.setValue(type, [...filteredItems, item]);
+                  form.setValue('courses', [...filteredItems, item]);
                 } else {
-                  form.setValue(type, filteredItems);
+                  form.setValue('courses', filteredItems);
                 }
               }}
               checked={selectedCourses.map((course) => course.id).includes(item.id)}
             />
-            <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('course item', 'tutor')} />
-            <div css={styles.courseItem}>
-              <div>{item.title}</div>
-              <p>{item.author}</p>
+            <div css={styles.courseItemWrapper}>
+              <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('Course item', 'tutor-pro')} />
+              <div css={styles.title}>{item.title}</div>
             </div>
-          </div>
-        );
-      },
-    },
-    {
-      Header: __('Price', 'tutor'),
-      Cell: (item) => {
-        return (
-          <div css={styles.price}>
-            {item.plan_start_price ? (
-              <span css={styles.startingFrom}>{sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)}</span>
-            ) : (
-              <>
-                <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
-                {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
-              </>
-            )}
           </div>
         );
       },
@@ -111,7 +97,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
   }
 
   if (!courseListQuery.data) {
-    return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor')}</div>;
+    return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor-pro')}</div>;
   }
 
   return (
@@ -144,6 +130,12 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
 export default CourseListTable;
 
 const styles = {
+  tableLabel: css`
+    text-align: left;
+  `,
+  tablePriceLabel: css`
+    text-align: right;
+  `,
   tableActions: css`
     padding: ${spacing[20]};
   `,
@@ -151,17 +143,55 @@ const styles = {
     max-height: calc(100vh - 350px);
     overflow: auto;
   `,
-  paginatorWrapper: css`
-    margin: ${spacing[20]} ${spacing[16]};
-  `,
   checkboxWrapper: css`
     display: flex;
     align-items: center;
     gap: ${spacing[12]};
   `,
-  courseItem: css`
-    ${typography.caption()};
+  checkboxLabel: css`
+    ${typography.body()};
+    color: ${colorTokens.text.primary};
+  `,
+  paginatorWrapper: css`
+    margin: ${spacing[20]} ${spacing[16]};
+  `,
+  courseItemWrapper: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
+  bundleBadge: css`
+    ${typography.tiny()};
+    display: inline-block;
+    padding: 0px ${spacing[8]};
+    background-color: #9342e7;
+    color: ${colorTokens.text.white};
+    border-radius: ${borderRadius[40]};
+  `,
+  subscriptionBadge: css`
+    ${typography.tiny()};
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0px ${spacing[6]} 0px ${spacing[4]};
+    background-color: ${colorTokens.color.warning[90]};
+    color: ${colorTokens.text.white};
+    border-radius: ${borderRadius[40]};
+  `,
+  selectedBadge: css`
     margin-left: ${spacing[4]};
+    ${typography.tiny()};
+    padding: ${spacing[4]} ${spacing[8]};
+    background-color: ${colorTokens.background.disable};
+    color: ${colorTokens.text.title};
+    border-radius: ${borderRadius[2]};
+    white-space: nowrap;
+  `,
+  title: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.primary};
+    ${styleUtils.text.ellipsis(2)};
+    text-wrap: pretty;
   `,
   thumbnail: css`
     width: 76px;
@@ -170,14 +200,21 @@ const styles = {
     object-fit: cover;
     object-position: center;
   `,
-  checkboxLabel: css`
-    ${typography.body()};
-    color: ${colorTokens.text.primary};
+  priceWrapper: css`
+    min-width: 200px;
+    text-align: right;
+    [data-button] {
+      display: none;
+    }
   `,
   price: css`
+    ${typography.caption()};
     display: flex;
     gap: ${spacing[4]};
     justify-content: end;
+  `,
+  startingFrom: css`
+    color: ${colorTokens.text.hints};
   `,
   discountPrice: css`
     text-decoration: line-through;
@@ -188,8 +225,5 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
-  `,
-  startingFrom: css`
-    color: ${colorTokens.text.hints};
   `,
 };
