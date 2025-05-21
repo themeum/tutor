@@ -14,10 +14,9 @@ interface CourseListModalProps extends ModalProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any, any, undefined>;
   addedCourses: Course[];
-  onSelect: (course: Course[]) => void;
 }
 
-function CourseListModal({ title, closeModal, actions, form, addedCourses, onSelect }: CourseListModalProps) {
+function CourseListModal({ title, closeModal, actions, form, addedCourses }: CourseListModalProps) {
   const _form = useFormWithGlobalError({
     defaultValues: {
       courses: addedCourses,
@@ -30,7 +29,6 @@ function CourseListModal({ title, closeModal, actions, form, addedCourses, onSel
     const selectedCourses = _form.getValues('courses');
     form.setValue('courses', [...selectedCourses]);
     _form.setValue('courses', []);
-    onSelect(selectedCourses);
     closeModal({ action: 'CONFIRM' });
   };
 

@@ -68,6 +68,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
         data.courses.assignments ? 'tutor_assignments' : undefined,
         data.courses.attachments ? 'attachment' : undefined,
       ].filter(Boolean) as ('lesson' | 'tutor_assignments' | 'quiz' | 'attachment')[],
+      keep_media_files: data.courses.keepMediaFiles,
     });
   }
 
@@ -76,6 +77,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
       type: 'course-bundle',
       ids: data.bundles.ids,
       sub_contents: [],
+      keep_media_files: data.bundles.keepMediaFiles,
     });
   }
 
@@ -132,6 +134,7 @@ interface ExportContentItem {
   type: 'courses' | 'course-bundle' | 'settings';
   ids?: number[];
   sub_contents?: ('lesson' | 'tutor_assignments' | 'quiz' | 'attachment')[];
+  keep_media_files?: boolean;
 }
 
 export interface ExportContentPayload {

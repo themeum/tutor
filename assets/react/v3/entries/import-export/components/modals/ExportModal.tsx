@@ -67,6 +67,9 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
   const getExportableContentQuery = useExportableContentQuery();
   const exportableContent = getExportableContentQuery.data as ExportableContent;
 
+  const isCoursesChecked = form.watch('courses.isChecked');
+  const isBundlesChecked = form.watch('bundles.isChecked');
+
   const resetBulkSelection = (type: 'courses' | 'bundles') => {
     if (type === 'courses') {
       bulkSelectionForm.reset({
@@ -90,8 +93,6 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getExportableContentQuery.isSuccess]);
-
-  const isCoursesChecked = form.watch('courses.isChecked');
 
   const getLabelByFormDateKey = ({
     key,
@@ -194,33 +195,31 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                           onClick={() => resetBulkSelection('courses')}
                           icon={<SVGIcon name="cross" width={16} height={16} />}
                         >
-                          {__('Clear Selection', 'tutor')}
+                          {__('Clear', 'tutor')}
                         </Button>
                       </Show>
                     </div>
-                    <Button
-                      variant="secondary"
-                      size="small"
-                      onClick={() => {
-                        showModal({
-                          component: CourseListModal,
-                          props: {
-                            title: __('Select Courses', 'tutor'),
-                            addedCourses: bulkSelectionForm.getValues('courses'),
-                            form: bulkSelectionForm,
-                            onSelect: (courses) => {
-                              if (courses.length) {
-                                form.setValue('courses.isChecked', true, {
-                                  shouldDirty: true,
-                                });
-                              }
+                    <Show when={isCoursesChecked}>
+                      <Button
+                        variant="secondary"
+                        buttonCss={styles.selectButton}
+                        size="small"
+                        onClick={() => {
+                          showModal({
+                            component: CourseListModal,
+                            props: {
+                              title: __('Select Courses', 'tutor'),
+                              addedCourses: bulkSelectionForm.getValues('courses'),
+                              form: bulkSelectionForm,
                             },
-                          },
-                        });
-                      }}
-                    >
-                      {__('Select Courses', 'tutor')}
-                    </Button>
+                          });
+                        }}
+                      >
+                        {bulkSelection.courses > 0
+                          ? __('Edit Selected Courses', 'tutor')
+                          : __('Select Specific Courses', 'tutor')}
+                      </Button>
+                    </Show>
                   </div>
                   <Show when={isCoursesChecked}>
                     <div css={styles.childCheckboxWrapper}>
@@ -337,35 +336,49 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                           onClick={() => resetBulkSelection('bundles')}
                           icon={<SVGIcon name="cross" width={16} height={16} />}
                         >
-                          {__('Clear Selection', 'tutor')}
+                          {__('Clear', 'tutor')}
                         </Button>
                       </Show>
                     </div>
 
-                    <Button
-                      variant="secondary"
-                      size="small"
-                      onClick={() => {
-                        showModal({
-                          component: CourseCategorySelectModal,
-                          props: {
-                            title: __('Select Bundles', 'tutor'),
-                            type: 'bundles',
-                            form: bulkSelectionForm,
-                            onSelect: (bundles) => {
-                              if (bundles.length) {
-                                form.setValue('bundles.isChecked', true, {
-                                  shouldDirty: true,
-                                });
-                              }
+                    <Show when={isBundlesChecked}>
+                      <Button
+                        variant="secondary"
+                        buttonCss={styles.selectButton}
+                        size="small"
+                        onClick={() => {
+                          showModal({
+                            component: CourseCategorySelectModal,
+                            props: {
+                              title: __('Select Bundles', 'tutor'),
+                              type: 'bundles',
+                              form: bulkSelectionForm,
                             },
-                          },
-                        });
-                      }}
-                    >
-                      {__('Select Bundles', 'tutor')}
-                    </Button>
+                          });
+                        }}
+                      >
+                        {__('Select Specific Bundles', 'tutor')}
+                      </Button>
+                    </Show>
                   </div>
+
+                  <Show when={isBundlesChecked}>
+                    <div css={styles.childCheckboxWrapper}>
+                      <div css={styles.contentCheckboxFooter}>
+                        <Controller
+                          control={form.control}
+                          name="bundles.keepMediaFiles"
+                          render={(controllerProps) => (
+                            <FormCheckbox
+                              {...controllerProps}
+                              disabled={!isTutorPro}
+                              label={__('Keep media files', 'tutor')}
+                            />
+                          )}
+                        />
+                      </div>
+                    </div>
+                  </Show>
                 </div>
 
                 <div css={styles.checkboxRow}>
@@ -585,6 +598,10 @@ const styles = {
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[16]};
     border-top: 1px solid ${colorTokens.stroke.divider};
     background-color: ${colorTokens.primary[30]};
+
+    &:only-of-type {
+      border-top: none;
+    }
   `,
   progress: css`
     width: 100%;
@@ -712,5 +729,8 @@ const styles = {
   fileSize: css`
     ${typography.tiny()};
     color: ${colorTokens.text.hints};
+  `,
+  selectButton: css`
+    background-color: ${colorTokens.background.white};
   `,
 };
