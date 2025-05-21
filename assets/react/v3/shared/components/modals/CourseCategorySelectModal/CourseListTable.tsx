@@ -164,7 +164,7 @@ const styles = {
     margin-left: ${spacing[4]};
   `,
   thumbnail: css`
-    width: 48px;
+    width: 76px;
     height: 48px;
     border-radius: ${borderRadius[4]};
     object-fit: cover;
