@@ -299,7 +299,7 @@ export default function TaxRates() {
   ) : (
     <>
       <Card>
-        <div css={styleUtils.cardInnerSection}>
+        <div css={styles.enableTaxWrapper}>
           <div css={styles.header}>
             <div css={typography.body('medium')}>{__('Tax Rates and Calculations', 'tutor')}</div>
           </div>
@@ -312,72 +312,74 @@ export default function TaxRates() {
           />
         </div>
       </Card>
-      <Card>
-        <div css={styleUtils.cardInnerSection}>
-          <div css={styles.header}>
-            <div css={typography.body('medium')}>{__('Tax Rates', 'tutor')}</div>
-            <div css={styles.subtitle}>
-              {
-                // prettier-ignore
-                __( "Set up tax rates for different regions. These rates will apply based on your customer's location.", 'tutor')
-              }
-            </div>
-          </div>
-          <Show when={activeCountry && activeCountryAllStates?.length}>
-            <Checkbox
-              label={__('Apply single tax rate for entire country', 'tutor')}
-              checked={rates[activeCountryIndex]?.is_same_rate ?? false}
-              onChange={(isChecked) => {
-                const currentCountry = rates[activeCountryIndex];
-                currentCountry.is_same_rate = isChecked;
-                form.setValue('rates', rates);
-              }}
-            />
-          </Show>
-          <Show when={tableData.length} fallback={<div>{renderCountrySelectButton()}</div>}>
-            <Table
-              columns={columns}
-              data={tableData}
-              isRounded={true}
-              rowStyle={activeCountry ? styles.rowStyle : undefined}
-              renderInLastRow={
-                !activeCountry ||
-                (activeCountry &&
-                  !isSingleCountry &&
-                  activeCountrySelectedStates.length !== activeCountryAllStates?.length) ? (
-                  <Show
-                    when={!activeCountry}
-                    fallback={
-                      <Show
-                        when={!isSingleCountry && activeCountrySelectedStates.length !== activeCountryAllStates?.length}
-                      >
-                        <Button
-                          variant="tertiary"
-                          onClick={() => {
-                            openCountryTaxRateModal({
-                              form,
-                              title: __('Add State & VAT Rate', 'tutor'),
-                            });
-                          }}
-                        >
-                          {__('Add State', 'tutor')}
-                        </Button>
-                      </Show>
-                    }
-                  >
-                    {renderCountrySelectButton()}
-                  </Show>
-                ) : undefined
-              }
-            />
-          </Show>
-        </div>
-      </Card>
 
-      <TaxSettingGlobal />
-      {/* <Show when={activeCountrySelectedStates.length || isSingleCountry} fallback={<TaxSettingGlobal />}>
-        <TaxOverride />
-      </Show> */}
+      <Show when={form.watch('enable_tax')}>
+        <Card>
+          <div css={styleUtils.cardInnerSection}>
+            <div css={styles.header}>
+              <div css={typography.body('medium')}>{__('Tax Rates', 'tutor')}</div>
+              <div css={styles.subtitle}>
+                {
+                  // prettier-ignore
+                  __( "Set up tax rates for different regions. These rates will apply based on your customer's location.", 'tutor')
+                }
+              </div>
+            </div>
+            <Show when={activeCountry && activeCountryAllStates?.length}>
+              <Checkbox
+                label={__('Apply single tax rate for entire country', 'tutor')}
+                checked={rates[activeCountryIndex]?.is_same_rate ?? false}
+                onChange={(isChecked) => {
+                  const currentCountry = rates[activeCountryIndex];
+                  currentCountry.is_same_rate = isChecked;
+                  form.setValue('rates', rates);
+                }}
+              />
+            </Show>
+            <Show when={tableData.length} fallback={<div>{renderCountrySelectButton()}</div>}>
+              <Table
+                columns={columns}
+                data={tableData}
+                isRounded={true}
+                rowStyle={activeCountry ? styles.rowStyle : undefined}
+                renderInLastRow={
+                  !activeCountry ||
+                  (activeCountry &&
+                    !isSingleCountry &&
+                    activeCountrySelectedStates.length !== activeCountryAllStates?.length) ? (
+                    <Show
+                      when={!activeCountry}
+                      fallback={
+                        <Show
+                          when={
+                            !isSingleCountry && activeCountrySelectedStates.length !== activeCountryAllStates?.length
+                          }
+                        >
+                          <Button
+                            variant="tertiary"
+                            onClick={() => {
+                              openCountryTaxRateModal({
+                                form,
+                                title: __('Add State & VAT Rate', 'tutor'),
+                              });
+                            }}
+                          >
+                            {__('Add State', 'tutor')}
+                          </Button>
+                        </Show>
+                      }
+                    >
+                      {renderCountrySelectButton()}
+                    </Show>
+                  ) : undefined
+                }
+              />
+            </Show>
+          </div>
+        </Card>
+
+        <TaxSettingGlobal />
+      </Show>
     </>
   );
 }
@@ -459,5 +461,11 @@ const styles = {
     display: flex;
     align-items: center;
     height: 36px;
+  `,
+  enableTaxWrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    padding: ${spacing[20]};
   `,
 };

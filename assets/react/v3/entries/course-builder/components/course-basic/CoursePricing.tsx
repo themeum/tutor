@@ -61,7 +61,9 @@ const CoursePricing = () => {
 
   const { tutor_currency } = tutorConfig;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isTaxEnabled = !!tutorConfig.settings?.enable_tax;
   const enableIndividualTaxControl = !!tutorConfig.settings?.enable_individual_tax_control;
+  const isTaxIncludedInPrice = !!tutorConfig.settings?.is_tax_included_in_price;
   const monetizeBy = tutorConfig.settings?.monetize_by;
 
   const coursePriceOptions = ['wc', 'tutor', 'edd'].includes(monetizeBy || '')
@@ -137,11 +139,19 @@ const CoursePricing = () => {
     return uniqueProducts;
   };
 
-  const isTaxDisabled = (
+  const shouldDisplayAlert = (
     selectedOption: CourseSellingOption,
     taxOnSingle: boolean,
     taxOnSubscription: boolean,
   ): boolean => {
+    if (!isTaxEnabled) {
+      return false;
+    }
+
+    if (!isTaxIncludedInPrice) {
+      return false;
+    }
+
     if (selectedOption === 'membership') {
       return false;
     }
@@ -424,22 +434,22 @@ const CoursePricing = () => {
           </div>
 
           <Show
-            when={isTaxDisabled(
+            when={shouldDisplayAlert(
               selectedPurchaseOption,
-              form.getValues('tax_on_single'),
-              form.getValues('tax_on_subscription'),
+              form.watch('tax_on_single'),
+              form.watch('tax_on_subscription'),
             )}
           >
             <div css={styles.taxAlert}>
               <div css={styles.alertTitle}>
                 <SVGIcon name="warning" width={24} height={24} />
-                <span>{__('Tax is disabled.', 'tutor')}</span>
+                <span>{__('Tax is Disabled.', 'tutor')}</span>
               </div>
               <div css={styles.alertDescription}>
-                {__(
-                  'You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.',
-                  'tutor',
-                )}
+                {
+                  // prettier-ignore
+                  __('You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.', 'tutor' )
+                }
               </div>
             </div>
           </Show>
