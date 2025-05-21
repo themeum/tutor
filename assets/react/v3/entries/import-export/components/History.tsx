@@ -188,7 +188,7 @@ const History = () => {
       <div css={styles.title}>{__('History', 'tutor')}</div>
 
       <div css={styles.history}>
-        <Table columns={columns} data={history} />
+        <Table columns={columns} data={history} isRounded isBordered />
       </div>
     </div>
   );
@@ -213,7 +213,6 @@ const styles = {
       tbody {
         tr {
           background-color: ${colorTokens.background.white};
-          border-bottom: none;
           ${typography.small('medium')}
 
           td:nth-child(n + 3) {
