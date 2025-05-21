@@ -110,6 +110,11 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
         return key;
       }
 
+      // Check if there are selected items in the parent content
+      const hasSelectedItems =
+        (mainType === 'courses' && bulkSelectionForm.getValues('courses').length > 0) ||
+        (mainType === 'course-bundle' && bulkSelectionForm.getValues('bundles').length > 0);
+
       // Find the sub-content item
       const subContentType = subType as ExportableCourseContentType;
       if (!subContentType || !mainContent.contents) {
@@ -117,37 +122,39 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
       }
 
       const subContent = mainContent.contents.find((content) => content.key === subContentType);
-
-      // Return formatted label with count
-      if (subContent) {
-        return `${subContent.label} (${subContent.count})`;
+      if (!subContent) {
+        return key;
       }
 
-      return key;
+      // If parent has selected items, don't show count for sub-content
+      if (hasSelectedItems) {
+        return subContent.label;
+      }
+
+      // Return formatted label with count for non-selected state
+      return `${subContent.label} (${subContent.count})`;
     } else {
       // This is a main content item (like 'courses', 'course-bundle', 'settings')
       const content = exportableContent.find((item) => item.key === key);
-
-      if (content) {
-        let label = content.count !== undefined ? `${content.label} (${content.count})` : content.label;
-
-        // Add bulk selection info for courses and bundles
-        if (key === 'courses') {
-          const selectedCount = bulkSelectionForm.getValues('courses').length;
-          if (selectedCount > 0) {
-            label += ` • ${selectedCount} ${selectedCount === 1 ? __('selected', 'tutor') : __('selected', 'tutor')}`;
-          }
-        } else if (key === 'course-bundle') {
-          const selectedCount = bulkSelectionForm.getValues('bundles').length;
-          if (selectedCount > 0) {
-            label += ` • ${selectedCount} ${selectedCount === 1 ? __('selected', 'tutor') : __('selected', 'tutor')}`;
-          }
-        }
-
-        return label;
+      if (!content) {
+        return key;
       }
 
-      return key;
+      // Get selection count for courses and bundles
+      let selectedCount = 0;
+      if (key === 'courses') {
+        selectedCount = bulkSelectionForm.getValues('courses').length;
+      } else if (key === 'course-bundle') {
+        selectedCount = bulkSelectionForm.getValues('bundles').length;
+      }
+
+      // Use selected count if available (without "selected" text)
+      if (selectedCount > 0) {
+        return `${content.label} (${selectedCount})`;
+      }
+
+      // Default to total count when no selections
+      return content.count !== undefined ? `${content.label} (${content.count})` : content.label;
     }
   };
 
