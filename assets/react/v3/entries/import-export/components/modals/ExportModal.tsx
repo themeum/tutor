@@ -13,7 +13,7 @@ import { useModal, type ModalProps } from '@TutorShared/components/modals/Modal'
 import {
   defaultExportFormData,
   useExportableContentQuery,
-  type ExportableContent,
+  type ExportableCourseContentType,
   type ExportFormData,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
@@ -27,7 +27,6 @@ import { formatBytes } from '@TutorShared/utils/util';
 
 import exportInProgressImage from '@SharedImages/import-export/export-inprogress.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
-import ProBadge from '@TutorShared/atoms/ProBadge';
 import CourseCategorySelectModal from '@TutorShared/components/modals/CourseCategorySelectModal';
 import { type Course } from '@TutorShared/services/course';
 import { useEffect } from 'react';
@@ -65,10 +64,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
 
   const { showModal } = useModal();
   const getExportableContentQuery = useExportableContentQuery();
-  const exportableContent = getExportableContentQuery.data as ExportableContent;
-
-  const isCoursesChecked = form.watch('courses.isChecked');
-  const isBundlesChecked = form.watch('bundles.isChecked');
+  const exportableContent = getExportableContentQuery.data;
 
   const resetBulkSelection = (type: 'courses' | 'bundles') => {
     if (type === 'courses') {
@@ -88,69 +84,211 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
 
   useEffect(() => {
     if (getExportableContentQuery.isSuccess && getExportableContentQuery.data) {
-      form.setValue('courses.ids', getExportableContentQuery.data.courses?.ids || []);
-      form.setValue('bundles.ids', getExportableContentQuery.data['course-bundle']?.ids || []);
+      const courseIds = getExportableContentQuery.data.filter((item) => item.key === 'courses')[0].ids || [];
+      const bundleIds = getExportableContentQuery.data.filter((item) => item.key === 'course-bundle')[0].ids || [];
+
+      form.setValue('courses__ids', courseIds);
+      form.setValue('course-bundle__ids', bundleIds);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getExportableContentQuery.isSuccess]);
 
-  const getLabelByFormDateKey = ({
-    key,
-    bulkSelection = {
-      courses: 0,
-      bundles: 0,
-    },
-    showProBadge = false,
-  }: {
-    key: string;
-    bulkSelection?: {
-      courses: number;
-      bundles: number;
-    };
-    showProBadge?: boolean;
-  }) => {
-    let label = '';
-    const hasContent = key.includes('[');
-
-    if (hasContent) {
-      const contentKey = hasContent ? key.split('[')[1].split(']')[0] : key;
-      const parentKey = key.split('[')[0] as keyof ExportableContent;
-      const contents = exportableContent[parentKey].contents as Record<string, string>;
-      const contentLabel = contents[contentKey];
-      label = bulkSelection?.courses > 0 ? contentLabel?.split('(')[0] : contentLabel;
-    } else {
-      if (
-        (key === 'courses' && bulkSelection?.courses > 0) ||
-        (key === 'course-bundle' && bulkSelection?.bundles > 0)
-      ) {
-        const count = key === 'courses' ? bulkSelection.courses : bulkSelection.bundles;
-        label = `${exportableContent?.[key as keyof ExportableContent]?.label.split('(')[0]}(${count})`;
-      } else {
-        label = exportableContent?.[key as keyof ExportableContent]?.label;
-      }
+  const getLabelByFormDateKey = (key: string) => {
+    // Early return if no exportable content data
+    if (!exportableContent || !Array.isArray(exportableContent)) {
+      return key;
     }
 
-    const [labelText, count = ''] = (label || '').split('(') || [];
+    // Check if the key contains delimiter '__'
+    if (key.includes('__')) {
+      // This is a sub-content item (like 'courses__lessons')
+      const [mainType, subType] = key.split('__');
 
-    return (
-      <div css={styles.checkboxLabel}>
-        <span>
-          {labelText}
-          <Show when={count}>
-            <span css={{ color: colorTokens.text.hints }}>{`(${count}`}</span>
-          </Show>
-        </span>
+      // Find the parent content item
+      const mainContent = exportableContent.find((item) => item.key === mainType);
+      if (!mainContent) {
+        return key;
+      }
 
-        <Show when={showProBadge && !isTutorPro}>
-          <ProBadge content={__('Pro', 'tutor')} size="small" />
-        </Show>
-      </div>
-    );
+      // Find the sub-content item
+      const subContentType = subType as ExportableCourseContentType;
+      if (!subContentType || !mainContent.contents) {
+        return key;
+      }
+
+      const subContent = mainContent.contents.find((content) => content.key === subContentType);
+
+      // Return formatted label with count
+      if (subContent) {
+        return `${subContent.label} (${subContent.count})`;
+      }
+
+      return key;
+    } else {
+      // This is a main content item (like 'courses', 'course-bundle', 'settings')
+      const content = exportableContent.find((item) => item.key === key);
+
+      if (content) {
+        let label = content.count !== undefined ? `${content.label} (${content.count})` : content.label;
+
+        // Add bulk selection info for courses and bundles
+        if (key === 'courses') {
+          const selectedCount = bulkSelectionForm.getValues('courses').length;
+          if (selectedCount > 0) {
+            label += ` • ${selectedCount} ${selectedCount === 1 ? __('selected', 'tutor') : __('selected', 'tutor')}`;
+          }
+        } else if (key === 'course-bundle') {
+          const selectedCount = bulkSelectionForm.getValues('bundles').length;
+          if (selectedCount > 0) {
+            label += ` • ${selectedCount} ${selectedCount === 1 ? __('selected', 'tutor') : __('selected', 'tutor')}`;
+          }
+        }
+
+        return label;
+      }
+
+      return key;
+    }
   };
 
   const handleClose = () => {
     form.reset();
     onClose();
+  };
+
+  const renderExportableContentOptions = () => {
+    if (getExportableContentQuery.isLoading) {
+      return <LoadingSection />;
+    }
+
+    if (!exportableContent || !Array.isArray(exportableContent)) {
+      return null;
+    }
+
+    return (
+      <>
+        {exportableContent.map((contentType) => {
+          const contentKey = contentType.key;
+          const isChecked = form.watch(contentKey);
+
+          // Calculate bulk selection count
+          const bulkSelectionCount =
+            contentKey === 'courses'
+              ? bulkSelectionForm.getValues('courses').length
+              : contentKey === 'course-bundle'
+                ? bulkSelectionForm.getValues('bundles').length
+                : 0;
+
+          return (
+            <div key={contentKey} css={styles.checkboxRow}>
+              <div css={styles.checkBoxWithButton}>
+                <div css={styles.checkBoxWithAction}>
+                  <Controller
+                    control={form.control}
+                    name={contentKey}
+                    render={(controllerProps) => (
+                      <FormCheckbox
+                        {...controllerProps}
+                        disabled={contentKey !== 'settings' && !isTutorPro}
+                        label={getLabelByFormDateKey(contentKey)}
+                      />
+                    )}
+                  />
+                  <Show when={bulkSelectionCount > 0}>
+                    <Button
+                      variant="danger"
+                      size="small"
+                      onClick={() => resetBulkSelection(contentKey === 'courses' ? 'courses' : 'bundles')}
+                      icon={<SVGIcon name="cross" width={16} height={16} />}
+                    >
+                      {__('Clear', 'tutor')}
+                    </Button>
+                  </Show>
+                </div>
+
+                {/* Show select button for courses and bundles */}
+                <Show when={isChecked && (contentKey === 'courses' || contentKey === 'course-bundle')}>
+                  <Button
+                    variant="secondary"
+                    buttonCss={styles.selectButton}
+                    size="small"
+                    onClick={() => {
+                      const modalComponent = contentKey === 'courses' ? CourseListModal : CourseCategorySelectModal;
+                      const modalTitle =
+                        contentKey === 'courses' ? __('Select Courses', 'tutor') : __('Select Bundles', 'tutor');
+
+                      showModal({
+                        component: modalComponent,
+                        props: {
+                          title: modalTitle,
+                          ...(contentKey === 'courses'
+                            ? {
+                                addedCourses: bulkSelectionForm.getValues('courses'),
+                                form: bulkSelectionForm,
+                              }
+                            : {
+                                type: 'bundles',
+                                form: bulkSelectionForm,
+                              }),
+                        },
+                      });
+                    }}
+                  >
+                    {contentKey === 'courses' && bulkSelectionCount > 0
+                      ? __('Edit Selected Courses', 'tutor')
+                      : contentKey === 'courses'
+                        ? __('Select Specific Courses', 'tutor')
+                        : __('Select Specific Bundles', 'tutor')}
+                  </Button>
+                </Show>
+              </div>
+
+              {/* Render sub-content checkboxes for courses and bundles */}
+              <Show when={isChecked && (contentKey === 'courses' || contentKey === 'course-bundle')}>
+                <div css={styles.childCheckboxWrapper}>
+                  {contentKey === 'courses' && contentType.contents && (
+                    <div css={styles.contentCheckboxWrapper}>
+                      {contentType.contents.map((subContent) => {
+                        const formKey = `${contentKey}__${subContent.key}`;
+                        return (
+                          <div key={formKey} css={styles.checkboxRow({ isContent: true })}>
+                            <Controller
+                              control={form.control}
+                              name={formKey as any}
+                              render={(controllerProps) => (
+                                <FormCheckbox
+                                  {...controllerProps}
+                                  disabled={!isTutorPro}
+                                  label={getLabelByFormDateKey(formKey)}
+                                />
+                              )}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  <div css={styles.contentCheckboxFooter}>
+                    <Controller
+                      control={form.control}
+                      name={`${contentKey}__keep_media_files` as any}
+                      render={(controllerProps) => (
+                        <FormCheckbox
+                          {...controllerProps}
+                          disabled={!isTutorPro}
+                          label={__('Keep media files', 'tutor')}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+              </Show>
+            </div>
+          );
+        })}
+      </>
+    );
   };
 
   const renderInitialState = ({
@@ -165,234 +303,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
       <div css={styles.wrapper}>
         <div css={styles.formWrapper}>
           <div css={styles.formTitle}>{__('What do you want to export', 'tutor')}</div>
-          <div css={styles.checkboxWrapper}>
-            {getExportableContentQuery.isLoading ? (
-              <LoadingSection />
-            ) : (
-              <>
-                <div css={styles.checkboxRow}>
-                  <div css={styles.checkBoxWithButton}>
-                    <div css={styles.checkBoxWithAction}>
-                      <Controller
-                        control={form.control}
-                        name="courses.isChecked"
-                        render={(controllerProps) => (
-                          <FormCheckbox
-                            {...controllerProps}
-                            disabled={!isTutorPro}
-                            label={getLabelByFormDateKey({
-                              key: 'courses',
-                              bulkSelection,
-                              showProBadge: true,
-                            })}
-                          />
-                        )}
-                      />
-                      <Show when={bulkSelection.courses > 0}>
-                        <Button
-                          variant="danger"
-                          size="small"
-                          onClick={() => resetBulkSelection('courses')}
-                          icon={<SVGIcon name="cross" width={16} height={16} />}
-                        >
-                          {__('Clear', 'tutor')}
-                        </Button>
-                      </Show>
-                    </div>
-                    <Show when={isCoursesChecked}>
-                      <Button
-                        variant="secondary"
-                        buttonCss={styles.selectButton}
-                        size="small"
-                        onClick={() => {
-                          showModal({
-                            component: CourseListModal,
-                            props: {
-                              title: __('Select Courses', 'tutor'),
-                              addedCourses: bulkSelectionForm.getValues('courses'),
-                              form: bulkSelectionForm,
-                            },
-                          });
-                        }}
-                      >
-                        {bulkSelection.courses > 0
-                          ? __('Edit Selected Courses', 'tutor')
-                          : __('Select Specific Courses', 'tutor')}
-                      </Button>
-                    </Show>
-                  </div>
-                  <Show when={isCoursesChecked}>
-                    <div css={styles.childCheckboxWrapper}>
-                      <div css={styles.contentCheckboxWrapper}>
-                        <div css={styles.checkboxRow({ isContent: true })}>
-                          <Controller
-                            control={form.control}
-                            name="courses.lessons"
-                            render={(controllerProps) => (
-                              <FormCheckbox
-                                disabled={!isTutorPro}
-                                {...controllerProps}
-                                label={getLabelByFormDateKey({
-                                  key: 'courses[lesson]',
-                                  bulkSelection,
-                                  showProBadge: true,
-                                })}
-                              />
-                            )}
-                          />
-                        </div>
-                        <div css={styles.checkboxRow({ isContent: true })}>
-                          <Controller
-                            control={form.control}
-                            name="courses.quizzes"
-                            render={(controllerProps) => (
-                              <FormCheckbox
-                                {...controllerProps}
-                                disabled={!isTutorPro}
-                                label={getLabelByFormDateKey({
-                                  key: 'courses[tutor_quiz]',
-                                  bulkSelection,
-                                  showProBadge: true,
-                                })}
-                              />
-                            )}
-                          />
-                        </div>
-                        <div css={styles.checkboxRow({ isContent: true })}>
-                          <Controller
-                            control={form.control}
-                            name="courses.assignments"
-                            render={(controllerProps) => (
-                              <FormCheckbox
-                                {...controllerProps}
-                                disabled={!isTutorPro}
-                                label={getLabelByFormDateKey({
-                                  key: 'courses[tutor_assignments]',
-                                  bulkSelection,
-                                  showProBadge: true,
-                                })}
-                              />
-                            )}
-                          />
-                        </div>
-                        <div css={styles.checkboxRow({ isContent: true })}>
-                          <Controller
-                            control={form.control}
-                            name="courses.attachments"
-                            render={(controllerProps) => (
-                              <FormCheckbox
-                                {...controllerProps}
-                                disabled={!isTutorPro}
-                                label={getLabelByFormDateKey({
-                                  key: 'courses[attachments]',
-                                  bulkSelection,
-                                  showProBadge: true,
-                                })}
-                              />
-                            )}
-                          />
-                        </div>
-                      </div>
-
-                      <div css={styles.contentCheckboxFooter}>
-                        <Controller
-                          control={form.control}
-                          name="courses.keepMediaFiles"
-                          render={(controllerProps) => (
-                            <FormCheckbox
-                              {...controllerProps}
-                              disabled={!isTutorPro}
-                              label={__('Keep media files', 'tutor')}
-                            />
-                          )}
-                        />
-                      </div>
-                    </div>
-                  </Show>
-                </div>
-
-                <div css={styles.checkboxRow}>
-                  <div css={styles.checkBoxWithButton}>
-                    <div css={styles.checkBoxWithAction}>
-                      <Controller
-                        control={form.control}
-                        name="bundles.isChecked"
-                        render={(controllerProps) => (
-                          <FormCheckbox
-                            {...controllerProps}
-                            disabled={!isTutorPro}
-                            label={getLabelByFormDateKey({
-                              key: 'course-bundle',
-                              bulkSelection,
-                              showProBadge: true,
-                            })}
-                          />
-                        )}
-                      />
-                      <Show when={bulkSelection.bundles > 0}>
-                        <Button
-                          variant="danger"
-                          size="small"
-                          onClick={() => resetBulkSelection('bundles')}
-                          icon={<SVGIcon name="cross" width={16} height={16} />}
-                        >
-                          {__('Clear', 'tutor')}
-                        </Button>
-                      </Show>
-                    </div>
-
-                    <Show when={isBundlesChecked}>
-                      <Button
-                        variant="secondary"
-                        buttonCss={styles.selectButton}
-                        size="small"
-                        onClick={() => {
-                          showModal({
-                            component: CourseCategorySelectModal,
-                            props: {
-                              title: __('Select Bundles', 'tutor'),
-                              type: 'bundles',
-                              form: bulkSelectionForm,
-                            },
-                          });
-                        }}
-                      >
-                        {__('Select Specific Bundles', 'tutor')}
-                      </Button>
-                    </Show>
-                  </div>
-
-                  <Show when={isBundlesChecked}>
-                    <div css={styles.childCheckboxWrapper}>
-                      <div css={styles.contentCheckboxFooter}>
-                        <Controller
-                          control={form.control}
-                          name="bundles.keepMediaFiles"
-                          render={(controllerProps) => (
-                            <FormCheckbox
-                              {...controllerProps}
-                              disabled={!isTutorPro}
-                              label={__('Keep media files', 'tutor')}
-                            />
-                          )}
-                        />
-                      </div>
-                    </div>
-                  </Show>
-                </div>
-
-                <div css={styles.checkboxRow}>
-                  <Controller
-                    control={form.control}
-                    name="settings"
-                    render={(controllerProps) => (
-                      <FormCheckbox {...controllerProps} label={getLabelByFormDateKey({ key: 'settings' })} />
-                    )}
-                  />
-                </div>
-              </>
-            )}
-          </div>
+          <div css={styles.checkboxWrapper}>{renderExportableContentOptions()}</div>
         </div>
       </div>
     );
@@ -485,14 +396,10 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
                   const { courses, bundles } = bulkSelectionForm.getValues();
                   onExport?.({
                     ...data,
-                    courses: {
-                      ...data.courses,
-                      ids: courses.length ? courses.map((course) => course.id) : data.courses.ids,
-                    },
-                    bundles: {
-                      ...data.bundles,
-                      ids: bundles.length ? bundles.map((bundle) => bundle.id) : data.bundles.ids,
-                    },
+                    courses__ids:
+                      courses.length > 0 ? courses.map((course) => course.id) : form.getValues('courses__ids'),
+                    'course-bundle__ids':
+                      bundles.length > 0 ? bundles.map((bundle) => bundle.id) : form.getValues('course-bundle__ids'),
                   });
                 })}
               >

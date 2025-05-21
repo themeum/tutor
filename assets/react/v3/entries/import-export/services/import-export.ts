@@ -18,39 +18,31 @@ export interface ImportExportHistory {
 }
 
 export interface ExportFormData {
-  courses: {
-    isChecked: boolean;
-    ids: number[];
-    lessons: boolean;
-    assignments: boolean;
-    quizzes: boolean;
-    attachments: boolean;
-    keepMediaFiles: boolean;
-  };
-  bundles: {
-    isChecked: boolean;
-    ids: number[];
-    keepMediaFiles: boolean;
-  };
+  courses: boolean;
+  'course-bundle': boolean;
   settings: boolean;
+  courses__ids: number[];
+  'course-bundle__ids': number[];
+  courses__keep_media_files: boolean;
+  'course-bundle__keep_media_files': boolean;
+  courses__lesson: boolean;
+  courses__tutor_quiz: boolean;
+  courses__tutor_assignments: boolean;
+  courses__attachments: boolean;
 }
 
 export const defaultExportFormData: ExportFormData = {
-  courses: {
-    isChecked: false,
-    ids: [],
-    lessons: false,
-    assignments: false,
-    quizzes: false,
-    attachments: false,
-    keepMediaFiles: false,
-  },
-  bundles: {
-    isChecked: false,
-    ids: [],
-    keepMediaFiles: false,
-  },
+  courses: false,
+  'course-bundle': false,
   settings: false,
+  courses__ids: [],
+  'course-bundle__ids': [],
+  courses__keep_media_files: false,
+  'course-bundle__keep_media_files': false,
+  courses__lesson: false,
+  courses__tutor_quiz: false,
+  courses__tutor_assignments: false,
+  courses__attachments: false,
 };
 
 export const convertExportFormDataToPayload = (data: ExportFormData): ExportContentPayload => {
@@ -58,35 +50,67 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
     export_contents: [],
   };
 
-  if (data.courses.isChecked) {
-    payload.export_contents?.push({
-      type: 'courses',
-      ids: data.courses.ids,
-      sub_contents: [
-        data.courses.lessons ? 'lesson' : undefined,
-        data.courses.quizzes ? 'quiz' : undefined,
-        data.courses.assignments ? 'tutor_assignments' : undefined,
-        data.courses.attachments ? 'attachment' : undefined,
-      ].filter(Boolean) as ('lesson' | 'tutor_assignments' | 'quiz' | 'attachment')[],
-      keep_media_files: data.courses.keepMediaFiles,
-    });
-  }
+  // Get all unique prefixes before "__"
+  const prefixes = new Set<string>();
 
-  if (data.bundles.isChecked) {
-    payload.export_contents?.push({
-      type: 'course-bundle',
-      ids: data.bundles.ids,
-      sub_contents: [],
-      keep_media_files: data.bundles.keepMediaFiles,
-    });
-  }
+  Object.keys(data).forEach((key) => {
+    if (key.includes('__')) {
+      prefixes.add(key.split('__')[0]);
+    }
+  });
 
+  // Process each content type
+  prefixes.forEach((prefix) => {
+    // Skip processing if the main type is not enabled
+    if (!data[prefix as keyof ExportFormData]) {
+      return;
+    }
+
+    const contentItem: ExportContentItem = {
+      type: prefix as ExportableContentType,
+    };
+
+    // Process ids
+    const idsKey = `${prefix}__ids` as keyof ExportFormData;
+    if (data[idsKey] && Array.isArray(data[idsKey]) && data[idsKey].length > 0) {
+      contentItem.ids = data[idsKey] as number[];
+    }
+
+    // Process keep_media_files
+    const keepMediaKey = `${prefix}__keep_media_files` as keyof ExportFormData;
+    if (data[keepMediaKey]) {
+      contentItem.keep_media_files = true;
+    }
+
+    // Process sub_contents
+    const subContents: Array<ExportableCourseContentType> = [];
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (key.startsWith(`${prefix}__`) && value === true) {
+        const suffix = key.split('__')[1];
+        if (suffix && suffix !== 'ids' && suffix !== 'keep_media_files') {
+          subContents.push(suffix as ExportableCourseContentType);
+        }
+      }
+    });
+
+    if (subContents.length > 0) {
+      contentItem.sub_contents = subContents;
+    }
+
+    payload.export_contents?.push(contentItem);
+  });
+
+  // Special case for settings that doesn't follow the pattern
   if (data.settings) {
     payload.export_contents?.push({
       type: 'settings',
-      ids: [],
-      sub_contents: [],
     });
+  }
+
+  // If no contents were added, set export_contents to undefined
+  if (payload.export_contents?.length === 0) {
+    payload.export_contents = undefined;
   }
 
   return payload;
@@ -94,33 +118,26 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
 
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
-export interface ExportableContent {
-  courses: ExportableSectionWithItems;
-  'course-bundle': ExportableSectionWithoutItems;
-  settings: ExportableSectionWithoutItems;
-}
+export type ExportableContentType = 'courses' | 'course-bundle' | 'settings';
+export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
-interface ExportableSectionBase {
+export interface ContentItem {
   label: string;
+  key: ExportableCourseContentType;
+  count: number;
 }
 
-interface ExportableSectionWithItems extends ExportableSectionBase {
-  contents: {
-    lesson: string;
-    tutor_quiz: string;
-    tutor_assignments: string;
-    attachments: string;
-  };
+export interface ExportableContent {
+  label: string;
+  key: ExportableContentType;
   ids?: number[];
-}
-
-interface ExportableSectionWithoutItems extends ExportableSectionBase {
-  contents: [];
-  ids?: number[];
+  count?: number;
+  keep_media_files?: boolean;
+  contents?: ContentItem[];
 }
 
 const getExportableContent = () => {
-  return wpAjaxInstance.get<ExportableContent>(endpoints.GET_EXPORTABLE_CONTENT);
+  return wpAjaxInstance.get<ExportableContent[]>(endpoints.GET_EXPORTABLE_CONTENT);
 };
 
 export const useExportableContentQuery = () => {
@@ -131,9 +148,9 @@ export const useExportableContentQuery = () => {
 };
 
 interface ExportContentItem {
-  type: 'courses' | 'course-bundle' | 'settings';
+  type: ExportableContentType;
   ids?: number[];
-  sub_contents?: ('lesson' | 'tutor_assignments' | 'quiz' | 'attachment')[];
+  sub_contents?: ExportableCourseContentType[];
   keep_media_files?: boolean;
 }
 
