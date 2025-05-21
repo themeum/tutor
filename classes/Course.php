@@ -1475,6 +1475,7 @@ class Course extends Tutor_Base {
 		$settings['youtube_api_key_exist']   = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
+		$settings['is_tax_included_in_price']      = Tax::is_tax_included_in_price();
 		$settings['enable_individual_tax_control'] = Tax::get_setting( 'enable_individual_tax_control' );
 
 		$new_data = array( 'settings' => $settings );
