@@ -262,7 +262,14 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           );
 
                         case 'textarea':
-                          return <FormWPEditor {...controllerProps} label={field.label} helpText={field.hint} hideMediaButtons hideQuickTags />;
+                          return (
+                            <FormWPEditor
+                              {...controllerProps}
+                              label={field.label}
+                              helpText={field.hint}
+                              toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
+                            />
+                          );
 
                         case 'webhook_url':
                           return (
