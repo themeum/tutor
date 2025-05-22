@@ -50,43 +50,43 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
     export_contents: [],
   };
 
-  // Get all unique prefixes before "__"
-  const prefixes = new Set<string>();
+  // Get all unique content type prefixes
+  const contentTypes = new Set<string>();
 
+  // Add direct content types (those without '__')
+  Object.keys(data).forEach((key) => {
+    if (!key.includes('__') && data[key as keyof ExportFormData]) {
+      contentTypes.add(key);
+    }
+  });
+
+  // Add prefixes from keys with '__'
   Object.keys(data).forEach((key) => {
     if (key.includes('__')) {
-      prefixes.add(key.split('__')[0]);
+      const prefix = key.split('__')[0];
+      if (data[prefix as keyof ExportFormData]) {
+        contentTypes.add(prefix);
+      }
     }
   });
 
   // Process each content type
-  prefixes.forEach((prefix) => {
-    // Skip processing if the main type is not enabled
-    if (!data[prefix as keyof ExportFormData]) {
-      return;
-    }
-
+  contentTypes.forEach((contentType) => {
     const contentItem: ExportContentItem = {
-      type: prefix as ExportableContentType,
+      type: contentType as ExportableContentType,
     };
 
-    // Process ids
-    const idsKey = `${prefix}__ids` as keyof ExportFormData;
-    if (data[idsKey] && Array.isArray(data[idsKey]) && data[idsKey].length > 0) {
+    // Process ids if they exist
+    const idsKey = `${contentType}__ids` as keyof ExportFormData;
+    if (data[idsKey] && Array.isArray(data[idsKey]) && (data[idsKey] as number[]).length > 0) {
       contentItem.ids = data[idsKey] as number[];
     }
-
-    // // Process keep_media_files
-    // const keepMediaKey = `${prefix}__keep_media_files` as keyof ExportFormData;
-    // if (data[keepMediaKey]) {
-    //   contentItem.keep_media_files = true;
-    // }
 
     // Process sub_contents
     const subContents: Array<ExportableCourseContentType> = [];
 
     Object.entries(data).forEach(([key, value]) => {
-      if (key.startsWith(`${prefix}__`) && value === true) {
+      if (key.startsWith(`${contentType}__`) && value === true) {
         const suffix = key.split('__')[1];
         if (suffix && suffix !== 'ids' && suffix !== 'keep_media_files') {
           subContents.push(suffix as ExportableCourseContentType);
@@ -98,18 +98,17 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
       contentItem.sub_contents = subContents;
     }
 
+    // Process keep_media_files if it exists
+    const keepMediaKey = `${contentType}__keep_media_files` as keyof ExportFormData;
+    if (data[keepMediaKey]) {
+      contentItem.keep_media_files = true;
+    }
+
     payload.export_contents?.push(contentItem);
   });
 
-  // Special case for settings that doesn't follow the pattern
-  if (data.settings) {
-    payload.export_contents?.push({
-      type: 'settings',
-    });
-  }
-
   // If no contents were added, set export_contents to undefined
-  if (payload.export_contents?.length === 0) {
+  if (!payload.export_contents?.length) {
     payload.export_contents = undefined;
   }
 
