@@ -1008,7 +1008,11 @@ class CouponModel {
 		// Check if the current time is within the start and expiry dates.
 		$has_validity = ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
 		if ( ! $has_validity ) {
-			$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'expired' );
+			if ( $now < $start_date ) {
+				$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'invalid' );
+			} else {
+				$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'expired' );
+			}
 		}
 
 		return $has_validity;
