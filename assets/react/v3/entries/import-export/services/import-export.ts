@@ -23,12 +23,11 @@ export interface ExportFormData {
   settings: boolean;
   courses__ids: number[];
   'course-bundle__ids': number[];
-  courses__keep_media_files: boolean;
-  'course-bundle__keep_media_files': boolean;
   courses__lesson: boolean;
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
   courses__attachments: boolean;
+  keep_media_files: boolean;
 }
 
 export const defaultExportFormData: ExportFormData = {
@@ -37,17 +36,17 @@ export const defaultExportFormData: ExportFormData = {
   settings: false,
   courses__ids: [],
   'course-bundle__ids': [],
-  courses__keep_media_files: false,
-  'course-bundle__keep_media_files': false,
   courses__lesson: false,
   courses__tutor_quiz: false,
   courses__tutor_assignments: false,
   courses__attachments: false,
+  keep_media_files: false,
 };
 
 export const convertExportFormDataToPayload = (data: ExportFormData): ExportContentPayload => {
   const payload: ExportContentPayload = {
     export_contents: [],
+    keep_media_files: data.keep_media_files ? '1' : '0',
   };
 
   // Get all unique content type prefixes
@@ -55,7 +54,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
 
   // Add direct content types (those without '__')
   Object.keys(data).forEach((key) => {
-    if (!key.includes('__') && data[key as keyof ExportFormData]) {
+    if (!key.includes('__') && data[key as keyof ExportFormData] && key !== 'keep_media_files') {
       contentTypes.add(key);
     }
   });
@@ -98,12 +97,6 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
       contentItem.sub_contents = subContents;
     }
 
-    // Process keep_media_files if it exists
-    const keepMediaKey = `${contentType}__keep_media_files` as keyof ExportFormData;
-    if (data[keepMediaKey]) {
-      contentItem.keep_media_files = true;
-    }
-
     payload.export_contents?.push(contentItem);
   });
 
@@ -117,7 +110,7 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
 
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
-export type ExportableContentType = 'courses' | 'course-bundle' | 'settings';
+export type ExportableContentType = 'courses' | 'course-bundle' | 'settings' | 'keep_media_files';
 export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
 export interface ContentItem {
@@ -150,11 +143,11 @@ interface ExportContentItem {
   type: ExportableContentType;
   ids?: number[];
   sub_contents?: ExportableCourseContentType[];
-  keep_media_files?: boolean;
 }
 
 export interface ExportContentPayload {
   export_contents?: ExportContentItem[];
+  keep_media_files?: '0' | '1';
   job_id?: string | number; // need to send back the job id to get the status
 }
 
@@ -189,6 +182,7 @@ const exportContents = async (payload: ExportContentPayload) => {
         ? { job_id: payload.job_id }
         : {
             export_contents: payload.export_contents,
+            keep_media_files: payload.keep_media_files,
           },
     )
     .then((res) => res.data);
