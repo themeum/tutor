@@ -422,9 +422,8 @@ class CheckoutController {
 
 		if ( Settings::is_coupon_usage_enabled() && '-1' !== $coupon_code ) {
 			$selected_coupon = $this->coupon_model->get_coupon_details_for_checkout( $coupon_code );
-			global $tutor_coupon_apply_err_msg;
 			if ( ! $selected_coupon ) {
-				$tutor_coupon_apply_err_msg = $this->coupon_model->get_coupon_failed_error_msg( 'not_found' );
+				$this->coupon_model->set_apply_coupon_error( $this->coupon_model->get_coupon_failed_error_msg( 'not_found' ) );
 			}
 		}
 
