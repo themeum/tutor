@@ -43,7 +43,7 @@ interface ExportModalProps extends ModalProps {
   onDownload?: (fileName: string) => void;
   progress: number;
   fileSize?: number;
-  errorMessage?: string;
+  message?: string;
 }
 
 interface BulkSelectionFormData {
@@ -55,15 +55,7 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const fileName = `tutor_data_${Date.now()}.json`;
 
-const ExportModal = ({
-  onClose,
-  onExport,
-  currentStep,
-  onDownload,
-  progress,
-  fileSize,
-  errorMessage,
-}: ExportModalProps) => {
+const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fileSize, message }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: defaultExportFormData,
   });
@@ -345,7 +337,9 @@ const ExportModal = ({
           <div css={styles.progressCount}>{progress}%</div>
         </div>
         <div css={styles.progressBar({ progress })} />
-        <div css={styles.progressInfo}>{fileName}</div>
+        <div css={styles.progressInfo} key={message}>
+          {message || fileName}
+        </div>
       </div>
     );
   };
@@ -363,7 +357,7 @@ const ExportModal = ({
 
     const subtitles = {
       success: __('Click the button below to download your file.', 'tutor'),
-      error: errorMessage,
+      error: message,
     };
 
     return (

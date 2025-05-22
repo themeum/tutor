@@ -151,7 +151,7 @@ export interface ExportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-interface ExportContentResponse {
+export interface ExportContentResponse {
   job_id: string;
   job_progress: number;
   job_status: string;
@@ -170,9 +170,11 @@ interface ExportContentResponse {
   };
   completed_contents: {
     courses: string[];
-    bundles: string[];
+    'course-bundle': string[];
     settings: boolean;
   };
+  failed_course_ids: [];
+  failed_bundle_ids: [];
 }
 const exportContents = async (payload: ExportContentPayload) => {
   return wpAjaxInstance
