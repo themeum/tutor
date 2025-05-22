@@ -76,11 +76,11 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
       contentItem.ids = data[idsKey] as number[];
     }
 
-    // Process keep_media_files
-    const keepMediaKey = `${prefix}__keep_media_files` as keyof ExportFormData;
-    if (data[keepMediaKey]) {
-      contentItem.keep_media_files = true;
-    }
+    // // Process keep_media_files
+    // const keepMediaKey = `${prefix}__keep_media_files` as keyof ExportFormData;
+    // if (data[keepMediaKey]) {
+    //   contentItem.keep_media_files = true;
+    // }
 
     // Process sub_contents
     const subContents: Array<ExportableCourseContentType> = [];

@@ -283,7 +283,7 @@ const ExportModal = ({
               </div>
 
               {/* Render sub-content checkboxes for courses and bundles */}
-              <Show when={isChecked}>
+              <Show when={isChecked && (contentType?.contents || []).length > 0}>
                 <div css={styles.childCheckboxWrapper}>
                   <div css={styles.contentCheckboxWrapper}>
                     <For each={contentType?.contents || []}>
@@ -306,20 +306,6 @@ const ExportModal = ({
                         );
                       }}
                     </For>
-                  </div>
-
-                  <div css={styles.contentCheckboxFooter}>
-                    <Controller
-                      control={form.control}
-                      name={`${contentKey}__keep_media_files` as 'courses'}
-                      render={(controllerProps) => (
-                        <FormCheckbox
-                          {...controllerProps}
-                          disabled={!isTutorPro}
-                          label={__('Keep media files', 'tutor')}
-                        />
-                      )}
-                    />
                   </div>
                 </div>
               </Show>
@@ -525,6 +511,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[4]};
+    padding-block: ${spacing[2]};
 
     span {
       color: ${colorTokens.text.hints};
