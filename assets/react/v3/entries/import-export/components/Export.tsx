@@ -1,10 +1,11 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 
 import {
   convertExportFormDataToPayload,
   useExportContentsMutation,
+  type ExportContentResponse,
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import Button from '@TutorShared/atoms/Button';
@@ -31,6 +32,105 @@ const Export = () => {
     });
   };
 
+  const generateExportMessage = (exportStatus: ExportContentResponse | undefined): string => {
+    // Early return for missing data
+    if (!exportStatus) {
+      return __('Export in progress...', 'tutor');
+    }
+
+    const { completed_contents: completedContents, failed_course_ids = [], failed_bundle_ids = [] } = exportStatus;
+
+    // Handle case with only failures
+    if (!completedContents || Object.keys(completedContents).length === 0) {
+      if (failed_course_ids.length || failed_bundle_ids.length) {
+        const failedMessages = [];
+
+        if (failed_course_ids.length) {
+          failedMessages.push(
+            failed_course_ids.length === 1
+              ? sprintf(__('%d Course failed', 'tutor'), failed_course_ids.length)
+              : sprintf(__('%d Courses failed', 'tutor'), failed_course_ids.length),
+          );
+        }
+
+        if (failed_bundle_ids.length) {
+          failedMessages.push(
+            failed_bundle_ids.length === 1
+              ? sprintf(__('%d Bundle failed', 'tutor'), failed_bundle_ids.length)
+              : sprintf(__('%d Bundles failed', 'tutor'), failed_bundle_ids.length),
+          );
+        }
+
+        return failedMessages.join(', ');
+      }
+
+      return __('Export in progress...', 'tutor');
+    }
+
+    const { courses, 'course-bundle': bundles, settings } = completedContents;
+    const successItems = [];
+    const failedItems = [];
+
+    // Handle successful exports
+    if (courses?.length) {
+      successItems.push(
+        courses.length === 1
+          ? sprintf(__('%d Course', 'tutor'), courses.length)
+          : sprintf(__('%d Courses', 'tutor'), courses.length),
+      );
+    }
+
+    if (bundles?.length) {
+      successItems.push(
+        bundles.length === 1
+          ? sprintf(__('%d Bundle', 'tutor'), bundles.length)
+          : sprintf(__('%d Bundles', 'tutor'), bundles.length),
+      );
+    }
+
+    if (settings) {
+      successItems.push(__('Settings', 'tutor'));
+    }
+
+    // Handle failed exports
+    if (failed_course_ids.length) {
+      failedItems.push(
+        failed_course_ids.length === 1
+          ? sprintf(__('%d Course failed', 'tutor'), failed_course_ids.length)
+          : sprintf(__('%d Courses failed', 'tutor'), failed_course_ids.length),
+      );
+    }
+
+    if (failed_bundle_ids.length) {
+      failedItems.push(
+        failed_bundle_ids.length === 1
+          ? sprintf(__('%d Bundle failed', 'tutor'), failed_bundle_ids.length)
+          : sprintf(__('%d Bundles failed', 'tutor'), failed_bundle_ids.length),
+      );
+    }
+
+    // Early return if nothing to report
+    if (successItems.length === 0 && failedItems.length === 0) {
+      return __('Export in progress...', 'tutor');
+    }
+
+    let message = '';
+
+    if (successItems.length > 0) {
+      message = `${successItems.join(', ')} ${__('Exported', 'tutor')}`;
+    }
+
+    if (failedItems.length > 0) {
+      if (message) {
+        message += `. ${failedItems.join(', ')}.`;
+      } else {
+        message = `${failedItems.join(', ')}.`;
+      }
+    }
+
+    return message;
+  };
+
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isPending) {
@@ -51,7 +151,7 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'error',
         progress: 0,
-        errorMessage: convertToErrorMessage(error),
+        message: convertToErrorMessage(error),
       });
     }
 
@@ -65,6 +165,7 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'progress',
         progress,
+        message: generateExportMessage(exportContentResponse),
       });
     }
 
