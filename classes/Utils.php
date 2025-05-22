@@ -964,7 +964,7 @@ class Utils {
 	 *
 	 * @since 3.6.0 $custom_args param added
 	 *
-	 * @param int $course_id course ID.
+	 * @param int   $course_id course ID.
 	 * @param array $custom_args Add custom args.
 	 *
 	 * @return \WP_Query
@@ -1062,8 +1062,8 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $topics_id topics ID.
-	 * @param int $limit limit.
+	 * @param int   $topics_id topics ID.
+	 * @param int   $limit limit.
 	 * @param array $custom_args Custom args.
 	 *
 	 * @return \WP_Query
@@ -6756,28 +6756,11 @@ class Utils {
 
 		$terms = get_terms( $args );
 
-        if ( $top_level_children ) {
-            return $terms;
-        }
+		if ( $top_level_children ) {
+			return $terms;
+		}
 
-        // Build term lookup and hierarchy.
-        $term_lookup     = array();
-        $top_level_terms = array();
-        foreach ( $terms as $term ) {
-            $term_lookup[ $term->id ] = $term;
-            $term->children = array();
-        }
-
-        // Add children.
-        foreach ( $terms as $term ) {
-            if ( $term->parent && isset( $term_lookup[ $term->parent ] ) ) {
-                $term_lookup[ $term->parent ]->children[] = $term;
-            } else {
-                $top_level_terms[] = $term;
-            }
-        }
-
-		return $top_level_terms;
+		return $this->build_term_tree( $terms, $parent );
 	}
 
 	/**
@@ -6785,10 +6768,10 @@ class Utils {
 	 *
 	 * @since 1.9.3
 	 *
-     * @since 3.6.0 Custom args param added
-     *
-     * @param array $custom_args Custom args.
-     *
+	 * @since 3.6.0 Custom args param added
+	 *
+	 * @param array $custom_args Custom args.
+	 *
 	 * @return array
 	 */
 	public function get_course_tags( $custom_args ) {
@@ -6800,7 +6783,7 @@ class Utils {
 			)
 		);
 
-        $args = wp_parse_args( $custom_args, $default_args );
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$terms = get_terms( $args );
 
@@ -10637,5 +10620,29 @@ class Utils {
 		}
 
 		return $username;
+	}
+
+	/**
+	 * Build term tree
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array   $terms Terms array.
+	 * @param integer $parent Parent id.
+	 *
+	 * @return array
+	 */
+	public function build_term_tree( $terms, $parent = 0 ) {
+		$branch = array();
+		foreach ( $terms as $term ) {
+			if ( (int) $term->parent === (int) $parent ) {
+				$children = $this->build_term_tree( $terms, $term->term_id );
+				if ( $children ) {
+					$term->children = $children;
+				}
+				$branch[] = $term;
+			}
+		}
+		return $branch;
 	}
 }
