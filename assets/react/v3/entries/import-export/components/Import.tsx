@@ -10,7 +10,7 @@ import { useImportContentsMutation } from '@ImportExport/services/import-export'
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { noop } from '@TutorShared/utils/util';
+import { convertToErrorMessage, noop } from '@TutorShared/utils/util';
 
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
 
@@ -80,16 +80,17 @@ const Import = () => {
   };
 
   useEffect(() => {
-    const progress = Number(importResponse?.job_progress);
+    const progress = Number(importResponse?.data?.job_progress);
     if (isError) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
+        message: convertToErrorMessage(error),
       });
     }
 
     if (progress < 100) {
       mutateAsync({
-        job_id: importResponse?.job_id as string,
+        job_id: importResponse?.data.job_id,
       });
     }
 
@@ -97,7 +98,7 @@ const Import = () => {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'progress',
         progress,
-        // message: importResponse?.
+        message: importResponse?.message,
       });
     }
 
@@ -118,7 +119,7 @@ const Import = () => {
         <img css={styles.emptyStateImage} src={importInitialImage} alt="File Upload" width={100} height={100} />
 
         <UploadButton size="small" acceptedTypes={['.json']} variant="secondary" onError={noop} onUpload={handleUpload}>
-          {__('Choose a file', 'tutor')}
+          {__('Choose a File', 'tutor')}
         </UploadButton>
 
         <div css={styles.description}>{__('Supported format: .JSON', 'tutor')}</div>

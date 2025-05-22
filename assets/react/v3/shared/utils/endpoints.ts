@@ -126,6 +126,7 @@ const endpoints = {
   GET_EXPORTABLE_CONTENT: 'tutor_pro_exportable_contents',
   EXPORT_CONTENTS: 'tutor_pro_export',
   IMPORT_CONTENTS: 'tutor_pro_import',
+  GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
 };
 
 export default endpoints;

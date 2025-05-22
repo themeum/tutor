@@ -36,8 +36,6 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
   const handleUpload = (uploadedFiles: File[]) => {
     if (uploadedFiles.length) {
       setFiles(uploadedFiles);
-      // Handle file upload
-      console.log('Uploaded files:', uploadedFiles);
     }
   };
 
@@ -128,7 +126,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
           <div css={styles.progressCount}>{__('In Progress', 'tutor')}</div>
         </div>
         <div css={styles.progressBar({ progress })} />
-        <div css={styles.progressInfo}>{file.name}</div>
+        <div css={styles.progressInfo}>{message || file.name}</div>
       </div>
     );
   };
@@ -140,9 +138,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
     };
     const subtitle = {
       success: sprintf(__('You have successfully imported a “%s"', 'tutor'), file.name),
-      error: message
-        ? sprintf(__('Failed to import “%s". Cause: %s', 'tutor'), file.name, message)
-        : __('Failed to import', 'tutor'),
+      error: message || sprintf(__('Failed to import “%s".', 'tutor'), file.name),
     };
 
     return (
