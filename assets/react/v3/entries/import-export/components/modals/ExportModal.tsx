@@ -273,6 +273,10 @@ const ExportModal = ({
           const bulkSelectionCount =
             bulkSelectionForm.getValues(contentKey as keyof BulkSelectionFormData)?.length || 0;
 
+          if (contentKey === 'keep_media_files') {
+            return;
+          }
+
           return (
             <div key={contentKey} css={styles.checkboxRow}>
               <div css={styles.checkBoxWithButton}>
@@ -360,6 +364,31 @@ const ExportModal = ({
         <div css={styles.formWrapper}>
           <div css={styles.formTitle}>{__('What do you want to export', 'tutor')}</div>
           <div css={styles.checkboxWrapper}>{renderExportableContentOptions()}</div>
+
+          <Show
+            when={
+              (getExportableContentQuery?.data || []).some((item) => item.key === 'keep_media_files') &&
+              (form.getValues('courses') || form.getValues('course-bundle'))
+            }
+          >
+            <div css={styles.contentCheckboxFooter}>
+              <Controller
+                control={form.control}
+                name="keep_media_files"
+                render={(controllerProps) => (
+                  <FormCheckbox
+                    {...controllerProps}
+                    label={__('Keep Media Files', 'tutor')}
+                    disabled={!isTutorPro}
+                    description={
+                      // prettier-ignore
+                      __('If you check this media files will be exported along with the selected data', 'tutor')
+                    }
+                  />
+                )}
+              />
+            </div>
+          </Show>
         </div>
       </div>
     );
@@ -662,7 +691,8 @@ const styles = {
   `,
   contentCheckboxFooter: css`
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[16]};
-    border-top: 1px solid ${colorTokens.stroke.divider};
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius.card};
     background-color: ${colorTokens.primary[30]};
 
     &:only-of-type {
