@@ -140,7 +140,9 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
     };
     const subtitle = {
       success: sprintf(__('You have successfully imported a “%s"', 'tutor'), file.name),
-      error: sprintf(__('Failed to import “%s". Cause: %s', 'tutor'), file.name, message),
+      error: message
+        ? sprintf(__('Failed to import “%s". Cause: %s', 'tutor'), file.name, message)
+        : __('Failed to import', 'tutor'),
     };
 
     return (

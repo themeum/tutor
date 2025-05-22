@@ -1,20 +1,19 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 
 import { useModal } from '@TutorShared/components/modals/Modal';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
 import ImportModal from '@ImportExport/components/modals/ImportModal';
+import { useImportContentsMutation } from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
-import { useImportContentsMutation } from '@ImportExport/services/import-export';
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
-import { useEffect } from 'react';
 
-// @TODO: need to integrate with the API
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const readJsonFile = (file: File): Promise<any> => {
   return new Promise((resolve, reject) => {
