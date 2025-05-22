@@ -38,6 +38,37 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
     onChange?.(!isIndeterminate ? event.target.checked : true, event);
   };
 
+  const extractLabelText = (label: string | ReactNode): string => {
+    if (typeof label === 'string') {
+      return label;
+    }
+
+    if (typeof label === 'number' || typeof label === 'boolean' || label === null) {
+      return String(label);
+    }
+
+    if (label === undefined) {
+      return '';
+    }
+
+    if (React.isValidElement(label)) {
+      const children = label.props?.children;
+
+      if (typeof children === 'string') {
+        return children;
+      }
+
+      if (Array.isArray(children)) {
+        return children
+          .map((child) => (typeof child === 'string' ? child : ''))
+          .filter(Boolean)
+          .join(' ');
+      }
+    }
+
+    return '';
+  };
+
   return (
     <label htmlFor={id} css={[styles.container({ disabled }), labelCss]}>
       <input
@@ -54,7 +85,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
         css={[inputCss, styles.checkbox({ label: !!label, isIndeterminate, disabled })]}
       />
       <span />
-      <span css={[styles.label({ isDisabled: disabled }), labelCss]} title={label?.toString()}>
+      <span css={[styles.label({ isDisabled: disabled }), labelCss]} title={extractLabelText(label)}>
         {label}
       </span>
     </label>

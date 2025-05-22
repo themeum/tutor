@@ -13,6 +13,7 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 import ExportModal from './modals/ExportModal';
 
 const Export = () => {
@@ -47,8 +48,11 @@ const Export = () => {
   useEffect(() => {
     const progress = Number(exportContentResponse?.job_progress);
     if (isError) {
-      closeModal();
-      return;
+      updateModal<typeof ExportModal>('export-modal', {
+        currentStep: 'error',
+        progress: 0,
+        errorMessage: convertToErrorMessage(error),
+      });
     }
 
     if (progress < 100) {
@@ -68,9 +72,9 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
         progress: 100,
-        fileSize: JSON.stringify(exportContentResponse).length,
+        fileSize: JSON.stringify(exportContentResponse?.exported_data).length,
         onDownload: (fileName) => {
-          const jsonFile = new Blob([JSON.stringify(exportContentResponse)], {
+          const jsonFile = new Blob([JSON.stringify(exportContentResponse?.exported_data)], {
             type: 'application/json',
           });
           const url = URL.createObjectURL(jsonFile);
