@@ -120,7 +120,7 @@ const endpoints = {
   // COURSE BUNDLE
   GET_BUNDLE_DETAILS: 'tutor_get_course_bundle_data',
   UPDATE_BUNDLE: 'tutor_create_course_bundle',
-  ADD_COURSE_TO_BUNDLE: 'tutor_add_course_to_bundle',
+  ADD_REMOVE_COURSE_TO_BUNDLE: 'tutor_add_remove_course_to_bundle',
 
   // IMPORT EXPORT
   GET_EXPORTABLE_CONTENT: 'tutor_pro_exportable_contents',

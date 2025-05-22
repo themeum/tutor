@@ -12,17 +12,17 @@ export interface Course {
   sale_price: string;
 }
 
-interface BundleListParams extends PaginatedParams {
-  exclude: string[];
+interface CourseListParams extends PaginatedParams {
+  exclude: string[] | number[];
 }
 
-const getCourseList = (params: BundleListParams) => {
+const getCourseList = (params: CourseListParams) => {
   return wpAjaxInstance.get<PaginatedResult<Course>>(endpoints.GET_COURSE_LIST, {
     params: params,
   });
 };
 
-export const useCourseListQuery = ({ params, isEnabled }: { params: BundleListParams; isEnabled: boolean }) => {
+export const useCourseListQuery = ({ params, isEnabled }: { params: CourseListParams; isEnabled: boolean }) => {
   return useQuery({
     queryKey: ['PrerequisiteCourses', params],
     queryFn: () =>
