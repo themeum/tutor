@@ -535,10 +535,10 @@ class WooCommerce extends Tutor_Base {
 		$item = new \WC_Order_Item_Product( $item );
 
 		$product_id    = $item->get_product_id();
+		$order         = wc_get_order( $order_id );
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
-		if ( $if_has_course ) {
-			$order        = wc_get_order( $order_id );
+		if ( $if_has_course && is_object( $order ) ) {
 			$course_id    = $if_has_course->post_id;
 			$user_id      = get_post_field( 'post_author', $course_id );
 			$order_status = "wc-{$order->get_status()}";
