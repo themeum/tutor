@@ -12,38 +12,40 @@ interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any, any, undefined>;
+  type?: 'courses' | 'course-bundle';
 }
 
-function CourseListModal({ title, closeModal, actions, form }: CourseListModalProps) {
-  const addedCourses = form.getValues('courses');
+function CourseListModal({ title, closeModal, actions, form, type }: CourseListModalProps) {
+  const addedItems = form.getValues(type as 'courses' | 'course-bundle') || [];
   const _form = useFormWithGlobalError({
     defaultValues: {
-      courses: addedCourses,
+      courses: addedItems,
+      'course-bundle': addedItems,
     },
   });
 
-  const selectedCourses = _form.watch('courses');
+  const selectedItems = _form.watch(type as 'courses' | 'course-bundle') || [];
 
   const handleAddCourses = () => {
-    const selectedCourses = _form.getValues('courses');
-    form.setValue('courses', [...selectedCourses]);
-    _form.setValue('courses', []);
+    const selectedItems = _form.getValues(type as 'courses' | 'course-bundle') || [];
+    form.setValue(type as 'courses' | 'course-bundle', [...selectedItems]);
+    _form.setValue(type as 'courses' | 'course-bundle', []);
     closeModal({ action: 'CONFIRM' });
   };
 
   return (
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      title={selectedCourses.length > 0 ? sprintf(__('%s selected', 'tutor'), selectedCourses.length) : title}
+      title={selectedItems.length > 0 ? sprintf(__('%s selected', 'tutor'), selectedItems.length) : title}
       actions={actions}
       maxWidth={720}
     >
-      <CourseListTable form={_form} />
+      <CourseListTable form={_form} type={type} />
       <div css={styles.footer}>
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
           {__('Cancel', 'tutor')}
         </Button>
-        <Button size="small" variant="primary" onClick={handleAddCourses} disabled={selectedCourses.length === 0}>
+        <Button size="small" variant="primary" onClick={handleAddCourses} disabled={selectedItems.length === 0}>
           {__('Add', 'tutor')}
         </Button>
       </div>

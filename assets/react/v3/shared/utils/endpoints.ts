@@ -11,6 +11,7 @@ const endpoints = {
   ORDER_CANCEL: 'tutor_order_cancel',
   ADD_ORDER_DISCOUNT: 'tutor_order_discount',
   COURSE_LIST: 'course_list',
+  BUNDLE_LIST: 'tutor_get_bundle_list',
   CATEGORY_LIST: 'category_list',
   CREATED_COURSE: 'tutor_create_course',
   TUTOR_INSTRUCTOR_SEARCH: 'tutor_course_instructor_search',
