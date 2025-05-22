@@ -324,32 +324,6 @@ class ValidationHelper {
 	}
 
 	/**
-	 * Get valid tutor post type list
-	 *
-	 * @since 3.6.0
-	 *
-	 * @param string $post_type the post type to get single tutor valid post type
-	 *
-	 * @return array|string
-	 */
-	public static function get_valid_tutor_post_types( $post_type = '' ) {
-		$valid_post_types = array(
-			'course'     => tutor()->course_post_type,
-			'bundle'     => tutor()->bundle_post_type,
-			'lesson'     => tutor()->lesson_post_type,
-			'topics'     => tutor()->topics_post_type,
-			'quiz'       => tutor()->quiz_post_type,
-			'assignment' => tutor()->assignment_post_type,
-		);
-
-		if ( $post_type && isset( $valid_post_types[ $post_type ] ) ) {
-			return $valid_post_types[ $post_type ];
-		}
-
-		return $valid_post_types;
-	}
-
-	/**
 	 * Validate term IDs before setting them.
 	 *
 	 * @since 3.6.0
