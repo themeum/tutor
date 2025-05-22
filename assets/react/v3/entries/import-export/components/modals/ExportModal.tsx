@@ -3,10 +3,12 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import CourseListModal from '@ImportExport/components/modals/CourseListModal';
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import CourseListModal from '@ImportExport/components/modals/CourseListModal';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import Logo from '@TutorShared/components/Logo';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
@@ -123,6 +125,10 @@ const ExportModal = ({
         <div css={styles.checkboxLabel}>
           {label}
           <span>{` (${count})`}</span>
+
+          <Show when={!isTutorPro}>
+            <ProBadge size="small" content={__('Pro', 'tutor')} />
+          </Show>
         </div>
       );
     };
@@ -297,7 +303,7 @@ const ExportModal = ({
                               render={(controllerProps) => (
                                 <FormCheckbox
                                   {...controllerProps}
-                                  disabled={!isTutorPro}
+                                  disabled={!isTutorPro && !isChecked}
                                   label={getLabelByFormDataKey(formKey)}
                                 />
                               )}
