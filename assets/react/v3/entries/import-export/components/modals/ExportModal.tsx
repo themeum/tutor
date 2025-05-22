@@ -436,7 +436,14 @@ const ExportModal = ({
                 variant="primary"
                 size="small"
                 icon={<SVGIcon name="export" width={24} height={24} />}
-                disabled={!form.formState.isDirty}
+                disabled={
+                  !Object.entries(form.getValues()).some(([key, value]) => {
+                    if (!key.includes('__')) {
+                      return value === true;
+                    }
+                    return false;
+                  })
+                }
                 onClick={form.handleSubmit((data) => {
                   const { courses, 'course-bundle': bundles } = bulkSelectionForm.getValues();
                   onExport?.({
