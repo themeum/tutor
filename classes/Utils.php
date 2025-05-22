@@ -6774,7 +6774,7 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public function get_course_tags( $custom_args ) {
+	public function get_course_tags( $custom_args = array() ) {
 		$default_args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
