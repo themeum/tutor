@@ -10371,7 +10371,7 @@ class Utils {
 		if ( is_plugin_active( 'elementor/elementor.php' ) ) {
 			$post_type             = get_post_type( $post_id );
 			$elementor_cpt_support = get_option( 'elementor_cpt_support' );
-			if ( in_array( $post_type, $elementor_cpt_support ) ) {
+			if ( is_array( $elementor_cpt_support ) && in_array( $post_type, $elementor_cpt_support ) ) {
 				$name             = 'elementor';
 				$editors[ $name ] = array(
 					'name'  => $name,
