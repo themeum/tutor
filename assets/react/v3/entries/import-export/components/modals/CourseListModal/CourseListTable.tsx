@@ -10,18 +10,19 @@ import { typography } from '@TutorShared/config/typography';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
-import { type Course, useCourseListQuery } from '@TutorShared/services/course';
+import { type Course, useBundleListQuery, useCourseListQuery } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 
 interface CourseListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<{ courses: Course[] }, any, undefined>;
+  form: UseFormReturn<{ courses: Course[]; 'course-bundle': Course[] }, any, undefined>;
+  type?: 'courses' | 'course-bundle';
 }
 
-const CourseListTable = ({ form }: CourseListTableProps) => {
-  const selectedCourses = form.watch('courses') || [];
+const CourseListTable = ({ form, type }: CourseListTableProps) => {
+  const selectedItems = form.watch(type as 'courses' | 'course-bundle') || [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
 
   const courseListQuery = useCourseListQuery({
@@ -31,27 +32,40 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
       filter: pageInfo.filter,
       exclude: [],
     },
-    isEnabled: true,
+    isEnabled: type === 'courses',
   });
 
-  const fetchedCourses = (courseListQuery.data?.results ?? []) as Course[];
+  const bundleListQuery = useBundleListQuery({
+    params: {
+      offset,
+      limit: itemsPerPage,
+      filter: pageInfo.filter,
+      exclude: [],
+    },
+    isEnabled: type === 'course-bundle',
+  });
+
+  const fetchedCourses =
+    type === 'courses'
+      ? ((courseListQuery.data?.results ?? []) as Course[])
+      : ((bundleListQuery.data?.results ?? []) as Course[]);
 
   const toggleSelection = (isChecked = false) => {
-    const selectedCourseIds = selectedCourses.map((course) => course.id);
-    const fetchedCourseIds = fetchedCourses.map((course) => course.id);
+    const selectedItemIds = selectedItems.map((course) => course.id);
+    const fetchedItemIds = fetchedCourses.map((course) => course.id);
 
     if (isChecked) {
-      const newCourses = fetchedCourses.filter((course) => !selectedCourseIds.includes(course.id));
-      form.setValue('courses', [...selectedCourses, ...newCourses]);
+      const newItems = fetchedCourses.filter((course) => !selectedItemIds.includes(course.id));
+      form.setValue(type as 'courses' | 'course-bundle', [...selectedItems, ...newItems]);
       return;
     }
 
-    const newCourses = selectedCourses.filter((course) => !fetchedCourseIds.includes(course.id));
-    form.setValue('courses', newCourses);
+    const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(course.id));
+    form.setValue(type as 'courses' | 'course-bundle', newItems);
   };
 
   const handleAllIsChecked = () => {
-    return fetchedCourses.every((course) => selectedCourses.map((course) => course.id).includes(course.id));
+    return fetchedCourses.every((course) => selectedItems.map((course) => course.id).includes(course.id));
   };
 
   const columns: Column<Course>[] = [
@@ -71,16 +85,16 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const filteredItems = selectedCourses.filter((course) => course.id !== item.id);
-                const isNewItem = filteredItems?.length === selectedCourses.length;
+                const filteredItems = selectedItems.filter((course) => course.id !== item.id);
+                const isNewItem = filteredItems?.length === selectedItems.length;
 
                 if (isNewItem) {
-                  form.setValue('courses', [...filteredItems, item]);
+                  form.setValue(type as 'courses' | 'course-bundle', [...filteredItems, item]);
                 } else {
-                  form.setValue('courses', filteredItems);
+                  form.setValue(type as 'courses' | 'course-bundle', filteredItems);
                 }
               }}
-              checked={selectedCourses.map((course) => course.id).includes(item.id)}
+              checked={selectedItems.map((course) => course.id).includes(item.id)}
             />
             <div css={styles.courseItemWrapper}>
               <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('Course item', 'tutor-pro')} />
@@ -92,11 +106,11 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
     },
   ];
 
-  if (courseListQuery.isLoading) {
+  if (courseListQuery.isLoading || bundleListQuery.isLoading) {
     return <LoadingSection />;
   }
 
-  if (!courseListQuery.data) {
+  if (!courseListQuery.data && !bundleListQuery.data) {
     return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor-pro')}</div>;
   }
 
@@ -109,7 +123,7 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
       <div css={styles.tableWrapper}>
         <Table
           columns={columns}
-          data={(courseListQuery.data.results as Course[]) ?? []}
+          data={(fetchedCourses as Course[]) ?? []}
           itemsPerPage={itemsPerPage}
           loading={courseListQuery.isFetching || courseListQuery.isRefetching}
         />
@@ -119,7 +133,7 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
         <Paginator
           currentPage={pageInfo.page}
           onPageChange={onPageChange}
-          totalItems={courseListQuery.data.total_items}
+          totalItems={(type === 'courses' ? courseListQuery.data?.total_items : bundleListQuery.data?.total_items) ?? 0}
           itemsPerPage={itemsPerPage}
         />
       </div>

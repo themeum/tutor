@@ -12,17 +12,17 @@ export interface Course {
   sale_price: string;
 }
 
-interface CourseListParams extends PaginatedParams {
+interface BundleListParams extends PaginatedParams {
   exclude: string[];
 }
 
-const getCourseList = (params: CourseListParams) => {
+const getCourseList = (params: BundleListParams) => {
   return wpAjaxInstance.get<PaginatedResult<Course>>(endpoints.GET_COURSE_LIST, {
     params: params,
   });
 };
 
-export const useCourseListQuery = ({ params, isEnabled }: { params: CourseListParams; isEnabled: boolean }) => {
+export const useCourseListQuery = ({ params, isEnabled }: { params: BundleListParams; isEnabled: boolean }) => {
   return useQuery({
     queryKey: ['PrerequisiteCourses', params],
     queryFn: () =>
@@ -55,5 +55,39 @@ const unlinkPageBuilder = ({ courseId, builder }: UnlinkPageBuilderPayload) => {
 export const useUnlinkPageBuilderMutation = () => {
   return useMutation({
     mutationFn: unlinkPageBuilder,
+  });
+};
+
+export interface Bundle {
+  id: number;
+  title: string;
+  image: string;
+  is_purchasable: boolean;
+  regular_price: string;
+  sale_price: string;
+}
+
+interface BundleListParams extends PaginatedParams {
+  exclude: string[];
+}
+
+const getBundleList = (params: BundleListParams) => {
+  return wpAjaxInstance.get<PaginatedResult<Bundle>>(endpoints.BUNDLE_LIST, {
+    params: params,
+  });
+};
+
+export const useBundleListQuery = ({ params, isEnabled }: { params: BundleListParams; isEnabled: boolean }) => {
+  return useQuery({
+    queryKey: ['PrerequisiteCourses', params],
+    queryFn: () =>
+      getBundleList({
+        exclude: params.exclude,
+        limit: params.limit,
+        offset: params.offset,
+        filter: params.filter,
+      }).then((res) => res.data),
+    placeholderData: keepPreviousData,
+    enabled: isEnabled,
   });
 };

@@ -12,7 +12,6 @@ import CourseListModal from '@ImportExport/components/modals/CourseListModal';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import Logo from '@TutorShared/components/Logo';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
-import CourseCategorySelectModal from '@TutorShared/components/modals/CourseCategorySelectModal';
 import { useModal, type ModalProps } from '@TutorShared/components/modals/Modal';
 
 import {
@@ -240,6 +239,7 @@ const ExportModal = ({
           component: CourseListModal,
           props: {
             title: __('Select Courses', 'tutor'),
+            type: 'courses',
             form: bulkSelectionForm,
           },
         },
@@ -250,10 +250,10 @@ const ExportModal = ({
       },
       'course-bundle': {
         modal: {
-          component: CourseCategorySelectModal,
+          component: CourseListModal,
           props: {
             title: __('Select Bundles', 'tutor'),
-            type: 'bundles',
+            type: 'course-bundle',
             form: bulkSelectionForm,
           },
         },
