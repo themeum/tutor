@@ -108,8 +108,11 @@ const ExportModal = ({
 
   /**
    * Returns properly formatted label for form data keys with appropriate count information
+   *
+   * @param {string} key - The form data key to get the label for
+   * @returns {string | JSX.Element} - The formatted label with count information
    */
-  const getLabelByFormDataKey = (key: string) => {
+  const getLabelByFormDataKey = (key: string): string | JSX.Element => {
     // Early return if no exportable content data
     if (!exportableContent || !Array.isArray(exportableContent)) {
       return key;
