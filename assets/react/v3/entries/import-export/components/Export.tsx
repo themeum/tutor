@@ -39,74 +39,50 @@ const Export = () => {
     }
 
     const { completed_contents: completedContents, failed_course_ids = [], failed_bundle_ids = [] } = exportStatus;
+    const noFailures = failed_course_ids.length === 0 && failed_bundle_ids.length === 0;
 
-    // Handle case with only failures
+    // Helper function for formatting count with singular/plural text
+    const formatCount = (count: number, singular: string, plural: string): string =>
+      sprintf(__(count === 1 ? '%d ' + singular : '%d ' + plural, 'tutor'), count);
+
+    // Handle case with only failures and no completed contents
     if (!completedContents || Object.keys(completedContents).length === 0) {
-      if (failed_course_ids.length || failed_bundle_ids.length) {
-        const failedMessages = [];
-
+      if (!noFailures) {
+        const items = [];
         if (failed_course_ids.length) {
-          failedMessages.push(
-            failed_course_ids.length === 1
-              ? sprintf(__('%d Course failed', 'tutor'), failed_course_ids.length)
-              : sprintf(__('%d Courses failed', 'tutor'), failed_course_ids.length),
-          );
+          items.push(formatCount(failed_course_ids.length, 'Course', 'Courses'));
         }
-
         if (failed_bundle_ids.length) {
-          failedMessages.push(
-            failed_bundle_ids.length === 1
-              ? sprintf(__('%d Bundle failed', 'tutor'), failed_bundle_ids.length)
-              : sprintf(__('%d Bundles failed', 'tutor'), failed_bundle_ids.length),
-          );
+          items.push(formatCount(failed_bundle_ids.length, 'Bundle', 'Bundles'));
         }
-
-        return failedMessages.join(', ');
+        return `${items.join(', ')} ${__('failed', 'tutor')}`;
       }
-
       return __('Export in progress...', 'tutor');
     }
 
+    // Process successful and failed items
     const { courses, 'course-bundle': bundles, settings } = completedContents;
     const successItems = [];
-    const failedItems = [];
 
-    // Handle successful exports
     if (courses?.length) {
-      successItems.push(
-        courses.length === 1
-          ? sprintf(__('%d Course', 'tutor'), courses.length)
-          : sprintf(__('%d Courses', 'tutor'), courses.length),
-      );
+      successItems.push(formatCount(courses.length, 'Course', 'Courses'));
     }
 
     if (bundles?.length) {
-      successItems.push(
-        bundles.length === 1
-          ? sprintf(__('%d Bundle', 'tutor'), bundles.length)
-          : sprintf(__('%d Bundles', 'tutor'), bundles.length),
-      );
+      successItems.push(formatCount(bundles.length, 'Bundle', 'Bundles'));
     }
 
     if (settings) {
       successItems.push(__('Settings', 'tutor'));
     }
 
-    // Handle failed exports
+    // Create failed items list (without the word "failed")
+    const failedItems = [];
     if (failed_course_ids.length) {
-      failedItems.push(
-        failed_course_ids.length === 1
-          ? sprintf(__('%d Course failed', 'tutor'), failed_course_ids.length)
-          : sprintf(__('%d Courses failed', 'tutor'), failed_course_ids.length),
-      );
+      failedItems.push(formatCount(failed_course_ids.length, 'Course', 'Courses'));
     }
-
     if (failed_bundle_ids.length) {
-      failedItems.push(
-        failed_bundle_ids.length === 1
-          ? sprintf(__('%d Bundle failed', 'tutor'), failed_bundle_ids.length)
-          : sprintf(__('%d Bundles failed', 'tutor'), failed_bundle_ids.length),
-      );
+      failedItems.push(formatCount(failed_bundle_ids.length, 'Bundle', 'Bundles'));
     }
 
     // Early return if nothing to report
@@ -114,6 +90,7 @@ const Export = () => {
       return __('Export in progress...', 'tutor');
     }
 
+    // Build final message
     let message = '';
 
     if (successItems.length > 0) {
@@ -121,11 +98,8 @@ const Export = () => {
     }
 
     if (failedItems.length > 0) {
-      if (message) {
-        message += `. ${failedItems.join(', ')}.`;
-      } else {
-        message = `${failedItems.join(', ')}.`;
-      }
+      const failureMessage = `${failedItems.join(', ')} ${__('failed', 'tutor')}`;
+      message = message ? `${message}. ${failureMessage}` : failureMessage;
     }
 
     return message;
@@ -174,6 +148,9 @@ const Export = () => {
         currentStep: 'success',
         progress: 100,
         fileSize: JSON.stringify(exportContentResponse?.exported_data).length,
+        completedContents: exportContentResponse?.completed_contents,
+        failedCourseIds: exportContentResponse?.failed_course_ids,
+        failedBundleIds: exportContentResponse?.failed_bundle_ids,
         onDownload: (fileName) => {
           const jsonFile = new Blob([JSON.stringify(exportContentResponse?.exported_data)], {
             type: 'application/json',

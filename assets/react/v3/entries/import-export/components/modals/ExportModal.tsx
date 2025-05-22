@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -19,6 +19,7 @@ import {
   defaultExportFormData,
   useExportableContentQuery,
   type ExportableCourseContentType,
+  type ExportContentResponse,
   type ExportFormData,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
@@ -44,6 +45,9 @@ interface ExportModalProps extends ModalProps {
   progress: number;
   fileSize?: number;
   message?: string;
+  completedContents?: ExportContentResponse['completed_contents'];
+  failedCourseIds?: ExportContentResponse['failed_course_ids'];
+  failedBundleIds?: ExportContentResponse['failed_bundle_ids'];
 }
 
 interface BulkSelectionFormData {
@@ -55,7 +59,18 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const fileName = `tutor_data_${Date.now()}.json`;
 
-const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fileSize, message }: ExportModalProps) => {
+const ExportModal = ({
+  onClose,
+  onExport,
+  currentStep,
+  onDownload,
+  progress,
+  fileSize,
+  message,
+  completedContents,
+  failedCourseIds = [],
+  failedBundleIds = [],
+}: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: defaultExportFormData,
   });
@@ -67,6 +82,7 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
     },
   });
 
+  const [isFailedDataVisible, setIsFailedDataVisible] = useState(false);
   const { showModal } = useModal();
   const getExportableContentQuery = useExportableContentQuery();
   const exportableContent = getExportableContentQuery.data;
@@ -186,6 +202,27 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
   const handleClose = () => {
     form.reset();
     onClose();
+  };
+
+  const formatCompletedItems = (completedContents?: ExportContentResponse['completed_contents']): string => {
+    if (!completedContents) return '';
+
+    const { courses, 'course-bundle': bundles, settings } = completedContents;
+    const items = [];
+
+    if (courses?.length) {
+      items.push(sprintf(courses.length === 1 ? __('%d Course', 'tutor') : __('%d Courses', 'tutor'), courses.length));
+    }
+
+    if (bundles?.length) {
+      items.push(sprintf(bundles.length === 1 ? __('%d Bundle', 'tutor') : __('%d Bundles', 'tutor'), bundles.length));
+    }
+
+    if (settings) {
+      items.push(__('Settings', 'tutor'));
+    }
+
+    return items.join(', ');
   };
 
   const renderExportableContentOptions = () => {
@@ -378,6 +415,74 @@ const ExportModal = ({ onClose, onExport, currentStep, onDownload, progress, fil
             </div>
           }
         >
+          <div css={styles.reportList}>
+            <div css={styles.reportWrapper}>
+              <div css={styles.report}>
+                <SVGIcon data-check-icon name="checkFilledWhite" width={24} height={24} />
+
+                <div css={styles.reportInfo}>
+                  <div css={styles.reportLeft}>
+                    <div>{__('Successfully Exported', 'tutor')}</div>
+                    <div>{formatCompletedItems(completedContents)}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <Show when={[...failedBundleIds, ...failedCourseIds].length > 0}>
+              <button
+                css={[styleUtils.resetButton, styles.reportWrapper]}
+                onClick={() => setIsFailedDataVisible(!isFailedDataVisible)}
+              >
+                <div css={styles.report}>
+                  <SVGIcon data-cross-icon name="crossCircle" width={28} height={28} />
+
+                  <div css={styles.reportInfo}>
+                    <div css={styles.reportLeft}>
+                      <div>{__('Failed to Export', 'tutor')}</div>
+                      <div>
+                        {failedCourseIds.length > 0 ? `${failedCourseIds.length} ${__('Courses', 'tutor')}` : ''}
+                        {failedBundleIds.length > 0 ? `${failedBundleIds.length} ${__('Bundles', 'tutor')}` : ''}
+                      </div>
+                    </div>
+
+                    <SVGIcon data-down-icon name="chevronDown" width={24} height={24} />
+                  </div>
+                </div>
+
+                <Show when={isFailedDataVisible}>
+                  <Show when={failedCourseIds.length > 0}>
+                    <div css={styles.failedItem}>
+                      <label>{sprintf(__('Course IDs (%d)', 'tutor'), failedCourseIds.length)}</label>
+                      <div css={styles.failedList}>
+                        <For each={failedCourseIds}>
+                          {(courseId) => (
+                            <div key={courseId} css={styles.failedId}>
+                              {courseId}
+                            </div>
+                          )}
+                        </For>
+                      </div>
+                    </div>
+                  </Show>
+                  <Show when={failedBundleIds.length > 0}>
+                    <div css={styles.failedItem}>
+                      <label>{sprintf(__('Bundle IDs (%d)', 'tutor'), failedBundleIds.length)}</label>
+                      <div css={styles.failedList}>
+                        <For each={failedBundleIds}>
+                          {(bundleId) => (
+                            <div key={bundleId} css={styles.failedId}>
+                              {bundleId}
+                            </div>
+                          )}
+                        </For>
+                      </div>
+                    </div>
+                  </Show>
+                </Show>
+              </button>
+            </Show>
+          </div>
           <div css={styles.file}>
             <div css={styles.fileIcon}>
               <SVGIcon name="attachmentLine" width={24} height={24} />
@@ -694,5 +799,80 @@ const styles = {
   `,
   selectButton: css`
     background-color: ${colorTokens.background.white};
+  `,
+  reportList: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+    width: 100%;
+  `,
+  reportWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+    background-color: ${colorTokens.primary[30]};
+    border-radius: ${borderRadius[6]};
+    padding: ${spacing[8]} ${spacing[12]};
+  `,
+  report: css`
+    width: 100%;
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[12]};
+
+    [data-check-icon] {
+      color: ${colorTokens.icon.success};
+      flex-shrink: 0;
+    }
+
+    [data-cross-icon] {
+      color: ${colorTokens.icon.error};
+      flex-shrink: 0;
+    }
+
+    [data-down-icon] {
+      color: ${colorTokens.icon.default};
+      flex-shrink: 0;
+    }
+  `,
+  reportInfo: css`
+    width: 100%;
+    ${styleUtils.display.flex()};
+    justify-content: space-between;
+    align-items: center;
+  `,
+  reportLeft: css`
+    ${styleUtils.display.flex('column')};
+
+    div:first-of-type {
+      ${typography.small()};
+      color: ${colorTokens.text.title};
+    }
+
+    div:last-of-type {
+      ${typography.small('medium')};
+      color: ${colorTokens.text.primary};
+    }
+  `,
+  failedItem: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+    padding: ${spacing[8]} ${spacing[12]};
+    background-color: ${colorTokens.primary[30]};
+    border-radius: ${borderRadius[6]};
+
+    label {
+      ${typography.small('medium')};
+    }
+  `,
+  failedList: css`
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-radius: ${borderRadius[6]};
+  `,
+  failedId: css`
+    ${typography.tiny()};
+    background-color: ${colorTokens.background.white};
+    color: ${colorTokens.text.subdued};
+    padding: ${spacing[2]} ${spacing[8]};
+    border-radius: ${borderRadius[4]};
   `,
 };
