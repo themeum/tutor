@@ -41,7 +41,6 @@ $item_ids   = $has_plan_info ? array( $plan_info->id ) : array_column( $course_l
 $order_type = $has_plan_info ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
 $coupon_code            = apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
-$show_tax               = (int) Input::sanitize_request_data( 'show_tax', 1 );
 $has_manual_coupon_code = ! empty( $coupon_code );
 
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
@@ -179,10 +178,8 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 				<div class="tutor-fw-bold tutor-discount-amount">-<?php tutor_print_formatted_price( $checkout_data->coupon_discount ); ?></div>
 			</div>
 
-					<?php
-					if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price && $show_tax ) :
-						?>
-			<div class="tutor-checkout-summary-item" data-tax-amount>
+			<?php if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price ) : ?>
+			<div class="tutor-checkout-summary-item tutor-checkout-tax-amount">
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold"><?php tutor_print_formatted_price( $checkout_data->tax_amount ); ?></div>
 			</div>
@@ -193,21 +190,19 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
 				<div class="tutor-fs-5 tutor-fw-bold tutor-checkout-grand-total">
-					<?php tutor_print_formatted_price( ! $show_tax ? $checkout_data->total_price_without_tax : $checkout_data->total_price ); ?>
+					<?php tutor_print_formatted_price( $checkout_data->total_price ); ?>
 				</div>
 			</div>
-			<div class="tutor-checkout-summary-item">
+			<div class="tutor-checkout-summary-item tutor-checkout-incl-tax-label">
 				<div></div>
-					<?php
-					if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price && $show_tax ) :
-						?>
+					<?php if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) : ?>
 					<div class="tutor-fs-7 tutor-color-muted">
 						<?php
 						/* translators: %s: tax amount */
 						echo esc_html( sprintf( __( '(Incl. Tax %s)', 'tutor' ), tutor_get_formatted_price( $checkout_data->tax_amount ) ) );
 						?>
 					</div>
-							<?php endif ?>
+					<?php endif ?>
 			</div>
 
 			<input type="hidden" name="coupon_code" value="<?php echo esc_attr( $coupon_code ); ?>">
@@ -220,7 +215,10 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 		$pay_now_btn_text     = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
 		$pay_now_btn_text     = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
 		$show_payment_methods = apply_filters( 'tutor_checkout_show_payment_methods', ! $is_zero_price, $checkout_data );
+
+		$checkout_data->pay_now_btn_text        = $pay_now_btn_text;
+		$checkout_data->payment_method_required = $show_payment_methods;
 		?>
-		<input type="hidden" id="pay_now_btn_text" value="<?php echo esc_attr( $pay_now_btn_text ); ?>">
+		<input type="hidden" id="checkout_data" value="<?php echo esc_attr( wp_json_encode( $checkout_data ) ); ?>">
 	</div>
 </div>
