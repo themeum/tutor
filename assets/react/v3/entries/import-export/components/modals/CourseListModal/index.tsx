@@ -5,7 +5,6 @@ import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper'
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import { spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type Course } from '@TutorShared/services/course';
 import { __, sprintf } from '@wordpress/i18n';
 import { type UseFormReturn } from 'react-hook-form';
 
@@ -13,10 +12,10 @@ interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any, any, undefined>;
-  addedCourses: Course[];
 }
 
-function CourseListModal({ title, closeModal, actions, form, addedCourses }: CourseListModalProps) {
+function CourseListModal({ title, closeModal, actions, form }: CourseListModalProps) {
+  const addedCourses = form.getValues('courses');
   const _form = useFormWithGlobalError({
     defaultValues: {
       courses: addedCourses,

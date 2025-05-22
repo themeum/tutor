@@ -123,7 +123,7 @@ export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tuto
 
 export interface ContentItem {
   label: string;
-  key: ExportableCourseContentType;
+  key: ExportableCourseContentType | (string & {});
   count: number;
 }
 
