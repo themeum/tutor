@@ -15,6 +15,7 @@ import importInitialImage from '@SharedImages/import-export/import-initial.webp'
 import { useEffect } from 'react';
 
 // @TODO: need to integrate with the API
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const readJsonFile = (file: File): Promise<any> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -24,7 +25,7 @@ const readJsonFile = (file: File): Promise<any> => {
         const content = event.target?.result as string;
         const jsonData = JSON.parse(content);
         resolve(jsonData);
-      } catch (error) {
+      } catch {
         reject(new Error(__('Invalid JSON file format', 'tutor')));
       }
     };
@@ -39,13 +40,19 @@ const readJsonFile = (file: File): Promise<any> => {
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
-  const { data: importResponse, mutateAsync, isPending, isError } = useImportContentsMutation();
+  const { data: importResponse, mutateAsync, isError, error } = useImportContentsMutation();
 
   const onImport = async (file: File): Promise<void> => {
     // Early return if file is invalid
     if (!file || !(file instanceof File)) {
       return;
     }
+
+    updateModal<typeof ImportModal>('import-modal', {
+      currentStep: 'progress',
+      progress: 0,
+    });
+
     const jsonData = await readJsonFile(file);
 
     try {
@@ -73,9 +80,36 @@ const Import = () => {
     });
   };
 
-  // useEffect(() => {
+  useEffect(() => {
+    const progress = Number(importResponse?.job_progress);
+    if (isError) {
+      updateModal<typeof ImportModal>('import-modal', {
+        currentStep: 'error',
+      });
+    }
 
-  // }, [importResponse]);
+    if (progress < 100) {
+      mutateAsync({
+        job_id: importResponse?.job_id as string,
+      });
+    }
+
+    if (progress > 0 && progress < 100) {
+      updateModal<typeof ImportModal>('import-modal', {
+        currentStep: 'progress',
+        progress,
+        // message: importResponse?.
+      });
+    }
+
+    if (progress === 100) {
+      updateModal<typeof ImportModal>('import-modal', {
+        currentStep: 'success',
+        progress: 100,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [importResponse, error]);
 
   return (
     <div css={styles.wrapper}>
