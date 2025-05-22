@@ -8,9 +8,9 @@
  * @since v2.0.0
  */
 import ajaxHandler from '../../helper/ajax-handler';
-const { __, _x, _n, _nx } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function () {
+	const { __, _x, _n, _nx } = wp.i18n;
 	const commonConfirmModal = document.getElementById('tutor-common-confirmation-modal');
 	const commonConfirmForm = document.getElementById('tutor-common-confirmation-form');
 
@@ -88,16 +88,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		'change',
 		(e) => {
 			window.location = urlPrams('payment-status', e.target.value);
-		},
-		{ once: true },
-	);
-
-	const filterCouponStatus = document.getElementById('tutor-backend-filter-coupon-status');
-
-	filterCouponStatus?.addEventListener(
-		'change',
-		(e) => {
-			window.location = urlPrams('coupon-status', e.target.value);
 		},
 		{ once: true },
 	);

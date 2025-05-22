@@ -1,7 +1,6 @@
 import ajaxHandler from "../../helper/ajax-handler";
 import tutorFormData from "../../helper/tutor-formdata";
 
-const {__} = wp.i18n;
 const tutor_filters = [
     'keyword',
     'course_order',

@@ -4,7 +4,6 @@
  * @since v2.0.6
  */
 import ajaxHandler from "../helper/ajax-handler";
-const { __, _x, _n, _nx } = wp.i18n;
 document.addEventListener('DOMContentLoaded', async function() {
     // Create new course
     const currentPage = _tutorobject.current_page;

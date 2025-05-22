@@ -2948,7 +2948,11 @@ class Utils {
 	 *
 	 * @return array|null|object|void
 	 */
-	public function product_belongs_with_course( $product_id = 0 ) {
+	public function product_belongs_with_course( int $product_id ) {
+		if ( ! $product_id ) {
+			return null;
+		}
+
 		global $wpdb;
 
 		$query = $wpdb->get_row(
@@ -3347,7 +3351,7 @@ class Utils {
 			if ( 5 === (int) $rating ) {
 				$max_rating = 5;
 			}
-			$rating_having = $wpdb->prepare( " HAVING rating >= %d AND rating <= %d ", $rating, $max_rating );
+			$rating_having = $wpdb->prepare( ' HAVING rating >= %d AND rating <= %d ', $rating, $max_rating );
 		}
 
 		/**
@@ -3540,7 +3544,7 @@ class Utils {
 	 * @param string  $date_filter date filter.
 	 * @param string  $order_by order by.
 	 * @param string  $order order.
-	 * 
+	 *
 	 * @since 3.4.0
 	 *
 	 * @param array   $post_status the post status.
@@ -3595,7 +3599,7 @@ class Utils {
 			$author_query = "AND course.post_author = $instructor_id";
 		}
 
-		$post_status = QueryHelper::prepare_in_clause( $post_status );
+		$post_status    = QueryHelper::prepare_in_clause( $post_status );
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
@@ -6841,7 +6845,7 @@ class Utils {
 	 * @since 1.3.4
 	 * @since 3.0.0 hide admin bar support and location param added.
 	 *
-	 * @param int $course_id course id.
+	 * @param int   $course_id course id.
 	 * @param mixed $location possible values `null|backend|frontend`.
 	 *
 	 * @return false|string
@@ -7079,9 +7083,9 @@ class Utils {
 			$status = '';
 		}
 
-		$status_query = "";
+		$status_query = '';
 		if ( is_array( $status ) && count( $status ) ) {
-			$in_clause    =  QueryHelper::prepare_in_clause( $status );
+			$in_clause    = QueryHelper::prepare_in_clause( $status );
 			$status_query = "AND enrol.post_status IN ({$in_clause})";
 		} elseif ( ! empty( $status ) ) {
 			$status_query = "AND enrol.post_status = '$status' ";
@@ -7144,9 +7148,9 @@ class Utils {
 			$status = '';
 		}
 
-		$status_query = "";
+		$status_query = '';
 		if ( is_array( $status ) && count( $status ) ) {
-			$in_clause    =  QueryHelper::prepare_in_clause( $status );
+			$in_clause    = QueryHelper::prepare_in_clause( $status );
 			$status_query = "AND enrol.post_status IN ({$in_clause})";
 		} elseif ( ! empty( $status ) ) {
 			$status_query = "AND enrol.post_status = '$status' ";
@@ -8172,8 +8176,9 @@ class Utils {
 	 * @return string|false
 	 */
 	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0 ) {
-		$value = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
-		$time  = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
+		$value               = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
+		$time                = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
+		$deadline_from_start = (bool) $this->get_assignment_option( $assignment_id, 'deadline_from_start' );
 
 		if ( ! $value ) {
 			return $fallback;
@@ -8194,6 +8199,13 @@ class Utils {
 		$publish_date_gmt = get_post_field( 'post_date_gmt', $assignment_id );
 
 		$deadline_date = strtotime( $enrolled_date_gmt ) < strtotime( $publish_date_gmt ) ? $publish_date_gmt : $enrolled_date_gmt;
+
+		if ( $deadline_from_start ) {
+			$assignment_comment = tutor_utils()->get_single_comment_user_post_id( $assignment_id, $student_id );
+			if ( $assignment_comment && isset( $assignment_comment->comment_date_gmt ) ) {
+				$deadline_date = $assignment_comment->comment_date_gmt;
+			}
+		}
 
 		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
@@ -10172,25 +10184,25 @@ class Utils {
 	 */
 	public function allowed_profile_bio_tags( $tags = array() ) {
 		$supported_tags = array(
-			'p'      => array(),
-			'br'     => array(),
-			'span'   => array(
+			'p'          => array(),
+			'br'         => array(),
+			'span'       => array(
 				'style' => true,
 			),
-			'strong' => array(),
-			'b'      => array(),
-			'em'     => array(),
-			'i'      => array(),
-			'u'      => array(),
+			'strong'     => array(),
+			'b'          => array(),
+			'em'         => array(),
+			'i'          => array(),
+			'u'          => array(),
 			'blockquote' => array(),
-			'ul'     => array(),
-			'ol'     => array(),
-			'li'     => array(),
-			'del'    => array(),
-			'ins'    => array(),
-			'sub'    => array(),
-			'sup'    => array(),
-			'a'      => array(
+			'ul'         => array(),
+			'ol'         => array(),
+			'li'         => array(),
+			'del'        => array(),
+			'ins'        => array(),
+			'sub'        => array(),
+			'sup'        => array(),
+			'a'          => array(
 				'href'   => true,
 				'title'  => true,
 				'target' => true,
@@ -10399,7 +10411,7 @@ class Utils {
 		if ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) ) {
 			$name = 'elementor';
 		}
-		 
+
 		if ( 'droip' === get_post_meta( $post_id, 'droip_editor_mode', true ) ) {
 			$name = 'droip';
 		}
@@ -10477,7 +10489,7 @@ class Utils {
 		if ( false === $next_timestamp ) {
 			return null;
 		}
-		
+
 		/* translators: %s: timestamp */
 		return sprintf( __( '%s left', 'tutor' ), human_time_diff( $next_timestamp ) );
 	}
@@ -10580,12 +10592,12 @@ class Utils {
 		$username = trim( $username );
 
 		// If username is email then remove domain part from it.
-		if ( filter_var( $username , FILTER_VALIDATE_EMAIL ) ) {
+		if ( filter_var( $username, FILTER_VALIDATE_EMAIL ) ) {
 			$username = strstr( $username, '@', true );
 		}
 
 		// Sanitize and convert to snake_case.
-		$username = str_replace('-', '_', sanitize_title( $username ) );
+		$username = str_replace( '-', '_', sanitize_title( $username ) );
 
 		// Add postfix to username if exists and make sure it's unique.
 		$original_username = $username;

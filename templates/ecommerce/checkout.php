@@ -85,13 +85,17 @@ $is_checkout_page = true;
 						<div class="tutor-billing-fields">
 							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
 						</div>
-						<div class="tutor-payment-method-wrapper tutor-mt-20">
-						<?php if ( $show_payment_methods ) : ?>
+						<div class="tutor-payment-method-wrapper tutor-mt-20 <?php echo esc_attr( $show_payment_methods ? '' : 'tutor-d-none' ); ?>">
 							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
 							</h5>
 							<div class="tutor-checkout-payment-options tutor-mb-24">
 								<input type="hidden" name="payment_type">
+
+								<?php if ( ! $show_payment_methods ) : ?>
+									<input type="hidden" name="payment_method" value="free" id="tutor-temp-payment-method">
+								<?php endif; ?>
+
 								<?php
 								$supported_gateways = $plan_id ? tutor_get_subscription_supported_payment_gateways() : tutor_get_all_active_payment_gateways();
 								if ( empty( $supported_gateways ) ) {
@@ -107,8 +111,8 @@ $is_checkout_page = true;
 										$is_manual = $gateway['is_manual'] ?? false;
 										if ( $is_manual ) {
 											?>
-											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ?? '' ); ?>">
-												<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input"  required>
+											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( base64_encode( $gateway['payment_instructions'] ?? '' ) ); ?>">
+												<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input">
 												<div class="tutor-payment-item-content">
 												<?php if ( ! empty( $icon ) ) : ?>
 													<img src ="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>
@@ -120,7 +124,7 @@ $is_checkout_page = true;
 										} else {
 											?>
 											<label class="tutor-checkout-payment-item" data-payment-type="automate">
-												<input type="radio" name="payment_method" value="<?php echo esc_attr( $name ); ?>" class="tutor-form-check-input" required>
+												<input type="radio" name="payment_method" value="<?php echo esc_attr( $name ); ?>" class="tutor-form-check-input">
 												<div class="tutor-payment-item-content">
 												<?php if ( ! empty( $icon ) ) : ?>
 													<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>
@@ -136,13 +140,9 @@ $is_checkout_page = true;
 							</div>
 
 							<div class="tutor-payment-instructions tutor-mb-20 tutor-d-none"></div>
-						<?php else : ?>
-							<input type="hidden" name="payment_method" value="free">
-							<input type="hidden" name="payment_type" value="manual">
-						<?php endif; ?>
 						</div>
 						<?php if ( null !== $tutor_toc_page_link ) : ?>
-							<div class="tutor-mb-16 <?php echo esc_attr( $show_payment_methods ? 'tutor-mt-20' : '' ); ?>">
+							<div class="tutor-mt-20">
 								<div class="tutor-form-check tutor-d-flex">
 									<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
 									<label for="tutor_checkout_agree_to_terms">
@@ -167,7 +167,7 @@ $is_checkout_page = true;
 						delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
 						if ( $pay_now_errors || $pay_now_alert_msg ) :
 							?>
-						<div class="tutor-break-word">
+						<div class="tutor-break-word tutor-mt-16">
 							<?php
 							if ( ! empty( $pay_now_alert_msg ) ) :
 								list( $alert, $message ) = array_values( $pay_now_alert_msg );
@@ -190,7 +190,7 @@ $is_checkout_page = true;
 						<?php endif; ?>
 						<!-- handle errors end -->
 						<?php $enable_pay_now_btn = apply_filters( 'tutor_checkout_enable_pay_now_btn', true, $checkout_data ); ?>
-						<button type="submit" <?php echo $enable_pay_now_btn ? '' : 'disabled'; ?>  id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
+						<button type="submit" <?php echo $enable_pay_now_btn ? '' : 'disabled'; ?>  id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center tutor-mt-16">
 							<?php echo esc_html( $pay_now_btn_text ); ?>
 						</button>
 					</div>

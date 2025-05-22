@@ -13,7 +13,7 @@ export interface Course {
 }
 
 interface CourseListParams extends PaginatedParams {
-  exclude: string[];
+  exclude: string[] | number[];
 }
 
 const getCourseList = (params: CourseListParams) => {
