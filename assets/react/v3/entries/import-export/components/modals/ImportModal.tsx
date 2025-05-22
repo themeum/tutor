@@ -24,7 +24,7 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   files: File[];
   currentStep: ImportExportModalState;
   onClose: () => void;
-  onImport: (files: File[]) => void;
+  onImport: (files: File) => void;
 }
 
 const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: ImportModalProps) => {
@@ -107,7 +107,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
               variant="primary"
               size="small"
               loading={currentStep === 'progress'}
-              onClick={() => onImport(files)}
+              onClick={() => onImport(files[0])}
             >
               {__('Import', 'tutor')}
             </Button>

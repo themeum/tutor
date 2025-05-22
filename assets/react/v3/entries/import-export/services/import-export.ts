@@ -203,3 +203,26 @@ export const useExportContentsMutation = () => {
     },
   });
 };
+
+interface ImportContentPayload {
+  data: string;
+  job_id?: string | number; // need to send back the job id to get the status
+}
+
+const importContents = (payload: ImportContentPayload) => {
+  return wpAjaxInstance.post<ExportContentResponse>(endpoints.IMPORT_CONTENTS, payload);
+};
+
+export const useImportContentsMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: importContents,
+    mutationKey: ['ImportContents'],
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: convertToErrorMessage(error),
+        type: 'danger',
+      });
+    },
+  });
+};

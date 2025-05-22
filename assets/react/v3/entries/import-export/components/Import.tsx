@@ -10,17 +10,54 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
+import { useImportContentsMutation } from '@ImportExport/services/import-export';
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
+import { useEffect } from 'react';
 
 // @TODO: need to integrate with the API
+const readJsonFile = (file: File): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        const jsonData = JSON.parse(content);
+        resolve(jsonData);
+      } catch (error) {
+        reject(new Error(__('Invalid JSON file format', 'tutor')));
+      }
+    };
+
+    reader.onerror = () => {
+      reject(new Error(__('Failed to read file', 'tutor')));
+    };
+
+    reader.readAsText(file);
+  });
+};
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
+  const { data: importResponse, mutateAsync, isPending, isError } = useImportContentsMutation();
 
-  const onImport = () => {
-    updateModal<typeof ImportModal>('import-modal', {
-      currentStep: 'error',
-    });
+  const onImport = async (file: File): Promise<void> => {
+    // Early return if file is invalid
+    if (!file || !(file instanceof File)) {
+      return;
+    }
+    const jsonData = await readJsonFile(file);
+
+    try {
+      await mutateAsync({
+        data: jsonData,
+      });
+    } catch {
+      updateModal<typeof ImportModal>('import-modal', {
+        currentStep: 'error',
+      });
+      return;
+    }
   };
 
   const handleUpload = (files: File[]) => {
@@ -35,6 +72,10 @@ const Import = () => {
       },
     });
   };
+
+  // useEffect(() => {
+
+  // }, [importResponse]);
 
   return (
     <div css={styles.wrapper}>
