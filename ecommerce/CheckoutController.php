@@ -509,6 +509,9 @@ class CheckoutController {
 		$response['total_price']             = $total_price;
 		$response['order_type']              = $order_type;
 
+		$response['formatted_total_price_without_tax'] = tutor_get_formatted_price( $total_price_without_tax );
+		$response['formatted_total_price']             = tutor_get_formatted_price( $total_price );
+
 		return (object) $response;
 	}
 
@@ -597,7 +600,12 @@ class CheckoutController {
 		}
 
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
-		$items         = array();
+
+		if ( $checkout_data->total_price > 0 && 'free' === $payment_method ) {
+			array_push( $errors, __( 'Select a payment method', 'tutor' ) );
+		}
+
+		$items = array();
 		foreach ( $checkout_data->items as $item ) {
 			$items[] = array(
 				'item_id'        => $item->item_id,
