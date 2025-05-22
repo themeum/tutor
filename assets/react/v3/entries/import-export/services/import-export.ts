@@ -151,7 +151,7 @@ export interface ExportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-export interface ExportContentResponse {
+interface ImportExportContentResponseBase {
   job_id: string;
   job_progress: number;
   job_status: string;
@@ -160,6 +160,9 @@ export interface ExportContentResponse {
     ids: string[];
     sub_contents: string[];
   }[];
+}
+
+export interface ExportContentResponse extends ImportExportContentResponseBase {
   exported_data: {
     schema_version: string;
     data: {
@@ -195,6 +198,40 @@ export const useExportContentsMutation = () => {
   return useMutation({
     mutationFn: exportContents,
     mutationKey: ['ExportContents'],
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: convertToErrorMessage(error),
+        type: 'danger',
+      });
+    },
+  });
+};
+
+interface ImportContentPayload {
+  data?: string;
+  job_id?: string | number; // need to send back the job id to get the status
+}
+
+interface ImportContentResponse extends ImportExportContentResponseBase {
+  imported_data: [];
+  completed_contents: {
+    courses: string[];
+    'course-bundle': string[];
+    settings: boolean;
+  };
+  failed_course_ids: [];
+  failed_bundle_ids: [];
+}
+
+const importContents = (payload: ImportContentPayload) => {
+  return wpAjaxInstance.post<ImportContentResponse>(endpoints.IMPORT_CONTENTS, payload).then((res) => res.data);
+};
+
+export const useImportContentsMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: importContents,
+    mutationKey: ['ImportContents'],
     onError: (error: ErrorResponse) => {
       showToast({
         message: convertToErrorMessage(error),

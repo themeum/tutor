@@ -746,15 +746,6 @@ const styles = {
       transition: width 0.3s ease-in;
       width: ${progress}%;
     }
-
-    @keyframes progress-stripes {
-      from {
-        background-position: 1rem 0;
-      }
-      to {
-        background-position: 0 0;
-      }
-    }
   `,
   progressInfo: css`
     ${typography.small()};

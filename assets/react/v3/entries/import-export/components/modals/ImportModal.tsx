@@ -24,10 +24,12 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   files: File[];
   currentStep: ImportExportModalState;
   onClose: () => void;
-  onImport: (files: File[]) => void;
+  onImport: (files: File) => void;
+  progress?: number;
+  message?: string;
 }
 
-const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: ImportModalProps) => {
+const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, message, progress }: ImportModalProps) => {
   const [files, setFiles] = useState<File[]>(propsFiles);
   const { showToast } = useToast();
 
@@ -107,7 +109,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
               variant="primary"
               size="small"
               loading={currentStep === 'progress'}
-              onClick={() => onImport(files)}
+              onClick={() => onImport(files[0])}
             >
               {__('Import', 'tutor')}
             </Button>
@@ -125,7 +127,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
           <div css={typography.caption()}>{renderHeader[currentStep]}</div>
           <div css={styles.progressCount}>{__('In Progress', 'tutor')}</div>
         </div>
-        <div css={styles.progressBar} />
+        <div css={styles.progressBar({ progress })} />
         <div css={styles.progressInfo}>{file.name}</div>
       </div>
     );
@@ -138,7 +140,9 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport }: Impo
     };
     const subtitle = {
       success: sprintf(__('You have successfully imported a “%s"', 'tutor'), file.name),
-      error: sprintf(__('Failed to import “%s"', 'tutor'), file.name),
+      error: message
+        ? sprintf(__('Failed to import “%s". Cause: %s', 'tutor'), file.name, message)
+        : __('Failed to import', 'tutor'),
     };
 
     return (
@@ -234,7 +238,7 @@ const styles = {
     color: ${colorTokens.text.success};
     border-radius: ${borderRadius[12]};
   `,
-  progressBar: css`
+  progressBar: ({ progress = 0 }) => css`
     position: relative;
     width: 100%;
     height: 6px;
@@ -252,27 +256,7 @@ const styles = {
       background-color: ${colorTokens.bg.success};
       border-radius: ${borderRadius[50]};
       transition: width 0.3s ease-in;
-      background-image: linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.15) 25%,
-        transparent 25%,
-        transparent 50%,
-        rgba(255, 255, 255, 0.15) 50%,
-        rgba(255, 255, 255, 0.15) 75%,
-        transparent 75%,
-        transparent
-      );
-      background-size: 1rem 1rem;
-      animation: progress-stripes 1s linear infinite;
-    }
-
-    @keyframes progress-stripes {
-      from {
-        background-position: 1rem 0;
-      }
-      to {
-        background-position: 0 0;
-      }
+      width: ${progress}%;
     }
   `,
   progressInfo: css`
