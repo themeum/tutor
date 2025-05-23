@@ -1,12 +1,16 @@
 import { css } from '@emotion/react';
-import CourseListTable from '@ImportExport/components/modals/CourseListModal/CourseListTable';
+import { __, sprintf } from '@wordpress/i18n';
+import { type UseFormReturn } from 'react-hook-form';
+import { type Bundle } from 'typescript';
+
 import Button from '@TutorShared/atoms/Button';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
+import CourseListTable from '@ImportExport/components/modals/CourseListModal/CourseListTable';
 import { spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { __, sprintf } from '@wordpress/i18n';
-import { type UseFormReturn } from 'react-hook-form';
+import { type Course } from '@TutorShared/services/course';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -15,8 +19,10 @@ interface CourseListModalProps extends ModalProps {
   type?: 'courses' | 'course-bundle';
 }
 
-function CourseListModal({ title, closeModal, actions, form, type }: CourseListModalProps) {
-  const addedItems = form.getValues(type as 'courses' | 'course-bundle') || [];
+type CourseBundleCombined = Course & Bundle;
+
+function CourseListModal({ title, closeModal, actions, form, type = 'courses' }: CourseListModalProps) {
+  const addedItems = form.getValues(type) || [];
   const _form = useFormWithGlobalError({
     defaultValues: {
       courses: addedItems,
@@ -24,12 +30,13 @@ function CourseListModal({ title, closeModal, actions, form, type }: CourseListM
     },
   });
 
-  const selectedItems = _form.watch(type as 'courses' | 'course-bundle') || [];
+  const selectedItems =
+    ((type === 'courses' ? _form.watch('courses') : _form.watch('course-bundle')) as CourseBundleCombined[]) || [];
 
   const handleAddCourses = () => {
-    const selectedItems = _form.getValues(type as 'courses' | 'course-bundle') || [];
-    form.setValue(type as 'courses' | 'course-bundle', [...selectedItems]);
-    _form.setValue(type as 'courses' | 'course-bundle', []);
+    const selectedItems = _form.getValues(type) || [];
+    form.setValue(type, [...selectedItems]);
+    _form.setValue(type, []);
     closeModal({ action: 'CONFIRM' });
   };
 
@@ -40,6 +47,7 @@ function CourseListModal({ title, closeModal, actions, form, type }: CourseListM
       actions={actions}
       maxWidth={720}
     >
+      {/* @ts-ignore */}
       <CourseListTable form={_form} type={type} />
       <div css={styles.footer}>
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>

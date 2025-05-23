@@ -5,7 +5,7 @@ import { useToast } from '@TutorShared/atoms/Toast';
 
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type WPUser } from '@TutorShared/utils/types';
+import { type TutorMutationResponse, type WPUser } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 export interface ImportExportHistory {
@@ -181,7 +181,7 @@ export interface ExportContentResponse extends ImportExportContentResponseBase {
 }
 const exportContents = async (payload: ExportContentPayload) => {
   return wpAjaxInstance
-    .post<ExportContentResponse>(
+    .post<ExportContentPayload, TutorMutationResponse<ExportContentResponse>>(
       endpoints.EXPORT_CONTENTS,
       payload.job_id
         ? { job_id: payload.job_id }
@@ -224,7 +224,10 @@ interface ImportContentResponse extends ImportExportContentResponseBase {
 }
 
 const importContents = (payload: ImportContentPayload) => {
-  return wpAjaxInstance.post<ImportContentResponse>(endpoints.IMPORT_CONTENTS, payload).then((res) => res.data);
+  return wpAjaxInstance.post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(
+    endpoints.IMPORT_CONTENTS,
+    payload,
+  );
 };
 
 export const useImportContentsMutation = () => {
@@ -238,5 +241,16 @@ export const useImportContentsMutation = () => {
         type: 'danger',
       });
     },
+  });
+};
+
+const getImportExportHistory = () => {
+  return wpAjaxInstance.get<ImportExportHistory[]>(endpoints.GET_IMPORT_EXPORT_HISTORY);
+};
+
+export const useImportExportHistoryQuery = () => {
+  return useQuery({
+    queryKey: ['ImportExportHistory'],
+    queryFn: () => getImportExportHistory().then((res) => res.data),
   });
 };

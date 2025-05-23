@@ -1,118 +1,164 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { type UseFormReturn } from 'react-hook-form';
+import { __, sprintf } from '@wordpress/i18n';
+import React, { useCallback, useMemo } from 'react';
 
-import SearchField from '@ImportExport/components/modals/CourseListModal/SearchField';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
-import { type Course, useBundleListQuery, useCourseListQuery } from '@TutorShared/services/course';
+
+import SearchField from '@ImportExport/components/modals/CourseListModal/SearchField';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
+import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import { type Bundle, type Course, useBundleListQuery, useCourseListQuery } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 
+type CourseType = 'courses' | 'course-bundle';
+
+type CourseBundleCombined = Course & Bundle;
+
 interface CourseListTableProps {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  form: UseFormReturn<{ courses: Course[]; 'course-bundle': Course[] }, any, undefined>;
-  type?: 'courses' | 'course-bundle';
+  form: FormWithGlobalErrorType<{
+    courses: CourseBundleCombined[];
+    'course-bundle': CourseBundleCombined[];
+  }>;
+  type?: CourseType;
 }
 
-const CourseListTable = ({ form, type }: CourseListTableProps) => {
-  const selectedItems = form.watch(type as 'courses' | 'course-bundle') || [];
+const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
-
-  const courseListQuery = useCourseListQuery({
-    params: {
+  const selectedItems = useMemo(() => form.watch(type) || [], [form, type]);
+  const selectedItemIds = useMemo(() => selectedItems.map((course) => course.id), [selectedItems]);
+  const queryParams = useMemo(
+    () => ({
       offset,
       limit: itemsPerPage,
       filter: pageInfo.filter,
       exclude: [],
-    },
+    }),
+    [offset, itemsPerPage, pageInfo.filter],
+  );
+
+  const courseListQuery = useCourseListQuery({
+    params: queryParams,
     isEnabled: type === 'courses',
   });
 
   const bundleListQuery = useBundleListQuery({
-    params: {
-      offset,
-      limit: itemsPerPage,
-      filter: pageInfo.filter,
-      exclude: [],
-    },
+    params: queryParams,
     isEnabled: type === 'course-bundle',
   });
 
-  const fetchedCourses =
-    type === 'courses'
-      ? ((courseListQuery.data?.results ?? []) as Course[])
-      : ((bundleListQuery.data?.results ?? []) as Course[]);
+  const fetchedItems = useMemo(
+    () => (type === 'courses' ? (courseListQuery.data?.results ?? []) : (bundleListQuery.data?.results ?? [])),
+    [type, courseListQuery.data?.results, bundleListQuery.data?.results],
+  );
+  const fetchedItemIds = useMemo(() => fetchedItems.map((course) => course.id), [fetchedItems]);
+  const areAllItemsSelected = useMemo(
+    () => fetchedItems.length > 0 && fetchedItems.every((course) => selectedItemIds.includes(course.id)),
+    [fetchedItems, selectedItemIds],
+  );
 
-  const toggleSelection = (isChecked = false) => {
-    const selectedItemIds = selectedItems.map((course) => course.id);
-    const fetchedItemIds = fetchedCourses.map((course) => course.id);
+  const handleToggleSelection = useCallback(
+    (isChecked: boolean) => {
+      if (isChecked) {
+        // Add all fetched items that aren't already selected
+        const newItems = fetchedItems.filter((course) => !selectedItemIds.includes(course.id));
+        form.setValue(type, [...selectedItems, ...(newItems as CourseBundleCombined[])]);
+      } else {
+        // Keep only items that aren't in the current view
+        const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(course.id));
+        form.setValue(type, newItems);
+      }
+    },
+    [fetchedItems, selectedItemIds, fetchedItemIds, selectedItems, form, type],
+  );
 
-    if (isChecked) {
-      const newItems = fetchedCourses.filter((course) => !selectedItemIds.includes(course.id));
-      form.setValue(type as 'courses' | 'course-bundle', [...selectedItems, ...newItems]);
-      return;
-    }
+  const handleItemToggle = useCallback(
+    (item: CourseBundleCombined) => {
+      const isSelected = selectedItemIds.includes(item.id);
 
-    const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(course.id));
-    form.setValue(type as 'courses' | 'course-bundle', newItems);
-  };
+      if (isSelected) {
+        form.setValue(
+          type,
+          selectedItems.filter((course) => course.id !== item.id),
+        );
+      } else {
+        form.setValue(type, [...selectedItems, item]);
+      }
+    },
+    [selectedItemIds, selectedItems, form, type],
+  );
 
-  const handleAllIsChecked = () => {
-    return fetchedCourses.every((course) => selectedItems.map((course) => course.id).includes(course.id));
-  };
-
-  const columns: Column<Course>[] = [
-    {
-      Header: courseListQuery.data?.results.length ? (
-        <Checkbox
-          onChange={toggleSelection}
-          checked={courseListQuery.isLoading || courseListQuery.isRefetching ? false : handleAllIsChecked()}
-          label={__('Name', 'tutor-pro')}
-          labelCss={styles.checkboxLabel}
-        />
-      ) : (
-        '#'
-      ),
-      Cell: (item) => {
-        return (
+  const columns: Column<CourseBundleCombined>[] = useMemo(
+    () => [
+      {
+        Header: fetchedItems.length ? (
+          <Checkbox
+            onChange={handleToggleSelection}
+            checked={!(courseListQuery.isLoading || courseListQuery.isRefetching) && areAllItemsSelected}
+            label={__('Name', 'tutor')}
+            labelCss={styles.checkboxLabel}
+            aria-label={__('Select all items', 'tutor')}
+          />
+        ) : (
+          '#'
+        ),
+        Cell: (item) => (
           <div css={styles.checkboxWrapper}>
             <Checkbox
-              onChange={() => {
-                const filteredItems = selectedItems.filter((course) => course.id !== item.id);
-                const isNewItem = filteredItems?.length === selectedItems.length;
-
-                if (isNewItem) {
-                  form.setValue(type as 'courses' | 'course-bundle', [...filteredItems, item]);
-                } else {
-                  form.setValue(type as 'courses' | 'course-bundle', filteredItems);
-                }
-              }}
-              checked={selectedItems.map((course) => course.id).includes(item.id)}
+              onChange={() => handleItemToggle(item)}
+              checked={selectedItemIds.includes(item.id)}
+              aria-label={`${__('Select', 'tutor')} ${item.title}`}
             />
             <div css={styles.courseItemWrapper}>
-              <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('Course item', 'tutor-pro')} />
-              <div css={styles.title}>{item.title}</div>
+              <img
+                src={item.image || coursePlaceholder}
+                css={styles.thumbnail}
+                alt={item.title || __('Course item', 'tutor')}
+              />
+              <div css={styles.title}>
+                <div>{item.title}</div>
+                <Show when={type === 'course-bundle' && item?.total_courses}>
+                  <div>{sprintf(__('Total Courses: %d', 'tutor'), item.total_courses)}</div>
+                </Show>
+              </div>
             </div>
           </div>
-        );
+        ),
       },
-    },
-  ];
+    ],
+    [
+      fetchedItems.length,
+      handleToggleSelection,
+      courseListQuery.isLoading,
+      courseListQuery.isRefetching,
+      areAllItemsSelected,
+      handleItemToggle,
+      selectedItemIds,
+      type,
+    ],
+  );
 
   if (courseListQuery.isLoading || bundleListQuery.isLoading) {
-    return <LoadingSection />;
+    return <LoadingSection aria-label={__('Loading', 'tutor')} />;
   }
 
   if (!courseListQuery.data && !bundleListQuery.data) {
-    return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor-pro')}</div>;
+    return (
+      <div css={styles.errorMessage} role="alert" aria-live="assertive">
+        {__('Something went wrong', 'tutor')}
+      </div>
+    );
   }
+
+  const totalItems =
+    type === 'courses' ? (courseListQuery.data?.total_items ?? 0) : (bundleListQuery.data?.total_items ?? 0);
 
   return (
     <>
@@ -123,7 +169,7 @@ const CourseListTable = ({ form, type }: CourseListTableProps) => {
       <div css={styles.tableWrapper}>
         <Table
           columns={columns}
-          data={(fetchedCourses as Course[]) ?? []}
+          data={fetchedItems as CourseBundleCombined[]}
           itemsPerPage={itemsPerPage}
           loading={courseListQuery.isFetching || courseListQuery.isRefetching}
         />
@@ -133,7 +179,7 @@ const CourseListTable = ({ form, type }: CourseListTableProps) => {
         <Paginator
           currentPage={pageInfo.page}
           onPageChange={onPageChange}
-          totalItems={(type === 'courses' ? courseListQuery.data?.total_items : bundleListQuery.data?.total_items) ?? 0}
+          totalItems={totalItems}
           itemsPerPage={itemsPerPage}
         />
       </div>
@@ -141,7 +187,7 @@ const CourseListTable = ({ form, type }: CourseListTableProps) => {
   );
 };
 
-export default CourseListTable;
+export default React.memo(CourseListTable);
 
 const styles = {
   tableLabel: css`
@@ -206,6 +252,12 @@ const styles = {
     color: ${colorTokens.text.primary};
     ${styleUtils.text.ellipsis(2)};
     text-wrap: pretty;
+
+    div:is(:last-of-type):not(:only-of-type) {
+      margin-top: ${spacing[4]};
+      ${typography.small('medium')};
+      color: ${colorTokens.text.hints};
+    }
   `,
   thumbnail: css`
     width: 76px;

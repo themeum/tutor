@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
-import { type ImportExportHistory } from '@ImportExport/services/import-export';
+import { useImportExportHistoryQuery, type ImportExportHistory } from '@ImportExport/services/import-export';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
@@ -16,6 +16,10 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 const History = () => {
   const [dateSortType, setDateSortType] = useState<'asc' | 'desc'>('asc');
   const [isThreeDotOpenIndex, setThreeDotOpenIndex] = useState<number>(-1);
+
+  const getImportExportHistoryQuery = useImportExportHistoryQuery();
+
+  console.log(getImportExportHistoryQuery);
 
   // @TODO: need to integrate with the API
   const history: ImportExportHistory[] = [

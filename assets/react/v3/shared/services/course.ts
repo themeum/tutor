@@ -62,9 +62,7 @@ export interface Bundle {
   id: number;
   title: string;
   image: string;
-  is_purchasable: boolean;
-  regular_price: string;
-  sale_price: string;
+  total_courses: number;
 }
 
 interface BundleListParams extends PaginatedParams {
