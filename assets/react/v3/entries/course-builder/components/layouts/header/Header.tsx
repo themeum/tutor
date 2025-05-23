@@ -8,9 +8,9 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
 import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
-import Logo from '@CourseBuilderComponents/layouts/header/Logo';
 import Tracker from '@CourseBuilderComponents/layouts/Tracker';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
+import Logo from '@TutorShared/components/Logo';
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';

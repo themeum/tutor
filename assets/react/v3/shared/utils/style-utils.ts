@@ -606,4 +606,19 @@ export const styleUtils = {
       }
     }
   `,
+  objectFit: (
+    {
+      fit,
+      position,
+    }: {
+      fit: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+      position: 'center' | 'top' | 'bottom' | 'left' | 'right';
+    } = {
+      fit: 'cover',
+      position: 'center',
+    },
+  ) => css`
+    object-fit: ${fit};
+    object-position: ${position};
+  `,
 };

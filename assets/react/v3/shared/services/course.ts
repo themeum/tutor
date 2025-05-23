@@ -57,3 +57,35 @@ export const useUnlinkPageBuilderMutation = () => {
     mutationFn: unlinkPageBuilder,
   });
 };
+
+export interface Bundle {
+  id: number;
+  title: string;
+  image: string;
+  total_courses: number;
+}
+
+interface BundleListParams extends PaginatedParams {
+  exclude: string[];
+}
+
+const getBundleList = (params: BundleListParams) => {
+  return wpAjaxInstance.get<PaginatedResult<Bundle>>(endpoints.BUNDLE_LIST, {
+    params: params,
+  });
+};
+
+export const useBundleListQuery = ({ params, isEnabled }: { params: BundleListParams; isEnabled: boolean }) => {
+  return useQuery({
+    queryKey: ['PrerequisiteCourses', params],
+    queryFn: () =>
+      getBundleList({
+        exclude: params.exclude,
+        limit: params.limit,
+        offset: params.offset,
+        filter: params.filter,
+      }).then((res) => res.data),
+    placeholderData: keepPreviousData,
+    enabled: isEnabled,
+  });
+};
