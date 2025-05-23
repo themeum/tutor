@@ -12,6 +12,7 @@ import { type ModalProps } from '@TutorShared/components/modals/Modal';
 import {
   defaultExportFormData,
   useExportableContentQuery,
+  type ExportableContent,
   type ExportContentResponse,
   type ExportFormData,
   type ImportExportModalState,
@@ -27,8 +28,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import ExportCompletedState from '@ImportExport/components/export/ExportCompletedState';
 import ExportInitialState from '@ImportExport/components/export/ExportInitialState';
 import ExportProgressState from '@ImportExport/components/export/ExportProgressState';
-import { DateFormats } from '@TutorShared/config/constants';
-import { format } from 'date-fns';
+import { tutorConfig } from '@TutorShared/config/config';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -48,7 +48,7 @@ interface BulkSelectionFormData {
   'course-bundle': Course[];
 }
 
-const fileName = `tutor_data_${format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)}.json`;
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const ExportModal = ({
   onClose,
@@ -74,7 +74,47 @@ const ExportModal = ({
   });
 
   const getExportableContentQuery = useExportableContentQuery();
-  const exportableContent = getExportableContentQuery.data;
+  const exportableContent = isTutorPro
+    ? getExportableContentQuery.data
+    : ([
+        {
+          key: 'courses',
+          label: 'Courses',
+          contents: [
+            {
+              label: 'Lessons',
+              key: 'lesson',
+            },
+            {
+              label: 'Quizzes',
+              key: 'tutor_quiz',
+            },
+            {
+              label: 'Assignments',
+              key: 'tutor_assignments',
+            },
+            {
+              label: 'Attachments',
+              key: 'attachments',
+            },
+          ],
+        },
+        {
+          key: 'course-bundle',
+          label: 'Bundles',
+          contents: [],
+        },
+        {
+          key: 'settings',
+          label: 'Settings',
+          contents: [],
+        },
+        {
+          key: 'keep_media_files',
+          label: 'Keep media files',
+          contents: [],
+        },
+      ] as ExportableContent[]);
 
   const resetBulkSelection = (type: 'courses' | 'course-bundle') => {
     if (type === 'courses') {
@@ -161,11 +201,10 @@ const ExportModal = ({
         resetBulkSelection={resetBulkSelection}
       />
     ),
-    progress: <ExportProgressState progress={progress} message={message} fileName={fileName} />,
+    progress: <ExportProgressState progress={progress} message={message} />,
     success: (
       <ExportCompletedState
         state="success"
-        fileName={fileName}
         fileSize={fileSize}
         message={message}
         completedContents={completedContents}
@@ -175,7 +214,7 @@ const ExportModal = ({
         onClose={handleClose}
       />
     ),
-    error: <ExportCompletedState state="error" fileName={fileName} message={message} onClose={handleClose} />,
+    error: <ExportCompletedState state="error" message={message} onClose={handleClose} />,
   };
 
   return (

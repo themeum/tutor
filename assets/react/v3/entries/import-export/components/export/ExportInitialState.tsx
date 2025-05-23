@@ -71,9 +71,17 @@ const ExportInitialState = ({
       return key;
     }
 
-    const createLabelWithCount = (label: string, count: number | undefined) => {
+    const createLabelWithCount = (label: string, count: number | undefined, key: string) => {
       if (count === undefined) {
-        return label;
+        return (
+          <div css={styles.checkboxLabel}>
+            {label}
+
+            <Show when={!isTutorPro && key !== 'settings'}>
+              <ProBadge size="small" content={__('Pro', 'tutor')} />
+            </Show>
+          </div>
+        );
       }
 
       return (
@@ -111,7 +119,7 @@ const ExportInitialState = ({
         return key;
       }
 
-      return hasSelectedItems ? subContent.label : createLabelWithCount(subContent.label, subContent.count);
+      return hasSelectedItems ? subContent.label : createLabelWithCount(subContent.label, subContent.count, key);
     }
 
     const content = exportableContent.find((item) => item.key === key);
@@ -131,8 +139,8 @@ const ExportInitialState = ({
     const selectedCount = getSelectionCount();
 
     return selectedCount > 0
-      ? createLabelWithCount(content.label, selectedCount)
-      : createLabelWithCount(content.label, content.count);
+      ? createLabelWithCount(content.label, selectedCount, key)
+      : createLabelWithCount(content.label, content.count, key);
   };
 
   const renderExportableContentOptions = () => {

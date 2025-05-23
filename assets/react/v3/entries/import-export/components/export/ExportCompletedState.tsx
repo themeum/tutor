@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import { format } from 'date-fns';
 import { useState } from 'react';
 
 import { type ExportContentResponse, type ImportExportModalState } from '@ImportExport/services/import-export';
@@ -17,7 +18,6 @@ import exportSuccessImage from '@SharedImages/import-export/export-success.webp'
 
 interface ExportCompletedStateProps {
   state: ImportExportModalState;
-  fileName: string;
   fileSize?: number;
   message?: string;
   completedContents?: ExportContentResponse['completed_contents'];
@@ -26,10 +26,10 @@ interface ExportCompletedStateProps {
   onDownload?: (fileName: string) => void;
   onClose: () => void;
 }
+const fileName = `tutor_data_${format(new Date(), 'yyyy-MM-dd_HH:mm:ss')}.json`;
 
 const ExportCompletedState = ({
   state,
-  fileName,
   fileSize,
   message,
   completedContents,

@@ -10,10 +10,9 @@ import exportInProgressImage from '@SharedImages/import-export/export-inprogress
 interface ExportProgressStateProps {
   progress: number;
   message?: string;
-  fileName: string;
 }
 
-const ExportProgressState = ({ progress, message, fileName }: ExportProgressStateProps) => {
+const ExportProgressState = ({ progress, message }: ExportProgressStateProps) => {
   return (
     <div css={styles.progress}>
       <img src={exportInProgressImage} alt={__('Exporting...', 'tutor')} />
@@ -23,7 +22,7 @@ const ExportProgressState = ({ progress, message, fileName }: ExportProgressStat
       </div>
       <div css={styles.progressBar({ progress })} />
       <div css={styles.progressInfo} key={message}>
-        {message || fileName}
+        {message || __('Exporting...', 'tutor')}
       </div>
     </div>
   );
@@ -54,7 +53,7 @@ const styles = {
   progressCount: css`
     ${styleUtils.flexCenter()};
     ${typography.tiny('bold')};
-    padding: ${spacing[2]} ${spacing[4]};
+    padding: ${spacing[2]} ${spacing[8]};
     background-color: ${colorTokens.background.status.success};
     color: ${colorTokens.text.success};
     border-radius: ${borderRadius[12]};
