@@ -22,6 +22,12 @@ const Import = () => {
   const { data: importResponse, mutateAsync, isError, error, isPending } = useImportContentsMutation();
 
   const onImport = async (data: string): Promise<void> => {
+    updateModal<typeof ImportModal>('import-modal', {
+      currentStep: 'progress',
+      progress: 0,
+      message: __('Importing...', 'tutor'),
+    });
+
     try {
       await mutateAsync({
         data: data,
@@ -32,11 +38,6 @@ const Import = () => {
       });
       return;
     }
-    updateModal<typeof ImportModal>('import-modal', {
-      currentStep: 'progress',
-      progress: 0,
-      message: __('Importing...', 'tutor'),
-    });
   };
 
   const handleUpload = async (files: File[]) => {
