@@ -82,6 +82,10 @@ const Import = () => {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'success',
         progress: 100,
+        onClose: () => {
+          closeModal({ action: 'CLOSE' });
+          window.location.reload();
+        },
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
