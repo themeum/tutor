@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { type UseFormReturn } from 'react-hook-form';
-import { type Bundle } from 'typescript';
 
 import Button from '@TutorShared/atoms/Button';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
@@ -10,7 +9,7 @@ import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import CourseListTable from '@ImportExport/components/modals/CourseListModal/CourseListTable';
 import { spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type Course } from '@TutorShared/services/course';
+import { type Bundle, type Course } from '@TutorShared/services/course';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -23,7 +22,10 @@ type CourseBundleCombined = Course & Bundle;
 
 function CourseListModal({ title, closeModal, actions, form, type = 'courses' }: CourseListModalProps) {
   const addedItems = form.getValues(type) || [];
-  const _form = useFormWithGlobalError({
+  const _form = useFormWithGlobalError<{
+    courses: CourseBundleCombined[];
+    'course-bundle': CourseBundleCombined[];
+  }>({
     defaultValues: {
       courses: addedItems,
       'course-bundle': addedItems,
@@ -47,7 +49,6 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
       actions={actions}
       maxWidth={720}
     >
-      {/* @ts-ignore */}
       <CourseListTable form={_form} type={type} />
       <div css={styles.footer}>
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
