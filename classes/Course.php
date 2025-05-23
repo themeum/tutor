@@ -74,6 +74,28 @@ class Course extends Tutor_Base {
 	const TAX_ON_SUBSCRIPTION_META = 'tutor_tax_on_subscription';
 
 	/**
+	 * Additional data meta
+	 *
+	 * @since 3.6.0
+	 */
+	const COURSE_BENEFITS_META         = '_tutor_course_benefits';
+	const COURSE_REQUIREMENTS_META     = '_tutor_course_requirements';
+	const COURSE_TARGET_AUDIENCE_META  = '_tutor_course_target_audience';
+	const COURSE_MATERIAL_INCLUDE_META = '_tutor_course_material_includes';
+	const COURSE_DURATION_META         = '_course_duration';
+
+	/**
+	 * Course settings meta
+	 *
+	 * @since 3.6.0
+	 */
+	const COURSE_ENABLE_QA_META = '_tutor_enable_qa';
+	const PUBLIC_COURSE_META    = '_tutor_is_public_course';
+	const COURSE_SETTINGS_META  = '_tutor_course_settings';
+	const COURSE_LEVEL_META     = '_tutor_course_level';
+
+
+	/**
 	 * Additional course meta info
 	 *
 	 * @var array
