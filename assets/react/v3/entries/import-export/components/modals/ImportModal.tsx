@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -13,6 +13,7 @@ import { type ModalProps } from '@TutorShared/components/modals/Modal';
 import { type ImportExportModalState } from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes } from '@TutorShared/utils/util';
 
@@ -24,14 +25,55 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   files: File[];
   currentStep: ImportExportModalState;
   onClose: () => void;
-  onImport: (files: File) => void;
+  onImport: (data: string) => Promise<void>;
   progress?: number;
   message?: string;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const readJsonFile = (file: File): Promise<any> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = (event) => {
+      try {
+        const content = event.target?.result as string;
+        const jsonData = JSON.parse(content);
+        resolve(jsonData);
+      } catch {
+        reject(new Error(__('Invalid JSON file format', 'tutor')));
+      }
+    };
+
+    reader.onerror = () => {
+      reject(new Error(__('Failed to read file', 'tutor')));
+    };
+
+    reader.readAsText(file);
+  });
+};
+
 const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, message, progress }: ImportModalProps) => {
   const [files, setFiles] = useState<File[]>(propsFiles);
+  const [isReadingFile, setIsReadingFile] = useState(false);
+  const [hasSettings, setHasSettings] = useState(false);
   const { showToast } = useToast();
+
+  useEffect(() => {
+    if (propsFiles.length === 0) {
+      return;
+    }
+    setIsReadingFile(true);
+    readJsonFile(files[0]).then((data) => {
+      const hasSettings =
+        data?.data.filter((item: { content_type: string }) => item.content_type === 'settings').length > 0;
+
+      setIsReadingFile(false);
+      setHasSettings(hasSettings);
+      setFiles(files);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [files]);
 
   const handleUpload = (uploadedFiles: File[]) => {
     if (uploadedFiles.length) {
@@ -49,7 +91,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
   const renderHeader = {
     initial: __('Import File', 'tutor'),
     progress: __('Importing...', 'tutor'),
-    success: __('Settings Imported Successful!', 'tutor'),
+    success: __('Imported Successfully!', 'tutor'),
     error: __('Import Failed!', 'tutor'),
   };
 
@@ -58,7 +100,15 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
       <>
         <div css={styles.selectedInfo}>
           <div css={styles.fileInfo}>
-            <div css={typography.small()}>{__('Selected', 'tutor')}</div>
+            <div css={styles.progressHeader}>
+              <div css={typography.small()}>
+                {isReadingFile ? __('Reading file...', 'tutor') : __('Selected', 'tutor')}
+              </div>
+
+              <div css={styles.progressCount}>
+                {isReadingFile ? __('Please wait...', 'tutor') : __('Ready to import', 'tutor')}
+              </div>
+            </div>
 
             <div css={styles.file}>
               <div css={styles.fileIcon}>
@@ -86,15 +136,17 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
             </div>
           </div>
 
-          <div css={styles.alert}>
-            <SVGIcon name="infoFill" width={40} height={40} />
-            <p>
-              {
-                // prettier-ignore
-                __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')
-              }
-            </p>
-          </div>
+          <Show when={hasSettings}>
+            <div css={styles.alert}>
+              <SVGIcon name="infoFill" width={40} height={40} />
+              <p>
+                {
+                  // prettier-ignore
+                  __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')
+                }
+              </p>
+            </div>
+          </Show>
         </div>
         <div css={styles.footer}>
           <div css={styles.actionButtons}>
@@ -106,8 +158,8 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
               disabled={files.length === 0}
               variant="primary"
               size="small"
-              loading={currentStep === 'progress'}
-              onClick={() => onImport(files[0])}
+              loading={isReadingFile || currentStep === 'progress'}
+              onClick={async () => onImport(await readJsonFile(files[0]))}
             >
               {__('Import', 'tutor')}
             </Button>
@@ -123,7 +175,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
         <img src={importInProgressImage} alt={__('Importing...', 'tutor')} />
         <div css={styles.progressHeader}>
           <div css={typography.caption()}>{renderHeader[currentStep]}</div>
-          <div css={styles.progressCount}>{__('In Progress', 'tutor')}</div>
+          <div css={styles.progressCount}>{progress}%</div>
         </div>
         <div css={styles.progressBar({ progress })} />
         <div css={styles.progressInfo}>{message || file.name}</div>
@@ -247,12 +299,36 @@ const styles = {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
       height: 100%;
-      background-color: ${colorTokens.bg.success};
       border-radius: ${borderRadius[50]};
-      transition: width 0.3s ease-in;
-      width: ${progress}%;
+      transition: ${progress === 0 ? 'none' : 'width 0.3s ease-in-out'};
+      width: ${progress === 0 ? 100 : progress}%;
+      background-color: ${colorTokens.bg.success};
+
+      ${progress === 0 &&
+      css`
+        background-image: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.15) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.15) 50%,
+          rgba(255, 255, 255, 0.15) 75%,
+          transparent 75%,
+          transparent
+        );
+        background-size: 1rem 1rem;
+        animation: progress-stripes 1s linear infinite;
+
+        @keyframes progress-stripes {
+          from {
+            background-position: 1rem 0;
+          }
+          to {
+            background-position: 0 0;
+          }
+        }
+      `}
     }
   `,
   progressInfo: css`

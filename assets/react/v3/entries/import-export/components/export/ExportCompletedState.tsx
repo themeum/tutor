@@ -169,7 +169,9 @@ const ExportCompletedState = ({
           </div>
           <div css={styles.fileRight}>
             <div css={styles.fileDetails}>
-              <div css={styles.fileName}>{fileName}</div>
+              <div css={styles.fileName} title={fileName}>
+                {fileName}
+              </div>
               <div css={styles.fileSize}>{formatBytes(fileSize || 0)}</div>
             </div>
 

@@ -5,17 +5,8 @@ import { useToast } from '@TutorShared/atoms/Toast';
 
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse, type WPUser } from '@TutorShared/utils/types';
+import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
-
-export interface ImportExportHistory {
-  title: string;
-  type: 'import' | 'export';
-  isSetting?: boolean;
-  isActive?: boolean;
-  author: WPUser;
-  date: string;
-}
 
 export interface ExportFormData {
   courses: boolean;
@@ -36,10 +27,10 @@ export const defaultExportFormData: ExportFormData = {
   settings: false,
   courses__ids: [],
   'course-bundle__ids': [],
-  courses__lesson: false,
-  courses__tutor_quiz: false,
-  courses__tutor_assignments: false,
-  courses__attachments: false,
+  courses__lesson: true,
+  courses__tutor_quiz: true,
+  courses__tutor_assignments: true,
+  courses__attachments: true,
   keep_media_files: false,
 };
 
@@ -244,13 +235,38 @@ export const useImportContentsMutation = () => {
   });
 };
 
+export interface ImportExportHistory {
+  option_id: string;
+  option_name: string;
+  option_value: {
+    created_at: string;
+    user_name: string;
+    job_id: number;
+    job_progress: number;
+    job_status: string;
+    job_requirements: {
+      type: string;
+      ids: string[];
+    }[];
+    exported_data?: unknown;
+    imported_data?: ExportableContentType[];
+    completed_contents?: {
+      courses: string[];
+      'course-bundle': string[];
+      settings: boolean;
+    };
+    failed_course_ids?: [];
+    failed_bundle_ids?: [];
+  };
+}
+
 const getImportExportHistory = () => {
-  return wpAjaxInstance.get<ImportExportHistory[]>(endpoints.GET_IMPORT_EXPORT_HISTORY);
+  return wpAjaxInstance.get<ImportExportHistory[]>(endpoints.GET_IMPORT_EXPORT_HISTORY).then((res) => res.data);
 };
 
 export const useImportExportHistoryQuery = () => {
   return useQuery({
     queryKey: ['ImportExportHistory'],
-    queryFn: () => getImportExportHistory().then((res) => res.data),
+    queryFn: () => getImportExportHistory(),
   });
 };

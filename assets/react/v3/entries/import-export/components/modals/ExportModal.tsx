@@ -27,6 +27,8 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import ExportCompletedState from '@ImportExport/components/export/ExportCompletedState';
 import ExportInitialState from '@ImportExport/components/export/ExportInitialState';
 import ExportProgressState from '@ImportExport/components/export/ExportProgressState';
+import { DateFormats } from '@TutorShared/config/constants';
+import { format } from 'date-fns';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -46,7 +48,7 @@ interface BulkSelectionFormData {
   'course-bundle': Course[];
 }
 
-const fileName = `tutor_data_${Date.now()}.json`;
+const fileName = `tutor_data_${format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)}.json`;
 
 const ExportModal = ({
   onClose,
