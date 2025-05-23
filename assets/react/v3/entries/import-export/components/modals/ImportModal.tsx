@@ -230,13 +230,11 @@ export default ImportModal;
 
 const styles = {
   wrapper: ({ state = 'initial' }: { state?: ImportExportModalState }) => css`
-    max-height: 340px;
+    max-height: 840px;
     transition: max-height 0.3s ease-in-out;
 
     ${state === 'progress' &&
     css`
-      max-height: 294px;
-
       img {
         height: 94px;
       }
@@ -244,8 +242,6 @@ const styles = {
 
     ${state === 'success' &&
     css`
-      max-height: 443px;
-
       img {
         height: 110px;
       }
@@ -253,8 +249,7 @@ const styles = {
 
     ${state === 'error' &&
     css`
-      max-height: 336px;
-
+      padding: ${spacing[24]} ${spacing[32]};
       img {
         height: 110px;
       }
