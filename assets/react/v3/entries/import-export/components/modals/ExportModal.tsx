@@ -35,6 +35,7 @@ import { formatBytes } from '@TutorShared/utils/util';
 import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportInProgressImage from '@SharedImages/import-export/export-inprogress.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
+import { formatCompletedItems } from '@ImportExport/utils/util';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -201,27 +202,6 @@ const ExportModal = ({
   const handleClose = () => {
     form.reset();
     onClose();
-  };
-
-  const formatCompletedItems = (completedContents?: ExportContentResponse['completed_contents']): string => {
-    if (!completedContents) return '';
-
-    const { courses, 'course-bundle': bundles, settings } = completedContents;
-    const items = [];
-
-    if (courses?.length) {
-      items.push(sprintf(courses.length === 1 ? __('%d Course', 'tutor') : __('%d Courses', 'tutor'), courses.length));
-    }
-
-    if (bundles?.length) {
-      items.push(sprintf(bundles.length === 1 ? __('%d Bundle', 'tutor') : __('%d Bundles', 'tutor'), bundles.length));
-    }
-
-    if (settings) {
-      items.push(__('Settings', 'tutor'));
-    }
-
-    return items.join(', ');
   };
 
   const renderExportableContentOptions = () => {
