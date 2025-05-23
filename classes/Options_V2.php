@@ -421,11 +421,11 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		if ( ! tutor_is_json( $_POST ) ) {
-			$this->response_bad_request( __( 'Invalid JSON', 'tutor' ) );
-		}
-
 		$request = json_decode( stripslashes( $_POST['data'] ), true );
+
+		if ( json_last_error() ) {
+			$this->response_bad_request( __( 'Invalid json file', 'tutor' ) );
+		}
 
 		$time = tutor_time();
 
