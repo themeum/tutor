@@ -274,6 +274,6 @@ export const useImportExportHistoryQuery = () => {
   return useQuery({
     queryKey: ['ImportExportHistory'],
     queryFn: () => getImportExportHistory(),
-    enabled: !isTutorPro,
+    enabled: isTutorPro,
   });
 };
