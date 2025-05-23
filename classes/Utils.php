@@ -10369,18 +10369,22 @@ class Utils {
 		}
 
 		if ( is_plugin_active( 'elementor/elementor.php' ) ) {
-			$name             = 'elementor';
-			$editors[ $name ] = array(
-				'name'  => $name,
-				'label' => __( 'Elementor', 'tutor' ),
-				'link'  => add_query_arg(
-					array(
-						'post'   => $post_id,
-						'action' => $name,
+			$post_type             = get_post_type( $post_id );
+			$elementor_cpt_support = get_option( 'elementor_cpt_support' );
+			if ( is_array( $elementor_cpt_support ) && in_array( $post_type, $elementor_cpt_support ) ) {
+				$name             = 'elementor';
+				$editors[ $name ] = array(
+					'name'  => $name,
+					'label' => __( 'Elementor', 'tutor' ),
+					'link'  => add_query_arg(
+						array(
+							'post'   => $post_id,
+							'action' => $name,
+						),
+						get_admin_url( null, 'post.php' )
 					),
-					get_admin_url( null, 'post.php' )
-				),
-			);
+				);
+			}
 		}
 
 		return apply_filters( 'tutor_course_builder_editor_list', $editors, $post_id );
