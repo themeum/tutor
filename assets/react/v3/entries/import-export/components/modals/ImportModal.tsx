@@ -236,16 +236,28 @@ const styles = {
     ${state === 'progress' &&
     css`
       max-height: 294px;
+
+      img {
+        height: 94px;
+      }
     `}
 
     ${state === 'success' &&
     css`
       max-height: 443px;
+
+      img {
+        height: 110px;
+      }
     `}
 
     ${state === 'error' &&
     css`
       max-height: 336px;
+
+      img {
+        height: 110px;
+      }
     `}
   `,
   title: css`
