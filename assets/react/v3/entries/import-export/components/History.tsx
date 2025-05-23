@@ -1,97 +1,20 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
 import { useState } from 'react';
 
-import { useImportExportHistoryQuery, type ImportExportHistory } from '@ImportExport/services/import-export';
+import { type ImportExportHistory, useImportExportHistoryQuery } from '@ImportExport/services/import-export';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
 import Table, { type Column } from '@TutorShared/molecules/Table';
-import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const History = () => {
   const [dateSortType, setDateSortType] = useState<'asc' | 'desc'>('asc');
-  const [isThreeDotOpenIndex, setThreeDotOpenIndex] = useState<number>(-1);
 
   const getImportExportHistoryQuery = useImportExportHistoryQuery();
 
-  console.log(getImportExportHistoryQuery);
-
-  // @TODO: need to integrate with the API
-  const history: ImportExportHistory[] = [
-    {
-      title: 'Global Settings',
-      type: 'export',
-      author: {
-        user_id: 1,
-        display_name: 'Bessie Cooper',
-        user_email: 'bessie.cooper@example.com',
-        avatar_url: 'https://example.com/avatar/bessie.jpg',
-      },
-      date: '2026-07-20T12:47:00Z',
-    },
-    {
-      title: 'Global Settings',
-      type: 'import',
-      author: {
-        user_id: 1,
-        display_name: 'Bessie Cooper',
-        user_email: 'bessie.cooper@example.com',
-        avatar_url: 'https://example.com/avatar/bessie.jpg',
-      },
-      date: '2026-07-20T12:47:00Z',
-    },
-    {
-      title: 'Global Settings',
-      type: 'export',
-      isSetting: true,
-      isActive: true,
-      author: {
-        user_id: 1,
-        display_name: 'Bessie Cooper',
-        user_email: 'bessie.cooper@example.com',
-        avatar_url: 'https://example.com/avatar/bessie.jpg',
-      },
-      date: '2026-07-20T12:47:00Z',
-    },
-    {
-      title: 'Lessons',
-      type: 'import',
-      author: {
-        user_id: 1,
-        display_name: 'Bessie Cooper',
-        user_email: 'bessie.cooper@example.com',
-        avatar_url: 'https://example.com/avatar/bessie.jpg',
-      },
-      date: '2026-07-20T12:47:00Z',
-    },
-    {
-      title: 'Courses (All)',
-      type: 'export',
-      author: {
-        user_id: 1,
-        display_name: 'Bessie Cooper',
-        user_email: 'bessie.cooper@example.com',
-        avatar_url: 'https://example.com/avatar/bessie.jpg',
-      },
-      date: '2026-07-20T12:47:00Z',
-    },
-    {
-      title: 'Questions',
-      type: 'export',
-      author: {
-        user_id: 1,
-        display_name: 'Bessie Cooper',
-        user_email: 'bessie.cooper@example.com',
-        avatar_url: 'https://example.com/avatar/bessie.jpg',
-      },
-      date: '2026-07-20T12:47:00Z',
-    },
-  ];
+  const history = getImportExportHistoryQuery.data || [];
 
   const renderImportExportLabel = (type: 'import' | 'export') => {
     return (
@@ -102,28 +25,57 @@ const History = () => {
     );
   };
 
+  const itemType = (item: ImportExportHistory) => {
+    if (item.option_name.includes('export')) {
+      return 'export';
+    }
+    if (item.option_name.includes('import')) {
+      return 'import';
+    }
+    return 'import';
+  };
+
+  const generateHistoryTitle = (item: ImportExportHistory) => {
+    const exportedContents = item.option_value.completed_contents || {};
+    const importedContents = item.option_value.imported_data;
+
+    const isExportType = itemType(item) === 'export';
+    const isImportType = itemType(item) === 'import';
+
+    const contentTypeMap = {
+      courses: __('Courses', 'tutor'),
+      'course-bundle': __('Course Bundles', 'tutor'),
+      settings: __('Settings', 'tutor'),
+    };
+
+    if (isExportType) {
+      return Object.keys(exportedContents)
+        .map((key) => contentTypeMap[key as keyof typeof contentTypeMap])
+        .join(', ');
+    }
+
+    if (isImportType) {
+      return importedContents?.map((item) => contentTypeMap[item as keyof typeof contentTypeMap]).join(', ');
+    }
+  };
+
   const columns: Column<ImportExportHistory>[] = [
     {
       Header: <span css={styles.tableHeader}>{__('Title', 'tutor')}</span>,
       Cell: (item) => {
-        return (
-          <div css={styles.historyTitle}>
-            {item.title}
-            {item.isActive && <span css={styles.activeTag}>{__('Active', 'tutor')}</span>}
-          </div>
-        );
+        return <div css={styles.historyTitle}>{generateHistoryTitle(item)}</div>;
       },
     },
     {
       Header: <span css={styles.tableHeader}>{__('Type', 'tutor')}</span>,
       Cell: (item) => {
-        return renderImportExportLabel(item.type);
+        return renderImportExportLabel(itemType(item));
       },
     },
     {
       Header: <span css={styles.tableHeader}>{__('Author', 'tutor')}</span>,
       Cell: (item) => {
-        return <div css={styles.historyTitle}>{item.author.display_name}</div>;
+        return <div css={styles.historyTitle}>{item.option_value.user_name}</div>;
       },
     },
     {
@@ -143,47 +95,8 @@ const History = () => {
         </div>
       ),
       Cell: (item) => {
-        return <div>{format(new Date(item.date), DateFormats.monthDayYearHoursMinutes)}</div>;
+        return <div css={styles.historyTitle}>{item.option_value.created_at}</div>;
       },
-    },
-    {
-      Header: <></>,
-      Cell: (item, index) => (
-        <div css={styles.action}>
-          <ThreeDots
-            isOpen={isThreeDotOpenIndex === index}
-            onClick={() => setThreeDotOpenIndex(index)}
-            closePopover={() => setThreeDotOpenIndex(-1)}
-            dotsOrientation="vertical"
-            maxWidth={'170px'}
-            isInverse
-            arrowPosition="top"
-            hideArrow={false}
-            size="small"
-          >
-            {/* @TODO: need to integrate with the API */}
-            <Show when={item.isSetting}>
-              <ThreeDots.Option
-                size="small"
-                text={__('Apply Settings', 'tutor')}
-                icon={<SVGIcon style={styles.brandIcon} name="materialCheck" width={24} height={24} />}
-                onClick={() => {}}
-              />
-            </Show>
-            <ThreeDots.Option
-              text={__('Download', 'tutor')}
-              icon={<SVGIcon style={styles.brandIcon} name="download" width={24} height={24} />}
-              onClick={() => {}}
-            />
-            <ThreeDots.Option
-              text={__('Delete', 'tutor')}
-              icon={<SVGIcon name="delete" width={24} height={24} />}
-              onClick={() => {}}
-              isTrash
-            />
-          </ThreeDots>
-        </div>
-      ),
     },
   ];
 
@@ -192,7 +105,7 @@ const History = () => {
       <div css={styles.title}>{__('History', 'tutor')}</div>
 
       <div css={styles.history}>
-        <Table columns={columns} data={history} isRounded isBordered />
+        <Table loading={getImportExportHistoryQuery.isLoading} columns={columns} data={history} isRounded isBordered />
       </div>
     </div>
   );
@@ -219,7 +132,7 @@ const styles = {
           background-color: ${colorTokens.background.white};
           ${typography.small('medium')}
 
-          td:nth-child(n + 3) {
+          td:nth-of-type(n + 3) {
             font-weight: ${fontWeight.regular};
           }
         }
