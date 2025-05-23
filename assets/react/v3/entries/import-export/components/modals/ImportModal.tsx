@@ -242,6 +242,7 @@ const styles = {
 
     ${state === 'success' &&
     css`
+      padding: ${spacing[24]} ${spacing[32]};
       img {
         height: 110px;
       }
