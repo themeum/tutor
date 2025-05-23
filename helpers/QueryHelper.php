@@ -157,7 +157,7 @@ class QueryHelper {
 	 * @return mixed  wpdb response true or int on success, false on failure.
 	 * @throws \Exception If error occur.
 	 */
-	public static function insert_multiple_rows( $table, $request, $return_ids = false ) {
+	public static function insert_multiple_rows( $table, $request, $return_ids = false, $do_sanitize = true ) {
 		global $wpdb;
 		$column_keys   = '';
 		$column_values = '';
@@ -170,7 +170,10 @@ class QueryHelper {
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
 				$column_keys   .= sanitize_key( $v ) . ',';
-				$sanitize_value = is_null( $value[ $v ] ) ? $value[ $v ] : sanitize_text_field( $value[ $v ] );
+				$sanitize_value = $value[$v];
+				if ( $sanitize_value && $do_sanitize ) {
+					$sanitize_value = sanitize_text_field( $sanitize_value );
+				}
 				$column_values .= is_numeric( $sanitize_value ) ? $sanitize_value . ',' : "'$sanitize_value'" . ',';
 			}
 			// Trim trailing comma.
