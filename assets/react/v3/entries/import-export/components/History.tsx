@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
 
 import { type ImportExportHistory, useImportExportHistoryQuery } from '@ImportExport/services/import-export';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -10,8 +9,6 @@ import Table, { type Column } from '@TutorShared/molecules/Table';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const History = () => {
-  const [dateSortType, setDateSortType] = useState<'asc' | 'desc'>('asc');
-
   const getImportExportHistoryQuery = useImportExportHistoryQuery();
 
   const history = getImportExportHistoryQuery.data || [];
@@ -84,21 +81,7 @@ const History = () => {
       },
     },
     {
-      Header: (
-        <div css={[styles.dateWithSort, styles.tableHeader]}>
-          <span>{__('Date', 'tutor')}</span>
-          <button
-            css={styleUtils.actionButton}
-            onClick={() => setDateSortType((prev) => (prev === 'asc' ? 'desc' : 'asc'))}
-          >
-            {dateSortType === 'asc' ? (
-              <SVGIcon name="sort" width={16} height={16} />
-            ) : (
-              <SVGIcon name="sort" width={16} height={16} />
-            )}
-          </button>
-        </div>
-      ),
+      Header: <span css={styles.tableHeader}>{__('Date', 'tutor')}</span>,
       Cell: (item) => {
         return <div css={styles.historyTitle}>{item.option_value.created_at}</div>;
       },

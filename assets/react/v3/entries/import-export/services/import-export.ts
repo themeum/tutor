@@ -3,6 +3,7 @@ import { type ErrorResponse } from 'react-router-dom';
 
 import { useToast } from '@TutorShared/atoms/Toast';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
@@ -124,9 +125,12 @@ const getExportableContent = () => {
 };
 
 export const useExportableContentQuery = () => {
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+
   return useQuery({
     queryKey: ['ExportableContent'],
     queryFn: () => getExportableContent().then((res) => res.data),
+    enabled: isTutorPro,
   });
 };
 
@@ -265,8 +269,11 @@ const getImportExportHistory = () => {
 };
 
 export const useImportExportHistoryQuery = () => {
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+
   return useQuery({
     queryKey: ['ImportExportHistory'],
     queryFn: () => getImportExportHistory(),
+    enabled: !isTutorPro,
   });
 };

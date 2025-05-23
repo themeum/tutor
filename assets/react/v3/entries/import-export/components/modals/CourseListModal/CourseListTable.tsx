@@ -125,7 +125,7 @@ const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
               <div css={styles.title}>
                 <div>{item.title}</div>
                 <Show when={type === 'course-bundle' && item?.total_courses}>
-                  <div>{sprintf(__('Total Courses: %d', 'tutor'), item.total_courses)}</div>
+                  <div>{sprintf(__('Total Courses: %d', 'tutor'), item.total_courses || 0)}</div>
                 </Show>
               </div>
             </div>

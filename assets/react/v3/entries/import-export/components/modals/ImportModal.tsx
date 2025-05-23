@@ -293,7 +293,7 @@ const styles = {
   progressCount: css`
     ${styleUtils.flexCenter()};
     ${typography.tiny('bold')};
-    padding: ${spacing[2]} ${spacing[4]};
+    padding: ${spacing[2]} ${spacing[8]};
     background-color: ${colorTokens.background.status.success};
     color: ${colorTokens.text.success};
     border-radius: ${borderRadius[12]};
