@@ -222,11 +222,15 @@ class Options_V2 {
 			'schema_version'   => '1.0.0',
 			'exported_at'      => current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 			'keep_media_files' => false,
-			'data'             => array(
-				'content_type' => 'settings',
-				'data'         => $data,
-			),
+			'data'             => array(),
 		);
+
+		$prepare_data = array(
+			'content_type' => 'settings',
+			'data'         => $data,
+		);
+
+		$export_data['data'][] = $prepare_data;
 
 		$response = array(
 			'job_progress'  => '100',
@@ -417,18 +421,18 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$request = json_decode( $_POST['data'] );
+		$request = json_decode( stripslashes( $_POST['data'] ), true );
 
 		if ( ! tutor_is_json( $request ) ) {
 			$this->response_bad_request( __( 'Invalid JSON', 'tutor' ) );
 		}
 
-		$time = $this->get_request_data( 'time' );
+		$time = tutor_time();
 
-		$save_import_data['datetime']             = (int) $time;
+		$save_import_data['datetime']             = $time;
 		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
 		$save_import_data['datatype']             = 'imported';
-		$save_import_data['dataset']              = $request['data']['data'];
+		$save_import_data['dataset']              = $request['data'][0]['data'];
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
 
 		$get_option_data = get_option( 'tutor_settings_log' );
@@ -449,7 +453,8 @@ class Options_V2 {
 				update_option( 'tutor_option', $save_import_data['dataset'] );
 			}
 
-			// $get_final_data = get_option( 'tutor_settings_log' );
+			$get_final_data = get_option( 'tutor_settings_log' );
+
 		} else {
 			if ( ! empty( $import_data ) ) {
 				update_option( 'tutor_settings_log', $import_data );
@@ -458,10 +463,16 @@ class Options_V2 {
 			if ( ! empty( $save_import_data ) ) {
 				update_option( 'tutor_option', $save_import_data['dataset'] );
 			}
-			// $get_final_data = get_option( 'tutor_settings_log' );
+
+			$get_final_data = get_option( 'tutor_settings_log' );
 		}
 
-		$this->response_success( __( 'Settings imported successfully!', 'tutor' ) );
+		$response = array(
+			'job_progress'  => '100',
+			'exported_data' => $get_final_data,
+		);
+
+		$this->json_response( __( 'Settings imported successfully!', 'tutor' ), $response );
 	}
 
 	/**
