@@ -123,7 +123,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
         <img src={importInProgressImage} alt={__('Importing...', 'tutor')} />
         <div css={styles.progressHeader}>
           <div css={typography.caption()}>{renderHeader[currentStep]}</div>
-          <div css={styles.progressCount}>{__('In Progress', 'tutor')}</div>
+          <div css={styles.progressCount}>{progress}%</div>
         </div>
         <div css={styles.progressBar({ progress })} />
         <div css={styles.progressInfo}>{message || file.name}</div>
@@ -247,12 +247,36 @@ const styles = {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
       height: 100%;
-      background-color: ${colorTokens.bg.success};
       border-radius: ${borderRadius[50]};
-      transition: width 0.3s ease-in;
-      width: ${progress}%;
+      transition: ${progress === 0 ? 'none' : 'width 0.3s ease-in-out'};
+      width: ${progress === 0 ? 100 : progress}%;
+      background-color: ${colorTokens.bg.success};
+
+      ${progress === 0 &&
+      css`
+        background-image: linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.15) 25%,
+          transparent 25%,
+          transparent 50%,
+          rgba(255, 255, 255, 0.15) 50%,
+          rgba(255, 255, 255, 0.15) 75%,
+          transparent 75%,
+          transparent
+        );
+        background-size: 1rem 1rem;
+        animation: progress-stripes 1s linear infinite;
+
+        @keyframes progress-stripes {
+          from {
+            background-position: 1rem 0;
+          }
+          to {
+            background-position: 0 0;
+          }
+        }
+      `}
     }
   `,
   progressInfo: css`
