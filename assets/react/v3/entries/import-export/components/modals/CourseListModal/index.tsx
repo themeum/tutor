@@ -1,14 +1,16 @@
-import { type Course } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
-import CourseListTable from '@ImportExport/components/modals/CourseListModal/CourseListTable';
-import Button from '@TutorShared/atoms/Button';
-import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
-import type { ModalProps } from '@TutorShared/components/modals/Modal';
-import { spacing } from '@TutorShared/config/styles';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { __, sprintf } from '@wordpress/i18n';
 import { type UseFormReturn } from 'react-hook-form';
 import { type Bundle } from 'typescript';
+
+import Button from '@TutorShared/atoms/Button';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+
+import CourseListTable from '@ImportExport/components/modals/CourseListModal/CourseListTable';
+import { spacing } from '@TutorShared/config/styles';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type Course } from '@TutorShared/services/course';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
