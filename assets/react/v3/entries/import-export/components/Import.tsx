@@ -13,6 +13,9 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToErrorMessage, noop } from '@TutorShared/utils/util';
 
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
+import { tutorConfig } from '@TutorShared/config/config';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
@@ -84,7 +87,9 @@ const Import = () => {
         progress: 100,
         onClose: () => {
           closeModal({ action: 'CLOSE' });
-          window.location.reload();
+          if (!isTutorPro) {
+            window.location.reload();
+          }
         },
       });
     }
