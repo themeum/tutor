@@ -49,8 +49,13 @@ const History = () => {
     };
 
     if (isExportType) {
-      return Object.keys(exportedContents)
-        .map((key) => contentTypeMap[key as keyof typeof contentTypeMap])
+      return Object.entries(exportedContents)
+        .filter(([, value]) => !Array.isArray(value) || value.length > 0)
+        .map(([key, value]) => {
+          const label = contentTypeMap[key as keyof typeof contentTypeMap];
+          // Add count in parentheses if value is an array
+          return Array.isArray(value) && value.length > 0 ? `${label} (${value.length})` : label;
+        })
         .join(', ');
     }
 

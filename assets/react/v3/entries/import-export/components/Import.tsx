@@ -14,49 +14,14 @@ import { convertToErrorMessage, noop } from '@TutorShared/utils/util';
 
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const readJsonFile = (file: File): Promise<any> => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      try {
-        const content = event.target?.result as string;
-        const jsonData = JSON.parse(content);
-        resolve(jsonData);
-      } catch {
-        reject(new Error(__('Invalid JSON file format', 'tutor')));
-      }
-    };
-
-    reader.onerror = () => {
-      reject(new Error(__('Failed to read file', 'tutor')));
-    };
-
-    reader.readAsText(file);
-  });
-};
-
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
-  const { data: importResponse, mutateAsync, isError, error } = useImportContentsMutation();
+  const { data: importResponse, mutateAsync, isError, error, isPending } = useImportContentsMutation();
 
-  const onImport = async (file: File): Promise<void> => {
-    // Early return if file is invalid
-    if (!file || !(file instanceof File)) {
-      return;
-    }
-
-    updateModal<typeof ImportModal>('import-modal', {
-      currentStep: 'progress',
-      progress: 0,
-    });
-
-    const jsonData = await readJsonFile(file);
-
+  const onImport = async (data: string): Promise<void> => {
     try {
       await mutateAsync({
-        data: jsonData,
+        data: data,
       });
     } catch {
       updateModal<typeof ImportModal>('import-modal', {
@@ -64,9 +29,20 @@ const Import = () => {
       });
       return;
     }
+    updateModal<typeof ImportModal>('import-modal', {
+      currentStep: 'progress',
+      progress: 0,
+      message: __('Importing...', 'tutor'),
+    });
   };
 
-  const handleUpload = (files: File[]) => {
+  const handleUpload = async (files: File[]) => {
+    const file = files[0];
+    // Early return if file is invalid
+    if (!file || !(file instanceof File)) {
+      return;
+    }
+
     showModal({
       component: ImportModal,
       id: 'import-modal',
@@ -109,7 +85,7 @@ const Import = () => {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [importResponse, error]);
+  }, [importResponse?.data, isPending, error]);
 
   return (
     <div css={styles.wrapper}>
