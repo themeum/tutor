@@ -111,4 +111,3 @@ class EddCart extends BaseCart implements CartInterface {
 		return edd_item_in_cart( $download_id );
 	}
 }
-
