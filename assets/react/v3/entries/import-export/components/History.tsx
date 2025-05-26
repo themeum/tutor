@@ -94,7 +94,14 @@ const History = () => {
       <div css={styles.title}>{__('History', 'tutor')}</div>
 
       <div css={styles.history}>
-        <Table loading={getImportExportHistoryQuery.isLoading} columns={columns} data={history} isRounded isBordered />
+        <Table
+          headerHeight={44}
+          loading={getImportExportHistoryQuery.isLoading}
+          columns={columns}
+          data={history}
+          isRounded
+          isBordered
+        />
       </div>
     </div>
   );
