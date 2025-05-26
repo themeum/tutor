@@ -146,7 +146,7 @@ export interface ExportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-interface ImportExportContentResponseBase {
+export interface ImportExportContentResponseBase {
   job_id: string;
   job_progress: number;
   job_status: string;
@@ -155,6 +155,14 @@ interface ImportExportContentResponseBase {
     ids: string[];
     sub_contents: string[];
   }[];
+  completed_contents: {
+    courses: string[];
+    'course-bundle': string[];
+    settings: boolean;
+  };
+
+  failed_course_ids: [];
+  failed_bundle_ids: [];
 }
 
 export interface ExportContentResponse extends ImportExportContentResponseBase {
@@ -166,13 +174,6 @@ export interface ExportContentResponse extends ImportExportContentResponseBase {
       data: Record<string, any>;
     }[];
   };
-  completed_contents: {
-    courses: string[];
-    'course-bundle': string[];
-    settings: boolean;
-  };
-  failed_course_ids: [];
-  failed_bundle_ids: [];
 }
 const exportContents = async (payload: ExportContentPayload) => {
   return wpAjaxInstance
@@ -209,20 +210,12 @@ interface ImportContentPayload {
 
 interface ImportContentResponse extends ImportExportContentResponseBase {
   imported_data: [];
-  completed_contents: {
-    courses: string[];
-    'course-bundle': string[];
-    settings: boolean;
-  };
-  failed_course_ids: [];
-  failed_bundle_ids: [];
 }
 
-const importContents = (payload: ImportContentPayload) => {
-  return wpAjaxInstance.post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(
-    endpoints.IMPORT_CONTENTS,
-    payload,
-  );
+const importContents = async (payload: ImportContentPayload) => {
+  return wpAjaxInstance
+    .post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(endpoints.IMPORT_CONTENTS, payload)
+    .then((res) => res.data);
 };
 
 export const useImportContentsMutation = () => {

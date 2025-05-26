@@ -16,15 +16,15 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { type Course } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import ExportCompletedState from '@ImportExport/components/export/ExportCompletedState';
-import ExportInitialState from '@ImportExport/components/export/ExportInitialState';
-import ExportProgressState from '@ImportExport/components/export/ExportProgressState';
+import ExportInitialState from '@ImportExport/components/modals/import-export-states/ExportInitialState';
+import ImportExportCompletedState from '@ImportExport/components/modals/import-export-states/ImportExportCompletedState';
+import ImportExportProgressState from '@ImportExport/components/modals/import-export-states/ImportExportProgressState';
 import {
   defaultExportFormData,
   useExportableContentQuery,
   type ExportableContent,
-  type ExportContentResponse,
   type ExportFormData,
+  type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 
@@ -38,9 +38,9 @@ interface ExportModalProps extends ModalProps {
   progress: number;
   fileSize?: number;
   message?: string;
-  completedContents?: ExportContentResponse['completed_contents'];
-  failedCourseIds?: ExportContentResponse['failed_course_ids'];
-  failedBundleIds?: ExportContentResponse['failed_bundle_ids'];
+  completedContents?: ImportExportContentResponseBase['completed_contents'];
+  failedCourseIds?: ImportExportContentResponseBase['failed_course_ids'];
+  failedBundleIds?: ImportExportContentResponseBase['failed_bundle_ids'];
 }
 
 interface BulkSelectionFormData {
@@ -201,9 +201,9 @@ const ExportModal = ({
         resetBulkSelection={resetBulkSelection}
       />
     ),
-    progress: <ExportProgressState progress={progress} message={message} />,
+    progress: <ImportExportProgressState progress={progress} message={message} type="export" />,
     success: (
-      <ExportCompletedState
+      <ImportExportCompletedState
         state="success"
         fileSize={fileSize}
         message={message}
@@ -212,9 +212,10 @@ const ExportModal = ({
         failedBundleIds={failedBundleIds}
         onDownload={onDownload}
         onClose={handleClose}
+        type="export"
       />
     ),
-    error: <ExportCompletedState state="error" message={message} onClose={handleClose} />,
+    error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
   };
 
   return (

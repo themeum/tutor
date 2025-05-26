@@ -1,13 +1,14 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 
 import {
   convertExportFormDataToPayload,
   useExportContentsMutation,
-  type ExportContentResponse,
   type ExportFormData,
 } from '@ImportExport/services/import-export';
+import generateImportExportMessage from '@ImportExport/utils/utils';
+import { useQueryClient } from '@tanstack/react-query';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
@@ -19,7 +20,7 @@ import ExportModal from './modals/ExportModal';
 
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
-
+  const queryClient = useQueryClient();
   const { data: exportContentResponse, mutateAsync, error, isPending, isError } = useExportContentsMutation();
 
   const handleImport = (data: ExportFormData) => {
@@ -30,79 +31,6 @@ const Export = () => {
       currentStep: 'progress',
       progress: 0,
     });
-  };
-
-  const generateExportMessage = (exportStatus: ExportContentResponse | undefined): string => {
-    // Early return for missing data
-    if (!exportStatus) {
-      return __('Export in progress...', 'tutor');
-    }
-
-    const { completed_contents: completedContents, failed_course_ids = [], failed_bundle_ids = [] } = exportStatus;
-    const noFailures = failed_course_ids.length === 0 && failed_bundle_ids.length === 0;
-
-    // Helper function for formatting count with singular/plural text
-    const formatCount = (count: number, singular: string, plural: string): string =>
-      sprintf(__(count === 1 ? '%d ' + singular : '%d ' + plural, 'tutor'), count);
-
-    // Handle case with only failures and no completed contents
-    if (!completedContents || Object.keys(completedContents).length === 0) {
-      if (!noFailures) {
-        const items = [];
-        if (failed_course_ids.length) {
-          items.push(formatCount(failed_course_ids.length, 'Course', 'Courses'));
-        }
-        if (failed_bundle_ids.length) {
-          items.push(formatCount(failed_bundle_ids.length, 'Bundle', 'Bundles'));
-        }
-        return `${items.join(', ')} ${__('failed', 'tutor')}`;
-      }
-      return __('Export in progress...', 'tutor');
-    }
-
-    // Process successful and failed items
-    const { courses, 'course-bundle': bundles, settings } = completedContents;
-    const successItems = [];
-
-    if (courses?.length) {
-      successItems.push(formatCount(courses.length, 'Course', 'Courses'));
-    }
-
-    if (bundles?.length) {
-      successItems.push(formatCount(bundles.length, 'Bundle', 'Bundles'));
-    }
-
-    if (settings) {
-      successItems.push(__('Settings', 'tutor'));
-    }
-
-    // Create failed items list (without the word "failed")
-    const failedItems = [];
-    if (failed_course_ids.length) {
-      failedItems.push(formatCount(failed_course_ids.length, 'Course', 'Courses'));
-    }
-    if (failed_bundle_ids.length) {
-      failedItems.push(formatCount(failed_bundle_ids.length, 'Bundle', 'Bundles'));
-    }
-
-    // Early return if nothing to report
-    if (successItems.length === 0 && failedItems.length === 0) {
-      return __('Export in progress...', 'tutor');
-    }
-
-    // Build final message
-    let message = '';
-
-    if (successItems.length > 0) {
-      message = `${successItems.join(', ')} ${__('Exported', 'tutor')}`;
-    }
-
-    if (failedItems.length > 0) {
-      const failureMessage = `${failedItems.join(', ')} ${__('failed', 'tutor')}`;
-      message = message ? `${message}. ${failureMessage}` : failureMessage;
-    }
-
-    return message;
   };
 
   useEffect(() => {
@@ -139,7 +67,7 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'progress',
         progress,
-        message: generateExportMessage(exportContentResponse),
+        message: generateImportExportMessage(exportContentResponse, 'export'),
       });
     }
 
@@ -164,6 +92,9 @@ const Export = () => {
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
         },
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['ImportExportHistory'],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

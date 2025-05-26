@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
@@ -10,16 +10,18 @@ import { UploadButton } from '@TutorShared/molecules/FileUploader';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
-import { type ImportExportModalState } from '@ImportExport/services/import-export';
+import {
+  type ImportExportContentResponseBase,
+  type ImportExportModalState,
+} from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes } from '@TutorShared/utils/util';
 
-import importErrorImage from '@SharedImages/import-export/import-error.webp';
-import importInProgressImage from '@SharedImages/import-export/import-inprogress.webp';
-import importSuccessImage from '@SharedImages/import-export/import-success.webp';
+import ImportExportCompletedState from './import-export-states/ImportExportCompletedState';
+import ImportExportProgressState from './import-export-states/ImportExportProgressState';
 
 interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon' | 'subtitle'> {
   files: File[];
@@ -28,6 +30,9 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   onImport: (data: string) => Promise<void>;
   progress?: number;
   message?: string;
+  completedContents?: ImportExportContentResponseBase['completed_contents'];
+  failedCourseIds?: ImportExportContentResponseBase['failed_course_ids'];
+  failedBundleIds?: ImportExportContentResponseBase['failed_bundle_ids'];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,7 +58,17 @@ const readJsonFile = (file: File): Promise<any> => {
   });
 };
 
-const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, message, progress }: ImportModalProps) => {
+const ImportModal = ({
+  files: propsFiles,
+  currentStep,
+  onClose,
+  onImport,
+  message,
+  progress,
+  completedContents,
+  failedCourseIds,
+  failedBundleIds,
+}: ImportModalProps) => {
   const [files, setFiles] = useState<File[]>(propsFiles);
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [hasSettings, setHasSettings] = useState(false);
@@ -170,43 +185,25 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
   };
 
   const renderProgressState = (file: File) => {
-    return (
-      <div css={styles.progress}>
-        <img src={importInProgressImage} alt={__('Importing...', 'tutor')} />
-        <div css={styles.progressHeader}>
-          <div css={typography.caption()}>{renderHeader[currentStep]}</div>
-          <div css={styles.progressCount}>{progress}%</div>
-        </div>
-        <div css={styles.progressBar({ progress })} />
-        <div css={styles.progressInfo}>{message || file.name}</div>
-      </div>
-    );
+    return <ImportExportProgressState progress={progress || 0} message={message || file.name} type="import" />;
   };
 
   const renderCompletedState = (file: File, state: ImportExportModalState) => {
-    const imageSrc = {
-      success: importSuccessImage,
-      error: importErrorImage,
-    };
-    const subtitle = {
-      success: sprintf(__('You have successfully imported a “%s"', 'tutor'), file.name),
-      error: message || sprintf(__('Failed to import “%s".', 'tutor'), file.name),
-    };
-
     return (
-      <div css={styles.completed}>
-        <img src={imageSrc[state as keyof typeof imageSrc]} alt={renderHeader[state]} />
-        <div css={styles.title}>{renderHeader[state]}</div>
-        <div css={styles.subtitle}>{subtitle[state as keyof typeof subtitle]}</div>
-
-        <Button variant="primary" size="small" onClick={onClose}>
-          {__('Okay', 'tutor')}
-        </Button>
-      </div>
+      <ImportExportCompletedState
+        onClose={onClose}
+        state={state}
+        fileSize={file.size}
+        completedContents={completedContents}
+        failedCourseIds={failedCourseIds}
+        failedBundleIds={failedBundleIds}
+        type="import"
+        importFileName={file.name}
+      />
     );
   };
 
-  const modalBody = {
+  const modalContent = {
     initial: renderInitialState(files[0]),
     progress: renderProgressState(files[0]),
     success: renderCompletedState(files[0], 'success'),
@@ -221,7 +218,7 @@ const ImportModal = ({ files: propsFiles, currentStep, onClose, onImport, messag
       title={currentStep === 'initial' ? renderHeader[currentStep] : undefined}
       isCloseAble={currentStep !== 'progress'}
     >
-      <div css={styles.wrapper({ state: currentStep })}>{modalBody[currentStep]}</div>
+      <div css={styles.wrapper({ state: currentStep })}>{modalContent[currentStep]}</div>
     </BasicModalWrapper>
   );
 };

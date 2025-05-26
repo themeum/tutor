@@ -6,27 +6,44 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import exportInProgressImage from '@SharedImages/import-export/export-inprogress.webp';
+import importInProgressImage from '@SharedImages/import-export/import-inprogress.webp';
 
-interface ExportProgressStateProps {
+interface ImportExportProgressStateProps {
   progress: number;
   message?: string;
+  type: 'import' | 'export';
 }
 
-const ExportProgressState = ({ progress, message }: ExportProgressStateProps) => {
+const ImportExportProgressState = ({ progress, message, type }: ImportExportProgressStateProps) => {
+  const contentMapping = {
+    import: {
+      image: importInProgressImage,
+      imageAlt: __('Importing...', 'tutor'),
+      header: __('Importing...', 'tutor'),
+    },
+    export: {
+      image: exportInProgressImage,
+      imageAlt: __('Exporting...', 'tutor'),
+      header: __('Getting your files ready!', 'tutor'),
+    },
+  };
   return (
     <div css={styles.progress}>
-      <img src={exportInProgressImage} alt={__('Exporting...', 'tutor')} />
+      <img
+        src={contentMapping[type as keyof typeof contentMapping].image}
+        alt={contentMapping[type as keyof typeof contentMapping].imageAlt}
+      />
       <div css={styles.progressHeader}>
-        <div css={typography.caption()}>{__('Getting your files ready!', 'tutor')}</div>
+        <div css={typography.caption()}>{contentMapping[type as keyof typeof contentMapping].header}</div>
         <div css={styles.progressCount}>{progress}%</div>
       </div>
       <div css={styles.progressBar({ progress })} />
-      <div css={styles.progressInfo}>{message || __('Exporting...', 'tutor')}</div>
+      <div css={styles.progressInfo}>{message || contentMapping[type as keyof typeof contentMapping].header}</div>
     </div>
   );
 };
 
-export default ExportProgressState;
+export default ImportExportProgressState;
 
 const styles = {
   progress: css`
