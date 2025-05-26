@@ -97,6 +97,20 @@ const Import = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [importResponse?.data, isPending, error]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isPending) {
+        e.preventDefault();
+        return;
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isPending]);
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.title}>{__('Import', 'tutor')}</div>
