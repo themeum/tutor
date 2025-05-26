@@ -25,7 +25,7 @@ const Import = () => {
     updateModal<typeof ImportModal>('import-modal', {
       currentStep: 'progress',
       progress: 0,
-      message: __('Importing...', 'tutor'),
+      message: __('Import in progress', 'tutor'),
     });
 
     try {
