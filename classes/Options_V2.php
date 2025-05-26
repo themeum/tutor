@@ -235,6 +235,9 @@ class Options_V2 {
 		$response = array(
 			'job_progress'  => '100',
 			'exported_data' => $export_data,
+			'completed_contents' => array(
+				'settings' => true
+			)
 		);
 
 		$this->json_response( __( 'Settings exported successfully', 'tutor-pro' ), $response );
@@ -427,6 +430,21 @@ class Options_V2 {
 			$this->response_bad_request( __( 'Invalid json file', 'tutor' ) );
 		}
 
+		if ( isset( $request['data'] ) ) {
+
+			$has_settings = false;
+
+			foreach( $request['data'] as $data ) {
+				if ( 'settings' === $data['content_type'] ){
+					$has_settings = true;
+				}
+			}
+
+			if ( ! $has_settings ) {
+				$this->response_bad_request( __( 'Settings not found.', 'tutor' ) );
+			}
+		}
+
 		$time = tutor_time();
 
 		$save_import_data['datetime']             = $time;
@@ -470,6 +488,9 @@ class Options_V2 {
 		$response = array(
 			'job_progress'  => '100',
 			'exported_data' => $get_final_data,
+			'completed_contents' => array(
+				'settings' => true,
+			)
 		);
 
 		$this->json_response( __( 'Settings imported successfully!', 'tutor' ), $response );
