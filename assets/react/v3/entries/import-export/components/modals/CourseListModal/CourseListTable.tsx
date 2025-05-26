@@ -39,6 +39,7 @@ const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
       offset,
       limit: itemsPerPage,
       filter: pageInfo.filter,
+      post_type: 'any',
       exclude: [],
     }),
     [offset, itemsPerPage, pageInfo.filter],

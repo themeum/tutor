@@ -21,9 +21,7 @@ const ExportProgressState = ({ progress, message }: ExportProgressStateProps) =>
         <div css={styles.progressCount}>{progress}%</div>
       </div>
       <div css={styles.progressBar({ progress })} />
-      <div css={styles.progressInfo} key={message}>
-        {message || __('Exporting...', 'tutor')}
-      </div>
+      <div css={styles.progressInfo}>{message || __('Exporting...', 'tutor')}</div>
     </div>
   );
 };

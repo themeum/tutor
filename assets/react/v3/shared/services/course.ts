@@ -14,6 +14,7 @@ export interface Course {
 
 interface CourseListParams extends PaginatedParams {
   exclude: string[] | number[];
+  post_type?: string;
 }
 
 const getCourseList = (params: CourseListParams) => {
@@ -31,6 +32,7 @@ export const useCourseListQuery = ({ params, isEnabled }: { params: CourseListPa
         limit: params.limit,
         offset: params.offset,
         filter: params.filter,
+        post_type: params.post_type,
       }).then((res) => res.data),
     placeholderData: keepPreviousData,
     enabled: isEnabled,
