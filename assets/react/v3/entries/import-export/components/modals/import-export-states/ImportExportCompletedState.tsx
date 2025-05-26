@@ -393,7 +393,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.divider};
     overflow: hidden;
     border-radius: ${borderRadius[6]};
-    width: 100%;
+    flex: 0 0 auto;
   `,
   fileIcon: css`
     ${styleUtils.flexCenter()};
