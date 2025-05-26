@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { type ErrorResponse } from 'react-router-dom';
 
 import { useToast } from '@TutorShared/atoms/Toast';
@@ -191,9 +191,18 @@ const exportContents = async (payload: ExportContentPayload) => {
 
 export const useExportContentsMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: exportContents,
     mutationKey: ['ExportContents'],
+    onSuccess: (response) => {
+      if (response.job_progress === 100) {
+        queryClient.invalidateQueries({
+          queryKey: ['ImportExportHistory'],
+        });
+      }
+    },
     onError: (error: ErrorResponse) => {
       showToast({
         message: convertToErrorMessage(error),
@@ -221,9 +230,18 @@ const importContents = async (payload: ImportContentPayload) => {
 
 export const useImportContentsMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: importContents,
     mutationKey: ['ImportContents'],
+    onSuccess: (response) => {
+      if (response.data.job_progress === 100) {
+        queryClient.invalidateQueries({
+          queryKey: ['ImportExportHistory'],
+        });
+      }
+    },
     onError: (error: ErrorResponse) => {
       showToast({
         message: convertToErrorMessage(error),

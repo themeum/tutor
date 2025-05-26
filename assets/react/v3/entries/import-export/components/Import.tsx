@@ -15,14 +15,12 @@ import { convertToErrorMessage, noop } from '@TutorShared/utils/util';
 import generateImportExportMessage from '@ImportExport/utils/utils';
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
 import { tutorConfig } from '@TutorShared/config/config';
-import { useQueryClient } from '@tanstack/react-query';
 import { type ErrorResponse } from 'react-router-dom';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
-  const queryClient = useQueryClient();
   const { data: importResponse, mutateAsync, isError, error, isPending } = useImportContentsMutation();
 
   const onImport = async (data: string): Promise<void> => {
@@ -101,9 +99,6 @@ const Import = () => {
         completedContents: importResponse?.data?.completed_contents,
         failedCourseIds: importResponse?.data?.failed_course_ids,
         failedBundleIds: importResponse?.data?.failed_bundle_ids,
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['ImportExportHistory'],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

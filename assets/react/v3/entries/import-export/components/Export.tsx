@@ -8,7 +8,6 @@ import {
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import generateImportExportMessage from '@ImportExport/utils/utils';
-import { useQueryClient } from '@tanstack/react-query';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
@@ -20,7 +19,6 @@ import ExportModal from './modals/ExportModal';
 
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
-  const queryClient = useQueryClient();
   const { data: exportContentResponse, mutateAsync, error, isPending, isError } = useExportContentsMutation();
 
   const handleImport = (data: ExportFormData) => {
@@ -92,9 +90,6 @@ const Export = () => {
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
         },
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['ImportExportHistory'],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
