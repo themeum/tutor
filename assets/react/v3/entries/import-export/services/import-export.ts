@@ -213,9 +213,10 @@ interface ImportContentResponse extends ImportExportContentResponseBase {
 }
 
 const importContents = async (payload: ImportContentPayload) => {
-  return wpAjaxInstance
-    .post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(endpoints.IMPORT_CONTENTS, payload)
-    .then((res) => res.data);
+  return wpAjaxInstance.post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(
+    endpoints.IMPORT_CONTENTS,
+    payload,
+  );
 };
 
 export const useImportContentsMutation = () => {

@@ -112,27 +112,25 @@ const Export = () => {
           </div>
         </div>
 
-        <div>
-          <Button
-            variant="primary"
-            size="small"
-            icon={<SVGIcon name="export" width={24} height={24} />}
-            onClick={() =>
-              showModal({
-                id: 'export-modal',
-                component: ExportModal,
-                props: {
-                  onClose: closeModal,
-                  currentStep: 'initial',
-                  onExport: handleImport,
-                  progress: Number(exportContentResponse?.job_progress) || 0,
-                },
-              })
-            }
-          >
-            {__('Initiate Export', 'tutor')}
-          </Button>
-        </div>
+        <Button
+          variant="primary"
+          size="small"
+          icon={<SVGIcon name="export" width={24} height={24} />}
+          onClick={() =>
+            showModal({
+              id: 'export-modal',
+              component: ExportModal,
+              props: {
+                onClose: closeModal,
+                currentStep: 'initial',
+                onExport: handleImport,
+                progress: Number(exportContentResponse?.job_progress) || 0,
+              },
+            })
+          }
+        >
+          {__('Initiate Export', 'tutor')}
+        </Button>
       </div>
     </div>
   );
@@ -158,6 +156,10 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.divider};
     border-radius: ${borderRadius[6]};
     background-color: ${colorTokens.background.white};
+
+    button {
+      flex-shrink: 0;
+    }
   `,
   exportHeader: css`
     ${styleUtils.display.flex('column')}

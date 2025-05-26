@@ -199,6 +199,7 @@ const ImportModal = ({
         failedBundleIds={failedBundleIds}
         type="import"
         importFileName={file.name}
+        message={message || ''}
       />
     );
   };

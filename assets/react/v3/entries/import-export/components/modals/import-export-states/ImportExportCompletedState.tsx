@@ -65,7 +65,7 @@ const ImportExportCompletedState = ({
         error: __('Import Failed', 'tutor'),
       },
       subtitle: {
-        success: '',
+        success: message || __('Your file has been successfully imported.', 'tutor'),
         error: message || sprintf(__('Failed to import %s.', 'tutor'), importFileName || __('file', 'tutor')),
       },
       completedMessage: {
@@ -132,23 +132,22 @@ const ImportExportCompletedState = ({
           ]
         }
       />
-      <div css={styles.successHeader}>
-        <div css={styles.successTitle}>
+      <div css={styles.statusHeader}>
+        <div css={styles.statusTitle}>
           {
             contentMapping[type as keyof typeof contentMapping].header[
               state as keyof (typeof contentMapping)['import']['header']
             ]
           }
         </div>
-        <Show when={type === 'export'}>
-          <div css={styles.successSubtitle}>
-            {
-              contentMapping[type as keyof typeof contentMapping].subtitle[
-                state as keyof (typeof contentMapping)['import']['subtitle']
-              ]
-            }
-          </div>
-        </Show>
+
+        <div css={styles.statusSubtitle}>
+          {
+            contentMapping[type as keyof typeof contentMapping].subtitle[
+              state as keyof (typeof contentMapping)['import']['subtitle']
+            ]
+          }
+        </div>
       </div>
 
       <Show
@@ -268,14 +267,13 @@ const ImportExportCompletedState = ({
             </div>
           </div>
         </Show>
-      </Show>
-
-      <Show when={type === 'import' && state === 'success'}>
-        <div>
-          <Button variant="primary" size="small" onClick={onClose}>
-            {__('Okay', 'tutor')}
-          </Button>
-        </div>
+        <Show when={type === 'import'}>
+          <div>
+            <Button variant="primary" size="small" onClick={onClose}>
+              {__('Okay', 'tutor')}
+            </Button>
+          </div>
+        </Show>
       </Show>
     </div>
   );
@@ -298,16 +296,16 @@ const styles = {
       object-position: center;
     }
   `,
-  successHeader: css`
+  statusHeader: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
     align-items: center;
     text-align: center;
   `,
-  successTitle: css`
+  statusTitle: css`
     ${typography.heading6('medium')};
   `,
-  successSubtitle: css`
+  statusSubtitle: css`
     ${typography.caption('regular')};
     color: ${colorTokens.text.subdued};
   `,
