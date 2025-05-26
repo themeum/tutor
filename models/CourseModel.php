@@ -958,6 +958,9 @@ class CourseModel {
 		if ( $results ) {
 			foreach ( $results as $row ) {
 				$attachment_ids = maybe_unserialize( $row->meta_value );
+				if ( ! is_array( $attachment_ids ) || empty( $attachment_ids ) ) {
+					continue;
+				}
 
 				$attachments = get_posts(
 					array(
