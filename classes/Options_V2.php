@@ -218,12 +218,7 @@ class Options_V2 {
 		$tutor_option = get_option( 'tutor_option' );
 		$data         = maybe_unserialize( $tutor_option );
 
-		$export_data = array(
-			'schema_version'   => '1.0.0',
-			'exported_at'      => current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
-			'keep_media_files' => false,
-			'data'             => array(),
-		);
+		$export_data = $this->get_export_json_schema();
 
 		$prepare_data = array(
 			'content_type' => 'settings',
@@ -258,7 +253,16 @@ class Options_V2 {
 
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$export_id          = $this->get_request_data( 'export_id' );
-		wp_send_json_success( $tutor_settings_log[ $export_id ]['dataset'] );
+
+		$export_data = $this->get_export_json_schema();
+
+		$prepare_data = array(
+			'content_type' => 'settings',
+			'data'         => $tutor_settings_log[ $export_id ]['dataset'],
+		);
+
+		$export_data['data'][] = $prepare_data;
+		wp_send_json_success( $export_data );
 	}
 
 	/**
@@ -1972,5 +1976,23 @@ class Options_V2 {
 		}
 
 		return $field_name;
+	}
+
+	/**
+	 * Json schema data
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array
+	 */
+	public function get_export_json_schema() {
+		$export_data = array(
+			'schema_version'   => '1.0.0',
+			'exported_at'      => current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
+			'keep_media_files' => false,
+			'data'             => array(),
+		);
+
+		return $export_data;
 	}
 }
