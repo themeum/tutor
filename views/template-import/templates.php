@@ -32,13 +32,13 @@
 		?>
 	</div>
 
-	<div class="tutor-template-live-preview-modal">
-		<div class="tutor-template-live-preview-modal-overlay"></div>
-		<div class="tutor-template-live-preview-frame">
+	<div class="tutor-template-preview-modal">
+		<div class="tutor-template-preview-modal-overlay"></div>
+		<div class="tutor-template-preview-frame">
 			<div class="tutor-template-preview-frame-header">
-				<div class="tutor- tutor-d-flex tutor-gap-1 tutor-align-center tutor-template-live-preview-modal-back-link">
+				<div class="tutor- tutor-d-flex tutor-gap-1 tutor-align-center tutor-template-preview-modal-back-link">
 					<i class="tutor-icon-previous"></i>
-					<h3 class="tutor-preview-modal-template-name" data-templateId=""></h3>
+					<div class="">Themes</div>
 				</div>
 				<ul class="tutor-template-preview-device-switcher">
 					<li class="active" data-device="desktop" data-width="100%" data-height="100%">
@@ -55,8 +55,8 @@
 			<div class="tutor-template-preview-iframe-wrapper">
 				<iframe id="tutor-template-preview-iframe" src="" frameborder="0"></iframe>
 				<div class="tutor-template-loading-indicator" style="display: none;"><?php esc_html_e( 'Loading...', 'tutor' ); ?></div>
-				<div class="tutor-template-live-preview-import-area tutor-flex-column tutor-justify-center tutor-gap-1" style="display: none;">
-					<div class="tutor-preview-template-name" data-templateId="">BeatLab Academy</div>	
+				<div class="tutor-template-preview-import-area tutor-flex-column tutor-justify-center tutor-gap-1" style="display: none;">
+					<div class="tutor-preview-template-name">BeatLab Academy</div>	
 					<p class="tutor-droip-color-presets-heading" style="display: none;">
 						<?php esc_html_e( 'Choose your color palette and continue with your design', 'tutor' ); ?>
 					</p>

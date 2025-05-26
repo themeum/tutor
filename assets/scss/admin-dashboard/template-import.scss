@@ -121,41 +121,64 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	}
 
 	// template preview scss.
-	.tutor-template-live-preview-modal {
+	.tutor-template-preview-modal {
 		display: none;
 		position: fixed;
 		z-index: 999999;
 		inset: 0;
 
-		.tutor-template-live-preview-modal-overlay {
+		.tutor-template-preview-modal-overlay {
 			width: 100%;
 			height: 100%;
 			position: absolute;
 			inset: 0;
-			// backdrop-filter: blur(2px);
 			background: #ddd;
 		}
 
-		.tutor-template-live-preview-modal-back-link {
+		.tutor-template-preview-modal-back-link {
+			width: max-content;
 			cursor: pointer;
 
 			i {
 				padding: 3px 4px;
-				border: 1px solid #9197A8;
+				border: 1px solid #C3C5CB;
 				color: #9197A8;
 				border-radius: 2.25px;
 
-				&:hover {
+			}
+
+			&:hover {
+				i {
 					padding: 3px 4px;
 					color: var(--tutor-color-primary);
 					border: 1px solid var(--tutor-color-primary);
 				}
+
+				div {
+					font-family: Inter;
+					font-weight: 500;
+					font-size: 14px;
+					line-height: 24px;
+					letter-spacing: -0.1px;
+					vertical-align: middle;
+					color: #000;
+				}
+			}
+
+			div {
+				font-family: Inter;
+				font-weight: 500;
+				font-size: 14px;
+				line-height: 24px;
+				letter-spacing: -0.1px;
+				vertical-align: middle;
+				color: #212327;
 			}
 
 		}
 	}
 
-	.tutor-template-live-preview-frame {
+	.tutor-template-preview-frame {
 		width: 100%;
 		height: calc(100vh - 78px);
 		position: relative;
@@ -206,7 +229,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		}
 	}
 
-	.tutor-template-live-preview-close-modal {
+	.tutor-template-preview-close-modal {
 		font-size: 20px;
 		cursor: pointer;
 		color: #333;
@@ -246,7 +269,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 			margin: 0 auto;
 		}
 
-		.tutor-template-live-preview-import-area {
+		.tutor-template-preview-import-area {
 			padding-left: 20px;
 			padding: 0px 10px 0px 20px;
 

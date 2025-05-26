@@ -31,7 +31,7 @@ if ( ! empty( $template_list ) ) { ?>
 						<span><?php echo esc_html( $template->label ); ?></span>
 					</div>
 					<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-						<button class="tutor-btn tutor-btn-sm open-template-live-preview" data-template_name="<?php echo esc_attr( $template->label ); ?>" data-template_id="<?php echo esc_attr( $template->slug ); ?>" data-template_url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>" style="border: 1px solid #ddd;">
+						<button class="tutor-btn tutor-btn-sm tutor-template-preview-btn" data-template_name="<?php echo esc_attr( $template->label ); ?>" data-template_id="<?php echo esc_attr( $template->slug ); ?>" data-template_url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>" style="border: 1px solid #ddd;">
 							<?php esc_html_e( 'Preview', 'tutor' ); ?>
 						</button>
 					</div>

@@ -3,24 +3,19 @@
 document.addEventListener('DOMContentLoaded', function () {
 	// template preview variables
 	const templatesDemoImportRoot = document.querySelector(".tutor-templates-demo-import");
-	const livePreviewModal = document.querySelector(".tutor-template-live-preview-modal");
-	const livePreviewModalOverlay = document.querySelector(".tutor-template-live-preview-modal-overlay");
+	const livePreviewModal = document.querySelector(".tutor-template-preview-modal");
+	const livePreviewModalOverlay = document.querySelector(".tutor-template-preview-modal-overlay");
 	const iframeWrapper = document.querySelector(".tutor-template-preview-iframe-wrapper");
 	const iframe = document.getElementById("tutor-template-preview-iframe");
-	const livePreviewCloseModal = document.querySelector(".tutor-template-live-preview-modal-back-link > i");
+	const livePreviewCloseModal = document.querySelector(".tutor-template-preview-modal-back-link");
 	const deviceSwitchers = document.querySelectorAll(".tutor-template-preview-device-switcher li");
-	const previewTemplateName = document.querySelector(".tutor-preview-modal-template-name");
+	const previewTemplateName = document.querySelector(".tutor-preview-template-name");
 	const loadingIndicator = document.querySelector(".tutor-template-loading-indicator");
-
-	const droipTemplateUrls = {
-		'music': 'https://pixage.droip.io',
-		'business': 'https://artify.droip.io'
-	};
 
 	if (templatesDemoImportRoot) {
 		// Open live preview modal
 		templatesDemoImportRoot.addEventListener('click', (event) => {
-			if (event.target && event.target.matches('.open-template-live-preview')) {
+			if (event.target && event.target.matches('.tutor-template-preview-btn')) {
 				loadingIndicator.style.display = "block";
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
@@ -46,7 +41,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			resetPreviewModal();
 
 			const importBtn = document.querySelector('.tutor-template-view-template-btn');
-			console.log('importBtn', importBtn);
 			const icon = importBtn.querySelector('i');
 			importBtn.classList.remove('is-loading');
 			importBtn.classList.add('tutor-template-demo-import-btn');
@@ -112,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					const presetHeading = document.querySelector('.tutor-droip-color-presets-heading');
 					presetHeading.style.display = 'block';
-					const presetWrapper = document.querySelector('.tutor-template-live-preview-import-area');
+					const presetWrapper = document.querySelector('.tutor-template-preview-import-area');
 					presetWrapper.style.display = 'flex';
 
 					// setVariables(event.data.droipCSSVariable.data[0]);
