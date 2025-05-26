@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { type FunctionComponent } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -23,7 +24,6 @@ import Show from '@TutorShared/controls/Show';
 import { type useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Course } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type FunctionComponent } from 'react';
 
 interface ExportInitialStateProps {
   form: ReturnType<typeof useFormWithGlobalError<ExportFormData>>;
@@ -268,7 +268,7 @@ const ExportInitialState = ({
                   disabled={!isTutorPro}
                   description={
                     // prettier-ignore
-                    __('If you check this media files will be exported along with the selected data', 'tutor')
+                    __('If checked, course media files will also be exported with the course data.', 'tutor')
                   }
                 />
               )}

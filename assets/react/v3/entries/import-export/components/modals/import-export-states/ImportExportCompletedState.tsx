@@ -45,7 +45,6 @@ const ImportExportCompletedState = ({
   failedBundleIds = [],
   onDownload,
   onClose,
-  importFileName = '',
   type,
 }: ImportExportCompletedStateProps) => {
   const [isFailedDataVisible, setIsFailedDataVisible] = useState(false);
@@ -62,14 +61,16 @@ const ImportExportCompletedState = ({
       },
       header: {
         success: __('Import Complete!', 'tutor'),
-        error: __('Import Failed', 'tutor'),
+        error: __('Import Failed!', 'tutor'),
       },
       subtitle: {
         success: message || __('Your file has been successfully imported.', 'tutor'),
-        error: message || sprintf(__('Failed to import %s.', 'tutor'), importFileName || __('file', 'tutor')),
+        error: message || __('Something went wrong during import. Please try again!', 'tutor'),
       },
       completedMessage: {
-        success: __('Successfully Imported', 'tutor'),
+        success:
+          // prettier-ignore
+          __( "Your Tutor LMS course data was successfully imported. However, some items couldn't be imported. Here's the list:", 'tutor'),
         error: __('Failed to Import', 'tutor'),
       },
     },
@@ -80,19 +81,24 @@ const ImportExportCompletedState = ({
       },
       imageAlt: {
         success: __('Export Successful', 'tutor'),
-        error: __('Export Failed', 'tutor'),
+        error: __('Export Failed!', 'tutor'),
       },
       header: {
-        success: __('Your File is Ready to Download!', 'tutor'),
+        success: __('Your Data is Ready to Download!', 'tutor'),
         error: __('Export Failed', 'tutor'),
       },
       subtitle: {
-        success: __('Click the button below to download your file.', 'tutor'),
+        success:
+          failedBundleIds.length || failedCourseIds.length
+            ? // prettier-ignore
+              __('The export process has finished. However, certain items could not be exported. Check the summary below:', 'tutor')
+            : // prettier-ignore
+              __('Download the JSON file and use it to import your course data into another Tutor LMS website.', 'tutor'),
         error: message,
       },
       completedMessage: {
         success: __('Successfully Exported', 'tutor'),
-        error: __('Failed to Export', 'tutor'),
+        error: __('Something went wrong during the export. Please try again.', 'tutor'),
       },
     },
   };

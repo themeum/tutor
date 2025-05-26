@@ -103,7 +103,7 @@ const Export = () => {
         <div css={styles.exportHeader}>
           <div css={styles.exportTitle}>{__('Export Data', 'tutor')}</div>
           <div css={styles.exportSubtitle}>
-            {__('Easily export your courses, lessons, quizzes, user data, and global settings.', 'tutor')}
+            {__('Easily export your courses, lessons, quizzes, assignments, global settings, etc.', 'tutor')}
           </div>
         </div>
 
