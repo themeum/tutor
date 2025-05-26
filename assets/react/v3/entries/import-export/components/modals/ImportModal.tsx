@@ -218,7 +218,7 @@ const ImportModal = ({
       title={currentStep === 'initial' ? renderHeader[currentStep] : undefined}
       isCloseAble={currentStep !== 'progress'}
     >
-      <div css={styles.wrapper({ state: currentStep })}>{modalContent[currentStep]}</div>
+      <div css={styles.wrapper}>{modalContent[currentStep]}</div>
     </BasicModalWrapper>
   );
 };
@@ -226,32 +226,9 @@ const ImportModal = ({
 export default ImportModal;
 
 const styles = {
-  wrapper: ({ state = 'initial' }: { state?: ImportExportModalState }) => css`
+  wrapper: css`
     max-height: 840px;
     transition: max-height 0.3s ease-in-out;
-
-    ${state === 'progress' &&
-    css`
-      img {
-        height: 94px;
-      }
-    `}
-
-    ${state === 'success' &&
-    css`
-      padding: ${spacing[24]} ${spacing[32]};
-      img {
-        height: 110px;
-      }
-    `}
-
-    ${state === 'error' &&
-    css`
-      padding: ${spacing[24]} ${spacing[32]};
-      img {
-        height: 110px;
-      }
-    `}
   `,
   title: css`
     ${typography.heading6('medium')};

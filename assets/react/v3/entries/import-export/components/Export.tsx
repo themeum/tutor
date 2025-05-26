@@ -144,7 +144,6 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[12]};
-    padding: ${spacing[32]} ${spacing[24]};
   `,
   title: css`
     ${typography.body()}
