@@ -9,21 +9,19 @@
  * @since 3.6.0
  */
 
-// todo
-// remove demo word from class naming, tutor-theme-import-wrapper tutor-theme-import-* like this
 ?>
-<div class="tutor-templates-demo-import-wrapper">
-	<div class="tutor-templates-demo-import">
-		<div class="tutor-demo-importer-top tutor-d-flex tutor-flex-wrap tutor-justify-between tutor-gap-4 tutor-pb-20 tutor-my-24">
-			<div class="tutor-demo-importer-top-left tutor-d-flex tutor-gap-1">
-				<div class="top-left-icon">
+<div class="tutor-template-import-wrapper">
+	<div class="tutor-template-import-area">
+		<div class="tutor-template-import-area-top tutor-d-flex tutor-flex-wrap tutor-justify-between tutor-gap-4 tutor-pb-20 tutor-my-24">
+			<div class="tutor-template-import-area-left tutor-d-flex tutor-gap-1">
+				<div class="tutor-template-area-top-left-icon">
 					<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.667 11.666v10.667a4 4 0 0 0 4 4h5.666M3.667 11.667v-2a4 4 0 0 1 4-4h16.666a4 4 0 0 1 4 4v2m-24.666 0h9.666m0 14.666h11a4 4 0 0 0 4-4V11.667m-15 14.666V11.667m15 0h-15" stroke="#4B505C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 				</div>
 				<div>
-					<div class="top-left-heading tutor-fs-5 tutor-fw-medium">
+					<div class="tutor-template-top-left-heading tutor-fs-5 tutor-fw-medium">
 						<?php esc_html_e( 'Templates', 'tutor' ); ?>
 					</div>
-					<div class="tutor-top-left-text tutor-fs-6 tutor-fw-regular"><?php esc_html_e( 'Leverage the collection of magnificent Tutor starter templates to make a jump start.', 'tutor' ); ?></div>
+					<div class="tutor-template-area-left-text tutor-fs-6 tutor-fw-regular"><?php esc_html_e( 'Leverage the collection of magnificent Tutor starter templates to make a jump start.', 'tutor' ); ?></div>
 				</div>
 			</div>
 		</div>
@@ -64,7 +62,7 @@
 						<div id="droip-color-modes">
 						</div>
 					</div>
-					<div class="tutor-template-demo-import-btn-wrapper">
+					<div class="tutor-template-import-btn-wrapper">
 						<?php do_action( 'template_import_btn' ); ?>
 					</div>
 					<!-- <i class="tutor-icon-times"></i> -->

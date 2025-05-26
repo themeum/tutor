@@ -15,18 +15,18 @@ $template_list = ( new TemplateImportHelper() )->get_template_list();
 
 $i = 0;
 if ( ! empty( $template_list ) ) { ?>
-	<ul class="tutor-demo-importer-list">
+	<ul class="tutor-template-list">
 		<?php
 		foreach ( $template_list as $key => $template ) {
 			$template = (object) $template;
 			?>
-			<li class="tutor-import-single-template tutor-d-flex tutor-flex-column tutor-justify-between tutor-gap-1 tutor-p-12">
-				<div class="tutor-import-single-template-inner">
+			<li class="tutor-template-list-single-template tutor-d-flex tutor-flex-column tutor-justify-between tutor-gap-1 tutor-p-12">
+				<div class="tutor-template-list-single-template-inner">
 					<div class="tutor-import-template-preview-img">
 						<img src="<?php echo esc_url( $template->preview_image ); ?>" loading="lazy" alt="icon">
 					</div>
 				</div>
-				<div class="tutor-import-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
+				<div class="tutor-template-list-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
 					<div class="tutor-import-template-name tutor-fs-6 tutor-fw-medium">
 						<span><?php echo esc_html( $template->label ); ?></span>
 					</div>

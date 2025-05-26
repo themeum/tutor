@@ -2,7 +2,7 @@
 
 document.addEventListener('DOMContentLoaded', function () {
 	// template preview variables
-	const templatesDemoImportRoot = document.querySelector(".tutor-templates-demo-import");
+	const templateDemoImportRoot = document.querySelector(".tutor-template-import-area");
 	const livePreviewModal = document.querySelector(".tutor-template-preview-modal");
 	const livePreviewModalOverlay = document.querySelector(".tutor-template-preview-modal-overlay");
 	const iframeWrapper = document.querySelector(".tutor-template-preview-iframe-wrapper");
@@ -12,21 +12,20 @@ document.addEventListener('DOMContentLoaded', function () {
 	const previewTemplateName = document.querySelector(".tutor-preview-template-name");
 	const loadingIndicator = document.querySelector(".tutor-template-loading-indicator");
 
-	if (templatesDemoImportRoot) {
+	if (templateDemoImportRoot) {
 		// Open live preview modal
-		templatesDemoImportRoot.addEventListener('click', (event) => {
+		templateDemoImportRoot.addEventListener('click', (event) => {
 			if (event.target && event.target.matches('.tutor-template-preview-btn')) {
 				loadingIndicator.style.display = "block";
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
-				// url = 'https://www.nytimes.com/international/';
-				// iframe.src = event.target.dataset.template_url;
-				iframe.src = 'https://pixage.droip.io';
 				// iframe.src = 'https://artify.droip.io';
+				iframe.src = 'https://pixage.droip.io';
+				// iframe.src = event.target.dataset.template_url;
 				// iframe.src = droipTemplateUrls[event.target.dataset.template_name];
 
 				if (_tutorobject?.tutor_pro_url) {
-					const importBtn = document.querySelector('.tutor-template-demo-import-btn');
+					const importBtn = document.querySelector('.tutor-template-import-btn');
 					importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);
 				}
 			}
@@ -43,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			const importBtn = document.querySelector('.tutor-template-view-template-btn');
 			const icon = importBtn.querySelector('i');
 			importBtn.classList.remove('is-loading');
-			importBtn.classList.add('tutor-template-demo-import-btn');
+			importBtn.classList.add('tutor-template-import-btn');
 			importBtn.classList.remove('tutor-template-view-template-btn');
 			icon.classList.add('tutor-icon-import');
 			icon.classList.remove('tutor-icon-circle-mark');
@@ -57,11 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				deviceSwitcher.classList.add("active");
 				let width = this.getAttribute("data-width");
 				let height = this.getAttribute("data-height");
-				// iframeWrapper.style.width = width;
-				// iframeWrapper.style.height = height;
 				iframe.style.width = width;
-				// iframe.style.height = height;
-				// loadingIndicator.style.display = "block";
 			});
 		});
 

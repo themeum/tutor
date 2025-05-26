@@ -3,7 +3,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	background-color: #f1f1f1;
 }
 
-.tutor-templates-demo-import-wrapper {
+.tutor-template-import-wrapper {
 	.tutor-text-truncate {
 		white-space: nowrap;
 		overflow: hidden;
@@ -15,31 +15,31 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		gap: 10px;
 	}
 
-	.tutor-templates-demo-import {
+	.tutor-template-import-area {
 		background: #f1f1f1;
 		max-width: 1200px;
 		margin: 0 auto;
 	}
 
-	.tutor-demo-importer-top {
+	.tutor-template-import-area-top {
 		border-bottom: 1px solid #e0e2ea;
 
-		.tutor-demo-importer-top-left {
-			.top-left-icon {
+		.tutor-template-import-area-top-left {
+			.tutor-template-area-top-left-icon {
 				width: 40px;
 			}
 		}
 
-		.top-left-heading {
+		.tutor-template-top-left-heading {
 			line-height: 28px;
 		}
 
-		.tutor-top-left-text {
+		.tutor-template-area-left-text {
 			line-height: 24px;
 			margin-top: 2px;
 		}
 
-		.tutor-demo-importer-top-right {
+		.tutor-template-import-area-top-right {
 			.tutor-template-search-wrapper {
 				position: relative;
 
@@ -75,12 +75,12 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		width: 100%;
 	}
 
-	.tutor-demo-importer-list {
+	.tutor-template-list {
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(274px, 374px));
 		gap: 24px;
 
-		.tutor-import-single-template {
+		.tutor-template-list-single-template {
 			border-radius: 6px;
 			border: 1px solid #e0e2ea;
 			background: white;
@@ -89,7 +89,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 				box-shadow: 0px 6px 20px 0px #1c31681a;
 			}
 
-			.tutor-import-single-template-inner {
+			.tutor-template-list-single-template-inner {
 				position: relative;
 
 				.tutor-import-template-preview-img {
@@ -99,7 +99,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 				}
 			}
 
-			.tutor-import-single-template-footer {
+			.tutor-template-list-single-template-footer {
 
 				.tutor-import-template-name {
 					line-height: 26px;
@@ -273,8 +273,12 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 			padding-left: 20px;
 			padding: 0px 10px 0px 20px;
 
-			.tutor-template-demo-import-btn-wrapper {
+			.tutor-template-import-btn-wrapper {
 				margin-top: 10px;
+
+				button {
+					width: 100%;
+				}
 			}
 		}
 	}
@@ -300,12 +304,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	margin-top: 30px;
 	font-size: 20px;
 	line-height: 1.5;
-}
-
-.tutor-template-demo-import-btn-wrapper {
-	button {
-		width: 100%;
-	}
 }
 
 // color palette 
