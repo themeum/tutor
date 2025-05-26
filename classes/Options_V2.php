@@ -236,7 +236,7 @@ class Options_V2 {
 		);
 
 		// Update settings log.
-		$this->update_settings_log( $data );
+		$this->update_settings_log( $data, 'Exported' );
 
 		$this->json_response( __( 'Settings exported successfully', 'tutor-pro' ), $response );
 	}
@@ -438,7 +438,7 @@ class Options_V2 {
 		}
 
 		$settings_data   = is_array( $request ) && isset( $request['data'] ) ? $request['data'][0]['data'] : array();
-		$update_settings = $this->update_settings_log( $settings_data );
+		$update_settings = $this->update_settings_log( $settings_data, 'Imported' );
 
 		$response = array(
 			'job_progress'  => '100',
@@ -1970,18 +1970,19 @@ class Options_V2 {
 	 *
 	 * @since 3.6.0
 	 *
-	 * @param array $new_settings_data New exported/import settings data.
+	 * @param array  $new_settings_data New exported/import settings data.
+	 * @param string $action_type Action type import/export.
 	 *
 	 * @return array Settings log data
 	 */
-	private function update_settings_log( $new_settings_data ) {
+	private function update_settings_log( $new_settings_data, $action_type ) {
 		$get_final_data = array();
 
 		$time = tutor_time();
 
 		$save_import_data['datetime']             = $time;
 		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
-		$save_import_data['datatype']             = 'imported';
+		$save_import_data['datatype']             = $action_type;
 		$save_import_data['dataset']              = $new_settings_data;
 		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
 
