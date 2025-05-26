@@ -34,7 +34,7 @@ interface ImportExportCompletedStateProps {
   importFileName?: string;
   type: 'import' | 'export';
 }
-const fileName = `tutor_data_${format(new Date(), 'yyyy_MM_dd_HH:mm:ss')}.json`;
+const fileName = `tutor_lms_data_${format(new Date(), 'yyyy_MM_dd_HH:mm:ss')}.json`;
 
 const ImportExportCompletedState = ({
   state,
