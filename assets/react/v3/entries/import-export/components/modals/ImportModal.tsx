@@ -71,6 +71,7 @@ const ImportModal = ({
 }: ImportModalProps) => {
   const [files, setFiles] = useState<File[]>(propsFiles);
   const [isReadingFile, setIsReadingFile] = useState(false);
+  const [isFileValid, setIsFileValid] = useState(true);
   const [hasSettings, setHasSettings] = useState(false);
   const { showToast } = useToast();
 
@@ -79,14 +80,22 @@ const ImportModal = ({
       return;
     }
     setIsReadingFile(true);
-    readJsonFile(files[0]).then((data) => {
-      const hasSettings =
-        data?.data.filter((item: { content_type: string }) => item.content_type === 'settings').length > 0;
+    readJsonFile(files[0])
+      .then((data) => {
+        const hasSettings =
+          data?.data.filter((item: { content_type: string }) => item.content_type === 'settings').length > 0;
 
-      setIsReadingFile(false);
-      setHasSettings(hasSettings);
-      setFiles(files);
-    });
+        setIsReadingFile(false);
+        setHasSettings(hasSettings);
+        setFiles(files);
+      })
+      .catch(() => {
+        setIsReadingFile(false);
+        setIsFileValid(false);
+      })
+      .finally(() => {
+        setIsReadingFile(false);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
@@ -120,9 +129,16 @@ const ImportModal = ({
                 {isReadingFile ? __('Reading file...', 'tutor') : __('Selected', 'tutor')}
               </div>
 
-              <div css={styles.progressCount}>
-                {isReadingFile ? __('Please wait...', 'tutor') : __('Ready to import', 'tutor')}
-              </div>
+              <Show
+                when={isReadingFile}
+                fallback={
+                  <Show when={isFileValid}>
+                    <div css={styles.progressCount}>{__('Ready to import', 'tutor')}</div>
+                  </Show>
+                }
+              >
+                <div css={styles.progressCount}>{__('Please wait...', 'tutor')}</div>
+              </Show>
             </div>
 
             <div css={styles.file}>
@@ -151,7 +167,19 @@ const ImportModal = ({
             </div>
           </div>
 
-          <Show when={hasSettings}>
+          <Show when={!isFileValid}>
+            <div css={styles.alert}>
+              <SVGIcon name="warning" width={40} height={40} />
+              <p>
+                {
+                  // prettier-ignore
+                  __('WARNING! Invalid file. Please upload a valid JSON file and try again.', 'tutor')
+                }
+              </p>
+            </div>
+          </Show>
+
+          <Show when={isFileValid && hasSettings}>
             <div css={styles.alert}>
               <SVGIcon name="infoFill" width={40} height={40} />
               <p>
@@ -170,7 +198,7 @@ const ImportModal = ({
             </Button>
             <Button
               data-cy="import-csv"
-              disabled={files.length === 0}
+              disabled={files.length === 0 || isReadingFile || !isFileValid}
               variant="primary"
               size="small"
               loading={isReadingFile || currentStep === 'progress'}
@@ -199,6 +227,7 @@ const ImportModal = ({
         failedBundleIds={failedBundleIds}
         type="import"
         importFileName={file.name}
+        message={message || ''}
       />
     );
   };

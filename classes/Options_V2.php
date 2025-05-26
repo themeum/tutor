@@ -228,8 +228,11 @@ class Options_V2 {
 		$export_data['data'][] = $prepare_data;
 
 		$response = array(
-			'job_progress'  => '100',
-			'exported_data' => $export_data,
+			'job_progress'       => '100',
+			'exported_data'      => $export_data,
+			'completed_contents' => array(
+				'settings' => true,
+			),
 		);
 
 		// Update settings log.
@@ -1032,7 +1035,7 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'Allow customers to place orders without an account.', 'tutor' ),
-							),					
+							),
 						),
 					),
 					'block_revenue_sharing' => array(
