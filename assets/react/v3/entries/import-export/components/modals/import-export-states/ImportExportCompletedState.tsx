@@ -3,7 +3,11 @@ import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
-import { type ExportContentResponse, type ImportExportModalState } from '@ImportExport/services/import-export';
+import {
+  type ExportContentResponse,
+  type ImportExportContentResponseBase,
+  type ImportExportModalState,
+} from '@ImportExport/services/import-export';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -15,20 +19,24 @@ import { formatBytes } from '@TutorShared/utils/util';
 
 import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
+import importErrorImage from '@SharedImages/import-export/import-error.webp';
+import importSuccessImage from '@SharedImages/import-export/import-success.webp';
 
-interface ExportCompletedStateProps {
+interface ImportExportCompletedStateProps {
   state: ImportExportModalState;
   fileSize?: number;
   message?: string;
-  completedContents?: ExportContentResponse['completed_contents'];
+  completedContents?: ImportExportContentResponseBase['completed_contents'];
   failedCourseIds?: number[];
   failedBundleIds?: number[];
   onDownload?: (fileName: string) => void;
   onClose: () => void;
+  importFileName?: string;
+  type: 'import' | 'export';
 }
-const fileName = `tutor_data_${format(new Date(), 'yyyy-MM-dd_HH:mm:ss')}.json`;
+const fileName = `tutor_data_${format(new Date(), 'yyyy_MM_dd_HH:mm:ss')}.json`;
 
-const ExportCompletedState = ({
+const ImportExportCompletedState = ({
   state,
   fileSize,
   message,
@@ -37,22 +45,56 @@ const ExportCompletedState = ({
   failedBundleIds = [],
   onDownload,
   onClose,
-}: ExportCompletedStateProps) => {
+  importFileName = '',
+  type,
+}: ImportExportCompletedStateProps) => {
   const [isFailedDataVisible, setIsFailedDataVisible] = useState(false);
 
-  const imageSrc = {
-    success: exportSuccessImage,
-    error: exportErrorImage,
-  };
-
-  const titles = {
-    success: __('Your File is Ready to Download!', 'tutor'),
-    error: __('Export Failed', 'tutor'),
-  };
-
-  const subtitles = {
-    success: __('Click the button below to download your file.', 'tutor'),
-    error: message,
+  const contentMapping = {
+    import: {
+      image: {
+        success: importSuccessImage,
+        error: importErrorImage,
+      },
+      imageAlt: {
+        success: __('Import Successful', 'tutor'),
+        error: __('Import Failed', 'tutor'),
+      },
+      header: {
+        success: __('Import Complete!', 'tutor'),
+        error: __('Import Failed', 'tutor'),
+      },
+      subtitle: {
+        success: '',
+        error: message || sprintf(__('Failed to import %s.', 'tutor'), importFileName || __('file', 'tutor')),
+      },
+      completedMessage: {
+        success: __('Successfully Imported', 'tutor'),
+        error: __('Failed to Import', 'tutor'),
+      },
+    },
+    export: {
+      image: {
+        success: exportSuccessImage,
+        error: exportErrorImage,
+      },
+      imageAlt: {
+        success: __('Export Successful', 'tutor'),
+        error: __('Export Failed', 'tutor'),
+      },
+      header: {
+        success: __('Your File is Ready to Download!', 'tutor'),
+        error: __('Export Failed', 'tutor'),
+      },
+      subtitle: {
+        success: __('Click the button below to download your file.', 'tutor'),
+        error: message,
+      },
+      completedMessage: {
+        success: __('Successfully Exported', 'tutor'),
+        error: __('Failed to Export', 'tutor'),
+      },
+    },
   };
 
   const formatCompletedItems = (completedContents?: ExportContentResponse['completed_contents']): string => {
@@ -78,10 +120,35 @@ const ExportCompletedState = ({
 
   return (
     <div css={styles.success}>
-      <img src={imageSrc[state as keyof typeof imageSrc]} alt={titles[state as keyof typeof titles]} />
+      <img
+        src={
+          contentMapping[type as keyof typeof contentMapping].image[
+            state as keyof (typeof contentMapping)['import']['image']
+          ]
+        }
+        alt={
+          contentMapping[type as keyof typeof contentMapping].imageAlt[
+            state as keyof (typeof contentMapping)['import']['imageAlt']
+          ]
+        }
+      />
       <div css={styles.successHeader}>
-        <div css={styles.successTitle}>{titles[state as keyof typeof titles]}</div>
-        <div css={styles.successSubtitle}>{subtitles[state as keyof typeof subtitles]}</div>
+        <div css={styles.successTitle}>
+          {
+            contentMapping[type as keyof typeof contentMapping].header[
+              state as keyof (typeof contentMapping)['import']['header']
+            ]
+          }
+        </div>
+        <Show when={type === 'export'}>
+          <div css={styles.successSubtitle}>
+            {
+              contentMapping[type as keyof typeof contentMapping].subtitle[
+                state as keyof (typeof contentMapping)['import']['subtitle']
+              ]
+            }
+          </div>
+        </Show>
       </div>
 
       <Show
@@ -101,7 +168,13 @@ const ExportCompletedState = ({
 
               <div css={styles.reportInfo}>
                 <div css={styles.reportLeft}>
-                  <div>{__('Successfully Exported', 'tutor')}</div>
+                  <div>
+                    {
+                      contentMapping[type as keyof typeof contentMapping].completedMessage[
+                        state as keyof (typeof contentMapping)['import']['completedMessage']
+                      ]
+                    }
+                  </div>
                   <div>{formatCompletedItems(completedContents)}</div>
                 </div>
               </div>
@@ -118,7 +191,13 @@ const ExportCompletedState = ({
 
                 <div css={styles.reportInfo}>
                   <div css={styles.reportLeft}>
-                    <div>{__('Failed to Export', 'tutor')}</div>
+                    <div>
+                      {
+                        contentMapping[type as keyof typeof contentMapping].completedMessage[
+                          state as keyof (typeof contentMapping)['import']['completedMessage']
+                        ]
+                      }
+                    </div>
                     <div>
                       {failedCourseIds.length > 0 ? `${failedCourseIds.length} ${__('Courses', 'tutor')}` : ''}
                       {failedBundleIds.length > 0 && failedCourseIds.length > 0 ? ', ' : ''}
@@ -163,36 +242,46 @@ const ExportCompletedState = ({
             </button>
           </Show>
         </div>
-        <div css={styles.file}>
-          <div css={styles.fileIcon}>
-            <SVGIcon name="attachmentLine" width={24} height={24} />
-          </div>
-          <div css={styles.fileRight}>
-            <div css={styles.fileDetails}>
-              <div css={styles.fileName} title={fileName}>
-                {fileName}
+        <Show when={type === 'export'}>
+          <div css={styles.file}>
+            <div css={styles.fileIcon}>
+              <SVGIcon name="attachmentLine" width={24} height={24} />
+            </div>
+            <div css={styles.fileRight}>
+              <div css={styles.fileDetails}>
+                <div css={styles.fileName} title={fileName}>
+                  {fileName}
+                </div>
+                <div css={styles.fileSize}>{formatBytes(fileSize || 0)}</div>
               </div>
-              <div css={styles.fileSize}>{formatBytes(fileSize || 0)}</div>
-            </div>
 
-            <div>
-              <Button
-                variant="primary"
-                size="small"
-                icon={<SVGIcon name="download" width={24} height={24} />}
-                onClick={() => onDownload?.(fileName)}
-              >
-                {__('Download', 'tutor')}
-              </Button>
+              <div>
+                <Button
+                  variant="primary"
+                  size="small"
+                  icon={<SVGIcon name="download" width={24} height={24} />}
+                  onClick={() => onDownload?.(fileName)}
+                >
+                  {__('Download', 'tutor')}
+                </Button>
+              </div>
             </div>
           </div>
+        </Show>
+      </Show>
+
+      <Show when={type === 'import' && state === 'success'}>
+        <div>
+          <Button variant="primary" size="small" onClick={onClose}>
+            {__('Okay', 'tutor')}
+          </Button>
         </div>
       </Show>
     </div>
   );
 };
 
-export default ExportCompletedState;
+export default ImportExportCompletedState;
 
 const styles = {
   success: css`
@@ -304,7 +393,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.divider};
     overflow: hidden;
     border-radius: ${borderRadius[6]};
-    width: 100%;
+    flex: 0 0 auto;
   `,
   fileIcon: css`
     ${styleUtils.flexCenter()};
@@ -320,6 +409,7 @@ const styles = {
   fileRight: css`
     flex-grow: 1;
     ${styleUtils.display.flex()};
+    gap: ${spacing[8]};
     justify-content: space-between;
     align-items: center;
     padding: ${spacing[10]} ${spacing[16]} ${spacing[10]} ${spacing[20]};

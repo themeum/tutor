@@ -12,13 +12,16 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToErrorMessage, noop } from '@TutorShared/utils/util';
 
+import generateImportExportMessage from '@ImportExport/utils/utils';
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
 import { tutorConfig } from '@TutorShared/config/config';
+import { useQueryClient } from '@tanstack/react-query';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
+  const queryClient = useQueryClient();
   const { data: importResponse, mutateAsync, isError, error, isPending } = useImportContentsMutation();
 
   const onImport = async (data: string): Promise<void> => {
@@ -60,7 +63,7 @@ const Import = () => {
   };
 
   useEffect(() => {
-    const progress = Number(importResponse?.data?.job_progress);
+    const progress = Number(importResponse?.job_progress);
     if (isError) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
@@ -70,7 +73,7 @@ const Import = () => {
 
     if (progress < 100) {
       mutateAsync({
-        job_id: importResponse?.data.job_id,
+        job_id: importResponse?.job_id,
       });
     }
 
@@ -78,7 +81,7 @@ const Import = () => {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'progress',
         progress,
-        message: importResponse?.message,
+        message: generateImportExportMessage(importResponse, 'import'),
       });
     }
 
@@ -92,10 +95,16 @@ const Import = () => {
             window.location.reload();
           }
         },
+        completedContents: importResponse?.completed_contents,
+        failedCourseIds: importResponse?.failed_course_ids,
+        failedBundleIds: importResponse?.failed_bundle_ids,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['ImportContents'],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [importResponse?.data, isPending, error]);
+  }, [importResponse, isPending, error]);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {

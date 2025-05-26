@@ -33,11 +33,7 @@ const History = () => {
   };
 
   const generateHistoryTitle = (item: ImportExportHistory) => {
-    const exportedContents = item.option_value.completed_contents || {};
-    const importedContents = item.option_value.imported_data;
-
-    const isExportType = itemType(item) === 'export';
-    const isImportType = itemType(item) === 'import';
+    const completedContents = item.option_value.completed_contents || {};
 
     const contentTypeMap = {
       courses: __('Courses', 'tutor'),
@@ -45,20 +41,25 @@ const History = () => {
       settings: __('Settings', 'tutor'),
     };
 
-    if (isExportType) {
-      return Object.entries(exportedContents)
-        .filter(([, value]) => !Array.isArray(value) || value.length > 0)
-        .map(([key, value]) => {
-          const label = contentTypeMap[key as keyof typeof contentTypeMap];
-          // Add count in parentheses if value is an array
-          return Array.isArray(value) && value.length > 0 ? `${label} (${value.length})` : label;
-        })
-        .join(', ');
-    }
+    return Object.entries(completedContents)
+      .filter(([, value]) => {
+        if (!value) {
+          return false;
+        }
 
-    if (isImportType) {
-      return importedContents?.map((item) => contentTypeMap[item as keyof typeof contentTypeMap]).join(', ');
-    }
+        // Skip empty arrays
+        if (Array.isArray(value) && value.length === 0) {
+          return false;
+        }
+
+        return true;
+      })
+      .map(([key, value]) => {
+        const label = contentTypeMap[key as keyof typeof contentTypeMap];
+        // Add count in parentheses if value is an array
+        return value ? (Array.isArray(value) && value.length > 0 ? `${label} (${value.length})` : label) : '';
+      })
+      .join(', ');
   };
 
   const columns: Column<ImportExportHistory>[] = [
