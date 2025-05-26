@@ -117,6 +117,8 @@ class TutorEDD extends Tutor_Base {
 		} else {
 			delete_post_meta( $post_ID, '_tutor_course_product_id' );
 		}
+
+		do_action( 'save_tutor_course', $post_ID, get_post( $post_ID ) );
 	}
 
 	/**
