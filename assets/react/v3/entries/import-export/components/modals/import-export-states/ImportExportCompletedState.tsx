@@ -34,7 +34,7 @@ interface ImportExportCompletedStateProps {
   importFileName?: string;
   type: 'import' | 'export';
 }
-const fileName = `tutor_lms_data_${format(new Date(), 'yyyy_MM_dd_HH:mm:ss')}.json`;
+const fileName = `tutor-lms-data-${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}.json`;
 
 const ImportExportCompletedState = ({
   state,
@@ -119,7 +119,7 @@ const ImportExportCompletedState = ({
   };
 
   return (
-    <div css={styles.success}>
+    <div css={styles.statusWrapper}>
       <img
         src={
           contentMapping[type as keyof typeof contentMapping].image[
@@ -153,7 +153,7 @@ const ImportExportCompletedState = ({
       <Show
         when={state === 'success'}
         fallback={
-          <div>
+          <div css>
             <Button variant="primary" size="small" onClick={onClose}>
               {__('Okay', 'tutor')}
             </Button>
@@ -282,10 +282,10 @@ const ImportExportCompletedState = ({
 export default ImportExportCompletedState;
 
 const styles = {
-  success: css`
+  statusWrapper: css`
     ${styleUtils.display.flex('column')}
     align-items: center;
-    gap: ${spacing[32]};
+    gap: ${spacing[16]};
     padding: ${spacing[32]} ${spacing[24]};
 
     img {
@@ -301,6 +301,7 @@ const styles = {
     gap: ${spacing[8]};
     align-items: center;
     text-align: center;
+    padding-top: ${spacing[16]};
   `,
   statusTitle: css`
     ${typography.heading6('medium')};
@@ -313,6 +314,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[8]};
     width: 100%;
+    padding-top: ${spacing[16]};
   `,
   reportWrapper: css`
     ${styleUtils.display.flex('column')};
@@ -350,6 +352,7 @@ const styles = {
   `,
   reportLeft: css`
     ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
 
     div:first-of-type {
       ${typography.small()};
@@ -391,7 +394,6 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.divider};
     overflow: hidden;
     border-radius: ${borderRadius[6]};
-    flex: 0 0 auto;
   `,
   fileIcon: css`
     ${styleUtils.flexCenter()};
@@ -399,6 +401,7 @@ const styles = {
     height: 100%;
     border-right: 1px solid ${colorTokens.stroke.divider};
     flex-shrink: 0;
+    background-color: #f7f7f7;
 
     svg {
       color: ${colorTokens.icon.hover};
@@ -413,7 +416,6 @@ const styles = {
     padding: ${spacing[10]} ${spacing[16]} ${spacing[10]} ${spacing[20]};
   `,
   fileDetails: css`
-    flex-grow: 1;
     ${styleUtils.display.flex('column')};
     gap: ${spacing[4]};
   `,
@@ -421,6 +423,7 @@ const styles = {
     ${typography.small('medium')};
     color: ${colorTokens.text.subdued};
     ${styleUtils.text.ellipsis(1)};
+    width: 100%;
   `,
   fileSize: css`
     ${typography.tiny()};

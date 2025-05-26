@@ -103,7 +103,7 @@ const Import = () => {
         failedBundleIds: importResponse?.data?.failed_bundle_ids,
       });
       queryClient.invalidateQueries({
-        queryKey: ['ImportContents'],
+        queryKey: ['ImportExportHistory'],
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

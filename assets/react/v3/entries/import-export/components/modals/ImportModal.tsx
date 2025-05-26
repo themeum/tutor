@@ -79,14 +79,21 @@ const ImportModal = ({
       return;
     }
     setIsReadingFile(true);
-    readJsonFile(files[0]).then((data) => {
-      const hasSettings =
-        data?.data.filter((item: { content_type: string }) => item.content_type === 'settings').length > 0;
+    readJsonFile(files[0])
+      .then((data) => {
+        const hasSettings =
+          data?.data.filter((item: { content_type: string }) => item.content_type === 'settings').length > 0;
 
-      setIsReadingFile(false);
-      setHasSettings(hasSettings);
-      setFiles(files);
-    });
+        setIsReadingFile(false);
+        setHasSettings(hasSettings);
+        setFiles(files);
+      })
+      .catch(() => {
+        setIsReadingFile(false);
+      })
+      .finally(() => {
+        setIsReadingFile(false);
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
