@@ -9,7 +9,7 @@ import Logo from '@TutorShared/components/Logo';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
-import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
@@ -271,6 +271,10 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     padding-inline: 88px;
+
+    ${Breakpoint.tablet} {
+      padding-inline: ${spacing[8]} ${spacing[36]};
+    }
   `,
   headerTitle: css`
     ${styleUtils.display.flex()}

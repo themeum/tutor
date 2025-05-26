@@ -11,7 +11,7 @@
 
 ?>
 <div class="tutor-admin-wrap">
-	<div class="tutor-admin-header tutor-px-24 is-sticky" style="z-index: 9;">
+	<div class="tutor-admin-header tutor-px-24 is-sticky">
 		<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-24">
 			<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Tools', 'tutor' ); ?></span>
 		</div>

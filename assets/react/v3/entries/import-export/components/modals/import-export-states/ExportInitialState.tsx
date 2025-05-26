@@ -17,7 +17,7 @@ import {
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
@@ -289,6 +289,11 @@ const styles = {
     padding: ${spacing[32]} 107px ${spacing[32]} 107px;
     background-color: ${colorTokens.surface.courseBuilder};
     border-top: 1px solid ${colorTokens.stroke.divider};
+
+    ${Breakpoint.tablet} {
+      padding: ${spacing[24]} ${spacing[16]};
+      height: calc(100vh - 160px);
+    }
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}

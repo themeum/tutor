@@ -34,7 +34,7 @@ const Import = () => {
       await mutateAsync({
         data: data,
       });
-    } catch {
+    } catch (error) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
         message: convertToErrorMessage(error as ErrorResponse),
@@ -67,7 +67,7 @@ const Import = () => {
     if (isError) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
-        message: convertToErrorMessage(error as ErrorResponse),
+        message: convertToErrorMessage(error),
       });
     }
 
