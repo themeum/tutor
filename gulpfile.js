@@ -7,6 +7,7 @@ var gulp = require('gulp'),
 	clean = require('gulp-clean'),
 	zip = require('gulp-zip'),
 	watch = require("gulp-watch"),
+	replace = require("gulp-replace"),
 	fs = require('fs'),
 	path = require('path'),
 	versionNumber = '';
@@ -67,6 +68,13 @@ for (let task in scss_blueprints) {
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
 			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
+			// Cache bust font URLs like .woff, .woff2, .ttf, etc.
+			.pipe(
+				replace(
+					/(url\(['"]?[^)'"]+\.(woff2?|ttf|otf))(['"]?\))/g,
+					`$1?v=${versionNumber}$3`
+				)
+			)
 			.pipe(rename(blueprint.destination))
 			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
 	});
