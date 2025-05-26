@@ -63,18 +63,23 @@ for (let task in scss_blueprints) {
 	let blueprint = scss_blueprints[task];
 
 	gulp.task(task, function () {
-		return gulp
+		let stream = gulp
 			.src(blueprint.src)
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
-			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
-			// Cache bust font URLs like .woff, .woff2, .ttf, etc.
-			.pipe(
+			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }));
+
+		// Cache bust font URLs like .woff, .woff2, .ttf, etc.
+		if (task === 'tutor_icon') {
+			stream = stream.pipe(
 				replace(
-					/(url\(['"]?[^)'"]+\.(woff2?|ttf|otf))(['"]?\))/g,
+					/(url\(['"]?[^)'"]+\.(woff2?|woff|ttf|otf))(['"]?\))/g,
 					`$1?v=${versionNumber}$3`
 				)
-			)
+			);
+		}
+
+		return stream
 			.pipe(rename(blueprint.destination))
 			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
 	});
