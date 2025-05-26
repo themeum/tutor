@@ -97,6 +97,7 @@ module.exports = (env, options) => {
                 'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
                 'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
                 'tutor-addon-list.min': './assets/react/v3/entries/addon-list/index.tsx',
+                'tutor-import-export.min': './assets/react/v3/entries/import-export/index.tsx',
             }
         }
     ];
@@ -144,6 +145,7 @@ module.exports = (env, options) => {
                         '@CouponComponents': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/components/'),
                         '@CouponServices': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/services/'),
                         '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
+                        '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
                     },
                 },
             }),

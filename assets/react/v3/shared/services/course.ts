@@ -14,6 +14,7 @@ export interface Course {
 
 interface CourseListParams extends PaginatedParams {
   exclude: string[] | number[];
+  post_type?: string;
 }
 
 const getCourseList = (params: CourseListParams) => {
@@ -31,6 +32,7 @@ export const useCourseListQuery = ({ params, isEnabled }: { params: CourseListPa
         limit: params.limit,
         offset: params.offset,
         filter: params.filter,
+        post_type: params.post_type,
       }).then((res) => res.data),
     placeholderData: keepPreviousData,
     enabled: isEnabled,
@@ -55,5 +57,37 @@ const unlinkPageBuilder = ({ courseId, builder }: UnlinkPageBuilderPayload) => {
 export const useUnlinkPageBuilderMutation = () => {
   return useMutation({
     mutationFn: unlinkPageBuilder,
+  });
+};
+
+export interface Bundle {
+  id: number;
+  title: string;
+  image: string;
+  total_courses: number;
+}
+
+interface BundleListParams extends PaginatedParams {
+  exclude: string[];
+}
+
+const getBundleList = (params: BundleListParams) => {
+  return wpAjaxInstance.get<PaginatedResult<Bundle>>(endpoints.BUNDLE_LIST, {
+    params: params,
+  });
+};
+
+export const useBundleListQuery = ({ params, isEnabled }: { params: BundleListParams; isEnabled: boolean }) => {
+  return useQuery({
+    queryKey: ['PrerequisiteCourses', params],
+    queryFn: () =>
+      getBundleList({
+        exclude: params.exclude,
+        limit: params.limit,
+        offset: params.offset,
+        filter: params.filter,
+      }).then((res) => res.data),
+    placeholderData: keepPreviousData,
+    enabled: isEnabled,
   });
 };
