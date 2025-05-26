@@ -76,7 +76,7 @@ const ImportModal = ({
   const { showToast } = useToast();
 
   useEffect(() => {
-    if (propsFiles.length === 0) {
+    if (files.length === 0) {
       return;
     }
     setIsReadingFile(true);
@@ -88,6 +88,7 @@ const ImportModal = ({
         setIsReadingFile(false);
         setHasSettings(hasSettings);
         setFiles(files);
+        setIsFileValid(true);
       })
       .catch(() => {
         setIsReadingFile(false);
@@ -96,7 +97,6 @@ const ImportModal = ({
       .finally(() => {
         setIsReadingFile(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
   const handleUpload = (uploadedFiles: File[]) => {

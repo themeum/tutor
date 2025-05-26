@@ -69,8 +69,11 @@ const ImportExportCompletedState = ({
       },
       completedMessage: {
         success:
-          // prettier-ignore
-          __( "Your Tutor LMS course data was successfully imported. However, some items couldn't be imported. Here's the list:", 'tutor'),
+          failedBundleIds.length || failedCourseIds.length
+            ? // prettier-ignore
+              __( "Your Tutor LMS data was successfully imported. However, some items couldn't be imported. Here's the list:", 'tutor')
+            : // prettier-ignore
+              __('Your Tutor LMS data has been successfully imported.', 'tutor'),
         error: __('Failed to Import', 'tutor'),
       },
     },
@@ -93,7 +96,7 @@ const ImportExportCompletedState = ({
             ? // prettier-ignore
               __('The export process has finished. However, certain items could not be exported. Check the summary below:', 'tutor')
             : // prettier-ignore
-              __('Download the JSON file and use it to import your course data into another Tutor LMS website.', 'tutor'),
+              __('Download the JSON file and use it to import your data into another Tutor LMS website.', 'tutor'),
         error: message,
       },
       completedMessage: {
