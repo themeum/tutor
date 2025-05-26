@@ -76,7 +76,7 @@ const History = () => {
       },
     },
     {
-      Header: <span css={styles.tableHeader}>{__('Author', 'tutor')}</span>,
+      Header: <span css={styles.tableHeader}>{__('User', 'tutor')}</span>,
       Cell: (item) => {
         return <div css={styles.historyTitle}>{item.option_value.user_name}</div>;
       },
