@@ -891,6 +891,7 @@ class Course extends Tutor_Base {
 		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
 		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
 		$search_term = '';
+		$post_status = Input::post( 'post_status', null );
 
 		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
@@ -898,6 +899,7 @@ class Course extends Tutor_Base {
 		}
 
 		$args = array(
+			'post_status'    => is_null( $post_status ) ? 'publish' : $post_status,
 			'posts_per_page' => $limit,
 			'offset'         => $offset,
 			's'              => $search_term,
