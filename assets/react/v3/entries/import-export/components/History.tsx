@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import { type ImportExportHistory, useImportExportHistoryQuery } from '@ImportExport/services/import-export';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -32,34 +32,60 @@ const History = () => {
     return 'import';
   };
 
-  const generateHistoryTitle = (item: ImportExportHistory) => {
+  const formatItemCount = (count: number, singular: string, plural: string): string => {
+    return sprintf(count === 1 ? singular : plural, count);
+  };
+
+  const generateHistoryTitle = (item: ImportExportHistory): string => {
     const completedContents = item.option_value.completed_contents || {};
 
-    const contentTypeMap = {
-      courses: __('Courses', 'tutor'),
-      'course-bundle': __('Course Bundles', 'tutor'),
-      settings: __('Settings', 'tutor'),
-    };
+    const contentTypeConfig = {
+      courses: {
+        singular: __('Course (%d)', 'tutor'),
+        plural: __('Courses (%d)', 'tutor'),
+      },
+      'course-bundle': {
+        singular: __('Bundle (%d)', 'tutor'),
+        plural: __('Bundles (%d)', 'tutor'),
+      },
+      settings: {
+        label: __('Settings', 'tutor'),
+      },
+    } as const;
 
-    return Object.entries(completedContents)
-      .filter(([, value]) => {
-        if (!value) {
-          return false;
+    const formattedItems: string[] = [];
+
+    for (const [key, value] of Object.entries(completedContents)) {
+      if (!value || (Array.isArray(value) && value.length === 0)) {
+        continue;
+      }
+
+      const contentKey = key as keyof typeof contentTypeConfig;
+      const config = contentTypeConfig[contentKey];
+
+      if (!config) {
+        continue;
+      }
+
+      if (contentKey === 'settings') {
+        if ('label' in config) {
+          formattedItems.push(config.label);
         }
+        continue;
+      }
 
-        // Skip empty arrays
-        if (Array.isArray(value) && value.length === 0) {
-          return false;
+      if (Array.isArray(value) && value.length > 0) {
+        if ('singular' in config && 'plural' in config) {
+          const itemText = formatItemCount(value.length, config.singular, config.plural);
+          formattedItems.push(itemText);
         }
+      } else if ('singular' in config && 'plural' in config) {
+        const itemText = formatItemCount(1, config.singular, config.plural);
+        formattedItems.push(itemText);
+      }
+    }
 
-        return true;
-      })
-      .map(([key, value]) => {
-        const label = contentTypeMap[key as keyof typeof contentTypeMap];
-        // Add count in parentheses if value is an array
-        return value ? (Array.isArray(value) && value.length > 0 ? `${label} (${value.length})` : label) : '';
-      })
-      .join(', ');
+    return formattedItems.join(', ');
   };
 
   const columns: Column<ImportExportHistory>[] = [
