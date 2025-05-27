@@ -289,3 +289,35 @@ export const useImportExportHistoryQuery = () => {
     enabled: isTutorPro,
   });
 };
+
+const deleteHistoryItem = async (optionId: string) => {
+  return wpAjaxInstance.post<{ option_id: string }, TutorMutationResponse<string>>(
+    endpoints.DELETE_IMPORT_EXPORT_HISTORY,
+    { option_id: optionId },
+  );
+};
+
+export const useDeleteImportExportHistoryMutation = () => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteHistoryItem,
+    mutationKey: ['DeleteImportExportHistory'],
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ['ImportExportHistory'],
+      });
+      showToast({
+        message: response.message,
+        type: 'success',
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: convertToErrorMessage(error),
+        type: 'danger',
+      });
+    },
+  });
+};
