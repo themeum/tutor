@@ -1773,10 +1773,10 @@ class Options_V2 {
 							array(
 								'key'         => 'enable_tutor_native_login',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Enable Tutor Login', 'tutor' ),
+								'label'       => __( 'Enable Tutor LMS Login', 'tutor' ),
 								'label_title' => '',
 								'default'     => 'on',
-								'desc'        => __( 'Enable to use the tutor login modal instead of the default WordPress login page', 'tutor' ),
+								'desc'        => __( 'Enable to use the Tutor LMS native login system instead of the WordPress login page', 'tutor' ),
 							),
 							array(
 								'key'         => 'delete_on_uninstall',
