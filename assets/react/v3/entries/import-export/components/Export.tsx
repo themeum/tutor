@@ -75,8 +75,6 @@ const Export = () => {
         progress: 100,
         fileSize: JSON.stringify(exportContentResponse?.exported_data).length,
         completedContents: exportContentResponse?.completed_contents,
-        failedCourseIds: exportContentResponse?.failed_course_ids,
-        failedBundleIds: exportContentResponse?.failed_bundle_ids,
         onDownload: (fileName) => {
           const jsonFile = new Blob([JSON.stringify(exportContentResponse?.exported_data)], {
             type: 'application/json',

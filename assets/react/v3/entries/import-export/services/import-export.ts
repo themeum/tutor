@@ -146,6 +146,11 @@ export interface ExportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
+interface ImportExportCompletedContentsItem {
+  success: string[];
+  error: string[];
+}
+
 export interface ImportExportContentResponseBase {
   job_id: string;
   job_progress: number;
@@ -156,13 +161,10 @@ export interface ImportExportContentResponseBase {
     sub_contents: string[];
   }[];
   completed_contents: {
-    courses: string[];
-    'course-bundle': string[];
+    courses: ImportExportCompletedContentsItem;
+    'course-bundle': ImportExportCompletedContentsItem;
     settings: boolean;
   };
-
-  failed_course_ids: [];
-  failed_bundle_ids: [];
 }
 
 export interface ExportContentResponse extends ImportExportContentResponseBase {
