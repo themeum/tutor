@@ -28,7 +28,7 @@ const History = () => {
 
   const renderImportExportLabel = useCallback((type: 'import' | 'export') => {
     return (
-      <span css={styles.importExportLabel({ type })}>
+      <span css={styles.importExportLabel}>
         <SVGIcon name={type} width={16} height={16} />
         {type === 'import' ? __('Imported', 'tutor') : __('Exported', 'tutor')}
       </span>
@@ -235,16 +235,15 @@ const styles = {
     width: 24px;
     height: 24px;
   `,
-  importExportLabel: ({ type }: { type: 'import' | 'export' }) => css`
+  importExportLabel: css`
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[4]};
     ${typography.small('medium')}
-
-    color: ${type === 'import' ? colorTokens.text.brand : colorTokens.text.hints};
+    color: ${colorTokens.text.hints};
 
     svg {
-      color: ${type === 'import' ? colorTokens.icon.brand : colorTokens.icon.default};
+      color: ${colorTokens.icon.default};
     }
   `,
 };
