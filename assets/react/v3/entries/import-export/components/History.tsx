@@ -117,7 +117,7 @@ const History = () => {
       },
     },
     {
-      Header: <span css={styles.tableHeader}>{__('Author', 'tutor')}</span>,
+      Header: <span css={styles.tableHeader}>{__('User', 'tutor')}</span>,
       Cell: (item) => {
         return <div css={styles.historyTitle}>{item.option_value.user_name}</div>;
       },
@@ -139,6 +139,7 @@ const History = () => {
               isInverse
               size="small"
               dotsOrientation="vertical"
+              wrapperCss={styles.threeDot}
             >
               <ThreeDotsOption
                 isTrash
@@ -230,6 +231,10 @@ const styles = {
     align-items: center;
     justify-content: flex-end;
   `,
+  threeDot: css`
+    width: 24px;
+    height: 24px;
+  `,
   importExportLabel: ({ type }: { type: 'import' | 'export' }) => css`
     ${styleUtils.display.flex()}
     align-items: center;
@@ -241,8 +246,5 @@ const styles = {
     svg {
       color: ${type === 'import' ? colorTokens.icon.brand : colorTokens.icon.default};
     }
-  `,
-  brandIcon: css`
-    color: ${colorTokens.text.brand} !important;
   `,
 };

@@ -11,7 +11,7 @@ import { css } from '@emotion/react';
 import { typography } from '../config/typography';
 
 export const createGlobalCss = () => css`
-  body:not(.tutor-screen-backend-settings) {
+  body:not(.tutor-screen-backend-settings, .tutor-backend-tutor-tools) {
     #wpcontent {
       padding-left: 0;
     }

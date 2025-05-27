@@ -34,10 +34,12 @@ const Import = () => {
       await mutateAsync({
         data: data,
       });
-    } catch {
+    } catch (error) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
-        message: convertToErrorMessage(error as ErrorResponse),
+        message: error
+          ? convertToErrorMessage(error as ErrorResponse)
+          : __('Something went wrong during import. Please try again!', 'tutor'),
       });
       return;
     }
@@ -63,17 +65,19 @@ const Import = () => {
   };
 
   useEffect(() => {
-    const progress = Number(importResponse?.data?.job_progress);
+    const progress = Number(importResponse?.job_progress);
     if (isError) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
-        message: convertToErrorMessage(error as ErrorResponse),
+        message: error
+          ? convertToErrorMessage(error)
+          : __('Something went wrong during import. Please try again!', 'tutor'),
       });
     }
 
     if (progress < 100) {
       mutateAsync({
-        job_id: importResponse?.data?.job_id,
+        job_id: importResponse?.job_id,
       });
     }
 
@@ -81,7 +85,7 @@ const Import = () => {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'progress',
         progress,
-        message: generateImportExportMessage(importResponse?.data, 'import'),
+        message: generateImportExportMessage(importResponse, 'import'),
       });
     }
 
@@ -95,10 +99,9 @@ const Import = () => {
             window.location.reload();
           }
         },
-        message: importResponse?.message,
-        completedContents: importResponse?.data?.completed_contents,
-        failedCourseIds: importResponse?.data?.failed_course_ids,
-        failedBundleIds: importResponse?.data?.failed_bundle_ids,
+        completedContents: importResponse?.completed_contents,
+        failedCourseIds: importResponse?.failed_course_ids,
+        failedBundleIds: importResponse?.failed_bundle_ids,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

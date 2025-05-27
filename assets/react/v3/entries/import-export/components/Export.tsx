@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 
+import ExportModal from '@ImportExport/components/modals/ExportModal';
 import {
   convertExportFormDataToPayload,
   useExportContentsMutation,
@@ -11,11 +12,10 @@ import generateImportExportMessage from '@ImportExport/utils/utils';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
-import ExportModal from './modals/ExportModal';
 
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
@@ -103,7 +103,7 @@ const Export = () => {
         <div css={styles.exportHeader}>
           <div css={styles.exportTitle}>{__('Export Data', 'tutor')}</div>
           <div css={styles.exportSubtitle}>
-            {__('Easily export your courses, lessons, quizzes, user data, and global settings.', 'tutor')}
+            {__('Easily export your courses, lessons, quizzes, assignments, global settings, etc.', 'tutor')}
           </div>
         </div>
 
@@ -115,6 +115,7 @@ const Export = () => {
             showModal({
               id: 'export-modal',
               component: ExportModal,
+              depthIndex: zIndex.highest,
               props: {
                 onClose: closeModal,
                 currentStep: 'initial',

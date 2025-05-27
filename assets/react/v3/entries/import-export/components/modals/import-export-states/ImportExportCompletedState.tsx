@@ -45,7 +45,6 @@ const ImportExportCompletedState = ({
   failedBundleIds = [],
   onDownload,
   onClose,
-  importFileName = '',
   type,
 }: ImportExportCompletedStateProps) => {
   const [isFailedDataVisible, setIsFailedDataVisible] = useState(false);
@@ -62,13 +61,22 @@ const ImportExportCompletedState = ({
       },
       header: {
         success: __('Import Complete!', 'tutor'),
-        error: __('Import Failed', 'tutor'),
+        error: __('Import Failed!', 'tutor'),
       },
       subtitle: {
         success: message || __('Your file has been successfully imported.', 'tutor'),
-        error: message || sprintf(__('Failed to import %s.', 'tutor'), importFileName || __('file', 'tutor')),
+        error: message || __('Something went wrong during import. Please try again!', 'tutor'),
       },
       completedMessage: {
+        success:
+          failedBundleIds.length || failedCourseIds.length
+            ? // prettier-ignore
+              __( "Your Tutor LMS data was successfully imported. However, some items couldn't be imported. Here's the list:", 'tutor')
+            : // prettier-ignore
+              __('Your Tutor LMS data has been successfully imported.', 'tutor'),
+        error: __('Failed to Import', 'tutor'),
+      },
+      reportList: {
         success: __('Successfully Imported', 'tutor'),
         error: __('Failed to Import', 'tutor'),
       },
@@ -80,42 +88,73 @@ const ImportExportCompletedState = ({
       },
       imageAlt: {
         success: __('Export Successful', 'tutor'),
-        error: __('Export Failed', 'tutor'),
+        error: __('Export Failed!', 'tutor'),
       },
       header: {
-        success: __('Your File is Ready to Download!', 'tutor'),
+        success: __('Your Data is Ready to Download!', 'tutor'),
         error: __('Export Failed', 'tutor'),
       },
       subtitle: {
-        success: __('Click the button below to download your file.', 'tutor'),
+        success:
+          failedBundleIds.length || failedCourseIds.length
+            ? // prettier-ignore
+              __('The export process has finished. However, certain items could not be exported. Check the summary below:', 'tutor')
+            : // prettier-ignore
+              __('Download the JSON file and use it to import your data into another Tutor LMS website.', 'tutor'),
         error: message,
       },
       completedMessage: {
+        success: __('Successfully Exported', 'tutor'),
+        error: __('Something went wrong during the export. Please try again.', 'tutor'),
+      },
+      reportList: {
         success: __('Successfully Exported', 'tutor'),
         error: __('Failed to Export', 'tutor'),
       },
     },
   };
 
+  const formatItemCount = (count: number, singular: string, plural: string): string => {
+    return sprintf(count === 1 ? singular : plural, count);
+  };
+
+  const formatFailedItems = (failedCourseIds: number[], failedBundleIds: number[]): string => {
+    const failedItems: string[] = [];
+
+    if (failedCourseIds.length > 0) {
+      const coursesText = formatItemCount(failedCourseIds.length, __('%d Course', 'tutor'), __('%d Courses', 'tutor'));
+      failedItems.push(coursesText);
+    }
+
+    if (failedBundleIds.length > 0) {
+      const bundlesText = formatItemCount(failedBundleIds.length, __('%d Bundle', 'tutor'), __('%d Bundles', 'tutor'));
+      failedItems.push(bundlesText);
+    }
+
+    return failedItems.join(', ');
+  };
+
   const formatCompletedItems = (completedContents?: ExportContentResponse['completed_contents']): string => {
     if (!completedContents) return '';
 
     const { courses, 'course-bundle': bundles, settings } = completedContents;
-    const items = [];
+    const formattedItems: string[] = [];
 
     if (courses?.length) {
-      items.push(sprintf(courses.length === 1 ? __('%d Course', 'tutor') : __('%d Courses', 'tutor'), courses.length));
+      const courseText = formatItemCount(courses.length, __('%d Course', 'tutor'), __('%d Courses', 'tutor'));
+      formattedItems.push(courseText);
     }
 
     if (bundles?.length) {
-      items.push(sprintf(bundles.length === 1 ? __('%d Bundle', 'tutor') : __('%d Bundles', 'tutor'), bundles.length));
+      const bundleText = formatItemCount(bundles.length, __('%d Bundle', 'tutor'), __('%d Bundles', 'tutor'));
+      formattedItems.push(bundleText);
     }
 
     if (settings) {
-      items.push(__('Settings', 'tutor'));
+      formattedItems.push(__('Settings', 'tutor'));
     }
 
-    return items.join(', ');
+    return formattedItems.join(', ');
   };
 
   return (
@@ -167,13 +206,7 @@ const ImportExportCompletedState = ({
 
               <div css={styles.reportInfo}>
                 <div css={styles.reportLeft}>
-                  <div>
-                    {
-                      contentMapping[type as keyof typeof contentMapping].completedMessage[
-                        state as keyof (typeof contentMapping)['import']['completedMessage']
-                      ]
-                    }
-                  </div>
+                  <div>{contentMapping[type as keyof typeof contentMapping].reportList.success}</div>
                   <div>{formatCompletedItems(completedContents)}</div>
                 </div>
               </div>
@@ -190,18 +223,8 @@ const ImportExportCompletedState = ({
 
                 <div css={styles.reportInfo}>
                   <div css={styles.reportLeft}>
-                    <div>
-                      {
-                        contentMapping[type as keyof typeof contentMapping].completedMessage[
-                          state as keyof (typeof contentMapping)['import']['completedMessage']
-                        ]
-                      }
-                    </div>
-                    <div>
-                      {failedCourseIds.length > 0 ? `${failedCourseIds.length} ${__('Courses', 'tutor')}` : ''}
-                      {failedBundleIds.length > 0 && failedCourseIds.length > 0 ? ', ' : ''}
-                      {failedBundleIds.length > 0 ? `${failedBundleIds.length} ${__('Bundles', 'tutor')}` : ''}
-                    </div>
+                    <div>{contentMapping[type as keyof typeof contentMapping].reportList.error}</div>
+                    <div>{formatFailedItems(failedCourseIds, failedBundleIds)}</div>
                   </div>
 
                   <SVGIcon data-down-icon name="chevronDown" width={24} height={24} />
@@ -211,7 +234,11 @@ const ImportExportCompletedState = ({
               <Show when={isFailedDataVisible}>
                 <Show when={failedCourseIds.length > 0}>
                   <div css={styles.failedItem}>
-                    <label>{sprintf(__('Course IDs (%d)', 'tutor'), failedCourseIds.length)}</label>
+                    <label>
+                      {failedCourseIds.length > 1
+                        ? sprintf(__('Course IDs (%d)', 'tutor'), failedCourseIds.length)
+                        : sprintf(__('Course ID (%d)', 'tutor'), failedCourseIds.length)}
+                    </label>
                     <div css={styles.failedList}>
                       <For each={failedCourseIds}>
                         {(courseId) => (
@@ -225,7 +252,11 @@ const ImportExportCompletedState = ({
                 </Show>
                 <Show when={failedBundleIds.length > 0}>
                   <div css={styles.failedItem}>
-                    <label>{sprintf(__('Bundle IDs (%d)', 'tutor'), failedBundleIds.length)}</label>
+                    <label>
+                      {failedBundleIds.length > 1
+                        ? sprintf(__('Bundle IDs (%d)', 'tutor'), failedBundleIds.length)
+                        : sprintf(__('Bundle ID (%d)', 'tutor'), failedBundleIds.length)}
+                    </label>
                     <div css={styles.failedList}>
                       <For each={failedBundleIds}>
                         {(bundleId) => (
@@ -376,8 +407,8 @@ const styles = {
     }
   `,
   failedList: css`
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     border-radius: ${borderRadius[6]};
     gap: 4px;
   `,

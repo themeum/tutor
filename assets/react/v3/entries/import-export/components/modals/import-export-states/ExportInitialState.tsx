@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { type FunctionComponent } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -16,14 +17,13 @@ import {
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { type useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Course } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type FunctionComponent } from 'react';
 
 interface ExportInitialStateProps {
   form: ReturnType<typeof useFormWithGlobalError<ExportFormData>>;
@@ -203,6 +203,7 @@ const ExportInitialState = ({
                       showModal({
                         component: modalConfig.modal.component,
                         props: modalConfig.modal.props,
+                        depthIndex: zIndex.highest,
                       });
                     }}
                   >
@@ -268,7 +269,7 @@ const ExportInitialState = ({
                   disabled={!isTutorPro}
                   description={
                     // prettier-ignore
-                    __('If you check this media files will be exported along with the selected data', 'tutor')
+                    __('If checked, course media files will also be exported with the course data.', 'tutor')
                   }
                 />
               )}
@@ -289,6 +290,11 @@ const styles = {
     padding: ${spacing[32]} 107px ${spacing[32]} 107px;
     background-color: ${colorTokens.surface.courseBuilder};
     border-top: 1px solid ${colorTokens.stroke.divider};
+
+    ${Breakpoint.tablet} {
+      padding: ${spacing[24]} ${spacing[16]};
+      height: calc(100vh - 160px);
+    }
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}
@@ -355,6 +361,10 @@ const styles = {
   contentCheckboxWrapper: css`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr;
+    }
   `,
   contentCheckboxFooter: css`
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[16]};

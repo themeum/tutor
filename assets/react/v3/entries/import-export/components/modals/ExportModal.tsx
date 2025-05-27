@@ -9,7 +9,7 @@ import Logo from '@TutorShared/components/Logo';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
-import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
@@ -227,11 +227,7 @@ const ExportModal = ({
         <Show when={currentStep === 'initial'} fallback={<>&nbsp;</>}>
           <div css={styles.header}>
             <div css={styles.headerTitle}>
-              <Logo
-                wrapperCss={css`
-                  padding-left: 0;
-                `}
-              />
+              <Logo wrapperCss={styles.logo} />
               <span>{__('Exporter', 'tutor')}</span>
             </div>
             <div>
@@ -271,6 +267,10 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     padding-inline: 88px;
+
+    ${Breakpoint.tablet} {
+      padding-inline: ${spacing[8]} ${spacing[36]};
+    }
   `,
   headerTitle: css`
     ${styleUtils.display.flex()}
@@ -278,5 +278,12 @@ const styles = {
     gap: ${spacing[4]};
     ${typography.heading6('medium')}
     color: ${colorTokens.text.brand};
+  `,
+  logo: css`
+    padding-left: 0;
+
+    ${Breakpoint.smallTablet} {
+      padding-left: 0;
+    }
   `,
 };

@@ -222,31 +222,23 @@ interface ImportContentResponse extends ImportExportContentResponseBase {
 }
 
 const importContents = async (payload: ImportContentPayload) => {
-  return wpAjaxInstance.post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(
-    endpoints.IMPORT_CONTENTS,
-    payload,
-  );
+  return wpAjaxInstance
+    .post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(endpoints.IMPORT_CONTENTS, payload)
+    .then((res) => res.data);
 };
 
 export const useImportContentsMutation = () => {
-  const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: importContents,
     mutationKey: ['ImportContents'],
     onSuccess: (response) => {
-      if (response.data.job_progress === 100) {
+      if (response.job_progress === 100) {
         queryClient.invalidateQueries({
           queryKey: ['ImportExportHistory'],
         });
       }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: convertToErrorMessage(error),
-        type: 'danger',
-      });
     },
   });
 };

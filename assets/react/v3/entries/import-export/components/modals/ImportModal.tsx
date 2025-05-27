@@ -76,7 +76,7 @@ const ImportModal = ({
   const { showToast } = useToast();
 
   useEffect(() => {
-    if (propsFiles.length === 0) {
+    if (files.length === 0) {
       return;
     }
     setIsReadingFile(true);
@@ -88,6 +88,7 @@ const ImportModal = ({
         setIsReadingFile(false);
         setHasSettings(hasSettings);
         setFiles(files);
+        setIsFileValid(true);
       })
       .catch(() => {
         setIsReadingFile(false);
@@ -96,7 +97,6 @@ const ImportModal = ({
       .finally(() => {
         setIsReadingFile(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [files]);
 
   const handleUpload = (uploadedFiles: File[]) => {
@@ -110,13 +110,6 @@ const ImportModal = ({
       message: errorMessages.join(', '),
       type: 'danger',
     });
-  };
-
-  const renderHeader = {
-    initial: __('Import File', 'tutor'),
-    progress: __('Importing...', 'tutor'),
-    success: __('Imported Successfully!', 'tutor'),
-    error: __('Import Failed!', 'tutor'),
   };
 
   const renderInitialState = (file: File) => {
@@ -244,7 +237,7 @@ const ImportModal = ({
       onClose={onClose}
       entireHeader={currentStep === 'initial' ? undefined : <>&nbsp;</>}
       maxWidth={500}
-      title={currentStep === 'initial' ? renderHeader[currentStep] : undefined}
+      title={currentStep === 'initial' ? __('Import File', 'tutor') : undefined}
       isCloseAble={currentStep !== 'progress'}
     >
       <div css={styles.wrapper}>{modalContent[currentStep]}</div>
