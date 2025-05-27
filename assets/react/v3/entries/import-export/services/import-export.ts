@@ -148,7 +148,7 @@ export interface ExportContentPayload {
 
 interface ImportExportCompletedContentsItem {
   success: string[];
-  error: string[];
+  failed: string[];
 }
 
 export interface ImportExportContentResponseBase {

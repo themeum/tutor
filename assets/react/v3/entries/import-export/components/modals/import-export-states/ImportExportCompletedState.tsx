@@ -48,8 +48,8 @@ const ImportExportCompletedState = ({
   const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
   const successFullyCompletedSettings = completedContents?.settings;
 
-  const completedWithErrorsCourses = completedContents?.courses?.error || [];
-  const completedWithErrorsBundles = completedContents?.['course-bundle']?.error || [];
+  const completedWithErrorsCourses = completedContents?.courses?.failed || [];
+  const completedWithErrorsBundles = completedContents?.['course-bundle']?.failed || [];
 
   const contentMapping = {
     import: {

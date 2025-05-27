@@ -24,8 +24,8 @@ const generateImportExportMessage = (
   const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
   const successFullyCompletedSettings = completedContents?.settings;
 
-  const completedWithErrorsCourses = completedContents?.courses?.error || [];
-  const completedWithErrorsBundles = completedContents?.['course-bundle']?.error || [];
+  const completedWithErrorsCourses = completedContents?.courses?.failed || [];
+  const completedWithErrorsBundles = completedContents?.['course-bundle']?.failed || [];
 
   const noFailures = completedWithErrorsCourses.length === 0 && completedWithErrorsBundles.length === 0;
 
