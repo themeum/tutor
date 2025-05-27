@@ -144,7 +144,6 @@ const ExportModal = ({
     onClose();
   };
 
-  // Define the component mapping for course selection
   const componentMapping = {
     courses: {
       modal: {

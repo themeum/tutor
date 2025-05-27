@@ -2,6 +2,10 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
+
 import ExportModal from '@ImportExport/components/modals/ExportModal';
 import {
   convertExportFormDataToPayload,
@@ -9,9 +13,6 @@ import {
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import generateImportExportMessage from '@ImportExport/utils/utils';
-import Button from '@TutorShared/atoms/Button';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useModal } from '@TutorShared/components/modals/Modal';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -19,7 +20,7 @@ import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
-  const { data: exportContentResponse, mutateAsync, error, isPending, isError } = useExportContentsMutation();
+  const { data: exportContentResponse, mutateAsync, error, isError } = useExportContentsMutation();
 
   const handleImport = (data: ExportFormData) => {
     const payload = convertExportFormDataToPayload(data);
@@ -33,7 +34,7 @@ const Export = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (isPending) {
+      if (exportContentResponse && exportContentResponse?.job_progress < 100) {
         e.preventDefault();
         return;
       }
@@ -43,7 +44,7 @@ const Export = () => {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isPending]);
+  }, [exportContentResponse]);
 
   useEffect(() => {
     const progress = Number(exportContentResponse?.job_progress);
