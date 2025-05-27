@@ -112,13 +112,6 @@ const ImportModal = ({
     });
   };
 
-  const renderHeader = {
-    initial: __('Import File', 'tutor'),
-    progress: __('Importing...', 'tutor'),
-    success: __('Imported Successfully!', 'tutor'),
-    error: __('Import Failed!', 'tutor'),
-  };
-
   const renderInitialState = (file: File) => {
     return (
       <>
@@ -244,7 +237,7 @@ const ImportModal = ({
       onClose={onClose}
       entireHeader={currentStep === 'initial' ? undefined : <>&nbsp;</>}
       maxWidth={500}
-      title={currentStep === 'initial' ? renderHeader[currentStep] : undefined}
+      title={currentStep === 'initial' ? __('Import File', 'tutor') : undefined}
       isCloseAble={currentStep !== 'progress'}
     >
       <div css={styles.wrapper}>{modalContent[currentStep]}</div>
