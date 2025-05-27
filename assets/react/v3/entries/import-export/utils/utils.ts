@@ -13,7 +13,7 @@ const generateImportExportMessage = (
     failed: __('failed', 'tutor'),
   };
 
-  const singularPluralText = {
+  const textMapping = {
     course: {
       singular: __('Course', 'tutor'),
       plural: __('Courses', 'tutor'),
@@ -50,20 +50,12 @@ const generateImportExportMessage = (
       const items = [];
       if (completedWithErrorsCourses.length) {
         items.push(
-          formatCount(
-            completedWithErrorsCourses.length,
-            singularPluralText.course.singular,
-            singularPluralText.course.plural,
-          ),
+          formatCount(completedWithErrorsCourses.length, textMapping.course.singular, textMapping.course.plural),
         );
       }
       if (completedWithErrorsBundles.length) {
         items.push(
-          formatCount(
-            completedWithErrorsBundles.length,
-            singularPluralText.bundle.singular,
-            singularPluralText.bundle.plural,
-          ),
+          formatCount(completedWithErrorsBundles.length, textMapping.bundle.singular, textMapping.bundle.plural),
         );
       }
       return `${items.join(', ')} ${operationText.failed}`;
@@ -75,21 +67,13 @@ const generateImportExportMessage = (
 
   if (successFullyCompletedCourses.length) {
     successItems.push(
-      formatCount(
-        successFullyCompletedCourses.length,
-        singularPluralText.course.singular,
-        singularPluralText.course.plural,
-      ),
+      formatCount(successFullyCompletedCourses.length, textMapping.course.singular, textMapping.course.plural),
     );
   }
 
   if (successFullyCompletedBundles.length) {
     successItems.push(
-      formatCount(
-        successFullyCompletedBundles.length,
-        singularPluralText.bundle.singular,
-        singularPluralText.bundle.plural,
-      ),
+      formatCount(successFullyCompletedBundles.length, textMapping.bundle.singular, textMapping.bundle.plural),
     );
   }
 
@@ -101,20 +85,12 @@ const generateImportExportMessage = (
   const failedItems = [];
   if (completedWithErrorsCourses.length) {
     failedItems.push(
-      formatCount(
-        completedWithErrorsCourses.length,
-        singularPluralText.course.singular,
-        singularPluralText.course.plural,
-      ),
+      formatCount(completedWithErrorsCourses.length, textMapping.course.singular, textMapping.course.plural),
     );
   }
   if (completedWithErrorsBundles.length) {
     failedItems.push(
-      formatCount(
-        completedWithErrorsBundles.length,
-        singularPluralText.bundle.singular,
-        singularPluralText.bundle.plural,
-      ),
+      formatCount(completedWithErrorsBundles.length, textMapping.bundle.singular, textMapping.bundle.plural),
     );
   }
 

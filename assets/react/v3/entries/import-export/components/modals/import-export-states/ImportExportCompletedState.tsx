@@ -120,14 +120,25 @@ const ImportExportCompletedState = ({
     return sprintf(count === 1 ? singular : plural, count);
   };
 
+  const courseBundleTextMapping = {
+    course: {
+      singular: __('Course ID (%d)', 'tutor'),
+      plural: __('Course IDs (%d)', 'tutor'),
+    },
+    bundle: {
+      singular: __('Bundle ID (%d)', 'tutor'),
+      plural: __('Bundle IDs (%d)', 'tutor'),
+    },
+  };
+
   const formatFailedItems = (): string => {
     const failedItems: string[] = [];
 
     if (completedWithErrorsCourses.length > 0) {
       const coursesText = formatItemCount(
         completedWithErrorsCourses.length,
-        __('%d Course', 'tutor'),
-        __('%d Courses', 'tutor'),
+        courseBundleTextMapping.course.singular,
+        courseBundleTextMapping.course.plural,
       );
       failedItems.push(coursesText);
     }
@@ -135,8 +146,8 @@ const ImportExportCompletedState = ({
     if (completedWithErrorsBundles.length > 0) {
       const bundlesText = formatItemCount(
         completedWithErrorsBundles.length,
-        __('%d Bundle', 'tutor'),
-        __('%d Bundles', 'tutor'),
+        courseBundleTextMapping.bundle.singular,
+        courseBundleTextMapping.bundle.plural,
       );
       failedItems.push(bundlesText);
     }
@@ -153,8 +164,8 @@ const ImportExportCompletedState = ({
     if (successFullyCompletedCourses.length) {
       const courseText = formatItemCount(
         successFullyCompletedCourses.length,
-        __('%d Course', 'tutor'),
-        __('%d Courses', 'tutor'),
+        courseBundleTextMapping.course.singular,
+        courseBundleTextMapping.course.plural,
       );
       formattedItems.push(courseText);
     }
@@ -162,8 +173,8 @@ const ImportExportCompletedState = ({
     if (successFullyCompletedBundles.length) {
       const bundleText = formatItemCount(
         successFullyCompletedBundles.length,
-        __('%d Bundle', 'tutor'),
-        __('%d Bundles', 'tutor'),
+        courseBundleTextMapping.bundle.singular,
+        courseBundleTextMapping.bundle.plural,
       );
       formattedItems.push(bundleText);
     }
