@@ -316,16 +316,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 New: Added course import/export functionality. (Pro)
 New: Added an option to set assignment expiration behavior. (Pro)
-Update: Improved UI on the pricing page. (Pro)
 Update: Admin cannot create a Zoom meeting for an instructor if the instructor hasn't set up Zoom. (Pro)
 Update: Allow user to use coupon even when course is in sale.
-Update: Replaced generic error with a clear message explaining why a coupon cannot be cleared.
+Update: Replaced generic error with a clear message explaining why a coupon cannot be applied.
 Fix: Bundle course reorder doesn't work on the frontend after publishing. (Pro)
 Fix: Student assignments are not available for evaluation immediately after submission. (Pro)
 Fix: Enrolled courses remain visible despite expired membership and only disappear upon access. (Pro)
 Fix: Subscription payment history is not persistent across sessions. (Pro)
 Fix: Refunded WooCommerce orders appear as "Processing" on the customer's order history page.
-Fix: Resolved graph display issues on the report page. (Pro)
 Fix: Co-instructors cannot see bundle courses on the "My Courses" page. (Pro)
 Fix: Google login swaps users' first and last names. (Pro)
 Fix: Certificate does not reload automatically after creating a meeting in the course builder. (Pro)

@@ -4,51 +4,92 @@ document.addEventListener('DOMContentLoaded', () => {
     const { __ } = wp.i18n;
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
     const checkoutPageWrapper = document.querySelector(".tutor-checkout-page");
-    let showTax               = true;    
 
     if (checkoutPageWrapper) {
         const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
-        const paymentMethodElem    = paymentMethodWrapper?.innerHTML;
-        const payNowBtn            = document.querySelector('#tutor-checkout-pay-now-button');
-        const payments             = document.querySelectorAll('.tutor-checkout-payment-item');
-        const paymentTypeInput     = document.querySelector("input[name=payment_type]");
-     
+        const payNowBtn = document.querySelector('#tutor-checkout-pay-now-button');
+        const payments = document.querySelectorAll('.tutor-checkout-payment-item');
+        const paymentTypeInput = document.querySelector("input[name=payment_type]");
+
+        /**
+         * Get checkout JSON object.
+         *
+         * @since 3.6.0
+         *
+         * @returns {object} JSON object.
+         */
+        function getCheckoutData() {
+            let jsonStr = document.querySelector('#checkout_data')?.value
+            return JSON.parse(jsonStr)
+        }
+
+        /**
+         * Determines if tax is managed by Tutor (not the payment gateway) 
+         *
+         * @since 3.6.0
+         *
+         * @param {string} paymentMethodName - The name of the payment method (paypal, stripe, paddle, etc).
+         *
+         * @returns {boolean}
+         */
+        function isTaxManagedByTutor(paymentMethodName) {
+            const externallyManagedTaxMethods = ['paddle'];
+            return !externallyManagedTaxMethods.includes(paymentMethodName.toLowerCase());
+        }
+
+        /**
+         * Determine tax info will be shown or hide.
+         * 
+         * @since 3.6.0
+         *
+         * @param {string} paymentMethodName payment method name.
+         *
+         * @returns {void}
+         */
+        function shouldShowTaxInfo(paymentMethodName) {
+            const taxAmount = document.querySelector('.tutor-checkout-tax-amount');
+            const inclTaxLabel = document.querySelector('.tutor-checkout-incl-tax-label');
+            const grandTotal = document.querySelector('.tutor-checkout-grand-total');
+            const checkoutData = getCheckoutData();
+
+            if (isTaxManagedByTutor(paymentMethodName)) {
+                grandTotal.innerHTML = checkoutData.formatted_total_price;
+                inclTaxLabel?.classList.remove('tutor-d-none');
+                taxAmount?.classList.remove('tutor-d-none');
+            } else {
+                grandTotal.innerHTML = checkoutData.formatted_total_price_without_tax;
+                inclTaxLabel?.classList.add('tutor-d-none');
+                taxAmount?.classList.add('tutor-d-none');
+            }
+        }
+
         // Handle payment method selection.
         document.addEventListener('click', async (e) => {
             if (e.target.closest(".tutor-checkout-payment-options")) {
                 const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
-                const paymentOptions        = paymentOptionsWrapper.querySelectorAll("label");
+                const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
 
                 // Remove active class.
                 paymentOptions.forEach(item => item.classList.remove('active'));
                 // Add active class to the selected option.
                 const clickedOption = e.target.closest("label");
                 clickedOption.classList.add('active');
-                
-                paymentTypeInput.value = clickedOption.dataset.paymentType;
-                const inputCouponCode  = document.querySelector('[name=coupon_code]');
-                const couponCode       = inputCouponCode?.value || '';
-                const isPaddleSelected = clickedOption.firstElementChild.value === 'paddle';
 
-                /**
-                 * If the selected payment method is Paddle, we need to hide the tax.
-                 * If the selected payment method is not Paddle, we need to show the tax.
-                 */
-                if (isPaddleSelected === showTax) {
-                    updateCheckoutData(couponCode, null, null, isPaddleSelected ? 0 : 1);
-                    showTax = !isPaddleSelected;
-                }
+                paymentTypeInput.value = clickedOption.dataset.paymentType;
+                const paymentMethodName = clickedOption.firstElementChild.value;
+
+                shouldShowTaxInfo(paymentMethodName);
 
                 const paymentInstructions = clickedOption.dataset.paymentInstruction;
                 if (paymentInstructions) {
                     document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').innerHTML = paymentInstructions;
+                    document.querySelector('.tutor-payment-instructions').innerHTML = atob(paymentInstructions);
                 } else {
                     document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
                 }
             }
 
-            // Handle toggle coupon form button click
+            // Handle toggle coupon form button click.
             if (e.target.closest("#tutor-toggle-coupon-button")) {
                 const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
                 const applyCouponInput = applyCouponForm?.querySelector("input");
@@ -90,12 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (status_code === 200) {
                         tutor_toast(__('Success', 'tutor'), message, 'success');
-                        await updateCheckoutData(couponCode, null, null, showTax ? 1 : 0);
-                        
-                        if (!data.total_price && data.order_type === 'single_order' && paymentMethodElem) {
-                            paymentMethodWrapper.innerHTML = '';
-                            const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
-                            payNowBtn.innerHTML = payNowBtnText;
+                        await updateCheckoutData(couponCode, null, null);
+
+                        if (!data.total_price && data.order_type === 'single_order') {
+                            paymentMethodWrapper.classList.add('tutor-d-none');
+                            payNowBtn.innerHTML = getCheckoutData()?.pay_now_btn_text;
                             paymentMethodWrapper.insertAdjacentHTML('beforeend', `<input type='hidden' name='payment_method' value='free' id="tutor-temp-payment-method"/>`);
                         }
                     } else {
@@ -109,22 +149,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Handle coupon remove button click
+            // Handle coupon remove button click.
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
-                const couponInput = document.querySelector('input[name=coupon_code]');
-                if (couponInput) {
-                  couponInput.value = '-1';
-                }
-
+                document.querySelector('input[name=coupon_code]').value = '-1';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
 
-                await updateCheckoutData('-1', null, null, 1);
+                await updateCheckoutData('-1', null, null);
 
-                paymentMethodWrapper.innerHTML = paymentMethodElem;
-                const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
-                payNowBtn.innerHTML = payNowBtnText;
+                const selectedPaymentMethod = document.querySelector('input[name=payment_method]:checked')?.value;
+                if (selectedPaymentMethod) {
+                    shouldShowTaxInfo(selectedPaymentMethod);
+                }
+
+                paymentMethodWrapper.classList.remove('tutor-d-none');
+                payNowBtn.innerHTML = getCheckoutData()?.pay_now_btn_text;
                 document.getElementById('tutor-temp-payment-method')?.remove();
-                showTax = true;
                 handleSinglePaymentOptionSelection();
             }
         });
@@ -146,6 +185,14 @@ document.addEventListener('DOMContentLoaded', () => {
         tutorCheckoutForm?.addEventListener('submit', function (e) {
             e.preventDefault();
 
+            const checkoutData = getCheckoutData();
+            const formData = new FormData(e.target);
+
+            if (checkoutData.payment_method_required && !formData.get('payment_method')) {
+                tutor_toast(__('Error', 'tutor'), __('Please select a payment method.', 'tutor'), 'error');
+                return;
+            }
+
             const submitButton = document.getElementById('tutor-checkout-pay-now-button');
             submitButton.classList.add('is-loading');
             submitButton.textContent = __('Processing', 'tutor');
@@ -162,9 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
          * @param {string} couponCode coupon code.
          * @param {string} billingCountry Billing country.
          * @param {string} billingState Billing state.
-         * @param {string} showTax Hide tax when payment method is Paddle.
          */
-        async function updateCheckoutData(couponCode, billingCountry = null, billingState = null, showTax = '1') {
+        async function updateCheckoutData(couponCode, billingCountry = null, billingState = null) {
             const url = new URL(window.location.href);
             const plan = url.searchParams.get('plan');
             const course_id = url.searchParams.get('course_id');
@@ -173,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
             formData.set('action', 'tutor_get_checkout_html');
             formData.set('coupon_code', couponCode);
-            formData.set('show_tax', showTax);
+
             if (billingCountry) {
                 formData.set('billing_country', billingCountry);
             }
@@ -239,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_country', country);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value, showTax ? 1 : 0);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
 
                 toggleSpinner(e.target, 'hide');
             }
@@ -259,24 +305,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_state', state);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value, showTax ? 1 : 0);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
 
                 toggleSpinner(e.target, 'hide');
             }
         })
-
-
-        /**
-         * Handles the selection of the Paddle payment method.
-         * 
-         * @since 3.5.0
-         */
-        async function handlePaddlePaymentSelection() {
-            const inputCouponCode = document.querySelector('[name=coupon_code]');
-            const couponCode      = inputCouponCode?.value || '';
-            await updateCheckoutData(couponCode, null, null, 0);
-            showTax = false;
-        }   
 
         /**
          * Handles the selection of a single payment option.
@@ -284,17 +317,19 @@ document.addEventListener('DOMContentLoaded', () => {
          * @returns {void}
          * @since 3.5.0
          */
-        function handleSinglePaymentOptionSelection()
-        {
+        function handleSinglePaymentOptionSelection() {
+            const checkoutData = getCheckoutData();
+            if (!checkoutData.payment_method_required) {
+                return;
+            }
+
             // If only one payment available, keep selected.
             if (payments.length === 1) {
                 payments[0].classList.add('active');
                 payments[0].querySelector('input[name=payment_method]').checked = true;
                 paymentTypeInput.value = payments[0].dataset.paymentType;
 
-                if (payments[0].firstElementChild.value === 'paddle') {
-                    handlePaddlePaymentSelection();
-                }
+                shouldShowTaxInfo(payments[0].firstElementChild.value);
 
                 const paymentInstructions = payments[0].dataset.paymentInstruction;
                 if (paymentInstructions) {

@@ -962,20 +962,25 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course ID.
+	 * @since 3.6.0 $custom_args param added
+	 *
+	 * @param int   $course_id course ID.
+	 * @param array $custom_args Add custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_topics( $course_id = 0 ) {
+	public function get_topics( $course_id = 0, $custom_args = array() ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => 'topics',
 			'post_parent'    => $course_id,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 			'posts_per_page' => -1,
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$query = new \WP_Query( $args );
 
@@ -1057,23 +1062,26 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $topics_id topics ID.
-	 * @param int $limit limit.
+	 * @param int   $topics_id topics ID.
+	 * @param int   $limit limit.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10 ) {
+	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10, $custom_args = array() ) {
 		$topics_id        = $this->get_post_id( $topics_id );
 		$lesson_post_type = tutor()->lesson_post_type;
 		$post_type        = array_unique( apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) ) );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => $post_type,
 			'post_parent'    => $topics_id,
 			'posts_per_page' => $limit,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		return new \WP_Query( $args );
 	}
@@ -6724,11 +6732,12 @@ class Utils {
 	 *
 	 * @since 1.3.4
 	 *
-	 * @param int $parent parent.
+	 * @param int   $parent parent.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return array
 	 */
-	public function get_course_categories( $parent = 0, $custom_args = array() ) {
+	public function get_course_categories( $parent = 0, $custom_args = array(), $top_level_children = false ) {
 		$default_args = array(
 			'taxonomy'   => CourseModel::COURSE_CATEGORY,
 			'hide_empty' => false,
@@ -6747,15 +6756,11 @@ class Utils {
 
 		$terms = get_terms( $args );
 
-		$children = array();
-		foreach ( $terms as $term ) {
-			if ( is_object( $term ) ) {
-				$term->children             = $this->get_course_categories( $term->term_id );
-				$children[ $term->term_id ] = $term;
-			}
+		if ( $top_level_children ) {
+			return $terms;
 		}
 
-		return $children;
+		return $this->build_term_tree( $terms, $parent );
 	}
 
 	/**
@@ -6763,16 +6768,22 @@ class Utils {
 	 *
 	 * @since 1.9.3
 	 *
+	 * @since 3.6.0 Custom args param added
+	 *
+	 * @param array $custom_args Custom args.
+	 *
 	 * @return array
 	 */
-	public function get_course_tags() {
-		$args = apply_filters(
+	public function get_course_tags( $custom_args = array() ) {
+		$default_args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
 				'taxonomy'   => CourseModel::COURSE_TAG,
 				'hide_empty' => false,
 			)
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$terms = get_terms( $args );
 
@@ -10369,18 +10380,22 @@ class Utils {
 		}
 
 		if ( is_plugin_active( 'elementor/elementor.php' ) ) {
-			$name             = 'elementor';
-			$editors[ $name ] = array(
-				'name'  => $name,
-				'label' => __( 'Elementor', 'tutor' ),
-				'link'  => add_query_arg(
-					array(
-						'post'   => $post_id,
-						'action' => $name,
+			$post_type             = get_post_type( $post_id );
+			$elementor_cpt_support = get_option( 'elementor_cpt_support' );
+			if ( is_array( $elementor_cpt_support ) && in_array( $post_type, $elementor_cpt_support ) ) {
+				$name             = 'elementor';
+				$editors[ $name ] = array(
+					'name'  => $name,
+					'label' => __( 'Elementor', 'tutor' ),
+					'link'  => add_query_arg(
+						array(
+							'post'   => $post_id,
+							'action' => $name,
+						),
+						get_admin_url( null, 'post.php' )
 					),
-					get_admin_url( null, 'post.php' )
-				),
-			);
+				);
+			}
 		}
 
 		return apply_filters( 'tutor_course_builder_editor_list', $editors, $post_id );
@@ -10609,5 +10624,29 @@ class Utils {
 		}
 
 		return $username;
+	}
+
+	/**
+	 * Build term tree
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array   $terms Terms array.
+	 * @param integer $parent Parent id.
+	 *
+	 * @return array
+	 */
+	public function build_term_tree( $terms, $parent = 0 ) {
+		$branch = array();
+		foreach ( $terms as $term ) {
+			if ( (int) $term->parent === (int) $parent ) {
+				$children = $this->build_term_tree( $terms, $term->term_id );
+				if ( $children ) {
+					$term->children = $children;
+				}
+				$branch[] = $term;
+			}
+		}
+		return $branch;
 	}
 }
