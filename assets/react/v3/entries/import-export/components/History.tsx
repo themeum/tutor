@@ -2,16 +2,17 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useState } from 'react';
 
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Table, { type Column } from '@TutorShared/molecules/Table';
+import ThreeDots, { ThreeDotsOption } from '@TutorShared/molecules/ThreeDots';
+
 import {
   type ImportExportHistory,
   useDeleteImportExportHistoryMutation,
   useImportExportHistoryQuery,
 } from '@ImportExport/services/import-export';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import Table, { type Column } from '@TutorShared/molecules/Table';
-import ThreeDots, { ThreeDotsOption } from '@TutorShared/molecules/ThreeDots';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const History = () => {
@@ -71,7 +72,6 @@ const History = () => {
 
     const formattedItems: string[] = [];
 
-    // Handle courses (only success array)
     const successfulCourses = completedContents.courses?.success || [];
     if (successfulCourses.length > 0) {
       const coursesText = formatItemCount(
@@ -82,7 +82,6 @@ const History = () => {
       formattedItems.push(coursesText);
     }
 
-    // Handle course bundles (only success array)
     const successfulBundles = completedContents['course-bundle']?.success || [];
     if (successfulBundles.length > 0) {
       const bundlesText = formatItemCount(
@@ -93,7 +92,6 @@ const History = () => {
       formattedItems.push(bundlesText);
     }
 
-    // Handle settings (boolean value, no count)
     if (completedContents.settings === true) {
       formattedItems.push(contentTypeConfig.settings.label);
     }
