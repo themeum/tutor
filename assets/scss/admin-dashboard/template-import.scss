@@ -3,6 +3,30 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	background-color: #f1f1f1;
 }
 
+.tutor-template-preview-device-switcher {
+	li {
+		cursor: pointer;
+
+		svg:nth-child(1) {
+			display: block;
+		}
+
+		svg:nth-child(2) {
+			display: none;
+		}
+
+		&.active {
+			svg:nth-child(1) {
+				display: none;
+			}
+
+			svg:nth-child(2) {
+				display: block;
+			}
+		}
+	}
+}
+
 .tutor-template-import-wrapper {
 	.tutor-text-truncate {
 		white-space: nowrap;
@@ -208,8 +232,9 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 
 		ul {
 			display: flex;
-			gap: 20px;
+			gap: 15px;
 			margin: 0;
+			align-items: center;
 
 			i {
 				font-size: 20px;

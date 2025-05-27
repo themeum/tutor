@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const deviceSwitchers = document.querySelectorAll(".tutor-template-preview-device-switcher li");
 	const previewTemplateName = document.querySelector(".tutor-preview-template-name");
 	const loadingIndicator = document.querySelector(".tutor-template-loading-indicator");
+	const importBtn = document.querySelector('.tutor-template-import-btn');
 
 	if (templateDemoImportRoot) {
 		// Open live preview modal
@@ -19,13 +20,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				loadingIndicator.style.display = "block";
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
-				// iframe.src = 'https://artify.droip.io';
 				iframe.src = 'https://pixage.droip.io';
 				// iframe.src = event.target.dataset.template_url;
-				// iframe.src = droipTemplateUrls[event.target.dataset.template_name];
 
 				if (_tutorobject?.tutor_pro_url) {
-					const importBtn = document.querySelector('.tutor-template-import-btn');
+					// const importBtn = document.querySelector('.tutor-template-import-btn');
 					importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);
 				}
 			}
@@ -39,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		livePreviewCloseModal?.addEventListener("click", function () {
 			resetPreviewModal();
 
-			const importBtn = document.querySelector('.tutor-template-view-template-btn');
+			// const importBtn = document.querySelector('.tutor-template-view-template-btn');
 			const icon = importBtn.querySelector('i');
 			importBtn.classList.remove('is-loading');
 			importBtn.classList.add('tutor-template-import-btn');

@@ -240,7 +240,7 @@ class Assets {
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
 
-		if ( 'tutor-templates' === $page ) {
+		if ( 'tutor-themes' === $page ) {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
 			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.min.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 		}
