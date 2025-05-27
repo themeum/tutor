@@ -47,7 +47,7 @@ class CouponController extends BaseController {
 	 *
 	 * @var CouponModel
 	 */
-	private $model;
+	public $model;
 
 	/**
 	 * Checkout controller instance.
