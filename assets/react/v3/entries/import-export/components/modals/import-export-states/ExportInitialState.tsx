@@ -17,7 +17,7 @@ import {
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
@@ -203,6 +203,7 @@ const ExportInitialState = ({
                       showModal({
                         component: modalConfig.modal.component,
                         props: modalConfig.modal.props,
+                        depthIndex: zIndex.highest,
                       });
                     }}
                   >

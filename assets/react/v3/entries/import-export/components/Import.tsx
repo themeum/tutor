@@ -37,7 +37,9 @@ const Import = () => {
     } catch (error) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
-        message: convertToErrorMessage(error as ErrorResponse),
+        message: error
+          ? convertToErrorMessage(error as ErrorResponse)
+          : __('Something went wrong during import. Please try again!', 'tutor'),
       });
       return;
     }
@@ -67,7 +69,9 @@ const Import = () => {
     if (isError) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'error',
-        message: convertToErrorMessage(error),
+        message: error
+          ? convertToErrorMessage(error)
+          : __('Something went wrong during import. Please try again!', 'tutor'),
       });
     }
 
