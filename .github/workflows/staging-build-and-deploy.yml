@@ -28,8 +28,8 @@ jobs:
 
       - name: Clone tutor-droip repository
         run: |
-          if [ ! -d "tutor-droip" ]; then
-            git clone https://github.com/jshossen/tutor-droip.git tutor-droip
+          if [ ! -d "includes/droip" ]; then
+            git clone https://github.com/themeum/tutor-droip.git includes/droip
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
