@@ -228,12 +228,15 @@ class Options_V2 {
 		$export_data['data'][] = $prepare_data;
 
 		$response = array(
-			'job_progress'  => '100',
-			'exported_data' => $export_data,
+			'job_progress'       => '100',
+			'exported_data'      => $export_data,
 			'completed_contents' => array(
-				'settings' => true
-			)
+				'settings' => true,
+			),
 		);
+
+		// Update settings log.
+		$this->update_settings_log( $data, 'Exported' );
 
 		$this->json_response( __( 'Settings exported successfully', 'tutor-pro' ), $response );
 	}
@@ -434,67 +437,12 @@ class Options_V2 {
 			$this->response_bad_request( __( 'Invalid json file', 'tutor' ) );
 		}
 
-		if ( isset( $request['data'] ) ) {
-
-			$has_settings = false;
-
-			foreach( $request['data'] as $data ) {
-				if ( 'settings' === $data['content_type'] ){
-					$has_settings = true;
-				}
-			}
-
-			if ( ! $has_settings ) {
-				$this->response_bad_request( __( 'Settings not found.', 'tutor' ) );
-			}
-		}
-
-		$time = tutor_time();
-
-		$save_import_data['datetime']             = $time;
-		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
-		$save_import_data['datatype']             = 'imported';
-		$save_import_data['dataset']              = $request['data'][0]['data'];
-		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
-
-		$get_option_data = get_option( 'tutor_settings_log' );
-		if ( empty( $get_option_data ) ) {
-			$get_option_data = array();
-		}
-		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
-
-			$update_option = array_merge( $import_data, $get_option_data );
-
-			$update_option = tutor_utils()->sanitize_recursively( $update_option );
-
-			if ( ! empty( $update_option ) ) {
-				update_option( 'tutor_settings_log', $update_option );
-			}
-
-			if ( ! empty( $save_import_data ) ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
-			}
-
-			$get_final_data = get_option( 'tutor_settings_log' );
-
-		} else {
-			if ( ! empty( $import_data ) ) {
-				update_option( 'tutor_settings_log', $import_data );
-			}
-
-			if ( ! empty( $save_import_data ) ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
-			}
-
-			$get_final_data = get_option( 'tutor_settings_log' );
-		}
+		$settings_data   = is_array( $request ) && isset( $request['data'] ) ? $request['data'][0]['data'] : array();
+		$update_settings = $this->update_settings_log( $settings_data, 'Imported' );
 
 		$response = array(
 			'job_progress'  => '100',
-			'exported_data' => $get_final_data,
-			'completed_contents' => array(
-				'settings' => true,
-			)
+			'exported_data' => $update_settings,
 		);
 
 		$this->json_response( __( 'Settings imported successfully!', 'tutor' ), $response );
@@ -1087,7 +1035,7 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'Allow customers to place orders without an account.', 'tutor' ),
-							),					
+							),
 						),
 					),
 					'block_revenue_sharing' => array(
@@ -2015,5 +1963,61 @@ class Options_V2 {
 		);
 
 		return $export_data;
+	}
+
+	/**
+	 * Update settings log based on the new data
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array  $new_settings_data New exported/import settings data.
+	 * @param string $action_type Action type import/export.
+	 *
+	 * @return array Settings log data
+	 */
+	private function update_settings_log( $new_settings_data, $action_type ) {
+		$get_final_data = array();
+
+		$time = tutor_time();
+
+		$save_import_data['datetime']             = $time;
+		$save_import_data['history_date']         = gmdate( 'j M, Y, g:i a', $time );
+		$save_import_data['datatype']             = $action_type;
+		$save_import_data['dataset']              = $new_settings_data;
+		$import_data[ 'tutor-imported-' . $time ] = $save_import_data;
+
+		$get_option_data = get_option( 'tutor_settings_log' );
+		if ( empty( $get_option_data ) ) {
+			$get_option_data = array();
+		}
+		if ( ! empty( $get_option_data ) && null !== $save_import_data['dataset'] ) {
+
+			$update_option = array_merge( $import_data, $get_option_data );
+
+			$update_option = tutor_utils()->sanitize_recursively( $update_option );
+
+			if ( ! empty( $update_option ) ) {
+				update_option( 'tutor_settings_log', $update_option );
+			}
+
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
+
+			$get_final_data = get_option( 'tutor_settings_log' );
+
+		} else {
+			if ( ! empty( $import_data ) ) {
+				update_option( 'tutor_settings_log', $import_data );
+			}
+
+			if ( ! empty( $save_import_data ) ) {
+				update_option( 'tutor_option', $save_import_data['dataset'] );
+			}
+
+			$get_final_data = get_option( 'tutor_settings_log' );
+		}
+
+		return $get_final_data;
 	}
 }
