@@ -227,11 +227,7 @@ const ExportModal = ({
         <Show when={currentStep === 'initial'} fallback={<>&nbsp;</>}>
           <div css={styles.header}>
             <div css={styles.headerTitle}>
-              <Logo
-                wrapperCss={css`
-                  padding-left: 0;
-                `}
-              />
+              <Logo wrapperCss={styles.logo} />
               <span>{__('Exporter', 'tutor')}</span>
             </div>
             <div>
@@ -282,5 +278,12 @@ const styles = {
     gap: ${spacing[4]};
     ${typography.heading6('medium')}
     color: ${colorTokens.text.brand};
+  `,
+  logo: css`
+    padding-left: 0;
+
+    ${Breakpoint.smallTablet} {
+      padding-left: 0;
+    }
   `,
 };

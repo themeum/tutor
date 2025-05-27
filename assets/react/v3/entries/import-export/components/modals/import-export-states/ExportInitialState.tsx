@@ -360,6 +360,10 @@ const styles = {
   contentCheckboxWrapper: css`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr;
+    }
   `,
   contentCheckboxFooter: css`
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[16]};
