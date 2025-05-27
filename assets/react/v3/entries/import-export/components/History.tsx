@@ -44,64 +44,66 @@ const History = () => {
     return 'import';
   }, []);
 
-  const formatItemCount = useCallback((count: number, singular: string, plural: string): string => {
+  const formatItemCount = (count: number, singular: string, plural: string): string => {
     return sprintf(count === 1 ? singular : plural, count);
-  }, []);
+  };
 
-  const generateHistoryTitle = useCallback(
-    (item: ImportExportHistory): string => {
-      const completedContents = item.option_value.completed_contents || {};
+  const generateHistoryTitle = (item: ImportExportHistory): string => {
+    const completedContents = item.option_value.completed_contents;
 
-      const contentTypeConfig = {
-        courses: {
-          singular: __('Course (%d)', 'tutor'),
-          plural: __('Courses (%d)', 'tutor'),
-        },
-        'course-bundle': {
-          singular: __('Bundle (%d)', 'tutor'),
-          plural: __('Bundles (%d)', 'tutor'),
-        },
-        settings: {
-          label: __('Settings', 'tutor'),
-        },
-      } as const;
+    if (!completedContents) {
+      return '';
+    }
 
-      const formattedItems: string[] = [];
+    const contentTypeConfig = {
+      courses: {
+        singular: __('Course (%d)', 'tutor'),
+        plural: __('Courses (%d)', 'tutor'),
+      },
+      'course-bundle': {
+        singular: __('Bundle (%d)', 'tutor'),
+        plural: __('Bundles (%d)', 'tutor'),
+      },
+      settings: {
+        label: __('Settings', 'tutor'),
+      },
+    } as const;
 
-      for (const [key, value] of Object.entries(completedContents)) {
-        if (!value || (Array.isArray(value) && value.length === 0)) {
-          continue;
-        }
+    const formattedItems: string[] = [];
 
-        const contentKey = key as keyof typeof contentTypeConfig;
-        const config = contentTypeConfig[contentKey];
+    // Handle courses (only success array)
+    const successfulCourses = completedContents.courses?.success || [];
+    if (successfulCourses.length > 0) {
+      const coursesText = formatItemCount(
+        successfulCourses.length,
+        contentTypeConfig.courses.singular,
+        contentTypeConfig.courses.plural,
+      );
+      formattedItems.push(coursesText);
+    }
 
-        if (!config) {
-          continue;
-        }
+    // Handle course bundles (only success array)
+    const successfulBundles = completedContents['course-bundle']?.success || [];
+    if (successfulBundles.length > 0) {
+      const bundlesText = formatItemCount(
+        successfulBundles.length,
+        contentTypeConfig['course-bundle'].singular,
+        contentTypeConfig['course-bundle'].plural,
+      );
+      formattedItems.push(bundlesText);
+    }
 
-        if (contentKey === 'settings') {
-          if ('label' in config) {
-            formattedItems.push(config.label);
-          }
-          continue;
-        }
+    // Handle settings (boolean value, no count)
+    if (completedContents.settings === true) {
+      formattedItems.push(contentTypeConfig.settings.label);
+    }
 
-        if (Array.isArray(value) && value.length > 0) {
-          if ('singular' in config && 'plural' in config) {
-            const itemText = formatItemCount(value.length, config.singular, config.plural);
-            formattedItems.push(itemText);
-          }
-        } else if ('singular' in config && 'plural' in config) {
-          const itemText = formatItemCount(1, config.singular, config.plural);
-          formattedItems.push(itemText);
-        }
-      }
+    return formattedItems.join(', ');
+  };
 
-      return formattedItems.join(', ');
-    },
-    [formatItemCount],
-  );
+  if (history.length === 0) {
+    return null;
+  }
 
   const columns: Column<ImportExportHistory>[] = [
     {

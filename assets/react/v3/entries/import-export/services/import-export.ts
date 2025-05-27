@@ -261,8 +261,8 @@ export interface ImportExportHistory {
     exported_data?: unknown;
     imported_data?: ExportableContentType[];
     completed_contents?: {
-      courses: string[];
-      'course-bundle': string[];
+      courses: ImportExportCompletedContentsItem;
+      'course-bundle': ImportExportCompletedContentsItem;
       settings: boolean;
     };
     failed_course_ids?: [];

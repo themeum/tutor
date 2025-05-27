@@ -13,6 +13,17 @@ const generateImportExportMessage = (
     failed: __('failed', 'tutor'),
   };
 
+  const singularPluralText = {
+    course: {
+      singular: __('Course', 'tutor'),
+      plural: __('Courses', 'tutor'),
+    },
+    bundle: {
+      singular: __('Bundle', 'tutor'),
+      plural: __('Bundles', 'tutor'),
+    },
+  };
+
   // Early return for missing data
   if (!importExportStatus) {
     return operationText.inProgress;
@@ -38,10 +49,22 @@ const generateImportExportMessage = (
     if (!noFailures) {
       const items = [];
       if (completedWithErrorsCourses.length) {
-        items.push(formatCount(completedWithErrorsCourses.length, 'Course', 'Courses'));
+        items.push(
+          formatCount(
+            completedWithErrorsCourses.length,
+            singularPluralText.course.singular,
+            singularPluralText.course.plural,
+          ),
+        );
       }
       if (completedWithErrorsBundles.length) {
-        items.push(formatCount(completedWithErrorsBundles.length, 'Bundle', 'Bundles'));
+        items.push(
+          formatCount(
+            completedWithErrorsBundles.length,
+            singularPluralText.bundle.singular,
+            singularPluralText.bundle.plural,
+          ),
+        );
       }
       return `${items.join(', ')} ${operationText.failed}`;
     }
@@ -51,11 +74,23 @@ const generateImportExportMessage = (
   const successItems = [];
 
   if (successFullyCompletedCourses.length) {
-    successItems.push(formatCount(successFullyCompletedCourses.length, 'Course', 'Courses'));
+    successItems.push(
+      formatCount(
+        successFullyCompletedCourses.length,
+        singularPluralText.course.singular,
+        singularPluralText.course.plural,
+      ),
+    );
   }
 
   if (successFullyCompletedBundles.length) {
-    successItems.push(formatCount(successFullyCompletedBundles.length, 'Bundle', 'Bundles'));
+    successItems.push(
+      formatCount(
+        successFullyCompletedBundles.length,
+        singularPluralText.bundle.singular,
+        singularPluralText.bundle.plural,
+      ),
+    );
   }
 
   if (successFullyCompletedSettings) {
@@ -65,10 +100,22 @@ const generateImportExportMessage = (
   // Create failed items list (without the word "failed")
   const failedItems = [];
   if (completedWithErrorsCourses.length) {
-    failedItems.push(formatCount(completedWithErrorsCourses.length, 'Course', 'Courses'));
+    failedItems.push(
+      formatCount(
+        completedWithErrorsCourses.length,
+        singularPluralText.course.singular,
+        singularPluralText.course.plural,
+      ),
+    );
   }
   if (completedWithErrorsBundles.length) {
-    failedItems.push(formatCount(completedWithErrorsBundles.length, 'Bundle', 'Bundles'));
+    failedItems.push(
+      formatCount(
+        completedWithErrorsBundles.length,
+        singularPluralText.bundle.singular,
+        singularPluralText.bundle.plural,
+      ),
+    );
   }
 
   // Early return if nothing to report
