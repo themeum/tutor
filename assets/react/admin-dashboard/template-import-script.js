@@ -34,8 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		livePreviewCloseModal?.addEventListener("click", function () {
 			resetPreviewModal();
-
-			// const importBtn = document.querySelector('.tutor-template-view-template-btn');
 			const icon = importBtn.querySelector('i');
 			importBtn.classList.remove('is-loading');
 			importBtn.classList.add('tutor-template-import-btn');
