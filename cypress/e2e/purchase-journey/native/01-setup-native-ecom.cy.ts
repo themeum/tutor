@@ -1,13 +1,14 @@
+import endpoints from '@TutorShared/utils/endpoints';
 import { backendUrls } from 'cypress/config/page-urls';
 import { loginAsAdmin } from 'cypress/support/auth';
 
 describe('Native E-Commerce', () => {
   beforeEach(() => {
     cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`, (req) => {
-      if (req.body.includes('tutor_payment_gateways')) {
+      if (req.body.includes(endpoints.GET_PAYMENT_GATEWAYS)) {
         req.alias = 'paymentGateways';
       }
-      if (req.body.includes('tutor_payment_settings')) {
+      if (req.body.includes(endpoints.GET_PAYMENT_SETTINGS)) {
         req.alias = 'paymentSettings';
       }
     });
