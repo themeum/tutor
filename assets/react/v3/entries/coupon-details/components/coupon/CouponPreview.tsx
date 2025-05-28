@@ -197,7 +197,7 @@ const styles = {
     width: 32px;
     height: 32px;
     border-radius: ${borderRadius.circle};
-    background-color: ${colorTokens.background.default};
+    background-color: ${colorTokens.surface.navbar};
     box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
 
     &::before {
@@ -205,7 +205,7 @@ const styles = {
       position: absolute;
       width: 50%;
       height: 100%;
-      background: ${colorTokens.background.default};
+      background: ${colorTokens.surface.navbar};
     }
   `,
   rightCircle: css`
@@ -216,7 +216,7 @@ const styles = {
     width: 32px;
     height: 32px;
     border-radius: ${borderRadius.circle};
-    background-color: ${colorTokens.background.default};
+    background-color: ${colorTokens.surface.navbar};
     box-shadow: inset 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
 
     &::before {
@@ -224,7 +224,7 @@ const styles = {
       position: absolute;
       width: 50%;
       height: 100%;
-      background: ${colorTokens.background.default};
+      background: ${colorTokens.surface.navbar};
       right: 0;
     }
   `,
