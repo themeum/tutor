@@ -152,7 +152,10 @@ $filters = array(
 
 									<td>
 										<?php
-										$coupon_status = $coupon_controller->model->has_coupon_validity( $coupon ) ? $coupon->coupon_status : 'expired';
+										$coupon_status = $coupon->coupon_status;
+										if ( CouponModel::STATUS_ACTIVE === $coupon_status ) {
+											$coupon_status = $coupon_controller->model->has_coupon_validity( $coupon ) ? $coupon->coupon_status : 'expired';
+										}
 										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon_status, true ) );
 										?>
 									</td>
