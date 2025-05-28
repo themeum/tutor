@@ -60,15 +60,24 @@
 							<path d="M3.78438 14.7273H6.22344C6.40313 14.7273 6.52813 14.6023 6.52813 14.4227C6.52813 14.2352 6.40313 14.1102 6.22344 14.1102H3.78438C3.60469 14.1102 3.47969 14.2352 3.47969 14.4227C3.47969 14.6023 3.60469 14.7273 3.78438 14.7273Z" fill="#9197A8"/>
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M2.27344 17.043H7.72656C8.98438 17.043 9.75781 16.293 9.75781 15.0742V2.93359C9.75781 1.71484 8.98438 0.957031 7.72656 0.957031H2.27344C1.01563 0.957031 0.242187 1.71484 0.242188 2.93359V15.0742C0.242188 16.293 1.01563 17.043 2.27344 17.043ZM2.38281 16.082C1.60156 16.082 1.21094 15.6992 1.21094 14.9336V3.06641C1.21094 2.30859 1.60156 1.92578 2.38281 1.92578H2.67969C2.99688 1.92578 3.15625 1.92578 3.15625 1.92578H6.85156C7.14063 1.92578 7.24688 1.92578 7.32813 1.92578H7.61719C8.39844 1.92578 8.79688 2.30859 8.79688 3.06641V14.9336C8.79688 15.6992 8.39844 16.082 7.61719 16.082H2.38281Z" fill="#9197A8"/>
 						</svg>
-						<svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-							<path d="M7.60254 0C8.53749 0 9.12012 0.733579 9.12012 1.91016V14.0967C9.12012 15.2733 8.53749 16 7.60254 16H1.51172C0.582363 16 0 15.2733 0 14.0967V1.91016C0 0.733579 0.582363 0 1.51172 0H7.60254ZM3.06738 13C2.9635 13 2.8829 13.1012 2.88281 13.2529C2.88281 13.3985 2.96345 13.5 3.06738 13.5H5.69824C5.8069 13.5 5.88281 13.3985 5.88281 13.2529C5.88273 13.1012 5.80685 13 5.69824 13H3.06738Z" fill="#446EF5"/>
+						<svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M0.242187 2.93359C0.242187 1.71484 1.01562 0.957031 2.27344 0.957031L7.72656 0.957031C8.98437 0.957031 9.75781 1.71484 9.75781 2.93359L9.75781 15.0742C9.75781 16.293 8.98438 17.043 7.72656 17.043L2.27344 17.043C1.01562 17.043 0.242187 16.293 0.242187 15.0742L0.242187 2.93359ZM3.47949 15.2227C3.47949 15.4023 3.6046 15.5273 3.78418 15.5273L6.22363 15.5273C6.40322 15.5273 6.52832 15.4023 6.52832 15.2227C6.52832 15.0352 6.40322 14.9102 6.22363 14.9102L3.78418 14.9102C3.6046 14.9102 3.47949 15.0352 3.47949 15.2227Z" fill="#446EF5"/>
 						</svg>
 					</li>
 				</ul>
 			</div>
 			<div class="tutor-template-preview-iframe-wrapper">
+				<div class="tutor-template-shimmer-effect" style="display: none;">
+					<!-- Top Large Box -->
+					<div class="tutor-template-shimmer-box tutor-template-shimmer-box-large"></div>
+					<!-- Bottom Two Boxes -->
+					<div class="tutor-template-shimmer-row">
+						<div class="tutor-template-shimmer-box tutor-template-shimmer-box-small"></div>
+						<div class="tutor-template-shimmer-box tutor-template-shimmer-box-small"></div>
+					</div>
+				</div>
 				<iframe id="tutor-template-preview-iframe" src="" frameborder="0"></iframe>
-				<div class="tutor-template-loading-indicator" style="display: none;"><?php esc_html_e( 'Loading...', 'tutor' ); ?></div>
+				<!-- <div class="tutor-template-loading-indicator" style="display: none;"></div> -->
 				<div class="tutor-template-preview-import-area tutor-flex-column tutor-justify-center tutor-gap-1" style="display: none;">
 					<div class="tutor-preview-template-name">BeatLab Academy</div>	
 					<p class="tutor-droip-color-presets-heading" style="display: none;">
@@ -81,7 +90,6 @@
 					<div class="tutor-template-import-btn-wrapper">
 						<?php do_action( 'template_import_btn' ); ?>
 					</div>
-					<!-- <i class="tutor-icon-times"></i> -->
 				</div>
 			</div>
 		</div>

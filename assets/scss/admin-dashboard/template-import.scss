@@ -40,7 +40,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	}
 
 	.tutor-template-import-area {
-		background: #f1f1f1;
 		max-width: 1200px;
 		margin: 0 auto;
 	}
@@ -97,6 +96,10 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 
 	img {
 		width: 100%;
+	}
+
+	.tutor-template-preview-btn {
+		border: 1px solid #ddd;
 	}
 
 	.tutor-template-list {
@@ -314,15 +317,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		gap: 10px;
 		justify-content: center;
 	}
-
-	.tutor-template-loading-indicator {
-		font-size: 40px;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		margin: 0 auto;
-		transform: translate(-40%, -50%);
-	}
 }
 
 .tutor-template-empty-state {
@@ -333,7 +327,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 
 // color palette 
 .all-colors-wrapper {
-	/* display: none; */
 	flex-direction: row;
 	flex-wrap: wrap;
 	gap: 2px;
@@ -350,8 +343,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	cursor: pointer;
 	border: 2px solid rgb(0 0 0 / 5%);
 	box-shadow: rgba(255, 255, 255, 0) 0px 0px 0px 2px;
-	// border: 2px solid #5641f34e;
-	// box-shadow: rgba(255, 255, 255, 1) 0px 0px 0px 2px;
 }
 
 .color-palette.active {
@@ -376,4 +367,63 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 [data-index="2"] {
 	width: 17px;
 	height: 9px;
+}
+
+// tutor template shimmer effect
+.tutor-template-shimmer-effect {
+	padding: 0px;
+	margin: 0 auto;
+	width: calc(100% - 37px);
+	position: absolute;
+	bottom: 0px;
+	height: 100%;
+	top: 55px;
+	left: 18px;
+	background: #fff;
+}
+
+.tutor-template-shimmer-box {
+	background-color: #e0e0e0;
+	border-radius: 8px;
+	position: relative;
+	overflow: hidden;
+	height: 50%;
+	margin-bottom: 20px;
+	display: block;
+}
+
+.tutor-template-shimmer-box::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -150px;
+	width: 150px;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	animation: tutorTemplateShimmerKeyframe 1.5s infinite;
+}
+
+.tutor-template-shimmer-box-large {
+	height: 50%;
+	margin-bottom: 20px;
+}
+
+.tutor-template-shimmer-row {
+	display: flex;
+	gap: 20px;
+}
+
+.tutor-template-shimmer-box-small {
+	height: 340px;
+	flex: 1;
+}
+
+@keyframes tutorTemplateShimmerKeyframe {
+	0% {
+		left: -150px;
+	}
+
+	100% {
+		left: 100%;
+	}
 }

@@ -1,7 +1,6 @@
 
 
 document.addEventListener('DOMContentLoaded', function () {
-	// template preview variables
 	const templateDemoImportRoot = document.querySelector(".tutor-template-import-area");
 	const livePreviewModal = document.querySelector(".tutor-template-preview-modal");
 	const livePreviewModalOverlay = document.querySelector(".tutor-template-preview-modal-overlay");
@@ -10,21 +9,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	const livePreviewCloseModal = document.querySelector(".tutor-template-preview-modal-back-link");
 	const deviceSwitchers = document.querySelectorAll(".tutor-template-preview-device-switcher li");
 	const previewTemplateName = document.querySelector(".tutor-preview-template-name");
-	const loadingIndicator = document.querySelector(".tutor-template-loading-indicator");
+	const tutorTemplateShimmerEffect = document.querySelector(".tutor-template-shimmer-effect");
 	const importBtn = document.querySelector('.tutor-template-import-btn');
 
 	if (templateDemoImportRoot) {
 		// Open live preview modal
 		templateDemoImportRoot.addEventListener('click', (event) => {
 			if (event.target && event.target.matches('.tutor-template-preview-btn')) {
-				loadingIndicator.style.display = "block";
+				tutorTemplateShimmerEffect.style.display = "block";
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
-				iframe.src = 'https://pixage.droip.io';
 				// iframe.src = event.target.dataset.template_url;
-
+				iframe.src = 'https://pixage.droip.io';
 				if (_tutorobject?.tutor_pro_url) {
-					// const importBtn = document.querySelector('.tutor-template-import-btn');
 					importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);
 				}
 			}
@@ -32,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		// Hide loading indicator when iframe is fully loaded
 		iframe.addEventListener('load', function () {
-			loadingIndicator.style.display = "none";
+			tutorTemplateShimmerEffect.style.display = "none";
 		});
 
 		livePreviewCloseModal?.addEventListener("click", function () {
@@ -67,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			iframeWrapper.style.height = "100%";
 			removeActiveClassFromDeviceList(deviceSwitchers);
 			deviceSwitchers[0].classList.add("active");
-			loadingIndicator.style.display = "none";
+			tutorTemplateShimmerEffect.style.display = "none";
 		}
 
 		// Remove active class from device list
@@ -113,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
 						colorPresetBlock.style.display = "none";
 					} else {
 						colorPresetBlock.style.display = "flex";
-						// colorPresetBlock.style.gap = "8px";
 						colorPresetBlock.style.justifyContent = "center";
 						colorPresetBlock.style.alignItems = "center";
 					}
