@@ -192,7 +192,6 @@ const exportContents = async (payload: ExportContentPayload) => {
 };
 
 export const useExportContentsMutation = () => {
-  const { showToast } = useToast();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -204,12 +203,6 @@ export const useExportContentsMutation = () => {
           queryKey: ['ImportExportHistory'],
         });
       }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: convertToErrorMessage(error),
-        type: 'danger',
-      });
     },
   });
 };
