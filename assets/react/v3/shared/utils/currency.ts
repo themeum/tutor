@@ -9,6 +9,8 @@ export const createPriceFormatter = ({
   currency: string;
   fraction_digits?: number;
 }) => {
+  const position = tutorConfig.tutor_currency?.position ?? 'left';
+
   return (price: number) => {
     const formatter = new Intl.NumberFormat(locale, {
       style: 'currency',
@@ -16,7 +18,24 @@ export const createPriceFormatter = ({
       maximumFractionDigits: fraction_digits,
     });
 
-    return formatter.format(price);
+    const formattedPrice = formatter.format(price);
+
+    if (position === 'left') {
+      return formattedPrice;
+    }
+
+    if (position === 'right') {
+      const parts = formatter.formatToParts(price);
+      const currencyPart = parts.find((part) => part.type === 'currency');
+      const numberParts = parts.filter((part) => part.type !== 'currency');
+
+      if (currencyPart) {
+        const numberString = numberParts.map((part) => part.value).join('');
+        return `${numberString}${currencyPart.value}`;
+      }
+    }
+
+    return formattedPrice;
   };
 };
 
