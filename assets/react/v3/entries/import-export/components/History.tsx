@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { useCallback, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -50,8 +50,11 @@ const History = () => {
     return 'import';
   }, []);
 
-  const formatItemCount = (count: number, singular: string, plural: string): string => {
-    return sprintf(count === 1 ? singular : plural, count);
+  const formatItemCount = (count: number, type: 'course' | 'bundle'): string => {
+    if (type === 'course') {
+      return sprintf(_n('Course', 'Courses (%d)', count, 'tutor'), count);
+    }
+    return sprintf(_n('Bundle', 'Bundles (%d)', count, 'tutor'), count);
   };
 
   const generateHistoryTitle = (item: ImportExportHistory): string => {
@@ -61,44 +64,22 @@ const History = () => {
       return '';
     }
 
-    const contentTypeConfig = {
-      courses: {
-        singular: __('Course', 'tutor'),
-        plural: __('Courses (%d)', 'tutor'),
-      },
-      'course-bundle': {
-        singular: __('Bundle', 'tutor'),
-        plural: __('Bundles (%d)', 'tutor'),
-      },
-      settings: {
-        label: __('Settings', 'tutor'),
-      },
-    } as const;
-
     const formattedItems: string[] = [];
 
     const successfulCourses = completedContents.courses?.success || [];
     if (successfulCourses.length > 0) {
-      const coursesText = formatItemCount(
-        successfulCourses.length,
-        contentTypeConfig.courses.singular,
-        contentTypeConfig.courses.plural,
-      );
+      const coursesText = formatItemCount(successfulCourses.length, 'course');
       formattedItems.push(coursesText);
     }
 
     const successfulBundles = completedContents['course-bundle']?.success || [];
     if (successfulBundles.length > 0) {
-      const bundlesText = formatItemCount(
-        successfulBundles.length,
-        contentTypeConfig['course-bundle'].singular,
-        contentTypeConfig['course-bundle'].plural,
-      );
+      const bundlesText = formatItemCount(successfulBundles.length, 'bundle');
       formattedItems.push(bundlesText);
     }
 
     if (completedContents.settings === true) {
-      formattedItems.push(contentTypeConfig.settings.label);
+      formattedItems.push('Settings');
     }
 
     return formattedItems.join(', ');
