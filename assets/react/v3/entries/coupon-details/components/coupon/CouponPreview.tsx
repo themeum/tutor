@@ -11,15 +11,35 @@ import { useFormContext } from 'react-hook-form';
 import EmptyPreviewDetail from './EmptyPreviewDetail';
 import EmptyPreviewTop from './EmptyPreviewTop';
 
-const appliesToLabel: Record<CouponAppliesTo, string> = {
-  all_courses_and_bundles: __('all courses and bundles', 'tutor'),
-  all_bundles: __('all bundles', 'tutor'),
-  all_membership_plans: __('all membership plans', 'tutor'),
-  specific_courses: __('specific courses', 'tutor'),
-  specific_bundles: __('specific bundles', 'tutor'),
-  all_courses: __('all courses', 'tutor'),
-  specific_category: __('specific category', 'tutor'),
-  specific_membership_plans: __('membership plans', 'tutor'),
+const discountTypeText = (appliesTo: CouponAppliesTo, discountText: string) => {
+  switch (appliesTo) {
+    case 'all_courses_and_bundles':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off all courses and bundles', 'tutor'), discountText);
+    case 'all_bundles':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off all bundles', 'tutor'), discountText);
+    case 'all_membership_plans':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off all membership plans', 'tutor'), discountText);
+    case 'specific_courses':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off specific courses', 'tutor'), discountText);
+    case 'specific_bundles':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off specific bundles', 'tutor'), discountText);
+    case 'all_courses':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off all courses', 'tutor'), discountText);
+    case 'specific_category':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off specific category', 'tutor'), discountText);
+    case 'specific_membership_plans':
+      // Translators: %s: Percentage or Amount of discount
+      return sprintf(__('%s off membership plans', 'tutor'), discountText);
+    default:
+      return '';
+  }
 };
 
 function CouponPreview() {
@@ -102,7 +122,7 @@ function CouponPreview() {
               <h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
               <ul css={styles.previewList} data-preview-list>
                 <Show when={discountAmount}>
-                  <li>{sprintf(__('%s off %s', 'tutor'), discountText, appliesToLabel[appliesTo])}</li>
+                  <li>{discountTypeText(appliesTo, discountText)}</li>
                 </Show>
               </ul>
             </div>
