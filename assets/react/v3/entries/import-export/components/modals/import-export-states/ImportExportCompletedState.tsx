@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
@@ -114,20 +114,18 @@ const ImportExportCompletedState = ({
     },
   };
 
-  const formatItemCount = (count: number, singular: string, plural: string): string => {
-    return sprintf(count === 1 ? singular : plural, count);
-  };
-
   const formatFailedItems = (failedCourseIds: number[], failedBundleIds: number[]): string => {
     const failedItems: string[] = [];
 
     if (failedCourseIds.length > 0) {
-      const coursesText = formatItemCount(failedCourseIds.length, __('%d Course', 'tutor'), __('%d Courses', 'tutor'));
+      /* translators: %d is the number of courses */
+      const coursesText = sprintf(_n('%d Course', '%d Courses', failedCourseIds.length, 'tutor'));
       failedItems.push(coursesText);
     }
 
     if (failedBundleIds.length > 0) {
-      const bundlesText = formatItemCount(failedBundleIds.length, __('%d Bundle', 'tutor'), __('%d Bundles', 'tutor'));
+      /* translators: %d is the number of bundles */
+      const bundlesText = sprintf(_n('%d Bundle', '%d Bundles', failedBundleIds.length, 'tutor'));
       failedItems.push(bundlesText);
     }
 
@@ -141,12 +139,14 @@ const ImportExportCompletedState = ({
     const formattedItems: string[] = [];
 
     if (courses?.length) {
-      const courseText = formatItemCount(courses.length, __('%d Course', 'tutor'), __('%d Courses', 'tutor'));
+      /* translators: %d is the number of courses */
+      const courseText = sprintf(_n('%d Course', '%d Courses', courses.length, 'tutor'));
       formattedItems.push(courseText);
     }
 
     if (bundles?.length) {
-      const bundleText = formatItemCount(bundles.length, __('%d Bundle', 'tutor'), __('%d Bundles', 'tutor'));
+      /* translators: %d is the number of bundles */
+      const bundleText = sprintf(_n('%d Bundle', '%d Bundles', bundles.length, 'tutor'));
       formattedItems.push(bundleText);
     }
 
@@ -235,9 +235,13 @@ const ImportExportCompletedState = ({
                 <Show when={failedCourseIds.length > 0}>
                   <div css={styles.failedItem}>
                     <label>
-                      {failedCourseIds.length > 1
-                        ? sprintf(__('Course IDs (%d)', 'tutor'), failedCourseIds.length)
-                        : sprintf(__('Course ID (%d)', 'tutor'), failedCourseIds.length)}
+                      {
+                        /* translators: %d is the number of failed course IDs */
+                        sprintf(
+                          _n('Course ID (%d)', 'Course IDs (%d)', failedCourseIds.length, 'tutor'),
+                          failedCourseIds.length,
+                        )
+                      }
                     </label>
                     <div css={styles.failedList}>
                       <For each={failedCourseIds}>
@@ -253,9 +257,13 @@ const ImportExportCompletedState = ({
                 <Show when={failedBundleIds.length > 0}>
                   <div css={styles.failedItem}>
                     <label>
-                      {failedBundleIds.length > 1
-                        ? sprintf(__('Bundle IDs (%d)', 'tutor'), failedBundleIds.length)
-                        : sprintf(__('Bundle ID (%d)', 'tutor'), failedBundleIds.length)}
+                      {
+                        /* translators: %d is the number of failed bundle IDs */
+                        sprintf(
+                          _n('Bundle ID (%d)', 'Bundle IDs (%d)', failedBundleIds.length, 'tutor'),
+                          failedBundleIds.length,
+                        )
+                      }
                     </label>
                     <div css={styles.failedList}>
                       <For each={failedBundleIds}>

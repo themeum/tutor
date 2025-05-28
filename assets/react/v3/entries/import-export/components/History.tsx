@@ -41,11 +41,15 @@ const History = () => {
 
     const contentTypeConfig = {
       courses: {
+        /* translators: %s is the course number */
         singular: __('Course (%d)', 'tutor'),
+        /* translators: %s is the course number */
         plural: __('Courses (%d)', 'tutor'),
       },
       'course-bundle': {
+        /* translators: %s is the bundle number */
         singular: __('Bundle (%d)', 'tutor'),
+        /* translators: %s is the bundle number */
         plural: __('Bundles (%d)', 'tutor'),
       },
       settings: {

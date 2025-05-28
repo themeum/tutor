@@ -93,7 +93,12 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
         return (
           <div css={styles.price}>
             {item.plan_start_price ? (
-              <span css={styles.startingFrom}>{sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)}</span>
+              <span css={styles.startingFrom}>
+                {
+                  /* translators: %s is the starting price */
+                  sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)
+                }
+              </span>
             ) : (
               <>
                 <span>{item.sale_price ? item.sale_price : item.regular_price}</span>

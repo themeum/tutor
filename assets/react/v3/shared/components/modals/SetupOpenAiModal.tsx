@@ -98,6 +98,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
             <div css={styles.infoText}>
               <div
                 dangerouslySetInnerHTML={{
+                  /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
                   __html: sprintf(
                     __(
                       'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',

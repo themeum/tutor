@@ -49,11 +49,14 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
         <div css={styles.information}>
           <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
             <span>
-              {sprintf(
-                __('Renew every %s %s', 'tutor'),
-                subscription.recurring_value.toString().padStart(2, '0'),
-                formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
-              )}
+              {
+                /* translators: %1$s is the number and the %2$s is the repeat unit (e.g., day, week, month) */
+                sprintf(
+                  __('Renew every %1$s %2$s', 'tutor'),
+                  subscription.recurring_value.toString().padStart(2, '0'),
+                  formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
+                )
+              }
             </span>
           </Show>
 
