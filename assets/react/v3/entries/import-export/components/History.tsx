@@ -1,22 +1,21 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Table, { type Column } from '@TutorShared/molecules/Table';
-import ThreeDots, { ThreeDotsOption } from '@TutorShared/molecules/ThreeDots';
 
 import {
   type ImportExportHistory,
   useDeleteImportExportHistoryMutation,
   useImportExportHistoryQuery,
 } from '@ImportExport/services/import-export';
+import Button from '@TutorShared/atoms/Button';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const History = () => {
-  const [isThreeDotMenuOpen, setIsThreeDotMenuOpen] = useState(-1);
   const getImportExportHistoryQuery = useImportExportHistoryQuery();
   const deleteImportExportHistoryMutation = useDeleteImportExportHistoryMutation();
 
@@ -129,30 +128,17 @@ const History = () => {
       },
     },
     {
-      Cell: (item, index) => {
+      Cell: (item) => {
         return (
-          <div css={styles.action}>
-            <ThreeDots
-              isOpen={isThreeDotMenuOpen === index}
-              onClick={() => setIsThreeDotMenuOpen(isThreeDotMenuOpen === index ? -1 : index)}
-              closePopover={() => setIsThreeDotMenuOpen(-1)}
-              isInverse
-              size="small"
-              dotsOrientation="vertical"
-              wrapperCss={styles.threeDot}
-            >
-              <ThreeDotsOption
-                isTrash
-                text={__('Delete', 'tutor')}
-                disabled={deleteImportExportHistoryMutation.isPending}
-                onClick={async () => {
-                  await handleDeleteHistory(item.option_id);
-                  setIsThreeDotMenuOpen(-1);
-                }}
-                icon={<SVGIcon name="delete" width={16} height={16} />}
-              />
-            </ThreeDots>
-          </div>
+          <Button
+            data-delete-history
+            size="small"
+            variant="primary"
+            isOutlined
+            onClick={() => handleDeleteHistory(item.option_id)}
+          >
+            {__('Delete', 'tutor')}
+          </Button>
         );
       },
     },
@@ -196,9 +182,20 @@ const styles = {
         tr {
           background-color: ${colorTokens.background.white};
           ${typography.small('medium')}
+          [data-delete-history] {
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+          }
 
           td:nth-of-type(n + 3) {
             font-weight: ${fontWeight.regular};
+          }
+
+          &:hover {
+            background-color: ${colorTokens.background.white};
+            [data-delete-history] {
+              opacity: 1;
+            }
           }
         }
       }
@@ -213,6 +210,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[4]};
+    min-width: 80px;
   `,
   activeTag: css`
     ${typography.tiny('medium')}
