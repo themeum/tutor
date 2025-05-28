@@ -585,13 +585,19 @@ class Options_V2 {
 		$tutor_saved_option   = get_option( 'tutor_option' );
 
 		foreach ( $attr as $sections ) {
-			foreach ( $sections as $section ) {
-				foreach ( $section['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $field ) {
-						if ( isset( $tutor_default_option[ $field['key'] ] ) ) {
-							$attr_default[ $field['key'] ] = $tutor_saved_option[ $field['key'] ];
-						} elseif ( null !== $field['key'] ) {
-								$attr_default[ $field['key'] ] = $field['default'];
+			if ( is_array( $sections ) && count( $sections ) ) {
+				foreach ( $sections as $section ) {
+					foreach ( $section['blocks'] as $blocks ) {
+						if ( isset( $blocks['fields'] ) ) {
+							foreach ( $blocks['fields'] as $field ) {
+								if ( isset( $field['key'] ) ) {
+									if ( isset( $tutor_default_option[ $field['key'] ] ) ) {
+										$attr_default[ $field['key'] ] = $tutor_saved_option[ $field['key'] ];
+									} else {
+										$attr_default[ $field['key'] ] = $field['default'] ?? '';
+									}
+								}
+							}
 						}
 					}
 				}
