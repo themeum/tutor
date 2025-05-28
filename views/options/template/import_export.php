@@ -113,11 +113,12 @@ if ( $tutor_options ) :
 			</div>
 			<div class="tutor-option-field-input">
 				<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-reset-all" 
-						data-tutor-modal-target="tutor-modal-bulk-action" 
-						data-btntext="<?php esc_attr_e( 'Yes, Reset Settings', 'tutor' ); ?>" 
-						data-heading="<?php esc_attr_e( 'Reset All Settings?', 'tutor' ); ?>" 
-						data-message="<?php esc_attr_e( 'WARNING! This will reset all settings to default, please proceed with caution.', 'tutor' ); ?>" 
-						id="tutor_reset_options"><?php esc_html_e( 'Reset All Settings', 'tutor' ); ?></button>
+					data-tutor-modal-target="tutor-modal-bulk-action" 
+					data-btntext="<?php esc_attr_e( 'Yes, Reset Settings', 'tutor' ); ?>" 
+					data-heading="<?php esc_attr_e( 'Reset All Settings?', 'tutor' ); ?>" 
+					data-message="<?php esc_attr_e( 'WARNING! This will reset all settings to default, please proceed with caution.', 'tutor' ); ?>" 
+					id="tutor_reset_options"><?php esc_html_e( 'Reset All Settings', 'tutor' ); ?>
+				</button>
 			</div>
 		</div>
 	</div>
