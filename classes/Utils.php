@@ -4063,24 +4063,30 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 3.6.0
+	 *
+	 * Fetching data by context, either course or comment
+	 *
 	 * @param int   $object id Course/Comment id.
 	 * @param int   $start offset.
 	 * @param int   $limit limit.
 	 * @param bool  $count_only count only.
 	 * @param array $status_in status list.
 	 * @param int   $include_user_id include user id.
+	 * @param int   $is_course_object Whether fetching by course or not.
 	 *
 	 * @return array|null|object
 	 */
 	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true  ) {
 		global $wpdb;
 
-		$where_clause = '_reviews.comment_post_ID = %d';
+		$object_id = (int) $object_id;
 
-		$object_id = (int) $this->get_post_id( $object_id );
+		$where_clause = '_reviews.comment_ID = %d';
 
-		if ( ! $is_course_object ) {
-			$where_clause = '_reviews.comment_ID = %d';
+		if ( $is_course_object ) {
+			$object_id    = $this->get_post_id( $object_id );
+			$where_clause = '_reviews.comment_post_ID = %d';
 		}
 
 		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
