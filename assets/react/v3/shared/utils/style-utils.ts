@@ -488,6 +488,7 @@ export const styleUtils = {
     height: 32px;
     padding: 0;
     margin: 0;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
