@@ -63,11 +63,11 @@ const History = () => {
 
     const contentTypeConfig = {
       courses: {
-        singular: __('Course (%d)', 'tutor'),
+        singular: __('Course', 'tutor'),
         plural: __('Courses (%d)', 'tutor'),
       },
       'course-bundle': {
-        singular: __('Bundle (%d)', 'tutor'),
+        singular: __('Bundle', 'tutor'),
         plural: __('Bundles (%d)', 'tutor'),
       },
       settings: {
