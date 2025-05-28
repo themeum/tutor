@@ -131,6 +131,7 @@ const endpoints = {
   EXPORT_CONTENTS: isTutorPro ? 'tutor_pro_export' : 'tutor_export_settings',
   IMPORT_CONTENTS: isTutorPro ? 'tutor_pro_import' : 'tutor_import_settings',
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
-};
+  DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
+} as const;
 
 export default endpoints;

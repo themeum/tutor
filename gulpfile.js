@@ -217,6 +217,7 @@ gulp.task('copy', function () {
 			'!phpcs.xml',
 			'!phpcs.xml.dist',
 			'!./tutor-droip/**',
+			'!./includes/droip/**',
 			'!./cypress/**',
 			'!./cypress.config.ts',
 		])
@@ -234,8 +235,8 @@ gulp.task('copy-fonts', function () {
 
 gulp.task("copy-tutor-droip", function () {
 	return gulp
-		.src("tutor-droip/dist/**")
-		.pipe(gulp.dest("build/tutor/tutor-droip"));
+		.src("includes/droip/dist/**")
+		.pipe(gulp.dest("build/tutor/includes/droip"));
 });
 
 gulp.task('make-zip', function () {

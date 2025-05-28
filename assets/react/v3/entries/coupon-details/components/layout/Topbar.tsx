@@ -13,7 +13,6 @@ import {
   useCreateCouponMutation,
   useUpdateCouponMutation,
 } from '@CouponServices/coupon';
-import config from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -49,7 +48,7 @@ function Topbar() {
   };
 
   const handleGoBack = () => {
-    window.location.href = config.TUTOR_COUPONS_PAGE;
+    window.history.back();
   };
 
   return (
@@ -158,7 +157,6 @@ const styles = {
   left: css`
     display: flex;
     gap: ${spacing[16]};
-    width: 100%;
   `,
   right: css`
     display: flex;
