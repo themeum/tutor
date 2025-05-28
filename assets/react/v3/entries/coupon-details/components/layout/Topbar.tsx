@@ -157,7 +157,6 @@ const styles = {
   left: css`
     display: flex;
     gap: ${spacing[16]};
-    width: 100%;
   `,
   right: css`
     display: flex;
