@@ -12,12 +12,14 @@ import EmptyPreviewDetail from './EmptyPreviewDetail';
 import EmptyPreviewTop from './EmptyPreviewTop';
 
 const appliesToLabel: Record<CouponAppliesTo, string> = {
-  all_courses_and_bundles: __('all courses', 'tutor'),
+  all_courses_and_bundles: __('all courses and bundles', 'tutor'),
   all_bundles: __('all bundles', 'tutor'),
+  all_membership_plans: __('all membership plans', 'tutor'),
   specific_courses: __('specific courses', 'tutor'),
   specific_bundles: __('specific bundles', 'tutor'),
   all_courses: __('all courses', 'tutor'),
   specific_category: __('specific category', 'tutor'),
+  specific_membership_plans: __('membership plans', 'tutor'),
 };
 
 function CouponPreview() {
