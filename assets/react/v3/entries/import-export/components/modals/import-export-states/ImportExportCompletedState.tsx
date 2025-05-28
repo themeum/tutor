@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
@@ -116,39 +116,24 @@ const ImportExportCompletedState = ({
     },
   };
 
-  const formatItemCount = (count: number, singular: string, plural: string): string => {
-    return sprintf(count === 1 ? singular : plural, count);
-  };
+  const formatItemCount = (count: number, type: 'course' | 'bundle'): string => {
+    if (type === 'course') {
+      return sprintf(_n('Course (%d)', 'Courses (%d)', count, 'tutor'), count);
+    }
 
-  const courseBundleTextMapping = {
-    course: {
-      singular: __('Course ID (%d)', 'tutor'),
-      plural: __('Course IDs (%d)', 'tutor'),
-    },
-    bundle: {
-      singular: __('Bundle ID (%d)', 'tutor'),
-      plural: __('Bundle IDs (%d)', 'tutor'),
-    },
+    return sprintf(_n('Bundle (%d)', 'Bundles (%d)', count, 'tutor'), count);
   };
 
   const formatFailedItems = (): string => {
     const failedItems: string[] = [];
 
     if (completedWithErrorsCourses.length > 0) {
-      const coursesText = formatItemCount(
-        completedWithErrorsCourses.length,
-        courseBundleTextMapping.course.singular,
-        courseBundleTextMapping.course.plural,
-      );
+      const coursesText = formatItemCount(completedWithErrorsCourses.length, 'course');
       failedItems.push(coursesText);
     }
 
     if (completedWithErrorsBundles.length > 0) {
-      const bundlesText = formatItemCount(
-        completedWithErrorsBundles.length,
-        courseBundleTextMapping.bundle.singular,
-        courseBundleTextMapping.bundle.plural,
-      );
+      const bundlesText = formatItemCount(completedWithErrorsBundles.length, 'bundle');
       failedItems.push(bundlesText);
     }
 
@@ -162,20 +147,12 @@ const ImportExportCompletedState = ({
     const formattedItems: string[] = [];
 
     if (successFullyCompletedCourses.length) {
-      const courseText = formatItemCount(
-        successFullyCompletedCourses.length,
-        courseBundleTextMapping.course.singular,
-        courseBundleTextMapping.course.plural,
-      );
+      const courseText = formatItemCount(successFullyCompletedCourses.length, 'course');
       formattedItems.push(courseText);
     }
 
     if (successFullyCompletedBundles.length) {
-      const bundleText = formatItemCount(
-        successFullyCompletedBundles.length,
-        courseBundleTextMapping.bundle.singular,
-        courseBundleTextMapping.bundle.plural,
-      );
+      const bundleText = formatItemCount(successFullyCompletedBundles.length, 'bundle');
       formattedItems.push(bundleText);
     }
 

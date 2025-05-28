@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { type ImportExportContentResponseBase } from '@ImportExport/services/import-export';
 
@@ -11,17 +11,6 @@ const generateImportExportMessage = (
     inProgress: type === 'export' ? __('Export in progress...', 'tutor') : __('Import in progress...', 'tutor'),
     verb: type === 'export' ? __('Exported', 'tutor') : __('Imported', 'tutor'),
     failed: __('failed', 'tutor'),
-  };
-
-  const textMapping = {
-    course: {
-      singular: __('Course', 'tutor'),
-      plural: __('Courses', 'tutor'),
-    },
-    bundle: {
-      singular: __('Bundle', 'tutor'),
-      plural: __('Bundles', 'tutor'),
-    },
   };
 
   // Early return for missing data
@@ -41,22 +30,22 @@ const generateImportExportMessage = (
   const noFailures = completedWithErrorsCourses.length === 0 && completedWithErrorsBundles.length === 0;
 
   // Helper function for formatting count with singular/plural text
-  const formatCount = (count: number, singular: string, plural: string): string =>
-    sprintf(__(count === 1 ? '%d ' + singular : '%d ' + plural, 'tutor'), count);
+  const formatCount = (count: number, type: 'course' | 'bundle'): string => {
+    if (type === 'course') {
+      return sprintf(_n('%d Course', '%d Courses', count, 'tutor'), count);
+    }
+    return sprintf(_n('%d Bundle', '%d Bundles', count, 'tutor'), count);
+  };
 
   // Handle case with only failures and no completed contents
   if (!completedContents || Object.keys(completedContents).length === 0) {
     if (!noFailures) {
       const items = [];
       if (completedWithErrorsCourses.length) {
-        items.push(
-          formatCount(completedWithErrorsCourses.length, textMapping.course.singular, textMapping.course.plural),
-        );
+        items.push(formatCount(completedWithErrorsCourses.length, 'course'));
       }
       if (completedWithErrorsBundles.length) {
-        items.push(
-          formatCount(completedWithErrorsBundles.length, textMapping.bundle.singular, textMapping.bundle.plural),
-        );
+        items.push(formatCount(completedWithErrorsBundles.length, 'bundle'));
       }
       return `${items.join(', ')} ${operationText.failed}`;
     }
@@ -66,15 +55,11 @@ const generateImportExportMessage = (
   const successItems = [];
 
   if (successFullyCompletedCourses.length) {
-    successItems.push(
-      formatCount(successFullyCompletedCourses.length, textMapping.course.singular, textMapping.course.plural),
-    );
+    successItems.push(formatCount(successFullyCompletedCourses.length, 'course'));
   }
 
   if (successFullyCompletedBundles.length) {
-    successItems.push(
-      formatCount(successFullyCompletedBundles.length, textMapping.bundle.singular, textMapping.bundle.plural),
-    );
+    successItems.push(formatCount(successFullyCompletedBundles.length, 'bundle'));
   }
 
   if (successFullyCompletedSettings) {
@@ -84,14 +69,10 @@ const generateImportExportMessage = (
   // Create failed items list (without the word "failed")
   const failedItems = [];
   if (completedWithErrorsCourses.length) {
-    failedItems.push(
-      formatCount(completedWithErrorsCourses.length, textMapping.course.singular, textMapping.course.plural),
-    );
+    failedItems.push(formatCount(completedWithErrorsCourses.length, 'course'));
   }
   if (completedWithErrorsBundles.length) {
-    failedItems.push(
-      formatCount(completedWithErrorsBundles.length, textMapping.bundle.singular, textMapping.bundle.plural),
-    );
+    failedItems.push(formatCount(completedWithErrorsBundles.length, 'bundle'));
   }
 
   // Early return if nothing to report
