@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Table, { type Column } from '@TutorShared/molecules/Table';
@@ -18,11 +18,17 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 const History = () => {
   const getImportExportHistoryQuery = useImportExportHistoryQuery();
   const deleteImportExportHistoryMutation = useDeleteImportExportHistoryMutation();
+  const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
 
   const history = getImportExportHistoryQuery.data || [];
 
   const handleDeleteHistory = async (itemId: string) => {
-    await deleteImportExportHistoryMutation.mutateAsync(itemId);
+    setDeletingItemId(itemId);
+    try {
+      await deleteImportExportHistoryMutation.mutateAsync(itemId);
+    } finally {
+      setDeletingItemId(null);
+    }
   };
 
   const renderImportExportLabel = useCallback((type: 'import' | 'export') => {
@@ -129,12 +135,16 @@ const History = () => {
     },
     {
       Cell: (item) => {
+        const isCurrentItemDeleting = deletingItemId === item.option_id;
+
         return (
           <Button
             data-delete-history
             size="small"
-            variant="primary"
+            variant="secondary"
             isOutlined
+            disabled={isCurrentItemDeleting}
+            loading={isCurrentItemDeleting}
             onClick={() => handleDeleteHistory(item.option_id)}
           >
             {__('Delete', 'tutor')}
@@ -148,7 +158,7 @@ const History = () => {
     <div css={styles.wrapper}>
       <div css={styles.title}>{__('History', 'tutor')}</div>
 
-      <div css={styles.history}>
+      <div css={styles.history({ deletingItemId })}>
         <Table
           headerHeight={44}
           loading={getImportExportHistoryQuery.isLoading}
@@ -173,7 +183,7 @@ const styles = {
     ${typography.body()}
     color: ${colorTokens.text.subdued};
   `,
-  history: css`
+  history: ({ deletingItemId = null }: { deletingItemId?: string | null }) => css`
     border-radius: ${borderRadius[6]};
     overflow: hidden;
 
@@ -186,6 +196,8 @@ const styles = {
             opacity: 0;
             transition: opacity 0.2s ease-in-out;
           }
+
+          ${deletingItemId ? `[data-delete-history="${deletingItemId}"] { opacity: 1; }` : ''}
 
           td:nth-of-type(n + 3) {
             font-weight: ${fontWeight.regular};
