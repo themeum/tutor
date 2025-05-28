@@ -1,4 +1,4 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 import { type ImportExportContentResponseBase } from '@ImportExport/services/import-export';
 
@@ -18,51 +18,61 @@ const generateImportExportMessage = (
     return operationText.inProgress;
   }
 
-  const { completed_contents: completedContents, failed_course_ids = [], failed_bundle_ids = [] } = importExportStatus;
-  const noFailures = failed_course_ids.length === 0 && failed_bundle_ids.length === 0;
+  const completedContents = importExportStatus.completed_contents;
+
+  const successFullyCompletedCourses = completedContents?.courses?.success || [];
+  const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
+  const successFullyCompletedSettings = completedContents?.settings;
+
+  const completedWithErrorsCourses = completedContents?.courses?.failed || [];
+  const completedWithErrorsBundles = completedContents?.['course-bundle']?.failed || [];
+
+  const noFailures = completedWithErrorsCourses.length === 0 && completedWithErrorsBundles.length === 0;
 
   // Helper function for formatting count with singular/plural text
-  const formatCount = (count: number, singular: string, plural: string): string =>
-    sprintf(__(count === 1 ? '%d ' + singular : '%d ' + plural, 'tutor'), count);
+  const formatCount = (count: number, type: 'course' | 'bundle'): string => {
+    if (type === 'course') {
+      return sprintf(_n('%d Course', '%d Courses', count, 'tutor'), count);
+    }
+    return sprintf(_n('%d Bundle', '%d Bundles', count, 'tutor'), count);
+  };
 
   // Handle case with only failures and no completed contents
   if (!completedContents || Object.keys(completedContents).length === 0) {
     if (!noFailures) {
       const items = [];
-      if (failed_course_ids.length) {
-        items.push(formatCount(failed_course_ids.length, 'Course', 'Courses'));
+      if (completedWithErrorsCourses.length) {
+        items.push(formatCount(completedWithErrorsCourses.length, 'course'));
       }
-      if (failed_bundle_ids.length) {
-        items.push(formatCount(failed_bundle_ids.length, 'Bundle', 'Bundles'));
+      if (completedWithErrorsBundles.length) {
+        items.push(formatCount(completedWithErrorsBundles.length, 'bundle'));
       }
       return `${items.join(', ')} ${operationText.failed}`;
     }
     return operationText.inProgress;
   }
 
-  // Process successful and failed items
-  const { courses, 'course-bundle': bundles, settings } = completedContents;
   const successItems = [];
 
-  if (courses?.length) {
-    successItems.push(formatCount(courses.length, 'Course', 'Courses'));
+  if (successFullyCompletedCourses.length) {
+    successItems.push(formatCount(successFullyCompletedCourses.length, 'course'));
   }
 
-  if (bundles?.length) {
-    successItems.push(formatCount(bundles.length, 'Bundle', 'Bundles'));
+  if (successFullyCompletedBundles.length) {
+    successItems.push(formatCount(successFullyCompletedBundles.length, 'bundle'));
   }
 
-  if (settings) {
+  if (successFullyCompletedSettings) {
     successItems.push(__('Settings', 'tutor'));
   }
 
   // Create failed items list (without the word "failed")
   const failedItems = [];
-  if (failed_course_ids.length) {
-    failedItems.push(formatCount(failed_course_ids.length, 'Course', 'Courses'));
+  if (completedWithErrorsCourses.length) {
+    failedItems.push(formatCount(completedWithErrorsCourses.length, 'course'));
   }
-  if (failed_bundle_ids.length) {
-    failedItems.push(formatCount(failed_bundle_ids.length, 'Bundle', 'Bundles'));
+  if (completedWithErrorsBundles.length) {
+    failedItems.push(formatCount(completedWithErrorsBundles.length, 'bundle'));
   }
 
   // Early return if nothing to report

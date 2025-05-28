@@ -1,28 +1,41 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import { useCallback, useState } from 'react';
 
-import { type ImportExportHistory, useImportExportHistoryQuery } from '@ImportExport/services/import-export';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Table, { type Column } from '@TutorShared/molecules/Table';
+import ThreeDots, { ThreeDotsOption } from '@TutorShared/molecules/ThreeDots';
+
+import {
+  type ImportExportHistory,
+  useDeleteImportExportHistoryMutation,
+  useImportExportHistoryQuery,
+} from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import Table, { type Column } from '@TutorShared/molecules/Table';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const History = () => {
+  const [isThreeDotMenuOpen, setIsThreeDotMenuOpen] = useState(-1);
   const getImportExportHistoryQuery = useImportExportHistoryQuery();
+  const deleteImportExportHistoryMutation = useDeleteImportExportHistoryMutation();
 
   const history = getImportExportHistoryQuery.data || [];
 
-  const renderImportExportLabel = (type: 'import' | 'export') => {
+  const handleDeleteHistory = async (itemId: string) => {
+    await deleteImportExportHistoryMutation.mutateAsync(itemId);
+  };
+
+  const renderImportExportLabel = useCallback((type: 'import' | 'export') => {
     return (
-      <span css={styles.importExportLabel({ type })}>
+      <span css={styles.importExportLabel}>
         <SVGIcon name={type} width={16} height={16} />
         {type === 'import' ? __('Imported', 'tutor') : __('Exported', 'tutor')}
       </span>
     );
-  };
+  }, []);
 
-  const itemType = (item: ImportExportHistory) => {
+  const itemType = useCallback((item: ImportExportHistory) => {
     if (item.option_name.includes('export')) {
       return 'export';
     }
@@ -30,14 +43,18 @@ const History = () => {
       return 'import';
     }
     return 'import';
-  };
+  }, []);
 
   const formatItemCount = (count: number, singular: string, plural: string): string => {
     return sprintf(count === 1 ? singular : plural, count);
   };
 
   const generateHistoryTitle = (item: ImportExportHistory): string => {
-    const completedContents = item.option_value.completed_contents || {};
+    const completedContents = item.option_value.completed_contents;
+
+    if (!completedContents) {
+      return '';
+    }
 
     const contentTypeConfig = {
       courses: {
@@ -55,38 +72,36 @@ const History = () => {
 
     const formattedItems: string[] = [];
 
-    for (const [key, value] of Object.entries(completedContents)) {
-      if (!value || (Array.isArray(value) && value.length === 0)) {
-        continue;
-      }
+    const successfulCourses = completedContents.courses?.success || [];
+    if (successfulCourses.length > 0) {
+      const coursesText = formatItemCount(
+        successfulCourses.length,
+        contentTypeConfig.courses.singular,
+        contentTypeConfig.courses.plural,
+      );
+      formattedItems.push(coursesText);
+    }
 
-      const contentKey = key as keyof typeof contentTypeConfig;
-      const config = contentTypeConfig[contentKey];
+    const successfulBundles = completedContents['course-bundle']?.success || [];
+    if (successfulBundles.length > 0) {
+      const bundlesText = formatItemCount(
+        successfulBundles.length,
+        contentTypeConfig['course-bundle'].singular,
+        contentTypeConfig['course-bundle'].plural,
+      );
+      formattedItems.push(bundlesText);
+    }
 
-      if (!config) {
-        continue;
-      }
-
-      if (contentKey === 'settings') {
-        if ('label' in config) {
-          formattedItems.push(config.label);
-        }
-        continue;
-      }
-
-      if (Array.isArray(value) && value.length > 0) {
-        if ('singular' in config && 'plural' in config) {
-          const itemText = formatItemCount(value.length, config.singular, config.plural);
-          formattedItems.push(itemText);
-        }
-      } else if ('singular' in config && 'plural' in config) {
-        const itemText = formatItemCount(1, config.singular, config.plural);
-        formattedItems.push(itemText);
-      }
+    if (completedContents.settings === true) {
+      formattedItems.push(contentTypeConfig.settings.label);
     }
 
     return formattedItems.join(', ');
   };
+
+  if (history.length === 0) {
+    return null;
+  }
 
   const columns: Column<ImportExportHistory>[] = [
     {
@@ -111,6 +126,34 @@ const History = () => {
       Header: <span css={styles.tableHeader}>{__('Date', 'tutor')}</span>,
       Cell: (item) => {
         return <div css={styles.historyTitle}>{item.option_value.created_at}</div>;
+      },
+    },
+    {
+      Cell: (item, index) => {
+        return (
+          <div css={styles.action}>
+            <ThreeDots
+              isOpen={isThreeDotMenuOpen === index}
+              onClick={() => setIsThreeDotMenuOpen(isThreeDotMenuOpen === index ? -1 : index)}
+              closePopover={() => setIsThreeDotMenuOpen(-1)}
+              isInverse
+              size="small"
+              dotsOrientation="vertical"
+              wrapperCss={styles.threeDot}
+            >
+              <ThreeDotsOption
+                isTrash
+                text={__('Delete', 'tutor')}
+                disabled={deleteImportExportHistoryMutation.isPending}
+                onClick={async () => {
+                  await handleDeleteHistory(item.option_id);
+                  setIsThreeDotMenuOpen(-1);
+                }}
+                icon={<SVGIcon name="delete" width={16} height={16} />}
+              />
+            </ThreeDots>
+          </div>
+        );
       },
     },
   ];
@@ -188,19 +231,19 @@ const styles = {
     align-items: center;
     justify-content: flex-end;
   `,
-  importExportLabel: ({ type }: { type: 'import' | 'export' }) => css`
+  threeDot: css`
+    width: 24px;
+    height: 24px;
+  `,
+  importExportLabel: css`
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[4]};
     ${typography.small('medium')}
-
-    color: ${type === 'import' ? colorTokens.text.brand : colorTokens.text.hints};
+    color: ${colorTokens.text.hints};
 
     svg {
-      color: ${type === 'import' ? colorTokens.icon.brand : colorTokens.icon.default};
+      color: ${colorTokens.icon.default};
     }
-  `,
-  brandIcon: css`
-    color: ${colorTokens.text.brand} !important;
   `,
 };

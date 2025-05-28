@@ -100,8 +100,6 @@ const Import = () => {
           }
         },
         completedContents: importResponse?.completed_contents,
-        failedCourseIds: importResponse?.failed_course_ids,
-        failedBundleIds: importResponse?.failed_bundle_ids,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

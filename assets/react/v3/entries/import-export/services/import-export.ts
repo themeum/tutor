@@ -146,6 +146,11 @@ export interface ExportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
+interface ImportExportCompletedContentsItem {
+  success: string[];
+  failed: string[];
+}
+
 export interface ImportExportContentResponseBase {
   job_id: string;
   job_progress: number;
@@ -156,13 +161,10 @@ export interface ImportExportContentResponseBase {
     sub_contents: string[];
   }[];
   completed_contents: {
-    courses: string[];
-    'course-bundle': string[];
+    courses: ImportExportCompletedContentsItem;
+    'course-bundle': ImportExportCompletedContentsItem;
     settings: boolean;
   };
-
-  failed_course_ids: [];
-  failed_bundle_ids: [];
 }
 
 export interface ExportContentResponse extends ImportExportContentResponseBase {
@@ -259,8 +261,8 @@ export interface ImportExportHistory {
     exported_data?: unknown;
     imported_data?: ExportableContentType[];
     completed_contents?: {
-      courses: string[];
-      'course-bundle': string[];
+      courses: ImportExportCompletedContentsItem;
+      'course-bundle': ImportExportCompletedContentsItem;
       settings: boolean;
     };
     failed_course_ids?: [];
@@ -279,5 +281,37 @@ export const useImportExportHistoryQuery = () => {
     queryKey: ['ImportExportHistory'],
     queryFn: () => getImportExportHistory(),
     enabled: isTutorPro,
+  });
+};
+
+const deleteHistoryItem = async (optionId: string) => {
+  return wpAjaxInstance.post<{ option_id: string }, TutorMutationResponse<string>>(
+    endpoints.DELETE_IMPORT_EXPORT_HISTORY,
+    { option_id: optionId },
+  );
+};
+
+export const useDeleteImportExportHistoryMutation = () => {
+  const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: deleteHistoryItem,
+    mutationKey: ['DeleteImportExportHistory'],
+    onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        queryKey: ['ImportExportHistory'],
+      });
+      showToast({
+        message: response.message,
+        type: 'success',
+      });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: convertToErrorMessage(error),
+        type: 'danger',
+      });
+    },
   });
 };
