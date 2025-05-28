@@ -39,8 +39,6 @@ interface ExportModalProps extends ModalProps {
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
-  failedCourseIds?: ImportExportContentResponseBase['failed_course_ids'];
-  failedBundleIds?: ImportExportContentResponseBase['failed_bundle_ids'];
 }
 
 interface BulkSelectionFormData {
@@ -59,8 +57,6 @@ const ExportModal = ({
   fileSize,
   message,
   completedContents,
-  failedCourseIds = [],
-  failedBundleIds = [],
 }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: defaultExportFormData,
@@ -148,7 +144,6 @@ const ExportModal = ({
     onClose();
   };
 
-  // Define the component mapping for course selection
   const componentMapping = {
     courses: {
       modal: {
@@ -208,8 +203,6 @@ const ExportModal = ({
         fileSize={fileSize}
         message={message}
         completedContents={completedContents}
-        failedCourseIds={failedCourseIds}
-        failedBundleIds={failedBundleIds}
         onDownload={onDownload}
         onClose={handleClose}
         type="export"

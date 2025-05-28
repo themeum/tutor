@@ -4063,18 +4063,31 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int   $course_id course id.
+	 * @since 3.6.0
+	 *
+	 * Fetching data by context, either course or comment
+	 *
+	 * @param int   $object id Course/Comment id.
 	 * @param int   $start offset.
 	 * @param int   $limit limit.
 	 * @param bool  $count_only count only.
 	 * @param array $status_in status list.
 	 * @param int   $include_user_id include user id.
+	 * @param int   $is_course_object Whether fetching by course or not.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0 ) {
-		$course_id = $this->get_post_id( $course_id );
+	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true  ) {
 		global $wpdb;
+
+		$object_id = (int) $object_id;
+
+		$where_clause = '_reviews.comment_ID = %d';
+
+		if ( $is_course_object ) {
+			$object_id    = $this->get_post_id( $object_id );
+			$where_clause = '_reviews.comment_post_ID = %d';
+		}
 
 		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
 		$status_in       = '"' . implode( '","', $status_in ) . '"';
@@ -4100,12 +4113,12 @@ class Utils {
 						ON _reviews.comment_ID = _rev_meta.comment_id
 					LEFT JOIN {$wpdb->users} _reviewer
 						ON _reviews.user_id = _reviewer.ID
-			WHERE 	_reviews.comment_post_ID = %d
+			WHERE 	{$where_clause}
 					AND _reviews.comment_type = 'tutor_course_rating' 
 					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
 					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
-			$course_id
+			$object_id
 		);
 
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
