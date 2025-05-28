@@ -107,8 +107,8 @@ if ( $tutor_options ) :
 		<div class="tutor-option-field-row">
 			<div class="tutor-option-field-label">
 				<div class="tutor-fs-6 tutor-color-black"><?php esc_html_e( 'Reset Everything to Default', 'tutor' ); ?></div>
-				<div class="tutor-fs-7 tutor-fw-medium tutor-color-secondary">
-					<span class="tutor-fw-medium"><?php esc_html_e( 'It will revert all settings to initial setup.', 'tutor' ); ?></span>
+				<div class="tutor-fs-7 tutor-color-subdued tutor-mt-4">
+					<?php esc_html_e( 'It will revert all settings to initial setup.', 'tutor' ); ?>
 				</div>
 			</div>
 			<div class="tutor-option-field-input">
