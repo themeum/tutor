@@ -7,14 +7,14 @@
     "node": ">=14.17.5"
   },
   "scripts": {
-    "build": "composer install --no-dev && webpack --env=make-pot --mode=production && npm run make-pot && webpack --mode=production && npm run tutor-droip && npm run gulp-build",
+    "build": "composer install --no-dev && npm run make-pot && webpack --mode=production && npm run tutor-droip && npm run gulp-build",
     "build-dev": "webpack --mode=development && npm run gulp-build-dev",
     "gulp-build": "_GULP_ENV='build' gulp build",
     "gulp-build-dev": "gulp build",
     "css-watch": "gulp",
     "js-watch": "webpack --watch --mode=development",
     "watch": "concurrently \"npm run css-watch\" \"npm run js-watch\"",
-    "make-pot": "wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip'",
+    "make-pot": "webpack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
     "biome:check": "npx @biomejs/biome check --apply ./assets/react/v3",
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
