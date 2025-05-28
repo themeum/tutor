@@ -9924,7 +9924,7 @@ class Utils {
 	/**
 	 * Get course meta data.
 	 *
-	 * @param int $course_id course id.
+	 * @param int|int[] $course_id course id.
 	 *
 	 * @return mixed
 	 */
