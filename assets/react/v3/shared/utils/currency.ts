@@ -3,45 +3,58 @@ import { tutorConfig } from '@TutorShared/config/config';
 export const createPriceFormatter = ({
   locale,
   currency,
+  position = 'left',
+  thousandSeparator = ',',
+  decimalSeparator = '.',
   fraction_digits = 2,
 }: {
   locale: string;
   currency: string;
-  fraction_digits?: number;
+  position: string; // 'left' or 'right'
+  thousandSeparator: string;
+  decimalSeparator: string;
+  fraction_digits: number;
 }) => {
-  const position = tutorConfig.tutor_currency?.position ?? 'left';
-
   return (price: number) => {
+    const formatNumberWithSeparators = (num: number): string => {
+      const fixed = num.toFixed(fraction_digits);
+      const [intPart, decimalPart] = fixed.split('.');
+
+      const formattedIntPart = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+
+      return decimalPart ? `${formattedIntPart}${decimalSeparator}${decimalPart}` : formattedIntPart;
+    };
+
     const formatter = new Intl.NumberFormat(locale, {
       style: 'currency',
       currency,
       maximumFractionDigits: fraction_digits,
     });
 
-    const formattedPrice = formatter.format(price);
+    const parts = formatter.formatToParts(price);
+    const currencySymbol = parts.find((part) => part.type === 'currency')?.value || currency;
+
+    const formattedNumber = formatNumberWithSeparators(price);
 
     if (position === 'left') {
-      return formattedPrice;
+      return `${currencySymbol}${formattedNumber}`;
     }
 
     if (position === 'right') {
-      const parts = formatter.formatToParts(price);
-      const currencyPart = parts.find((part) => part.type === 'currency');
-      const numberParts = parts.filter((part) => part.type !== 'currency');
-
-      if (currencyPart) {
-        const numberString = numberParts.map((part) => part.value).join('');
-        return `${numberString}${currencyPart.value}`;
-      }
+      return `${formattedNumber}${currencySymbol}`;
     }
 
-    return formattedPrice;
+    return `${currencySymbol}${formattedNumber}`;
   };
 };
 
 export const formatPrice = createPriceFormatter({
   locale: tutorConfig.local?.replace('_', '-') ?? 'en-US',
-  currency: tutorConfig.tutor_currency.currency ?? 'USD',
+  currency: tutorConfig.tutor_currency?.currency ?? 'USD',
+  position: tutorConfig.tutor_currency?.position ?? ('left' as 'left' | 'right'),
+  thousandSeparator: tutorConfig.tutor_currency?.thousand_separator ?? ',',
+  decimalSeparator: tutorConfig.tutor_currency?.decimal_separator ?? '.',
+  fraction_digits: Number(tutorConfig.tutor_currency?.no_of_decimal ?? 2),
 });
 
 export const calculateDiscountedPrice = ({
