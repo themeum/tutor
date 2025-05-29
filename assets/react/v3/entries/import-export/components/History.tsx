@@ -119,17 +119,19 @@ const History = () => {
         const isCurrentItemDeleting = deletingItemId === item.option_id;
 
         return (
-          <Button
-            data-delete-history
-            size="small"
-            variant="secondary"
-            isOutlined
-            disabled={isCurrentItemDeleting}
-            loading={isCurrentItemDeleting}
-            onClick={() => handleDeleteHistory(item.option_id)}
-          >
-            {__('Delete', 'tutor')}
-          </Button>
+          <div css={styles.action}>
+            <Button
+              data-delete-history
+              size="small"
+              variant="secondary"
+              isOutlined
+              disabled={isCurrentItemDeleting}
+              loading={isCurrentItemDeleting}
+              onClick={() => handleDeleteHistory(item.option_id)}
+            >
+              {__('Delete', 'tutor')}
+            </Button>
+          </div>
         );
       },
     },
