@@ -1,21 +1,21 @@
 import { tutorConfig } from '@TutorShared/config/config';
 
+type PriceFormatterOptions = {
+  symbol?: string;
+  position?: string;
+  thousandSeparator?: string;
+  decimalSeparator?: string;
+  fraction_digits?: number;
+};
+
 export const createPriceFormatter = ({
-  locale,
-  currency,
+  symbol = '$',
   position = 'left',
   thousandSeparator = ',',
   decimalSeparator = '.',
   fraction_digits = 2,
-}: {
-  locale: string;
-  currency: string;
-  position: string; // 'left' or 'right'
-  thousandSeparator: string;
-  decimalSeparator: string;
-  fraction_digits: number;
-}) => {
-  return (price: number) => {
+}: PriceFormatterOptions) => {
+  return (price: number): string => {
     const formatNumberWithSeparators = (num: number): string => {
       const fixed = num.toFixed(fraction_digits);
       const [intPart, decimalPart] = fixed.split('.');
@@ -25,33 +25,19 @@ export const createPriceFormatter = ({
       return decimalPart ? `${formattedIntPart}${decimalSeparator}${decimalPart}` : formattedIntPart;
     };
 
-    const formatter = new Intl.NumberFormat(locale, {
-      style: 'currency',
-      currency,
-      maximumFractionDigits: fraction_digits,
-    });
-
-    const parts = formatter.formatToParts(price);
-    const currencySymbol = parts.find((part) => part.type === 'currency')?.value || currency;
-
     const formattedNumber = formatNumberWithSeparators(price);
 
     if (position === 'left') {
-      return `${currencySymbol}${formattedNumber}`;
+      return `${symbol}${formattedNumber}`;
     }
 
-    if (position === 'right') {
-      return `${formattedNumber}${currencySymbol}`;
-    }
-
-    return `${currencySymbol}${formattedNumber}`;
+    return `${formattedNumber}${symbol}`;
   };
 };
 
 export const formatPrice = createPriceFormatter({
-  locale: tutorConfig.local?.replace('_', '-') ?? 'en-US',
-  currency: tutorConfig.tutor_currency?.currency ?? 'USD',
-  position: tutorConfig.tutor_currency?.position ?? ('left' as 'left' | 'right'),
+  symbol: tutorConfig.tutor_currency?.symbol ?? '$',
+  position: tutorConfig.tutor_currency?.position ?? 'left',
   thousandSeparator: tutorConfig.tutor_currency?.thousand_separator ?? ',',
   decimalSeparator: tutorConfig.tutor_currency?.decimal_separator ?? '.',
   fraction_digits: Number(tutorConfig.tutor_currency?.no_of_decimal ?? 2),
