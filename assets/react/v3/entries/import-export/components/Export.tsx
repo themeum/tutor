@@ -70,7 +70,7 @@ const Export = () => {
       });
     }
 
-    if (progress === 100) {
+    if (progress === 100 && exportContentResponse?.exported_data) {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
         progress: 100,
@@ -89,6 +89,12 @@ const Export = () => {
           document.body.removeChild(a);
           URL.revokeObjectURL(url);
         },
+      });
+    }
+
+    if (progress === 100 && !exportContentResponse?.exported_data) {
+      updateModal<typeof ExportModal>('export-modal', {
+        currentStep: 'error',
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
