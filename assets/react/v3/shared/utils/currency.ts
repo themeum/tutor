@@ -54,9 +54,7 @@ export const formatPriceIntl = (price: number): string => {
     minimumFractionDigits: fractionDigits,
   });
 
-  const formattedNumber = formatter.format(price);
-
-  return formattedNumber;
+  return formatter.format(price);
 };
 
 export const calculateDiscountedPrice = ({
