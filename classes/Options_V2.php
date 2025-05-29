@@ -439,6 +439,10 @@ class Options_V2 {
 			$this->response_bad_request( __( 'Invalid json file', 'tutor' ) );
 		}
 
+		if ( ! isset( $request['data'] ) ) {
+			$this->response_bad_request( __( 'Data not found or invalid', 'tutor' ) );
+		}
+
 		if ( is_array( $request['data'] ) && count( $request['data'] ) ) {
 			foreach ( $request['data'] as $content ) {
 				if ( isset( $content['content_type'] ) && 'settings' === $content['content_type'] ) {
