@@ -16,9 +16,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		// Open live preview modal
 		templateDemoImportRoot.addEventListener('click', (event) => {
 			if (event.target && event.target.matches('.tutor-template-preview-btn')) {
+				document.body.style.overflow = 'hidden';
 				tutorTemplateShimmerEffect.style.display = "block";
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
+				// return 0;
 				// iframe.src = event.target.dataset.template_url;
 				iframe.src = 'https://pixage.droip.io';
 				if (_tutorobject?.tutor_pro_url) {
@@ -40,7 +42,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			importBtn.classList.remove('tutor-template-view-template-btn');
 			icon.classList.add('tutor-icon-import');
 			icon.classList.remove('tutor-icon-circle-mark');
-			importBtn.innerHTML = `${icon.outerHTML} import`;
+			const proBadge = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="presentation" aria-hidden="true" class="css-xron3k-svg-SVGIcon"><rect width="16" height="16" rx="8" fill="#E5803C"></rect><path d="M12.252 7.042c0 .004 0 .008-.003.012l-.862 3.951a.609.609 0 0 1-.598.495H5.213a.61.61 0 0 1-.598-.495l-.862-3.95c0-.005-.002-.009-.003-.013a.609.609 0 0 1 1.056-.51l1.28 1.38 1.362-3.054v-.004a.609.609 0 0 1 1.106.004l1.362 3.054 1.28-1.38a.609.609 0 0 1 1.055.51h.001Z" fill="#fff"></path></svg>`;
+			importBtn.innerHTML = `${icon.outerHTML} import ${_tutorobject.tutor_pro_url ? '' : proBadge}`;
 		});
 
 		// Device switcher
@@ -63,6 +66,8 @@ document.addEventListener('DOMContentLoaded', function () {
 			removeActiveClassFromDeviceList(deviceSwitchers);
 			deviceSwitchers[0].classList.add("active");
 			tutorTemplateShimmerEffect.style.display = "none";
+			document.body.style.overflow = 'visible';
+			iframe.style.width = "100%";
 		}
 
 		// Remove active class from device list
@@ -95,8 +100,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					const presetHeading = document.querySelector('.tutor-droip-color-presets-heading');
 					presetHeading.style.display = 'block';
-					const presetWrapper = document.querySelector('.tutor-template-preview-import-area');
-					presetWrapper.style.display = 'flex';
+					const presetWrapper = document.querySelector('.tutor-template-preview-template-details');
+					presetWrapper.style.display = 'block';
+					const effect2 = document.querySelector('.tutor-template-preview-import-area .tutor-template-shimmer-effect-2');
+					effect2.style.display = 'none';
 
 					// setVariables(event.data.droipCSSVariable.data[0]);
 					const variables = event.data.droipCSSVariable.data[0];

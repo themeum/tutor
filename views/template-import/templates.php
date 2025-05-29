@@ -67,28 +67,45 @@
 				</ul>
 			</div>
 			<div class="tutor-template-preview-iframe-wrapper">
-				<div class="tutor-template-shimmer-effect" style="display: none;">
-					<!-- Top Large Box -->
-					<div class="tutor-template-shimmer-box tutor-template-shimmer-box-large"></div>
-					<!-- Bottom Two Boxes -->
-					<div class="tutor-template-shimmer-row">
-						<div class="tutor-template-shimmer-box tutor-template-shimmer-box-small"></div>
-						<div class="tutor-template-shimmer-box tutor-template-shimmer-box-small"></div>
-					</div>
-				</div>
-				<iframe id="tutor-template-preview-iframe" src="" frameborder="0"></iframe>
-				<!-- <div class="tutor-template-loading-indicator" style="display: none;"></div> -->
-				<div class="tutor-template-preview-import-area tutor-flex-column tutor-justify-center tutor-gap-1" style="display: none;">
-					<div class="tutor-preview-template-name">BeatLab Academy</div>	
-					<p class="tutor-droip-color-presets-heading" style="display: none;">
-						<?php esc_html_e( 'Choose your color palette and continue with your design', 'tutor' ); ?>
-					</p>
-					<div id="droip-color-presets">
-						<div id="droip-color-modes">
+				<div class="tutor-template-preview-iframe-parent">
+					<div class="tutor-template-shimmer-effect" style="display: none;">
+						<!-- Top Large Box -->
+						<div class="tutor-template-shimmer-box tutor-template-shimmer-box-large"></div>
+						<!-- Bottom Two Boxes -->
+						<div class="tutor-template-shimmer-row">
+							<div class="tutor-template-shimmer-box tutor-template-shimmer-box-small"></div>
+							<div class="tutor-template-shimmer-box tutor-template-shimmer-box-small"></div>
 						</div>
 					</div>
-					<div class="tutor-template-import-btn-wrapper">
-						<?php do_action( 'template_import_btn' ); ?>
+					<iframe id="tutor-template-preview-iframe" src="" frameborder="0"></iframe>
+				</div>
+				<div class="tutor-template-preview-import-area tutor-flex-column tutor-justify-center tutor-gap-1">
+					<div class="tutor-template-shimmer-effect-2">
+						<div class="tutor-template-shimmer-effect-2-box-1"></div>
+						<div class="tutor-template-shimmer-effect-2-box-2"></div>
+						<div class="tutor-template-shimmer-effect-2-box-3"></div>
+					</div>
+					<div class="tutor-template-preview-template-details" style="display: none;">
+						<div class="tutor-preview-template-name"></div>	
+						<p class="tutor-droip-color-presets-heading">
+							<?php esc_html_e( 'Choose your color palette and continue with your design', 'tutor' ); ?>
+						</p>
+						<div id="droip-color-presets">
+							<div id="droip-color-modes">
+							</div>
+						</div>
+						<div class="tutor-template-import-btn-wrapper">
+							<?php
+							$pro = tutor()->has_pro;
+							?>
+							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-import-btn tutor-justify-center" <?php echo tutor()->has_pro ? '' : ' disabled'; ?> >
+								<i class="tutor-icon-import tutor-mr-8"></i>
+								<?php esc_html_e( 'Import', 'tutor-pro' ); ?>
+								<?php if ( ! tutor()->has_pro ) : ?>
+									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="presentation" aria-hidden="true" class="css-xron3k-svg-SVGIcon"><rect width="16" height="16" rx="8" fill="#E5803C"></rect><path d="M12.252 7.042c0 .004 0 .008-.003.012l-.862 3.951a.609.609 0 0 1-.598.495H5.213a.61.61 0 0 1-.598-.495l-.862-3.95c0-.005-.002-.009-.003-.013a.609.609 0 0 1 1.056-.51l1.28 1.38 1.362-3.054v-.004a.609.609 0 0 1 1.106.004l1.362 3.054 1.28-1.38a.609.609 0 0 1 1.055.51h.001Z" fill="#fff"></path></svg>
+								<?php endif; ?>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
