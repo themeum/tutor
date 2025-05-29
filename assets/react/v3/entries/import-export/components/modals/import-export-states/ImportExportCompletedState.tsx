@@ -99,7 +99,7 @@ const ImportExportCompletedState = ({
               __('The export process has finished. However, certain items could not be exported. Check the summary below:', 'tutor')
             : // prettier-ignore
               __('Download the JSON file and use it to import your data into another Tutor LMS website.', 'tutor'),
-        error: message,
+        error: message || __('Something went wrong during export. Please try again!', 'tutor'),
       },
       reportList: {
         success: __('Successfully Exported', 'tutor'),
@@ -277,7 +277,13 @@ const ImportExportCompletedState = ({
             </button>
           </Show>
         </div>
-        <Show when={type === 'export'}>
+        <Show
+          when={
+            type === 'export' &&
+            ([...successFullyCompletedCourses, ...successFullyCompletedBundles].length > 0 ||
+              successFullyCompletedSettings)
+          }
+        >
           <div css={styles.file}>
             <div css={styles.fileIcon}>
               <SVGIcon name="attachmentLine" width={24} height={24} />
