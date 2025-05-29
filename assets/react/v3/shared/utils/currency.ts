@@ -43,6 +43,22 @@ export const formatPrice = createPriceFormatter({
   fraction_digits: Number(tutorConfig.tutor_currency?.no_of_decimal ?? 2),
 });
 
+export const formatPriceIntl = (price: number): string => {
+  const currency = tutorConfig.tutor_currency?.currency ?? 'USD';
+  const locale = tutorConfig.local?.replace('_', '-') ?? 'en-US';
+  const fractionDigits = Number(tutorConfig.tutor_currency?.no_of_decimal ?? 2);
+
+  const formatter = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: fractionDigits,
+  });
+
+  const formattedNumber = formatter.format(price);
+
+  return formattedNumber;
+};
+
 export const calculateDiscountedPrice = ({
   discount_type,
   discount_amount,
