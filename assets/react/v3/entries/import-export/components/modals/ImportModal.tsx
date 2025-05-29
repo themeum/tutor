@@ -27,7 +27,7 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   files: File[];
   currentStep: ImportExportModalState;
   onClose: () => void;
-  onImport: (data: string) => Promise<void>;
+  onImport: (file: File) => void;
   progress?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
@@ -191,7 +191,7 @@ const ImportModal = ({
               variant="primary"
               size="small"
               loading={isReadingFile || currentStep === 'progress'}
-              onClick={async () => onImport(await readJsonFile(files[0]))}
+              onClick={async () => onImport(files[0])}
             >
               {__('Import', 'tutor')}
             </Button>
