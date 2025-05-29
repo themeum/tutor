@@ -20,6 +20,7 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes } from '@TutorShared/utils/util';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import ImportExportCompletedState from './import-export-states/ImportExportCompletedState';
 import ImportExportProgressState from './import-export-states/ImportExportProgressState';
 
@@ -56,6 +57,8 @@ const readJsonFile = (file: File): Promise<any> => {
   });
 };
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 const ImportModal = ({
   files: propsFiles,
   currentStep,
@@ -69,6 +72,7 @@ const ImportModal = ({
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [isFileValid, setIsFileValid] = useState(true);
   const [hasSettings, setHasSettings] = useState(false);
+  const [hasCourseOrBundle, setHasCourseOrBundle] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -78,11 +82,14 @@ const ImportModal = ({
     setIsReadingFile(true);
     readJsonFile(files[0])
       .then((data) => {
-        const hasSettings =
-          data?.data.filter((item: { content_type: string }) => item.content_type === 'settings').length > 0;
+        const hasSettings = !!data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
+        const hasCourseOrBundle = !!data?.data.find(
+          (item: { content_type: string }) => item.content_type === 'course' || item.content_type === 'course-bundle',
+        );
 
         setIsReadingFile(false);
         setHasSettings(hasSettings);
+        setHasCourseOrBundle(hasCourseOrBundle);
         setFiles(files);
         setIsFileValid(true);
       })
@@ -179,6 +186,18 @@ const ImportModal = ({
               </p>
             </div>
           </Show>
+
+          <Show when={!isTutorPro && isFileValid && hasCourseOrBundle}>
+            <div css={styles.alert}>
+              <SVGIcon name="infoFill" width={40} height={40} />
+              <p>
+                {
+                  // prettier-ignore
+                  __('INFO: Upgrade to Tutor Pro to import courses and bundles.', 'tutor')
+                }
+              </p>
+            </div>
+          </Show>
         </div>
         <div css={styles.footer}>
           <div css={styles.actionButtons}>
@@ -187,7 +206,7 @@ const ImportModal = ({
             </Button>
             <Button
               data-cy="import-csv"
-              disabled={files.length === 0 || isReadingFile || !isFileValid}
+              disabled={files.length === 0 || isReadingFile || !isFileValid || (!isTutorPro && !hasSettings)}
               variant="primary"
               size="small"
               loading={isReadingFile || currentStep === 'progress'}
