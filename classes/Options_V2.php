@@ -433,8 +433,26 @@ class Options_V2 {
 
 		$request = json_decode( stripslashes( $_POST['data'] ), true );
 
+		$settings_found = false;
+
 		if ( json_last_error() ) {
 			$this->response_bad_request( __( 'Invalid json file', 'tutor' ) );
+		}
+
+		if ( ! isset( $request['data'] ) ) {
+			$this->response_bad_request( __( 'Data not found or invalid', 'tutor' ) );
+		}
+
+		if ( is_array( $request['data'] ) && count( $request['data'] ) ) {
+			foreach ( $request['data'] as $content ) {
+				if ( isset( $content['content_type'] ) && 'settings' === $content['content_type'] ) {
+					$settings_found = true;
+				}
+			}
+		}
+
+		if ( ! $settings_found ) {
+			$this->response_bad_request( __( 'Settings not found', 'tutor' ) );
 		}
 
 		$settings_data   = is_array( $request ) && isset( $request['data'] ) ? $request['data'][0]['data'] : array();
