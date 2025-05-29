@@ -31,8 +31,6 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   progress?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
-  failedCourseIds?: ImportExportContentResponseBase['failed_course_ids'];
-  failedBundleIds?: ImportExportContentResponseBase['failed_bundle_ids'];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,8 +64,6 @@ const ImportModal = ({
   message,
   progress,
   completedContents,
-  failedCourseIds,
-  failedBundleIds,
 }: ImportModalProps) => {
   const [files, setFiles] = useState<File[]>(propsFiles);
   const [isReadingFile, setIsReadingFile] = useState(false);
@@ -216,8 +212,6 @@ const ImportModal = ({
         state={state}
         fileSize={file.size}
         completedContents={completedContents}
-        failedCourseIds={failedCourseIds}
-        failedBundleIds={failedBundleIds}
         type="import"
         importFileName={file.name}
         message={message || ''}
