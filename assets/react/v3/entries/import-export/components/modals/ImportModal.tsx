@@ -72,7 +72,6 @@ const ImportModal = ({
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [isFileValid, setIsFileValid] = useState(true);
   const [hasSettings, setHasSettings] = useState(false);
-  const [hasCourseOrBundle, setHasCourseOrBundle] = useState(false);
   const { showToast } = useToast();
 
   useEffect(() => {
@@ -82,14 +81,10 @@ const ImportModal = ({
     setIsReadingFile(true);
     readJsonFile(files[0])
       .then((data) => {
-        const hasSettings = !!data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
-        const hasCourseOrBundle = !!data?.data.find(
-          (item: { content_type: string }) => item.content_type === 'course' || item.content_type === 'course-bundle',
-        );
+        const hasSettings = data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
 
         setIsReadingFile(false);
         setHasSettings(hasSettings);
-        setHasCourseOrBundle(hasCourseOrBundle);
         setFiles(files);
         setIsFileValid(true);
       })
@@ -182,18 +177,6 @@ const ImportModal = ({
                 {
                   // prettier-ignore
                   __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')
-                }
-              </p>
-            </div>
-          </Show>
-
-          <Show when={!isTutorPro && isFileValid && hasCourseOrBundle}>
-            <div css={styles.alert}>
-              <SVGIcon name="infoFill" width={40} height={40} />
-              <p>
-                {
-                  // prettier-ignore
-                  __('INFO: Upgrade to Tutor Pro to import courses and bundles.', 'tutor')
                 }
               </p>
             </div>
