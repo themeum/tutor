@@ -32,7 +32,7 @@ export const useCourseListQuery = ({ params, isEnabled }: { params: CourseListPa
         limit: params.limit,
         offset: params.offset,
         filter: params.filter,
-        post_status: params.post_status,
+        ...(params.post_status && { post_status: params.post_status }),
       }).then((res) => res.data),
     placeholderData: keepPreviousData,
     enabled: isEnabled,
