@@ -245,7 +245,10 @@ const FormTopicPrerequisites = ({
                         </span>
                         <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
                           <span data-question-count css={typography.tiny()}>
-                            {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
+                            {
+                              /* translators: %d is the number of questions */
+                              sprintf(__('(%d questions)', 'tutor'), content.total_question)
+                            }
                           </span>
                         </Show>
                       </div>
@@ -335,7 +338,10 @@ const FormTopicPrerequisites = ({
                                   </span>
                                   <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
                                     <span data-question-count css={typography.tiny()}>
-                                      {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
+                                      {
+                                        /* translators: %d is the number of questions */
+                                        sprintf(__('(%d questions)', 'tutor'), content.total_question)
+                                      }
                                     </span>
                                   </Show>
                                 </div>

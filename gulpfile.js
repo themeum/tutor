@@ -67,7 +67,18 @@ for (let task in scss_blueprints) {
 			.src(blueprint.src)
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
-			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }));
+			.pipe(sass({
+				outputStyle: 'compressed',
+				sass: require('sass'),
+				silenceDeprecations: [
+					"abs-percent",
+					"color-functions",
+					"global-builtin",
+					"import",
+					"legacy-js-api",
+					"mixed-decls"
+				]
+			}));
 
 		// Cache bust font URLs like .woff, .woff2, .ttf, etc.
 		if (task === 'tutor_icon') {
