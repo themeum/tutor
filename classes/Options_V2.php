@@ -433,8 +433,26 @@ class Options_V2 {
 
 		$request = json_decode( stripslashes( $_POST['data'] ), true );
 
+		$settings_found = false;
+
 		if ( json_last_error() ) {
 			$this->response_bad_request( __( 'Invalid json file', 'tutor' ) );
+		}
+
+		if ( ! isset( $request['data'] ) ) {
+			$this->response_bad_request( __( 'Data not found or invalid', 'tutor' ) );
+		}
+
+		if ( is_array( $request['data'] ) && count( $request['data'] ) ) {
+			foreach ( $request['data'] as $content ) {
+				if ( isset( $content['content_type'] ) && 'settings' === $content['content_type'] ) {
+					$settings_found = true;
+				}
+			}
+		}
+
+		if ( ! $settings_found ) {
+			$this->response_bad_request( __( 'Settings not found', 'tutor' ) );
 		}
 
 		$settings_data   = is_array( $request ) && isset( $request['data'] ) ? $request['data'][0]['data'] : array();
@@ -585,13 +603,19 @@ class Options_V2 {
 		$tutor_saved_option   = get_option( 'tutor_option' );
 
 		foreach ( $attr as $sections ) {
-			foreach ( $sections as $section ) {
-				foreach ( $section['blocks'] as $blocks ) {
-					foreach ( $blocks['fields'] as $field ) {
-						if ( isset( $tutor_default_option[ $field['key'] ] ) ) {
-							$attr_default[ $field['key'] ] = $tutor_saved_option[ $field['key'] ];
-						} elseif ( null !== $field['key'] ) {
-								$attr_default[ $field['key'] ] = $field['default'];
+			if ( is_array( $sections ) && count( $sections ) ) {
+				foreach ( $sections as $section ) {
+					foreach ( $section['blocks'] as $blocks ) {
+						if ( isset( $blocks['fields'] ) ) {
+							foreach ( $blocks['fields'] as $field ) {
+								if ( isset( $field['key'] ) ) {
+									if ( isset( $tutor_default_option[ $field['key'] ] ) ) {
+										$attr_default[ $field['key'] ] = $tutor_saved_option[ $field['key'] ];
+									} else {
+										$attr_default[ $field['key'] ] = $field['default'] ?? '';
+									}
+								}
+							}
 						}
 					}
 				}

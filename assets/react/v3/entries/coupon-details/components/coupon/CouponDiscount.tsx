@@ -150,7 +150,10 @@ function CouponDiscount() {
                 <div css={styles.price}>
                   {item.plan_start_price ? (
                     <span css={styles.startingFrom}>
-                      {sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)}
+                      {
+                        // translators: %s is the starting price of the plan
+                        sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)
+                      }
                     </span>
                   ) : (
                     <>

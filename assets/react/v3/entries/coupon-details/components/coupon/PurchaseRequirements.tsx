@@ -1,11 +1,11 @@
-import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import type { Coupon } from '@CouponServices/coupon';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import { tutorConfig } from '@TutorShared/config/config';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
-import type { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
@@ -15,6 +15,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 function PurchaseRequirements() {
   const form = useFormContext<Coupon>();
   const { tutor_currency } = tutorConfig;
+  // translators: %s is the currency symbol, e.g. $, €, ¥
   const purchaseAmountLabel = sprintf(__('Minimum purchase amount (%s)', 'tutor'), tutor_currency?.symbol ?? '$');
 
   const requirementOptions = [

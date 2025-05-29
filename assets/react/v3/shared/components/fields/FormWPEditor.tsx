@@ -147,7 +147,10 @@ const CustomEditorOverlay = ({
           }
         }}
       >
-        {sprintf(__('Edit with %s', 'tutor'), editorUsed?.label)}
+        {
+          /* translators: %s is the editor name */
+          sprintf(__('Edit with %s', 'tutor'), editorUsed?.label)
+        }
       </Button>
     </div>
   );

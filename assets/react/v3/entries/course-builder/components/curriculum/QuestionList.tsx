@@ -155,6 +155,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     appendQuestion({
       _data_status: QuizDataStatus.NEW,
       question_id: questionId,
+      /* translators: %d is the question number */
       question_title:
         questionType === 'h5p' ? content?.title : sprintf(__('Question %d', 'tutor'), questionFields.length + 1),
       question_description: questionType === 'h5p' ? content?.id : '',

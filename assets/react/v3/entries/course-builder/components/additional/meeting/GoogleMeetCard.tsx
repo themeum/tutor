@@ -11,9 +11,9 @@ import Popover from '@TutorShared/molecules/Popover';
 import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
-import { DateFormats } from '@TutorShared/config/constants';
 import { type GoogleMeet, useDeleteGoogleMeetMutation } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { DateFormats } from '@TutorShared/config/constants';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
@@ -141,7 +141,10 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
         triggerRef={deleteRef}
         closePopover={noop}
         maxWidth="258px"
-        title={sprintf(__('Delete "%s"', 'tutor'), post_title)}
+        title={
+          // translators: %s is the title of the item to be deleted
+          sprintf(__('Delete "%s"', 'tutor'), post_title)
+        }
         message={__('Are you sure you want to delete this meeting? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
         arrow="auto"
