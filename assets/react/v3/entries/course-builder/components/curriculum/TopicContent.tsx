@@ -171,6 +171,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           assignmentId: contentId,
           quizId: contentId,
           title: modalTitle[contentType],
+          /* translators: %s is the topic title */
           subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
           icon: <SVGIcon name={modalIcon[contentType]} height={24} width={24} />,
           ...(type === 'tutor_h5p_quiz' && {
@@ -257,7 +258,14 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
             <Show when={(type === 'tutor_quiz' || type === 'tutor_h5p_quiz') && !!content.total_question}>
-              <span data-question-count>({sprintf(__('%s Questions', 'tutor'), content.total_question)})</span>
+              <span data-question-count>
+                (
+                {
+                  /* translators: %s is the total number of questions */
+                  sprintf(__('%s Questions', 'tutor'), content.total_question)
+                }
+                )
+              </span>
             </Show>
           </p>
         </div>
@@ -373,7 +381,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         triggerRef={deleteRef}
         closePopover={noop}
         maxWidth="258px"
-        title={sprintf(__('Delete "%s"', 'tutor'), content.title)}
+        title={
+          // translators: %s is the title of the item to be deleted
+          sprintf(__('Delete "%s"', 'tutor'), content.title)
+        }
         message={
           confirmationMessages[type as keyof typeof confirmationMessages] ||
           __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')

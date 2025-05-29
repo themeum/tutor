@@ -1,5 +1,5 @@
 import { differenceInDays } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker, { CalendarContainer } from 'react-datepicker';
 import CustomHeader from './CustomHeader';
 import { CustomInput } from './CustomInput';
@@ -63,7 +63,14 @@ const TutorDateRangePicker = () => {
 					{children}
 					<div className="react-datepicker__custom-footer">
 						<div className="react-datepicker__selected-days-count">
-							{dayCount ? sprintf(_n('%d day selected', '%d days selected', dayCount, 'tutor'), dayCount) : __('0 day selected', 'tutor')}
+							{
+								dayCount ? (
+									// translators: %d is the number of days selected
+									sprintf(_n('%d day selected', '%d days selected', dayCount, 'tutor'), dayCount)
+								) : (
+									__('0 day selected', 'tutor')
+								)
+							}
 						</div>
 						<div className="tutor-btns">
 							<button

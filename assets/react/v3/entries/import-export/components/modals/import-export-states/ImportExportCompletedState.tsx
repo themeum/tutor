@@ -110,9 +110,10 @@ const ImportExportCompletedState = ({
 
   const formatItemCount = (count: number, type: 'course' | 'bundle'): string => {
     if (type === 'course') {
+      // translators: %d is the number of courses
       return sprintf(_n('Course (%d)', 'Courses (%d)', count, 'tutor'), count);
     }
-
+    // translators: %d is the number of bundles
     return sprintf(_n('Bundle (%d)', 'Bundles (%d)', count, 'tutor'), count);
   };
 
@@ -240,9 +241,13 @@ const ImportExportCompletedState = ({
                 <Show when={completedWithErrorsCourses.length > 0}>
                   <div css={styles.failedItem}>
                     <label>
-                      {completedWithErrorsCourses.length > 1
-                        ? sprintf(__('Course IDs (%d)', 'tutor'), completedWithErrorsCourses.length)
-                        : sprintf(__('Course ID (%d)', 'tutor'), completedWithErrorsCourses.length)}
+                      {
+                        /* translators: %d is the number of course IDs */
+                        sprintf(
+                          _n('Course ID (%d)', 'Course IDs (%d)', completedWithErrorsCourses.length, 'tutor'),
+                          completedWithErrorsCourses.length,
+                        )
+                      }
                     </label>
                     <div css={styles.failedList}>
                       <For each={completedWithErrorsCourses}>
@@ -258,9 +263,13 @@ const ImportExportCompletedState = ({
                 <Show when={completedWithErrorsBundles.length > 0}>
                   <div css={styles.failedItem}>
                     <label>
-                      {completedWithErrorsBundles.length > 1
-                        ? sprintf(__('Bundle IDs (%d)', 'tutor'), completedWithErrorsBundles.length)
-                        : sprintf(__('Bundle ID (%d)', 'tutor'), completedWithErrorsBundles.length)}
+                      {
+                        /* translators: %d is the number of bundle IDs */
+                        sprintf(
+                          _n('Bundle ID (%d)', 'Bundle IDs (%d)', completedWithErrorsBundles.length, 'tutor'),
+                          completedWithErrorsBundles.length,
+                        )
+                      }
                     </label>
                     <div css={styles.failedList}>
                       <For each={completedWithErrorsBundles}>

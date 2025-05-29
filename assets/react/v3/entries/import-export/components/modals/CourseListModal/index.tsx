@@ -45,7 +45,10 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
   return (
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      title={selectedItems.length > 0 ? sprintf(__('%s selected', 'tutor'), selectedItems.length) : title}
+      title={
+        /* translators: %s is the number of selected items */
+        selectedItems.length > 0 ? sprintf(__('%s selected', 'tutor'), selectedItems.length) : title
+      }
       actions={actions}
       maxWidth={720}
     >

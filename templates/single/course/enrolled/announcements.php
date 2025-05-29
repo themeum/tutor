@@ -37,7 +37,7 @@ $announcements = tutor_utils()->get_announcements( get_the_ID() );
 
 					<div>
 						<?php
-						/* translators: %s: timestamp */
+						/* translators: %s: time difference */
 						echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $announcement->post_date_gmt ) ) ) );
 						?>
 					</div>
