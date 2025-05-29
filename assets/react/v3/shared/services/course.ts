@@ -69,6 +69,7 @@ export interface Bundle {
 
 interface BundleListParams extends PaginatedParams {
   exclude: string[];
+  post_status?: string;
 }
 
 const getBundleList = (params: BundleListParams) => {
@@ -86,6 +87,7 @@ export const useBundleListQuery = ({ params, isEnabled }: { params: BundleListPa
         limit: params.limit,
         offset: params.offset,
         filter: params.filter,
+        ...(params.post_status && { post_status: params.post_status }),
       }).then((res) => res.data),
     placeholderData: keepPreviousData,
     enabled: isEnabled,
