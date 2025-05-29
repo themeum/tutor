@@ -126,7 +126,6 @@ const History = () => {
             size="small"
             variant="secondary"
             isOutlined
-            disabled={isCurrentItemDeleting}
             loading={isCurrentItemDeleting}
             onClick={() => handleDeleteHistory(item.option_id)}
           >
