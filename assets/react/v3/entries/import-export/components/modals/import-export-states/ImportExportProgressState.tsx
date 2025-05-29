@@ -24,7 +24,7 @@ const ImportExportProgressState = ({ progress, message, type }: ImportExportProg
     export: {
       image: exportInProgressImage,
       imageAlt: __('Exporting...', 'tutor'),
-      header: __('Exporting your course data...', 'tutor'),
+      header: __('Exporting your data...', 'tutor'),
     },
   };
   return (
