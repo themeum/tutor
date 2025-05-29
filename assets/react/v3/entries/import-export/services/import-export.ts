@@ -208,7 +208,7 @@ export const useExportContentsMutation = () => {
 };
 
 interface ImportContentPayload {
-  data?: string;
+  data?: File;
   job_id?: string | number; // need to send back the job id to get the status
 }
 
