@@ -19,25 +19,45 @@ if ( ! empty( $template_list ) ) { ?>
 		<?php
 		foreach ( $template_list as $key => $template ) {
 			$template = (object) $template;
-			?>
-			<li class="tutor-template-list-single-template tutor-d-flex tutor-flex-column tutor-justify-between tutor-gap-1 tutor-p-12">
-				<div class="tutor-template-list-single-template-inner">
-					<div class="tutor-import-template-preview-img">
-						<img src="<?php echo esc_url( $template->preview_image ); ?>" loading="lazy" alt="icon">
+			if ( property_exists( $template, 'is_coming_soon' ) && ! $template->is_coming_soon ) {
+				?>
+				<li class="tutor-template-list-single-template tutor-d-flex tutor-flex-column tutor-justify-between tutor-gap-1 tutor-p-12">
+					<div class="tutor-template-list-single-template-inner">
+						<div class="tutor-import-template-preview-img">
+							<img src="<?php echo esc_url( $template->preview_image ); ?>" loading="lazy" alt="icon">
+						</div>
 					</div>
-				</div>
-				<div class="tutor-template-list-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
-					<div class="tutor-import-template-name tutor-fs-6 tutor-fw-medium">
-						<span><?php echo esc_html( $template->label ); ?></span>
+					<div class="tutor-template-list-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
+						<div class="tutor-import-template-name tutor-fs-6 tutor-fw-medium">
+							<span><?php echo esc_html( $template->label ); ?></span>
+						</div>
+						<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-preview-btn" data-template_name="<?php echo esc_attr( $template->label ); ?>" data-template_id="<?php echo esc_attr( $template->slug ); ?>" data-template_url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>">
+								<?php esc_html_e( 'Preview', 'tutor' ); ?>
+							</button>
+						</div>
 					</div>
-					<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-						<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-preview-btn" data-template_name="<?php echo esc_attr( $template->label ); ?>" data-template_id="<?php echo esc_attr( $template->slug ); ?>" data-template_url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>">
-							<?php esc_html_e( 'Preview', 'tutor' ); ?>
-						</button>
+				</li>
+				<?php
+			} else {
+				?>
+				<li class="tutor-template-list-single-template tutor-d-flex tutor-flex-column tutor-justify-between tutor-gap-1 tutor-p-12">
+					<div class="tutor-template-list-single-template-inner">
+						<div class="tutor-import-template-preview-img">
+							<img src="<?php echo esc_url( $template->preview_image ); ?>" loading="lazy" alt="icon">
+						</div>
 					</div>
-				</div>
-			</li>
-			<?php
+					<div class="tutor-template-list-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
+						<div class="tutor-import-template-name tutor-fs-6 tutor-fw-medium">
+							<span><?php echo esc_html( $template->label ); ?></span>
+						</div>
+						<div class="tutor-template-coming-soon">
+							<?php echo esc_html_e( 'Coming soon', 'tutor' ); ?>
+						</div>
+					</div>
+				</li>
+				<?php
+			}
 		}
 		?>
 	</ul>

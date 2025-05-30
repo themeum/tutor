@@ -110,9 +110,17 @@ img {
 		border: 1px solid #e0e2ea;
 		background: white;
 		min-height: 350px;
+		position: relative;
 
 		&:hover {
 			box-shadow: 0px 6px 20px 0px #1c31681a;
+		}
+
+		.tutor-template-coming-soon {
+			font-size: 14px;
+			background: #efefef;
+			padding: 2px 8px;
+			border-radius: 4px;
 		}
 
 		.tutor-template-list-single-template-inner {
