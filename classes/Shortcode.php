@@ -161,6 +161,8 @@ class Shortcode {
 			$atts
 		);
 
+		$a = apply_filters( 'tutor_get_course_list_filter_args', $a );
+
 		$supported_filters         = tutor_utils()->get_option( 'supported_course_filters', array() );
 		$course_filter_category    = array();
 		$course_filter_exclude_ids = array();
@@ -191,14 +193,14 @@ class Shortcode {
 
 			$category_ids = array_filter(
 				$category,
-				function( $id ) {
+				function ( $id ) {
 					return is_numeric( $id );
 				}
 			);
 
 			$category_names = array_filter(
 				$category,
-				function( $id ) {
+				function ( $id ) {
 					return ! is_numeric( $id );
 				}
 			);
@@ -456,7 +458,7 @@ class Shortcode {
 		$category = (array) tutor_utils()->array_get( 'category', $_post, array() );
 		$category = array_filter(
 			$category,
-			function( $cat ) {
+			function ( $cat ) {
 				return is_numeric( $cat );
 			}
 		);
