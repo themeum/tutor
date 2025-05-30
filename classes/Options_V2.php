@@ -1995,12 +1995,14 @@ class Options_V2 {
 	 * @since 3.6.0
 	 *
 	 * @param array  $new_settings_data New exported/import settings data.
-	 * @param string $action_type Action type import/export.
+	 * @param string $action_type Action type Imported/Exported.
 	 *
 	 * @return array Settings log data
 	 */
 	public function update_settings_log( $new_settings_data, $action_type ) {
 		$get_final_data = array();
+		
+		$action = strtolower( $action_type );
 
 		$time = tutor_time();
 
@@ -2024,8 +2026,10 @@ class Options_V2 {
 				update_option( 'tutor_settings_log', $update_option );
 			}
 
-			if ( ! empty( $save_import_data ) ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
+			if ( 'imported' === $action ) {
+				if ( ! empty( $save_import_data ) ) {
+					update_option( 'tutor_option', $save_import_data['dataset'] );
+				}
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
@@ -2035,8 +2039,10 @@ class Options_V2 {
 				update_option( 'tutor_settings_log', $import_data );
 			}
 
-			if ( ! empty( $save_import_data ) ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
+			if ( 'imported' === $action ) {
+				if ( ! empty( $save_import_data ) ) {
+					update_option( 'tutor_option', $save_import_data['dataset'] );
+				}
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
