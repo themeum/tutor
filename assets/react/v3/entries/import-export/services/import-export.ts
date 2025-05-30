@@ -33,10 +33,29 @@ export const defaultExportFormData: ExportFormData = {
   keep_media_files: false,
 };
 
-export const convertExportFormDataToPayload = (data: ExportFormData): ExportContentPayload => {
+export const convertExportFormDataToPayload = ({
+  data,
+  exportableContent,
+}: {
+  data: ExportFormData;
+  exportableContent: ExportableContent[];
+}): ExportContentPayload => {
   const payload: ExportContentPayload = {
     export_contents: [],
     keep_media_files: data.keep_media_files ? '1' : '0',
+  };
+
+  const isContentInExportableContent = (contentType: ExportableContentType): boolean => {
+    return exportableContent.some((content) => content.key === contentType);
+  };
+  const isSubContentInExportableContent = (
+    contentType: ExportableContentType,
+    subContentType: ExportableCourseContentType,
+  ): boolean => {
+    return exportableContent.some(
+      (content) =>
+        content.key === contentType && content.contents?.some((subContent) => subContent.key === subContentType),
+    );
   };
 
   // Get all unique content type prefixes
@@ -44,7 +63,12 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
 
   // Add direct content types (those without '__')
   Object.keys(data).forEach((key) => {
-    if (!key.includes('__') && data[key as keyof ExportFormData] && key !== 'keep_media_files') {
+    if (
+      !key.includes('__') &&
+      data[key as keyof ExportFormData] &&
+      key !== 'keep_media_files' &&
+      isContentInExportableContent(key as ExportableContentType)
+    ) {
       contentTypes.add(key);
     }
   });
@@ -77,7 +101,12 @@ export const convertExportFormDataToPayload = (data: ExportFormData): ExportCont
     Object.entries(data).forEach(([key, value]) => {
       if (key.startsWith(`${contentType}__`) && value === true) {
         const suffix = key.split('__')[1];
-        if (suffix && suffix !== 'ids' && suffix !== 'keep_media_files') {
+        if (
+          suffix &&
+          suffix !== 'ids' &&
+          suffix !== 'keep_media_files' &&
+          isSubContentInExportableContent(contentType as ExportableContentType, suffix as ExportableCourseContentType)
+        ) {
           subContents.push(suffix as ExportableCourseContentType);
         }
       }

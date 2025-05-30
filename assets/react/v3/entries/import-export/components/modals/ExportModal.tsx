@@ -32,7 +32,7 @@ import { tutorConfig } from '@TutorShared/config/config';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
-  onExport: (data: ExportFormData) => void;
+  onExport: ({ data, exportableContent }: { data: ExportFormData; exportableContent: ExportableContent[] }) => void;
   currentStep: ImportExportModalState;
   onDownload?: (fileName: string) => void;
   progress: number;
@@ -178,10 +178,13 @@ const ExportModal = ({
   const handleExport = form.handleSubmit((data) => {
     const { courses, 'course-bundle': bundles } = bulkSelectionForm.getValues();
     onExport?.({
-      ...data,
-      courses__ids: courses.length > 0 ? courses.map((course) => course.id) : form.getValues('courses__ids'),
-      'course-bundle__ids':
-        bundles.length > 0 ? bundles.map((bundle) => bundle.id) : form.getValues('course-bundle__ids'),
+      data: {
+        ...data,
+        courses__ids: courses.length > 0 ? courses.map((course) => course.id) : form.getValues('courses__ids'),
+        'course-bundle__ids':
+          bundles.length > 0 ? bundles.map((bundle) => bundle.id) : form.getValues('course-bundle__ids'),
+      },
+      exportableContent: getExportableContentQuery.data || [],
     });
   });
 
