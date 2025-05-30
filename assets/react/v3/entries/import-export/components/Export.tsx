@@ -10,6 +10,7 @@ import ExportModal from '@ImportExport/components/modals/ExportModal';
 import {
   convertExportFormDataToPayload,
   useExportContentsMutation,
+  type ExportableContent,
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import generateImportExportMessage from '@ImportExport/utils/utils';
@@ -22,8 +23,14 @@ const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
   const { data: exportContentResponse, mutateAsync, error, isError } = useExportContentsMutation();
 
-  const handleImport = (data: ExportFormData) => {
-    const payload = convertExportFormDataToPayload(data);
+  const handleImport = ({
+    data,
+    exportableContent,
+  }: {
+    data: ExportFormData;
+    exportableContent: ExportableContent[];
+  }) => {
+    const payload = convertExportFormDataToPayload({ data, exportableContent });
     mutateAsync(payload);
 
     updateModal<typeof ExportModal>('export-modal', {

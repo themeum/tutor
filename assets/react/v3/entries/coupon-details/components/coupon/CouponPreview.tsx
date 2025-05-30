@@ -1,10 +1,10 @@
 import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
-import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { formatPrice } from '@TutorShared/utils/currency';
 import { __, sprintf } from '@wordpress/i18n';
 import { format, isToday, isTomorrow, isValid } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
@@ -44,7 +44,6 @@ const discountTypeText = (appliesTo: CouponAppliesTo, discountText: string) => {
 
 function CouponPreview() {
   const form = useFormContext<Coupon>();
-  const { tutor_currency } = tutorConfig;
 
   const couponTitle = form.watch('coupon_title');
   const couponType = form.watch('coupon_type');
@@ -69,8 +68,7 @@ function CouponPreview() {
       }`
     : '';
 
-  const discountText =
-    discountType === 'flat' ? `${tutor_currency?.symbol ?? '$'}${discountAmount ?? 0}` : `${discountAmount ?? 0}%`;
+  const discountText = discountType === 'flat' ? formatPrice(Number(discountAmount)) : `${discountAmount ?? 0}%`;
   // translators: %d is the number of times the coupon was used
   const totalUsedText = couponUsedCount ? sprintf(__('Total %d times used', 'tutor'), couponUsedCount) : '';
   // translators: %s is the date from which coupon is active

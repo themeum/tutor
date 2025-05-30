@@ -9,7 +9,7 @@ const generateImportExportMessage = (
   // Define operation-specific text based on type
   const operationText = {
     inProgress: type === 'export' ? __('Export in progress...', 'tutor') : __('Import in progress...', 'tutor'),
-    verb: type === 'export' ? __('Exported', 'tutor') : __('Imported', 'tutor'),
+    verb: type === 'export' ? __('exported', 'tutor') : __('imported', 'tutor'),
     failed: __('failed', 'tutor'),
   };
 

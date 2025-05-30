@@ -433,8 +433,26 @@ class Options_V2 {
 
 		$request = json_decode( stripslashes( $_POST['data'] ), true );
 
+		$settings_found = false;
+
 		if ( json_last_error() ) {
 			$this->response_bad_request( __( 'Invalid json file', 'tutor' ) );
+		}
+
+		if ( ! isset( $request['data'] ) ) {
+			$this->response_bad_request( __( 'Data not found or invalid', 'tutor' ) );
+		}
+
+		if ( is_array( $request['data'] ) && count( $request['data'] ) ) {
+			foreach ( $request['data'] as $content ) {
+				if ( isset( $content['content_type'] ) && 'settings' === $content['content_type'] ) {
+					$settings_found = true;
+				}
+			}
+		}
+
+		if ( ! $settings_found ) {
+			$this->response_bad_request( __( 'Settings not found', 'tutor' ) );
 		}
 
 		$settings_data   = is_array( $request ) && isset( $request['data'] ) ? $request['data'][0]['data'] : array();
@@ -1977,12 +1995,14 @@ class Options_V2 {
 	 * @since 3.6.0
 	 *
 	 * @param array  $new_settings_data New exported/import settings data.
-	 * @param string $action_type Action type import/export.
+	 * @param string $action_type Action type Imported/Exported.
 	 *
 	 * @return array Settings log data
 	 */
-	private function update_settings_log( $new_settings_data, $action_type ) {
+	public function update_settings_log( $new_settings_data, $action_type ) {
 		$get_final_data = array();
+		
+		$action = strtolower( $action_type );
 
 		$time = tutor_time();
 
@@ -2006,8 +2026,10 @@ class Options_V2 {
 				update_option( 'tutor_settings_log', $update_option );
 			}
 
-			if ( ! empty( $save_import_data ) ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
+			if ( 'imported' === $action ) {
+				if ( ! empty( $save_import_data ) ) {
+					update_option( 'tutor_option', $save_import_data['dataset'] );
+				}
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
@@ -2017,8 +2039,10 @@ class Options_V2 {
 				update_option( 'tutor_settings_log', $import_data );
 			}
 
-			if ( ! empty( $save_import_data ) ) {
-				update_option( 'tutor_option', $save_import_data['dataset'] );
+			if ( 'imported' === $action ) {
+				if ( ! empty( $save_import_data ) ) {
+					update_option( 'tutor_option', $save_import_data['dataset'] );
+				}
 			}
 
 			$get_final_data = get_option( 'tutor_settings_log' );
