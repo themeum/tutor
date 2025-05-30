@@ -95,9 +95,6 @@ const Import = () => {
         progress: 100,
         onClose: () => {
           closeModal({ action: 'CLOSE' });
-          if (!isTutorPro) {
-            window.location.reload();
-          }
         },
         completedContents: importResponse?.completed_contents,
       });

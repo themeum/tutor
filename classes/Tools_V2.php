@@ -337,6 +337,17 @@ class Tools_V2 {
 					'block' => array(),
 				),
 			),
+			'settings_log'   => array(
+				'label'     => __( 'Settings Log', 'tutor' ),
+				'slug'      => 'settings_log',
+				'desc'      => __( 'Settings Log', 'tutor' ),
+				'template'  => 'settings-log',
+				'view_path' => tutor()->path . 'views/pages/tools/',
+				'icon'      => 'tutor-icon-settings-log',
+				'blocks'    => array(
+					'block' => array(),
+				),
+			),
 		);
 
 		$attr_tools = apply_filters( 'tutor/tools/extend/attr', apply_filters( 'tutor/tools/attr', apply_filters( 'tutor_tool_pages', $attr_tools ) ) );
