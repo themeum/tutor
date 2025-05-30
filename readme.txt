@@ -314,6 +314,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.6.0 - May 30, 2025
 
+New: Introduced Tutor LMS integration with Droip.
 New: Added course import/export functionality. (Pro)
 New: Added option to define assignment expiration behavior. (Pro)
 Update: Admins can no longer create Zoom meetings for instructors who haven't connected their Zoom accounts. (Pro)
