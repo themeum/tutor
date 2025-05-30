@@ -312,24 +312,24 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.6.0 - May 27, 2025
+= 3.6.0 - May 30, 2025
 
 New: Added course import/export functionality. (Pro)
-New: Added an option to set assignment expiration behavior. (Pro)
-Update: Admin cannot create a Zoom meeting for an instructor if the instructor hasn't set up Zoom. (Pro)
-Update: Allow user to use coupon even when course is in sale.
-Update: Replaced generic error with a clear message explaining why a coupon cannot be applied.
-Fix: Bundle course reorder doesn't work on the frontend after publishing. (Pro)
-Fix: Student assignments are not available for evaluation immediately after submission. (Pro)
-Fix: Enrolled courses remain visible despite expired membership and only disappear upon access. (Pro)
-Fix: Subscription payment history is not persistent across sessions. (Pro)
-Fix: Refunded WooCommerce orders appear as "Processing" on the customer's order history page.
-Fix: Co-instructors cannot see bundle courses on the "My Courses" page. (Pro)
-Fix: Google login swaps users' first and last names. (Pro)
-Fix: Certificate does not reload automatically after creating a meeting in the course builder. (Pro)
-Fix: For public courses, 'View Pricing' is incorrectly shown on the course list page.
-Fix: Gradebook displays incorrect or inconsistent data. (Pro)
-Fix: Purchasing a paid course unintentionally grants access to another free course.
+New: Added option to define assignment expiration behavior. (Pro)
+Update: Admins can no longer create Zoom meetings for instructors who haven't connected their Zoom accounts. (Pro)
+Update: Coupons can now be used even when a course is on sale.
+Update: Improved coupon error messaging with clearer explanations when a coupon cannot be applied.
+Update: Optimized the bundle creation process. (Pro)
+Fix: Bundle course reordering on the frontend wasn't working after publishing. (Pro)
+Fix: Student assignments were not available for evaluation immediately after submission. (Pro)
+Fix: Enrolled courses remained visible after membership expiration and only disappeared upon access. (Pro)
+Fix: Subscription payment history was not retained across sessions. (Pro)
+Fix: Refunded WooCommerce orders were incorrectly marked as "Processing" in the customer's order history.
+Fix: Google login reversed users' first and last names. (Pro)
+Fix: Certificate did not auto-reload after creating a meeting in the course builder. (Pro)
+Fix: 'View Pricing' was incorrectly shown for public courses on the course list page.
+Fix: Gradebook displayed incorrect or inconsistent data. (Pro)
+Fix: Purchasing a paid course unintentionally granted access to an unrelated free course.
 
 = 3.5.0 - April 30, 2025
 
