@@ -42,7 +42,7 @@ class TemplateImportHelper {
 	 *
 	 * @since 3.6.0
 	 *
-	 * @var [type]
+	 * @var string
 	 */
 	public $template_list_transient_key = 'tutor_template_list_cache';
 
