@@ -22,12 +22,16 @@ class TemplateImportHelper {
 	/**
 	 * Template list endpoint.
 	 *
+	 * @since 3.6.0
+	 *
 	 * @var string
 	 */
 	public $template_list_endpoint;
 
 	/**
 	 * Template download endpoint.
+	 *
+	 * @since 3.6.0
 	 *
 	 * @var string
 	 */
@@ -36,12 +40,16 @@ class TemplateImportHelper {
 	/**
 	 * $template_list_transient_key description.
 	 *
+	 * @since 3.6.0
+	 *
 	 * @var [type]
 	 */
 	public $template_list_transient_key = 'tutor_template_list_cache';
 
 	/**
 	 * Constructor.
+	 *
+	 * @since 3.6.0
 	 *
 	 * @return  void
 	 */
@@ -52,6 +60,8 @@ class TemplateImportHelper {
 
 	/**
 	 * Get base url.
+	 *
+	 * @since 3.6.0
 	 *
 	 * @return string The base URL for the template import API.
 	 */
@@ -67,6 +77,8 @@ class TemplateImportHelper {
 	/**
 	 * Make url
 	 *
+	 * @since 3.6.0
+	 *
 	 * @param  string $url_path  url path.
 	 *
 	 * @return  string full url.
@@ -77,6 +89,8 @@ class TemplateImportHelper {
 
 	/**
 	 * Get Template list.
+	 *
+	 * @since 3.6.0
 	 *
 	 * @throws \Exception If there is an error fetching or decoding the templates.
 	 */
@@ -116,7 +130,10 @@ class TemplateImportHelper {
 	/**
 	 * Get Template download url
 	 *
+	 * @since 3.6.0
+	 *
 	 * @param string $template_id The ID of the template to download.
+	 *
 	 *
 	 * return string The download URL for the specified template.
 	 */
