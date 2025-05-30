@@ -155,9 +155,6 @@ const modalConfirmation = (modalOpener) => {
 	let modalHeading = modalElement && modalElement.querySelector('[data-modal-dynamic-title]');
 	let modalMessage = modalElement && modalElement.querySelector('[data-modal-dynamic-content]');
 
-	confirmButton.removeAttribute('data-reset-for');
-	confirmButton.classList.remove('reset_to_default');
-
 	confirmButton.innerText = modalOpener.dataset.btntext;
 	confirmButton.dataset.reset = '';
 	modalHeading.innerText = modalOpener.dataset.heading;
@@ -179,9 +176,12 @@ const modalConfirmation = (modalOpener) => {
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-	let confirmButton = document.querySelector('.tutor-modal-body button[data-reset]');
-	confirmButton.removeAttribute('data-reset-for');
-	confirmButton.classList.remove('reset_to_default');
+	const toolPage = document.querySelector('.tutor-backend-tutor-tools');
+	const confirmButton = document.querySelector('.tutor-modal-body button[data-reset]');
+	if (toolPage && confirmButton) {
+		confirmButton.removeAttribute('data-reset-for');
+		confirmButton.classList.remove('reset_to_default');
+	}
 });
 
 document.addEventListener('click', async function (e) {
