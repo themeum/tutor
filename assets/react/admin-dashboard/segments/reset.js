@@ -57,7 +57,7 @@ const resetConfirmation = () => {
 
 									let elementOptions = elementItem.options;
 									[...elementOptions].forEach((elementOption) => {
-										elementOption.selected = item.default.includes(elementOption.value) ? true : false;
+										elementOption.selected = String(item.default).includes(elementOption.value) ? true : false;
 									});
 
 								} else if (item.type == 'color_preset') {
