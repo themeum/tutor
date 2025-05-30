@@ -160,7 +160,11 @@ const modalConfirmation = (modalOpener) => {
 	modalHeading.innerText = modalOpener.dataset.heading;
 	modalMessage.innerText = modalOpener.dataset.message;
 
-	confirmButton.addEventListener('click', function () {
+	if (confirmButton._handleConfirmClick) {
+		confirmButton.removeEventListener('click', confirmButton._handleConfirmClick);
+	}
+
+	const handleConfirmClick = () => {
 		confirmButton.classList.add('is-loading');
 
 		if (modalOpener.classList.contains('tutor-reset-all')) {
@@ -172,7 +176,10 @@ const modalConfirmation = (modalOpener) => {
 		if (modalOpener.classList.contains('delete_single_settings')) {
 			delete_settings_xhttp_request(modalOpener, modalElement, confirmButton);
 		}
-	});
+	};
+
+	confirmButton._handleConfirmClick = handleConfirmClick;
+	confirmButton.addEventListener('click', handleConfirmClick);
 };
 
 document.addEventListener('DOMContentLoaded', function () {
