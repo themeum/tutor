@@ -185,6 +185,19 @@ class OrderModel {
 	}
 
 	/**
+	 * Get a order record.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array $where where clause.
+	 *
+	 * @return mixed
+	 */
+	public function get_row( $where = array() ) {
+		return QueryHelper::get_row( $this->table_name, $where, 'id' );
+	}
+
+	/**
 	 * Get recalculated order tax data.
 	 *
 	 * @since 3.4.0
