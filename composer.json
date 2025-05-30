@@ -29,12 +29,12 @@
   "scripts": {
     "post-install-cmd": [
       "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal",
-       "rm -rf includes/droip && git clone https://github.com/themeum/tutor-droip.git includes/droip",
+      "if [ ! -d \"includes/droip\" ]; then git clone https://github.com/themeum/tutor-droip.git includes/droip; else cd includes/droip && git pull origin master; fi",
       "cd includes/droip && composer install && npm install"
     ],
     "post-update-cmd": [
       "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal",
-      "rm -rf includes/droip && git clone https://github.com/themeum/tutor-droip.git includes/droip",
+      "if [ ! -d \"includes/droip\" ]; then git clone https://github.com/themeum/tutor-droip.git includes/droip; else cd includes/droip && git pull origin master; fi",
       "cd includes/droip && composer update && npm install"
     ]
   }
