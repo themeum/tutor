@@ -72,7 +72,6 @@
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-watch": "^5.0.1",
-    "gulp-wp-pot": "^2.4.3",
     "gulp-zip": "^5.0.2",
     "lodash.range": "^3.2.0",
     "path": "^0.12.7",
