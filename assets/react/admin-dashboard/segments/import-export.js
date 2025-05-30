@@ -21,7 +21,8 @@ const load_saved_data = async () => {
 };
 
 function tutor_option_history_load(dataset) {
-	var output = '';
+	const { __ } = wp.i18n;
+	let output = '';
 	if (null !== dataset && 0 !== dataset.length) {
 		dataset.forEach((value) => {
 			let dataKey = value[0];
@@ -31,10 +32,10 @@ function tutor_option_history_load(dataset) {
 			output += `<div class="tutor-option-field-row">
 				<div class="tutor-option-field-label">
 					<div class="tutor-fs-7 tutor-fw-medium">${dataValue.history_date}
-					<span class="tutor-badge-label tutor-ml-16${badgeStatus}"> ${dataValue.datatype}</span> </div>
+					<span class="tutor-badge-label tutor-text-capitalize tutor-ml-16${badgeStatus}"> ${dataValue.datatype}</span> </div>
 				</div>
 				<div class="tutor-option-field-input">
-					<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Restore Settings" data-heading="Restore Previous Settings?" data-message="WARNING! This will overwrite all existing settings, please proceed with caution." data-id="${dataKey}">Apply</button>
+					<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm apply_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="${__('Yes, Restore Settings" data-heading="Restore Previous Settings?', 'tutor')}" data-message="${__('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')}" data-id="${dataKey}">${__('Apply', 'tutor')}</button>
 					<div class="tutor-dropdown-parent tutor-ml-16">
 						<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 							<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
@@ -43,13 +44,13 @@ function tutor_option_history_load(dataset) {
 							<li>
 								<a href="javascript:;" class="tutor-dropdown-item export_single_settings" data-id="${dataKey}">
 									<span class="tutor-icon-archive tutor-mr-8" area-hidden="true"></span>
-									<span>Download</span>
+									<span>${__('Download', 'tutor')}</span>
 								</a>
 							</li>
 							<li>
 								<a href="javascript:;" class="tutor-dropdown-item delete_single_settings" data-tutor-modal-target="tutor-modal-bulk-action" data-btntext="Yes, Delete Settings" data-heading="Delete This Settings?" data-message="WARNING! This will remove the settings history data from your system, please proceed with caution." data-id="${dataKey}">
 									<span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
-									<span>Delete</span>
+									<span>${__('Delete', 'tutor')}</span>
 								</a>
 							</li>
 						</ul>
@@ -58,9 +59,9 @@ function tutor_option_history_load(dataset) {
         	</div>`;
 		});
 	} else {
-		output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="tutor-fs-7 tutor-fw-medium">No settings data found.</p></div></div>`;
+		output += `<div class="tutor-option-field-row"><div class="tutor-option-field-label"><p class="tutor-fs-7 tutor-fw-medium">${__('No settings data found.', 'tutor')}</p></div></div>`;
 	}
-	const heading = `<div class="tutor-option-field-row"><div class="tutor-option-field-label">Date</div></div>`;
+	const heading = `<div class="tutor-option-field-row"><div class="tutor-option-field-label">${__('Date', 'tutor')}</div></div>`;
 
 	const historyData = document.querySelector('.history_data');
 	if (historyData) {
