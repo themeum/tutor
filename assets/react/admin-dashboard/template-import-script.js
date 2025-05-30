@@ -1,5 +1,3 @@
-
-
 document.addEventListener('DOMContentLoaded', function () {
 	const templateDemoImportRoot = document.querySelector(".tutor-template-import-area");
 	const livePreviewModal = document.querySelector(".tutor-template-preview-modal");
@@ -20,9 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				tutorTemplateShimmerEffect.style.display = "block";
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
-				// return 0;
-				// iframe.src = event.target.dataset.template_url;
-				iframe.src = 'https://pixage.droip.io';
+				iframe.src = event.target.dataset.template_url;
 				if (_tutorobject?.tutor_pro_url) {
 					importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);
 				}

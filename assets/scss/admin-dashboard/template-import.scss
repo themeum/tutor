@@ -410,6 +410,18 @@ img {
 		background: #ddd;
 		border-radius: 6px;
 		height: 25px;
+		position: relative;
+
+		&::after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -150px;
+			width: 150px;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+			animation: tutorTemplateShimmerKeyframe 1.5s infinite;
+		}
 	}
 
 	.tutor-template-shimmer-effect-2-box-1 {}
