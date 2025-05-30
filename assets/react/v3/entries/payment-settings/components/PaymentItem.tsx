@@ -13,7 +13,7 @@ import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
-import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
@@ -103,6 +103,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     const { action } = await showModal({
       component: ConfirmationModal,
       props: {
+        /* translators: %s is the label of the item to remove */
         title: sprintf(__('Remove %s', 'tutor'), data.label),
         description: __('Are you sure you want to remove this payment method?', 'tutor'),
       },
@@ -141,9 +142,9 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
   const paymentActionTray = (
     <div css={styles.cardActions}>
-      <Show when={data.update_available}>
+      <Show when={data.is_plugin_active && data.update_available}>
         <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
-          {__('Update available', 'tutor')}
+          {__('Update Available', 'tutor')}
         </Badge>
         <Button
           variant="text"
@@ -161,12 +162,17 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
           }}
           loading={installPaymentMutation.isPending}
         >
-          {__('Update now', 'tutor')}
+          {__('Update Now', 'tutor')}
         </Button>
       </Show>
       <Show when={!data.is_manual && !data.is_installed}>
         <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
-          {__('Plugin not installed', 'tutor')}
+          {__('Plugin Not Installed', 'tutor')}
+        </Badge>
+      </Show>
+      <Show when={!data.is_plugin_active && data.is_installed && !data.is_plugin_active}>
+        <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
+          {__('Plugin Not Activated', 'tutor')}
         </Badge>
       </Show>
       <Controller
@@ -258,11 +264,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
                         case 'textarea':
                           return (
-                            <FormTextareaInput
+                            <FormWPEditor
                               {...controllerProps}
                               label={field.label}
-                              rows={6}
                               helpText={field.hint}
+                              toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
                             />
                           );
 

@@ -34,7 +34,7 @@ if ( ! empty( $field['group_options'] ) ) {
 						<span class="label-after"> <?php echo esc_attr( $option ['label'] ); ?> </span>
 					</label>
 					<div class="tooltip-wrap tooltip-icon">
-						<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $option ['desc'] ); ?></span>
+						<span class="tooltip-txt tooltip-top"><?php echo esc_attr( $option ['desc'] ); ?></span>
 					</div>
 				</div>
 			<?php endforeach; ?>

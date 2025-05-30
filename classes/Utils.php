@@ -962,20 +962,25 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course ID.
+	 * @since 3.6.0 $custom_args param added
+	 *
+	 * @param int   $course_id course ID.
+	 * @param array $custom_args Add custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_topics( $course_id = 0 ) {
+	public function get_topics( $course_id = 0, $custom_args = array() ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => 'topics',
 			'post_parent'    => $course_id,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 			'posts_per_page' => -1,
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$query = new \WP_Query( $args );
 
@@ -1057,23 +1062,26 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $topics_id topics ID.
-	 * @param int $limit limit.
+	 * @param int   $topics_id topics ID.
+	 * @param int   $limit limit.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10 ) {
+	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10, $custom_args = array() ) {
 		$topics_id        = $this->get_post_id( $topics_id );
 		$lesson_post_type = tutor()->lesson_post_type;
 		$post_type        = array_unique( apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) ) );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => $post_type,
 			'post_parent'    => $topics_id,
 			'posts_per_page' => $limit,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		return new \WP_Query( $args );
 	}
@@ -2948,7 +2956,11 @@ class Utils {
 	 *
 	 * @return array|null|object|void
 	 */
-	public function product_belongs_with_course( $product_id = 0 ) {
+	public function product_belongs_with_course( int $product_id ) {
+		if ( ! $product_id ) {
+			return null;
+		}
+
 		global $wpdb;
 
 		$query = $wpdb->get_row(
@@ -3347,7 +3359,7 @@ class Utils {
 			if ( 5 === (int) $rating ) {
 				$max_rating = 5;
 			}
-			$rating_having = $wpdb->prepare( " HAVING rating >= %d AND rating <= %d ", $rating, $max_rating );
+			$rating_having = $wpdb->prepare( ' HAVING rating >= %d AND rating <= %d ', $rating, $max_rating );
 		}
 
 		/**
@@ -3540,7 +3552,7 @@ class Utils {
 	 * @param string  $date_filter date filter.
 	 * @param string  $order_by order by.
 	 * @param string  $order order.
-	 * 
+	 *
 	 * @since 3.4.0
 	 *
 	 * @param array   $post_status the post status.
@@ -3595,7 +3607,7 @@ class Utils {
 			$author_query = "AND course.post_author = $instructor_id";
 		}
 
-		$post_status = QueryHelper::prepare_in_clause( $post_status );
+		$post_status    = QueryHelper::prepare_in_clause( $post_status );
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
@@ -4051,18 +4063,31 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int   $course_id course id.
+	 * @since 3.6.0
+	 *
+	 * Fetching data by context, either course or comment
+	 *
+	 * @param int   $object id Course/Comment id.
 	 * @param int   $start offset.
 	 * @param int   $limit limit.
 	 * @param bool  $count_only count only.
 	 * @param array $status_in status list.
 	 * @param int   $include_user_id include user id.
+	 * @param int   $is_course_object Whether fetching by course or not.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0 ) {
-		$course_id = $this->get_post_id( $course_id );
+	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true  ) {
 		global $wpdb;
+
+		$object_id = (int) $object_id;
+
+		$where_clause = '_reviews.comment_ID = %d';
+
+		if ( $is_course_object ) {
+			$object_id    = $this->get_post_id( $object_id );
+			$where_clause = '_reviews.comment_post_ID = %d';
+		}
 
 		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
 		$status_in       = '"' . implode( '","', $status_in ) . '"';
@@ -4088,12 +4113,12 @@ class Utils {
 						ON _reviews.comment_ID = _rev_meta.comment_id
 					LEFT JOIN {$wpdb->users} _reviewer
 						ON _reviews.user_id = _reviewer.ID
-			WHERE 	_reviews.comment_post_ID = %d
+			WHERE 	{$where_clause}
 					AND _reviews.comment_type = 'tutor_course_rating' 
 					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
 					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
-			$course_id
+			$object_id
 		);
 
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
@@ -6720,11 +6745,12 @@ class Utils {
 	 *
 	 * @since 1.3.4
 	 *
-	 * @param int $parent parent.
+	 * @param int   $parent parent.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return array
 	 */
-	public function get_course_categories( $parent = 0, $custom_args = array() ) {
+	public function get_course_categories( $parent = 0, $custom_args = array(), $top_level_children = false ) {
 		$default_args = array(
 			'taxonomy'   => CourseModel::COURSE_CATEGORY,
 			'hide_empty' => false,
@@ -6743,15 +6769,11 @@ class Utils {
 
 		$terms = get_terms( $args );
 
-		$children = array();
-		foreach ( $terms as $term ) {
-			if ( is_object( $term ) ) {
-				$term->children             = $this->get_course_categories( $term->term_id );
-				$children[ $term->term_id ] = $term;
-			}
+		if ( $top_level_children ) {
+			return $terms;
 		}
 
-		return $children;
+		return $this->build_term_tree( $terms, $parent );
 	}
 
 	/**
@@ -6759,16 +6781,22 @@ class Utils {
 	 *
 	 * @since 1.9.3
 	 *
+	 * @since 3.6.0 Custom args param added
+	 *
+	 * @param array $custom_args Custom args.
+	 *
 	 * @return array
 	 */
-	public function get_course_tags() {
-		$args = apply_filters(
+	public function get_course_tags( $custom_args = array() ) {
+		$default_args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
 				'taxonomy'   => CourseModel::COURSE_TAG,
 				'hide_empty' => false,
 			)
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$terms = get_terms( $args );
 
@@ -6841,7 +6869,7 @@ class Utils {
 	 * @since 1.3.4
 	 * @since 3.0.0 hide admin bar support and location param added.
 	 *
-	 * @param int $course_id course id.
+	 * @param int   $course_id course id.
 	 * @param mixed $location possible values `null|backend|frontend`.
 	 *
 	 * @return false|string
@@ -7079,9 +7107,9 @@ class Utils {
 			$status = '';
 		}
 
-		$status_query = "";
+		$status_query = '';
 		if ( is_array( $status ) && count( $status ) ) {
-			$in_clause    =  QueryHelper::prepare_in_clause( $status );
+			$in_clause    = QueryHelper::prepare_in_clause( $status );
 			$status_query = "AND enrol.post_status IN ({$in_clause})";
 		} elseif ( ! empty( $status ) ) {
 			$status_query = "AND enrol.post_status = '$status' ";
@@ -7144,9 +7172,9 @@ class Utils {
 			$status = '';
 		}
 
-		$status_query = "";
+		$status_query = '';
 		if ( is_array( $status ) && count( $status ) ) {
-			$in_clause    =  QueryHelper::prepare_in_clause( $status );
+			$in_clause    = QueryHelper::prepare_in_clause( $status );
 			$status_query = "AND enrol.post_status IN ({$in_clause})";
 		} elseif ( ! empty( $status ) ) {
 			$status_query = "AND enrol.post_status = '$status' ";
@@ -8172,8 +8200,9 @@ class Utils {
 	 * @return string|false
 	 */
 	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0 ) {
-		$value = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
-		$time  = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
+		$value               = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
+		$time                = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
+		$deadline_from_start = (bool) $this->get_assignment_option( $assignment_id, 'deadline_from_start' );
 
 		if ( ! $value ) {
 			return $fallback;
@@ -8194,6 +8223,13 @@ class Utils {
 		$publish_date_gmt = get_post_field( 'post_date_gmt', $assignment_id );
 
 		$deadline_date = strtotime( $enrolled_date_gmt ) < strtotime( $publish_date_gmt ) ? $publish_date_gmt : $enrolled_date_gmt;
+
+		if ( $deadline_from_start ) {
+			$assignment_comment = tutor_utils()->get_single_comment_user_post_id( $assignment_id, $student_id );
+			if ( $assignment_comment && isset( $assignment_comment->comment_date_gmt ) ) {
+				$deadline_date = $assignment_comment->comment_date_gmt;
+			}
+		}
 
 		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
@@ -10172,25 +10208,25 @@ class Utils {
 	 */
 	public function allowed_profile_bio_tags( $tags = array() ) {
 		$supported_tags = array(
-			'p'      => array(),
-			'br'     => array(),
-			'span'   => array(
+			'p'          => array(),
+			'br'         => array(),
+			'span'       => array(
 				'style' => true,
 			),
-			'strong' => array(),
-			'b'      => array(),
-			'em'     => array(),
-			'i'      => array(),
-			'u'      => array(),
+			'strong'     => array(),
+			'b'          => array(),
+			'em'         => array(),
+			'i'          => array(),
+			'u'          => array(),
 			'blockquote' => array(),
-			'ul'     => array(),
-			'ol'     => array(),
-			'li'     => array(),
-			'del'    => array(),
-			'ins'    => array(),
-			'sub'    => array(),
-			'sup'    => array(),
-			'a'      => array(
+			'ul'         => array(),
+			'ol'         => array(),
+			'li'         => array(),
+			'del'        => array(),
+			'ins'        => array(),
+			'sub'        => array(),
+			'sup'        => array(),
+			'a'          => array(
 				'href'   => true,
 				'title'  => true,
 				'target' => true,
@@ -10357,18 +10393,22 @@ class Utils {
 		}
 
 		if ( is_plugin_active( 'elementor/elementor.php' ) ) {
-			$name             = 'elementor';
-			$editors[ $name ] = array(
-				'name'  => $name,
-				'label' => __( 'Elementor', 'tutor' ),
-				'link'  => add_query_arg(
-					array(
-						'post'   => $post_id,
-						'action' => $name,
+			$post_type             = get_post_type( $post_id );
+			$elementor_cpt_support = get_option( 'elementor_cpt_support' );
+			if ( is_array( $elementor_cpt_support ) && in_array( $post_type, $elementor_cpt_support ) ) {
+				$name             = 'elementor';
+				$editors[ $name ] = array(
+					'name'  => $name,
+					'label' => __( 'Elementor', 'tutor' ),
+					'link'  => add_query_arg(
+						array(
+							'post'   => $post_id,
+							'action' => $name,
+						),
+						get_admin_url( null, 'post.php' )
 					),
-					get_admin_url( null, 'post.php' )
-				),
-			);
+				);
+			}
 		}
 
 		return apply_filters( 'tutor_course_builder_editor_list', $editors, $post_id );
@@ -10399,7 +10439,7 @@ class Utils {
 		if ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) ) {
 			$name = 'elementor';
 		}
-		 
+
 		if ( 'droip' === get_post_meta( $post_id, 'droip_editor_mode', true ) ) {
 			$name = 'droip';
 		}
@@ -10477,7 +10517,7 @@ class Utils {
 		if ( false === $next_timestamp ) {
 			return null;
 		}
-		
+
 		/* translators: %s: timestamp */
 		return sprintf( __( '%s left', 'tutor' ), human_time_diff( $next_timestamp ) );
 	}
@@ -10580,12 +10620,12 @@ class Utils {
 		$username = trim( $username );
 
 		// If username is email then remove domain part from it.
-		if ( filter_var( $username , FILTER_VALIDATE_EMAIL ) ) {
+		if ( filter_var( $username, FILTER_VALIDATE_EMAIL ) ) {
 			$username = strstr( $username, '@', true );
 		}
 
 		// Sanitize and convert to snake_case.
-		$username = str_replace('-', '_', sanitize_title( $username ) );
+		$username = str_replace( '-', '_', sanitize_title( $username ) );
 
 		// Add postfix to username if exists and make sure it's unique.
 		$original_username = $username;
@@ -10597,5 +10637,29 @@ class Utils {
 		}
 
 		return $username;
+	}
+
+	/**
+	 * Build term tree
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array   $terms Terms array.
+	 * @param integer $parent Parent id.
+	 *
+	 * @return array
+	 */
+	public function build_term_tree( $terms, $parent = 0 ) {
+		$branch = array();
+		foreach ( $terms as $term ) {
+			if ( (int) $term->parent === (int) $parent ) {
+				$children = $this->build_term_tree( $terms, $term->term_id );
+				if ( $children ) {
+					$term->children = $children;
+				}
+				$branch[] = $term;
+			}
+		}
+		return $branch;
 	}
 }

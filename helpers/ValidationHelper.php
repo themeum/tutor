@@ -5,7 +5,7 @@
  * Provides static helper methods for form validation.
  *
  * @package Tutor\Helper
- * @author  Themum<support@themeum.com>
+ * @author  Themeum<support@themeum.com>
  * @link    https://themeum.com
  * @since   2.6.0
  */
@@ -321,5 +321,25 @@ class ValidationHelper {
 
 		$record = QueryHelper::get_row( $table, array( $column => $value ), $column );
 		return $record ? true : false;
+	}
+
+	/**
+	 * Validate term IDs before setting them.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array  $term_ids Term IDs to validate.
+	 * @param string $taxonomy Taxonomy to check against.
+	 *
+	 * @return array Valid term IDs.
+	 */
+	public static function validate_term_ids( $term_ids, $taxonomy ) {
+		return array_filter(
+			array_map( 'intval', $term_ids ),
+			function ( $term_id ) use ( $taxonomy ) {
+				$term = get_term( $term_id, $taxonomy );
+				return ! is_wp_error( $term ) && $term;
+			}
+		);
 	}
 }

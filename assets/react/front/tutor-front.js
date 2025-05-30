@@ -1,5 +1,5 @@
-import '../admin-dashboard/segments/lib';
 import '../admin-dashboard/segments/filter';
+import '../admin-dashboard/segments/lib';
 import sprintf from '../helper/sprintf';
 import './_select_dd_search';
 import './course/index';
@@ -299,6 +299,7 @@ jQuery(document).ready(function($) {
 			if (completedPercentage < required_percentage) {
 				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 				complete_lesson_btn.attr('disabled', true);
+				/* translators: %s is the required watch percentage (e.g., 80) */
 				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">${ sprintf( __( 'Watch at least %s% to complete the lesson.', 'tutor' ), video_data.required_percentage ) }</span>`);
 			}
 		},

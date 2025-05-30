@@ -230,14 +230,16 @@ class QuizBuilder {
 
 		foreach ( $payload['questions'] as $question ) {
 			if ( ! isset( $question[ self::TRACKING_KEY ] ) ) {
-				$success                        = false;
-				$errors[ self::TRACKING_KEY ][] = sprintf( __( '%s is required for each question', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
+				$success = false;
+				// translators: %s is the tracking key required for each question.
+				$errors[ self::TRACKING_KEY ][] = sprintf( __( '%s is required for each question', 'tutor' ), self::TRACKING_KEY );
 				break;
 			}
 
 			if ( ! in_array( $question[ self::TRACKING_KEY ], array( self::FLAG_NEW, self::FLAG_UPDATE, self::FLAG_NO_CHANGE ), true ) ) {
-				$success                        = false;
-				$errors[ self::TRACKING_KEY ][] = sprintf( __( 'Invalid value for %s', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
+				$success = false;
+				// translators: %s is the tracking key for which the value is invalid.
+				$errors[ self::TRACKING_KEY ][] = sprintf( __( 'Invalid value for %s', 'tutor' ), self::TRACKING_KEY );
 				break;
 			}
 

@@ -214,8 +214,9 @@ class Assets {
 		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 
 		// Tutor order detail & coupon scripts.
-		$page   = Input::get( 'page', '' );
-		$action = Input::get( 'action' );
+		$page     = Input::get( 'page', '' );
+		$action   = Input::get( 'action' );
+		$sub_page = Input::get( 'sub_page' );
 
 		$allowed_actions = array( 'add_new', 'edit' );
 
@@ -230,9 +231,14 @@ class Assets {
 
 			// @since 3.0.0 add tax react app on the settings page.
 			if ( 'tutor_settings' === $page && ! Input::has( 'edit' ) ) {
+				wp_enqueue_editor();
 				wp_enqueue_script( 'tutor-tax-settings', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 				wp_enqueue_script( 'tutor-payment-settings', tutor()->url . 'assets/js/tutor-payment-settings.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 			}
+		}
+
+		if ( 'tutor-tools' === $page && 'import_export' === $sub_page ) {
+				wp_enqueue_script( 'tutor-import-export', tutor()->url . 'assets/js/tutor-import-export.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
 
 		if ( 'tutor-addons' === $page ) {
@@ -595,7 +601,6 @@ class Assets {
 	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**

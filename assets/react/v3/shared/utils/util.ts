@@ -328,6 +328,10 @@ export const copyToClipboard = (text: string) => {
 };
 
 export const convertToErrorMessage = (error: ErrorResponse) => {
+  if (!error || !error.response || !error.response.data) {
+    return __('Something went wrong', 'tutor');
+  }
+
   let errorMessage = error.response.data.message;
   if (error.response.data.status_code === 422 && error.response.data.data) {
     errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
