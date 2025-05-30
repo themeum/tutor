@@ -614,7 +614,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 								<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
 								<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
 								<button type="submit" id="tutor_assignment_start_btn" class="tutor-btn tutor-btn-primary"<?php echo $is_expired ? ' disabled' : ''; ?>>
-									<?php esc_html_e( 'Start Assignment Submit', 'tutor' ); ?>
+									<?php esc_html_e( 'Start Assignment', 'tutor' ); ?>
 								</button>
 							</form>
 

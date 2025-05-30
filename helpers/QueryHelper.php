@@ -147,15 +147,17 @@ class QueryHelper {
 	 * Insert multiple rows without knowing key value
 	 *
 	 * @since v2.0.7
+	 * @since 3.6.0 param $return_ids added.
 	 *
 	 * @param string $table  table name.
 	 * @param array  $request two dimensional array
 	 * for ex: [ [id => 1], [id => 2] ].
+	 * @param bool   $return_ids if true returns the last inserted data ids.
 	 *
 	 * @return mixed  wpdb response true or int on success, false on failure.
 	 * @throws \Exception If error occur.
 	 */
-	public static function insert_multiple_rows( $table, $request ) {
+	public static function insert_multiple_rows( $table, $request, $return_ids = false, $do_sanitize = true ) {
 		global $wpdb;
 		$column_keys   = '';
 		$column_values = '';
@@ -168,7 +170,10 @@ class QueryHelper {
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
 				$column_keys   .= sanitize_key( $v ) . ',';
-				$sanitize_value = is_null( $value[ $v ] ) ? $value[ $v ] : sanitize_text_field( $value[ $v ] );
+				$sanitize_value = $value[$v];
+				if ( $sanitize_value && $do_sanitize ) {
+					$sanitize_value = sanitize_text_field( $sanitize_value );
+				}
 				$column_values .= is_numeric( $sanitize_value ) ? $sanitize_value . ',' : "'$sanitize_value'" . ',';
 			}
 			// Trim trailing comma.
@@ -195,6 +200,15 @@ class QueryHelper {
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
+		}
+
+		if ( $return_ids ) {
+			$query_ids = $wpdb->get_results(
+				"SELECT ID FROM {$table} WHERE ID >= LAST_INSERT_ID()",
+				'ARRAY_N'
+			);
+
+			return $query_ids;
 		}
 
 		return true;

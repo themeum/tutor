@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
+use TUTOR_ASSIGNMENTS\Assignments;
 
 /**
  * CourseModel Class
@@ -87,11 +88,15 @@ class CourseModel {
 	 *
 	 * @since 2.0.7
 	 *
-	 * @param string $status course status.
+	 * @since 3.6.0 $post_type param added
+	 *
+	 * @param string $status Post status.
+	 * @param string $post_type Post type.
+	 *
 	 * @return int
 	 */
-	public static function count( $status = self::STATUS_PUBLISH ) {
-		$count_obj = wp_count_posts( self::POST_TYPE );
+	public static function count( $status = self::STATUS_PUBLISH, $post_type = self::POST_TYPE ) {
+		$count_obj = wp_count_posts( $post_type );
 		if ( 'all' === $status ) {
 			return array_sum( (array) $count_obj );
 		}
@@ -105,7 +110,7 @@ class CourseModel {
 	 * @since 3.5.0
 	 *
 	 * @param int|\WP_POST $post the post id or object.
-     *
+	 *
 	 * @return bool
 	 */
 	public static function get_post_types( $post ) {
@@ -270,15 +275,15 @@ class CourseModel {
 	 */
 	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false, $post_types = array() ) {
 		global $wpdb;
-		$offset           = sanitize_text_field( $offset );
-		$limit            = sanitize_text_field( $limit );
-		$instructor_id    = tutils()->get_user_id( $instructor_id );
+		$offset        = sanitize_text_field( $offset );
+		$limit         = sanitize_text_field( $limit );
+		$instructor_id = tutils()->get_user_id( $instructor_id );
 
 		if ( ! count( $post_types ) ) {
 			$post_types = array( tutor()->course_post_type );
 		}
 
-		$post_types       = QueryHelper::prepare_in_clause( $post_types );
+		$post_types = QueryHelper::prepare_in_clause( $post_types );
 
 		if ( empty( $post_status ) || 'any' == $post_status ) {
 			$where_post_status = '';
@@ -903,5 +908,105 @@ class CourseModel {
 		);
 
 		return $instructor_ids;
+	}
+
+	/**
+	 * Count total attachments available in all courses or specific
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param int $course_id Course id to get only a particular course's attachment.
+	 *
+	 * @return int
+	 */
+	public static function count_attachment( int $course_id = 0 ) {
+		global $wpdb;
+
+		$total_count = 0;
+
+		$primary_table  = "$wpdb->posts p";
+		$joining_tables = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->postmeta} pm",
+				'on'    => "p.ID = pm.post_id AND pm.meta_key = '_tutor_attachments' AND pm.meta_value != 'a:0:{}'",
+			),
+		);
+
+		// Prepare query.
+		$select = array( 'pm.meta_value' );
+		$where  = array();
+		if ( $course_id ) {
+			$where['p.ID'] = $course_id;
+		}
+		$search   = array();
+		$limit    = 0; // Get all.
+		$offset   = 0;
+		$order_by = '';
+
+		$results = QueryHelper::get_joined_data(
+			$primary_table,
+			$joining_tables,
+			$select,
+			$where,
+			$search,
+			$order_by,
+			$limit,
+			$offset
+		)['results'];
+
+		if ( $results ) {
+			foreach ( $results as $row ) {
+				$attachment_ids = maybe_unserialize( $row->meta_value );
+				if ( ! is_array( $attachment_ids ) || empty( $attachment_ids ) ) {
+					continue;
+				}
+
+				$attachments = get_posts(
+					array(
+						'post_type'      => 'attachment',
+						'post__in'       => $attachment_ids,
+						'posts_per_page' => -1,
+					)
+				);
+
+				$total_count += count( $attachments );
+			}
+		}
+
+		return $total_count;
+	}
+
+	/**
+	 * Count course content
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param string $content_type Content type.
+	 *
+	 * @return int
+	 */
+	public static function count_course_content( string $content_type ): int {
+		$total_count = 0;
+		switch ( $content_type ) {
+			case tutor()->lesson_post_type:
+				$total_count = tutor_utils()->get_total_lesson();
+				break;
+			case tutor()->quiz_post_type:
+				$total_count = tutor_utils()->get_total_quiz();
+				break;
+			case tutor()->assignment_post_type:
+				if ( tutor_utils()->is_addon_enabled( 'tutor-assignments' ) ) {
+					$total_count = ( new Assignments( false ) )->get_total_assignment();
+				}
+				break;
+			case 'attachments':
+				$total_count = self::count_attachment();
+				break;
+			default:
+				break;
+		}
+
+		return (int) $total_count;
 	}
 }

@@ -840,6 +840,20 @@ class CouponModel {
 	}
 
 	/**
+	 * Set apply coupon error.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param string $error error.
+	 *
+	 * @return void
+	 */
+	public static function set_apply_coupon_error( $error ) {
+		global $tutor_coupon_apply_err_msg;
+		$tutor_coupon_apply_err_msg = $error;
+	}
+
+	/**
 	 * Check whether this coupon is valid or not.
 	 *
 	 * Considering start-expire time & use limit.
@@ -851,9 +865,8 @@ class CouponModel {
 	 * @return bool
 	 */
 	public function is_coupon_valid( object $coupon ): bool {
-		global $tutor_coupon_apply_err_msg;
 		if ( self::STATUS_INACTIVE === $coupon->coupon_status || self::STATUS_TRASH === $coupon->coupon_status ) {
-			$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'invalid' );
+			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'invalid' ) );
 			return false;
 		}
 
@@ -875,7 +888,6 @@ class CouponModel {
 	 * @return bool
 	 */
 	public function is_coupon_applicable( object $coupon, int $object_id, string $order_type ): bool {
-		global $tutor_coupon_apply_err_msg;
 
 		$is_applicable      = false;
 		$is_membership_plan = false;
@@ -932,7 +944,7 @@ class CouponModel {
 		}
 
 		if ( ! $is_applicable ) {
-			$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'specific_applicable', str_replace( '_', ' ', $applies_to ) );
+			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'specific_applicable', str_replace( '_', ' ', $applies_to ) ) );
 		}
 
 		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id, $applications, $is_membership_plan );
@@ -950,7 +962,6 @@ class CouponModel {
 	 * @return boolean
 	 */
 	public function is_coupon_requirement_meet( $item_id, object $coupon, $order_type = OrderModel::TYPE_SINGLE_ORDER ) {
-		global $tutor_coupon_apply_err_msg;
 
 		$is_meet_requirement = true;
 		$item_ids            = is_array( $item_id ) ? $item_id : array( $item_id );
@@ -979,20 +990,11 @@ class CouponModel {
 			$min_quantity        = $coupon->purchase_requirement_value;
 			$is_meet_requirement = count( $item_ids ) >= $min_quantity;
 			if ( ! $is_meet_requirement ) {
-				$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'minimum_quantity', $min_quantity );
+				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'minimum_quantity', $min_quantity ) );
 			}
 		} elseif ( self::REQUIREMENT_MINIMUM_PURCHASE === $coupon->purchase_requirement && $total_price < $min_amount ) {
-			$is_meet_requirement        = false;
-			$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'minimum_purchase', tutor_get_formatted_price( $min_amount ) );
-		}
-
-		/**
-		 * If there is no regular price item in the cart, then it's not meet requirement.
-		 *
-		 * @since 3.0.0
-		 */
-		if ( 0 === $regular_price_item_count ) {
 			$is_meet_requirement = false;
+			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'minimum_purchase', tutor_get_formatted_price( $min_amount ) ) );
 		}
 
 		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $item_id );
@@ -1008,8 +1010,6 @@ class CouponModel {
 	 * @return boolean
 	 */
 	public function has_coupon_validity( object $coupon ): bool {
-		global $tutor_coupon_apply_err_msg;
-
 		$now         = time();
 		$start_date  = strtotime( $coupon->start_date_gmt );
 		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : 0;
@@ -1017,7 +1017,11 @@ class CouponModel {
 		// Check if the current time is within the start and expiry dates.
 		$has_validity = ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
 		if ( ! $has_validity ) {
-			$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'expired' );
+			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'expired' ) );
+		}
+
+		if ( $now < $start_date ) {
+			self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'invalid' ) );
 		}
 
 		return $has_validity;
@@ -1034,8 +1038,6 @@ class CouponModel {
 	 * @return bool true if has usage limit otherwise false
 	 */
 	public function has_user_usage_limit( object $coupon, int $user_id ): bool {
-		global $tutor_coupon_apply_err_msg;
-
 		$has_limit = true;
 
 		$total_usage_limit = (int) $coupon->total_usage_limit;
@@ -1044,16 +1046,16 @@ class CouponModel {
 		if ( $total_usage_limit > 0 ) {
 			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
 			if ( $coupon_usage_count >= $total_usage_limit ) {
-				$has_limit                  = false;
-				$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' );
+				$has_limit = false;
+				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'usage_limit_exceeded' ) );
 			}
 		}
 
 		if ( $user_usage_limit > 0 ) {
 			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
-				$has_limit                  = false;
-				$tutor_coupon_apply_err_msg = $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' );
+				$has_limit = false;
+				self::set_apply_coupon_error( $this->get_coupon_failed_error_msg( 'user_usage_limit_exceeded' ) );
 			}
 		}
 
@@ -1126,12 +1128,13 @@ class CouponModel {
 			$post = get_post( $id );
 
 			if ( $post ) {
-				$response = array(
+				$sale_price = get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true );
+				$response   = array(
 					'id'            => $id,
 					'title'         => get_the_title( $id ),
 					'image'         => get_the_post_thumbnail_url( $id ),
 					'regular_price' => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_PRICE_META, true ) ),
-					'sale_price'    => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ) ),
+					'sale_price'    => $sale_price ? tutor_get_formatted_price( $sale_price ) : null,
 				);
 			}
 		} elseif ( term_exists( $id ) ) {

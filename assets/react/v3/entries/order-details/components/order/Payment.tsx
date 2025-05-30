@@ -202,7 +202,10 @@ function Payment() {
             <div>{__('Total Paid', 'tutor')}</div>
             <div css={styles.includeTax}>
               <Show when={order.tax_type === 'inclusive'}>
-                {sprintf(__('Incl. tax %s', 'tutor'), order.tax_amount ? formatPrice(order.tax_amount) : 0)}
+                {
+                  /* translators: %s is the tax amount formatted as a price */
+                  sprintf(__('Incl. tax %s', 'tutor'), order.tax_amount ? formatPrice(order.tax_amount) : 0)
+                }
               </Show>
             </div>
             <div>{formatPrice(order.total_price)}</div>
@@ -216,7 +219,12 @@ function Payment() {
                   {(refund, index) => (
                     <div css={styles.item({ action: 'destructive' })} key={index}>
                       <div>{index === 0 ? 'Refunded' : ''}</div>
-                      <div>{sprintf(__('Reason: %s', 'tutor'), refund.reason ?? '-')}</div>
+                      <div>
+                        {
+                          /* translators: %s is the refund reason or '-' if none */
+                          sprintf(__('Reason: %s', 'tutor'), refund.reason ?? '-')
+                        }
+                      </div>
                       <div>-{formatPrice(refund.amount)}</div>
                     </div>
                   )}

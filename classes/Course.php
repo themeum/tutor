@@ -64,6 +64,27 @@ class Course extends Tutor_Base {
 	const SELLING_OPTION_MEMBERSHIP   = 'membership';
 	const SELLING_OPTION_ALL          = 'all';
 
+	/**
+	 * Additional data meta
+	 *
+	 * @since 3.6.0
+	 */
+	const COURSE_BENEFITS_META         = '_tutor_course_benefits';
+	const COURSE_REQUIREMENTS_META     = '_tutor_course_requirements';
+	const COURSE_TARGET_AUDIENCE_META  = '_tutor_course_target_audience';
+	const COURSE_MATERIAL_INCLUDE_META = '_tutor_course_material_includes';
+	const COURSE_DURATION_META         = '_course_duration';
+
+	/**
+	 * Course settings meta
+	 *
+	 * @since 3.6.0
+	 */
+	const COURSE_ENABLE_QA_META = '_tutor_enable_qa';
+	const PUBLIC_COURSE_META    = '_tutor_is_public_course';
+	const COURSE_SETTINGS_META  = '_tutor_course_settings';
+	const COURSE_LEVEL_META     = '_tutor_course_level';
+
 
 	/**
 	 * Additional course meta info
@@ -870,6 +891,7 @@ class Course extends Tutor_Base {
 		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
 		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
 		$search_term = '';
+		$post_status = Input::post( 'post_status', null );
 
 		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
@@ -877,6 +899,7 @@ class Course extends Tutor_Base {
 		}
 
 		$args = array(
+			'post_status'    => is_null( $post_status ) ? 'publish' : $post_status,
 			'posts_per_page' => $limit,
 			'offset'         => $offset,
 			's'              => $search_term,

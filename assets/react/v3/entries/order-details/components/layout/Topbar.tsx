@@ -41,7 +41,12 @@ function Topbar() {
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={styles.headerTitle}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
+                <h4 css={styles.headerTitle}>
+                  {
+                    /* translators: %s is the order number or ID */
+                    sprintf(__('Order #%s', 'tutor'), order.id)
+                  }
+                </h4>
                 <Show when={order.payment_status}>
                   <PaymentBadge status={order.payment_status} />
                 </Show>
@@ -53,13 +58,19 @@ function Topbar() {
                 when={order.updated_at_readable}
                 fallback={
                   <p css={styles.updateMessage}>
-                    {sprintf(__('Created by %s at %s', 'tutor'), order.created_by, order.created_at_readable)}
+                    {
+                      /* translators: %1$s is author's name and %2$s is creation date/time */
+                      sprintf(__('Created by %1$s at %2$s', 'tutor'), order.created_by, order.created_at_readable)
+                    }
                   </p>
                 }
               >
                 {(date) => (
                   <p css={styles.updateMessage}>
-                    {sprintf(__('Updated by %s at %s', 'tutor'), order.updated_by, date)}
+                    {
+                      /* translators: %1$s is author's name and %2$s is update date/time */
+                      sprintf(__('Updated by %1$s at %2$s', 'tutor'), order.updated_by, date)
+                    }
                   </p>
                 )}
               </Show>
@@ -73,6 +84,7 @@ function Topbar() {
                 showModal({
                   component: CancelOrderModal,
                   props: {
+                    /* translators: %s is the order number */
                     title: sprintf(__('Cancel order #%s', 'tutor'), order.id),
                     order_id: order.id,
                   },

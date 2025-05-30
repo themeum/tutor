@@ -206,6 +206,7 @@ export default function SubscriptionItem({
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
     ...lifetimePresets.map((preset) => ({
+      /* translators: %s is the number of times */
       label: sprintf(__('%s times', 'tutor'), preset.toString()),
       value: String(preset),
     })),
@@ -548,7 +549,10 @@ export default function SubscriptionItem({
         triggerRef={deleteButtonRef}
         closePopover={noop}
         maxWidth="258px"
-        title={sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name)}
+        title={
+          // translators: %s is the title of the item to be deleted
+          sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name)
+        }
         message={__('Are you sure you want to delete this plan? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
         arrow="auto"

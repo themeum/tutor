@@ -11,16 +11,16 @@
 
 ?>
 <div class="tutor-admin-wrap">
-	<div class="tutor-wp-dashboard-header tutor-px-24 tutor-mb-24">
-		<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-16">
+	<div class="tutor-admin-header tutor-px-24 is-sticky" style="z-index: 9;">
+		<div class="tutor-d-lg-flex tutor-align-lg-center tutor-px-12 tutor-py-4">
 			<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Tools', 'tutor' ); ?></span>
 		</div>
 	</div>
 
 	<div class="tutor-admin-container">
-		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
-			<div class="tutor-col-12 tutor-col-sm-auto tutor-col-lg-2">
-				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" data-page="<?php echo esc_attr( wp_unslash( $_GET['page'] ) ); ?>">
+		<div class="tutor-row tutor-gx-lg-0 tutor-mb-24">
+			<div class="tutor-col-12 tutor-col-sm-auto tutor-col-lg-2 tutor-py-16">
+				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v tutor-position-sticky" style="top: 110px;" data-page="<?php echo esc_attr( wp_unslash( $_GET['page'] ) ); ?>">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
 						$icon         = tutor()->icon_dir . $key . '.svg';
@@ -43,7 +43,7 @@
 				<div class="tutor-vr tutor-mx-32 tutor-d-inline-block"></div>
 			</div>
 
-			<div class="tutor-col-12 tutor-col-sm-10 tutor-col-lg-9">
+			<div class="tutor-col-12 tutor-col-sm-10 tutor-col-lg-9 tutor-mt-24">
 				<div class="tutor-option-tab-pages">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {

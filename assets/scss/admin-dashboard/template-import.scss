@@ -26,7 +26,160 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	}
 }
 
-.tutor-template-import-wrapper {}
+.tutor-template-import-wrapper {
+	img {
+		width: 100%;
+	}
+
+	.tutor-template-device-selector {
+		margin-bottom: 16px;
+		display: flex;
+		gap: 10px;
+		justify-content: center;
+	}
+
+	.tutor-template-empty-state {
+		margin-top: 30px;
+		font-size: 20px;
+		line-height: 1.5;
+	}
+
+	// color palette 
+	.all-colors-wrapper {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 2px;
+	}
+
+	.color-palette {
+		width: unset !important;
+		display: grid;
+		gap: 0px;
+		grid-template-columns: 1fr 1fr;
+		grid-template-areas: ". ." ". .";
+		border-radius: 6px;
+		overflow: hidden;
+		cursor: pointer;
+		border: 2px solid rgb(0 0 0 / 5%);
+		box-shadow: rgba(255, 255, 255, 0) 0px 0px 0px 2px;
+	}
+
+	.color-palette.active {
+		border: 2px solid #5641f3;
+		box-shadow: rgba(255, 255, 255, 1) 0px 0px 0px 2px;
+	}
+
+	[data-index="0"] {
+		grid-row-start: span 2;
+		grid-row-end: span 2;
+		grid-column-start: span 1;
+		grid-column-end: span 1;
+		width: 17px;
+		height: 18px;
+	}
+
+	[data-index="1"] {
+		width: 17px;
+		height: 9px;
+	}
+
+	[data-index="2"] {
+		width: 17px;
+		height: 9px;
+	}
+
+	// tutor template shimmer effect
+	.tutor-template-shimmer-effect {
+		padding: 0px;
+		margin: 0 auto;
+		width: 100%;
+		position: absolute;
+		bottom: 0px;
+		top: 0px;
+		left: 0px;
+		background: #fff;
+	}
+
+	.tutor-template-shimmer-effect-2 {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+
+		>div {
+			background: #ddd;
+			border-radius: 6px;
+			height: 25px;
+			position: relative;
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: -150px;
+				width: 150px;
+				height: 100%;
+				background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+				animation: tutorTemplateShimmerKeyframe 1.5s infinite;
+			}
+		}
+
+		.tutor-template-shimmer-effect-2-box-1 {}
+
+		.tutor-template-shimmer-effect-2-box-2 {
+			width: 60%;
+			height: 20px;
+		}
+
+		.tutor-template-shimmer-effect-2-box-3 {
+			width: 80%;
+		}
+	}
+
+	.tutor-template-shimmer-box {
+		background-color: #e0e0e0;
+		border-radius: 8px;
+		position: relative;
+		overflow: hidden;
+		display: block;
+	}
+
+	.tutor-template-shimmer-box::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -150px;
+		width: 150px;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+		animation: tutorTemplateShimmerKeyframe 1.5s infinite;
+	}
+
+	.tutor-template-shimmer-box-large {
+		height: 50%;
+		margin-bottom: 10px;
+	}
+
+	.tutor-template-shimmer-row {
+		display: flex;
+		gap: 10px;
+		height: calc(50% - 10px);
+	}
+
+	.tutor-template-shimmer-box-small {
+		flex: 1;
+		height: 100%;
+	}
+
+	@keyframes tutorTemplateShimmerKeyframe {
+		0% {
+			left: -150px;
+		}
+
+		100% {
+			left: 100%;
+		}
+	}
+}
 
 .tutor-text-truncate {
 	white-space: nowrap;
@@ -92,10 +245,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 			}
 		}
 	}
-}
-
-img {
-	width: 100%;
 }
 
 .tutor-template-preview-btn {}
@@ -337,154 +486,5 @@ img {
 			top: 0;
 			transform: translateX(50%) translateY(-50%);
 		}
-	}
-}
-
-.tutor-template-device-selector {
-	margin-bottom: 16px;
-	display: flex;
-	gap: 10px;
-	justify-content: center;
-}
-
-.tutor-template-empty-state {
-	margin-top: 30px;
-	font-size: 20px;
-	line-height: 1.5;
-}
-
-// color palette 
-.all-colors-wrapper {
-	flex-direction: row;
-	flex-wrap: wrap;
-	gap: 2px;
-}
-
-.color-palette {
-	width: unset !important;
-	display: grid;
-	gap: 0px;
-	grid-template-columns: 1fr 1fr;
-	grid-template-areas: ". ." ". .";
-	border-radius: 6px;
-	overflow: hidden;
-	cursor: pointer;
-	border: 2px solid rgb(0 0 0 / 5%);
-	box-shadow: rgba(255, 255, 255, 0) 0px 0px 0px 2px;
-}
-
-.color-palette.active {
-	border: 2px solid #5641f3;
-	box-shadow: rgba(255, 255, 255, 1) 0px 0px 0px 2px;
-}
-
-[data-index="0"] {
-	grid-row-start: span 2;
-	grid-row-end: span 2;
-	grid-column-start: span 1;
-	grid-column-end: span 1;
-	width: 17px;
-	height: 18px;
-}
-
-[data-index="1"] {
-	width: 17px;
-	height: 9px;
-}
-
-[data-index="2"] {
-	width: 17px;
-	height: 9px;
-}
-
-// tutor template shimmer effect
-.tutor-template-shimmer-effect {
-	padding: 0px;
-	margin: 0 auto;
-	width: 100%;
-	position: absolute;
-	bottom: 0px;
-	top: 0px;
-	left: 0px;
-	background: #fff;
-}
-
-.tutor-template-shimmer-effect-2 {
-	display: flex;
-	flex-direction: column;
-	gap: 10px;
-
-	>div {
-		background: #ddd;
-		border-radius: 6px;
-		height: 25px;
-		position: relative;
-
-		&::after {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: -150px;
-			width: 150px;
-			height: 100%;
-			background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-			animation: tutorTemplateShimmerKeyframe 1.5s infinite;
-		}
-	}
-
-	.tutor-template-shimmer-effect-2-box-1 {}
-
-	.tutor-template-shimmer-effect-2-box-2 {
-		width: 60%;
-		height: 20px;
-	}
-
-	.tutor-template-shimmer-effect-2-box-3 {
-		width: 80%;
-	}
-}
-
-.tutor-template-shimmer-box {
-	background-color: #e0e0e0;
-	border-radius: 8px;
-	position: relative;
-	overflow: hidden;
-	display: block;
-}
-
-.tutor-template-shimmer-box::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: -150px;
-	width: 150px;
-	height: 100%;
-	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-	animation: tutorTemplateShimmerKeyframe 1.5s infinite;
-}
-
-.tutor-template-shimmer-box-large {
-	height: 50%;
-	margin-bottom: 10px;
-}
-
-.tutor-template-shimmer-row {
-	display: flex;
-	gap: 10px;
-	height: calc(50% - 10px);
-}
-
-.tutor-template-shimmer-box-small {
-	flex: 1;
-	height: 100%;
-}
-
-@keyframes tutorTemplateShimmerKeyframe {
-	0% {
-		left: -150px;
-	}
-
-	100% {
-		left: 100%;
 	}
 }

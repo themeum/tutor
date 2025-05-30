@@ -74,7 +74,10 @@ function CouponInfo() {
           <FormInput
             {...controllerProps}
             label={__('Title', 'tutor')}
-            placeholder={sprintf(__('e.g. Summer Sale %s', 'tutor'), format(new Date(), DateFormats.year))}
+            placeholder={
+              /* translators: %s is the current year (e.g., 2025) */
+              sprintf(__('e.g. Summer Sale %s', 'tutor'), format(new Date(), DateFormats.year))
+            }
           />
         )}
       />

@@ -103,6 +103,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     const { action } = await showModal({
       component: ConfirmationModal,
       props: {
+        /* translators: %s is the label of the item to remove */
         title: sprintf(__('Remove %s', 'tutor'), data.label),
         description: __('Are you sure you want to remove this payment method?', 'tutor'),
       },
@@ -262,7 +263,14 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           );
 
                         case 'textarea':
-                          return <FormWPEditor {...controllerProps} label={field.label} helpText={field.hint} hideMediaButtons hideQuickTags />;
+                          return (
+                            <FormWPEditor
+                              {...controllerProps}
+                              label={field.label}
+                              helpText={field.hint}
+                              toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
+                            />
+                          );
 
                         case 'webhook_url':
                           return (
