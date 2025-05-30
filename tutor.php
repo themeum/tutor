@@ -32,6 +32,7 @@ define( 'TUTOR_FILE', __FILE__ );
  */
 add_action( 'init', fn () => load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' ) );
 
+
 if ( ! function_exists( 'tutor' ) ) {
 	/**
 	 * Tutor helper function.

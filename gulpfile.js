@@ -55,6 +55,13 @@ var scss_blueprints = {
 		mode: 'expanded',
 		destination: 'tutor-frontend-dashboard.min.css',
 	},
+
+	tutor_import: {
+		src: 'assets/scss/admin-dashboard/template-import.scss',
+		mode: 'expanded',
+		destination: 'tutor-template-import.min.css'
+	},
+
 };
 
 var task_keys = Object.keys(scss_blueprints);
@@ -101,7 +108,7 @@ gulp.task('watch', function () {
 		if (e.history[0].includes('/front/')) {
 			gulp.parallel('tutor_front')();
 		} else if (e.history[0].includes('/admin-dashboard/')) {
-			gulp.parallel('tutor_admin', 'tutor_setup')();
+			gulp.parallel('tutor_admin', 'tutor_setup', 'tutor_import')();
 		} else if (e.history[0].includes('/frontend-dashboard/')) {
 			gulp.parallel('tutor_front_dashboard')();
 		} else if (e.history[0].includes('modules/')) {
