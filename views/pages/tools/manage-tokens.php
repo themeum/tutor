@@ -31,6 +31,11 @@ $permissions = RestAuth::available_permissions();
 $user        = get_userdata( get_current_user_id() );
 
 ?>
+<div class="tutor-option-main-title">
+	<div class="tutor-fs-4 tutor-fw-medium tutor-color-black">
+		<?php esc_html_e( 'Rest API', 'tutor' ); ?>
+	</div>
+</div>
 
 <div class="tutor-rest-api-keys-wrapper">
 	<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-mb-12" data-tutor-modal-target="tutor-add-new-api-keys">

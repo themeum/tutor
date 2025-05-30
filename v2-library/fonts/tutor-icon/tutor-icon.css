@@ -33,85 +33,88 @@
 /* tutor v2 new icons */
 
 .tutor-icon-privacy:before {
-  content: "\f900";
+  content: "\e100";
 }
 .tutor-icon-laptop:before {
-  content: "\f901";
+  content: "\e101";
 }
 .tutor-icon-desktop:before {
-  content: "\f902";
+  content: "\e102";
 }
 .tutor-icon-tablet:before {
-  content: "\f903";
+  content: "\e103";
 }
 .tutor-icon-mobile:before {
-  content: "\f904";
+  content: "\e104";
 }
 .tutor-icon-map-pin:before {
-  content: "\f905";
+  content: "\e105";
 }
 .tutor-icon-api:before {
-  content: "\f906";
+  content: "\e106";
 }
 .tutor-icon-align-center:before {
-  content: "\f907";
+  content: "\e107";
 }
 .tutor-icon-align-justify:before {
-  content: "\f908";
+  content: "\e108";
 }
 .tutor-icon-align-left:before {
-  content: "\f909";
+  content: "\e109";
 }
 .tutor-icon-align-right:before {
-  content: "\f910";
+  content: "\e110";
 }
 .tutor-icon-receipt-percent:before {
-  content: "\f911";
+  content: "\e111";
 }
 .tutor-icon-credit-card:before {
-  content: "\f912";
+  content: "\e112";
 }
 .tutor-icon-change:before {
-  content: "\f913";
+  content: "\e113";
 }
 .tutor-icon-tag:before {
-  content: "\f914";
+  content: "\e114";
 }
 .tutor-icon-subscription:before {
-  content: "\f915";
+  content: "\e115";
 }
 .tutor-icon-mark-light:before {
-  content: "\f916";
+  content: "\e116";
 }
 .tutor-icon-brand-x-twitter:before {
-  content: "\f917";
+  content: "\e117";
 }
 .tutor-icon-book-open-line:before {
-  content: "\f918";
+  content: "\e118";
 }
 .tutor-icon-sorting-desc:before {
-  content: "\f919";
+  content: "\e119";
 }
 .tutor-icon-sorting-asc:before {
-  content: "\f920";
+  content: "\e120";
 }
 .tutor-icon-note:before {
-  content: "\f921";
+  content: "\e121";
 }
 .tutor-icon-add-document:before {
-  content: "\f922";
+  content: "\e122";
 }
 .tutor-icon-topic:before {
-  content: "\f923";
+  content: "\e123";
 }
 .tutor-icon-quiz-2:before {
-  content: "\f924";
+  content: "\e124";
 }
 .tutor-icon-bundle:before {
-  content: "\f925";
+  content: "\e125";
 }
 .tutor-icon-plus-light:before {
-  content: "\f926";
+  content: "\e126";
+}
+.tutor-icon-settings-log:before {
+  content: "\e127";
 }
 
 /* tutor old fonts */
