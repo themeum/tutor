@@ -10,7 +10,6 @@ import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 
-import { useSaveAIGeneratedCourseContentMutation } from '@TutorShared/services/magic-ai';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import { Addons, isRTL } from '@TutorShared/config/constants';
@@ -19,6 +18,7 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useSaveAIGeneratedCourseContentMutation } from '@TutorShared/services/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { getObjectKeys, getObjectValues, isAddonEnabled } from '@TutorShared/utils/util';
 
@@ -285,7 +285,10 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                 {content?.counts?.topics ? (
                                   <>
                                     <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                    {sprintf(__('%d Topics in total', 'tutor'), content.counts?.topics)}
+                                    {
+                                      /* translators: %d is the total number of topics */
+                                      sprintf(__('%d Topics in total', 'tutor'), content.counts?.topics)
+                                    }
                                   </>
                                 ) : (
                                   (!isAborted && (
@@ -302,7 +305,10 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                 {content?.counts?.lessons ? (
                                   <>
                                     <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                    {sprintf(__('%d Lessons', 'tutor'), content.counts?.lessons)}
+                                    {
+                                      /* translators: %d is the number of lessons */
+                                      sprintf(__('%d Lessons', 'tutor'), content.counts?.lessons)
+                                    }
                                   </>
                                 ) : (
                                   (!isAborted && (
@@ -319,7 +325,10 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                 {content?.counts?.quizzes ? (
                                   <>
                                     <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                    {sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)}
+                                    {
+                                      /* translators: %d is the number of quizzes */
+                                      sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)
+                                    }
                                   </>
                                 ) : (
                                   (!isAborted && (
@@ -337,7 +346,10 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                   {content?.counts?.assignments ? (
                                     <>
                                       <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                      {sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)}
+                                      {
+                                        /* translators: %d is the number of assignments */
+                                        sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)
+                                      }
                                     </>
                                   ) : (
                                     (!isAborted && (

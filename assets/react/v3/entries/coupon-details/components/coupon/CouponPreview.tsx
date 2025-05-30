@@ -1,10 +1,10 @@
 import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
-import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { formatPrice } from '@TutorShared/utils/currency';
 import { __, sprintf } from '@wordpress/i18n';
 import { format, isToday, isTomorrow, isValid } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
@@ -14,28 +14,28 @@ import EmptyPreviewTop from './EmptyPreviewTop';
 const discountTypeText = (appliesTo: CouponAppliesTo, discountText: string) => {
   switch (appliesTo) {
     case 'all_courses':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off all courses', 'tutor'), discountText);
     case 'all_bundles':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off all bundles', 'tutor'), discountText);
     case 'all_courses_and_bundles':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off all courses and bundles', 'tutor'), discountText);
     case 'all_membership_plans':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off all membership plans', 'tutor'), discountText);
     case 'specific_courses':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off specific courses', 'tutor'), discountText);
     case 'specific_bundles':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off specific bundles', 'tutor'), discountText);
     case 'specific_category':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off specific category', 'tutor'), discountText);
     case 'specific_membership_plans':
-      // Translators: %s: Percentage or Amount of discount
+      // translators: %s: Percentage or Amount of discount
       return sprintf(__('%s off specific membership plans', 'tutor'), discountText);
     default:
       return '';
@@ -44,7 +44,6 @@ const discountTypeText = (appliesTo: CouponAppliesTo, discountText: string) => {
 
 function CouponPreview() {
   const form = useFormContext<Coupon>();
-  const { tutor_currency } = tutorConfig;
 
   const couponTitle = form.watch('coupon_title');
   const couponType = form.watch('coupon_type');
@@ -69,9 +68,10 @@ function CouponPreview() {
       }`
     : '';
 
-  const discountText =
-    discountType === 'flat' ? `${tutor_currency?.symbol ?? '$'}${discountAmount ?? 0}` : `${discountAmount ?? 0}%`;
+  const discountText = discountType === 'flat' ? formatPrice(Number(discountAmount)) : `${discountAmount ?? 0}%`;
+  // translators: %d is the number of times the coupon was used
   const totalUsedText = couponUsedCount ? sprintf(__('Total %d times used', 'tutor'), couponUsedCount) : '';
+  // translators: %s is the date from which coupon is active
   const activeFromText = sprintf(__('Active from %s', 'tutor'), activeFromSuffix);
 
   return (
@@ -87,7 +87,10 @@ function CouponPreview() {
           <h1 css={styles.couponCode}>{couponType === 'automatic' ? __('Automatic', 'tutor') : couponCode}</h1>
           {endDate && (
             <p css={styles.couponSubtitle}>
-              {sprintf(__('Valid until %s', 'tutor'), format(new Date(endDate), DateFormats.validityDate))}
+              {
+                /* translators: %s is the validity end date */
+                sprintf(__('Valid until %s', 'tutor'), format(new Date(endDate), DateFormats.validityDate))
+              }
             </p>
           )}
         </div>

@@ -162,7 +162,7 @@ $available_status = array(
 												<br>
 												<span class="tutor-fw-normal tutor-fs-8 tutor-color-muted">
 													<?php
-													/* translators: %s: transaction id */
+													/* translators: %s is the transaction ID */
 													echo esc_html( sprintf( __( 'Trx ID: %s', 'tutor' ), $order->transaction_id ) );
 													?>
 												</span>

@@ -134,8 +134,14 @@ const export_settings_all = () => {
 
 			xhttp.onreadystatechange = function () {
 				if (xhttp.readyState === 4) {
-					let fileName = 'tutor_options_' + time_now();
-					json_download(xhttp.response, fileName);
+					const fileName = 'tutor_options_' + time_now();
+					const response = JSON.parse(xhttp.response);
+					const data = response?.data?.exported_data;
+					if (data) {
+						json_download(data, fileName);
+					} else {
+						tutor_toast(__('Failed', 'tutor'), __('Something went wrong!', 'tutor'), 'error');
+					}
 				}
 			};
 		};

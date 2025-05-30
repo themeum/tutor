@@ -9,7 +9,7 @@ const generateImportExportMessage = (
   // Define operation-specific text based on type
   const operationText = {
     inProgress: type === 'export' ? __('Export in progress...', 'tutor') : __('Import in progress...', 'tutor'),
-    verb: type === 'export' ? __('Exported', 'tutor') : __('Imported', 'tutor'),
+    verb: type === 'export' ? __('exported', 'tutor') : __('imported', 'tutor'),
     failed: __('failed', 'tutor'),
   };
 
@@ -32,8 +32,10 @@ const generateImportExportMessage = (
   // Helper function for formatting count with singular/plural text
   const formatCount = (count: number, type: 'course' | 'bundle'): string => {
     if (type === 'course') {
+      // translators: %d is the number of courses
       return sprintf(_n('%d Course', '%d Courses', count, 'tutor'), count);
     }
+    // translators: %d is the number of bundles
     return sprintf(_n('%d Bundle', '%d Bundles', count, 'tutor'), count);
   };
 

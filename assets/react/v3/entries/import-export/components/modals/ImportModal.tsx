@@ -20,6 +20,7 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { formatBytes } from '@TutorShared/utils/util';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import ImportExportCompletedState from './import-export-states/ImportExportCompletedState';
 import ImportExportProgressState from './import-export-states/ImportExportProgressState';
 
@@ -27,12 +28,10 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   files: File[];
   currentStep: ImportExportModalState;
   onClose: () => void;
-  onImport: (data: string) => Promise<void>;
+  onImport: (file: File) => void;
   progress?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
-  failedCourseIds?: ImportExportContentResponseBase['failed_course_ids'];
-  failedBundleIds?: ImportExportContentResponseBase['failed_bundle_ids'];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -58,6 +57,8 @@ const readJsonFile = (file: File): Promise<any> => {
   });
 };
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 const ImportModal = ({
   files: propsFiles,
   currentStep,
@@ -66,8 +67,6 @@ const ImportModal = ({
   message,
   progress,
   completedContents,
-  failedCourseIds,
-  failedBundleIds,
 }: ImportModalProps) => {
   const [files, setFiles] = useState<File[]>(propsFiles);
   const [isReadingFile, setIsReadingFile] = useState(false);
@@ -82,8 +81,7 @@ const ImportModal = ({
     setIsReadingFile(true);
     readJsonFile(files[0])
       .then((data) => {
-        const hasSettings =
-          data?.data.filter((item: { content_type: string }) => item.content_type === 'settings').length > 0;
+        const hasSettings = data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
 
         setIsReadingFile(false);
         setHasSettings(hasSettings);
@@ -191,11 +189,11 @@ const ImportModal = ({
             </Button>
             <Button
               data-cy="import-csv"
-              disabled={files.length === 0 || isReadingFile || !isFileValid}
+              disabled={files.length === 0 || isReadingFile || !isFileValid || (!isTutorPro && !hasSettings)}
               variant="primary"
               size="small"
               loading={isReadingFile || currentStep === 'progress'}
-              onClick={async () => onImport(await readJsonFile(files[0]))}
+              onClick={async () => onImport(files[0])}
             >
               {__('Import', 'tutor')}
             </Button>
@@ -216,8 +214,6 @@ const ImportModal = ({
         state={state}
         fileSize={file.size}
         completedContents={completedContents}
-        failedCourseIds={failedCourseIds}
-        failedBundleIds={failedBundleIds}
         type="import"
         importFileName={file.name}
         message={message || ''}

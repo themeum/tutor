@@ -27,7 +27,7 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
 
   const installPlugin = useInstallPlugin();
 
-  let interval: NodeJS.Timer;
+  let interval: NodeJS.Timeout;
 
   const handleActivatePlugin = async () => {
     let isSuccessAll = true;
@@ -91,12 +91,13 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
   return (
     <div css={styles.wrapper}>
       <p css={styles.content}>
-        {
-          // prettier-ignore
-          (addon.required_pro_plugin && !addon.is_dependents_installed)
+        {addon.required_pro_plugin && !addon.is_dependents_installed
           ? __('Install the following plugin(s) to enable this addon.', 'tutor')
-          : sprintf(__("The following plugin(s) will be %s upon activating the '%s'.", 'tutor'), addon.is_dependents_installed ? 'activated' : 'installed', addon.name)
-        }
+          : addon.is_dependents_installed
+            ? // translators: %s is the addon name
+              sprintf(__("The following plugin(s) will be activated upon activating the '%s'.", 'tutor'), addon.name)
+            : // translators: %s is the addon name
+              sprintf(__("The following plugin(s) will be installed upon activating the '%s'.", 'tutor'), addon.name)}
       </p>
 
       <div css={styles.pluginsWrapper}>

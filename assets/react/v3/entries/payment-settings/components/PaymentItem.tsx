@@ -104,6 +104,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     const { action } = await showModal({
       component: ConfirmationModal,
       props: {
+        /* translators: %s is the label of the item to remove */
         title: sprintf(__('Remove %s', 'tutor'), data.label),
         description: __('Are you sure you want to remove this payment method?', 'tutor'),
       },

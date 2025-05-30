@@ -16,7 +16,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 const accountName = e.currentTarget.dataset.name;
                 const content = document.getElementById('tutor-admin-withdraw-approve-content');
                 content.innerHTML = `${
-                   sprintf( __( 'You are approving %s withdrawal request for %s. Are you sure you want to approve?', 'tutor'), `<strong style="color:#000;">${accountName}</strong>`, `<strong  style="color:#000;">${amount}</strong>` )
+                /* translators: %1$s is the Account name and %2$s is the Amount */
+                   sprintf( __( 'You are approving %1$s withdrawal request for %2$s. Are you sure you want to approve?', 'tutor'), `<strong style="color:#000;">${accountName}</strong>`, `<strong  style="color:#000;">${amount}</strong>` )
                 }`;
             }
        }
@@ -31,7 +32,8 @@ document.addEventListener("DOMContentLoaded", function(){
                 const accountName = e.currentTarget.dataset.name;
                 const content = document.getElementById('tutor-admin-withdraw-reject-content');
                 content.innerHTML = `${
-                   sprintf( __( 'You are rejecting  %s withdrawal request for %s. Are you sure you want to reject?', 'tutor' ), `<strong style="color:#000;">${accountName}</strong>`, `<strong style="color:#000;">${amount}</strong>` )
+                    /* translators: %1$s is the Account name and %2$s is the Amount */
+                   sprintf( __( 'You are rejecting %1$s withdrawal request for %2$s. Are you sure you want to reject?', 'tutor' ), `<strong style="color:#000;">${accountName}</strong>`, `<strong style="color:#000;">${amount}</strong>` )
                 }`;
             }
         }

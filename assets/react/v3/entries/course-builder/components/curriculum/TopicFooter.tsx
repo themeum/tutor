@@ -97,6 +97,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                   topicId: topicId,
                   title: __('Lesson', 'tutor'),
                   icon: <SVGIcon name="lesson" width={24} height={24} />,
+                  /* translators: %s is the topic title */
                   subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                 },
               });
@@ -120,6 +121,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                   contentDripType: courseDetailsForm.watch('contentDripType'),
                   title: __('Quiz', 'tutor'),
                   icon: <SVGIcon name="quiz" width={24} height={24} />,
+                  /* translators: %s is the topic title */
                   subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                 },
                 closeOnEscape: false,
@@ -148,6 +150,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Interactive Quiz', 'tutor'),
                         icon: <SVGIcon name="interactiveQuiz" width={24} height={24} />,
+                        /* translators: %s is the topic title */
                         subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                         contentType: 'tutor_h5p_quiz',
                       },
@@ -193,6 +196,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
+                        /* translators: %s is the topic title */
                         subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                       },
                     });

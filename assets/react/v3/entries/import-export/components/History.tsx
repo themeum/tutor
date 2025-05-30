@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, _n, sprintf } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -52,9 +52,11 @@ const History = () => {
 
   const formatItemCount = (count: number, type: 'course' | 'bundle'): string => {
     if (type === 'course') {
-      return sprintf(_n('Course', 'Courses (%d)', count, 'tutor'), count);
+      // translators: %d is the number of courses
+      return count === 1 ? __('Course', 'tutor') : sprintf(__('Courses (%d)', 'tutor'), count);
     }
-    return sprintf(_n('Bundle', 'Bundles (%d)', count, 'tutor'), count);
+    // translators: %d is the number of bundles
+    return count === 1 ? __('Bundle', 'tutor') : sprintf(__('Bundles (%d)', 'tutor'), count);
   };
 
   const generateHistoryTitle = (item: ImportExportHistory): string => {
@@ -119,17 +121,19 @@ const History = () => {
         const isCurrentItemDeleting = deletingItemId === item.option_id;
 
         return (
-          <Button
-            data-delete-history
-            size="small"
-            variant="secondary"
-            isOutlined
-            disabled={isCurrentItemDeleting}
-            loading={isCurrentItemDeleting}
-            onClick={() => handleDeleteHistory(item.option_id)}
-          >
-            {__('Delete', 'tutor')}
-          </Button>
+          <div css={styles.action}>
+            <Button
+              data-delete-history
+              size="small"
+              variant="secondary"
+              isOutlined
+              disabled={isCurrentItemDeleting}
+              loading={isCurrentItemDeleting}
+              onClick={() => handleDeleteHistory(item.option_id)}
+            >
+              {__('Delete', 'tutor')}
+            </Button>
+          </div>
         );
       },
     },

@@ -73,18 +73,28 @@ function Topbar() {
                 fallback={
                   coupon.created_at_gmt && (
                     <p css={styles.updateMessage}>
-                      {sprintf(
-                        __('Created by %s at %s', 'tutor'),
-                        coupon.coupon_created_by,
-                        coupon.created_at_readable,
-                      )}
+                      {
+                        /* translators: %1$s is author's name and %2$s is creation date/time */
+                        sprintf(
+                          __('Created by %1$s at %2$s', 'tutor'),
+                          coupon.coupon_created_by,
+                          coupon.created_at_readable,
+                        )
+                      }
                     </p>
                   )
                 }
               >
                 {() => (
                   <p css={styles.updateMessage}>
-                    {sprintf(__('Updated by %s at %s', 'tutor'), coupon.coupon_update_by, coupon.updated_at_readable)}
+                    {
+                      /* translators: %1$s is author's name and %2$s is update date/time */
+                      sprintf(
+                        __('Updated by %1$s at %2$s', 'tutor'),
+                        coupon.coupon_update_by,
+                        coupon.updated_at_readable,
+                      )
+                    }
                   </p>
                 )}
               </Show>

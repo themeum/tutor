@@ -228,10 +228,10 @@ const ScheduleOptions = () => {
                     {...controllerProps}
                     label={__('Coming Soon Thumbnail', 'tutor')}
                     buttonText={__('Upload Thumbnail', 'tutor')}
-                    infoText={sprintf(
-                      __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
-                      tutorConfig.max_upload_size,
-                    )}
+                    infoText={
+                      /* translators: %s is the maximum allowed upload file size (e.g., "2MB") */
+                      sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+                    }
                   />
                 )}
               />
@@ -295,7 +295,10 @@ const ScheduleOptions = () => {
           </div>
           <Show when={scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))}>
             <div css={styles.scheduleInfo}>
-              {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
+              {
+                /* translators: %1$s is the date and %2$s is the time */
+                sprintf(__('%1$s at %2$s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)
+              }
             </div>
 
             <Show when={comingSoonThumbnail?.url}>
