@@ -14,10 +14,7 @@ import { convertToErrorMessage, noop } from '@TutorShared/utils/util';
 
 import generateImportExportMessage from '@ImportExport/utils/utils';
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
-import { tutorConfig } from '@TutorShared/config/config';
 import { type ErrorResponse } from 'react-router-dom';
-
-const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();

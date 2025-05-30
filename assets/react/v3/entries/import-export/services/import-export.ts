@@ -18,7 +18,6 @@ export interface ExportFormData {
   courses__lesson: boolean;
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
-  courses__attachments: boolean;
   keep_media_files: boolean;
 }
 
@@ -31,7 +30,6 @@ export const defaultExportFormData: ExportFormData = {
   courses__lesson: true,
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
-  courses__attachments: true,
   keep_media_files: false,
 };
 
