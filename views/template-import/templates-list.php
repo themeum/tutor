@@ -52,7 +52,7 @@ if ( ! empty( $template_list ) ) { ?>
 							<span><?php echo esc_html( $template->label ); ?></span>
 						</div>
 						<div class="tutor-template-coming-soon">
-							<?php echo esc_html_e( 'Coming soon', 'tutor' ); ?>
+							<?php esc_html_e( 'Coming soon', 'tutor' ); ?>
 						</div>
 					</div>
 				</li>
