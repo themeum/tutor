@@ -1999,7 +1999,7 @@ class Options_V2 {
 	 *
 	 * @return array Settings log data
 	 */
-	private function update_settings_log( $new_settings_data, $action_type ) {
+	public function update_settings_log( $new_settings_data, $action_type ) {
 		$get_final_data = array();
 
 		$time = tutor_time();
