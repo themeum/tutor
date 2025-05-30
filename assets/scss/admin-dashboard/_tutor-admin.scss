@@ -1800,6 +1800,17 @@ h2.tutor-page-heading {
     line-height: 15px;
 }
 
+.tutor-theme-menu-badge {
+	display: inline-block;
+	font-size: 11px;
+	line-height: 16px;
+	font-weight: 400;
+	color: #A4A8B2;
+	border: 1px solid #596369;
+	border-radius: 11px;
+	padding: 0px 6px;
+}
+
 .wp-submenu li a[href="admin.php?page=create-course"] {
     display: none!important;
 }
