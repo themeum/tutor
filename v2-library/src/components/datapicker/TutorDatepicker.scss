@@ -310,6 +310,7 @@
 
 		&__time-list {
 			height: calc(276px + (1.7rem / 2))!important;
+			overflow: auto;
 		}
 
 		&__time-list-item {
