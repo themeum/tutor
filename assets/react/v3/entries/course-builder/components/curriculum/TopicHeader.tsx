@@ -313,7 +313,10 @@ const TopicHeader = ({
         isLoading={deleteTopicMutation.isPending}
         closePopover={noop}
         maxWidth="258px"
-        title={sprintf(__('Delete topic "%s"', 'tutor'), topic.title)}
+        title={
+          /* translators: %s is the topic title */
+          sprintf(__('Delete topic "%s"', 'tutor'), topic.title)
+        }
         message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
         arrow="auto"

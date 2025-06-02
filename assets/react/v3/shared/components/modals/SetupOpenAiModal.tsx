@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -96,14 +96,22 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
         >
           <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
             <div css={styles.infoText}>
-              <div>
-                {__('Find your Secret API key in your ', 'tutor')}
-                <a href={config.CHATGPT_PLATFORM_URL}>{__('OpenAI User settings', 'tutor')}</a>
-                {__(' and paste it here to connect OpenAI with your Tutor LMS website.', 'tutor')}
-              </div>
+              <div
+                dangerouslySetInnerHTML={{
+                  /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
+                  __html: sprintf(
+                    __(
+                      'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
+                      'tutor',
+                    ),
+                    `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
+                    '</a>',
+                  ),
+                }}
+              ></div>
 
               <Alert type="info" icon="warning">
-                {__('This page will reload after submit. Please save course information.', 'tutor')}
+                {__('The page will reload after submission. Make sure to save the course information.', 'tutor')}
               </Alert>
             </div>
 

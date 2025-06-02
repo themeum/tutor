@@ -4,7 +4,6 @@ import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
-import {} from 'react-router-dom';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
@@ -141,7 +140,10 @@ const CourseBasicSidebar = () => {
         <Show when={courseDetails?.post_modified}>
           {(date) => (
             <div css={styles.updatedOn}>
-              {sprintf(__('Last updated on %s', 'tutor'), format(new Date(date), DateFormats.dayMonthYear) || '')}
+              {
+                /* translators: %s is the last updated date */
+                sprintf(__('Last updated on %s', 'tutor'), format(new Date(date), DateFormats.dayMonthYear) || '')
+              }
             </div>
           )}
         </Show>
@@ -177,7 +179,10 @@ const CourseBasicSidebar = () => {
             {...controllerProps}
             label={__('Featured Image', 'tutor')}
             buttonText={__('Upload Thumbnail', 'tutor')}
-            infoText={sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
+            infoText={
+              // translators: %s is the maximum allowed upload file size (e.g., "2MB")
+              sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+            }
             generateWithAi={!isTutorPro || isOpenAiEnabled}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.FEATURED_IMAGE}
@@ -193,7 +198,10 @@ const CourseBasicSidebar = () => {
             {...controllerProps}
             label={__('Intro Video', 'tutor')}
             buttonText={__('Upload Video', 'tutor')}
-            infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
+            infoText={
+              // translators: %s is the maximum allowed file size
+              sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+            }
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.INTRO_VIDEO}
           />

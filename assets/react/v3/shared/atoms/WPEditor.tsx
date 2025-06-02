@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, _x } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -12,6 +12,8 @@ interface WPEditorProps {
   value: string;
   onChange: (value: string) => void;
   isMinimal?: boolean;
+  hideMediaButtons?: boolean;
+  hideQuickTags?: boolean;
   autoFocus?: boolean;
   onFullScreenChange?: (isFullScreen: boolean) => void;
   readonly?: boolean;
@@ -33,6 +35,8 @@ function editorConfig(
   onChange: (value: string) => void,
   setIsFocused: (value: boolean) => void,
   isMinimal?: boolean,
+  hideMediaButtons?: boolean,
+  hideQuickTags?: boolean,
   onFullScreenChange?: (isFullScreen: boolean) => void,
   readOnly?: boolean,
   min_height?: number,
@@ -126,7 +130,7 @@ function editorConfig(
                 },
               },
               {
-                text: _x('Courses', 'tinyMCE button courses', 'tutor'),
+                text: __('Courses', 'tutor'),
                 onclick: () => {
                   editor.windowManager.open({
                     title: __('Courses Shortcode', 'tutor'),
@@ -152,7 +156,7 @@ function editorConfig(
                       {
                         type: 'listbox',
                         name: 'orderby',
-                        label: _x('Order By', 'tinyMCE button order by', 'tutor'),
+                        label: __('Order By', 'tutor'),
                         onselect: () => {},
                         values: [
                           { text: 'ID', value: 'ID' },
@@ -166,7 +170,7 @@ function editorConfig(
                       {
                         type: 'listbox',
                         name: 'order',
-                        label: _x('Order', 'tinyMCE button order', 'tutor'),
+                        label: __('Order', 'tutor'),
                         onselect: () => {},
                         values: [
                           { text: 'DESC', value: 'DESC' },
@@ -218,10 +222,10 @@ function editorConfig(
       wp_keep_scroll_position: false,
       wpeditimage_html5_captions: true,
     },
-    mediaButtons: !isMinimal && !readOnly,
+    mediaButtons: !hideMediaButtons && !isMinimal && !readOnly,
     drag_drop_upload: true,
     quicktags:
-      isMinimal || readOnly
+      hideQuickTags || isMinimal || readOnly
         ? false
         : {
             buttons: ['strong', 'em', 'block', 'del', 'ins', 'img', 'ul', 'ol', 'li', 'code', 'more', 'close'],
@@ -233,6 +237,8 @@ const WPEditor = ({
   value = '',
   onChange,
   isMinimal,
+  hideMediaButtons,
+  hideQuickTags,
   autoFocus = false,
   onFullScreenChange,
   readonly = false,
@@ -283,6 +289,8 @@ const WPEditor = ({
           onChange,
           setIsFocused,
           isMinimal,
+          hideMediaButtons,
+          hideQuickTags,
           onFullScreenChange,
           readonly,
           min_height,
@@ -310,6 +318,7 @@ const WPEditor = ({
   return (
     <div
       css={styles.wrapper({
+        hideQuickTags,
         isMinimal,
         isFocused,
         isReadOnly: readonly,
@@ -324,10 +333,12 @@ export default WPEditor;
 
 const styles = {
   wrapper: ({
+    hideQuickTags,
     isMinimal,
     isFocused,
     isReadOnly,
   }: {
+    hideQuickTags?: boolean;
     isMinimal?: boolean;
     isFocused: boolean;
     isReadOnly?: boolean;
@@ -386,7 +397,7 @@ const styles = {
     .quicktags-toolbar {
       border-top-left-radius: ${borderRadius[6]};
 
-      ${isMinimal &&
+      ${(hideQuickTags || isMinimal) &&
       css`
         border-top-right-radius: ${borderRadius[6]};
       `}
@@ -410,7 +421,7 @@ const styles = {
       background-color: unset;
     }
 
-    ${isMinimal &&
+    ${(hideQuickTags || isMinimal) &&
     css`
       .mce-tinymce.mce-container {
         border: ${!isReadOnly ? `1px solid ${colorTokens.stroke.default}` : 'none'};

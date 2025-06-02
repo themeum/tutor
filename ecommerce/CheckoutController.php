@@ -243,6 +243,17 @@ class CheckoutController {
 	}
 
 	/**
+	 * Check coupon is applied on checkout item.
+	 *
+	 * @param array $item checkout item.
+	 *
+	 * @return boolean applied or not.
+	 */
+	private function is_coupon_applied_on_item( array $item ) {
+		return isset( $item['is_coupon_applied'] ) && (bool) $item['is_coupon_applied'];
+	}
+
+	/**
 	 * Prepare items
 	 *
 	 * @since 3.0.0
@@ -282,10 +293,11 @@ class CheckoutController {
 
 			$is_coupon_applicable = false;
 			if ( Settings::is_coupon_usage_enabled() && is_object( $coupon ) ) {
-				$is_coupon_applicable = ! $item['sale_price'] && $this->coupon_model->is_coupon_applicable( $coupon, $item_id, $order_type );
+				$is_coupon_applicable = $this->coupon_model->is_coupon_applicable( $coupon, $item_id, $order_type );
 				if ( $is_coupon_applicable ) {
 					$item['is_coupon_applied'] = $is_coupon_applicable;
 					$item['coupon_code']       = $coupon->coupon_code;
+					$item['sale_price']        = null;
 				}
 			}
 
@@ -299,6 +311,7 @@ class CheckoutController {
 	 * Calculate discount.
 	 *
 	 * @since 3.0.0
+	 * @since 3.6.0 refactor and inaccurate flat discount distribution.
 	 *
 	 * @param array  $items item array.
 	 * @param string $discount_type discount type. like percentage or fixed.
@@ -307,38 +320,69 @@ class CheckoutController {
 	 * @return array
 	 */
 	public function calculate_discount( $items, $discount_type, $discount_value ) {
-		// Filter products without a sale price.
-		$items_without_sale = array_filter( $items, fn( $item ) => empty( $item['sale_price'] ) );
+		$final                              = array();
+		$coupon_applied_items               = array();
+		$total_regular_price_coupon_applied = 0;
 
-		// Calculate the total regular price of products without a sale price.
-		$total_regular_price = array_sum( array_column( $items_without_sale, 'regular_price' ) );
-
-		$final = array();
 		foreach ( $items as $item ) {
-			// If product already has a sale price, no discount is applied.
-			if ( ! empty( $item['sale_price'] ) || ( isset( $item['is_coupon_applied'] ) && ! $item['is_coupon_applied'] ) ) {
+			if ( $this->is_coupon_applied_on_item( $item ) ) {
+				$coupon_applied_items[]              = $item;
+				$total_regular_price_coupon_applied += $item['regular_price'];
+			} else {
 				$item['discount_amount'] = 0;
 				$final[]                 = $item;
-			} else {
-				if ( 'percentage' === $discount_type ) {
-					// Apply percentage discount.
-					$discount       = $item['regular_price'] * ( $discount_value / 100 );
-					$discount_price = $item['regular_price'] - $discount;
-
-					$item['discount_amount'] = round( $discount, 2 );
-					$item['discount_price']  = $discount_price;
-
-				} elseif ( 'flat' === $discount_type && $total_regular_price > 0 ) {
-					// Apply a proportional fixed discount based on the regular price.
-					$proportion     = $item['regular_price'] / $total_regular_price;
-					$discount       = $discount_value * $proportion;
-					$discount_price = $item['regular_price'] - $discount;
-
-					$item['discount_amount'] = round( $discount, 2 );
-					$item['discount_price']  = round( $discount_price, 2 );
-				}
-				$final[] = $item;
 			}
+		}
+
+		// For flat discount calculation.
+		$cumulative_discount  = 0;
+		$coupon_applied_count = count( $coupon_applied_items );
+
+		foreach ( $coupon_applied_items as $index => $item ) {
+			$regular_price = $item['regular_price'];
+
+			if ( 'percentage' === $discount_type ) {
+				// Limit percentage value between 0 and 100.
+				$percentage   = max( 0, min( 100, (float) $discount_value ) );
+				$raw_discount = $regular_price * ( $percentage / 100 );
+				$discount     = round( $raw_discount, 2 );
+
+				// Prevent discount from exceeding the item price.
+				$discount = min( $discount, $regular_price );
+
+				$discount_price = round( $regular_price - $discount, 2 );
+
+				$item['discount_amount'] = $discount;
+				$item['discount_price']  = $discount_price;
+
+			} elseif ( 'flat' === $discount_type && $total_regular_price_coupon_applied > 0 ) {
+				/**
+				 * Apply a proportional fixed discount
+				 * based on the total applied coupon item regular price.
+				 */
+				$proportion = $regular_price / $total_regular_price_coupon_applied;
+				$discount   = $discount_value * $proportion;
+
+				/**
+				 * On last item, fix rounding error.
+				 *
+				 * Example: $100 discount spread over 3 items
+				 * could result in $33.33 + $33.33 + $33.33 = $99.99, losing 1 cent.
+				 */
+				if ( $index === $coupon_applied_count - 1 ) {
+					$discount = $discount_value - $cumulative_discount;
+				}
+
+				// Prevent discount from exceeding the item price.
+				$discount       = min( $discount, $regular_price );
+				$discount_price = $regular_price - $discount;
+
+				$item['discount_amount'] = round( $discount, 2 );
+				$item['discount_price']  = round( $discount_price, 2 );
+				$cumulative_discount    += round( $discount, 2 );
+			}
+
+			$final[] = $item;
 		}
 
 		return $final;
@@ -376,8 +420,11 @@ class CheckoutController {
 		$is_meet_min_requirement = false;
 		$selected_coupon         = null;
 
-		if ( Settings::is_coupon_usage_enabled() ) {
+		if ( Settings::is_coupon_usage_enabled() && '-1' !== $coupon_code ) {
 			$selected_coupon = $this->coupon_model->get_coupon_details_for_checkout( $coupon_code );
+			if ( ! $selected_coupon ) {
+				$this->coupon_model->set_apply_coupon_error( $this->coupon_model->get_coupon_failed_error_msg( 'not_found' ) );
+			}
 		}
 
 		$is_valid = is_object( $selected_coupon ) && $this->coupon_model->is_coupon_valid( $selected_coupon );
@@ -461,6 +508,9 @@ class CheckoutController {
 		$response['total_price']             = $total_price;
 		$response['order_type']              = $order_type;
 
+		$response['formatted_total_price_without_tax'] = tutor_get_formatted_price( $total_price_without_tax );
+		$response['formatted_total_price']             = tutor_get_formatted_price( $total_price );
+
 		return (object) $response;
 	}
 
@@ -525,7 +575,7 @@ class CheckoutController {
 		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
 		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
 		$payment_method = $request['payment_method'];
-		$payment_type   = $request['payment_type'];
+		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $request['payment_type'];
 		$order_type     = $request['order_type'];
 
 		if ( empty( $object_ids ) ) {
@@ -549,7 +599,12 @@ class CheckoutController {
 		}
 
 		$checkout_data = $this->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
-		$items         = array();
+
+		if ( $checkout_data->total_price > 0 && 'free' === $payment_method ) {
+			array_push( $errors, __( 'Select a payment method', 'tutor' ) );
+		}
+
+		$items = array();
 		foreach ( $checkout_data->items as $item ) {
 			$items[] = array(
 				'item_id'        => $item->item_id,

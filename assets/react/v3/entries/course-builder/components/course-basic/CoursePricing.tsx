@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -253,10 +253,14 @@ const CoursePricing = () => {
                 },
                 ...wcProductOptions(wcProductsQuery.data),
               ]}
-              helpText={sprintf(
-                __('You can select an existing WooCommerce product%s', 'tutor'),
-                isTutorPro ? ', alternatively, a new WooCommerce product will be created for you.' : '.',
-              )}
+              helpText={
+                isTutorPro
+                  ? __(
+                      'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
+                      'tutor',
+                    )
+                  : __('You can select an existing WooCommerce product.', 'tutor')
+              }
               isSearchable
               loading={wcProductsQuery.isLoading && !controllerProps.field.value}
               isClearable

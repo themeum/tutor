@@ -33,7 +33,7 @@ function App() {
         <ToastProvider position="bottom-right">
           <ModalProvider>
             <Global styles={createGlobalCss()} />
-              <TaxSettingsPage />
+            <TaxSettingsPage />
           </ModalProvider>
         </ToastProvider>
       </QueryClientProvider>

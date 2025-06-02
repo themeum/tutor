@@ -147,15 +147,17 @@ class QueryHelper {
 	 * Insert multiple rows without knowing key value
 	 *
 	 * @since v2.0.7
+	 * @since 3.6.0 param $return_ids added.
 	 *
 	 * @param string $table  table name.
 	 * @param array  $request two dimensional array
 	 * for ex: [ [id => 1], [id => 2] ].
+	 * @param bool   $return_ids if true returns the last inserted data ids.
 	 *
 	 * @return mixed  wpdb response true or int on success, false on failure.
 	 * @throws \Exception If error occur.
 	 */
-	public static function insert_multiple_rows( $table, $request ) {
+	public static function insert_multiple_rows( $table, $request, $return_ids = false, $do_sanitize = true ) {
 		global $wpdb;
 		$column_keys   = '';
 		$column_values = '';
@@ -168,7 +170,10 @@ class QueryHelper {
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
 				$column_keys   .= sanitize_key( $v ) . ',';
-				$sanitize_value = is_null( $value[ $v ] ) ? $value[ $v ] : sanitize_text_field( $value[ $v ] );
+				$sanitize_value = $value[$v];
+				if ( $sanitize_value && $do_sanitize ) {
+					$sanitize_value = sanitize_text_field( $sanitize_value );
+				}
 				$column_values .= is_numeric( $sanitize_value ) ? $sanitize_value . ',' : "'$sanitize_value'" . ',';
 			}
 			// Trim trailing comma.
@@ -195,6 +200,15 @@ class QueryHelper {
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
+		}
+
+		if ( $return_ids ) {
+			$query_ids = $wpdb->get_results(
+				"SELECT ID FROM {$table} WHERE ID >= LAST_INSERT_ID()",
+				'ARRAY_N'
+			);
+
+			return $query_ids;
 		}
 
 		return true;
@@ -253,6 +267,7 @@ class QueryHelper {
 				'IS NOT',
 				'BETWEEN',
 				'NOT BETWEEN',
+				'RAW',
 			),
 			true
 		);
@@ -274,7 +289,10 @@ class QueryHelper {
 	 *                  'deleted_at' => 'null',
 	 *                  'role'       => 'editor',
 	 *              )
-	 *
+	 * @since 3.6.0 Added raw query support. Make sure the query written is not sql injectable.
+	 *              $where = array(
+	 *                  'username = %s' =>  [ 'RAW' , array( 'test' ) ]
+	 *              )
 	 * @param   array $where assoc array with field and value.
 	 *
 	 * @return  string
@@ -282,6 +300,7 @@ class QueryHelper {
 	public static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
+			$operator = null;
 			if ( is_array( $value ) && isset( $value[0] ) && is_string( $value[0] ) && self::is_support_operator( $value[0] ) ) {
 				$operator = strtoupper( $value[0] );
 				$val      = $value[1];
@@ -307,7 +326,13 @@ class QueryHelper {
 						$val    = strtoupper( $val ) === 'NULL' ? 'NULL' : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
 						break;
-
+					case 'RAW':
+						$final_query = '';
+						if ( ! empty( $field ) && is_array( $val ) ) {
+							$final_query = self::prepare_raw_query( $field, $val );
+						}
+						$clause = $final_query;
+						break;
 					default: // =, !=, <, >, <=, >=, LIKE, NOT LIKE, <>
 						$val    = is_numeric( $val ) ? $val : "'" . $val . "'";
 						$clause = array( $field, $operator, $val );
@@ -324,10 +349,41 @@ class QueryHelper {
 				}
 			}
 
-			$arr[] = self::make_clause( $clause );
+			$arr[] = ( 'RAW' === $operator ) ? $clause : self::make_clause( $clause );
 		}
 
 		return implode( ' AND ', $arr );
+	}
+
+	/**
+	 * Prepare raw query for query helper.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param string $raw_query the query to execute.
+	 * @param array  $parameters the parameters to pass to the query.
+	 *
+	 * @return string
+	 */
+	public static function prepare_raw_query( $raw_query, $parameters ) {
+		/**
+		 * Not allowed unsafe SQL control characters  [;, --, /*]
+		 * Allowed safe SQL control characters only.
+		 */
+		$is_safe = preg_match( '/^[a-zA-Z0-9_%\.=\s\'"<>\(\)\-\[\],]+$/', $raw_query );
+		if ( ! $is_safe ) {
+			return '';
+		}
+
+		if ( ! count( $parameters ) ) {
+			return $raw_query;
+		}
+
+		global $wpdb;
+
+		$final_query = $wpdb->prepare( $raw_query, $parameters ); //phpcs:ignore
+
+		return $final_query;
 	}
 
 	/**
@@ -578,7 +634,7 @@ class QueryHelper {
 	/**
 	 * Make sanitized SQL IN clause value from an array
 	 *
-	 * @param array $arr a sequentital array.
+	 * @param array $arr a sequential array.
 	 * @return string
 	 * @since 2.1.1
 	 */
@@ -941,6 +997,18 @@ class QueryHelper {
 		}
 
 		return $period_clause;
+	}
+
+	/**
+	 * Get last executed SQL query.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @return string
+	 */
+	public static function get_last_query(){
+		global $wpdb;
+		return $wpdb->last_query;
 	}
 
 }

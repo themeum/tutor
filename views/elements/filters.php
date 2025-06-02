@@ -160,18 +160,18 @@ if ( isset( $data ) ) : ?>
 					<?php if ( CouponController::PAGE_SLUG === $current_page ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
-								<?php esc_html_e( 'Status', 'tutor' ); ?>
+								<?php esc_html_e( 'Applies To', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
+							<select name="applies_to" class="tutor-form-control tutor-form-select tutor-filter-select" data-search="no">
 								<option value="">
 									<?php esc_html_e( 'Select', 'tutor' ); ?>
 								</option>
 							<?php
-								$coupon_status        = CouponModel::get_coupon_status();
-								$filter_coupon_status = Input::get( 'coupon-status', '' );
-							foreach ( $coupon_status as $key => $value ) :
+								$coupon_applies_to = CouponModel::get_coupon_applies_to();
+								$filter_applies_to = Input::get( 'applies_to', '' );
+							foreach ( $coupon_applies_to as $key => $value ) :
 								?>
-								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_coupon_status, $key ); ?>>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_applies_to, $key ); ?>>
 								<?php echo esc_html( $value ); ?>
 								</option>
 							<?php endforeach; ?>

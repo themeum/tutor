@@ -1,8 +1,8 @@
 import ajaxHandler from '../../helper/ajax-handler';
 import tutorFormData from '../../helper/tutor-formdata';
-const { __ } = wp.i18n;
 
 document.addEventListener('DOMContentLoaded', function () {
+	const { __ } = wp.i18n;
 	const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
 
 	// Add to cart functionalities

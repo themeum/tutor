@@ -57,7 +57,7 @@ const resetConfirmation = () => {
 
 									let elementOptions = elementItem.options;
 									[...elementOptions].forEach((elementOption) => {
-										elementOption.selected = item.default.includes(elementOption.value) ? true : false;
+										elementOption.selected = typeof item.default === 'number' ? elementOption.value === item.default : item.default.includes(elementOption.value);
 									});
 
 								} else if (item.type == 'color_preset') {
@@ -182,7 +182,12 @@ const resetConfirmation = () => {
 
 						setTimeout(() => {
 							resetBtn.classList.remove('is-loading');
-							tutor_toast(__('Reset Successful', 'tutor'), sprintf(__('All modified settings of %s have been changed to default.', 'tutor'), resetTitle), 'success');
+							tutor_toast(
+								__('Reset Successful', 'tutor'),
+								// translators: %s: Reset settings title
+								sprintf(__('All modified settings of %s have been changed to default.', 'tutor'), resetTitle),
+								'success',
+							);
 							modalConfirmation.classList.remove('tutor-is-active');
 							document.body.classList.remove('tutor-modal-open');
 							if (document.getElementById('save_tutor_option')) {
