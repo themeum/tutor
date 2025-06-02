@@ -4676,7 +4676,7 @@ class Utils {
 			$args['course_id']   = intval( $args['course_id'] );
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
-		} elseif ( ! $asker_id && $question_id === null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
+		} elseif ( ! $asker_id && null === $question_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only.
 			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
 			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
@@ -7919,7 +7919,7 @@ class Utils {
 	 * @param string $content content like lession, quiz, answer etc.
 	 * @param int    $object_id object id.
 	 *
-	 * @return int
+	 * @return int|int[]
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
@@ -8041,14 +8041,8 @@ class Utils {
 
 				case 'instructor':
 					$course_ids = get_user_meta( $object_id, '_tutor_instructor_course_id' );
-
-					! is_array( $course_ids ) ? $course_ids = array() : 0;
-					$course_id                              = array_filter(
-						$course_ids,
-						function ( $id ) {
-							return ( $id && is_numeric( $id ) );
-						}
-					);
+					$course_ids = is_array( $course_ids ) ? $course_ids : array();
+					$course_id  = array_filter( $course_ids, fn( $id ) => is_numeric( $id ) && $id );
 					break;
 			}
 

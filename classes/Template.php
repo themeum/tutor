@@ -209,7 +209,7 @@ class Template extends Tutor_Base {
 				if ( $has_content_access ) {
 					$template = tutor_get_template( 'single-lesson' );
 				} else {
-					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first
+					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
 				}
 			} else {
 				$template = tutor_get_template( 'login' );
@@ -433,7 +433,7 @@ class Template extends Tutor_Base {
 				if ( $has_content_access ) {
 					$template = tutor_get_template( 'single-assignment' );
 				} else {
-					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first
+					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
 				}
 			} else {
 				$template = tutor_get_template( 'login' );
