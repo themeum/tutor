@@ -164,7 +164,8 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
       $body.text().includes('No Data Found from your Search/Filter') ||
       $body.text().includes('No request found') ||
       $body.text().includes('No records found') ||
-      $body.text().includes('No Records Found')
+      $body.text().includes('No Records Found') ||
+      $body.text().includes('No Courses Found.')
     ) {
       cy.log('No data available');
     } else {
@@ -176,7 +177,7 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
         cy.get('@randomCheckbox').check();
         // cy.get(':nth-child(1) > :nth-child(1) > .td-checkbox > .tutor-form-check-input').check();
         cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
-        cy.get(`span[tutor-dropdown-item][data-key=${option}]`).click();
+        cy.get(`span[tutor-dropdown-item][data-key=${option}]`).eq(0).click();
 
         cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
         cy.get('#tutor-confirm-bulk-action').click();
@@ -209,7 +210,8 @@ Cypress.Commands.add('performBulkAction', (option) => {
       $body.text().includes('No request found') ||
       $body.text().includes('No Data Available in this Section') ||
       $body.text().includes('No records found') ||
-      $body.text().includes('No Records Found')
+      $body.text().includes('No Records Found') ||
+      $body.text().includes('No Courses Found.')
     ) {
       cy.log('No data available');
     } else {
@@ -217,10 +219,11 @@ Cypress.Commands.add('performBulkAction', (option) => {
       cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
 
       cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`)
+        .eq(0)
         .invoke('text')
         .then((text) => {
           const expectedValue = text.trim();
-          cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).click();
+          cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).eq(0).click();
           cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
           cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
           cy.reload();
@@ -400,7 +403,8 @@ Cypress.Commands.add(
         $body.text().includes('No request found') ||
         $body.text().includes('No Data Available in this Section') ||
         $body.text().includes('No records found') ||
-        $body.text().includes('No Records Found')
+        $body.text().includes('No Records Found') ||
+        $body.text().includes('No Courses Found.')
       ) {
         cy.log('No data available');
       } else {
