@@ -52,11 +52,20 @@ const History = () => {
 
   const formatItemCount = (count: number, type: 'course' | 'bundle'): string => {
     if (type === 'course') {
+      if (count === 1) {
+        return __('Course', 'tutor');
+      }
+
       // translators: %d is the number of courses
-      return count === 1 ? __('Course', 'tutor') : sprintf(__('Courses (%d)', 'tutor'), count);
+      return sprintf(__('Courses (%d)', 'tutor'), count);
     }
+
+    if (count === 1) {
+      return __('Bundle', 'tutor');
+    }
+
     // translators: %d is the number of bundles
-    return count === 1 ? __('Bundle', 'tutor') : sprintf(__('Bundles (%d)', 'tutor'), count);
+    return sprintf(__('Bundles (%d)', 'tutor'), count);
   };
 
   const generateHistoryTitle = (item: ImportExportHistory): string => {
