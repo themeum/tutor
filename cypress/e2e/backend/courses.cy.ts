@@ -8,7 +8,34 @@ describe('Tutor Admin Courses', () => {
   });
 
   it('should filter by category', () => {
-    cy.filterByCategory();
+    let categoryName = '';
+    cy.get('.tutor-wp-dashboard-filters-button').click();
+    cy.get('.tutor-admin-dashboard-filter-form')
+      .should('be.visible')
+      .within(() => {
+        cy.get('.tutor-wp-dashboard-filters-item').each(($item) => {
+          if ($item.find('select[name="category"]').length) {
+            cy.wrap($item).click();
+            cy.wrap($item).within(() => {
+              cy.get('.tutor-form-select-options')
+                .should('be.visible')
+                .within(() => {
+                  cy.get('.tutor-form-select-option').then(($options) => {
+                    const randomIndex = Math.floor(Math.random() * $options.length);
+                    cy.wrap($options[randomIndex]).click();
+                    categoryName = $options[randomIndex].innerText.trim();
+                  });
+                });
+            });
+          }
+        });
+
+        cy.get('button.tutor-btn.tutor-btn-outline-primary').contains('Apply Filters').click();
+      });
+
+    cy.get('table.table-dashboard-course-list>tbody>tr>td:nth-child(3)').each(($row) => {
+      cy.wrap($row).should('contain.text', categoryName);
+    });
   });
 
   it('should check if the elements are sorted', () => {

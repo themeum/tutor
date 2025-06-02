@@ -87,7 +87,7 @@ const History = () => {
     return formattedItems.join(', ');
   };
 
-  if (history.length === 0) {
+  if (!getImportExportHistoryQuery.isLoading && history.length === 0) {
     return null;
   }
 
