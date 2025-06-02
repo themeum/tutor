@@ -1,14 +1,12 @@
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 
-import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import Main from '@ImportExport/components/Main';
 import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
-
-const Main = lazy(() => import('@ImportExport/components/Main'));
 
 function App() {
   const [queryClient] = useState(
@@ -34,9 +32,7 @@ function App() {
         <ToastProvider position="bottom-right">
           <ModalProvider>
             <Global styles={createGlobalCss()} />
-            <Suspense fallback={<LoadingSection />}>
-              <Main />
-            </Suspense>
+            <Main />
           </ModalProvider>
         </ToastProvider>
       </QueryClientProvider>
