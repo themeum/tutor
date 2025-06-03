@@ -962,20 +962,25 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course ID.
+	 * @since 3.6.0 $custom_args param added
+	 *
+	 * @param int   $course_id course ID.
+	 * @param array $custom_args Add custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_topics( $course_id = 0 ) {
+	public function get_topics( $course_id = 0, $custom_args = array() ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => 'topics',
 			'post_parent'    => $course_id,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 			'posts_per_page' => -1,
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$query = new \WP_Query( $args );
 
@@ -1057,23 +1062,26 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $topics_id topics ID.
-	 * @param int $limit limit.
+	 * @param int   $topics_id topics ID.
+	 * @param int   $limit limit.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return \WP_Query
 	 */
-	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10 ) {
+	public function get_course_contents_by_topic( $topics_id = 0, $limit = 10, $custom_args = array() ) {
 		$topics_id        = $this->get_post_id( $topics_id );
 		$lesson_post_type = tutor()->lesson_post_type;
 		$post_type        = array_unique( apply_filters( 'tutor_course_contents_post_types', array( $lesson_post_type, 'tutor_quiz' ) ) );
 
-		$args = array(
+		$default_args = array(
 			'post_type'      => $post_type,
 			'post_parent'    => $topics_id,
 			'posts_per_page' => $limit,
 			'orderby'        => 'menu_order',
 			'order'          => 'ASC',
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		return new \WP_Query( $args );
 	}
@@ -4067,18 +4075,31 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int   $course_id course id.
+	 * @since 3.6.0
+	 *
+	 * Fetching data by context, either course or comment
+	 *
+	 * @param int   $object id Course/Comment id.
 	 * @param int   $start offset.
 	 * @param int   $limit limit.
 	 * @param bool  $count_only count only.
 	 * @param array $status_in status list.
 	 * @param int   $include_user_id include user id.
+	 * @param int   $is_course_object Whether fetching by course or not.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_course_reviews( $course_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0 ) {
-		$course_id = $this->get_post_id( $course_id );
+	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true  ) {
 		global $wpdb;
+
+		$object_id = (int) $object_id;
+
+		$where_clause = '_reviews.comment_ID = %d';
+
+		if ( $is_course_object ) {
+			$object_id    = $this->get_post_id( $object_id );
+			$where_clause = '_reviews.comment_post_ID = %d';
+		}
 
 		$limit_offset    = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
 		$status_in       = '"' . implode( '","', $status_in ) . '"';
@@ -4104,12 +4125,12 @@ class Utils {
 						ON _reviews.comment_ID = _rev_meta.comment_id
 					LEFT JOIN {$wpdb->users} _reviewer
 						ON _reviews.user_id = _reviewer.ID
-			WHERE 	_reviews.comment_post_ID = %d
+			WHERE 	{$where_clause}
 					AND _reviews.comment_type = 'tutor_course_rating' 
 					AND (_reviews.comment_approved IN ({$status_in}) OR _reviews.user_id IN ({$include_user_id}))
 					AND _rev_meta.meta_key = 'tutor_rating'
 			ORDER BY _reviews.comment_ID DESC {$limit_offset}",
-			$course_id
+			$object_id
 		);
 
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query );
@@ -4667,7 +4688,7 @@ class Utils {
 			$args['course_id']   = intval( $args['course_id'] );
 			$in_course_id_query .= ' AND _question.comment_post_ID=' . $args['course_id'] . ' ';
 
-		} elseif ( ! $asker_id && $question_id === null && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
+		} elseif ( ! $asker_id && null === $question_id && ! $this->has_user_role( 'administrator', $user_id ) && current_user_can( tutor()->instructor_role ) ) {
 			// If current user is simple instructor (non admin), then get qa from their courses only.
 			$my_course_ids       = $this->get_course_id_by( 'instructor', $user_id );
 			$in_ids              = count( $my_course_ids ) ? implode( ',', $my_course_ids ) : '0';
@@ -6736,11 +6757,12 @@ class Utils {
 	 *
 	 * @since 1.3.4
 	 *
-	 * @param int $parent parent.
+	 * @param int   $parent parent.
+	 * @param array $custom_args Custom args.
 	 *
 	 * @return array
 	 */
-	public function get_course_categories( $parent = 0, $custom_args = array() ) {
+	public function get_course_categories( $parent = 0, $custom_args = array(), $top_level_children = false ) {
 		$default_args = array(
 			'taxonomy'   => CourseModel::COURSE_CATEGORY,
 			'hide_empty' => false,
@@ -6759,15 +6781,11 @@ class Utils {
 
 		$terms = get_terms( $args );
 
-		$children = array();
-		foreach ( $terms as $term ) {
-			if ( is_object( $term ) ) {
-				$term->children             = $this->get_course_categories( $term->term_id );
-				$children[ $term->term_id ] = $term;
-			}
+		if ( $top_level_children ) {
+			return $terms;
 		}
 
-		return $children;
+		return $this->build_term_tree( $terms, $parent );
 	}
 
 	/**
@@ -6775,16 +6793,22 @@ class Utils {
 	 *
 	 * @since 1.9.3
 	 *
+	 * @since 3.6.0 Custom args param added
+	 *
+	 * @param array $custom_args Custom args.
+	 *
 	 * @return array
 	 */
-	public function get_course_tags() {
-		$args = apply_filters(
+	public function get_course_tags( $custom_args = array() ) {
+		$default_args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
 				'taxonomy'   => CourseModel::COURSE_TAG,
 				'hide_empty' => false,
 			)
 		);
+
+		$args = wp_parse_args( $custom_args, $default_args );
 
 		$terms = get_terms( $args );
 
@@ -7907,7 +7931,7 @@ class Utils {
 	 * @param string $content content like lession, quiz, answer etc.
 	 * @param int    $object_id object id.
 	 *
-	 * @return int
+	 * @return int|int[]
 	 */
 	public function get_course_id_by( $content, $object_id ) {
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
@@ -8029,14 +8053,8 @@ class Utils {
 
 				case 'instructor':
 					$course_ids = get_user_meta( $object_id, '_tutor_instructor_course_id' );
-
-					! is_array( $course_ids ) ? $course_ids = array() : 0;
-					$course_id                              = array_filter(
-						$course_ids,
-						function ( $id ) {
-							return ( $id && is_numeric( $id ) );
-						}
-					);
+					$course_ids = is_array( $course_ids ) ? $course_ids : array();
+					$course_id  = array_filter( $course_ids, fn( $id ) => is_numeric( $id ) && $id );
 					break;
 			}
 
@@ -10625,5 +10643,29 @@ class Utils {
 		}
 
 		return $username;
+	}
+
+	/**
+	 * Build term tree
+	 *
+	 * @since 3.6.0
+	 *
+	 * @param array   $terms Terms array.
+	 * @param integer $parent Parent id.
+	 *
+	 * @return array
+	 */
+	public function build_term_tree( $terms, $parent = 0 ) {
+		$branch = array();
+		foreach ( $terms as $term ) {
+			if ( (int) $term->parent === (int) $parent ) {
+				$children = $this->build_term_tree( $terms, $term->term_id );
+				if ( $children ) {
+					$term->children = $children;
+				}
+				$branch[] = $term;
+			}
+		}
+		return $branch;
 	}
 }

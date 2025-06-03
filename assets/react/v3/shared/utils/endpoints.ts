@@ -1,3 +1,7 @@
+import { tutorConfig } from '@TutorShared/config/config';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 const endpoints = {
   ADMIN_AJAX: 'wp-admin/admin-ajax.php',
   TAGS: 'course-tag',
@@ -11,6 +15,7 @@ const endpoints = {
   ORDER_CANCEL: 'tutor_order_cancel',
   ADD_ORDER_DISCOUNT: 'tutor_order_discount',
   COURSE_LIST: 'course_list',
+  BUNDLE_LIST: 'tutor_get_bundle_list',
   CATEGORY_LIST: 'category_list',
   CREATED_COURSE: 'tutor_create_course',
   TUTOR_INSTRUCTOR_SEARCH: 'tutor_course_instructor_search',
@@ -120,6 +125,13 @@ const endpoints = {
   GET_BUNDLE_DETAILS: 'tutor_get_course_bundle_data',
   UPDATE_BUNDLE: 'tutor_create_course_bundle',
   ADD_REMOVE_COURSE_TO_BUNDLE: 'tutor_add_remove_course_to_bundle',
-};
+
+  // IMPORT EXPORT
+  GET_EXPORTABLE_CONTENT: 'tutor_pro_exportable_contents',
+  EXPORT_CONTENTS: isTutorPro ? 'tutor_pro_export' : 'tutor_export_settings',
+  IMPORT_CONTENTS: isTutorPro ? 'tutor_pro_import' : 'tutor_import_settings',
+  GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
+  DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
+} as const;
 
 export default endpoints;

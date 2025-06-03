@@ -93,7 +93,12 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
         return (
           <div css={styles.price}>
             {item.plan_start_price ? (
-              <span css={styles.startingFrom}>{sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)}</span>
+              <span css={styles.startingFrom}>
+                {
+                  /* translators: %s is the starting price */
+                  sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)
+                }
+              </span>
             ) : (
               <>
                 <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
@@ -164,9 +169,11 @@ const styles = {
     margin-left: ${spacing[4]};
   `,
   thumbnail: css`
-    width: 48px;
+    width: 76px;
     height: 48px;
     border-radius: ${borderRadius[4]};
+    object-fit: cover;
+    object-position: center;
   `,
   checkboxLabel: css`
     ${typography.body()};

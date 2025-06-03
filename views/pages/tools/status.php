@@ -212,7 +212,7 @@
 						if ( version_compare( $environment['mysql_version'], '5.6', '<' ) && ! strstr( $environment['mysql_version_string'], 'MariaDB' ) ) {
 							echo '<mark class="error">
 							<span class="dashicons dashicons-warning"></span> ' .
-									/* Translators: %1$s: MySQL version, %2$s: Recommended MySQL version. */
+									/* translators: %1$s: MySQL version number, %2$s: WordPress requirements URL */
 									sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor' ), esc_html( $environment['mysql_version_string'] ), '<a href="https://wordpress.org)/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'tutor' ) . '</a>' ) .
 								'</mark>';
 						} else {
@@ -267,7 +267,7 @@
 					} else {
 						echo '<mark class="error">
 						<span class="dashicons dashicons-warning"></span> ' .
-							/* Translators: %s: classname and link. */
+							/* translators: %s: classname and link. */
 							sprintf( esc_html__( 'Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'tutor' ), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>' ) .
 						'</mark>';
 					}
@@ -284,7 +284,7 @@
 					} else {
 						echo '<mark class="error">
 						<span class="dashicons dashicons-warning"></span> ' .
-							/* Translators: %s: classname and link. */
+							/* translators: %s: classname and link. */
 							sprintf( esc_html__( 'Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'tutor' ), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>' ) .
 						'</mark>';
 					}
@@ -303,7 +303,7 @@
 					} else {
 						echo '<mark class="error">
 						<span class="dashicons dashicons-warning"></span> ' .
-								/* Translators: %s: classname and link. */
+								/* translators: %s: classname and link. */
 								sprintf( esc_html__( 'Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'tutor' ), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>' ) .
 							'</mark>';
 					}

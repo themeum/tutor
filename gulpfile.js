@@ -7,6 +7,7 @@ var gulp = require('gulp'),
 	clean = require('gulp-clean'),
 	zip = require('gulp-zip'),
 	watch = require("gulp-watch"),
+	replace = require("gulp-replace"),
 	fs = require('fs'),
 	path = require('path'),
 	versionNumber = '';
@@ -54,6 +55,13 @@ var scss_blueprints = {
 		mode: 'expanded',
 		destination: 'tutor-frontend-dashboard.min.css',
 	},
+
+	tutor_import: {
+		src: 'assets/scss/admin-dashboard/template-import.scss',
+		mode: 'expanded',
+		destination: 'tutor-template-import.min.css'
+	},
+
 };
 
 var task_keys = Object.keys(scss_blueprints);
@@ -62,11 +70,34 @@ for (let task in scss_blueprints) {
 	let blueprint = scss_blueprints[task];
 
 	gulp.task(task, function () {
-		return gulp
+		let stream = gulp
 			.src(blueprint.src)
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
-			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
+			.pipe(sass({
+				outputStyle: 'compressed',
+				sass: require('sass'),
+				silenceDeprecations: [
+					"abs-percent",
+					"color-functions",
+					"global-builtin",
+					"import",
+					"legacy-js-api",
+					"mixed-decls"
+				]
+			}));
+
+		// Cache bust font URLs like .woff, .woff2, .ttf, etc.
+		if (task === 'tutor_icon') {
+			stream = stream.pipe(
+				replace(
+					/(url\(['"]?[^)'"]+\.(woff2?|woff|ttf|otf))(['"]?\))/g,
+					`$1?v=${versionNumber}$3`
+				)
+			);
+		}
+
+		return stream
 			.pipe(rename(blueprint.destination))
 			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
 	});
@@ -77,7 +108,7 @@ gulp.task('watch', function () {
 		if (e.history[0].includes('/front/')) {
 			gulp.parallel('tutor_front')();
 		} else if (e.history[0].includes('/admin-dashboard/')) {
-			gulp.parallel('tutor_admin', 'tutor_setup')();
+			gulp.parallel('tutor_admin', 'tutor_setup', 'tutor_import')();
 		} else if (e.history[0].includes('/frontend-dashboard/')) {
 			gulp.parallel('tutor_front_dashboard')();
 		} else if (e.history[0].includes('modules/')) {
@@ -204,6 +235,7 @@ gulp.task('copy', function () {
 			'!phpcs.xml',
 			'!phpcs.xml.dist',
 			'!./tutor-droip/**',
+			'!./includes/droip/**',
 			'!./cypress/**',
 			'!./cypress.config.ts',
 		])
@@ -221,8 +253,8 @@ gulp.task('copy-fonts', function () {
 
 gulp.task("copy-tutor-droip", function () {
 	return gulp
-		.src("tutor-droip/dist/**")
-		.pipe(gulp.dest("build/tutor/tutor-droip"));
+		.src("includes/droip/dist/**")
+		.pipe(gulp.dest("build/tutor/includes/droip"));
 });
 
 gulp.task('make-zip', function () {

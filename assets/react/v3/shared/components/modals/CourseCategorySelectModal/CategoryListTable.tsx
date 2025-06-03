@@ -147,6 +147,8 @@ const styles = {
     width: 48px;
     height: 48px;
     border-radius: ${borderRadius[4]};
+    object-fit: cover;
+    object-position: center;
   `,
   errorMessage: css`
     height: 100px;

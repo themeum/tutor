@@ -591,7 +591,7 @@ class CheckoutController {
 		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
 		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
 		$payment_method = $request['payment_method'];
-		$payment_type   = $request['payment_type'];
+		$payment_type   = 'free' === strtolower( $payment_method ) ? 'manual' : $request['payment_type'];
 		$order_type     = $request['order_type'];
 
 		if ( empty( $object_ids ) ) {

@@ -13,7 +13,6 @@ import {
   useCreateCouponMutation,
   useUpdateCouponMutation,
 } from '@CouponServices/coupon';
-import config from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -49,7 +48,7 @@ function Topbar() {
   };
 
   const handleGoBack = () => {
-    window.location.href = config.TUTOR_COUPONS_PAGE;
+    window.history.back();
   };
 
   return (
@@ -74,18 +73,28 @@ function Topbar() {
                 fallback={
                   coupon.created_at_gmt && (
                     <p css={styles.updateMessage}>
-                      {sprintf(
-                        __('Created by %s at %s', 'tutor'),
-                        coupon.coupon_created_by,
-                        coupon.created_at_readable,
-                      )}
+                      {
+                        /* translators: %1$s is author's name and %2$s is creation date/time */
+                        sprintf(
+                          __('Created by %1$s at %2$s', 'tutor'),
+                          coupon.coupon_created_by,
+                          coupon.created_at_readable,
+                        )
+                      }
                     </p>
                   )
                 }
               >
                 {() => (
                   <p css={styles.updateMessage}>
-                    {sprintf(__('Updated by %s at %s', 'tutor'), coupon.coupon_update_by, coupon.updated_at_readable)}
+                    {
+                      /* translators: %1$s is author's name and %2$s is update date/time */
+                      sprintf(
+                        __('Updated by %1$s at %2$s', 'tutor'),
+                        coupon.coupon_update_by,
+                        coupon.updated_at_readable,
+                      )
+                    }
                   </p>
                 )}
               </Show>
@@ -158,7 +167,6 @@ const styles = {
   left: css`
     display: flex;
     gap: ${spacing[16]};
-    width: 100%;
   `,
   right: css`
     display: flex;

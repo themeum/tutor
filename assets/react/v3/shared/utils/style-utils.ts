@@ -11,7 +11,7 @@ import { css } from '@emotion/react';
 import { typography } from '../config/typography';
 
 export const createGlobalCss = () => css`
-  body:not(.tutor-screen-backend-settings) {
+  body:not(.tutor-screen-backend-settings, .tutor-backend-tutor-tools) {
     #wpcontent {
       padding-left: 0;
     }
@@ -488,6 +488,7 @@ export const styleUtils = {
     height: 32px;
     padding: 0;
     margin: 0;
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -605,5 +606,20 @@ export const styleUtils = {
         outline-offset: 1px;
       }
     }
+  `,
+  objectFit: (
+    {
+      fit,
+      position,
+    }: {
+      fit: 'cover' | 'contain' | 'fill' | 'none' | 'scale-down';
+      position: 'center' | 'top' | 'bottom' | 'left' | 'right';
+    } = {
+      fit: 'cover',
+      position: 'center',
+    },
+  ) => css`
+    object-fit: ${fit};
+    object-position: ${position};
   `,
 };
