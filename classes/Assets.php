@@ -604,8 +604,17 @@ class Assets {
 	 * @return void
 	 */
 	public function tutor_script_text_domain() {
+		wp_set_script_translations( 'tutor-script', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-gutenberg', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-payment-settings', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-addon-list', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-import-export', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-template-import-js', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**

@@ -48,7 +48,12 @@ module.exports = (env, options) => {
                 },
             ],
         },
-        plugins: [new webpack.ProvidePlugin({ React: 'react' })],
+        plugins: [
+            new webpack.ProvidePlugin({ React: 'react' }),
+            new webpack.DefinePlugin({
+                'process.env.MAKE_POT': JSON.stringify(!!env['make-pot']),
+            }),
+        ],
         externals: {
             react: 'React',
             'react-dom': 'ReactDOM',
@@ -60,6 +65,7 @@ module.exports = (env, options) => {
     if ('production' === mode) {
         config.devtool = false;
         config.optimization = {
+            splitChunks: false,
             minimize: true,
             minimizer: [
                 new TerserPlugin({
@@ -119,7 +125,7 @@ module.exports = (env, options) => {
                             const name = pathData.chunk.name.replace(/^icon-/, '');
                             return `icons/${name}.min.js?ver=${version}`;
                         }
-                        return `lazy-chunks/[name].[contenthash].min.js?ver=${version}`;
+                        return `lazy-chunks/[name].min.js?ver=${version}`;
                     },
                     clean: true,
                 },
