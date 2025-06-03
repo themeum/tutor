@@ -47,7 +47,16 @@ class CouponController extends BaseController {
 	 *
 	 * @var CouponModel
 	 */
-	private $model;
+	public $model;
+
+	/**
+	 * Checkout controller instance.
+	 *
+	 * @since 3.6.0
+	 *
+	 * @var CheckoutController
+	 */
+	private $checkout_ctrl;
 
 	/**
 	 * Trait for utilities
@@ -82,7 +91,8 @@ class CouponController extends BaseController {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
-		$this->model      = new CouponModel();
+		$this->model         = new CouponModel();
+		$this->checkout_ctrl = new CheckoutController( false );
 
 		if ( $register_hooks ) {
 			// Register hooks here.
@@ -413,16 +423,25 @@ class CouponController extends BaseController {
 
 		$date          = Input::get( 'date', '' );
 		$coupon_status = Input::get( 'coupon-status', '' );
+		$applies_to    = Input::get( 'applies_to', '' );
 		$search        = Input::get( 'search', '' );
 
 		$where = array();
 
 		if ( ! empty( $date ) ) {
-			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
+			$where['date(created_at_gmt)'] = tutor_get_formated_date( 'Y-m-d', $date );
 		}
 
 		if ( ! empty( $coupon_status ) ) {
 			$where['coupon_status'] = $coupon_status;
+		}
+
+		if ( ! empty( $applies_to ) ) {
+			$where['applies_to'] = $applies_to;
+		}
+
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) && empty( $applies_to ) ) {
+			$where['applies_to'] = $this->model->get_course_bundle_applies_to( true );
 		}
 
 		$coupon_status = $this->model->get_coupon_status();
@@ -467,14 +486,15 @@ class CouponController extends BaseController {
 		$date          = Input::get( 'date', '' );
 		$search_term   = Input::get( 'search', '' );
 		$coupon_status = Input::get( 'coupon-status' );
+		$applies_to    = Input::get( 'applies_to' );
 
 		$where_clause = array();
 
 		if ( $date ) {
-			$where_clause['created_at_gmt'] = tutor_get_formated_date( '', $date );
+			$where_clause['date(created_at_gmt)'] = tutor_get_formated_date( '', $date );
 		}
 
-		if ( ! is_null( $coupon_status ) ) {
+		if ( $coupon_status ) {
 			$where_clause['coupon_status'] = $coupon_status;
 		}
 
@@ -482,10 +502,14 @@ class CouponController extends BaseController {
 			$where_clause['coupon_status'] = $active_tab;
 		}
 
+		if ( $applies_to ) {
+			$where_clause['applies_to'] = $applies_to;
+		}
+
 		$list_order    = Input::get( 'order', 'DESC' );
 		$list_order_by = 'id';
 
-		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) ) {
+		if ( ! tutor_utils()->is_addon_enabled( 'subscription' ) && ! $applies_to ) {
 			$where_clause['applies_to'] = $this->model->get_course_bundle_applies_to( true );
 		}
 
@@ -771,7 +795,7 @@ class CouponController extends BaseController {
 			$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
 			$order_type  = $plan ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-			$checkout_data = ( new CheckoutController( false ) )->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
+			$checkout_data = $this->checkout_ctrl->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
 
 			if ( $checkout_data->is_coupon_applied ) {
 				$this->json_response(
@@ -779,8 +803,9 @@ class CouponController extends BaseController {
 					$checkout_data
 				);
 			} else {
+				global $tutor_coupon_apply_err_msg;
 				$this->json_response(
-					__( 'Coupon code is not applicable!', 'tutor' ),
+					$tutor_coupon_apply_err_msg,
 					null,
 					HttpHelper::STATUS_BAD_REQUEST
 				);

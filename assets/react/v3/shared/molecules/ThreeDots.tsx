@@ -68,6 +68,7 @@ interface ThreeDotsProps {
   hideArrow?: boolean;
   size?: 'small' | 'medium';
   closeOnEscape?: boolean;
+  wrapperCss?: SerializedStyles;
 }
 
 const ThreeDots = ({
@@ -84,6 +85,7 @@ const ThreeDots = ({
   hideArrow = false,
   size = 'medium',
   closeOnEscape = true,
+  wrapperCss,
   ...props
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
@@ -94,7 +96,7 @@ const ThreeDots = ({
         type="button"
         ref={ref}
         onClick={onClick}
-        css={styles.button({ isOpen, isInverse, isDisabled: disabled })}
+        css={[styles.button({ isOpen, isInverse, isDisabled: disabled }), wrapperCss]}
         disabled={disabled}
         {...props}
       >
@@ -235,6 +237,7 @@ const styles = {
 
     svg {
       color: ${colorTokens.icon.default};
+      flex-shrink: 0;
     }
 
     :hover {

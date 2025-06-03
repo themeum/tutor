@@ -337,6 +337,17 @@ class Tools_V2 {
 					'block' => array(),
 				),
 			),
+			'settings_log'   => array(
+				'label'     => __( 'Settings Log', 'tutor' ),
+				'slug'      => 'settings_log',
+				'desc'      => __( 'Settings Log', 'tutor' ),
+				'template'  => 'settings-log',
+				'view_path' => tutor()->path . 'views/pages/tools/',
+				'icon'      => 'tutor-icon-settings-log',
+				'blocks'    => array(
+					'block' => array(),
+				),
+			),
 		);
 
 		$attr_tools = apply_filters( 'tutor/tools/extend/attr', apply_filters( 'tutor/tools/attr', apply_filters( 'tutor_tool_pages', $attr_tools ) ) );
@@ -471,7 +482,7 @@ class Tools_V2 {
 
 		$data['mysql_version'] = ( version_compare( $environment['mysql_version'], '5.6', '<' ) && ! strstr( $environment['mysql_version_string'], 'MariaDB' ) )
 			?
-			/* translators: 1: MySQL version number, 2: WordPress requirements URL */
+			/* translators: %1$s: MySQL version number, %2$s: WordPress requirements URL */
 			sprintf( esc_html__( '%1$s - We recommend a minimum MySQL version of 5.6. See: %2$s', 'tutor' ), esc_html( $environment['mysql_version_string'] ), '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__( 'WordPress requirements', 'tutor' ) . '</a>' )
 			: esc_html( $environment['mysql_version_string'] );
 
@@ -488,19 +499,19 @@ class Tools_V2 {
 		$data['dom_document'] = $environment['domdocument_enabled']
 			? '✓'
 			:
-			/* translators: %s: DOMDocument class */
+			/* translators: %s: classname and link. */
 			sprintf( esc_html__( 'Your server does not have the %s class enabled - HTML/Multipart emails, and also some extensions, will not work without DOMDocument.', 'tutor' ), '<a href="https://php.net/manual/en/class.domdocument.php">DOMDocument</a>' );
 
 		$data['gzip'] = ( $environment['gzip_enabled'] )
 			? '✓'
 			:
-			/* translators: %s: gzopen function */
+			/* translators: %s: classname and link. */
 			sprintf( esc_html__( 'Your server does not support the %s function - this is required to use the GeoIP database from MaxMind.', 'tutor' ), '<a href="https://php.net/manual/en/zlib.installation.php">gzopen</a>' );
 
 		$data['multibyte_string'] = ( $environment['mbstring_enabled'] )
 			? '✓'
 			:
-			/* translators: %s: mbstring functions */
+			/* translators: %s: classname and link. */
 			sprintf( esc_html__( 'Your server does not support the %s functions - this is required for better character encoding. Some fallbacks will be used instead for it.', 'tutor' ), '<a href="https://php.net/manual/en/mbstring.installation.php">mbstring</a>' );
 
 		if ( ! null == $type ) {

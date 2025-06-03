@@ -64,6 +64,27 @@ class Course extends Tutor_Base {
 	const SELLING_OPTION_MEMBERSHIP   = 'membership';
 	const SELLING_OPTION_ALL          = 'all';
 
+	/**
+	 * Additional data meta
+	 *
+	 * @since 3.6.0
+	 */
+	const COURSE_BENEFITS_META         = '_tutor_course_benefits';
+	const COURSE_REQUIREMENTS_META     = '_tutor_course_requirements';
+	const COURSE_TARGET_AUDIENCE_META  = '_tutor_course_target_audience';
+	const COURSE_MATERIAL_INCLUDE_META = '_tutor_course_material_includes';
+	const COURSE_DURATION_META         = '_course_duration';
+
+	/**
+	 * Course settings meta
+	 *
+	 * @since 3.6.0
+	 */
+	const COURSE_ENABLE_QA_META = '_tutor_enable_qa';
+	const PUBLIC_COURSE_META    = '_tutor_is_public_course';
+	const COURSE_SETTINGS_META  = '_tutor_course_settings';
+	const COURSE_LEVEL_META     = '_tutor_course_level';
+
 
 	/**
 	 * Additional course meta info
@@ -498,7 +519,7 @@ class Course extends Tutor_Base {
 	 */
 	public function setup_course_categories_tags( $post_id, $params ) {
 		if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
-			$valid_category_ids = $this->validate_term_ids(
+			$valid_category_ids = ValidationHelper::validate_term_ids(
 				$params['course_categories'],
 				CourseModel::COURSE_CATEGORY
 			);
@@ -508,7 +529,7 @@ class Course extends Tutor_Base {
 		}
 
 		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
-			$valid_tag_ids = $this->validate_term_ids(
+			$valid_tag_ids = ValidationHelper::validate_term_ids(
 				$params['course_tags'],
 				CourseModel::COURSE_TAG
 			);
@@ -728,9 +749,6 @@ class Course extends Tutor_Base {
 				if ( isset( $params['pricing']['type'] ) ) {
 					update_post_meta( $post_id, self::COURSE_PRICE_TYPE_META, $params['pricing']['type'] );
 				}
-				if ( isset( $params['pricing']['product_id'] ) ) {
-					update_post_meta( $post_id, '_tutor_course_product_id', $params['pricing']['product_id'] );
-				}
 			} catch ( \Throwable $th ) {
 				throw new \Exception( $th->getMessage() );
 			}
@@ -873,6 +891,7 @@ class Course extends Tutor_Base {
 		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
 		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
 		$search_term = '';
+		$post_status = Input::post( 'post_status', null );
 
 		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
@@ -880,6 +899,7 @@ class Course extends Tutor_Base {
 		}
 
 		$args = array(
+			'post_status'    => is_null( $post_status ) ? 'publish' : $post_status,
 			'posts_per_page' => $limit,
 			'offset'         => $offset,
 			's'              => $search_term,
@@ -2224,19 +2244,22 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function attach_product_with_course( $post_ID, $post_data ) {
-
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		$product_id  = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
 
+		/**
+		 * For native monetization, just return
+		 * No need to attach anything.
+		 */
 		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			return;
 		}
 
 		/**
-		 * Unlink product from course.
+		 * When course moved paid to free
+		 * Keep the product linked and return.
 		 */
 		if ( -1 === $product_id ) {
-			delete_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META );
 			return;
 		}
 
@@ -2265,16 +2288,15 @@ class Course extends Tutor_Base {
 
 		if ( 'wc' === $monetize_by ) {
 
-			$is_update = ( $attached_product_id && wc_get_product( $attached_product_id ) ) ? true : false;
+			$is_update = ( $product_id && wc_get_product( $product_id ) ) ? true : false;
 
 			if ( $is_update ) {
-				$attached_product_id = $product_id;
 				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
 
-				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
+				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $product_id );
 				$product_obj = wc_get_product( $product_id );
 				if ( $product_obj->is_type( 'subscription' ) ) {
-					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
+					update_post_meta( $product_id, '_subscription_price', $course_price );
 				}
 
 				// Set course regular & sale price.
@@ -3080,25 +3102,5 @@ class Course extends Tutor_Base {
 		}
 
 		return $args;
-	}
-
-	/**
-	 * Validate term IDs before setting them.
-	 *
-	 * @since 3.5.0
-	 *
-	 * @param array  $term_ids Term IDs to validate.
-	 * @param string $taxonomy Taxonomy to check against.
-	 *
-	 * @return array Valid term IDs.
-	 */
-	private function validate_term_ids( $term_ids, $taxonomy ) {
-		return array_filter(
-			array_map( 'intval', $term_ids ),
-			function( $term_id ) use ( $taxonomy ) {
-				$term = get_term( $term_id, $taxonomy );
-				return ! is_wp_error( $term ) && $term;
-			}
-		);
 	}
 }

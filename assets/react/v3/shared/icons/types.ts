@@ -92,7 +92,6 @@ export const icons = [
   'note',
   'attach',
   'report',
-  'jitsiColorize',
   'linkExternal',
   'quizTrueFalse',
   'quizMultiChoice',

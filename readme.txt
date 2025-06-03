@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.5.0
+Stable tag: 3.6.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -312,6 +312,26 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.6.0 - May 30, 2025
+
+New: Introduced Tutor LMS integration with Droip.
+New: Added course import/export functionality. (Pro)
+New: Added option to define assignment expiration behavior. (Pro)
+Update: Admins can no longer create Zoom meetings for instructors who haven't connected their Zoom accounts. (Pro)
+Update: Coupons can now be used even when a course is on sale.
+Update: Improved coupon error messaging with clearer explanations when a coupon cannot be applied.
+Update: Optimized the bundle creation process. (Pro)
+Fix: Bundle course reordering on the frontend wasn't working after publishing. (Pro)
+Fix: Student assignments were not available for evaluation immediately after submission. (Pro)
+Fix: Enrolled courses remained visible after membership expiration and only disappeared upon access. (Pro)
+Fix: Subscription payment history was not retained across sessions. (Pro)
+Fix: Refunded WooCommerce orders were incorrectly marked as "Processing" in the customer's order history.
+Fix: Google login reversed users' first and last names. (Pro)
+Fix: Certificate did not auto-reload after creating a meeting in the course builder. (Pro)
+Fix: 'View Pricing' was incorrectly shown for public courses on the course list page.
+Fix: Gradebook displayed incorrect or inconsistent data. (Pro)
+Fix: Purchasing a paid course unintentionally granted access to an unrelated free course.
+
 = 3.5.0 - April 30, 2025
 
 New: Introduced a trial feature for membership plans. (Pro)
@@ -408,11 +428,11 @@ Fix: Resolved REST API errors in Tutor LMS Pro. (Pro)
 Fix: Fixed Google Meet authorization issues for instructors. (Pro)
 Fix: Fixed an issue where removed payment methods were still appearing as installed.
 
-= 3.2.1 - January 21, 2024
+= 3.2.1 - January 21, 2025
 
 Fix: Resolved the "Page not found" issue for multilingual courses.
 
-= 3.2.0 - January 20, 2024
+= 3.2.0 - January 20, 2025
 
 New: Added Membership support (Phase 1) in the Native Subscription system. (Pro)
 New: Redesigned the Native Subscription and introduced Subscriptions for Course Bundles. (Pro)

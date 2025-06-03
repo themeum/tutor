@@ -222,7 +222,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 											break;
 										case 'wc-refunded' === $status:
 											$badge_class       = 'danger';
-											$order_status_text = __( 'Processing', 'tutor' );
+											$order_status_text = __( 'Refunded', 'tutor' );
 											break;
 										case 'wc-cancelled' === $status:
 											$badge_class       = 'danger';

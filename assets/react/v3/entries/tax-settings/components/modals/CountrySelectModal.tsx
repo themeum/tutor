@@ -146,11 +146,14 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
                               );
                             }}
                           >
-                            {sprintf(
-                              '%s of %s provinces',
-                              selectedCountries[country.value]?.length || 0,
-                              getStatesByCountryAsOptions(country.value).length,
-                            )}
+                            {
+                              /* translators: %1$s is the number of selected provinces, and %2$s is the total number of provinces */
+                              sprintf(
+                                '%1$s of %2$s provinces',
+                                selectedCountries[country.value]?.length || 0,
+                                getStatesByCountryAsOptions(country.value).length,
+                              )
+                            }
                           </Button>
                         </Show>
                       </div>

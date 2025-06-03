@@ -1,8 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import DatePicker from 'react-datepicker';
+import { __ } from '@wordpress/i18n';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import CustomHeader from './CustomHeader';
 import { CustomInput } from './CustomInput';
 import { stringToDate, translateWeekday, urlPrams } from './utils';
+
+const DatePicker = lazy(() => import(/* webpackChunkName: "tutor-react-datepicker" */'react-datepicker'));
+
+const fallbackElement = (
+	<div class="tutor-form-wrap">
+		<span class="tutor-form-icon tutor-form-icon-reverse">
+			<span class="tutor-icon-calender-line" aria-hidden="true"></span>
+		</span>
+		<input class="tutor-form-control" placeholder={__('Loading...', 'tutor')} />
+	</div>
+);
 
 const TutorDatepicker = (data) => {
 	let isPreviousDateAllowed = data?.input_name !== 'meeting_date';
@@ -42,32 +53,34 @@ const TutorDatepicker = (data) => {
 
 	return (
 		<div className="tutor-react-datepicker">
-			<DatePicker
-				customInput={<CustomInput />}
-				minDate={isPreviousDateAllowed ? null : new Date()}
-				isClearable={Boolean(data.is_clearable)}
-				placeholderText={dateFormat}
-				selected={startDate}
-				name={data.input_name || ''}
-				onChange={(date) => (data.prevent_redirect ? setStartDate(date) : handleCalendarChange(date))}
-				showPopperArrow={false}
-				shouldCloseOnSelect={true}
-				onCalendarClose={handleCalendarClose}
-				onClick={handleCalendarClose}
-				dateFormat={dateFormat}
-				formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
-				calendarStartDay={_tutorobject.start_of_week}
-				renderCustomHeader={(props) => (
-					<CustomHeader
-						{...props}
-						dropdownMonth={dropdownMonth}
-						setDropdownMonth={setDropdownMonth}
-						dropdownYear={dropdownYear}
-						setDropdownYear={setDropdownYear}
-						handleCalendarClose={handleCalendarClose}
-					/>
-				)}
-			/>
+			<Suspense fallback={fallbackElement}>
+				<DatePicker
+					customInput={<CustomInput />}
+					minDate={isPreviousDateAllowed ? null : new Date()}
+					isClearable={Boolean(data.is_clearable)}
+					placeholderText={dateFormat}
+					selected={startDate}
+					name={data.input_name || ''}
+					onChange={(date) => (data.prevent_redirect ? setStartDate(date) : handleCalendarChange(date))}
+					showPopperArrow={false}
+					shouldCloseOnSelect={true}
+					onCalendarClose={handleCalendarClose}
+					onClick={handleCalendarClose}
+					dateFormat={dateFormat}
+					formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
+					calendarStartDay={_tutorobject.start_of_week}
+					renderCustomHeader={(props) => (
+						<CustomHeader
+							{...props}
+							dropdownMonth={dropdownMonth}
+							setDropdownMonth={setDropdownMonth}
+							dropdownYear={dropdownYear}
+							setDropdownYear={setDropdownYear}
+							handleCalendarClose={handleCalendarClose}
+						/>
+					)}
+				/>
+			</Suspense>
 		</div>
 	);
 };

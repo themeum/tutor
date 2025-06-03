@@ -44,6 +44,8 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   onClickAiButton?: () => void;
   hasCustomEditorSupport?: boolean;
   isMinimal?: boolean;
+  hideMediaButtons?: boolean;
+  hideQuickTags?: boolean;
   editors?: Editor[];
   editorUsed?: Editor;
   isMagicAi?: boolean;
@@ -145,7 +147,10 @@ const CustomEditorOverlay = ({
           }
         }}
       >
-        {sprintf(__('Edit with %s', 'tutor'), editorUsed?.label)}
+        {
+          /* translators: %s is the editor name */
+          sprintf(__('Edit with %s', 'tutor'), editorUsed?.label)
+        }
       </Button>
     </div>
   );
@@ -165,6 +170,8 @@ const FormWPEditor = ({
   onClickAiButton,
   hasCustomEditorSupport = false,
   isMinimal = false,
+  hideMediaButtons = false,
+  hideQuickTags = false,
   editors = [],
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
   isMagicAi = false,
@@ -311,6 +318,8 @@ const FormWPEditor = ({
                 }
               }}
               isMinimal={isMinimal}
+              hideMediaButtons={hideMediaButtons}
+              hideQuickTags={hideQuickTags}
               autoFocus={autoFocus}
               onFullScreenChange={onFullScreenChange}
               readonly={readOnly}

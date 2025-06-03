@@ -30,7 +30,7 @@ $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
-$coupon_controller = new CouponController();
+$coupon_controller = new CouponController( false );
 
 $get_coupons = $coupon_controller->get_coupons( $limit, $offset );
 $coupons     = $get_coupons['results'];
@@ -104,7 +104,7 @@ $filters = array(
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</th>
 							<th colspan="2">
-								<?php esc_html_e( 'Uses', 'tutor' ); ?>
+								<?php esc_html_e( 'Usage', 'tutor' ); ?>
 							</th>
 						</tr>
 					</thead>
@@ -135,7 +135,7 @@ $filters = array(
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( 'flat' === $coupon->discount_type ? $currency_symbol . $coupon->discount_amount : $coupon->discount_amount . '%' ); ?>
+											<?php echo wp_kses_post( ( 'flat' === $coupon->discount_type ? tutor_utils()->tutor_price( $coupon->discount_amount ) : $coupon->discount_amount . '%' ) ); ?>
 										</div>
 									</td>
 									<td>
@@ -152,7 +152,11 @@ $filters = array(
 
 									<td>
 										<?php
-										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon->coupon_status, true ) );
+										$coupon_status = $coupon->coupon_status;
+										if ( CouponModel::STATUS_ACTIVE === $coupon_status ) {
+											$coupon_status = $coupon_controller->model->has_coupon_validity( $coupon ) ? $coupon->coupon_status : 'expired';
+										}
+										echo wp_kses_post( tutor_utils()->translate_dynamic_text( $coupon_status, true ) );
 										?>
 									</td>
 

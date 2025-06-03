@@ -137,7 +137,10 @@ const H5PContentListModal = ({
 
   return (
     <BasicModalWrapper
-      title={selectedContents.length > 0 ? sprintf(__('%s  selected', 'tutor'), selectedContents.length) : title}
+      title={
+        /* translators: %s is the number of selected items */
+        selectedContents.length > 0 ? sprintf(__('%s selected', 'tutor'), selectedContents.length) : title
+      }
       onClose={() => closeModal({ action: 'CLOSE' })}
       maxWidth={920}
     >

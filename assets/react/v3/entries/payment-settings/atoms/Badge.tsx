@@ -1,5 +1,5 @@
-import Show from '@TutorShared/controls/Show';
 import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
@@ -48,7 +48,7 @@ const styles = {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: ${spacing[8]};
+    gap: ${spacing[4]};
     min-width: 60px;
 
     svg {

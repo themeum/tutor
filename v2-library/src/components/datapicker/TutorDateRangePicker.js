@@ -1,11 +1,12 @@
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { differenceInDays } from 'date-fns';
-import React, { useEffect, useState } from 'react';
-import DatePicker, { CalendarContainer } from 'react-datepicker';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import CustomHeader from './CustomHeader';
 import { CustomInput } from './CustomInput';
 import { translateWeekday } from './utils';
-const { __, sprintf, _n } = wp.i18n;
 
+const DatePicker = lazy(() => import(/* webpackChunkName: "tutor-react-datepicker" */'react-datepicker'));
+const CalendarContainer = lazy(() => import('react-datepicker').then((module) => ({ default: module.CalendarContainer })));
 
 const TutorDateRangePicker = () => {
 	const dateFormat = 'Y-M-d';
@@ -58,25 +59,34 @@ const TutorDateRangePicker = () => {
 
 	const ContainerWrapper = ({ className, children }) => {
 		return (
-			<CalendarContainer className={className}>
-				<div style={{ position: 'relative' }} className="react-datepicker__custom-wrapper">
-					{children}
-					<div className="react-datepicker__custom-footer">
-						<div className="react-datepicker__selected-days-count">
-							{dayCount ? sprintf(_n('%d day selected', '%d days selected', dayCount, 'tutor'), dayCount) : __('0 day selected', 'tutor')}
-						</div>
-						<div className="tutor-btns">
-							<button
-								type="button"
-								className="tutor-btn tutor-btn-outline-primary"
-								onClick={applyDateRange}
-							>
-								{__('Apply', 'tutor')}
-							</button>
+			<Suspense fallback={__('Loading...', 'tutor')}>
+				<CalendarContainer className={className}>
+					<div style={{ position: 'relative' }} className="react-datepicker__custom-wrapper">
+						{children}
+						<div className="react-datepicker__custom-footer">
+							<div className="react-datepicker__selected-days-count">
+								{
+									dayCount ? (
+										// translators: %d is the number of days selected
+										sprintf(_n('%d day selected', '%d days selected', dayCount, 'tutor'), dayCount)
+									) : (
+										__('0 day selected', 'tutor')
+									)
+								}
+							</div>
+							<div className="tutor-btns">
+								<button
+									type="button"
+									className="tutor-btn tutor-btn-outline-primary"
+									onClick={applyDateRange}
+								>
+									{__('Apply', 'tutor')}
+								</button>
+							</div>
 						</div>
 					</div>
-				</div>
-			</CalendarContainer>
+				</CalendarContainer>
+			</Suspense>
 		);
 	};
 
@@ -90,32 +100,34 @@ const TutorDateRangePicker = () => {
 
 	return (
 		<div className="tutor-react-datepicker tutor-react-datepicker__selects-range" style={{ width: '100%' }}>
-			<DatePicker
-				customInput={<CustomInput />}
-				placeholderText={` ${dateFormat} -- ${dateFormat} `}
-				showPopperArrow={false}
-				shouldCloseOnSelect={false}
-				selectsRange={true}
-				startDate={startDate}
-				endDate={endDate}
-				onChange={handleCalenderChange}
-				onCalendarClose={handleCalendarClose}
-				onClick={handleCalendarClose}
-				dateFormat={dateFormat}
-				formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
-				calendarStartDay={_tutorobject.start_of_week}
-				calendarContainer={ContainerWrapper}
-				renderCustomHeader={(props) => (
-					<CustomHeader
-						{...props}
-						dropdownMonth={dropdownMonth}
-						setDropdownMonth={setDropdownMonth}
-						dropdownYear={dropdownYear}
-						setDropdownYear={setDropdownYear}
-						handleCalendarClose={handleCalendarClose}
-					/>
-				)}
-			/>
+			<Suspense fallback={<div>{__('Loading...', 'tutor')}</div>}>
+				<DatePicker
+					customInput={<CustomInput />}
+					placeholderText={` ${dateFormat} -- ${dateFormat} `}
+					showPopperArrow={false}
+					shouldCloseOnSelect={false}
+					selectsRange={true}
+					startDate={startDate}
+					endDate={endDate}
+					onChange={handleCalenderChange}
+					onCalendarClose={handleCalendarClose}
+					onClick={handleCalendarClose}
+					dateFormat={dateFormat}
+					formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
+					calendarStartDay={_tutorobject.start_of_week}
+					calendarContainer={ContainerWrapper}
+					renderCustomHeader={(props) => (
+						<CustomHeader
+							{...props}
+							dropdownMonth={dropdownMonth}
+							setDropdownMonth={setDropdownMonth}
+							dropdownYear={dropdownYear}
+							setDropdownYear={setDropdownYear}
+							handleCalendarClose={handleCalendarClose}
+						/>
+					)}
+				/>
+			</Suspense>
 		</div>
 	);
 };

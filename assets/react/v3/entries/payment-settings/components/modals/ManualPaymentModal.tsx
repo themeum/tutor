@@ -6,7 +6,7 @@ import { Controller } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
-import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
@@ -55,7 +55,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
   }, []);
 
   const onSubmit = (data: PaymentMethod) => {
-    paymentForm.setValue('payment_methods', [...paymentForm.getValues('payment_methods') ?? [], data]);
+    paymentForm.setValue('payment_methods', [...(paymentForm.getValues('payment_methods') ?? []), data]);
     closeModal({ action: 'CONFIRM' });
   };
 
@@ -113,7 +113,13 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                   name={`fields.${index}.value`}
                   control={form.control}
                   rules={{ ...requiredRule() }}
-                  render={(controllerProps) => <FormTextareaInput {...controllerProps} label={field.label} rows={5} />}
+                  render={(controllerProps) => (
+                    <FormWPEditor
+                      {...controllerProps}
+                      label={field.label}
+                      toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
+                    />
+                  )}
                 />
                 <div css={styles.inputHint}>{field.hint}</div>
               </div>

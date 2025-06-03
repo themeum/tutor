@@ -256,7 +256,7 @@ const HeaderActions = () => {
     };
 
     const moveToTrashItem = {
-      text: <>{__('Move to trash', 'tutor')}</>,
+      text: <>{__('Move to Trash', 'tutor')}</>,
       onClick: async () => {
         if (hasTrashAccess) {
           try {
@@ -275,7 +275,7 @@ const HeaderActions = () => {
     };
 
     const switchToDraftItem = {
-      text: <>{__('Switch to draft', 'tutor')}</>,
+      text: <>{__('Switch to Draft', 'tutor')}</>,
       onClick: form.handleSubmit((data) => handleSubmit(data, 'draft')),
       isDanger: false,
       dataCy: 'switch-to-draft',
@@ -291,7 +291,7 @@ const HeaderActions = () => {
             },
           ]}
         >
-          {__('Legacy mode', 'tutor')}
+          {__('Legacy Mode', 'tutor')}
           <SVGIcon name="linkExternal" width={24} height={24} />
         </div>
       ),
@@ -307,7 +307,7 @@ const HeaderActions = () => {
     };
 
     const publishImmediatelyItem = {
-      text: <>{__('Publish immediately', 'tutor')}</>,
+      text: <>{__('Publish Immediately', 'tutor')}</>,
       onClick: form.handleSubmit((data) =>
         handleSubmit(
           {

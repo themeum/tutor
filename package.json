@@ -7,16 +7,16 @@
     "node": ">=14.17.5"
   },
   "scripts": {
-    "build": "composer install --no-dev && webpack --env=build --mode=production && npm run tutor-droip && npm run gulp-build",
+    "build": "composer install --no-dev && npm run make-pot && webpack --mode=production && npm run tutor-droip && npm run gulp-build",
     "build-dev": "webpack --mode=development && npm run gulp-build-dev",
-    "gulp-build": "npm run rm-lang && _GULP_ENV='build' gulp build",
-    "gulp-build-dev": "npm run rm-lang && gulp build",
+    "gulp-build": "_GULP_ENV='build' gulp build",
+    "gulp-build-dev": "gulp build",
     "css-watch": "gulp",
     "js-watch": "webpack --watch --mode=development",
     "watch": "concurrently \"npm run css-watch\" \"npm run js-watch\"",
-    "rm-lang": "rm ./languages/tutor.pot || echo \"No tutor pot yet\"",
+    "make-pot": "webpack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
     "biome:check": "npx @biomejs/biome check --apply ./assets/react/v3",
-    "tutor-droip": "cd tutor-droip && npm run build && cp -r dist/* ../tutor-droip",
+    "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run"
   },
@@ -67,10 +67,10 @@
     "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.2.1",
     "gulp-rename": "^2.0.0",
+    "gulp-replace": "^1.1.4",
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-watch": "^5.0.1",
-    "gulp-wp-pot": "^2.4.3",
     "gulp-zip": "^5.0.2",
     "lodash.range": "^3.2.0",
     "path": "^0.12.7",
@@ -80,10 +80,11 @@
     "style-loader": "^3.3.4",
     "terser-webpack-plugin": "^5.3.10",
     "typescript-eslint": "^8.16.0",
-    "webpack": "^5.22.0",
+    "webpack": "^5.99.9",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^4.1.1"
+    "webpack-dev-server": "^4.1.1",
+    "webpack-node-externals": "^3.0.0"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.1.0",
