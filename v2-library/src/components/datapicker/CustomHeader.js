@@ -1,5 +1,4 @@
 import { getMonth, getYear } from "date-fns";
-import range from 'lodash.range';
 import { months } from "./utils";
 
 const CustomHeader = ({
@@ -16,7 +15,10 @@ const CustomHeader = ({
     setDropdownYear,
     handleCalendarClose
 }) => {
-    const years = range(2000, getYear(new Date()) + 5, 1);
+    const years = Array.from(
+        { length: (getYear(new Date()) + 5) - 2000 },
+        (_, i) => 2000 + i
+    );
 
     return (
         <div className="datepicker-header-custom">
