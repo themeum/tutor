@@ -17,7 +17,14 @@ import { format } from 'date-fns';
 import { lazy, Suspense, useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
-const MainContent = lazy(() => import('./MainContent'));
+
+let MainContent: React.FC;
+
+if (process.env.MAKE_POT) {
+  MainContent = require('./MainContent').default;
+} else {
+  MainContent = lazy(() => import(/* webpackChunkName: "tutor-coupon-main-content" */ './MainContent'));
+}
 
 function Main() {
   const params = new URLSearchParams(window.location.search);
