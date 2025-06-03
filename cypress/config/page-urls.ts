@@ -13,7 +13,7 @@ export const frontendUrls = {
     MY_QUIZ_ATTEMPTS: `${dashboardUrl}/my-quiz-attempts/`,
     ORDER_HISTORY: `${dashboardUrl}/order-history/`,
     QUESTION_AND_ANSWER: `${dashboardUrl}/question-and-answer/`,
-    CALENDER: `${dashboardUrl}/calender/`,
+    CALENDAR: `${dashboardUrl}/calendar/`,
     MY_COURSES: `${dashboardUrl}/my-courses/`,
     ANNOUNCEMENTS: `${dashboardUrl}/announcements/`,
     WITHDRAWS: `${dashboardUrl}/withdraw/`,
