@@ -23,16 +23,6 @@ describe('Tutor Dashboard My Courses', () => {
     cy.waitAfterRequest('getCourseDetails');
 
     cy.get('[data-cy=course-builder-submit-button]').click();
-
-    // cy.get("a[title=Exit]").click()
-
-    // <ul class="tutor-nav">
-    // 		<li class="tutor-nav-item">
-    // 			<a class="tutor-nav-link is-active" href="http://localhost:8888/wordpress-tutor/dashboard/reviews">
-    // 				Received (0)
-    // 			</a>
-    // 		</li>
-    // </ul>
   });
 
   it('should draft and publish again a course', () => {
