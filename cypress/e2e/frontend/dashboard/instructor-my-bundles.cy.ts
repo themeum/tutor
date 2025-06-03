@@ -50,13 +50,14 @@ describe('Tutor Dashboard My Bundles', () => {
     // Add course to bundle
     cy.get('[data-cy=add-course]').click();
     cy.get('[data-cy=tutor-modal]').within(($elements) => {
-      cy.wrap($elements).should('contain.text', 'Add Course');
+      cy.wrap($elements).should('contain.text', 'Select Courses');
       cy.waitAfterRequest('courseList');
       if ($elements.text().includes('No Data!')) {
         cy.get('[data-cy=tutor-modal-close]').click();
         return;
       } else {
         cy.get('tbody tr:first-child').find('[data-cy=select-course]').click({ force: true });
+        cy.get('button[data-cy=add-selected-courses]').click();
       }
       cy.waitAfterRequest('addRemoveCourseToBundle');
     });
