@@ -19,7 +19,7 @@ if ( ! empty( $template_list ) ) { ?>
 		<?php
 		foreach ( $template_list as $key => $template ) {
 			$template = (object) $template;
-			if ( property_exists( $template, 'is_coming_soon' ) && ! $template->is_coming_soon ) {
+			if ( true ) {
 				?>
 				<li class="tutor-template-list-single-template tutor-d-flex tutor-flex-column tutor-justify-between tutor-gap-1 tutor-p-12">
 					<div class="tutor-template-list-single-template-inner">
