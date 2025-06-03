@@ -1,5 +1,15 @@
 import endpoints from '@TutorShared/utils/endpoints';
-import { frontendUrls } from '../../../config/page-urls';
+import { backendUrls, frontendUrls } from '../../../config/page-urls';
+
+describe('Tutor Dashboard Instructor Settings', () => {
+  it('should give instructor access to publish courses', () => {
+    cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}`);
+    cy.loginAsAdmin();
+
+    cy.toggle('tutor_option[instructor_can_publish_course]', '#field_instructor_can_publish_course', true);
+    cy.saveTutorSettings();
+  });
+});
 
 describe('Tutor Dashboard My Courses', () => {
   beforeEach(() => {

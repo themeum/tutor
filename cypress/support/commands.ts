@@ -986,7 +986,7 @@ Cypress.Commands.add('saveTutorSettings', () => {
       req.alias = 'saveSettings';
     }
   });
-  cy.get('button#save_tutor_option').click();
+  cy.get('button#save_tutor_option').click({ force: true });
   cy.waitAfterRequest('saveSettings');
 });
 
