@@ -9,7 +9,6 @@ var gulp = require('gulp'),
 	watch = require("gulp-watch"),
 	replace = require("gulp-replace"),
 	fs = require('fs'),
-	path = require('path'),
 	versionNumber = '';
 
 try {
@@ -120,53 +119,6 @@ gulp.task('watch', function () {
 });
 
 /**
- * Replace all js sources with the following two
- * 1. tutor-admin.min.js
- * 2. tutor-front.min.js
- * 
- * @since 3.6.0
- */
-gulp.task('modify-pot', function (done) {
-	const potFilePath = path.resolve(__dirname, 'languages', 'tutor.pot');
-	const jsFilesPath = '#: assets/js/tutor-admin.min.js:1\n#: assets/js/tutor-front.min.js:1';
-
-	try {
-		const lines = fs.readFileSync(potFilePath, 'utf8').split('\n');
-		const updatedLines = [];
-
-		for (let i = 0; i < lines.length; i++) {
-			const line = lines[i];
-
-			if (line.startsWith('#:')) {
-				const sources = line.substring(2).split(/\s+/).filter(Boolean);
-
-				const phpSources = sources.filter(src => !src.includes('.js'));
-				const jsSources = sources.filter(src => src.includes('.js'));
-
-				if (phpSources.length) {
-					updatedLines.push(`#: ${phpSources.join(' ')}`);
-				}
-
-				if (jsSources.length) {
-					updatedLines.push(jsFilesPath);
-				}
-			} else {
-				updatedLines.push(line);
-			}
-		}
-
-		// Remove duplicate lines
-		const deduplicatedLines = updatedLines.filter((line, i, arr) => line !== arr[i - 1]);
-
-		fs.writeFileSync(potFilePath, deduplicatedLines.join('\n'), 'utf8');
-		done();
-	} catch (err) {
-		console.error('Failed to process .pot file:', err);
-		done(err);
-	}
-});
-
-/**
  * Build
  */
 gulp.task('clean-zip', function () {
@@ -267,6 +219,6 @@ gulp.task('make-zip', function () {
 /**
  * Export tasks
  */
-exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'modify-pot', 'copy', 'copy-fonts', 'copy-tutor-droip', 'make-zip', 'clean-build');
+exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'copy', 'copy-fonts', 'copy-tutor-droip', 'make-zip', 'clean-build');
 exports.sass = gulp.parallel(...task_keys);
 exports.default = gulp.parallel(...task_keys, 'watch');

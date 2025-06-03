@@ -3,10 +3,28 @@ import RouteSuspense from '@TutorShared/components/RouteSuspense';
 import React from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 import { CourseBuilderRouteConfigs } from './route-configs';
-const CourseBasicPage = React.lazy(() => import('@CourseBuilderPages/CourseBasic'));
-const CourseCurriculumPage = React.lazy(() => import('@CourseBuilderPages/Curriculum'));
-const CourseAdditionalPage = React.lazy(() => import('@CourseBuilderPages/Additional'));
-const IconListPage = React.lazy(() => import('@CourseBuilderPages/IconList'));
+
+let CourseBasicPage, CourseCurriculumPage, CourseAdditionalPage, IconListPage;
+
+if (process.env.MAKE_POT) {
+  CourseBasicPage = require('@CourseBuilderPages/CourseBasic').default;
+  CourseCurriculumPage = require('@CourseBuilderPages/Curriculum').default;
+  CourseAdditionalPage = require('@CourseBuilderPages/Additional').default;
+  IconListPage = require('@CourseBuilderPages/IconList').default;
+} else {
+  CourseBasicPage = React.lazy(
+    () => import(/* webpackChunkName: "tutor-course-builder-basic" */ '@CourseBuilderPages/CourseBasic'),
+  );
+  CourseCurriculumPage = React.lazy(
+    () => import(/* webpackChunkName: "tutor-course-builder-curriculum" */ '@CourseBuilderPages/Curriculum'),
+  );
+  CourseAdditionalPage = React.lazy(
+    () => import(/* webpackChunkName: "tutor-course-builder-additional" */ '@CourseBuilderPages/Additional'),
+  );
+  IconListPage = React.lazy(
+    () => import(/* webpackChunkName: "tutor-course-builder-icon" */ '@CourseBuilderPages/IconList'),
+  );
+}
 
 const routes: RouteObject[] = [
   {
