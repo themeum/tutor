@@ -692,7 +692,7 @@ class Tutor_Setup {
 							<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/setup/welcome-to-tutor-lms.png'; ?>" />
 
 							<p class="description">
-								<?php esc_html_e( 'Get started with an all-in-one platform to create, manage, and sell your courses effortlessly—trusted by over 90,000 eLearning websites worldwide.', 'tutor' ); ?>
+								<?php esc_html_e( 'Get started with an all-in-one platform to create, manage, and sell your courses effortlessly—trusted by over 100,000 eLearning websites worldwide.', 'tutor' ); ?>
 							</p>
 						</div>
 						<div class="">
