@@ -1572,7 +1572,7 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 					<span><?php tutor_print_formatted_price( $price_data->display_price ); ?></span>
 				<?php endif; ?>
 			</div>
-			<?php if ( $price_data->show_price_with_tax ) : ?>
+			<?php if ( $price_data->show_incl_tax_label ) : ?>
 			<div class="tutor-course-price-tax tutor-fs-8 tutor-fw-normal tutor-color-black"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
 			<?php endif; ?>
 		<?php

@@ -43,6 +43,7 @@ $order_type = $has_plan_info ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_
 $coupon_code            = apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
 $has_manual_coupon_code = ! empty( $coupon_code );
 
+$should_calculate_tax     = Tax::should_calculate_tax();
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
 $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 
@@ -178,12 +179,12 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 				<div class="tutor-fw-bold tutor-discount-amount">-<?php tutor_print_formatted_price( $checkout_data->coupon_discount ); ?></div>
 			</div>
 
-			<?php if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price ) : ?>
+			<?php if ( $should_calculate_tax && $tax_rate > 0 && ! $is_tax_included_in_price ) : ?>
 			<div class="tutor-checkout-summary-item tutor-checkout-tax-amount">
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold"><?php tutor_print_formatted_price( $checkout_data->tax_amount ); ?></div>
 			</div>
-					<?php endif; ?>
+			<?php endif; ?>
 		</div>
 
 		<div class="tutor-pt-12 tutor-pb-20">
@@ -195,7 +196,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 			</div>
 			<div class="tutor-checkout-summary-item tutor-checkout-incl-tax-label">
 				<div></div>
-					<?php if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) : ?>
+					<?php if ( $should_calculate_tax && $tax_rate > 0 && $is_tax_included_in_price ) : ?>
 					<div class="tutor-fs-7 tutor-color-muted">
 						<?php
 						/* translators: %s: tax amount */

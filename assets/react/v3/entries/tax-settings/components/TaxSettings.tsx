@@ -21,12 +21,14 @@ import { useCountrySelectModal } from './modals/CountrySelectModal';
 const TaxSettingsPage = () => {
   const form = useFormWithGlobalError<TaxSettings>({
     defaultValues: {
+      enable_tax: true,
       rates: [],
       apply_tax_on: 'product',
       active_country: null,
       show_price_with_tax: false,
       charge_tax_on_shipping: false,
       is_tax_included_in_price: 0,
+      enable_individual_tax_control: false,
     },
   });
   const { reset } = form;

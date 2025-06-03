@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use TUTOR\Course;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
 use TUTOR_ASSIGNMENTS\Assignments;
 
@@ -908,6 +909,24 @@ class CourseModel {
 		);
 
 		return $instructor_ids;
+	}
+
+	/**
+	 * Check tax collection is enabled for single purchase course/bundle
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param int $post_id course or bundle id.
+	 *
+	 * @return boolean
+	 */
+	public static function is_tax_enabled_for_single_purchase( $post_id ) {
+		if ( ! Tax::is_individual_control_enabled() ) {
+			return true;
+		}
+
+		$data = get_post_meta( $post_id, Course::TAX_ON_SINGLE_META, true );
+		return ( '1' === $data || '' === $data );
 	}
 
 	/**
