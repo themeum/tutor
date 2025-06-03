@@ -117,7 +117,7 @@ class Tax {
 	/**
 	 * Check individual tax control is enabled or not.
 	 *
-	 * @since 3.6.0
+	 * @since 3.7.0
 	 *
 	 * @return boolean
 	 */
@@ -128,7 +128,7 @@ class Tax {
 	/**
 	 * Should calculate tax or not.
 	 *
-	 * @since 3.6.0
+	 * @since 3.7.0
 	 *
 	 * @return boolean
 	 */

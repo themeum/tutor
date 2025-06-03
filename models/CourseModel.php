@@ -914,7 +914,7 @@ class CourseModel {
 	/**
 	 * Check tax collection is enabled for single purchase course/bundle
 	 *
-	 * @since 3.6.0
+	 * @since 3.7.0
 	 *
 	 * @param int $post_id course or bundle id.
 	 *

@@ -168,7 +168,7 @@ class OrderController {
 	 * For Single Order
 	 * Filter order tax calculation during create an order.
 	 *
-	 * @since 3.6.0
+	 * @since 3.7.0
 	 *
 	 * @param int|float $tax_amount tax amount.
 	 * @param int|float $total_price total price.

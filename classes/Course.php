@@ -68,7 +68,7 @@ class Course extends Tutor_Base {
 	/**
 	 * Tax collection settings meta
 	 *
-	 * @since 3.6.0
+	 * @since 3.7.0
 	 */
 	const TAX_ON_SINGLE_META       = 'tutor_tax_on_single';
 	const TAX_ON_SUBSCRIPTION_META = 'tutor_tax_on_subscription';
@@ -770,7 +770,7 @@ class Course extends Tutor_Base {
 		/**
 		 * Save tax collection settings
 		 *
-		 * @since 3.6.0
+		 * @since 3.7.0
 		 */
 		if ( isset( $params['tax_on_single'] ) ) {
 			update_post_meta( $post_id, self::TAX_ON_SINGLE_META, $params['tax_on_single'] );

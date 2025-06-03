@@ -1266,7 +1266,7 @@ class Utils {
 	 * Get prices with tax info
 	 *
 	 * @since 3.0.0
-	 * @since 3.6.0 param tax collection is added.
+	 * @since 3.7.0 param tax collection is added.
 	 *
 	 * @param int|float $regular_price regular price.
 	 * @param int|float $sale_price sale price.
