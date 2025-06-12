@@ -96,7 +96,7 @@ module.exports = (env, options) => {
                 'tutor-front.min': './assets/react/front/tutor-front.js',
                 'tutor-admin.min': './assets/react/admin-dashboard/tutor-admin.js',
                 'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
-                'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
+                'tutor-gutenberg': './assets/react/gutenberg/index.js',
                 'tutor-course-builder.min': './assets/react/v3/entries/course-builder/index.tsx',
                 'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
                 'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
