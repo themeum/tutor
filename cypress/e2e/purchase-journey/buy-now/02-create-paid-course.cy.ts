@@ -33,9 +33,22 @@ describe('Paid Course Creation for Buy Now', () => {
     // Use the centralized login function
     loginAsAdmin();
 
-    cy.readFile('cypress/fixtures/course.json').then((fixture) => {
-      if (fixture.courseId) {
-        cy.visit(`/wp-admin/admin.php?page=create-course&course_id=${fixture.courseId}`);
+    // Check if file exists and handle accordingly
+    cy.task('checkFileExists', 'cypress/fixtures/course.json').then((exists) => {
+      if (!exists) {
+        cy.writeFile('cypress/fixtures/course.json', {});
+        cy.log('Created new course.json file');
+      } else {
+        // File exists, read and verify it
+        cy.readFile('cypress/fixtures/course.json').then((content) => {
+          if (!content || Object.keys(content).length === 0) {
+            cy.writeFile('cypress/fixtures/course.json', {});
+          } else {
+            cy.log(`Course ID already exists in course.json: ${content.courseId}`);
+            courseId = content.courseId;
+            cy.visit(`${Cypress.env('base_url')}${backendUrls.COURSE_BUILDER}${courseId}`);
+          }
+        });
       }
     });
   });

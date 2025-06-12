@@ -21,6 +21,12 @@ describe('Native E-Commerce', () => {
     cy.saveTutorSettings();
   });
 
+  it('should disable guest checkout and buy now button', () => {
+    cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_checkout`);
+    cy.toggle('tutor_option[is_enable_buy_now]', '#field_is_enable_buy_now', false);
+    cy.toggle('tutor_option[is_enable_guest_checkout]', '#field_is_enable_guest_checkout', false);
+  });
+
   it('should setup paypal payment gateways', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_payment`);
     cy.waitAfterRequest('paymentGateways');
@@ -37,11 +43,5 @@ describe('Native E-Commerce', () => {
     });
 
     cy.saveTutorSettings();
-  });
-
-  it('should disable guest checkout and buy now button', () => {
-    cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}&tab_page=ecommerce_checkout`);
-    cy.toggle('tutor_option[is_enable_buy_now]', '#field_is_enable_buy_now', false);
-    cy.toggle('tutor_option[is_enable_guest_checkout]', '#field_is_enable_guest_checkout', false);
   });
 });

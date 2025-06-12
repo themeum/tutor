@@ -19,6 +19,7 @@ const SELECTORS = {
   CHECKOUT_BUTTON: 'a[data-cy=tutor-native-checkout-button]',
   PAY_NOW_BUTTON: 'button#tutor-checkout-pay-now-button',
   ORDER_HISTORY: 'a[data-cy=tutor-native-order-history]',
+  TERM_AND_CONDITIONS: 'agree_to_terms',
 } as const;
 
 // Utilities
@@ -117,6 +118,12 @@ describe('Purchase Course', () => {
     fillBillingForm(billingData);
     cy.get('select[name="billing_state"]').select(1);
     cy.get('input[type="radio"][name="payment_method"][value="paypal"]').check({ force: true });
+    cy.get('body').then((body) => {
+      const $body = Cypress.$(body);
+      if ($body.find(`input[name=${SELECTORS.TERM_AND_CONDITIONS}]`).length) {
+        cy.getByInputName(SELECTORS.TERM_AND_CONDITIONS).check({ force: true });
+      }
+    });
 
     // Process payment
     cy.get(SELECTORS.PAY_NOW_BUTTON).click();
@@ -142,7 +149,7 @@ describe('Purchase Course', () => {
         cy.get('input[name=login_password]').type(Cypress.env('paypal_personal_password'));
         cy.get('button#btnLogin').click();
 
-        cy.get('button#payment-submit-btn').click();
+        cy.get('button[data-id=payment-submit-btn]').click();
 
         cy.wait(2000);
       });

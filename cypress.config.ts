@@ -1,12 +1,21 @@
 import { defineConfig } from 'cypress';
 import 'dotenv/config';
+import fs from 'fs';
 
 export default defineConfig({
   projectId: process.env.CYPRESS_PROJECT_ID,
 
   e2e: {
-    setupNodeEvents() {
-      // implement node event listeners here
+    setupNodeEvents(on) {
+      on('task', {
+        checkFileExists(filename) {
+          if (fs.existsSync(filename)) {
+            return fs.readFileSync(filename, 'utf8');
+          }
+
+          return null;
+        },
+      });
     },
     baseUrl: process.env.CYPRESS_base_url,
     experimentalRunAllSpecs: true,
