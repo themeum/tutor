@@ -14,9 +14,9 @@ describe('Tutor Dashboard My Bundles', () => {
   });
 
   beforeEach(() => {
-    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.MY_BUNDLES}`);
+    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.MY_COURSES}`);
     cy.loginAsInstructor();
-    cy.url().should('include', frontendUrls.dashboard.MY_BUNDLES);
+    cy.url().should('include', frontendUrls.dashboard.MY_COURSES);
 
     cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`, (req) => {
       if (req.body.includes(endpoints.GET_BUNDLE_DETAILS)) {
@@ -31,8 +31,8 @@ describe('Tutor Dashboard My Bundles', () => {
         req.alias = 'courseList';
       }
 
-      if (req.body.includes(endpoints.ADD_COURSE_TO_BUNDLE)) {
-        req.alias = 'addCourseToBundle';
+      if (req.body.includes(endpoints.ADD_REMOVE_COURSE_TO_BUNDLE)) {
+        req.alias = 'addRemoveCourseToBundle';
       }
     });
   });
@@ -50,15 +50,16 @@ describe('Tutor Dashboard My Bundles', () => {
     // Add course to bundle
     cy.get('[data-cy=add-course]').click();
     cy.get('[data-cy=tutor-modal]').within(($elements) => {
-      cy.wrap($elements).should('contain.text', 'Add Course');
+      cy.wrap($elements).should('contain.text', 'Select Courses');
       cy.waitAfterRequest('courseList');
       if ($elements.text().includes('No Data!')) {
         cy.get('[data-cy=tutor-modal-close]').click();
         return;
       } else {
         cy.get('tbody tr:first-child').find('[data-cy=select-course]').click({ force: true });
+        cy.get('button[data-cy=add-selected-courses]').click();
       }
-      cy.waitAfterRequest('addCourseToBundle');
+      cy.waitAfterRequest('addRemoveCourseToBundle');
     });
 
     // Remove course from bundle if any exists
@@ -69,7 +70,7 @@ describe('Tutor Dashboard My Bundles', () => {
       }
 
       cy.get('[data-cy=remove-course]').first().click({ force: true });
-      cy.waitAfterRequest('addCourseToBundle');
+      cy.waitAfterRequest('addRemoveCourseToBundle');
     });
 
     cy.get('[data-cy=bundle-builder-submit-button]').click();

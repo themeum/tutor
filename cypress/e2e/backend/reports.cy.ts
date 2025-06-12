@@ -1,13 +1,13 @@
 import { backendUrls } from '../../config/page-urls';
 
-describe('Tutor Dashboard My Courses', () => {
+describe('Tutor Reports', () => {
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}`);
     cy.loginAsAdmin();
     cy.url().should('include', backendUrls.REPORTS);
   });
   //   courses
-  it('should be able to search any meeting', () => {
+  it('should be able to search any course', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}&sub_page=courses`);
     const searchInputSelector = '#tutor-backend-filter-search';
     const searchQuery = 'test';
@@ -32,6 +32,7 @@ describe('Tutor Dashboard My Courses', () => {
       }
     });
   });
+
   it('should check if the elements are sorted', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}&sub_page=courses`);
     const formSelector = ':nth-child(3) > .tutor-form-control.tutor-form-select.tutor-js-form-select';
@@ -57,7 +58,7 @@ describe('Tutor Dashboard My Courses', () => {
     checkSorting('ASC');
     checkSorting('DESC');
   });
-  // reviews
+
   it('should change status of a review', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}&sub_page=reviews`);
     cy.get('body').then(($body) => {
@@ -111,7 +112,7 @@ describe('Tutor Dashboard My Courses', () => {
       });
     });
   });
-  //   overview
+
   it('should visit all tabs of graph', () => {
     cy.get('.tutor-analytics-graph .tutor-nav-link').as('navLinks');
     cy.get('@navLinks').each(($el) => {

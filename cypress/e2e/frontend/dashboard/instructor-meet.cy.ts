@@ -4,6 +4,7 @@ import { Addons } from '@TutorShared/config/constants';
 import endpoints from '@TutorShared/utils/endpoints';
 import { frontendUrls } from '../../../config/page-urls';
 
+let courseId: string = '';
 describe('Tutor Dashboard My Courses', () => {
   // @ts-ignore
   const googleMeetData: GoogleMeetMeetingFormData = {
@@ -87,12 +88,20 @@ describe('Tutor Dashboard My Courses', () => {
       }
     });
     cy.get('[data-cy=course-builder-submit-button]').click();
+
+    cy.url()
+      .should('include', 'course_id=')
+      .then((url) => {
+        courseId = url.split('course_id=')[1].split('#/')[0];
+        cy.log(`Course ID: ${courseId}`);
+        cy.wrap(courseId).should('be.a', 'string').and('not.be.empty');
+      });
   });
 
   it('should start meeting', () => {
     cy.get('a.tutor-btn.tutor-btn-primary').contains('Start Meeting').invoke('removeAttr', 'target').click();
 
-    cy.origin('https://calendar.google.com', () => {
+    cy.origin('https://workspace.google.com', () => {
       cy.url().should('include', '/calendar');
     });
   });
@@ -248,5 +257,11 @@ describe('Tutor Dashboard My Courses', () => {
         });
       }
     });
+  });
+});
+
+describe('Course Management', () => {
+  it('should delete the created course', () => {
+    cy.deleteCourseById(courseId);
   });
 });

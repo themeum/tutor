@@ -45,7 +45,14 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL, onChange }:
             <div css={styles.linkWrapper}>
               {!isEditing ? (
                 <>
-                  <a href={fieldValue} target="_blank" css={styles.link} title={fieldValue} rel="noreferrer">
+                  <a
+                    data-cy="course-slug"
+                    href={fieldValue}
+                    target="_blank"
+                    css={styles.link}
+                    title={fieldValue}
+                    rel="noreferrer"
+                  >
                     {fieldValue}
                   </a>
                   <button css={styles.iconWrapper} type="button" onClick={() => setIsEditing((prev) => !prev)}>

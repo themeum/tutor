@@ -10,8 +10,6 @@ describe('Tutor Admin Dashboard Journey', () => {
   });
 
   it('should be able visit all the admin dashboard pages', () => {
-    // Login as an admin
-
     // Visit dashboard pages
     cy.get('a.tutor-dashboard-menu-item-link:not(.is-active)').each(($item) => {
       cy.wrap($item)

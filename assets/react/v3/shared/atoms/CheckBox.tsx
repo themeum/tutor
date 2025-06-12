@@ -72,6 +72,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
   return (
     <label htmlFor={id} css={[styles.container({ disabled }), labelCss]}>
       <input
+        {...props}
         ref={ref}
         id={id}
         name={name}

@@ -4,7 +4,8 @@ import { Addons } from '@TutorShared/config/constants';
 import endpoints from '@TutorShared/utils/endpoints';
 import { frontendUrls } from '../../../config/page-urls';
 
-describe('Tutor Dashboard My Courses', () => {
+let courseId: string = '';
+describe('Tutor Dashboard Zoom', () => {
   // @ts-ignore
   const zoomMeetingData: ZoomMeetingFormData = {
     meeting_name: faker.lorem.sentence(),
@@ -60,7 +61,7 @@ describe('Tutor Dashboard My Courses', () => {
     cy.getByInputName('post_title').clear().type('Zoom test course');
     cy.get('[data-cy=tutor-tracker]').contains('Additional').click();
 
-    cy.wait(500);
+    cy.wait(1000);
 
     cy.isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION).then((isEnabled) => {
       if (isEnabled) {
@@ -91,6 +92,14 @@ describe('Tutor Dashboard My Courses', () => {
     });
 
     cy.get('[data-cy=course-builder-submit-button]').click();
+
+    cy.url()
+      .should('include', 'course_id=')
+      .then((url) => {
+        courseId = url.split('course_id=')[1].split('#/')[0];
+        cy.log(`Course ID: ${courseId}`);
+        cy.wrap(courseId).should('be.a', 'string').and('not.be.empty');
+      });
   });
 
   it('should start meeting', () => {
@@ -114,18 +123,6 @@ describe('Tutor Dashboard My Courses', () => {
           .eq(0)
           .clear()
           .type('Edited zoom meeting summary', { force: true });
-        cy.get(
-          '.tutor-mb-12 > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
-        )
-          .eq(0)
-          .clear()
-          .click();
-        cy.get('.dropdown-years > .dropdown-label').click();
-        cy.get('.dropdown-container.dropdown-years .dropdown-list li').contains('2025').click();
-        cy.get('.dropdown-container.dropdown-months .dropdown-label').click();
-        cy.get('.dropdown-container.dropdown-months .dropdown-list li').contains('May').click();
-        // Select the desired day
-        cy.get('.react-datepicker__day').contains('13').click();
         cy.get("input[data-name='meeting_duration']").eq(0).clear().type('1');
         cy.get('input[data-name="meeting_time"]').eq(0).clear().type('08:00 PM');
         cy.get('select[data-name="meeting_duration_unit"]').eq(0).select('Hours');
@@ -200,41 +197,39 @@ describe('Tutor Dashboard My Courses', () => {
   it('should filter meetings', () => {
     cy.get('.tutor-my-lg-0 > .tutor-js-form-select').click();
 
-    cy.get('.tutor-form-select-options')
-      .eq(1)
-      .then(() => {
-        cy.get('.tutor-form-select-option')
-          .then(() => {
-            // cy.get('.tutor-dropdown-item').eq(1).click();
-            cy.get(
-              '.tutor-my-lg-0 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis',
-            ).click();
-          })
-          .then(() => {
-            cy.get('body').then(($body) => {
-              if ($body.text().includes('No Data Found from your Search/Filter')) {
-                cy.log('No data available');
-              } else {
-                cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
-                  .eq(1)
-                  .invoke('text')
-                  .then((retrievedText) => {
-                    cy.get(
-                      '.tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis',
-                    ).each(($category) => {
-                      cy.wrap($category)
-                        .invoke('text')
-                        .then((categoryText) => {
-                          if (categoryText.trim() === retrievedText.trim()) {
-                            cy.wrap($category).click();
-                          }
-                        });
-                    });
+    cy.get('.tutor-form-select-options').then(() => {
+      cy.get('.tutor-form-select-option')
+        .then(() => {
+          // cy.get('.tutor-dropdown-item').eq(1).click();
+          cy.get(
+            '.tutor-my-lg-0 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis',
+          ).click();
+        })
+        .then(() => {
+          cy.get('body').then(($body) => {
+            if ($body.text().includes('No Data Found from your Search/Filter')) {
+              cy.log('No data available');
+            } else {
+              cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
+                .eq(1)
+                .invoke('text')
+                .then((retrievedText) => {
+                  cy.get(
+                    '.tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis',
+                  ).each(($category) => {
+                    cy.wrap($category)
+                      .invoke('text')
+                      .then((categoryText) => {
+                        if (categoryText.trim() === retrievedText.trim()) {
+                          cy.wrap($category).click();
+                        }
+                      });
                   });
-              }
-            });
+                });
+            }
           });
-      });
+        });
+    });
   });
 
   it('should filter courses by a specific date', () => {
@@ -258,5 +253,11 @@ describe('Tutor Dashboard My Courses', () => {
         });
       }
     });
+  });
+});
+
+describe('Course Management', () => {
+  it('should delete the created course', () => {
+    cy.deleteCourseById(courseId);
   });
 });
