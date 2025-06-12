@@ -604,8 +604,17 @@ class Assets {
 	 * @return void
 	 */
 	public function tutor_script_text_domain() {
+		wp_set_script_translations( 'tutor-script', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-gutenberg', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-payment-settings', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-addon-list', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-import-export', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-template-import-js', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**
@@ -708,7 +717,7 @@ class Assets {
 		$wp_screen = get_current_screen();
 
 		if ( is_a( $wp_screen, 'WP_Screen' ) && tutor()->course_post_type === $wp_screen->post_type ) {
-			wp_enqueue_script( 'tutor-gutenberg', tutor()->url . 'assets/js/tutor-gutenberg.min.js', array(), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-gutenberg', tutor()->url . 'assets/js/tutor-gutenberg.js', array(), TUTOR_VERSION, true );
 			$data = array(
 				'frontend_dashboard_url' => esc_url( trailingslashit( tutor_utils()->tutor_dashboard_url( 'create-course' ) ) ) . '?course_id=' . get_the_ID(),
 			);
