@@ -5,7 +5,7 @@ export type Accessor<T> = () => T;
 
 type ShowProps<T> = {
   when: T | undefined | null | false;
-  children: ReactNode | ((item: NonNullable<T>) => ReactNode);
+  children: JSX.Element | ((item: NonNullable<T>) => ReactNode);
   fallback?: ReactNode;
 };
 

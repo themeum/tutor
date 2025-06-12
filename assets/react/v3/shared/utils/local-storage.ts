@@ -1,6 +1,6 @@
-import type { LocalStorage } from '@TutorShared/config/constants';
+import type { LocalStorageKeys } from '@TutorShared/config/constants';
 
-export const getStorageItem = (key: LocalStorage) => {
+export const getStorageItem = (key: LocalStorageKeys) => {
   if (typeof window !== 'undefined') {
     return window.localStorage.getItem(key) || null;
   }
@@ -8,13 +8,13 @@ export const getStorageItem = (key: LocalStorage) => {
   return null;
 };
 
-export const setStorageItem = (key: LocalStorage, value: string) => {
+export const setStorageItem = (key: LocalStorageKeys, value: string) => {
   if (typeof window !== 'undefined') {
     window.localStorage.setItem(key, value);
   }
 };
 
-export const removeStorageItem = (key: LocalStorage) => {
+export const removeStorageItem = (key: LocalStorageKeys) => {
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem(key);
   }
