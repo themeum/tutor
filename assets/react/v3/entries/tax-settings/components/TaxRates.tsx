@@ -56,7 +56,6 @@ export default function TaxRates() {
     tableData = [{ locationId: activeCountry, rate: rates[activeCountryIndex].rate }];
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (
       isSingleCountry &&
@@ -71,6 +70,7 @@ export default function TaxRates() {
         activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, apply_on_shipping: false })),
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSingleCountry]);
 
   const columns: Column<ColumnDataType>[] = [

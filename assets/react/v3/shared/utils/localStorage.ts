@@ -1,6 +1,5 @@
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import { EventEmitter } from 'events';
 import type { LocalStorageKeys } from '@TutorShared/config/constants';
+import { EventEmitter } from 'events';
 
 export const localStorageEventEmitter = new EventEmitter();
 
