@@ -17,7 +17,7 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { IconCollection } from '@TutorShared/icons/types';
+import { type IconCollection } from '@TutorShared/icons/types';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 

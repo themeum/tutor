@@ -20,7 +20,6 @@ function useIntersectionObserver<T extends HTMLElement>({
     setIntersectionEntry(entry);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const node = intersectionElementRef.current;
     const hasIOSupport = isDefined(window.IntersectionObserver);
@@ -33,6 +32,7 @@ function useIntersectionObserver<T extends HTMLElement>({
     observer.observe(node);
 
     return () => observer.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [intersectionElementRef.current, threshold, root, rootMargin, frozen]);
 
   return { intersectionEntry, intersectionElementRef };

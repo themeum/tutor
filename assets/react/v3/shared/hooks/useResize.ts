@@ -239,20 +239,20 @@ export const useResize = ({ resizeDivRef, options }: ResizeProps) => {
     document.body.addEventListener('mouseup', handleMouseUp);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(resizeDivRef?.current) && isResizing) {
       resizeDivRef.current.style.left = `${position.x}px`;
       resizeDivRef.current.style.top = `${position.y}px`;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [position]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(resizeDivRef?.current) && isResizing) {
       resizeDivRef.current.style.width = `${size.width}px`;
       resizeDivRef.current.style.height = `${size.height}px`;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [size]);
 
   useEffect(() => {

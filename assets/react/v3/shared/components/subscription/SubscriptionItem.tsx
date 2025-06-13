@@ -94,7 +94,6 @@ export default function SubscriptionItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpanded]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLFormElement)) {
