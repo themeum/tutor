@@ -195,19 +195,39 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 	$show_course_delete = true;
 }
 
-$total_course_count = $the_query->found_posts;
-if ( 0 === $total_course_count ) {
+$total_courses_count   = $the_query->found_posts;
+$trashed_courses_count = 0;
+$other_courses_count   = 0;
+if ( 0 === $total_courses_count ) {
+	// Get total courses count
 	$total_list_args    = array(
 		'post_type'   => tutor()->course_post_type,
 		'post_status' => array( 'publish', 'pending', 'draft', 'private', 'future', 'trash' ),
 		'author'      => current_user_can( 'administrator' ) ? null : get_current_user_id(),
 	);
 	$total_list_query   = Course_List::course_list_query( $total_list_args, get_current_user_id(), 'any' );
-	$total_course_count = $total_list_query->found_posts;
+	$total_courses_count = $total_list_query->found_posts;
 
-	if ( 0 === $total_course_count ) {
+	if ( 0 === $total_courses_count ) {
 		$navbar_data['hide_action_buttons'] = true;
 	}
+
+	// Get trashed courses count.
+	$trashed_list_args    = array(
+		'post_type'   => tutor()->course_post_type,
+		'post_status' => array( 'trash' ),
+		'author'      => current_user_can( 'administrator' ) ? null : get_current_user_id(),
+	);
+	$trashed_list_query   = Course_List::course_list_query( $trashed_list_args, get_current_user_id(), 'any' );
+	$trashed_courses_count = $trashed_list_query->found_posts;
+	
+	// Get other courses count (all but trashed courses).
+	$other_list_args    = array(
+		'post_type'   => tutor()->course_post_type,
+		'author'      => current_user_can( 'administrator' ) ? null : get_current_user_id(),
+	);
+	$other_list_query   = Course_List::course_list_query( $other_list_args, get_current_user_id(), 'any' );
+	$other_courses_count = $other_list_query->found_posts;
 }
 ?>
 
@@ -216,7 +236,7 @@ if ( 0 === $total_course_count ) {
 	$navbar_template = tutor()->path . 'views/elements/course-navbar.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 
-	if ( $total_course_count > 0 ) {
+	if ( $total_courses_count > 0 ) {
 		$filters_template = tutor()->path . 'views/elements/course-filters.php';
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	}
@@ -461,13 +481,23 @@ if ( 0 === $total_course_count ) {
 			</div>
 			<?php else : ?>
 				<?php
-				$empty_state_template = tutor()->path . 'views/elements/course-empty-state.php';
-				tutor_load_template_from_custom_path(
-					$empty_state_template,
-					array(
-						'show_empty_state_create' => 0 === $total_course_count,
-					)
-				);
+				$template = '';
+				$template_args = array();
+
+				if ( 0 === $total_courses_count ) {
+					$template = 'create-course-empty-state.php';
+				} elseif ( 0 === $other_courses_count && 0 !== $trashed_courses_count ) {
+					$template       = 'trashed-course-empty-state.php';
+					$template_args  = array(
+						'trashed_courses_count' => $trashed_courses_count,
+						'trashed_courses_url'     => "?page=tutor&data=trash"
+					);
+				} else {
+					$template = 'course-empty-state.php';
+				}
+
+				$full_path = tutor()->path . 'views/elements/' . $template;
+				tutor_load_template_from_custom_path( $full_path, $template_args );
 				?>
 			<?php endif; ?>
 		</div>
