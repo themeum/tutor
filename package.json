@@ -15,10 +15,11 @@
     "js-watch": "webpack --watch --mode=development",
     "watch": "concurrently \"npm run css-watch\" \"npm run js-watch\"",
     "make-pot": "webpack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
-    "biome:check": "npx @biomejs/biome check --apply ./assets/react/v3",
+    "eslint:fix": "npx eslint ./assets/react/v3 --fix",
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
-    "test": "cypress run"
+    "test": "cypress run",
+    "prepare": "husky"
   },
   "keywords": [
     "lms",
@@ -72,6 +73,7 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-watch": "^5.0.1",
     "gulp-zip": "^5.0.2",
+    "husky": "^9.1.7",
     "path": "^0.12.7",
     "sass": "^1.62.1",
     "sass-loader": "^10.1.1",

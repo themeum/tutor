@@ -1,0 +1,62 @@
+#!/usr/bin/env sh
+
+# Setup Node.js environment
+export PATH="/usr/local/bin:/opt/homebrew/bin:$PATH"
+
+# Validate Node.js availability
+if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
+  echo "Error: Node.js or npm not found"
+  exit 1
+fi
+
+# Get staged files for different tools
+get_staged_files() {
+  local extensions="$1"
+  git diff --cached --name-only --diff-filter=ACM | grep -E "$extensions" | tr '\n' ' '
+}
+
+# Get files for Prettier (more file types)
+PRETTIER_FILES=$(get_staged_files '\.(ts|tsx|json|md|css|scss|html)$')
+
+# Get files for ESLint (code files only)
+ESLINT_FILES=$(get_staged_files '\.(ts|tsx)$')
+
+# Run Prettier first (if files to format)
+if [ -n "$PRETTIER_FILES" ]; then
+  echo "Running Prettier on staged files:"
+  echo "$PRETTIER_FILES" | tr ' ' '\n' | sed 's/^/  - /'
+  
+  echo "$PRETTIER_FILES" | xargs npx prettier --write
+  
+  if [ $? -ne 0 ]; then
+    echo "Prettier failed. Please check the files."
+    exit 1
+  fi
+  
+  # Re-add formatted files to staging area
+  echo "$PRETTIER_FILES" | xargs git add
+  echo "✓ Prettier completed successfully"
+else
+  echo "No files to format with Prettier, skipping"
+fi
+
+# Run ESLint second (if files to lint)
+if [ -n "$ESLINT_FILES" ]; then
+  echo "Running ESLint on staged files:"
+  echo "$ESLINT_FILES" | tr ' ' '\n' | sed 's/^/  - /'
+  
+  echo "$ESLINT_FILES" | xargs npx eslint --fix
+  
+  if [ $? -ne 0 ]; then
+    echo "ESLint found errors. Please fix them before committing."
+    exit 1
+  fi
+  
+  # Re-add fixed files to staging area
+  echo "$ESLINT_FILES" | xargs git add
+  echo "✓ ESLint completed successfully"
+else
+  echo "No JavaScript/TypeScript files staged, skipping ESLint"
+fi
+
+echo "✓ Pre-commit hook completed successfully"
