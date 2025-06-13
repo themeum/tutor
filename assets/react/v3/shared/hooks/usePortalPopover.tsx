@@ -65,7 +65,6 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     setTriggerWidth(triggerRect.width);
   }, [triggerRef]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!isOpen || !triggerRef.current || !popoverRef.current) {
       return;
@@ -188,7 +187,6 @@ export const Portal = ({
 }: PortalProps) => {
   const { hasModalOnStack } = useModal();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {

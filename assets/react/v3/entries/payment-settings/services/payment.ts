@@ -13,7 +13,7 @@ export interface PaymentField {
   type?: 'select' | 'text' | 'secret_key' | 'textarea' | 'image' | 'webhook_url';
   options?: Option<string>[] | Record<string, string>;
   hint?: string;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
 }
 
