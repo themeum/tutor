@@ -4,7 +4,7 @@
  * Plugin URI: https://tutorlms.com
  * Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
  * Author: Themeum
- * Version: 3.6.0
+ * Version: 3.6.1
  * Author URI: https://themeum.com
  * Requires PHP: 7.4
  * Requires at least: 5.3
@@ -15,22 +15,18 @@
  * @package Tutor
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 /**
  * Constants for tutor plugin.
  */
-define( 'TUTOR_VERSION', '3.6.0' );
+define( 'TUTOR_VERSION', '3.6.1' );
 define( 'TUTOR_FILE', __FILE__ );
 
-/**
- * Load tutor text domain for translation
- */
-add_action( 'init', fn () => load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' ) );
+// Load text domain.
+add_action( 'init', fn () => load_plugin_textdomain( 'tutor', false, basename( __DIR__ ) . '/languages' ) );
 
 
 if ( ! function_exists( 'tutor' ) ) {
@@ -89,19 +85,13 @@ if ( ! function_exists( 'tutor' ) ) {
 	}
 }
 
-if ( ! class_exists( 'Tutor' ) ) {
-	include_once 'classes/Tutor.php';
-}
-
 /**
- * Get all helper functions/methods
+ * Load core classes.
  *
- * @return \TUTOR\Utils
+ * @since 1.0.0
  */
-
-if ( ! class_exists( '\TUTOR\Utils' ) ) {
-	include_once 'classes/Utils.php';
-}
+! class_exists( 'Tutor' ) && require_once 'classes/Tutor.php';
+! class_exists( '\TUTOR\Utils' ) && require_once 'classes/Utils.php';
 
 if ( ! function_exists( 'tutor_utils' ) ) {
 	/**

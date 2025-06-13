@@ -171,7 +171,6 @@ const FormInput = ({
                 {...additionalAttributes}
                 type={fieldType === 'number' ? 'text' : fieldType}
                 value={inputValue}
-                // biome-ignore lint/a11y/noAutofocus: <explanation>
                 autoFocus={autoFocus}
                 onChange={(event) => {
                   const { value } = event.target;

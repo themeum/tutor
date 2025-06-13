@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 
 /**
  * Add custom button on Gutenberg header to open Tutor frontend
@@ -7,7 +8,6 @@
  */
 
  ( function( window, wp ){
-    const {__} = wp.i18n;
     const buttonId = 'tutor-frontend-builder-trigger';
     // prepare our custom link's html.
     const buttonHtml = `
