@@ -92,7 +92,7 @@ class WooCommerce extends Tutor_Base {
 		 *
 		 * @since 1.7.8
 		 */
-		$woocommerce_path = dirname( __DIR__, 2 ) . DIRECTORY_SEPARATOR . 'woocommerce' . DIRECTORY_SEPARATOR . 'woocommerce.php';
+		$woocommerce_path = dirname( dirname( __DIR__ ) ) . DIRECTORY_SEPARATOR . 'woocommerce' . DIRECTORY_SEPARATOR . 'woocommerce.php';
 		register_deactivation_hook( $woocommerce_path, array( $this, 'woocommerce_deactivation_handler' ) );
 		/**
 		 * Redirect student on enrolled courses after course
