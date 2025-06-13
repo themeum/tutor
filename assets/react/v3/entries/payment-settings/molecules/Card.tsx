@@ -78,6 +78,7 @@ const Card = ({
     return () => {
       resizeObserver.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collapsed]);
 
   return (
