@@ -275,7 +275,6 @@ const FormVideoInput = ({
   const videoSource = form.watch('videoSource') || '';
   const fieldValue = field.value;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!fieldValue) {
       return;

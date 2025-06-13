@@ -55,7 +55,6 @@ const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false 
     [topic.contents.length],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
@@ -94,7 +93,6 @@ const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false 
     background: isDragging ? colorTokens.stroke.hover : undefined,
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(topicRef.current)) {
       collapseAnimate.start({
@@ -102,6 +100,7 @@ const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false 
         opacity: !topic.isCollapsed ? 1 : 0,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic.isCollapsed, topic.contents.length]);
 
   return (

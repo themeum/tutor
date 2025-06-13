@@ -15,7 +15,7 @@
     "js-watch": "rspack --watch --mode=development",
     "watch": "concurrently \"npm run css-watch\" \"npm run js-watch\"",
     "make-pot": "rspack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
-    "eslint:check": "npx eslint check --apply ./assets/react/v3",
+    "eslint:fix": "npx eslint ./assets/react/v3 --fix",
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run"
@@ -37,7 +37,6 @@
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.13",
     "@babel/preset-typescript": "^7.23.3",
-    "@biomejs/biome": "^1.8.3",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@eslint/js": "^9.15.0",
     "@faker-js/faker": "^9.5.0",
