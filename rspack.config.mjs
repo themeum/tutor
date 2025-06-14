@@ -1,7 +1,13 @@
-const path = require('node:path');
-const fs = require('fs');
-const { rspack } = require('@rspack/core');
-const nodeExternals = require('webpack-node-externals');
+import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
+import { rspack } from '@rspack/core';
+import fs from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+import { fileURLToPath } from 'node:url';
+import nodeExternals from 'webpack-node-externals';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 let version = '';
 
@@ -19,7 +25,7 @@ const createSwcLoaderOptions = (isDevelopment) => ({
       tsx: true,
       decorators: false,
     },
-    externalHelpers: false,
+    externalHelpers: true,
     transform: {
       react: {
         runtime: 'automatic',
@@ -37,10 +43,10 @@ const createSwcLoaderOptions = (isDevelopment) => ({
             autoLabel: 'dev-only',
             labelFormat: '[local]',
             cssPropOptimization: true,
-          }
-        ]
-      ]
-    }
+          },
+        ],
+      ],
+    },
   },
   env: {
     targets: 'Chrome >= 58, Firefox >= 54, Safari >= 10.1, Edge >= 16',
@@ -62,10 +68,7 @@ const createConfig = (env, options) => {
         },
         {
           test: /\.(js|ts|tsx)$/,
-          exclude: [
-            /node_modules/,
-            /\.cy\.(ts|tsx)$/,
-          ],
+          exclude: [/node_modules/, /\.cy\.(ts|tsx)$/],
           use: [
             {
               loader: 'builtin:swc-loader',
@@ -89,13 +92,14 @@ const createConfig = (env, options) => {
     },
     plugins: [
       new rspack.ProvidePlugin({
-        React: 'react'
+        React: 'react',
       }),
       new rspack.DefinePlugin({
         'process.env.MAKE_POT': JSON.stringify(!!isMakePot),
         'process.env.NODE_ENV': JSON.stringify(mode),
       }),
-    ],
+      process.env.RSDOCTOR && new RsdoctorRspackPlugin({}),
+    ].filter(Boolean),
     externals: {
       react: 'React',
       'react-dom': 'ReactDOM',
@@ -106,18 +110,29 @@ const createConfig = (env, options) => {
       preset: 'errors-warnings',
       colors: true,
       errorDetails: true,
+      modules: false,
+      chunks: false,
+      chunkModules: false,
+      reasons: false,
+      usedExports: false,
+      providedExports: false,
+      optimizationBailout: false,
+      children: false,
+      entrypoints: true,
+      assets: isDevelopment,
     },
+    ignoreWarnings: [/CROSS-CHUNKS-PACKAGE/, /asset size limit/, /entrypoint size limit/],
   };
 
   if (mode === 'production') {
     baseConfig.optimization = {
       minimize: true,
+      splitChunks: false,
       minimizer: [
         new rspack.SwcJsMinimizerRspackPlugin({
-          compress: {
-            drop_console: true,
-            drop_debugger: true,
-          },
+          compress: false,
+          mangle: true,
+          extractComments: false,
         }),
       ],
     };
@@ -196,22 +211,45 @@ const createEntryDisplayName = (entryKey) => {
   return displayNames[entryKey] || entryKey;
 };
 
-module.exports = (env, options) => {
+export default (env, options) => {
   const baseConfig = createConfig(env, options);
   const reactEntries = getReactEntries();
   const resolveAliases = createResolveAliases();
+  const isDevelopment = options.mode === 'development';
 
-  const configurations = Object.entries(reactEntries).map(([entryKey, entryPath]) => ({
+  if (isDevelopment) {
+    return Object.entries(reactEntries).map(([entryKey, entryPath]) => ({
+      ...baseConfig,
+      name: createEntryDisplayName(entryKey),
+      entry: {
+        [entryKey]: entryPath,
+      },
+      output: {
+        path: path.resolve('./assets/js'),
+        filename: '[name].js',
+        chunkFilename: createChunkFilename,
+        clean: false,
+      },
+      resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        fallback: {
+          fs: false,
+          path: false,
+          os: false,
+        },
+        alias: resolveAliases,
+      },
+    }));
+  }
+
+  return {
     ...baseConfig,
-    name: createEntryDisplayName(entryKey),
-    entry: {
-      [entryKey]: entryPath,
-    },
+    entry: reactEntries,
     output: {
       path: path.resolve('./assets/js'),
       filename: '[name].js',
       chunkFilename: createChunkFilename,
-      clean: false,
+      clean: true,
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -222,7 +260,5 @@ module.exports = (env, options) => {
       },
       alias: resolveAliases,
     },
-  }));
-
-  return configurations;
+  };
 };
