@@ -487,11 +487,6 @@ final class Tutor {
 		 */
 		$this->includes();
 
-		/**
-		 * Loading Auto loader
-		 */
-		spl_autoload_register( array( $this, 'loader' ) );
-
 		do_action( 'tutor_before_load' );
 
 		$this->addons                = new Addons();
@@ -616,32 +611,6 @@ final class Tutor {
 				update_option( 'tutor_wizard', 'active' );
 				wp_safe_redirect( admin_url( 'admin.php?page=tutor-setup' ) );
 				exit;
-			}
-		}
-	}
-
-	/**
-	 * Auto Load class and the files
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $class_name class name to load.
-	 *
-	 * @return void
-	 */
-	private function loader( $class_name ) {
-		if ( ! class_exists( $class_name ) ) {
-			$class_name = preg_replace(
-				array( '/([a-z])([A-Z])/', '/\\\/' ),
-				array( '$1$2', DIRECTORY_SEPARATOR ),
-				$class_name
-			);
-
-			$class_name = str_replace( 'TUTOR' . DIRECTORY_SEPARATOR, 'classes' . DIRECTORY_SEPARATOR, $class_name );
-			$file_name  = $this->path . $class_name . '.php';
-
-			if ( file_exists( $file_name ) ) {
-				require_once $file_name;
 			}
 		}
 	}
