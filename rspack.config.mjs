@@ -80,7 +80,7 @@ const createConfig = (env, options) => {
           test: /\.(png|jp(e*)g|gif|webp)$/,
           type: 'asset/resource',
           generator: {
-            filename: 'images/[hash]-[name][ext]',
+            filename: 'images/[name]-[hash:8][ext]',
           },
         },
         {
@@ -124,15 +124,17 @@ const createConfig = (env, options) => {
     ignoreWarnings: [/CROSS-CHUNKS-PACKAGE/, /asset size limit/, /entrypoint size limit/],
   };
 
-  if (mode === 'production') {
+  if ('production' === mode) {
     baseConfig.optimization = {
       minimize: true,
       splitChunks: false,
       minimizer: [
         new rspack.SwcJsMinimizerRspackPlugin({
-          compress: false,
-          mangle: true,
           extractComments: false,
+          minimizerOptions: {
+            compress: false,
+            mangle: true,
+          },
         }),
       ],
     };
