@@ -15,6 +15,8 @@
  * @package Tutor
  */
 
+use TUTOR\Tutor;
+
 defined( 'ABSPATH' ) || exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
@@ -35,22 +37,14 @@ define( 'TUTOR_FILE', __FILE__ );
 add_action( 'init', fn () => load_plugin_textdomain( 'tutor', false, basename( __DIR__ ) . '/languages' ) );
 
 /**
- * Load core classes.
- *
- * @since 1.0.0
- */
-! class_exists( 'Tutor' ) && require_once 'classes/Tutor.php';
-! class_exists( '\TUTOR\Utils' ) && require_once 'classes/Utils.php';
-
-/**
  * Do some task during activation
  *
  * @since 1.5.2
  * @since 2.6.2 Uninstall hook registered
  */
-register_activation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_activate' ) );
-register_deactivation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_deactivation' ) );
-register_uninstall_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_uninstall' ) );
+register_activation_hook( TUTOR_FILE, array( Tutor::class, 'tutor_activate' ) );
+register_deactivation_hook( TUTOR_FILE, array( Tutor::class, 'tutor_deactivation' ) );
+register_uninstall_hook( TUTOR_FILE, array( Tutor::class, 'tutor_uninstall' ) );
 
 if ( ! function_exists( 'tutor_lms' ) ) {
 	/**
@@ -58,10 +52,10 @@ if ( ! function_exists( 'tutor_lms' ) ) {
 	 *
 	 * @since 1.2.0
 	 *
-	 * @return null|\TUTOR\Tutor
+	 * @return Tutor
 	 */
 	function tutor_lms() {
-		return \TUTOR\Tutor::instance();
+		return Tutor::instance();
 	}
 }
 
