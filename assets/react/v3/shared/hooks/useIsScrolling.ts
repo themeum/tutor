@@ -14,7 +14,6 @@ export const useIsScrolling = <TRef extends HTMLElement = HTMLDivElement>(option
   const mergedOptions = { ...defaultOptions, ...options };
   const [isScrolling, setIsScrolling] = useState(mergedOptions.defaultValue);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!isDefined(ref.current)) {
       return;
@@ -25,9 +24,8 @@ export const useIsScrolling = <TRef extends HTMLElement = HTMLDivElement>(option
       return;
     }
 
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-    const handleScroll = (event: any) => {
-      const element = event.target;
+    const handleScroll = (event: Event) => {
+      const element = event.target as HTMLElement;
 
       if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
         setIsScrolling(false);
@@ -40,8 +38,10 @@ export const useIsScrolling = <TRef extends HTMLElement = HTMLDivElement>(option
     ref.current.addEventListener('scroll', handleScroll);
 
     return () => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       ref.current?.removeEventListener('scroll', handleScroll);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref.current]);
 
   return { ref, isScrolling };

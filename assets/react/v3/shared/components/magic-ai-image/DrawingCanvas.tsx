@@ -148,9 +148,9 @@ export const DrawingCanvas = React.forwardRef<HTMLCanvasElement, CanvasProps>(
       cursorRef.current.style.display = 'none';
     };
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
     useEffect(() => {
       canvasSetup();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

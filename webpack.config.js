@@ -48,7 +48,12 @@ module.exports = (env, options) => {
                 },
             ],
         },
-        plugins: [new webpack.ProvidePlugin({ React: 'react' })],
+        plugins: [
+            new webpack.ProvidePlugin({ React: 'react' }),
+            new webpack.DefinePlugin({
+                'process.env.MAKE_POT': JSON.stringify(!!env['make-pot']),
+            }),
+        ],
         externals: {
             react: 'React',
             'react-dom': 'ReactDOM',
@@ -60,6 +65,7 @@ module.exports = (env, options) => {
     if ('production' === mode) {
         config.devtool = false;
         config.optimization = {
+            splitChunks: false,
             minimize: true,
             minimizer: [
                 new TerserPlugin({
@@ -90,7 +96,7 @@ module.exports = (env, options) => {
                 'tutor-front.min': './assets/react/front/tutor-front.js',
                 'tutor-admin.min': './assets/react/admin-dashboard/tutor-admin.js',
                 'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
-                'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
+                'tutor-gutenberg': './assets/react/gutenberg/index.js',
                 'tutor-course-builder.min': './assets/react/v3/entries/course-builder/index.tsx',
                 'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
                 'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
@@ -119,7 +125,7 @@ module.exports = (env, options) => {
                             const name = pathData.chunk.name.replace(/^icon-/, '');
                             return `icons/${name}.min.js?ver=${version}`;
                         }
-                        return `lazy-chunks/[name].[contenthash].min.js?ver=${version}`;
+                        return `lazy-chunks/[name].min.js?ver=${version}`;
                     },
                     clean: true,
                 },
