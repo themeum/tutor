@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -16,6 +16,7 @@ interface EmptyStateProps {
   description?: string;
   actions?: React.ReactNode;
   removeBorder?: boolean;
+  wrapperCss?: SerializedStyles;
 }
 
 const EmptyState = ({
@@ -27,9 +28,10 @@ const EmptyState = ({
   description,
   actions,
   removeBorder = true,
+  wrapperCss,
 }: EmptyStateProps) => {
   return (
-    <div css={styles.bannerWrapper(size, removeBorder, !!isDefined(emptyStateImage))}>
+    <div css={[styles.bannerWrapper(size, removeBorder, !!isDefined(emptyStateImage)), wrapperCss]}>
       <Show when={emptyStateImage}>
         <img src={emptyStateImage} alt={imageAltText} srcSet={emptyStateImage2x ? `${emptyStateImage2x} 2x` : ''} />
       </Show>
@@ -39,7 +41,9 @@ const EmptyState = ({
           <p css={styles.description(size)}>{description}</p>
         </Show>
         <Show when={actions}>
-          <div css={styles.actionWrapper(size)}>{actions}</div>
+          <div data-actions css={styles.actionWrapper(size)}>
+            {actions}
+          </div>
         </Show>
       </div>
     </div>

@@ -132,6 +132,12 @@ const endpoints = {
   IMPORT_CONTENTS: isTutorPro ? 'tutor_pro_import' : 'tutor_import_settings',
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
   DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
+
+  // @TODO: Will be chnages when API is constructed
+  // CONTENT BANK
+  GET_CONTENT_BANK_COLLECTIONS: 'tutor_pro_get_content_bank_collections',
+  GET_CONTENT_BANK_COLLECTION_DETAILS: 'tutor_pro_get_content_bank_collection_details',
+  CREATE_CONTENT_BANK_COLLECTION: 'tutor-pro_create_content_bank_collection',
 } as const;
 
 export default endpoints;
