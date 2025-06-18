@@ -16,13 +16,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\Tax;
+use Tutor\Models\CourseModel;
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
 $courses         = $get_cart['courses'];
 $total_count     = $courses['total_count'];
 $course_list     = $courses['results'];
-$subtotal        = 0;
+
+$subtotal         = 0;
+$tax_exempt_price = 0;
 
 $checkout_page_url = CheckoutController::get_page_url();
 
@@ -47,9 +50,15 @@ $checkout_page_url = CheckoutController::get_page_url();
 							$course_price     = tutor_utils()->get_raw_course_price( $course->ID );
 							$regular_price    = $course_price->regular_price;
 							$sale_price       = $course_price->sale_price;
+							$display_price    = $sale_price ? $sale_price : $regular_price;
 							$tutor_course_img = get_tutor_course_thumbnail_src( '', $course->ID );
 
-							$subtotal += $sale_price ? $sale_price : $regular_price;
+							$subtotal += $display_price;
+
+							$tax_collection = CourseModel::is_tax_enabled_for_single_purchase( $course->ID );
+							if ( ! $tax_collection ) {
+								$tax_exempt_price += $display_price;
+							}
 							?>
 							<div class="tutor-cart-course-item">
 								<div class="tutor-cart-course-thumb">
@@ -83,11 +92,11 @@ $checkout_page_url = CheckoutController::get_page_url();
 								<div class="tutor-cart-course-price-wrapper">
 									<div class="tutor-cart-course-price">
 										<div class="tutor-fw-bold">
-											<?php echo tutor_get_formatted_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
+											<?php tutor_print_formatted_price( $display_price ); ?>
 										</div>
 										<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
 										<div class="tutor-cart-discount-price">
-											<?php echo tutor_get_formatted_price( $regular_price ); //phpcs:ignore?>
+											<?php tutor_print_formatted_price( $regular_price ); ?>
 										</div>
 										<?php endif; ?>
 									</div>
@@ -100,13 +109,19 @@ $checkout_page_url = CheckoutController::get_page_url();
 					</div>
 				</div>
 				<?php
-				$is_tax_configured        = Tax::is_tax_configured();
+				$should_calculate_tax     = Tax::should_calculate_tax();
 				$is_tax_included_in_price = Tax::is_tax_included_in_price();
 				$tax_rate                 = Tax::get_user_tax_rate();
-				$tax_amount               = Tax::calculate_tax( $subtotal, $tax_rate );
-				$grand_total              = $subtotal;
-				$show_tax_incl_text       = $is_tax_configured && $tax_rate > 0 && $is_tax_included_in_price;
+				$show_tax_incl_text       = $should_calculate_tax && $tax_rate > 0 && $is_tax_included_in_price;
+				$tax_amount               = 0;
 
+				if ( $should_calculate_tax ) {
+					$tax_amount        = Tax::calculate_tax( $subtotal, $tax_rate );
+					$tax_exempt_amount = Tax::calculate_tax( $tax_exempt_price, $tax_rate );
+					$tax_amount        = $tax_amount - $tax_exempt_amount;
+				}
+
+				$grand_total = $subtotal;
 				if ( ! $is_tax_included_in_price ) {
 					$grand_total += $tax_amount;
 				}
@@ -119,7 +134,7 @@ $checkout_page_url = CheckoutController::get_page_url();
 								<div><?php esc_html_e( 'Subtotal:', 'tutor' ); ?></div>
 								<div><?php tutor_print_formatted_price( $subtotal ); ?></div>
 							</div>
-							<?php if ( $is_tax_configured && $tax_rate > 0 && ! $is_tax_included_in_price ) : ?>
+							<?php if ( $should_calculate_tax && $tax_rate > 0 && ! $is_tax_included_in_price ) : ?>
 							<div class="tutor-cart-summery-item">
 								<div><?php esc_html_e( 'Tax:', 'tutor' ); ?></div>
 								<div><?php tutor_print_formatted_price( $tax_amount ); ?></div>
@@ -132,7 +147,7 @@ $checkout_page_url = CheckoutController::get_page_url();
 								<div><?php tutor_print_formatted_price( $grand_total ); ?></div>
 							</div>
 							<?php
-							if ( $is_tax_configured && $tax_rate > 0 && $is_tax_included_in_price ) :
+							if ( $should_calculate_tax && $tax_rate > 0 && $is_tax_included_in_price ) :
 								?>
 									<div class="tutor-text-right tutor-fs-7 tutor-color-muted tutor-mb-40">
 								<?php

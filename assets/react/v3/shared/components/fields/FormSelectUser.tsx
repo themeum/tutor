@@ -311,7 +311,6 @@ const FormSelectUser = ({
                         </div>
                         <input
                           {...restInputProps}
-                          // biome-ignore lint/a11y/noAutofocus: <explanation>
                           autoFocus
                           className="tutor-input-field"
                           css={[inputCss, styles.input]}
