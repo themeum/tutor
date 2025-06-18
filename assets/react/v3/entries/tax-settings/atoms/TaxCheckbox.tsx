@@ -1,5 +1,4 @@
 import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
-import { nanoid } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
 
@@ -20,7 +19,6 @@ interface CheckboxProps {
 
 const TaxCheckbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: CheckboxProps, ref) => {
   const {
-    id = nanoid(),
     name,
     labelCss,
     inputCss,
@@ -34,8 +32,7 @@ const TaxCheckbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Ch
   } = props;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    // biome-ignore lint/complexity/useOptionalChain: <explanation>
-    onChange && onChange(!isIndeterminate ? event.target.checked : true, event);
+    return onChange?.(!isIndeterminate ? event.target.checked : true, event);
   };
 
   return (
