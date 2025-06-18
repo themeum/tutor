@@ -184,8 +184,8 @@ class OrderController {
 			$tax_amount       = Tax::calculate_tax( $total_price, $tax_rate );
 
 			foreach ( $items as $item ) {
-				$tax_collection = CourseModel::is_tax_enabled_for_single_purchase( $item['item_id'] ?? 0 );
-				if ( ! $tax_collection ) {
+				$is_tax_enabled = CourseModel::is_tax_enabled_for_single_purchase( $item['item_id'] ?? 0 );
+				if ( ! $is_tax_enabled ) {
 					$display_price     = $this->model->get_order_item_display_price( (object) $item );
 					$tax_exempt_price += $display_price;
 				}
