@@ -28,7 +28,7 @@ $field_id  = sanitize_key( 'field_' . $field_key );
 							<input id="radio_<?php echo esc_attr( $option_key ); ?>" type="radio" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php esc_attr( checked( $option_value, $option_key ) ); ?> class="tutor-form-check-input" />
 							<label for="radio_<?php echo esc_attr( $option_key ); ?>">
 								<?php echo esc_attr( $option['label'] ); ?>
-								<p class="desc"><?php echo esc_attr( $option['desc'] ); ?></p>
+								<p class="desc tutor-fw-normal tutor-fs-7 tutor-color-muted"><?php echo esc_attr( $option['desc'] ); ?></p>
 							</label>
 						</div>
 					</div>

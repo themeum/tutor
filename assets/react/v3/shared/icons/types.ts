@@ -92,7 +92,6 @@ export const icons = [
   'note',
   'attach',
   'report',
-  'jitsiColorize',
   'linkExternal',
   'quizTrueFalse',
   'quizMultiChoice',
@@ -220,6 +219,6 @@ export const icons = [
   'uploadFile',
   'attachmentLine',
   'primeCheckCircle',
-];
+] as const;
 
 export type IconCollection = (typeof icons)[number];

@@ -4,7 +4,7 @@ import { borderRadius, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
 import Show from '@TutorShared/controls/Show';
-import { IconCollection } from '@TutorShared/icons/types';
+import { type IconCollection } from '@TutorShared/icons/types';
 import SVGIcon from './SVGIcon';
 
 type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'primary';

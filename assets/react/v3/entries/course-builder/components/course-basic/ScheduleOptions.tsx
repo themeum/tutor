@@ -297,7 +297,11 @@ const ScheduleOptions = () => {
             <div css={styles.scheduleInfo}>
               {
                 /* translators: %1$s is the date and %2$s is the time */
-                sprintf(__('%1$s at %2$s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)
+                sprintf(
+                  __('%1$s at %2$s', 'tutor'),
+                  format(parseISO(scheduleDate), DateFormats.monthDayYear),
+                  scheduleTime,
+                )
               }
             </div>
 

@@ -60,7 +60,6 @@ const Card = ({
     [collapsed],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!cardRef.current) return;
 

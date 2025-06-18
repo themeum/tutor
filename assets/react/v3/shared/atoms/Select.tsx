@@ -91,7 +91,6 @@ const Select = <T,>({
   const { intersectionEntry, intersectionElementRef } = useIntersectionObserver<HTMLDivElement>();
   const hasMoreItems = selections.length > currentOptions.length;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!infiniteScroll) {
       setCurrentOptions(selections);
@@ -106,6 +105,7 @@ const Select = <T,>({
     const endIndex = startIndex + OPTIONS_LIMIT;
 
     setCurrentOptions((previousOptions) => [...previousOptions, ...selections.slice(startIndex, endIndex)]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selections, intersectionEntry?.isIntersecting]);
 
   return (
