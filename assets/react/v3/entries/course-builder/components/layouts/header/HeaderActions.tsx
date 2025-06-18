@@ -261,8 +261,6 @@ const HeaderActions = () => {
         if (hasTrashAccess) {
           try {
             await form.handleSubmit((data) => handleSubmit(data, 'trash'))();
-          } catch (error) {
-            console.error(error);
           } finally {
             window.location.href = window.location.href.includes('wp-admin')
               ? tutorConfig.backend_course_list_url

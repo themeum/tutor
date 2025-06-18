@@ -38,6 +38,7 @@ const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = fals
         setIcon(loadedIcon);
       })
       .catch((err) => {
+        // eslint-disable-next-line no-console
         console.error(`Error loading icon "${name}":`, err);
       })
       .finally(() => {

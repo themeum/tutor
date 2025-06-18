@@ -56,6 +56,7 @@ const VirtualList = <T,>({ items, height, itemHeight = DEFAULT_ITEM_HEIGHT, rend
   }, [items, scrollTop, height, itemHeight]);
 
   if (height <= 0 || itemHeight <= 0) {
+    // eslint-disable-next-line no-console
     console.warn('VirtualList: Invalid height or itemHeight provided');
     return null;
   }
