@@ -3104,4 +3104,22 @@ class Course extends Tutor_Base {
 
 		return $args;
 	}
+
+	/**
+	 * Get a list of possible course status.
+	 *
+	 * @since 3.6.2
+	 *
+	 * @return array
+	 */
+	public static function course_status_list() {
+		return array(
+			'publish',
+			'private',
+			'draft',
+			'trash',
+			'pending',
+			'future',
+		);
+	}
 }
