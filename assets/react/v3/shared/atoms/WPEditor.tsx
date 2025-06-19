@@ -256,7 +256,6 @@ const WPEditor = ({
     onChange(target.value);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const updateEditorContent = useCallback(
     (value: string) => {
       const { tinymce } = window;

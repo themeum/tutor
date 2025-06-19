@@ -1,4 +1,4 @@
-import { Addon } from '@AddonList/services/addons';
+import { type Addon } from '@AddonList/services/addons';
 import { css } from '@emotion/react';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { tutorConfig } from '@TutorShared/config/config';

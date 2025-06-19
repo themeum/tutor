@@ -1,5 +1,5 @@
 import { tutorConfig } from '@TutorShared/config/config';
-import { Option } from './types';
+import { type Option } from './types';
 
 export interface Country {
   name: string;
