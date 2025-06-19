@@ -78,6 +78,7 @@ const Card = ({
     return () => {
       resizeObserver.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [collapsed]);
 
   return (
@@ -99,7 +100,12 @@ const Card = ({
 
         <div css={styles.actions}>
           <Show when={actionTray}>{actionTray}</Show>
-          <button type="button" css={styles.collapseButton({ isCollapsed: collapsed })} onClick={toggleCollapse}>
+          <button
+            data-cy="collapse-button"
+            type="button"
+            css={styles.collapseButton({ isCollapsed: collapsed })}
+            onClick={toggleCollapse}
+          >
             <SVGIcon name="change" width={24} height={24} />
           </button>
         </div>

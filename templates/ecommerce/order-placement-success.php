@@ -31,7 +31,7 @@ $order_id;
 			<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-btn tutor-btn-primary">
 				<?php esc_html_e( 'Continue Shopping', 'tutor' ); ?>
 			</a>
-			<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) ); ?>" class="tutor-btn tutor-btn-secondary">
+			<a data-cy="tutor-native-order-history" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) ); ?>" class="tutor-btn tutor-btn-secondary">
 				<?php esc_html_e( 'Check Order List', 'tutor' ); ?>
 			</a>
 		</div>
