@@ -45,7 +45,7 @@ $navbar_data = array(
 	'page_title' => $students->page_title,
 );
 
-$courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 $course_options = array(
 	array(
 		'key'   => '',
@@ -65,10 +65,10 @@ if ( ! empty( $courses ) ) {
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'   => tutor_utils()->has_user_role( 'administrator' ) ? $students->bulk_action : false,
-	'bulk_actions'  => $students->prpare_bulk_actions(),
-	'ajax_action'   => 'tutor_student_bulk_action',
-	'filters'       => array(
+	'bulk_action'  => tutor_utils()->has_user_role( 'administrator' ) ? $students->bulk_action : false,
+	'bulk_actions' => $students->prpare_bulk_actions(),
+	'ajax_action'  => 'tutor_student_bulk_action',
+	'filters'      => array(
 		array(
 			'label'      => __( 'Courses', 'tutor' ),
 			'field_type' => 'select',
@@ -133,9 +133,10 @@ $filters = array(
 					</thead>
 
 					<tbody>
-						<?php foreach ( $students_list as $list ) :
+						<?php
+						foreach ( $students_list as $list ) :
 							$reg_date = $list->user_registered;
-						?>
+							?>
 							<tr>
 								<td>
 									<div class="tutor-d-flex">
