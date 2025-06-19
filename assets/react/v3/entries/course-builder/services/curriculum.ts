@@ -13,23 +13,15 @@ import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
-
-export type ContentType =
-  | 'tutor-google-meet'
-  | 'tutor_zoom_meeting'
-  | 'lesson'
-  | 'tutor_quiz'
-  | 'tutor_assignments'
-  | 'tutor_h5p_quiz';
 
 export interface Content {
   ID: ID;
   post_title: string;
   post_content: string;
   post_name: string | null;
-  post_type: ContentType;
+  post_type: TopicContentType;
   total_question?: number;
   quiz_type?: 'tutor_h5p_quiz';
 }
@@ -568,7 +560,7 @@ const getH5PLessonContents = (search: string) => {
   });
 };
 
-export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
+export const useGetH5PLessonContentsQuery = (search: string, contentType: TopicContentType) => {
   return useQuery({
     queryKey: ['H5PLessonContents', search],
     queryFn: () => getH5PLessonContents(search).then((response) => response.data),

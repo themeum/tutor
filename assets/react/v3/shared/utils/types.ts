@@ -243,3 +243,33 @@ interface VisibilityProps {
   visibilityKey?: string;
 }
 export type WithVisibilityProps<T> = T & VisibilityProps;
+
+export type TopicContentType =
+  | 'tutor-google-meet'
+  | 'tutor_zoom_meeting'
+  | 'lesson'
+  | 'tutor_quiz'
+  | 'tutor_assignments'
+  | 'tutor_h5p_quiz';
+
+export interface H5PContent {
+  id: ID;
+  title: string;
+  content_type: string;
+  user_id: ID;
+  user_name: string;
+  updated_at: string;
+}
+
+export interface H5PContent {
+  id: ID;
+  title: string;
+  content_type: string;
+  user_id: ID;
+  user_name: string;
+  updated_at: string;
+}
+
+export interface H5PContentResponse {
+  output: H5PContent[];
+}

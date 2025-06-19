@@ -2,9 +2,8 @@ import type React from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import type { ContentType } from '@CourseBuilderServices/curriculum';
 import type { QuizForm, QuizQuestion } from '@CourseBuilderServices/quiz';
-import { type ID } from '@TutorShared/utils/types';
+import { type ID, type TopicContentType } from '@TutorShared/utils/types';
 
 export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
 
@@ -13,7 +12,7 @@ interface QuizModalContextProps {
   activeQuestionId: ID;
   setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
   quizId: ID;
-  contentType: ContentType;
+  contentType: TopicContentType;
   validationError: {
     message: string;
     type: QuizValidationErrorType;
@@ -61,7 +60,7 @@ export const QuizModalContextProvider = ({
         >;
       }) => React.ReactNode);
   quizId: ID;
-  contentType: ContentType;
+  contentType: TopicContentType;
   validationError?: {
     message: string;
     type: QuizValidationErrorType;

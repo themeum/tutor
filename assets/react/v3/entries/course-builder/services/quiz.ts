@@ -17,9 +17,8 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertToErrorMessage, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 
-import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
 import type { ContentDripType } from './course';
-import type { ContentType } from './curriculum';
 
 export const QuizDataStatus = {
   NEW: 'new',
@@ -651,7 +650,7 @@ const getH5PQuizContents = (search: string) => {
   });
 };
 
-export const useGetH5PQuizContentsQuery = (search: string, contentType: ContentType) => {
+export const useGetH5PQuizContentsQuery = (search: string, contentType: TopicContentType) => {
   return useQuery({
     queryKey: ['H5PQuizContents', search],
     queryFn: () => getH5PQuizContents(search).then((response) => response.data),
@@ -672,7 +671,7 @@ const getH5PQuizContentById = (id: ID) => {
     .then((response) => response.data);
 };
 
-export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: ContentType) => {
+export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: TopicContentType) => {
   return useQuery({
     queryKey: ['H5PQuizContent', id],
     queryFn: () => getH5PQuizContentById(id),

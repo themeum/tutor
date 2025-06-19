@@ -22,7 +22,6 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
 
 import Question from '@CourseBuilderComponents/curriculum/Question';
-import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -34,6 +33,7 @@ import {
   type QuizQuestionType,
 } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';

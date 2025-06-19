@@ -18,6 +18,7 @@ interface DropdownOptionProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   buttonContentCss?: SerializedStyles;
   isDanger?: boolean;
+  icon?: React.ReactNode;
 }
 
 export const DropdownItem = ({
@@ -27,6 +28,7 @@ export const DropdownItem = ({
   onClick,
   buttonContentCss,
   isDanger = false,
+  icon,
   ...props
 }: DropdownOptionProps) => {
   return (
@@ -40,6 +42,7 @@ export const DropdownItem = ({
       onClick={onClick}
       {...props}
     >
+      {icon && <>{icon}</>}
       <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
     </button>
   );
@@ -534,6 +537,10 @@ const styles = {
       pointer-events: none;
       color: ${colorTokens.text.disable};
     `}
+
+    svg:first-of-type {
+      color: ${colorTokens.icon.default};
+    }
   `,
   dropdownOptionContent: css`
     display: flex;

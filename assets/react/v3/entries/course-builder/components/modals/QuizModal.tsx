@@ -22,9 +22,9 @@ import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
 import FormQuestionTitle from '@CourseBuilderComponents/fields/FormQuestionTitle';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import {
-  type QuizForm,
   convertQuizFormDataToPayload,
   convertQuizResponseToFormData,
+  type QuizForm,
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
@@ -37,11 +37,10 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
-import type { ContentType } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type ID, isDefined } from '@TutorShared/utils/types';
+import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
 import { findSlotFields } from '@TutorShared/utils/util';
 
 interface QuizModalProps extends ModalProps {
@@ -49,7 +48,7 @@ interface QuizModalProps extends ModalProps {
   topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   contentDripType: ContentDripType;
-  contentType?: ContentType;
+  contentType?: TopicContentType;
 }
 
 export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';

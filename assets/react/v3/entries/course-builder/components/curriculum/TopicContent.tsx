@@ -18,11 +18,7 @@ import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMee
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import {
-  type ContentType,
-  useDeleteContentMutation,
-  useDuplicateContentMutation,
-} from '@CourseBuilderServices/curriculum';
+import { useDeleteContentMutation, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
@@ -38,11 +34,11 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { ID } from '@TutorShared/utils/types';
+import type { ID, TopicContentType } from '@TutorShared/utils/types';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicContentProps {
-  type: ContentType;
+  type: TopicContentType;
   topic: CourseTopicWithCollapse;
   content: { id: ID; title: string; total_question: number };
   isOverlay?: boolean;
@@ -91,7 +87,7 @@ const confirmationMessages = {
 
 const modalComponent: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
+  [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
 } = {
   lesson: LessonModal,
   tutor_quiz: QuizModal,
@@ -100,7 +96,7 @@ const modalComponent: {
 } as const;
 
 const modalTitle: {
-  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: string;
+  [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: string;
 } = {
   lesson: __('Lesson', 'tutor'),
   tutor_quiz: __('Quiz', 'tutor'),
@@ -109,7 +105,7 @@ const modalTitle: {
 } as const;
 
 const modalIcon: {
-  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: IconCollection;
+  [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: IconCollection;
 } = {
   lesson: 'lesson',
   tutor_quiz: 'quiz',
@@ -207,7 +203,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
   const handleDuplicate = () => {
     const convertedContentType: {
-      [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]:
+      [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]:
         | 'lesson'
         | 'assignment'
         | 'answer'
@@ -224,7 +220,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
     duplicateContentMutation.mutateAsync({
       course_id: courseId,
       content_id: contentId,
-      content_type: convertedContentType[type as Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
+      content_type: convertedContentType[type as Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
     });
     onCopy?.();
   };

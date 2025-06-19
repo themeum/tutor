@@ -9,14 +9,6 @@ import ImageInput from '@TutorShared/atoms/ImageInput';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
-import {
-  convertYouTubeDurationToSeconds,
-  covertSecondsToHMS,
-  generateVideoThumbnail,
-  getExternalVideoDuration,
-  getVimeoVideoDuration,
-} from '@CourseBuilderUtils/utils';
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { VideoRegex, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
@@ -28,10 +20,18 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type IconCollection } from '@TutorShared/icons/types';
+import { useGetYouTubeVideoDuration } from '@TutorShared/services/video';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { TutorMutationResponse } from '@TutorShared/utils/types';
+import { covertSecondsToHMS } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
+import {
+  convertYouTubeDurationToSeconds,
+  generateVideoThumbnail,
+  getExternalVideoDuration,
+  getVimeoVideoDuration,
+} from '@TutorShared/utils/video';
 
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
