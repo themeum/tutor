@@ -211,7 +211,7 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
 		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
 
 		// Tutor order detail & coupon scripts.
 		$page     = Input::get( 'page', '' );
@@ -222,32 +222,32 @@ class Assets {
 
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
 			if ( OrderController::PAGE_SLUG === $page && 'edit' === $action ) {
-				wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 			}
 
 			if ( CouponController::PAGE_SLUG === $page && in_array( $action, $allowed_actions, true ) ) {
-				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array( 'wp-date', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.js', array( 'wp-date', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 			}
 
 			// @since 3.0.0 add tax react app on the settings page.
 			if ( 'tutor_settings' === $page && ! Input::has( 'edit' ) ) {
 				wp_enqueue_editor();
-				wp_enqueue_script( 'tutor-tax-settings', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
-				wp_enqueue_script( 'tutor-payment-settings', tutor()->url . 'assets/js/tutor-payment-settings.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-tax-settings', tutor()->url . 'assets/js/tutor-tax-settings.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-payment-settings', tutor()->url . 'assets/js/tutor-payment-settings.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 			}
 		}
 
 		if ( 'tutor-tools' === $page && 'import_export' === $sub_page ) {
-				wp_enqueue_script( 'tutor-import-export', tutor()->url . 'assets/js/tutor-import-export.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-import-export', tutor()->url . 'assets/js/tutor-import-export.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
 
 		if ( 'tutor-addons' === $page ) {
-			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
 
 		if ( 'tutor-themes' === $page ) {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
-			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.min.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 		}
 	}
 
@@ -322,7 +322,7 @@ class Assets {
 		 * @since 1.9.0
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
-		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.min.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
 
 		/**
 		 * Load frontend dashboard style
@@ -425,7 +425,7 @@ class Assets {
 		 *
 		 * @since v2.0.0
 		 */
-		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.js', array( 'jquery', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 
 		/**
 		 * Enqueue datetime countdown scripts & styles
