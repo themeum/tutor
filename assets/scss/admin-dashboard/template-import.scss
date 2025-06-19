@@ -422,6 +422,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	margin: 0 auto;
 	display: grid;
 	grid-template-columns: 1128px 190px;
+	overflow-y: hidden;
 
 	.tutor-preview-template-name {
 		font-weight: 500;
