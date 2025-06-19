@@ -27,6 +27,8 @@ $date          = Input::get( 'date', '' );
 $search_filter = Input::get( 'search', '' );
 $category_slug = Input::get( 'category', '' );
 
+$current_user_id = get_current_user_id();
+
 /**
  * Determine active tab
  */
@@ -150,7 +152,7 @@ if ( '' !== $course_id ) {
 }
 // Add author param.
 if ( 'mine' === $active_tab || ! current_user_can( 'administrator' ) ) {
-	$args['author'] = get_current_user_id();
+	$args['author'] = $current_user_id;
 }
 // Search filter.
 if ( '' !== $search_filter ) {
@@ -169,7 +171,7 @@ if ( '' !== $category_slug ) {
 
 add_filter( 'posts_search', '_tutor_search_by_title_only', 500, 2 );
 
-$the_query = Course_List::course_list_query( $args, get_current_user_id(), $active_tab );
+$the_query = Course_List::course_list_query( $args, $current_user_id, $active_tab );
 
 remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 
@@ -203,13 +205,13 @@ if ( 0 === $total_courses_count ) {
 	$list_args           = array(
 		'post_type'              => tutor()->course_post_type,
 		'post_status'            => array( 'publish', 'pending', 'draft', 'private', 'future', 'trash' ),
-		'author'                 => current_user_can( 'administrator' ) ? null : get_current_user_id(),
+		'author'                 => current_user_can( 'administrator' ) ? null : $current_user_id,
 		'ignore_sticky_posts'    => true,
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false,
 		'order_by'               => 'none',
 	);
-	$total_list_query    = Course_List::course_list_query( $list_args, get_current_user_id(), 'any' );
+	$total_list_query    = Course_List::course_list_query( $list_args, $current_user_id, 'any' );
 	$total_courses_count = $total_list_query->found_posts;
 
 	if ( 0 === $total_courses_count ) {
@@ -217,13 +219,13 @@ if ( 0 === $total_courses_count ) {
 	} else {
 		// Get other courses count (all but trashed courses).
 		$list_args['post_status'] = array( 'any' );
-		$other_list_query         = Course_List::course_list_query( $list_args, get_current_user_id(), 'any' );
+		$other_list_query         = Course_List::course_list_query( $list_args, $current_user_id, 'any' );
 		$other_courses_count      = $other_list_query->found_posts;
 
 		// Get trashed courses count.
 		if ( 0 === $other_courses_count ) {
 			$list_args['post_status'] = array( 'trash' );
-			$trashed_list_query       = Course_List::course_list_query( $list_args, get_current_user_id(), 'trash' );
+			$trashed_list_query       = Course_List::course_list_query( $list_args, $current_user_id, 'trash' );
 			$trashed_courses_count    = $trashed_list_query->found_posts;
 		}
 	}
