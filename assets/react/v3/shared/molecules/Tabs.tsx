@@ -182,8 +182,13 @@ const styles = {
 
     ${isActive &&
     css`
-      background-color: ${colorTokens.background.white};
-      color: ${colorTokens.text.primary};
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: ${colorTokens.background.white};
+        color: ${colorTokens.text.primary};
+      }
 
       & > span {
         color: ${colorTokens.text.subdued};
