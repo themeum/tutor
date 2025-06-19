@@ -15,22 +15,29 @@
 		<h6 class="tutor-fs-6 tutor-fw-bold tutor-mt-0 tutor-mb-8 tutor-mt-32">
 			<?php esc_html_e( 'No Courses Found.', 'tutor' ); ?>
 		</h6>
-		<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-gap-4px">
-			<p class="tutor-fs-7 tutor-color-danger tutor-m-0">
-				<?php
-				$message = sprintf(
-					_n(
-						'You have %1$s course in Trash %2$s',
-						'You have %1$s courses in Trash %2$s',
-						$data['trashed_courses_count'],
-						'tutor'
+		<p class="tutor-d-flex tutor-align-center tutor-justify-center tutor-gap-4px tutor-fs-7 tutor-color-danger tutor-m-0">
+			<?php
+			$message = sprintf(
+				/* translators: %1$s: number of courses, %2$s: the anchor tag */
+				_n(
+					'You have %1$s course in Trash %2$s',
+					'You have %1$s courses in Trash %2$s',
+					$data['trashed_courses_count'],
+					'tutor'
+				),
+				number_format_i18n( $data['trashed_courses_count'] ),
+				'<a href="' . esc_url( $data['trashed_courses_url'] ) . '" class="tutor-btn tutor-btn-link">' . esc_html__( 'View Trash', 'tutor' ) . '</a>'
+			);
+			echo wp_kses(
+				$message,
+				array(
+					'a' => array(
+						'href'  => true,
+						'class' => true,
 					),
-					number_format_i18n($data['trashed_courses_count']),
-					'<a href="'. esc_url($data['trashed_courses_url']) .'" class="tutor-btn tutor-btn-link">' . esc_html__('View Trash', 'tutor') . '</a>'
-				);
-				echo wp_kses( $message, array( 'a' => array( 'href' => true, 'class' => true ) ) );
-				?>
-			</p>
-		</div>
+				)
+			);
+			?>
+		</p>
 	</div>
 </div>
