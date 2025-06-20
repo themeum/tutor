@@ -50,55 +50,25 @@ $navbar_data = array(
 	'button_url'   => $coupon_controller::get_coupon_page_url() . '&action=add_new',
 );
 
-$status_option = array(
-	array(
-		'key'   => '',
-		'title' => __( 'All', 'tutor' ),
-	),
-	array(
-		'key'   => 'active',
-		'title' => __( 'Active', 'tutor' ),
-	),
-	array(
-		'key'   => 'inactive',
-		'title' => __( 'Inactive', 'tutor' ),
-	),
-	array(
-		'key'   => 'trash',
-		'title' => __( 'Trash', 'tutor' ),
-	),
-);
-
-$applies_to = array(
+$applies_to_options = array(
 	array(
 		'key'   => '',
 		'title' => __( 'Select', 'tutor' ),
 	),
-	array(
-		'key'   => 'all_courses_and_bundles',
-		'title' => __( 'All courses and bundles', 'tutor' ),
-	),
-	array(
-		'key'   => 'all_courses',
-		'title' => __( 'All courses', 'tutor' ),
-	),
-	array(
-		'key'   => 'all_bundles',
-		'title' => __( 'All bundles', 'tutor' ),
-	),
-	array(
-		'key'   => 'specific_courses',
-		'title' => __( 'Specific courses', 'tutor' ),
-	),
-	array(
-		'key'   => 'specific_bundles',
-		'title' => __( 'Specific bundles', 'tutor' ),
-	),
-	array(
-		'key'   => 'specific_category',
-		'title' => __( 'Specific category', 'tutor' ),
-	),
 );
+
+$applies_to = array_map(
+	function ( $val, $key ) {
+		return array(
+			'key'   => $key,
+			'title' => $val,
+		);
+	},
+	CouponModel::get_coupon_applies_to(),
+	array_keys( CouponModel::get_coupon_applies_to() )
+);
+
+$applies_to_options = array_merge( $applies_to_options, $applies_to );
 
 /**
  * Bulk action & filters
@@ -112,7 +82,7 @@ $filters = array(
 			'label'      => __( 'Status', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'data',
-			'options'    => $status_option,
+			'options'    => $coupon_controller->tabs_key_value(),
 			'searchable' => false,
 			'value'      => Input::get( 'data', '' ),
 		),
@@ -120,7 +90,7 @@ $filters = array(
 			'label'      => __( 'Applies To', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'applies_to',
-			'options'    => $applies_to,
+			'options'    => $applies_to_options,
 			'show_label' => true,
 			'value'      => Input::get( 'applies_to', '' ),
 		),

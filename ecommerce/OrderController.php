@@ -807,7 +807,7 @@ class OrderController {
 		$tabs = array();
 
 		$tabs [] = array(
-			'key'   => 'all',
+			'key'   => '',
 			'title' => __( 'All', 'tutor' ),
 			'value' => $this->model->get_order_count( $where, $search ),
 			'url'   => $url . '&data=all',

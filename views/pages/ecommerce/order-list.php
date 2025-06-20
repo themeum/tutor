@@ -16,6 +16,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
+use Tutor\Models\OrderModel;
 
 /**
  * Determine active tab
@@ -42,55 +43,26 @@ $navbar_data    = array(
 	'button_url'   => $add_course_url,
 );
 
-$status_option = array(
-	array(
-		'key'   => '',
-		'title' => __( 'All', 'tutor' ),
-	),
-	array(
-		'key'   => 'incomplete',
-		'title' => __( 'Incomplete', 'tutor' ),
-	),
-	array(
-		'key'   => 'completed',
-		'title' => __( 'Completed', 'tutor' ),
-	),
-	array(
-		'key'   => 'cancelled',
-		'title' => __( 'Cancelled', 'tutor' ),
-	),
-	array(
-		'key'   => 'trash',
-		'title' => __( 'Trash', 'tutor' ),
-	),
-);
 
-$payment_status = array(
+$payment_status_options = array(
 	array(
 		'key'   => '',
 		'title' => __( 'Select', 'tutor' ),
 	),
-	array(
-		'key'   => 'paid',
-		'title' => __( 'Paid', 'tutor' ),
-	),
-	array(
-		'key'   => 'unpaid',
-		'title' => __( 'Unpaid', 'tutor' ),
-	),
-	array(
-		'key'   => 'failed',
-		'title' => __( 'Failed', 'tutor' ),
-	),
-	array(
-		'key'   => 'refunded',
-		'title' => __( 'Refunded', 'tutor' ),
-	),
-	array(
-		'key'   => 'partially-refunded',
-		'title' => __( 'Partially Refunded', 'tutor' ),
-	),
 );
+
+$payment_status = array_map(
+	function ( $val, $key ) {
+		return array(
+			'key'   => $key,
+			'title' => $val,
+		);
+	},
+	OrderModel::get_payment_status(),
+	array_keys( OrderModel::get_payment_status() )
+);
+
+$payment_status_options = array_merge( $payment_status_options, $payment_status );
 
 /**
  * Bulk action & filters
@@ -104,7 +76,7 @@ $filters = array(
 			'label'      => __( 'Status', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'data',
-			'options'    => $status_option,
+			'options'    => $order_controller->tabs_key_value(),
 			'searchable' => false,
 			'value'      => Input::get( 'data', '' ),
 		),
@@ -112,7 +84,7 @@ $filters = array(
 			'label'      => __( 'Payment Status', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'payment-status',
-			'options'    => $payment_status,
+			'options'    => $payment_status_options,
 			'show_label' => true,
 			'value'      => Input::get( 'payment-status', '' ),
 		),
