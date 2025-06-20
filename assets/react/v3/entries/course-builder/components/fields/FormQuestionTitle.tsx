@@ -18,6 +18,7 @@ type Size = 'small' | 'regular';
 
 interface FormQuestionTitleProps extends FormControllerProps<string | null> {
   maxLimit?: number;
+  maxHeight?: number;
   disabled?: boolean;
   readOnly?: boolean;
   loading?: boolean;
@@ -39,6 +40,7 @@ interface FormQuestionTitleProps extends FormControllerProps<string | null> {
 
 const FormQuestionTitle = ({
   maxLimit,
+  maxHeight,
   field,
   fieldState,
   disabled,
@@ -60,7 +62,7 @@ const FormQuestionTitle = ({
   onToggleEdit,
 }: FormQuestionTitleProps) => {
   const inputValue = field.value ?? '';
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const isControlled = isDefined(propsIsEdit);
   const [internalIsEdit, setInternalIsEdit] = useState(false);
@@ -88,6 +90,7 @@ const FormQuestionTitle = ({
       inputRef.current.focus();
       setPreviousValue(inputValue);
     }
+    adjustHeight();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
@@ -105,6 +108,23 @@ const FormQuestionTitle = ({
   const handleCancel = () => {
     field.onChange(previousValue);
     handleToggleEdit(false);
+  };
+
+  const adjustHeight = () => {
+    if (inputRef.current) {
+      const textarea = inputRef.current;
+      textarea.style.height = 'auto';
+
+      const newHeight = textarea.scrollHeight;
+
+      if (maxHeight && newHeight > maxHeight) {
+        textarea.style.height = `${maxHeight}px`;
+        textarea.style.overflowY = 'auto';
+      } else {
+        textarea.style.height = `${newHeight}px`;
+        textarea.style.overflowY = 'hidden';
+      }
+    }
   };
 
   return (
@@ -146,12 +166,12 @@ const FormQuestionTitle = ({
             return (
               <>
                 <div css={styles.inputContainer({ isClearable: false, size })}>
-                  <input
+                  <textarea
                     {...field}
                     {...inputProps}
                     {...additionalAttributes}
                     className="tutor-input-field"
-                    type="text"
+                    rows={2}
                     ref={inputRef}
                     value={inputValue}
                     placeholder={placeholder}
@@ -165,14 +185,17 @@ const FormQuestionTitle = ({
                       }
                     }}
                     onKeyDown={(event) => {
-                      if (event.key === 'Enter') {
+                      if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+                        event.preventDefault();
                         handleSave();
-                      }
-                      if (event.key === 'Escape') {
+                      } else if (event.key === 'Escape') {
+                        event.preventDefault();
                         handleCancel();
                       }
                       onKeyDown?.(event.key);
                     }}
+                    onInput={adjustHeight}
+                    onPaste={adjustHeight}
                     onFocus={(event) => {
                       if (selectOnFocus) {
                         event.target.select();
@@ -303,7 +326,7 @@ const styles = {
     display: flex;
     transition: background 0.15s ease-in-out;
 
-    & input {
+    & textarea {
       ${typography.heading6()}
       color: ${colorTokens.text.primary};
       border: none;
@@ -311,6 +334,7 @@ const styles = {
       padding: 0;
       ${isClearable && `padding-right: ${spacing[36]};`};
       width: 100%;
+      resize: none;
 
       &.tutor-input-field {
         border: none;
