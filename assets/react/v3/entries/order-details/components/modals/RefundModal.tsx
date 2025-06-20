@@ -52,7 +52,7 @@ function RefundModal({
       reason: '',
     },
   });
-  const amount = form.watch('amount', 0);
+  const amount = Number(form.watch('amount', 0));
 
   useEffect(() => {
     form.setFocus('amount');
