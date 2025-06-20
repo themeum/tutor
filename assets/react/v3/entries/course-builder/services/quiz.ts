@@ -17,8 +17,13 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertToErrorMessage, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 
-import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
-import type { ContentDripType } from './course';
+import type { ContentDripType } from '@CourseBuilderServices/course';
+import {
+  type H5PContentResponse,
+  type ID,
+  type TopicContentType,
+  type TutorMutationResponse,
+} from '@TutorShared/utils/types';
 
 export const QuizDataStatus = {
   NEW: 'new',
@@ -191,19 +196,6 @@ interface QuizUpdateQuestionPayload {
   'question_settings[question_type]': string;
   'question_settings[answer_required]': 0 | 1;
   'question_settings[question_mark]': number;
-}
-
-export interface H5PContent {
-  id: ID;
-  title: string;
-  content_type: string;
-  user_id: ID;
-  user_name: string;
-  updated_at: string;
-}
-
-export interface H5PContentResponse {
-  output: H5PContent[];
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {

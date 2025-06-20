@@ -273,3 +273,60 @@ export interface H5PContent {
 export interface H5PContentResponse {
   output: H5PContent[];
 }
+
+export const QuizDataStatus = {
+  NEW: 'new',
+  UPDATE: 'update',
+  NO_CHANGE: 'no_change',
+} as const;
+
+export type QuizDataStatus = (typeof QuizDataStatus)[keyof typeof QuizDataStatus];
+
+export type QuizQuestionType =
+  | 'true_false'
+  | 'single_choice'
+  | 'multiple_choice'
+  | 'open_ended'
+  | 'fill_in_the_blank'
+  | 'short_answer'
+  | 'matching'
+  | 'image_matching'
+  | 'image_answering'
+  | 'ordering'
+  | 'h5p';
+
+export interface QuizQuestionOption {
+  _data_status: QuizDataStatus;
+  is_saved: boolean;
+  answer_id: ID;
+  belongs_question_id: ID;
+  belongs_question_type: QuizQuestionType;
+  answer_title: string;
+  is_correct: '0' | '1';
+  image_id?: ID;
+  image_url?: string;
+  answer_two_gap_match: string;
+  answer_view_format: string;
+  answer_order: number;
+}
+
+export interface QuizQuestion {
+  _data_status: QuizDataStatus;
+  question_id: ID;
+  question_title: string;
+  question_description: string;
+  question_mark: number;
+  answer_explanation: string;
+  question_order: number;
+  question_type: QuizQuestionType;
+  question_settings: {
+    question_type: QuizQuestionType;
+    answer_required: boolean;
+    randomize_question: boolean;
+    question_mark: number;
+    show_question_mark: boolean;
+    has_multiple_correct_answer: boolean;
+    is_image_matching: boolean;
+  };
+  question_answers: QuizQuestionOption[];
+}
