@@ -1,6 +1,6 @@
 <?php
 /**
- * Course Filter views
+ * List Filter views
  *
  * A common filter element for all the backend pages
  *
@@ -68,7 +68,7 @@ if ( isset( $data ) ) : ?>
 		?>
 
 		<div class="tutor-wp-dashboard-filter-right tutor-d-flex tutor-flex-wrap tutor-gap-1 <?php echo esc_attr( $filters_count > 2 ? 'tutor-flex-column' : 'tutor-flex-row-reverse' ); ?>">
-			<div class="tutor-d-flex tutor-flex-wrap tutor-align-center tutor-justify-end tutor-gap-1 tutor-ml-16">
+			<div class="tutor-d-flex tutor-flex-wrap tutor-align-center tutor-justify-end tutor-gap-1 <?php echo esc_attr( $filters_count > 0 ? 'tutor-ml-16' : '' ); ?>">
 				<?php if ( isset( $data['filters'] ) ) : ?>
 				<div class="tutor-wp-dashboard-filters tutor-dropdown-parent">
 					<button type="button" class="tutor-wp-dashboard-filters-button <?php echo esc_attr( $filters_count > 0 ? 'active' : '' ); ?>" action-tutor-dropdown="toggle">
