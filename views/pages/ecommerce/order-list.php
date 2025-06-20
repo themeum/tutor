@@ -42,6 +42,56 @@ $navbar_data    = array(
 	'button_url'   => $add_course_url,
 );
 
+$status_option = array(
+	array(
+		'key'   => '',
+		'title' => __( 'All', 'tutor' ),
+	),
+	array(
+		'key'   => 'incomplete',
+		'title' => __( 'Incomplete', 'tutor' ),
+	),
+	array(
+		'key'   => 'completed',
+		'title' => __( 'Completed', 'tutor' ),
+	),
+	array(
+		'key'   => 'cancelled',
+		'title' => __( 'Cancelled', 'tutor' ),
+	),
+	array(
+		'key'   => 'trash',
+		'title' => __( 'Trash', 'tutor' ),
+	),
+);
+
+$payment_status = array(
+	array(
+		'key'   => '',
+		'title' => __( 'Select', 'tutor' ),
+	),
+	array(
+		'key'   => 'paid',
+		'title' => __( 'Paid', 'tutor' ),
+	),
+	array(
+		'key'   => 'unpaid',
+		'title' => __( 'Unpaid', 'tutor' ),
+	),
+	array(
+		'key'   => 'failed',
+		'title' => __( 'Failed', 'tutor' ),
+	),
+	array(
+		'key'   => 'refunded',
+		'title' => __( 'Refunded', 'tutor' ),
+	),
+	array(
+		'key'   => 'partially-refunded',
+		'title' => __( 'Partially Refunded', 'tutor' ),
+	),
+);
+
 /**
  * Bulk action & filters
  */
@@ -49,15 +99,31 @@ $filters = array(
 	'bulk_action'  => true,
 	'bulk_actions' => $order_controller->prepare_bulk_actions(),
 	'ajax_action'  => 'tutor_order_bulk_action',
-	'filters'      => true,
-);
-
-$available_status = array(
-	'publish' => array( __( 'Publish', 'tutor' ), 'select-success' ),
-	'pending' => array( __( 'Pending', 'tutor' ), 'select-warning' ),
-	'trash'   => array( __( 'Trash', 'tutor' ), 'select-danger' ),
-	'draft'   => array( __( 'Draft', 'tutor' ), 'select-default' ),
-	'private' => array( __( 'Private', 'tutor' ), 'select-default' ),
+	'filters'      => array(
+		array(
+			'label'      => __( 'Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'data',
+			'options'    => $status_option,
+			'searchable' => false,
+			'value'      => Input::get( 'data', '' ),
+		),
+		array(
+			'label'      => __( 'Payment Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'payment-status',
+			'options'    => $payment_status,
+			'show_label' => true,
+			'value'      => Input::get( 'payment-status', '' ),
+		),
+		array(
+			'label'      => __( 'Date', 'tutor' ),
+			'field_type' => 'date',
+			'field_name' => 'date',
+			'show_label' => true,
+			'value'      => Input::get( 'date', '' ),
+		),
+	),
 );
 
 ?>
@@ -67,12 +133,12 @@ $available_status = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
-	<div class="tutor-admin-body">
+	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-mt-24">
 			<div class="tutor-table-responsive">
 

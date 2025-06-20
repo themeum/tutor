@@ -50,6 +50,56 @@ $navbar_data = array(
 	'button_url'   => $coupon_controller::get_coupon_page_url() . '&action=add_new',
 );
 
+$status_option = array(
+	array(
+		'key'   => '',
+		'title' => __( 'All', 'tutor' ),
+	),
+	array(
+		'key'   => 'active',
+		'title' => __( 'Active', 'tutor' ),
+	),
+	array(
+		'key'   => 'inactive',
+		'title' => __( 'Inactive', 'tutor' ),
+	),
+	array(
+		'key'   => 'trash',
+		'title' => __( 'Trash', 'tutor' ),
+	),
+);
+
+$applies_to = array(
+	array(
+		'key'   => '',
+		'title' => __( 'Select', 'tutor' ),
+	),
+	array(
+		'key'   => 'all_courses_and_bundles',
+		'title' => __( 'All courses and bundles', 'tutor' ),
+	),
+	array(
+		'key'   => 'all_courses',
+		'title' => __( 'All courses', 'tutor' ),
+	),
+	array(
+		'key'   => 'all_bundles',
+		'title' => __( 'All bundles', 'tutor' ),
+	),
+	array(
+		'key'   => 'specific_courses',
+		'title' => __( 'Specific courses', 'tutor' ),
+	),
+	array(
+		'key'   => 'specific_bundles',
+		'title' => __( 'Specific bundles', 'tutor' ),
+	),
+	array(
+		'key'   => 'specific_category',
+		'title' => __( 'Specific category', 'tutor' ),
+	),
+);
+
 /**
  * Bulk action & filters
  */
@@ -57,7 +107,24 @@ $filters = array(
 	'bulk_action'  => $coupon_controller->bulk_action,
 	'bulk_actions' => $coupon_controller->prepare_bulk_actions(),
 	'ajax_action'  => 'tutor_coupon_bulk_action',
-	'filters'      => true,
+	'filters'      => array(
+		array(
+			'label'      => __( 'Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'data',
+			'options'    => $status_option,
+			'searchable' => false,
+			'value'      => Input::get( 'data', '' ),
+		),
+		array(
+			'label'      => __( 'Applies To', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'applies_to',
+			'options'    => $applies_to,
+			'show_label' => true,
+			'value'      => Input::get( 'applies_to', '' ),
+		),
+	),
 );
 
 ?>
@@ -67,13 +134,13 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) );
 	?>
-	<div class="tutor-admin-body">
+	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-mt-24">
 			<div class="tutor-table-responsive">
 
