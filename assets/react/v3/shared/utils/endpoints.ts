@@ -133,7 +133,7 @@ const endpoints = {
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
   DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
 
-  // @TODO: Will be chnages when API is constructed
+  // @TODO: Will be changed when API is constructed
   // CONTENT BANK
   GET_CONTENT_BANK_COLLECTIONS: 'tutor_pro_get_content_bank_collections',
   GET_CONTENT_BANK_COLLECTION_DETAILS: 'tutor_pro_get_content_bank_collection_details',
