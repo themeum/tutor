@@ -190,6 +190,8 @@ gulp.task('copy', function () {
 			'!./includes/droip/**',
 			'!./cypress/**',
 			'!./cypress.config.ts',
+			'!.husky',
+			'!.lintstagedrc'
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });

@@ -36,7 +36,9 @@ export async function getVimeoVideoDuration(videoUrl: string): Promise<number | 
 
     const duration = Number.parseInt(durationElement.textContent, 10);
     return duration; // in seconds
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(__('Error fetching Vimeo video duration:', 'tutor'), error);
     return null;
   }
 }

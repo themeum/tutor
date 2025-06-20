@@ -162,7 +162,9 @@ const getVideoDuration = async ({ source, url, getYouTubeVideoDurationMutation }
       return duration;
     }
     return null;
-  } catch {
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error getting video duration:', error);
     return null;
   }
 };
