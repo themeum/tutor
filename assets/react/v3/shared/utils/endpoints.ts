@@ -140,6 +140,8 @@ const endpoints = {
   CREATE_CONTENT_BANK_COLLECTION: 'tutor-pro_create_content_bank_collection',
   GET_CONTENT_DETAILS: 'tutor_pro_get_content_details',
   SAVE_LESSON_CONTENT: 'tutor_pro_save_lesson_content',
+  SAVE_ASSIGNMENT_CONTENT: 'tutor_pro_save_assignment_content',
+  SAVE_QUESTION_CONTENT: 'tutor_pro_save_question_content',
 } as const;
 
 export default endpoints;

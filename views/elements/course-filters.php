@@ -14,7 +14,7 @@
 use TUTOR\Input;
 
 if ( isset( $data ) ) : ?>
-<div class="tutor-admin-container tutor-admin-container-lg tutor-mt-24">
+<div class="tutor-admin-container tutor-admin-container-lg">
 	<div class="tutor-wp-dashboard-course-filter tutor-justify-<?php echo esc_attr( ! empty( $data['bulk_action'] ) ? 'between' : 'end' ); ?>">
 		<?php if ( isset( $data['bulk_action'] ) && true === $data['bulk_action'] ) : ?>
 		<form id="tutor-admin-bulk-action-form" action method="post">

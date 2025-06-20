@@ -15,9 +15,6 @@ if ( isset( $data ) && count( $data ) ) : ?>
 		<div class="tutor-wp-dashboard-course-header-inner">
 			<div>
 				<span class="tutor-fs-4 tutor-fw-normal tutor-color-black <?php echo isset( $data['sub_page_title'] ) ? 'tutor-mr-16' : ''; ?>">
-					<?php if ( isset( $data['icon'] ) && ! empty( $data['icon'] ) ) : ?>
-						<i class="<?php echo esc_attr( $data['icon'] ); ?> tutor-mr-8"></i>
-					<?php endif; ?>
 					<?php echo esc_html( $data['page_title'] ); ?>
 				</span>
 
