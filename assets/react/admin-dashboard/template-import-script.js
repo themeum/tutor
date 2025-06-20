@@ -99,9 +99,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		const { type } = event.data;
 		switch (type) {
 			case "RETURN_DROIP_VARIABLE_DATA": {
-				if (event.data.droipCSSVariable?.data?.length > 0) {
+				if (event.data.droipCSSVariable?.data?.[0]?.modes.length > 1) {
 					const presetHeading = document.querySelector('.tutor-droip-color-presets-heading');
 					presetHeading.style.display = 'block';
+					const templateColorPresets = document.querySelector('#droip-color-modes');
+					templateColorPresets.style.display = 'block';
 
 					const variables = event.data.droipCSSVariable.data[0];
 					const modes = variables.modes;
@@ -146,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
 								const selectedMode = singleMode.getAttribute("data-mode");
 								handlePaletteSelect(selectedMode);
 								addActiveClassOnModeChange(selectedMode);
-								//
 							});
 						});
 				}
@@ -162,11 +163,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	};
 
 	const addActiveClassOnModeChange = (mode) => {
-		document.querySelectorAll(".color-palette")
-			.forEach((palette) => {
-				palette.classList.remove("active");
-			});
-		document.querySelector('[data-mode="' + mode + '"]').classList.add('active')
+		const elements = document.querySelectorAll(".color-palette");
+		if (!elements) return;
+		elements.forEach((palette) => {
+			palette.classList.remove("active");
+		});
+		document.querySelector('[data-mode="' + mode + '"]')?.classList?.add('active')
 	}
 
 	const sendMessageToIframe = (message) => {
