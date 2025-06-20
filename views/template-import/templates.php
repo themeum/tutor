@@ -80,7 +80,6 @@
 					<iframe id="tutor-template-preview-iframe" src="" frameborder="0"></iframe>
 				</div>
 				<div class="tutor-template-preview-import-area tutor-flex-column tutor-justify-center tutor-gap-1">
-					<!-- <div class="tutor-template-preview-template-details" style="display: none;"> -->
 					<div class="tutor-template-preview-template-details">
 						<div class="tutor-preview-template-name"></div>	
 						<p class="tutor-droip-color-presets-heading" style="display: none;">

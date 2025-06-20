@@ -65,8 +65,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		function resetPreviewModal() {
 			livePreviewModal.style.display = "none";
 			iframe.src = "";
-			// iframeWrapper.style.width = "100%";
-			// iframeWrapper.style.height = "100%";
 			removeActiveClassFromDeviceList(deviceSwitchers);
 			deviceSwitchers[0].classList.add("active");
 			tutorTemplateShimmerEffect.style.display = "none";
@@ -102,13 +100,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		switch (type) {
 			case "RETURN_DROIP_VARIABLE_DATA": {
 				if (event.data.droipCSSVariable?.data?.length > 0) {
-					// const presetWrapper = document.querySelector('.tutor-template-preview-template-details');
-					// presetWrapper.style.display = 'block';
 					const presetHeading = document.querySelector('.tutor-droip-color-presets-heading');
 					presetHeading.style.display = 'block';
 
-
-					// setVariables(event.data.droipCSSVariable.data[0]);
 					const variables = event.data.droipCSSVariable.data[0];
 					const modes = variables.modes;
 
