@@ -19,8 +19,8 @@ import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormMultipleChoiceAndOrdering from '@CourseBuilderComponents/fields/quiz/FormMultipleChoiceAndOrdering';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import FormMultipleChoiceAndOrdering from '@TutorShared/components/fields/quiz/questions/FormMultipleChoiceAndOrdering';
 
 import {
   QuizDataStatus,
@@ -198,6 +198,11 @@ const MultipleChoiceAndOrdering = () => {
                     onRemoveOption={() => handleDeleteOption(index, option)}
                     onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
                     index={index}
+                    hasMultipleCorrectAnswer={hasMultipleCorrectAnswer}
+                    questionType={currentQuestionType}
+                    questionId={activeQuestionId}
+                    validationError={validationError}
+                    setValidationError={setValidationError}
                   />
                 )}
               />
@@ -225,6 +230,9 @@ const MultipleChoiceAndOrdering = () => {
                         onCheckCorrectAnswer={noop}
                         index={index}
                         isOverlay
+                        hasMultipleCorrectAnswer={hasMultipleCorrectAnswer}
+                        questionType={currentQuestionType}
+                        questionId={activeQuestionId}
                       />
                     )}
                   />

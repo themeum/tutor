@@ -15,8 +15,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import FormTrueFalse from '@CourseBuilderComponents/fields/quiz/FormTrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import FormTrueFalse from '@TutorShared/components/fields/quiz/questions/FormTrueFalse';
 
 import {
   QuizDataStatus,
@@ -34,7 +34,7 @@ import { noop } from '@TutorShared/utils/util';
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
 
   const {
     fields: optionsFields,
@@ -152,6 +152,7 @@ const TrueFalse = () => {
                     {...controllerProps}
                     index={index}
                     onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
+                    questionId={activeQuestionId}
                   />
                 )}
               />
@@ -172,7 +173,13 @@ const TrueFalse = () => {
                       `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
-                      <FormTrueFalse {...controllerProps} index={index} onCheckCorrectAnswer={noop} isOverlay />
+                      <FormTrueFalse
+                        {...controllerProps}
+                        index={index}
+                        onCheckCorrectAnswer={noop}
+                        isOverlay
+                        questionId={activeQuestionId}
+                      />
                     )}
                   />
                 );

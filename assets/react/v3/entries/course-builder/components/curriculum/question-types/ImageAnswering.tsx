@@ -18,7 +18,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormImageAnswering from '@CourseBuilderComponents/fields/quiz/FormImageAnswering';
+import FormImageAnswering from '@TutorShared/components/fields/quiz/questions/FormImageAnswering';
 
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
@@ -150,6 +150,9 @@ const ImageAnswering = () => {
                     onDuplicateOption={(data) => handleDuplicateOption(index, data)}
                     onRemoveOption={() => handleDeleteOption(index, option)}
                     index={index}
+                    questionId={activeQuestionId}
+                    validationError={validationError}
+                    setValidationError={setValidationError}
                   />
                 )}
               />
@@ -176,6 +179,7 @@ const ImageAnswering = () => {
                         onRemoveOption={noop}
                         index={index}
                         isOverlay
+                        questionId={activeQuestionId}
                       />
                     )}
                   />

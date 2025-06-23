@@ -16,9 +16,9 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import FormMatching from '@CourseBuilderComponents/fields/quiz/FormMatching';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormMatching from '@TutorShared/components/fields/quiz/questions/FormMatching';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { QuizDataStatus, type QuizForm, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
@@ -44,7 +44,7 @@ const Matching = () => {
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
 
-  const imageMatching = useWatch({
+  const isImageMatching = useWatch({
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching',
     defaultValue: false,
@@ -76,7 +76,7 @@ const Matching = () => {
         answer_title: '',
         is_correct: '0',
         belongs_question_id: activeQuestionId,
-        belongs_question_type: imageMatching ? 'image_matching' : 'matching',
+        belongs_question_type: isImageMatching ? 'image_matching' : 'matching',
         answer_order: optionsFields.length,
         answer_two_gap_match: '',
         answer_view_format: '',
@@ -154,6 +154,10 @@ const Matching = () => {
                     index={index}
                     onDuplicateOption={(data) => handleDuplicateOption(index, data)}
                     onRemoveOption={() => handleDeleteOption(index, option)}
+                    isImageMatching={isImageMatching}
+                    questionId={activeQuestionId}
+                    validationError={validationError}
+                    setValidationError={setValidationError}
                   />
                 )}
               />
@@ -180,6 +184,8 @@ const Matching = () => {
                         onDuplicateOption={noop}
                         onRemoveOption={noop}
                         isOverlay
+                        isImageMatching={isImageMatching}
+                        questionId={activeQuestionId}
                       />
                     )}
                   />
