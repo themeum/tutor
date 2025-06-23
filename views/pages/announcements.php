@@ -122,7 +122,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	?>
 
-	<div class="tutor-px-20 tutor-mb-24">
+	<div class="tutor-admin-container tutor-admin-container-lg tutor-mb-24">
 		<div class="tutor-card tutor-p-24">
 			<div class="tutor-row tutor-align-lg-center">
 				<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
@@ -153,7 +153,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-body">
+	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-admin-announcements-list tutor-mt-16">
 		<?php
 			$announcements         = $the_query->have_posts() ? $the_query->posts : array();

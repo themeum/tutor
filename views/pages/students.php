@@ -101,7 +101,7 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-body tutor-mt-16">
+	<div class="tutor-admin-container tutor-admin-container-lg tutor-mt-16">
 		<?php if ( is_array( $students_list ) && count( $students_list ) ) : ?>
 			<div class="tutor-table-responsive tutor-dashboard-list-table">
 				<table class="tutor-table tutor-table-middle tutor-table-with-checkbox">

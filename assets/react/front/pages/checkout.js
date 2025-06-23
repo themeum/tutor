@@ -80,12 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 shouldShowTaxInfo(paymentMethodName);
 
-                const paymentInstructions = clickedOption.dataset.paymentInstruction;
-                if (paymentInstructions) {
-                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').innerHTML = atob(paymentInstructions);
-                } else {
-                    document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                const instructionsContainer = document.querySelector('.tutor-payment-instructions');
+                if (instructionsContainer) {
+                    const paymentInstructions = clickedOption.querySelector('.tutor-payment-item-instructions');
+                    if (paymentInstructions) {
+                        instructionsContainer.classList.remove('tutor-d-none');
+                        instructionsContainer.innerHTML = paymentInstructions.innerHTML;
+                    } else {
+                        instructionsContainer.classList.add('tutor-d-none');
+                    }
                 }
             }
 
