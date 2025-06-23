@@ -103,7 +103,7 @@ $navbar_data = array(
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
-	<div class="tutor-admin-body">
+	<div class="tutor-admin-container tutor-admin-container-lg">
 		<div class="tutor-dashboard-list-table tutor-mt-16">
 			<?php
 				tutor_load_template_from_custom_path(
