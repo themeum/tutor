@@ -330,3 +330,5 @@ export interface QuizQuestion {
   };
   question_answers: QuizQuestionOption[];
 }
+
+export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
