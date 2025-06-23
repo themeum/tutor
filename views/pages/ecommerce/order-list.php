@@ -111,9 +111,9 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
-		<div class="tutor-mt-24">
+		<div class="tutor-mt-24 tutor-dashboard-list-table">
 			<div class="tutor-table-responsive">
-
+				<?php if ( is_array( $orders ) && count( $orders ) ) : ?>
 				<table class="tutor-table tutor-table-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
@@ -153,7 +153,7 @@ $filters = array(
 					</thead>
 
 					<tbody>
-						<?php if ( is_array( $orders ) && count( $orders ) ) : ?>
+						
 							<?php
 							foreach ( $orders as $key => $order ) : //phpcs:ignore
 								$user_data = get_userdata( $order->user_id );
@@ -228,15 +228,11 @@ $filters = array(
 									</td>
 								</tr>
 							<?php endforeach; ?>
-						<?php else : ?>
-							<tr>
-								<td colspan="100%" class="column-empty-state">
-									<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-								</td>
-							</tr>
-						<?php endif; ?>
 					</tbody>
 				</table>
+				<?php else : ?>
+					<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', array() ); ?>
+				<?php endif; ?>
 
 				<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 					<?php

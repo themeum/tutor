@@ -111,9 +111,9 @@ $filters = array(
 		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) );
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
-		<div class="tutor-mt-24">
+		<div class="tutor-mt-24 tutor-dashboard-list-table">
 			<div class="tutor-table-responsive">
-
+				<?php if ( is_array( $coupons ) && count( $coupons ) ) : ?>
 				<table class="tutor-table tutor-table-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
@@ -147,7 +147,7 @@ $filters = array(
 					</thead>
 
 					<tbody>
-						<?php if ( is_array( $coupons ) && count( $coupons ) ) : ?>
+						
 							<?php
 							foreach ( $coupons as $key => $coupon ) :
 								?>
@@ -225,15 +225,11 @@ $filters = array(
 									</td>
 								</tr>
 							<?php endforeach; ?>
-						<?php else : ?>
-							<tr>
-								<td colspan="100%" class="column-empty-state">
-									<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-								</td>
-							</tr>
-						<?php endif; ?>
 					</tbody>
 				</table>
+				<?php else : ?>
+					<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', array() ); ?>
+				<?php endif; ?>
 
 				<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 					<?php
