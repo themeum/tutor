@@ -4,7 +4,7 @@ import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import type { FormControllerProps } from '@TutorShared/utils/form';
+import { type FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
@@ -155,9 +155,7 @@ const FormTimeInput = ({
                             setIsOpen(false);
                           }}
                           onMouseOver={() => setActiveIndex(index)}
-                          onMouseLeave={() => {
-                            index !== activeIndex && setActiveIndex(-1);
-                          }}
+                          onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
                           onFocus={() => setActiveIndex(index)}
                         >
                           {option}

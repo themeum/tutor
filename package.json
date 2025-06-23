@@ -18,7 +18,8 @@
     "eslint:fix": "npx eslint ./assets/react/v3 --fix",
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
-    "test": "cypress run"
+    "test": "cypress run",
+    "prepare": "husky && husky install"
   },
   "keywords": [
     "lms",
@@ -72,6 +73,8 @@
     "gulp-sourcemaps": "^2.6.5",
     "gulp-watch": "^5.0.1",
     "gulp-zip": "^5.0.2",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.0",
     "path": "^0.12.7",
     "sass": "^1.62.1",
     "sass-loader": "^10.1.1",
