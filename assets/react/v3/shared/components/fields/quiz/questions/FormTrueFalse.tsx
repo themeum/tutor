@@ -2,14 +2,13 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type ID } from '@TutorShared/utils/types';
+import { type ID, type QuizQuestionOption } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
 
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
