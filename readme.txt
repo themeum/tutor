@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.6.1
+Stable tag: 3.6.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.6.2 - Jun 23, 2025
+
+Fix: Fixed an issue where the wrong graph was generated on the Earnings Report page. (Pro)
+Fix: Fixed an issue where scheduled courses could be purchased from the WooCommerce shop page.
+Fix: Fixed the "Filter by Course" functionality not working in the Student tab on the Analytics page. (Pro)
+Fix: Fixed an issue where the Save Settings button would disappear when monetization was set to Paid Memberships Pro (PMPro). (Pro)
+Fix: Fixed an issue where old bundled courses were not appearing under the Courses tab for instructors. (Pro)
 
 = 3.6.1 - Jun 03, 2025
 
