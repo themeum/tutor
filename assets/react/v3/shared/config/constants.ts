@@ -157,3 +157,9 @@ export const VisibilityControlKeys = {
     },
   },
 } as const;
+
+export const QuizDataStatus = {
+  NEW: 'new',
+  UPDATE: 'update',
+  NO_CHANGE: 'no_change',
+} as const;
