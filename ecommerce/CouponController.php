@@ -449,7 +449,7 @@ class CouponController extends BaseController {
 		$tabs = array();
 
 		$tabs [] = array(
-			'key'   => 'all',
+			'key'   => '',
 			'title' => __( 'All', 'tutor' ),
 			'value' => $this->model->get_coupon_count( $where, $search ),
 			'url'   => $url . '&data=all',
