@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { nanoid } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -20,7 +20,7 @@ interface RadioProps {
 }
 
 const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props: RadioProps, ref) => {
-  const { name, checked, readOnly, disabled = false, labelCss, inputCss, label, icon, value, onChange, onBlur } = props;
+  const { name, checked, readOnly, disabled = false, labelCss, label, icon, value, onChange, onBlur } = props;
   const id = nanoid();
 
   return (

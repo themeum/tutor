@@ -118,6 +118,7 @@ const FieldRenderer = ({
       <ComponentErrorBoundary
         componentName={`field ${name}`}
         onError={(error, errorInfo) => {
+          // eslint-disable-next-line no-console
           console.warn(`Field ${name} failed to render:`, { error, errorInfo });
         }}
       >

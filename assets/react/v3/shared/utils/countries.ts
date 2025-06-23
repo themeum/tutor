@@ -30,6 +30,7 @@ export const setCountriesData = (newCountriesData: Country[]) => {
     const data = await response.json();
     setCountriesData(data);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Failed to fetch countries data', error);
   }
 })();

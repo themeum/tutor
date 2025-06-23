@@ -114,8 +114,6 @@ const CustomEditorOverlay = ({
               try {
                 setLoadingButton('back_to');
                 await onBackToWPEditorClick?.(editorUsed.name);
-              } catch (error) {
-                console.error(error);
               } finally {
                 setLoadingButton('');
               }
@@ -140,8 +138,6 @@ const CustomEditorOverlay = ({
             setLoadingButton('edit_with');
             await onCustomEditorButtonClick?.(editorUsed);
             window.location.href = editorUsed.link;
-          } catch (error) {
-            console.error(error);
           } finally {
             setLoadingButton('');
           }
@@ -257,8 +253,6 @@ const FormWPEditor = ({
                       setCustomEditorLoading(editor.name);
                       await onCustomEditorButtonClick?.(editor);
                       window.location.href = editor.link;
-                    } catch (error) {
-                      console.error(error);
                     } finally {
                       setCustomEditorLoading(null);
                     }

@@ -42,6 +42,7 @@ const TaxSettingsPage = () => {
   useEffect(() => {
     window.addEventListener('tutor_option_saved', tutorOptionSaved);
     return () => window.removeEventListener('tutor_option_saved', tutorOptionSaved);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
