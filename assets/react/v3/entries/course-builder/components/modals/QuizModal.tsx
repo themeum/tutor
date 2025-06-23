@@ -19,7 +19,6 @@ import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionCond
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
 import QuestionList from '@CourseBuilderComponents/curriculum/QuestionList';
 import QuizSettings from '@CourseBuilderComponents/curriculum/QuizSettings';
-import FormQuestionTitle from '@CourseBuilderComponents/fields/FormQuestionTitle';
 import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContext';
 import {
   convertQuizFormDataToPayload,
@@ -28,6 +27,7 @@ import {
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
+import FormQuestionTitle from '@TutorShared/components/fields/quiz/FormQuestionTitle';
 
 import { CURRENT_VIEWPORT, modal } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -312,6 +312,7 @@ const QuizModal = ({
                                 onToggleEdit={(isEdit) => {
                                   setIsEdit(isEdit);
                                 }}
+                                wrapperCss={styles.quizTitle}
                               />
                             )}
                           />
@@ -514,10 +515,19 @@ const styles = {
     }
   `,
   quizTitle: css`
-    flex: 1;
-    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[8]};
-    background-color: ${colorTokens.background.white};
-    border-radius: ${borderRadius[6]};
+    padding: 0;
+
+    [data-placeholder] {
+      padding: 0;
+    }
+
+    [data-question-title-edit-button] {
+      background-color: ${colorTokens.background.white};
+    }
+
+    &:hover {
+      background-color: transparent;
+    }
   `,
   quizForm: css`
     display: flex;

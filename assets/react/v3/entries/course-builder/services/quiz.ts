@@ -18,12 +18,7 @@ import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertToErrorMessage, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
-import {
-  type H5PContentResponse,
-  type ID,
-  type TopicContentType,
-  type TutorMutationResponse,
-} from '@TutorShared/utils/types';
+import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
 
 export const QuizDataStatus = {
   NEW: 'new',
@@ -634,20 +629,6 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
   }
 
   return QuizDataStatus.NO_CHANGE;
-};
-
-const getH5PQuizContents = (search: string) => {
-  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT, {
-    search_filter: search,
-  });
-};
-
-export const useGetH5PQuizContentsQuery = (search: string, contentType: TopicContentType) => {
-  return useQuery({
-    queryKey: ['H5PQuizContents', search],
-    queryFn: () => getH5PQuizContents(search).then((response) => response.data),
-    enabled: contentType === 'tutor_h5p_quiz',
-  });
 };
 
 const getH5PQuizContentById = (id: ID) => {

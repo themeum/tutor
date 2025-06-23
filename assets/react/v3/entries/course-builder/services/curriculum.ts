@@ -7,7 +7,6 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
 import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
-import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
 import { Addons } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
@@ -551,19 +550,5 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
     queryKey: ['GoogleMeet', meetingId],
     queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
-  });
-};
-
-const getH5PLessonContents = (search: string) => {
-  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
-    search_filter: search,
-  });
-};
-
-export const useGetH5PLessonContentsQuery = (search: string, contentType: TopicContentType) => {
-  return useQuery({
-    queryKey: ['H5PLessonContents', search],
-    queryFn: () => getH5PLessonContents(search).then((response) => response.data),
-    enabled: contentType === 'lesson',
   });
 };
