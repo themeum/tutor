@@ -25,13 +25,11 @@
 			<rect x="31.9365" y="38.4766" width="15.0088" height="1.2" rx="0.6" fill="white"/>
 		</svg>
 
-		<h6 class="tutor-fs-6 tutor-fw-bold tutor-mt-0 tutor-mb-8 tutor-mt-32">
-			<?php esc_html_e( 'No Courses Found.', 'tutor' ); ?>
+		<h6 class="tutor-fs-6 tutor-fw-bold tutor-mb-0 tutor-mt-32">
+			<?php echo isset( $data['title'] ) ? esc_html( $data['title'] ) : __( 'No Data Found.', 'tutor' ); ?>
 		</h6>
-		<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-gap-4px">
-			<p class="tutor-fs-7 tutor-color-hints tutor-m-0">
-				<?php esc_html_e( 'Try using different keywords', 'tutor' ); ?>
-			</p>
-		</div>
+		<p class="tutor-fs-7 tutor-color-hints tutor-mt-8 tutor-mb-0">
+			<?php echo isset( $data['sub_title'] ) ? esc_html( $data['sub_title'] ) : __( 'Try using different keywords', 'tutor' ); ?>
+		</p>
 	</div>
 </div>

@@ -116,6 +116,7 @@ const TutorDateRangePicker = () => {
 					formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
 					calendarStartDay={_tutorobject.start_of_week}
 					calendarContainer={ContainerWrapper}
+					popperPlacement="bottom-end"
 					renderCustomHeader={(props) => (
 						<CustomHeader
 							{...props}

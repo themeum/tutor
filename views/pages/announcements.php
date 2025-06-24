@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Input;
 use TUTOR\Announcements;
+use Tutor\Models\CourseModel;
+
 $announcement_obj = new Announcements();
 
 $limit         = tutor_utils()->get_option( 'pagination_per_page' );
@@ -67,15 +69,46 @@ $navbar_data = array(
 	'page_title' => $announcement_obj->page_title,
 );
 
+$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+$course_options = array(
+	array(
+		'key'   => '',
+		'title' => __( 'All Courses', 'tutor' ),
+	),
+);
+if ( ! empty( $courses ) ) {
+	foreach ( $courses as $course ) {
+		$course_options[] = array(
+			'key'   => $course->ID,
+			'title' => $course->post_title,
+		);
+	}
+}
+
 /**
  * Filters for sorting searching
  */
 $filters = array(
-	'bulk_action'   => $announcement_obj->bulk_action,
-	'bulk_actions'  => $announcement_obj->prepare_bulk_actions(),
-	'ajax_action'   => 'tutor_announcement_bulk_action',
-	'filters'       => true,
-	'course_filter' => true,
+	'bulk_action'  => $announcement_obj->bulk_action,
+	'bulk_actions' => $announcement_obj->prepare_bulk_actions(),
+	'ajax_action'  => 'tutor_announcement_bulk_action',
+	'filters'      => array(
+		array(
+			'label'      => __( 'Courses', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'course-id',
+			'options'    => $course_options,
+			'searchable' => true,
+			'value'      => Input::get( 'course-id', '' ),
+		),
+		array(
+			'label'      => __( 'Date', 'tutor' ),
+			'field_type' => 'date',
+			'field_name' => 'date',
+			'show_label' => true,
+			'value'      => Input::get( 'date', '' ),
+		),
+	),
 );
 ?>
 
@@ -84,12 +117,12 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$filters_template = tutor()->path . 'views/elements/filters.php';
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 	?>
 
-	<div class="tutor-px-20 tutor-mb-24">
+	<div class="tutor-admin-container tutor-admin-container-lg tutor-mb-24">
 		<div class="tutor-card tutor-p-24">
 			<div class="tutor-row tutor-align-lg-center">
 				<div class="tutor-col-lg-auto tutor-mb-16 tutor-mb-lg-0">
@@ -120,8 +153,8 @@ $filters = array(
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-body">
-		<div class="tutor-admin-announcements-list tutor-mt-24">
+	<div class="tutor-admin-container tutor-admin-container-lg">
+		<div class="tutor-admin-announcements-list tutor-mt-16">
 		<?php
 			$announcements         = $the_query->have_posts() ? $the_query->posts : array();
 			$announcement_template = tutor()->path . '/views/fragments/announcement-list.php';
