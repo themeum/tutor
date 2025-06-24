@@ -26,6 +26,7 @@ export default [
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'react/display-name': 'off',
+      'no-console': 'error',
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {

@@ -116,6 +116,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
 
   const openMediaLibrary = useCallback(() => {
     if (!window.wp?.media) {
+      // eslint-disable-next-line no-console
       console.error('WordPress media library is not available');
       return;
     }

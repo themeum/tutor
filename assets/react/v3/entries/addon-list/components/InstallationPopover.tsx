@@ -69,10 +69,12 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
     if (percentage === 100) {
       handleSuccess();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [percentage]);
 
   useEffect(() => {
     if (installingIdx === 0) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       interval = setInterval(() => {
         setPercentage((prevSeconds) => {
           if (prevSeconds < 77) {

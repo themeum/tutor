@@ -47,6 +47,7 @@ const FormRangeSliderField = ({
 
   useEffect(() => {
     field.onChange(debounceValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debounceValue, field.onChange]);
 
   useEffect(() => {
@@ -106,7 +107,7 @@ const FormRangeSliderField = ({
           <input
             type="text"
             css={styles.input}
-            value={String(value) ?? ''}
+            value={String(value)}
             onChange={(event) => {
               setValue(Number(event.target.value));
             }}
