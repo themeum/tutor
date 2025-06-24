@@ -314,7 +314,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.6.2 - Jun 24, 2025
 
-Update: Pathwise theme is now fully functional. (Phase 1)
+Update: Pathwise theme is now fully functional.
 Fix: Resolved an issue where the wrong graph was displayed on the Earnings Report page. (Pro)
 Fix: Prevented scheduled courses from being purchasable via the WooCommerce shop page.
 Fix: Restored functionality of the "Filter by Course" option in the Student tab on the Analytics page. (Pro)
