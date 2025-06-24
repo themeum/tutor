@@ -465,8 +465,8 @@ class EmailController {
 			$replacable['{order_id}']             = '#' . $order_data->id;
 			$replacable['{order_date}']           = tutor_i18n_get_formated_date( $order_data->created_at_gmt, get_option( 'date_format' ) );
 			$replacable['{order_total}']          = tutor_get_formatted_price( $order_data->total_price );
-			$replacable['{order_status}']         = ucfirst( $order_data->order_status );
-			$replacable['{order_payment_status}'] = ucfirst( $order_data->payment_status );
+			$replacable['{order_status}']         = tutor_utils()->translate_dynamic_text( $order_data->order_status );
+			$replacable['{order_payment_status}'] = tutor_utils()->translate_dynamic_text( $order_data->payment_status );
 
 			$student = get_userdata( $order_data->student->id );
 			if ( is_a( $student, 'WP_User' ) ) {

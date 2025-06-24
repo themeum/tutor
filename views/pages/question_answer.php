@@ -10,6 +10,8 @@
  */
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
+use TUTOR\Q_And_A;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -32,12 +34,52 @@ $qna            = $qna_object->get_items( $_GET );
 $qna_list       = $qna['items'];
 $qna_pagination = $qna['pagination'];
 
+$status_options = Q_And_A::tabs_key_value();
+
+$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+$course_options = array(
+	array(
+		'key'   => '',
+		'title' => __( 'All Courses', 'tutor' ),
+	),
+);
+if ( ! empty( $courses ) ) {
+	foreach ( $courses as $course ) {
+		$course_options[] = array(
+			'key'   => $course->ID,
+			'title' => $course->post_title,
+		);
+	}
+}
+
 $filters = array(
-	'bulk_action'   => true,
-	'bulk_actions'  => $qna_object->get_bulk_actions(),
-	'ajax_action'   => 'tutor_qna_bulk_action',
-	'filters'       => true,
-	'course_filter' => true,
+	'bulk_action'  => true,
+	'bulk_actions' => $qna_object->get_bulk_actions(),
+	'ajax_action'  => 'tutor_qna_bulk_action',
+	'filters'      => array(
+		array(
+			'label'      => __( 'Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'data',
+			'options'    => $status_options,
+			'value'      => Input::get( 'data', '' ),
+		),
+		array(
+			'label'      => __( 'Courses', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'course-id',
+			'options'    => $course_options,
+			'searchable' => true,
+			'value'      => Input::get( 'course-id', '' ),
+		),
+		array(
+			'label'      => __( 'Date', 'tutor' ),
+			'field_type' => 'date',
+			'field_name' => 'date',
+			'show_label' => true,
+			'value'      => Input::get( 'date', '' ),
+		),
+	),
 );
 
 /**
@@ -48,8 +90,6 @@ $active_tab = Input::get( 'tab', 'all' );
 
 $navbar_data = array(
 	'page_title' => __( 'Question & Answer', 'tutor' ),
-	'tabs'       => \Tutor\Q_And_A::tabs_key_value(),
-	'active'     => $active_tab,
 );
 ?>
 
@@ -58,13 +98,13 @@ $navbar_data = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
-	<div class="tutor-admin-body">
-		<div class="tutor-mt-24">
+	<div class="tutor-admin-container tutor-admin-container-lg">
+		<div class="tutor-dashboard-list-table tutor-mt-16">
 			<?php
 				tutor_load_template_from_custom_path(
 					tutor()->path . '/views/qna/qna-table.php',

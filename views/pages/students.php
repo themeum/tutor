@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Students_List;
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 $students = new Students_List();
 
@@ -44,15 +45,46 @@ $navbar_data = array(
 	'page_title' => $students->page_title,
 );
 
+$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+$course_options = array(
+	array(
+		'key'   => '',
+		'title' => __( 'All Courses', 'tutor' ),
+	),
+);
+if ( ! empty( $courses ) ) {
+	foreach ( $courses as $course ) {
+		$course_options[] = array(
+			'key'   => $course->ID,
+			'title' => $course->post_title,
+		);
+	}
+}
+
 /**
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'   => tutor_utils()->has_user_role( 'administrator' ) ? $students->bulk_action : false,
-	'bulk_actions'  => $students->prpare_bulk_actions(),
-	'ajax_action'   => 'tutor_student_bulk_action',
-	'filters'       => true,
-	'course_filter' => true,
+	'bulk_action'  => tutor_utils()->has_user_role( 'administrator' ) ? $students->bulk_action : false,
+	'bulk_actions' => $students->prpare_bulk_actions(),
+	'ajax_action'  => 'tutor_student_bulk_action',
+	'filters'      => array(
+		array(
+			'label'      => __( 'Courses', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'course-id',
+			'options'    => $course_options,
+			'searchable' => true,
+			'value'      => Input::get( 'course-id', '' ),
+		),
+		array(
+			'label'      => __( 'Date', 'tutor' ),
+			'field_type' => 'date',
+			'field_name' => 'date',
+			'show_label' => true,
+			'value'      => Input::get( 'date', '' ),
+		),
+	),
 );
 
 ?>
@@ -63,15 +95,15 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-body">
+	<div class="tutor-admin-container tutor-admin-container-lg tutor-mt-16">
 		<?php if ( is_array( $students_list ) && count( $students_list ) ) : ?>
-			<div class="tutor-table-responsive tutor-mt-24">
+			<div class="tutor-table-responsive tutor-dashboard-list-table">
 				<table class="tutor-table tutor-table-middle tutor-table-with-checkbox">
 					<thead>
 						<tr>
@@ -101,9 +133,10 @@ $filters = array(
 					</thead>
 
 					<tbody>
-						<?php foreach ( $students_list as $list ) :
+						<?php
+						foreach ( $students_list as $list ) :
 							$reg_date = $list->user_registered;
-						?>
+							?>
 							<tr>
 								<td>
 									<div class="tutor-d-flex">
@@ -148,7 +181,7 @@ $filters = array(
 										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 											<?php do_action( 'tutor_before_student_details_btn', $list->ID ); ?>
 											<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor_report&sub_page=students&student_id=' . $list->ID ) ); ?>"
-											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+											class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
 												<?php esc_html_e( 'Details', 'tutor' ); ?>
 											</a>
 										</div>
@@ -160,7 +193,7 @@ $filters = array(
 				</table>
 			</div>
 		<?php else : ?>
-			<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+			<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', array() ); ?>
 		<?php endif; ?>
 
 		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
