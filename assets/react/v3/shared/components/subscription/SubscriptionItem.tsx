@@ -110,18 +110,14 @@ export default function SubscriptionItem({
   const duplicateSubscriptionMutation = useDuplicateCourseSubscriptionMutation(courseId);
 
   const handleDeleteSubscription = async () => {
-    try {
-      const response = await deleteSubscriptionMutation.mutateAsync(Number(subscription.id));
+    const response = await deleteSubscriptionMutation.mutateAsync(Number(subscription.id));
 
-      if (response.data) {
-        setIsDeletePopoverOpen(false);
+    if (response.data) {
+      setIsDeletePopoverOpen(false);
 
-        if (isExpanded) {
-          toggleCollapse(subscription.id);
-        }
+      if (isExpanded) {
+        toggleCollapse(subscription.id);
       }
-    } catch (error) {
-      console.error(error);
     }
   };
 

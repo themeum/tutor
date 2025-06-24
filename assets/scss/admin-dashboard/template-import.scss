@@ -92,7 +92,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	.tutor-template-shimmer-effect {
 		padding: 0px;
 		margin: 0 auto;
-		width: 100%;
+		width: 99.4%;
 		position: absolute;
 		bottom: 0px;
 		top: 0px;
@@ -104,6 +104,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		overflow: hidden;
 
 		>div {
 			background: #ddd;
@@ -122,8 +123,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 				animation: tutorTemplateShimmerKeyframe 1.5s infinite;
 			}
 		}
-
-		.tutor-template-shimmer-effect-2-box-1 {}
 
 		.tutor-template-shimmer-effect-2-box-2 {
 			width: 60%;
@@ -247,8 +246,6 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	}
 }
 
-.tutor-template-preview-btn {}
-
 .tutor-template-list {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(274px, 374px));
@@ -358,13 +355,11 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 			vertical-align: middle;
 			color: #212327;
 		}
-
 	}
 }
 
 .tutor-template-preview-frame {
 	width: 100%;
-	height: calc(100vh - 78px);
 	position: relative;
 	max-width: 1320px;
 	margin: auto auto;
@@ -423,10 +418,11 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 
 .tutor-template-preview-iframe-wrapper {
 	width: 100%;
-	height: 100%;
+	max-height: 700px;
 	margin: 0 auto;
 	display: grid;
-	grid-template-columns: 1fr 190px;
+	grid-template-columns: 1128px 190px;
+	overflow-y: hidden;
 
 	.tutor-preview-template-name {
 		font-weight: 500;
@@ -445,22 +441,29 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		margin: 0px 0px 5px 0px
 	}
 
-	#droip-color-presets {
+	#droip-color-modes {
 		padding: 10px 0px;
+		display: none;
 	}
 
 	.tutor-template-preview-iframe-parent {
 		position: relative;
 		margin: 0 auto;
-		width: 100%;
+		width: 101%;
+		padding: 1px;
 		text-align: center;
+		border-radius: 10px;
+		overflow: hidden;
 	}
 
 	#tutor-template-preview-iframe {
-		width: 100%;
-		height: 100%;
+		border: 1px solid #ddd;
+		height: 863px;
 		border-radius: 10px;
 		margin: 0 auto;
+		width: 1400px;
+		transform: scale(0.808);
+		transform-origin: left top;
 	}
 
 	.tutor-template-preview-import-area {
@@ -468,6 +471,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		justify-content: center;
 		padding-left: 20px;
 		padding: 0px 10px 0px 20px;
+		max-height: 700px;
 	}
 }
 

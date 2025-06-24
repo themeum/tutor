@@ -172,7 +172,6 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
       cy.getByInputName('tutor-bulk-checkbox-all').then(($checkboxes) => {
         const checkboxesArray = Cypress._.toArray($checkboxes);
         const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
-        console.log(randomIndex);
         cy.wrap(checkboxesArray[randomIndex]).as('randomCheckbox');
         cy.get('@randomCheckbox').check();
         // cy.get(':nth-child(1) > :nth-child(1) > .td-checkbox > .tutor-form-check-input').check();
@@ -191,7 +190,6 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
               cy.get(`select.tutor-table-row-status-update[data-id="${id}"]`)
                 .invoke('attr', 'data-status')
                 .then((status) => {
-                  console.log(status);
                   expect(status).to.include(option);
                 });
             }
@@ -295,7 +293,6 @@ Cypress.Commands.add(
               const $randomOption = Cypress.$($options[randomIndex]);
               const selectedOptionText = $randomOption.text().trim();
               cy.wrap($randomOption).find(dropdownTextSelector).click();
-              console.log(`drop `, selectedOptionText);
               cy.get('body').then(($body) => {
                 if (
                   $body.text().includes('No Data Found from your Search/Filter') ||
@@ -309,7 +306,6 @@ Cypress.Commands.add(
                   cy.wait(500);
                   cy.get(elementTitleSelector).each(($element) => {
                     const elementText = $element.text().trim();
-                    console.log('el ', elementText);
                     expect(elementText).to.contain(selectedOptionText);
                   });
                 }
