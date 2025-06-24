@@ -49,7 +49,15 @@ document.addEventListener('DOMContentLoaded', function () {
 				deviceSwitcher.classList.add("active");
 				let width = this.getAttribute("data-width");
 				let height = this.getAttribute("data-height");
+				let device = this.getAttribute("data-device");
 				iframe.style.width = width;
+				if ('desktop' !== device) {
+					iframe.style.transform = 'scale(0.8085714286)';
+					iframe.style.transformOrigin = 'center top';
+				} else {
+					iframe.style.transform = 'scale(0.8085714286)';
+					iframe.style.transformOrigin = 'left top';
+				}
 			});
 		});
 
@@ -57,13 +65,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		function resetPreviewModal() {
 			livePreviewModal.style.display = "none";
 			iframe.src = "";
-			iframeWrapper.style.width = "100%";
-			iframeWrapper.style.height = "100%";
 			removeActiveClassFromDeviceList(deviceSwitchers);
 			deviceSwitchers[0].classList.add("active");
 			tutorTemplateShimmerEffect.style.display = "none";
 			document.body.style.overflow = 'visible';
-			iframe.style.width = "100%";
+			iframe.style.width = "1400px";
 		}
 
 		// Remove active class from device list
@@ -82,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		// Wait for the iframe to load before interacting with it
 		iframe.addEventListener("load", () => {
 			window.addEventListener("message", handleMessage);
+			const effect2 = document.querySelector('.tutor-template-preview-import-area .tutor-template-shimmer-effect-2');
+			effect2.style.display = 'none';
 			requestDroipVariableData(); // Safe to send message now
 			requestDroipActiveMode();
 		});
@@ -89,19 +97,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const handleMessage = (event) => {
 		const { type } = event.data;
-
 		switch (type) {
 			case "RETURN_DROIP_VARIABLE_DATA": {
-				if (event.data.droipCSSVariable?.data?.length > 0) {
-
+				if (event.data.droipCSSVariable?.data?.[0]?.modes.length > 1) {
 					const presetHeading = document.querySelector('.tutor-droip-color-presets-heading');
 					presetHeading.style.display = 'block';
-					const presetWrapper = document.querySelector('.tutor-template-preview-template-details');
-					presetWrapper.style.display = 'block';
-					const effect2 = document.querySelector('.tutor-template-preview-import-area .tutor-template-shimmer-effect-2');
-					effect2.style.display = 'none';
+					const templateColorPresets = document.querySelector('#droip-color-modes');
+					templateColorPresets.style.display = 'block';
 
-					// setVariables(event.data.droipCSSVariable.data[0]);
 					const variables = event.data.droipCSSVariable.data[0];
 					const modes = variables.modes;
 
@@ -145,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
 								const selectedMode = singleMode.getAttribute("data-mode");
 								handlePaletteSelect(selectedMode);
 								addActiveClassOnModeChange(selectedMode);
-								//
 							});
 						});
 				}
@@ -161,11 +163,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	};
 
 	const addActiveClassOnModeChange = (mode) => {
-		document.querySelectorAll(".color-palette")
-			.forEach((palette) => {
-				palette.classList.remove("active");
-			});
-		document.querySelector('[data-mode="' + mode + '"]').classList.add('active')
+		const elements = document.querySelectorAll(".color-palette");
+		if (!elements) return;
+		elements.forEach((palette) => {
+			palette.classList.remove("active");
+		});
+		document.querySelector('[data-mode="' + mode + '"]')?.classList?.add('active')
 	}
 
 	const sendMessageToIframe = (message) => {

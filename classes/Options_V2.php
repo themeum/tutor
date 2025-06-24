@@ -924,10 +924,9 @@ class Options_V2 {
 										'label' => __( 'Auto Submit', 'tutor' ),
 										'desc'  => __( 'The current quiz answers are submitted automatically.', 'tutor' ),
 									),
-									// 'grace_period' => __( 'The current quiz answers are submitted by students.', 'tutor' )
 									'auto_abandon' => array(
 										'label' => __( 'Auto Abandon', 'tutor' ),
-										'desc'  => __( 'Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor' ),
+										'desc'  => __( 'Attempts must be submitted before time expires, otherwise they will not be counted.', 'tutor' ),
 									),
 								),
 								'desc'           => __( 'Choose which action to follow when the quiz time expires.', 'tutor' ),

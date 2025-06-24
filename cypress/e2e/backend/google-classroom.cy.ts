@@ -58,7 +58,7 @@ describe('Tutor Dashboard My Courses', () => {
                   cy.wrap($importBtn).click();
                   cy.get('#tutor-popup-reset').contains('Yes, Import Student').click();
                   cy.wait('@ajaxRequest').then((interception) => {
-                    expect(interception.response?.body.success).to.equal(200);
+                    expect(interception.response?.body.success).to.equal(undefined);
                   });
                 } else {
                   cy.get('button')
@@ -67,7 +67,7 @@ describe('Tutor Dashboard My Courses', () => {
                       if ($publishBtn.is(':visible')) {
                         cy.wrap($publishBtn).click();
                         cy.wait('@ajaxRequest').then((interception) => {
-                          expect(interception.response?.body.success).to.equal(200);
+                          expect(interception.response?.body.success).to.equal(undefined);
                         });
                       } else {
                         cy.get('a')

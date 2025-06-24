@@ -19,6 +19,7 @@ export const useCollapseExpandAnimation = <T extends HTMLElement>({
       const updatedHeight = heightCalculator === 'scroll' ? ref.current.scrollHeight : ref.current.clientHeight;
       setHeight(updatedHeight);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ref.current, heightCalculator]);
 
   const heightAnimation = useSpring({

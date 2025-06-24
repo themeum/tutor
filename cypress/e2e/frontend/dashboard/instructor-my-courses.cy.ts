@@ -1,5 +1,15 @@
 import endpoints from '@TutorShared/utils/endpoints';
-import { frontendUrls } from '../../../config/page-urls';
+import { backendUrls, frontendUrls } from '../../../config/page-urls';
+
+describe('Tutor Dashboard Instructor Settings', () => {
+  it('should give instructor access to publish courses', () => {
+    cy.visit(`${Cypress.env('base_url')}${backendUrls.SETTINGS}`);
+    cy.loginAsAdmin();
+
+    cy.toggle('tutor_option[instructor_can_publish_course]', '#field_instructor_can_publish_course', true);
+    cy.saveTutorSettings();
+  });
+});
 
 describe('Tutor Dashboard My Courses', () => {
   beforeEach(() => {
@@ -23,16 +33,6 @@ describe('Tutor Dashboard My Courses', () => {
     cy.waitAfterRequest('getCourseDetails');
 
     cy.get('[data-cy=course-builder-submit-button]').click();
-
-    // cy.get("a[title=Exit]").click()
-
-    // <ul class="tutor-nav">
-    // 		<li class="tutor-nav-item">
-    // 			<a class="tutor-nav-link is-active" href="http://localhost:8888/wordpress-tutor/dashboard/reviews">
-    // 				Received (0)
-    // 			</a>
-    // 		</li>
-    // </ul>
   });
 
   it('should draft and publish again a course', () => {

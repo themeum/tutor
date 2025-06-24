@@ -1,10 +1,7 @@
 import { __ } from '@wordpress/i18n';
 import { isValid } from 'date-fns';
-import type { UseControllerProps } from 'react-hook-form';
 
 import type { ProductDiscount } from './types';
-
-type Rule = UseControllerProps['rules'];
 
 export const requiredRule = (): object => ({
   required: { value: true, message: __('This field is required', 'tutor') },

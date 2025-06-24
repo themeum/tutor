@@ -94,68 +94,70 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
             </>
           }
         >
-          <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
-            <div css={styles.infoText}>
-              <div
-                dangerouslySetInnerHTML={{
-                  /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
-                  __html: sprintf(
-                    __(
-                      'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
-                      'tutor',
+          <>
+            <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
+              <div css={styles.infoText}>
+                <div
+                  dangerouslySetInnerHTML={{
+                    /* translators: %1$s and %2$s are opening and closing anchor tags for the "OpenAI User settings" link */
+                    __html: sprintf(
+                      __(
+                        'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
+                        'tutor',
+                      ),
+                      `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
+                      '</a>',
                     ),
-                    `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
-                    '</a>',
-                  ),
-                }}
-              ></div>
+                  }}
+                ></div>
 
-              <Alert type="info" icon="warning">
-                {__('The page will reload after submission. Make sure to save the course information.', 'tutor')}
-              </Alert>
+                <Alert type="info" icon="warning">
+                  {__('The page will reload after submission. Make sure to save the course information.', 'tutor')}
+                </Alert>
+              </div>
+
+              <Controller
+                name="openAIApiKey"
+                control={form.control}
+                rules={requiredRule()}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    type="password"
+                    isPassword
+                    label={__('OpenAI API key', 'tutor')}
+                    placeholder={__('Enter your OpenAI API key', 'tutor')}
+                  />
+                )}
+              />
+
+              <Controller
+                name="enable_open_ai"
+                control={form.control}
+                render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Enable OpenAI', 'tutor')} />}
+              />
+            </form>
+            <div css={styles.formFooter}>
+              <Button
+                onClick={() =>
+                  closeModal({
+                    action: 'CLOSE',
+                  })
+                }
+                variant="text"
+                size="small"
+              >
+                {__('Cancel', 'tutor')}
+              </Button>
+              <Button
+                size="small"
+                onClick={form.handleSubmit(handleSubmit)}
+                loading={saveOpenAiSettingsMutation.isPending}
+              >
+                {__('Save', 'tutor')}
+              </Button>
             </div>
-
-            <Controller
-              name="openAIApiKey"
-              control={form.control}
-              rules={requiredRule()}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  type="password"
-                  isPassword
-                  label={__('OpenAI API key', 'tutor')}
-                  placeholder={__('Enter your OpenAI API key', 'tutor')}
-                />
-              )}
-            />
-
-            <Controller
-              name="enable_open_ai"
-              control={form.control}
-              render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Enable OpenAI', 'tutor')} />}
-            />
-          </form>
-          <div css={styles.formFooter}>
-            <Button
-              onClick={() =>
-                closeModal({
-                  action: 'CLOSE',
-                })
-              }
-              variant="text"
-              size="small"
-            >
-              {__('Cancel', 'tutor')}
-            </Button>
-            <Button
-              size="small"
-              onClick={form.handleSubmit(handleSubmit)}
-              loading={saveOpenAiSettingsMutation.isPending}
-            >
-              {__('Save', 'tutor')}
-            </Button>
-          </div>
+          </>
         </Show>
       </div>
     </BasicModalWrapper>
