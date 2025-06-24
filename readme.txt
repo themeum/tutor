@@ -312,13 +312,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.6.2 - Jun 23, 2025
+= 3.6.2 - Jun 24, 2025
 
-Fix: Fixed an issue where the wrong graph was generated on the Earnings Report page. (Pro)
-Fix: Fixed an issue where scheduled courses could be purchased from the WooCommerce shop page.
-Fix: Fixed the "Filter by Course" functionality not working in the Student tab on the Analytics page. (Pro)
-Fix: Fixed an issue where the Save Settings button would disappear when monetization was set to Paid Memberships Pro (PMPro). (Pro)
-Fix: Fixed an issue where old bundled courses were not appearing under the Courses tab for instructors. (Pro)
+Update: Pathwise theme is now fully functional. (Phase 1)
+Fix: Resolved an issue where the wrong graph was displayed on the Earnings Report page. (Pro)
+Fix: Prevented scheduled courses from being purchasable via the WooCommerce shop page.
+Fix: Restored functionality of the "Filter by Course" option in the Student tab on the Analytics page. (Pro)
+Fix: Fixed the disappearing Save Settings button when monetization was set to Paid Memberships Pro (PMPro). (Pro)
+Fix: Ensured old bundled courses now appear correctly under the Courses tab for instructors. (Pro)
 
 = 3.6.1 - Jun 03, 2025
 
