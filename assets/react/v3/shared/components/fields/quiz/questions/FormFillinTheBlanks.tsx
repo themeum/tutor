@@ -6,27 +6,43 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isDefined } from '@TutorShared/utils/types';
+import {
+  type ID,
+  isDefined,
+  QuizDataStatus,
+  type QuizQuestionOption,
+  type QuizValidationErrorType,
+} from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
 
-type FormFillInTheBlanksProps = FormControllerProps<QuizQuestionOption | null>;
+interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption> {
+  questionId: ID;
+  validationError?: {
+    message: string;
+    type: QuizValidationErrorType;
+  } | null;
+  setValidationError?: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      type: QuizValidationErrorType;
+    } | null>
+  >;
+}
 
-const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
-  const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
+const FormFillInTheBlanks = ({ field, questionId, validationError, setValidationError }: FormFillInTheBlanksProps) => {
   const inputValue = field.value ?? {
     _data_status: QuizDataStatus.NEW,
     is_saved: false,
     answer_id: nanoid(),
     answer_title: '',
-    belongs_question_id: activeQuestionId,
+    belongs_question_id: questionId,
     belongs_question_type: 'fill_in_the_blank',
     answer_two_gap_match: '',
     answer_view_format: 'text',
@@ -195,7 +211,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                       });
 
                       if (validationError?.type === 'save_option') {
-                        setValidationError(null);
+                        setValidationError?.(null);
                       }
 
                       setIsEditing(false);
@@ -264,7 +280,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     });
 
                     if (validationError?.type === 'save_option') {
-                      setValidationError(null);
+                      setValidationError?.(null);
                     }
 
                     setIsEditing(false);

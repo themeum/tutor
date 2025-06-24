@@ -130,6 +130,16 @@ const endpoints = {
   IMPORT_SETTINGS_FREE: 'tutor_import_settings',
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
   DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
+
+  // @TODO: Will be changed when API is constructed
+  // CONTENT BANK
+  GET_CONTENT_BANK_COLLECTIONS: 'tutor_pro_get_content_bank_collections',
+  GET_CONTENT_BANK_COLLECTION_DETAILS: 'tutor_pro_get_content_bank_collection_details',
+  CREATE_CONTENT_BANK_COLLECTION: 'tutor-pro_create_content_bank_collection',
+  GET_CONTENT_DETAILS: 'tutor_pro_get_content_details',
+  SAVE_LESSON_CONTENT: 'tutor_pro_save_lesson_content',
+  SAVE_ASSIGNMENT_CONTENT: 'tutor_pro_save_assignment_content',
+  SAVE_QUESTION_CONTENT: 'tutor_pro_save_question_content',
 } as const;
 
 export default endpoints;

@@ -1,34 +1,42 @@
+import { type QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
+import { QuizDataStatus, type QuizQuestion } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
-import type { UseFormReturn } from 'react-hook-form';
 
-import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { type ID } from '@TutorShared/utils/types';
+export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatus: QuizDataStatus) => {
+  if (currentStatus === dataStatus) {
+    return null;
+  }
 
-export const getCourseId = () => {
-  const params = new URLSearchParams(window.location.search);
-  const courseId = params.get('course_id');
-  return Number(courseId);
+  if (dataStatus === QuizDataStatus.NEW) {
+    return QuizDataStatus.NEW;
+  }
+
+  if (
+    (dataStatus === QuizDataStatus.UPDATE || dataStatus === QuizDataStatus.NO_CHANGE) &&
+    currentStatus === QuizDataStatus.UPDATE
+  ) {
+    return QuizDataStatus.UPDATE;
+  }
+
+  return QuizDataStatus.NO_CHANGE;
 };
 
 export const validateQuizQuestion = (
-  activeQuestionIndex: number,
-  form: UseFormReturn<QuizForm>,
+  question: QuizQuestion,
 ):
   | {
       message: string;
       type: QuizValidationErrorType;
     }
   | true => {
-  if (activeQuestionIndex !== -1) {
-    const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+  if (question) {
+    const currentQuestionType = question.question_type;
 
     if (currentQuestionType === 'h5p') {
       return true;
     }
 
-    const answers =
-      form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
+    const answers = question.question_answers || [];
     const isAllSaved = answers.every((answer) => answer.is_saved);
     const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
 
@@ -54,9 +62,7 @@ export const validateQuizQuestion = (
     }
 
     if (currentQuestionType === 'matching') {
-      const isImageMatching = form.watch(
-        `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching',
-      );
+      const isImageMatching = question.question_settings.is_image_matching;
 
       const everyOptionHasTitle = answers.every((answer) => answer.answer_title);
 
@@ -88,8 +94,4 @@ export const validateQuizQuestion = (
   }
 
   return true;
-};
-
-export const getIdWithoutPrefix = (prefix: string, id: ID) => {
-  return id.toString().replace(prefix, '');
 };

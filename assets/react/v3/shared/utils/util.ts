@@ -259,6 +259,7 @@ export const formatSeconds = (seconds: number) => {
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };
+
 export const getObjectKeys = <T extends object>(object: T) => {
   if (!isDefined(object) || !isObject(object)) {
     return [] as (keyof T)[];
@@ -269,6 +270,7 @@ export const getObjectKeys = <T extends object>(object: T) => {
 export const getObjectValues = <T extends object, K extends keyof T = keyof T>(object: T): T[K][] => {
   return Object.values(object);
 };
+
 export const getObjectEntries = <T extends object, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
   return Object.entries(object) as [K, T[K]][];
 };
@@ -496,4 +498,11 @@ const capitalizeWords = (text: string): string => {
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+};
+
+export const covertSecondsToHMS = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const sec = seconds % 60;
+  return { hours, minutes, seconds: sec };
 };

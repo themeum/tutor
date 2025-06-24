@@ -10,8 +10,8 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
@@ -20,6 +20,7 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 
 interface QuestionProps {
   question: QuizQuestion;

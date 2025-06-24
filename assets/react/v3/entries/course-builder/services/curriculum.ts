@@ -7,29 +7,20 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
 import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
-import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
 import { Addons } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
-
-export type ContentType =
-  | 'tutor-google-meet'
-  | 'tutor_zoom_meeting'
-  | 'lesson'
-  | 'tutor_quiz'
-  | 'tutor_assignments'
-  | 'tutor_h5p_quiz';
 
 export interface Content {
   ID: ID;
   post_title: string;
   post_content: string;
   post_name: string | null;
-  post_type: ContentType;
+  post_type: TopicContentType;
   total_question?: number;
   quiz_type?: 'tutor_h5p_quiz';
 }
@@ -559,19 +550,5 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
     queryKey: ['GoogleMeet', meetingId],
     queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
-  });
-};
-
-const getH5PLessonContents = (search: string) => {
-  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
-    search_filter: search,
-  });
-};
-
-export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
-  return useQuery({
-    queryKey: ['H5PLessonContents', search],
-    queryFn: () => getH5PLessonContents(search).then((response) => response.data),
-    enabled: contentType === 'lesson',
   });
 };

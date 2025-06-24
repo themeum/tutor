@@ -3,7 +3,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
@@ -15,18 +14,18 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import {
-  calculateQuizDataStatus,
-  QuizDataStatus,
-  type QuizForm,
-  type QuizQuestionOption,
-} from '@CourseBuilderServices/quiz';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isDefined } from '@TutorShared/utils/types';
+import {
+  type ID,
+  isDefined,
+  QuizDataStatus,
+  type QuizQuestionOption,
+  type QuizValidationErrorType,
+} from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
@@ -34,32 +33,45 @@ interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
   isOverlay?: boolean;
+  isImageMatching: boolean;
+  questionId: ID;
+  validationError?: {
+    message: string;
+    type: QuizValidationErrorType;
+  } | null;
+  setValidationError?: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      type: QuizValidationErrorType;
+    } | null>
+  >;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverlay = false }: FormMatchingProps) => {
-  const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
-  const form = useFormContext<QuizForm>();
-
+const FormMatching = ({
+  index,
+  onDuplicateOption,
+  onRemoveOption,
+  field,
+  isOverlay = false,
+  isImageMatching,
+  questionId,
+  validationError,
+  setValidationError,
+}: FormMatchingProps) => {
   const inputValue = field.value ?? {
     answer_id: '',
     answer_title: '',
     answer_two_gap_match: '',
     is_correct: '0',
-    belongs_question_id: activeQuestionId,
+    belongs_question_id: questionId,
     belongs_question_type: 'matching',
   };
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const imageMatching = useWatch({
-    control: form.control,
-    name: `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching',
-    defaultValue: false,
-  });
-
   const [isEditing, setIsEditing] = useState(
-    !inputValue.answer_title || imageMatching ? !inputValue.image_url : !inputValue.answer_two_gap_match,
+    !inputValue.answer_title || isImageMatching ? !inputValue.image_url : !inputValue.answer_two_gap_match,
   );
 
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
@@ -201,9 +213,9 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
           <Show
             when={isEditing}
             fallback={
-              <div css={styles.placeholderWrapper({ isImageMatching: imageMatching })}>
+              <div css={styles.placeholderWrapper({ isImageMatching: isImageMatching })}>
                 <Show
-                  when={imageMatching}
+                  when={isImageMatching}
                   fallback={
                     <div css={styles.optionPlaceholder}>
                       {inputValue.answer_title || __('Answer title...', 'tutor')}
@@ -226,13 +238,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                   </Show>
                 </Show>
                 <div css={styles.optionPlaceholder}>
-                  {!imageMatching ? inputValue.answer_two_gap_match : inputValue.answer_title}
+                  {!isImageMatching ? inputValue.answer_two_gap_match : inputValue.answer_title}
                 </div>
               </div>
             }
           >
             <div css={styleUtils.optionInputWrapper}>
-              <Show when={imageMatching}>
+              <Show when={isImageMatching}>
                 <ImageInput
                   value={{
                     id: Number(inputValue.image_id),
@@ -250,7 +262,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                 {...field}
                 type="text"
                 ref={inputRef}
-                placeholder={!imageMatching ? __('Question', 'tutor') : __('Image matched text..', 'tutor')}
+                placeholder={!isImageMatching ? __('Question', 'tutor') : __('Image matched text..', 'tutor')}
                 value={inputValue.answer_title}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -288,7 +300,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                   }
                 }}
               />
-              <Show when={!imageMatching}>
+              <Show when={!isImageMatching}>
                 <input
                   {...field}
                   type="text"
@@ -329,7 +341,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                       });
 
                       if (validationError?.type === 'save_option') {
-                        setValidationError(null);
+                        setValidationError?.(null);
                       }
 
                       setIsEditing(false);
@@ -348,7 +360,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
 
                     if (!inputValue.is_saved) {
                       if (validationError?.type === 'save_option') {
-                        setValidationError(null);
+                        setValidationError?.(null);
                       }
                       onRemoveOption();
                     }
@@ -384,13 +396,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                     });
 
                     if (validationError?.type === 'save_option') {
-                      setValidationError(null);
+                      setValidationError?.(null);
                     }
                     setIsEditing(false);
                   }}
                   disabled={
                     !inputValue.answer_title ||
-                    (imageMatching ? !inputValue.image_id : !inputValue.answer_two_gap_match)
+                    (isImageMatching ? !inputValue.image_id : !inputValue.answer_two_gap_match)
                   }
                 >
                   {__('Ok', 'tutor')}

@@ -17,66 +17,16 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertToErrorMessage, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 
-import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
-import type { ContentDripType } from './course';
-import type { ContentType } from './curriculum';
-
-export const QuizDataStatus = {
-  NEW: 'new',
-  UPDATE: 'update',
-  NO_CHANGE: 'no_change',
-} as const;
-
-export type QuizDataStatus = (typeof QuizDataStatus)[keyof typeof QuizDataStatus];
-
-export type QuizQuestionType =
-  | 'true_false'
-  | 'single_choice'
-  | 'multiple_choice'
-  | 'open_ended'
-  | 'fill_in_the_blank'
-  | 'short_answer'
-  | 'matching'
-  | 'image_matching'
-  | 'image_answering'
-  | 'ordering'
-  | 'h5p';
-
-export interface QuizQuestionOption {
-  _data_status: QuizDataStatus;
-  is_saved: boolean;
-  answer_id: ID;
-  belongs_question_id: ID;
-  belongs_question_type: QuizQuestionType;
-  answer_title: string;
-  is_correct: '0' | '1';
-  image_id?: ID;
-  image_url?: string;
-  answer_two_gap_match: string;
-  answer_view_format: string;
-  answer_order: number;
-}
-
-export interface QuizQuestion {
-  _data_status: QuizDataStatus;
-  question_id: ID;
-  question_title: string;
-  question_description: string;
-  question_mark: number;
-  answer_explanation: string;
-  question_order: number;
-  question_type: QuizQuestionType;
-  question_settings: {
-    question_type: QuizQuestionType;
-    answer_required: boolean;
-    randomize_question: boolean;
-    question_mark: number;
-    show_question_mark: boolean;
-    has_multiple_correct_answer: boolean;
-    is_image_matching: boolean;
-  };
-  question_answers: QuizQuestionOption[];
-}
+import type { ContentDripType } from '@CourseBuilderServices/course';
+import {
+  QuizDataStatus,
+  type ID,
+  type QuizQuestion,
+  type QuizQuestionOption,
+  type QuizQuestionType,
+  type TopicContentType,
+  type TutorMutationResponse,
+} from '@TutorShared/utils/types';
 
 interface ImportQuizPayload {
   topic_id: ID;
@@ -192,19 +142,6 @@ interface QuizUpdateQuestionPayload {
   'question_settings[question_type]': string;
   'question_settings[answer_required]': 0 | 1;
   'question_settings[question_mark]': number;
-}
-
-export interface H5PContent {
-  id: ID;
-  title: string;
-  content_type: string;
-  user_id: ID;
-  user_name: string;
-  updated_at: string;
-}
-
-export interface H5PContentResponse {
-  output: H5PContent[];
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
@@ -626,39 +563,6 @@ export const useGetQuizDetailsQuery = (quizId: ID) => {
   });
 };
 
-export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatus: QuizDataStatus) => {
-  if (currentStatus === dataStatus) {
-    return null;
-  }
-
-  if (dataStatus === QuizDataStatus.NEW) {
-    return QuizDataStatus.NEW;
-  }
-
-  if (
-    (dataStatus === QuizDataStatus.UPDATE || dataStatus === QuizDataStatus.NO_CHANGE) &&
-    currentStatus === QuizDataStatus.UPDATE
-  ) {
-    return QuizDataStatus.UPDATE;
-  }
-
-  return QuizDataStatus.NO_CHANGE;
-};
-
-const getH5PQuizContents = (search: string) => {
-  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT, {
-    search_filter: search,
-  });
-};
-
-export const useGetH5PQuizContentsQuery = (search: string, contentType: ContentType) => {
-  return useQuery({
-    queryKey: ['H5PQuizContents', search],
-    queryFn: () => getH5PQuizContents(search).then((response) => response.data),
-    enabled: contentType === 'tutor_h5p_quiz',
-  });
-};
-
 const getH5PQuizContentById = (id: ID) => {
   return wpAjaxInstance
     .post<
@@ -672,7 +576,7 @@ const getH5PQuizContentById = (id: ID) => {
     .then((response) => response.data);
 };
 
-export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: ContentType) => {
+export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: TopicContentType) => {
   return useQuery({
     queryKey: ['H5PQuizContent', id],
     queryFn: () => getH5PQuizContentById(id),

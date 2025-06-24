@@ -5,32 +5,30 @@ import { css } from '@emotion/react';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID, type QuizQuestionOption } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
 
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   onCheckCorrectAnswer: () => void;
   isOverlay?: boolean;
+  questionId: ID;
 }
 
-const FormTrueFalse = ({ field, onCheckCorrectAnswer, isOverlay = false }: FormTrueFalseProps) => {
-  const { activeQuestionId } = useQuizModalContext();
-
+const FormTrueFalse = ({ field, onCheckCorrectAnswer, isOverlay = false, questionId }: FormTrueFalseProps) => {
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
     is_correct: '0',
-    belongs_question_id: activeQuestionId,
+    belongs_question_id: questionId,
     belongs_question_type: 'true_false',
   };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value.answer_id || 0,
+    id: inputValue.answer_id || 0,
     animateLayoutChanges,
   });
 
@@ -43,15 +41,15 @@ const FormTrueFalse = ({ field, onCheckCorrectAnswer, isOverlay = false }: FormT
   return (
     <div
       {...attributes}
-      css={styles.option({ isSelected: !!Number(field.value.is_correct), isOverlay })}
+      css={styles.option({ isSelected: !!Number(inputValue.is_correct), isOverlay })}
       tabIndex={-1}
       ref={setNodeRef}
       style={style}
     >
       <button data-check-button type="button" css={styleUtils.optionCheckButton} onClick={onCheckCorrectAnswer}>
-        <SVGIcon name={Number(field.value.is_correct) ? 'checkFilled' : 'check'} height={32} width={32} />
+        <SVGIcon name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'} height={32} width={32} />
       </button>
-      <div css={styles.optionLabel({ isSelected: !!Number(field.value.is_correct), isDragging, isOverlay })}>
+      <div css={styles.optionLabel({ isSelected: !!Number(inputValue.is_correct), isDragging, isOverlay })}>
         <span>{inputValue.answer_title}</span>
 
         <button

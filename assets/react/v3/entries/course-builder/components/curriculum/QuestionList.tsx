@@ -22,17 +22,11 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
 
 import Question from '@CourseBuilderComponents/curriculum/Question';
-import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
+import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import {
-  type H5PContent,
-  QuizDataStatus,
-  type QuizForm,
-  type QuizQuestion,
-  type QuizQuestionType,
-} from '@CourseBuilderServices/quiz';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
@@ -43,6 +37,7 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type H5PContent, QuizDataStatus, type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
