@@ -57,7 +57,7 @@ class QuizBuilder {
 	 *
 	 * @return array
 	 */
-	private function prepare_question_data( $quiz_id, $input ) {
+	public function prepare_question_data( $quiz_id, $input ) {
 		$question_title       = Input::sanitize( wp_slash( $input['question_title'] ), '' );
 		$question_description = Input::sanitize( wp_slash( $input['question_description'] ) ?? '', '', Input::TYPE_KSES_POST );
 		$question_type        = Input::sanitize( $input['question_type'], '' );
@@ -108,6 +108,56 @@ class QuizBuilder {
 	}
 
 	/**
+	 * Save question answers.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param int    $question_id question id.
+	 * @param string $question_type question type.
+	 * @param array  $question_answers question answers.
+	 *
+	 * @return void
+	 */
+	public function save_question_answers( $question_id, $question_type, $question_answers ) {
+		global $wpdb;
+		$answers_table = $wpdb->prefix . 'tutor_quiz_question_answers';
+
+		$answer_order = 0;
+		foreach ( $question_answers as $answer ) {
+			$data_status = isset( $answer[ self::TRACKING_KEY ] ) ? $answer[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
+			$answer_data = $this->prepare_answer_data( $question_id, $question_type, $answer );
+
+			// New answer.
+			if ( self::FLAG_NEW === $data_status ) {
+				$wpdb->insert( $answers_table, $answer_data );
+				$answer_id = $wpdb->insert_id;
+			}
+
+			// Update answer.
+			if ( self::FLAG_UPDATE === $data_status ) {
+				$answer_id = $answer['answer_id'];
+				$wpdb->update(
+					$answers_table,
+					$answer_data,
+					array( 'answer_id' => $answer_id )
+				);
+			}
+
+			if ( self::FLAG_NO_CHANGE === $data_status ) {
+				$answer_id = $answer['answer_id'];
+			}
+
+			// Save sort order.
+			$answer_order++;
+			$wpdb->update(
+				$answers_table,
+				array( 'answer_order' => $answer_order ),
+				array( 'answer_id' => $answer_id )
+			);
+		}
+	}
+
+	/**
 	 * Save quiz questions.
 	 *
 	 * @since 3.0.0
@@ -120,7 +170,6 @@ class QuizBuilder {
 	public function save_questions( $quiz_id, $questions ) {
 		global $wpdb;
 		$questions_table = $wpdb->prefix . 'tutor_quiz_questions';
-		$answers_table   = $wpdb->prefix . 'tutor_quiz_question_answers';
 
 		$question_order = 0;
 		foreach ( $questions as $question ) {
@@ -158,39 +207,7 @@ class QuizBuilder {
 			);
 
 			// Save question's answers.
-			$answer_order = 0;
-			foreach ( $question_answers as $answer ) {
-				$data_status = isset( $answer[ self::TRACKING_KEY ] ) ? $answer[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
-				$answer_data = $this->prepare_answer_data( $question_id, $question_type, $answer );
-
-				// New answer.
-				if ( self::FLAG_NEW === $data_status ) {
-					$wpdb->insert( $answers_table, $answer_data );
-					$answer_id = $wpdb->insert_id;
-				}
-
-				// Update answer.
-				if ( self::FLAG_UPDATE === $data_status ) {
-					$answer_id = $answer['answer_id'];
-					$wpdb->update(
-						$answers_table,
-						$answer_data,
-						array( 'answer_id' => $answer_id )
-					);
-				}
-
-				if ( self::FLAG_NO_CHANGE === $data_status ) {
-					$answer_id = $answer['answer_id'];
-				}
-
-				// Save sort order.
-				$answer_order++;
-				$wpdb->update(
-					$answers_table,
-					array( 'answer_order' => $answer_order ),
-					array( 'answer_id' => $answer_id )
-				);
-			}
+			$this->save_question_answers( $question_id, $question_type, $question_answers );
 		}
 	}
 
