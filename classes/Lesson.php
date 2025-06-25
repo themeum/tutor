@@ -31,11 +31,18 @@ class Lesson extends Tutor_Base {
 	 * Register hooks
 	 *
 	 * @since 1.0.0
+	 * @since 3.7.0 param register hook added.
+	 *
+	 * @param bool $register_hooks register hooks or not.
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
 		parent::__construct();
+
+		if ( ! $register_hooks ) {
+			return;
+		}
 
 		add_action( 'save_post_' . $this->lesson_post_type, array( $this, 'save_lesson_meta' ) );
 
@@ -111,6 +118,7 @@ class Lesson extends Tutor_Base {
 	 * @since 1.0.0
 	 *
 	 * @param integer $post_ID post ID.
+	 *
 	 * @return void
 	 */
 	public function save_lesson_meta( $post_ID ) {
