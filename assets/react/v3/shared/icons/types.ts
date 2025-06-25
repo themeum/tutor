@@ -220,6 +220,8 @@ export const icons = [
   'attachmentLine',
   'primeCheckCircle',
   'contentBank',
+  'sortASC',
+  'sortDESC',
 ] as const;
 
 export type IconCollection = (typeof icons)[number];

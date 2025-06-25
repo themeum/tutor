@@ -121,7 +121,6 @@ const Select = <T,>({
           <input
             id={id}
             onClick={() => setIsOpen((previousState) => !previousState)}
-            onFocus={() => setIsOpen(true)}
             css={styles.input({ isSearchable })}
             autoComplete="off"
             readOnly={readOnly || !isSearchable}
@@ -132,6 +131,7 @@ const Select = <T,>({
               setSearchText(event.target.value);
             }}
             disabled={disabled}
+            data-select
           />
 
           <button
@@ -250,34 +250,36 @@ const styles = {
     position: relative;
   `,
   input: ({ isSearchable }: { isSearchable: boolean }) => css`
-    ${typography.body()};
-    width: 100%;
-    height: 40px;
-    border-radius: ${borderRadius[6]};
-    border: 1px solid ${colorTokens.stroke.default};
-    box-shadow: ${shadow.input};
-    padding: ${spacing[8]} ${spacing[32]} ${spacing[8]} ${spacing[16]};
-    color: ${colorTokens.text.primary};
-    appearance: textfield;
+    &[data-select] {
+      ${typography.body()};
+      width: 100%;
+      height: 40px;
+      background-color: ${colorTokens.background.white};
+      border-radius: ${borderRadius[6]};
+      border: 1px solid ${colorTokens.stroke.default};
+      box-shadow: ${shadow.input};
+      padding: ${spacing[8]} ${spacing[32]} ${spacing[8]} ${spacing[16]};
+      color: ${colorTokens.text.primary};
+      appearance: textfield;
 
-    ${!isSearchable &&
-    css`
-      cursor: pointer;
-    `}
+      ${!isSearchable &&
+      css`
+        cursor: pointer;
+      `}
 
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus};
-    }
+      :focus {
+        ${styleUtils.inputFocus};
+      }
 
-    ::-webkit-outer-spin-button,
-    ::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+      ::-webkit-outer-spin-button,
+      ::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
 
-    ::placeholder {
-      color: ${colorTokens.text.subdued};
+      ::placeholder {
+        color: ${colorTokens.text.subdued};
+      }
     }
   `,
   clearButton: ({ isDisabled = false }: { isDisabled: boolean }) => css`
@@ -378,11 +380,17 @@ const styles = {
   `,
   optionButton: ({ fontWeight = 'inherit' }: { fontWeight: string | number }) => css`
     width: 100%;
-    padding: ${spacing[0]} ${spacing[12]};
+    justify-content: start;
+    padding: ${spacing[6]} ${spacing[12]};
     font-weight: ${fontWeight};
     color: ${colorTokens.text.title};
+
     :hover {
       text-decoration: none;
+    }
+
+    :focus {
+      box-shadow: none;
     }
   `,
   toggleIcon: ({ isOpen = false }: { isOpen: boolean }) => css`
