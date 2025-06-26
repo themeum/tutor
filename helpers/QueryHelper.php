@@ -170,7 +170,7 @@ class QueryHelper {
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
 				$column_keys   .= sanitize_key( $v ) . ',';
-				$sanitize_value = $value[$v];
+				$sanitize_value = $value[ $v ];
 				if ( $sanitize_value && $do_sanitize ) {
 					$sanitize_value = sanitize_text_field( $sanitize_value );
 				}
@@ -1009,6 +1009,36 @@ class QueryHelper {
 	public static function get_last_query(){
 		global $wpdb;
 		return $wpdb->last_query;
+	}
+
+	/**
+	 * Get table prefix.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return string
+	 */
+	public static function get_table_prefix() {
+		global $wpdb;
+		return $wpdb->prefix;
+	}
+
+	/**
+	 * Prepare table name with prefix.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string $table_name table name.
+	 *
+	 * @return string
+	 */
+	public static function prepare_table_name( string $table_name ) {
+		$table_prefix = self::get_table_prefix();
+		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
+			$table_name = $table_prefix . $table_name;
+		}
+
+		return $table_name;
 	}
 
 }

@@ -17,7 +17,7 @@ interface ThreeDotsOptionProps {
   onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
   onClosePopover?: () => void;
   isTrash?: boolean;
-  css?: SerializedStyles;
+  buttonCss?: SerializedStyles;
   size?: 'small' | 'medium';
   disabled?: boolean;
 }
@@ -29,13 +29,13 @@ export const ThreeDotsOption = ({
   onClosePopover,
   isTrash = false,
   size = 'medium',
-  css,
+  buttonCss,
   disabled,
 }: ThreeDotsOptionProps) => {
   return (
     <button
       type="button"
-      css={[styles.option({ isTrash: isTrash, size: size }), css]}
+      css={[styles.option({ isTrash: isTrash, size: size }), buttonCss]}
       onClick={(event) => {
         if (onClick) {
           onClick(event);
