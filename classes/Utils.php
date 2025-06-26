@@ -4089,7 +4089,7 @@ class Utils {
 	 *
 	 * @return array|null|object
 	 */
-	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true  ) {
+	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true ) {
 		global $wpdb;
 
 		$object_id = (int) $object_id;
@@ -10667,5 +10667,31 @@ class Utils {
 			}
 		}
 		return $branch;
+	}
+
+	/**
+	 * Get filter course options
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return array
+	 */
+	public function get_filter_course_options() {
+		$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+		$course_options = array(
+			array(
+				'key'   => '',
+				'title' => __( 'All Courses', 'tutor' ),
+			),
+		);
+		if ( ! empty( $courses ) ) {
+			foreach ( $courses as $course ) {
+				$course_options[] = array(
+					'key'   => $course->ID,
+					'title' => $course->post_title,
+				);
+			}
+		}
+		return $course_options;
 	}
 }

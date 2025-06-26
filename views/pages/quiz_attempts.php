@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Input;
-use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 
 if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
@@ -55,22 +54,6 @@ $navbar_data = array(
 	'page_title' => $quiz_attempts->page_title,
 );
 
-$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
-$course_options = array(
-	array(
-		'key'   => '',
-		'title' => __( 'All Courses', 'tutor' ),
-	),
-);
-if ( ! empty( $courses ) ) {
-	foreach ( $courses as $course ) {
-		$course_options[] = array(
-			'key'   => $course->ID,
-			'title' => $course->post_title,
-		);
-	}
-}
-
 $filters = array(
 	'bulk_action'  => $quiz_attempts->bulk_action,
 	'bulk_actions' => $quiz_attempts->prpare_bulk_actions(),
@@ -80,7 +63,7 @@ $filters = array(
 			'label'      => __( 'Courses', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'course-id',
-			'options'    => $course_options,
+			'options'    => tutils()->get_filter_course_options(),
 			'searchable' => true,
 			'value'      => Input::get( 'course-id', '' ),
 		),

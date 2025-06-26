@@ -34,43 +34,25 @@ $qna            = $qna_object->get_items( $_GET );
 $qna_list       = $qna['items'];
 $qna_pagination = $qna['pagination'];
 
-$status_options = Q_And_A::tabs_key_value();
-
-$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
-$course_options = array(
-	array(
-		'key'   => '',
-		'title' => __( 'All Courses', 'tutor' ),
-	),
-);
-if ( ! empty( $courses ) ) {
-	foreach ( $courses as $course ) {
-		$course_options[] = array(
-			'key'   => $course->ID,
-			'title' => $course->post_title,
-		);
-	}
-}
-
 $filters = array(
 	'bulk_action'  => true,
 	'bulk_actions' => $qna_object->get_bulk_actions(),
 	'ajax_action'  => 'tutor_qna_bulk_action',
 	'filters'      => array(
 		array(
-			'label'      => __( 'Status', 'tutor' ),
-			'field_type' => 'select',
-			'field_name' => 'data',
-			'options'    => $status_options,
-			'value'      => Input::get( 'data', '' ),
-		),
-		array(
 			'label'      => __( 'Courses', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'course-id',
-			'options'    => $course_options,
+			'options'    => tutils()->get_filter_course_options(),
 			'searchable' => true,
 			'value'      => Input::get( 'course-id', '' ),
+		),
+		array(
+			'label'      => __( 'Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'data',
+			'options'    => Q_And_A::tabs_key_value(),
+			'value'      => Input::get( 'data', '' ),
 		),
 		array(
 			'label'      => __( 'Date', 'tutor' ),
