@@ -218,6 +218,10 @@ const styles = {
     [data-type] {
       text-align: right;
     }
+
+    td {
+      padding: ${spacing[12]} ${spacing[20]};
+    }
   `,
   paginatorWrapper: css`
     margin: ${spacing[20]} ${spacing[16]};
