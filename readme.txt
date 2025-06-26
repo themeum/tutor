@@ -312,7 +312,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.6.2 - Jun 24, 2025
+= 3.6.2 - Jun 26, 2025
 
 Update: Pathwise theme is now fully functional.
 Fix: Resolved an issue where the wrong graph was displayed on the Earnings Report page. (Pro)
