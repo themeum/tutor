@@ -13,8 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use Tutor\Cache\QuizAttempts;
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 
 if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
@@ -53,16 +53,53 @@ $total              = QuizModel::get_quiz_attempts( $offset, $per_page, $search,
  */
 $navbar_data = array(
 	'page_title' => $quiz_attempts->page_title,
-	'tabs'       => $quiz_attempts->tabs_key_value( $user_id, $date, $search, $course_id ),
-	'active'     => $active_tab,
 );
 
+$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
+$course_options = array(
+	array(
+		'key'   => '',
+		'title' => __( 'All Courses', 'tutor' ),
+	),
+);
+if ( ! empty( $courses ) ) {
+	foreach ( $courses as $course ) {
+		$course_options[] = array(
+			'key'   => $course->ID,
+			'title' => $course->post_title,
+		);
+	}
+}
+
 $filters = array(
-	'bulk_action'   => $quiz_attempts->bulk_action,
-	'bulk_actions'  => $quiz_attempts->prpare_bulk_actions(),
-	'ajax_action'   => 'tutor_quiz_attempts_bulk_action',
-	'filters'       => true,
-	'course_filter' => true,
+	'bulk_action'  => $quiz_attempts->bulk_action,
+	'bulk_actions' => $quiz_attempts->prpare_bulk_actions(),
+	'ajax_action'  => 'tutor_quiz_attempts_bulk_action',
+	'filters'      => array(
+		array(
+			'label'      => __( 'Courses', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'course-id',
+			'options'    => $course_options,
+			'searchable' => true,
+			'value'      => Input::get( 'course-id', '' ),
+		),
+		array(
+			'label'      => __( 'Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'data',
+			'options'    => $quiz_attempts->tabs_key_value( $user_id, $date, $search, $course_id ),
+			'searchable' => false,
+			'value'      => Input::get( 'data', '' ),
+		),
+		array(
+			'label'      => __( 'Date', 'tutor' ),
+			'field_type' => 'date',
+			'field_name' => 'date',
+			'show_label' => true,
+			'value'      => Input::get( 'date', '' ),
+		),
+	),
 );
 
 ?>
@@ -72,13 +109,13 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-body">
+	<div class="tutor-admin-container tutor-admin-container-lg tutor-mt-16">
 		<?php
 			tutor_load_template_from_custom_path(
 				tutor()->path . '/views/quiz/attempt-table.php',
