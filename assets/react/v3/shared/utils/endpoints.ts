@@ -133,7 +133,7 @@ const endpoints = {
 
   // @TODO: Will be changed when API is constructed
   // CONTENT BANK
-  GET_CONTENT_BANK_COLLECTIONS: 'tutor_pro_get_content_bank_collections',
+  GET_CONTENT_BANK_COLLECTIONS: 'tutor_content_bank_collections',
   SAVE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_save',
   DELETE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_delete',
   GET_CONTENT_BANK_CONTENTS: 'tutor_content_bank_contents',
@@ -142,6 +142,7 @@ const endpoints = {
   SAVE_LESSON_CONTENT: 'tutor_pro_save_lesson_content',
   SAVE_ASSIGNMENT_CONTENT: 'tutor_pro_save_assignment_content',
   SAVE_QUESTION_CONTENT: 'tutor_content_bank_question_save',
+  GET_CONTENT_BANK_QUESTION_DETAILS: 'tutor_content_bank_question_details',
 } as const;
 
 export default endpoints;

@@ -333,7 +333,7 @@ export interface QuizQuestion {
 
 export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
 
-export type CollectionContentType = 'question' | 'lesson' | 'assignment';
+export type CollectionContentType = 'cb_question' | 'cb_lesson' | 'cb_assignment';
 
 export interface Collection {
   ID: number;
@@ -352,4 +352,32 @@ export interface CollectionResponse {
   current_page: number;
   total_page: number;
   data: Collection[];
+}
+
+export interface ContentBankContent {
+  ID: number;
+  post_title: string;
+  post_content: string;
+  post_name: string | null;
+  post_type: CollectionContentType;
+  post_author: string;
+  post_parent: string;
+  post_date: string;
+  linked_courses: {
+    total: number;
+    courses: {
+      ID: number;
+      post_title: string;
+    }[];
+    more_text: string;
+  };
+}
+
+export interface ContentBankContents {
+  total_record: number;
+  per_page: number;
+  current_page: number;
+  total_page: number;
+  data: ContentBankContent[];
+  collection: Collection;
 }

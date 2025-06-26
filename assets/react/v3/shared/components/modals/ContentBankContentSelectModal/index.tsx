@@ -47,22 +47,13 @@ const CollectionListModal = ({ title, closeModal, actions, onAddContent }: Cours
     <FormProvider {...form}>
       <BasicModalWrapper
         onClose={() => closeModal({ action: 'CLOSE' })}
-        title={!selectedCollection && title}
+        title={title}
         entireHeader={selectedCollection && <>&nbsp;</>}
         icon={<SVGIcon name="contentBank" height={24} width={24} />}
         actions={actions}
         maxWidth={720}
       >
-        <Show
-          when={!selectedCollection}
-          fallback={
-            <ContentListTable
-              collectionName={selectedCollection?.post_title}
-              totalItems={selectedCollection?.count_stats?.total || 0}
-              onBack={() => form.setValue('selectedCollection', null)}
-            />
-          }
-        >
+        <Show when={!selectedCollection} fallback={<ContentListTable />}>
           <CollectionListTable />
         </Show>
         <Show when={form.watch('selectedCollection')}>

@@ -21,13 +21,15 @@ const CollectionListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
 
-  const collectionListQuery = useGetCollectionsPaginatedQuery({
+  const getCollectionListQuery = useGetCollectionsPaginatedQuery({
     page: pageInfo.page,
     per_page: itemsPerPage,
-    search: pageInfo.filter.search ? String(pageInfo.filter.search) : '',
+    ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
   });
 
-  const fetchedItems = useMemo(() => collectionListQuery.data?.data ?? [], [collectionListQuery.data]);
+  const fetchedItems = useMemo(() => getCollectionListQuery.data?.data ?? [], [getCollectionListQuery.data]);
+  const totalItems = getCollectionListQuery.data?.total_record ?? 0;
+  const totalPages = Number(getCollectionListQuery.data?.total_page ?? 0);
 
   const columns: Column<Collection>[] = useMemo(
     () => [
@@ -62,7 +64,7 @@ const CollectionListTable = () => {
             <Show when={item.count_stats.total > 0}>
               <div css={styles.contentsWrapper}>
                 <Show when={item.count_stats.lesson > 0}>
-                  <span css={styles.contentBadge({ type: 'lesson' })}>
+                  <span css={styles.contentBadge({ type: 'cb_lesson' })}>
                     {
                       /* translators: %d is the number of lessons */
                       sprintf(_n('%d Lesson', '%d Lessons', item.count_stats.lesson, 'tutor'), item.count_stats.lesson)
@@ -70,7 +72,7 @@ const CollectionListTable = () => {
                   </span>
                 </Show>
                 <Show when={item.count_stats.assignment > 0}>
-                  <span css={styles.contentBadge({ type: 'assignment' })}>
+                  <span css={styles.contentBadge({ type: 'cb_assignment' })}>
                     {
                       /* translators: %d is the number of assignments */
                       sprintf(
@@ -81,7 +83,7 @@ const CollectionListTable = () => {
                   </span>
                 </Show>
                 <Show when={item.count_stats.question > 0}>
-                  <span css={styles.contentBadge({ type: 'question' })}>
+                  <span css={styles.contentBadge({ type: 'cb_question' })}>
                     {
                       /* translators: %d is the number of questions */
                       sprintf(
@@ -100,11 +102,11 @@ const CollectionListTable = () => {
     [form],
   );
 
-  if (collectionListQuery.isLoading) {
+  if (getCollectionListQuery.isLoading) {
     return <LoadingSection aria-label={__('Loading', 'tutor')} />;
   }
 
-  if (!collectionListQuery.data) {
+  if (!getCollectionListQuery.data) {
     return (
       <div css={styles.errorMessage} role="alert" aria-live="assertive">
         {__('Something went wrong', 'tutor')}
@@ -112,32 +114,37 @@ const CollectionListTable = () => {
     );
   }
 
-  const totalItems = collectionListQuery.data?.total_record ?? 0;
-
   return (
     <>
       <div css={styles.tableActions}>
         <SearchField onFilterItems={onFilterItems} />
       </div>
 
-      <div css={styles.tableWrapper({ isLoading: collectionListQuery.isFetching || collectionListQuery.isRefetching })}>
+      <div
+        css={styles.tableWrapper({
+          isLoading: getCollectionListQuery.isFetching || getCollectionListQuery.isRefetching,
+          hasPagination: totalPages > 1,
+        })}
+      >
         <Table
           noHeader
           columns={columns}
           data={fetchedItems}
           itemsPerPage={itemsPerPage}
-          loading={collectionListQuery.isFetching || collectionListQuery.isRefetching}
+          loading={getCollectionListQuery.isFetching || getCollectionListQuery.isRefetching}
         />
       </div>
 
-      <div css={styles.paginatorWrapper}>
-        <Paginator
-          currentPage={pageInfo.page}
-          onPageChange={onPageChange}
-          totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
-        />
-      </div>
+      <Show when={totalPages > 1}>
+        <div css={styles.paginatorWrapper}>
+          <Paginator
+            currentPage={pageInfo.page}
+            onPageChange={onPageChange}
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+          />
+        </div>
+      </Show>
     </>
   );
 };
@@ -148,13 +155,23 @@ const styles = {
   tableActions: css`
     padding: ${spacing[20]};
   `,
-  tableWrapper: ({ isLoading = false }) => css`
+  tableWrapper: ({ isLoading = false, hasPagination = false }) => css`
     max-height: calc(100vh - 350px);
     overflow: auto;
     border-top: 1px solid ${colorTokens.stroke.divider};
 
+    ${!hasPagination &&
+    css`
+      padding-bottom: ${spacing[12]};
+    `}
+
     ${!isLoading &&
     css`
+      tr {
+        &:last-of-type {
+          border-bottom: none;
+        }
+      }
       td {
         padding: 0;
 
@@ -192,19 +209,19 @@ const styles = {
     border-radius: ${borderRadius[4]};
     white-space: nowrap;
 
-    ${type === 'lesson' &&
+    ${type === 'cb_lesson' &&
     css`
       background-color: #e8f4fd;
       color: ${colorTokens.icon.brand};
     `}
 
-    ${type === 'assignment' &&
+    ${type === 'cb_assignment' &&
     css`
       background-color: #e6f8f1;
       color: ${colorTokens.icon.processing};
     `}
 
-    ${type === 'question' &&
+    ${type === 'cb_question' &&
     css`
       background-color: #fff5e6;
       color: #ff7c02;
