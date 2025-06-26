@@ -25,6 +25,7 @@ import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
+import CollectionListModal from '@TutorShared/components/modals/ContentBankContentSelectModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -223,6 +224,44 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         </div>
         <div css={styles.rightButtons}>
           <Show
+            when={isTutorPro}
+            fallback={
+              <ProBadge>
+                <Button
+                  variant="tertiary"
+                  isOutlined
+                  size="small"
+                  icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                  disabled
+                  onClick={noop}
+                >
+                  {__('Content Bank', 'tutor')}
+                </Button>
+              </ProBadge>
+            }
+          >
+            <Button
+              variant="tertiary"
+              isOutlined
+              size="small"
+              icon={<SVGIcon name="contentBank" width={24} height={24} />}
+              disabled={!topic.isSaved}
+              buttonCss={styles.contentButton}
+              onClick={() => {
+                showModal({
+                  id: 'content-bank-collection-list',
+                  component: CollectionListModal,
+                  props: {
+                    title: __('Content Bank', 'tutor'),
+                    icon: <SVGIcon name="contentBank" width={24} height={24} />,
+                  },
+                });
+              }}
+            >
+              {__('Content Bank', 'tutor')}
+            </Button>
+          </Show>
+          <Show
             when={!isTutorPro || hasLiveAddons}
             fallback={
               <Show
@@ -384,11 +423,12 @@ const styles = {
     }
   `,
   rightButtons: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
+    gap: ${spacing[8]};
   `,
   threeDotButton: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[4]};
   `,
