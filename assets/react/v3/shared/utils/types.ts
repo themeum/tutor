@@ -332,3 +332,24 @@ export interface QuizQuestion {
 }
 
 export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+
+export type CollectionContentType = 'question' | 'lesson' | 'assignment';
+
+export interface Collection {
+  ID: number;
+  post_title: string;
+  count_stats: {
+    lesson: number;
+    assignment: number;
+    question: number;
+    total: number;
+  };
+}
+
+export interface CollectionResponse {
+  total_record: number;
+  per_page: number;
+  current_page: number;
+  total_page: number;
+  data: Collection[];
+}
