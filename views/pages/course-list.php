@@ -243,9 +243,9 @@ if ( 0 === $total_courses_count ) {
 	}
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
-		<div class="tutor-dashboard-list-table tutor-mt-16">
+		<div class="tutor-mt-16">
 			<?php if ( $the_query->have_posts() ) : ?>
-			<div class="tutor-table-responsive">
+			<div class="tutor-table-responsive tutor-dashboard-list-table">
 				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
