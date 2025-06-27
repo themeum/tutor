@@ -333,7 +333,7 @@ export interface QuizQuestion {
 
 export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
 
-export type CollectionContentType = 'cb_question' | 'cb_lesson' | 'cb_assignment';
+export type CollectionContentType = 'cb-question' | 'cb-lesson' | 'cb-assignment';
 
 export interface Collection {
   ID: number;

@@ -39,73 +39,7 @@ const getContentBankContents = (params: ContentBankContentsParams) => {
     .get<ContentBankContents>(endpoints.GET_CONTENT_BANK_CONTENTS, {
       params,
     })
-    .then((response) => {
-      // Return mock data if no data exists
-      if (!response.data || !response.data.data || response.data.data.length === 0) {
-        return {
-          collection: {
-            ID: 0,
-            post_title: 'Collection Placeholder',
-            count_stats: {
-              lesson: 0,
-              assignment: 0,
-              question: 0,
-              total: 0,
-            },
-          },
-          total_record: 3,
-          current_page: 1,
-          per_page: 10,
-          total_page: 1,
-          data: [
-            {
-              ID: 1,
-              post_title: 'Lesson',
-              post_content: '',
-              post_name: null,
-              post_date: '',
-              post_parent: '',
-              linked_courses: {
-                total: 0,
-                courses: [],
-                more_text: '',
-              },
-              post_type: 'cb_lesson',
-            },
-            {
-              ID: 2,
-              post_title: 'Assignment',
-              post_content: '',
-              post_name: null,
-              post_date: '',
-              post_parent: '',
-              linked_courses: {
-                total: 0,
-                courses: [],
-                more_text: '',
-              },
-              post_type: 'cb_assignment',
-            },
-            {
-              ID: 3,
-              post_title: 'Question',
-              post_author: '',
-              post_content: '',
-              post_name: null,
-              post_date: '',
-              post_parent: '',
-              linked_courses: {
-                total: 0,
-                courses: [],
-                more_text: '',
-              },
-              post_type: 'cb_question',
-            },
-          ],
-        } as ContentBankContents;
-      }
-      return response.data;
-    });
+    .then((response) => response.data);
 };
 
 export const useGetContentBankContents = (params: ContentBankContentsParams) => {
@@ -118,7 +52,7 @@ export const useGetContentBankContents = (params: ContentBankContentsParams) => 
 };
 
 export const CONTENT_BANK_POST_TYPE_MAP = {
-  cb_lesson: __('Lesson', 'tutor'),
-  cb_assignment: __('Assignment', 'tutor'),
-  cb_question: __('Question', 'tutor'),
+  'cb-lesson': __('Lesson', 'tutor'),
+  'cb-assignment': __('Assignment', 'tutor'),
+  'cb-question': __('Question', 'tutor'),
 } as const;
