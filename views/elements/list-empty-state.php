@@ -26,10 +26,10 @@
 		</svg>
 
 		<h6 class="tutor-fs-6 tutor-fw-bold tutor-mb-0 tutor-mt-32">
-			<?php echo isset( $data['title'] ) ? esc_html( $data['title'] ) : __( 'No Data Found.', 'tutor' ); ?>
+			<?php echo esc_html( isset( $data['title'] ) ? $data['title'] : __( 'No Data Found.', 'tutor' ) ); ?>
 		</h6>
 		<p class="tutor-fs-7 tutor-color-hints tutor-mt-8 tutor-mb-0">
-			<?php echo isset( $data['sub_title'] ) ? esc_html( $data['sub_title'] ) : __( 'Try using different keywords', 'tutor' ); ?>
+			<?php echo esc_html( isset( $data['sub_title'] ) ? $data['sub_title'] : __( 'Try using different keywords', 'tutor' ) ); ?>
 		</p>
 	</div>
 </div>
