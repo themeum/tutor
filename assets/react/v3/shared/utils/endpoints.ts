@@ -137,7 +137,7 @@ const endpoints = {
   SAVE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_save',
   DELETE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_delete',
   GET_CONTENT_BANK_CONTENTS: 'tutor_content_bank_contents',
-  DELETE_CONTENT_BANK_CONTENT: 'tutor_content_bank_content_delete',
+  DELETE_CONTENT_BANK_CONTENTS: 'tutor_content_bank_content_delete',
   CREATE_CONTENT_BANK_COLLECTION: 'tutor-pro_create_content_bank_collection',
   GET_CONTENT_DETAILS: 'tutor_pro_get_content_details',
   SAVE_LESSON_CONTENT: 'tutor_pro_save_lesson_content',
