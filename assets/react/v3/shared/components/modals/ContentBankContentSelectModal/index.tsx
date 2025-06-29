@@ -16,29 +16,24 @@ import ContentListTable from './ContentListTable';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  onAddContent?: (contents: { lessons: string[]; assignments: string[] }) => void;
+  onAddContent?: (contents: string[]) => void;
 }
 
 export interface ContentSelectionForm {
   selectedCollection: Collection | null;
-  lessons: string[];
-  assignments: string[];
+  contents: string[];
 }
 
 const CollectionListModal = ({ title, closeModal, actions, onAddContent }: CourseListModalProps) => {
   const form = useFormWithGlobalError<ContentSelectionForm>({
     defaultValues: {
       selectedCollection: null,
-      lessons: [],
-      assignments: [],
+      contents: [],
     },
   });
 
   const handleAddContent = (data: ContentSelectionForm) => {
-    onAddContent?.({
-      lessons: data.lessons,
-      assignments: data.assignments,
-    });
+    onAddContent?.(data.contents);
   };
 
   const selectedCollection = form.watch('selectedCollection');
@@ -65,7 +60,7 @@ const CollectionListModal = ({ title, closeModal, actions, onAddContent }: Cours
               size="small"
               variant="primary"
               onClick={form.handleSubmit(handleAddContent)}
-              disabled={form.watch('lessons').length === 0}
+              disabled={form.watch('contents').length === 0}
             >
               {__('Add', 'tutor')}
             </Button>

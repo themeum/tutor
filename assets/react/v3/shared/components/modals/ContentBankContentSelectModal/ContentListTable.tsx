@@ -26,14 +26,14 @@ const ContentListTable = () => {
   const getContentsQuery = useGetContentBankContents({
     page: String(pageInfo.page),
     collection_id: selectedCollection?.ID ?? null,
+    content_type: ['lesson', 'assignment'],
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
   });
 
   const totalItems = getContentsQuery.data?.total_record || 0;
   const totalPages = Number(getContentsQuery.data?.total_page || 0);
   const collectionName = selectedCollection?.post_title ?? __('All Contents', 'tutor');
-  const selectedLessons = form.watch('lessons') || [];
-  const selectedAssignments = form.watch('assignments') || [];
+  const selectedContents = form.watch('contents') || [];
   const fetchedContents = useMemo(() => getContentsQuery.data?.data ?? [], [getContentsQuery.data]);
 
   const onBack = () => {
@@ -44,33 +44,19 @@ const ContentListTable = () => {
 
   const toggleSelection = (isChecked = false) => {
     if (isChecked) {
-      const newLessons = fetchedContents.filter(
-        (content) => content.post_type === 'cb_lesson' && !selectedLessons.includes(String(content.ID)),
-      );
-      const newAssignments = fetchedContents.filter(
-        (content) => content.post_type === 'cb_assignment' && !selectedAssignments.includes(String(content.ID)),
-      );
-      form.setValue('lessons', [...selectedLessons, ...newLessons.map((lesson) => String(lesson.ID))]);
-      form.setValue('assignments', [
-        ...selectedAssignments,
-        ...newAssignments.map((assignment) => String(assignment.ID)),
-      ]);
+      const newContents = fetchedContents.filter((content) => !selectedContents.includes(String(content.ID)));
+      form.setValue('contents', [...selectedContents, ...newContents.map((content) => String(content.ID))]);
       return;
     }
 
-    const newLessons = selectedLessons.filter(
-      (lesson) => !fetchedContents.map((content) => String(content.ID)).includes(lesson),
+    const newContents = selectedContents.filter(
+      (content) => !fetchedContents.map((content) => String(content.ID)).includes(content),
     );
-    const newAssignments = selectedAssignments.filter(
-      (assignment) => !fetchedContents.map((content) => String(content.ID)).includes(assignment),
-    );
-    form.setValue('lessons', newLessons);
-    form.setValue('assignments', newAssignments);
+    form.setValue('contents', newContents);
   };
 
   function handleAllIsChecked() {
-    const selectedContentIds = [...selectedLessons, ...selectedAssignments];
-    return fetchedContents.every((content) => selectedContentIds.includes(String(content.ID)));
+    return fetchedContents.every((content) => selectedContents.includes(String(content.ID)));
   }
 
   const columns: Column<ContentBankContent>[] = [
@@ -90,36 +76,21 @@ const ContentListTable = () => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const selectedLessons = form.watch('lessons') || [];
-                const selectedAssignments = form.watch('assignments') || [];
-                const isLesson = item.post_type === 'cb_lesson';
-                const isAssignment = item.post_type === 'cb_assignment';
+                const selectedContents = form.watch('contents') || [];
 
-                if (isLesson) {
-                  const filteredLessons = selectedLessons.filter((lesson) => lesson !== String(item.ID));
-                  const isNewItem = filteredLessons.length === selectedLessons.length;
+                const filteredContents = selectedContents.filter((lesson) => lesson !== String(item.ID));
+                const isNewItem = filteredContents.length === selectedContents.length;
 
-                  if (isNewItem) {
-                    form.setValue('lessons', [...filteredLessons, String(item.ID)]);
-                  } else {
-                    form.setValue('lessons', filteredLessons);
-                  }
-                } else if (isAssignment) {
-                  const filteredAssignments = selectedAssignments.filter(
-                    (assignment) => assignment !== String(item.ID),
-                  );
-                  const isNewItem = filteredAssignments.length === selectedAssignments.length;
-
-                  if (isNewItem) {
-                    form.setValue('assignments', [...filteredAssignments, String(item.ID)]);
-                  } else {
-                    form.setValue('assignments', filteredAssignments);
-                  }
+                if (isNewItem) {
+                  form.setValue('contents', [...filteredContents, String(item.ID)]);
+                } else {
+                  form.setValue('contents', filteredContents);
                 }
               }}
               checked={
-                (item.post_type === 'cb_lesson' && selectedLessons.includes(String(item.ID))) ||
-                (item.post_type === 'cb_assignment' && selectedAssignments.includes(String(item.ID)))
+                getContentsQuery.isLoading || getContentsQuery.isRefetching
+                  ? false
+                  : selectedContents.includes(String(item.ID))
               }
             />
             <div>{item.post_title}</div>

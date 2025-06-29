@@ -64,7 +64,7 @@ const CollectionListTable = () => {
             <Show when={item.count_stats.total > 0}>
               <div css={styles.contentsWrapper}>
                 <Show when={item.count_stats.lesson > 0}>
-                  <span css={styles.contentBadge({ type: 'cb_lesson' })}>
+                  <span css={styles.contentBadge({ type: 'cb-lesson' })}>
                     {
                       /* translators: %d is the number of lessons */
                       sprintf(_n('%d Lesson', '%d Lessons', item.count_stats.lesson, 'tutor'), item.count_stats.lesson)
@@ -72,7 +72,7 @@ const CollectionListTable = () => {
                   </span>
                 </Show>
                 <Show when={item.count_stats.assignment > 0}>
-                  <span css={styles.contentBadge({ type: 'cb_assignment' })}>
+                  <span css={styles.contentBadge({ type: 'cb-assignment' })}>
                     {
                       /* translators: %d is the number of assignments */
                       sprintf(
@@ -83,7 +83,7 @@ const CollectionListTable = () => {
                   </span>
                 </Show>
                 <Show when={item.count_stats.question > 0}>
-                  <span css={styles.contentBadge({ type: 'cb_question' })}>
+                  <span css={styles.contentBadge({ type: 'cb-question' })}>
                     {
                       /* translators: %d is the number of questions */
                       sprintf(
@@ -209,19 +209,19 @@ const styles = {
     border-radius: ${borderRadius[4]};
     white-space: nowrap;
 
-    ${type === 'cb_lesson' &&
+    ${type === 'cb-lesson' &&
     css`
       background-color: #e8f4fd;
       color: ${colorTokens.icon.brand};
     `}
 
-    ${type === 'cb_assignment' &&
+    ${type === 'cb-assignment' &&
     css`
       background-color: #e6f8f1;
       color: ${colorTokens.icon.processing};
     `}
 
-    ${type === 'cb_question' &&
+    ${type === 'cb-question' &&
     css`
       background-color: #fff5e6;
       color: #ff7c02;
