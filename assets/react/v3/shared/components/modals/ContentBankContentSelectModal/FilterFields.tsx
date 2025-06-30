@@ -284,7 +284,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
     background-color: ${colorTokens.surface.tutor};
-    border-radius: 8px;
+    border-radius: ${borderRadius[8]};
   `,
   filterActions: css`
     padding: ${spacing[6]} ${spacing[12]} ${spacing[12]} ${spacing[12]};
