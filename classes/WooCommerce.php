@@ -122,12 +122,37 @@ class WooCommerce extends Tutor_Base {
 		add_action( 'woocommerce_guest_session_to_user_id', array( $this, 'enroll_guest_user' ), 10, 2 );
 
 		add_filter( 'woocommerce_shortcode_products_query_results', array( $this, 'filter_products_query_results' ), 10, 2 );
+
+		add_filter( 'woocommerce_shortcode_products_query', array( $this, 'filter_tutor_course_products' ) );
+	}
+
+	/**
+	 * Filter tutor courses from shortcode shop page if enabled.
+	 *
+	 * @since 3.6.2
+	 *
+	 * @param array $query_args the query args.
+	 *
+	 * @return array
+	 */
+	public function filter_tutor_course_products( $query_args ) {
+		$hide_course_from_shop_page = (bool) get_tutor_option( 'hide_course_from_shop_page' );
+
+		if ( ! $hide_course_from_shop_page ) {
+			return $query_args;
+		}
+
+		$course_ids = ( new Course() )->get_connected_wc_product_ids();
+
+		$query_args['post__not_in'] = $course_ids;
+
+		return $query_args;
 	}
 
 	/**
 	 * Filter woocommerce shop query result to remove scheduled posts.
 	 *
-	 * @since 3.7.0
+	 * @since 3.6.2
 	 *
 	 * @param \WP_Query $results the query result object.
 	 * @param object    $wc_shortcode_products_obj the shortcode product class object.
@@ -142,7 +167,13 @@ class WooCommerce extends Tutor_Base {
 				$ids,
 				function ( $val ) {
 					$course_id = (int) $this->get_post_id_by_meta_key_and_value( self::TUTOR_COURSE_PRODUCT_ID_META, $val );
-					return $course_id && 'publish' === get_post_status( $course_id );
+					if ( ! $course_id ) {
+						return true;
+					}
+
+					if ( $course_id && 'future' !== get_post_status( $course_id ) ) {
+						return true;
+					}
 				}
 			);
 
