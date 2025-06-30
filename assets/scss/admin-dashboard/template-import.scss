@@ -492,3 +492,12 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		}
 	}
 }
+
+.tutor-include-demo-courses-toggle {
+	gap: 10px;
+	.tutor-form-check-input {
+		width: 19px;
+		height: 19px;
+		margin-top: -3px;
+	}
+}
