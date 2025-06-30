@@ -252,8 +252,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                   id: 'content-bank-collection-list',
                   component: CollectionListModal,
                   props: {
-                    title: __('Content Bank', 'tutor'),
-                    icon: <SVGIcon name="contentBank" width={24} height={24} />,
+                    type: 'lesson_assignment',
                   },
                 });
               }}

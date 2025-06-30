@@ -7,6 +7,7 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type IconCollection } from '@TutorShared/icons/types';
 import Popover from '@TutorShared/molecules/Popover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestionType } from '@TutorShared/utils/types';
@@ -16,7 +17,7 @@ import { useRef, useState } from 'react';
 interface FilterFieldsProps {
   onFilterChange: (values: FilterFormValues) => void;
   initialValues?: FilterFormValues;
-  type: 'content' | 'question';
+  type: 'lesson_assignment' | 'question';
 }
 
 interface FilterFormValues {
@@ -39,33 +40,76 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
   const order = form.watch('order') || 'asc';
   const contentTypes = form.watch('contentTypes') || [];
   const questionTypes = form.watch('questionTypes') || [];
+  const isQuestionType = type === 'question';
 
-  const questionTypeOptions = [
-    {
-      label: __('Multiple Choice', 'tutor'),
-      value: 'multiple_choice',
-    },
+  const questionTypeOptions: {
+    label: string;
+    value: QuizQuestionType;
+    icon: IconCollection;
+  }[] = [
     {
       label: __('True/False', 'tutor'),
       value: 'true_false',
+      icon: 'quizTrueFalse',
+    },
+    {
+      label: __('Multiple Choice', 'tutor'),
+      value: 'multiple_choice',
+      icon: 'quizMultiChoice',
+    },
+    {
+      label: __('Open Ended/Essay', 'tutor'),
+      value: 'open_ended',
+      icon: 'quizEssay',
     },
     {
       label: __('Fill in the Blanks', 'tutor'),
-      value: 'fill_in_the_blanks',
+      value: 'fill_in_the_blank',
+      icon: 'quizFillInTheBlanks',
     },
     {
       label: __('Short Answer', 'tutor'),
       value: 'short_answer',
+      icon: 'quizShortAnswer',
     },
     {
-      label: __('Essay', 'tutor'),
-      value: 'essay',
+      label: __('Matching', 'tutor'),
+      value: 'matching',
+      icon: 'quizImageMatching',
+    },
+    {
+      label: __('Image Answering', 'tutor'),
+      value: 'image_answering',
+      icon: 'quizImageAnswer',
+    },
+    {
+      label: __('Ordering', 'tutor'),
+      value: 'ordering',
+      icon: 'quizOrdering',
     },
   ];
 
   return (
     <>
       <div css={styles.wrapper}>
+        <Show when={(!isQuestionType && contentTypes.length > 0) || (isQuestionType && questionTypes.length > 0)}>
+          <Button
+            size="small"
+            variant="text"
+            buttonCss={styles.clearButton}
+            onClick={() => {
+              form.reset({
+                contentTypes: [],
+                questionTypes: [],
+                order: 'asc',
+              });
+              onFilterChange(form.getValues());
+            }}
+          >
+            {__('Clear All', 'tutor')}
+          </Button>
+        </Show>
+
         <Button
           ref={filterButtonRef}
           variant="tertiary"
@@ -75,12 +119,10 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
         >
           <span>{__('Filters', 'tutor')}</span>
 
-          <Show
-            when={(type === 'content' && contentTypes.length > 0) || (type === 'question' && questionTypes.length > 0)}
-          >
+          <Show when={(!isQuestionType && contentTypes.length > 0) || (isQuestionType && questionTypes.length > 0)}>
             <div css={styles.filterCount}>
               <div css={styles.divider} />
-              <span>{type === 'content' ? contentTypes.length : questionTypes.length}</span>
+              <span>{isQuestionType ? questionTypes.length : contentTypes.length}</span>
             </div>
           </Show>
         </Button>
@@ -106,20 +148,25 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
           setIsFiltersPopoverOpen(false);
         }}
         triggerRef={filterButtonRef}
-        maxWidth={type === 'content' ? '170px' : '300px'}
+        maxWidth={!isQuestionType ? '200px' : '300px'}
       >
         <div css={styles.filterFieldsWrapper}>
           <h6>{__('Filter by', 'tutor')}</h6>
           {/* Add filter fields here */}
           <div css={styles.filterFields}>
             <Show
-              when={type === 'content'}
+              when={!isQuestionType}
               fallback={
                 <>
                   <For each={questionTypeOptions}>
                     {(option) => (
                       <Checkbox
-                        label={option.label}
+                        label={
+                          <div css={styles.questionType}>
+                            <SVGIcon name={option.icon} height={24} width={24} />
+                            <span>{option.label}</span>
+                          </div>
+                        }
                         checked={questionTypes.includes(option.value as QuizQuestionType)}
                         onChange={(isChecked) => {
                           const newTypes = isChecked
@@ -157,16 +204,18 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
             </Show>
           </div>
 
-          <Button
-            size="small"
-            variant="primary"
-            onClick={() => {
-              onFilterChange(form.getValues());
-              setIsFiltersPopoverOpen(false);
-            }}
-          >
-            {__('Apply Filters', 'tutor')}
-          </Button>
+          <div css={styles.filterActions}>
+            <Button
+              size="small"
+              variant="primary"
+              onClick={() => {
+                onFilterChange(form.getValues());
+                setIsFiltersPopoverOpen(false);
+              }}
+            >
+              {__('Apply Filters', 'tutor')}
+            </Button>
+          </div>
         </div>
       </Popover>
     </>
@@ -187,6 +236,15 @@ const styles = {
     padding: ${spacing[10]} ${spacing[12]};
     background-color: ${colorTokens.background.white};
     color: ${colorTokens.icon.default};
+  `,
+  clearButton: css`
+    flex-shrink: 0;
+  `,
+  questionType: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[12]};
+    color: ${colorTokens.text.primary};
   `,
   divider: css`
     width: 1px;
@@ -213,23 +271,26 @@ const styles = {
   `,
   filterFieldsWrapper: css`
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
-    padding: ${spacing[12]};
 
     h6 {
+      padding: ${spacing[12]} ${spacing[12]} ${spacing[6]} ${spacing[12]};
       ${typography.caption()};
       color: ${colorTokens.text.hints};
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
     }
   `,
   filterFields: css`
+    padding: ${spacing[6]} ${spacing[12]} ${spacing[6]} ${spacing[16]};
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
+    gap: ${spacing[16]};
     background-color: ${colorTokens.surface.tutor};
     border-radius: 8px;
   `,
   filterActions: css`
-    ${styleUtils.display.flex()};
-    justify-content: flex-end;
-    gap: ${spacing[8]};
+    padding: ${spacing[6]} ${spacing[12]} ${spacing[12]} ${spacing[12]};
+
+    button {
+      width: 100%;
+    }
   `,
 };

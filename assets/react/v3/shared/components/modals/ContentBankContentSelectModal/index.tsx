@@ -13,10 +13,12 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Collection } from '@TutorShared/utils/types';
 import ContentListTable from './ContentListTable';
+import QuestionListTable from './QuestionListTable';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   onAddContent?: (contents: string[]) => void;
+  type: 'lesson_assignment' | 'question';
 }
 
 export interface ContentSelectionForm {
@@ -24,7 +26,7 @@ export interface ContentSelectionForm {
   contents: string[];
 }
 
-const CollectionListModal = ({ title, closeModal, actions, onAddContent }: CourseListModalProps) => {
+const CollectionListModal = ({ closeModal, actions, onAddContent, type }: CourseListModalProps) => {
   const form = useFormWithGlobalError<ContentSelectionForm>({
     defaultValues: {
       selectedCollection: null,
@@ -42,14 +44,21 @@ const CollectionListModal = ({ title, closeModal, actions, onAddContent }: Cours
     <FormProvider {...form}>
       <BasicModalWrapper
         onClose={() => closeModal({ action: 'CLOSE' })}
-        title={title}
+        title={__('Content Bank', 'tutor')}
         entireHeader={selectedCollection && <>&nbsp;</>}
         icon={<SVGIcon name="contentBank" height={24} width={24} />}
         actions={actions}
         maxWidth={720}
       >
-        <Show when={!selectedCollection} fallback={<ContentListTable />}>
-          <CollectionListTable />
+        <Show
+          when={!selectedCollection}
+          fallback={
+            <Show when={type === 'lesson_assignment'} fallback={<QuestionListTable />}>
+              <ContentListTable />
+            </Show>
+          }
+        >
+          <CollectionListTable type={type} />
         </Show>
         <Show when={form.watch('selectedCollection')}>
           <div css={styles.footer}>

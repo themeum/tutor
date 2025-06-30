@@ -32,6 +32,7 @@ interface ContentBankContentsParams {
   search?: string;
   order?: string;
   content_types?: ('lesson' | 'assignment' | 'question')[];
+  question_types?: string[];
 }
 
 const getContentBankContents = (params: ContentBankContentsParams) => {

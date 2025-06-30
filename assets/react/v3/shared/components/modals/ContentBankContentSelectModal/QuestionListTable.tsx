@@ -14,21 +14,27 @@ import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
-import { CONTENT_BANK_POST_TYPE_MAP, useGetContentBankContents } from '@TutorShared/services/content-bank';
+import { type IconCollection } from '@TutorShared/icons/types';
+import { useGetContentBankContents } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type ContentBankContent } from '@TutorShared/utils/types';
+import { type ContentBankContent, type QuizQuestionType } from '@TutorShared/utils/types';
 import FilterFields from './FilterFields';
 import SearchField from './SearchField';
 
-const ContentListTable = () => {
+type SortDirection = 'asc' | 'desc';
+
+const QuestionListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
   const selectedCollection = form.watch('selectedCollection');
-  const [contentTypes, setContentTypes] = useState<('lesson' | 'assignment')[]>([]);
+  const [questionTypes, setQuestionTypes] = useState<QuizQuestionType[]>([]);
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
   const getContentsQuery = useGetContentBankContents({
     page: String(pageInfo.page),
     collection_id: selectedCollection?.ID ?? null,
-    content_types: contentTypes.length ? contentTypes : ['lesson', 'assignment'],
+    content_types: ['question'],
+    question_types: questionTypes.length ? questionTypes : undefined,
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
   });
 
@@ -38,80 +44,155 @@ const ContentListTable = () => {
   const selectedContents = form.watch('contents') || [];
   const fetchedContents = useMemo(() => getContentsQuery.data?.data ?? [], [getContentsQuery.data]);
 
-  const onBack = () => {
+  const sortedContents = useMemo(() => {
+    if (!fetchedContents.length) return [];
+
+    const sorted = [...fetchedContents].sort((a, b) => {
+      const titleA = a.post_title.toLowerCase();
+      const titleB = b.post_title.toLowerCase();
+
+      if (sortDirection === 'asc') {
+        return titleA.localeCompare(titleB);
+      }
+      return titleB.localeCompare(titleA);
+    });
+
+    return sorted;
+  }, [fetchedContents, sortDirection]);
+
+  const handleBack = () => {
     form.setValue('selectedCollection', null);
     onPageChange(1);
     onFilterItems({ search: '' });
   };
 
-  const toggleSelection = (isChecked = false) => {
+  const handleToggleSelection = (isChecked = false) => {
     if (isChecked) {
-      const newContents = fetchedContents.filter((content) => !selectedContents.includes(String(content.ID)));
+      const newContents = sortedContents.filter((content) => !selectedContents.includes(String(content.ID)));
       form.setValue('contents', [...selectedContents, ...newContents.map((content) => String(content.ID))]);
       return;
     }
 
     const newContents = selectedContents.filter(
-      (content) => !fetchedContents.map((content) => String(content.ID)).includes(content),
+      (content) => !sortedContents.map((content) => String(content.ID)).includes(content),
     );
     form.setValue('contents', newContents);
   };
 
   const handleAllIsChecked = () => {
-    return fetchedContents.every((content) => selectedContents.includes(String(content.ID)));
+    return sortedContents.every((content) => selectedContents.includes(String(content.ID)));
   };
+
+  const handleSortClick = () => {
+    const newSortDirection: SortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    setSortDirection(newSortDirection);
+  };
+
+  const questionTypeOptions: {
+    label: string;
+    value: QuizQuestionType;
+    icon: IconCollection;
+    isPro: boolean;
+  }[] = [
+    {
+      label: __('True/False', 'tutor'),
+      value: 'true_false',
+      icon: 'quizTrueFalse',
+      isPro: false,
+    },
+    {
+      label: __('Multiple Choice', 'tutor'),
+      value: 'multiple_choice',
+      icon: 'quizMultiChoice',
+      isPro: false,
+    },
+    {
+      label: __('Open Ended/Essay', 'tutor'),
+      value: 'open_ended',
+      icon: 'quizEssay',
+      isPro: false,
+    },
+    {
+      label: __('Fill in the Blanks', 'tutor'),
+      value: 'fill_in_the_blank',
+      icon: 'quizFillInTheBlanks',
+      isPro: false,
+    },
+    {
+      label: __('Short Answer', 'tutor'),
+      value: 'short_answer',
+      icon: 'quizShortAnswer',
+      isPro: true,
+    },
+    {
+      label: __('Matching', 'tutor'),
+      value: 'matching',
+      icon: 'quizImageMatching',
+      isPro: true,
+    },
+    {
+      label: __('Image Answering', 'tutor'),
+      value: 'image_answering',
+      icon: 'quizImageAnswer',
+      isPro: true,
+    },
+    {
+      label: __('Ordering', 'tutor'),
+      value: 'ordering',
+      icon: 'quizOrdering',
+      isPro: true,
+    },
+  ];
 
   const columns: Column<ContentBankContent>[] = [
     {
       Header: totalItems ? (
         <Checkbox
-          onChange={toggleSelection}
+          onChange={handleToggleSelection}
           checked={getContentsQuery.isLoading || getContentsQuery.isRefetching ? false : handleAllIsChecked()}
           label={__('Title', 'tutor')}
           labelCss={styles.tableTitle}
-          isIndeterminate={fetchedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
-          aria-label={__('Select all contents', 'tutor')}
+          isIndeterminate={sortedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
+          aria-label={__('Select all questions', 'tutor')}
         />
       ) : (
         __('# Title', 'tutor')
       ),
+      sortProperty: 'title',
+      name: 'title',
       Cell: (item) => {
+        const handleItemToggle = () => {
+          const selectedContents = form.watch('contents') || [];
+          const filteredContents = selectedContents.filter((lesson) => lesson !== String(item.ID));
+          const isNewItem = filteredContents.length === selectedContents.length;
+
+          if (isNewItem) {
+            form.setValue('contents', [...filteredContents, String(item.ID)]);
+          } else {
+            form.setValue('contents', filteredContents);
+          }
+        };
+
         return (
           <div css={styles.checkboxWrapper}>
             <Checkbox
-              onChange={() => {
-                const selectedContents = form.watch('contents') || [];
-
-                const filteredContents = selectedContents.filter((lesson) => lesson !== String(item.ID));
-                const isNewItem = filteredContents.length === selectedContents.length;
-
-                if (isNewItem) {
-                  form.setValue('contents', [...filteredContents, String(item.ID)]);
-                } else {
-                  form.setValue('contents', filteredContents);
-                }
-              }}
+              onChange={handleItemToggle}
               checked={
                 getContentsQuery.isLoading || getContentsQuery.isRefetching
                   ? false
                   : selectedContents.includes(String(item.ID))
               }
             />
-            <div>{item.post_title}</div>
-          </div>
-        );
-      },
-    },
-    {
-      Header: (
-        <div data-type css={styles.tableTitle}>
-          {__('Type', 'tutor')}
-        </div>
-      ),
-      Cell: (item) => {
-        return (
-          <div css={styles.type}>
-            <span css={styles.checkboxLabel}>{CONTENT_BANK_POST_TYPE_MAP[item.post_type]}</span>
+            <div css={styles.checkboxLabel}>
+              <Show when={questionTypeOptions.find((option) => option.value === item.question_type)?.icon}>
+                <SVGIcon
+                  name={
+                    questionTypeOptions.find((option) => option.value === item.question_type)?.icon as IconCollection
+                  }
+                />
+              </Show>
+              {item.post_title}
+            </div>
           </div>
         );
       },
@@ -130,7 +211,12 @@ const ContentListTable = () => {
     <>
       <div css={styles.wrapper}>
         <div css={styles.headerWithAction}>
-          <button css={styleUtils.backButton} onClick={onBack} aria-label={__('Go back to collection list', 'tutor')}>
+          <button
+            css={styleUtils.backButton}
+            onClick={handleBack}
+            aria-label={__('Go back to collection list', 'tutor')}
+            tabIndex={0}
+          >
             <SVGIcon name="arrowLeft" height={24} width={24} />
           </button>
           <div css={styles.headerTitle}>
@@ -152,9 +238,9 @@ const ContentListTable = () => {
           <SearchField onFilterItems={onFilterItems} />
 
           <FilterFields
-            type="lesson_assignment"
+            type="question"
             onFilterChange={(values) => {
-              setContentTypes(values.contentTypes as ('lesson' | 'assignment')[]);
+              setQuestionTypes(values.questionTypes || []);
             }}
           />
         </div>
@@ -162,11 +248,15 @@ const ContentListTable = () => {
         <div css={styles.tableWrapper}>
           <Table
             headerHeight={48}
-            isBordered={false}
+            isBordered
+            isRounded
             columns={columns}
-            data={fetchedContents}
+            data={sortedContents}
             itemsPerPage={itemsPerPage}
             loading={getContentsQuery.isFetching || getContentsQuery.isRefetching}
+            querySortProperty={'title'}
+            querySortDirection={sortDirection}
+            onSortClick={handleSortClick}
           />
         </div>
 
@@ -185,7 +275,7 @@ const ContentListTable = () => {
   );
 };
 
-export default ContentListTable;
+export default QuestionListTable;
 
 const styles = {
   tableActions: css`
@@ -201,6 +291,7 @@ const styles = {
     }
   `,
   tableWrapper: css`
+    margin: 0 ${spacing[16]} ${spacing[12]} ${spacing[16]};
     max-height: calc(100vh - 350px);
     overflow: auto;
 
@@ -213,7 +304,7 @@ const styles = {
     }
 
     td {
-      padding: ${spacing[12]} ${spacing[20]};
+      padding: ${spacing[12]} ${spacing[16]};
     }
   `,
   paginatorWrapper: css`
@@ -243,11 +334,11 @@ const styles = {
     ${styleUtils.display.flex('column')};
   `,
   tableTitle: css`
-    ${typography.body('medium')};
-    color: ${colorTokens.text.primary};
+    ${typography.small('regular')};
+    color: ${colorTokens.text.hints};
   `,
   checkboxLabel: css`
-    ${typography.caption()};
+    ${typography.caption('medium')};
     color: ${colorTokens.text.primary};
   `,
   checkboxWrapper: css`

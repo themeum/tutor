@@ -17,7 +17,15 @@ import { useGetCollectionsPaginatedQuery } from '@TutorShared/services/content-b
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection, type CollectionContentType } from '@TutorShared/utils/types';
 
-const CollectionListTable = () => {
+interface CollectionListTableProps {
+  type: 'lesson_assignment' | 'question';
+}
+
+const CollectionListTable = ({
+  type,
+}: CollectionListTableProps & {
+  type: 'lesson_assignment' | 'question';
+}) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
 
@@ -34,72 +42,75 @@ const CollectionListTable = () => {
   const columns: Column<Collection>[] = useMemo(
     () => [
       {
-        Cell: (item) => (
-          <button
-            css={styles.collectionItemWrapper}
-            onClick={() => form.setValue('selectedCollection', item)}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                form.setValue('selectedCollection', item);
+        Cell: (item) => {
+          const totalLessons = Number(item.count_stats.lesson) || 0;
+          const totalAssignments = Number(item.count_stats.assignment) || 0;
+          const totalQuestions = Number(item.count_stats.question) || 0;
+          const totalItems = type === 'lesson_assignment' ? totalLessons + totalAssignments : totalQuestions;
+
+          return (
+            <button
+              css={styles.collectionItemWrapper}
+              onClick={() => form.setValue('selectedCollection', item)}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  form.setValue('selectedCollection', item);
+                }
+              }}
+              aria-label={
+                /* translators: %s is the collection title */
+                sprintf(__('Select collection: %s', 'tutor'), item.post_title)
               }
-            }}
-            aria-label={
-              /* translators: %s is the collection title */
-              sprintf(__('Select collection: %s', 'tutor'), item.post_title)
-            }
-            tabIndex={0}
-          >
-            <div css={styles.title}>
-              <div data-collection-title>{item.post_title}</div>
-              <Show when={(item?.count_stats?.total ?? 0) > 0}>
-                <div>
-                  {
-                    /* translators: %d is the total number of contents */
-                    sprintf(_n('%d Item', '%d Items', item.count_stats.total, 'tutor'), item.count_stats.total)
-                  }
-                </div>
-              </Show>
-            </div>
-            <Show when={item.count_stats.total > 0}>
-              <div css={styles.contentsWrapper}>
-                <Show when={item.count_stats.lesson > 0}>
-                  <span css={styles.contentBadge({ type: 'cb-lesson' })}>
+              tabIndex={0}
+            >
+              <div css={styles.title}>
+                <div data-collection-title>{item.post_title}</div>
+                <Show when={(item?.count_stats?.total ?? 0) > 0}>
+                  <div>
                     {
-                      /* translators: %d is the number of lessons */
-                      sprintf(_n('%d Lesson', '%d Lessons', item.count_stats.lesson, 'tutor'), item.count_stats.lesson)
+                      /* translators: %d is the total number of contents */
+                      sprintf(_n('%d Item', '%d Items', totalItems, 'tutor'), totalItems)
                     }
-                  </span>
-                </Show>
-                <Show when={item.count_stats.assignment > 0}>
-                  <span css={styles.contentBadge({ type: 'cb-assignment' })}>
-                    {
-                      /* translators: %d is the number of assignments */
-                      sprintf(
-                        _n('%d Assignment', '%d Assignments', item.count_stats.assignment, 'tutor'),
-                        item.count_stats.assignment,
-                      )
-                    }
-                  </span>
-                </Show>
-                <Show when={item.count_stats.question > 0}>
-                  <span css={styles.contentBadge({ type: 'cb-question' })}>
-                    {
-                      /* translators: %d is the number of questions */
-                      sprintf(
-                        _n('%d Question', '%d Questions', item.count_stats.question, 'tutor'),
-                        item.count_stats.question,
-                      )
-                    }
-                  </span>
+                  </div>
                 </Show>
               </div>
-            </Show>
-          </button>
-        ),
+              <Show when={totalItems > 0}>
+                <div css={styles.contentsWrapper}>
+                  <Show when={type === 'lesson_assignment'}>
+                    <Show when={totalLessons > 0}>
+                      <span css={styles.contentBadge({ type: 'cb-lesson' })}>
+                        {
+                          /* translators: %d is the number of lessons */
+                          sprintf(_n('%d Lesson', '%d Lessons', totalLessons, 'tutor'), totalLessons)
+                        }
+                      </span>
+                    </Show>
+                    <Show when={totalAssignments > 0}>
+                      <span css={styles.contentBadge({ type: 'cb-assignment' })}>
+                        {
+                          /* translators: %d is the number of assignments */
+                          sprintf(_n('%d Assignment', '%d Assignments', totalAssignments, 'tutor'), totalAssignments)
+                        }
+                      </span>
+                    </Show>
+                  </Show>
+                  <Show when={totalQuestions > 0 && type === 'question'}>
+                    <span css={styles.contentBadge({ type: 'cb-question' })}>
+                      {
+                        /* translators: %d is the number of questions */
+                        sprintf(_n('%d Question', '%d Questions', totalQuestions, 'tutor'), totalQuestions)
+                      }
+                    </span>
+                  </Show>
+                </div>
+              </Show>
+            </button>
+          );
+        },
       },
     ],
-    [form],
+    [form, type],
   );
 
   if (getCollectionListQuery.isLoading) {

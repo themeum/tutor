@@ -28,6 +28,8 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import Button from '@TutorShared/atoms/Button';
+import CollectionListModal from '@TutorShared/components/modals/ContentBankContentSelectModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -403,6 +405,45 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                 </button>
               </Show>
             ))}
+            <Show
+              when={isTutorPro}
+              fallback={
+                <span css={styles.addFormContentBankButton}>
+                  <ProBadge size="tiny">
+                    <Button
+                      disabled
+                      variant="secondary"
+                      size="small"
+                      onClick={noop}
+                      icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                    >
+                      {__('Add from Content Bank', 'tutor')}
+                    </Button>
+                    <ProBadge size="small" content={__('Pro', 'tutor')} />
+                  </ProBadge>
+                </span>
+              }
+            >
+              <span css={styles.addFormContentBankButton}>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => {
+                    showModal({
+                      component: CollectionListModal,
+                      props: {
+                        title: __('Content Bank', 'tutor'),
+                        type: 'question',
+                      },
+                    });
+                    setIsOpen(false);
+                  }}
+                  icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                >
+                  {__('Add from Content Bank', 'tutor')}
+                </Button>
+              </span>
+            </Show>
           </div>
         </Popover>
       </div>
@@ -461,6 +502,15 @@ const styles = {
     color: ${colorTokens.text.subdued};
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
+  `,
+  addFormContentBankButton: css`
+    margin-inline: ${spacing[8]};
+    padding-block: ${spacing[8]};
+    border-top: 1px solid ${colorTokens.stroke.divider};
+
+    button {
+      margin: 0 ${spacing[8]};
+    }
   `,
   questionOptionsWrapper: css`
     display: flex;

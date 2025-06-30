@@ -360,6 +360,7 @@ export interface ContentBankContent {
   post_content: string;
   post_name: string | null;
   post_type: CollectionContentType;
+  question_type?: QuizQuestionType;
   post_author: string;
   post_parent: string;
   post_date: string;
