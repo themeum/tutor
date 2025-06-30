@@ -94,9 +94,9 @@
 							<div id="droip-color-modes">
 							</div>
 						</div>
-						<div class="tutor-include-demo-courses-toggle tutor-d-flex gap-1" style="margin-top: 20px;">
+						<div class="tutor-include-demo-courses-toggle tutor-d-flex">
 							<input id="include-demo-courses" class="tutor-form-check-input" type="checkbox" checked>
-							<label for="include-demo-courses" style="font-size: 13px;margin-top: -7px;"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
+							<label for="include-demo-courses"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
 						</div>
 						<div class="tutor-template-import-btn-wrapper">
 							<?php
