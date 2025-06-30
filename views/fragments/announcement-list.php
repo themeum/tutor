@@ -344,7 +344,7 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 	</table>
 </div>
 <?php else : ?>
-	<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', array() ); ?>
+	<?php tutils()->render_list_empty_state(); ?>
 <?php endif; ?>
 
 <div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : 'tutor-mt-40' ); ?>">

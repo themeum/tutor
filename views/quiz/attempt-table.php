@@ -199,7 +199,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 		</table>
 	</div>
 <?php else : ?>
-	<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', array() ); ?>
+	<?php tutils()->render_list_empty_state(); ?>
 <?php endif; ?>
 <?php
 // Load delete modal.

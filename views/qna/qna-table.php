@@ -215,5 +215,5 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 	</div>
 	<!-- end table responsive -->
 <?php else : ?>
-	<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+	<?php tutor_utils()->render_list_empty_state(); ?>
 <?php endif; ?>

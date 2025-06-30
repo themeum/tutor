@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 
 if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
@@ -63,7 +64,7 @@ $filters = array(
 			'label'      => __( 'Courses', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'course-id',
-			'options'    => tutils()->get_filter_course_options(),
+			'options'    => CourseModel::get_course_dropdown_options(),
 			'searchable' => true,
 			'value'      => Input::get( 'course-id', '' ),
 		),

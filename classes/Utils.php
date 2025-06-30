@@ -8913,6 +8913,19 @@ class Utils {
 	}
 
 	/**
+	 * Render list empty state template
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param array   $data title and subtitle.
+	 *
+	 * @return void
+	 */
+	public function render_list_empty_state($data = array()) {
+		tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', $data );
+	}
+
+	/**
 	 * Get tutor TOC page link
 	 * Settings > General > Terms and Conditions Page
 	 *
@@ -10667,31 +10680,5 @@ class Utils {
 			}
 		}
 		return $branch;
-	}
-
-	/**
-	 * Get filter course options
-	 *
-	 * @since 3.7.0
-	 *
-	 * @return array
-	 */
-	public function get_filter_course_options() {
-		$courses        = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
-		$course_options = array(
-			array(
-				'key'   => '',
-				'title' => __( 'All Courses', 'tutor' ),
-			),
-		);
-		if ( ! empty( $courses ) ) {
-			foreach ( $courses as $course ) {
-				$course_options[] = array(
-					'key'   => $course->ID,
-					'title' => $course->post_title,
-				);
-			}
-		}
-		return $course_options;
 	}
 }

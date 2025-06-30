@@ -57,7 +57,7 @@ $filters = array(
 			'label'      => __( 'Courses', 'tutor' ),
 			'field_type' => 'select',
 			'field_name' => 'course-id',
-			'options'    => tutils()->get_filter_course_options(),
+			'options'    => CourseModel::get_course_dropdown_options(),
 			'searchable' => true,
 			'value'      => Input::get( 'course-id', '' ),
 		),
@@ -177,7 +177,7 @@ $filters = array(
 				</table>
 			</div>
 		<?php else : ?>
-			<?php tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', array() ); ?>
+			<?php tutils()->render_list_empty_state(); ?>
 		<?php endif; ?>
 
 		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
