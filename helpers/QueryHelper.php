@@ -153,6 +153,7 @@ class QueryHelper {
 	 * @param array  $request two dimensional array
 	 * for ex: [ [id => 1], [id => 2] ].
 	 * @param bool   $return_ids if true returns the last inserted data ids.
+	 * @param bool   $do_sanitize sanitize data or not.
 	 *
 	 * @return mixed  wpdb response true or int on success, false on failure.
 	 * @throws \Exception If error occur.
@@ -204,6 +205,7 @@ class QueryHelper {
 
 		if ( $return_ids ) {
 			$query_ids = $wpdb->get_results(
+				//phpcs:ignore
 				"SELECT ID FROM {$table} WHERE ID >= LAST_INSERT_ID()",
 				'ARRAY_N'
 			);
