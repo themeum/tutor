@@ -222,6 +222,7 @@ export const icons = [
   'contentBank',
   'sortASC',
   'sortDESC',
+  'mageFilter',
 ] as const;
 
 export type IconCollection = (typeof icons)[number];

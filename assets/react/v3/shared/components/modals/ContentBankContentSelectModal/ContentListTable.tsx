@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __, _n, sprintf } from '@wordpress/i18n';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
@@ -17,16 +17,18 @@ import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import { CONTENT_BANK_POST_TYPE_MAP, useGetContentBankContents } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ContentBankContent } from '@TutorShared/utils/types';
+import FilterFields from './FilterFields';
 import SearchField from './SearchField';
 
 const ContentListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
   const selectedCollection = form.watch('selectedCollection');
+  const [contentTypes, setContentTypes] = useState<('lesson' | 'assignment')[]>([]);
   const getContentsQuery = useGetContentBankContents({
     page: String(pageInfo.page),
     collection_id: selectedCollection?.ID ?? null,
-    content_type: ['lesson', 'assignment'],
+    content_types: contentTypes.length ? contentTypes : ['lesson', 'assignment'],
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
   });
 
@@ -123,52 +125,61 @@ const ContentListTable = () => {
   }
 
   return (
-    <div css={styles.wrapper}>
-      <div css={styles.headerWithAction}>
-        <button css={styleUtils.backButton} onClick={onBack} aria-label={__('Go back to collection list', 'tutor')}>
-          <SVGIcon name="arrowLeft" height={24} width={24} />
-        </button>
-        <div css={styles.headerTitle}>
-          <span>{collectionName} </span>
-          <Show when={totalItems}>
-            <span>
-              (
-              {
-                /* translators: %d is the total number of contents */
-                sprintf(_n('%d Item', '%d Items', totalItems, 'tutor'), totalItems)
-              }
-              )
-            </span>
-          </Show>
+    <>
+      <div css={styles.wrapper}>
+        <div css={styles.headerWithAction}>
+          <button css={styleUtils.backButton} onClick={onBack} aria-label={__('Go back to collection list', 'tutor')}>
+            <SVGIcon name="arrowLeft" height={24} width={24} />
+          </button>
+          <div css={styles.headerTitle}>
+            <span>{collectionName} </span>
+            <Show when={totalItems}>
+              <span>
+                (
+                {
+                  /* translators: %d is the total number of contents */
+                  sprintf(_n('%d Item', '%d Items', totalItems, 'tutor'), totalItems)
+                }
+                )
+              </span>
+            </Show>
+          </div>
         </div>
-      </div>
 
-      <div css={styles.tableActions}>
-        <SearchField onFilterItems={onFilterItems} />
-      </div>
+        <div css={styles.tableActions}>
+          <SearchField onFilterItems={onFilterItems} />
 
-      <div css={styles.tableWrapper}>
-        <Table
-          headerHeight={48}
-          isBordered={false}
-          columns={columns}
-          data={fetchedContents}
-          itemsPerPage={itemsPerPage}
-          loading={getContentsQuery.isFetching || getContentsQuery.isRefetching}
-        />
-      </div>
-
-      <Show when={totalPages > 1}>
-        <div css={styles.paginatorWrapper}>
-          <Paginator
-            currentPage={pageInfo.page}
-            onPageChange={onPageChange}
-            totalItems={totalItems}
-            itemsPerPage={itemsPerPage}
+          <FilterFields
+            type="content"
+            onFilterChange={(values) => {
+              setContentTypes(values.contentTypes as ('lesson' | 'assignment')[]);
+            }}
           />
         </div>
-      </Show>
-    </div>
+
+        <div css={styles.tableWrapper}>
+          <Table
+            headerHeight={48}
+            isBordered={false}
+            columns={columns}
+            data={fetchedContents}
+            itemsPerPage={itemsPerPage}
+            loading={getContentsQuery.isFetching || getContentsQuery.isRefetching}
+          />
+        </div>
+
+        <Show when={totalPages > 1}>
+          <div css={styles.paginatorWrapper}>
+            <Paginator
+              currentPage={pageInfo.page}
+              onPageChange={onPageChange}
+              totalItems={totalItems}
+              itemsPerPage={itemsPerPage}
+            />
+          </div>
+        </Show>
+      </div>
+    </>
   );
 };
 
@@ -176,7 +187,16 @@ export default ContentListTable;
 
 const styles = {
   tableActions: css`
+    width: 100%;
+    display: grid;
+    grid-template-columns: 212px 1fr;
+    justify-content: space-between;
+    gap: ${spacing[16]};
     padding: ${spacing[20]};
+
+    div:last-of-type {
+      justify-self: end;
+    }
   `,
   tableWrapper: css`
     max-height: calc(100vh - 350px);
