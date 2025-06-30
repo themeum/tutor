@@ -1054,15 +1054,16 @@ class QueryHelper {
 	 *
 	 * @return int|WP_Error      New row ID on success, or WP_Error on failure.
 	 */
-	public function duplicate_row( $table_name, array $where, ?callable $modifier = null ) {
+	public static function duplicate_row( $table_name, array $where, ?callable $modifier = null ) {
 		global $wpdb;
 
 		if ( empty( $where ) ) {
 			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
 		}
 
-		$sql = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$this->build_where_clause( $where )} LIMIT %d", 1 );
-		$row = $wpdb->get_row( $sql, ARRAY_A );
+		$where_clause = self::build_where_clause( $where );
+		$sql          = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$where_clause} LIMIT %d", 1 );
+		$row          = $wpdb->get_row( $sql, ARRAY_A );
 
 		if ( ! $row ) {
 			return new \WP_Error( 'not_found', 'No matching row found to duplicate.' );
