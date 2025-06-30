@@ -1041,4 +1041,58 @@ class QueryHelper {
 		return $table_name;
 	}
 
+	/**
+	 * Duplicate a row with modification callback support.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string             $table_name name of the database table (with prefix if needed).
+	 * @param array              $where      associative array of WHERE conditions.
+	 * @param callable|null      $modifier   optional callback to modify or exclude fields before insertion.
+	 *
+	 * @return int|WP_Error      New row ID on success, or WP_Error on failure.
+	 */
+	public function duplicate_row( $table_name, array $where, ?callable $modifier = null ) {
+		global $wpdb;
+
+		if ( empty( $where ) ) {
+			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
+		}
+
+		$sql = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$this->build_where_clause( $where )} LIMIT %d", 1 );
+		$row = $wpdb->get_row( $sql, ARRAY_A );
+
+		if ( ! $row ) {
+			return new \WP_Error( 'not_found', 'No matching row found to duplicate.' );
+		}
+
+		// Apply user-defined modifications (ex: remove ID, change field value)
+		if ( is_callable( $modifier ) ) {
+			$row = call_user_func( $modifier, $row );
+
+			if ( ! is_array( $row ) || empty( $row ) ) {
+				return new \WP_Error( 'invalid_modified_row', 'Modified row is invalid or empty.' );
+			}
+		}
+
+		// Prepare insert
+		$columns      = array_keys( $row );
+		$placeholders = array_fill( 0, count( $columns ), '%s' );
+		$values       = array_values( $row );
+
+		$insert_sql = $wpdb->prepare(
+			"INSERT INTO `$table_name` (`" . implode( '`, `', $columns ) . "`) 
+			VALUES (" . implode( ', ', $placeholders ) . ")",
+			...$values
+		);
+
+		$result = $wpdb->query( $insert_sql );
+
+		if ( false === $result ) {
+			return new \WP_Error( 'insert_failed', 'Failed to insert duplicate row.' );
+		}
+
+		return $wpdb->insert_id;
+	}
+
 }
