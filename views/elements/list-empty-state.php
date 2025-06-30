@@ -9,6 +9,15 @@
  * @since 3.5.0
  */
 
+$subtile       = tutor_utils()->get_list_empty_state_subtitle();
+$subtitle_text = '';
+
+if ( isset( $data['sub_title'] ) ) {
+	$subtitle_text = $data['sub_title'];
+} elseif ( $subtile ) {
+	$subtitle_text = $subtile;
+}
+
 ?>
 <div class="tutor-divider tutor-radius-12 tutor-overflow-hidden">
 	<div class="tutor-px-32 tutor-py-64 tutor-bg-white tutor-text-center">
@@ -28,8 +37,10 @@
 		<h6 class="tutor-fs-6 tutor-fw-bold tutor-mb-0 tutor-mt-32">
 			<?php echo esc_html( isset( $data['title'] ) ? $data['title'] : __( 'No Data Found.', 'tutor' ) ); ?>
 		</h6>
+		<?php if ( ! empty( $subtitle_text ) ) : ?>
 		<p class="tutor-fs-7 tutor-color-hints tutor-mt-8 tutor-mb-0">
-			<?php echo esc_html( isset( $data['sub_title'] ) ? $data['sub_title'] : __( 'Try using different keywords', 'tutor' ) ); ?>
+			<?php echo esc_html( $subtitle_text ); ?>
 		</p>
+		<?php endif; ?>
 	</div>
 </div>
