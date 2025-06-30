@@ -356,6 +356,15 @@ class Assets {
 			if ( CourseModel::COURSE_CATEGORY === $taxonomy || CourseModel::COURSE_TAG === $taxonomy ) {
 				$localize_data['open_tutor_admin_menu'] = true;
 			}
+
+			if ( 'en_US' !== $localize_data['local'] ) {
+				$page            = Input::get( 'page', '' );
+				$action          = Input::get( 'action' );
+				$allowed_actions = array( 'add_new', 'edit' );
+				if ( CouponController::PAGE_SLUG === $page && in_array( $action, $allowed_actions, true ) ) {
+					$localize_data['coupon_main_content_locales'] = tutils()->get_script_locale_data( 'tutor-coupon-main-content', $localize_data['local'] );
+				}
+			}
 		} else {
 
 			// Assign quiz option.

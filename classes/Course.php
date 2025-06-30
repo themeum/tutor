@@ -1552,6 +1552,12 @@ class Course extends Tutor_Base {
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
 		$data['max_upload_size']          = size_format( wp_max_upload_size() );
 
+		if ( 'en_US' !== $data['local'] ) {
+			$data['course_builder_basic_locales']      = tutils()->get_script_locale_data( 'tutor-course-builder-basic', $data['local'] );
+			$data['course_builder_curriculum_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-curriculum', $data['local'] );
+			$data['course_builder_additional_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-additional', $data['local'] );
+		}
+
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
 		return $data;
