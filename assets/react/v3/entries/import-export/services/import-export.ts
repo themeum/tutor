@@ -196,6 +196,7 @@ export interface ImportExportContentResponseBase {
   completed_contents: {
     courses: ImportExportCompletedContentsItem;
     'course-bundle': ImportExportCompletedContentsItem;
+    collections: ImportExportCompletedContentsItem;
     settings: boolean;
   };
 }
