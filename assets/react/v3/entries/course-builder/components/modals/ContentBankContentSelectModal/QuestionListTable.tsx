@@ -35,6 +35,7 @@ const QuestionListTable = () => {
     page: String(pageInfo.page),
     collection_id: selectedCollection?.ID ?? null,
     content_types: ['question'],
+    context: 'quiz_builder',
     ...(orderDirection ? { order: orderDirection.toUpperCase() } : {}),
     ...(questionTypes.length ? { question_types: questionTypes } : {}),
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
@@ -44,6 +45,7 @@ const QuestionListTable = () => {
   const totalPages = Number(getContentsQuery.data?.total_page || 0);
   const collectionName = selectedCollection?.post_title ?? __('All Contents', 'tutor');
   const selectedContents = form.watch('contents') || [];
+  const selectedContentIds = selectedContents.map((content) => String(content.ID));
   const fetchedContents = useMemo(() => getContentsQuery.data?.data ?? [], [getContentsQuery.data]);
 
   const sortedContents = useMemo(() => {
@@ -70,19 +72,21 @@ const QuestionListTable = () => {
 
   const handleToggleSelection = (isChecked = false) => {
     if (isChecked) {
-      const newContents = sortedContents.filter((content) => !selectedContents.includes(String(content.ID)));
-      form.setValue('contents', [...selectedContents, ...newContents.map((content) => String(content.ID))]);
+      const newContents = sortedContents.filter((content) => !selectedContentIds.includes(String(content.ID)));
+      form.setValue('contents', [...selectedContents, ...newContents]);
       return;
     }
 
     const newContents = selectedContents.filter(
-      (content) => !sortedContents.map((content) => String(content.ID)).includes(content),
+      (content) => !sortedContents.map((content) => String(content.ID)).includes(String(content.ID)),
     );
     form.setValue('contents', newContents);
   };
 
   const handleAllIsChecked = () => {
-    return sortedContents.every((content) => selectedContents.includes(String(content.ID)));
+    return (
+      sortedContents.length > 0 && sortedContents.every((content) => selectedContentIds.includes(String(content.ID)))
+    );
   };
 
   const handleSortClick = () => {
@@ -165,11 +169,11 @@ const QuestionListTable = () => {
       Cell: (item) => {
         const handleItemToggle = () => {
           const selectedContents = form.watch('contents') || [];
-          const filteredContents = selectedContents.filter((lesson) => lesson !== String(item.ID));
+          const filteredContents = selectedContents.filter((content) => String(content.ID) !== String(item.ID));
           const isNewItem = filteredContents.length === selectedContents.length;
 
           if (isNewItem) {
-            form.setValue('contents', [...filteredContents, String(item.ID)]);
+            form.setValue('contents', [...filteredContents, item]);
           } else {
             form.setValue('contents', filteredContents);
           }
@@ -182,7 +186,7 @@ const QuestionListTable = () => {
               checked={
                 getContentsQuery.isLoading || getContentsQuery.isRefetching
                   ? false
-                  : selectedContents.includes(String(item.ID))
+                  : selectedContentIds.includes(String(item.ID))
               }
             />
             <div css={styles.checkboxLabel}>
@@ -191,6 +195,8 @@ const QuestionListTable = () => {
                   name={
                     questionTypeOptions.find((option) => option.value === item.question_type)?.icon as IconCollection
                   }
+                  height={24}
+                  width={24}
                 />
               </Show>
               {item.post_title}
@@ -345,6 +351,9 @@ const styles = {
     color: ${colorTokens.text.hints};
   `,
   checkboxLabel: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[12]};
     ${typography.caption('medium')};
     color: ${colorTokens.text.primary};
   `,

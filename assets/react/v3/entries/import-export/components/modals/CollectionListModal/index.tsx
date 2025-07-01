@@ -11,25 +11,19 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type Collection, type ContentBankContent, type QuizQuestion } from '@TutorShared/utils/types';
+import { type Collection } from '@TutorShared/utils/types';
 import ContentListTable from './ContentListTable';
 import QuestionListTable from './QuestionListTable';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  onAddContent?: (
-    contents: (ContentBankContent & {
-      question?: QuizQuestion;
-    })[],
-  ) => void;
+  onAddContent?: (contents: string[]) => void;
   type: 'lesson_assignment' | 'question';
 }
 
 export interface ContentSelectionForm {
   selectedCollection: Collection | null;
-  contents: (ContentBankContent & {
-    question?: QuizQuestion;
-  })[];
+  contents: string[];
 }
 
 const CollectionListModal = ({ closeModal, actions, onAddContent, type }: CourseListModalProps) => {
@@ -42,7 +36,6 @@ const CollectionListModal = ({ closeModal, actions, onAddContent, type }: Course
 
   const handleAddContent = (data: ContentSelectionForm) => {
     onAddContent?.(data.contents);
-    closeModal({ action: 'CONFIRM' });
   };
 
   const selectedCollection = form.watch('selectedCollection');

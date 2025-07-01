@@ -39,6 +39,7 @@ interface ExportModalProps extends ModalProps {
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
+  isContentBank?: boolean;
 }
 
 interface BulkSelectionFormData {
@@ -57,6 +58,7 @@ const ExportModal = ({
   fileSize,
   message,
   completedContents,
+  isContentBank,
 }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: defaultExportFormData,
@@ -197,6 +199,7 @@ const ExportModal = ({
         isLoading={getExportableContentQuery.isLoading}
         componentMapping={componentMapping}
         resetBulkSelection={resetBulkSelection}
+        isFromContentBank={isContentBank}
       />
     ),
     progress: <ImportExportProgressState progress={progress} message={message} type="export" />,
