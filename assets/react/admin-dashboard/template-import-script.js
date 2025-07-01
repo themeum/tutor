@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (templateDemoImportRoot) {
 		// Open live preview modal
 		templateDemoImportRoot.addEventListener('click', (event) => {
-			if (event.target && event.target.matches('.tutor-template-preview-btn')) {
+			if (event.target.closest('.tutor-template-preview-btn')) {
 				document.body.style.overflow = 'hidden';
 				tutorTemplateShimmerEffect.style.display = "block";
 				livePreviewModal.style.display = "flex";
