@@ -33,7 +33,7 @@ if ( ! empty( $template_list ) ) { ?>
 						</div>
 						<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-preview-btn" data-template_name="<?php echo esc_attr( $template->label ); ?>" data-template_id="<?php echo esc_attr( $template->slug ); ?>" data-template_url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>">
-								<?php esc_html_e( 'Preview', 'tutor' ); ?>
+								<?php esc_html_e( 'Import', 'tutor' ); ?>
 							</button>
 						</div>
 					</div>

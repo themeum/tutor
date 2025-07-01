@@ -442,7 +442,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	}
 
 	#droip-color-modes {
-		padding: 10px 0px;
+		padding: 10px 0px 0px 0px;
 		display: none;
 	}
 
@@ -490,5 +490,19 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 			top: 0;
 			transform: translateX(50%) translateY(-50%);
 		}
+	}
+}
+
+.tutor-include-demo-courses-toggle {
+	margin-top: 20px;
+	gap: 10px;
+	.tutor-form-check-input {
+		width: 19px;
+		height: 19px;
+		margin-top: -3px;
+	}
+	label {
+		margin-top: -7px;
+		font-size: 13px;
 	}
 }
