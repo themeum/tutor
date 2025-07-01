@@ -96,6 +96,7 @@
 						</div>
 						<div class="tutor-include-demo-courses-toggle tutor-d-flex">
 							<input id="include-demo-courses" class="tutor-form-check-input" type="checkbox" checked>
+							<input type="hidden" id="tutor_template_course_data_url">
 							<label for="include-demo-courses"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
 						</div>
 						<div class="tutor-template-import-btn-wrapper">
