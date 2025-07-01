@@ -77,7 +77,7 @@ const ExportModal = ({
   });
 
   const getExportableContentQuery = useExportableContentQuery();
-  const exportableContent = !isTutorPro
+  const exportableContent = isTutorPro
     ? getExportableContentQuery.data
     : ([
         {
