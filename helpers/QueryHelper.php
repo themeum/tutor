@@ -79,7 +79,8 @@ class QueryHelper {
 	}
 
 	/**
-	 * Delete rows from table
+	 * Delete a row from table with where clause.
+	 * Limitation: It can only delete one row by wpdb::delete
 	 *
 	 * @param string $table  table name.
 	 * @param array  $where  key value pairs.Where key is the name of
@@ -95,6 +96,22 @@ class QueryHelper {
 			$where
 		);
 		return $delete ? true : false;
+	}
+
+	/**
+	 * Bulk record delete by where clause.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string $table table name.
+	 * @param array  $where where clause.
+	 *
+	 * @return int|boolean
+	 */
+	public static function bulk_delete( $table, array $where ): bool {
+		$where_clause = self::build_where_clause( $where );
+		global $wpdb;
+		return $wpdb->query( "DELETE FROM {$table} WHERE {$where_clause}" ); //phpcs:ignore --$where clause sanitized.
 	}
 
 	/**
