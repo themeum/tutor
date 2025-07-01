@@ -38,6 +38,8 @@ export const removeAllQueryParams = ({ exclude }: { exclude: string[] }) => {
     searchParams.delete(key);
   });
 
-  const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+  const newUrl = searchParams.toString()
+    ? `${window.location.pathname}?${searchParams.toString()}`
+    : window.location.pathname;
   window.history.replaceState({}, '', newUrl);
 };

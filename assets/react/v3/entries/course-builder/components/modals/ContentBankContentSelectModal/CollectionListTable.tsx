@@ -8,7 +8,7 @@ import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
-import SearchField from '@ImportExport/components/modals/CourseListModal/SearchField';
+import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
