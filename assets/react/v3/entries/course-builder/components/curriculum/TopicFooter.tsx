@@ -21,6 +21,7 @@ import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 
+import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
@@ -223,6 +224,43 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         </div>
         <div css={styles.rightButtons}>
           <Show
+            when={isTutorPro}
+            fallback={
+              <ProBadge>
+                <Button
+                  variant="tertiary"
+                  isOutlined
+                  size="small"
+                  icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                  disabled
+                  onClick={noop}
+                >
+                  {__('Content Bank', 'tutor')}
+                </Button>
+              </ProBadge>
+            }
+          >
+            <Button
+              variant="tertiary"
+              isOutlined
+              size="small"
+              icon={<SVGIcon name="contentBank" width={24} height={24} />}
+              disabled={!topic.isSaved}
+              buttonCss={styles.contentButton}
+              onClick={() => {
+                showModal({
+                  id: 'content-bank-collection-list',
+                  component: CollectionListModal,
+                  props: {
+                    type: 'lesson_assignment',
+                  },
+                });
+              }}
+            >
+              {__('Content Bank', 'tutor')}
+            </Button>
+          </Show>
+          <Show
             when={!isTutorPro || hasLiveAddons}
             fallback={
               <Show
@@ -384,11 +422,12 @@ const styles = {
     }
   `,
   rightButtons: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
+    gap: ${spacing[8]};
   `,
   threeDotButton: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[4]};
   `,

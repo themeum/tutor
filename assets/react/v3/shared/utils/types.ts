@@ -332,3 +332,53 @@ export interface QuizQuestion {
 }
 
 export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+
+export type CollectionContentType = 'cb-question' | 'cb-lesson' | 'cb-assignment';
+
+export interface Collection {
+  ID: number;
+  post_title: string;
+  count_stats: {
+    lesson: number;
+    assignment: number;
+    question: number;
+    total: number;
+  };
+}
+
+export interface CollectionResponse {
+  total_record: number;
+  per_page: number;
+  current_page: number;
+  total_page: number;
+  data: Collection[];
+}
+
+export interface ContentBankContent {
+  ID: number;
+  post_title: string;
+  post_content: string;
+  post_name: string | null;
+  post_type: CollectionContentType;
+  question_type?: QuizQuestionType;
+  post_author: string;
+  post_parent: string;
+  post_date: string;
+  linked_courses: {
+    total: number;
+    courses: {
+      ID: number;
+      post_title: string;
+    }[];
+    more_text: string;
+  };
+}
+
+export interface ContentBankContents {
+  total_record: number;
+  per_page: number;
+  current_page: number;
+  total_page: number;
+  data: ContentBankContent[];
+  collection: Collection;
+}

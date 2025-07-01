@@ -141,6 +141,7 @@ export const colorTokens = {
   },
   border: {
     neutral: '#C8C8C8',
+    tertiary: '#F5F5F5',
   },
   action: {
     primary: {
