@@ -41,13 +41,13 @@ interface ExportInitialStateProps {
       bulkSelectionButtonLabel: string;
     };
   };
-  resetBulkSelection: (type: 'courses' | 'course-bundle' | 'collection') => void;
+  resetBulkSelection: (type: 'courses' | 'course-bundle' | 'collections') => void;
 }
 
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  collection: Collection[];
+  collections: Collection[];
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -108,7 +108,8 @@ const ExportInitialState = ({
 
       const hasSelectedItems =
         (mainType === 'courses' && bulkSelectionForm.getValues('courses').length > 0) ||
-        (mainType === 'course-bundle' && bulkSelectionForm.getValues('course-bundle').length > 0);
+        (mainType === 'course-bundle' && bulkSelectionForm.getValues('course-bundle').length > 0) ||
+        (mainType === 'collections' && bulkSelectionForm.getValues('collections').length > 0);
 
       if (!mainContent.contents) {
         return key;
@@ -133,6 +134,7 @@ const ExportInitialState = ({
       const countMap: Record<string, number> = {
         courses: bulkSelectionForm.getValues('courses').length,
         'course-bundle': bulkSelectionForm.getValues('course-bundle').length,
+        collections: bulkSelectionForm.getValues('collections').length,
       };
 
       return countMap[key] || 0;
@@ -195,7 +197,7 @@ const ExportInitialState = ({
                 </div>
 
                 {/* Show select button for courses and bundles */}
-                <Show when={isChecked && ['courses', 'course-bundle'].includes(contentKey)}>
+                <Show when={isChecked && ['courses', 'course-bundle', 'collections'].includes(contentKey)}>
                   <Button
                     variant="secondary"
                     buttonCss={styles.selectButton}

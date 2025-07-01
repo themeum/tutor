@@ -12,7 +12,7 @@ import CollectionListTable from '../CollectionList/CollectionListTable';
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  collection: Collection[];
+  collections: Collection[];
 }
 
 interface ExportContentBankStateProps {

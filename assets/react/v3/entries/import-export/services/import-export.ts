@@ -14,11 +14,11 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 export interface ExportFormData {
   courses: boolean;
   'course-bundle': boolean;
-  collection: boolean;
+  collections: boolean;
   settings: boolean;
   courses__ids: number[];
   'course-bundle__ids': number[];
-  collection__ids: number[];
+  collections__ids: number[];
   courses__lesson: boolean;
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
@@ -28,11 +28,11 @@ export interface ExportFormData {
 export const defaultExportFormData: ExportFormData = {
   courses: false,
   'course-bundle': false,
-  collection: false,
+  collections: false,
   settings: false,
   courses__ids: [],
   'course-bundle__ids': [],
-  collection__ids: [],
+  collections__ids: [],
   courses__lesson: true,
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
@@ -135,7 +135,7 @@ export const convertExportFormDataToPayload = ({
 
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
-export type ExportableContentType = 'courses' | 'course-bundle' | 'settings' | 'keep_media_files';
+export type ExportableContentType = 'courses' | 'course-bundle' | 'collections' | 'settings' | 'keep_media_files';
 export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
 export interface ContentItem {

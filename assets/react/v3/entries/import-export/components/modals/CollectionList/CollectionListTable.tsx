@@ -21,7 +21,7 @@ import { type Collection, type CollectionContentType } from '@TutorShared/utils/
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  collection: Collection[];
+  collections: Collection[];
 }
 
 interface CourseListTableProps {
@@ -30,7 +30,7 @@ interface CourseListTableProps {
 
 const CollectionListTable = ({ form }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
-  const selectedItems = useMemo(() => form.watch('collection') || [], [form]);
+  const selectedItems = useMemo(() => form.watch('collections') || [], [form]);
   const selectedItemIds = useMemo(() => selectedItems.map((item) => String(item.ID)), [selectedItems]);
 
   const getCollectionListQuery = useGetCollectionsPaginatedQuery({
@@ -54,11 +54,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
       if (isChecked) {
         // Add all fetched items that aren't already selected
         const newItems = fetchedItems.filter((course) => !selectedItemIds.includes(String(course.ID)));
-        form.setValue('collection', [...selectedItems, ...newItems]);
+        form.setValue('collections', [...selectedItems, ...newItems]);
       } else {
         // Keep only items that aren't in the current view
         const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(String(course.ID)));
-        form.setValue('collection', newItems);
+        form.setValue('collections', newItems);
       }
     },
     [fetchedItems, selectedItemIds, fetchedItemIds, selectedItems, form],
@@ -70,11 +70,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
 
       if (isSelected) {
         form.setValue(
-          'collection',
+          'collections',
           selectedItems.filter((collection) => String(collection.ID) !== String(item.ID)),
         );
       } else {
-        form.setValue('collection', [...selectedItems, item]);
+        form.setValue('collections', [...selectedItems, item]);
       }
     },
     [selectedItemIds, selectedItems, form],
@@ -275,7 +275,7 @@ const styles = {
     min-height: 60px;
     width: 100%;
     height: 100%;
-    padding: ${spacing[12]} ${spacing[24]} ${spacing[12]} ${spacing[20]};
+    padding: ${spacing[12]} ${spacing[24]} ${spacing[12]} ${spacing[16]};
     ${styleUtils.display.flex()};
     justify-content: space-between;
     align-items: center;
