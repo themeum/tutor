@@ -334,10 +334,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 shouldShowTaxInfo(payments[0].firstElementChild.value);
 
-                const paymentInstructions = payments[0].dataset.paymentInstruction;
+                const paymentInstructions = payments[0].querySelector('.tutor-payment-item-instructions');
                 if (paymentInstructions) {
                     document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                    document.querySelector('.tutor-payment-instructions').innerHTML = paymentInstructions.innerHTML;
                 }
             }
         }
