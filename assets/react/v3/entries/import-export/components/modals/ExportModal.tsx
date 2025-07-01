@@ -206,13 +206,22 @@ const ExportModal = ({
   };
 
   const handleExport = form.handleSubmit((data) => {
-    const { courses, 'course-bundle': bundles } = bulkSelectionForm.getValues();
+    const { courses, 'course-bundle': bundles, collection } = bulkSelectionForm.getValues();
     onExport?.({
       data: {
         ...data,
+        ...(isFromContentBank
+          ? {
+              collection: true,
+            }
+          : {
+              collection: data.collection,
+            }),
         courses__ids: courses.length > 0 ? courses.map((course) => course.id) : form.getValues('courses__ids'),
         'course-bundle__ids':
           bundles.length > 0 ? bundles.map((bundle) => bundle.id) : form.getValues('course-bundle__ids'),
+        collection__ids:
+          collection.length > 0 ? collection.map((collection) => collection.ID) : form.getValues('collection__ids'),
       },
       exportableContent: getExportableContentQuery.data || [],
     });

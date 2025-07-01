@@ -26,7 +26,7 @@ const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
   const { data: exportContentResponse, mutateAsync, error, isError } = useExportContentsMutation();
 
-  const handleImport = ({
+  const handleExport = ({
     data,
     exportableContent,
   }: {
@@ -54,7 +54,7 @@ const Export = () => {
         props: {
           onClose: closeModal,
           currentStep: 'initial',
-          onExport: handleImport,
+          onExport: handleExport,
           progress: 0,
           isFromContentBank: true,
         },
@@ -155,7 +155,7 @@ const Export = () => {
               props: {
                 onClose: closeModal,
                 currentStep: 'initial',
-                onExport: handleImport,
+                onExport: handleExport,
                 progress: Number(exportContentResponse?.job_progress) || 0,
               },
             })
