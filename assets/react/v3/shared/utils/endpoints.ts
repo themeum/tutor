@@ -147,6 +147,7 @@ const endpoints = {
   SAVE_QUESTION_CONTENT: 'tutor_content_bank_question_save',
   GET_CONTENT_BANK_QUESTION_DETAILS: 'tutor_content_bank_question_details',
   DUPLICATE_CONTENT_BANK_CONTENT: 'tutor_content_bank_content_duplicate',
+  DUPLICATE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_duplicate',
 } as const;
 
 export default endpoints;

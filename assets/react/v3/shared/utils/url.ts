@@ -23,3 +23,21 @@ export function getQueryParam(key: string, type: DataType = 'string') {
       return value;
   }
 }
+
+export const removeAllQueryParams = ({ exclude }: { exclude: string[] }) => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const keysToRemove: string[] = [];
+
+  for (const key of searchParams.keys()) {
+    if (!exclude.includes(key)) {
+      keysToRemove.push(key);
+    }
+  }
+
+  keysToRemove.forEach((key) => {
+    searchParams.delete(key);
+  });
+
+  const newUrl = `${window.location.pathname}?${searchParams.toString()}`;
+  window.history.replaceState({}, '', newUrl);
+};

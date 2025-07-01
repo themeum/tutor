@@ -167,6 +167,7 @@ const ContentListTable = () => {
             data={fetchedContents}
             itemsPerPage={itemsPerPage}
             loading={getContentsQuery.isFetching || getContentsQuery.isRefetching}
+            rowStyle={styles.tableRow}
           />
         </div>
 
@@ -215,6 +216,9 @@ const styles = {
     td {
       padding: ${spacing[12]} ${spacing[20]};
     }
+  `,
+  tableRow: css`
+    border-bottom: 1px solid ${colorTokens.border.tertiary};
   `,
   paginatorWrapper: css`
     margin: ${spacing[20]} ${spacing[16]};

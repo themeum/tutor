@@ -29,12 +29,14 @@ const QuestionListTable = () => {
   const selectedCollection = form.watch('selectedCollection');
   const [questionTypes, setQuestionTypes] = useState<QuizQuestionType[]>([]);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
 
   const getContentsQuery = useGetContentBankContents({
     page: String(pageInfo.page),
     collection_id: selectedCollection?.ID ?? null,
     content_types: ['question'],
-    question_types: questionTypes.length ? questionTypes : undefined,
+    ...(orderDirection ? { order: orderDirection.toUpperCase() } : {}),
+    ...(questionTypes.length ? { question_types: questionTypes } : {}),
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
   });
 
@@ -240,6 +242,7 @@ const QuestionListTable = () => {
           <FilterFields
             type="question"
             onFilterChange={(values) => {
+              setOrderDirection(values.order);
               setQuestionTypes(values.questionTypes || []);
             }}
           />
@@ -257,6 +260,7 @@ const QuestionListTable = () => {
             querySortProperty={'title'}
             querySortDirection={sortDirection}
             onSortClick={handleSortClick}
+            rowStyle={styles.tableRow}
           />
         </div>
 
@@ -306,6 +310,9 @@ const styles = {
     td {
       padding: ${spacing[12]} ${spacing[16]};
     }
+  `,
+  tableRow: css`
+    border-bottom: 1px solid ${colorTokens.border.tertiary};
   `,
   paginatorWrapper: css`
     margin: ${spacing[20]} ${spacing[16]};
