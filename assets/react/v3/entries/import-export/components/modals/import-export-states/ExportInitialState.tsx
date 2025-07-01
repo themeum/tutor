@@ -24,6 +24,7 @@ import Show from '@TutorShared/controls/Show';
 import { type useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Course } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type Collection } from '@TutorShared/utils/types';
 
 interface ExportInitialStateProps {
   form: ReturnType<typeof useFormWithGlobalError<ExportFormData>>;
@@ -40,12 +41,13 @@ interface ExportInitialStateProps {
       bulkSelectionButtonLabel: string;
     };
   };
-  resetBulkSelection: (type: 'courses' | 'course-bundle') => void;
+  resetBulkSelection: (type: 'courses' | 'course-bundle' | 'collection') => void;
 }
 
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
+  collection: Collection[];
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;

@@ -56,6 +56,7 @@ const Export = () => {
           currentStep: 'initial',
           onExport: handleImport,
           progress: 0,
+          isFromContentBank: true,
         },
       });
     }

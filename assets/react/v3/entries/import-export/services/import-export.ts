@@ -14,9 +14,11 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 export interface ExportFormData {
   courses: boolean;
   'course-bundle': boolean;
+  collection: boolean;
   settings: boolean;
   courses__ids: number[];
   'course-bundle__ids': number[];
+  collection__ids: number[];
   courses__lesson: boolean;
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
@@ -26,9 +28,11 @@ export interface ExportFormData {
 export const defaultExportFormData: ExportFormData = {
   courses: false,
   'course-bundle': false,
+  collection: false,
   settings: false,
   courses__ids: [],
   'course-bundle__ids': [],
+  collection__ids: [],
   courses__lesson: true,
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,

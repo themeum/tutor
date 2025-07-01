@@ -29,6 +29,9 @@ import {
 } from '@ImportExport/services/import-export';
 
 import { tutorConfig } from '@TutorShared/config/config';
+import { type Collection } from '@TutorShared/utils/types';
+import CollectionListModal from './CollectionList';
+import ExportContentBankState from './import-export-states/ExportContentBankState';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -39,12 +42,13 @@ interface ExportModalProps extends ModalProps {
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
-  isContentBank?: boolean;
+  isFromContentBank?: boolean;
 }
 
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
+  collection: Collection[];
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -58,7 +62,7 @@ const ExportModal = ({
   fileSize,
   message,
   completedContents,
-  isContentBank,
+  isFromContentBank,
 }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: defaultExportFormData,
@@ -68,6 +72,7 @@ const ExportModal = ({
     defaultValues: {
       courses: [],
       'course-bundle': [],
+      collection: [],
     },
   });
 
@@ -114,11 +119,12 @@ const ExportModal = ({
         },
       ] as ExportableContent[]);
 
-  const resetBulkSelection = (type: 'courses' | 'course-bundle') => {
+  const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'collection') => {
     if (type === 'courses') {
       bulkSelectionForm.reset({
         courses: [],
         'course-bundle': bulkSelectionForm.getValues('course-bundle'),
+        collection: bulkSelectionForm.getValues('collection'),
       });
     }
 
@@ -126,6 +132,15 @@ const ExportModal = ({
       bulkSelectionForm.reset({
         courses: bulkSelectionForm.getValues('courses'),
         'course-bundle': [],
+        collection: bulkSelectionForm.getValues('collection'),
+      });
+    }
+
+    if (type === 'collection') {
+      bulkSelectionForm.reset({
+        courses: bulkSelectionForm.getValues('courses'),
+        'course-bundle': bulkSelectionForm.getValues('course-bundle'),
+        collection: [],
       });
     }
   };
@@ -175,6 +190,19 @@ const ExportModal = ({
           ? __('Edit Selected Bundles', 'tutor')
           : __('Select Specific Bundles', 'tutor'),
     },
+    collection: {
+      modal: {
+        component: CollectionListModal,
+        props: {
+          title: __('Select Collections', 'tutor'),
+          form: bulkSelectionForm,
+        },
+      },
+      bulkSelectionButtonLabel:
+        bulkSelectionForm.getValues('collection').length > 0
+          ? __('Edit Selected Collections', 'tutor')
+          : __('Select Specific Collections', 'tutor'),
+    },
   };
 
   const handleExport = form.handleSubmit((data) => {
@@ -191,7 +219,9 @@ const ExportModal = ({
   });
 
   const modalContent = {
-    initial: (
+    initial: isFromContentBank ? (
+      <ExportContentBankState bulkSelectionForm={bulkSelectionForm} />
+    ) : (
       <ExportInitialState
         form={form}
         bulkSelectionForm={bulkSelectionForm}
@@ -199,7 +229,6 @@ const ExportModal = ({
         isLoading={getExportableContentQuery.isLoading}
         componentMapping={componentMapping}
         resetBulkSelection={resetBulkSelection}
-        isFromContentBank={isContentBank}
       />
     ),
     progress: <ImportExportProgressState progress={progress} message={message} type="export" />,
@@ -215,6 +244,19 @@ const ExportModal = ({
       />
     ),
     error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
+  };
+
+  const disableExportButton = () => {
+    if (isFromContentBank) {
+      return bulkSelectionForm.getValues('collection').length === 0;
+    }
+
+    return !Object.entries(form.getValues()).some(([key, value]) => {
+      if (!key.includes('__')) {
+        return value === true;
+      }
+      return false;
+    });
   };
 
   return (
@@ -234,14 +276,7 @@ const ExportModal = ({
                 variant="primary"
                 size="small"
                 icon={<SVGIcon name="export" width={24} height={24} />}
-                disabled={
-                  !Object.entries(form.getValues()).some(([key, value]) => {
-                    if (!key.includes('__')) {
-                      return value === true;
-                    }
-                    return false;
-                  })
-                }
+                disabled={currentStep === 'progress' || disableExportButton() || getExportableContentQuery.isLoading}
                 onClick={handleExport}
               >
                 {__('Export', 'tutor')}

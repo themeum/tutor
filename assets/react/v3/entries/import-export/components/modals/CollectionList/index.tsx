@@ -12,8 +12,6 @@ import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Collection } from '@TutorShared/utils/types';
-import ContentListTable from './ContentListTable';
-import QuestionListTable from './QuestionListTable';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -50,16 +48,7 @@ const CollectionListModal = ({ closeModal, actions, onAddContent, type }: Course
         actions={actions}
         maxWidth={720}
       >
-        <Show
-          when={!selectedCollection}
-          fallback={
-            <Show when={type === 'lesson_assignment'} fallback={<QuestionListTable />}>
-              <ContentListTable />
-            </Show>
-          }
-        >
-          <CollectionListTable type={type} />
-        </Show>
+        <CollectionListTable type={type} />
         <Show when={form.watch('selectedCollection')}>
           <div css={styles.footer}>
             <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
