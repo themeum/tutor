@@ -3,10 +3,10 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { type ContentSelectionForm } from '@TutorShared/components/modals/ContentBankContentSelectModal';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 

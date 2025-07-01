@@ -25,11 +25,11 @@ import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
+import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import Button from '@TutorShared/atoms/Button';
-import CollectionListModal from '@TutorShared/components/modals/ContentBankContentSelectModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';

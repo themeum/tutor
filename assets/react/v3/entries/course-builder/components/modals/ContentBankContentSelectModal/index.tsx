@@ -6,8 +6,8 @@ import Button from '@TutorShared/atoms/Button';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
+import CollectionListTable from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/CollectionListTable';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import CollectionListTable from '@TutorShared/components/modals/ContentBankContentSelectModal/CollectionListTable';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';

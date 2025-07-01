@@ -7,8 +7,8 @@ import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
+import { type ContentSelectionForm } from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import SearchField from '@ImportExport/components/modals/CourseListModal/SearchField';
-import { type ContentSelectionForm } from '@TutorShared/components/modals/ContentBankContentSelectModal';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -66,7 +66,7 @@ const CollectionListTable = ({
             >
               <div css={styles.title}>
                 <div data-collection-title>{item.post_title}</div>
-                <Show when={(item?.count_stats?.total ?? 0) > 0}>
+                <Show when={(totalItems ?? 0) > 0}>
                   <div>
                     {
                       /* translators: %d is the total number of contents */

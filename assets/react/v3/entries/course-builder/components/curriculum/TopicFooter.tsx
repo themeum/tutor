@@ -21,11 +21,11 @@ import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 
+import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
-import CollectionListModal from '@TutorShared/components/modals/ContentBankContentSelectModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
