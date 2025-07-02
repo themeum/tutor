@@ -2,12 +2,12 @@ import { css } from '@emotion/react';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import React, { useCallback, useMemo } from 'react';
 
+import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import SearchField from '@ImportExport/components/modals/CollectionList/SearchField';
-import Checkbox from '@TutorShared/atoms/CheckBox';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';

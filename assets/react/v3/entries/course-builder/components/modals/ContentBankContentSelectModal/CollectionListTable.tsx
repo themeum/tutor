@@ -63,9 +63,12 @@ const CollectionListTable = ({
                 sprintf(__('Select collection: %s', 'tutor'), item.post_title)
               }
               tabIndex={0}
+              disabled={totalItems === 0}
             >
               <div css={styles.title}>
-                <div data-collection-title>{item.post_title}</div>
+                <div data-collection-title aria-disabled={totalItems === 0}>
+                  {item.post_title}
+                </div>
                 <Show when={(totalItems ?? 0) > 0}>
                   <div>
                     {
@@ -75,7 +78,14 @@ const CollectionListTable = ({
                   </div>
                 </Show>
               </div>
-              <Show when={totalItems > 0}>
+              <Show
+                when={totalItems > 0}
+                fallback={
+                  <span css={styles.title} aria-disabled={totalItems === 0}>
+                    {__('No Items', 'tutor')}
+                  </span>
+                }
+              >
                 <div css={styles.contentsWrapper}>
                   <Show when={type === 'lesson_assignment'}>
                     <Show when={totalLessons > 0}>
@@ -143,6 +153,9 @@ const CollectionListTable = ({
           data={fetchedItems}
           itemsPerPage={itemsPerPage}
           loading={getCollectionListQuery.isFetching || getCollectionListQuery.isRefetching}
+          colors={{
+            bodyRowHover: colorTokens.background.white,
+          }}
         />
       </div>
 
@@ -186,9 +199,15 @@ const styles = {
       td {
         padding: 0;
 
+        [aria-disabled='true'] {
+          color: ${colorTokens.text.disable};
+        }
+
         &:hover {
           [data-collection-title] {
-            color: ${colorTokens.text.brand};
+            &:not([aria-disabled='true']) {
+              color: ${colorTokens.text.brand};
+            }
           }
         }
       }
@@ -207,6 +226,16 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     gap: ${spacing[16]};
+
+    &:hover {
+      background-color: ${colorTokens.background.hover};
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+      background-color: ${colorTokens.background.disable};
+    }
   `,
   contentsWrapper: css`
     ${styleUtils.display.flex()};

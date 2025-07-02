@@ -2,8 +2,10 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
+import { css } from '@emotion/react';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import { colorTokens } from '@TutorShared/config/styles';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import type { Filter } from '@TutorShared/hooks/usePaginatedTable';
@@ -34,6 +36,7 @@ const SearchField = ({ onFilterItems }: SearchFieldProps) => {
         <FormInputWithContent
           {...controllerProps}
           content={<SVGIcon name="search" width={24} height={24} />}
+          contentCss={styles.contentCss}
           placeholder={__('Search...', 'tutor-pro')}
           showVerticalBar={false}
         />
@@ -43,3 +46,11 @@ const SearchField = ({ onFilterItems }: SearchFieldProps) => {
 };
 
 export default SearchField;
+
+const styles = {
+  contentCss: css`
+    svg {
+      color: ${colorTokens.icon.default};
+    }
+  `,
+};

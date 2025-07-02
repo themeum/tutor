@@ -10,25 +10,26 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
+import FilterFields from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/FilterFields';
+import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
+import Select from '@TutorShared/atoms/Select';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import { CONTENT_BANK_POST_TYPE_MAP, useGetContentBankContents } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type ContentBankContent } from '@TutorShared/utils/types';
-import FilterFields from './FilterFields';
-import SearchField from './SearchField';
+import { type ContentBankContent, type Option } from '@TutorShared/utils/types';
 
 const ContentListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
   const selectedCollection = form.watch('selectedCollection');
-  const [contentTypes, setContentTypes] = useState<('lesson' | 'assignment')[]>([]);
+  const [contentType, setContentType] = useState<'lesson' | 'assignment' | ''>('');
   const getContentsQuery = useGetContentBankContents({
     page: String(pageInfo.page),
     collection_id: selectedCollection?.ID ?? null,
-    content_types: contentTypes.length ? contentTypes : ['lesson', 'assignment'],
+    content_types: contentType ? [contentType] : ['lesson', 'assignment'],
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
   });
 
@@ -63,6 +64,14 @@ const ContentListTable = () => {
       fetchedContents.length > 0 && fetchedContents.every((content) => selectedContentIds.includes(String(content.ID)))
     );
   };
+
+  const contentTypesOptions: Option<'lesson' | 'assignment' | ''>[] = useMemo(() => {
+    return [
+      { value: '', label: __('All', 'tutor') },
+      { value: 'lesson', label: __('Lessons', 'tutor') },
+      { value: 'assignment', label: __('Assignments', 'tutor') },
+    ];
+  }, []);
 
   const columns: Column<ContentBankContent>[] = [
     {
@@ -100,7 +109,7 @@ const ContentListTable = () => {
                   : selectedContentIds.includes(String(item.ID))
               }
             />
-            <div>{item.post_title}</div>
+            <div css={styles.checkboxLabel}>{item.post_title}</div>
           </div>
         );
       },
@@ -154,18 +163,30 @@ const ContentListTable = () => {
         <div css={styles.tableActions}>
           <SearchField onFilterItems={onFilterItems} />
 
-          <FilterFields
-            type="lesson_assignment"
-            onFilterChange={(values) => {
-              setContentTypes(values.contentTypes as ('lesson' | 'assignment')[]);
-            }}
-          />
+          <div css={styles.tableFilters}>
+            <Select
+              aria-label={__('Select content type', 'tutor')}
+              options={contentTypesOptions}
+              value={
+                contentType
+                  ? contentTypesOptions.find((option) => option.value === contentType) || contentTypesOptions[0]
+                  : contentTypesOptions[0]
+              }
+              onChange={(selected) => {
+                setContentType(selected.value as 'lesson' | 'assignment');
+              }}
+              isClearable={false}
+              wrapperStyle={styles.selectInput}
+            />
+            <FilterFields type="lesson_assignment" onFilterChange={() => {}} />
+          </div>
         </div>
 
         <div css={styles.tableWrapper}>
           <Table
             headerHeight={48}
-            isBordered={false}
+            isBordered
+            isRounded
             columns={columns}
             data={fetchedContents}
             itemsPerPage={itemsPerPage}
@@ -198,18 +219,20 @@ const styles = {
     grid-template-columns: 212px 1fr;
     justify-content: space-between;
     gap: ${spacing[16]};
-    padding: ${spacing[20]};
+    padding: ${spacing[16]};
 
-    div:last-of-type {
+    [data-filter] {
       justify-self: end;
     }
   `,
   tableWrapper: css`
+    margin: 0 ${spacing[16]} ${spacing[12]} ${spacing[16]};
     max-height: calc(100vh - 350px);
     overflow: auto;
 
     th {
       border-bottom: 1px solid ${colorTokens.stroke.divider};
+      padding-inline: ${spacing[20]};
     }
 
     [data-type] {
@@ -250,27 +273,36 @@ const styles = {
     ${styleUtils.display.flex('column')};
   `,
   tableTitle: css`
-    ${typography.body('medium')};
-    color: ${colorTokens.text.primary};
+    ${typography.small('medium')};
+    color: ${colorTokens.text.hints};
   `,
   checkboxLabel: css`
-    ${typography.caption()};
+    ${typography.caption('medium')};
     color: ${colorTokens.text.primary};
   `,
   checkboxWrapper: css`
-    display: flex;
+    ${styleUtils.display.flex('row')};
     align-items: center;
     gap: ${spacing[12]};
   `,
   type: css`
-    display: flex;
+    ${styleUtils.display.flex('row')};
     gap: ${spacing[4]};
     justify-content: end;
   `,
   errorMessage: css`
     height: 100px;
-    display: flex;
+    ${styleUtils.display.flex('row')};
     align-items: center;
     justify-content: center;
+  `,
+  tableFilters: css`
+    ${styleUtils.display.flex('row')};
+    justify-content: end;
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
+  selectInput: css`
+    max-width: 100px;
   `,
 };

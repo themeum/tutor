@@ -199,7 +199,7 @@ const QuestionListTable = () => {
                   width={24}
                 />
               </Show>
-              {item.post_title}
+              <span>{item.post_title}</span>
             </div>
           </div>
         );
@@ -256,15 +256,17 @@ const QuestionListTable = () => {
 
         <div css={styles.tableWrapper}>
           <Table
-            headerHeight={48}
+            headerHeight={56}
             isBordered
             isRounded
             columns={columns}
             data={sortedContents}
             itemsPerPage={itemsPerPage}
             loading={getContentsQuery.isFetching || getContentsQuery.isRefetching}
-            querySortProperty={'title'}
-            querySortDirection={sortDirection}
+            querySortProperties={['title']}
+            querySortDirections={{
+              title: sortDirection,
+            }}
             onSortClick={handleSortClick}
             rowStyle={styles.tableRow}
           />
@@ -294,9 +296,9 @@ const styles = {
     grid-template-columns: 212px 1fr;
     justify-content: space-between;
     gap: ${spacing[16]};
-    padding: ${spacing[20]};
+    padding: ${spacing[16]};
 
-    div:last-of-type {
+    [data-filter] {
       justify-self: end;
     }
   `,
@@ -311,10 +313,6 @@ const styles = {
 
     [data-type] {
       text-align: right;
-    }
-
-    td {
-      padding: ${spacing[12]} ${spacing[16]};
     }
   `,
   tableRow: css`
@@ -356,6 +354,15 @@ const styles = {
     gap: ${spacing[12]};
     ${typography.caption('medium')};
     color: ${colorTokens.text.primary};
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    span {
+      width: 100%;
+      ${styleUtils.text.ellipsis(1)};
+    }
   `,
   checkboxWrapper: css`
     display: flex;

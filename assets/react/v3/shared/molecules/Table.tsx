@@ -40,7 +40,7 @@ export type Colors = {
   bodyRowSelectedHover?: string;
 };
 
-export interface TableProps<TableItem> {
+export interface TableProps<TableItem, TSortProperties extends readonly string[] = string[]> {
   columns: Column<TableItem>[];
   data: TableItem[];
   entireHeader?: ReactNode | string | null;
@@ -53,11 +53,15 @@ export interface TableProps<TableItem> {
   isBordered?: boolean;
   loading?: boolean;
   itemsPerPage?: number;
-  querySortProperty?: string;
-  querySortDirection?: 'asc' | 'desc';
+  querySortProperties?: TSortProperties;
+  querySortDirections?: { [K in TSortProperties[number]]?: 'asc' | 'desc' };
   onSortClick?: (sortProperty: string) => void;
   renderInLastRow?: ReactNode;
   rowStyle?: SerializedStyles;
+  sortIcons?: {
+    asc?: ReactNode;
+    desc?: ReactNode;
+  };
 }
 
 const defaultColors = {
@@ -65,7 +69,7 @@ const defaultColors = {
   bodyRowHover: colorTokens.background.hover,
 };
 
-const Table = <TableItem,>({
+const Table = <TableItem, TSortProperties extends readonly string[] = string[]>({
   columns,
   data,
   entireHeader = null,
@@ -78,12 +82,16 @@ const Table = <TableItem,>({
   isBordered = true,
   loading = false,
   itemsPerPage = 1,
-  querySortProperty,
-  querySortDirection = 'asc',
+  querySortProperties,
+  querySortDirections = {},
   onSortClick,
   renderInLastRow,
   rowStyle,
-}: TableProps<TableItem>) => {
+  sortIcons = {
+    asc: <SVGIcon name="sortASC" height={16} width={16} />,
+    desc: <SVGIcon name="sortDESC" height={16} width={16} />,
+  },
+}: TableProps<TableItem, TSortProperties>) => {
   const renderRow = (index: number, content: (column: Column<TableItem>) => ReactNode) => {
     return (
       <tr
@@ -115,11 +123,11 @@ const Table = <TableItem,>({
     }
 
     // @TODO: the icons need to be updated with proper one.
-    if (column.sortProperty === querySortProperty) {
-      if (querySortDirection === 'asc') {
-        icon = <SVGIcon name="chevronDown" />;
+    if (querySortProperties?.includes(sortProperty as TSortProperties[number])) {
+      if (querySortDirections?.[sortProperty as TSortProperties[number]] === 'asc') {
+        icon = sortIcons.asc;
       } else {
-        icon = <SVGIcon name="chevronUp" />;
+        icon = sortIcons.desc;
       }
     }
 
@@ -228,8 +236,12 @@ const styles = {
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     display: flex;
-    gap: ${spacing[4]};
+    gap: ${spacing[8]};
     align-items: center;
+
+    svg {
+      color: ${colorTokens.text.primary};
+    }
   `,
   table: css`
     width: 100%;
