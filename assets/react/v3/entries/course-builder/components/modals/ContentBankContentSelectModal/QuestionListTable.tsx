@@ -29,7 +29,7 @@ const QuestionListTable = () => {
   const selectedCollection = form.watch('selectedCollection');
   const [questionTypes, setQuestionTypes] = useState<QuizQuestionType[]>([]);
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
-  const [orderDirection, setOrderDirection] = useState<'asc' | 'desc'>('asc');
+  const [orderDirection, setOrderDirection] = useState<SortDirection>('asc');
 
   const getContentsQuery = useGetContentBankContents({
     page: String(pageInfo.page),
@@ -48,22 +48,6 @@ const QuestionListTable = () => {
   const selectedContentIds = selectedContents.map((content) => String(content.ID));
   const fetchedContents = useMemo(() => getContentsQuery.data?.data ?? [], [getContentsQuery.data]);
 
-  const sortedContents = useMemo(() => {
-    if (!fetchedContents.length) return [];
-
-    const sorted = [...fetchedContents].sort((a, b) => {
-      const titleA = a.post_title.toLowerCase();
-      const titleB = b.post_title.toLowerCase();
-
-      if (sortDirection === 'asc') {
-        return titleA.localeCompare(titleB);
-      }
-      return titleB.localeCompare(titleA);
-    });
-
-    return sorted;
-  }, [fetchedContents, sortDirection]);
-
   const handleBack = () => {
     form.setValue('selectedCollection', null);
     onPageChange(1);
@@ -72,26 +56,30 @@ const QuestionListTable = () => {
 
   const handleToggleSelection = (isChecked = false) => {
     if (isChecked) {
-      const newContents = sortedContents.filter((content) => !selectedContentIds.includes(String(content.ID)));
+      const newContents = fetchedContents.filter((content) => !selectedContentIds.includes(String(content.ID)));
       form.setValue('contents', [...selectedContents, ...newContents]);
       return;
     }
 
     const newContents = selectedContents.filter(
-      (content) => !sortedContents.map((content) => String(content.ID)).includes(String(content.ID)),
+      (content) => !fetchedContents.map((content) => String(content.ID)).includes(String(content.ID)),
     );
     form.setValue('contents', newContents);
   };
 
   const handleAllIsChecked = () => {
     return (
-      sortedContents.length > 0 && sortedContents.every((content) => selectedContentIds.includes(String(content.ID)))
+      fetchedContents.length > 0 && fetchedContents.every((content) => selectedContentIds.includes(String(content.ID)))
     );
   };
 
-  const handleSortClick = () => {
-    const newSortDirection: SortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
-    setSortDirection(newSortDirection);
+  const handleSortData = () => {
+    setSortDirection((prevDirection) => (prevDirection === 'asc' ? 'desc' : 'asc'));
+    return fetchedContents.sort((a, b) => {
+      return sortDirection === 'asc'
+        ? a.post_title.localeCompare(b.post_title)
+        : b.post_title.localeCompare(a.post_title);
+    });
   };
 
   const questionTypeOptions: {
@@ -158,7 +146,7 @@ const QuestionListTable = () => {
           checked={getContentsQuery.isLoading || getContentsQuery.isRefetching ? false : handleAllIsChecked()}
           label={__('Title', 'tutor')}
           labelCss={styles.tableTitle}
-          isIndeterminate={sortedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
+          isIndeterminate={fetchedContents.length > 0 && !handleAllIsChecked() && selectedContents.length > 0}
           aria-label={__('Select all questions', 'tutor')}
         />
       ) : (
@@ -260,14 +248,19 @@ const QuestionListTable = () => {
             isBordered
             isRounded
             columns={columns}
-            data={sortedContents}
+            data={fetchedContents}
             itemsPerPage={itemsPerPage}
             loading={getContentsQuery.isFetching || getContentsQuery.isRefetching}
             querySortProperties={['title']}
             querySortDirections={{
               title: sortDirection,
             }}
-            onSortClick={handleSortClick}
+            onSortClick={(sortProperty) => {
+              if (sortProperty === 'title') {
+                const sortedData = handleSortData();
+                return sortedData;
+              }
+            }}
             rowStyle={styles.tableRow}
           />
         </div>

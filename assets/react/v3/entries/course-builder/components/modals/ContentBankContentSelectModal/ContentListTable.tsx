@@ -21,15 +21,22 @@ import { CONTENT_BANK_POST_TYPE_MAP, useGetContentBankContents } from '@TutorSha
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ContentBankContent, type Option } from '@TutorShared/utils/types';
 
+type SortDirection = 'asc' | 'desc';
+
 const ContentListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
   const selectedCollection = form.watch('selectedCollection');
   const [contentType, setContentType] = useState<'lesson' | 'assignment' | ''>('');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+
+  const [orderDirection, setOrderDirection] = useState<SortDirection>('asc');
+
   const getContentsQuery = useGetContentBankContents({
     page: String(pageInfo.page),
     collection_id: selectedCollection?.ID ?? null,
     content_types: contentType ? [contentType] : ['lesson', 'assignment'],
+    ...(orderDirection ? { order: orderDirection.toUpperCase() } : {}),
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
   });
 
@@ -65,6 +72,15 @@ const ContentListTable = () => {
     );
   };
 
+  const handleSortData = () => {
+    setSortDirection((prevDirection) => (prevDirection === 'asc' ? 'desc' : 'asc'));
+    return fetchedContents.sort((a, b) => {
+      return sortDirection === 'asc'
+        ? a.post_title.localeCompare(b.post_title)
+        : b.post_title.localeCompare(a.post_title);
+    });
+  };
+
   const contentTypesOptions: Option<'lesson' | 'assignment' | ''>[] = useMemo(() => {
     return [
       { value: '', label: __('All', 'tutor') },
@@ -87,6 +103,7 @@ const ContentListTable = () => {
       ) : (
         __('# Title', 'tutor')
       ),
+      sortProperty: 'title',
       Cell: (item) => {
         return (
           <div css={styles.checkboxWrapper}>
@@ -178,7 +195,12 @@ const ContentListTable = () => {
               isClearable={false}
               wrapperStyle={styles.selectInput}
             />
-            <FilterFields type="lesson_assignment" onFilterChange={() => {}} />
+            <FilterFields
+              type="lesson_assignment"
+              onFilterChange={(newFilters) => {
+                setOrderDirection(newFilters.order || 'asc');
+              }}
+            />
           </div>
         </div>
 
@@ -192,6 +214,14 @@ const ContentListTable = () => {
             itemsPerPage={itemsPerPage}
             loading={getContentsQuery.isFetching || getContentsQuery.isRefetching}
             rowStyle={styles.tableRow}
+            querySortProperties={['title']}
+            querySortDirections={{ title: orderDirection }}
+            onSortClick={(sortProperty) => {
+              if (sortProperty === 'title') {
+                const sortedData = handleSortData();
+                return sortedData;
+              }
+            }}
           />
         </div>
 
