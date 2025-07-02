@@ -145,6 +145,7 @@ const CollectionListTable = ({
         css={styles.tableWrapper({
           isLoading: getCollectionListQuery.isFetching || getCollectionListQuery.isRefetching,
           hasPagination: totalPages > 1,
+          hasData: fetchedItems.length > 0,
         })}
       >
         <Table
@@ -179,7 +180,7 @@ const styles = {
   tableActions: css`
     padding: ${spacing[20]};
   `,
-  tableWrapper: ({ isLoading = false, hasPagination = false }) => css`
+  tableWrapper: ({ isLoading = false, hasPagination = false, hasData = true }) => css`
     max-height: calc(100vh - 350px);
     overflow: auto;
     border-top: 1px solid ${colorTokens.stroke.divider};
@@ -210,6 +211,13 @@ const styles = {
             }
           }
         }
+      }
+    `}
+
+    ${!hasData &&
+    css`
+      td {
+        padding: ${spacing[20]};
       }
     `}
   `,
