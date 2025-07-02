@@ -27,6 +27,7 @@ class ComponentErrorBoundary extends Component<ComponentErrorBoundaryProps, Comp
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    // eslint-disable-next-line no-console
     console.error(`Error rendering ${this.props.componentName}:`, error, errorInfo);
     this.props.onError?.(error, errorInfo);
   }

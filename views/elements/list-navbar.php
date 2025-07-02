@@ -10,11 +10,11 @@
  */
 
 if ( isset( $data ) && count( $data ) ) : ?>
-<div class="tutor-wp-dashboard-course-header">
+<div class="tutor-wp-dashboard-header tutor-py-16">
 	<div class="tutor-admin-container tutor-admin-container-lg">
-		<div class="tutor-wp-dashboard-course-header-inner">
+		<div class="tutor-wp-dashboard-header-inner">
 			<div>
-				<span class="tutor-fs-4 tutor-fw-normal tutor-color-black <?php echo isset( $data['sub_page_title'] ) ? 'tutor-mr-16' : ''; ?>">
+				<span class="tutor-wp-dashboard-header-title <?php echo isset( $data['sub_page_title'] ) ? 'tutor-mr-16' : ''; ?>">
 					<?php echo esc_html( $data['page_title'] ); ?>
 				</span>
 

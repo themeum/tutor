@@ -838,7 +838,7 @@ class Tutor_Setup {
 		$page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
-			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_localize_script( 'tutor-setup', '_tutorobject', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 			wp_set_script_translations( 'tutor-setup', 'tutor', tutor()->path . 'languages/' );
 		}

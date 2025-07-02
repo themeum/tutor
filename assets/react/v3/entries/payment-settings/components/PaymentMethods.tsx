@@ -28,6 +28,7 @@ import PaymentItem from './PaymentItem';
 
 const PaymentMethods = () => {
   const form = useFormContext<PaymentSettings>();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const paymentMethods = form.watch('payment_methods') ?? [];
 
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);

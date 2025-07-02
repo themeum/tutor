@@ -58,7 +58,7 @@ window.jQuery(document).ready(function($) {
 							});
 						}
 
-						if (redirect) {
+						if (redirect !== undefined) {
 							window.location.assign(redirect);
 						}
 						return;

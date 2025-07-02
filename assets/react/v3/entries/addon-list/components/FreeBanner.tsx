@@ -38,6 +38,7 @@ export default FreeBanner;
 
 const styles = {
   wrapper: css`
+    background-color: ${colorTokens.background.brand};
     background-image: url(${bannerImage});
     background-size: cover;
     background-position: center;

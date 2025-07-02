@@ -142,7 +142,13 @@ class WooCommerce extends Tutor_Base {
 				$ids,
 				function ( $val ) {
 					$course_id = (int) $this->get_post_id_by_meta_key_and_value( self::TUTOR_COURSE_PRODUCT_ID_META, $val );
-					return $course_id && 'publish' === get_post_status( $course_id );
+					if ( ! $course_id ) {
+						return true;
+					}
+
+					if ( $course_id && 'future' !== get_post_status( $course_id ) ) {
+						return true;
+					}
 				}
 			);
 

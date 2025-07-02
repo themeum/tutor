@@ -111,7 +111,7 @@ $is_checkout_page = true;
 										$is_manual = $gateway['is_manual'] ?? false;
 										if ( $is_manual ) {
 											?>
-											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( base64_encode( $gateway['payment_instructions'] ?? '' ) ); ?>">
+											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual">
 												<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input">
 												<div class="tutor-payment-item-content">
 												<?php if ( ! empty( $icon ) ) : ?>
@@ -119,6 +119,7 @@ $is_checkout_page = true;
 													<?php endif; ?>
 												<?php echo esc_html( $label ); ?>
 												</div>
+												<div class="tutor-d-none tutor-payment-item-instructions"><?php echo wp_kses_post( $gateway['payment_instructions'] ?? '' ); ?></div>
 											</label>
 												<?php
 										} else {
