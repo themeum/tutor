@@ -29,6 +29,9 @@ import {
 } from '@ImportExport/services/import-export';
 
 import { tutorConfig } from '@TutorShared/config/config';
+import { type Collection } from '@TutorShared/utils/types';
+import CollectionListModal from './CollectionList';
+import ExportContentBankState from './import-export-states/ExportContentBankState';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -39,11 +42,13 @@ interface ExportModalProps extends ModalProps {
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
+  isFromContentBank?: boolean;
 }
 
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
+  collections: Collection[];
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -57,6 +62,7 @@ const ExportModal = ({
   fileSize,
   message,
   completedContents,
+  isFromContentBank,
 }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
     defaultValues: defaultExportFormData,
@@ -66,6 +72,7 @@ const ExportModal = ({
     defaultValues: {
       courses: [],
       'course-bundle': [],
+      collections: [],
     },
   });
 
@@ -101,6 +108,11 @@ const ExportModal = ({
           contents: [],
         },
         {
+          key: 'collections',
+          label: 'Collections',
+          contents: [],
+        },
+        {
           key: 'settings',
           label: 'Settings',
           contents: [],
@@ -112,11 +124,12 @@ const ExportModal = ({
         },
       ] as ExportableContent[]);
 
-  const resetBulkSelection = (type: 'courses' | 'course-bundle') => {
+  const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'collections') => {
     if (type === 'courses') {
       bulkSelectionForm.reset({
         courses: [],
         'course-bundle': bulkSelectionForm.getValues('course-bundle'),
+        collections: bulkSelectionForm.getValues('collections'),
       });
     }
 
@@ -124,20 +137,38 @@ const ExportModal = ({
       bulkSelectionForm.reset({
         courses: bulkSelectionForm.getValues('courses'),
         'course-bundle': [],
+        collections: bulkSelectionForm.getValues('collections'),
+      });
+    }
+
+    if (type === 'collections') {
+      bulkSelectionForm.reset({
+        courses: bulkSelectionForm.getValues('courses'),
+        'course-bundle': bulkSelectionForm.getValues('course-bundle'),
+        collections: [],
       });
     }
   };
 
-  useEffect(() => {
-    if (getExportableContentQuery.isSuccess && getExportableContentQuery.data) {
-      const courseIds = getExportableContentQuery.data.filter((item) => item.key === 'courses')[0].ids || [];
-      const bundleIds = getExportableContentQuery.data.filter((item) => item.key === 'course-bundle')[0].ids || [];
+  const getContentIds = (data: ExportableContent[], key: string): number[] => {
+    const contentItem = data?.find((item) => item.key === key);
+    return contentItem?.ids || [];
+  };
 
-      form.setValue('courses__ids', courseIds);
-      form.setValue('course-bundle__ids', bundleIds);
+  useEffect(() => {
+    if (!getExportableContentQuery.isSuccess || !getExportableContentQuery.data) {
+      return;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getExportableContentQuery.isSuccess]);
+
+    const data = getExportableContentQuery.data;
+    const courseIds = getContentIds(data, 'courses');
+    const bundleIds = getContentIds(data, 'course-bundle');
+    const collectionIds = getContentIds(data, 'collections');
+
+    form.setValue('courses__ids', courseIds);
+    form.setValue('course-bundle__ids', bundleIds);
+    form.setValue('collections__ids', collectionIds);
+  }, [getExportableContentQuery.isSuccess, getExportableContentQuery.data, form]);
 
   const handleClose = () => {
     form.reset();
@@ -173,23 +204,47 @@ const ExportModal = ({
           ? __('Edit Selected Bundles', 'tutor')
           : __('Select Specific Bundles', 'tutor'),
     },
+    collections: {
+      modal: {
+        component: CollectionListModal,
+        props: {
+          title: __('Select Collections', 'tutor'),
+          form: bulkSelectionForm,
+        },
+      },
+      bulkSelectionButtonLabel:
+        bulkSelectionForm.getValues('collections').length > 0
+          ? __('Edit Selected Collections', 'tutor')
+          : __('Select Specific Collections', 'tutor'),
+    },
   };
 
   const handleExport = form.handleSubmit((data) => {
-    const { courses, 'course-bundle': bundles } = bulkSelectionForm.getValues();
+    const { courses, 'course-bundle': bundles, collections } = bulkSelectionForm.getValues();
     onExport?.({
       data: {
         ...data,
+        ...(isFromContentBank
+          ? {
+              collections: true,
+            }
+          : {
+              collections: data.collections,
+            }),
         courses__ids: courses.length > 0 ? courses.map((course) => course.id) : form.getValues('courses__ids'),
         'course-bundle__ids':
           bundles.length > 0 ? bundles.map((bundle) => bundle.id) : form.getValues('course-bundle__ids'),
+        collections__ids:
+          collections.length > 0 ? collections.map((collection) => collection.ID) : form.getValues('collections__ids'),
       },
       exportableContent: getExportableContentQuery.data || [],
     });
   });
 
   const modalContent = {
-    initial: (
+    initial: isFromContentBank ? (
+      <ExportContentBankState bulkSelectionForm={bulkSelectionForm} />
+    ) : (
       <ExportInitialState
         form={form}
         bulkSelectionForm={bulkSelectionForm}
@@ -214,6 +269,19 @@ const ExportModal = ({
     error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
   };
 
+  const disableExportButton = () => {
+    if (isFromContentBank) {
+      return bulkSelectionForm.getValues('collections').length === 0;
+    }
+
+    return !Object.entries(form.getValues()).some(([key, value]) => {
+      if (!key.includes('__')) {
+        return value === true;
+      }
+      return false;
+    });
+  };
+
   return (
     <BasicModalWrapper
       onClose={handleClose}
@@ -231,14 +299,7 @@ const ExportModal = ({
                 variant="primary"
                 size="small"
                 icon={<SVGIcon name="export" width={24} height={24} />}
-                disabled={
-                  !Object.entries(form.getValues()).some(([key, value]) => {
-                    if (!key.includes('__')) {
-                      return value === true;
-                    }
-                    return false;
-                  })
-                }
+                disabled={currentStep === 'progress' || disableExportButton() || getExportableContentQuery.isLoading}
                 onClick={handleExport}
               >
                 {__('Export', 'tutor')}

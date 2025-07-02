@@ -33,6 +33,7 @@ interface ContentBankContentsParams {
   order?: string;
   content_types?: ('lesson' | 'assignment' | 'question')[];
   question_types?: string[];
+  context?: 'quiz_builder';
 }
 
 const getContentBankContents = (params: ContentBankContentsParams) => {

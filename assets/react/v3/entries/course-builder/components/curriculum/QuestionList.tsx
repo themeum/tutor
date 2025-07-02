@@ -39,7 +39,13 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type H5PContent, QuizDataStatus, type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
+import {
+  type ContentBankContent,
+  type H5PContent,
+  QuizDataStatus,
+  type QuizQuestion,
+  type QuizQuestionType,
+} from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
@@ -215,6 +221,34 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     setValidationError(null);
     setActiveQuestionId(questionId);
     setIsOpen(false);
+  };
+
+  const handleAddContentBankBulkQuestions = (
+    contents: (ContentBankContent & {
+      question: QuizQuestion;
+    })[],
+  ) => {
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    if (validation !== true) {
+      setValidationError(validation);
+      setIsOpen(false);
+      return;
+    }
+
+    const convertedQuestions: QuizQuestion[] = contents.map((content) => {
+      const question = content.question;
+      return {
+        ...question,
+        _data_status: QuizDataStatus.UPDATE,
+        question_answers: question.question_answers.map((answer) => ({
+          ...answer,
+          is_saved: true,
+          _data_status: QuizDataStatus.UPDATE,
+        })),
+      };
+    });
+
+    appendQuestion(convertedQuestions);
   };
 
   const handleH5PBulkQuestion = (contents: H5PContent[]) => {
@@ -419,7 +453,6 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                     >
                       {__('Add from Content Bank', 'tutor')}
                     </Button>
-                    <ProBadge size="small" content={__('Pro', 'tutor')} />
                   </ProBadge>
                 </span>
               }
@@ -434,6 +467,13 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                       props: {
                         title: __('Content Bank', 'tutor'),
                         type: 'question',
+                        onAddContent: (contents) => {
+                          handleAddContentBankBulkQuestions(
+                            contents as (ContentBankContent & {
+                              question: QuizQuestion;
+                            })[],
+                          );
+                        },
                       },
                     });
                     setIsOpen(false);

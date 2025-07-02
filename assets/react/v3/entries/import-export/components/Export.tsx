@@ -17,13 +17,16 @@ import generateImportExportMessage from '@ImportExport/utils/utils';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getQueryParam } from '@TutorShared/utils/url';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
+
+const CONTENT_BANK_PAGE = 'tutor-content-bank';
 
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
   const { data: exportContentResponse, mutateAsync, error, isError } = useExportContentsMutation();
 
-  const handleImport = ({
+  const handleExport = ({
     data,
     exportableContent,
   }: {
@@ -38,6 +41,27 @@ const Export = () => {
       progress: 0,
     });
   };
+
+  useEffect(() => {
+    const isFromContentBank = getQueryParam('referrer', 'string') === CONTENT_BANK_PAGE;
+    const isExportingFromContentBank = getQueryParam('type', 'string') === 'export';
+
+    if (isFromContentBank && isExportingFromContentBank) {
+      showModal({
+        id: 'export-modal',
+        component: ExportModal,
+        depthIndex: zIndex.highest,
+        props: {
+          onClose: closeModal,
+          currentStep: 'initial',
+          onExport: handleExport,
+          progress: 0,
+          isFromContentBank: true,
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -131,7 +155,7 @@ const Export = () => {
               props: {
                 onClose: closeModal,
                 currentStep: 'initial',
-                onExport: handleImport,
+                onExport: handleExport,
                 progress: Number(exportContentResponse?.job_progress) || 0,
               },
             })
