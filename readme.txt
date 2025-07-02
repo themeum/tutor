@@ -312,7 +312,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.6.3 - Jul 01, 2025
+= 3.6.3 - Jul 02, 2025
 
 Fix: WooCommerce products were not displaying correctly on the shop page.
 Fix: Course importing process was failing in certain scenarios. (Pro)
