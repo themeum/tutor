@@ -68,6 +68,37 @@ const readJsonFile = (file: File): Promise<any> => {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
+const hasAnyCourseWithChildren = (data: {
+  data: {
+    content_type: string;
+    data?: {
+      contents?: {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        children?: any[];
+      }[];
+    }[];
+  }[];
+}): boolean => {
+  return data.data.some((item) => {
+    if (item.content_type !== 'courses') {
+      return false;
+    }
+
+    if (!item.data || !Array.isArray(item.data)) {
+      return false;
+    }
+
+    return item.data.some((course) => {
+      if (!course.contents && !Array.isArray(course.contents)) {
+        return false;
+      }
+      return course.contents.some((contentItem) => {
+        return contentItem.children && contentItem.children.length > 0;
+      });
+    });
+  });
+};
+
 const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport }: ImportInitialStateProps) => {
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [isFileValid, setIsFileValid] = useState(true);
@@ -109,12 +140,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     readJsonFile(files[0])
       .then((data) => {
         const hasSettings = data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
-        const hasContentBankContent = data?.data.some(
-          (item: { content_type: string; data: { contents: { children: [] } }[] }) =>
-            item.content_type === 'courses' &&
-            item.data.length > 0 &&
-            item.data.some((courses) => courses.contents.children.length > 0),
-        );
+        const hasContentBankContent = hasAnyCourseWithChildren(data);
 
         setIsReadingFile(false);
         setHasContent((prev) => ({
@@ -135,7 +161,6 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Move intersection observer logic to useEffect
   useEffect(() => {
     if (intersectionEntry?.isIntersecting && getCollectionListQuery.hasNextPage) {
       getCollectionListQuery.fetchNextPage();
