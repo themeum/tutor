@@ -1,18 +1,21 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useRef, useState } from 'react';
+
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type IconCollection } from '@TutorShared/icons/types';
-import Popover from '@TutorShared/molecules/Popover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestionType } from '@TutorShared/utils/types';
-import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
 
 interface FilterFieldsProps {
   onFilterChange: (values: FilterFormValues) => void;
@@ -91,7 +94,7 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
 
   return (
     <>
-      <div css={styles.wrapper}>
+      <div data-filter css={styles.wrapper}>
         <Show when={(!isQuestionType && contentTypes.length > 0) || (isQuestionType && questionTypes.length > 0)}>
           <Button
             size="small"
@@ -110,97 +113,80 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
           </Button>
         </Show>
 
-        <Button
-          ref={filterButtonRef}
-          variant="tertiary"
-          icon={<SVGIcon name="mageFilter" height={16} width={16} />}
-          buttonCss={styles.filterButton}
-          onClick={() => setIsFiltersPopoverOpen((prev) => !prev)}
-        >
-          <span>{__('Filters', 'tutor')}</span>
+        <div>
+          <Button
+            ref={filterButtonRef}
+            variant="tertiary"
+            icon={<SVGIcon name="mageFilter" height={16} width={16} />}
+            buttonCss={styles.filterButton({
+              hasFilters: isQuestionType ? questionTypes.length > 0 : contentTypes.length > 0,
+            })}
+            onClick={() => setIsFiltersPopoverOpen((prev) => !prev)}
+          >
+            <span>{__('Filters', 'tutor')}</span>
 
-          <Show when={(!isQuestionType && contentTypes.length > 0) || (isQuestionType && questionTypes.length > 0)}>
-            <div css={styles.filterCount}>
-              <div css={styles.divider} />
-              <span>{isQuestionType ? questionTypes.length : contentTypes.length}</span>
-            </div>
-          </Show>
-        </Button>
+            <Show when={(!isQuestionType && contentTypes.length > 0) || (isQuestionType && questionTypes.length > 0)}>
+              <div css={styles.filterCount}>
+                <div css={styles.divider} />
+                <span>{isQuestionType ? questionTypes.length : contentTypes.length}</span>
+              </div>
+            </Show>
+          </Button>
+        </div>
 
-        <Button
-          variant="tertiary"
-          icon={<SVGIcon name={order === 'asc' ? 'sortASC' : 'sortDESC'} width={18} height={18} />}
-          buttonCss={styles.sortButton}
-          onClick={() => {
-            const newOrder = order === 'asc' ? 'desc' : 'asc';
-            form.setValue('order', newOrder);
-            onFilterChange({ ...form.getValues(), order: newOrder });
-          }}
-          aria-label={__('Order by', 'tutor')}
-        />
+        <div>
+          <Button
+            variant="tertiary"
+            size="small"
+            icon={<SVGIcon name={order === 'asc' ? 'sortASC' : 'sortDESC'} width={18} height={18} />}
+            buttonCss={styles.sortButton}
+            onClick={() => {
+              const newOrder = order === 'asc' ? 'desc' : 'asc';
+              form.setValue('order', newOrder);
+              onFilterChange({ ...form.getValues(), order: newOrder });
+            }}
+            aria-label={__('Order by', 'tutor')}
+          />
+        </div>
       </div>
 
       <Popover
         isOpen={isFiltersPopoverOpen}
         closeOnEscape
+        hideArrow
+        arrow="top"
+        animationType={AnimationType.slideDown}
         closePopover={() => {
           form.reset();
           setIsFiltersPopoverOpen(false);
         }}
         triggerRef={filterButtonRef}
-        maxWidth={!isQuestionType ? '200px' : '300px'}
+        maxWidth={!isQuestionType ? '200px' : '240px'}
       >
         <div css={styles.filterFieldsWrapper}>
           <h6>{__('Filter by', 'tutor')}</h6>
           {/* Add filter fields here */}
           <div css={styles.filterFields}>
-            <Show
-              when={!isQuestionType}
-              fallback={
-                <>
-                  <For each={questionTypeOptions}>
-                    {(option) => (
-                      <Checkbox
-                        label={
-                          <div css={styles.questionType}>
-                            <SVGIcon name={option.icon} height={24} width={24} />
-                            <span>{option.label}</span>
-                          </div>
-                        }
-                        checked={questionTypes.includes(option.value as QuizQuestionType)}
-                        onChange={(isChecked) => {
-                          const newTypes = isChecked
-                            ? [...questionTypes, option.value]
-                            : questionTypes.filter((type) => type !== option.value);
-                          form.setValue('questionTypes', newTypes as QuizQuestionType[]);
-                        }}
-                      />
-                    )}
-                  </For>
-                </>
-              }
-            >
-              <Checkbox
-                label={__('Lesson', 'tutor')}
-                checked={form.watch('contentTypes').includes('lesson')}
-                onChange={(isChecked) => {
-                  const newTypes = isChecked
-                    ? [...contentTypes, 'lesson']
-                    : contentTypes.filter((type) => type !== 'lesson');
-                  form.setValue('contentTypes', newTypes as ('lesson' | 'assignment' | 'question')[]);
-                }}
-              />
-
-              <Checkbox
-                label={__('Assignment', 'tutor')}
-                checked={form.watch('contentTypes').includes('assignment')}
-                onChange={(isChecked) => {
-                  const newTypes = isChecked
-                    ? [...contentTypes, 'assignment']
-                    : contentTypes.filter((type) => type !== 'assignment');
-                  form.setValue('contentTypes', newTypes as ('lesson' | 'assignment' | 'question')[]);
-                }}
-              />
+            <Show when={isQuestionType}>
+              <For each={questionTypeOptions}>
+                {(option) => (
+                  <Checkbox
+                    label={
+                      <div css={styles.questionType}>
+                        <SVGIcon name={option.icon} height={24} width={24} />
+                        <span>{option.label}</span>
+                      </div>
+                    }
+                    checked={questionTypes.includes(option.value as QuizQuestionType)}
+                    onChange={(isChecked) => {
+                      const newTypes = isChecked
+                        ? [...questionTypes, option.value]
+                        : questionTypes.filter((type) => type !== option.value);
+                      form.setValue('questionTypes', newTypes as QuizQuestionType[]);
+                    }}
+                  />
+                )}
+              </For>
             </Show>
           </div>
 
@@ -229,10 +215,18 @@ const styles = {
     ${styleUtils.display.flex()};
     gap: ${spacing[12]};
   `,
-  filterButton: css`
-    padding-inline: ${spacing[8]};
+  filterButton: ({ hasFilters = false }) => css`
+    height: 40px;
+    padding-inline: ${spacing[12]} ${spacing[16]};
+    background-color: ${colorTokens.background.white};
+
+    ${hasFilters &&
+    css`
+      padding-right: ${spacing[6]};
+    `}
   `,
   sortButton: css`
+    flex-shrink: 0;
     padding: ${spacing[10]} ${spacing[12]};
     background-color: ${colorTokens.background.white};
     color: ${colorTokens.icon.default};
@@ -258,12 +252,11 @@ const styles = {
     margin-left: ${spacing[8]};
 
     span {
-      height: 24px;
-      width: 24px;
+      height: 26px;
+      width: 26px;
       ${styleUtils.display.flex()};
       align-items: center;
       justify-content: center;
-      padding: ${spacing[4]};
       border-radius: ${borderRadius[4]};
       background-color: ${colorTokens.primary[50]};
       color: ${colorTokens.text.brand};

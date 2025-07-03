@@ -2,12 +2,12 @@ import { css } from '@emotion/react';
 import { __, _n, sprintf } from '@wordpress/i18n';
 import React, { useCallback, useMemo } from 'react';
 
+import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import SearchField from '@ImportExport/components/modals/CollectionList/SearchField';
-import Checkbox from '@TutorShared/atoms/CheckBox';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -21,7 +21,7 @@ import { type Collection, type CollectionContentType } from '@TutorShared/utils/
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  collections: Collection[];
+  'content-bank': Collection[];
 }
 
 interface CourseListTableProps {
@@ -30,7 +30,7 @@ interface CourseListTableProps {
 
 const CollectionListTable = ({ form }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
-  const selectedItems = useMemo(() => form.watch('collections') || [], [form]);
+  const selectedItems = useMemo(() => form.watch('content-bank') || [], [form]);
   const selectedItemIds = useMemo(() => selectedItems.map((item) => String(item.ID)), [selectedItems]);
 
   const getCollectionListQuery = useGetCollectionsPaginatedQuery({
@@ -54,11 +54,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
       if (isChecked) {
         // Add all fetched items that aren't already selected
         const newItems = fetchedItems.filter((course) => !selectedItemIds.includes(String(course.ID)));
-        form.setValue('collections', [...selectedItems, ...newItems]);
+        form.setValue('content-bank', [...selectedItems, ...newItems]);
       } else {
         // Keep only items that aren't in the current view
         const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(String(course.ID)));
-        form.setValue('collections', newItems);
+        form.setValue('content-bank', newItems);
       }
     },
     [fetchedItems, selectedItemIds, fetchedItemIds, selectedItems, form],
@@ -70,11 +70,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
 
       if (isSelected) {
         form.setValue(
-          'collections',
+          'content-bank',
           selectedItems.filter((collection) => String(collection.ID) !== String(item.ID)),
         );
       } else {
-        form.setValue('collections', [...selectedItems, item]);
+        form.setValue('content-bank', [...selectedItems, item]);
       }
     },
     [selectedItemIds, selectedItems, form],
@@ -204,6 +204,7 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
         css={styles.tableWrapper({
           isLoading: getCollectionListQuery.isFetching || getCollectionListQuery.isRefetching,
           hasPagination: totalPages > 1,
+          hasData: fetchedItems.length > 0,
         })}
       >
         <Table
@@ -234,7 +235,7 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
 export default React.memo(CollectionListTable);
 
 const styles = {
-  tableWrapper: ({ isLoading = false, hasPagination = false }) => css`
+  tableWrapper: ({ isLoading = false, hasPagination = false, hasData = true }) => css`
     max-height: calc(100vh - 350px);
     overflow: auto;
 
@@ -253,6 +254,13 @@ const styles = {
             color: ${colorTokens.text.brand};
           }
         }
+      }
+    `}
+
+    ${!hasData &&
+    css`
+      td {
+        padding: ${spacing[20]};
       }
     `}
   `,

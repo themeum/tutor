@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
@@ -23,6 +23,21 @@ export const useGetCollectionsPaginatedQuery = (params: CollectionParams) => {
     queryFn: () => getCollections({ ...params }),
     placeholderData: (previousData) => previousData,
     enabled: !!params.page && !!params.per_page,
+  });
+};
+
+export const useGetCollectionsInfinityQuery = (params: CollectionParams) => {
+  return useInfiniteQuery({
+    queryKey: ['ContentBankCollectionsInfinity'],
+    queryFn: ({ pageParam = 1 }) => {
+      return getCollections({
+        ...params,
+        page: pageParam,
+      });
+    },
+    getNextPageParam: (lastPage) =>
+      lastPage.current_page < lastPage.total_page ? lastPage.current_page + 1 : undefined,
+    initialPageParam: 1,
   });
 };
 

@@ -4,9 +4,10 @@ import { type ErrorResponse } from 'react-router-dom';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import { tutorConfig } from '@TutorShared/config/config';
+import { type Course } from '@TutorShared/services/course';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type Collection, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -14,25 +15,31 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 export interface ExportFormData {
   courses: boolean;
   'course-bundle': boolean;
-  collections: boolean;
+  'content-bank': boolean;
   settings: boolean;
   courses__ids: number[];
   'course-bundle__ids': number[];
-  collections__ids: number[];
+  'content-bank__ids': number[];
   courses__lesson: boolean;
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
   keep_media_files: boolean;
 }
 
+export interface BulkSelectionFormData {
+  courses: Course[];
+  'course-bundle': Course[];
+  'content-bank': Collection[];
+}
+
 export const defaultExportFormData: ExportFormData = {
   courses: false,
   'course-bundle': false,
-  collections: false,
+  'content-bank': false,
   settings: false,
   courses__ids: [],
   'course-bundle__ids': [],
-  collections__ids: [],
+  'content-bank__ids': [],
   courses__lesson: true,
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
@@ -135,7 +142,7 @@ export const convertExportFormDataToPayload = ({
 
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
-export type ExportableContentType = 'courses' | 'course-bundle' | 'collections' | 'settings' | 'keep_media_files';
+export type ExportableContentType = 'courses' | 'course-bundle' | 'content-bank' | 'settings' | 'keep_media_files';
 export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
 export interface ContentItem {
@@ -196,7 +203,7 @@ export interface ImportExportContentResponseBase {
   completed_contents: {
     courses: ImportExportCompletedContentsItem;
     'course-bundle': ImportExportCompletedContentsItem;
-    collections: ImportExportCompletedContentsItem;
+    'content-bank': ImportExportCompletedContentsItem;
     settings: boolean;
   };
 }
