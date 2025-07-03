@@ -9,15 +9,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	const previewTemplateName = document.querySelector(".tutor-preview-template-name");
 	const tutorTemplateShimmerEffect = document.querySelector(".tutor-template-shimmer-effect");
 	const importBtn = document.querySelector('.tutor-template-import-btn');
+	const tutorTemplateCourseDataUrl = document.getElementById("tutor_template_course_data_url");
+	// let template_course_data_url = '';
 
 	if (templateDemoImportRoot) {
 		// Open live preview modal
 		templateDemoImportRoot.addEventListener('click', (event) => {
-			if (event.target && event.target.matches('.tutor-template-preview-btn')) {
+			if (event.target.closest('.tutor-template-preview-btn')) {
 				document.body.style.overflow = 'hidden';
 				tutorTemplateShimmerEffect.style.display = "block";
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
+				tutorTemplateCourseDataUrl.value = event.target.dataset.template_course_data_url;
 				iframe.src = event.target.dataset.template_url;
 				if (_tutorobject?.tutor_pro_url) {
 					importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);

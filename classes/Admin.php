@@ -146,7 +146,7 @@ class Admin {
 		do_action( 'tutor_after_courses_menu' );
 
 		// Templates menu @since 3.6.0.
-		add_submenu_page( 'tutor', __( 'Themes', 'tutor' ), __( 'Themes', 'tutor' ) . sprintf( ' <span class="tutor-theme-menu-badge">%s</span>', __( 'Beta', 'tutor' ) ), 'manage_tutor', 'tutor-themes', array( $this, 'tutor_themes' ) );
+		add_submenu_page( 'tutor', __( 'Themes', 'tutor' ), __( 'Themes', 'tutor' ) . sprintf( ' <span class="tutor-theme-menu-badge">%s</span>', __( 'New', 'tutor' ) ), 'manage_tutor', 'tutor-themes', array( $this, 'tutor_themes' ) );
 
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
 
