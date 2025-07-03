@@ -1,19 +1,12 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type Course } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type Collection } from '@TutorShared/utils/types';
 import CollectionListTable from '../CollectionList/CollectionListTable';
-
-interface BulkSelectionFormData {
-  courses: Course[];
-  'course-bundle': Course[];
-  'content-bank': Collection[];
-}
 
 interface ExportContentBankStateProps {
   bulkSelectionForm: FormWithGlobalErrorType<BulkSelectionFormData>;

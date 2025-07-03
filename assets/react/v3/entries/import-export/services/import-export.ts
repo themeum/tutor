@@ -15,11 +15,11 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 export interface ExportFormData {
   courses: boolean;
   'course-bundle': boolean;
-  'content-bank': boolean;
+  content_bank: boolean;
   settings: boolean;
   courses__ids: number[];
   'course-bundle__ids': number[];
-  'content-bank__ids': number[];
+  content_bank__ids: number[];
   courses__lesson: boolean;
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
@@ -29,17 +29,17 @@ export interface ExportFormData {
 export interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  'content-bank': Collection[];
+  content_bank: Collection[];
 }
 
 export const defaultExportFormData: ExportFormData = {
   courses: false,
   'course-bundle': false,
-  'content-bank': false,
+  content_bank: false,
   settings: false,
   courses__ids: [],
   'course-bundle__ids': [],
-  'content-bank__ids': [],
+  content_bank__ids: [],
   courses__lesson: true,
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
@@ -142,7 +142,7 @@ export const convertExportFormDataToPayload = ({
 
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
-export type ExportableContentType = 'courses' | 'course-bundle' | 'content-bank' | 'settings' | 'keep_media_files';
+export type ExportableContentType = 'courses' | 'course-bundle' | 'content_bank' | 'settings' | 'keep_media_files';
 export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
 export interface ContentItem {
@@ -203,7 +203,7 @@ export interface ImportExportContentResponseBase {
   completed_contents: {
     courses: ImportExportCompletedContentsItem;
     'course-bundle': ImportExportCompletedContentsItem;
-    'content-bank': ImportExportCompletedContentsItem;
+    content_bank: ImportExportCompletedContentsItem;
     settings: boolean;
   };
 }
