@@ -36,6 +36,7 @@ const ContentListTable = () => {
   const totalPages = Number(getContentsQuery.data?.total_page || 0);
   const collectionName = selectedCollection?.post_title ?? __('All Contents', 'tutor');
   const selectedContents = form.watch('contents') || [];
+  const selectedContentIds = selectedContents.map((content) => String(content.ID));
   const fetchedContents = useMemo(() => getContentsQuery.data?.data ?? [], [getContentsQuery.data]);
 
   const onBack = () => {
@@ -46,19 +47,21 @@ const ContentListTable = () => {
 
   const toggleSelection = (isChecked = false) => {
     if (isChecked) {
-      const newContents = fetchedContents.filter((content) => !selectedContents.includes(String(content.ID)));
-      form.setValue('contents', [...selectedContents, ...newContents.map((content) => String(content.ID))]);
+      const newContents = fetchedContents.filter((content) => !selectedContentIds.includes(String(content.ID)));
+      form.setValue('contents', [...selectedContents, ...newContents]);
       return;
     }
 
     const newContents = selectedContents.filter(
-      (content) => !fetchedContents.map((content) => String(content.ID)).includes(content),
+      (content) => !fetchedContents.map((content) => String(content.ID)).includes(String(content.ID)),
     );
     form.setValue('contents', newContents);
   };
 
   const handleAllIsChecked = () => {
-    return fetchedContents.every((content) => selectedContents.includes(String(content.ID)));
+    return (
+      fetchedContents.length > 0 && fetchedContents.every((content) => selectedContentIds.includes(String(content.ID)))
+    );
   };
 
   const columns: Column<ContentBankContent>[] = [
@@ -82,11 +85,11 @@ const ContentListTable = () => {
               onChange={() => {
                 const selectedContents = form.watch('contents') || [];
 
-                const filteredContents = selectedContents.filter((lesson) => lesson !== String(item.ID));
+                const filteredContents = selectedContents.filter((content) => String(content.ID) !== String(item.ID));
                 const isNewItem = filteredContents.length === selectedContents.length;
 
                 if (isNewItem) {
-                  form.setValue('contents', [...filteredContents, String(item.ID)]);
+                  form.setValue('contents', [...filteredContents, item]);
                 } else {
                   form.setValue('contents', filteredContents);
                 }
@@ -94,7 +97,7 @@ const ContentListTable = () => {
               checked={
                 getContentsQuery.isLoading || getContentsQuery.isRefetching
                   ? false
-                  : selectedContents.includes(String(item.ID))
+                  : selectedContentIds.includes(String(item.ID))
               }
             />
             <div>{item.post_title}</div>

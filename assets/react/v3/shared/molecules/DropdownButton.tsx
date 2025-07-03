@@ -9,6 +9,7 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { typography } from '@TutorShared/config/typography';
+import { type arrowPosition } from '@TutorShared/hooks/usePortalPopover';
 import Popover from './Popover';
 
 interface DropdownOptionProps {
@@ -52,6 +53,8 @@ interface DropdownButtonProps {
   text: string | ReactNode;
   children: ReactNode;
   variant?: ButtonVariant;
+  arrowPosition?: arrowPosition;
+  animationType?: AnimationType;
   type?: 'submit' | 'button';
   size?: ButtonSize;
   icon?: React.ReactNode;
@@ -71,6 +74,8 @@ const DropdownButton = ({
   text,
   children,
   variant = 'primary',
+  arrowPosition = 'top',
+  animationType = AnimationType.slideUp,
   size = 'regular',
   icon,
   iconPosition = 'left',
@@ -167,11 +172,11 @@ const DropdownButton = ({
       <Popover
         gap={4}
         maxWidth={dropdownMaxWidth}
-        arrow="top"
+        arrow={arrowPosition}
         triggerRef={dropdownTriggerRef}
         isOpen={isOpen}
         closePopover={() => setIsOpen(false)}
-        animationType={AnimationType.slideUp}
+        animationType={animationType}
         hideArrow
       >
         <div css={styles.dropdownWrapper}>

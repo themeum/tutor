@@ -22,21 +22,32 @@ const generateImportExportMessage = (
 
   const successFullyCompletedCourses = completedContents?.courses?.success || [];
   const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
+  const successFullyCompletedCollections = completedContents?.collections?.success || [];
   const successFullyCompletedSettings = completedContents?.settings;
 
   const completedWithErrorsCourses = completedContents?.courses?.failed || [];
   const completedWithErrorsBundles = completedContents?.['course-bundle']?.failed || [];
+  const completedWithErrorsCollections = completedContents?.collections?.failed || [];
 
-  const noFailures = completedWithErrorsCourses.length === 0 && completedWithErrorsBundles.length === 0;
+  const noFailures =
+    completedWithErrorsCourses.length === 0 &&
+    completedWithErrorsBundles.length === 0 &&
+    completedWithErrorsCollections.length === 0;
 
   // Helper function for formatting count with singular/plural text
-  const formatCount = (count: number, type: 'course' | 'bundle'): string => {
+  const formatCount = (count: number, type: 'course' | 'bundle' | 'collection'): string => {
     if (type === 'course') {
       // translators: %d is the number of courses
       return sprintf(_n('%d Course', '%d Courses', count, 'tutor'), count);
     }
-    // translators: %d is the number of bundles
-    return sprintf(_n('%d Bundle', '%d Bundles', count, 'tutor'), count);
+
+    if (type === 'bundle') {
+      // translators: %d is the number of bundles
+      return sprintf(_n('%d Bundle', '%d Bundles', count, 'tutor'), count);
+    }
+
+    // translators: %d is the number of collections
+    return sprintf(_n('%d Collection', '%d Collections', count, 'tutor'), count);
   };
 
   // Handle case with only failures and no completed contents
@@ -49,6 +60,10 @@ const generateImportExportMessage = (
       if (completedWithErrorsBundles.length) {
         items.push(formatCount(completedWithErrorsBundles.length, 'bundle'));
       }
+      if (completedWithErrorsCollections.length) {
+        items.push(formatCount(completedWithErrorsCollections.length, 'collection'));
+      }
+
       return `${items.join(', ')} ${operationText.failed}`;
     }
     return operationText.inProgress;
@@ -64,6 +79,10 @@ const generateImportExportMessage = (
     successItems.push(formatCount(successFullyCompletedBundles.length, 'bundle'));
   }
 
+  if (successFullyCompletedCollections.length) {
+    successItems.push(formatCount(successFullyCompletedCollections.length, 'collection'));
+  }
+
   if (successFullyCompletedSettings) {
     successItems.push(__('Settings', 'tutor'));
   }
@@ -75,6 +94,10 @@ const generateImportExportMessage = (
   }
   if (completedWithErrorsBundles.length) {
     failedItems.push(formatCount(completedWithErrorsBundles.length, 'bundle'));
+  }
+
+  if (completedWithErrorsCollections.length) {
+    failedItems.push(formatCount(completedWithErrorsCollections.length, 'collection'));
   }
 
   // Early return if nothing to report
