@@ -17,6 +17,7 @@ interface UploaderProps {
   multiple?: boolean;
   fullWidth?: boolean;
   disabled?: boolean;
+  maxFileSize?: number; // in bytes, default is MAX_FILE_SIZE
 }
 
 interface FileUploaderProps extends UploaderProps {
@@ -27,14 +28,21 @@ interface UseFileUploaderProps {
   acceptedTypes: string[];
   onUpload: (files: File[]) => void;
   onError: (errorMessage: string[]) => void;
+  maxFileSize?: number; // in bytes, default is MAX_FILE_SIZE
 }
-export const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUploaderProps) => {
+export const useFileUploader = ({
+  acceptedTypes,
+  onUpload,
+  onError,
+  maxFileSize = MAX_FILE_SIZE,
+}: UseFileUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
 
-    if (!files) {
+    if (!files || files.length === 0) {
+      onError([__('No files selected', 'tutor')]);
       return;
     }
 
@@ -44,7 +52,7 @@ export const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUpl
     for (const file of [...files]) {
       if (!acceptedTypes.includes(getFileExtensionFromName(file.name))) {
         errorMessages.push(__('Invalid file type', 'tutor'));
-      } else if (file.size > MAX_FILE_SIZE) {
+      } else if (file.size > maxFileSize) {
         errorMessages.push(__('Maximum upload size exceeded', 'tutor'));
       } else {
         validFiles.push(file);
@@ -72,8 +80,9 @@ const FileUploader = ({
   label,
   multiple = false,
   disabled = false,
+  maxFileSize = MAX_FILE_SIZE,
 }: FileUploaderProps) => {
-  const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError });
+  const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError, maxFileSize });
 
   return (
     <button type="button" css={styles.uploadButton} onClick={() => fileInputRef.current?.click()} disabled={disabled}>
@@ -133,9 +142,10 @@ export const UploadButton = ({
   multiple = false,
   disabled = false,
   children,
+  maxFileSize = MAX_FILE_SIZE,
   ...buttonProps
 }: UploadButtonProps) => {
-  const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError });
+  const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError, maxFileSize });
 
   return (
     <Button {...buttonProps} onClick={() => fileInputRef.current?.click()} disabled={disabled}>
