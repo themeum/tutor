@@ -46,10 +46,12 @@ const ImportExportCompletedState = ({
 
   const successFullyCompletedCourses = completedContents?.courses?.success || [];
   const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
+  const successFullyCompletedContentBank = completedContents?.content_bank?.success || [];
   const successFullyCompletedSettings = completedContents?.settings;
 
   const completedWithErrorsCourses = completedContents?.courses?.failed || [];
   const completedWithErrorsBundles = completedContents?.['course-bundle']?.failed || [];
+  const completedWithErrorsCollections = completedContents?.content_bank?.failed || [];
 
   const contentMapping = {
     import: {
@@ -108,11 +110,17 @@ const ImportExportCompletedState = ({
     },
   };
 
-  const formatItemCount = (count: number, type: 'course' | 'bundle'): string => {
+  const formatItemCount = (count: number, type: 'course' | 'bundle' | 'content-bank'): string => {
     if (type === 'course') {
       // translators: %d is the number of courses
       return sprintf(_n('Course (%d)', 'Courses (%d)', count, 'tutor'), count);
     }
+
+    if (type === 'content-bank') {
+      // translators: %d is the number of content bank items
+      return sprintf(_n('Collection (%d)', 'Collections (%d)', count, 'tutor'), count);
+    }
+
     // translators: %d is the number of bundles
     return sprintf(_n('Bundle (%d)', 'Bundles (%d)', count, 'tutor'), count);
   };
@@ -128,6 +136,11 @@ const ImportExportCompletedState = ({
     if (completedWithErrorsBundles.length > 0) {
       const bundlesText = formatItemCount(completedWithErrorsBundles.length, 'bundle');
       failedItems.push(bundlesText);
+    }
+
+    if (completedWithErrorsCollections.length > 0) {
+      const collectionsText = formatItemCount(completedWithErrorsCollections.length, 'content-bank');
+      failedItems.push(collectionsText);
     }
 
     return failedItems.join(', ');
@@ -147,6 +160,11 @@ const ImportExportCompletedState = ({
     if (successFullyCompletedBundles.length) {
       const bundleText = formatItemCount(successFullyCompletedBundles.length, 'bundle');
       formattedItems.push(bundleText);
+    }
+
+    if (successFullyCompletedContentBank.length) {
+      const contentBankText = formatItemCount(successFullyCompletedContentBank.length, 'content-bank');
+      formattedItems.push(contentBankText);
     }
 
     if (settings) {
@@ -201,8 +219,8 @@ const ImportExportCompletedState = ({
         <div css={styles.reportList}>
           <Show
             when={
-              [...successFullyCompletedCourses, ...successFullyCompletedBundles].length > 0 ||
-              successFullyCompletedSettings
+              [...successFullyCompletedCourses, ...successFullyCompletedBundles, ...successFullyCompletedContentBank]
+                .length > 0 || successFullyCompletedSettings
             }
           >
             <div css={styles.reportWrapper}>
@@ -219,7 +237,12 @@ const ImportExportCompletedState = ({
             </div>
           </Show>
 
-          <Show when={[...completedWithErrorsCourses, ...completedWithErrorsBundles].length > 0}>
+          <Show
+            when={
+              [...completedWithErrorsCourses, ...completedWithErrorsBundles, ...completedWithErrorsCollections].length >
+              0
+            }
+          >
             <button
               css={[styleUtils.resetButton, styles.reportWrapper]}
               onClick={() => setIsFailedDataVisible(!isFailedDataVisible)}
@@ -282,6 +305,33 @@ const ImportExportCompletedState = ({
                     </div>
                   </div>
                 </Show>
+                <Show when={completedWithErrorsCollections.length > 0}>
+                  <div css={styles.failedItem}>
+                    <label>
+                      {
+                        /* translators: %d is the number of collection IDs */
+                        sprintf(
+                          _n(
+                            'Collection ID (%d)',
+                            'Collection IDs (%d)',
+                            completedWithErrorsCollections.length,
+                            'tutor',
+                          ),
+                          completedWithErrorsCollections.length,
+                        )
+                      }
+                    </label>
+                    <div css={styles.failedList}>
+                      <For each={completedWithErrorsCollections}>
+                        {(collectionId) => (
+                          <div key={collectionId} css={styles.failedId}>
+                            {collectionId}
+                          </div>
+                        )}
+                      </For>
+                    </div>
+                  </div>
+                </Show>
               </Show>
             </button>
           </Show>
@@ -289,7 +339,8 @@ const ImportExportCompletedState = ({
         <Show
           when={
             type === 'export' &&
-            ([...successFullyCompletedCourses, ...successFullyCompletedBundles].length > 0 ||
+            ([...successFullyCompletedCourses, ...successFullyCompletedBundles, ...successFullyCompletedContentBank]
+              .length > 0 ||
               successFullyCompletedSettings)
           }
         >
