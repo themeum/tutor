@@ -48,7 +48,7 @@ interface ExportModalProps extends ModalProps {
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  collections: Collection[];
+  'content-bank': Collection[];
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -72,7 +72,7 @@ const ExportModal = ({
     defaultValues: {
       courses: [],
       'course-bundle': [],
-      collections: [],
+      'content-bank': [],
     },
   });
 
@@ -108,8 +108,8 @@ const ExportModal = ({
           contents: [],
         },
         {
-          key: 'collections',
-          label: 'Collections',
+          key: 'content-bank',
+          label: 'Content Bank',
           contents: [],
         },
         {
@@ -124,12 +124,12 @@ const ExportModal = ({
         },
       ] as ExportableContent[]);
 
-  const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'collections') => {
+  const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'content-bank') => {
     if (type === 'courses') {
       bulkSelectionForm.reset({
         courses: [],
         'course-bundle': bulkSelectionForm.getValues('course-bundle'),
-        collections: bulkSelectionForm.getValues('collections'),
+        'content-bank': bulkSelectionForm.getValues('content-bank'),
       });
     }
 
@@ -137,15 +137,15 @@ const ExportModal = ({
       bulkSelectionForm.reset({
         courses: bulkSelectionForm.getValues('courses'),
         'course-bundle': [],
-        collections: bulkSelectionForm.getValues('collections'),
+        'content-bank': bulkSelectionForm.getValues('content-bank'),
       });
     }
 
-    if (type === 'collections') {
+    if (type === 'content-bank') {
       bulkSelectionForm.reset({
         courses: bulkSelectionForm.getValues('courses'),
         'course-bundle': bulkSelectionForm.getValues('course-bundle'),
-        collections: [],
+        'content-bank': [],
       });
     }
   };
@@ -163,11 +163,11 @@ const ExportModal = ({
     const data = getExportableContentQuery.data;
     const courseIds = getContentIds(data, 'courses');
     const bundleIds = getContentIds(data, 'course-bundle');
-    const collectionIds = getContentIds(data, 'collections');
+    const collectionIds = getContentIds(data, 'content-bank');
 
     form.setValue('courses__ids', courseIds);
     form.setValue('course-bundle__ids', bundleIds);
-    form.setValue('collections__ids', collectionIds);
+    form.setValue('content-bank__ids', collectionIds);
   }, [getExportableContentQuery.isSuccess, getExportableContentQuery.data, form]);
 
   const handleClose = () => {
@@ -204,7 +204,7 @@ const ExportModal = ({
           ? __('Edit Selected Bundles', 'tutor')
           : __('Select Specific Bundles', 'tutor'),
     },
-    collections: {
+    'content-bank': {
       modal: {
         component: CollectionListModal,
         props: {
@@ -213,29 +213,29 @@ const ExportModal = ({
         },
       },
       bulkSelectionButtonLabel:
-        bulkSelectionForm.getValues('collections').length > 0
-          ? __('Edit Selected Collections', 'tutor')
-          : __('Select Specific Collections', 'tutor'),
+        bulkSelectionForm.getValues('content-bank').length > 0
+          ? __('Edit Selected Content Bank Items', 'tutor')
+          : __('Select Specific Content Bank Items', 'tutor'),
     },
   };
 
   const handleExport = form.handleSubmit((data) => {
-    const { courses, 'course-bundle': bundles, collections } = bulkSelectionForm.getValues();
+    const { courses, 'course-bundle': bundles, 'content-bank': collections } = bulkSelectionForm.getValues();
     onExport?.({
       data: {
         ...data,
         ...(isFromContentBank
           ? {
-              collections: true,
+              'content-bank': true,
             }
           : {
-              collections: data.collections,
+              'content-bank': data['content-bank'],
             }),
         courses__ids: courses.length > 0 ? courses.map((course) => course.id) : form.getValues('courses__ids'),
         'course-bundle__ids':
           bundles.length > 0 ? bundles.map((bundle) => bundle.id) : form.getValues('course-bundle__ids'),
-        collections__ids:
-          collections.length > 0 ? collections.map((collection) => collection.ID) : form.getValues('collections__ids'),
+        'content-bank__ids':
+          collections.length > 0 ? collections.map((collection) => collection.ID) : form.getValues('content-bank__ids'),
       },
       exportableContent: getExportableContentQuery.data || [],
     });
@@ -271,7 +271,7 @@ const ExportModal = ({
 
   const disableExportButton = () => {
     if (isFromContentBank) {
-      return bulkSelectionForm.getValues('collections').length === 0;
+      return bulkSelectionForm.getValues('content-bank').length === 0;
     }
 
     return !Object.entries(form.getValues()).some(([key, value]) => {

@@ -12,7 +12,7 @@ import CollectionListTable from '../CollectionList/CollectionListTable';
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  collections: Collection[];
+  'content-bank': Collection[];
 }
 
 interface ExportContentBankStateProps {
@@ -23,7 +23,7 @@ const ExportContentBankState = ({ bulkSelectionForm }: ExportContentBankStatePro
   return (
     <div css={styles.wrapper}>
       <div css={styles.formWrapper}>
-        <div css={styles.formTitle}>{__('Select content collections to export', 'tutor')}</div>
+        <div css={styles.formTitle}>{__('Select content bank items to export', 'tutor')}</div>
 
         <CollectionListTable form={bulkSelectionForm} />
       </div>
