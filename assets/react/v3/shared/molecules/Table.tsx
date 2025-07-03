@@ -122,7 +122,6 @@ const Table = <TableItem, TSortProperties extends readonly string[] = string[]>(
       return column.Header;
     }
 
-    // @TODO: the icons need to be updated with proper one.
     if (querySortProperties?.includes(sortProperty as TSortProperties[number])) {
       if (querySortDirections?.[sortProperty as TSortProperties[number]] === 'asc') {
         icon = sortIcons.asc;
