@@ -27,7 +27,13 @@ interface ImportInitialStateProps {
   files: File[];
   currentStep: string;
   onClose: () => void;
-  onImport: (file: File) => void;
+  onImport: ({
+    file,
+    collectionId,
+  }: {
+    file: File;
+    collectionId?: number; // Optional for content bank import
+  }) => void;
 }
 
 interface ImportForm {
@@ -103,15 +109,18 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     readJsonFile(files[0])
       .then((data) => {
         const hasSettings = data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
-        const hasContentBank = data?.data.some(
-          (item: { content_type: string }) => item.content_type === 'content_bank',
+        const hasContentBankContent = data?.data.some(
+          (item: { content_type: string; data: { contents: { children: [] } }[] }) =>
+            item.content_type === 'courses' &&
+            item.data.length > 0 &&
+            item.data.some((courses) => courses.contents.children.length > 0),
         );
 
         setIsReadingFile(false);
         setHasContent((prev) => ({
           ...prev,
           settings: hasSettings || false,
-          contentBank: hasContentBank || false,
+          contentBank: hasContentBankContent || false,
         }));
         form.setValue('files', files);
         setIsFileValid(true);
@@ -306,7 +315,12 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             variant="primary"
             size="small"
             loading={isReadingFile || currentStep === 'progress'}
-            onClick={async () => onImport(files[0])}
+            onClick={async () =>
+              onImport({
+                file: files[0],
+                collectionId: isContentBankSelectionEnabled ? Number(form.watch('collectionId')) : undefined,
+              })
+            }
           >
             {__('Import', 'tutor')}
           </Button>
