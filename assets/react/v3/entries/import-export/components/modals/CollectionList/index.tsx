@@ -26,19 +26,19 @@ export interface ContentSelectionForm {
 }
 
 const CollectionListModal = ({ closeModal, actions, form }: CourseListModalProps) => {
-  const addedItems = form.getValues('content-bank') || [];
+  const addedItems = form.getValues('content_bank') || [];
   const _form = useFormWithGlobalError<BulkSelectionFormData>({
     defaultValues: {
-      'content-bank': addedItems,
+      content_bank: addedItems,
     },
   });
 
-  const selectedItems = (_form.watch('content-bank') as Collection[]) || [];
+  const selectedItems = (_form.watch('content_bank') as Collection[]) || [];
 
   const handleAddContent = () => {
-    const selectedItems = _form.getValues('content-bank') || [];
-    form.setValue('content-bank', [...selectedItems]);
-    _form.setValue('content-bank', []);
+    const selectedItems = _form.getValues('content_bank') || [];
+    form.setValue('content_bank', [...selectedItems]);
+    _form.setValue('content_bank', []);
     closeModal({ action: 'CONFIRM' });
   };
 

@@ -8,21 +8,15 @@ import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import SearchField from '@ImportExport/components/modals/CollectionList/SearchField';
+import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import { useGetCollectionsPaginatedQuery } from '@TutorShared/services/content-bank';
-import { type Course } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection, type CollectionContentType } from '@TutorShared/utils/types';
-
-interface BulkSelectionFormData {
-  courses: Course[];
-  'course-bundle': Course[];
-  'content-bank': Collection[];
-}
 
 interface CourseListTableProps {
   form: FormWithGlobalErrorType<BulkSelectionFormData>;
@@ -30,7 +24,7 @@ interface CourseListTableProps {
 
 const CollectionListTable = ({ form }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
-  const selectedItems = useMemo(() => form.watch('content-bank') || [], [form]);
+  const selectedItems = useMemo(() => form.watch('content_bank') || [], [form]);
   const selectedItemIds = useMemo(() => selectedItems.map((item) => String(item.ID)), [selectedItems]);
 
   const getCollectionListQuery = useGetCollectionsPaginatedQuery({
@@ -54,11 +48,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
       if (isChecked) {
         // Add all fetched items that aren't already selected
         const newItems = fetchedItems.filter((course) => !selectedItemIds.includes(String(course.ID)));
-        form.setValue('content-bank', [...selectedItems, ...newItems]);
+        form.setValue('content_bank', [...selectedItems, ...newItems]);
       } else {
         // Keep only items that aren't in the current view
         const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(String(course.ID)));
-        form.setValue('content-bank', newItems);
+        form.setValue('content_bank', newItems);
       }
     },
     [fetchedItems, selectedItemIds, fetchedItemIds, selectedItems, form],
@@ -70,11 +64,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
 
       if (isSelected) {
         form.setValue(
-          'content-bank',
+          'content_bank',
           selectedItems.filter((collection) => String(collection.ID) !== String(item.ID)),
         );
       } else {
-        form.setValue('content-bank', [...selectedItems, item]);
+        form.setValue('content_bank', [...selectedItems, item]);
       }
     },
     [selectedItemIds, selectedItems, form],

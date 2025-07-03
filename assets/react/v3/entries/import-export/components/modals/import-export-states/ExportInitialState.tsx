@@ -40,7 +40,7 @@ interface ExportInitialStateProps {
       bulkSelectionButtonLabel: string;
     };
   };
-  resetBulkSelection: (type: 'courses' | 'course-bundle' | 'content-bank') => void;
+  resetBulkSelection: (type: 'courses' | 'course-bundle' | 'content_bank') => void;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -102,7 +102,7 @@ const ExportInitialState = ({
       const hasSelectedItems =
         (mainType === 'courses' && bulkSelectionForm.getValues('courses').length > 0) ||
         (mainType === 'course-bundle' && bulkSelectionForm.getValues('course-bundle').length > 0) ||
-        (mainType === 'content-bank' && bulkSelectionForm.getValues('content-bank').length > 0);
+        (mainType === 'content_bank' && bulkSelectionForm.getValues('content_bank').length > 0);
 
       if (!mainContent.contents) {
         return key;
@@ -127,7 +127,7 @@ const ExportInitialState = ({
       const countMap: Record<string, number> = {
         courses: bulkSelectionForm.getValues('courses').length,
         'course-bundle': bulkSelectionForm.getValues('course-bundle').length,
-        'content-bank': bulkSelectionForm.getValues('content-bank').length,
+        content_bank: bulkSelectionForm.getValues('content_bank').length,
       };
 
       return countMap[key] || 0;
@@ -190,7 +190,7 @@ const ExportInitialState = ({
                 </div>
 
                 {/* Show select button for courses and bundles */}
-                <Show when={isChecked && ['courses', 'course-bundle', 'content-bank'].includes(contentKey)}>
+                <Show when={isChecked && ['courses', 'course-bundle', 'content_bank'].includes(contentKey)}>
                   <Button
                     variant="secondary"
                     buttonCss={styles.selectButton}
