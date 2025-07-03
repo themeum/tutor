@@ -20,7 +20,7 @@ const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
   const { data: importResponse, mutateAsync, isError, error, isPending } = useImportContentsMutation();
 
-  const onImport = async (file: File): Promise<void> => {
+  const onImport = async ({ file, collectionId }: { file: File; collectionId?: number }): Promise<void> => {
     updateModal<typeof ImportModal>('import-modal', {
       currentStep: 'progress',
       progress: 0,
@@ -29,6 +29,7 @@ const Import = () => {
 
     try {
       await mutateAsync({
+        ...(collectionId ? { collection_id: collectionId } : {}),
         data: file,
       });
     } catch (error) {

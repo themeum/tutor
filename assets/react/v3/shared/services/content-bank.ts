@@ -26,7 +26,11 @@ export const useGetCollectionsPaginatedQuery = (params: CollectionParams) => {
   });
 };
 
-export const useGetCollectionsInfinityQuery = (params: CollectionParams) => {
+export const useGetCollectionsInfinityQuery = (
+  params: CollectionParams & {
+    isEnabled?: boolean;
+  },
+) => {
   return useInfiniteQuery({
     queryKey: ['ContentBankCollectionsInfinity'],
     queryFn: ({ pageParam = 1 }) => {
@@ -38,6 +42,7 @@ export const useGetCollectionsInfinityQuery = (params: CollectionParams) => {
     getNextPageParam: (lastPage) =>
       lastPage.current_page < lastPage.total_page ? lastPage.current_page + 1 : undefined,
     initialPageParam: 1,
+    enabled: params.isEnabled && !!params.per_page,
   });
 };
 

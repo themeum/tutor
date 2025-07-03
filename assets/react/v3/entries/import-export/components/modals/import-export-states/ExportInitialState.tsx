@@ -252,7 +252,7 @@ const ExportInitialState = ({
         <Show
           when={
             (exportableContent || []).some((item) => item.key === 'keep_media_files') &&
-            (form.getValues('courses') || form.getValues('course-bundle'))
+            (form.getValues('courses') || form.getValues('course-bundle') || form.getValues('content_bank'))
           }
         >
           <div css={styles.contentCheckboxFooter}>
