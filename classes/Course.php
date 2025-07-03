@@ -1205,6 +1205,7 @@ class Course extends Tutor_Base {
 				);
 
 				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
+				$topic_contents = apply_filters( 'tutor_topic_contents', $topic_contents, $post->ID, $course_id );
 
 				if ( $topic_contents->have_posts() ) {
 					foreach ( $topic_contents->get_posts() as $post ) {
