@@ -36,7 +36,7 @@
 			<div class="tutor-template-preview-frame-header">
 				<div class="tutor- tutor-d-flex tutor-gap-1 tutor-align-center tutor-template-preview-modal-back-link">
 					<i class="tutor-icon-previous"></i>
-					<div class=""><?php esc_html_e( 'Themes', 'tutor' ); ?></div>
+					<div><?php esc_html_e( 'Themes', 'tutor' ); ?></div>
 				</div>
 				<ul class="tutor-template-preview-device-switcher">
 					<li class="active" data-device="desktop" data-width="1400px" data-height="100%">
@@ -47,7 +47,7 @@
 							<path d="M2.6573 12.9234H17.3392C18.4991 12.9234 19.0902 12.3547 19.0902 11.1724V2.55183C19.0902 1.3695 18.4991 0.800781 17.3392 0.800781H2.6573C1.48993 0.800781 0.90625 1.3695 0.90625 2.55183V11.1724C0.90625 12.3547 1.48993 12.9234 2.6573 12.9234ZM6.339 15.1983H13.6575C13.9119 15.1983 14.1215 14.9963 14.1215 14.7418C14.1215 14.4799 13.9119 14.2704 13.6575 14.2704H6.339C6.07709 14.2704 5.86756 14.4799 5.86756 14.7418C5.86756 14.9963 6.07709 15.1983 6.339 15.1983Z" fill="#446EF5"/>
 						</svg>
 					</li>
-					<li class="" data-device="tablet" data-width="768px" data-height="1024px">
+					<li data-device="tablet" data-width="768px" data-height="1024px">
 						<svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M0.636719 15.5586C0.636719 16.8242 1.44922 17.6055 2.74609 17.6055H11.2461C12.5508 17.6055 13.3633 16.8242 13.3633 15.5586V2.44922C13.3633 1.18359 12.5508 0.394531 11.2461 0.394531H2.74609C1.44922 0.394531 0.636719 1.18359 0.636719 2.44922V15.5586ZM1.60547 15.4102V2.58984C1.60547 1.80078 2.05078 1.36328 2.86328 1.36328H11.1367C11.9492 1.36328 12.3945 1.80078 12.3945 2.58984V15.4102C12.3945 16.1992 11.9492 16.6445 11.1367 16.6445H2.86328C2.05078 16.6445 1.60547 16.1992 1.60547 15.4102ZM4.82422 15.243H9.17578C9.35547 15.243 9.48047 15.118 9.48047 14.9383C9.48047 14.7508 9.35547 14.6258 9.17578 14.6258H4.82422C4.65234 14.6258 4.51953 14.7508 4.51953 14.9383C4.51953 15.118 4.65234 15.243 4.82422 15.243Z" fill="#9197A8"/>
 						</svg>
@@ -55,7 +55,7 @@
 							<path d="M11.2461 0.394531C12.5508 0.394531 13.3633 1.18359 13.3633 2.44922V15.5586C13.3633 16.8242 12.5508 17.6055 11.2461 17.6055H2.74609C1.44922 17.6055 0.636719 16.8242 0.636719 15.5586V2.44922C0.636719 1.18359 1.44922 0.394531 2.74609 0.394531H11.2461ZM4.82422 15.0498C4.6524 15.0498 4.51962 15.1749 4.51953 15.3623C4.51953 15.542 4.65234 15.667 4.82422 15.667H9.17578C9.35547 15.667 9.48047 15.542 9.48047 15.3623C9.48038 15.1749 9.35541 15.0498 9.17578 15.0498H4.82422Z" fill="#446EF5"/>
 						</svg>
 					</li>
-					<li class="" data-device="phone" data-width="375px" data-height="667px">
+					<li data-device="phone" data-width="375px" data-height="667px">
 						<svg width="10" height="18" viewBox="0 0 10 18" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M3.78438 14.7273H6.22344C6.40313 14.7273 6.52813 14.6023 6.52813 14.4227C6.52813 14.2352 6.40313 14.1102 6.22344 14.1102H3.78438C3.60469 14.1102 3.47969 14.2352 3.47969 14.4227C3.47969 14.6023 3.60469 14.7273 3.78438 14.7273Z" fill="#9197A8"/>
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M2.27344 17.043H7.72656C8.98438 17.043 9.75781 16.293 9.75781 15.0742V2.93359C9.75781 1.71484 8.98438 0.957031 7.72656 0.957031H2.27344C1.01563 0.957031 0.242187 1.71484 0.242188 2.93359V15.0742C0.242188 16.293 1.01563 17.043 2.27344 17.043ZM2.38281 16.082C1.60156 16.082 1.21094 15.6992 1.21094 14.9336V3.06641C1.21094 2.30859 1.60156 1.92578 2.38281 1.92578H2.67969C2.99688 1.92578 3.15625 1.92578 3.15625 1.92578H6.85156C7.14063 1.92578 7.24688 1.92578 7.32813 1.92578H7.61719C8.39844 1.92578 8.79688 2.30859 8.79688 3.06641V14.9336C8.79688 15.6992 8.39844 16.082 7.61719 16.082H2.38281Z" fill="#9197A8"/>
@@ -94,6 +94,11 @@
 							<div id="droip-color-modes">
 							</div>
 						</div>
+						<div class="tutor-include-demo-courses-toggle tutor-d-flex">
+							<input id="include-demo-courses" class="tutor-form-check-input" type="checkbox" checked>
+							<input type="hidden" id="tutor_template_course_data_url">
+							<label for="include-demo-courses"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
+						</div>
 						<div class="tutor-template-import-btn-wrapper">
 							<?php
 							$pro = tutor()->has_pro;
@@ -105,7 +110,6 @@
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="presentation" aria-hidden="true" class="css-xron3k-svg-SVGIcon"><rect width="16" height="16" rx="8" fill="#E5803C"></rect><path d="M12.252 7.042c0 .004 0 .008-.003.012l-.862 3.951a.609.609 0 0 1-.598.495H5.213a.61.61 0 0 1-.598-.495l-.862-3.95c0-.005-.002-.009-.003-.013a.609.609 0 0 1 1.056-.51l1.28 1.38 1.362-3.054v-.004a.609.609 0 0 1 1.106.004l1.362 3.054 1.28-1.38a.609.609 0 0 1 1.055.51h.001Z" fill="#fff"></path></svg>
 								<?php endif; ?>
 							</button>
-							<p style="font-size: 12px; margin: 10px 0px 0px 0px; color: #888; line-height: 1.2;"><?php esc_html_e( 'Tutor LMS demo courses and pages will be imported.', 'tutor' ); ?></p>
 						</div>
 					</div>
 				</div>
