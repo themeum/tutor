@@ -255,7 +255,7 @@ const importContents = async (payload: ImportContentPayload) => {
     .post<
       ImportContentPayload,
       TutorMutationResponse<ImportContentResponse>
-    >(!isTutorPro ? endpoints.IMPORT_CONTENTS : endpoints.IMPORT_SETTINGS_FREE, payload)
+    >(isTutorPro ? endpoints.IMPORT_CONTENTS : endpoints.IMPORT_SETTINGS_FREE, payload)
     .then((res) => res.data);
 };
 

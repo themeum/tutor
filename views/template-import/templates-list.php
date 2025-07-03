@@ -32,8 +32,8 @@ if ( ! empty( $template_list ) ) { ?>
 							<span><?php echo esc_html( $template->label ); ?></span>
 						</div>
 						<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-preview-btn" data-template_name="<?php echo esc_attr( $template->label ); ?>" data-template_id="<?php echo esc_attr( $template->slug ); ?>" data-template_url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>">
-								<?php esc_html_e( 'Preview', 'tutor' ); ?>
+							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-preview-btn" data-template_name="<?php echo esc_attr( $template->label ); ?>" data-template_id="<?php echo esc_attr( $template->slug ); ?>" data-template_url="<?php echo esc_url( $template->preview_url, 'tutor' ); ?>" data-template_course_data_url="<?php echo esc_url( $template->data_url ); ?>" >
+								<?php esc_html_e( 'Import', 'tutor' ); ?>
 							</button>
 						</div>
 					</div>
