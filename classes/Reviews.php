@@ -119,6 +119,10 @@ class Reviews {
 		global $wpdb;
 		$wpdb->update( $wpdb->comments, array( 'comment_approved' => $status ), array( 'comment_ID' => $review_id ) );
 
+		if ( 'approved' === $status ) {
+			do_action( 'tutor_course_review_approved', $review_id );
+		}
+
 		wp_send_json_success();
 	}
 }
