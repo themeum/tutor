@@ -456,7 +456,27 @@ class CouponController extends BaseController {
 		);
 
 		foreach ( $coupon_status as $key => $value ) {
-			$where['coupon_status'] = $key;
+			if ( CouponModel::STATUS_EXPIRED === $key ) {
+				$where['coupon_status'] = CouponModel::STATUS_ACTIVE;
+				$raw_query              = '( UNIX_TIMESTAMP(start_date_gmt) > %d OR UNIX_TIMESTAMP(expire_date_gmt) < %d )';
+				$where[ $raw_query ]    = array(
+					'RAW',
+					array( time(), time() ),
+				);
+			} else {
+
+				$where['coupon_status']                  = $key;
+				$where['UNIX_TIMESTAMP(start_date_gmt)'] = array(
+					'<=',
+					time(),
+				);
+
+				$where['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] = array(
+					'>=',
+					time(),
+				);
+
+			}
 
 			$tabs[] = array(
 				'key'   => $key,
@@ -464,6 +484,14 @@ class CouponController extends BaseController {
 				'value' => $this->model->get_coupon_count( $where, $search ),
 				'url'   => $url . '&data=' . $key,
 			);
+
+			if ( isset( $where['UNIX_TIMESTAMP(start_date_gmt)'] ) ) {
+				unset( $where['UNIX_TIMESTAMP(start_date_gmt)'] );
+			}
+
+			if ( isset( $where['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] ) ) {
+				unset( $where['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] );
+			}
 		}
 
 		return apply_filters( 'tutor_coupon_tabs', $tabs );
@@ -499,7 +527,25 @@ class CouponController extends BaseController {
 		}
 
 		if ( 'all' !== $active_tab && in_array( $active_tab, array_keys( $this->model->get_coupon_status() ), true ) ) {
-			$where_clause['coupon_status'] = $active_tab;
+			if ( CouponModel::STATUS_EXPIRED === $active_tab ) {
+				$where_clause['coupon_status'] = CouponModel::STATUS_ACTIVE;
+				$raw_query                     = '( UNIX_TIMESTAMP(start_date_gmt) > %d OR UNIX_TIMESTAMP(expire_date_gmt) < %d )';
+				$where_clause[ $raw_query ]    = array(
+					'RAW',
+					array( time(), time() ),
+				);
+			} else {
+				$where_clause['coupon_status']                  = $active_tab;
+				$where_clause['UNIX_TIMESTAMP(start_date_gmt)'] = array(
+					'<=',
+					time(),
+				);
+
+				$where_clause['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] = array(
+					'>=',
+					time(),
+				);
+			}
 		}
 
 		if ( $applies_to ) {
