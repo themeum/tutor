@@ -40,6 +40,7 @@ const styles = {
     }
   `,
   formWrapper: css`
+    height: 100%;
     ${styleUtils.display.flex('column')}
     gap: ${spacing[12]};
     padding: ${spacing[16]} ${spacing[20]};

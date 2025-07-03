@@ -65,8 +65,11 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport }: ImportInitialStateProps) => {
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [isFileValid, setIsFileValid] = useState(true);
-  const [hasSettings, setHasSettings] = useState(false);
   const { showToast } = useToast();
+  const [hasContent, setHasContent] = useState({
+    settings: false,
+    contentBank: false,
+  });
 
   const form = useFormWithGlobalError<ImportForm>({
     defaultValues: {
@@ -100,9 +103,16 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     readJsonFile(files[0])
       .then((data) => {
         const hasSettings = data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
+        const hasContentBank = data?.data.some(
+          (item: { content_type: string }) => item.content_type === 'content_bank',
+        );
 
         setIsReadingFile(false);
-        setHasSettings(hasSettings);
+        setHasContent((prev) => ({
+          ...prev,
+          settings: hasSettings || false,
+          contentBank: hasContentBank || false,
+        }));
         form.setValue('files', files);
         setIsFileValid(true);
       })
@@ -211,53 +221,55 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </div>
 
-        <div css={styles.contentBank}>
-          <Controller
-            control={form.control}
-            name="importIntoContentBank"
-            render={(controllerProps) => (
-              <FormCheckbox
-                {...controllerProps}
-                label={__('Import items into a specific collection in the Content Bank', 'tutor')}
-              />
-            )}
-          />
-
-          <Show when={isContentBankSelectionEnabled}>
-            <div css={styles.collectionListWrapper}>
-              <div css={styles.collectionListHeader}>
-                <Controller
-                  control={form.control}
-                  name="collectionSearch"
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      placeholder={__('Search...', 'tutor')}
-                      content={<SVGIcon name="search" width={24} height={24} />}
-                      contentPosition="left"
-                      showVerticalBar={false}
-                    />
-                  )}
+        <Show when={isTutorPro && hasContent.contentBank}>
+          <div css={styles.contentBank}>
+            <Controller
+              control={form.control}
+              name="importIntoContentBank"
+              render={(controllerProps) => (
+                <FormCheckbox
+                  {...controllerProps}
+                  label={__('Import items into a specific collection in the Content Bank', 'tutor')}
                 />
-              </div>
+              )}
+            />
 
-              <div css={styles.collectionList}>
-                <Show
-                  when={!getCollectionListQuery.isLoading && collectionOptions.length > 0}
-                  fallback={<div css={styles.notFound}>{__('No collections found.', 'tutor')}</div>}
-                >
+            <Show when={isContentBankSelectionEnabled}>
+              <div css={styles.collectionListWrapper}>
+                <div css={styles.collectionListHeader}>
                   <Controller
                     control={form.control}
-                    name="collectionId"
-                    render={(controllerProps) => <FormRadioGroup {...controllerProps} options={collectionOptions} />}
+                    name="collectionSearch"
+                    render={(controllerProps) => (
+                      <FormInputWithContent
+                        {...controllerProps}
+                        placeholder={__('Search...', 'tutor')}
+                        content={<SVGIcon name="search" width={24} height={24} />}
+                        contentPosition="left"
+                        showVerticalBar={false}
+                      />
+                    )}
                   />
-                </Show>
+                </div>
 
-                <div ref={intersectionElementRef} />
+                <div css={styles.collectionList}>
+                  <Show
+                    when={!getCollectionListQuery.isLoading && collectionOptions.length > 0}
+                    fallback={<div css={styles.notFound}>{__('No collections found.', 'tutor')}</div>}
+                  >
+                    <Controller
+                      control={form.control}
+                      name="collectionId"
+                      render={(controllerProps) => <FormRadioGroup {...controllerProps} options={collectionOptions} />}
+                    />
+                  </Show>
+
+                  <div ref={intersectionElementRef} />
+                </div>
               </div>
-            </div>
-          </Show>
-        </div>
+            </Show>
+          </div>
+        </Show>
 
         <Show when={!isFileValid}>
           <div css={styles.alert}>
@@ -271,7 +283,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </Show>
 
-        <Show when={isFileValid && hasSettings}>
+        <Show when={isFileValid && hasContent.settings}>
           <div css={styles.alert}>
             <SVGIcon name="infoFill" width={40} height={40} />
             <p>
@@ -290,7 +302,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </Button>
           <Button
             data-cy="import-csv"
-            disabled={files.length === 0 || isReadingFile || !isFileValid || (!isTutorPro && !hasSettings)}
+            disabled={files.length === 0 || isReadingFile || !isFileValid || (!isTutorPro && !hasContent.settings)}
             variant="primary"
             size="small"
             loading={isReadingFile || currentStep === 'progress'}
