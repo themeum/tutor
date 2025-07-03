@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -15,7 +15,9 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
 import { useGetCollectionsInfinityQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection } from '@TutorShared/utils/types';
@@ -74,11 +76,18 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
       collectionId: '',
     },
   });
+  const searchTerm = form.watch('collectionSearch');
+  const search = useDebounce(searchTerm, 300);
+  const isContentBankSelectionEnabled = form.watch('importIntoContentBank');
 
+  const { intersectionEntry, intersectionElementRef } = useIntersectionObserver<HTMLDivElement>({
+    dependencies: [isContentBankSelectionEnabled],
+  });
   const getCollectionListQuery = useGetCollectionsInfinityQuery({
-    search: form.watch('collectionSearch'),
+    search,
     page: 1,
     per_page: 10,
+    isEnabled: !!isContentBankSelectionEnabled,
   });
 
   const files = form.watch('files');
@@ -107,6 +116,17 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Move intersection observer logic to useEffect
+  useEffect(() => {
+    if (intersectionEntry?.isIntersecting && getCollectionListQuery.hasNextPage) {
+      getCollectionListQuery.fetchNextPage();
+    }
+  }, [intersectionEntry?.isIntersecting, getCollectionListQuery, isContentBankSelectionEnabled]);
+
+  useEffect(() => {
+    getCollectionListQuery.refetch();
+  }, [search, getCollectionListQuery]);
+
   const handleUpload = (uploadedFiles: File[]) => {
     if (uploadedFiles.length) {
       form.setValue('files', uploadedFiles);
@@ -120,22 +140,29 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     });
   };
 
+  const file = files[0];
+  const collections = useMemo(() => {
+    return (
+      getCollectionListQuery.data?.pages?.reduce((acc, page) => {
+        if (page.data && Array.isArray(page.data)) {
+          return [...acc, ...page.data];
+        }
+        return acc;
+      }, [] as Collection[]) || []
+    );
+  }, [getCollectionListQuery.data]);
+
+  const collectionOptions = useMemo(() => {
+    return collections.map((collection) => ({
+      label: collection.post_title,
+      value: String(collection.ID),
+      labelCss: styles.collectionItem,
+    }));
+  }, [collections]);
+
   if (files.length === 0) {
     return null;
   }
-
-  const file = files[0];
-  const collections =
-    getCollectionListQuery.data?.pages?.reduce((acc, page) => {
-      if (page.data && Array.isArray(page.data)) {
-        return [...acc, ...page.data];
-      }
-      return acc;
-    }, [] as Collection[]) || [];
-  const collectionOptions = collections.map((collection) => ({
-    label: collection.post_title,
-    value: String(collection.ID),
-  }));
 
   return (
     <>
@@ -196,30 +223,40 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             )}
           />
 
-          {/* Collection Radio List With infinite scroll */}
-          <div css={styles.collectionListWrapper}>
-            <Controller
-              control={form.control}
-              name="collectionSearch"
-              render={(controllerProps) => (
-                <FormInputWithContent
-                  {...controllerProps}
-                  placeholder={__('Search...', 'tutor')}
-                  content={<SVGIcon name="search" width={24} height={24} />}
-                  contentPosition="left"
-                  showVerticalBar={false}
+          <Show when={isContentBankSelectionEnabled}>
+            <div css={styles.collectionListWrapper}>
+              <div css={styles.collectionListHeader}>
+                <Controller
+                  control={form.control}
+                  name="collectionSearch"
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      placeholder={__('Search...', 'tutor')}
+                      content={<SVGIcon name="search" width={24} height={24} />}
+                      contentPosition="left"
+                      showVerticalBar={false}
+                    />
+                  )}
                 />
-              )}
-            />
+              </div>
 
-            <div css={styles.collectionList}>
-              <Controller
-                control={form.control}
-                name="collectionId"
-                render={(controllerProps) => <FormRadioGroup {...controllerProps} options={collectionOptions} />}
-              />
+              <div css={styles.collectionList}>
+                <Show
+                  when={!getCollectionListQuery.isLoading && collectionOptions.length > 0}
+                  fallback={<div css={styles.notFound}>{__('No collections found.', 'tutor')}</div>}
+                >
+                  <Controller
+                    control={form.control}
+                    name="collectionId"
+                    render={(controllerProps) => <FormRadioGroup {...controllerProps} options={collectionOptions} />}
+                  />
+                </Show>
+
+                <div ref={intersectionElementRef} />
+              </div>
             </div>
-          </div>
+          </Show>
         </div>
 
         <Show when={!isFileValid}>
@@ -368,15 +405,24 @@ const styles = {
   `,
   collectionListWrapper: css`
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
-    padding: ${spacing[12]};
     border-radius: ${borderRadius[8]};
     border: 1px solid ${colorTokens.stroke.divider};
+  `,
+  collectionListHeader: css`
+    padding: ${spacing[12]};
   `,
   collectionList: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     max-height: 200px;
     ${styleUtils.overflowYAuto};
+  `,
+  collectionItem: css`
+    padding: ${spacing[6]} ${spacing[16]};
+  `,
+  notFound: css`
+    padding: ${spacing[12]};
+    text-align: center;
+    color: ${colorTokens.text.subdued};
   `,
 };
