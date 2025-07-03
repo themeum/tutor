@@ -110,13 +110,13 @@ const ImportExportCompletedState = ({
     },
   };
 
-  const formatItemCount = (count: number, type: 'course' | 'bundle' | 'content-bank'): string => {
+  const formatItemCount = (count: number, type: 'course' | 'bundle' | 'content_bank'): string => {
     if (type === 'course') {
       // translators: %d is the number of courses
       return sprintf(_n('Course (%d)', 'Courses (%d)', count, 'tutor'), count);
     }
 
-    if (type === 'content-bank') {
+    if (type === 'content_bank') {
       // translators: %d is the number of content bank items
       return sprintf(_n('Collection (%d)', 'Collections (%d)', count, 'tutor'), count);
     }
@@ -139,7 +139,7 @@ const ImportExportCompletedState = ({
     }
 
     if (completedWithErrorsCollections.length > 0) {
-      const collectionsText = formatItemCount(completedWithErrorsCollections.length, 'content-bank');
+      const collectionsText = formatItemCount(completedWithErrorsCollections.length, 'content_bank');
       failedItems.push(collectionsText);
     }
 
@@ -163,7 +163,7 @@ const ImportExportCompletedState = ({
     }
 
     if (successFullyCompletedContentBank.length) {
-      const contentBankText = formatItemCount(successFullyCompletedContentBank.length, 'content-bank');
+      const contentBankText = formatItemCount(successFullyCompletedContentBank.length, 'content_bank');
       formattedItems.push(contentBankText);
     }
 
