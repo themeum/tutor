@@ -7,18 +7,12 @@ import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper'
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
 import CollectionListTable from '@ImportExport/components/modals/CollectionList/CollectionListTable';
+import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type Course } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection } from '@TutorShared/utils/types';
-
-interface BulkSelectionFormData {
-  courses: Course[];
-  'course-bundle': Course[];
-  collections: Collection[];
-}
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -32,19 +26,19 @@ export interface ContentSelectionForm {
 }
 
 const CollectionListModal = ({ closeModal, actions, form }: CourseListModalProps) => {
-  const addedItems = form.getValues('collections') || [];
+  const addedItems = form.getValues('content-bank') || [];
   const _form = useFormWithGlobalError<BulkSelectionFormData>({
     defaultValues: {
-      collections: addedItems,
+      'content-bank': addedItems,
     },
   });
 
-  const selectedItems = (_form.watch('collections') as Collection[]) || [];
+  const selectedItems = (_form.watch('content-bank') as Collection[]) || [];
 
   const handleAddContent = () => {
-    const selectedItems = _form.getValues('collections') || [];
-    form.setValue('collections', [...selectedItems]);
-    _form.setValue('collections', []);
+    const selectedItems = _form.getValues('content-bank') || [];
+    form.setValue('content-bank', [...selectedItems]);
+    _form.setValue('content-bank', []);
     closeModal({ action: 'CONFIRM' });
   };
 

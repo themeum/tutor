@@ -21,7 +21,7 @@ import { type Collection, type CollectionContentType } from '@TutorShared/utils/
 interface BulkSelectionFormData {
   courses: Course[];
   'course-bundle': Course[];
-  collections: Collection[];
+  'content-bank': Collection[];
 }
 
 interface CourseListTableProps {
@@ -30,7 +30,7 @@ interface CourseListTableProps {
 
 const CollectionListTable = ({ form }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
-  const selectedItems = useMemo(() => form.watch('collections') || [], [form]);
+  const selectedItems = useMemo(() => form.watch('content-bank') || [], [form]);
   const selectedItemIds = useMemo(() => selectedItems.map((item) => String(item.ID)), [selectedItems]);
 
   const getCollectionListQuery = useGetCollectionsPaginatedQuery({
@@ -54,11 +54,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
       if (isChecked) {
         // Add all fetched items that aren't already selected
         const newItems = fetchedItems.filter((course) => !selectedItemIds.includes(String(course.ID)));
-        form.setValue('collections', [...selectedItems, ...newItems]);
+        form.setValue('content-bank', [...selectedItems, ...newItems]);
       } else {
         // Keep only items that aren't in the current view
         const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(String(course.ID)));
-        form.setValue('collections', newItems);
+        form.setValue('content-bank', newItems);
       }
     },
     [fetchedItems, selectedItemIds, fetchedItemIds, selectedItems, form],
@@ -70,11 +70,11 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
 
       if (isSelected) {
         form.setValue(
-          'collections',
+          'content-bank',
           selectedItems.filter((collection) => String(collection.ID) !== String(item.ID)),
         );
       } else {
-        form.setValue('collections', [...selectedItems, item]);
+        form.setValue('content-bank', [...selectedItems, item]);
       }
     },
     [selectedItemIds, selectedItems, form],

@@ -22,12 +22,12 @@ const generateImportExportMessage = (
 
   const successFullyCompletedCourses = completedContents?.courses?.success || [];
   const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
-  const successFullyCompletedCollections = completedContents?.collections?.success || [];
+  const successFullyCompletedCollections = completedContents?.['content-bank']?.success || [];
   const successFullyCompletedSettings = completedContents?.settings;
 
   const completedWithErrorsCourses = completedContents?.courses?.failed || [];
   const completedWithErrorsBundles = completedContents?.['course-bundle']?.failed || [];
-  const completedWithErrorsCollections = completedContents?.collections?.failed || [];
+  const completedWithErrorsCollections = completedContents?.['content-bank']?.failed || [];
 
   const noFailures =
     completedWithErrorsCourses.length === 0 &&
@@ -35,7 +35,7 @@ const generateImportExportMessage = (
     completedWithErrorsCollections.length === 0;
 
   // Helper function for formatting count with singular/plural text
-  const formatCount = (count: number, type: 'course' | 'bundle' | 'collection'): string => {
+  const formatCount = (count: number, type: 'course' | 'bundle' | 'content-bank'): string => {
     if (type === 'course') {
       // translators: %d is the number of courses
       return sprintf(_n('%d Course', '%d Courses', count, 'tutor'), count);
@@ -61,7 +61,7 @@ const generateImportExportMessage = (
         items.push(formatCount(completedWithErrorsBundles.length, 'bundle'));
       }
       if (completedWithErrorsCollections.length) {
-        items.push(formatCount(completedWithErrorsCollections.length, 'collection'));
+        items.push(formatCount(completedWithErrorsCollections.length, 'content-bank'));
       }
 
       return `${items.join(', ')} ${operationText.failed}`;
@@ -80,7 +80,7 @@ const generateImportExportMessage = (
   }
 
   if (successFullyCompletedCollections.length) {
-    successItems.push(formatCount(successFullyCompletedCollections.length, 'collection'));
+    successItems.push(formatCount(successFullyCompletedCollections.length, 'content-bank'));
   }
 
   if (successFullyCompletedSettings) {
@@ -97,7 +97,7 @@ const generateImportExportMessage = (
   }
 
   if (completedWithErrorsCollections.length) {
-    failedItems.push(formatCount(completedWithErrorsCollections.length, 'collection'));
+    failedItems.push(formatCount(completedWithErrorsCollections.length, 'content-bank'));
   }
 
   // Early return if nothing to report
