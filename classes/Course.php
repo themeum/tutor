@@ -1205,10 +1205,9 @@ class Course extends Tutor_Base {
 				);
 
 				$topic_contents = tutor_utils()->get_course_contents_by_topic( $post->ID, -1 );
-				$topic_contents = apply_filters( 'tutor_topic_contents', $topic_contents, $post->ID, $course_id );
-
 				if ( $topic_contents->have_posts() ) {
-					foreach ( $topic_contents->get_posts() as $post ) {
+					$topic_posts = apply_filters( 'tutor_topic_contents', $topic_contents->get_posts(), $post->ID, $course_id );
+					foreach ( $topic_posts as $post ) {
 						if ( tutor()->quiz_post_type === $post->post_type ) {
 							$questions            = tutor_utils()->get_questions_by_quiz( $post->ID );
 							$post->total_question = is_array( $questions ) ? count( $questions ) : 0;
