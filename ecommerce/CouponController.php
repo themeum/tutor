@@ -455,25 +455,27 @@ class CouponController extends BaseController {
 			'url'   => $url . '&data=all',
 		);
 
+		$gm_date = DateTimeHelper::now()->to_date_time_string();
+
 		foreach ( $coupon_status as $key => $value ) {
 			if ( CouponModel::STATUS_EXPIRED === $key ) {
 				$where['coupon_status'] = CouponModel::STATUS_ACTIVE;
-				$raw_query              = '( UNIX_TIMESTAMP(start_date_gmt) > %d OR UNIX_TIMESTAMP(expire_date_gmt) < %d )';
+				$raw_query              = '( start_date_gmt > %s OR expire_date_gmt < %s )';
 				$where[ $raw_query ]    = array(
 					'RAW',
-					array( time(), time() ),
+					array( $gm_date, $gm_date ),
 				);
 			} else {
 
-				$where['coupon_status']                  = $key;
-				$where['UNIX_TIMESTAMP(start_date_gmt)'] = array(
+				$where['coupon_status']  = $key;
+				$where['start_date_gmt'] = array(
 					'<=',
-					time(),
+					$gm_date,
 				);
 
-				$where['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] = array(
+				$where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
 					'>=',
-					time(),
+					$gm_date,
 				);
 
 			}
@@ -485,12 +487,12 @@ class CouponController extends BaseController {
 				'url'   => $url . '&data=' . $key,
 			);
 
-			if ( isset( $where['UNIX_TIMESTAMP(start_date_gmt)'] ) ) {
-				unset( $where['UNIX_TIMESTAMP(start_date_gmt)'] );
+			if ( isset( $where['start_date_gmt'] ) ) {
+				unset( $where['start_date_gmt'] );
 			}
 
-			if ( isset( $where['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] ) ) {
-				unset( $where['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] );
+			if ( isset( $where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] ) ) {
+				unset( $where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] );
 			}
 		}
 
@@ -526,24 +528,26 @@ class CouponController extends BaseController {
 			$where_clause['coupon_status'] = $coupon_status;
 		}
 
+		$gm_date = DateTimeHelper::now()->to_date_time_string();
+
 		if ( 'all' !== $active_tab && in_array( $active_tab, array_keys( $this->model->get_coupon_status() ), true ) ) {
 			if ( CouponModel::STATUS_EXPIRED === $active_tab ) {
 				$where_clause['coupon_status'] = CouponModel::STATUS_ACTIVE;
-				$raw_query                     = '( UNIX_TIMESTAMP(start_date_gmt) > %d OR UNIX_TIMESTAMP(expire_date_gmt) < %d )';
+				$raw_query                     = '( start_date_gmt > %s OR expire_date_gmt < %s )';
 				$where_clause[ $raw_query ]    = array(
 					'RAW',
-					array( time(), time() ),
+					array( $gm_date, $gm_date ),
 				);
 			} else {
-				$where_clause['coupon_status']                  = $active_tab;
-				$where_clause['UNIX_TIMESTAMP(start_date_gmt)'] = array(
+				$where_clause['coupon_status']  = $active_tab;
+				$where_clause['start_date_gmt'] = array(
 					'<=',
-					time(),
+					$gm_date,
 				);
 
-				$where_clause['IFNULL( UNIX_TIMESTAMP(expire_date_gmt), UNIX_TIMESTAMP() )'] = array(
+				$where_clause[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
 					'>=',
-					time(),
+					$gm_date,
 				);
 			}
 		}
