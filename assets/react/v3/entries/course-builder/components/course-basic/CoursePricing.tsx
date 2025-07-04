@@ -15,13 +15,11 @@ import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
-  type CourseSellingOption,
   type WcProduct,
   useGetWcProductsQuery,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -65,6 +63,9 @@ const CoursePricing = () => {
   const enableIndividualTaxControl = !!tutorConfig.settings?.enable_individual_tax_control;
   const isTaxIncludedInPrice = !!tutorConfig.settings?.is_tax_included_in_price;
   const monetizeBy = tutorConfig.settings?.monetize_by;
+
+  // prettier-ignore
+  const taxAlertMessage = __('You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.', 'tutor');
 
   const coursePriceOptions = ['wc', 'tutor', 'edd'].includes(monetizeBy || '')
     ? [
@@ -137,38 +138,6 @@ const CoursePricing = () => {
     const uniqueProducts = Array.from(new Map(combinedProducts.map((item) => [item.value, item])).values());
 
     return uniqueProducts;
-  };
-
-  const shouldDisplayAlert = (
-    selectedOption: CourseSellingOption,
-    taxOnSingle: boolean,
-    taxOnSubscription: boolean,
-  ): boolean => {
-    if (!isTaxEnabled) {
-      return false;
-    }
-
-    if (!isTaxIncludedInPrice) {
-      return false;
-    }
-
-    if (selectedOption === 'membership') {
-      return false;
-    }
-
-    if (['all', 'both'].includes(selectedOption)) {
-      return !taxOnSingle || !taxOnSubscription;
-    }
-
-    if (selectedOption === 'one_time') {
-      return !taxOnSingle;
-    }
-
-    if (selectedOption === 'subscription') {
-      return !taxOnSubscription;
-    }
-
-    return !taxOnSingle && !taxOnSubscription;
   };
 
   useEffect(() => {
@@ -405,6 +374,7 @@ const CoursePricing = () => {
         when={
           coursePriceType === 'paid' &&
           monetizeBy === 'tutor' &&
+          isTaxEnabled &&
           enableIndividualTaxControl &&
           selectedPurchaseOption !== 'membership'
         }
@@ -418,7 +388,11 @@ const CoursePricing = () => {
                 name="tax_on_single"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormCheckbox {...controllerProps} label={__('Charge tax on one-time purchase ', 'tutor')} />
+                  <FormCheckbox
+                    {...controllerProps}
+                    label={__('Charge tax on one-time purchase ', 'tutor')}
+                    helpText={isTaxIncludedInPrice && !form.watch('tax_on_single') ? taxAlertMessage : ''}
+                  />
                 )}
               />
             </Show>
@@ -431,32 +405,15 @@ const CoursePricing = () => {
                 name="tax_on_subscription"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormCheckbox {...controllerProps} label={__('Charge tax on subscription', 'tutor')} />
+                  <FormCheckbox
+                    {...controllerProps}
+                    label={__('Charge tax on subscription', 'tutor')}
+                    helpText={isTaxIncludedInPrice && !form.watch('tax_on_subscription') ? taxAlertMessage : ''}
+                  />
                 )}
               />
             </Show>
           </div>
-
-          <Show
-            when={shouldDisplayAlert(
-              selectedPurchaseOption,
-              form.watch('tax_on_single'),
-              form.watch('tax_on_subscription'),
-            )}
-          >
-            <div css={styles.taxAlert}>
-              <div css={styles.alertTitle}>
-                <SVGIcon name="warning" width={24} height={24} />
-                <span>{__('Tax is Disabled.', 'tutor')}</span>
-              </div>
-              <div css={styles.alertDescription}>
-                {
-                  // prettier-ignore
-                  __('You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.', 'tutor' )
-                }
-              </div>
-            </div>
-          </Show>
         </div>
       </Show>
     </>
