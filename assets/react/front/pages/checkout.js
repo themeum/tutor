@@ -54,11 +54,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (isTaxManagedByTutor(paymentMethodName)) {
                 grandTotal.innerHTML = checkoutData.formatted_total_price;
-                inclTaxLabels.forEach(label => label?.classList.remove('tutor-d-none'));
+                inclTaxLabels.forEach(label => label.classList.remove('tutor-d-none'));
                 taxAmount?.classList.remove('tutor-d-none');
             } else {
                 grandTotal.innerHTML = checkoutData.formatted_total_price_without_tax;
-                inclTaxLabels.forEach(label => label?.classList.add('tutor-d-none'));
+                inclTaxLabels.forEach(label => label.classList.add('tutor-d-none'));
                 taxAmount?.classList.add('tutor-d-none');
             }
         }
