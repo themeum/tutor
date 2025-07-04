@@ -1,46 +1,29 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from 'react';
-import { Controller } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
-import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
-import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
-import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
-import { useGetCollectionsInfinityQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type Collection } from '@TutorShared/utils/types';
 import { formatBytes } from '@TutorShared/utils/util';
 
 interface ImportInitialStateProps {
   files: File[];
   currentStep: string;
   onClose: () => void;
-  onImport: ({
-    file,
-    collectionId,
-  }: {
-    file: File;
-    collectionId?: number; // Optional for content bank import
-  }) => void;
+  onImport: ({ file }: { file: File }) => void;
 }
 
 interface ImportForm {
   files: File[];
-  importIntoContentBank: boolean;
-  collectionSearch: string;
-  collectionId: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -68,66 +51,16 @@ const readJsonFile = (file: File): Promise<any> => {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const hasAnyCourseWithChildren = (data: {
-  data: {
-    content_type: string;
-    data?: {
-      contents?: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        children?: any[];
-      }[];
-    }[];
-  }[];
-}): boolean => {
-  return data.data.some((item) => {
-    if (item.content_type !== 'courses') {
-      return false;
-    }
-
-    if (!item.data || !Array.isArray(item.data)) {
-      return false;
-    }
-
-    return item.data.some((course) => {
-      if (!course.contents && !Array.isArray(course.contents)) {
-        return false;
-      }
-      return course.contents.some((contentItem) => {
-        return contentItem.children && contentItem.children.length > 0;
-      });
-    });
-  });
-};
-
 const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport }: ImportInitialStateProps) => {
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [isFileValid, setIsFileValid] = useState(true);
   const { showToast } = useToast();
-  const [hasContent, setHasContent] = useState({
-    settings: false,
-    contentBank: false,
-  });
+  const [hasSettings, setHasSettings] = useState(false);
 
   const form = useFormWithGlobalError<ImportForm>({
     defaultValues: {
       files: propsFiles,
-      importIntoContentBank: false,
-      collectionSearch: '',
-      collectionId: '',
     },
-  });
-  const searchTerm = form.watch('collectionSearch');
-  const search = useDebounce(searchTerm, 300);
-  const isContentBankSelectionEnabled = form.watch('importIntoContentBank');
-
-  const { intersectionEntry, intersectionElementRef } = useIntersectionObserver<HTMLDivElement>({
-    dependencies: [isContentBankSelectionEnabled],
-  });
-  const getCollectionListQuery = useGetCollectionsInfinityQuery({
-    search,
-    page: 1,
-    per_page: 10,
-    isEnabled: !!isContentBankSelectionEnabled,
   });
 
   const files = form.watch('files');
@@ -140,14 +73,9 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     readJsonFile(files[0])
       .then((data) => {
         const hasSettings = data?.data.find((item: { content_type: string }) => item.content_type === 'settings');
-        const hasContentBankContent = hasAnyCourseWithChildren(data);
 
         setIsReadingFile(false);
-        setHasContent((prev) => ({
-          ...prev,
-          settings: hasSettings || false,
-          contentBank: hasContentBankContent || false,
-        }));
+        setHasSettings(hasSettings);
         form.setValue('files', files);
         setIsFileValid(true);
       })
@@ -160,16 +88,6 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (intersectionEntry?.isIntersecting && getCollectionListQuery.hasNextPage) {
-      getCollectionListQuery.fetchNextPage();
-    }
-  }, [intersectionEntry?.isIntersecting, getCollectionListQuery, isContentBankSelectionEnabled]);
-
-  useEffect(() => {
-    getCollectionListQuery.refetch();
-  }, [search, getCollectionListQuery]);
 
   const handleUpload = (uploadedFiles: File[]) => {
     if (uploadedFiles.length) {
@@ -185,24 +103,6 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
   };
 
   const file = files[0];
-  const collections = useMemo(() => {
-    return (
-      getCollectionListQuery.data?.pages?.reduce((acc, page) => {
-        if (page.data && Array.isArray(page.data)) {
-          return [...acc, ...page.data];
-        }
-        return acc;
-      }, [] as Collection[]) || []
-    );
-  }, [getCollectionListQuery.data]);
-
-  const collectionOptions = useMemo(() => {
-    return collections.map((collection) => ({
-      label: collection.post_title,
-      value: String(collection.ID),
-      labelCss: styles.collectionItem,
-    }));
-  }, [collections]);
 
   if (files.length === 0) {
     return null;
@@ -255,57 +155,6 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             </div>
           </div>
         </div>
-
-        <Show when={isTutorPro && hasContent.contentBank}>
-          <div css={styles.contentBank}>
-            <Controller
-              control={form.control}
-              name="importIntoContentBank"
-              render={(controllerProps) => (
-                <FormCheckbox
-                  {...controllerProps}
-                  label={__('Import items into a specific collection in the Content Bank', 'tutor')}
-                />
-              )}
-            />
-
-            <Show when={isContentBankSelectionEnabled}>
-              <div css={styles.collectionListWrapper}>
-                <div css={styles.collectionListHeader}>
-                  <Controller
-                    control={form.control}
-                    name="collectionSearch"
-                    render={(controllerProps) => (
-                      <FormInputWithContent
-                        {...controllerProps}
-                        placeholder={__('Search...', 'tutor')}
-                        content={<SVGIcon name="search" width={24} height={24} />}
-                        contentPosition="left"
-                        showVerticalBar={false}
-                      />
-                    )}
-                  />
-                </div>
-
-                <div css={styles.collectionList}>
-                  <Show
-                    when={!getCollectionListQuery.isLoading && collectionOptions.length > 0}
-                    fallback={<div css={styles.notFound}>{__('No collections found.', 'tutor')}</div>}
-                  >
-                    <Controller
-                      control={form.control}
-                      name="collectionId"
-                      render={(controllerProps) => <FormRadioGroup {...controllerProps} options={collectionOptions} />}
-                    />
-                  </Show>
-
-                  <div ref={intersectionElementRef} />
-                </div>
-              </div>
-            </Show>
-          </div>
-        </Show>
-
         <Show when={!isFileValid}>
           <div css={styles.alert}>
             <SVGIcon name="warning" width={40} height={40} />
@@ -318,7 +167,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </Show>
 
-        <Show when={isFileValid && hasContent.settings}>
+        <Show when={isFileValid && hasSettings}>
           <div css={styles.alert}>
             <SVGIcon name="infoFill" width={40} height={40} />
             <p>
@@ -337,14 +186,13 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </Button>
           <Button
             data-cy="import-csv"
-            disabled={files.length === 0 || isReadingFile || !isFileValid || (!isTutorPro && !hasContent.settings)}
+            disabled={files.length === 0 || isReadingFile || !isFileValid || (!isTutorPro && !hasSettings)}
             variant="primary"
             size="small"
             loading={isReadingFile || currentStep === 'progress'}
             onClick={async () =>
               onImport({
                 file: files[0],
-                collectionId: isContentBankSelectionEnabled ? Number(form.watch('collectionId')) : undefined,
               })
             }
           >
