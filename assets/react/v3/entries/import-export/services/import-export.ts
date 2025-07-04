@@ -250,7 +250,6 @@ export const useExportContentsMutation = () => {
 
 interface ImportContentPayload {
   data?: File;
-  collection_id?: number; // for content bank import
   job_id?: string | number; // need to send back the job id to get the status
 }
 
@@ -301,6 +300,7 @@ export interface ImportExportHistory {
     completed_contents?: {
       courses: ImportExportCompletedContentsItem;
       'course-bundle': ImportExportCompletedContentsItem;
+      content_bank: ImportExportCompletedContentsItem;
       settings: boolean;
     };
     failed_course_ids?: [];

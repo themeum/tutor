@@ -19,13 +19,7 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   files: File[];
   currentStep: ImportExportModalState;
   onClose: () => void;
-  onImport: ({
-    file,
-    collectionId,
-  }: {
-    file: File;
-    collectionId?: number; // Optional for content bank import
-  }) => void;
+  onImport: ({ file }: { file: File }) => void;
   progress?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
