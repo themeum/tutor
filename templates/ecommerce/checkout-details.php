@@ -116,7 +116,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 										</div>
 										<?php endif; ?>
 										<?php if ( $checkout_data->total_items > 1 && $item->tax_amount > 0 && $item->tax_collection ) : ?>
-										<div class="tutor-fs-8 tutor-color-muted">
+										<div class="tutor-fs-8 tutor-color-muted tutor-checkout-incl-tax-label">
 											<?php echo esc_html( $item->tax_amount_readable ); ?>
 										</div>
 										<?php endif; ?>
