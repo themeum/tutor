@@ -17,14 +17,15 @@ function TaxSettingGlobal() {
 
   const taxCollectionProcessOptions = [
     {
-      label: __('Prices include tax', 'tutor'),
+      label: __('Prices inclusive of tax', 'tutor'),
       value: TaxCollectionProcess.isTaxIncludedInPrice,
-      description: __('Tax rates can still be configured and calculated at checkout.', 'tutor'),
+      description: __('Enter course prices inclusive of tax.', 'tutor'),
     },
     {
-      label: __('Add tax during checkout', 'tutor'),
+      label: __('Prices exclusive of tax', 'tutor'),
       value: TaxCollectionProcess.taxIsNotIncluded,
-      description: __('Display prices without tax—tax will be calculated and shown at checkout.', 'tutor'),
+      // prettier-ignore
+      description: __( 'Enter course prices without tax. Tax will be added at checkout based on your configured rates.', 'tutor'),
     },
   ];
 
@@ -67,11 +68,11 @@ function TaxSettingGlobal() {
                       <div>
                         <FormCheckbox
                           {...controllerProps}
-                          label={__('Show prices with tax included', 'tutor')}
+                          label={__('Display tax-inclusive prices site-wide', 'tutor')}
                           labelCss={styles.checkboxLabel}
                           description={
                             // prettier-ignore
-                            __("Display the final price including tax, so customers know exactly what they'll pay upfront.", 'tutor')
+                            __("Show tax-inclusive pricing across course listings, detail pages, and at checkout", 'tutor')
                           }
                         />
                       </div>
@@ -86,11 +87,11 @@ function TaxSettingGlobal() {
                     return (
                       <FormCheckbox
                         {...controllerProps}
-                        label={__('Enable tax control per course & membership plan', 'tutor')}
+                        label={__('Enable tax configuration per course & membership plan', 'tutor')}
                         labelCss={styles.checkboxLabel}
                         description={
                           // prettier-ignore
-                          __('Set tax preferences at the individual course or bundle pricing level.', 'tutor')
+                          __('Allow tax settings when creating individual courses, bundles, and membership plans.', 'tutor')
                         }
                       />
                     );
