@@ -160,7 +160,7 @@ const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false 
             </SortableContext>
           </Show>
 
-          <TopicFooter topic={topic} />
+          <TopicFooter topic={topic} nextContentOrder={topic?.contents?.length || 0} />
         </div>
       </animated.div>
     </div>

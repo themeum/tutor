@@ -75,6 +75,10 @@ const icons = {
     name: 'lesson',
     color: colorTokens.icon.default,
   },
+  'cb-assignment': {
+    name: 'assignment',
+    color: colorTokens.icon.processing,
+  },
 } as const;
 
 const confirmationMessages = {
@@ -116,6 +120,15 @@ const modalIcon: {
   tutor_assignments: 'assignment',
   tutor_h5p_quiz: 'interactiveQuiz',
 } as const;
+
+const editAbleContentTypes = [
+  'lesson',
+  'tutor_assignments',
+  'tutor_quiz',
+  'tutor_h5p_quiz',
+  'tutor_zoom_meeting',
+  'tutor-google-meet',
+] as const;
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
@@ -297,17 +310,19 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
               </Show>
             </Tooltip>
           </Show>
-          <Tooltip content={__('Edit', 'tutor')} delay={200}>
-            <button
-              data-cy={`edit-${type}`}
-              ref={editButtonRef}
-              type="button"
-              css={styleUtils.actionButton}
-              onClick={handleShowModalOrPopover}
-            >
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-          </Tooltip>
+          <Show when={editAbleContentTypes.includes(type)}>
+            <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <button
+                data-cy={`edit-${type}`}
+                ref={editButtonRef}
+                type="button"
+                css={styleUtils.actionButton}
+                onClick={handleShowModalOrPopover}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </Tooltip>
+          </Show>
           <Show when={!['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>

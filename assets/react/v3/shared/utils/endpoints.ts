@@ -72,6 +72,7 @@ const endpoints = {
   DELETE_TOPIC_CONTENT: 'tutor_delete_lesson',
   UPDATE_COURSE_CONTENT_ORDER: 'tutor_update_course_content_order',
   DUPLICATE_CONTENT: 'tutor_duplicate_content',
+  ADD_CONTENT_BANK_CONTENT_TO_COURSE: 'tutor_content_bank_add_content_to_course',
 
   // LESSON
   GET_LESSON_DETAILS: 'tutor_lesson_details',
@@ -131,7 +132,6 @@ const endpoints = {
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
   DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
 
-  // @TODO: Will be changed when API is constructed
   // CONTENT BANK
   GET_CONTENT_BANK_COLLECTIONS: 'tutor_content_bank_collections',
   SAVE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_save',
