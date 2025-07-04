@@ -125,7 +125,6 @@ const Import = () => {
         <UploadButton
           size="small"
           acceptedTypes={['.json']}
-          maxFileSize={20 * 1024 * 1024} // 20 MB
           variant="secondary"
           onError={(errors) => {
             showToast({

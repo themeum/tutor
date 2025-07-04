@@ -218,6 +218,23 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   return `${Number.parseFloat((bytes / kilobit ** index).toFixed(decimal))} ${sizes[index]}`;
 };
 
+export const formatReadAbleBytesToBytes = (readableBytes: string): number => {
+  if (!readableBytes || typeof readableBytes !== 'string') {
+    return 0;
+  }
+
+  const [value, unit] = readableBytes.split(' ');
+  const byteValue = parseFloat(value);
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const index = units.indexOf(unit);
+  if (index === -1) {
+    return 0;
+  }
+
+  return byteValue * 1024 ** index;
+};
+
 export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
   return value
     .replace(allowNegative ? /[^0-9.-]/g : /[^0-9.]/g, '')

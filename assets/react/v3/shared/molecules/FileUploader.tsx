@@ -1,10 +1,11 @@
 import Button, { type ButtonIconPosition, type ButtonSize, type ButtonVariant } from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { tutorConfig } from '@TutorShared/config/config';
 import { MAX_FILE_SIZE } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { getFileExtensionFromName } from '@TutorShared/utils/util';
+import { formatReadAbleBytesToBytes, getFileExtensionFromName } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import type React from 'react';
@@ -34,7 +35,7 @@ export const useFileUploader = ({
   acceptedTypes,
   onUpload,
   onError,
-  maxFileSize = MAX_FILE_SIZE,
+  maxFileSize = formatReadAbleBytesToBytes(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
 }: UseFileUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -80,7 +81,7 @@ const FileUploader = ({
   label,
   multiple = false,
   disabled = false,
-  maxFileSize = MAX_FILE_SIZE,
+  maxFileSize = formatReadAbleBytesToBytes(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
 }: FileUploaderProps) => {
   const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError, maxFileSize });
 
@@ -142,7 +143,7 @@ export const UploadButton = ({
   multiple = false,
   disabled = false,
   children,
-  maxFileSize = MAX_FILE_SIZE,
+  maxFileSize = formatReadAbleBytesToBytes(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
   ...buttonProps
 }: UploadButtonProps) => {
   const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError, maxFileSize });
