@@ -18,7 +18,7 @@ interface UploaderProps {
   multiple?: boolean;
   fullWidth?: boolean;
   disabled?: boolean;
-  maxFileSize?: number; // in bytes, default is MAX_FILE_SIZE
+  maxFileSize?: number; // in bytes
 }
 
 interface FileUploaderProps extends UploaderProps {
@@ -29,7 +29,7 @@ interface UseFileUploaderProps {
   acceptedTypes: string[];
   onUpload: (files: File[]) => void;
   onError: (errorMessage: string[]) => void;
-  maxFileSize?: number; // in bytes, default is MAX_FILE_SIZE
+  maxFileSize?: number; // in bytes
 }
 export const useFileUploader = ({
   acceptedTypes,
