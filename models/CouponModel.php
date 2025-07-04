@@ -28,6 +28,7 @@ class CouponModel {
 	const STATUS_ACTIVE   = 'active';
 	const STATUS_INACTIVE = 'inactive';
 	const STATUS_TRASH    = 'trash';
+	const STATUS_EXPIRED  = 'expired';
 
 	/**
 	 * Coupon type
@@ -203,6 +204,7 @@ class CouponModel {
 			self::STATUS_ACTIVE   => __( 'Active', 'tutor' ),
 			self::STATUS_INACTIVE => __( 'Inactive', 'tutor' ),
 			self::STATUS_TRASH    => __( 'Trash', 'tutor' ),
+			self::STATUS_EXPIRED  => __( 'Expired', 'tutor' ),
 		);
 	}
 
