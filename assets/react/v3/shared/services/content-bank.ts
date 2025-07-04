@@ -32,7 +32,7 @@ export const useGetCollectionsInfinityQuery = (
   },
 ) => {
   return useInfiniteQuery({
-    queryKey: ['ContentBankCollectionsInfinity'],
+    queryKey: ['ContentBankCollectionsInfinity', params],
     queryFn: ({ pageParam = 1 }) => {
       return getCollections({
         ...params,
