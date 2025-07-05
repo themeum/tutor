@@ -1081,7 +1081,7 @@ class Utils {
 			'order'          => 'ASC',
 		);
 
-		$args = wp_parse_args( $custom_args, $default_args );
+		$args = apply_filters( 'tutor_course_topic_contents_args', wp_parse_args( $custom_args, $default_args ) );
 
 		return new \WP_Query( $args );
 	}
