@@ -149,7 +149,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const editButtonRef = useRef<HTMLButtonElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
 
-  const icon = icons[type];
+  const icon = icons[type] || {
+    name: 'lesson',
+    color: colorTokens.icon.default,
+  };
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: content.id,
     data: {
