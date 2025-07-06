@@ -9,6 +9,7 @@
   "scripts": {
     "build": "composer install --no-dev && npm run make-pot && rspack --mode=production && npm run tutor-droip && npm run gulp-build",
     "build-dev": "rspack --mode=development && npm run gulp-build-dev",
+    "build-analysis": "RSDOCTOR=true npx rspack --mode=production",
     "gulp-build": "_GULP_ENV='build' gulp build",
     "gulp-build-dev": "gulp build",
     "css-watch": "gulp dev",
