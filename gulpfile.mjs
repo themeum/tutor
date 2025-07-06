@@ -5,13 +5,12 @@ import notify from 'gulp-notify';
 import plumber from 'gulp-plumber';
 import rename from 'gulp-rename';
 import replace from 'gulp-replace';
+import gulpSass from 'gulp-sass';
 import sourcemaps from 'gulp-sourcemaps';
 import gulpWatch from 'gulp-watch';
 import zip from 'gulp-zip';
 import * as sass from 'sass';
 
-// Dynamic import for gulp-sass since it requires ES module syntax
-const { default: gulpSass } = await import('gulp-sass');
 const sassCompiler = gulpSass(sass);
 
 let versionNumber = '';
@@ -19,8 +18,10 @@ let versionNumber = '';
 try {
   const data = readFileSync('tutor.php', 'utf8');
   versionNumber = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+  // eslint-disable-next-line no-console
   console.log(versionNumber);
 } catch (err) {
+  // eslint-disable-next-line no-console
   console.error('Error reading version:', err);
 }
 
@@ -103,17 +104,14 @@ const createSassTask = (taskName, blueprintConfig) => {
 
     // Cache bust font URLs for icon task and fix font paths
     if (taskName === 'compileTutorIcon') {
-      compilationStream = compilationStream.pipe(
-        replace(
-          /(url\(['"]?)(?:\.\.\/)?fonts\/tutor-icon\//g,
-          `$1../fonts/` // FIX: Remove tutor-icon subfolder, fonts are directly in assets/fonts
+      compilationStream = compilationStream
+        .pipe(
+          replace(
+            /(url\(['"]?)(?:\.\.\/)?fonts\/tutor-icon\//g,
+            `$1../fonts/`, // FIX: Remove tutor-icon subfolder, fonts are directly in assets/fonts
+          ),
         )
-      ).pipe(
-        replace(
-          /(url\(['"]?[^)'"]+\.(woff2?|woff|ttf|otf|eot))(['"]?\))/g,
-          `$1?v=${versionNumber}$3`
-        )
-      );
+        .pipe(replace(/(url\(['"]?[^)'"]+\.(woff2?|woff|ttf|otf|eot))(['"]?\))/g, `$1?v=${versionNumber}$3`));
     }
 
     return compilationStream
@@ -185,99 +183,113 @@ cleanBuildDirectory.displayName = 'cleanBuildDirectory';
 
 const copyProjectFiles = () => {
   return gulp
-    .src([
-      './**/*.*',
-      '!./build/**',
-      '!./assets/**/*.map',
-      '!./assets/react/**',
-      '!./assets/scss/**',
-      '!./assets/css/fonts/**',
-      '!./assets/css/images/**',
-      '!./assets/.sass-cache',
-      '!./node_modules/**',
-      '!./v2-library/**',
-      '!./test/**',
-      '!./.docz/**',
-      '!./**/*.zip',
-      '!.github',
-      '!.vscode',
-      '!./readme.md',
-      '!.DS_Store',
-      '!./**/.DS_Store',
-      '!./LICENSE.txt',
-      '!./*.lock',
-      '!./*.js',
-      '!./*.mjs',
-      '!./*.json',
-      '!yarn-error.log',
-      '!bin/**',
-      '!tests/**',
-      '!.env',
-      '!vendor/bin/**',
-      '!vendor/doctrine/**',
-      '!vendor/myclabs/**',
-      '!vendor/nikic/**',
-      '!vendor/phar-io/**',
-      '!vendor/phpdocumentor/**',
-      '!vendor/phpspec/**',
-      '!vendor/phpunit/**',
-      '!vendor/sebastian/**',
-      '!vendor/theseer/**',
-      '!vendor/webmozart/**',
-      '!vendor/yoast/**',
-      '!.phpunit.result.cache',
-      '!*.yml',
-      '!*.yaml',
-      '!phpunit.xml.dist',
-      '!phpunit.xml',
-      '!phpcs.xml',
-      '!phpcs.xml.dist',
-      '!./tutor-droip/**',
-      '!./includes/droip/**',
-      '!./cypress/**',
-      '!./cypress.config.ts',
-    ], {
-      buffer: true,
-      encoding: false
-    })
+    .src(
+      [
+        './**/*.*',
+        '!./build/**',
+        '!./assets/**/*.map',
+        '!./assets/react/**',
+        '!./assets/scss/**',
+        '!./assets/css/fonts/**',
+        '!./assets/css/images/**',
+        '!./assets/.sass-cache',
+        '!./node_modules/**',
+        '!./v2-library/**',
+        '!./test/**',
+        '!./.docz/**',
+        '!./**/*.zip',
+        '!.github',
+        '!.vscode',
+        '!./readme.md',
+        '!.DS_Store',
+        '!./**/.DS_Store',
+        '!./LICENSE.txt',
+        '!./*.lock',
+        '!./*.js',
+        '!./*.mjs',
+        '!./*.json',
+        '!yarn-error.log',
+        '!bin/**',
+        '!tests/**',
+        '!.env',
+        '!vendor/bin/**',
+        '!vendor/doctrine/**',
+        '!vendor/myclabs/**',
+        '!vendor/nikic/**',
+        '!vendor/phar-io/**',
+        '!vendor/phpdocumentor/**',
+        '!vendor/phpspec/**',
+        '!vendor/phpunit/**',
+        '!vendor/sebastian/**',
+        '!vendor/theseer/**',
+        '!vendor/webmozart/**',
+        '!vendor/yoast/**',
+        '!.phpunit.result.cache',
+        '!*.yml',
+        '!*.yaml',
+        '!phpunit.xml.dist',
+        '!phpunit.xml',
+        '!phpcs.xml',
+        '!phpcs.xml.dist',
+        '!./tutor-droip/**',
+        '!./includes/droip/**',
+        '!./cypress/**',
+        '!./cypress.config.ts',
+        '!.husky/**',
+        '!.lintstagedrc',
+      ],
+      {
+        buffer: true,
+        encoding: false,
+      },
+    )
     .pipe(gulp.dest('build/tutor/'));
 };
 copyProjectFiles.displayName = 'copyProjectFiles';
 
 const copyFontFiles = () => {
-  return gulp.src('v2-library/fonts/tutor-icon/*.{woff2,woff,ttf,otf,eot}', {
-    buffer: true,
-    encoding: false
-  }).pipe(gulp.dest('assets/fonts'));
+  return gulp
+    .src('v2-library/fonts/tutor-icon/*.{woff2,woff,ttf,otf,eot}', {
+      buffer: true,
+      encoding: false,
+    })
+    .pipe(gulp.dest('assets/fonts'));
 };
 copyFontFiles.displayName = 'copyFontFiles';
 
 const copyTutorDroipFiles = () => {
-  return gulp.src('includes/droip/dist/**', {
-    buffer: true,
-    encoding: false
-  }).pipe(gulp.dest('build/tutor/includes/droip'));
+  return gulp
+    .src('includes/droip/dist/**', {
+      buffer: true,
+      encoding: false,
+    })
+    .pipe(gulp.dest('build/tutor/includes/droip'));
 };
 copyTutorDroipFiles.displayName = 'copyTutorDroipFiles';
 
 const copyTutorIconFonts = () => {
-  return gulp.src('v2-library/fonts/tutor-icon/*.{woff2,woff,ttf,otf,eot}', {
-    buffer: true,
-    encoding: false
-  }).pipe(gulp.dest('build/tutor/assets/fonts/'));
+  return gulp
+    .src('v2-library/fonts/tutor-icon/*.{woff2,woff,ttf,otf,eot}', {
+      buffer: true,
+      encoding: false,
+    })
+    .pipe(gulp.dest('build/tutor/assets/fonts/'));
 };
 copyTutorIconFonts.displayName = 'copyTutorIconFonts';
 
 const createZipFile = () => {
-  return gulp.src('./build/**/*.*', {
-    buffer: true,
-    encoding: false,
-    base: './build'
-  })
-    .pipe(zip(buildName, {
-      compress: true,
-      level: 6
-    }))
+  return gulp
+    .src('./build/**/*.*', {
+      buffer: true,
+      encoding: false,
+      base: './build',
+    })
+    .pipe(
+      zip(buildName, {
+        compress: true,
+        level: 6,
+      }),
+    )
     .pipe(gulp.dest('./'));
 };
 createZipFile.displayName = 'createZipFile';
@@ -294,7 +306,7 @@ const compileAllScssFiles = gulp.parallel(
 );
 compileAllScssFiles.displayName = 'compileAllScssFiles';
 
-const buildProject = gulp.series(
+const build = gulp.series(
   compileAllScssFiles,
   cleanZipFile,
   cleanBuildDirectory,
@@ -305,10 +317,9 @@ const buildProject = gulp.series(
   createZipFile,
   cleanBuildDirectory,
 );
-buildProject.displayName = 'buildProject';
+build.displayName = 'build';
 
-const developmentWorkflow = gulp.parallel(compileAllScssFiles, watchScssFiles);
-developmentWorkflow.displayName = 'developmentWorkflow';
+const dev = gulp.parallel(compileAllScssFiles, watchScssFiles);
+dev.displayName = 'dev';
 
-gulp.task('default', developmentWorkflow);
-gulp.task('build', buildProject);
+export { build, dev };

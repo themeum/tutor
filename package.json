@@ -11,7 +11,7 @@
     "build-dev": "rspack --mode=development && npm run gulp-build-dev",
     "gulp-build": "_GULP_ENV='build' gulp build",
     "gulp-build-dev": "gulp build",
-    "css-watch": "gulp",
+    "css-watch": "gulp dev",
     "js-watch": "rspack --watch --mode=development",
     "watch": "concurrently \"npm run css-watch\" \"npm run js-watch\"",
     "make-pot": "rspack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
@@ -19,7 +19,7 @@
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run",
-    "prepare": "husky && husky install"
+    "prepare": "husky"
   },
   "keywords": [
     "lms",
@@ -103,7 +103,7 @@
     "react-router-dom": "^6.21.3",
     "react-use-measure": "^2.1.1",
     "stylis-plugin-rtl": "^2.1.1",
-    "typescript": "^4.6.3",
+    "typescript": "^5.8.3",
     "uuid": "^9.0.1"
   }
 }
