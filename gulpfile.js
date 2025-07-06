@@ -1,6 +1,6 @@
+import { deleteAsync } from 'del';
 import { readFileSync } from 'fs';
 import gulp from 'gulp';
-import clean from 'gulp-clean';
 import notify from 'gulp-notify';
 import plumber from 'gulp-plumber';
 import rename from 'gulp-rename';
@@ -174,22 +174,12 @@ watchScssFiles.displayName = 'watchScssFiles';
 
 // Build-related tasks with descriptive names
 const cleanZipFile = () => {
-  return gulp
-    .src(`./${buildName}`, {
-      read: false,
-      allowEmpty: true,
-    })
-    .pipe(clean());
+  return deleteAsync(`./${buildName}`);
 };
 cleanZipFile.displayName = 'cleanZipFile';
 
 const cleanBuildDirectory = () => {
-  return gulp
-    .src('./build', {
-      read: false,
-      allowEmpty: true,
-    })
-    .pipe(clean());
+  return deleteAsync('./build');
 };
 cleanBuildDirectory.displayName = 'cleanBuildDirectory';
 
@@ -254,12 +244,11 @@ const copyProjectFiles = () => {
 };
 copyProjectFiles.displayName = 'copyProjectFiles';
 
-// FIX: Copy only font files to assets/fonts
 const copyFontFiles = () => {
   return gulp.src('v2-library/fonts/tutor-icon/*.{woff2,woff,ttf,otf,eot}', {
     buffer: true,
     encoding: false
-  }).pipe(gulp.dest('assets/fonts')); // FIX: Only copy actual font files
+  }).pipe(gulp.dest('assets/fonts'));
 };
 copyFontFiles.displayName = 'copyFontFiles';
 
@@ -271,12 +260,11 @@ const copyTutorDroipFiles = () => {
 };
 copyTutorDroipFiles.displayName = 'copyTutorDroipFiles';
 
-// FIX: Copy only tutor-icon font files directly to assets/fonts
 const copyTutorIconFonts = () => {
   return gulp.src('v2-library/fonts/tutor-icon/*.{woff2,woff,ttf,otf,eot}', {
     buffer: true,
     encoding: false
-  }).pipe(gulp.dest('build/tutor/assets/fonts/')); // FIX: Only copy font files
+  }).pipe(gulp.dest('build/tutor/assets/fonts/'));
 };
 copyTutorIconFonts.displayName = 'copyTutorIconFonts';
 
@@ -294,7 +282,6 @@ const createZipFile = () => {
 };
 createZipFile.displayName = 'createZipFile';
 
-// Compile all SCSS files in parallel
 const compileAllScssFiles = gulp.parallel(
   compileTutorFront,
   compileTutorAdmin,
@@ -307,7 +294,6 @@ const compileAllScssFiles = gulp.parallel(
 );
 compileAllScssFiles.displayName = 'compileAllScssFiles';
 
-// Complete build process
 const buildProject = gulp.series(
   compileAllScssFiles,
   cleanZipFile,
@@ -321,7 +307,6 @@ const buildProject = gulp.series(
 );
 buildProject.displayName = 'buildProject';
 
-// Development workflow with compilation and watching
 const developmentWorkflow = gulp.parallel(compileAllScssFiles, watchScssFiles);
 developmentWorkflow.displayName = 'developmentWorkflow';
 

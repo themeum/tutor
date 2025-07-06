@@ -194,26 +194,6 @@ const createChunkFilename = (pathData) => {
   return `lazy-chunks/[name].min.js?ver=${version}`;
 };
 
-const createEntryDisplayName = (entryKey) => {
-  const displayNames = {
-    'tutor.min': 'TutorCore',
-    'tutor-front.min': 'TutorFrontend',
-    'tutor-admin.min': 'TutorAdmin',
-    'tutor-setup.min': 'TutorSetup',
-    'tutor-gutenberg': 'TutorGutenberg',
-    'tutor-course-builder.min': 'CourseBuilder',
-    'tutor-order-details.min': 'OrderDetails',
-    'tutor-coupon.min': 'CouponDetails',
-    'tutor-tax-settings.min': 'TaxSettings',
-    'tutor-payment-settings.min': 'PaymentSettings',
-    'tutor-addon-list.min': 'AddonList',
-    'tutor-template-import-script.min': 'TemplateImport',
-    'tutor-import-export.min': 'ImportExport',
-  };
-
-  return displayNames[entryKey] || entryKey;
-};
-
 export default (env, options) => {
   const baseConfig = createConfig(env, options);
   const reactEntries = getReactEntries();
@@ -223,7 +203,7 @@ export default (env, options) => {
   if (isDevelopment) {
     return Object.entries(reactEntries).map(([entryKey, entryPath]) => ({
       ...baseConfig,
-      name: createEntryDisplayName(entryKey),
+      name: entryKey,
       entry: {
         [entryKey]: entryPath,
       },
