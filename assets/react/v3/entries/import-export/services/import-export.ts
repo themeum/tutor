@@ -4,9 +4,10 @@ import { type ErrorResponse } from 'react-router-dom';
 import { useToast } from '@TutorShared/atoms/Toast';
 
 import { tutorConfig } from '@TutorShared/config/config';
+import { type Course } from '@TutorShared/services/course';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type Collection, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -14,21 +15,31 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 export interface ExportFormData {
   courses: boolean;
   'course-bundle': boolean;
+  content_bank: boolean;
   settings: boolean;
   courses__ids: number[];
   'course-bundle__ids': number[];
+  content_bank__ids: number[];
   courses__lesson: boolean;
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
   keep_media_files: boolean;
 }
 
+export interface BulkSelectionFormData {
+  courses: Course[];
+  'course-bundle': Course[];
+  content_bank: Collection[];
+}
+
 export const defaultExportFormData: ExportFormData = {
   courses: false,
   'course-bundle': false,
+  content_bank: false,
   settings: false,
   courses__ids: [],
   'course-bundle__ids': [],
+  content_bank__ids: [],
   courses__lesson: true,
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
@@ -131,7 +142,7 @@ export const convertExportFormDataToPayload = ({
 
 export type ImportExportModalState = 'initial' | 'progress' | 'success' | 'error';
 
-export type ExportableContentType = 'courses' | 'course-bundle' | 'settings' | 'keep_media_files';
+export type ExportableContentType = 'courses' | 'course-bundle' | 'content_bank' | 'settings' | 'keep_media_files';
 export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
 export interface ContentItem {
@@ -192,6 +203,7 @@ export interface ImportExportContentResponseBase {
   completed_contents: {
     courses: ImportExportCompletedContentsItem;
     'course-bundle': ImportExportCompletedContentsItem;
+    content_bank: ImportExportCompletedContentsItem;
     settings: boolean;
   };
 }
@@ -288,6 +300,7 @@ export interface ImportExportHistory {
     completed_contents?: {
       courses: ImportExportCompletedContentsItem;
       'course-bundle': ImportExportCompletedContentsItem;
+      content_bank: ImportExportCompletedContentsItem;
       settings: boolean;
     };
     failed_course_ids?: [];

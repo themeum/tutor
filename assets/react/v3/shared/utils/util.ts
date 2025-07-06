@@ -218,6 +218,23 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   return `${Number.parseFloat((bytes / kilobit ** index).toFixed(decimal))} ${sizes[index]}`;
 };
 
+export const formatReadAbleBytesToBytes = (readableBytes: string): number => {
+  if (!readableBytes || typeof readableBytes !== 'string') {
+    return 0;
+  }
+
+  const [value, unit] = readableBytes.split(' ');
+  const byteValue = parseFloat(value);
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const index = units.indexOf(unit);
+  if (index === -1) {
+    return 0;
+  }
+
+  return byteValue * 1024 ** index;
+};
+
 export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
   return value
     .replace(allowNegative ? /[^0-9.-]/g : /[^0-9.]/g, '')
@@ -259,6 +276,7 @@ export const formatSeconds = (seconds: number) => {
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };
+
 export const getObjectKeys = <T extends object>(object: T) => {
   if (!isDefined(object) || !isObject(object)) {
     return [] as (keyof T)[];
@@ -269,6 +287,7 @@ export const getObjectKeys = <T extends object>(object: T) => {
 export const getObjectValues = <T extends object, K extends keyof T = keyof T>(object: T): T[K][] => {
   return Object.values(object);
 };
+
 export const getObjectEntries = <T extends object, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
   return Object.entries(object) as [K, T[K]][];
 };
@@ -496,4 +515,11 @@ const capitalizeWords = (text: string): string => {
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+};
+
+export const covertSecondsToHMS = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const sec = seconds % 60;
+  return { hours, minutes, seconds: sec };
 };

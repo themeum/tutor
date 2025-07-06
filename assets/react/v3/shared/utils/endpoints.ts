@@ -130,6 +130,25 @@ const endpoints = {
   IMPORT_SETTINGS_FREE: 'tutor_import_settings',
   GET_IMPORT_EXPORT_HISTORY: 'tutor_pro_export_import_history',
   DELETE_IMPORT_EXPORT_HISTORY: 'tutor_pro_delete_export_import_history',
+
+  // @TODO: Will be changed when API is constructed
+  // CONTENT BANK
+  GET_CONTENT_BANK_COLLECTIONS: 'tutor_content_bank_collections',
+  SAVE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_save',
+  DELETE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_delete',
+  GET_CONTENT_BANK_CONTENTS: 'tutor_content_bank_contents',
+  DELETE_CONTENT_BANK_CONTENTS: 'tutor_content_bank_content_delete',
+  CREATE_CONTENT_BANK_COLLECTION: 'tutor-pro_create_content_bank_collection',
+  GET_CONTENT_DETAILS: 'tutor_pro_get_content_details',
+  GET_CONTENT_BANK_LESSON_DETAILS: 'tutor_content_bank_lesson_details',
+  GET_CONTENT_BANK_ASSIGNMENT_DETAILS: 'tutor_content_bank_assignment_details',
+  SAVE_CONTENT_BANK_LESSON_CONTENT: 'tutor_content_bank_lesson_save',
+  SAVE_CONTENT_BANK_ASSIGNMENT_CONTENT: 'tutor_content_bank_assignment_save',
+  SAVE_QUESTION_CONTENT: 'tutor_content_bank_question_save',
+  GET_CONTENT_BANK_QUESTION_DETAILS: 'tutor_content_bank_question_details',
+  DUPLICATE_CONTENT_BANK_CONTENT: 'tutor_content_bank_content_duplicate',
+  MOVE_CONTENT_BANK_CONTENT: 'tutor_content_bank_content_move',
+  DUPLICATE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_duplicate',
 } as const;
 
 export default endpoints;

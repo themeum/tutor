@@ -11,50 +11,79 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, Breakpoint, colorTokens, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { calculateQuizDataStatus, QuizDataStatus, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isDefined } from '@TutorShared/utils/types';
+import {
+  type ID,
+  isDefined,
+  QuizDataStatus,
+  type QuizQuestionOption,
+  type QuizQuestionType,
+  type QuizValidationErrorType,
+} from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
-interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
+interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
+  onCheckCorrectAnswer: () => void;
   isOverlay?: boolean;
+  hasMultipleCorrectAnswer: boolean;
+  questionId: ID;
+  questionType: QuizQuestionType;
+  validationError?: {
+    message: string;
+    type: QuizValidationErrorType;
+  } | null;
+  setValidationError?: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      type: QuizValidationErrorType;
+    } | null>
+  >;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const FormImageAnswering = ({
-  index,
+const FormMultipleChoiceAndOrdering = ({
+  field,
   onDuplicateOption,
   onRemoveOption,
-  field,
+  onCheckCorrectAnswer,
+  index,
   isOverlay = false,
-}: FormImageAnsweringProps) => {
-  const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
-
+  questionId,
+  hasMultipleCorrectAnswer = false,
+  questionType = 'multiple_choice',
+  validationError,
+  setValidationError,
+}: FormMultipleChoiceAndOrderingProps) => {
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
     is_correct: '0',
-    belongs_question_id: activeQuestionId,
-    belongs_question_type: 'image_answering',
+    belongs_question_id: questionId,
+    belongs_question_type: 'multiple_choice',
   };
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
+  const [isEditing, setIsEditing] = useState(
+    !inputValue.is_saved || (!inputValue.answer_title && !inputValue.image_url),
+  );
+  const [isUploadImageVisible, setIsUploadImageVisible] = useState(
+    isDefined(inputValue.image_id) && isDefined(inputValue.image_url),
+  );
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: field.value.answer_id || 0,
+    id: field.value?.answer_id || 0,
     animateLayoutChanges,
   });
   const { openMediaLibrary, resetFiles } = useWPMedia({
@@ -64,6 +93,7 @@ const FormImageAnswering = ({
     onChange: (file) => {
       if (file && !Array.isArray(file)) {
         const { id, url } = file;
+
         field.onChange({
           ...inputValue,
           ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
@@ -71,15 +101,13 @@ const FormImageAnswering = ({
           }),
           image_id: id,
           image_url: url,
+          answer_view_format: 'text_image',
         });
+        setIsUploadImageVisible(true);
       }
     },
-    initialFiles: field.value.image_id
-      ? {
-          id: Number(inputValue.image_id),
-          url: inputValue.image_url || '',
-          title: inputValue.image_url || '',
-        }
+    initialFiles: field.value?.image_id
+      ? { id: Number(field.value.image_id), url: field.value.image_url || '', title: '' }
       : null,
   });
 
@@ -90,6 +118,7 @@ const FormImageAnswering = ({
   };
 
   const clearHandler = () => {
+    resetFiles();
     field.onChange({
       ...inputValue,
       ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
@@ -97,8 +126,9 @@ const FormImageAnswering = ({
       }),
       image_id: '',
       image_url: '',
+      answer_view_format: 'text',
     });
-    resetFiles();
+    setIsUploadImageVisible(false);
   };
 
   useEffect(() => {
@@ -108,9 +138,43 @@ const FormImageAnswering = ({
   }, [isEditing]);
 
   return (
-    <div {...attributes} css={styles.option} ref={setNodeRef} style={style} tabIndex={-1}>
+    <div
+      {...attributes}
+      css={styles.option({
+        isSelected: !!Number(inputValue.is_correct),
+        isMultipleChoice: hasMultipleCorrectAnswer,
+      })}
+      tabIndex={-1}
+      ref={setNodeRef}
+      style={style}
+    >
+      <Show when={questionType === 'multiple_choice'}>
+        <button
+          key={inputValue.is_correct}
+          css={styleUtils.optionCheckButton}
+          data-check-button
+          type="button"
+          onClick={onCheckCorrectAnswer}
+        >
+          <Show
+            when={hasMultipleCorrectAnswer}
+            fallback={<SVGIcon name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'} height={32} width={32} />}
+          >
+            <SVGIcon
+              name={Number(inputValue.is_correct) ? 'checkSquareFilled' : 'checkSquare'}
+              height={32}
+              width={32}
+            />
+          </Show>
+        </button>
+      </Show>
       <div
-        css={styles.optionLabel({ isEditing, isOverlay, isDragging })}
+        css={styles.optionLabel({
+          isSelected: !!Number(inputValue.is_correct),
+          isEditing,
+          isDragging,
+          isOverlay,
+        })}
         onClick={() => {
           setIsEditing(true);
         }}
@@ -121,24 +185,47 @@ const FormImageAnswering = ({
           }
         }}
       >
-        <div css={styles.optionHeader}>
-          <div
-            css={styleUtils.optionCounter({
-              isEditing,
-            })}
-          >
-            {String.fromCharCode(65 + index)}
+        <div
+          css={styles.optionHeader({
+            isEditing,
+          })}
+        >
+          <div css={styles.optionCounterAndButton}>
+            <div css={styleUtils.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
+              {String.fromCharCode(65 + index)}
+            </div>
+            <Show when={isEditing}>
+              <Show
+                when={!isUploadImageVisible}
+                fallback={
+                  <Button
+                    variant="text"
+                    icon={<SVGIcon name="removeImage" width={24} height={24} />}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      clearHandler();
+                    }}
+                  >
+                    {__('Remove Image', 'tutor')}
+                  </Button>
+                }
+              >
+                <Button
+                  variant="text"
+                  icon={<SVGIcon name="addImage" width={24} height={24} />}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    openMediaLibrary();
+                  }}
+                >
+                  {__('Add Image', 'tutor')}
+                </Button>
+              </Show>
+            </Show>
           </div>
 
           <Show when={!isEditing && inputValue.is_saved}>
-            <button
-              {...listeners}
-              type="button"
-              css={styleUtils.optionDragButton({
-                isOverlay,
-              })}
-              data-visually-hidden
-            >
+            <button {...listeners} type="button" css={styleUtils.optionDragButton({ isOverlay })} data-visually-hidden>
               <SVGIcon name="dragVertical" height={24} width={24} />
             </button>
 
@@ -198,19 +285,12 @@ const FormImageAnswering = ({
             when={isEditing}
             fallback={
               <div css={styles.placeholderWrapper}>
-                <Show
-                  when={inputValue.image_url}
-                  fallback={
-                    <div css={styles.imagePlaceholder}>
-                      <SVGIcon name="imagePreview" height={48} width={48} />
-                    </div>
-                  }
-                >
-                  {() => (
+                <Show when={inputValue.image_url}>
+                  {
                     <div css={styles.imagePlaceholder}>
                       <img src={inputValue.image_url} alt={inputValue.image_url} />
                     </div>
-                  )}
+                  }
                 </Show>
                 <div css={styles.optionPlaceholder}>
                   {inputValue.answer_title || __('Write answer option...', 'tutor')}
@@ -219,30 +299,47 @@ const FormImageAnswering = ({
             }
           >
             <div css={styleUtils.optionInputWrapper}>
-              <ImageInput
-                value={{
-                  id: Number(inputValue.image_id),
-                  url: inputValue.image_url || '',
-                  title: inputValue.image_url || '',
-                }}
-                buttonText={__('Upload Image', 'tutor')}
-                infoText={__('Standard Size: 700x430 pixels', 'tutor')}
-                uploadHandler={openMediaLibrary}
-                clearHandler={clearHandler}
-                emptyImageCss={styles.emptyImageInput}
-                previewImageCss={styles.previewImageInput}
-              />
-              <div css={styles.inputWithHints}>
-                <input
-                  {...field}
-                  ref={inputRef}
-                  type="text"
-                  placeholder={__('Input answer here', 'tutor')}
-                  value={inputValue.answer_title}
-                  onClick={(event) => {
-                    event.stopPropagation();
+              <Show when={isUploadImageVisible}>
+                <ImageInput
+                  value={{
+                    id: Number(inputValue.image_id),
+                    url: inputValue.image_url || '',
+                    title: __('Image', 'tutor'),
                   }}
-                  onChange={(event) => {
+                  buttonText={__('Upload Image', 'tutor')}
+                  infoText={__('Size: 700x430 pixels', 'tutor')}
+                  uploadHandler={openMediaLibrary}
+                  clearHandler={clearHandler}
+                  emptyImageCss={styles.emptyImageInput}
+                  previewImageCss={styles.previewImageInput}
+                />
+              </Show>
+
+              <textarea
+                {...field}
+                ref={inputRef}
+                placeholder={__('Write option...', 'tutor')}
+                value={inputValue.answer_title}
+                onClick={(event) => {
+                  event.stopPropagation();
+                }}
+                onChange={(event) => {
+                  const { value } = event.target;
+
+                  field.onChange({
+                    ...inputValue,
+                    ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                      _data_status: calculateQuizDataStatus(
+                        inputValue._data_status,
+                        QuizDataStatus.UPDATE,
+                      ) as QuizDataStatus,
+                    }),
+                    answer_title: value,
+                  });
+                }}
+                onKeyDown={async (event) => {
+                  event.stopPropagation();
+                  if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
                     field.onChange({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
@@ -250,42 +347,19 @@ const FormImageAnswering = ({
                           inputValue._data_status,
                           QuizDataStatus.UPDATE,
                         ) as QuizDataStatus,
+                        is_saved: true,
                       }),
-                      answer_title: event.target.value,
                     });
-                  }}
-                  onKeyDown={async (event) => {
-                    event.stopPropagation();
-                    if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
-                      field.onChange({
-                        ...inputValue,
-                        ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
-                          _data_status: calculateQuizDataStatus(
-                            inputValue._data_status,
-                            QuizDataStatus.UPDATE,
-                          ) as QuizDataStatus,
-                          is_saved: true,
-                        }),
-                      });
 
-                      if (validationError?.type === 'save_option') {
-                        setValidationError(null);
-                      }
-
-                      setIsEditing(false);
+                    if (validationError?.type === 'save_option') {
+                      setValidationError?.(null);
                     }
-                  }}
-                />
 
-                <div css={styles.inputHints}>
-                  <SVGIcon name="info" height={20} width={20} />
-                  <p>
-                    {__('Students need to type their answers exactly as you write them here. Use ', 'tutor')}
-                    <span css={{ fontWeight: fontWeight.semiBold }}>{__('small caps', 'tutor')}</span>
-                    {__(' when writing the answer.', 'tutor')}
-                  </p>
-                </div>
-              </div>
+                    setIsEditing(false);
+                  }
+                }}
+              />
+
               <div css={styles.optionInputButtons}>
                 <Button
                   variant="text"
@@ -296,11 +370,10 @@ const FormImageAnswering = ({
                     field.onChange(previousValue);
 
                     if (!inputValue.is_saved) {
-                      onRemoveOption();
-
                       if (validationError?.type === 'save_option') {
-                        setValidationError(null);
+                        setValidationError?.(null);
                       }
+                      onRemoveOption();
                     }
                   }}
                 >
@@ -321,7 +394,6 @@ const FormImageAnswering = ({
                       }),
                       is_saved: true,
                     });
-
                     setPreviousValue({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
@@ -334,12 +406,11 @@ const FormImageAnswering = ({
                     });
 
                     if (validationError?.type === 'save_option') {
-                      setValidationError(null);
+                      setValidationError?.(null);
                     }
-
                     setIsEditing(false);
                   }}
-                  disabled={!inputValue.answer_title || !inputValue.image_id}
+                  disabled={!inputValue.answer_title && !inputValue.image_url}
                 >
                   {__('Ok', 'tutor')}
                 </Button>
@@ -352,28 +423,73 @@ const FormImageAnswering = ({
   );
 };
 
-export default FormImageAnswering;
+export default FormMultipleChoiceAndOrdering;
 
 const styles = {
-  option: css`
+  option: ({ isSelected, isMultipleChoice }: { isSelected: boolean; isMultipleChoice: boolean }) => css`
     ${styleUtils.display.flex()};
     ${typography.caption('medium')};
     align-items: center;
     color: ${colorTokens.text.subdued};
     gap: ${spacing[10]};
     align-items: center;
+
+    [data-check-button] {
+      color: ${colorTokens.icon.default};
+      ${!isMultipleChoice &&
+      css`
+        fill: none;
+      `}
+
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
+
+    &:hover {
+      [data-check-button] {
+        opacity: 1;
+      }
+    }
+
+    &:focus-within {
+      [data-check-button] {
+        opacity: 1;
+      }
+    }
+
+    ${isSelected &&
+    css`
+      [data-check-button] {
+        opacity: 1;
+        color: ${colorTokens.bg.success};
+        ${!isMultipleChoice &&
+        css`
+          fill: ${colorTokens.bg.success};
+        `}
+      }
+    `}
+
+    ${Breakpoint.smallTablet} {
+      [data-check-button] {
+        opacity: 1;
+      }
+    }
   `,
   optionLabel: ({
+    isSelected,
     isEditing,
-    isOverlay,
     isDragging,
+    isOverlay,
   }: {
+    isSelected: boolean;
     isEditing: boolean;
-    isOverlay: boolean;
     isDragging: boolean;
+    isOverlay: boolean;
   }) => css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[20]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
     width: 100%;
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
@@ -391,13 +507,21 @@ const styles = {
       }
     }
 
+    ${isSelected &&
+    css`
+      background-color: ${colorTokens.background.success.fill40};
+      color: ${colorTokens.text.primary};
+
+      &:hover {
+        outline: 1px solid ${colorTokens.stroke.success.fill70};
+      }
+    `}
     ${isEditing &&
     css`
       background-color: ${colorTokens.background.white};
-      outline: 1px solid ${colorTokens.stroke.brand};
-
+      outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
       &:hover {
-        outline: 1px solid ${colorTokens.stroke.brand};
+        outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
       }
     `}
 
@@ -417,15 +541,23 @@ const styles = {
       }
     }
   `,
-  optionHeader: css`
+  optionHeader: ({ isEditing = false }) => css`
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: ${!isEditing ? '1fr auto 1fr' : '1fr'};
     align-items: center;
 
-    :focus-within {
+    &:focus-within {
       [data-visually-hidden] {
         opacity: 1;
       }
+    }
+  `,
+  optionCounterAndButton: css`
+    ${styleUtils.display.flex()}
+    gap: ${spacing[8]};
+    place-self: center start;
+    button {
+      padding: 0;
     }
   `,
   optionActions: css`
@@ -470,21 +602,6 @@ const styles = {
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};
-  `,
-  inputWithHints: css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[8]};
-  `,
-  inputHints: css`
-    ${styleUtils.display.flex()}
-    gap: ${spacing[4]};
-    ${typography.small()};
-    color: ${colorTokens.text.hints};
-    align-items: flex-start;
-
-    svg {
-      flex-shrink: 0;
-    }
   `,
   optionInputButtons: css`
     ${styleUtils.display.flex()}

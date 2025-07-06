@@ -22,18 +22,14 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
 
 import Question from '@CourseBuilderComponents/curriculum/Question';
-import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
+import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
+import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import {
-  type H5PContent,
-  QuizDataStatus,
-  type QuizForm,
-  type QuizQuestion,
-  type QuizQuestionType,
-} from '@CourseBuilderServices/quiz';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import Button from '@TutorShared/atoms/Button';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -43,6 +39,13 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import {
+  type ContentBankContent,
+  type H5PContent,
+  QuizDataStatus,
+  type QuizQuestion,
+  type QuizQuestionType,
+} from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
@@ -218,6 +221,34 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     setValidationError(null);
     setActiveQuestionId(questionId);
     setIsOpen(false);
+  };
+
+  const handleAddContentBankBulkQuestions = (
+    contents: (ContentBankContent & {
+      question: QuizQuestion;
+    })[],
+  ) => {
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    if (validation !== true) {
+      setValidationError(validation);
+      setIsOpen(false);
+      return;
+    }
+
+    const convertedQuestions: QuizQuestion[] = contents.map((content) => {
+      const question = content.question;
+      return {
+        ...question,
+        _data_status: QuizDataStatus.UPDATE,
+        question_answers: question.question_answers.map((answer) => ({
+          ...answer,
+          is_saved: true,
+          _data_status: QuizDataStatus.UPDATE,
+        })),
+      };
+    });
+
+    appendQuestion(convertedQuestions);
   };
 
   const handleH5PBulkQuestion = (contents: H5PContent[]) => {
@@ -408,6 +439,51 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                 </button>
               </Show>
             ))}
+            <Show
+              when={isTutorPro}
+              fallback={
+                <span css={styles.addFormContentBankButton}>
+                  <ProBadge size="tiny">
+                    <Button
+                      disabled
+                      variant="secondary"
+                      size="small"
+                      onClick={noop}
+                      icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                    >
+                      {__('Add from Content Bank', 'tutor')}
+                    </Button>
+                  </ProBadge>
+                </span>
+              }
+            >
+              <span css={styles.addFormContentBankButton}>
+                <Button
+                  variant="secondary"
+                  size="small"
+                  onClick={() => {
+                    showModal({
+                      component: CollectionListModal,
+                      props: {
+                        title: __('Content Bank', 'tutor'),
+                        type: 'question',
+                        onAddContent: (contents) => {
+                          handleAddContentBankBulkQuestions(
+                            contents as (ContentBankContent & {
+                              question: QuizQuestion;
+                            })[],
+                          );
+                        },
+                      },
+                    });
+                    setIsOpen(false);
+                  }}
+                  icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                >
+                  {__('Add from Content Bank', 'tutor')}
+                </Button>
+              </span>
+            </Show>
           </div>
         </Popover>
       </div>
@@ -466,6 +542,15 @@ const styles = {
     color: ${colorTokens.text.subdued};
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
+  `,
+  addFormContentBankButton: css`
+    margin-inline: ${spacing[8]};
+    padding-block: ${spacing[8]};
+    border-top: 1px solid ${colorTokens.stroke.divider};
+
+    button {
+      margin: 0 ${spacing[8]};
+    }
   `,
   questionOptionsWrapper: css`
     display: flex;

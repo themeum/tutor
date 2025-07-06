@@ -219,6 +219,10 @@ export const icons = [
   'uploadFile',
   'attachmentLine',
   'primeCheckCircle',
+  'contentBank',
+  'sortASC',
+  'sortDESC',
+  'mageFilter',
 ] as const;
 
 export type IconCollection = (typeof icons)[number];
