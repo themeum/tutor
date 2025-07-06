@@ -9,6 +9,8 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 export interface ExportFormData {
   courses: boolean;
   'course-bundle': boolean;
@@ -207,7 +209,7 @@ export interface ExportContentResponse extends ImportExportContentResponseBase {
 const exportContents = async (payload: ExportContentPayload) => {
   return wpAjaxInstance
     .post<ExportContentPayload, TutorMutationResponse<ExportContentResponse>>(
-      endpoints.EXPORT_CONTENTS,
+      isTutorPro ? endpoints.EXPORT_CONTENTS : endpoints.EXPORT_SETTINGS_FREE,
       payload.job_id
         ? { job_id: payload.job_id }
         : {
@@ -245,7 +247,10 @@ interface ImportContentResponse extends ImportExportContentResponseBase {
 
 const importContents = async (payload: ImportContentPayload) => {
   return wpAjaxInstance
-    .post<ImportContentPayload, TutorMutationResponse<ImportContentResponse>>(endpoints.IMPORT_CONTENTS, payload)
+    .post<
+      ImportContentPayload,
+      TutorMutationResponse<ImportContentResponse>
+    >(isTutorPro ? endpoints.IMPORT_CONTENTS : endpoints.IMPORT_SETTINGS_FREE, payload)
     .then((res) => res.data);
 };
 

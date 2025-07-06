@@ -1,6 +1,6 @@
 import { frontendUrls } from '../../../config/page-urls';
 
-describe('Tutor Dashboard My Courses', () => {
+describe('Tutor Dashboard Withdrawals', () => {
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.WITHDRAWS}`);
     cy.loginAsInstructor();

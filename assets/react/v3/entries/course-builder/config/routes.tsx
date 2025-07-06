@@ -7,9 +7,13 @@ import { CourseBuilderRouteConfigs } from './route-configs';
 let CourseBasicPage, CourseCurriculumPage, CourseAdditionalPage, IconListPage;
 
 if (process.env.MAKE_POT) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   CourseBasicPage = require('@CourseBuilderPages/CourseBasic').default;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   CourseCurriculumPage = require('@CourseBuilderPages/Curriculum').default;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   CourseAdditionalPage = require('@CourseBuilderPages/Additional').default;
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   IconListPage = require('@CourseBuilderPages/IconList').default;
 } else {
   CourseBasicPage = React.lazy(

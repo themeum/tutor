@@ -142,7 +142,7 @@ $checkout_page_url = CheckoutController::get_page_url();
 									</div>
 								<?php endif ?>
 
-							<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center <?php echo esc_attr( $checkout_page_url ? '' : 'tutor-checkout-page-not-configured' ); ?>" href="<?php echo esc_url( $checkout_page_url ? $checkout_page_url : '#' ); ?>">
+							<a data-cy="tutor-native-checkout-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center <?php echo esc_attr( $checkout_page_url ? '' : 'tutor-checkout-page-not-configured' ); ?>" href="<?php echo esc_url( $checkout_page_url ? $checkout_page_url : '#' ); ?>">
 								<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
 							</a>
 						</div>

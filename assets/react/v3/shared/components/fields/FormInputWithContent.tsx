@@ -85,7 +85,7 @@ const FormInputWithContent = ({
                     ? e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
                     : e.target.value;
 
-                field.onChange(value);
+                field.onChange(type === 'number' ? Number(value) : value);
 
                 if (onChange) {
                   onChange(value);
