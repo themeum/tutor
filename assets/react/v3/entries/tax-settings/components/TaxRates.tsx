@@ -1,17 +1,22 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
+
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+
 import { colorTokens, fontSize, fontWeight, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { getCountryByCode, getStateByCode, isEuropeanUnion } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { Controller, useFormContext } from 'react-hook-form';
-import Card, { CardHeader } from '../molecules/Card';
+
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import { typography } from '@TutorShared/config/typography';
+import Card from '../molecules/Card';
 import type { TaxSettings } from '../services/tax';
 import EuropeanUnionTax from './EuropeanUnionTax';
 import { MoreOptions } from './MoreOptions';
@@ -274,7 +279,9 @@ export default function TaxRates() {
   function renderCountrySelectButton() {
     return (
       <Button
-        variant="secondary"
+        variant="primary"
+        size="small"
+        buttonCss={styles.addRegionButton}
         onClick={() => {
           openCountrySelectModal({
             form,
@@ -292,66 +299,87 @@ export default function TaxRates() {
   ) : (
     <>
       <Card>
-        <CardHeader
-          title={__('Tax Regions & Rates', 'tutor')}
-          subtitle={__('Specify regions and their applicable tax rates.', 'tutor')}
-        />
-        <div css={styleUtils.cardInnerSection}>
-          <Show when={activeCountry && activeCountryAllStates?.length}>
-            <Checkbox
-              label={__('Apply single tax rate for entire country', 'tutor')}
-              checked={rates[activeCountryIndex]?.is_same_rate ?? false}
-              onChange={(isChecked) => {
-                const currentCountry = rates[activeCountryIndex];
-                currentCountry.is_same_rate = isChecked;
-                form.setValue('rates', rates);
-              }}
-            />
-          </Show>
-          <Show when={tableData.length} fallback={<div>{renderCountrySelectButton()}</div>}>
-            <Table
-              columns={columns}
-              data={tableData}
-              isRounded={true}
-              rowStyle={activeCountry ? styles.rowStyle : undefined}
-              renderInLastRow={
-                !activeCountry ||
-                (activeCountry &&
-                  !isSingleCountry &&
-                  activeCountrySelectedStates.length !== activeCountryAllStates?.length) ? (
-                  <Show
-                    when={!activeCountry}
-                    fallback={
-                      <Show
-                        when={!isSingleCountry && activeCountrySelectedStates.length !== activeCountryAllStates?.length}
-                      >
-                        <Button
-                          variant="tertiary"
-                          onClick={() => {
-                            openCountryTaxRateModal({
-                              form,
-                              title: __('Add State & VAT Rate', 'tutor'),
-                            });
-                          }}
-                        >
-                          {__('Add State', 'tutor')}
-                        </Button>
-                      </Show>
-                    }
-                  >
-                    {renderCountrySelectButton()}
-                  </Show>
-                ) : undefined
-              }
-            />
-          </Show>
+        <div css={styles.enableTaxWrapper}>
+          <div css={styles.header}>
+            <div css={typography.body('medium')}>{__('Tax Rates and Calculations', 'tutor')}</div>
+          </div>
+          <Controller
+            control={form.control}
+            name="enable_tax"
+            render={(controllerProps) => (
+              <FormCheckbox {...controllerProps} label={__('Enable tax rates and calculations', 'tutor')} />
+            )}
+          />
         </div>
       </Card>
 
-      <TaxSettingGlobal />
-      {/* <Show when={activeCountrySelectedStates.length || isSingleCountry} fallback={<TaxSettingGlobal />}>
-        <TaxOverride />
-      </Show> */}
+      <Show when={form.watch('enable_tax')}>
+        <Card>
+          <div css={styleUtils.cardInnerSection}>
+            <div css={styles.header}>
+              <div css={typography.body('medium')}>{__('Tax Rates', 'tutor')}</div>
+              <div css={styles.subtitle}>
+                {
+                  // prettier-ignore
+                  __( "Set up tax rates for different regions. These rates will apply based on your customer's location.", 'tutor')
+                }
+              </div>
+            </div>
+            <Show when={activeCountry && activeCountryAllStates?.length}>
+              <Checkbox
+                label={__('Apply single tax rate for entire country', 'tutor')}
+                checked={rates[activeCountryIndex]?.is_same_rate ?? false}
+                onChange={(isChecked) => {
+                  const currentCountry = rates[activeCountryIndex];
+                  currentCountry.is_same_rate = isChecked;
+                  form.setValue('rates', rates);
+                }}
+              />
+            </Show>
+            <Show when={tableData.length} fallback={<div>{renderCountrySelectButton()}</div>}>
+              <Table
+                columns={columns}
+                data={tableData}
+                isRounded={true}
+                rowStyle={activeCountry ? styles.rowStyle : undefined}
+                renderInLastRow={
+                  !activeCountry ||
+                  (activeCountry &&
+                    !isSingleCountry &&
+                    activeCountrySelectedStates.length !== activeCountryAllStates?.length) ? (
+                    <Show
+                      when={!activeCountry}
+                      fallback={
+                        <Show
+                          when={
+                            !isSingleCountry && activeCountrySelectedStates.length !== activeCountryAllStates?.length
+                          }
+                        >
+                          <Button
+                            variant="tertiary"
+                            onClick={() => {
+                              openCountryTaxRateModal({
+                                form,
+                                title: __('Add State & VAT Rate', 'tutor'),
+                              });
+                            }}
+                          >
+                            {__('Add State', 'tutor')}
+                          </Button>
+                        </Show>
+                      }
+                    >
+                      {renderCountrySelectButton()}
+                    </Show>
+                  ) : undefined
+                }
+              />
+            </Show>
+          </div>
+        </Card>
+
+        <TaxSettingGlobal />
+      </Show>
     </>
   );
 }
@@ -362,6 +390,17 @@ const styles = {
     gap: ${spacing[8]};
     color: ${colorTokens.text.primary};
     font-weight: ${fontWeight.medium};
+  `,
+  header: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
+  addRegionButton: css`
+    padding: ${spacing[8]} ${spacing[16]};
+  `,
+  subtitle: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
   `,
   emoji: css`
     font-size: ${fontSize[24]};
@@ -422,5 +461,11 @@ const styles = {
     display: flex;
     align-items: center;
     height: 36px;
+  `,
+  enableTaxWrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    padding: ${spacing[20]};
   `,
 };

@@ -66,12 +66,16 @@ const FormDateInput = ({
   helpText,
   isClearable = true,
   onChange,
-  dateFormat = DateFormats.yearMonthDay,
+  dateFormat = DateFormats.monthDayYear,
 }: FormDateInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const parsedDate = parseDate(field.value);
-  const fieldValue = parsedDate ? format(parsedDate, dateFormat) : '';
+  const fieldValue = parsedDate
+    ? wp.date
+      ? wp.date.format('F j, Y', parsedDate)
+      : format(parsedDate, dateFormat)
+    : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,

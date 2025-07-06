@@ -1,12 +1,15 @@
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { nanoid } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEventHandler, type FocusEventHandler, type ReactNode } from 'react';
+
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid } from '@TutorShared/utils/util';
 
 interface RadioProps {
   id?: string;
   label?: string;
+  description?: string;
   icon?: ReactNode;
   value?: string | number;
   name?: string;
@@ -20,32 +23,51 @@ interface RadioProps {
 }
 
 const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props: RadioProps, ref) => {
-  const { name, checked, readOnly, disabled = false, labelCss, label, icon, value, onChange, onBlur } = props;
+  const {
+    name,
+    checked,
+    readOnly,
+    disabled = false,
+    labelCss,
+    label,
+    icon,
+    value,
+    onChange,
+    onBlur,
+    description,
+  } = props;
   const id = nanoid();
 
   return (
-    <label htmlFor={id} css={[styles.container(disabled), labelCss]}>
-      <input
-        ref={ref}
-        id={id}
-        name={name}
-        type="radio"
-        checked={checked}
-        readOnly={readOnly}
-        value={value}
-        disabled={disabled}
-        onChange={onChange}
-        onBlur={onBlur}
-        css={[styles.radio(label)]}
-      />
-      <span />
-      {icon}
-      {label}
-    </label>
+    <div css={styles.wrapper}>
+      <label htmlFor={id} css={[styles.container(disabled), labelCss]}>
+        <input
+          ref={ref}
+          id={id}
+          name={name}
+          type="radio"
+          checked={checked}
+          readOnly={readOnly}
+          value={value}
+          disabled={disabled}
+          onChange={onChange}
+          onBlur={onBlur}
+          css={[styles.radio(label)]}
+        />
+        <span />
+        {icon}
+        {label}
+      </label>
+      {description && <p css={styles.description}>{description}</p>}
+    </div>
   );
 });
 
 const styles = {
+  wrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+  `,
   container: (disabled: boolean) => css`
     ${typography.caption()};
     display: flex;
@@ -101,6 +123,11 @@ const styles = {
         outline-offset: 1px;
       }
     }
+  `,
+  description: css`
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+    padding-left: 30px;
   `,
 };
 

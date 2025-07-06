@@ -465,8 +465,8 @@ class EmailController {
 			$replacable['{order_id}']             = '#' . $order_data->id;
 			$replacable['{order_date}']           = tutor_i18n_get_formated_date( $order_data->created_at_gmt, get_option( 'date_format' ) );
 			$replacable['{order_total}']          = tutor_get_formatted_price( $order_data->total_price );
-			$replacable['{order_status}']         = ucfirst( $order_data->order_status );
-			$replacable['{order_payment_status}'] = ucfirst( $order_data->payment_status );
+			$replacable['{order_status}']         = tutor_utils()->translate_dynamic_text( $order_data->order_status );
+			$replacable['{order_payment_status}'] = tutor_utils()->translate_dynamic_text( $order_data->payment_status );
 
 			$student = get_userdata( $order_data->student->id );
 			if ( is_a( $student, 'WP_User' ) ) {
@@ -527,7 +527,7 @@ class EmailController {
 		$email_array = array(
 			self::TO_STUDENTS => array(
 				'new_order'            => array(
-					'label'       => __( 'New order placed', 'tutor' ),
+					'label'       => __( 'New Order Placed', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_new_' . self::TO_STUDENTS,
 					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
@@ -558,7 +558,7 @@ class EmailController {
 					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 				),
 				'order_status_updated' => array(
-					'label'       => __( 'Order status updated', 'tutor' ),
+					'label'       => __( 'Order Status Updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_STUDENTS,
 					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
@@ -591,7 +591,7 @@ class EmailController {
 			),
 			self::TO_TEACHERS => array(
 				'new_order'            => array(
-					'label'       => __( 'New order placed', 'tutor' ),
+					'label'       => __( 'New Order Placed', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_new_' . self::TO_TEACHERS,
 					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
@@ -620,7 +620,7 @@ class EmailController {
 					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 				),
 				'order_status_updated' => array(
-					'label'       => __( 'Order status updated', 'tutor' ),
+					'label'       => __( 'Order Status Updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_TEACHERS,
 					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
@@ -651,7 +651,7 @@ class EmailController {
 			),
 			self::TO_ADMIN    => array(
 				'new_order'            => array(
-					'label'       => __( 'New order placed', 'tutor' ),
+					'label'       => __( 'New Order Placed', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_new_' . self::TO_ADMIN,
 					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
@@ -676,7 +676,7 @@ class EmailController {
 					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 				),
 				'order_status_updated' => array(
-					'label'       => __( 'Order status updated', 'tutor' ),
+					'label'       => __( 'Order Status Updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_ADMIN,
 					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),

@@ -272,6 +272,21 @@ class OrderModel {
 	}
 
 	/**
+	 * Get all order types
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return array
+	 */
+	public static function get_order_type_list() {
+		return array(
+			self::TYPE_SINGLE_ORDER => __( 'Single Order', 'tutor' ),
+			self::TYPE_SUBSCRIPTION => __( 'Subscription', 'tutor' ),
+			self::TYPE_RENEWAL      => __( 'Renewal', 'tutor' ),
+		);
+	}
+
+	/**
 	 * Get all payment statuses
 	 *
 	 * @since 3.0.0

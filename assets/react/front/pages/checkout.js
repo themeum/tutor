@@ -48,17 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
          */
         function shouldShowTaxInfo(paymentMethodName) {
             const taxAmount = document.querySelector('.tutor-checkout-tax-amount');
-            const inclTaxLabel = document.querySelector('.tutor-checkout-incl-tax-label');
+            const inclTaxLabels = document.querySelectorAll('.tutor-checkout-incl-tax-label');
             const grandTotal = document.querySelector('.tutor-checkout-grand-total');
             const checkoutData = getCheckoutData();
 
             if (isTaxManagedByTutor(paymentMethodName)) {
                 grandTotal.innerHTML = checkoutData.formatted_total_price;
-                inclTaxLabel?.classList.remove('tutor-d-none');
+                inclTaxLabels.forEach(label => label.classList.remove('tutor-d-none'));
                 taxAmount?.classList.remove('tutor-d-none');
             } else {
                 grandTotal.innerHTML = checkoutData.formatted_total_price_without_tax;
-                inclTaxLabel?.classList.add('tutor-d-none');
+                inclTaxLabels.forEach(label => label.classList.add('tutor-d-none'));
                 taxAmount?.classList.add('tutor-d-none');
             }
         }
@@ -80,12 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 shouldShowTaxInfo(paymentMethodName);
 
-                const paymentInstructions = clickedOption.dataset.paymentInstruction;
-                if (paymentInstructions) {
-                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').innerHTML = atob(paymentInstructions);
-                } else {
-                    document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                const instructionsContainer = document.querySelector('.tutor-payment-instructions');
+                if (instructionsContainer) {
+                    const paymentInstructions = clickedOption.querySelector('.tutor-payment-item-instructions');
+                    if (paymentInstructions) {
+                        instructionsContainer.classList.remove('tutor-d-none');
+                        instructionsContainer.innerHTML = paymentInstructions.innerHTML;
+                    } else {
+                        instructionsContainer.classList.add('tutor-d-none');
+                    }
                 }
             }
 
@@ -331,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 shouldShowTaxInfo(payments[0].firstElementChild.value);
 
-                const paymentInstructions = payments[0].dataset.paymentInstruction;
+                const paymentInstructions = payments[0].querySelector('.tutor-payment-item-instructions');
                 if (paymentInstructions) {
                     document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
                     document.querySelector('.tutor-payment-instructions').innerHTML = atob(paymentInstructions);

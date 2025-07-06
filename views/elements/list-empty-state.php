@@ -9,6 +9,15 @@
  * @since 3.5.0
  */
 
+$subtile       = tutor_utils()->get_list_empty_state_subtitle();
+$subtitle_text = '';
+
+if ( isset( $data['sub_title'] ) ) {
+	$subtitle_text = $data['sub_title'];
+} elseif ( $subtile ) {
+	$subtitle_text = $subtile;
+}
+
 ?>
 <div class="tutor-divider tutor-radius-12 tutor-overflow-hidden">
 	<div class="tutor-px-32 tutor-py-64 tutor-bg-white tutor-text-center">
@@ -25,13 +34,13 @@
 			<rect x="31.9365" y="38.4766" width="15.0088" height="1.2" rx="0.6" fill="white"/>
 		</svg>
 
-		<h6 class="tutor-fs-6 tutor-fw-bold tutor-mt-0 tutor-mb-8 tutor-mt-32">
-			<?php esc_html_e( 'No Courses Found.', 'tutor' ); ?>
+		<h6 class="tutor-fs-6 tutor-fw-bold tutor-mb-0 tutor-mt-32">
+			<?php echo esc_html( isset( $data['title'] ) ? $data['title'] : __( 'No Data Found.', 'tutor' ) ); ?>
 		</h6>
-		<div class="tutor-d-flex tutor-align-center tutor-justify-center tutor-gap-4px">
-			<p class="tutor-fs-7 tutor-color-hints tutor-m-0">
-				<?php esc_html_e( 'Try using different keywords', 'tutor' ); ?>
-			</p>
-		</div>
+		<?php if ( ! empty( $subtitle_text ) ) : ?>
+		<p class="tutor-fs-7 tutor-color-hints tutor-mt-8 tutor-mb-0">
+			<?php echo esc_html( $subtitle_text ); ?>
+		</p>
+		<?php endif; ?>
 	</div>
 </div>
