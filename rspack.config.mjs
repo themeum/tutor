@@ -15,7 +15,7 @@ try {
   const data = fs.readFileSync('tutor.php', 'utf8');
   version = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
 } catch (err) {
-  console.log(err);
+  console.log(`Error reading version from tutor.php: ${err}`);
 }
 
 const createSwcLoaderOptions = (isDevelopment) => ({
