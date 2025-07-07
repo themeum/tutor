@@ -150,10 +150,12 @@ class Quiz_Attempts_List {
 		$search_filter   = '%' . $wpdb->esc_like( $search ) . '%';
 
 		if ( $is_ajax_action ) {
-			$attempt_cache = new QuizAttempts();
+			$current_params = compact( 'course_id', 'date', 'search' );
+			$attempt_cache  = new QuizAttempts( $current_params );
 
-			if ( $attempt_cache->has_cache() && ! is_null( $attempt_cache->get_cache()->pass ) ) {
-				$count_obj = $attempt_cache->get_cache();
+			$cached_attempts = $attempt_cache->get_cache();
+			if ( $attempt_cache->has_cache() && $attempt_cache->is_same_query() && isset( $cached_attempts['result'] ) ) {
+				$count_obj = $cached_attempts['result'];
 			} else {
 				$select_stmt = "SELECT COUNT( DISTINCT attempt_id)
 								FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
