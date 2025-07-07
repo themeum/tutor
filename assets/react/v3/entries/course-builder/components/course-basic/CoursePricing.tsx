@@ -391,7 +391,7 @@ const CoursePricing = () => {
                   <FormCheckbox
                     {...controllerProps}
                     label={__('Charge tax on one-time purchase ', 'tutor')}
-                    helpText={isTaxIncludedInPrice && !form.watch('tax_on_single') ? taxAlertMessage : ''}
+                    helpText={isTaxIncludedInPrice && !controllerProps.field.value ? taxAlertMessage : ''}
                   />
                 )}
               />
@@ -408,7 +408,7 @@ const CoursePricing = () => {
                   <FormCheckbox
                     {...controllerProps}
                     label={__('Charge tax on subscription', 'tutor')}
-                    helpText={isTaxIncludedInPrice && !form.watch('tax_on_subscription') ? taxAlertMessage : ''}
+                    helpText={isTaxIncludedInPrice && !controllerProps.field.value ? taxAlertMessage : ''}
                   />
                 )}
               />
