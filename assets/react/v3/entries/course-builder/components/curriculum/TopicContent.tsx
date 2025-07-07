@@ -71,10 +71,6 @@ const icons = {
     name: 'interactiveQuiz',
     color: '#C984FE',
   },
-  'cb-lesson': {
-    name: 'lesson',
-    color: colorTokens.icon.default,
-  },
 } as const;
 
 const confirmationMessages = {
