@@ -342,31 +342,32 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 			<?php endforeach; ?>
 		</tbody>
 	</table>
+
+	<div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : 'tutor-mt-40' ); ?>">
+		<?php
+		$limit = tutor_utils()->get_option( 'pagination_per_page' );
+		if ( $the_query->found_posts > $limit ) {
+			$pagination_data = array(
+				'total_items' => $the_query->found_posts,
+				'per_page'    => $limit,
+				'paged'       => $paged,
+			);
+
+			$pagination_template = tutor()->path . 'views/elements/pagination.php';
+			if ( is_admin() ) {
+				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+			} else {
+				$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
+				tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
+			}
+		}
+		?>
+	</div>
 </div>
+
 <?php else : ?>
 	<?php tutils()->render_list_empty_state(); ?>
 <?php endif; ?>
-
-<div class="tutor-pagination-wrapper <?php echo esc_attr( is_admin() ? 'tutor-mt-20' : 'tutor-mt-40' ); ?>">
-	<?php
-	$limit = tutor_utils()->get_option( 'pagination_per_page' );
-	if ( $the_query->found_posts > $limit ) {
-		$pagination_data = array(
-			'total_items' => $the_query->found_posts,
-			'per_page'    => $limit,
-			'paged'       => $paged,
-		);
-
-		$pagination_template = tutor()->path . 'views/elements/pagination.php';
-		if ( is_admin() ) {
-			tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-		} else {
-			$pagination_template_frontend = tutor()->path . 'templates/dashboard/elements/pagination.php';
-			tutor_load_template_from_custom_path( $pagination_template_frontend, $pagination_data );
-		}
-	}
-	?>
-</div>
 
 <?php
 	tutor_announcement_modal( 'tutor_announcement_new', __( 'Create Announcement', 'tutor' ), $courses );
