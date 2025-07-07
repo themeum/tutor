@@ -8056,6 +8056,9 @@ class Utils {
 					$course_ids = is_array( $course_ids ) ? $course_ids : array();
 					$course_id  = array_filter( $course_ids, fn( $id ) => is_numeric( $id ) && $id );
 					break;
+				case 'cb-lesson':
+					$course_id = wp_get_post_parent_id( wp_get_post_parent_id( $object_id ) );
+					break;
 			}
 
 			TutorCache::set( $cache_key, $course_id );
@@ -8084,6 +8087,7 @@ class Utils {
 			'tutor_gm_course'    => 'tutor_gm_course',
 			'tutor_gm_topic'     => 'tutor_gm_topic',
 			'topics'             => 'topic',
+			'cb-lesson'          => 'cb-lesson',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -8101,6 +8105,7 @@ class Utils {
 
 			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
 		}
+
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
 	}
 
