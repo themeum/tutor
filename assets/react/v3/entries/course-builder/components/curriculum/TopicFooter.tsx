@@ -34,6 +34,7 @@ import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicFooterProps {
   topic: CourseTopicWithCollapse;
+  nextContentOrder: number;
 }
 
 const courseId = getCourseId();
@@ -41,7 +42,7 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasLiveAddons =
   isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION) || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 
-const TopicFooter = ({ topic }: TopicFooterProps) => {
+const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
   const topicId = getIdWithoutPrefix('topic-', topic.id);
 
   const { showToast } = useToast();
@@ -253,6 +254,8 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                   component: CollectionListModal,
                   props: {
                     type: 'lesson_assignment',
+                    topicId: topicId,
+                    nextContentOrder: nextContentOrder,
                   },
                 });
               }}
