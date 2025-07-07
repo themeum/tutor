@@ -25,7 +25,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 ?>
 
 <?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) : ?>
-	<div class="tutor-table-responsive tutor-dashboard-list-table <?php echo esc_attr( is_admin() ? '' : 'tutor-table-mobile' ); ?>">
+	<div class="tutor-table-responsive tutor-dashboard-list-table <?php echo esc_attr( is_admin() ? '' : 'tutor-table-mobile tutor-mt-32' ); ?>">
 		<table class="tutor-table tutor-table-quiz-attempts">
 			<thead>
 				<tr>

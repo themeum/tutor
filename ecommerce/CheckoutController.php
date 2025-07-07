@@ -459,6 +459,10 @@ class CheckoutController {
 			$coupon_title = $coupon->coupon_title;
 		}
 
+		$should_calculate_tax = Tax::should_calculate_tax();
+		$tax_included         = Tax::is_tax_included_in_price();
+		$tax_rate             = Tax::get_user_tax_rate();
+
 		// Keep calculated price for each item.
 		foreach ( $items as $item ) {
 			$discount_amount        = isset( $item['discount_amount'] ) ? $item['discount_amount'] : 0;
@@ -468,6 +472,18 @@ class CheckoutController {
 			$display_price         = isset( $item['sale_price'] ) ? $item['sale_price'] : $item['regular_price'];
 			$display_price         = $has_discount_amount ? $item['discount_price'] : $display_price;
 			$item['display_price'] = $display_price;
+
+			$item['tax_amount']          = 0;
+			$item['tax_amount_readable'] = '';
+
+			if ( $should_calculate_tax ) {
+				$tax_amount = Tax::calculate_tax( $display_price, $tax_rate );
+				// translators: %1$s: tax amount %2$s: included text or empty string.
+				$tax_amount_readable = sprintf( __( 'Tax: %1$s%2$s', 'tutor' ), tutor_get_formatted_price( $tax_amount ), $tax_included ? __( ' included', 'tutor' ) : '' );
+
+				$item['tax_amount']          = $tax_amount;
+				$item['tax_amount_readable'] = $tax_amount_readable;
+			}
 
 			$sale_discount_amount         = isset( $item['sale_price'] ) ? $item['regular_price'] - $item['sale_price'] : 0;
 			$item['sale_discount_amount'] = $sale_discount_amount;
@@ -490,10 +506,9 @@ class CheckoutController {
 		}
 
 		$total_price = $subtotal_price - ( $coupon_discount + $sale_discount );
-		$tax_rate    = Tax::get_user_tax_rate();
 		$tax_amount  = 0;
 
-		if ( Tax::should_calculate_tax() ) {
+		if ( $should_calculate_tax ) {
 			$tax_amount        = Tax::calculate_tax( $total_price, $tax_rate );
 			$tax_exempt_amount = Tax::calculate_tax( $tax_exempt_price, $tax_rate );
 			$tax_amount        = $tax_amount - $tax_exempt_amount;
@@ -509,6 +524,7 @@ class CheckoutController {
 
 		$response['plan_info'] = $plan_info;
 
+		$response['total_items']       = tutor_utils()->count( $items );
 		$response['coupon_type']       = $coupon_type;
 		$response['coupon_code']       = $is_coupon_applied ? $coupon->coupon_code : null;
 		$response['coupon_title']      = $coupon_title;
