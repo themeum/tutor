@@ -144,8 +144,8 @@ class Quiz_Attempts_List {
 		$date           = Input::post( 'date', '' );
 		$search         = Input::post( 'search', '' );
 
-		$course_filter   = '' !== $course_id ? " AND quiz_attempts.course_id = $course_id " : '';
-		$date_filter     = '' !== $date ? " AND DATE(quiz_attempts.attempt_started_at) = '$date' " : '';
+		$course_filter   = '' !== $course_id ? $wpdb->prepare( ' AND quiz_attempts.course_id = %d', $course_id ) : '';
+		$date_filter     = '' !== $date ? $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) = %s ', $date ) : '';
 		$search_term_raw = $search;
 		$search_filter   = '%' . $wpdb->esc_like( $search ) . '%';
 
