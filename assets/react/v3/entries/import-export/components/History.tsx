@@ -50,7 +50,7 @@ const History = () => {
     return 'import';
   }, []);
 
-  const formatItemCount = (count: number, type: 'course' | 'bundle'): string => {
+  const formatItemCount = (count: number, type: 'course' | 'bundle' | 'content_bank'): string => {
     if (type === 'course') {
       if (count === 1) {
         return __('Course', 'tutor');
@@ -58,6 +58,15 @@ const History = () => {
 
       // translators: %d is the number of courses
       return sprintf(__('Courses (%d)', 'tutor'), count);
+    }
+
+    if (type === 'content_bank') {
+      if (count === 1) {
+        return __('Collection', 'tutor');
+      }
+
+      // translators: %d is the number of content bank items
+      return sprintf(__('Collections (%d)', 'tutor'), count);
     }
 
     if (count === 1) {
@@ -87,6 +96,12 @@ const History = () => {
     if (successfulBundles.length > 0) {
       const bundlesText = formatItemCount(successfulBundles.length, 'bundle');
       formattedItems.push(bundlesText);
+    }
+
+    const successfulContentBank = completedContents['content_bank']?.success || [];
+    if (successfulContentBank.length > 0) {
+      const contentBankText = formatItemCount(successfulContentBank.length, 'content_bank');
+      formattedItems.push(contentBankText);
     }
 
     if (completedContents.settings === true) {

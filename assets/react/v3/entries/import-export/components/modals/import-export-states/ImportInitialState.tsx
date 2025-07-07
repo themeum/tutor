@@ -1,38 +1,29 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
-import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
-import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
-import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
-import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { useGetCollectionsInfinityQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type Collection } from '@TutorShared/utils/types';
 import { formatBytes } from '@TutorShared/utils/util';
 
 interface ImportInitialStateProps {
   files: File[];
   currentStep: string;
   onClose: () => void;
-  onImport: (file: File) => void;
+  onImport: ({ file }: { file: File }) => void;
 }
 
 interface ImportForm {
   files: File[];
-  importIntoContentBank: boolean;
-  collectionSearch: string;
-  collectionId: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -63,22 +54,13 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport }: ImportInitialStateProps) => {
   const [isReadingFile, setIsReadingFile] = useState(false);
   const [isFileValid, setIsFileValid] = useState(true);
-  const [hasSettings, setHasSettings] = useState(false);
   const { showToast } = useToast();
+  const [hasSettings, setHasSettings] = useState(false);
 
   const form = useFormWithGlobalError<ImportForm>({
     defaultValues: {
       files: propsFiles,
-      importIntoContentBank: false,
-      collectionSearch: '',
-      collectionId: '',
     },
-  });
-
-  const getCollectionListQuery = useGetCollectionsInfinityQuery({
-    search: form.watch('collectionSearch'),
-    page: 1,
-    per_page: 10,
   });
 
   const files = form.watch('files');
@@ -120,22 +102,11 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     });
   };
 
+  const file = files[0];
+
   if (files.length === 0) {
     return null;
   }
-
-  const file = files[0];
-  const collections =
-    getCollectionListQuery.data?.pages?.reduce((acc, page) => {
-      if (page.data && Array.isArray(page.data)) {
-        return [...acc, ...page.data];
-      }
-      return acc;
-    }, [] as Collection[]) || [];
-  const collectionOptions = collections.map((collection) => ({
-    label: collection.post_title,
-    value: String(collection.ID),
-  }));
 
   return (
     <>
@@ -183,45 +154,6 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             </div>
           </div>
         </div>
-
-        <div css={styles.contentBank}>
-          <Controller
-            control={form.control}
-            name="importIntoContentBank"
-            render={(controllerProps) => (
-              <FormCheckbox
-                {...controllerProps}
-                label={__('Import items into a specific collection in the Content Bank', 'tutor')}
-              />
-            )}
-          />
-
-          {/* Collection Radio List With infinite scroll */}
-          <div css={styles.collectionListWrapper}>
-            <Controller
-              control={form.control}
-              name="collectionSearch"
-              render={(controllerProps) => (
-                <FormInputWithContent
-                  {...controllerProps}
-                  placeholder={__('Search...', 'tutor')}
-                  content={<SVGIcon name="search" width={24} height={24} />}
-                  contentPosition="left"
-                  showVerticalBar={false}
-                />
-              )}
-            />
-
-            <div css={styles.collectionList}>
-              <Controller
-                control={form.control}
-                name="collectionId"
-                render={(controllerProps) => <FormRadioGroup {...controllerProps} options={collectionOptions} />}
-              />
-            </div>
-          </div>
-        </div>
-
         <Show when={!isFileValid}>
           <div css={styles.alert}>
             <SVGIcon name="warning" width={40} height={40} />
@@ -257,7 +189,11 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             variant="primary"
             size="small"
             loading={isReadingFile || currentStep === 'progress'}
-            onClick={async () => onImport(files[0])}
+            onClick={async () =>
+              onImport({
+                file: files[0],
+              })
+            }
           >
             {__('Import', 'tutor')}
           </Button>
@@ -368,15 +304,24 @@ const styles = {
   `,
   collectionListWrapper: css`
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
-    padding: ${spacing[12]};
     border-radius: ${borderRadius[8]};
     border: 1px solid ${colorTokens.stroke.divider};
+  `,
+  collectionListHeader: css`
+    padding: ${spacing[12]};
   `,
   collectionList: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     max-height: 200px;
     ${styleUtils.overflowYAuto};
+  `,
+  collectionItem: css`
+    padding: ${spacing[6]} ${spacing[16]};
+  `,
+  notFound: css`
+    padding: ${spacing[12]};
+    text-align: center;
+    color: ${colorTokens.text.subdued};
   `,
 };
