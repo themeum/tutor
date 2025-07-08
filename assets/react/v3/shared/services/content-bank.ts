@@ -2,7 +2,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type CollectionResponse, type ContentBankContents } from '@TutorShared/utils/types';
+import { type ID, type CollectionResponse, type ContentBankContents } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
 
 interface CollectionParams {
@@ -54,6 +54,7 @@ interface ContentBankContentsParams {
   content_types?: ('lesson' | 'assignment' | 'question')[];
   question_types?: string[];
   context?: 'quiz_builder';
+  exclude?: ID[];
 }
 
 const getContentBankContents = (params: ContentBankContentsParams) => {
