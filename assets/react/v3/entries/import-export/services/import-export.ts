@@ -300,6 +300,7 @@ export interface ImportExportHistory {
     completed_contents?: {
       courses: ImportExportCompletedContentsItem;
       'course-bundle': ImportExportCompletedContentsItem;
+      content_bank: ImportExportCompletedContentsItem;
       settings: boolean;
     };
     failed_course_ids?: [];

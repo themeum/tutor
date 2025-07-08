@@ -26,6 +26,7 @@ type TextInputProps = {
   variant?: Variant;
   focusOnMount?: boolean;
   inputCss?: SerializedStyles;
+  autoFocus?: boolean;
 };
 
 const TextInput = ({
@@ -45,6 +46,7 @@ const TextInput = ({
   variant = 'regular',
   focusOnMount = false,
   inputCss,
+  autoFocus = false,
 }: TextInputProps) => {
   const id = useId();
 
@@ -73,6 +75,7 @@ const TextInput = ({
           type="text"
           css={[styles.input(variant), inputCss]}
           value={value || ''}
+          autoFocus={autoFocus}
           onChange={(event) => {
             const { value } = event.target;
 

@@ -14,6 +14,7 @@ import {
   type ExportFormData,
 } from '@ImportExport/services/import-export';
 import generateImportExportMessage from '@ImportExport/utils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -21,6 +22,7 @@ import { getQueryParam } from '@TutorShared/utils/url';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const CONTENT_BANK_PAGE = 'tutor-content-bank';
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Export = () => {
   const { showModal, updateModal, closeModal } = useModal();
@@ -46,7 +48,7 @@ const Export = () => {
     const isFromContentBank = getQueryParam('referrer', 'string') === CONTENT_BANK_PAGE;
     const isExportingFromContentBank = getQueryParam('type', 'string') === 'export';
 
-    if (isFromContentBank && isExportingFromContentBank) {
+    if (isTutorPro && isFromContentBank && isExportingFromContentBank) {
       showModal({
         id: 'export-modal',
         component: ExportModal,

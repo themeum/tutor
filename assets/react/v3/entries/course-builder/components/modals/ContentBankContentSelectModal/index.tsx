@@ -57,16 +57,21 @@ const CollectionListModal = ({
   const handleAddContent = async (data: ContentSelectionForm) => {
     onAddContent?.(data.contents);
 
-    const response = await addContentBankContentToCourseMutation.mutateAsync({
-      course_id: courseId,
-      topic_id: topicId || '',
-      content_ids: data.contents.map((content) => content.ID),
-      next_content_order: nextContentOrder || 0,
-    });
+    if (type === 'lesson_assignment') {
+      const response = await addContentBankContentToCourseMutation.mutateAsync({
+        course_id: courseId,
+        topic_id: topicId || '',
+        content_ids: data.contents.map((content) => content.ID),
+        next_content_order: nextContentOrder || 0,
+      });
 
-    if (response.status_code === 200) {
-      closeModal({ action: 'CONFIRM' });
+      if (response.status_code === 200) {
+        closeModal({ action: 'CONFIRM' });
+        return;
+      }
     }
+
+    closeModal({ action: 'CONFIRM' });
   };
 
   const selectedCollection = form.watch('selectedCollection');
@@ -101,7 +106,7 @@ const CollectionListModal = ({
               variant="primary"
               onClick={form.handleSubmit(handleAddContent)}
               disabled={form.watch('contents').length === 0}
-              loading={addContentBankContentToCourseMutation.isPending}
+              loading={type === 'lesson_assignment' && addContentBankContentToCourseMutation.isPending}
             >
               {__('Add', 'tutor')}
             </Button>
