@@ -7934,6 +7934,11 @@ class Utils {
 	 * @return int|int[]
 	 */
 	public function get_course_id_by( $content, $object_id ) {
+		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
+		if ( $course_id ) {
+			return $course_id;
+		}
+
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
 		$course_id = TutorCache::get( $cache_key );
 
@@ -8056,9 +8061,6 @@ class Utils {
 					$course_ids = is_array( $course_ids ) ? $course_ids : array();
 					$course_id  = array_filter( $course_ids, fn( $id ) => is_numeric( $id ) && $id );
 					break;
-				case 'cb-lesson':
-					$course_id = wp_get_post_parent_id( wp_get_post_parent_id( $object_id ) );
-					break;
 			}
 
 			TutorCache::set( $cache_key, $course_id );
@@ -8180,7 +8182,11 @@ class Utils {
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
-		$course_id = $this->get_course_id_by( $content, $object_id );
+
+		$course_id = Input::get('course', 0, Input::TYPE_INT );
+		if ( ! $course_id ) {
+			$course_id = $this->get_course_id_by( $content, $object_id );
+		}
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 

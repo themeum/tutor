@@ -248,7 +248,7 @@ if ( $topics->have_posts() ) {
 						$is_completed_lesson = tutor_utils()->is_completed_lesson();
 						?>
 						<div class="tutor-course-topic-item tutor-course-topic-item-lesson<?php echo esc_attr( get_the_ID() == $current_post->ID ? ' is-active' : '' ); ?>">
-							<a href="<?php echo $show_permalink ? esc_url( get_the_permalink() ) : '#'; ?>" data-lesson-id="<?php the_ID(); ?>">
+							<a href="<?php echo $show_permalink ? esc_url( add_query_arg( 'course', $course_id, get_the_permalink() ) ) : '#'; ?>" data-lesson-id="<?php the_ID(); ?>">
 								<div class="tutor-d-flex tutor-mr-32">
 									<?php
 									$tutor_lesson_type_icon = $play_time ? 'brand-youtube-bold' : 'document-text';
