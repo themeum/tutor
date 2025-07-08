@@ -239,6 +239,10 @@ class Addons {
 				'name'        => __( 'Subscription', 'tutor' ),
 				'description' => __( 'Manage subscription', 'tutor' ),
 			),
+			'content-bank'             => array(
+				'name'        => __( 'Content Bank', 'tutor' ),
+				'description' => __( 'Reuse contents on course creation', 'tutor' ),
+			),
 			'social-login'             => array(
 				'name'        => __( 'Social Login', 'tutor' ),
 				'description' => __( 'Let users register & login through social networks.', 'tutor' ),
