@@ -58,7 +58,6 @@ if ( $topics->have_posts() ) {
 		$topic_summery   = get_the_content();
 		$total_contents  = tutor_utils()->count_completed_contents_by_topic( $topic_id );
 		$lessons         = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
-		$lessons         = apply_filters( 'tutor_filter_lesson_sidebar', $lessons, $topic_id );
 		$is_topic_active = ! empty(
 			array_filter(
 				$lessons->posts,
