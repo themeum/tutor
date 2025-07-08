@@ -5141,6 +5141,8 @@ class Utils {
 			)
 		);
 
+		$questions = apply_filters( 'tutor_get_questions_by_quiz', $questions, $quiz_id );
+
 		foreach ( $questions as $question ) {
 			$question->question_title       = stripslashes( $question->question_title );
 			$question->question_description = stripslashes( $question->question_description );
