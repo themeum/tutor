@@ -2,13 +2,14 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type ID, type CollectionResponse, type ContentBankContents } from '@TutorShared/utils/types';
+import { type CollectionResponse, type ContentBankContents, type ID } from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
 
 interface CollectionParams {
   search?: string;
   page?: number;
   per_page?: number;
+  hide_empty?: number;
 }
 
 export const getCollections = (params: CollectionParams) => {
