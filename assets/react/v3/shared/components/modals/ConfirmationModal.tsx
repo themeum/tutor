@@ -12,7 +12,7 @@ interface ConfirmationModalProps extends Omit<ModalProps, 'actions'> {
   cancelButtonText?: string;
   confirmButtonVariant?: ButtonVariant;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
   isLoading?: boolean;
   maxWidth?: number;
 }

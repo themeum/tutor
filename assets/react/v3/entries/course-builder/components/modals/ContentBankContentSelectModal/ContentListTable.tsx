@@ -12,6 +12,7 @@ import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import FilterFields from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/FilterFields';
 import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
+import { getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import Select from '@TutorShared/atoms/Select';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -27,6 +28,8 @@ const ContentListTable = () => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const form = useFormContext<ContentSelectionForm>();
   const selectedCollection = form.watch('selectedCollection');
+  const existingContentIds = form.watch('existingContentIds');
+
   const [contentType, setContentType] = useState<'lesson' | 'assignment' | ''>('');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
@@ -38,6 +41,7 @@ const ContentListTable = () => {
     content_types: contentType ? [contentType] : ['lesson', 'assignment'],
     ...(orderDirection ? { order: orderDirection.toUpperCase() } : {}),
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
+    exclude: existingContentIds.map((id) => getIdWithoutPrefix('content-', id)),
   });
 
   const totalItems = getContentsQuery.data?.total_record || 0;

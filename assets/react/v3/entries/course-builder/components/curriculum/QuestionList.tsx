@@ -442,8 +442,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
             <Show
               when={isTutorPro}
               fallback={
-                <span css={styles.addFormContentBankButton}>
-                  <ProBadge size="tiny">
+                <div css={styles.addFormContentBankButton}>
+                  <ProBadge size="small">
                     <Button
                       disabled
                       variant="secondary"
@@ -454,10 +454,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                       {__('Add from Content Bank', 'tutor')}
                     </Button>
                   </ProBadge>
-                </span>
+                </div>
               }
             >
-              <span css={styles.addFormContentBankButton}>
+              <div css={styles.addFormContentBankButton}>
                 <Button
                   variant="secondary"
                   size="small"
@@ -482,7 +482,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                 >
                   {__('Add from Content Bank', 'tutor')}
                 </Button>
-              </span>
+              </div>
             </Show>
           </div>
         </Popover>
@@ -544,12 +544,11 @@ const styles = {
     border-bottom: 1px solid ${colorTokens.stroke.divider};
   `,
   addFormContentBankButton: css`
-    margin-inline: ${spacing[8]};
-    padding-block: ${spacing[8]};
+    padding: ${spacing[8]} ${spacing[16]};
     border-top: 1px solid ${colorTokens.stroke.divider};
 
     button {
-      margin: 0 ${spacing[8]};
+      width: 100%;
     }
   `,
   questionOptionsWrapper: css`

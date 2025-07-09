@@ -18,7 +18,11 @@ import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMee
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import { useDeleteContentMutation, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import {
+  useDeleteContentBankContentMutation,
+  useDeleteContentMutation,
+  useDuplicateContentMutation,
+} from '@CourseBuilderServices/curriculum';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
@@ -94,8 +98,11 @@ const confirmationMessages = {
 } as const;
 
 const modalComponent: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
+  [key in Exclude<
+    TopicContentType,
+    'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  >]: React.FunctionComponent<any>;
 } = {
   lesson: LessonModal,
   tutor_quiz: QuizModal,
@@ -104,7 +111,7 @@ const modalComponent: {
 } as const;
 
 const modalTitle: {
-  [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: string;
+  [key in Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>]: string;
 } = {
   lesson: __('Lesson', 'tutor'),
   tutor_quiz: __('Quiz', 'tutor'),
@@ -113,7 +120,7 @@ const modalTitle: {
 } as const;
 
 const modalIcon: {
-  [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: IconCollection;
+  [key in Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>]: IconCollection;
 } = {
   lesson: 'lesson',
   tutor_quiz: 'quiz',
@@ -128,7 +135,7 @@ const editAbleContentTypes = [
   'tutor_h5p_quiz',
   'tutor_zoom_meeting',
   'tutor-google-meet',
-] as const;
+];
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
@@ -174,6 +181,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const deleteGoogleMeetMutation = useDeleteContentMutation();
   const deleteZoomMeetingMutation = useDeleteContentMutation();
   const exportQuizMutation = useExportQuizMutation();
+  const deleteContentBankContentMutation = useDeleteContentBankContentMutation();
 
   const handleShowModalOrPopover = () => {
     const contentType = type as keyof typeof modalComponent;
@@ -215,6 +223,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       await deleteGoogleMeetMutation.mutateAsync(contentId);
     } else if (type === 'tutor_zoom_meeting') {
       await deleteZoomMeetingMutation.mutateAsync(contentId);
+    } else if (['cb-lesson', 'cb-assignment'].includes(type)) {
+      await deleteContentBankContentMutation.mutateAsync({ topicId, contentId });
     }
 
     setIsDeletePopoverOpen(false);
@@ -223,7 +233,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
   const handleDuplicate = () => {
     const convertedContentType: {
-      [key in Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]:
+      [key in Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>]:
         | 'lesson'
         | 'assignment'
         | 'answer'
@@ -240,7 +250,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
     duplicateContentMutation.mutateAsync({
       course_id: courseId,
       content_id: contentId,
-      content_type: convertedContentType[type as Exclude<TopicContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
+      content_type:
+        convertedContentType[
+          type as Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>
+        ],
     });
     onCopy?.();
   };
@@ -394,7 +407,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           deleteContentMutation.isPending ||
           deleteQuizMutation.isPending ||
           deleteGoogleMeetMutation.isPending ||
-          deleteZoomMeetingMutation.isPending
+          deleteZoomMeetingMutation.isPending ||
+          deleteContentBankContentMutation.isPending
         }
         triggerRef={deleteRef}
         closePopover={noop}
