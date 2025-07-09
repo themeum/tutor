@@ -598,7 +598,7 @@ interface DeleteContentBankContentPayload {
 
 const deleteContentBankContent = ({ topicId, contentId }: DeleteContentBankContentPayload) => {
   return wpAjaxInstance.post<string, TutorMutationResponse<DeleteContentBankContentPayload>>(
-    endpoints.DELETE_CONTENT_BANK_CONTENT_TO_COURSE,
+    endpoints.DELETE_CONTENT_BANK_CONTENT_FROM_COURSE,
     {
       topic_id: topicId,
       content_id: contentId,
