@@ -220,6 +220,7 @@ export const icons = [
   'attachmentLine',
   'primeCheckCircle',
   'contentBank',
+  'sort',
   'sortASC',
   'sortDESC',
   'mageFilter',

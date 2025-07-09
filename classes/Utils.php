@@ -10711,4 +10711,49 @@ class Utils {
 		}
 		return $branch;
 	}
+
+	/**
+	 * Render SVG icon
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string  $name Icon name
+	 * @param integer $width Icon width
+	 * @param integer $height Icon height
+	 * @param array   $attributes Custom attribures
+	 *
+	 * @return void
+	 */
+	function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
+		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
+		if ( ! file_exists( $icon_path ) ) {
+			return;
+		}
+
+		$svg = file_get_contents( $icon_path );
+		if ( ! $svg ) {
+			return;
+		}
+
+		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
+		if ( ! $matches ) {
+			return;
+		}
+
+		$viewBox  = $matches[1];
+		$innerSvg = $matches[2];
+
+		$attr_string = sprintf(
+			'width="%d" height="%d" viewBox="%s" role="presentation" aria-hidden="true"',
+			$width,
+			$height,
+			esc_attr( $viewBox ),
+		);
+
+		foreach ( $attributes as $key => $value ) {
+			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+		}
+
+		echo sprintf( '<svg %s>%s</svg>', $attr_string, $innerSvg );
+	}
 }
