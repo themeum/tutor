@@ -1,26 +1,63 @@
 import { readdirSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
-function toCamelCase(input: string): string {
-  return input.replace(/-([a-z])/g, (_, char) => char.toUpperCase());
-}
-
 const ICONS_DIR = resolve('./assets/icons');
-const OUTPUT_FILE = resolve('./assets/react/v3/shared/icons/types.ts');
+const TS_OUTPUT_FILE = resolve('./assets/react/v3/shared/icons/types.ts');
+const PHP_OUTPUT_FILE = resolve('./classes/Icon.php');
 
-const files = readdirSync(ICONS_DIR)
+const iconNames = readdirSync(ICONS_DIR)
   .filter((file) => file.endsWith('.svg'))
-  .map((file) => file.replace(/\.svg$/, ''))
-  .map(toCamelCase)
-  .map((name) => `'${name}'`)
-  .sort();
+  .map((file) => file.replace(/\.svg$/, ''));
 
-const typeDef = `// This file is auto-generated. Run "npm run generate:icon-types" to generate again.
-export const icons = [${files.join(', ')}] as const;
+// ------------------------
+// TypeScript Output
+// ------------------------
+const tsNames = iconNames
+  .map((name) => name.replace(/-([a-z])/g, (_, char) => char.toUpperCase()))
+  .map((name) => `'${name}'`)
+  .sort()
+  .join(', ');
+
+const tsContent = `// This file is auto-generated. Run "npm run generate:icon-types" to generate again.
+export const icons = [${tsNames}] as const;
 
 export type IconCollection = (typeof icons)[number];
 `;
 
-writeFileSync(OUTPUT_FILE, typeDef);
+writeFileSync(TS_OUTPUT_FILE, tsContent);
 // eslint-disable-next-line no-console
-console.log('✅ icons/types.ts updated.');
+console.log('✅ TypeScript icons/types.ts updated.');
+
+// ------------------------
+// PHP Class Output
+// ------------------------
+const phpNames = iconNames
+  .map((name) => `    const ${name.replaceAll('-', '_').toUpperCase()} = '${name}';`)
+  .sort()
+  .join('\n');
+
+const phpClass = `<?php
+/**
+ * This file is auto-generated. Run "npm run generate:icon-types" to generate again.
+ *
+ * @package Tutor
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 3.7.0
+ */
+
+namespace TUTOR;
+
+/**
+ * Icon class for Icon Names
+ *
+ * @since 3.7.0
+ */
+final class Icon {
+${phpNames}
+}
+`;
+
+writeFileSync(PHP_OUTPUT_FILE, phpClass);
+// eslint-disable-next-line no-console
+console.log('✅ PHP Icon class generated.');
