@@ -10740,20 +10740,20 @@ class Utils {
 			return;
 		}
 
-		$viewBox  = $matches[1];
-		$innerSvg = $matches[2];
+		$view_box  = $matches[1];
+		$inner_svg = $matches[2];
 
 		$attr_string = sprintf(
 			'width="%d" height="%d" viewBox="%s" role="presentation" aria-hidden="true"',
-			$width,
-			$height,
-			esc_attr( $viewBox ),
+			esc_attr( $width ),
+			esc_attr( $height ),
+			esc_attr( $view_box ),
 		);
 
 		foreach ( $attributes as $key => $value ) {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		echo sprintf( '<svg %s>%s</svg>', $attr_string, $innerSvg );
+		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 }
