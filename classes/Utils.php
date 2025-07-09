@@ -10740,8 +10740,7 @@ class Utils {
 			return;
 		}
 
-		$view_box  = $matches[1];
-		$inner_svg = $matches[2];
+		list( $svg_tag, $view_box, $inner_svg ) = $matches;
 
 		$attr_string = sprintf(
 			'width="%d" height="%d" viewBox="%s" role="presentation" aria-hidden="true"',
