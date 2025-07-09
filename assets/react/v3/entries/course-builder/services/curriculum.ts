@@ -552,3 +552,41 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
     enabled: !!meetingId && !!topicId,
   });
 };
+
+interface AddContentBankContentToCoursePayload {
+  course_id: ID;
+  topic_id: ID;
+  content_ids: ID[];
+  next_content_order: number;
+}
+
+const addContentBankContentToCourse = (payload: AddContentBankContentToCoursePayload) => {
+  return wpAjaxInstance.post<AddContentBankContentToCoursePayload, TutorMutationResponse<ID[]>>(
+    endpoints.ADD_CONTENT_BANK_CONTENT_TO_COURSE,
+    payload,
+  );
+};
+
+export const useAddContentBankContentToCourseMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: addContentBankContentToCourse,
+    onSuccess: (response, payload) => {
+      if (response.status_code === 200) {
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', payload.course_id],
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
+  });
+};
