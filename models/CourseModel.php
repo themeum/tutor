@@ -1028,4 +1028,32 @@ class CourseModel {
 
 		return (int) $total_count;
 	}
+
+	/**
+	 * Get course dropdown options
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return array
+	 */
+	public static function get_course_dropdown_options() {
+		$course_options = array(
+			array(
+				'key'   => '',
+				'title' => __( 'All Courses', 'tutor' ),
+			),
+		);
+
+		$courses = current_user_can( 'administrator' ) ? self::get_courses() : self::get_courses_by_instructor();
+		if ( ! empty( $courses ) ) {
+			foreach ( $courses as $course ) {
+				$course_options[] = array(
+					'key'   => $course->ID,
+					'title' => $course->post_title,
+				);
+			}
+		}
+
+		return $course_options;
+	}
 }
