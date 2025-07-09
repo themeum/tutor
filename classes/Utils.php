@@ -10756,4 +10756,17 @@ class Utils {
 
 		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
+
+	/**
+	 * Get SVG icon url
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string $name Icon name
+	 *
+	 * @return string
+	 */
+	function get_svg_icon_url( $name ) {
+		return tutor()->url . 'assets/icons/' . $name . '.svg';
+	}
 }
