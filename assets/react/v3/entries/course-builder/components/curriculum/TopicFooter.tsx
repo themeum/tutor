@@ -255,6 +255,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                   props: {
                     type: 'lesson_assignment',
                     topicId: topicId,
+                    contents: topic.contents,
                     nextContentOrder: nextContentOrder,
                   },
                 });

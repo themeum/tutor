@@ -248,6 +248,7 @@ export type TopicContentType =
   | 'tutor-google-meet'
   | 'tutor_zoom_meeting'
   | 'lesson'
+  | 'cb-lesson'
   | 'tutor_quiz'
   | 'tutor_assignments'
   | 'tutor_h5p_quiz';

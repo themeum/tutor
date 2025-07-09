@@ -33,6 +33,7 @@ const CollectionListTable = ({
     page: pageInfo.page,
     per_page: itemsPerPage,
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
+    hide_empty: 1,
   });
 
   const fetchedItems = useMemo(() => getCollectionListQuery.data?.data ?? [], [getCollectionListQuery.data]);

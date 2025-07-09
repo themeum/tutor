@@ -7,7 +7,7 @@ import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper'
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
 import CollectionListTable from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/CollectionListTable';
-import { useAddContentBankContentToCourseMutation } from '@CourseBuilderServices/curriculum';
+import { type Content, useAddContentBankContentToCourseMutation } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { spacing } from '@TutorShared/config/styles';
@@ -26,6 +26,7 @@ interface CourseListModalProps extends ModalProps {
   ) => void;
   type: 'lesson_assignment' | 'question';
   topicId?: ID;
+  contents?: Content[];
   nextContentOrder?: number;
 }
 
@@ -36,6 +37,7 @@ export interface ContentSelectionForm {
   contents: (ContentBankContent & {
     question?: QuizQuestion;
   })[];
+  existingContentIds: ID[];
 }
 
 const CollectionListModal = ({
@@ -44,12 +46,14 @@ const CollectionListModal = ({
   onAddContent,
   type,
   topicId,
+  contents,
   nextContentOrder,
 }: CourseListModalProps) => {
   const form = useFormWithGlobalError<ContentSelectionForm>({
     defaultValues: {
       selectedCollection: null,
       contents: [],
+      existingContentIds: contents?.map((item) => item.ID) ?? [],
     },
   });
   const addContentBankContentToCourseMutation = useAddContentBankContentToCourseMutation();
