@@ -50,6 +50,68 @@ class Container {
 	}
 
 	/**
+	 * Get a registered binding, singleton, or instance without resolving it.
+	 *
+	 * @param string $abstract abstract.
+	 *
+	 * @return mixed|null Returns the binding, singleton, or instance if found; otherwise null.
+	 */
+	public static function get( string $abstract ) {
+		if ( isset( self::$instances[ $abstract ] ) ) {
+			return self::$instances[ $abstract ];
+		}
+
+		if ( isset( self::$singletons[ $abstract ] ) ) {
+			return self::$singletons[ $abstract ];
+		}
+
+		if ( isset( self::$bindings[ $abstract ] ) ) {
+			return self::$bindings[ $abstract ];
+		}
+
+		return null;
+	}
+
+	/**
+	 * Check if a binding or instance exists.
+	 *
+	 * @param string $abstract abstract.
+	 *
+	 * @return bool
+	 */
+	public static function has( string $abstract ): bool {
+		return isset( self::$bindings[ $abstract ] ) ||
+				isset( self::$singletons[ $abstract ] ) ||
+				isset( self::$instances[ $abstract ] );
+	}
+
+	/**
+	 * Remove a binding, singleton, or instance.
+	 *
+	 * @param string $abstract abstract.
+	 *
+	 * @return void
+	 */
+	public static function remove( string $abstract ): void {
+		unset(
+			self::$bindings[ $abstract ],
+			self::$singletons[ $abstract ],
+			self::$instances[ $abstract ]
+		);
+	}
+
+	/**
+	 * Clear all bindings, singletons, and instances.
+	 *
+	 * @return void
+	 */
+	public static function clear(): void {
+		self::$bindings   = array();
+		self::$singletons = array();
+		self::$instances  = array();
+	}
+
+	/**
 	 * Register a singleton binding.
 	 *
 	 * @param string          $abstract abstract.
