@@ -1,3 +1,4 @@
+import { exec } from 'child_process';
 import { readdirSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
@@ -14,12 +15,12 @@ const iconNames = readdirSync(ICONS_DIR)
 // ------------------------
 const tsNames = iconNames
   .map((name) => name.replace(/-([a-z])/g, (_, char) => char.toUpperCase()))
-  .map((name) => `'${name}'`)
+  .map((name) => `  '${name}'`)
   .sort()
-  .join(', ');
+  .join(',\n');
 
 const tsContent = `// This file is auto-generated. Run "npm run generate:icon-types" to generate again.
-export const icons = [${tsNames}] as const;
+export const icons = [\n${tsNames},\n] as const;
 
 export type IconCollection = (typeof icons)[number];
 `;
@@ -59,5 +60,6 @@ ${phpNames}
 `;
 
 writeFileSync(PHP_OUTPUT_FILE, phpClass);
+exec('phpcbf classes/Icon.php');
 // eslint-disable-next-line no-console
 console.log('✅ PHP Icon class generated.');
