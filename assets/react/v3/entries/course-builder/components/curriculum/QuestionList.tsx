@@ -239,12 +239,12 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       const question = content.question;
       return {
         ...question,
-        _data_status: QuizDataStatus.UPDATE,
+        _data_status: QuizDataStatus.NEW,
         is_cb_question: true,
         question_answers: question.question_answers.map((answer) => ({
           ...answer,
           is_saved: true,
-          _data_status: QuizDataStatus.UPDATE,
+          _data_status: QuizDataStatus.NEW,
         })),
       };
     });
