@@ -73,7 +73,7 @@ const endpoints = {
   UPDATE_COURSE_CONTENT_ORDER: 'tutor_update_course_content_order',
   DUPLICATE_CONTENT: 'tutor_duplicate_content',
   ADD_CONTENT_BANK_CONTENT_TO_COURSE: 'tutor_content_bank_add_content_to_course',
-  DELETE_CONTENT_BANK_CONTENT_TO_COURSE: 'tutor_content_bank_remove_content_from_course',
+  DELETE_CONTENT_BANK_CONTENT_FROM_COURSE: 'tutor_content_bank_remove_content_from_course',
 
   // LESSON
   GET_LESSON_DETAILS: 'tutor_lesson_details',
