@@ -241,7 +241,7 @@ class Addons {
 			),
 			'content-bank'             => array(
 				'name'        => __( 'Content Bank', 'tutor' ),
-				'description' => __( 'Reuse contents on course creation', 'tutor' ),
+				'description' => __( 'Create content once and use it across multiple courses.', 'tutor' ),
 			),
 			'social-login'             => array(
 				'name'        => __( 'Social Login', 'tutor' ),
