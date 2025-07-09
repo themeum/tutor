@@ -313,6 +313,7 @@ export interface QuizQuestionOption {
 
 export interface QuizQuestion {
   _data_status: QuizDataStatus;
+  is_cb_question?: boolean;
   question_id: ID;
   question_title: string;
   question_description: string;

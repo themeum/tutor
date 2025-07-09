@@ -17,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
@@ -29,9 +30,8 @@ import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankCont
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import Button from '@TutorShared/atoms/Button';
 import { tutorConfig } from '@TutorShared/config/config';
-import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
@@ -46,7 +46,7 @@ import {
   type QuizQuestion,
   type QuizQuestionType,
 } from '@TutorShared/utils/types';
-import { nanoid, noop } from '@TutorShared/utils/util';
+import { isAddonEnabled, nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
   label: string;
@@ -240,6 +240,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       return {
         ...question,
         _data_status: QuizDataStatus.UPDATE,
+        is_cb_question: true,
         question_answers: question.question_answers.map((answer) => ({
           ...answer,
           is_saved: true,
@@ -440,48 +441,50 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               </Show>
             ))}
             <Show
-              when={isTutorPro}
+              when={!isTutorPro}
               fallback={
-                <div css={styles.addFormContentBankButton}>
-                  <ProBadge size="small">
+                <Show when={isAddonEnabled(Addons.CONTENT_BANK)}>
+                  <div css={styles.addFormContentBankButton}>
                     <Button
-                      disabled
                       variant="secondary"
                       size="small"
-                      onClick={noop}
+                      onClick={() => {
+                        showModal({
+                          component: CollectionListModal,
+                          props: {
+                            title: __('Content Bank', 'tutor'),
+                            type: 'question',
+                            onAddContent: (contents) => {
+                              handleAddContentBankBulkQuestions(
+                                contents as (ContentBankContent & {
+                                  question: QuizQuestion;
+                                })[],
+                              );
+                            },
+                          },
+                        });
+                        setIsOpen(false);
+                      }}
                       icon={<SVGIcon name="contentBank" width={24} height={24} />}
                     >
                       {__('Add from Content Bank', 'tutor')}
                     </Button>
-                  </ProBadge>
-                </div>
+                  </div>
+                </Show>
               }
             >
               <div css={styles.addFormContentBankButton}>
-                <Button
-                  variant="secondary"
-                  size="small"
-                  onClick={() => {
-                    showModal({
-                      component: CollectionListModal,
-                      props: {
-                        title: __('Content Bank', 'tutor'),
-                        type: 'question',
-                        onAddContent: (contents) => {
-                          handleAddContentBankBulkQuestions(
-                            contents as (ContentBankContent & {
-                              question: QuizQuestion;
-                            })[],
-                          );
-                        },
-                      },
-                    });
-                    setIsOpen(false);
-                  }}
-                  icon={<SVGIcon name="contentBank" width={24} height={24} />}
-                >
-                  {__('Add from Content Bank', 'tutor')}
-                </Button>
+                <ProBadge size="small">
+                  <Button
+                    disabled
+                    variant="secondary"
+                    size="small"
+                    onClick={noop}
+                    icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                  >
+                    {__('Add from Content Bank', 'tutor')}
+                  </Button>
+                </ProBadge>
               </div>
             </Show>
           </div>
