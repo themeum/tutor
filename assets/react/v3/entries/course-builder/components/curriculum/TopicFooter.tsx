@@ -225,45 +225,47 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
         </div>
         <div css={styles.rightButtons}>
           <Show
-            when={isTutorPro}
+            when={!isTutorPro}
             fallback={
-              <ProBadge>
+              <Show when={isAddonEnabled(Addons.CONTENT_BANK)}>
                 <Button
                   variant="tertiary"
                   isOutlined
                   size="small"
                   icon={<SVGIcon name="contentBank" width={24} height={24} />}
-                  disabled
-                  onClick={noop}
+                  disabled={!topic.isSaved}
+                  buttonCss={styles.contentButton}
+                  onClick={() => {
+                    showModal({
+                      id: 'content-bank-collection-list',
+                      component: CollectionListModal,
+                      props: {
+                        type: 'lesson_assignment',
+                        topicId: topicId,
+                        nextContentOrder: nextContentOrder,
+                      },
+                    });
+                  }}
                 >
                   {__('Content Bank', 'tutor')}
                 </Button>
-              </ProBadge>
+              </Show>
             }
           >
-            <Button
-              variant="tertiary"
-              isOutlined
-              size="small"
-              icon={<SVGIcon name="contentBank" width={24} height={24} />}
-              disabled={!topic.isSaved}
-              buttonCss={styles.contentButton}
-              onClick={() => {
-                showModal({
-                  id: 'content-bank-collection-list',
-                  component: CollectionListModal,
-                  props: {
-                    type: 'lesson_assignment',
-                    topicId: topicId,
-                    contents: topic.contents,
-                    nextContentOrder: nextContentOrder,
-                  },
-                });
-              }}
-            >
-              {__('Content Bank', 'tutor')}
-            </Button>
+            <ProBadge>
+              <Button
+                variant="tertiary"
+                isOutlined
+                size="small"
+                icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                disabled
+                onClick={noop}
+              >
+                {__('Content Bank', 'tutor')}
+              </Button>
+            </ProBadge>
           </Show>
+
           <Show
             when={!isTutorPro || hasLiveAddons}
             fallback={
@@ -308,7 +310,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
               closePopover={() => setIsThreeDotOpen(false)}
               disabled={!topic.isSaved}
               dotsOrientation="vertical"
-              maxWidth={isTutorPro ? '220px' : '240px'}
+              maxWidth={isTutorPro ? '220px' : '250px'}
               isInverse
               arrowPosition="auto"
               hideArrow
