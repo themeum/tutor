@@ -52,6 +52,7 @@ class QuizModel {
 				INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
 				INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID 
 			WHERE course.post_type=%s
+				AND course.post_status = 'publish'
 				AND quiz.post_type='tutor_quiz'";
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared

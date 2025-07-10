@@ -155,10 +155,8 @@ const Additional = () => {
                   removeBorder={false}
                   emptyStateImage={attachmentsPro}
                   emptyStateImage2x={attachmentsPro2x}
-                  title={__(
-                    // prettier-ignore
-                    __( 'Provide additional resources like downloadable files and reference materials.', 'tutor'),
-                  )}
+                  // prettier-ignore
+                  title={__('Provide additional resources like downloadable files and reference materials.', 'tutor')}
                 />
               </Show>
             }
