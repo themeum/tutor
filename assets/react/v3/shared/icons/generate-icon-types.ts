@@ -50,7 +50,7 @@ const phpClass = `<?php
 namespace TUTOR;
 
 /**
- * Icon class for Icon Names
+ * Icon class for Icon Names.
  *
  * @since 3.7.0
  */

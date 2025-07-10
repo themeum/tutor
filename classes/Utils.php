@@ -10717,14 +10717,14 @@ class Utils {
 	 *
 	 * @since 3.7.0
 	 *
-	 * @param string  $name Icon name
-	 * @param integer $width Icon width
-	 * @param integer $height Icon height
-	 * @param array   $attributes Custom attribures
+	 * @param string  $name Icon name.
+	 * @param integer $width Icon width.
+	 * @param integer $height Icon height.
+	 * @param array   $attributes Custom attributes.
 	 *
 	 * @return void
 	 */
-	function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
 			return;
@@ -10761,11 +10761,11 @@ class Utils {
 	 *
 	 * @since 3.7.0
 	 *
-	 * @param string $name Icon name
+	 * @param string $name Icon name.
 	 *
 	 * @return string
 	 */
-	function get_svg_icon_url( $name ) {
+	public function get_svg_icon_url( $name ) {
 		return tutor()->url . 'assets/icons/' . $name . '.svg';
 	}
 }
