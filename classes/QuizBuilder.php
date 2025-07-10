@@ -175,7 +175,7 @@ class QuizBuilder {
 		foreach ( $questions as $question ) {
 			$data_status = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
 			$question_order++;
-			if ( isset( $question['is_cb_question'] ) ) {
+			if ( isset( $question['is_cb_question'], $question['cb_action'] ) && 'link' === $question['cb_action'] ) {
 				$question['question_order'] = $question_order;
 				do_action( 'tutor_content_bank_question_linked_to_quiz', $quiz_id, (object) $question );
 				continue;
@@ -189,6 +189,12 @@ class QuizBuilder {
 			if ( self::FLAG_NEW === $data_status ) {
 				$wpdb->insert( $questions_table, $question_data );
 				$question_id = $wpdb->insert_id;
+
+				if ( isset( $question['is_cb_question'] ) ) {
+					$question['question_order']  = $question_order;
+					$question['new_question_id'] = $question_id;
+					do_action( 'tutor_content_bank_question_added_to_quiz', $quiz_id, (object) $question );
+				}
 			}
 
 			// Update question.

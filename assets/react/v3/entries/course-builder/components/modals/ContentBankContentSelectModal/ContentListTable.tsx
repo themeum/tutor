@@ -337,6 +337,6 @@ const styles = {
     gap: ${spacing[12]};
   `,
   selectInput: css`
-    max-width: 100px;
+    max-width: 150px;
   `,
 };
