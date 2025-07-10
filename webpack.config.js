@@ -73,7 +73,12 @@ module.exports = (env, options) => {
                     terserOptions: {
                         compress: false,
                         ecma: 6,
-                        mangle: true,
+                        mangle: {
+                            reserved: ['__'],
+                        },
+                        format: {
+                            comments: /translators:/i,
+                        },
                     },
                     extractComments: false,
                 }),
