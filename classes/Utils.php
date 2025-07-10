@@ -10022,7 +10022,7 @@ class Utils {
 	/**
 	 * Get course meta data.
 	 *
-	 * @param int $course_id course id.
+	 * @param int|int[] $course_id course id.
 	 *
 	 * @return mixed
 	 */
@@ -10780,5 +10780,28 @@ class Utils {
 	 */
 	public function get_svg_icon_url( $name ) {
 		return tutor()->url . 'assets/icons/' . $name . '.svg';
+	}
+	
+	/**
+	 * Get script locale data for dynamic scripts
+	 *
+	 * @since 3.7.0
+	 * 
+	 * @param string $filename Filename
+	 * @param string $locale Locale
+	 *
+	 * @return array|null
+	 */
+	public function get_script_locale_data( string $filename, string $locale = 'en_US' ) {
+		$hash      = md5( "assets/js/lazy-chunks/{$filename}.js" );
+		$json_path = WP_CONTENT_DIR . "/languages/plugins/tutor-{$locale}-{$hash}.json";
+		
+		if ( file_exists( $json_path ) ) {
+			$contents = file_get_contents( $json_path );
+			$data     = json_decode( $contents, true );
+			return $data['locale_data'][ $data['domain'] ];
+		}
+
+		return null;
 	}
 }
