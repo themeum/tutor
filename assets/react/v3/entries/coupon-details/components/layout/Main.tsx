@@ -21,6 +21,7 @@ import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 let MainContent: React.FC;
 
 if (process.env.MAKE_POT) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   MainContent = require('./MainContent').default;
 } else {
   MainContent = lazy(() => import(/* webpackChunkName: "tutor-coupon-main-content" */ './MainContent'));

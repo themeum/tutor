@@ -7,10 +7,9 @@ describe('Tutor Dashboard Student Calendar', () => {
         req.alias = 'calendarAjaxRequest';
       }
     });
-    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.DASHBOARD}`);
+    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.CALENDAR}`);
     cy.loginAsStudent();
-    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.CALENDER}`);
-    cy.url().should('include', frontendUrls.dashboard.CALENDER);
+    cy.url().should('include', frontendUrls.dashboard.CALENDAR);
   });
 
   it('should visit all the upcoming events', () => {

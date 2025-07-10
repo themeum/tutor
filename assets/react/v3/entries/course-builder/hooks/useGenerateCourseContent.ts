@@ -1,13 +1,13 @@
 import {
+  type Topic,
+  useContentGenerationContext,
+} from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
+import {
   useGenerateCourseContentMutation,
   useGenerateCourseTopicContentMutation,
   useGenerateCourseTopicNamesMutation,
   useGenerateQuizQuestionsMutation,
 } from '@TutorShared/services/magic-ai';
-import {
-  type Topic,
-  useContentGenerationContext,
-} from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
 import { fetchImageUrlAsBase64 } from '@TutorShared/utils/util';
 
 import courseGenerationPlaceholderBlue from '@SharedImages/course-generation-placeholders/course-generation-placeholder-blue.webp';
@@ -65,12 +65,10 @@ export const useGenerateCourseContent = () => {
       const courseTitle = response.data;
       updateContents({ title: courseTitle, prompt }, pointer);
 
-      try {
-        const featuredImageResponse = await fetchImageUrlAsBase64(
-          courseGenerationPlaceholders[Math.floor(Math.random() * courseGenerationPlaceholders.length)],
-        );
-        updateContents({ featured_image: featuredImageResponse }, pointer);
-      } catch (error) {}
+      const featuredImageResponse = await fetchImageUrlAsBase64(
+        courseGenerationPlaceholders[Math.floor(Math.random() * courseGenerationPlaceholders.length)],
+      );
+      updateContents({ featured_image: featuredImageResponse }, pointer);
 
       try {
         const descriptionResponse = await generateCourseDescriptionMutation.mutateAsync({

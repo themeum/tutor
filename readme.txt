@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.6.1
+Stable tag: 3.6.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,21 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.6.3 - Jul 02, 2025
+
+Fix: WooCommerce products were not displaying correctly on the shop page.
+Fix: Course importing process was failing in certain scenarios. (Pro)
+Fix: Fixed wrong course content count while exporting courses. (Pro)
+
+= 3.6.2 - Jun 26, 2025
+
+Update: Pathwise theme is now fully functional.
+Fix: Resolved an issue where the wrong graph was displayed on the Earnings Report page. (Pro)
+Fix: Prevented scheduled courses from being purchasable via the WooCommerce shop page.
+Fix: Restored functionality of the "Filter by Course" option in the Student tab on the Analytics page. (Pro)
+Fix: Fixed the disappearing Save Settings button when monetization was set to Paid Memberships Pro (PMPro). (Pro)
+Fix: Ensured old bundled courses now appear correctly under the Courses tab for instructors. (Pro)
 
 = 3.6.1 - Jun 03, 2025
 

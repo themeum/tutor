@@ -22,8 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WooCommerce extends Tutor_Base {
 
 
-	const TUTOR_WC_GUEST_CUSTOMER_ID = '_tutor_wc_guest_customer_id';
-	const WC_STORE_API_DRAFT_ORDER   = 'store_api_draft_order';
+	const TUTOR_WC_GUEST_CUSTOMER_ID   = '_tutor_wc_guest_customer_id';
+	const WC_STORE_API_DRAFT_ORDER     = 'store_api_draft_order';
+	const TUTOR_COURSE_PRODUCT_ID_META = '_tutor_course_product_id';
 
 	/**
 	 * Register hooks
@@ -119,6 +120,67 @@ class WooCommerce extends Tutor_Base {
 		add_action( 'woocommerce_order_after_calculate_totals', array( $this, 'add_coupon_to_order' ), 10, 2 );
 
 		add_action( 'woocommerce_guest_session_to_user_id', array( $this, 'enroll_guest_user' ), 10, 2 );
+
+		add_filter( 'woocommerce_shortcode_products_query_results', array( $this, 'filter_products_query_results' ), 10, 2 );
+
+		add_filter( 'woocommerce_shortcode_products_query', array( $this, 'filter_tutor_course_products' ) );
+	}
+
+	/**
+	 * Filter tutor courses from shortcode shop page if enabled.
+	 *
+	 * @since 3.6.2
+	 *
+	 * @param array $query_args the query args.
+	 *
+	 * @return array
+	 */
+	public function filter_tutor_course_products( $query_args ) {
+		$hide_course_from_shop_page = (bool) get_tutor_option( 'hide_course_from_shop_page' );
+
+		if ( ! $hide_course_from_shop_page ) {
+			return $query_args;
+		}
+
+		$course_ids = ( new Course() )->get_connected_wc_product_ids();
+
+		$query_args['post__not_in'] = $course_ids;
+
+		return $query_args;
+	}
+
+	/**
+	 * Filter woocommerce shop query result to remove scheduled posts.
+	 *
+	 * @since 3.6.2
+	 *
+	 * @param \WP_Query $results the query result object.
+	 * @param object    $wc_shortcode_products_obj the shortcode product class object.
+	 *
+	 * @return array
+	 */
+	public function filter_products_query_results( $results, $wc_shortcode_products_obj ) {
+		$ids = $results->ids ?? array();
+
+		if ( $ids ) {
+			$filtered_ids = array_filter(
+				$ids,
+				function ( $val ) {
+					$course_id = (int) $this->get_post_id_by_meta_key_and_value( self::TUTOR_COURSE_PRODUCT_ID_META, $val );
+					if ( ! $course_id ) {
+						return true;
+					}
+
+					if ( $course_id && 'future' !== get_post_status( $course_id ) ) {
+						return true;
+					}
+				}
+			);
+
+			$results->ids = $filtered_ids;
+		}
+
+		return $results;
 	}
 
 	/**
@@ -692,7 +754,7 @@ class WooCommerce extends Tutor_Base {
 			 *
 			 * Possible follow-up fix: Only show a notice when
 			 * WooCommerce was re-activated after this forced
-			 * disabling of WooCommerce monetisation took place:
+			 * disabling of WooCommerce monetization took place:
 			 */
 			update_option( 'tutor_show_woocommerce_notice', true );
 		}

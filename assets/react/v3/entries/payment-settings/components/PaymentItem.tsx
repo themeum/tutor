@@ -77,6 +77,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     transition,
     opacity: isDragging ? 0.3 : undefined,
     background: isDragging ? colorTokens.stroke.hover : undefined,
+    boxShadow: isOverlay ? shadow.drag : undefined,
   };
 
   const convertToOptions = (options: Record<string, string>) => {
@@ -197,7 +198,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
   );
 
   return (
-    <div {...attributes} css={styles.wrapper({ isOverlay })} ref={setNodeRef}>
+    <div {...attributes} css={styles.wrapper} ref={setNodeRef}>
       <button {...listeners} type="button" css={styles.dragButton({ isOverlay })} data-drag-button>
         <SVGIcon width={24} height={24} name="dragVertical" />
       </button>
@@ -212,7 +213,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
         hasBorder
         noSeparator
         collapsed={isDragging || isCollapsed}
-        dataAttribute="data-card"
+        dataAttribute={`data-payment-item-${data.name}`}
         subscription={data.support_subscription}
         actionTray={paymentActionTray}
       >
@@ -334,7 +335,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 export default PaymentItem;
 
 const styles = {
-  wrapper: ({ isOverlay }: { isOverlay: boolean }) => css`
+  wrapper: css`
     position: relative;
 
     &:hover {
@@ -342,13 +343,6 @@ const styles = {
         opacity: 1;
       }
     }
-
-    ${isOverlay &&
-    css`
-      [data-card] {
-        box-shadow: ${shadow.drag} !important;
-      }
-    `}
   `,
   cardActions: css`
     display: flex;

@@ -163,6 +163,7 @@ const getVideoDuration = async ({ source, url, getYouTubeVideoDurationMutation }
     }
     return null;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error getting video duration:', error);
     return null;
   }
@@ -236,8 +237,6 @@ const FormVideoInput = ({
       if (posterUrl) {
         setLocalPoster(posterUrl);
       }
-    } catch (error) {
-      console.error(error);
     } finally {
       setIsThumbnailLoading(false);
     }
@@ -314,26 +313,22 @@ const FormVideoInput = ({
     }
 
     if (fieldValue.source === 'vimeo') {
-      getVimeoVideoDuration(fieldValue['source_vimeo' as keyof CourseVideo] || '')
-        .then((duration) => {
-          if (!duration) {
-            return;
-          }
+      getVimeoVideoDuration(fieldValue['source_vimeo' as keyof CourseVideo] || '').then((duration) => {
+        if (!duration) {
+          return;
+        }
 
-          setDuration(covertSecondsToHMS(Math.floor(duration)));
+        setDuration(covertSecondsToHMS(Math.floor(duration)));
 
-          if (onGetDuration) {
-            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-          }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        if (onGetDuration) {
+          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+        }
+      });
     }
 
     if (['external_url', 'html5'].includes(fieldValue.source)) {
-      getExternalVideoDuration(fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '')
-        .then((duration) => {
+      getExternalVideoDuration(fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '').then(
+        (duration) => {
           if (!duration) {
             return;
           }
@@ -343,10 +338,8 @@ const FormVideoInput = ({
           if (onGetDuration) {
             onGetDuration(covertSecondsToHMS(Math.floor(duration)));
           }
-        })
-        .catch((error) => {
-          console.error(error);
-        });
+        },
+      );
     }
 
     if (fieldValue.source === 'youtube' && tutorConfig.settings?.youtube_api_key_exist) {

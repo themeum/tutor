@@ -18,6 +18,7 @@ export const translateBeErrorMessage = (key: string): string => {
     return errorToMessage[key];
   }
 
+  // eslint-disable-next-line no-console
   console.error(`Missing BE error translations: ${key}`);
   return key;
 };

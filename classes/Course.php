@@ -1399,7 +1399,7 @@ class Course extends Tutor_Base {
 		wp_enqueue_editor();
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'wp-date', 'wp-i18n', 'wp-element', 'wp-api' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.js', array( 'wp-date', 'wp-i18n', 'wp-element', 'wp-api' ), TUTOR_VERSION, true );
 		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
 
 		wp_localize_script(
@@ -3103,5 +3103,23 @@ class Course extends Tutor_Base {
 		}
 
 		return $args;
+	}
+
+	/**
+	 * Get a list of possible course status.
+	 *
+	 * @since 3.6.2
+	 *
+	 * @return array
+	 */
+	public static function course_status_list() {
+		return array(
+			'publish',
+			'private',
+			'draft',
+			'trash',
+			'pending',
+			'future',
+		);
 	}
 }

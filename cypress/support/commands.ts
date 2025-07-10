@@ -1,4 +1,6 @@
+import endpoints from '@TutorShared/utils/endpoints';
 import { type Addon } from '@TutorShared/utils/util';
+import { backendUrls } from 'cypress/config/page-urls';
 import { type Interception } from 'cypress/types/net-stubbing';
 
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -37,7 +39,7 @@ declare global {
         apiFieldOption: string,
         dataValueAttribute: string,
       ): Chainable<JQuery<HTMLElement>>;
-      toggle(inputName: string, fieldId: string): Chainable<JQuery<HTMLElement>>;
+      toggle(inputName: string, fieldId: string, state?: boolean | undefined): Chainable<JQuery<HTMLElement>>;
       isEnrolled(): Chainable<JQuery<HTMLElement>>;
       handleCourseStart(): Chainable<JQuery<HTMLElement>>;
       completeLesson(): Chainable<JQuery<HTMLElement>>;
@@ -58,6 +60,8 @@ declare global {
       doesElementExist: (selector: string) => Chainable<boolean>;
       updateCourse: () => Chainable<void>;
       selectDate: (selector: string) => Chainable<void>;
+      getPHPSelectInput: (name: string, value: string) => Chainable<void>;
+      saveTutorSettings: () => Chainable<void>;
 
       // Course builder commands
       saveTopic(title: string, summary?: string): Chainable<void>;
@@ -73,6 +77,7 @@ declare global {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       waitAfterRequest(alias: string, additionalWaitMs?: number): Chainable<Interception<any, any>>;
       monetizedBy(): Chainable<string>;
+      deleteCourseById(courseId: string): Chainable<void>;
     }
   }
 }
@@ -159,19 +164,19 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
       $body.text().includes('No Data Found from your Search/Filter') ||
       $body.text().includes('No request found') ||
       $body.text().includes('No records found') ||
-      $body.text().includes('No Records Found')
+      $body.text().includes('No Records Found') ||
+      $body.text().includes('No Courses Found.')
     ) {
       cy.log('No data available');
     } else {
       cy.getByInputName('tutor-bulk-checkbox-all').then(($checkboxes) => {
         const checkboxesArray = Cypress._.toArray($checkboxes);
         const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
-        console.log(randomIndex);
         cy.wrap(checkboxesArray[randomIndex]).as('randomCheckbox');
         cy.get('@randomCheckbox').check();
         // cy.get(':nth-child(1) > :nth-child(1) > .td-checkbox > .tutor-form-check-input').check();
         cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
-        cy.get(`span[tutor-dropdown-item][data-key=${option}]`).click();
+        cy.get(`span[tutor-dropdown-item][data-key=${option}]`).eq(0).click();
 
         cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
         cy.get('#tutor-confirm-bulk-action').click();
@@ -185,7 +190,6 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
               cy.get(`select.tutor-table-row-status-update[data-id="${id}"]`)
                 .invoke('attr', 'data-status')
                 .then((status) => {
-                  console.log(status);
                   expect(status).to.include(option);
                 });
             }
@@ -204,7 +208,8 @@ Cypress.Commands.add('performBulkAction', (option) => {
       $body.text().includes('No request found') ||
       $body.text().includes('No Data Available in this Section') ||
       $body.text().includes('No records found') ||
-      $body.text().includes('No Records Found')
+      $body.text().includes('No Records Found') ||
+      $body.text().includes('No Courses Found.')
     ) {
       cy.log('No data available');
     } else {
@@ -212,10 +217,11 @@ Cypress.Commands.add('performBulkAction', (option) => {
       cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
 
       cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`)
+        .eq(0)
         .invoke('text')
         .then((text) => {
           const expectedValue = text.trim();
-          cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).click();
+          cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).eq(0).click();
           cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
           cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
           cy.reload();
@@ -287,7 +293,6 @@ Cypress.Commands.add(
               const $randomOption = Cypress.$($options[randomIndex]);
               const selectedOptionText = $randomOption.text().trim();
               cy.wrap($randomOption).find(dropdownTextSelector).click();
-              console.log(`drop `, selectedOptionText);
               cy.get('body').then(($body) => {
                 if (
                   $body.text().includes('No Data Found from your Search/Filter') ||
@@ -301,7 +306,6 @@ Cypress.Commands.add(
                   cy.wait(500);
                   cy.get(elementTitleSelector).each(($element) => {
                     const elementText = $element.text().trim();
-                    console.log('el ', elementText);
                     expect(elementText).to.contain(selectedOptionText);
                   });
                 }
@@ -395,7 +399,8 @@ Cypress.Commands.add(
         $body.text().includes('No request found') ||
         $body.text().includes('No Data Available in this Section') ||
         $body.text().includes('No records found') ||
-        $body.text().includes('No Records Found')
+        $body.text().includes('No Records Found') ||
+        $body.text().includes('No Courses Found.')
       ) {
         cy.log('No data available');
       } else {
@@ -456,33 +461,46 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add('toggle', (inputName, fieldId) => {
+Cypress.Commands.add('toggle', (inputName, fieldId, state = undefined) => {
   cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
     if (req.body.includes('tutor_option_save')) {
       req.alias = 'ajaxRequest';
     }
   });
-  cy.get(`${fieldId} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`).click();
 
-  cy.getByInputName(`${inputName}`)
-    .invoke('attr', 'value')
-    .then((dataValue) => {
-      cy.contains('Save Changes').click({ force: true });
+  const toggleSelector = `${fieldId} > .tutor-option-field-input > .tutor-form-toggle > .tutor-form-toggle-control`;
+  const checkboxSelector = `${fieldId} > .tutor-option-field-input > .tutor-form-toggle > input[type="checkbox"]`;
 
-      cy.wait('@ajaxRequest').then((interception) => {
-        if (interception.response) {
-          expect(interception.response?.body.success).to.equal(true);
-        } else {
-          throw new Error('Response is undefined');
-        }
+  // Check the current toggle state
+  cy.get(checkboxSelector).then(($checkbox) => {
+    const isChecked = $checkbox.prop('checked');
 
-        const requestBody = interception.request.body;
-        const params = new URLSearchParams(requestBody);
-        const tutorOptionId = params.get(`${inputName}`);
+    const shouldToggle = (state && !isChecked) || (!state && isChecked) || state === null; // toggle by default if no explicit state
 
-        expect(tutorOptionId).to.equal(dataValue);
+    if (shouldToggle) {
+      cy.get(toggleSelector).click({ force: true });
+    }
+
+    cy.getByInputName(`${inputName}`)
+      .invoke('attr', 'value')
+      .then((dataValue) => {
+        cy.contains('Save Changes').click({ force: true });
+
+        cy.wait('@ajaxRequest').then((interception) => {
+          if (interception.response) {
+            expect(interception.response?.body.success).to.equal(true);
+          } else {
+            throw new Error('Response is undefined');
+          }
+
+          const requestBody = interception.request.body;
+          const params = new URLSearchParams(requestBody);
+          const tutorOptionId = params.get(`${inputName}`);
+
+          expect(tutorOptionId).to.equal(dataValue);
+        });
       });
-    });
+  });
 });
 
 Cypress.Commands.add('isEnrolled', () => {
@@ -949,4 +967,40 @@ Cypress.Commands.add('monetizedBy', () => {
   cy.window().then((win) => {
     return win._tutorobject.settings?.monetize_by;
   });
+});
+
+Cypress.Commands.add('getPHPSelectInput', (name: string, value: string) => {
+  cy.get(`select[name*="${name}"]`).next().click({ force: true });
+  cy.get('.tutor-form-select-options:visible').within(() => {
+    cy.get('span').contains(value).click();
+  });
+});
+
+Cypress.Commands.add('saveTutorSettings', () => {
+  cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+    if (req.body.includes('tutor_option_save')) {
+      req.alias = 'saveSettings';
+    }
+  });
+  cy.get('button#save_tutor_option').click({ force: true });
+  cy.waitAfterRequest('saveSettings');
+});
+
+Cypress.Commands.add('deleteCourseById', (id: string) => {
+  cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+    if (req.body.includes(endpoints.UPDATE_COURSE)) {
+      req.alias = 'updateCourse';
+    }
+  });
+  cy.visit(`${Cypress.env('base_url')}${backendUrls.COURSE_BUILDER}${id}`);
+  cy.loginAsAdmin();
+
+  cy.get('[data-cy=dropdown-trigger]').click();
+  cy.get('.tutor-portal-popover').within(() => {
+    cy.get('[data-cy=move-to-trash]').click();
+  });
+
+  cy.waitAfterRequest('updateCourse');
+  cy.wait(1000);
+  cy.url().should('include', '/wp-admin/admin.php?page=tutor');
 });
