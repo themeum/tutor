@@ -303,7 +303,6 @@ jQuery(document).ready(function($) {
 		e.preventDefault();
 		var $that = $(this);
 		let btnContent = $that.html();
-		console.log(tinymce.activeEditor.getContent());
 		$.ajax({
 			url: window.ajaxurl || _tutorobject.ajaxurl,
 			type: 'POST',

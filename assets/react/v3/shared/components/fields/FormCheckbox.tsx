@@ -37,31 +37,34 @@ const FormCheckbox = ({
         const { css, ...restInputProps } = inputProps;
 
         return (
-          <div css={styles.wrapper}>
-            <AtomCheckbox
-              {...field}
-              {...restInputProps}
-              inputCss={css}
-              labelCss={labelCss}
-              value={value}
-              disabled={disabled}
-              checked={field.value}
-              label={label}
-              onChange={() => {
-                field.onChange(!field.value);
+          <div>
+            <div css={styles.wrapper}>
+              <AtomCheckbox
+                {...field}
+                {...restInputProps}
+                inputCss={css}
+                labelCss={labelCss}
+                value={value}
+                disabled={disabled}
+                checked={field.value}
+                label={label}
+                onChange={() => {
+                  field.onChange(!field.value);
 
-                if (onChange) {
-                  onChange(!field.value);
-                }
-              }}
-            />
+                  if (onChange) {
+                    onChange(!field.value);
+                  }
+                }}
+              />
+
+              {helpText && (
+                <Tooltip content={helpText} placement="top" allowHTML>
+                  <SVGIcon name="info" width={20} height={20} />
+                </Tooltip>
+              )}
+            </div>
+
             {description && <p css={styles.description}>{description}</p>}
-
-            {helpText && (
-              <Tooltip content={helpText} placement="top" allowHTML>
-                <SVGIcon name="info" width={20} height={20} />
-              </Tooltip>
-            )}
           </div>
         );
       }}

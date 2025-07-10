@@ -1,5 +1,7 @@
 import Layout from '@CourseBuilderComponents/layouts/Layout';
 import RouteSuspense from '@TutorShared/components/RouteSuspense';
+import { tutorConfig } from '@TutorShared/config/config';
+import { setLocaleData } from '@wordpress/i18n';
 import React from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';
 import { CourseBuilderRouteConfigs } from './route-configs';
@@ -16,15 +18,18 @@ if (process.env.MAKE_POT) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   IconListPage = require('@CourseBuilderPages/IconList').default;
 } else {
-  CourseBasicPage = React.lazy(
-    () => import(/* webpackChunkName: "tutor-course-builder-basic" */ '@CourseBuilderPages/CourseBasic'),
-  );
-  CourseCurriculumPage = React.lazy(
-    () => import(/* webpackChunkName: "tutor-course-builder-curriculum" */ '@CourseBuilderPages/Curriculum'),
-  );
-  CourseAdditionalPage = React.lazy(
-    () => import(/* webpackChunkName: "tutor-course-builder-additional" */ '@CourseBuilderPages/Additional'),
-  );
+  CourseBasicPage = React.lazy(() => {
+    setLocaleData(tutorConfig.course_builder_basic_locales, 'tutor');
+    return import(/* webpackChunkName: "tutor-course-builder-basic" */ '@CourseBuilderPages/CourseBasic');
+  });
+  CourseCurriculumPage = React.lazy(() => {
+    setLocaleData(tutorConfig.course_builder_curriculum_locales, 'tutor');
+    return import(/* webpackChunkName: "tutor-course-builder-curriculum" */ '@CourseBuilderPages/Curriculum');
+  });
+  CourseAdditionalPage = React.lazy(() => {
+    setLocaleData(tutorConfig.course_builder_additional_locales, 'tutor');
+    return import(/* webpackChunkName: "tutor-course-builder-additional" */ '@CourseBuilderPages/Additional');
+  });
   IconListPage = React.lazy(
     () => import(/* webpackChunkName: "tutor-course-builder-icon" */ '@CourseBuilderPages/IconList'),
   );
