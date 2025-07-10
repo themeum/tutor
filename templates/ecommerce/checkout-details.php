@@ -115,6 +115,11 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 											<?php tutor_print_formatted_price( $item->regular_price ); ?>
 										</div>
 										<?php endif; ?>
+										<?php if ( $checkout_data->total_items > 1 && $item->tax_amount > 0 && $item->tax_collection ) : ?>
+										<div class="tutor-fs-8 tutor-color-muted tutor-checkout-incl-tax-label">
+											<?php echo esc_html( $item->tax_amount_readable ); ?>
+										</div>
+										<?php endif; ?>
 									</div>
 								</div>
 							</div>
@@ -179,7 +184,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 				<div class="tutor-fw-bold tutor-discount-amount">-<?php tutor_print_formatted_price( $checkout_data->coupon_discount ); ?></div>
 			</div>
 
-			<?php if ( $should_calculate_tax && $tax_rate > 0 && ! $is_tax_included_in_price ) : ?>
+			<?php if ( $checkout_data->tax_amount > 0 && ! $is_tax_included_in_price ) : ?>
 			<div class="tutor-checkout-summary-item tutor-checkout-tax-amount">
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold"><?php tutor_print_formatted_price( $checkout_data->tax_amount ); ?></div>
@@ -196,7 +201,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 			</div>
 			<div class="tutor-checkout-summary-item tutor-checkout-incl-tax-label">
 				<div></div>
-					<?php if ( $should_calculate_tax && $tax_rate > 0 && $is_tax_included_in_price ) : ?>
+					<?php if ( $checkout_data->tax_amount > 0 && $is_tax_included_in_price ) : ?>
 					<div class="tutor-fs-7 tutor-color-muted">
 						<?php
 						/* translators: %s: tax amount */

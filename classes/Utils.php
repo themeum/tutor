@@ -4089,7 +4089,7 @@ class Utils {
 	 *
 	 * @return array|null|object
 	 */
-	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true  ) {
+	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true ) {
 		global $wpdb;
 
 		$object_id = (int) $object_id;
@@ -8910,6 +8910,49 @@ class Utils {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Render list empty state template
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param array $data title and subtitle.
+	 *
+	 * @return void
+	 */
+	public function render_list_empty_state( $data = array() ) {
+		tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', $data );
+	}
+
+	/**
+	 * Get subtitle for list empty state.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return bool|string
+	 */
+	public function get_list_empty_state_subtitle() {
+		$subtitle = __( 'Try adjusting your filters.', 'tutor' );
+
+		$course            = isset( $_GET['course-id'] ) ? true : false;
+		$data              = isset( $_GET['data'] ) ? true : false;
+		$date              = isset( $_GET['date'] ) ? true : false;
+		$search            = isset( $_GET['search'] ) ? true : false;
+		$category          = isset( $_GET['category'] ) ? true : false;
+		$payment_status    = isset( $_GET['payment-status'] ) ? true : false;
+		$subscription_type = isset( $_GET['subscription-type'] ) ? true : false;
+		$applies_to        = isset( $_GET['applies_to'] ) ? true : false;
+
+		if ( $course || $data || $date || $search || $category || $payment_status || $subscription_type || $applies_to ) {
+			if ( $search ) {
+				return __( 'Try using different keywords.', 'tutor' );
+			}
+
+			return $subtitle;
+		}
+
+		return false;
 	}
 
 	/**

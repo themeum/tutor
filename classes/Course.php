@@ -1550,7 +1550,6 @@ class Course extends Tutor_Base {
 		$data['difficulty_levels']        = $difficulty_levels;
 		$data['supported_video_sources']  = $supported_video_sources;
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
-		$data['max_upload_size']          = size_format( wp_max_upload_size() );
 
 		if ( 'en_US' !== $data['local'] ) {
 			$data['course_builder_basic_locales']      = tutils()->get_script_locale_data( 'tutor-course-builder-basic', $data['local'] );
