@@ -52,6 +52,26 @@ class QuizAttempts extends AbstractCache {
 	public $data;
 
 	/**
+	 * Params for caching
+	 *
+	 * @var string
+	 *
+	 * @since 3.7.0
+	 */
+	public $params = array();
+
+	/**
+	 * Constructor to initialize query parameters for cache comparison.
+	 *
+	 * @param array $params The current query parameters (e.g., course_id, date, search).
+	 *
+	 * @since 2.7.0
+	 */
+	public function __construct( array $params = array() ) {
+		$this->params = $params;
+	}
+
+	/**
 	 * Key
 	 *
 	 * @since 2.0.6
@@ -65,10 +85,13 @@ class QuizAttempts extends AbstractCache {
 	 * Cache data
 	 *
 	 * @since 2.0.6
-	 * @return object
+	 * @return array
 	 */
 	public function cache_data() {
-		return $this->data;
+		return array(
+			'params' => $this->params,
+			'result' => $this->data,
+		);
 	}
 
 	/**
@@ -80,5 +103,18 @@ class QuizAttempts extends AbstractCache {
 	public function cache_time(): int {
 		$cache_time = self::HOUR_IN_SECONDS;
 		return $cache_time;
+	}
+
+	/**
+	 * Check if current params match cached params.
+	 *
+	 * @return bool
+	 */
+	public function is_same_query(): bool {
+		$cache = $this->get_cache();
+		if ( ! $cache || ! is_array( $cache ) || ! isset( $cache['params'] ) ) {
+			return false;
+		}
+		return $cache['params'] === $this->params;
 	}
 }

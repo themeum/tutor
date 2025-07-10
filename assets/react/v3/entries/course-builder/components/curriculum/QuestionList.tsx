@@ -17,6 +17,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
@@ -29,9 +30,8 @@ import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankCont
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import Button from '@TutorShared/atoms/Button';
 import { tutorConfig } from '@TutorShared/config/config';
-import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
@@ -46,7 +46,7 @@ import {
   type QuizQuestion,
   type QuizQuestionType,
 } from '@TutorShared/utils/types';
-import { nanoid, noop } from '@TutorShared/utils/util';
+import { isAddonEnabled, nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
   label: string;
@@ -239,11 +239,12 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       const question = content.question;
       return {
         ...question,
-        _data_status: QuizDataStatus.UPDATE,
+        _data_status: QuizDataStatus.NEW,
+        is_cb_question: true,
         question_answers: question.question_answers.map((answer) => ({
           ...answer,
           is_saved: true,
-          _data_status: QuizDataStatus.UPDATE,
+          _data_status: QuizDataStatus.NEW,
         })),
       };
     });
@@ -440,49 +441,51 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               </Show>
             ))}
             <Show
-              when={isTutorPro}
+              when={!isTutorPro}
               fallback={
-                <span css={styles.addFormContentBankButton}>
-                  <ProBadge size="tiny">
+                <Show when={isAddonEnabled(Addons.CONTENT_BANK)}>
+                  <div css={styles.addFormContentBankButton}>
                     <Button
-                      disabled
                       variant="secondary"
                       size="small"
-                      onClick={noop}
+                      onClick={() => {
+                        showModal({
+                          component: CollectionListModal,
+                          props: {
+                            title: __('Content Bank', 'tutor'),
+                            type: 'question',
+                            onAddContent: (contents) => {
+                              handleAddContentBankBulkQuestions(
+                                contents as (ContentBankContent & {
+                                  question: QuizQuestion;
+                                })[],
+                              );
+                            },
+                          },
+                        });
+                        setIsOpen(false);
+                      }}
                       icon={<SVGIcon name="contentBank" width={24} height={24} />}
                     >
                       {__('Add from Content Bank', 'tutor')}
                     </Button>
-                  </ProBadge>
-                </span>
+                  </div>
+                </Show>
               }
             >
-              <span css={styles.addFormContentBankButton}>
-                <Button
-                  variant="secondary"
-                  size="small"
-                  onClick={() => {
-                    showModal({
-                      component: CollectionListModal,
-                      props: {
-                        title: __('Content Bank', 'tutor'),
-                        type: 'question',
-                        onAddContent: (contents) => {
-                          handleAddContentBankBulkQuestions(
-                            contents as (ContentBankContent & {
-                              question: QuizQuestion;
-                            })[],
-                          );
-                        },
-                      },
-                    });
-                    setIsOpen(false);
-                  }}
-                  icon={<SVGIcon name="contentBank" width={24} height={24} />}
-                >
-                  {__('Add from Content Bank', 'tutor')}
-                </Button>
-              </span>
+              <div css={styles.addFormContentBankButton}>
+                <ProBadge size="small">
+                  <Button
+                    disabled
+                    variant="secondary"
+                    size="small"
+                    onClick={noop}
+                    icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                  >
+                    {__('Add from Content Bank', 'tutor')}
+                  </Button>
+                </ProBadge>
+              </div>
             </Show>
           </div>
         </Popover>
@@ -544,12 +547,11 @@ const styles = {
     border-bottom: 1px solid ${colorTokens.stroke.divider};
   `,
   addFormContentBankButton: css`
-    margin-inline: ${spacing[8]};
-    padding-block: ${spacing[8]};
+    padding: ${spacing[8]} ${spacing[16]};
     border-top: 1px solid ${colorTokens.stroke.divider};
 
     button {
-      margin: 0 ${spacing[8]};
+      width: 100%;
     }
   `,
   questionOptionsWrapper: css`

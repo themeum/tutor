@@ -50,9 +50,9 @@ $filters = array(
 		array(
 			'label'      => __( 'Status', 'tutor' ),
 			'field_type' => 'select',
-			'field_name' => 'data',
+			'field_name' => 'tab',
 			'options'    => Q_And_A::tabs_key_value(),
-			'value'      => Input::get( 'data', '' ),
+			'value'      => Input::get( 'tab', '' ),
 		),
 		array(
 			'label'      => __( 'Date', 'tutor' ),

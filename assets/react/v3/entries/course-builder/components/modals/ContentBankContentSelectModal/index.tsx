@@ -7,11 +7,13 @@ import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper'
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
 import CollectionListTable from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/CollectionListTable';
+import { type Content, useAddContentBankContentToCourseMutation } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type Collection, type ContentBankContent, type QuizQuestion } from '@TutorShared/utils/types';
+import { type Collection, type ContentBankContent, type ID, type QuizQuestion } from '@TutorShared/utils/types';
 import ContentListTable from './ContentListTable';
 import QuestionListTable from './QuestionListTable';
 
@@ -23,25 +25,56 @@ interface CourseListModalProps extends ModalProps {
     })[],
   ) => void;
   type: 'lesson_assignment' | 'question';
+  topicId?: ID;
+  contents?: Content[];
+  nextContentOrder?: number;
 }
+
+const courseId = getCourseId();
 
 export interface ContentSelectionForm {
   selectedCollection: Collection | null;
   contents: (ContentBankContent & {
     question?: QuizQuestion;
   })[];
+  existingContentIds: ID[];
 }
 
-const CollectionListModal = ({ closeModal, actions, onAddContent, type }: CourseListModalProps) => {
+const CollectionListModal = ({
+  closeModal,
+  actions,
+  onAddContent,
+  type,
+  topicId,
+  contents,
+  nextContentOrder,
+}: CourseListModalProps) => {
   const form = useFormWithGlobalError<ContentSelectionForm>({
     defaultValues: {
       selectedCollection: null,
       contents: [],
+      existingContentIds: contents?.map((item) => item.ID) ?? [],
     },
   });
+  const addContentBankContentToCourseMutation = useAddContentBankContentToCourseMutation();
 
-  const handleAddContent = (data: ContentSelectionForm) => {
+  const handleAddContent = async (data: ContentSelectionForm) => {
     onAddContent?.(data.contents);
+
+    if (type === 'lesson_assignment') {
+      const response = await addContentBankContentToCourseMutation.mutateAsync({
+        course_id: courseId,
+        topic_id: topicId || '',
+        content_ids: data.contents.map((content) => content.ID),
+        next_content_order: nextContentOrder || 0,
+      });
+
+      if (response.status_code === 200) {
+        closeModal({ action: 'CONFIRM' });
+        return;
+      }
+    }
+
     closeModal({ action: 'CONFIRM' });
   };
 
@@ -77,6 +110,7 @@ const CollectionListModal = ({ closeModal, actions, onAddContent, type }: Course
               variant="primary"
               onClick={form.handleSubmit(handleAddContent)}
               disabled={form.watch('contents').length === 0}
+              loading={type === 'lesson_assignment' && addContentBankContentToCourseMutation.isPending}
             >
               {__('Add', 'tutor')}
             </Button>

@@ -795,11 +795,11 @@ class OrderController {
 		);
 
 		if ( ! empty( $date ) ) {
-			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
+			$where['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
 		}
 
 		if ( ! empty( $payment_status ) ) {
-			$where['payment_status'] = $payment_status;
+			$where['o.payment_status'] = $payment_status;
 		}
 
 		$order_status = $this->model->get_order_status();

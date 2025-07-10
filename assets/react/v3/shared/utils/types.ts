@@ -248,6 +248,7 @@ export type TopicContentType =
   | 'tutor-google-meet'
   | 'tutor_zoom_meeting'
   | 'lesson'
+  | 'cb-lesson'
   | 'tutor_quiz'
   | 'tutor_assignments'
   | 'tutor_h5p_quiz';
@@ -312,6 +313,7 @@ export interface QuizQuestionOption {
 
 export interface QuizQuestion {
   _data_status: QuizDataStatus;
+  is_cb_question?: boolean;
   question_id: ID;
   question_title: string;
   question_description: string;

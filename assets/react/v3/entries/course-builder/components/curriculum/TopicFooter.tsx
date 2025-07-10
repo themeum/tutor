@@ -34,6 +34,7 @@ import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicFooterProps {
   topic: CourseTopicWithCollapse;
+  nextContentOrder: number;
 }
 
 const courseId = getCourseId();
@@ -41,7 +42,7 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasLiveAddons =
   isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION) || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 
-const TopicFooter = ({ topic }: TopicFooterProps) => {
+const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
   const topicId = getIdWithoutPrefix('topic-', topic.id);
 
   const { showToast } = useToast();
@@ -224,42 +225,47 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         </div>
         <div css={styles.rightButtons}>
           <Show
-            when={isTutorPro}
+            when={!isTutorPro}
             fallback={
-              <ProBadge>
+              <Show when={isAddonEnabled(Addons.CONTENT_BANK)}>
                 <Button
                   variant="tertiary"
                   isOutlined
                   size="small"
                   icon={<SVGIcon name="contentBank" width={24} height={24} />}
-                  disabled
-                  onClick={noop}
+                  disabled={!topic.isSaved}
+                  buttonCss={styles.contentButton}
+                  onClick={() => {
+                    showModal({
+                      id: 'content-bank-collection-list',
+                      component: CollectionListModal,
+                      props: {
+                        type: 'lesson_assignment',
+                        topicId: topicId,
+                        nextContentOrder: nextContentOrder,
+                      },
+                    });
+                  }}
                 >
                   {__('Content Bank', 'tutor')}
                 </Button>
-              </ProBadge>
+              </Show>
             }
           >
-            <Button
-              variant="tertiary"
-              isOutlined
-              size="small"
-              icon={<SVGIcon name="contentBank" width={24} height={24} />}
-              disabled={!topic.isSaved}
-              buttonCss={styles.contentButton}
-              onClick={() => {
-                showModal({
-                  id: 'content-bank-collection-list',
-                  component: CollectionListModal,
-                  props: {
-                    type: 'lesson_assignment',
-                  },
-                });
-              }}
-            >
-              {__('Content Bank', 'tutor')}
-            </Button>
+            <ProBadge>
+              <Button
+                variant="tertiary"
+                isOutlined
+                size="small"
+                icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                disabled
+                onClick={noop}
+              >
+                {__('Content Bank', 'tutor')}
+              </Button>
+            </ProBadge>
           </Show>
+
           <Show
             when={!isTutorPro || hasLiveAddons}
             fallback={
@@ -304,7 +310,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
               closePopover={() => setIsThreeDotOpen(false)}
               disabled={!topic.isSaved}
               dotsOrientation="vertical"
-              maxWidth={isTutorPro ? '220px' : '240px'}
+              maxWidth={isTutorPro ? '220px' : '250px'}
               isInverse
               arrowPosition="auto"
               hideArrow

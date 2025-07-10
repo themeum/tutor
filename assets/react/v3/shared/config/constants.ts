@@ -94,6 +94,7 @@ export enum Addons {
   WEGLOT = 'tutor-weglot',
   WPML_MULTILINGUAL_CMS = 'tutor-wpml',
   H5P_INTEGRATION = 'h5p',
+  CONTENT_BANK = 'content-bank',
 }
 
 export const VideoRegex = {
