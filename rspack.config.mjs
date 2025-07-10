@@ -152,19 +152,19 @@ const createConfig = (env, options) => {
 };
 
 const getReactEntries = () => ({
-  'tutor.min': './assets/react/v2/common.js',
-  'tutor-front.min': './assets/react/front/tutor-front.js',
-  'tutor-admin.min': './assets/react/admin-dashboard/tutor-admin.js',
-  'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
+  tutor: './assets/react/v2/common.js',
+  'tutor-front': './assets/react/front/tutor-front.js',
+  'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
+  'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
   'tutor-gutenberg': './assets/react/gutenberg/index.js',
-  'tutor-course-builder.min': './assets/react/v3/entries/course-builder/index.tsx',
-  'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
-  'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
-  'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
-  'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
-  'tutor-addon-list.min': './assets/react/v3/entries/addon-list/index.tsx',
-  'tutor-template-import-script.min': './assets/react/admin-dashboard/template-import-script.js',
-  'tutor-import-export.min': './assets/react/v3/entries/import-export/index.tsx',
+  'tutor-course-builder': './assets/react/v3/entries/course-builder/index.tsx',
+  'tutor-order-details': './assets/react/v3/entries/order-details/index.tsx',
+  'tutor-coupon': './assets/react/v3/entries/coupon-details/index.tsx',
+  'tutor-tax-settings': './assets/react/v3/entries/tax-settings/index.tsx',
+  'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
+  'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
+  'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
+  'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
 });
 
 const createResolveAliases = () => ({
@@ -189,9 +189,9 @@ const createResolveAliases = () => ({
 const createChunkFilename = (pathData) => {
   if (pathData.chunk.name?.startsWith('icon-')) {
     const iconName = pathData.chunk.name.replace(/^icon-/, '');
-    return `icons/${iconName}.min.js?ver=${version}`;
+    return `icons/${iconName}.js?ver=${version}`;
   }
-  return `lazy-chunks/[name].min.js?ver=${version}`;
+  return `lazy-chunks/[name].js?ver=${version}`;
 };
 
 export default (env, options) => {
