@@ -20,6 +20,7 @@
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run",
+    "generate:icon-types": "tsx ./assets/react/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -87,6 +88,7 @@
     "storybook": "^9.0.16",
     "storybook-react-rsbuild": "^2.0.2",
     "style-loader": "^4.0.0",
+    "tsx": "^4.20.3",
     "typescript-eslint": "^8.16.0",
     "webpack-node-externals": "^3.0.0"
   },

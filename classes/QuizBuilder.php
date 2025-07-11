@@ -173,7 +173,14 @@ class QuizBuilder {
 
 		$question_order = 0;
 		foreach ( $questions as $question ) {
-			$data_status      = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
+			$data_status = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
+			$question_order++;
+			if ( isset( $question['is_cb_question'], $question['cb_action'] ) && 'link' === $question['cb_action'] ) {
+				$question['question_order'] = $question_order;
+				do_action( 'tutor_content_bank_question_linked_to_quiz', $quiz_id, (object) $question );
+				continue;
+			}
+
 			$question_type    = Input::sanitize( $question['question_type'] );
 			$question_data    = $this->prepare_question_data( $quiz_id, $question );
 			$question_answers = isset( $question['question_answers'] ) ? $question['question_answers'] : array();
@@ -182,6 +189,12 @@ class QuizBuilder {
 			if ( self::FLAG_NEW === $data_status ) {
 				$wpdb->insert( $questions_table, $question_data );
 				$question_id = $wpdb->insert_id;
+
+				if ( isset( $question['is_cb_question'] ) ) {
+					$question['question_order']  = $question_order;
+					$question['new_question_id'] = $question_id;
+					do_action( 'tutor_content_bank_question_added_to_quiz', $quiz_id, (object) $question );
+				}
 			}
 
 			// Update question.
@@ -199,7 +212,6 @@ class QuizBuilder {
 			}
 
 			// Save sort order.
-			$question_order++;
 			$wpdb->update(
 				$questions_table,
 				array( 'question_order' => $question_order ),
@@ -291,7 +303,7 @@ class QuizBuilder {
 		if ( count( $deleted_question_ids ) ) {
 			$id_str = QueryHelper::prepare_in_clause( $deleted_question_ids );
             //phpcs:ignore -- sanitized $id_str.
-            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id IN (" . $id_str . ')' );
+            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE content_id IS NULL AND question_id IN (" . $id_str . ')' );
 			do_action( 'tutor_deleted_quiz_question_ids', $deleted_question_ids );
 		}
 

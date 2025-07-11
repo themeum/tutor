@@ -113,26 +113,28 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
           </Button>
         </Show>
 
-        <div>
-          <Button
-            ref={filterButtonRef}
-            variant="tertiary"
-            icon={<SVGIcon name="mageFilter" height={16} width={16} />}
-            buttonCss={styles.filterButton({
-              hasFilters: isQuestionType ? questionTypes.length > 0 : contentTypes.length > 0,
-            })}
-            onClick={() => setIsFiltersPopoverOpen((prev) => !prev)}
-          >
-            <span>{__('Filters', 'tutor')}</span>
+        <Show when={isQuestionType}>
+          <div>
+            <Button
+              ref={filterButtonRef}
+              variant="tertiary"
+              icon={<SVGIcon name="mageFilter" height={16} width={16} />}
+              buttonCss={styles.filterButton({
+                hasFilters: questionTypes.length > 0,
+              })}
+              onClick={() => setIsFiltersPopoverOpen((prev) => !prev)}
+            >
+              <span>{__('Filters', 'tutor')}</span>
 
-            <Show when={(!isQuestionType && contentTypes.length > 0) || (isQuestionType && questionTypes.length > 0)}>
-              <div css={styles.filterCount}>
-                <div css={styles.divider} />
-                <span>{isQuestionType ? questionTypes.length : contentTypes.length}</span>
-              </div>
-            </Show>
-          </Button>
-        </div>
+              <Show when={isQuestionType && questionTypes.length > 0}>
+                <div css={styles.filterCount}>
+                  <div css={styles.divider} />
+                  <span>{questionTypes.length}</span>
+                </div>
+              </Show>
+            </Button>
+          </div>
+        </Show>
 
         <div>
           <Button
@@ -165,7 +167,6 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
       >
         <div css={styles.filterFieldsWrapper}>
           <h6>{__('Filter by', 'tutor')}</h6>
-          {/* Add filter fields here */}
           <div css={styles.filterFields}>
             <Show when={isQuestionType}>
               <For each={questionTypeOptions}>

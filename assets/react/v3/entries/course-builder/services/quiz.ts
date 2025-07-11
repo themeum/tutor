@@ -338,7 +338,15 @@ export const convertQuizFormDataToPayload = (
       questions: formData.questions.map((question) => {
         return {
           _data_status: question._data_status,
-          question_id: question.question_id,
+          question_id: (() => {
+            if (question.is_cb_question) {
+              return String(question.question_id).split('-')[0];
+            }
+            return question.question_id;
+          })(),
+          ...(question.is_cb_question && {
+            is_cb_question: question.is_cb_question,
+          }),
           question_title: question.question_title,
           question_description: question.question_description,
           question_mark: question.question_settings.question_mark,

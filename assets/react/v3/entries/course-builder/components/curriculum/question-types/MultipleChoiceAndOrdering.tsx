@@ -79,7 +79,9 @@ const MultipleChoiceAndOrdering = () => {
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
-  const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
+  const handleCheckCorrectAnswer = (index: number) => {
+    const option = currentOptions[index];
+
     if (hasMultipleCorrectAnswer) {
       updateOption(index, {
         ...option,
@@ -193,7 +195,7 @@ const MultipleChoiceAndOrdering = () => {
                     {...controllerProps}
                     onDuplicateOption={(data) => handleDuplicateOption(index, data)}
                     onRemoveOption={() => handleDeleteOption(index, option)}
-                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
+                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index)}
                     index={index}
                     hasMultipleCorrectAnswer={hasMultipleCorrectAnswer}
                     questionType={currentQuestionType}
