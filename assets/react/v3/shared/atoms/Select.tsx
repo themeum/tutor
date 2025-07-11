@@ -16,6 +16,7 @@ import LoadingSpinner from './LoadingSpinner';
 import SVGIcon from './SVGIcon';
 
 type OptionsStyleVariant = 'regular' | 'small';
+type Size = 'regular' | 'small';
 
 type SelectProps<T> = {
   options: Option<T>[];
@@ -35,6 +36,7 @@ type SelectProps<T> = {
   infiniteScroll?: boolean;
   wrapperStyle?: SerializedStyles;
   inputCss?: SerializedStyles;
+  size?: Size;
   optionsStyleVariant?: OptionsStyleVariant;
 };
 
@@ -57,6 +59,7 @@ const Select = <T,>({
   wrapperStyle,
   inputCss,
   disabled,
+  size = 'regular',
   optionsStyleVariant = 'regular',
 }: SelectProps<T>) => {
   const id = nanoid();
@@ -121,7 +124,7 @@ const Select = <T,>({
           <input
             id={id}
             onClick={() => setIsOpen((previousState) => !previousState)}
-            css={styles.input({ isSearchable })}
+            css={styles.input({ isSearchable, size })}
             autoComplete="off"
             readOnly={readOnly || !isSearchable}
             placeholder={placeholder}
@@ -249,7 +252,7 @@ const styles = {
     width: 100%;
     position: relative;
   `,
-  input: ({ isSearchable }: { isSearchable: boolean }) => css`
+  input: ({ isSearchable, size }: { isSearchable: boolean; size: Size }) => css`
     &[data-select] {
       ${typography.body()};
       width: 100%;
@@ -280,6 +283,11 @@ const styles = {
       ::placeholder {
         color: ${colorTokens.text.subdued};
       }
+
+      ${size === 'small' &&
+      css`
+        height: 32px;
+      `}
     }
   `,
   clearButton: ({ isDisabled = false }: { isDisabled: boolean }) => css`

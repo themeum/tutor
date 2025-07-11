@@ -1,13 +1,16 @@
+import { type SerializedStyles, css } from '@emotion/react';
+import { type FocusEvent, type KeyboardEvent, useEffect, useId, useRef } from 'react';
+
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { parseNumberOnly } from '@TutorShared/utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import { type FocusEvent, type KeyboardEvent, useEffect, useId, useRef } from 'react';
 
 type Variant = 'regular' | 'search';
+type Size = 'small' | 'regular';
 
 type TextInputProps = {
   label?: string;
@@ -27,6 +30,7 @@ type TextInputProps = {
   focusOnMount?: boolean;
   inputCss?: SerializedStyles;
   autoFocus?: boolean;
+  size?: Size;
 };
 
 const TextInput = ({
@@ -47,6 +51,7 @@ const TextInput = ({
   focusOnMount = false,
   inputCss,
   autoFocus = false,
+  size = 'regular',
 }: TextInputProps) => {
   const id = useId();
 
@@ -73,7 +78,7 @@ const TextInput = ({
           ref={inputRef}
           id={id}
           type="text"
-          css={[styles.input(variant), inputCss]}
+          css={[styles.input(variant, size), inputCss]}
           value={value || ''}
           autoFocus={autoFocus}
           onChange={(event) => {
@@ -156,7 +161,7 @@ const styles = {
   inputWrapper: css`
     position: relative;
   `,
-  input: (variant: Variant) => css`
+  input: (variant: Variant, size: Size) => css`
     /** Increasing the css specificity */
     &[data-input] {
       ${typography.body()}
@@ -186,6 +191,12 @@ const styles = {
       ${variant === 'search' &&
       css`
         padding-left: ${spacing[36]};
+      `}
+
+      ${size === 'small' &&
+      css`
+        height: 32px;
+        min-height: 32px;
       `}
     }
   `,
