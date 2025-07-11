@@ -1,5 +1,7 @@
+import { css, type SerializedStyles } from '@emotion/react';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { type IconCollection, icons } from '@TutorShared/icons/types';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta: Meta<typeof Button> = {
@@ -38,7 +40,8 @@ const meta: Meta<typeof Button> = {
       description: 'Shows a loading spinner.',
     },
     icon: {
-      control: false,
+      control: 'select',
+      options: [undefined, ...icons],
       description: 'Optional icon element.',
     },
     iconPosition: {
@@ -55,6 +58,14 @@ const meta: Meta<typeof Button> = {
       control: 'number',
       description: 'Tab index for accessibility.',
     },
+    buttonCss: {
+      control: false,
+      table: { disable: true },
+    },
+    buttonContentCss: {
+      control: false,
+      table: { disable: true },
+    },
   },
   args: {
     children: 'Button',
@@ -66,6 +77,26 @@ const meta: Meta<typeof Button> = {
     icon: undefined,
     iconPosition: 'left',
     tabIndex: 0,
+  },
+  render: (args) => {
+    const { icon, buttonCss, buttonContentCss, ...rest } = args;
+    const iconElement =
+      typeof icon === 'string' && icon ? <SVGIcon name={icon as IconCollection} width={24} height={24} /> : undefined;
+    const buttonCssStyles: SerializedStyles | undefined =
+      typeof buttonCss === 'string' && String(buttonCss).trim()
+        ? css`
+            ${buttonCss}
+          `
+        : undefined;
+    const buttonContentCssStyles: SerializedStyles | undefined =
+      typeof buttonContentCss === 'string' && String(buttonContentCss).trim()
+        ? css`
+            ${buttonContentCss}
+          `
+        : undefined;
+    return (
+      <Button {...rest} icon={iconElement} buttonCss={buttonCssStyles} buttonContentCss={buttonContentCssStyles} />
+    );
   },
 };
 
@@ -139,7 +170,7 @@ export const Disabled: Story = {
 export const WithIconLeft: Story = {
   args: {
     children: 'With Icon',
-    icon: <SVGIcon name="plus" width={24} height={24} />,
+    icon: 'plus',
     iconPosition: 'left',
   },
 };
@@ -147,7 +178,7 @@ export const WithIconLeft: Story = {
 export const WithIconRight: Story = {
   args: {
     children: 'Export',
-    icon: <SVGIcon name="export" width={24} height={24} />,
+    icon: 'export',
     iconPosition: 'right',
   },
 };
