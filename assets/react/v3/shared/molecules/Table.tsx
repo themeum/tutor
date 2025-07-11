@@ -266,6 +266,7 @@ const styles = {
     color: ${colorTokens.text.primary};
     padding: 0 ${spacing[16]};
     border: none;
+    white-space: nowrap;
   `,
   bodyTr: ({ colors, isSelected, isRounded }: { colors: Colors; isSelected: boolean; isRounded: boolean }) => {
     const {
@@ -302,5 +303,6 @@ const styles = {
     ${typography.body()};
     padding: ${spacing[16]};
     border: none;
+    white-space: nowrap;
   `,
 };
