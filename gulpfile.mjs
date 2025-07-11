@@ -237,6 +237,10 @@ const copyProjectFiles = () => {
         '!./cypress.config.ts',
         '!.husky/**',
         '!.lintstagedrc',
+        '!.storybook/**',
+        '!**/*.stories.*',
+        '!storybook-static/**',
+        '!storybook/**',
       ],
       {
         buffer: true,
