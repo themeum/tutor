@@ -57,3 +57,5 @@ launch.json
 
 #rspack
 .swc
+*storybook.log
+storybook-static

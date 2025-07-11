@@ -40,6 +40,6 @@
       "@ImportExport/*": ["assets/react/v3/entries/import-export/*"]
     }
   },
-  "include": ["./assets/react/v3", "**/*.ts"],
+  "include": ["./assets/react/v3", "**/*.ts", "stories/SVGIcon.stories.tsx", "stories/Button.stories.tsx"],
   "exclude": ["node_modules"]
 }

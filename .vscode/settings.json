@@ -32,5 +32,6 @@
   },
   "prettier.enable": true,
   "eslint.enable": true,
-  "eslint.workingDirectories": ["./wp-content/plugins/tutor"]
+  "eslint.workingDirectories": ["./wp-content/plugins/tutor"],
+  "cSpell.words": ["rsbuild"]
 }
