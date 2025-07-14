@@ -13,6 +13,10 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
 
     previousActiveElementRef.current = document.activeElement as HTMLElement;
 
+    if (previousActiveElementRef.current && previousActiveElementRef.current !== document.body) {
+      previousActiveElementRef.current.blur();
+    }
+
     const isElementVisible = (element: HTMLElement): boolean => {
       if (!element || !element.isConnected) {
         return false;
