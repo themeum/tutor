@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.6.3
+Stable tag: 3.6.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -312,6 +312,10 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.6.4 - Jul 14, 2025
+
+New: Introduced all-new WellThrive theme.
+
 = 3.6.3 - Jul 02, 2025
 
 Fix: WooCommerce products were not displaying correctly on the shop page.
@@ -329,7 +333,7 @@ Fix: Ensured old bundled courses now appear correctly under the Courses tab for 
 
 = 3.6.1 - Jun 03, 2025
 
-New: New: Introduced all-new Pathwise theme (beta).
+New: Introduced all-new Pathwise theme (beta).
 
 = 3.6.0 - May 30, 2025
 
