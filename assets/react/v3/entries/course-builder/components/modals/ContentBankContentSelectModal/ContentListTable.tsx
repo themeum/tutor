@@ -14,6 +14,7 @@ import FilterFields from '@CourseBuilderComponents/modals/ContentBankContentSele
 import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelectModal/SearchField';
 import { getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import Select from '@TutorShared/atoms/Select';
+import { Addons } from '@TutorShared/config/constants';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -21,6 +22,7 @@ import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import { CONTENT_BANK_POST_TYPE_MAP, useGetContentBankContents } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ContentBankContent, type Option } from '@TutorShared/utils/types';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 
 type SortDirection = 'asc' | 'desc';
 
@@ -89,7 +91,9 @@ const ContentListTable = () => {
     return [
       { value: '', label: __('All', 'tutor') },
       { value: 'lesson', label: __('Lessons', 'tutor') },
-      { value: 'assignment', label: __('Assignments', 'tutor') },
+      ...(isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)
+        ? [{ value: 'assignment' as const, label: __('Assignments', 'tutor') }]
+        : []),
     ];
   }, []);
 
@@ -337,6 +341,6 @@ const styles = {
     gap: ${spacing[12]};
   `,
   selectInput: css`
-    max-width: 100px;
+    max-width: 150px;
   `,
 };

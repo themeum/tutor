@@ -1,7 +1,8 @@
 import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type InjectionSlots } from '@TutorShared/utils/types';
+import { type LocaleData } from '@wordpress/i18n';
 
-export type { };
+export type {};
 
 interface Tutor {
   readonly CourseBuilder: {
@@ -90,6 +91,10 @@ declare global {
       course_list_page_url: string;
       course_post_type: string;
       local: string;
+      coupon_main_content_locales: LocaleData;
+      course_builder_basic_locales: LocaleData;
+      course_builder_curriculum_locales: LocaleData;
+      course_builder_additional_locales: LocaleData;
       difficulty_levels: {
         label: string;
         value: string;

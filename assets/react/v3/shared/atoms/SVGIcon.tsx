@@ -1,3 +1,4 @@
+import { tutorConfig } from '@TutorShared/config/config';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { type SerializedStyles, css } from '@emotion/react';
 import { memo, useEffect, useState } from 'react';
@@ -29,11 +30,17 @@ const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = fals
 
     setIsLoading(true);
 
-    // Dynamically import the icon based on the name
-    import(/* webpackChunkName: "icon-[request]" */ `@TutorShared/icons/icon-list/${name}`)
-      .then((iconModule) => {
-        const loadedIcon = iconModule.default;
-        // Store in cache for future use
+    const fileName = name.trim().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+    fetch(`${tutorConfig.tutor_url}/assets/icons/${fileName}.svg`)
+      .then((res) => res.text())
+      .then((svgText) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(svgText, 'image/svg+xml');
+        const svgEl = doc.querySelector('svg');
+        const viewBox = svgEl?.getAttribute('viewBox') || `0 0 ${width} ${height}`;
+        const innerHTML = svgEl?.innerHTML || '';
+
+        const loadedIcon = { viewBox, icon: innerHTML };
         iconCache[name] = loadedIcon;
         setIcon(loadedIcon);
       })
@@ -44,7 +51,7 @@ const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = fals
       .finally(() => {
         setIsLoading(false);
       });
-  }, [name]);
+  }, [name, width, height]);
 
   const additionalAttributes = {
     ...(isColorIcon && { 'data-colorize': true }),

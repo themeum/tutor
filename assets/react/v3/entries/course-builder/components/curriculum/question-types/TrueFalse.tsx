@@ -65,7 +65,8 @@ const TrueFalse = () => {
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
-  const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
+  const handleCheckCorrectAnswer = (index: number) => {
+    const option = optionsFields[index];
     const updatedOptions = currentOptions.map((item) => ({
       ...item,
       ...(calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) && {
@@ -148,7 +149,7 @@ const TrueFalse = () => {
                   <FormTrueFalse
                     {...controllerProps}
                     index={index}
-                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
+                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index)}
                     questionId={activeQuestionId}
                   />
                 )}

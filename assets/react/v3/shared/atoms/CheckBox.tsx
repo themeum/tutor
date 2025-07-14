@@ -109,7 +109,6 @@ const styles = {
   `,
   label: ({ isDisabled = false }) => css`
     ${typography.caption()};
-    margin-top: ${spacing[2]};
     color: ${colorTokens.text.title};
 
     ${isDisabled &&
