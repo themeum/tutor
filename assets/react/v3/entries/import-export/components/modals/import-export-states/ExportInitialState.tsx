@@ -246,7 +246,7 @@ const ExportInitialState = ({
   return (
     <div css={styles.wrapper}>
       <div css={styles.formWrapper}>
-        <div css={styles.formTitle}>{__('What do you want to export', 'tutor')}</div>
+        <div css={styles.formTitle}>{__('What do you want to export?', 'tutor')}</div>
         <div css={styles.checkboxWrapper}>{renderExportableContentOptions()}</div>
 
         <Show
