@@ -270,7 +270,7 @@ const styles = {
     color: ${colorTokens.text.primary};
   `,
   paginatorWrapper: css`
-    margin: ${spacing[20]} ${spacing[16]};
+    margin-top: ${spacing[20]};
   `,
   collectionItemWrapper: css`
     ${styleUtils.resetButton};
