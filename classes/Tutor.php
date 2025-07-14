@@ -156,7 +156,7 @@ final class Tutor extends Singleton {
 	 *
 	 * @var object
 	 */
-	private $lesson;
+	public $lesson;
 
 	/**
 	 * Rewrite_Rules class object
