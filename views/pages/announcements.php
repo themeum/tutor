@@ -15,10 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Input;
-use TUTOR\Announcements;
 use Tutor\Models\CourseModel;
 
-$announcement_obj = new Announcements();
+$announcement_obj = tutor_lms()->announcements;
 
 $limit         = tutor_utils()->get_option( 'pagination_per_page' );
 $page_filter   = Input::get( 'paged', 1, Input::TYPE_INT );

@@ -16,7 +16,7 @@ use TUTOR\Course_List;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
-$courses = tutor_lms()->get_instance()->course_list;
+$courses = tutor_lms()->course_list;
 
 /**
  * Short able params
