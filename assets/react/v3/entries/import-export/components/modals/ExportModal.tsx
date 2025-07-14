@@ -82,44 +82,44 @@ const ExportModal = ({
     : ([
         {
           key: 'courses',
-          label: 'Courses',
+          label: __('Courses', 'tutor'),
           contents: [
             {
-              label: 'Lessons',
+              label: __('Lessons', 'tutor'),
               key: 'lesson',
             },
             {
-              label: 'Quizzes',
+              label: __('Quizzes', 'tutor'),
               key: 'tutor_quiz',
             },
             {
-              label: 'Assignments',
+              label: __('Assignments', 'tutor'),
               key: 'tutor_assignments',
             },
             {
-              label: 'Attachments',
+              label: __('Attachments', 'tutor'),
               key: 'attachments',
             },
           ],
         },
         {
           key: 'course-bundle',
-          label: 'Bundles',
+          label: __('Bundles', 'tutor'),
           contents: [],
         },
         {
           key: 'content_bank',
-          label: 'Content Bank',
+          label: __('Content Bank', 'tutor'),
           contents: [],
         },
         {
           key: 'settings',
-          label: 'Settings',
+          label: __('Settings', 'tutor'),
           contents: [],
         },
         {
           key: 'keep_media_files',
-          label: 'Keep media files',
+          label: __('Keep Media Files', 'tutor'),
           contents: [],
         },
       ] as ExportableContent[]);
