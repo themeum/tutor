@@ -168,6 +168,7 @@ const styles = {
 
       width: 100%;
       height: 40px;
+      min-height: auto;
       border-radius: ${borderRadius[5]};
       border: 1px solid ${colorTokens.stroke.default};
       padding: 0 ${spacing[32]} 0 ${spacing[12]};

@@ -424,7 +424,7 @@ export const zIndex = {
 } as const;
 
 export const SmallMobileBreakpoint = 480;
-export const MobileBreakpoint = 768;
+export const MobileBreakpoint = 782;
 export const TabletBreakpoint = 992;
 export const DesktopBreakpoint = 1280;
 

@@ -19,6 +19,7 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
 export const WP_ADMIN_BAR_HEIGHT = '32px';
+export const WP_ADMIN_BAR_HEIGHT_MOBILE = '46px';
 export const currentWindowWidth = window.innerWidth;
 export const CURRENT_VIEWPORT = {
   isAboveDesktop: currentWindowWidth >= DesktopBreakpoint,
