@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	const tutorTemplateShimmerEffect = document.querySelector(".tutor-template-shimmer-effect");
 	const importBtn = document.querySelector('.tutor-template-import-btn');
 	const tutorTemplateCourseDataUrl = document.getElementById("tutor_template_course_data_url");
-	// let template_course_data_url = '';
 
 	if (templateDemoImportRoot) {
 		// Open live preview modal
