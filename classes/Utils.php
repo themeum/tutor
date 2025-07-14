@@ -1081,7 +1081,7 @@ class Utils {
 			'order'          => 'ASC',
 		);
 
-		$args = wp_parse_args( $custom_args, $default_args );
+		$args = apply_filters( 'tutor_course_topic_contents_args', wp_parse_args( $custom_args, $default_args ) );
 
 		return new \WP_Query( $args );
 	}
@@ -5141,6 +5141,8 @@ class Utils {
 			)
 		);
 
+		$questions = apply_filters( 'tutor_get_questions_by_quiz', $questions, $quiz_id );
+
 		foreach ( $questions as $question ) {
 			$question->question_title       = stripslashes( $question->question_title );
 			$question->question_description = stripslashes( $question->question_description );
@@ -7934,6 +7936,11 @@ class Utils {
 	 * @return int|int[]
 	 */
 	public function get_course_id_by( $content, $object_id ) {
+		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
+		if ( $course_id ) {
+			return $course_id;
+		}
+
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
 		$course_id = TutorCache::get( $cache_key );
 
@@ -8084,6 +8091,7 @@ class Utils {
 			'tutor_gm_course'    => 'tutor_gm_course',
 			'tutor_gm_topic'     => 'tutor_gm_topic',
 			'topics'             => 'topic',
+			'cb-lesson'          => 'cb-lesson',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -8101,6 +8109,7 @@ class Utils {
 
 			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
 		}
+
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
 	}
 
@@ -8175,7 +8184,11 @@ class Utils {
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
-		$course_id = $this->get_course_id_by( $content, $object_id );
+
+		$course_id = Input::get('course', 0, Input::TYPE_INT );
+		if ( ! $course_id ) {
+			$course_id = $this->get_course_id_by( $content, $object_id );
+		}
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
@@ -10712,6 +10725,63 @@ class Utils {
 		return $branch;
 	}
 
+	/**
+	 * Render SVG icon
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string  $name Icon name.
+	 * @param integer $width Icon width.
+	 * @param integer $height Icon height.
+	 * @param array   $attributes Custom attributes.
+	 *
+	 * @return void
+	 */
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
+		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
+		if ( ! file_exists( $icon_path ) ) {
+			return;
+		}
+
+		$svg = file_get_contents( $icon_path );
+		if ( ! $svg ) {
+			return;
+		}
+
+		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
+		if ( ! $matches ) {
+			return;
+		}
+
+		list( $svg_tag, $view_box, $inner_svg ) = $matches;
+
+		$attr_string = sprintf(
+			'width="%d" height="%d" viewBox="%s" role="presentation" aria-hidden="true"',
+			esc_attr( $width ),
+			esc_attr( $height ),
+			esc_attr( $view_box ),
+		);
+
+		foreach ( $attributes as $key => $value ) {
+			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+		}
+
+		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+	}
+
+	/**
+	 * Get SVG icon url
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string $name Icon name.
+	 *
+	 * @return string
+	 */
+	public function get_svg_icon_url( $name ) {
+		return tutor()->url . 'assets/icons/' . $name . '.svg';
+	}
+	
 	/**
 	 * Get script locale data for dynamic scripts
 	 *

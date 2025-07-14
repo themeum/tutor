@@ -105,7 +105,7 @@
 							?>
 							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-import-btn tutor-justify-center" <?php echo tutor()->has_pro ? '' : ' disabled'; ?> >
 								<i class="tutor-icon-import tutor-mr-8"></i>
-								<?php esc_html_e( 'Import', 'tutor-pro' ); ?>
+								<?php esc_html_e( 'Import', 'tutor' ); ?>
 								<?php if ( ! tutor()->has_pro ) : ?>
 									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="presentation" aria-hidden="true" class="css-xron3k-svg-SVGIcon"><rect width="16" height="16" rx="8" fill="#E5803C"></rect><path d="M12.252 7.042c0 .004 0 .008-.003.012l-.862 3.951a.609.609 0 0 1-.598.495H5.213a.61.61 0 0 1-.598-.495l-.862-3.95c0-.005-.002-.009-.003-.013a.609.609 0 0 1 1.056-.51l1.28 1.38 1.362-3.054v-.004a.609.609 0 0 1 1.106.004l1.362 3.054 1.28-1.38a.609.609 0 0 1 1.055.51h.001Z" fill="#fff"></path></svg>
 								<?php endif; ?>

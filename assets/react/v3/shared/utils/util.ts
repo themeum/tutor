@@ -218,6 +218,23 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   return `${Number.parseFloat((bytes / kilobit ** index).toFixed(decimal))} ${sizes[index]}`;
 };
 
+export const formatReadAbleBytesToBytes = (readableBytes: string): number => {
+  if (!readableBytes || typeof readableBytes !== 'string') {
+    return 0;
+  }
+
+  const [value, unit] = readableBytes.split(' ');
+  const byteValue = parseFloat(value);
+  const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+  const index = units.indexOf(unit);
+  if (index === -1) {
+    return 0;
+  }
+
+  return byteValue * 1024 ** index;
+};
+
 export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
   return value
     .replace(allowNegative ? /[^0-9.-]/g : /[^0-9.]/g, '')
@@ -259,6 +276,7 @@ export const formatSeconds = (seconds: number) => {
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };
+
 export const getObjectKeys = <T extends object>(object: T) => {
   if (!isDefined(object) || !isObject(object)) {
     return [] as (keyof T)[];
@@ -269,6 +287,7 @@ export const getObjectKeys = <T extends object>(object: T) => {
 export const getObjectValues = <T extends object, K extends keyof T = keyof T>(object: T): T[K][] => {
   return Object.values(object);
 };
+
 export const getObjectEntries = <T extends object, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
   return Object.entries(object) as [K, T[K]][];
 };
@@ -435,40 +454,40 @@ export const formatSubscriptionRepeatUnit = ({
   showSingular?: boolean;
 }) => {
   if (unit === 'until_cancellation') {
-    const result = __('Until Cancellation', 'tutor-pro');
+    const result = __('Until Cancellation', 'tutor');
     return capitalize ? capitalizeWords(result) : result;
   }
 
   const unitFormats = {
     hour: {
-      plural: __('%d hours', 'tutor-pro'),
-      singular: __('%d hour', 'tutor-pro'),
-      suffix: __('hourly', 'tutor-pro'),
-      base: __('hour', 'tutor-pro'),
+      plural: __('%d hours', 'tutor'),
+      singular: __('%d hour', 'tutor'),
+      suffix: __('hourly', 'tutor'),
+      base: __('hour', 'tutor'),
     },
     day: {
-      plural: __('%d days', 'tutor-pro'),
-      singular: __('%d day', 'tutor-pro'),
-      suffix: __('daily', 'tutor-pro'),
-      base: __('day', 'tutor-pro'),
+      plural: __('%d days', 'tutor'),
+      singular: __('%d day', 'tutor'),
+      suffix: __('daily', 'tutor'),
+      base: __('day', 'tutor'),
     },
     week: {
-      plural: __('%d weeks', 'tutor-pro'),
-      singular: __('%d week', 'tutor-pro'),
-      suffix: __('weekly', 'tutor-pro'),
-      base: __('week', 'tutor-pro'),
+      plural: __('%d weeks', 'tutor'),
+      singular: __('%d week', 'tutor'),
+      suffix: __('weekly', 'tutor'),
+      base: __('week', 'tutor'),
     },
     month: {
-      plural: __('%d months', 'tutor-pro'),
-      singular: __('%d month', 'tutor-pro'),
-      suffix: __('monthly', 'tutor-pro'),
-      base: __('month', 'tutor-pro'),
+      plural: __('%d months', 'tutor'),
+      singular: __('%d month', 'tutor'),
+      suffix: __('monthly', 'tutor'),
+      base: __('month', 'tutor'),
     },
     year: {
-      plural: __('%d years', 'tutor-pro'),
-      singular: __('%d year', 'tutor-pro'),
-      suffix: __('yearly', 'tutor-pro'),
-      base: __('year', 'tutor-pro'),
+      plural: __('%d years', 'tutor'),
+      singular: __('%d year', 'tutor'),
+      suffix: __('yearly', 'tutor'),
+      base: __('year', 'tutor'),
     },
   };
 
@@ -496,4 +515,11 @@ const capitalizeWords = (text: string): string => {
     .split(' ')
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+};
+
+export const covertSecondsToHMS = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const sec = seconds % 60;
+  return { hours, minutes, seconds: sec };
 };

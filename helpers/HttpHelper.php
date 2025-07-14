@@ -17,6 +17,17 @@ namespace Tutor\Helpers;
  */
 class HttpHelper {
 	/**
+	 * HTTP methods constants
+	 *
+	 * @var string
+	 */
+	const METHOD_GET    = 'GET';
+	const METHOD_POST   = 'POST';
+	const METHOD_PUT    = 'PUT';
+	const METHOD_PATCH  = 'PATCH';
+	const METHOD_DELETE = 'DELETE';
+
+	/**
 	 * 200 serial HTTP status code constants
 	 */
 	const STATUS_OK       = 200;

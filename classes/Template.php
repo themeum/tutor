@@ -198,7 +198,11 @@ class Template extends Tutor_Base {
 	public function load_single_lesson_template( $template ) {
 		global $wp_query;
 
-		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->lesson_post_type ) {
+		$post_type = get_query_var( 'post_type' );
+
+		$is_lesson_post_type = apply_filters( 'tutor_is_lesson_post_type', $wp_query->query_vars['post_type'] === $this->lesson_post_type, $post_type );
+
+		if ( $wp_query->is_single && ! empty( $post_type ) && $is_lesson_post_type ) {
 			$page_id = get_the_ID();
 
 			do_action( 'tutor_lesson_load_before', $template );

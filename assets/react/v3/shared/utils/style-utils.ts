@@ -17,6 +17,14 @@ export const createGlobalCss = () => css`
     }
   }
 
+  body.tutor-backend-tutor-content-bank {
+    @media screen and (max-width: 600px) {
+      #wpadminbar {
+        position: fixed;
+      }
+    }
+  }
+
   *,
   ::after,
   ::before {

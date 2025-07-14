@@ -141,6 +141,7 @@ export const colorTokens = {
   },
   border: {
     neutral: '#C8C8C8',
+    tertiary: '#F5F5F5',
   },
   action: {
     primary: {
@@ -423,7 +424,7 @@ export const zIndex = {
 } as const;
 
 export const SmallMobileBreakpoint = 480;
-export const MobileBreakpoint = 768;
+export const MobileBreakpoint = 782;
 export const TabletBreakpoint = 992;
 export const DesktopBreakpoint = 1280;
 

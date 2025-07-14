@@ -125,13 +125,7 @@ module.exports = (env, options) => {
                 output: {
                     path: path.resolve(dest_path),
                     filename: '[name].js',
-                    chunkFilename: (pathData) => {
-                        if (pathData.chunk.name && pathData.chunk.name.startsWith('icon-')) {
-                            const name = pathData.chunk.name.replace(/^icon-/, '');
-                            return `icons/${name}.js?ver=${version}`;
-                        }
-                        return `lazy-chunks/[name].js?ver=${version}`;
-                    },
+                    chunkFilename: `lazy-chunks/[name].js?ver=${version}`,
                     clean: true,
                 },
                 resolve: {
