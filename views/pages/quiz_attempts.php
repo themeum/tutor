@@ -22,11 +22,9 @@ if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
 	return;
 }
 
-$quiz_attempts = new TUTOR\Quiz_Attempts_List( false );
+$quiz_attempts = tutor_lms()->get_instance()->q_attempt;
 
-/**
- * Short able params
- */
+//phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 $user_id   = Input::get( 'user_id', '' );
 $course_id = Input::get( 'course-id', '' );
 $order     = Input::get( 'order', 'DESC' );
@@ -47,6 +45,8 @@ $offset   = ( $per_page * $paged ) - $per_page;
 
 $quiz_attempts_list = QuizModel::get_quiz_attempts( $offset, $per_page, $search, $course_id, $date, $order, $active_tab, false, true );
 $total              = QuizModel::get_quiz_attempts( $offset, $per_page, $search, $course_id, $date, $order, $active_tab, true, true );
+//phpcs:enable
+
 
 /**
  * Navbar data to make nav menu

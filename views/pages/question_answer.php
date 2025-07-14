@@ -29,7 +29,7 @@ if ( $question_id > 0 ) {
 	return;
 }
 
-$qna_object     = new \TUTOR\Question_Answers_List( false );
+$qna_object     = tutor_lms()->get_instance()->q_and_a_list;
 $qna            = $qna_object->get_items( $_GET );
 $qna_list       = $qna['items'];
 $qna_pagination = $qna['pagination'];

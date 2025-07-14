@@ -55,7 +55,7 @@ if ( ! function_exists( 'tutor_lms' ) ) {
 	 * @return Tutor
 	 */
 	function tutor_lms() {
-		return Tutor::instance();
+		return Tutor::get_instance();
 	}
 }
 
