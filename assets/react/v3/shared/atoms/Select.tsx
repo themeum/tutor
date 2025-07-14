@@ -264,6 +264,7 @@ const styles = {
       padding: ${spacing[8]} ${spacing[32]} ${spacing[8]} ${spacing[16]};
       color: ${colorTokens.text.primary};
       appearance: textfield;
+      transition: all 0.15s ease-in-out;
 
       ${!isSearchable &&
       css`
@@ -272,6 +273,11 @@ const styles = {
 
       :focus {
         ${styleUtils.inputFocus};
+      }
+
+      :disabled {
+        color: ${colorTokens.text.disable};
+        cursor: not-allowed;
       }
 
       ::-webkit-outer-spin-button,
