@@ -284,42 +284,31 @@ export default (env, options) => {
     }));
   }
 
-  return [
-    // React entries configuration
-    {
-      ...baseConfig,
-      name: 'react-entries',
-      entry: reactEntries,
-      output: {
-        path: path.resolve('./assets'),
-        filename: 'js/[name].js',
-        chunkFilename: createChunkFilename,
-        clean: false,
+  return {
+    ...baseConfig,
+    entry: allEntries,
+    output: {
+      path: path.resolve('./assets'),
+      filename: (pathData) => {
+        const entryName = pathData.chunk.name;
+        const originalEntryPath = allEntries[entryName];
+
+        if (isScssEntry(originalEntryPath)) {
+          return `[name].min.css`;
+        }
+        return `js/[name].js`;
       },
-      resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
-        fallback: {
-          fs: false,
-          path: false,
-          os: false,
-        },
-        alias: resolveAliases,
-      },
+      chunkFilename: createChunkFilename,
+      clean: true,
     },
-    // SCSS entries configuration
-    {
-      ...baseConfig,
-      name: 'scss-entries',
-      entry: scssEntries,
-      output: {
-        path: path.resolve('./assets'),
-        filename: '[name].min.css',
-        chunkFilename: '[name].min.css',
-        clean: false,
+    resolve: {
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
+      fallback: {
+        fs: false,
+        path: false,
+        os: false,
       },
-      resolve: {
-        extensions: ['.scss', '.css'],
-      },
+      alias: resolveAliases,
     },
-  ];
+  };
 };
