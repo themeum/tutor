@@ -314,7 +314,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.6.4 - Jul 14, 2025
 
-New: Introduced all-new WellThrive theme.
+New: A lightweight base theme is now available for all Tutor LMS themes.
 
 = 3.6.3 - Jul 02, 2025
 
