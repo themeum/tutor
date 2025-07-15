@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const tutorTemplateShimmerEffect = document.querySelector(".tutor-template-shimmer-effect");
 	const importBtn = document.querySelector('.tutor-template-import-btn');
 	const tutorTemplateCourseDataUrl = document.getElementById("tutor_template_course_data_url");
+	let colorPresetBlock = document.getElementById("droip-color-presets");
 
 	if (templateDemoImportRoot) {
 		// Open live preview modal
@@ -72,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			tutorTemplateShimmerEffect.style.display = "none";
 			document.body.style.overflow = 'visible';
 			iframe.style.width = "1400px";
+			colorPresetBlock.style.display = "none";
 		}
 
 		// Remove active class from device list
@@ -111,13 +113,15 @@ document.addEventListener('DOMContentLoaded', function () {
 					const modes = variables.modes;
 
 					// Hide #color-preset if 1 or fewer modes
-					const colorPresetBlock = document.getElementById("droip-color-presets");
-					if (modes.length <= 1) {
-						colorPresetBlock.style.display = "none";
-					} else {
-						colorPresetBlock.style.display = "flex";
-						colorPresetBlock.style.justifyContent = "center";
-						colorPresetBlock.style.alignItems = "center";
+					colorPresetBlock = document.getElementById("droip-color-presets");
+					if (templateColorPresets && colorPresetBlock) {
+						if (modes.length <= 1) {
+							colorPresetBlock.style.display = "none";
+						} else {
+							colorPresetBlock.style.display = "flex";
+							colorPresetBlock.style.justifyContent = "center";
+							colorPresetBlock.style.alignItems = "center";
+						}
 					}
 
 					const allColors = document.createElement("div");
