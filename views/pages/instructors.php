@@ -27,7 +27,7 @@ if ( Input::has( 'sub_page' ) ) {
 	}
 }
 
-$instructors = tutor_lms()->get_instance()->instructor_list;
+$instructors = tutor_lms()->instructor_list;
 
 /**
  * Short able params

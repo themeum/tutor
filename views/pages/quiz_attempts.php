@@ -22,7 +22,7 @@ if ( is_numeric( Input::get( 'view_quiz_attempt_id' ) ) ) {
 	return;
 }
 
-$quiz_attempts = tutor_lms()->get_instance()->q_attempt;
+$quiz_attempts = tutor_lms()->q_attempt;
 
 //phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 $user_id   = Input::get( 'user_id', '' );
