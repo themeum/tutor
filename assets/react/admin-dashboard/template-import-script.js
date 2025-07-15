@@ -114,12 +114,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
 					// Hide #color-preset if 1 or fewer modes
 					colorPresetBlock = document.getElementById("droip-color-presets");
-					if (modes.length <= 1) {
-						colorPresetBlock.style.display = "none";
-					} else {
-						colorPresetBlock.style.display = "flex";
-						colorPresetBlock.style.justifyContent = "center";
-						colorPresetBlock.style.alignItems = "center";
+					if (templateColorPresets && colorPresetBlock) {
+						if (modes.length <= 1) {
+							colorPresetBlock.style.display = "none";
+						} else {
+							colorPresetBlock.style.display = "flex";
+							colorPresetBlock.style.justifyContent = "center";
+							colorPresetBlock.style.alignItems = "center";
+						}
 					}
 
 					const allColors = document.createElement("div");
