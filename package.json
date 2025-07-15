@@ -75,6 +75,7 @@
     "lint-staged": "^16.1.0",
     "path": "^0.12.7",
     "sass": "^1.62.1",
+    "sass-loader": "^16.0.5",
     "source-map": "^0.7.4",
     "style-loader": "^4.0.0",
     "tsx": "^4.20.3",
