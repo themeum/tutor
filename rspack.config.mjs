@@ -234,11 +234,7 @@ const createResolveAliases = () => ({
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
 });
 
-const createChunkFilename = (pathData) => {
-  if (pathData.chunk.name?.startsWith('icon-')) {
-    const iconName = pathData.chunk.name.replace(/^icon-/, '');
-    return `js/icons/${iconName}.js?ver=${version}`;
-  }
+const createChunkFilename = () => {
   return `js/lazy-chunks/[name].js?ver=${version}`;
 };
 
@@ -288,31 +284,42 @@ export default (env, options) => {
     }));
   }
 
-  return {
-    ...baseConfig,
-    entry: allEntries,
-    output: {
-      path: path.resolve('./assets'),
-      filename: (pathData) => {
-        const entryName = pathData.chunk.name;
-        const originalEntryPath = allEntries[entryName];
-
-        if (isScssEntry(originalEntryPath)) {
-          return `css/${entryName}.min.css`;
-        }
-        return `js/${entryName}.js`;
+  return [
+    // React entries configuration
+    {
+      ...baseConfig,
+      name: 'react-entries',
+      entry: reactEntries,
+      output: {
+        path: path.resolve('./assets'),
+        filename: 'js/[name].js',
+        chunkFilename: createChunkFilename,
+        clean: false,
       },
-      chunkFilename: createChunkFilename,
-      clean: true,
-    },
-    resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
-      fallback: {
-        fs: false,
-        path: false,
-        os: false,
+      resolve: {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        fallback: {
+          fs: false,
+          path: false,
+          os: false,
+        },
+        alias: resolveAliases,
       },
-      alias: resolveAliases,
     },
-  };
+    // SCSS entries configuration
+    {
+      ...baseConfig,
+      name: 'scss-entries',
+      entry: scssEntries,
+      output: {
+        path: path.resolve('./assets'),
+        filename: '[name].min.css',
+        chunkFilename: '[name].min.css',
+        clean: false,
+      },
+      resolve: {
+        extensions: ['.scss', '.css'],
+      },
+    },
+  ];
 };
