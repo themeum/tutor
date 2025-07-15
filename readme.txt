@@ -312,7 +312,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.6.4 - Jul 14, 2025
+= 3.6.4 - Jul 15, 2025
 
 New: A lightweight base theme is now available for all Tutor LMS themes.
 
