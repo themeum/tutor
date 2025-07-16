@@ -21,7 +21,7 @@ use TUTOR\WhatsNew;
 					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 18 16" fill="none">
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M6.99065 1.5025C7.95315 -0.164164 10.3598 -0.164164 11.3215 1.5025L17.4506 12.1258C18.4123 13.7925 17.209 15.8758 15.2848 15.8758H3.02731C1.10315 15.8758 -0.0993531 13.7925 0.862314 12.1258L6.98981 1.5025H6.99065ZM9.15648 5.875C9.32224 5.875 9.48121 5.94085 9.59842 6.05806C9.71563 6.17527 9.78148 6.33424 9.78148 6.5V9.625C9.78148 9.79076 9.71563 9.94973 9.59842 10.0669C9.48121 10.1842 9.32224 10.25 9.15648 10.25C8.99072 10.25 8.83175 10.1842 8.71454 10.0669C8.59733 9.94973 8.53148 9.79076 8.53148 9.625V6.5C8.53148 6.33424 8.59733 6.17527 8.71454 6.05806C8.83175 5.94085 8.99072 5.875 9.15648 5.875ZM9.15648 12.75C9.32224 12.75 9.48121 12.6842 9.59842 12.5669C9.71563 12.4497 9.78148 12.2908 9.78148 12.125C9.78148 11.9592 9.71563 11.8003 9.59842 11.6831C9.48121 11.5659 9.32224 11.5 9.15648 11.5C8.99072 11.5 8.83175 11.5659 8.71454 11.6831C8.59733 11.8003 8.53148 11.9592 8.53148 12.125C8.53148 12.2908 8.59733 12.4497 8.71454 12.5669C8.83175 12.6842 8.99072 12.75 9.15648 12.75Z" fill="#FF9C21"/>
 					</svg>
-					<p><?php esc_html_e( "New version available. You didn't update yet!", 'tutor' ); ?></p>
+					<p>New version available. You didn't update yet!</p>
 				</div>
 
 				<div class="tutor-update-version">
@@ -31,19 +31,14 @@ use TUTOR\WhatsNew;
 							<path fill-rule="evenodd" clip-rule="evenodd" d="M8.36661 31.6667C9.12855 30.0292 10.3302 28.635 11.8379 27.6392C13.3456 26.6435 15.1002 26.0853 16.9065 26.0267C19.4985 26.1103 21.9525 27.2137 23.7343 29.0965C25.5162 30.9794 26.4816 33.4893 26.4204 36.08V54.12C26.5389 54.9854 26.9671 55.7787 27.6257 56.353C28.2844 56.9272 29.129 57.2437 30.0032 57.2437C30.8773 57.2437 31.7219 56.9272 32.3806 56.353C33.0392 55.7787 33.4674 54.9854 33.5859 54.12V36.08C33.5211 33.4906 34.4835 30.9806 36.2633 29.0974C38.043 27.2141 40.4956 26.1103 43.0865 26.0267C44.8254 25.9964 46.5352 26.4751 48.0052 27.4038C49.4752 28.3325 50.6412 29.6706 51.3595 31.2533C53.2193 34.8947 54.1174 38.9504 53.9686 43.0359C53.8198 47.1213 52.6291 51.1011 50.5093 54.5978C48.3896 58.0944 45.4111 60.9921 41.8563 63.0159C38.3015 65.0397 34.2883 66.1227 30.1972 66.162C26.1061 66.2013 22.0727 65.1957 18.4796 63.2406C14.8865 61.2855 11.8528 58.4457 9.66612 54.9904C7.47944 51.5352 6.2123 47.579 5.98488 43.4972C5.75746 39.4154 6.57728 35.3431 8.36661 31.6667ZM23.5249 8H37.0285V13.2133C34.7736 12.6701 32.4628 12.3926 30.1433 12.3867C27.9025 12.4089 25.6688 12.641 23.4715 13.08L23.5249 8ZM60.1796 44.8933C60.1796 44.0667 60.313 43.3733 60.313 42.5467C60.3005 37.1921 58.8661 31.9367 56.1561 27.3173C53.446 22.6978 49.5576 18.8799 44.8879 16.2533V8H50.6923C51.754 8 52.7722 7.57857 53.5229 6.82843C54.2736 6.07828 54.6954 5.06087 54.6954 4C54.6954 2.93913 54.2736 1.92172 53.5229 1.17157C52.7722 0.421427 51.754 0 50.6923 0L9.741 0C8.67381 0.053895 7.6669 0.510644 6.92381 1.27792C6.18071 2.0452 5.75686 3.06577 5.73794 4.13333C5.73794 5.1942 6.15969 6.21162 6.91041 6.96176C7.66113 7.71191 8.67932 8.13333 9.741 8.13333H15.6655V16.2667C12.0388 18.2486 8.85922 20.9554 6.32477 24.2185C3.79032 27.4816 1.95526 31.231 0.933855 35.2335C-0.08755 39.2359 -0.273433 43.4057 0.387781 47.483C1.04899 51.5603 2.54315 55.458 4.7772 58.9333C15.9991 77.9333 46.3957 79.8667 56.7369 80C57.6496 79.9722 58.5253 79.6335 59.2188 79.04C59.5394 78.7137 59.79 78.3255 59.9552 77.899C60.1204 77.4726 60.1967 77.0169 60.1796 76.56V44.8933Z" fill="#0049F8"/>
 						</svg>
 						<div>
-							<h3>
-								<?php
-								/* translators: %s: Tutor LMS version number */
-								echo esc_html( sprintf( __( 'Tutor LMS v%s', 'tutor' ), $remote_version ) );
-								?>
-							</h3>
-							<p><a target="_blank" href="https://tutorlms.com/releases/?utm_source=wp_admin_dashboard&utm_medium=update&utm_campaign=what_s_new_top_bar"><?php esc_html_e( 'More info...', 'tutor' ); ?></a></p>
+							<h3>Tutor LMS  v<?php echo esc_html( $remote_version ); ?></h3>
+							<p><a target="_blank" href="https://tutorlms.com/releases/?utm_source=wp_admin_dashboard&utm_medium=update&utm_campaign=what_s_new_top_bar">More info...</a></p>
 						</div>
 						<a class="tutor-whats-new-update-now" href="<?php echo esc_url( admin_url( 'plugins.php?s=tutor-lms&plugin_status=all' ) ); ?>">
 							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">
 								<path fill-rule="evenodd" clip-rule="evenodd" d="M6.24054 10.275C6.54314 9.14466 7.13799 8.11387 7.96528 7.28629C8.79256 6.4587 9.82314 5.86349 10.9534 5.56048C12.0837 5.25747 13.2738 5.25734 14.4041 5.56011C15.5344 5.86287 16.5651 6.45787 17.3926 7.28527L19.0839 8.97657H16.255C16.0782 8.97657 15.9087 9.04679 15.7836 9.1718C15.6586 9.2968 15.5884 9.46634 15.5884 9.64313C15.5884 9.81991 15.6586 9.98945 15.7836 10.1145C15.9087 10.2395 16.0782 10.3097 16.255 10.3097H20.6916C20.8684 10.3097 21.0379 10.2395 21.163 10.1145C21.288 9.98945 21.3582 9.81991 21.3582 9.64313V5.20649C21.3582 5.0297 21.288 4.86016 21.163 4.73516C21.0379 4.61015 20.8684 4.53992 20.6916 4.53992C20.5148 4.53992 20.3453 4.61015 20.2203 4.73516C20.0953 4.86016 20.0251 5.0297 20.0251 5.20649V8.03271L18.3364 6.34409C17.3437 5.35087 16.1069 4.63652 14.7505 4.27286C13.3941 3.9092 11.9659 3.90905 10.6094 4.27242C9.25295 4.63579 8.01605 5.34988 7.02308 6.34288C6.0301 7.33589 5.31606 8.57282 4.95274 9.92931C4.9301 10.0139 4.92434 10.1022 4.93581 10.189C4.94727 10.2759 4.97572 10.3596 5.01955 10.4354C5.06337 10.5113 5.1217 10.5777 5.19121 10.631C5.26072 10.6843 5.34005 10.7234 5.42467 10.7461C5.50928 10.7687 5.59753 10.7745 5.68437 10.763C5.77121 10.7515 5.85494 10.7231 5.93079 10.6793C6.00663 10.6354 6.0731 10.5771 6.1264 10.5076C6.1797 10.4381 6.21879 10.3588 6.24143 10.2741L6.24054 10.275ZM19.9344 13.2541C19.8498 13.2314 19.7616 13.2256 19.6748 13.2369C19.588 13.2483 19.5043 13.2767 19.4284 13.3204C19.3526 13.3642 19.2861 13.4224 19.2328 13.4919C19.1795 13.5613 19.1403 13.6406 19.1176 13.7252C18.815 14.8555 18.2202 15.8863 17.3929 16.7139C16.5656 17.5415 15.535 18.1367 14.4048 18.4397C13.2745 18.7427 12.0844 18.7429 10.9541 18.4401C9.82377 18.1373 8.79307 17.5423 7.9656 16.7149L6.2752 15.0236H9.10409C9.28088 15.0236 9.45042 14.9534 9.57542 14.8284C9.70043 14.7034 9.77066 14.5338 9.77066 14.3571C9.77066 14.1803 9.70043 14.0107 9.57542 13.8857C9.45042 13.7607 9.28088 13.6905 9.10409 13.6905H4.66656C4.48978 13.6905 4.32024 13.7607 4.19523 13.8857C4.07023 14.0107 4 14.1803 4 14.3571V18.7937C4 18.9705 4.07023 19.14 4.19523 19.265C4.32024 19.39 4.48978 19.4603 4.66656 19.4603C4.84335 19.4603 5.01289 19.39 5.13789 19.265C5.2629 19.14 5.33313 18.9705 5.33313 18.7937V15.9675L7.02175 17.6561C8.01457 18.6493 9.25139 19.3636 10.6078 19.7272C11.9643 20.0908 13.3926 20.0909 14.749 19.7275C16.1055 19.364 17.3424 18.6498 18.3353 17.6567C19.3283 16.6636 20.0422 15.4266 20.4054 14.07C20.4511 13.8993 20.4271 13.7176 20.3387 13.5646C20.2504 13.4116 20.105 13.2999 19.9344 13.2541Z" fill="white"/>
 							</svg>
-							<?php esc_html_e( 'Update Now', 'tutor' ); ?>
+							Update Now
 						</a>
 				</div>
 			</div>
@@ -75,18 +70,10 @@ use TUTOR\WhatsNew;
 					</svg>
 				</div>
 
-				<h1><?php esc_html_e( "What's New 🥳 in Tutor LMS", 'tutor' ); ?></h1>
+				<h1>What's New 🥳 in Tutor LMS</h1>
 
-				<p>
-					<?php
-					echo wp_kses_post(
-						sprintf(
-							/* translators: %s is the installed Tutor LMS version. */
-							__( 'You are using <strong>Tutor LMS (v%s)</strong><br>Here are features and improvements made to this version!', 'tutor' ),
-							esc_html( $installed_version )
-						)
-					);
-					?>
+				<p>You are using <strong>Tutor LMS (v<?php echo esc_html( $installed_version ); ?>)</strong> <br>
+				Here are features and improvements made to this version!
 				</p>
 
 				<div class="tutor-logo-head">
@@ -100,17 +87,7 @@ use TUTOR\WhatsNew;
 			<!-- end header section -->
 
 			<div class="tutor-changelog-wrapper">
-				<h3>
-					<?php
-					echo esc_html(
-						sprintf(
-						/* translators: %s: Installed Tutor LMS version */
-							__( 'Changelog (v%s)', 'tutor' ),
-							$installed_version
-						)
-					);
-					?>
-				</h3>
+				<h3><strong>Changelog (v<?php echo esc_html( $installed_version ); ?>)</strong></h3>
 				<ul class="tutor-changelog-list">
 					<?php
 					if ( isset( $changelogs['new'] ) ) {
@@ -139,7 +116,7 @@ use TUTOR\WhatsNew;
 			<!-- PRO section -->
 			<div class="tutor-whats-new-pro-section tutor-pro-section-top">
 				<div>
-					<h2><?php echo wp_kses_post( __( 'Upgrade to Tutor LMS Pro and Maximize <br/> Your Revenue Potential!', 'tutor' ) ); ?></h2>
+					<h2>Upgrade to Tutor LMS Pro and Maximize <br/> Your Revenue Potential!</h2>
 
 					<div class="tutor-whats-new-pro-banner">
 						<img src="https://www.themeum.com/wp-content/uploads/2023/10/banner-top.png" alt="pro features">
@@ -149,18 +126,18 @@ use TUTOR\WhatsNew;
 
 			<div class="tutor-whats-new-pro-section">
 				<div>
-					<h2><?php echo wp_kses_post( __( 'Users love Tutor LMS Pro, <br/> you will love it too!', 'tutor' ) ); ?></h2>
+					<h2>Users love Tutor LMS Pro, <br/> you will love it too!</h2>
 
 					<div class="tutor-mt-30 tutor-whats-new-pro-banner">
 						<img src="https://www.themeum.com/wp-content/uploads/2023/10/banner-bottom.png" alt="pro features">
 					</div>
 
-					<p><?php echo wp_kses_post( __( 'Get access to plenty of functional addons, useful integrations, <br/> new exciting features and much more, so why wait!', 'tutor' ) ); ?></p>
+					<p>Get access to plenty of functional addons, useful integrations, <br/> new exciting features and much more, so why wait!</p>
 
 					<a class="tutor-whats-new-action-btn" 
 						target="_blank" 
 						href="https://tutorlms.com/free-vs-pro?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new#pricing-section"> 
-						<?php esc_html_e( 'Compare Free vs Pro', 'tutor' ); ?>
+						Compare Free vs Pro
 					</a>
 				</div>
 			</div>
