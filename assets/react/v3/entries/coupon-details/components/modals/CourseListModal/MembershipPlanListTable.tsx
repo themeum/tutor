@@ -111,7 +111,7 @@ const MembershipPlanListTable = ({ form }: MembershipPlanListTableProps) => {
       },
     },
     {
-      Header: <div css={styles.tablePriceLabel}>{__('Price', 'tutor-pro')}</div>,
+      Header: <div css={styles.tablePriceLabel}>{__('Price', 'tutor')}</div>,
       Cell: (item) => {
         return (
           <div css={styles.priceWrapper}>
@@ -136,7 +136,7 @@ const MembershipPlanListTable = ({ form }: MembershipPlanListTableProps) => {
   }
 
   if (!getMembershipPlanListQuery.data) {
-    return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor-pro')}</div>;
+    return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor')}</div>;
   }
 
   return (

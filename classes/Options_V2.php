@@ -238,7 +238,7 @@ class Options_V2 {
 		// Update settings log.
 		$this->update_settings_log( $data, 'Exported' );
 
-		$this->json_response( __( 'Settings exported successfully', 'tutor-pro' ), $response );
+		$this->json_response( __( 'Settings exported successfully', 'tutor' ), $response );
 	}
 
 	/**

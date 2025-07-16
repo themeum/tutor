@@ -94,7 +94,7 @@ class Instructors_List {
 
 		$tabs = array(
 			array(
-				'key'   => 'all',
+				'key'   => '',
 				'title' => __( 'All', 'tutor' ),
 				'value' => $approve + $pending + $blocked,
 				'url'   => $url . '&data=all',

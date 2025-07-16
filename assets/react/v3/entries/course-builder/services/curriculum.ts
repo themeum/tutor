@@ -7,29 +7,20 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
 import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
-import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
 import { Addons } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type ID, type TopicContentType, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
-
-export type ContentType =
-  | 'tutor-google-meet'
-  | 'tutor_zoom_meeting'
-  | 'lesson'
-  | 'tutor_quiz'
-  | 'tutor_assignments'
-  | 'tutor_h5p_quiz';
 
 export interface Content {
   ID: ID;
   post_title: string;
   post_content: string;
   post_name: string | null;
-  post_type: ContentType;
+  post_type: TopicContentType;
   total_question?: number;
   quiz_type?: 'tutor_h5p_quiz';
 }
@@ -562,16 +553,79 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
   });
 };
 
-const getH5PLessonContents = (search: string) => {
-  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
-    search_filter: search,
+interface AddContentBankContentToCoursePayload {
+  course_id: ID;
+  topic_id: ID;
+  content_ids: ID[];
+  next_content_order: number;
+}
+
+const addContentBankContentToCourse = (payload: AddContentBankContentToCoursePayload) => {
+  return wpAjaxInstance.post<AddContentBankContentToCoursePayload, TutorMutationResponse<ID[]>>(
+    endpoints.ADD_CONTENT_BANK_CONTENT_TO_COURSE,
+    payload,
+  );
+};
+
+export const useAddContentBankContentToCourseMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: addContentBankContentToCourse,
+    onSuccess: (response, payload) => {
+      if (response.status_code === 200) {
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', payload.course_id],
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
   });
 };
 
-export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
-  return useQuery({
-    queryKey: ['H5PLessonContents', search],
-    queryFn: () => getH5PLessonContents(search).then((response) => response.data),
-    enabled: contentType === 'lesson',
+interface DeleteContentBankContentPayload {
+  topicId: ID;
+  contentId: ID;
+}
+
+const deleteContentBankContent = ({ topicId, contentId }: DeleteContentBankContentPayload) => {
+  return wpAjaxInstance.post<string, TutorMutationResponse<DeleteContentBankContentPayload>>(
+    endpoints.DELETE_CONTENT_BANK_CONTENT_FROM_COURSE,
+    {
+      topic_id: topicId,
+      content_id: contentId,
+    },
+  );
+};
+
+export const useDeleteContentBankContentMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteContentBankContent,
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
   });
 };

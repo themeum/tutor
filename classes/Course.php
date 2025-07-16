@@ -19,6 +19,7 @@ use TUTOR\Input;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Ecommerce\Tax;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -63,6 +64,14 @@ class Course extends Tutor_Base {
 	const SELLING_OPTION_BOTH         = 'both'; // onetime and subscription.
 	const SELLING_OPTION_MEMBERSHIP   = 'membership';
 	const SELLING_OPTION_ALL          = 'all';
+
+	/**
+	 * Tax collection settings meta
+	 *
+	 * @since 3.7.0
+	 */
+	const TAX_ON_SINGLE_META       = 'tutor_tax_on_single';
+	const TAX_ON_SUBSCRIPTION_META = 'tutor_tax_on_subscription';
 
 	/**
 	 * Additional data meta
@@ -758,6 +767,19 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_id, '_tutor_is_public_course', $params['is_public_course'] ?? 'no' );
 		update_post_meta( $post_id, '_tutor_course_level', $params['course_level'] );
 
+		/**
+		 * Save tax collection settings
+		 *
+		 * @since 3.7.0
+		 */
+		if ( isset( $params['tax_on_single'] ) ) {
+			update_post_meta( $post_id, self::TAX_ON_SINGLE_META, $params['tax_on_single'] );
+		}
+
+		if ( isset( $params['tax_on_subscription'] ) ) {
+			update_post_meta( $post_id, self::TAX_ON_SUBSCRIPTION_META, $params['tax_on_subscription'] );
+		}
+
 		do_action( 'tutor_after_prepare_update_post_meta', $post_id, $params );
 	}
 
@@ -1333,6 +1355,14 @@ class Course extends Tutor_Base {
 			),
 		);
 
+		$tax_on_single       = get_post_meta( $course_id, self::TAX_ON_SINGLE_META, true );
+		$tax_on_subscription = get_post_meta( $course_id, self::TAX_ON_SUBSCRIPTION_META, true );
+
+		$data['tax_collection'] = array(
+			'tax_on_single'       => '' === $tax_on_single ? '1' : $tax_on_single,
+			'tax_on_subscription' => '' === $tax_on_subscription ? '1' : $tax_on_subscription,
+		);
+
 		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
 
 		$this->json_response( __( 'Data retrieved successfully!', 'tutor' ), $data );
@@ -1469,6 +1499,10 @@ class Course extends Tutor_Base {
 		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
 		$settings['youtube_api_key_exist']   = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
+		$settings['enable_tax']                    = Tax::get_setting( 'enable_tax', true );
+		$settings['is_tax_included_in_price']      = Tax::is_tax_included_in_price();
+		$settings['enable_individual_tax_control'] = Tax::get_setting( 'enable_individual_tax_control' );
+
 		$new_data = array( 'settings' => $settings );
 
 		$data = array_merge( $default_data, $new_data );
@@ -1516,7 +1550,12 @@ class Course extends Tutor_Base {
 		$data['difficulty_levels']        = $difficulty_levels;
 		$data['supported_video_sources']  = $supported_video_sources;
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
-		$data['max_upload_size']          = size_format( wp_max_upload_size() );
+
+		if ( 'en_US' !== $data['local'] ) {
+			$data['course_builder_basic_locales']      = tutils()->get_script_locale_data( 'tutor-course-builder-basic', $data['local'] );
+			$data['course_builder_curriculum_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-curriculum', $data['local'] );
+			$data['course_builder_additional_locales'] = tutils()->get_script_locale_data( 'tutor-course-builder-additional', $data['local'] );
+		}
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 

@@ -15,26 +15,23 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import FormTrueFalse from '@CourseBuilderComponents/fields/quiz/FormTrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import FormTrueFalse from '@TutorShared/components/fields/quiz/questions/FormTrueFalse';
 
-import {
-  QuizDataStatus,
-  type QuizForm,
-  type QuizQuestionOption,
-  calculateQuizDataStatus,
-} from '@CourseBuilderServices/quiz';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { QuizDataStatus, type QuizQuestionOption } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex } = useQuizModalContext();
 
   const {
     fields: optionsFields,
@@ -68,7 +65,8 @@ const TrueFalse = () => {
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
-  const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
+  const handleCheckCorrectAnswer = (index: number) => {
+    const option = optionsFields[index];
     const updatedOptions = currentOptions.map((item) => ({
       ...item,
       ...(calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) && {
@@ -151,7 +149,8 @@ const TrueFalse = () => {
                   <FormTrueFalse
                     {...controllerProps}
                     index={index}
-                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
+                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index)}
+                    questionId={activeQuestionId}
                   />
                 )}
               />
@@ -172,7 +171,13 @@ const TrueFalse = () => {
                       `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
-                      <FormTrueFalse {...controllerProps} index={index} onCheckCorrectAnswer={noop} isOverlay />
+                      <FormTrueFalse
+                        {...controllerProps}
+                        index={index}
+                        onCheckCorrectAnswer={noop}
+                        isOverlay
+                        questionId={activeQuestionId}
+                      />
                     )}
                   />
                 );

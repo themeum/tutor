@@ -96,7 +96,6 @@ describe('Purchase Course', () => {
     cy.loginAsStudent();
     cy.get('.tutor-course-name a').then(($links) => {
       const hrefs = Cypress._.map($links, (el) => el.getAttribute('href'));
-      console.log(hrefs);
       expect(hrefs).to.include(`${courseSlug}/`);
     });
   });

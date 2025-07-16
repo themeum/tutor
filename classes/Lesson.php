@@ -31,11 +31,18 @@ class Lesson extends Tutor_Base {
 	 * Register hooks
 	 *
 	 * @since 1.0.0
+	 * @since 3.7.0 param register hook added.
+	 *
+	 * @param bool $register_hooks register hooks or not.
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
 		parent::__construct();
+
+		if ( ! $register_hooks ) {
+			return;
+		}
 
 		add_action( 'save_post_' . $this->lesson_post_type, array( $this, 'save_lesson_meta' ) );
 
@@ -111,9 +118,17 @@ class Lesson extends Tutor_Base {
 	 * @since 1.0.0
 	 *
 	 * @param integer $post_ID post ID.
+	 *
 	 * @return void
 	 */
 	public function save_lesson_meta( $post_ID ) {
+		$thumbnail_id = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
+		if ( $thumbnail_id ) {
+			update_post_meta( $post_ID, '_thumbnail_id', $thumbnail_id );
+		} else {
+			delete_post_meta( $post_ID, '_thumbnail_id' );
+		}
+
 		$video_source = sanitize_text_field( tutor_utils()->array_get( 'video.source', $_POST ) ); //phpcs:ignore
 		if ( '-1' === $video_source ) {
 			delete_post_meta( $post_ID, '_video' );
@@ -187,29 +202,7 @@ class Lesson extends Tutor_Base {
 			}
 		}
 
-		$post = get_post( $lesson_id, ARRAY_A );
-
-		if ( $post ) {
-			$post['thumbnail_id'] = get_post_meta( $lesson_id, '_thumbnail_id', true );
-			$post['thumbnail']    = get_the_post_thumbnail_url( $lesson_id );
-			$post['attachments']  = tutor_utils()->get_attachments( $lesson_id );
-
-			$video = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
-			if ( $video ) {
-				$source = $video['source'] ?? '';
-				if ( 'html5' === $source ) {
-					$poster_url            = wp_get_attachment_url( $video['poster'] ?? 0 );
-					$source_html5          = wp_get_attachment_url( $video['source_video_id'] ?? 0 );
-					$video['poster_url']   = $poster_url;
-					$video['source_html5'] = $source_html5;
-				}
-			}
-			$post['video'] = $video;
-		} else {
-			$post = array();
-		}
-
-		$data = apply_filters( 'tutor_lesson_details_response', $post, $lesson_id );
+		$data = LessonModel::get_lesson_details( $lesson_id );
 
 		$this->json_response(
 			__( 'Lesson data fetched successfully', 'tutor' ),
@@ -257,10 +250,8 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
-		$title        = Input::post( 'title' );
-		$description  = Input::post( 'description', '', Input::TYPE_KSES_POST );
-		$thumbnail_id = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
-
+		$title            = Input::post( 'title' );
+		$description      = Input::post( 'description', '', Input::TYPE_KSES_POST );
 		$is_html_active   = Input::post( 'is_html_active' ) === 'true' ? true : false;
 		$raw_html_content = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
 		$post_content     = $is_html_active ? $raw_html_content : $description;
@@ -320,12 +311,6 @@ class Lesson extends Tutor_Base {
 			do_action( 'tutor/lesson_update/before', $lesson_id );
 			wp_update_post( $lesson_data );
 			do_action( 'tutor/lesson_update/after', $lesson_id );
-		}
-
-		if ( $thumbnail_id ) {
-			update_post_meta( $lesson_id, '_thumbnail_id', $thumbnail_id );
-		} else {
-			delete_post_meta( $lesson_id, '_thumbnail_id' );
 		}
 
 		if ( $is_update ) {

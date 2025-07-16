@@ -18,7 +18,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormImageAnswering from '@CourseBuilderComponents/fields/quiz/FormImageAnswering';
+import FormImageAnswering from '@TutorShared/components/fields/quiz/questions/FormImageAnswering';
 
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
@@ -27,8 +27,9 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { QuizDataStatus, type QuizForm, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 import Button from '@TutorShared/atoms/Button';
+import { QuizDataStatus, type QuizQuestionOption } from '@TutorShared/utils/types';
 
 const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -150,6 +151,9 @@ const ImageAnswering = () => {
                     onDuplicateOption={(data) => handleDuplicateOption(index, data)}
                     onRemoveOption={() => handleDeleteOption(index, option)}
                     index={index}
+                    questionId={activeQuestionId}
+                    validationError={validationError}
+                    setValidationError={setValidationError}
                   />
                 )}
               />
@@ -176,6 +180,7 @@ const ImageAnswering = () => {
                         onRemoveOption={noop}
                         index={index}
                         isOverlay
+                        questionId={activeQuestionId}
                       />
                     )}
                   />

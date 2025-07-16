@@ -16,7 +16,7 @@ use TUTOR\Course_List;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
-$courses = \TUTOR\Tutor::instance()->course_list;
+$courses = tutor_lms()->course_list;
 
 /**
  * Short able params
@@ -234,18 +234,18 @@ if ( 0 === $total_courses_count ) {
 
 <div class="tutor-admin-wrap">
 	<?php
-	$navbar_template = tutor()->path . 'views/elements/course-navbar.php';
+	$navbar_template = tutor()->path . 'views/elements/list-navbar.php';
 	tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 
 	if ( $total_courses_count > 0 ) {
-		$filters_template = tutor()->path . 'views/elements/course-filters.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	}
 	?>
 	<div class="tutor-admin-container tutor-admin-container-lg">
-		<div class="tutor-dashboard-course-list tutor-mt-16">
+		<div class="tutor-mt-16">
 			<?php if ( $the_query->have_posts() ) : ?>
-			<div class="tutor-table-responsive">
+			<div class="tutor-table-responsive tutor-dashboard-list-table">
 				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
@@ -483,7 +483,9 @@ if ( 0 === $total_courses_count ) {
 			<?php else : ?>
 				<?php
 				$template      = '';
-				$template_args = array();
+				$template_args = array(
+					'title' => __( 'No Courses Found.', 'tutor' ),
+				);
 
 				if ( 0 === $total_courses_count ) {
 					$template = 'create-course-empty-state.php';
@@ -494,7 +496,7 @@ if ( 0 === $total_courses_count ) {
 						'trashed_courses_url'   => '?page=tutor&data=trash',
 					);
 				} else {
-					$template = 'course-empty-state.php';
+					$template = 'list-empty-state.php';
 				}
 
 				$full_path = tutor()->path . 'views/elements/' . $template;

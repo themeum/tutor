@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-final class Tutor {
+final class Tutor extends Singleton {
 	/**
 	 * Tutor version
 	 *
@@ -58,16 +58,6 @@ final class Tutor {
 	 * @var string
 	 */
 	public $basename;
-
-	/**
-	 * The single instance of the class.
-	 *
-	 * @since 1.2.0
-	 *
-	 * @var object
-	 */
-	protected static $_instance = null;
-
 
 	/**
 	 * Utils class object
@@ -166,7 +156,7 @@ final class Tutor {
 	 *
 	 * @var object
 	 */
-	private $lesson;
+	public $lesson;
 
 	/**
 	 * Rewrite_Rules class object
@@ -353,9 +343,9 @@ final class Tutor {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @var $announcements
+	 * @var object
 	 */
-	private $announcements;
+	public $announcements;
 
 	/**
 	 * Reviews class object
@@ -373,7 +363,7 @@ final class Tutor {
 	 *
 	 * @var object
 	 */
-	private $withdraw_list;
+	public $withdraw_list;
 
 	/**
 	 * Student_List class object
@@ -382,7 +372,7 @@ final class Tutor {
 	 *
 	 * @var object
 	 */
-	private $student_list;
+	public $student_list;
 
 	/**
 	 * Instructor_List class object
@@ -391,7 +381,7 @@ final class Tutor {
 	 *
 	 * @var object
 	 */
-	private $instructor_list;
+	public $instructor_list;
 
 	/**
 	 * Course List
@@ -435,20 +425,6 @@ final class Tutor {
 	 * @var Permalink
 	 */
 	private $permalink;
-
-	/**
-	 * Run the TUTOR
-	 *
-	 * @since 1.2.0
-	 *
-	 * @return null|Tutor
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) ) {
-			self::$_instance = new self();
-		}
-		return self::$_instance;
-	}
 
 	/**
 	 * Initialize props & other dependencies

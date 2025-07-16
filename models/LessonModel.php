@@ -132,4 +132,41 @@ class LessonModel {
 		update_user_meta( $user_id, '_tutor_completed_lesson_id_' . $post_id, tutor_time() );
 		do_action( 'tutor_mark_lesson_complete_after', $post_id, $user_id );
 	}
+
+	/**
+	 * Get lesson details.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param int $lesson_id lesson id.
+	 *
+	 * @return array
+	 */
+	public static function get_lesson_details( $lesson_id ) {
+		$post = get_post( $lesson_id, ARRAY_A );
+
+		if ( $post ) {
+			$post['thumbnail_id'] = get_post_meta( $lesson_id, '_thumbnail_id', true );
+			$post['thumbnail']    = get_the_post_thumbnail_url( $lesson_id );
+			$post['attachments']  = tutor_utils()->get_attachments( $lesson_id );
+
+			$video = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
+			if ( $video ) {
+				$source = $video['source'] ?? '';
+				if ( 'html5' === $source ) {
+					$poster_url            = wp_get_attachment_url( $video['poster'] ?? 0 );
+					$source_html5          = wp_get_attachment_url( $video['source_video_id'] ?? 0 );
+					$video['poster_url']   = $poster_url;
+					$video['source_html5'] = $source_html5;
+				}
+			}
+			$post['video'] = $video;
+		} else {
+			$post = array();
+		}
+
+		$data = apply_filters( 'tutor_lesson_details_response', $post, $lesson_id );
+
+		return $data;
+	}
 }

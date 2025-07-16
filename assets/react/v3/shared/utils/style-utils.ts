@@ -17,6 +17,14 @@ export const createGlobalCss = () => css`
     }
   }
 
+  body.tutor-backend-tutor-content-bank {
+    @media screen and (max-width: 600px) {
+      #wpadminbar {
+        position: fixed;
+      }
+    }
+  }
+
   *,
   ::after,
   ::before {
@@ -266,7 +274,7 @@ export const styleUtils = {
     cursor: pointer;
   `,
   cardInnerSection: css`
-    padding: ${spacing[24]};
+    padding: ${spacing[20]} ${spacing[20]} ${spacing[24]} ${spacing[20]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};

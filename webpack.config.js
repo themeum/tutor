@@ -73,7 +73,12 @@ module.exports = (env, options) => {
                     terserOptions: {
                         compress: false,
                         ecma: 6,
-                        mangle: true,
+                        mangle: {
+                            reserved: ['__'],
+                        },
+                        format: {
+                            comments: /translators:/i,
+                        },
                     },
                     extractComments: false,
                 }),
@@ -120,13 +125,7 @@ module.exports = (env, options) => {
                 output: {
                     path: path.resolve(dest_path),
                     filename: '[name].js',
-                    chunkFilename: (pathData) => {
-                        if (pathData.chunk.name && pathData.chunk.name.startsWith('icon-')) {
-                            const name = pathData.chunk.name.replace(/^icon-/, '');
-                            return `icons/${name}.js?ver=${version}`;
-                        }
-                        return `lazy-chunks/[name].js?ver=${version}`;
-                    },
+                    chunkFilename: `lazy-chunks/[name].js?ver=${version}`,
                     clean: true,
                 },
                 resolve: {
