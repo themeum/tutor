@@ -2,43 +2,54 @@
 .tutor-whats-new-wrapper{
 	max-width: 1080px;
 	background-color: white;
-	margin: 25px auto;
-	border-radius: 8px;
+	margin: 32px auto;
+	border-radius: 16px;
 
 	.tutor-update-available{
 		background: #FFF5E0;
-		border-top-left-radius: 8px;
-    	border-top-right-radius: 8px;
-		padding: 25px;
+		border-top-left-radius: 16px;
+    	border-top-right-radius: 16px;
+		padding: 32px;
 
 		.tutor-version-alert{
 			display: flex;
-			gap: 15px;
+			gap: 8px;
 			justify-content: center;
 			align-items: center;
-			margin-bottom: 10px;
+			margin-bottom: 12px;
 			p{
+				font-size: 14px;
+				line-height: 20px;
 				font-weight: 500;
 				margin: 0;
+				color: #000000;
 			}
 		}
 
 		.tutor-update-version{
-			border-radius: 6px;
+			border-radius: 8px;
 			background-color: #fff;
-			padding: 20px 25px;
+			padding: 20px 24px;
 			display: flex;
-			gap: 25px;
+			gap: 12px;
 			align-items: center;
-			width: 410px;
+			max-width: 460px;
 			margin: 0 auto;
 
 			>div:nth-child(2) {
-				h3,p{
-					margin: 0;
+				h3{
+					font-size: 18px;
+					line-height: 24px;
+					font-weight: 500;
+					margin-top: 0px;
+					margin-bottom: 4px;
+					color: #091E42;
 				}
 				p{
-					margin-top: 5px;
+					font-size: 14px;
+					line-height: 20px;
+					font-weight: 400;
+					margin: 0px;
 				}
 				a{
 					color: #00F;
@@ -85,7 +96,7 @@
 		}
 
 		p{
-			font-size: 14px;
+			font-size: 16px;
 		}
 
 		.tutor-logo-head{
