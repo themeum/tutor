@@ -239,6 +239,11 @@ class Addons {
 				'name'        => __( 'Subscription', 'tutor' ),
 				'description' => __( 'Manage subscription', 'tutor' ),
 			),
+			'content-bank'             => array(
+				'name'        => __( 'Content Bank', 'tutor' ),
+				'description' => __( 'Create content once and use it across multiple courses.', 'tutor' ),
+				'is_new'      => true,
+			),
 			'social-login'             => array(
 				'name'        => __( 'Social Login', 'tutor' ),
 				'description' => __( 'Let users register & login through social networks.', 'tutor' ),
@@ -338,7 +343,6 @@ class Addons {
 			'h5p'                      => array(
 				'name'        => __( 'H5P', 'tutor' ),
 				'description' => __( 'Integrate H5P to add interactivity and engagement to your courses.', 'tutor' ),
-				'is_new'      => true,
 			),
 		);
 

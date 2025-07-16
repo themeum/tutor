@@ -1081,7 +1081,7 @@ class Utils {
 			'order'          => 'ASC',
 		);
 
-		$args = wp_parse_args( $custom_args, $default_args );
+		$args = apply_filters( 'tutor_course_topic_contents_args', wp_parse_args( $custom_args, $default_args ) );
 
 		return new \WP_Query( $args );
 	}
@@ -1238,10 +1238,11 @@ class Utils {
 		$monetize_by = $this->get_option( 'monetize_by' );
 
 		if ( $this->is_monetize_by_tutor() ) {
-			$regular_price = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
-			$sale_price    = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+			$regular_price  = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$sale_price     = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+			$tax_collection = CourseModel::is_tax_enabled_for_single_purchase( $course_id );
 
-			$prices = $this->get_prices_with_tax_info( $regular_price, $sale_price );
+			$prices = $this->get_prices_with_tax_info( $regular_price, $sale_price, $tax_collection );
 		} else {
 			$product_id = $this->get_course_product_id( $course_id );
 			if ( $product_id ) {
@@ -1265,24 +1266,35 @@ class Utils {
 	 * Get prices with tax info
 	 *
 	 * @since 3.0.0
+	 * @since 3.7.0 param tax collection is added.
 	 *
 	 * @param int|float $regular_price regular price.
 	 * @param int|float $sale_price sale price.
+	 * @param bool      $tax_collection tax collection.
 	 *
 	 * @return object
 	 */
-	public function get_prices_with_tax_info( $regular_price, $sale_price = null ) {
+	public function get_prices_with_tax_info( $regular_price, $sale_price = null, $tax_collection = true ) {
 
-		$display_price       = $sale_price ? $sale_price : $regular_price;
-		$show_price_with_tax = Tax::show_price_with_tax();
-		$user_logged_in      = is_user_logged_in();
+		$display_price        = $sale_price ? $sale_price : $regular_price;
+		$user_logged_in       = is_user_logged_in();
+		$should_calculate_tax = Tax::should_calculate_tax();
+		$show_price_with_tax  = Tax::show_price_with_tax() && $user_logged_in;
 
 		$tax_amount = 0;
 		$tax_rate   = 0;
-		if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_included_in_price() ) {
+
+		if ( $should_calculate_tax
+			&& $show_price_with_tax
+			&& $tax_collection
+			&& is_numeric( $display_price )
+			&& ! Tax::is_tax_included_in_price()
+		) {
+
 			$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
 			$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
 			$display_price += $tax_amount;
+
 		}
 
 		$price_info = array();
@@ -1292,7 +1304,7 @@ class Utils {
 		$price_info['display_price']       = $display_price;
 		$price_info['tax_rate']            = $tax_rate;
 		$price_info['tax_amount']          = $tax_amount;
-		$price_info['show_price_with_tax'] = $user_logged_in && $show_price_with_tax;
+		$price_info['show_incl_tax_label'] = $should_calculate_tax && $tax_collection && $show_price_with_tax;
 
 		return (object) $price_info;
 	}
@@ -4077,7 +4089,7 @@ class Utils {
 	 *
 	 * @return array|null|object
 	 */
-	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true  ) {
+	public function get_course_reviews( $object_id = 0, $start = 0, $limit = 10, $count_only = false, $status_in = array( 'approved' ), $include_user_id = 0, $is_course_object = true ) {
 		global $wpdb;
 
 		$object_id = (int) $object_id;
@@ -5128,6 +5140,8 @@ class Utils {
 				$quiz_id
 			)
 		);
+
+		$questions = apply_filters( 'tutor_get_questions_by_quiz', $questions, $quiz_id );
 
 		foreach ( $questions as $question ) {
 			$question->question_title       = stripslashes( $question->question_title );
@@ -7922,6 +7936,11 @@ class Utils {
 	 * @return int|int[]
 	 */
 	public function get_course_id_by( $content, $object_id ) {
+		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
+		if ( $course_id ) {
+			return $course_id;
+		}
+
 		$cache_key = "tutor_get_course_id_by_{$content}_{$object_id}";
 		$course_id = TutorCache::get( $cache_key );
 
@@ -8072,6 +8091,7 @@ class Utils {
 			'tutor_gm_course'    => 'tutor_gm_course',
 			'tutor_gm_topic'     => 'tutor_gm_topic',
 			'topics'             => 'topic',
+			'cb-lesson'          => 'cb-lesson',
 		);
 
 		$content_type = get_post_field( 'post_type', $content_id );
@@ -8089,6 +8109,7 @@ class Utils {
 
 			$content_type = $parent_type == tutor()->course_post_type ? 'tutor_gm_course' : 'tutor_gm_topic';
 		}
+
 		return $this->get_course_id_by( $mapping[ $content_type ], $content_id );
 	}
 
@@ -8163,7 +8184,11 @@ class Utils {
 	public function has_enrolled_content_access( $content, $object_id = 0, $user_id = 0 ) {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
-		$course_id = $this->get_course_id_by( $content, $object_id );
+
+		$course_id = Input::get('course', 0, Input::TYPE_INT );
+		if ( ! $course_id ) {
+			$course_id = $this->get_course_id_by( $content, $object_id );
+		}
 
 		do_action( 'tutor_before_enrolment_check', $course_id, $user_id );
 
@@ -8898,6 +8923,49 @@ class Utils {
 			</div>
 		</div>
 		<?php
+	}
+
+	/**
+	 * Render list empty state template
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param array $data title and subtitle.
+	 *
+	 * @return void
+	 */
+	public function render_list_empty_state( $data = array() ) {
+		tutor_load_template_from_custom_path( tutor()->path . 'views/elements/list-empty-state.php', $data );
+	}
+
+	/**
+	 * Get subtitle for list empty state.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return bool|string
+	 */
+	public function get_list_empty_state_subtitle() {
+		$subtitle = __( 'Try adjusting your filters.', 'tutor' );
+
+		$course            = isset( $_GET['course-id'] ) ? true : false;
+		$data              = isset( $_GET['data'] ) ? true : false;
+		$date              = isset( $_GET['date'] ) ? true : false;
+		$search            = isset( $_GET['search'] ) ? true : false;
+		$category          = isset( $_GET['category'] ) ? true : false;
+		$payment_status    = isset( $_GET['payment-status'] ) ? true : false;
+		$subscription_type = isset( $_GET['subscription-type'] ) ? true : false;
+		$applies_to        = isset( $_GET['applies_to'] ) ? true : false;
+
+		if ( $course || $data || $date || $search || $category || $payment_status || $subscription_type || $applies_to ) {
+			if ( $search ) {
+				return __( 'Try using different keywords.', 'tutor' );
+			}
+
+			return $subtitle;
+		}
+
+		return false;
 	}
 
 	/**
@@ -10655,5 +10723,85 @@ class Utils {
 			}
 		}
 		return $branch;
+	}
+
+	/**
+	 * Render SVG icon
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string  $name Icon name.
+	 * @param integer $width Icon width.
+	 * @param integer $height Icon height.
+	 * @param array   $attributes Custom attributes.
+	 *
+	 * @return void
+	 */
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
+		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
+		if ( ! file_exists( $icon_path ) ) {
+			return;
+		}
+
+		$svg = file_get_contents( $icon_path );
+		if ( ! $svg ) {
+			return;
+		}
+
+		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
+		if ( ! $matches ) {
+			return;
+		}
+
+		list( $svg_tag, $view_box, $inner_svg ) = $matches;
+
+		$attr_string = sprintf(
+			'width="%d" height="%d" viewBox="%s" role="presentation" aria-hidden="true"',
+			esc_attr( $width ),
+			esc_attr( $height ),
+			esc_attr( $view_box ),
+		);
+
+		foreach ( $attributes as $key => $value ) {
+			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+		}
+
+		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+	}
+
+	/**
+	 * Get SVG icon url
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string $name Icon name.
+	 *
+	 * @return string
+	 */
+	public function get_svg_icon_url( $name ) {
+		return tutor()->url . 'assets/icons/' . $name . '.svg';
+	}
+	
+	/**
+	 * Get script locale data for dynamic scripts
+	 *
+	 * @since 3.7.0
+	 * 
+	 * @param string $filename Filename
+	 * @param string $locale Locale
+	 *
+	 * @return array|null
+	 */
+	public function get_script_locale_data( string $filename, string $locale = 'en_US' ) {
+		$hash      = md5( "assets/js/lazy-chunks/{$filename}.js" );
+		$json_path = WP_CONTENT_DIR . "/languages/plugins/tutor-{$locale}-{$hash}.json";
+		
+		if ( file_exists( $json_path ) ) {
+			$contents = file_get_contents( $json_path );
+			$data     = json_decode( $contents, true );
+			return $data['locale_data'][ $data['domain'] ];
+		}
+
+		return null;
 	}
 }

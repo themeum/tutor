@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Input;
 use TUTOR\Instructors_List;
+use Tutor\Models\CourseModel;
 
 $allowed_subpage = array();
 
@@ -26,7 +27,7 @@ if ( Input::has( 'sub_page' ) ) {
 	}
 }
 
-$instructors = new Instructors_List();
+$instructors = tutor_lms()->instructor_list;
 
 /**
  * Short able params
@@ -66,9 +67,9 @@ if ( 'pending' === $active_tab ) {
 } elseif ( 'approved' === $active_tab ) {
 	$instructor_status = array( 'approved' );
 }
-$instructors_list = Instructors_List::get_instructors( $instructor_status, $offset, $per_page_data, $search_term, $course_id, $date, $data_order );
 
-$total = Instructors_List::count_total_instructors( $instructor_status, $search_term, $course_id, $date );
+$instructors_list = $instructors::get_instructors( $instructor_status, $offset, $per_page_data, $search_term, $course_id, $date, $data_order );
+$total            = $instructors::count_total_instructors( $instructor_status, $search_term, $course_id, $date );
 
 /**
  * Navbar data to make nav menu
@@ -77,8 +78,6 @@ $url               = get_pagenum_link();
 $add_insructor_url = $url . '&sub_page=add_new_instructor';
 $navbar_data       = array(
 	'page_title'   => $instructors->page_title,
-	'tabs'         => $instructors->tabs_key_value( $search_term, $course_id, $date ),
-	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
 	'button_url'   => $add_insructor_url,
@@ -86,11 +85,34 @@ $navbar_data       = array(
 );
 
 $filters = array(
-	'bulk_action'   => $instructors->bulk_action,
-	'bulk_actions'  => $instructors->prpare_bulk_actions(),
-	'ajax_action'   => 'tutor_instructor_bulk_action',
-	'filters'       => true,
-	'course_filter' => true,
+	'bulk_action'  => $instructors->bulk_action,
+	'bulk_actions' => $instructors->prpare_bulk_actions(),
+	'ajax_action'  => 'tutor_instructor_bulk_action',
+	'filters'      => array(
+		array(
+			'label'      => __( 'Courses', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'course-id',
+			'options'    => CourseModel::get_course_dropdown_options(),
+			'searchable' => true,
+			'value'      => Input::get( 'course-id', '' ),
+		),
+		array(
+			'label'      => __( 'Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'data',
+			'options'    => $instructors->tabs_key_value( $search_term, $course_id, $date ),
+			'searchable' => false,
+			'value'      => Input::get( 'data', '' ),
+		),
+		array(
+			'label'      => __( 'Date', 'tutor' ),
+			'field_type' => 'date',
+			'field_name' => 'date',
+			'show_label' => true,
+			'value'      => Input::get( 'date', '' ),
+		),
+	),
 );
 
 ?>
@@ -100,13 +122,14 @@ $filters = array(
 		/**
 		 * Load Templates with data.
 		 */
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
-	<div class="tutor-admin-body">
-		<div class="tutor-table-responsive tutor-mt-32">
+	<div class="tutor-admin-container tutor-admin-container-lg tutor-mt-16">
+		<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
+		<div class="tutor-table-responsive tutor-dashboard-list-table">
 			<table class="tutor-table tutor-table-middle table-instructors tutor-table-with-checkbox">
 				<thead>
 					<tr>
@@ -141,101 +164,97 @@ $filters = array(
 					</tr>
 				</thead>
 				<tbody>
-					<?php if ( is_array( $instructors_list ) && count( $instructors_list ) ) : ?>
-						<?php
-						foreach ( $instructors_list as $list ) :
-							$alert     = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
-							$user_data = get_userdata( $list->ID );
-							?>
-							<tr>
-								<td>
-									<div class="td-checkbox tutor-d-flex ">
-										<input id="tutor-admin-list-<?php echo esc_attr( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
-									</div>
-								</td>
-								<td>
-									<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-										<?php
-										echo wp_kses(
-											tutor_utils()->get_tutor_avatar( $list->ID ),
-											tutor_utils()->allowed_avatar_tags()
-										);
-										?>
-										<?php echo esc_html( tutils()->get_user_name( $user_data ) ); ?>
-										<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
-											<span class="tutor-icon-external-link"></span>
-										</a>
-									</div>
-								</td>
-								<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
-									<div class="tutor-d-flex tutor-align-center" style="gap: 5px;">
-										<span class="tutor-fs-7"><?php echo esc_html( $list->user_email ); ?></span>
-										<?php do_action( 'tutor_show_email_verified_badge', $list->ID ); ?>
-									</div>
-								</td>
-								</td>
-								<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
-									<span class="tutor-color-black tutor-fs-7">
-										<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
-									</span>
-								</td>
-								<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
-									<span class="tutor-color-black tutor-fs-7">
-										<?php
-											$commision_string = tutor_utils()->get_option( 'earning_instructor_commission' ) . '%';
-											echo apply_filters( 'tutor_pro_instructor_commission_string', $commision_string, $list->ID ); //phpcs:ignore
-										?>
-									</span>
-								</td>
-
-								<?php do_action( 'tutor_after_instructor_list_commission_column_data', $list->ID ); ?>
-
-								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
-									<span style="display:block; width:0; height:0; overflow:hidden;">
-										<?php
-											// Render for frontend sorting.
-											echo esc_html( $available_status[ $list->status ][0] );
-										?>
-									</span>
-									<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
-										<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
-											<?php foreach ( $available_status as $key => $status_name ) : ?>
-												<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
-													<?php echo esc_html( $available_status[ $key ][0] ); ?>
-												</option>
-											<?php endforeach; ?>
-										</select>
-										<i class="icon1 tutor-icon-eye-bold"></i>
-										<i class="icon2 tutor-icon-angle-down"></i>
-									</div>
-								</td>
-								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+					<?php
+					foreach ( $instructors_list as $list ) :
+						$alert     = ( 'pending' === $list->status ? 'warning' : ( 'approved' === $list->status ? 'success' : ( 'blocked' === $list->status ? 'danger' : 'default' ) ) );
+						$user_data = get_userdata( $list->ID );
+						?>
+						<tr>
+							<td>
+								<div class="td-checkbox tutor-d-flex ">
+									<input id="tutor-admin-list-<?php echo esc_attr( $list->ID ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $list->ID ); ?>" />
+								</div>
+							</td>
+							<td>
+								<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 									<?php
-									ob_start();
-									$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
+									echo wp_kses(
+										tutor_utils()->get_tutor_avatar( $list->ID ),
+										tutor_utils()->allowed_avatar_tags()
+									);
 									?>
-									<a href="<?php echo esc_url( $profile_url ); ?>" 
-										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-										<?php esc_html_e( 'Edit', 'tutor' ); ?>
+									<?php echo esc_html( tutils()->get_user_name( $user_data ) ); ?>
+									<a href="<?php echo esc_url( tutor_utils()->profile_url( $list->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
+										<span class="tutor-icon-external-link"></span>
 									</a>
+								</div>
+							</td>
+							<td data-th="<?php esc_html_e( 'Email', 'tutor' ); ?>">
+								<div class="tutor-d-flex tutor-align-center" style="gap: 5px;">
+									<span class="tutor-fs-7"><?php echo esc_html( $list->user_email ); ?></span>
+									<?php do_action( 'tutor_show_email_verified_badge', $list->ID ); ?>
+								</div>
+							</td>
+							</td>
+							<td data-th="<?php esc_html_e( 'Total Course', 'tutor' ); ?>">
+								<span class="tutor-color-black tutor-fs-7">
+									<?php echo esc_html( $instructors->column_total_course( $list, 'total_course' ) ); ?>
+								</span>
+							</td>
+							<td data-th="<?php esc_html_e( 'Commission Rate', 'tutor' ); ?>">
+								<span class="tutor-color-black tutor-fs-7">
 									<?php
-									$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
-									//phpcs:ignore -- already escaped.
-									echo $edit_button;
+										$commision_string = tutor_utils()->get_option( 'earning_instructor_commission' ) . '%';
+										echo apply_filters( 'tutor_pro_instructor_commission_string', $commision_string, $list->ID ); //phpcs:ignore
 									?>
-								</td>
-							</tr>
-						<?php endforeach; ?>
-						<?php else : ?>
-							<tr>
-								<td colspan="100%" class="column-empty-state">
-									<?php tutor_utils()->tutor_empty_state( __( 'No instructor found', 'tutor' ) ); ?>
-								</td>
-							</tr>
-					<?php endif; ?>
+								</span>
+							</td>
+
+							<?php do_action( 'tutor_after_instructor_list_commission_column_data', $list->ID ); ?>
+
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+								<span style="display:block; width:0; height:0; overflow:hidden;">
+									<?php
+										// Render for frontend sorting.
+										echo esc_html( $available_status[ $list->status ][0] );
+									?>
+								</span>
+								<div class="tutor-form-select-with-icon <?php echo esc_html( $available_status[ $list->status ][1] ); ?>">
+									<select class="tutor-table-row-status-update" data-bulk-ids="<?php echo esc_attr( $list->ID ); ?>" data-status_key="bulk-action" data-action="tutor_instructor_bulk_action">
+										<?php foreach ( $available_status as $key => $status_name ) : ?>
+											<option data-status_class="<?php echo esc_attr( $available_status[ $key ][1] ); ?>" value="<?php echo esc_attr( $key ); ?>" data-status="<?php echo esc_attr( $key ); ?>" <?php selected( $list->status, $key ); ?>>
+												<?php echo esc_html( $available_status[ $key ][0] ); ?>
+											</option>
+										<?php endforeach; ?>
+									</select>
+									<i class="icon1 tutor-icon-eye-bold"></i>
+									<i class="icon2 tutor-icon-angle-down"></i>
+								</div>
+							</td>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+								<?php
+								ob_start();
+								$profile_url = add_query_arg( 'user_id', $list->ID, self_admin_url( 'user-edit.php' ) );
+								?>
+								<a href="<?php echo esc_url( $profile_url ); ?>" 
+									class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+									<?php esc_html_e( 'Edit', 'tutor' ); ?>
+								</a>
+								<?php
+								$edit_button = apply_filters( 'tutor_instructor_list_edit_button', ob_get_clean(), $user_data );
+								//phpcs:ignore -- already escaped.
+								echo $edit_button;
+								?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
 				</tbody>
 			</table>
 		</div>
+		<?php else : ?>
+			<?php tutils()->render_list_empty_state(); ?>
+		<?php endif; ?>
+
 		<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 			<?php
 				/**

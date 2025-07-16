@@ -19,19 +19,16 @@ import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormMultipleChoiceAndOrdering from '@CourseBuilderComponents/fields/quiz/FormMultipleChoiceAndOrdering';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import FormMultipleChoiceAndOrdering from '@TutorShared/components/fields/quiz/questions/FormMultipleChoiceAndOrdering';
 
-import {
-  QuizDataStatus,
-  type QuizForm,
-  type QuizQuestionOption,
-  calculateQuizDataStatus,
-} from '@CourseBuilderServices/quiz';
+import { type QuizForm } from '@CourseBuilderServices/quiz';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { calculateQuizDataStatus } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { QuizDataStatus, type QuizQuestionOption } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
 const MultipleChoiceAndOrdering = () => {
@@ -82,7 +79,9 @@ const MultipleChoiceAndOrdering = () => {
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
-  const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
+  const handleCheckCorrectAnswer = (index: number) => {
+    const option = currentOptions[index];
+
     if (hasMultipleCorrectAnswer) {
       updateOption(index, {
         ...option,
@@ -196,8 +195,13 @@ const MultipleChoiceAndOrdering = () => {
                     {...controllerProps}
                     onDuplicateOption={(data) => handleDuplicateOption(index, data)}
                     onRemoveOption={() => handleDeleteOption(index, option)}
-                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
+                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index)}
                     index={index}
+                    hasMultipleCorrectAnswer={hasMultipleCorrectAnswer}
+                    questionType={currentQuestionType}
+                    questionId={activeQuestionId}
+                    validationError={validationError}
+                    setValidationError={setValidationError}
                   />
                 )}
               />
@@ -225,6 +229,9 @@ const MultipleChoiceAndOrdering = () => {
                         onCheckCorrectAnswer={noop}
                         index={index}
                         isOverlay
+                        hasMultipleCorrectAnswer={hasMultipleCorrectAnswer}
+                        questionType={currentQuestionType}
+                        questionId={activeQuestionId}
                       />
                     )}
                   />

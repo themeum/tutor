@@ -15,6 +15,7 @@ const config = {
   TUTOR_SUBSCRIPTIONS_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor-subscriptions`,
   TUTOR_ENROLLMENTS_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=enrollments`,
   TUTOR_COUPONS_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_coupons`,
+  TUTOR_IMPORT_EXPORT_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor-tools&sub_page=import_export`,
 };
 
 export default config;

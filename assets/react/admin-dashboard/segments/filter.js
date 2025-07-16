@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		search_field.addEventListener('search', e => {
 			let { value } = e.currentTarget || {};
 			if (/\S+/.test(value) == false) {
-				window.location = urlPrams('search', '');
+				window.location = deleteUrlPram('search');
 			}
 		});
 

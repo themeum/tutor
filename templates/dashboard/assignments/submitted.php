@@ -104,7 +104,7 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 						$not_evaluated             = '' === $given_mark;
 						$status                    = 'pending';
 						$button_text               = __( 'Evaluate', 'tutor' );
-						$deadline_date             = tutor_utils()->get_assignment_deadline_date_in_gmt( $assignment->comment_post_ID, __( 'No Limit', 'tutor' ), $assignment->user_id, $assignment->comment_parent );
+						$deadline_date             = tutor_utils()->get_assignment_deadline_date_in_gmt( $assignment->comment_post_ID, null, $assignment->user_id, $assignment->comment_parent );
 
 						if ( ! empty( $given_mark ) || ! $not_evaluated ) {
 							$status      = (int) $given_mark >= (int) $pass_mark ? 'pass' : 'fail';
@@ -127,7 +127,7 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 								<?php echo wp_kses_post( DateTimeHelper::get_gmt_to_user_timezone_date( $assignment->comment_date_gmt ) ); ?>
 							</td>
 							<td>
-								<?php echo esc_html( 'No Limit' !== $deadline_date ? DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ) : $deadline_date ); ?>
+								<?php echo esc_html( is_null( $deadline_date ) ? __( 'No Limit', 'tutor' ) : DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ) ); ?>
 							</td>
 							<td>
 								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium">

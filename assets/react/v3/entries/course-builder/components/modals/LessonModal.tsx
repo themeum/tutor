@@ -32,8 +32,8 @@ import {
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
-import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT, TutorRoles, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
@@ -43,10 +43,9 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type ID } from '@TutorShared/utils/types';
+import { type H5PContent, type ID } from '@TutorShared/utils/types';
 import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
-import H5PContentListModal from './H5PContentListModal';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;

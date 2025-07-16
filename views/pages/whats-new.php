@@ -32,7 +32,7 @@ use TUTOR\WhatsNew;
 						</svg>
 						<div>
 							<h3>Tutor LMS  v<?php echo esc_html( $remote_version ); ?></h3>
-							<p><a target="_blank" href="https://www.themeum.com/tutor-lms/changelog/?utm_source=wp_admin_dashboard&utm_medium=update&utm_campaign=what_s_new_top_bar">More info...</a></p>
+							<p><a target="_blank" href="https://tutorlms.com/releases/?utm_source=wp_admin_dashboard&utm_medium=update&utm_campaign=what_s_new_top_bar">More info...</a></p>
 						</div>
 						<a class="tutor-whats-new-update-now" href="<?php echo esc_url( admin_url( 'plugins.php?s=tutor-lms&plugin_status=all' ) ); ?>">
 							<svg xmlns="http://www.w3.org/2000/svg" width="25" height="24" viewBox="0 0 25 24" fill="none">

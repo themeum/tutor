@@ -63,7 +63,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 												<i class="<?php echo $is_important ? 'tutor-icon-important-bold' : 'tutor-icon-important-line'; ?>  tutor-cursor-pointer" area-hidden="true"></i>
 											</span>
 
-											<span class="tooltip-txt tooltip-bottom">
+											<span class="tooltip-txt tooltip-right arrow-center">
 												<?php $is_important ? esc_html_e( 'This conversation is important', 'tutor' ) : esc_html_e( 'Mark this conversation as important', 'tutor' ); ?>
 											</span>
 										</div>
@@ -112,7 +112,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 								<?php elseif ( 'status' == $key ) : ?>
 									<div class="tooltip-wrap tooltip-icon-custom" >
 										<i class="tutor-fs-4 <?php echo $is_solved ? 'tutor-icon-circle-mark tutor-color-success' : 'tutor-icon-circle-mark-line tutor-color-muted'; ?>"></i>
-										<span class="tooltip-txt tooltip-bottom">
+										<span class="tooltip-txt tooltip-top">
 											<?php $is_solved ? esc_html_e( 'Solved', 'tutor' ) : esc_html_e( 'Unresolved Yet', 'tutor' ); ?>
 										</span>
 									</div>
@@ -215,5 +215,5 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 	</div>
 	<!-- end table responsive -->
 <?php else : ?>
-	<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+	<?php tutor_utils()->render_list_empty_state(); ?>
 <?php endif; ?>
