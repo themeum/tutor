@@ -22,6 +22,7 @@ interface ModalWrapperProps {
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
   maxWidth?: number;
+  blurTriggerElement?: boolean;
 }
 
 const ModalWrapper = ({
@@ -34,6 +35,7 @@ const ModalWrapper = ({
   entireHeader,
   actions,
   maxWidth = 1218,
+  blurTriggerElement: blurTrigger = true,
 }: ModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -44,7 +46,7 @@ const ModalWrapper = ({
   }, []);
 
   return (
-    <FocusTrap>
+    <FocusTrap blurPrevious={blurTrigger}>
       <div
         css={styles.container({
           maxWidth,
