@@ -24,6 +24,7 @@ interface BasicModalWrapperProps {
   modalStyle?: SerializedStyles;
   maxWidth?: number;
   isCloseAble?: boolean;
+  blurTriggerElement?: boolean;
 }
 
 const BasicModalWrapper = ({
@@ -38,6 +39,7 @@ const BasicModalWrapper = ({
   modalStyle,
   maxWidth = modal.BASIC_MODAL_MAX_WIDTH,
   isCloseAble = true,
+  blurTriggerElement: blurTrigger = true,
 }: BasicModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -48,7 +50,7 @@ const BasicModalWrapper = ({
   }, []);
 
   return (
-    <FocusTrap>
+    <FocusTrap blurPrevious={blurTrigger}>
       <div
         css={[styles.container({ isFullScreen: fullScreen }), modalStyle]}
         style={{
