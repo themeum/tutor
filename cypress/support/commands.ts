@@ -8,6 +8,7 @@ export {};
 
 interface UnifiedFilterOptions {
   selectFieldName: string;
+  selectFieldValue?: string;
   filterButtonSelector?: string;
   filterFormSelector?: string;
   selectFieldSelector?: string;
@@ -1078,16 +1079,30 @@ Cypress.Commands.add('unifiedFilterElements', (options: UnifiedFilterOptions) =>
               return;
             }
 
-            const startIndex = config.skipFirstOption ? 1 : 0;
-            const validOptionsCount = $options.length - startIndex;
-            const randomIndex = Math.floor(Math.random() * validOptionsCount) + startIndex;
+            if (config.selectFieldName !== 'date' && config.selectFieldValue) {
+              const selectedOption = $options.filter((index, option) => {
+                return option.innerText.trim().includes(config?.selectFieldValue || '');
+              });
+              if (selectedOption.length > 0) {
+                selectedOptionText = selectedOption.text().trim();
+                cy.log(`Selected predefined option: ${selectedOptionText}`);
+                cy.wrap(selectedOption).scrollIntoView().click();
+                return;
+              } else {
+                cy.log(`Predefined option "${config.selectFieldValue}" not found`);
+              }
+            } else {
+              const startIndex = config.skipFirstOption ? 1 : 0;
+              const validOptionsCount = $options.length - startIndex;
+              const randomIndex = Math.floor(Math.random() * validOptionsCount) + startIndex;
 
-            const selectedOption = $options[randomIndex];
-            selectedOptionText = selectedOption.innerText.trim();
+              const selectedOption = $options[randomIndex];
+              selectedOptionText = selectedOption.innerText.trim();
 
-            cy.log(`Selected: ${selectedOptionText} (${randomIndex}/${$options.length})`);
+              cy.log(`Selected: ${selectedOptionText} (${randomIndex}/${$options.length})`);
 
-            cy.wrap(selectedOption).scrollIntoView().click();
+              cy.wrap(selectedOption).scrollIntoView().click();
+            }
 
             if (config.waitAfterSelection) {
               cy.wait(config.waitAfterSelection);
