@@ -421,7 +421,8 @@ Cypress.Commands.add(
         $body.text().includes('No Data Available in this Section') ||
         $body.text().includes('No records found') ||
         $body.text().includes('No Records Found') ||
-        $body.text().includes('No Courses Found.')
+        $body.text().includes('No Courses Found.') ||
+        $body.text().includes('No Data Found.')
       ) {
         cy.log('No data available');
       } else {
