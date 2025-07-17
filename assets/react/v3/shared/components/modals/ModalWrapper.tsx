@@ -35,7 +35,7 @@ const ModalWrapper = ({
   entireHeader,
   actions,
   maxWidth = 1218,
-  blurTriggerElement: blurTrigger = true,
+  blurTriggerElement = true,
 }: ModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -46,7 +46,7 @@ const ModalWrapper = ({
   }, []);
 
   return (
-    <FocusTrap blurPrevious={blurTrigger}>
+    <FocusTrap blurPrevious={blurTriggerElement}>
       <div
         css={styles.container({
           maxWidth,
