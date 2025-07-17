@@ -147,7 +147,7 @@ describe('Tutor Admin Courses', () => {
     });
   });
 
-  it.only('should be able to perform bulk actions on all courses', () => {
+  it('should be able to perform bulk actions on all courses', () => {
     const options = ['publish', 'pending', 'draft', 'trash'];
     options.forEach((option) => {
       cy.performBulkAction(option);
