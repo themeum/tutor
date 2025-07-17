@@ -1011,6 +1011,9 @@ Cypress.Commands.add('saveTutorSettings', () => {
 
 Cypress.Commands.add('deleteCourseById', (id: string) => {
   cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+    if (req.body.includes(endpoints.GET_COURSE_DETAILS)) {
+      req.alias = 'getCourseDetails';
+    }
     if (req.body.includes(endpoints.UPDATE_COURSE)) {
       req.alias = 'updateCourse';
     }
@@ -1018,6 +1021,7 @@ Cypress.Commands.add('deleteCourseById', (id: string) => {
   cy.visit(`${Cypress.env('base_url')}${backendUrls.COURSE_BUILDER}${id}`);
   cy.loginAsAdmin();
 
+  cy.waitAfterRequest('getCourseDetails');
   cy.get('[data-cy=dropdown-trigger]').click();
   cy.get('.tutor-portal-popover').within(() => {
     cy.get('[data-cy=move-to-trash]').click();
