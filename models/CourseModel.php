@@ -1056,4 +1056,38 @@ class CourseModel {
 
 		return $course_options;
 	}
+
+	/**
+	 * Get category dropdown options
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return array
+	 */
+	public static function get_category_dropdown_options() {
+		$category_options = array(
+			array(
+				'key'   => '',
+				'title' => __( 'All Categories', 'tutor' ),
+			),
+		);
+
+		$categories = get_terms(
+			array(
+				'taxonomy' => self::COURSE_CATEGORY,
+				'orderby'  => 'term_id',
+				'order'    => 'DESC',
+			)
+		);
+		if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+			foreach ( $categories as $category ) {
+				$category_options[] = array(
+					'key'   => $category->slug,
+					'title' => $category->name,
+				);
+			}
+		}
+
+		return $category_options;
+	}
 }
