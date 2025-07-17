@@ -34,11 +34,14 @@ $qna            = $qna_object->get_items( $_GET );
 $qna_list       = $qna['items'];
 $qna_pagination = $qna['pagination'];
 
+$current_page = Input::get( 'page', '', Input::TYPE_STRING );
+
 $filters = array(
-	'bulk_action'  => true,
-	'bulk_actions' => $qna_object->get_bulk_actions(),
-	'ajax_action'  => 'tutor_qna_bulk_action',
-	'filters'      => array(
+	'bulk_action'   => true,
+	'bulk_actions'  => $qna_object->get_bulk_actions(),
+	'ajax_action'   => 'tutor_qna_bulk_action',
+	'clear_all_url' => "?page=$current_page",
+	'filters'       => array(
 		array(
 			'label'      => __( 'Courses', 'tutor' ),
 			'field_type' => 'select',

@@ -159,7 +159,7 @@ if ( isset( $data ) ) : ?>
 
 			<?php if ( $filters_count > 0 || strlen( $search_query ) > 0 ) : ?>
 			<div class="tutor-d-flex tutor-flex-wrap tutor-align-center tutor-justify-end tutor-gap-1">
-				<a class="tutor-color-subdued tutor-px-8 tutor-py-4" href="<?php echo esc_url( $url ); ?>">
+				<a class="tutor-color-subdued tutor-px-8 tutor-py-4" href="<?php echo esc_url( ! empty( $data['clear_all_url'] ) ? $data['clear_all_url'] : $url ); ?>">
 					<?php esc_html_e( 'Clear All', 'tutor' ); ?>
 				</a>
 
