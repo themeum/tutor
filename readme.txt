@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.6.4
+Stable tag: 3.7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,20 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.7.0 - Jul 21, 2025
+
+New: Content Bank for storing and reusing content throughout course creation. (Pro)
+New: Certificate paper size customization option. (Pro)
+New: New email trigger added after a review is submitted. (Pro)
+Update: Tax collection control added for both Course and Subscription Plan. (Pro)
+Update: Unified design system introduced for listing and filtering on Admin pages.
+Fix: PHP fatal error when creating an assignment without a time limit and using a language other than English. (Pro)
+Update: Full user name is now shown in password reset emails instead of the username/login.
+Fix: MCQ question edits are not saving properly—shows old data after save.
+Fix: Import failure issue when the file size exceeds the maximum upload limit. (Pro)
+Fix: {instructor_feedback} placeholder not working when feedback is submitted for a quiz attempt.
+Fix: Payment fails when using Taiwan Dollar due to a currency exchange error.
 
 = 3.6.4 - Jul 15, 2025
 
