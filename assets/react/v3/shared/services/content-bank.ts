@@ -49,6 +49,7 @@ export const useGetCollectionsInfinityQuery = (
 
 interface ContentBankContentsParams {
   collection_id: number | null;
+  per_page?: number;
   page?: string;
   search?: string;
   order?: string;
