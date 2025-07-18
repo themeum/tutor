@@ -23,7 +23,7 @@ if ( ! function_exists( 'tutor_add_to_cart' ) ) {
 	function tutor_add_to_cart( int $item_id ) {
 		$response          = new stdClass();
 		$response->success = true;
-		$response->message = __( 'Course added to cart', 'tutor-pro' );
+		$response->message = __( 'Course added to cart', 'tutor' );
 		$response->data    = null;
 
 		try {
