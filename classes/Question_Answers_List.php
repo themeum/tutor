@@ -66,7 +66,7 @@ class Question_Answers_List {
 		}
 
 		$current_page    = absint( Input::sanitize_request_data( 'paged', 1 ) );
-		$question_status = ! empty( $args['tab'] ) ? $args['tab'] : null;
+		$question_status = ! empty( $args['data'] ) ? $args['data'] : null;
 		$items           = tutor_utils()->get_qa_questions( ( $current_page - 1 ) * $per_page, $per_page, $search_term, null, null, null, $question_status, false, $args );
 		$total_items     = tutor_utils()->get_qa_questions( ( $current_page - 1 ) * $per_page, $per_page, $search_term, null, null, null, $question_status, true, $args );
 
