@@ -6,6 +6,7 @@
   "phpcbf.onsave": false,
   "phpcbf.debug": false,
   "yet-phpunit.xmlConfigFilepath": "${workspaceRoot}/wp-content/plugins/tutor/phpunit.xml.dist",
+  "phpSniffer.standard": "./phpcs.xml.dist",
   "editor.formatOnSave": true,
   "[javascript]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
