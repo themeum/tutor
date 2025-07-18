@@ -71,7 +71,7 @@ const ProIdentifierModal = ({
           <img
             css={styles.image}
             src={image}
-            alt={typeof title === 'string' ? title : __('Illustration')}
+            alt={typeof title === 'string' ? title : __('Illustration', 'tutor')}
             srcSet={image2x ? `${image} ${image2x} 2x` : undefined}
           />
         </Show>

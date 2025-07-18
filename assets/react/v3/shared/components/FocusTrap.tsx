@@ -89,7 +89,7 @@ const FocusTrap = ({ children, blurPrevious = false }: FocusTrapProps) => {
         previousActiveElementRef.current.focus();
       }
     };
-  }, []);
+  }, [blurPrevious]);
 
   return cloneElement(Children.only(children) as ReactElement, {
     ref: containerRef,

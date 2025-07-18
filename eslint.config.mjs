@@ -35,6 +35,14 @@ export default [
         },
       ],
       '@typescript-eslint/ban-ts-comment': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.name=/^(__|_e|_x|_n|_nx)$/] > Literal[value!='tutor']:last-child",
+          message: 'Incorrect text domain. Expected "tutor".',
+        },
+      ],
     },
     settings: {
       react: {
