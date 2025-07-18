@@ -449,14 +449,36 @@ class CouponController extends BaseController {
 		$tabs = array();
 
 		$tabs [] = array(
-			'key'   => 'all',
+			'key'   => '',
 			'title' => __( 'All', 'tutor' ),
 			'value' => $this->model->get_coupon_count( $where, $search ),
 			'url'   => $url . '&data=all',
 		);
 
+		$gm_date = DateTimeHelper::now()->to_date_time_string();
+
 		foreach ( $coupon_status as $key => $value ) {
-			$where['coupon_status'] = $key;
+			if ( CouponModel::STATUS_EXPIRED === $key ) {
+				$where['coupon_status'] = CouponModel::STATUS_ACTIVE;
+				$raw_query              = '( start_date_gmt > %s OR expire_date_gmt < %s )';
+				$where[ $raw_query ]    = array(
+					'RAW',
+					array( $gm_date, $gm_date ),
+				);
+			} else {
+
+				$where['coupon_status']  = $key;
+				$where['start_date_gmt'] = array(
+					'<=',
+					$gm_date,
+				);
+
+				$where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
+					'>=',
+					$gm_date,
+				);
+
+			}
 
 			$tabs[] = array(
 				'key'   => $key,
@@ -464,6 +486,14 @@ class CouponController extends BaseController {
 				'value' => $this->model->get_coupon_count( $where, $search ),
 				'url'   => $url . '&data=' . $key,
 			);
+
+			if ( isset( $where['start_date_gmt'] ) ) {
+				unset( $where['start_date_gmt'] );
+			}
+
+			if ( isset( $where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] ) ) {
+				unset( $where[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] );
+			}
 		}
 
 		return apply_filters( 'tutor_coupon_tabs', $tabs );
@@ -498,8 +528,28 @@ class CouponController extends BaseController {
 			$where_clause['coupon_status'] = $coupon_status;
 		}
 
+		$gm_date = DateTimeHelper::now()->to_date_time_string();
+
 		if ( 'all' !== $active_tab && in_array( $active_tab, array_keys( $this->model->get_coupon_status() ), true ) ) {
-			$where_clause['coupon_status'] = $active_tab;
+			if ( CouponModel::STATUS_EXPIRED === $active_tab ) {
+				$where_clause['coupon_status'] = CouponModel::STATUS_ACTIVE;
+				$raw_query                     = '( start_date_gmt > %s OR expire_date_gmt < %s )';
+				$where_clause[ $raw_query ]    = array(
+					'RAW',
+					array( $gm_date, $gm_date ),
+				);
+			} else {
+				$where_clause['coupon_status']  = $active_tab;
+				$where_clause['start_date_gmt'] = array(
+					'<=',
+					$gm_date,
+				);
+
+				$where_clause[ "IFNULL( expire_date_gmt, '{$gm_date}' )" ] = array(
+					'>=',
+					$gm_date,
+				);
+			}
 		}
 
 		if ( $applies_to ) {

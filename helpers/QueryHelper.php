@@ -79,7 +79,8 @@ class QueryHelper {
 	}
 
 	/**
-	 * Delete rows from table
+	 * Delete a row from table with where clause.
+	 * Limitation: It can only delete one row by wpdb::delete
 	 *
 	 * @param string $table  table name.
 	 * @param array  $where  key value pairs.Where key is the name of
@@ -95,6 +96,22 @@ class QueryHelper {
 			$where
 		);
 		return $delete ? true : false;
+	}
+
+	/**
+	 * Bulk record delete by where clause.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string $table table name.
+	 * @param array  $where where clause.
+	 *
+	 * @return int|boolean
+	 */
+	public static function bulk_delete( $table, array $where ): bool {
+		$where_clause = self::build_where_clause( $where );
+		global $wpdb;
+		return $wpdb->query( "DELETE FROM {$table} WHERE {$where_clause}" ); //phpcs:ignore --$where clause sanitized.
 	}
 
 	/**
@@ -153,6 +170,7 @@ class QueryHelper {
 	 * @param array  $request two dimensional array
 	 * for ex: [ [id => 1], [id => 2] ].
 	 * @param bool   $return_ids if true returns the last inserted data ids.
+	 * @param bool   $do_sanitize sanitize data or not.
 	 *
 	 * @return mixed  wpdb response true or int on success, false on failure.
 	 * @throws \Exception If error occur.
@@ -170,7 +188,7 @@ class QueryHelper {
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
 				$column_keys   .= sanitize_key( $v ) . ',';
-				$sanitize_value = $value[$v];
+				$sanitize_value = $value[ $v ];
 				if ( $sanitize_value && $do_sanitize ) {
 					$sanitize_value = sanitize_text_field( $sanitize_value );
 				}
@@ -204,6 +222,7 @@ class QueryHelper {
 
 		if ( $return_ids ) {
 			$query_ids = $wpdb->get_results(
+				//phpcs:ignore
 				"SELECT ID FROM {$table} WHERE ID >= LAST_INSERT_ID()",
 				'ARRAY_N'
 			);
@@ -1009,6 +1028,91 @@ class QueryHelper {
 	public static function get_last_query(){
 		global $wpdb;
 		return $wpdb->last_query;
+	}
+
+	/**
+	 * Get table prefix.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return string
+	 */
+	public static function get_table_prefix() {
+		global $wpdb;
+		return $wpdb->prefix;
+	}
+
+	/**
+	 * Prepare table name with prefix.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string $table_name table name.
+	 *
+	 * @return string
+	 */
+	public static function prepare_table_name( string $table_name ) {
+		$table_prefix = self::get_table_prefix();
+		if ( strpos( $table_name,$table_prefix ) !== 0 ) {
+			$table_name = $table_prefix . $table_name;
+		}
+
+		return $table_name;
+	}
+
+	/**
+	 * Duplicate a row with modification callback support.
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param string             $table_name name of the database table (with prefix if needed).
+	 * @param array              $where      associative array of WHERE conditions.
+	 * @param callable|null      $modifier   optional callback to modify or exclude fields before insertion.
+	 *
+	 * @return int|WP_Error      New row ID on success, or WP_Error on failure.
+	 */
+	public static function duplicate_row( $table_name, array $where, ?callable $modifier = null ) {
+		global $wpdb;
+
+		if ( empty( $where ) ) {
+			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
+		}
+
+		$where_clause = self::build_where_clause( $where );
+		$sql          = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$where_clause} LIMIT %d", 1 );
+		$row          = $wpdb->get_row( $sql, ARRAY_A );
+
+		if ( ! $row ) {
+			return new \WP_Error( 'not_found', 'No matching row found to duplicate.' );
+		}
+
+		// Apply user-defined modifications (ex: remove ID, change field value)
+		if ( is_callable( $modifier ) ) {
+			$row = call_user_func( $modifier, $row );
+
+			if ( ! is_array( $row ) || empty( $row ) ) {
+				return new \WP_Error( 'invalid_modified_row', 'Modified row is invalid or empty.' );
+			}
+		}
+
+		// Prepare insert
+		$columns      = array_keys( $row );
+		$placeholders = array_fill( 0, count( $columns ), '%s' );
+		$values       = array_values( $row );
+
+		$insert_sql = $wpdb->prepare(
+			"INSERT INTO `$table_name` (`" . implode( '`, `', $columns ) . "`) 
+			VALUES (" . implode( ', ', $placeholders ) . ")",
+			...$values
+		);
+
+		$result = $wpdb->query( $insert_sql );
+
+		if ( false === $result ) {
+			return new \WP_Error( 'insert_failed', 'Failed to insert duplicate row.' );
+		}
+
+		return $wpdb->insert_id;
 	}
 
 }

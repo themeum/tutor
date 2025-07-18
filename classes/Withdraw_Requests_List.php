@@ -73,7 +73,7 @@ class Withdraw_Requests_List {
 		$url  = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 		$tabs = array(
 			array(
-				'key'   => 'all',
+				'key'   => '',
 				'title' => __( 'All', 'tutor' ),
 				'value' => $approved + $pending + $rejected,
 				'url'   => $url . '&data=all',

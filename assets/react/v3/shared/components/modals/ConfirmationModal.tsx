@@ -12,16 +12,20 @@ interface ConfirmationModalProps extends Omit<ModalProps, 'actions'> {
   cancelButtonText?: string;
   confirmButtonVariant?: ButtonVariant;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  onConfirm?: () => void;
+  isLoading?: boolean;
   maxWidth?: number;
 }
 
 const ConfirmationModal = ({
-  closeModal,
   title,
   description,
   confirmButtonText,
   cancelButtonText,
   confirmButtonVariant,
+  closeModal,
+  onConfirm,
+  isLoading = false,
   icon,
   maxWidth = 460,
 }: ConfirmationModalProps) => {
@@ -35,8 +39,13 @@ const ConfirmationModal = ({
         <Button
           variant={confirmButtonVariant ?? 'danger'}
           size="small"
+          loading={isLoading}
           onClick={() => {
-            closeModal({ action: 'CONFIRM' });
+            if (onConfirm) {
+              onConfirm();
+            } else {
+              closeModal({ action: 'CONFIRM' });
+            }
           }}
         >
           {confirmButtonText ?? __('Delete', 'tutor')}

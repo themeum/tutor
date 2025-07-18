@@ -390,10 +390,10 @@ class Q_And_A {
 		$tabs = array_map(
 			function ( $tab ) use ( $stats ) {
 				return array(
-					'key'   => $tab,
+					'key'   => 'all' === $tab ? '' : $tab,
 					'title' => tutor_utils()->translate_dynamic_text( $tab ),
 					'value' => $stats[ $tab ],
-					'url'   => add_query_arg( array( 'tab' => $tab ), remove_query_arg( 'tab' ) ),
+					'url'   => add_query_arg( array( 'data' => $tab ), remove_query_arg( 'data' ) ),
 				);
 			},
 			array_keys( $stats )

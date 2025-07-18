@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.6.3
+Stable tag: 3.6.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -17,9 +17,9 @@ Tutor LMS is a lightweight, feature-packed, and robust WordPress LMS plugin to c
 
 You can create unlimited courses, quizzes, interactive lessons, generate reports, making Tutor LMS the best free WordPress LMS plugin. So, it’s become a breeze to manage educational institutes, online courses, or eLearning websites without writing a single line of code.
 
-👉 [Tutor LMS Pro](https://tutorlms.com/pricing)
+👉 [Tutor LMS Pro](https://tutorlms.com/pricing/)
 
-👉 [Tutor LMS Themes](https://www.themeum.com/wordpress-themes/)
+👉 [Tutor LMS Themes](https://tutorlms.com/themes/)
 
 👉 [Live Demo](https://demo.themeum.com/tutor/)
 
@@ -312,6 +312,10 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.6.4 - Jul 15, 2025
+
+New: Lightweight base theme added for seamless Tutor LMS × Droip integration.
+
 = 3.6.3 - Jul 02, 2025
 
 Fix: WooCommerce products were not displaying correctly on the shop page.
@@ -329,7 +333,7 @@ Fix: Ensured old bundled courses now appear correctly under the Courses tab for 
 
 = 3.6.1 - Jun 03, 2025
 
-New: New: Introduced all-new Pathwise theme (beta).
+New: Introduced all-new Pathwise theme (beta).
 
 = 3.6.0 - May 30, 2025
 

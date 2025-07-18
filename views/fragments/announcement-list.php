@@ -16,9 +16,9 @@ use Tutor\Models\CourseModel;
  *
  * @since 2.0.0
  *
- * @param string $id modal id.
- * @param string $title modal title.
- * @param array $courses courses.
+ * @param string      $id modal id.
+ * @param string      $title modal title.
+ * @param array       $courses courses.
  * @param object|null $announcement announcement.
  *
  * @return void
@@ -216,7 +216,7 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 						<button class="tutor-btn tutor-btn-outline-primary" data-tutor-modal-close>
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"announcement_id":<?php echo esc_attr( $announcment_id ); ?>, "action":"tutor_announcement_delete"}' data-delete_element_id="<?php echo esc_attr( $row_id ); ?>">
+						<button class="tutor-btn tutor-btn-primary tutor-list-ajax-action tutor-ml-20" data-request_data='{"announcement_id":<?php echo esc_attr( $announcment_id ); ?>, "action":"tutor_announcement_delete"}' data-redirect_to="">
 							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>
@@ -230,8 +230,8 @@ function tutor_announcement_modal_delete( $id, $announcment_id, $row_id ) {
 extract( $data );
 $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 ?>
-
-<div class="tutor-table-responsive">
+<?php if ( is_array( $announcements ) && count( $announcements ) ) : ?>
+<div class="tutor-table-responsive tutor-dashboard-list-table">
 	<table class="tutor-table">
 		<thead>
 			<tr>
@@ -256,98 +256,90 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 			</tr>
 		</thead>
 		<tbody>
-			<?php if ( is_array( $announcements ) && count( $announcements ) ) : ?>
-				<?php foreach ( $announcements as $announcement ) : ?>
-					<?php
-						$course      = get_post( $announcement->post_parent );
-						$date_format = tutor_get_formated_date( get_option( 'date_format' ), $announcement->post_date );
-						$time_format = tutor_get_formated_date( get_option( 'time_format' ), $announcement->post_date );
+			<?php foreach ( $announcements as $announcement ) : ?>
+				<?php
+					$course      = get_post( $announcement->post_parent );
+					$date_format = tutor_get_formated_date( get_option( 'date_format' ), $announcement->post_date );
+					$time_format = tutor_get_formated_date( get_option( 'time_format' ), $announcement->post_date );
 
-						$update_modal_id  = 'tutor_announcement_' . $announcement->ID;
-						$details_modal_id = $update_modal_id . '_details';
-						$delete_modal_id  = $update_modal_id . '_delete';
-						$row_id           = 'tutor-announcement-tr-' . $announcement->ID;
-					?>
-					<tr id="<?php echo esc_attr( $row_id ); ?>">
-						<?php if ( is_admin() ) : ?>
-							<td class="v-align-top">
-								<div class="tutor-form-check">
-									<input
-										id="tutor-admin-list-<?php echo esc_attr( $announcement->ID ); ?>"
-										type="checkbox"
-										class="tutor-form-check-input tutor-bulk-checkbox"
-										name="tutor-bulk-checkbox-all"
-										value="<?php echo esc_attr( $announcement->ID ); ?>"
-									/>
-								</div>
-							</td>
-							<td width="17%" class="v-align-top">
-								<div><?php echo esc_html( $date_format ); ?></div>
-								<div class="tutor-fw-normal tutor-color-muted"><?php echo esc_html( $time_format ); ?></div>
-							</td>
-						<?php else : ?>
-							<td width="17%" class="tutor-nowrap-ellipsis">
-								<div><?php echo esc_html( $date_format ); ?></div>
-								<div class="tutor-fw-normal tutor-color-muted"><?php echo esc_html( $time_format ); ?></div>
-							</td>
-						<?php endif; ?>
-
-						<td>
-							<div>
-								<div class="td-course tutor-color-black tutor-fs-6 tutor-fw-medium">
-									<?php echo esc_html( $announcement->post_title ); ?>
-								</div>
-								<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted" style="margin-top: 3px;">
-									<?php esc_html_e( 'Course', 'tutor' ); ?>: <?php echo esc_html( $course ? $course->post_title : '' ); ?>
-								</div>
+					$update_modal_id  = 'tutor_announcement_' . $announcement->ID;
+					$details_modal_id = $update_modal_id . '_details';
+					$delete_modal_id  = $update_modal_id . '_delete';
+					$row_id           = 'tutor-announcement-tr-' . $announcement->ID;
+				?>
+				<tr id="<?php echo esc_attr( $row_id ); ?>">
+					<?php if ( is_admin() ) : ?>
+						<td class="v-align-top">
+							<div class="tutor-form-check">
+								<input
+									id="tutor-admin-list-<?php echo esc_attr( $announcement->ID ); ?>"
+									type="checkbox"
+									class="tutor-form-check-input tutor-bulk-checkbox"
+									name="tutor-bulk-checkbox-all"
+									value="<?php echo esc_attr( $announcement->ID ); ?>"
+								/>
 							</div>
 						</td>
+						<td width="17%" class="v-align-top">
+							<div><?php echo esc_html( $date_format ); ?></div>
+							<div class="tutor-fw-normal tutor-color-muted"><?php echo esc_html( $time_format ); ?></div>
+						</td>
+					<?php else : ?>
+						<td width="17%" class="tutor-nowrap-ellipsis">
+							<div><?php echo esc_html( $date_format ); ?></div>
+							<div class="tutor-fw-normal tutor-color-muted"><?php echo esc_html( $time_format ); ?></div>
+						</td>
+					<?php endif; ?>
 
-						<td>
-							<div class="tutor-d-flex tutor-align-center tutor-justify-end">
-								<div class="tutor-d-inline-flex tutor-align-center td-action-btns tutor-mr-4">
-									<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo esc_attr( $details_modal_id ); ?>">
-										<?php esc_html_e( 'Details', 'tutor' ); ?>
-									</button>
-								</div>
+					<td>
+						<div>
+							<div class="td-course tutor-color-black tutor-fs-6 tutor-fw-medium">
+								<?php echo esc_html( $announcement->post_title ); ?>
+							</div>
+							<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted" style="margin-top: 3px;">
+								<?php esc_html_e( 'Course', 'tutor' ); ?>: <?php echo esc_html( $course ? $course->post_title : '' ); ?>
+							</div>
+						</div>
+					</td>
 
-								<div class="tutor-dropdown-parent">
-									<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
-										<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
-									</button>
-									<ul class="tutor-dropdown tutor-dropdown-dark">
-										<li>
-											<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $update_modal_id ); ?>">
-												<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
-												<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
-											</a>
-										</li>
-										<li>
-											<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $delete_modal_id ); ?>">
-												<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
-												<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
-											</a>
-										</li>
-									</ul>
-								</div>
+					<td>
+						<div class="tutor-d-flex tutor-align-center tutor-justify-end">
+							<div class="tutor-d-inline-flex tutor-align-center td-action-btns tutor-mr-4">
+								<button class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-announcement-details"  data-tutor-modal-target="<?php echo esc_attr( $details_modal_id ); ?>">
+									<?php esc_html_e( 'Details', 'tutor' ); ?>
+								</button>
 							</div>
 
-							<?php
-								$course_title = isset( $course->post_title ) ? $course->post_title : '';
-								tutor_announcement_modal( $update_modal_id, __( 'Edit Announcement', 'tutor' ), $courses, $announcement );
-								tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $date_format, $time_format );
-								tutor_announcement_modal_delete( $delete_modal_id, $announcement->ID, $row_id );
-							?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			<?php else : ?>
-				<tr>
-					<td colspan="100%" class="column-empty-state">
-						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+							<div class="tutor-dropdown-parent">
+								<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
+									<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
+								</button>
+								<ul class="tutor-dropdown tutor-dropdown-dark">
+									<li>
+										<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $update_modal_id ); ?>">
+											<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
+											<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
+										</a>
+									</li>
+									<li>
+										<a href="#" class="tutor-dropdown-item" data-tutor-modal-target="<?php echo esc_attr( $delete_modal_id ); ?>">
+											<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+											<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<?php
+							$course_title = isset( $course->post_title ) ? $course->post_title : '';
+							tutor_announcement_modal( $update_modal_id, __( 'Edit Announcement', 'tutor' ), $courses, $announcement );
+							tutor_announcement_modal_details( $details_modal_id, $update_modal_id, $delete_modal_id, $announcement, $course_title, $date_format, $time_format );
+							tutor_announcement_modal_delete( $delete_modal_id, $announcement->ID, $row_id );
+						?>
 					</td>
 				</tr>
-			<?php endif; ?>
+			<?php endforeach; ?>
 		</tbody>
 	</table>
 
@@ -371,10 +363,11 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 		}
 		?>
 	</div>
-	<!-- end pagination -->
 </div>
-<!-- end table responsive -->
 
+<?php else : ?>
+	<?php tutils()->render_list_empty_state(); ?>
+<?php endif; ?>
 
 <?php
 	tutor_announcement_modal( 'tutor_announcement_new', __( 'Create Announcement', 'tutor' ), $courses );

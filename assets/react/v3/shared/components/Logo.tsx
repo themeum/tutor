@@ -15,7 +15,7 @@ const Logo = ({ wrapperCss }: LogoProps) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
 
   return (
-    <button type="button" css={[styleUtils.resetButton, styles.logo, wrapperCss]}>
+    <button tabIndex={-1} type="button" css={[styleUtils.resetButton, styles.logo, wrapperCss]}>
       <Show
         when={isTutorPro && tutorConfig.settings?.course_builder_logo_url}
         fallback={<LogoSvg width={108} height={24} />}

@@ -1,0 +1,33 @@
+name: PHP Compatibility Check
+
+on:
+  push:
+    paths:
+      - '**.php'
+  pull_request:
+    paths:
+      - '**.php'
+
+jobs:
+  php-compatibility:
+    name: Test PHP Compatibility
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: [7.4, 8.0, 8.1, 8.2, 8.3]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, intl, json, dom
+          coverage: none
+
+      - name: Lint PHP files
+        run: |
+          find . -type f -name "*.php" ! -path "./vendor/*" -print0 | xargs -0 -n1 php -l

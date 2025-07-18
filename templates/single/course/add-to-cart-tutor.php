@@ -27,20 +27,11 @@ if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 $is_course_in_user_cart = CartModel::is_course_in_user_cart( $user_id, $course_id );
 $cart_page_url          = CartController::get_page_url();
 
-$course_price  = tutor_utils()->get_raw_course_price( $course_id );
-$regular_price = $course_price->regular_price;
-$sale_price    = $course_price->sale_price;
+$price_info    = tutor_utils()->get_raw_course_price( $course_id );
+$regular_price = $price_info->regular_price;
+$sale_price    = $price_info->sale_price;
+$display_price = $price_info->display_price;
 
-$display_price       = $sale_price ? $sale_price : $regular_price;
-$show_price_with_tax = Tax::show_price_with_tax();
-$user_logged_in      = is_user_logged_in();
-
-$tax_amount = 0;
-if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_included_in_price() ) {
-	$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
-	$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
-	$display_price += $tax_amount;
-}
 $buy_now      = Settings::is_buy_now_enabled();
 $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutController::get_page_url() );
 
@@ -59,7 +50,7 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 					<?php endif; ?>
 				</div>
 		</div>
-		<?php if ( $user_logged_in && $show_price_with_tax ) : ?>
+		<?php if ( $price_info->show_incl_tax_label ) : ?>
 			<div class="tutor-course-price-tax tutor-fs-8 tutor-fw-normal tutor-color-black"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
 		<?php endif; ?>
 		<?php

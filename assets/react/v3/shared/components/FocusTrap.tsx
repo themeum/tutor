@@ -1,6 +1,11 @@
 import { Children, cloneElement, useEffect, useRef, type ReactElement, type ReactNode } from 'react';
 
-const FocusTrap = ({ children }: { children: ReactNode }) => {
+interface FocusTrapProps {
+  children: ReactNode;
+  blurPrevious?: boolean;
+}
+
+const FocusTrap = ({ children, blurPrevious = false }: FocusTrapProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
@@ -12,6 +17,10 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
     }
 
     previousActiveElementRef.current = document.activeElement as HTMLElement;
+
+    if (blurPrevious && previousActiveElementRef.current && previousActiveElementRef.current !== document.body) {
+      previousActiveElementRef.current.blur();
+    }
 
     const isElementVisible = (element: HTMLElement): boolean => {
       if (!element || !element.isConnected) {
