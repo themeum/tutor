@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "composer install --no-dev && npm run make-pot && webpack --mode=production && npm run tutor-droip && npm run gulp-build",
-    "build-dev": "webpack --mode=development && npm run gulp-build-dev",
+    "build-dev": "composer i && webpack --mode=development && npm run gulp-build-dev",
     "gulp-build": "_GULP_ENV='build' gulp build",
     "gulp-build-dev": "gulp build",
     "css-watch": "gulp",
