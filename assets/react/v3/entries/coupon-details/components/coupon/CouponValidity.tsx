@@ -1,3 +1,4 @@
+import type { Coupon } from '@CouponDetails/services/coupon';
 import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
@@ -5,7 +6,6 @@ import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';

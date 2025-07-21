@@ -8,7 +8,7 @@ import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
-import { type Coupon } from '@CouponServices/coupon';
+import { type Coupon } from '@CouponDetails/services/coupon';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';

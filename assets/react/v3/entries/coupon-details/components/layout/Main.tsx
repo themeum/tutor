@@ -6,7 +6,7 @@ import {
   type CourseCategory,
   couponInitialValue,
   useCouponDetailsQuery,
-} from '@CouponServices/coupon';
+} from '@CouponDetails/services/coupon';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
