@@ -58,22 +58,23 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
   );
 
   const handleItemToggle = useCallback(
-    (item: Collection, event?: React.MouseEvent | React.KeyboardEvent | 'checkbox') => {
-      // Early return for invalid keyboard events
-      if (event && typeof event === 'object' && event.type === 'keydown') {
-        const keyboardEvent = event as React.KeyboardEvent;
-        if (keyboardEvent.key !== 'Enter' && keyboardEvent.key !== ' ') {
-          return;
+    (item: Collection, options?: { event: React.MouseEvent | React.KeyboardEvent } | { source: 'checkbox' }) => {
+      if (options && 'event' in options) {
+        const event = options.event;
+        if (event.type === 'keydown') {
+          const keyboardEvent = event as React.KeyboardEvent;
+          if (keyboardEvent.key !== 'Enter' && keyboardEvent.key !== ' ') {
+            return;
+          }
+          keyboardEvent.preventDefault();
         }
-        keyboardEvent.preventDefault();
-      }
 
-      // Early return for mouse clicks on checkbox elements
-      if (event && typeof event === 'object' && event.type === 'click') {
-        const mouseEvent = event as React.MouseEvent;
-        const target = mouseEvent.target as HTMLElement;
-        if (target.closest('input[type="checkbox"]') || target.closest('label')) {
-          return;
+        if (event.type === 'click') {
+          const mouseEvent = event as React.MouseEvent;
+          const target = mouseEvent.target as HTMLElement;
+          if (target.closest('input[type="checkbox"]') || target.closest('label')) {
+            return;
+          }
         }
       }
 
@@ -124,18 +125,20 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
           return (
             <div
               css={styles.collectionItemWrapper}
-              onClick={(event) => handleItemToggle(item, event)}
-              onKeyDown={(event) => handleItemToggle(item, event)}
+              onClick={(event) => handleItemToggle(item, { event })}
+              onKeyDown={(event) => handleItemToggle(item, { event })}
               tabIndex={0}
+              role="button"
               aria-label={
                 /* translators: %s is the collection title */
                 sprintf(__('Select collection: %s', 'tutor'), item.post_title)
               }
+              aria-pressed={selectedItemIds.includes(String(item.ID))}
             >
               <div css={styles.rowWrapper}>
                 <Checkbox
                   checked={selectedItemIds.includes(String(item.ID))}
-                  onChange={() => handleItemToggle(item)}
+                  onChange={() => handleItemToggle(item, { source: 'checkbox' })}
                   aria-label={sprintf(__('Select collection: %s', 'tutor'), item.post_title)}
                 />
                 <div css={styles.title}>
