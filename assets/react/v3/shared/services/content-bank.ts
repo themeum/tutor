@@ -10,6 +10,7 @@ interface CollectionParams {
   page?: number;
   per_page?: number;
   hide_empty?: number;
+  context?: 'topic' | 'quiz_builder';
 }
 
 export const getCollections = (params: CollectionParams) => {
