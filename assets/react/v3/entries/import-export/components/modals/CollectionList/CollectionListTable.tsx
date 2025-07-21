@@ -4,25 +4,26 @@ import React, { useCallback, useMemo } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
-import SearchField from '@ImportExport/components/modals/CollectionList/SearchField';
 import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
 import { useGetCollectionsPaginatedQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection, type CollectionContentType } from '@TutorShared/utils/types';
+import SearchField from './SearchField';
 
 interface CourseListTableProps {
   form: FormWithGlobalErrorType<BulkSelectionFormData>;
+  selectedContentBankCollection?: Collection;
 }
 
-const CollectionListTable = ({ form }: CourseListTableProps) => {
+const CollectionListTable = ({ form, selectedContentBankCollection }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const selectedItems = useMemo(() => form.watch('content_bank') || [], [form]);
   const selectedItemIds = useMemo(() => selectedItems.map((item) => String(item.ID)), [selectedItems]);
@@ -192,7 +193,7 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
 
   return (
     <>
-      <SearchField onFilterItems={onFilterItems} />
+      <SearchField initialSearchValue={selectedContentBankCollection?.post_title} onFilterItems={onFilterItems} />
 
       <div
         css={styles.tableWrapper({
@@ -334,5 +335,13 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
+  `,
+  selectedContentBankCollection: css`
+    button {
+      height: auto;
+      padding-block: ${spacing[4]};
+      border: 1px solid ${colorTokens.stroke.divider};
+      border-radius: ${borderRadius[6]};
+    }
   `,
 };

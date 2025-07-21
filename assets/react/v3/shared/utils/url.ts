@@ -43,3 +43,21 @@ export const removeAllQueryParams = ({ exclude }: { exclude: string[] }) => {
     : window.location.pathname;
   window.history.replaceState({}, '', newUrl);
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const encodeParams = (params: Record<string, any>): string => {
+  const jsonString = JSON.stringify(params);
+  return btoa(encodeURIComponent(jsonString));
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const decodeParams = <T = Record<string, any>>(encodedString: string): T => {
+  try {
+    const jsonString = decodeURIComponent(atob(encodedString));
+    return JSON.parse(jsonString) as T;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to decode parameters:', error);
+    return {} as T;
+  }
+};

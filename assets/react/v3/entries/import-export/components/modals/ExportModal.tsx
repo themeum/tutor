@@ -31,7 +31,6 @@ import {
 import { tutorConfig } from '@TutorShared/config/config';
 import { type Collection } from '@TutorShared/utils/types';
 import CollectionListModal from './CollectionList';
-import ExportContentBankState from './import-export-states/ExportContentBankState';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -42,7 +41,7 @@ interface ExportModalProps extends ModalProps {
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
-  isFromContentBank?: boolean;
+  collection?: Collection;
 }
 
 interface BulkSelectionFormData {
@@ -62,17 +61,20 @@ const ExportModal = ({
   fileSize,
   message,
   completedContents,
-  isFromContentBank,
+  collection,
 }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
-    defaultValues: defaultExportFormData,
+    defaultValues: {
+      ...defaultExportFormData,
+      content_bank: collection ? true : defaultExportFormData.content_bank,
+    },
   });
 
   const bulkSelectionForm = useFormWithGlobalError<BulkSelectionFormData>({
     defaultValues: {
       courses: [],
       'course-bundle': [],
-      content_bank: [],
+      content_bank: collection ? [collection] : [],
     },
   });
 
@@ -210,6 +212,7 @@ const ExportModal = ({
         props: {
           title: __('Select Collections', 'tutor'),
           form: bulkSelectionForm,
+          selectedCollectionFromContentBank: collection,
         },
       },
       bulkSelectionButtonLabel:
@@ -224,7 +227,7 @@ const ExportModal = ({
     onExport?.({
       data: {
         ...data,
-        ...(isFromContentBank
+        ...(collection?.ID
           ? {
               content_bank: true,
             }
@@ -242,9 +245,7 @@ const ExportModal = ({
   });
 
   const modalContent = {
-    initial: isFromContentBank ? (
-      <ExportContentBankState bulkSelectionForm={bulkSelectionForm} />
-    ) : (
+    initial: (
       <ExportInitialState
         form={form}
         bulkSelectionForm={bulkSelectionForm}
@@ -252,6 +253,7 @@ const ExportModal = ({
         isLoading={getExportableContentQuery.isLoading}
         componentMapping={componentMapping}
         resetBulkSelection={resetBulkSelection}
+        isFromContentBank={!!collection}
       />
     ),
     progress: <ImportExportProgressState progress={progress} message={message} type="export" />,
@@ -270,7 +272,7 @@ const ExportModal = ({
   };
 
   const disableExportButton = () => {
-    if (isFromContentBank) {
+    if (collection?.ID) {
       return bulkSelectionForm.getValues('content_bank').length === 0;
     }
 
