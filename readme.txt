@@ -314,13 +314,13 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.7.0 - Jul 21, 2025
 
-New: Content Bank — store and reuse lessons, quizzes, and assignments across multiple courses. (Pro)
+New: Content Bank — store and reuse lessons, questions, and assignments across multiple courses. (Pro)
 New: Option to customize certificate paper size. (Pro)
 New: New email trigger added for post-review submissions. (Pro)
-Update: Added tax collection control for both individual courses and subscription plans. (Pro)
+New: Added tax collection control for both individual courses and subscription plans. (Pro)
 Update: Unified design system applied to listing and filtering components on Admin pages.
-Fix: PHP fatal error when creating an assignment without a time limit in non-English languages. (Pro)
 Update: Full user name now appears in password reset emails instead of the username/login.
+Fix: PHP fatal error when creating an assignment without a time limit in non-English languages. (Pro)
 Fix: MCQ question edits weren’t saving properly and showed outdated data.
 Fix: Import failed when file size exceeded the server's maximum upload limit. (Pro)
 Fix: {instructor_feedback} placeholder wasn’t rendering after quiz feedback submission.
