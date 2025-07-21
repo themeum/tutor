@@ -62,7 +62,7 @@ const ExportInitialState = ({
     if (isFromContentBank && !isLoading) {
       buttonRef.current?.click();
     }
-  }, [isLoading]);
+  }, [isLoading, isFromContentBank]);
 
   /**
    * Returns properly formatted label for form data keys with appropriate count information

@@ -51,13 +51,16 @@ export const encodeParams = (params: Record<string, any>): string => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const decodeParams = <T = Record<string, any>>(encodedString: string): T => {
+export const decodeParams = <T = Record<string, any>>(encodedString: string, defaultValue?: T): T => {
   try {
     const jsonString = decodeURIComponent(atob(encodedString));
     return JSON.parse(jsonString) as T;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to decode parameters:', error);
-    return {} as T;
+    if (defaultValue !== undefined) {
+      return defaultValue;
+    }
+    throw error;
   }
 };

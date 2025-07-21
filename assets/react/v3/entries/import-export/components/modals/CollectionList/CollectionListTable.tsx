@@ -336,12 +336,4 @@ const styles = {
     align-items: center;
     justify-content: center;
   `,
-  selectedContentBankCollection: css`
-    button {
-      height: auto;
-      padding-block: ${spacing[4]};
-      border: 1px solid ${colorTokens.stroke.divider};
-      border-radius: ${borderRadius[6]};
-    }
-  `,
 };
