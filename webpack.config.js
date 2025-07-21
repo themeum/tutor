@@ -102,13 +102,13 @@ module.exports = (env, options) => {
                 'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
                 'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
                 'tutor-gutenberg': './assets/react/gutenberg/index.js',
+                'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
                 'tutor-course-builder': './assets/react/v3/entries/course-builder/index.tsx',
                 'tutor-order-details': './assets/react/v3/entries/order-details/index.tsx',
                 'tutor-coupon': './assets/react/v3/entries/coupon-details/index.tsx',
                 'tutor-tax-settings': './assets/react/v3/entries/tax-settings/index.tsx',
                 'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
                 'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
-                'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
                 'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
             }
         }
