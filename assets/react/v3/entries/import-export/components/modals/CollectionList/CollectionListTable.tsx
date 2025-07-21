@@ -139,12 +139,20 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
                 <Checkbox
                   checked={selectedItemIds.includes(String(item.ID))}
                   onChange={() => handleItemToggle(item, { source: 'checkbox' })}
-                  aria-label={sprintf(__('Select collection: %s', 'tutor'), item.post_title)}
+                  aria-label={
+                    /* translators: %s is the collection title */
+                    sprintf(__('Select collection: %s', 'tutor'), item.post_title)
+                  }
                 />
                 <div css={styles.title}>
                   <div data-collection-title>{item.post_title}</div>
                   <Show when={(totalItemsCount ?? 0) > 0}>
-                    <div>{sprintf(_n('%d Item', '%d Items', totalItemsCount, 'tutor'), totalItemsCount)}</div>
+                    <div>
+                      {
+                        /* translators: %d is the total number of contents */
+                        sprintf(_n('%d Item', '%d Items', totalItemsCount, 'tutor'), totalItemsCount)
+                      }
+                    </div>
                   </Show>
                 </div>
               </div>
@@ -152,17 +160,26 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
                 <div css={styles.contentsWrapper}>
                   <Show when={totalLessons > 0}>
                     <span css={styles.contentBadge({ type: 'cb-lesson' })}>
-                      {sprintf(_n('%d Lesson', '%d Lessons', totalLessons, 'tutor'), totalLessons)}
+                      {
+                        /* translators: %d is the number of lessons */
+                        sprintf(_n('%d Lesson', '%d Lessons', totalLessons, 'tutor'), totalLessons)
+                      }
                     </span>
                   </Show>
                   <Show when={totalAssignments > 0}>
                     <span css={styles.contentBadge({ type: 'cb-assignment' })}>
-                      {sprintf(_n('%d Assignment', '%d Assignments', totalAssignments, 'tutor'), totalAssignments)}
+                      {
+                        /* translators: %d is the number of assignments */
+                        sprintf(_n('%d Assignment', '%d Assignments', totalAssignments, 'tutor'), totalAssignments)
+                      }
                     </span>
                   </Show>
                   <Show when={totalQuestions > 0}>
                     <span css={styles.contentBadge({ type: 'cb-question' })}>
-                      {sprintf(_n('%d Question', '%d Questions', totalQuestions, 'tutor'), totalQuestions)}
+                      {
+                        /* translators: %d is the number of questions */
+                        sprintf(_n('%d Question', '%d Questions', totalQuestions, 'tutor'), totalQuestions)
+                      }
                     </span>
                   </Show>
                 </div>
