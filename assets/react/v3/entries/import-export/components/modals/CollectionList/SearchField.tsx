@@ -15,10 +15,11 @@ interface FilterFormValues {
 
 interface SearchFieldProps {
   onFilterItems: (filter: Filter) => void;
+  initialSearchValue?: string;
 }
 
-const SearchField = ({ onFilterItems }: SearchFieldProps) => {
-  const actionsForm = useFormWithGlobalError<FilterFormValues>({ defaultValues: { search: '' } });
+const SearchField = ({ onFilterItems, initialSearchValue }: SearchFieldProps) => {
+  const actionsForm = useFormWithGlobalError<FilterFormValues>({ defaultValues: { search: initialSearchValue || '' } });
   const searchValue = useDebounce(actionsForm.watch('search'));
 
   useEffect(() => {
