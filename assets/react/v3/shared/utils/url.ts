@@ -44,8 +44,7 @@ export const removeAllQueryParams = ({ exclude }: { exclude: string[] }) => {
   window.history.replaceState({}, '', newUrl);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const encodeParams = (params: Record<string, any>): string => {
+export const encodeParams = (params: Record<string, unknown>): string => {
   const jsonString = JSON.stringify(params);
   return btoa(encodeURIComponent(jsonString));
 };

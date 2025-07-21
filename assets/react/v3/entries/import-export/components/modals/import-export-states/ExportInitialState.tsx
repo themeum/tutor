@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, type FunctionComponent } from 'react';
+import { useCallback, useEffect, type FunctionComponent } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -57,18 +57,18 @@ const ExportInitialState = ({
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
 
-  const handleSelectContentBank = () => {
+  const handleOpenContentBankModal = useCallback(() => {
     const modalConfig = componentMapping['content_bank'];
     showModal({
       component: modalConfig.modal.component,
       props: modalConfig.modal.props,
       depthIndex: zIndex.highest,
     });
-  };
+  }, [componentMapping, showModal]);
 
   useEffect(() => {
     if (isFromContentBank && !isLoading) {
-      handleSelectContentBank();
+      handleOpenContentBankModal();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isFromContentBank]);
@@ -215,7 +215,7 @@ const ExportInitialState = ({
                     size="small"
                     onClick={
                       contentKey === 'content_bank'
-                        ? handleSelectContentBank
+                        ? handleOpenContentBankModal
                         : () => {
                             const modalConfig = componentMapping[contentKey];
                             showModal({
