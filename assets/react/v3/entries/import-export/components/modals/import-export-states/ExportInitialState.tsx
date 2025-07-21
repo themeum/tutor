@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, type FunctionComponent } from 'react';
+import { useEffect, type FunctionComponent } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -56,12 +56,21 @@ const ExportInitialState = ({
   isFromContentBank = false,
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
-  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  const handleSelectContentBank = () => {
+    const modalConfig = componentMapping['content_bank'];
+    showModal({
+      component: modalConfig.modal.component,
+      props: modalConfig.modal.props,
+      depthIndex: zIndex.highest,
+    });
+  };
 
   useEffect(() => {
     if (isFromContentBank && !isLoading) {
-      buttonRef.current?.click();
+      handleSelectContentBank();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, isFromContentBank]);
 
   /**
@@ -204,15 +213,18 @@ const ExportInitialState = ({
                     variant="secondary"
                     buttonCss={styles.selectButton}
                     size="small"
-                    ref={contentKey === 'content_bank' ? buttonRef : undefined}
-                    onClick={() => {
-                      const modalConfig = componentMapping[contentKey];
-                      showModal({
-                        component: modalConfig.modal.component,
-                        props: modalConfig.modal.props,
-                        depthIndex: zIndex.highest,
-                      });
-                    }}
+                    onClick={
+                      contentKey === 'content_bank'
+                        ? handleSelectContentBank
+                        : () => {
+                            const modalConfig = componentMapping[contentKey];
+                            showModal({
+                              component: modalConfig.modal.component,
+                              props: modalConfig.modal.props,
+                              depthIndex: zIndex.highest,
+                            });
+                          }
+                    }
                   >
                     {componentMapping[contentKey]?.bulkSelectionButtonLabel}
                   </Button>

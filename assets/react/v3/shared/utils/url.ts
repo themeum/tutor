@@ -50,8 +50,7 @@ export const encodeParams = (params: Record<string, any>): string => {
   return btoa(encodeURIComponent(jsonString));
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const decodeParams = <T = Record<string, any>>(encodedString: string, defaultValue?: T): T => {
+export const decodeParams = <T = Record<string, unknown>>(encodedString: string, defaultValue?: T): T => {
   try {
     const jsonString = decodeURIComponent(atob(encodedString));
     return JSON.parse(jsonString) as T;
