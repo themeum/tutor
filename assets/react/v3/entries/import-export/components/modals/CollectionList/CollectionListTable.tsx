@@ -20,10 +20,9 @@ import SearchField from './SearchField';
 
 interface CourseListTableProps {
   form: FormWithGlobalErrorType<BulkSelectionFormData>;
-  selectedContentBankCollection?: Collection;
 }
 
-const CollectionListTable = ({ form, selectedContentBankCollection }: CourseListTableProps) => {
+const CollectionListTable = ({ form }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, onFilterItems } = usePaginatedTable();
   const selectedItems = useMemo(() => form.watch('content_bank') || [], [form]);
   const selectedItemIds = useMemo(() => selectedItems.map((item) => String(item.ID)), [selectedItems]);
@@ -41,6 +40,11 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
 
   const areAllItemsSelected = useMemo(
     () => fetchedItems.length > 0 && fetchedItems.every((item) => selectedItemIds.includes(String(item.ID))),
+    [fetchedItems, selectedItemIds],
+  );
+
+  const someItemsSelected = useMemo(
+    () => fetchedItems.length > 0 && fetchedItems.some((item) => selectedItemIds.includes(String(item.ID))),
     [fetchedItems, selectedItemIds],
   );
 
@@ -98,13 +102,13 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
         Header: totalItems ? (
           <div css={styles.tableHeader}>
             <Checkbox
-              onChange={handleToggleSelection}
+              onChange={() => handleToggleSelection(!areAllItemsSelected)}
               checked={
                 getCollectionListQuery.isLoading || getCollectionListQuery.isRefetching ? false : areAllItemsSelected
               }
               label={__('Collection Name', 'tutor')}
               labelCss={styles.tableTitle}
-              isIndeterminate={fetchedItems.length > 0 && !areAllItemsSelected && selectedItems.length > 0}
+              isIndeterminate={fetchedItems.length > 0 && someItemsSelected}
               aria-label={__('Select all collections', 'tutor')}
             />
 
@@ -216,7 +220,7 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
 
   return (
     <>
-      <SearchField initialSearchValue={selectedContentBankCollection?.post_title} onFilterItems={onFilterItems} />
+      <SearchField onFilterItems={onFilterItems} />
 
       <div
         css={styles.tableWrapper({

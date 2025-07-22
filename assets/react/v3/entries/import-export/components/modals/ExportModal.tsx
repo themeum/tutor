@@ -272,12 +272,16 @@ const ExportModal = ({
   };
 
   const disableExportButton = () => {
-    return !Object.entries(form.getValues()).some(([key, value]) => {
-      if (!key.includes('__')) {
+    const formValues = form.getValues();
+
+    const mainContentTypesSelected = Object.entries(formValues).some(([key, value]) => {
+      if (!key.includes('__') && key !== 'keep_media_files') {
         return value === true;
       }
       return false;
     });
+
+    return !mainContentTypesSelected;
   };
 
   return (
