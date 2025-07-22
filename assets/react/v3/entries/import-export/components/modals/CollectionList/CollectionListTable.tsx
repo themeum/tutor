@@ -47,12 +47,10 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
   const handleToggleSelection = useCallback(
     (isChecked: boolean) => {
       if (isChecked) {
-        // Add all fetched items that aren't already selected
-        const newItems = fetchedItems.filter((course) => !selectedItemIds.includes(String(course.ID)));
+        const newItems = fetchedItems.filter((item) => !selectedItemIds.includes(String(item.ID)));
         form.setValue('content_bank', [...selectedItems, ...newItems]);
       } else {
-        // Keep only items that aren't in the current view
-        const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(String(course.ID)));
+        const newItems = selectedItems.filter((item) => !fetchedItemIds.includes(String(item.ID)));
         form.setValue('content_bank', newItems);
       }
     },
@@ -60,7 +58,26 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
   );
 
   const handleItemToggle = useCallback(
-    (item: Collection) => {
+    (item: Collection, options?: { event: React.MouseEvent | React.KeyboardEvent } | { source: 'checkbox' }) => {
+      if (options && 'event' in options) {
+        const event = options.event;
+        if (event.type === 'keydown') {
+          const keyboardEvent = event as React.KeyboardEvent;
+          if (keyboardEvent.key !== 'Enter' && keyboardEvent.key !== ' ') {
+            return;
+          }
+          keyboardEvent.preventDefault();
+        }
+
+        if (event.type === 'click') {
+          const mouseEvent = event as React.MouseEvent;
+          const target = mouseEvent.target as HTMLElement;
+          if (target.closest('input[type="checkbox"]') || target.closest('label')) {
+            return;
+          }
+        }
+      }
+
       const isSelected = selectedItemIds.includes(String(item.ID));
 
       if (isSelected) {
@@ -103,38 +120,43 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
           const totalLessons = Number(item.count_stats.lesson) || 0;
           const totalAssignments = Number(item.count_stats.assignment) || 0;
           const totalQuestions = Number(item.count_stats.question) || 0;
-          const totalItems = Number(item.count_stats.total) || 0;
+          const totalItemsCount = Number(item.count_stats.total) || 0;
 
           return (
-            <button
+            <div
               css={styles.collectionItemWrapper}
+              onClick={(event) => handleItemToggle(item, { event })}
+              onKeyDown={(event) => handleItemToggle(item, { event })}
+              tabIndex={0}
+              role="button"
               aria-label={
                 /* translators: %s is the collection title */
                 sprintf(__('Select collection: %s', 'tutor'), item.post_title)
               }
-              tabIndex={0}
+              aria-pressed={selectedItemIds.includes(String(item.ID))}
             >
               <div css={styles.rowWrapper}>
                 <Checkbox
                   checked={selectedItemIds.includes(String(item.ID))}
-                  onChange={() => {
-                    handleItemToggle(item);
-                  }}
-                  aria-label={__('Select this collection', 'tutor')}
+                  onChange={() => handleItemToggle(item, { source: 'checkbox' })}
+                  aria-label={
+                    /* translators: %s is the collection title */
+                    sprintf(__('Select collection: %s', 'tutor'), item.post_title)
+                  }
                 />
                 <div css={styles.title}>
                   <div data-collection-title>{item.post_title}</div>
-                  <Show when={(totalItems ?? 0) > 0}>
+                  <Show when={(totalItemsCount ?? 0) > 0}>
                     <div>
                       {
                         /* translators: %d is the total number of contents */
-                        sprintf(_n('%d Item', '%d Items', totalItems, 'tutor'), totalItems)
+                        sprintf(_n('%d Item', '%d Items', totalItemsCount, 'tutor'), totalItemsCount)
                       }
                     </div>
                   </Show>
                 </div>
               </div>
-              <Show when={totalItems > 0}>
+              <Show when={totalItemsCount > 0}>
                 <div css={styles.contentsWrapper}>
                   <Show when={totalLessons > 0}>
                     <span css={styles.contentBadge({ type: 'cb-lesson' })}>
@@ -152,16 +174,17 @@ const CollectionListTable = ({ form, selectedContentBankCollection }: CourseList
                       }
                     </span>
                   </Show>
-
-                  <span css={styles.contentBadge({ type: 'cb-question' })}>
-                    {
-                      /* translators: %d is the number of questions */
-                      sprintf(_n('%d Question', '%d Questions', totalQuestions, 'tutor'), totalQuestions)
-                    }
-                  </span>
+                  <Show when={totalQuestions > 0}>
+                    <span css={styles.contentBadge({ type: 'cb-question' })}>
+                      {
+                        /* translators: %d is the number of questions */
+                        sprintf(_n('%d Question', '%d Questions', totalQuestions, 'tutor'), totalQuestions)
+                      }
+                    </span>
+                  </Show>
                 </div>
               </Show>
-            </button>
+            </div>
           );
         },
       },
@@ -283,6 +306,7 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     gap: ${spacing[16]};
+    cursor: pointer;
   `,
   contentsWrapper: css`
     ${styleUtils.display.flex()};
