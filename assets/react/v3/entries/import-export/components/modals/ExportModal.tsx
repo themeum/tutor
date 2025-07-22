@@ -253,7 +253,6 @@ const ExportModal = ({
         isLoading={getExportableContentQuery.isLoading}
         componentMapping={componentMapping}
         resetBulkSelection={resetBulkSelection}
-        isFromContentBank={!!collection}
       />
     ),
     progress: <ImportExportProgressState progress={progress} message={message} type="export" />,

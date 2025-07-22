@@ -41,7 +41,6 @@ interface ExportInitialStateProps {
     };
   };
   resetBulkSelection: (type: 'courses' | 'course-bundle' | 'content_bank') => void;
-  isFromContentBank?: boolean;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
