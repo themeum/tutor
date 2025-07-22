@@ -270,11 +270,13 @@ const ExportModal = ({
     error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
   };
 
+  const EXCLUDED_KEYS = ['keep_media_files'];
+
   const disableExportButton = () => {
     const formValues = form.getValues();
 
     const mainContentTypesSelected = Object.entries(formValues).some(([key, value]) => {
-      if (!key.includes('__') && key !== 'keep_media_files') {
+      if (!key.includes('__') && !EXCLUDED_KEYS.includes(key)) {
         return value === true;
       }
       return false;

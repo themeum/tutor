@@ -53,10 +53,10 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
       if (isChecked) {
         const newItems = fetchedItems.filter((item) => !selectedItemIds.includes(String(item.ID)));
         form.setValue('content_bank', [...selectedItems, ...newItems]);
-      } else {
-        const newItems = selectedItems.filter((item) => !fetchedItemIds.includes(String(item.ID)));
-        form.setValue('content_bank', newItems);
+        return;
       }
+      const newItems = selectedItems.filter((item) => !fetchedItemIds.includes(String(item.ID)));
+      form.setValue('content_bank', newItems);
     },
     [fetchedItems, selectedItemIds, fetchedItemIds, selectedItems, form],
   );
