@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing, zIndex } from '@TutorShared/config/styles';
 import { AnimatedDiv } from '@TutorShared/hooks/useAnimation';
 import type { AnyObject } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
@@ -69,6 +69,7 @@ const Tooltip = ({
       hideOnClick={hideOnClick}
       placement={placement}
       visible={visible}
+      zIndex={zIndex.highest}
     >
       <div>{children}</div>
     </Tippy>
