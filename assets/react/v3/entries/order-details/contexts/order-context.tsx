@@ -1,5 +1,5 @@
+import { type Order, useOrderDetailsQuery } from '@OrderDetails/services/order';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import { type Order, useOrderDetailsQuery } from '@OrderServices/order';
 import React from 'react';
 
 interface OrderContextType {

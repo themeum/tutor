@@ -1,4 +1,4 @@
-import { useOrderContext } from '@OrderContexts/order-context';
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
 import { Avatar } from '@TutorShared/atoms/Avatar';
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';

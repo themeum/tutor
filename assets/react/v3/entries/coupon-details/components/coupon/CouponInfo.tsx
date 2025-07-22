@@ -1,4 +1,4 @@
-import type { Coupon } from '@CouponServices/coupon';
+import type { Coupon } from '@CouponDetails/services/coupon';
 import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import FormInput from '@TutorShared/components/fields/FormInput';
