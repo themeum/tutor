@@ -272,10 +272,6 @@ const ExportModal = ({
   };
 
   const disableExportButton = () => {
-    if (collection?.ID) {
-      return bulkSelectionForm.getValues('content_bank').length === 0;
-    }
-
     return !Object.entries(form.getValues()).some(([key, value]) => {
       if (!key.includes('__')) {
         return value === true;
