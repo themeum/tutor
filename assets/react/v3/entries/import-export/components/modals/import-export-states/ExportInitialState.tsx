@@ -343,6 +343,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[8]};
+    min-height: 30px;
 
     button {
       flex-shrink: 0;
