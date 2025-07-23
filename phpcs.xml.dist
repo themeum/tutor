@@ -5,4 +5,13 @@
         <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"/>
         <exclude name="WordPress.Files.FileName.InvalidClassFileName"/>
     </rule>
+
+    <!-- Enforce correct text domain -->
+    <rule ref="WordPress.WP.I18n">
+        <properties>
+            <property name="text_domain" type="array">
+                <element value="tutor"/>
+            </property>
+        </properties>
+    </rule>
 </ruleset>

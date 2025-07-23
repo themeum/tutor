@@ -54,7 +54,6 @@ const ExportInitialState = ({
   resetBulkSelection,
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
-
   /**
    * Returns properly formatted label for form data keys with appropriate count information
    *
@@ -344,6 +343,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[8]};
+    min-height: 30px;
 
     button {
       flex-shrink: 0;

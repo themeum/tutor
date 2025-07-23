@@ -1,4 +1,4 @@
-import type { Coupon } from '@CouponServices/coupon';
+import type { Coupon } from '@CouponDetails/services/coupon';
 import Button from '@TutorShared/atoms/Button';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';

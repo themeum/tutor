@@ -43,3 +43,22 @@ export const removeAllQueryParams = ({ exclude }: { exclude: string[] }) => {
     : window.location.pathname;
   window.history.replaceState({}, '', newUrl);
 };
+
+export const encodeParams = (params: Record<string, unknown>): string => {
+  const jsonString = JSON.stringify(params);
+  return btoa(encodeURIComponent(jsonString));
+};
+
+export const decodeParams = <T = Record<string, unknown>>(encodedString: string, defaultValue?: T): T => {
+  try {
+    const jsonString = decodeURIComponent(atob(encodedString));
+    return JSON.parse(jsonString) as T;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to decode parameters:', error);
+    if (defaultValue !== undefined) {
+      return defaultValue;
+    }
+    throw error;
+  }
+};

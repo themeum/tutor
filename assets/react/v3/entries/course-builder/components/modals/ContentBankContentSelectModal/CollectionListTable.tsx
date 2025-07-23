@@ -34,6 +34,7 @@ const CollectionListTable = ({
     per_page: itemsPerPage,
     ...(pageInfo.filter.search ? { search: String(pageInfo.filter.search) } : {}),
     hide_empty: 1,
+    context: type === 'question' ? 'quiz_builder' : 'topic',
   });
 
   const fetchedItems = useMemo(() => getCollectionListQuery.data?.data ?? [], [getCollectionListQuery.data]);

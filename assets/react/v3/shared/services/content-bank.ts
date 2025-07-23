@@ -10,6 +10,7 @@ interface CollectionParams {
   page?: number;
   per_page?: number;
   hide_empty?: number;
+  context?: 'topic' | 'quiz_builder';
 }
 
 export const getCollections = (params: CollectionParams) => {
@@ -49,6 +50,7 @@ export const useGetCollectionsInfinityQuery = (
 
 interface ContentBankContentsParams {
   collection_id: number | null;
+  per_page?: number;
   page?: string;
   search?: string;
   order?: string;

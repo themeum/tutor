@@ -7,7 +7,7 @@ import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { css } from '@emotion/react';
 
-import { type Coupon, type Course, useAppliesToQuery } from '@CouponServices/coupon';
+import { type Coupon, type Course, useAppliesToQuery } from '@CouponDetails/services/coupon';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import { __, sprintf } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';

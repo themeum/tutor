@@ -8,6 +8,7 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { getCountryByCode } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
@@ -65,14 +66,16 @@ const TaxSettingsPage = () => {
       });
 
       reset({
-        enable_tax: taxData.enable_tax || true,
+        enable_tax: isDefined(taxData.enable_tax) ? taxData.enable_tax : true,
         rates: taxData.rates ?? [],
         apply_tax_on: taxData.apply_tax_on ?? 'product',
         active_country: taxData.active_country || null,
-        show_price_with_tax: taxData.show_price_with_tax ?? false,
-        charge_tax_on_shipping: taxData.charge_tax_on_shipping ?? false,
+        show_price_with_tax: isDefined(taxData.show_price_with_tax) ? taxData.show_price_with_tax : false,
+        charge_tax_on_shipping: isDefined(taxData.charge_tax_on_shipping) ? taxData.charge_tax_on_shipping : false,
         is_tax_included_in_price: taxData.is_tax_included_in_price ?? 0,
-        enable_individual_tax_control: taxData.enable_individual_tax_control ?? false,
+        enable_individual_tax_control: isDefined(taxData.enable_individual_tax_control)
+          ? taxData.enable_individual_tax_control
+          : false,
       });
     }
   }, [reset, taxSettingsQuery.data]);

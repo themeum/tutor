@@ -1,4 +1,4 @@
-import { type Discount, useOrderDiscountMutation } from '@OrderServices/order';
+import { type Discount, useOrderDiscountMutation } from '@OrderDetails/services/order';
 import Button from '@TutorShared/atoms/Button';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
