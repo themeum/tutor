@@ -23,6 +23,7 @@ if ( $context && file_exists( $file_path ) ) {
 	$student_name = $user_data->display_name;
 	$student_url  = '#';
 
+	//phpcs:ignore
 	extract( \Tutor\Models\QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_duration, $attempt_duration_taken;
 
 	$quiz_time    = $attempt_duration;
@@ -31,7 +32,7 @@ if ( $context && file_exists( $file_path ) ) {
 	$question_count      = $attempt_data->total_questions;
 	$total_marks         = $attempt_data->total_marks;
 	$earned_marks        = $attempt_data->earned_marks;
-	$unserialize_attempt = unserialize( $attempt_data->attempt_info );
+	$unserialize_attempt = maybe_unserialize( $attempt_data->attempt_info );
 	$pass_marks          = '';
 	$passing_grade       = isset( $unserialize_attempt['passing_grade'] ) ? $unserialize_attempt['passing_grade'] : 0;
 	$back_url            = isset( $back_url ) ? $back_url : ( isset( $_GET['view_quiz_attempt_id'] ) ? remove_query_arg( 'view_quiz_attempt_id', is_admin() ? admin_url( 'admin.php?page=tutor_quiz_attempts' ) : tutor()->current_url ) : null );

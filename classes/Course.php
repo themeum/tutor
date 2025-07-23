@@ -22,6 +22,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\QuizModel;
 use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
@@ -2802,7 +2803,7 @@ class Course extends Tutor_Base {
 				$attempt = tutor_utils()->get_quiz_attempt( $quiz->ID );
 				if ( $attempt ) {
 					$passing_grade     = tutor_utils()->get_quiz_option( $quiz->ID, 'passing_grade', 0 );
-					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
+					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
 						$required_quiz_pass++;
