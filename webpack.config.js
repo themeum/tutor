@@ -73,7 +73,12 @@ module.exports = (env, options) => {
                     terserOptions: {
                         compress: false,
                         ecma: 6,
-                        mangle: true,
+                        mangle: {
+                            reserved: ['__'],
+                        },
+                        format: {
+                            comments: /translators:/i,
+                        },
                     },
                     extractComments: false,
                 }),
@@ -97,13 +102,13 @@ module.exports = (env, options) => {
                 'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
                 'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
                 'tutor-gutenberg': './assets/react/gutenberg/index.js',
+                'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
                 'tutor-course-builder': './assets/react/v3/entries/course-builder/index.tsx',
                 'tutor-order-details': './assets/react/v3/entries/order-details/index.tsx',
                 'tutor-coupon': './assets/react/v3/entries/coupon-details/index.tsx',
                 'tutor-tax-settings': './assets/react/v3/entries/tax-settings/index.tsx',
                 'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
                 'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
-                'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
                 'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
             }
         }
@@ -120,13 +125,7 @@ module.exports = (env, options) => {
                 output: {
                     path: path.resolve(dest_path),
                     filename: '[name].js',
-                    chunkFilename: (pathData) => {
-                        if (pathData.chunk.name && pathData.chunk.name.startsWith('icon-')) {
-                            const name = pathData.chunk.name.replace(/^icon-/, '');
-                            return `icons/${name}.js?ver=${version}`;
-                        }
-                        return `lazy-chunks/[name].js?ver=${version}`;
-                    },
+                    chunkFilename: `lazy-chunks/[name].js?ver=${version}`,
                     clean: true,
                 },
                 resolve: {
@@ -145,12 +144,8 @@ module.exports = (env, options) => {
                         '@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
                         '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
                         '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
-                        '@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
-                        '@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
-                        '@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),
-                        '@OrderContexts': path.resolve(__dirname, './assets/react/v3/entries/order-details/contexts/'),
-                        '@CouponComponents': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/components/'),
-                        '@CouponServices': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/services/'),
+                        '@OrderDetails': path.resolve(__dirname, './assets/react/v3/entries/order-details/'),
+                        '@CouponDetails': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/'),
                         '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
                         '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
                     },

@@ -17,7 +17,7 @@ use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
-use Tutor\Models\OrderMetaModel;
+use Tutor\Models\CourseModel;
 use Tutor\Models\OrderModel;
 use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
@@ -284,6 +284,7 @@ class CheckoutController {
 					'sale_price'        => $sale_price ? $sale_price : null,
 					'is_coupon_applied' => false,
 					'coupon_code'       => null,
+					'tax_collection'    => CourseModel::is_tax_enabled_for_single_purchase( $item_id ),
 				);
 			}
 
@@ -415,6 +416,9 @@ class CheckoutController {
 		$coupon_discount = 0;
 		$sale_discount   = 0;
 
+		$tax_exempt_price  = 0;
+		$tax_exempt_amount = 0;
+
 		$coupon                  = null;
 		$is_coupon_applied       = false;
 		$is_meet_min_requirement = false;
@@ -455,6 +459,10 @@ class CheckoutController {
 			$coupon_title = $coupon->coupon_title;
 		}
 
+		$should_calculate_tax = Tax::should_calculate_tax();
+		$tax_included         = Tax::is_tax_included_in_price();
+		$tax_rate             = Tax::get_user_tax_rate();
+
 		// Keep calculated price for each item.
 		foreach ( $items as $item ) {
 			$discount_amount        = isset( $item['discount_amount'] ) ? $item['discount_amount'] : 0;
@@ -464,6 +472,18 @@ class CheckoutController {
 			$display_price         = isset( $item['sale_price'] ) ? $item['sale_price'] : $item['regular_price'];
 			$display_price         = $has_discount_amount ? $item['discount_price'] : $display_price;
 			$item['display_price'] = $display_price;
+
+			$item['tax_amount']          = 0;
+			$item['tax_amount_readable'] = '';
+
+			if ( $should_calculate_tax ) {
+				$tax_amount = Tax::calculate_tax( $display_price, $tax_rate );
+				// translators: %1$s: tax amount %2$s: included text or empty string.
+				$tax_amount_readable = sprintf( __( 'Tax: %1$s%2$s', 'tutor' ), tutor_get_formatted_price( $tax_amount ), $tax_included ? __( ' included', 'tutor' ) : '' );
+
+				$item['tax_amount']          = $tax_amount;
+				$item['tax_amount_readable'] = $tax_amount_readable;
+			}
 
 			$sale_discount_amount         = isset( $item['sale_price'] ) ? $item['regular_price'] - $item['sale_price'] : 0;
 			$item['sale_discount_amount'] = $sale_discount_amount;
@@ -478,11 +498,21 @@ class CheckoutController {
 			foreach ( $additional_items as $additional_item ) {
 				$subtotal_price += $additional_item['regular_price'] ?? 0;
 			}
+
+			if ( isset( $item['tax_collection'] ) && false === $item['tax_collection'] ) {
+				$tax_exempt_price += $display_price;
+				$tax_exempt_price += array_sum( array_column( $additional_items, 'regular_price' ) );
+			}
 		}
 
 		$total_price = $subtotal_price - ( $coupon_discount + $sale_discount );
-		$tax_rate    = Tax::get_user_tax_rate();
-		$tax_amount  = Tax::calculate_tax( $total_price, $tax_rate );
+		$tax_amount  = 0;
+
+		if ( $should_calculate_tax ) {
+			$tax_amount        = Tax::calculate_tax( $total_price, $tax_rate );
+			$tax_exempt_amount = Tax::calculate_tax( $tax_exempt_price, $tax_rate );
+			$tax_amount        = $tax_amount - $tax_exempt_amount;
+		}
 
 		$total_price_without_tax = $total_price;
 		if ( ! Tax::is_tax_included_in_price() ) {
@@ -494,6 +524,7 @@ class CheckoutController {
 
 		$response['plan_info'] = $plan_info;
 
+		$response['total_items']       = tutor_utils()->count( $items );
 		$response['coupon_type']       = $coupon_type;
 		$response['coupon_code']       = $is_coupon_applied ? $coupon->coupon_code : null;
 		$response['coupon_title']      = $coupon_title;
@@ -504,6 +535,7 @@ class CheckoutController {
 		$response['sale_discount']           = $sale_discount;
 		$response['tax_rate']                = $tax_rate;
 		$response['total_price_without_tax'] = $total_price_without_tax;
+		$response['tax_exempt_amount']       = $tax_exempt_amount;
 		$response['tax_amount']              = $tax_amount;
 		$response['total_price']             = $total_price;
 		$response['order_type']              = $order_type;

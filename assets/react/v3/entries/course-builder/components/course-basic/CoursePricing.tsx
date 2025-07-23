@@ -5,9 +5,11 @@ import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import {
@@ -18,10 +20,10 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
-import { spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -57,27 +59,31 @@ const CoursePricing = () => {
 
   const { tutor_currency } = tutorConfig;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isTaxEnabled = !!tutorConfig.settings?.enable_tax;
+  const enableIndividualTaxControl = !!tutorConfig.settings?.enable_individual_tax_control;
+  const isTaxIncludedInPrice = !!tutorConfig.settings?.is_tax_included_in_price;
+  const monetizeBy = tutorConfig.settings?.monetize_by;
 
-  const coursePriceOptions =
-    tutorConfig.settings?.monetize_by === 'wc' ||
-    tutorConfig.settings?.monetize_by === 'tutor' ||
-    tutorConfig.settings?.monetize_by === 'edd'
-      ? [
-          {
-            label: __('Free', 'tutor'),
-            value: 'free',
-          },
-          {
-            label: __('Paid', 'tutor'),
-            value: 'paid',
-          },
-        ]
-      : [
-          {
-            label: __('Free', 'tutor'),
-            value: 'free',
-          },
-        ];
+  // prettier-ignore
+  const taxAlertMessage = __('You have unchecked the Tax Collection option. Please review your pricing, as your tax settings currently indicate that prices are inclusive of tax.', 'tutor');
+
+  const coursePriceOptions = ['wc', 'tutor', 'edd'].includes(monetizeBy || '')
+    ? [
+        {
+          label: __('Free', 'tutor'),
+          value: 'free',
+        },
+        {
+          label: __('Paid', 'tutor'),
+          value: 'paid',
+        },
+      ]
+    : [
+        {
+          label: __('Free', 'tutor'),
+          value: 'free',
+        },
+      ];
 
   const purchaseOptions = [
     {
@@ -102,12 +108,12 @@ const CoursePricing = () => {
     },
   ];
 
-  const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings?.monetize_by, courseId ? String(courseId) : '');
+  const wcProductsQuery = useGetWcProductsQuery(monetizeBy, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
     courseProductId,
     String(courseId),
     coursePriceType,
-    isTutorPro ? tutorConfig.settings?.monetize_by : undefined,
+    isTutorPro ? monetizeBy : undefined,
   );
 
   const wcProductOptions = (data: WcProduct[] | undefined) => {
@@ -139,7 +145,7 @@ const CoursePricing = () => {
       const { course_pricing } = courseDetails || {};
 
       if (
-        tutorConfig.settings?.monetize_by === 'wc' &&
+        monetizeBy === 'wc' &&
         course_pricing?.product_id &&
         course_pricing.product_id !== '0' &&
         !wcProductOptions(wcProductsQuery.data).find(({ value }) => String(value) === String(course_pricing.product_id))
@@ -160,7 +166,7 @@ const CoursePricing = () => {
     const { course_pricing } = courseDetails || {};
 
     if (
-      tutorConfig.settings?.monetize_by === 'edd' &&
+      monetizeBy === 'edd' &&
       course_pricing?.product_id &&
       course_pricing.product_id !== '0' &&
       !tutorConfig.edd_products.find(({ ID }) => String(ID) === String(course_pricing.product_id))
@@ -173,7 +179,7 @@ const CoursePricing = () => {
   }, [tutorConfig.edd_products]);
 
   useEffect(() => {
-    if (tutorConfig.settings?.monetize_by !== 'wc') {
+    if (monetizeBy !== 'wc') {
       return;
     }
 
@@ -221,13 +227,7 @@ const CoursePricing = () => {
         )}
       />
 
-      <Show
-        when={
-          isAddonEnabled(Addons.SUBSCRIPTION) &&
-          tutorConfig.settings?.monetize_by === 'tutor' &&
-          coursePriceType === 'paid'
-        }
-      >
+      <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && monetizeBy === 'tutor' && coursePriceType === 'paid'}>
         <Controller
           name="course_selling_option"
           control={form.control}
@@ -237,7 +237,7 @@ const CoursePricing = () => {
         />
       </Show>
 
-      <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'wc'}>
+      <Show when={coursePriceType === 'paid' && monetizeBy === 'wc'}>
         <Controller
           name="course_product_id"
           control={form.control}
@@ -269,7 +269,7 @@ const CoursePricing = () => {
         />
       </Show>
 
-      <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'edd'}>
+      <Show when={coursePriceType === 'paid' && monetizeBy === 'edd'}>
         <Controller
           name="course_product_id"
           control={form.control}
@@ -301,8 +301,7 @@ const CoursePricing = () => {
         when={
           coursePriceType === 'paid' &&
           !['subscription', 'membership'].includes(selectedPurchaseOption) &&
-          (tutorConfig.settings?.monetize_by === 'tutor' ||
-            (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && courseProductId !== '-1'))
+          (monetizeBy === 'tutor' || (isTutorPro && monetizeBy === 'wc' && courseProductId !== '-1'))
         }
       >
         <div css={styles.coursePriceWrapper}>
@@ -365,16 +364,57 @@ const CoursePricing = () => {
         </div>
       </Show>
 
-      <Show
-        when={
-          isAddonEnabled(Addons.SUBSCRIPTION) &&
-          tutorConfig.settings?.monetize_by === 'tutor' &&
-          coursePriceType === 'paid'
-        }
-      >
+      <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && monetizeBy === 'tutor' && coursePriceType === 'paid'}>
         <Show when={!['one_time', 'membership'].includes(selectedPurchaseOption)}>
           <SubscriptionPreview courseId={courseId} />
         </Show>
+      </Show>
+
+      <Show
+        when={
+          coursePriceType === 'paid' &&
+          monetizeBy === 'tutor' &&
+          isTaxEnabled &&
+          enableIndividualTaxControl &&
+          selectedPurchaseOption !== 'membership'
+        }
+      >
+        <div css={styles.taxWrapper}>
+          <label>{__('Tax Collection', 'tutor')}</label>
+
+          <div css={styles.checkboxWrapper}>
+            <Show when={['one_time', 'both', 'all'].includes(selectedPurchaseOption)}>
+              <Controller
+                name="tax_on_single"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox
+                    {...controllerProps}
+                    label={__('Charge tax on one-time purchase ', 'tutor')}
+                    helpText={isTaxIncludedInPrice && !controllerProps.field.value ? taxAlertMessage : ''}
+                  />
+                )}
+              />
+            </Show>
+            <Show
+              when={
+                isAddonEnabled(Addons.SUBSCRIPTION) && ['subscription', 'both', 'all'].includes(selectedPurchaseOption)
+              }
+            >
+              <Controller
+                name="tax_on_subscription"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox
+                    {...controllerProps}
+                    label={__('Charge tax on subscription', 'tutor')}
+                    helpText={isTaxIncludedInPrice && !controllerProps.field.value ? taxAlertMessage : ''}
+                  />
+                )}
+              />
+            </Show>
+          </div>
+        </div>
       </Show>
     </>
   );
@@ -392,5 +432,43 @@ const styles = {
     display: flex;
     align-items: flex-start;
     gap: ${spacing[16]};
+  `,
+  taxWrapper: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[4]};
+
+    label {
+      ${typography.body()}
+      color: ${colorTokens.text.title};
+    }
+  `,
+  checkboxWrapper: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[4]};
+  `,
+  taxAlert: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[8]};
+    margin-top: ${spacing[8]};
+    padding: ${spacing[12]};
+    background-color: ${colorTokens.color.warning[40]};
+    border: 1px solid ${colorTokens.color.warning[50]};
+    border-radius: ${borderRadius[6]};
+  `,
+  alertTitle: css`
+    ${styleUtils.display.flex()}
+    gap: ${spacing[4]};
+    align-items: center;
+    ${typography.caption('medium')};
+    color: ${colorTokens.color.warning[100]};
+
+    svg {
+      color: ${colorTokens.design.warning};
+      flex-shrink: 0;
+    }
+  `,
+  alertDescription: css`
+    ${typography.caption()}
+    color: ${colorTokens.color.warning[100]};
   `,
 };

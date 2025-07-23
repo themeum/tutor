@@ -1,5 +1,6 @@
 import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type InjectionSlots } from '@TutorShared/utils/types';
+import { type LocaleData } from '@wordpress/i18n';
 
 export type {};
 
@@ -90,6 +91,10 @@ declare global {
       course_list_page_url: string;
       course_post_type: string;
       local: string;
+      coupon_main_content_locales: LocaleData;
+      course_builder_basic_locales: LocaleData;
+      course_builder_curriculum_locales: LocaleData;
+      course_builder_additional_locales: LocaleData;
       difficulty_levels: {
         label: string;
         value: string;
@@ -157,6 +162,10 @@ declare global {
         instructor_can_publish_course: 'on' | 'off';
         youtube_api_key_exist: boolean;
         membership_only_mode: boolean;
+        enable_tax: boolean;
+        enable_individual_tax_control: boolean;
+        is_tax_included_in_price: boolean;
+        pagination_per_page: string;
       };
       tutor_currency: {
         symbol: string;

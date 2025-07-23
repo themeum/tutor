@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Input;
 use Tutor\Models\WithdrawModel;
-use TUTOR\Withdraw_Requests_List;
-$withdraw = new Withdraw_Requests_List();
+
+$withdraw = tutor_lms()->withdraw_list;
 
 //phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 $order       = Input::get( 'order', 'DESC' );
@@ -50,17 +50,30 @@ $total         = $withdraw_list->count;
  */
 $navbar_data = array(
 	'page_title' => $withdraw->page_title,
-	'tabs'       => $withdraw->tabs_key_value( $date, $search_term ),
-	'active'     => $active_tab,
 );
 
 /**
  * Bulk action & filters
  */
 $filters = array(
-	'bulk_action'   => false,
-	'filters'       => true,
-	'course_filter' => false,
+	'bulk_action' => false,
+	'filters'     => array(
+		array(
+			'label'      => __( 'Status', 'tutor' ),
+			'field_type' => 'select',
+			'field_name' => 'data',
+			'options'    => $withdraw->tabs_key_value( $date, $search_term ),
+			'searchable' => false,
+			'value'      => Input::get( 'data', '' ),
+		),
+		array(
+			'label'      => __( 'Date', 'tutor' ),
+			'field_type' => 'date',
+			'field_name' => 'date',
+			'show_label' => true,
+			'value'      => Input::get( 'date', '' ),
+		),
+	),
 );
 
 //phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
@@ -68,15 +81,16 @@ $filters = array(
 
 <div class="tutor-admin-wrap">
 	<?php
-		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
-		$filters_template = tutor()->path . 'views/elements/filters.php';
+		$navbar_template  = tutor()->path . 'views/elements/list-navbar.php';
+		$filters_template = tutor()->path . 'views/elements/list-filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 
-	<div class="tutor-admin-body">
-		<div class="tutor-admin-page-content-wrapper tutor-withdraw-wrapper tutor-mt-24">
-			<div class="tutor-table-responsive">
+	<div class="tutor-admin-container tutor-admin-container-lg">
+		<div class="tutor-mt-16">
+			<?php if ( is_array( $withdraw_list->results ) && count( $withdraw_list->results ) ) : ?>
+			<div class="tutor-table-responsive tutor-dashboard-list-table">
 				<table class="tutor-table tutor-table-middle tutor-withdraw-request">
 					<thead>
 						<tr>
@@ -106,212 +120,207 @@ $filters = array(
 					</thead>
 
 					<tbody>
-						<?php if ( is_array( $withdraw_list->results ) && count( $withdraw_list->results ) ) : ?>
-							<?php foreach ( $withdraw_list->results as $list ) : ?>
-								<?php
-									$user_data = get_userdata( $list->user_id );
-									$details   = unserialize( $list->method_data );
-									$alert     = ( 'pending' == $list->status ? 'warning' : ( 'rejected' === $list->status ? 'danger' : ( 'approved' === $list->status ? 'success' : 'default' ) ) );
-									$data_name = isset( $details['account_name']['value'] ) ? $details['account_name']['value'] : $user_data->display_name;
-								if ( ! $details ) {
-									continue;
-								}
-								?>
-							<tr>
-								<td>
-									<div class="tutor-fs-7"><?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $list->created_at ) ); ?>,</div>
-									<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $list->created_at ) ); ?></div>
-								</td>
+						<?php foreach ( $withdraw_list->results as $list ) : ?>
+							<?php
+								$user_data = get_userdata( $list->user_id );
+								$details   = unserialize( $list->method_data );
+								$alert     = ( 'pending' == $list->status ? 'warning' : ( 'rejected' === $list->status ? 'danger' : ( 'approved' === $list->status ? 'success' : 'default' ) ) );
+								$data_name = isset( $details['account_name']['value'] ) ? $details['account_name']['value'] : $user_data->display_name;
+							if ( ! $details ) {
+								continue;
+							}
+							?>
+						<tr>
+							<td>
+								<div class="tutor-fs-7"><?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $list->created_at ) ); ?>,</div>
+								<div class="tutor-fs-7 tutor-color-muted tutor-mt-4"><?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $list->created_at ) ); ?></div>
+							</td>
 
-								<td>
-									<div class="tutor-d-flex tutor-gap-2">
-										<?php
-										echo wp_kses(
-											tutor_utils()->get_tutor_avatar( $user_data->ID ),
-											tutor_utils()->allowed_avatar_tags()
-										);
-										?>
+							<td>
+								<div class="tutor-d-flex tutor-gap-2">
+									<?php
+									echo wp_kses(
+										tutor_utils()->get_tutor_avatar( $user_data->ID ),
+										tutor_utils()->allowed_avatar_tags()
+									);
+									?>
 
-										<div>
-											<div class="tutor-d-flex tutor-align-center tutor-gap-1">
-												<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
-													<?php echo esc_html( $user_data->display_name ); ?>
-												</span>
-												<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
-													<span class="tutor-icon-external-link"></span>
-												</a>
-											</div>
-
-											<span class="tutor-fs-7 tutor-color-muted">
-												<?php echo esc_html( $user_data->user_email ); ?>
-											</span>
-										</div>
-									</div>
-								</td>
-
-								<td>
-									<div class="tutor-fs-7">
-										<?php echo esc_html( $details['withdraw_method_name'] ); ?>
-									</div>
-								</td>
-
-								<td>
-									<?php if ( 'bank_transfer_withdraw' === $details['withdraw_method_key'] ) : ?>
-										<ul class="tutor-table-inside-table">
-											<li>
-												<span class="tutor-fs-7 tutor-color-muted">
-													<?php esc_html_e( 'Name:', 'tutor' ); ?>
-												</span>
-												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-													<?php echo esc_html( $details['account_name']['value'] ); ?>
-												</span>
-											</li>
-											<li>
-												<span class="tutor-fs-7 tutor-color-muted">
-													<?php esc_html_e( 'A/C Number:', 'tutor' ); ?>
-												</span>
-												<div class="tooltip-wrap">
-													<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-														<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['account_number']['value'] ) ); ?>
-													</span>
-													<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top tutor-d-flex">
-														<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
-															<?php echo esc_html( $details['account_number']['value'] ); ?>
-														</div>
-														<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
-															<span class="icon tutor-icon-copy"></span>
-															<?php esc_html_e( 'Copy', 'tutor' ); ?>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li>
-												<span class="tutor-fs-7 tutor-color-muted">
-													<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
-												</span>
-												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-													<?php echo esc_html( $details['bank_name']['value'] ); ?>
-												</span>
-											</li>
-											<li>
-												<span class="tutor-fs-7 tutor-color-muted">
-													<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
-												</span>
-												<div class="tooltip-wrap">
-													<span class="tutor-fs-7 tutor-fw-medium tutor-color-black dotedtext">
-														<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['iban']['value'] ) ); ?>
-													</span>
-													<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top  tutor-d-flex">
-														<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
-															<?php echo esc_html( $details['iban']['value'] ); ?>
-														</div>
-														<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
-															<span class="icon tutor-icon-copy"></span>
-															<?php esc_html_e( 'Copy', 'tutor' ); ?>
-														</div>
-													</div>
-												</div>
-											</li>
-											<li>
-												<span class="tutor-fs-7 tutor-color-muted">
-													<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
-												</span>
-												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-													<?php echo esc_html( $details['swift']['value'] ); ?>
-												</span>
-											</li>
-										</ul>
-									<?php elseif ( 'echeck_withdraw' === $details['withdraw_method_key'] ) : ?>
-										<span>
-											<?php echo esc_html( $details['physical_address']['value'] ); ?>
-										</span>
-									<?php elseif ( 'paypal_withdraw' === $details['withdraw_method_key'] ) : ?>
-										<div class="tooltip-wrap">
-											<span class="dotedtext">
-												<?php echo esc_html( '' !== $details['paypal_email']['value'] ? tutor_utils()->asterisks_email( $details['paypal_email']['value'] ) : '' ); ?>
-											</span>
-											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top  tutor-d-flex me-auto">
-												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
-													<?php echo esc_html( $details['paypal_email']['value'] ); ?>
-												</div>
-												<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
-													<span class="icon tutor-icon-copy"></span>
-													Copy
-												</div>
-											</div>
-										</div>
-									<?php endif; ?>
-								</td>
-								<td data-th="<?php esc_html_e( 'Amount', 'tutor' ); ?>">
-									<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-										<?php echo tutor_utils()->tutor_price( $list->amount ); //phpcs:ignore ?>
-									</div>
-								</td>
-								<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
 									<div>
-										<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-4 tutor-justify-center">
-											<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
+										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+											<span class="tutor-color-black tutor-fs-6 tutor-fw-medium">
+												<?php echo esc_html( $user_data->display_name ); ?>
+											</span>
+											<a href="<?php echo esc_url( tutor_utils()->profile_url( $user_data->ID, true ) ); ?>" class="tutor-iconic-btn" target="_blank">
+												<span class="tutor-icon-external-link"></span>
+											</a>
+										</div>
+
+										<span class="tutor-fs-7 tutor-color-muted">
+											<?php echo esc_html( $user_data->user_email ); ?>
 										</span>
 									</div>
-								</td>
-								<td data-th="<?php esc_html_e( 'Update', 'tutor' ); ?>" class="tutor-withdraw-btns">
-									<?php if ( 'pending' === $list->status ) : ?>
-									<div class="tutor-d-flex tutor-gap-1">
-										<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-admin-open-withdraw-approve-modal">
-											<?php esc_html_e( 'Approve', 'tutor' ); ?>
-										</button>
-										<button data-tutor-modal-target="tutor-admin-withdraw-reject"  data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>"  class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-admin-open-withdraw-reject-modal">
-											<?php esc_html_e( 'Reject', 'tutor' ); ?>
-										</button>
+								</div>
+							</td>
+
+							<td>
+								<div class="tutor-fs-7">
+									<?php echo esc_html( $details['withdraw_method_name'] ); ?>
+								</div>
+							</td>
+
+							<td>
+								<?php if ( 'bank_transfer_withdraw' === $details['withdraw_method_key'] ) : ?>
+									<ul class="tutor-table-inside-table">
+										<li>
+											<span class="tutor-fs-7 tutor-color-muted">
+												<?php esc_html_e( 'Name:', 'tutor' ); ?>
+											</span>
+											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+												<?php echo esc_html( $details['account_name']['value'] ); ?>
+											</span>
+										</li>
+										<li>
+											<span class="tutor-fs-7 tutor-color-muted">
+												<?php esc_html_e( 'A/C Number:', 'tutor' ); ?>
+											</span>
+											<div class="tooltip-wrap">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['account_number']['value'] ) ); ?>
+												</span>
+												<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top tutor-d-flex">
+													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
+														<?php echo esc_html( $details['account_number']['value'] ); ?>
+													</div>
+													<div data-text-copy="<?php echo esc_attr( $details['account_number']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
+														<span class="icon tutor-icon-copy"></span>
+														<?php esc_html_e( 'Copy', 'tutor' ); ?>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<span class="tutor-fs-7 tutor-color-muted">
+												<?php esc_html_e( 'Bank Name:', 'tutor' ); ?>
+											</span>
+											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+												<?php echo esc_html( $details['bank_name']['value'] ); ?>
+											</span>
+										</li>
+										<li>
+											<span class="tutor-fs-7 tutor-color-muted">
+												<?php esc_html_e( 'IBAN:', 'tutor' ); ?>
+											</span>
+											<div class="tooltip-wrap">
+												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black dotedtext">
+													<?php echo esc_html( tutor_utils()->asterisks_center_text( $details['iban']['value'] ) ); ?>
+												</span>
+												<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top  tutor-d-flex">
+													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
+														<?php echo esc_html( $details['iban']['value'] ); ?>
+													</div>
+													<div data-text-copy="<?php echo esc_attr( $details['iban']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
+														<span class="icon tutor-icon-copy"></span>
+														<?php esc_html_e( 'Copy', 'tutor' ); ?>
+													</div>
+												</div>
+											</div>
+										</li>
+										<li>
+											<span class="tutor-fs-7 tutor-color-muted">
+												<?php esc_html_e( 'BIC/SWIFT:', 'tutor' ); ?>
+											</span>
+											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+												<?php echo esc_html( $details['swift']['value'] ); ?>
+											</span>
+										</li>
+									</ul>
+								<?php elseif ( 'echeck_withdraw' === $details['withdraw_method_key'] ) : ?>
+									<span>
+										<?php echo esc_html( $details['physical_address']['value'] ); ?>
+									</span>
+								<?php elseif ( 'paypal_withdraw' === $details['withdraw_method_key'] ) : ?>
+									<div class="tooltip-wrap">
+										<span class="dotedtext">
+											<?php echo esc_html( '' !== $details['paypal_email']['value'] ? tutor_utils()->asterisks_email( $details['paypal_email']['value'] ) : '' ); ?>
+										</span>
+										<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-top  tutor-d-flex me-auto">
+											<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center tutor-mr-12">
+												<?php echo esc_html( $details['paypal_email']['value'] ); ?>
+											</div>
+											<div data-text-copy="<?php echo esc_attr( $details['paypal_email']['value'] ); ?>" class="withdraw-tutor-copy-to-clipboard tutor-fs-7 tutor-d-flex tutor-align-center">
+												<span class="icon tutor-icon-copy"></span>
+												Copy
+											</div>
+										</div>
 									</div>
-									<?php elseif ( 'approved' === $list->status ) : ?>
+								<?php endif; ?>
+							</td>
+							<td data-th="<?php esc_html_e( 'Amount', 'tutor' ); ?>">
+								<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+									<?php echo tutor_utils()->tutor_price( $list->amount ); //phpcs:ignore ?>
+								</div>
+							</td>
+							<td data-th="<?php esc_html_e( 'Status', 'tutor' ); ?>">
+								<div>
+									<span class="tutor-badge-label label-<?php echo esc_attr( $alert ); ?> tutor-m-4 tutor-justify-center">
+										<?php echo esc_html( tutor_utils()->translate_dynamic_text( $list->status ) ); ?>
+									</span>
+								</div>
+							</td>
+							<td data-th="<?php esc_html_e( 'Update', 'tutor' ); ?>" class="tutor-withdraw-btns">
+								<?php if ( 'pending' === $list->status ) : ?>
+								<div class="tutor-d-flex tutor-gap-1">
+									<button data-tutor-modal-target="tutor-admin-withdraw-approve" data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-admin-open-withdraw-approve-modal">
+										<?php esc_html_e( 'Approve', 'tutor' ); ?>
+									</button>
+									<button data-tutor-modal-target="tutor-admin-withdraw-reject"  data-id="<?php echo esc_attr( $list->withdraw_id ); ?>" data-name="<?php echo esc_attr( $data_name ); ?>" data-amount="<?php echo esc_attr( $list->amount ); ?>"  class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-admin-open-withdraw-reject-modal">
+										<?php esc_html_e( 'Reject', 'tutor' ); ?>
+									</button>
+								</div>
+								<?php elseif ( 'approved' === $list->status ) : ?>
+									<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
+									</div>
+								<?php elseif ( 'rejected' === $list->status ) : ?>
+									<div class="tutor-d-flex ">
 										<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 										</div>
-									<?php elseif ( 'rejected' === $list->status ) : ?>
-										<div class="tutor-d-flex ">
-											<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
-												<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
-												<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
-											</div>
-											<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">
-												<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-													<i class="tutor-icon-circle-info tutor-color-muted"></i>
-												</span>
-												<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
-													<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center">
-														<span>
-														<?php
-														if ( is_array( $details ) && isset( $details['rejects'] ) ) {
-															echo esc_html( '' !== $details['rejects']['reject_comment'] ? $details['rejects']['reject_comment'] : $details['rejects']['reject_type'] );
-														}
-														?>
-														</span>
-													</div>
+										<div class="tooltip-wrap tutor-ml-lg-20 tutor-ml-0">
+											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+												<i class="tutor-icon-circle-info tutor-color-muted"></i>
+											</span>
+											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
+												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center">
+													<span>
+													<?php
+													if ( is_array( $details ) && isset( $details['rejects'] ) ) {
+														echo esc_html( '' !== $details['rejects']['reject_comment'] ? $details['rejects']['reject_comment'] : $details['rejects']['reject_type'] );
+													}
+													?>
+													</span>
 												</div>
 											</div>
 										</div>
-									<?php else : ?>
-										<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
-											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
-											<br>
-											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
-										</div>
-									<?php endif; ?>
-								</td>
-							</tr>
-							<?php endforeach; ?>
-						<?php else : ?>
-							<tr>
-								<td colspan="100%" class="column-empty-state">
-									<?php tutor_utils()->tutor_empty_state( __( 'No request found', 'tutor' ) ); ?>
-								</td>
-							</tr>
-						<?php endif; ?>
+									</div>
+								<?php else : ?>
+									<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>
+										<br>
+										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
+									</div>
+								<?php endif; ?>
+							</td>
+						</tr>
+						<?php endforeach; ?>
 					</tbody>
 				</table>
 			</div>
+			<?php else : ?>
+				<?php tutils()->render_list_empty_state(); ?>
+			<?php endif; ?>
 
 			<div class="tutor-admin-page-pagination-wrapper tutor-mt-32">
 				<?php

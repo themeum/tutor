@@ -19,7 +19,7 @@ import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import {
-  type ContentType,
+  useDeleteContentBankContentMutation,
   useDeleteContentMutation,
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -38,11 +38,11 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { ID } from '@TutorShared/utils/types';
+import type { ID, TopicContentType } from '@TutorShared/utils/types';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicContentProps {
-  type: ContentType;
+  type: TopicContentType;
   topic: CourseTopicWithCollapse;
   content: { id: ID; title: string; total_question: number };
   isOverlay?: boolean;
@@ -75,6 +75,14 @@ const icons = {
     name: 'interactiveQuiz',
     color: '#C984FE',
   },
+  'cb-lesson': {
+    name: 'lesson',
+    color: colorTokens.icon.default,
+  },
+  'cb-assignment': {
+    name: 'assignment',
+    color: colorTokens.icon.processing,
+  },
 } as const;
 
 const confirmationMessages = {
@@ -90,8 +98,11 @@ const confirmationMessages = {
 } as const;
 
 const modalComponent: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
+  [key in Exclude<
+    TopicContentType,
+    'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  >]: React.FunctionComponent<any>;
 } = {
   lesson: LessonModal,
   tutor_quiz: QuizModal,
@@ -100,7 +111,7 @@ const modalComponent: {
 } as const;
 
 const modalTitle: {
-  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: string;
+  [key in Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>]: string;
 } = {
   lesson: __('Lesson', 'tutor'),
   tutor_quiz: __('Quiz', 'tutor'),
@@ -109,13 +120,22 @@ const modalTitle: {
 } as const;
 
 const modalIcon: {
-  [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: IconCollection;
+  [key in Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>]: IconCollection;
 } = {
   lesson: 'lesson',
   tutor_quiz: 'quiz',
   tutor_assignments: 'assignment',
   tutor_h5p_quiz: 'interactiveQuiz',
 } as const;
+
+const editAbleContentTypes = [
+  'lesson',
+  'tutor_assignments',
+  'tutor_quiz',
+  'tutor_h5p_quiz',
+  'tutor_zoom_meeting',
+  'tutor-google-meet',
+];
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
@@ -136,7 +156,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const editButtonRef = useRef<HTMLButtonElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
 
-  const icon = icons[type];
+  const icon = icons[type] || {
+    name: 'lesson',
+    color: colorTokens.icon.default,
+  };
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: content.id,
     data: {
@@ -158,6 +181,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const deleteGoogleMeetMutation = useDeleteContentMutation();
   const deleteZoomMeetingMutation = useDeleteContentMutation();
   const exportQuizMutation = useExportQuizMutation();
+  const deleteContentBankContentMutation = useDeleteContentBankContentMutation();
 
   const handleShowModalOrPopover = () => {
     const contentType = type as keyof typeof modalComponent;
@@ -199,6 +223,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       await deleteGoogleMeetMutation.mutateAsync(contentId);
     } else if (type === 'tutor_zoom_meeting') {
       await deleteZoomMeetingMutation.mutateAsync(contentId);
+    } else if (['cb-lesson', 'cb-assignment'].includes(type)) {
+      await deleteContentBankContentMutation.mutateAsync({ topicId, contentId });
     }
 
     setIsDeletePopoverOpen(false);
@@ -207,7 +233,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
   const handleDuplicate = () => {
     const convertedContentType: {
-      [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]:
+      [key in Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>]:
         | 'lesson'
         | 'assignment'
         | 'answer'
@@ -224,7 +250,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
     duplicateContentMutation.mutateAsync({
       course_id: courseId,
       content_id: contentId,
-      content_type: convertedContentType[type as Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
+      content_type:
+        convertedContentType[
+          type as Exclude<TopicContentType, 'cb-lesson' | 'tutor_zoom_meeting' | 'tutor-google-meet'>
+        ],
     });
     onCopy?.();
   };
@@ -297,17 +326,19 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
               </Show>
             </Tooltip>
           </Show>
-          <Tooltip content={__('Edit', 'tutor')} delay={200}>
-            <button
-              data-cy={`edit-${type}`}
-              ref={editButtonRef}
-              type="button"
-              css={styleUtils.actionButton}
-              onClick={handleShowModalOrPopover}
-            >
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-          </Tooltip>
+          <Show when={editAbleContentTypes.includes(type)}>
+            <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <button
+                data-cy={`edit-${type}`}
+                ref={editButtonRef}
+                type="button"
+                css={styleUtils.actionButton}
+                onClick={handleShowModalOrPopover}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </Tooltip>
+          </Show>
           <Show when={!['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
@@ -376,7 +407,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           deleteContentMutation.isPending ||
           deleteQuizMutation.isPending ||
           deleteGoogleMeetMutation.isPending ||
-          deleteZoomMeetingMutation.isPending
+          deleteZoomMeetingMutation.isPending ||
+          deleteContentBankContentMutation.isPending
         }
         triggerRef={deleteRef}
         closePopover={noop}

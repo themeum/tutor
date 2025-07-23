@@ -25,7 +25,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 ?>
 
 <?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) : ?>
-	<div class="tutor-table-responsive tutor-table-mobile tutor-my-24">
+	<div class="tutor-table-responsive tutor-dashboard-list-table <?php echo esc_attr( is_admin() ? '' : 'tutor-table-mobile tutor-mt-32' ); ?>">
 		<table class="tutor-table tutor-table-quiz-attempts">
 			<thead>
 				<tr>
@@ -169,7 +169,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 										$style     = '';
 									?>
 									<div class="tutor-d-inline-flex tutor-align-center" style="<?php echo esc_attr( ! is_admin() ? $style : '' ); ?>">
-										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-tertiary tutor-btn-sm">
 											<?php
 											if ( $has_pending && ( 'frontend-dashboard-students-attempts' == $context || 'backend-dashboard-students-attempts' == $context ) ) {
 												esc_html_e( 'Review', 'tutor' );
@@ -199,7 +199,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 		</table>
 	</div>
 <?php else : ?>
-	<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+	<?php tutils()->render_list_empty_state(); ?>
 <?php endif; ?>
 <?php
 // Load delete modal.

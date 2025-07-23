@@ -19,6 +19,7 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
 export const WP_ADMIN_BAR_HEIGHT = '32px';
+export const WP_ADMIN_BAR_HEIGHT_MOBILE = '46px';
 export const currentWindowWidth = window.innerWidth;
 export const CURRENT_VIEWPORT = {
   isAboveDesktop: currentWindowWidth >= DesktopBreakpoint,
@@ -94,6 +95,7 @@ export enum Addons {
   WEGLOT = 'tutor-weglot',
   WPML_MULTILINGUAL_CMS = 'tutor-wpml',
   H5P_INTEGRATION = 'h5p',
+  CONTENT_BANK = 'content-bank',
 }
 
 export const VideoRegex = {
@@ -156,4 +158,10 @@ export const VisibilityControlKeys = {
       SCHEDULE_LIVE_CLASS: 'course_builder.additional_schedule_live_class',
     },
   },
+} as const;
+
+export const QuizDataStatus = {
+  NEW: 'new',
+  UPDATE: 'update',
+  NO_CHANGE: 'no_change',
 } as const;

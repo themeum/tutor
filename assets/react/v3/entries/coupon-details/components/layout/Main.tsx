@@ -6,13 +6,15 @@ import {
   type CourseCategory,
   couponInitialValue,
   useCouponDetailsQuery,
-} from '@CouponServices/coupon';
+} from '@CouponDetails/services/coupon';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type MembershipPlan } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
+import { setLocaleData } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { lazy, Suspense, useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
@@ -24,7 +26,10 @@ if (process.env.MAKE_POT) {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   MainContent = require('./MainContent').default;
 } else {
-  MainContent = lazy(() => import(/* webpackChunkName: "tutor-coupon-main-content" */ './MainContent'));
+  MainContent = lazy(() => {
+    setLocaleData(tutorConfig.coupon_main_content_locales, 'tutor');
+    return import(/* webpackChunkName: "tutor-coupon-main-content" */ './MainContent');
+  });
 }
 
 function Main() {

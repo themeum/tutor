@@ -21,6 +21,7 @@ import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 
+import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
@@ -33,6 +34,7 @@ import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicFooterProps {
   topic: CourseTopicWithCollapse;
+  nextContentOrder: number;
 }
 
 const courseId = getCourseId();
@@ -40,7 +42,7 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasLiveAddons =
   isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION) || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 
-const TopicFooter = ({ topic }: TopicFooterProps) => {
+const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
   const topicId = getIdWithoutPrefix('topic-', topic.id);
 
   const { showToast } = useToast();
@@ -223,6 +225,48 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         </div>
         <div css={styles.rightButtons}>
           <Show
+            when={!isTutorPro}
+            fallback={
+              <Show when={isAddonEnabled(Addons.CONTENT_BANK)}>
+                <Button
+                  variant="tertiary"
+                  isOutlined
+                  size="small"
+                  icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                  disabled={!topic.isSaved}
+                  buttonCss={styles.contentButton}
+                  onClick={() => {
+                    showModal({
+                      id: 'content-bank-collection-list',
+                      component: CollectionListModal,
+                      props: {
+                        type: 'lesson_assignment',
+                        topicId: topicId,
+                        nextContentOrder: nextContentOrder,
+                      },
+                    });
+                  }}
+                >
+                  {__('Content Bank', 'tutor')}
+                </Button>
+              </Show>
+            }
+          >
+            <ProBadge>
+              <Button
+                variant="tertiary"
+                isOutlined
+                size="small"
+                icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                disabled
+                onClick={noop}
+              >
+                {__('Content Bank', 'tutor')}
+              </Button>
+            </ProBadge>
+          </Show>
+
+          <Show
             when={!isTutorPro || hasLiveAddons}
             fallback={
               <Show
@@ -266,7 +310,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
               closePopover={() => setIsThreeDotOpen(false)}
               disabled={!topic.isSaved}
               dotsOrientation="vertical"
-              maxWidth={isTutorPro ? '220px' : '240px'}
+              maxWidth={isTutorPro ? '220px' : '250px'}
               isInverse
               arrowPosition="auto"
               hideArrow
@@ -384,11 +428,12 @@ const styles = {
     }
   `,
   rightButtons: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
+    gap: ${spacing[8]};
   `,
   threeDotButton: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[4]};
   `,

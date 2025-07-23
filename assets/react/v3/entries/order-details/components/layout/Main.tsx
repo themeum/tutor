@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 
-import Activities from '@OrderComponents/order/Activities';
-import Notes from '@OrderComponents/order/Notes';
-import Payment from '@OrderComponents/order/Payment';
-import PaymentInfo from '@OrderComponents/order/PaymentInfo';
-import Student from '@OrderComponents/order/Student';
-import Summary from '@OrderComponents/order/Summary';
-import { OrderProvider } from '@OrderContexts/order-context';
+import Activities from '@OrderDetails/components/order/Activities';
+import Notes from '@OrderDetails/components/order/Notes';
+import Payment from '@OrderDetails/components/order/Payment';
+import PaymentInfo from '@OrderDetails/components/order/PaymentInfo';
+import Student from '@OrderDetails/components/order/Student';
+import Summary from '@OrderDetails/components/order/Summary';
+import { OrderProvider } from '@OrderDetails/contexts/order-context';
 import Container from '@TutorShared/components/Container';
 
 import { Breakpoint, spacing } from '@TutorShared/config/styles';

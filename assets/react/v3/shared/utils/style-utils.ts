@@ -17,6 +17,14 @@ export const createGlobalCss = () => css`
     }
   }
 
+  body.tutor-backend-tutor-content-bank {
+    @media screen and (max-width: 600px) {
+      #wpadminbar {
+        position: fixed;
+      }
+    }
+  }
+
   *,
   ::after,
   ::before {
@@ -266,7 +274,7 @@ export const styleUtils = {
     cursor: pointer;
   `,
   cardInnerSection: css`
-    padding: ${spacing[24]};
+    padding: ${spacing[20]} ${spacing[20]} ${spacing[24]} ${spacing[20]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
@@ -377,12 +385,25 @@ export const styleUtils = {
     display: grid;
     grid-template-columns: 5.5fr 4.5fr;
     border-radius: ${borderRadius[6]};
+    position: relative;
 
-    &:focus-within {
-      box-shadow: none;
-      border-color: ${colorTokens.stroke.default};
-      outline: 2px solid ${colorTokens.stroke.brand};
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      outline: 2px solid transparent;
       outline-offset: 1px;
+      border-radius: ${borderRadius[6]};
+      pointer-events: none;
+      z-index: 1;
+      transition: outline-color 0.2s ease-in-out;
+    }
+
+    &:focus-within::before {
+      outline-color: ${colorTokens.stroke.brand};
     }
 
     > div {

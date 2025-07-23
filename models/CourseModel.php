@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use TUTOR\Course;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
 use TUTOR_ASSIGNMENTS\Assignments;
 
@@ -911,6 +912,24 @@ class CourseModel {
 	}
 
 	/**
+	 * Check tax collection is enabled for single purchase course/bundle
+	 *
+	 * @since 3.7.0
+	 *
+	 * @param int $post_id course or bundle id.
+	 *
+	 * @return boolean
+	 */
+	public static function is_tax_enabled_for_single_purchase( $post_id ) {
+		if ( ! Tax::is_individual_control_enabled() ) {
+			return true;
+		}
+
+		$data = get_post_meta( $post_id, Course::TAX_ON_SINGLE_META, true );
+		return ( '1' === $data || '' === $data );
+	}
+
+	/**
 	 * Count total attachments available in all courses or specific
 	 *
 	 * @since 3.6.0
@@ -1008,5 +1027,67 @@ class CourseModel {
 		}
 
 		return (int) $total_count;
+	}
+
+	/**
+	 * Get course dropdown options
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return array
+	 */
+	public static function get_course_dropdown_options() {
+		$course_options = array(
+			array(
+				'key'   => '',
+				'title' => __( 'All Courses', 'tutor' ),
+			),
+		);
+
+		$courses = current_user_can( 'administrator' ) ? self::get_courses() : self::get_courses_by_instructor();
+		if ( ! empty( $courses ) ) {
+			foreach ( $courses as $course ) {
+				$course_options[] = array(
+					'key'   => $course->ID,
+					'title' => $course->post_title,
+				);
+			}
+		}
+
+		return $course_options;
+	}
+
+	/**
+	 * Get category dropdown options
+	 *
+	 * @since 3.7.0
+	 *
+	 * @return array
+	 */
+	public static function get_category_dropdown_options() {
+		$category_options = array(
+			array(
+				'key'   => '',
+				'title' => __( 'All Categories', 'tutor' ),
+			),
+		);
+
+		$categories = get_terms(
+			array(
+				'taxonomy' => self::COURSE_CATEGORY,
+				'orderby'  => 'term_id',
+				'order'    => 'DESC',
+			)
+		);
+		if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) {
+			foreach ( $categories as $category ) {
+				$category_options[] = array(
+					'key'   => $category->slug,
+					'title' => $category->name,
+				);
+			}
+		}
+
+		return $category_options;
 	}
 }

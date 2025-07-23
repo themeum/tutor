@@ -9,6 +9,7 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { typography } from '@TutorShared/config/typography';
+import { type arrowPosition } from '@TutorShared/hooks/usePortalPopover';
 import Popover from './Popover';
 
 interface DropdownOptionProps {
@@ -18,6 +19,7 @@ interface DropdownOptionProps {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   buttonContentCss?: SerializedStyles;
   isDanger?: boolean;
+  icon?: React.ReactNode;
 }
 
 export const DropdownItem = ({
@@ -27,6 +29,7 @@ export const DropdownItem = ({
   onClick,
   buttonContentCss,
   isDanger = false,
+  icon,
   ...props
 }: DropdownOptionProps) => {
   return (
@@ -40,6 +43,7 @@ export const DropdownItem = ({
       onClick={onClick}
       {...props}
     >
+      {icon && <>{icon}</>}
       <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
     </button>
   );
@@ -49,6 +53,8 @@ interface DropdownButtonProps {
   text: string | ReactNode;
   children: ReactNode;
   variant?: ButtonVariant;
+  arrowPosition?: arrowPosition;
+  animationType?: AnimationType;
   type?: 'submit' | 'button';
   size?: ButtonSize;
   icon?: React.ReactNode;
@@ -68,6 +74,8 @@ const DropdownButton = ({
   text,
   children,
   variant = 'primary',
+  arrowPosition = 'top',
+  animationType = AnimationType.slideUp,
   size = 'regular',
   icon,
   iconPosition = 'left',
@@ -164,11 +172,11 @@ const DropdownButton = ({
       <Popover
         gap={4}
         maxWidth={dropdownMaxWidth}
-        arrow="top"
+        arrow={arrowPosition}
         triggerRef={dropdownTriggerRef}
         isOpen={isOpen}
         closePopover={() => setIsOpen(false)}
-        animationType={AnimationType.slideUp}
+        animationType={animationType}
         hideArrow
       >
         <div css={styles.dropdownWrapper}>
@@ -534,6 +542,10 @@ const styles = {
       pointer-events: none;
       color: ${colorTokens.text.disable};
     `}
+
+    svg:first-of-type {
+      color: ${colorTokens.icon.default};
+    }
   `,
   dropdownOptionContent: css`
     display: flex;

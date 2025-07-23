@@ -1,4 +1,4 @@
-import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
+import CouponSelectItemModal from '@CouponDetails/components/modals/CourseListModal';
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -9,7 +9,7 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 
-import type { Coupon } from '@CouponServices/coupon';
+import type { Coupon } from '@CouponDetails/services/coupon';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import { Addons } from '@TutorShared/config/constants';
 import { typography } from '@TutorShared/config/typography';
