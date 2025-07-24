@@ -102,6 +102,7 @@ const CONFIG = {
   sourceDir: '.',
   buildDir: './build',
   excludePatterns: [
+    '*.json',
     './build/**',
     'assets/*.min.css',
     'assets/*.min.css.map',
@@ -181,8 +182,16 @@ const extractVersionNumber = () => {
 
 const shouldExcludeFile = (filePath) => {
   return CONFIG.excludePatterns.some((pattern) => {
-    const normalizedPattern = pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*');
-    const regex = new RegExp(`^${normalizedPattern.replace(/\//g, '\\/')}`);
+    // Handle dot files specifically
+    if (pattern.startsWith('.') && !pattern.includes('/') && !pattern.includes('*')) {
+      const fileName = filePath.split('/').pop();
+      return fileName === pattern;
+    }
+
+    // Handle patterns with wildcards
+    const normalizedPattern = pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\./g, '\\.');
+
+    const regex = new RegExp(`^${normalizedPattern}$`);
     return regex.test(filePath);
   });
 };
