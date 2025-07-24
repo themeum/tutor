@@ -180,7 +180,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                 <input
                   {...field}
                   type="text"
-                  placeholder={__('Correct Answer(s)...')}
+                  placeholder={__('Correct Answer(s)...', 'tutor')}
                   value={fillInTheBlanksCorrectAnswer?.join('|')}
                   onClick={(event) => {
                     event.stopPropagation();

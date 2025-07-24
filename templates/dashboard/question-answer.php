@@ -43,7 +43,7 @@ $view_as           = $is_instructor ? ( $view_option ? $view_option : 'instructo
 $as_instructor_url = add_query_arg( array( 'view_as' => 'instructor' ), tutor()->current_url );
 $as_student_url    = add_query_arg( array( 'view_as' => 'student' ), tutor()->current_url );
 $qna_tabs          = \Tutor\Q_And_A::tabs_key_value( 'student' == $view_as ? get_current_user_id() : null );
-$active_tab        = Input::get( 'tab', 'all' );
+$active_tab        = Input::get( 'data', '' );
 ?>
 
 <div class="tutor-frontend-dashboard-qna-header tutor-mb-32">
@@ -100,7 +100,7 @@ $per_page     = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page = max( 1, tutor_utils()->avalue_dot( 'current_page', $_GET ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
-$q_status    = Input::get( 'tab' );
+$q_status    = Input::get( 'data' );
 $asker_id    = 'instructor' == $view_as ? null : get_current_user_id();
 $total_items = tutor_utils()->get_qa_questions( $offset, $per_page, '', null, null, $asker_id, $q_status, true );
 $questions   = tutor_utils()->get_qa_questions( $offset, $per_page, '', null, null, $asker_id, $q_status );

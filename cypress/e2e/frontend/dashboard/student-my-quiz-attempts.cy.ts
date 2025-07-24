@@ -7,9 +7,9 @@ describe('Tutor Dashboard Student My Quiz Attempts', () => {
     cy.url().should('include', frontendUrls.dashboard.MY_QUIZ_ATTEMPTS);
   });
 
-  it('should visit quiz a attempts', () => {
+  it('should visit quiz attempts', () => {
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table-quiz-attempts tbody tr')

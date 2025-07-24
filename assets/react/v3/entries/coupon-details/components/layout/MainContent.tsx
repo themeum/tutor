@@ -1,12 +1,12 @@
 import Container from '@TutorShared/components/Container';
 import { Breakpoint, spacing } from '@TutorShared/config/styles';
 
-import CouponDiscount from '@CouponComponents/coupon/CouponDiscount';
-import CouponInfo from '@CouponComponents/coupon/CouponInfo';
-import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
-import CouponPreview from '@CouponComponents/coupon/CouponPreview';
-import CouponValidity from '@CouponComponents/coupon/CouponValidity';
-import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
+import CouponDiscount from '@CouponDetails/components/coupon/CouponDiscount';
+import CouponInfo from '@CouponDetails/components/coupon/CouponInfo';
+import CouponUsageLimitation from '@CouponDetails/components/coupon/CouponLimitation';
+import CouponPreview from '@CouponDetails/components/coupon/CouponPreview';
+import CouponValidity from '@CouponDetails/components/coupon/CouponValidity';
+import PurchaseRequirements from '@CouponDetails/components/coupon/PurchaseRequirements';
 import { css } from '@emotion/react';
 import { TOPBAR_HEIGHT } from './Topbar';
 

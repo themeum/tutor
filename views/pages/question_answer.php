@@ -29,7 +29,7 @@ if ( $question_id > 0 ) {
 	return;
 }
 
-$qna_object     = new \TUTOR\Question_Answers_List( false );
+$qna_object     = tutor_lms()->q_and_a_list;
 $qna            = $qna_object->get_items( $_GET );
 $qna_list       = $qna['items'];
 $qna_pagination = $qna['pagination'];
@@ -50,9 +50,9 @@ $filters = array(
 		array(
 			'label'      => __( 'Status', 'tutor' ),
 			'field_type' => 'select',
-			'field_name' => 'tab',
+			'field_name' => 'data',
 			'options'    => Q_And_A::tabs_key_value(),
-			'value'      => Input::get( 'tab', '' ),
+			'value'      => Input::get( 'data', '' ),
 		),
 		array(
 			'label'      => __( 'Date', 'tutor' ),
@@ -68,7 +68,7 @@ $filters = array(
  * Determine active tab
  */
 
-$active_tab = Input::get( 'tab', 'all' );
+$active_tab = Input::get( 'data', '' );
 
 $navbar_data = array(
 	'page_title' => __( 'Question & Answer', 'tutor' ),

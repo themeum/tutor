@@ -111,7 +111,7 @@ const disabledStyles = {
     &:disabled {
       background-color: transparent;
       border: none;
-      outline: 1px solid ${colorTokens.action.outline.disable};
+      box-shadow: inset 0px 0px 0px 1px ${colorTokens.action.outline.disable};
       color: ${colorTokens.text.disable};
       svg {
         color: ${colorTokens.icon.disable.default};
@@ -206,7 +206,7 @@ const styles = {
       }
     `,
     tertiary: css`
-      outline: 1px solid ${colorTokens.stroke.default};
+      box-shadow: inset 0px 0px 0px 1px ${colorTokens.stroke.default};
       color: ${colorTokens.text.subdued};
       svg {
         color: ${colorTokens.icon.hints};
@@ -217,7 +217,7 @@ const styles = {
         &:hover,
         &:focus {
           background-color: ${colorTokens.background.hover};
-          outline: 1px solid ${colorTokens.stroke.hover};
+          box-shadow: inset 0px 0px 0px 1px ${colorTokens.stroke.hover};
           color: ${colorTokens.text.title};
 
           svg {
@@ -292,7 +292,7 @@ const styles = {
   outlined: {
     primary: css`
       background-color: transparent;
-      outline: 1px solid ${colorTokens.stroke.brand};
+      box-shadow: inset 0px 0px 0px 1px ${colorTokens.stroke.brand};
       color: ${colorTokens.text.brand};
 
       svg {
@@ -313,7 +313,7 @@ const styles = {
     `,
     secondary: css`
       background-color: transparent;
-      outline: 1px solid ${colorTokens.stroke.brand};
+      box-shadow: inset 0px 0px 0px 1px ${colorTokens.stroke.brand};
       color: ${colorTokens.text.brand};
       svg {
         color: ${colorTokens.icon.brand};

@@ -161,7 +161,7 @@ if ( ! isset( $user_data ) ) {
 	$user_data = get_userdata( $user_id );
 }
 
-// Prepare attempt meta info.
+//phpcs:ignore
 extract( QuizModel::get_quiz_attempt_timing( $attempt_data ) ); // $attempt_duration, $attempt_duration_taken;
 
 // Prepare the correct/incorrect answer count for the first summary table.
@@ -274,25 +274,17 @@ if ( is_array( $attempt_info ) ) {
 							<?php echo esc_html( $incorrect ); ?>
 						<?php elseif ( 'earned_marks' === $key ) : ?>
 							<?php
-								echo esc_html( $attempt_data->earned_marks );
-								$earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format( ( $attempt_data->earned_marks * 100 ) / $attempt_data->total_marks ) ) : 0;
-								echo esc_html( ' (' . $earned_percentage . '%)' );
+							$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt_data );
+							echo esc_html( $attempt_data->earned_marks );
+							echo esc_html( ' (' . $earned_percentage . '%)' );
 							?>
 						<?php elseif ( 'result' === $key ) : ?>
 							<?php
-								$ans_array   = is_array( $answers ) ? $answers : array();
-								$has_pending = count(
-									array_filter(
-										$ans_array,
-										function ( $ans ) {
-											return null === $ans->is_correct;
-										}
-									)
-								);
+							$attempt_result = QuizModel::get_attempt_result( $attempt_data->attempt_id );
 
-							if ( $has_pending ) {
+							if ( QuizModel::RESULT_PENDING === $attempt_result ) {
 								echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
-							} elseif ( $earned_percentage >= $pass_mark_percent ) {
+							} elseif ( QuizModel::RESULT_PASS === $attempt_result ) {
 								echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Pass', 'tutor' ) . '</span>';
 							} else {
 								echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Fail', 'tutor' ) . '</span>';
@@ -311,7 +303,7 @@ if ( is_array( $attempt_info ) ) {
 global $wp_query;
 $query_vars   = $wp_query->query_vars;
 $page_name    = isset( $query_vars['tutor_dashboard_page'] ) ? $query_vars['tutor_dashboard_page'] : '';
-$attempt_info = unserialize( $attempt_data->attempt_info );
+$attempt_info = maybe_unserialize( $attempt_data->attempt_info );
 $feedback     = is_array( $attempt_info ) && isset( $attempt_info['instructor_feedback'] ) ? $attempt_info['instructor_feedback'] : '';
 // don't show on instructor quiz attempt since below already have feedback box area.
 if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
@@ -348,10 +340,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
 					$answer_i++;
-					$question_type          = tutor_utils()->get_question_types( $answer->question_type );
+					$question_type     = tutor_utils()->get_question_types( $answer->question_type );
 					$question_settings = maybe_unserialize( $answer->question_settings );
 					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
-					$answer_status      = 'wrong';
+					$answer_status     = 'wrong';
 
 					// If already correct, then show it.
 					if ( (bool) $answer->is_correct ) {

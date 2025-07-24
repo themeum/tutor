@@ -58,7 +58,7 @@ class Admin {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
-		// add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
+		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
@@ -133,10 +133,6 @@ class Admin {
 		// Added @since v2.0.0.
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
-		if ( '3.0.0' !== get_option( 'tutor-new-feature' ) ) {
-			add_submenu_page( 'tutor', __( 'What\'s New', 'tutor' ), sprintf( '<span class="tutor-new-feature tutor-text-orange">%s</span>', __( 'What\'s New', 'tutor' ) ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
-		}
-
 		// Ecommerce menu @since 3.0.0.
 		do_action( 'tutor_after_courses_admin_menu' );
 
@@ -146,7 +142,7 @@ class Admin {
 		do_action( 'tutor_after_courses_menu' );
 
 		// Templates menu @since 3.6.0.
-		add_submenu_page( 'tutor', __( 'Themes', 'tutor' ), __( 'Themes', 'tutor' ) . sprintf( ' <span class="tutor-theme-menu-badge">%s</span>', __( 'New', 'tutor' ) ), 'manage_tutor', 'tutor-themes', array( $this, 'tutor_themes' ) );
+		add_submenu_page( 'tutor', __( 'Themes', 'tutor' ), __( 'Themes', 'tutor' ), 'manage_tutor', 'tutor-themes', array( $this, 'tutor_themes' ) );
 
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
 

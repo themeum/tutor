@@ -54,7 +54,6 @@ const ExportInitialState = ({
   resetBulkSelection,
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
-
   /**
    * Returns properly formatted label for form data keys with appropriate count information
    *
@@ -246,7 +245,7 @@ const ExportInitialState = ({
   return (
     <div css={styles.wrapper}>
       <div css={styles.formWrapper}>
-        <div css={styles.formTitle}>{__('What do you want to export', 'tutor')}</div>
+        <div css={styles.formTitle}>{__('What do you want to export?', 'tutor')}</div>
         <div css={styles.checkboxWrapper}>{renderExportableContentOptions()}</div>
 
         <Show
@@ -344,6 +343,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[8]};
+    min-height: 30px;
 
     button {
       flex-shrink: 0;

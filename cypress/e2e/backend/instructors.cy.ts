@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker';
 import { backendUrls } from '../../config/page-urls';
 
 describe('Tutor Admin Instructors', () => {
@@ -8,7 +9,14 @@ describe('Tutor Admin Instructors', () => {
   });
 
   it('should create a instructor successfully', () => {
-    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    const instructorInfo = {
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+      userLogin: faker.internet.username(),
+      phoneNumber: faker.phone.number(),
+      email: faker.internet.email(),
+      password: faker.internet.password(),
+    };
 
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
       if (req.body.includes('tutor_add_instructor')) {
@@ -18,18 +26,18 @@ describe('Tutor Admin Instructors', () => {
 
     cy.get('button').contains('Add New').click();
 
-    cy.get('#tutor-instructor-add-new [name="first_name"]').type('John');
-    cy.get('#tutor-instructor-add-new [name="last_name"]').type('Doe');
-    cy.get('#tutor-instructor-add-new [name="user_login"]').type(`john_doe_${randomNumber}`);
-    cy.get('#tutor-instructor-add-new [name="phone_number"]').type('123456789');
-    cy.get('#tutor-instructor-add-new [name="email"]').type(`john.doe${randomNumber}@example.com`);
-    cy.get('#tutor-instructor-add-new [name="password"]').type('password123');
-    cy.get('#tutor-instructor-add-new [name="password_confirmation"]').type('password123');
+    cy.get('#tutor-instructor-add-new [name="first_name"]').type(instructorInfo.firstName);
+    cy.get('#tutor-instructor-add-new [name="last_name"]').type(instructorInfo.lastName);
+    cy.get('#tutor-instructor-add-new [name="user_login"]').type(instructorInfo.userLogin);
+    cy.get('#tutor-instructor-add-new [name="phone_number"]').type(instructorInfo.phoneNumber);
+    cy.get('#tutor-instructor-add-new [name="email"]').type(instructorInfo.email);
+    cy.get('#tutor-instructor-add-new [name="password"]').type(instructorInfo.password);
+    cy.get('#tutor-instructor-add-new [name="password_confirmation"]').type(instructorInfo.password);
 
     cy.get('#tutor-new-instructor-form').submit();
 
     cy.wait('@addInstructorAjax').then((interception) => {
-      expect(interception.response?.body.success).to.equal(true);
+      expect(interception.response?.body.status_code).to.equal(true);
     });
   });
 
@@ -42,7 +50,7 @@ describe('Tutor Admin Instructors', () => {
     cy.get('.tutor-table tbody tr').eq(0).find('a').contains('Edit').click();
     cy.get('form.tutor-instructor-edit-modal.tutor-is-active').submit();
     cy.wait('@updateInstructorAjax').then((interception) => {
-      expect(interception.response?.body.success).to.equal(true);
+      expect(interception.response?.body.status_code).to.equal(200);
     });
   });
 

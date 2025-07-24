@@ -10,7 +10,7 @@ export const requiredRule = (): object => ({
 export const maxValueRule = ({ maxValue, message }: { maxValue: number; message?: string }): object => ({
   maxLength: {
     value: maxValue,
-    message: message || __(`Max. value should be ${maxValue}`),
+    message: message || __(`Max. value should be ${maxValue}`, 'tutor'),
   },
 });
 
