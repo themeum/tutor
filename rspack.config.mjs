@@ -67,7 +67,12 @@ const createConfig = (env, options) => {
           test: /\.s[ac]ss$/i,
           use: [
             rspack.CssExtractRspackPlugin.loader,
-            'css-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                url: false,
+              },
+            },
             {
               loader: 'sass-loader',
               options: {
@@ -93,7 +98,7 @@ const createConfig = (env, options) => {
           use: ['style-loader', 'css-loader'],
         },
         {
-          test: /\.(js|ts|tsx)$/,
+          test: /\.(js|ts|jsx|tsx)$/,
           exclude: [/node_modules/, /\.cy\.(ts|tsx)$/],
           use: [
             {
@@ -125,8 +130,14 @@ const createConfig = (env, options) => {
     },
     plugins: [
       new rspack.CssExtractRspackPlugin({
-        filename: 'css/[name].min.css',
-        chunkFilename: 'css/[name].min.css',
+        filename: (pathData) => {
+          const entryName = pathData.chunk.name.replace('-scss', '');
+          return `css/${entryName}.min.css`;
+        },
+        chunkFilename: (pathData) => {
+          const entryName = pathData.chunk.name.replace('-scss', '');
+          return `css/${entryName}.min.css`;
+        },
       }),
       new rspack.ProvidePlugin({
         React: 'react',
@@ -205,14 +216,14 @@ const getReactEntries = () => ({
 });
 
 const getScssEntries = () => ({
-  'tutor-front': './assets/scss/front/index.scss',
-  'tutor-admin': './assets/scss/admin-dashboard/index.scss',
-  'tutor-setup': './assets/scss/admin-dashboard/tutor-setup.scss',
-  tutor: './v2-library/src/scss/main.scss',
-  'tutor-rtl': './v2-library/src/scss/main.rtl.scss',
-  'tutor-icon': './v2-library/fonts/tutor-icon/tutor-icon.scss',
-  'tutor-frontend-dashboard': './assets/scss/frontend-dashboard/index.scss',
-  'tutor-template-import': './assets/scss/admin-dashboard/template-import.scss',
+  'tutor-front-scss': './assets/scss/front/index.scss',
+  'tutor-admin-scss': './assets/scss/admin-dashboard/index.scss',
+  'tutor-setup-scss': './assets/scss/admin-dashboard/tutor-setup.scss',
+  'tutor-scss': './v2-library/src/scss/main.scss',
+  'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
+  'tutor-icon-scss': './v2-library/fonts/tutor-icon/tutor-icon.scss',
+  'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
+  'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
 });
 
 const createResolveAliases = () => ({
