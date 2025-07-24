@@ -101,7 +101,7 @@ const printFooter = (duration) => {
     `${colors.green}${colors.bright}║     ${symbols.success} BUILD COMPLETED SUCCESSFULLY!     ║${colors.reset}`,
   );
   console.log(
-    `${colors.green}${colors.bright}║           ${symbols.clock} Duration: ${duration}ms            ║${colors.reset}`,
+    `${colors.green}${colors.bright}║           ${symbols.clock} Duration: ${duration}              ║${colors.reset}`,
   );
   console.log(`${colors.green}${colors.bright}╚══════════════════════════════════════════╝${colors.reset}\n`);
 };
@@ -465,7 +465,7 @@ const executeBuild = async () => {
     cleanDirectory(CONFIG.buildDir);
 
     const duration = Date.now() - startTime;
-    const durationFormatted = duration > 1000 ? `${(duration / 1000).toFixed(2)}s` : `${duration}ms`;
+    const durationFormatted = `${(duration / 1000).toFixed(2)}s`;
 
     printFooter(durationFormatted);
   } catch (error) {
