@@ -54,7 +54,7 @@ const logInfo = (message) => {
 };
 
 const logStep = (step, message) => {
-  console.log(`${colors.blue}${colors.bright}[${step}]${colors.reset} ${colors.white}${message}${colors.reset}`);
+  console.log(`\n${colors.blue}${colors.bright}[${step}]${colors.reset} ${colors.white}${message}${colors.reset}`);
 };
 
 const createSpinner = (message) => {
