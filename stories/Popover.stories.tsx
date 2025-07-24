@@ -2,11 +2,10 @@
 import { css } from '@emotion/react';
 import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import Popover from '../assets/react/v3/shared/molecules/Popover';
 import Button from '../assets/react/v3/shared/atoms/Button';
 import { borderRadius, colorTokens, spacing } from '../assets/react/v3/shared/config/styles';
-import { typography } from '../assets/react/v3/shared/config/typography';
 import { AnimationType } from '../assets/react/v3/shared/hooks/useAnimation';
+import Popover from '../assets/react/v3/shared/molecules/Popover';
 
 const meta: Meta<typeof Popover> = {
   title: 'Shared/Molecules/Popover',
@@ -292,18 +291,15 @@ const templateStyles = {
     justify-content: center;
     align-items: center;
     padding: ${spacing[32]};
-    ${typography.body()}
   `,
   popoverContent: css`
     padding: ${spacing[16]};
-    ${typography.body()}
   `,
   popoverTitle: css`
     margin: 0 0 ${spacing[8]} 0;
     font-size: 16px;
     font-weight: 600;
     color: ${colorTokens.text.title};
-    ${typography.body()}
   `,
   popoverText: css`
     margin: 0 0 ${spacing[12]} 0;
