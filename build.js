@@ -3,22 +3,34 @@ const { dirname, extname, join, relative } = require('path');
 const { pipeline } = require('stream/promises');
 const archiver = require('archiver');
 
-// Console styling utilities
+// Streamlined color palette with only necessary colors
 const colors = {
+  // Base formatting
   reset: '\x1b[0m',
   bright: '\x1b[1m',
   dim: '\x1b[2m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m',
-  white: '\x1b[37m',
-  bgRed: '\x1b[41m',
-  bgGreen: '\x1b[42m',
-  bgYellow: '\x1b[43m',
-  bgBlue: '\x1b[44m',
+
+  // Primary colors - using a focused, pleasing palette
+  teal: '\x1b[38;5;43m', // Vibrant teal for primary elements
+  green: '\x1b[38;5;114m', // Soft green for success messages
+  red: '\x1b[38;5;203m', // Soft red for errors
+  blue: '\x1b[38;5;75m', // Sky blue for information
+  yellow: '\x1b[38;5;221m', // Warm yellow for warnings/spinners
+  orange: '\x1b[38;5;209m', // Warm orange for warnings
+  white: '\x1b[37m', // White for standard text
+
+  // Semantic mappings (aliases for better code readability)
+  success: '\x1b[38;5;114m', // Green
+  error: '\x1b[38;5;203m', // Red
+  warning: '\x1b[38;5;209m', // Orange
+  info: '\x1b[38;5;75m', // Blue
+  highlight: '\x1b[38;5;221m', // Yellow
+
+  // Header colors
+  headerPrimary: '\x1b[38;5;43m', // Teal
+  headerSuccess: '\x1b[38;5;114m', // Green
+  headerError: '\x1b[38;5;203m', // Red
+  headerMagenta: '\x1b[38;5;177m', // Softer magenta
 };
 
 const symbols = {
@@ -31,26 +43,91 @@ const symbols = {
   file: '📄',
   folder: '📁',
   clock: '⏱️',
-  checkmark: '✓',
-  cross: '✗',
-  arrow: '→',
+  arrow: '➡️',
+  bullet: '•',
   spinner: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
 };
 
+// Helper to get the visual width of a string (accounting for emojis)
+const getVisualWidth = (str) => {
+  // Remove ANSI escape codes first
+  const cleanStr = str.replace(/\x1b\[[0-9;]*m/g, '');
+
+  // Count characters but account for specific emojis we use
+  let width = 0;
+  let i = 0;
+  while (i < cleanStr.length) {
+    const char = cleanStr[i];
+
+    // Check for specific emojis that take 2 terminal columns
+    if (
+      char === '✅' ||
+      char === '❌' ||
+      char === '⚠️' ||
+      char === '💡' ||
+      char === '🚀' ||
+      char === '📦' ||
+      char === '📄' ||
+      char === '📁' ||
+      char === '⏱️' ||
+      char === '➡️'
+    ) {
+      width += 2; // These emojis take 2 columns
+      i++;
+    } else if (char === '️' && i > 0) {
+      // Variation selector - doesn't add width
+      i++;
+    } else {
+      width += 1; // Regular characters take 1 column
+      i++;
+    }
+  }
+
+  return width;
+};
+
+// Helper functions for creating stylized text with fixed width
+const style = {
+  // Create fixed-width box with consistent dimensions
+  box: (text, boxColor = colors.headerPrimary) => {
+    const boxWidth = 50; // Fixed width for all boxes
+    const lines = text.split('\n');
+
+    // Create the formatted box with proper padding
+    const formattedBox = [`\n${boxColor}${colors.bright}╔${'═'.repeat(boxWidth)}╗${colors.reset}`];
+
+    // Add each line with centered content
+    for (const line of lines) {
+      const visualWidth = getVisualWidth(line);
+      const totalPadding = boxWidth - visualWidth;
+      const leftPadding = Math.max(0, Math.floor(totalPadding / 2));
+      const rightPadding = Math.max(0, totalPadding - leftPadding);
+
+      formattedBox.push(
+        `${boxColor}${colors.bright}║${' '.repeat(leftPadding)}${line}${' '.repeat(rightPadding)}║${colors.reset}`,
+      );
+    }
+
+    formattedBox.push(`${boxColor}${colors.bright}╚${'═'.repeat(boxWidth)}╝${colors.reset}\n`);
+
+    return formattedBox.join('\n');
+  },
+};
+
 const logSuccess = (message) => {
-  console.log(`${colors.green}${symbols.success} ${message}${colors.reset}`);
+  console.log(`${colors.success}${symbols.success} ${message}${colors.reset}`);
 };
 
 const logError = (message) => {
-  console.log(`${colors.red}${symbols.error} ${message}${colors.reset}`);
+  console.log(`${colors.error}${symbols.error} ${message}${colors.reset}`);
 };
 
 const logWarning = (message) => {
-  console.log(`${colors.yellow}${symbols.warning} ${message}${colors.reset}`);
+  console.log(`${colors.warning}${symbols.warning} ${message}${colors.reset}`);
 };
 
 const logInfo = (message) => {
-  console.log(`${colors.cyan}${symbols.info} ${message}${colors.reset}`);
+  console.log(`${colors.info}${symbols.info} ${message}${colors.reset}`);
 };
 
 const logStep = (step, message) => {
@@ -67,11 +144,11 @@ const createSpinner = (message) => {
   return {
     stop: (successMessage) => {
       clearInterval(interval);
-      process.stdout.write(`\r${colors.green}${symbols.checkmark} ${successMessage || message}${colors.reset}\n`);
+      process.stdout.write(`\r${colors.success}${symbols.success} ${successMessage || message}${colors.reset}\n`);
     },
     fail: (errorMessage) => {
       clearInterval(interval);
-      process.stdout.write(`\r${colors.red}${symbols.cross} ${errorMessage || message}${colors.reset}\n`);
+      process.stdout.write(`\r${colors.error}${symbols.error} ${errorMessage || message}${colors.reset}\n`);
     },
   };
 };
@@ -88,22 +165,11 @@ const formatBytes = (bytes, decimals = 2) => {
 };
 
 const printHeader = () => {
-  console.log(`\n${colors.cyan}${colors.bright}╔═════════════════════════════════════════╗${colors.reset}`);
-  console.log(
-    `${colors.cyan}${colors.bright}║        ${symbols.rocket} TUTOR BUILD PROCESS ${symbols.package}        ║${colors.reset}`,
-  );
-  console.log(`${colors.cyan}${colors.bright}╚═════════════════════════════════════════╝${colors.reset}\n`);
+  console.log(style.box(`${symbols.rocket} TUTOR BUILD PROCESS ${symbols.package}`, colors.headerMagenta));
 };
 
 const printFooter = (duration) => {
-  console.log(`\n${colors.green}${colors.bright}╔══════════════════════════════════════════╗${colors.reset}`);
-  console.log(
-    `${colors.green}${colors.bright}║     ${symbols.success} BUILD COMPLETED SUCCESSFULLY!     ║${colors.reset}`,
-  );
-  console.log(
-    `${colors.green}${colors.bright}║           ${symbols.clock} Duration: ${duration}              ║${colors.reset}`,
-  );
-  console.log(`${colors.green}${colors.bright}╚══════════════════════════════════════════╝${colors.reset}\n`);
+  console.log(style.box(`✅ BUILD COMPLETED SUCCESSFULLY!\n⏱️ Duration: ${duration}`, colors.headerSuccess));
 };
 
 const CONFIG = {
@@ -180,7 +246,7 @@ const extractVersionNumber = () => {
       throw new Error('Could not extract version number from tutor.php');
     }
 
-    spinner.stop(`Version extracted: ${colors.bright}${versionNumber}${colors.reset}`);
+    spinner.stop(`Version detected: ${colors.bright}${versionNumber}${colors.reset}`);
   } catch (error) {
     spinner.fail('Error reading tutor.php');
     logError(`Error reading version: ${error.message}`);
@@ -355,6 +421,11 @@ const copyDroipFiles = async () => {
     const droipFiles = getAllFiles(droipSourceDir);
     let totalSize = 0;
 
+    if (droipFiles.length === 0) {
+      spinner.fail('No Droip files found, skipping...');
+      return;
+    }
+
     for (const file of droipFiles) {
       const relativeToDroip = relative(droipSourceDir, file.fullPath);
       const destinationPath = join(CONFIG.buildDir, 'tutor', 'includes', 'droip', relativeToDroip);
@@ -364,8 +435,8 @@ const copyDroipFiles = async () => {
 
     spinner.stop(`Copied ${colors.bright}${droipFiles.length}${colors.reset} Droip files (${formatBytes(totalSize)})`);
   } catch (error) {
-    spinner.fail('Droip files not found, skipping...');
-    logWarning('Droip files not found, skipping...');
+    // Just use one consistent method to report the error
+    spinner.fail(`Droip files not found: ${error.message}`);
   }
 };
 
@@ -433,9 +504,7 @@ const createValidZipArchive = async () => {
 
 const handleBuildError = (error) => {
   logError(`Build failed: ${error.message}`);
-  console.log(`\n${colors.red}${colors.bright}╔════════════════════════════════════════╗${colors.reset}`);
-  console.log(`${colors.red}${colors.bright}║          ${symbols.error} BUILD FAILED!              ║${colors.reset}`);
-  console.log(`${colors.red}${colors.bright}╚════════════════════════════════════════╝${colors.reset}\n`);
+  console.log(style.box(`${symbols.error} BUILD FAILED!`, colors.headerError));
   process.exit(1);
 };
 
