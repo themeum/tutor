@@ -130,6 +130,12 @@ export const hasAnyCourseWithChildren = (data: {
   data: {
     content_type: string;
     data?: {
+      courses?: {
+        contents?: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          children?: any[];
+        }[];
+      }[];
       contents?: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         children?: any[];
@@ -138,21 +144,36 @@ export const hasAnyCourseWithChildren = (data: {
   }[];
 }): boolean => {
   return data.data.some((item) => {
-    if (item.content_type !== 'courses') {
-      return false;
-    }
-
-    if (!item.data || !Array.isArray(item.data)) {
-      return false;
-    }
-
-    return item.data.some((course) => {
-      if (!course.contents && !Array.isArray(course.contents)) {
+    if (item.content_type === 'courses') {
+      if (!item.data) {
         return false;
       }
-      return course.contents.some((contentItem) => {
-        return contentItem.children && contentItem.children.length > 0;
+      return item.data.some((course) => {
+        if (!course.contents) {
+          return false;
+        }
+        return course.contents.some((contentItem) => {
+          return contentItem.children && contentItem.children.length > 0;
+        });
       });
-    });
+    } else if (item.content_type === 'course-bundle') {
+      if (!item.data) {
+        return false;
+      }
+      return item.data.some((bundle) => {
+        if (!bundle.courses) {
+          return false;
+        }
+        return bundle.courses.some((bundleCourse) => {
+          if (!bundleCourse.contents) {
+            return false;
+          }
+          return bundleCourse.contents.some((contentItem) => {
+            return contentItem.children && contentItem.children.length > 0;
+          });
+        });
+      });
+    }
+    return false;
   });
 };
