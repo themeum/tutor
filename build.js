@@ -200,15 +200,27 @@ const shouldExcludeFile = (filePath) => {
     return true;
   }
 
-  // Critical directories to always exclude
-  const criticalExclusions = ['assets/react', 'assets/scss', 'node_modules', 'v2-library', 'cypress', 'tests'];
+  // Extract critical paths from exclusion patterns for early returns
+  const criticalPathsFromPatterns = CONFIG.excludePatterns
+    .filter((pattern) => !pattern.includes('*') && !pattern.startsWith('.'))
+    .map((pattern) => pattern.replace(/\/\*\*$/, ''));
 
-  // Early return if path contains any critical exclusion
-  if (criticalExclusions.some((excluded) => filePath.includes(excluded))) {
+  // Add base directories from wildcard patterns
+  CONFIG.excludePatterns
+    .filter((pattern) => pattern.endsWith('/**'))
+    .forEach((pattern) => {
+      const basePath = pattern.replace(/\/\*\*$/, '');
+      if (!criticalPathsFromPatterns.includes(basePath)) {
+        criticalPathsFromPatterns.push(basePath);
+      }
+    });
+
+  // Early return for critical paths
+  if (criticalPathsFromPatterns.some((path) => filePath.includes(path))) {
     return true;
   }
 
-  // Continue with existing pattern matching
+  // Continue with pattern matching
   return CONFIG.excludePatterns.some((pattern) => {
     // Skip dot files as we've already handled them above
     if (pattern.startsWith('.') && !pattern.includes('/') && !pattern.includes('*')) {
