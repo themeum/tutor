@@ -25,7 +25,7 @@ export const createPriceFormatter = ({
       return decimalPart ? `${formattedIntPart}${decimalSeparator}${decimalPart}` : formattedIntPart;
     };
 
-    const formattedNumber = formatNumberWithSeparators(price);
+    const formattedNumber = formatNumberWithSeparators(Number(price));
 
     if (position === 'left') {
       return `${symbol}${formattedNumber}`;
