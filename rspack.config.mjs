@@ -199,7 +199,7 @@ const createConfig = (env, options) => {
   return baseConfig;
 };
 
-const getReactEntries = () => ({
+const reactEntries = {
   tutor: './assets/react/v2/common.js',
   'tutor-front': './assets/react/front/tutor-front.js',
   'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
@@ -213,9 +213,9 @@ const getReactEntries = () => ({
   'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
   'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
   'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
-});
+};
 
-const getScssEntries = () => ({
+const scssEntries = {
   'tutor-front-scss': './assets/scss/front/index.scss',
   'tutor-admin-scss': './assets/scss/admin-dashboard/index.scss',
   'tutor-setup-scss': './assets/scss/admin-dashboard/tutor-setup.scss',
@@ -224,9 +224,9 @@ const getScssEntries = () => ({
   'tutor-icon-scss': './v2-library/fonts/tutor-icon/tutor-icon.scss',
   'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
   'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
-});
+};
 
-const createResolveAliases = () => ({
+const resolveAliases = {
   '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
   '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
   '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
@@ -243,7 +243,7 @@ const createResolveAliases = () => ({
   '@CouponServices': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/services/'),
   '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
-});
+};
 
 const createChunkFilename = () => {
   return `js/lazy-chunks/[name].js?ver=${version}`;
@@ -255,9 +255,6 @@ const isScssEntry = (entryPath) => {
 
 export default (env, options) => {
   const baseConfig = createConfig(env, options);
-  const reactEntries = getReactEntries();
-  const scssEntries = getScssEntries();
-  const resolveAliases = createResolveAliases();
   const isDevelopment = options.mode === 'development';
 
   const allEntries = { ...reactEntries, ...scssEntries };
@@ -310,7 +307,11 @@ export default (env, options) => {
         return `js/[name].js`;
       },
       chunkFilename: createChunkFilename,
-      clean: true,
+      clean: {
+        keep: (asset) => {
+          return !asset.startsWith('css/') && !asset.startsWith('js/') && !asset.endsWith('.min.css');
+        },
+      },
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
