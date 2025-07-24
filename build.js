@@ -1,10 +1,7 @@
 const { createReadStream, createWriteStream, mkdirSync, readFileSync, readdirSync, rmSync, statSync } = require('fs');
 const { dirname, extname, join, relative } = require('path');
 const { pipeline } = require('stream/promises');
-const { createDeflateRaw } = require('zlib');
-const { promisify } = require('util');
-
-const deflateRaw = promisify(createDeflateRaw().flush ? createDeflateRaw()._flush : createDeflateRaw);
+const archiver = require('archiver');
 
 // Console styling utilities
 const colors = {
@@ -79,23 +76,34 @@ const createSpinner = (message) => {
   };
 };
 
+// Helper function for formatting bytes
+const formatBytes = (bytes, decimals = 2) => {
+  if (bytes === 0) return '0 Bytes';
+
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${sizes[i]}`;
+};
+
 const printHeader = () => {
-  console.log(`\n${colors.cyan}${colors.bright}╔════════════════════════════════════════╗${colors.reset}`);
+  console.log(`\n${colors.cyan}${colors.bright}╔═════════════════════════════════════════╗${colors.reset}`);
   console.log(
     `${colors.cyan}${colors.bright}║        ${symbols.rocket} TUTOR BUILD PROCESS ${symbols.package}        ║${colors.reset}`,
   );
-  console.log(`${colors.cyan}${colors.bright}╚════════════════════════════════════════╝${colors.reset}\n`);
+  console.log(`${colors.cyan}${colors.bright}╚═════════════════════════════════════════╝${colors.reset}\n`);
 };
 
 const printFooter = (duration) => {
-  console.log(`\n${colors.green}${colors.bright}╔════════════════════════════════════════╗${colors.reset}`);
+  console.log(`\n${colors.green}${colors.bright}╔══════════════════════════════════════════╗${colors.reset}`);
   console.log(
     `${colors.green}${colors.bright}║     ${symbols.success} BUILD COMPLETED SUCCESSFULLY!     ║${colors.reset}`,
   );
   console.log(
     `${colors.green}${colors.bright}║           ${symbols.clock} Duration: ${duration}ms            ║${colors.reset}`,
   );
-  console.log(`${colors.green}${colors.bright}╚════════════════════════════════════════╝${colors.reset}\n`);
+  console.log(`${colors.green}${colors.bright}╚══════════════════════════════════════════╝${colors.reset}\n`);
 };
 
 const CONFIG = {
@@ -180,12 +188,31 @@ const extractVersionNumber = () => {
   }
 };
 
+/**
+ * Determines if a file should be excluded from the build
+ * @param {string} filePath - Relative path of the file to check
+ * @returns {boolean} - True if the file should be excluded
+ */
 const shouldExcludeFile = (filePath) => {
+  // Exclude files/folders starting with a dot (.)
+  const pathSegments = filePath.split('/');
+  if (pathSegments.some((segment) => segment.startsWith('.'))) {
+    return true;
+  }
+
+  // Critical directories to always exclude
+  const criticalExclusions = ['assets/react', 'assets/scss', 'node_modules', 'v2-library', 'cypress', 'tests'];
+
+  // Early return if path contains any critical exclusion
+  if (criticalExclusions.some((excluded) => filePath.includes(excluded))) {
+    return true;
+  }
+
+  // Continue with existing pattern matching
   return CONFIG.excludePatterns.some((pattern) => {
-    // Handle dot files specifically
+    // Skip dot files as we've already handled them above
     if (pattern.startsWith('.') && !pattern.includes('/') && !pattern.includes('*')) {
-      const fileName = filePath.split('/').pop();
-      return fileName === pattern;
+      return false;
     }
 
     // Handle patterns with wildcards
@@ -215,6 +242,7 @@ const getAllFiles = (dirPath, arrayOfFiles = []) => {
       arrayOfFiles.push({
         fullPath,
         relativePath: relativePath.replace(/\\/g, '/'),
+        size: fileStat.size,
       });
     }
   });
@@ -257,15 +285,19 @@ const copyProjectFiles = async () => {
 
   const allFiles = getAllFiles('.');
   const tutorBuildDir = join(CONFIG.buildDir, 'tutor');
+  let totalSize = 0;
 
   ensureDirectoryExists(tutorBuildDir);
 
   for (const file of allFiles) {
     const destinationPath = join(tutorBuildDir, file.relativePath);
     await copyFileToDestination(file, destinationPath);
+    totalSize += file.size;
   }
 
-  spinner.stop(`Copied ${colors.bright}${allFiles.length}${colors.reset} files to build directory`);
+  spinner.stop(
+    `Copied ${colors.bright}${allFiles.length}${colors.reset} files (${formatBytes(totalSize)}) to build directory`,
+  );
 };
 
 const copyFontFiles = async () => {
@@ -276,6 +308,7 @@ const copyFontFiles = async () => {
     const fontSourceDir = 'v2-library/fonts/tutor-icon';
     const fontDestDir = 'assets/fonts';
     const buildFontDestDir = join(CONFIG.buildDir, 'tutor', fontDestDir);
+    let totalSize = 0;
 
     ensureDirectoryExists(fontDestDir);
     ensureDirectoryExists(buildFontDestDir);
@@ -287,11 +320,14 @@ const copyFontFiles = async () => {
       const localDestPath = join(fontDestDir, fontFile);
       const buildDestPath = join(buildFontDestDir, fontFile);
 
+      const fileSize = statSync(sourcePath).size;
+      totalSize += fileSize;
+
       await copyFileToDestination({ fullPath: sourcePath }, localDestPath);
       await copyFileToDestination({ fullPath: sourcePath }, buildDestPath);
     }
 
-    spinner.stop(`Copied ${colors.bright}${fontFiles.length}${colors.reset} font files`);
+    spinner.stop(`Copied ${colors.bright}${fontFiles.length}${colors.reset} font files (${formatBytes(totalSize)})`);
   } catch (error) {
     spinner.fail('Font files not found, skipping...');
     logWarning('Font files not found, skipping...');
@@ -305,156 +341,82 @@ const copyDroipFiles = async () => {
   try {
     const droipSourceDir = 'includes/droip/dist';
     const droipFiles = getAllFiles(droipSourceDir);
+    let totalSize = 0;
 
     for (const file of droipFiles) {
       const relativeToDroip = relative(droipSourceDir, file.fullPath);
       const destinationPath = join(CONFIG.buildDir, 'tutor', 'includes', 'droip', relativeToDroip);
       await copyFileToDestination(file, destinationPath);
+      totalSize += file.size;
     }
 
-    spinner.stop(`Copied ${colors.bright}${droipFiles.length}${colors.reset} Droip files`);
+    spinner.stop(`Copied ${colors.bright}${droipFiles.length}${colors.reset} Droip files (${formatBytes(totalSize)})`);
   } catch (error) {
     spinner.fail('Droip files not found, skipping...');
     logWarning('Droip files not found, skipping...');
   }
 };
 
-// CRC32 calculation for ZIP files
-const calculateCrc32 = (data) => {
-  const crcTable = [];
-  for (let i = 0; i < 256; i++) {
-    let crc = i;
-    for (let j = 0; j < 8; j++) {
-      crc = crc & 1 ? (crc >>> 1) ^ 0xedb88320 : crc >>> 1;
-    }
-    crcTable[i] = crc;
-  }
-
-  let crc = 0xffffffff;
-  for (let i = 0; i < data.length; i++) {
-    crc = (crc >>> 8) ^ crcTable[(crc ^ data[i]) & 0xff];
-  }
-  return (crc ^ 0xffffffff) >>> 0;
-};
-
-// Create proper ZIP file format
+// Create ZIP archive using archiver
 const createValidZipArchive = async () => {
   logStep('4/4', 'Creating ZIP archive...');
   const buildName = `tutor-${versionNumber}.zip`;
   const spinner = createSpinner(`Creating ${buildName}...`);
 
   try {
+    // Remove existing zip if present
     rmSync(buildName, { force: true });
-  } catch (error) {
-    // File might not exist
-  }
 
-  const allBuildFiles = getAllFiles(CONFIG.buildDir);
+    const allBuildFiles = getAllFiles(CONFIG.buildDir);
+    if (allBuildFiles.length === 0) {
+      spinner.fail('No files found in build directory');
+      throw new Error('No files found in build directory');
+    }
 
-  if (allBuildFiles.length === 0) {
-    spinner.fail('No files found in build directory');
-    throw new Error('No files found in build directory');
-  }
-
-  const zipStream = createWriteStream(buildName);
-  const centralDirectory = [];
-  let currentOffset = 0;
-
-  // Process each file and write to ZIP
-  for (const file of allBuildFiles) {
-    const relativePath = relative(CONFIG.buildDir, file.fullPath);
-    const fileContent = readFileSync(file.fullPath);
-    const crc32 = calculateCrc32(fileContent);
-
-    // Convert path separators to forward slashes for ZIP compatibility
-    const zipPath = relativePath.replace(/\\/g, '/');
-    const pathBuffer = Buffer.from(zipPath, 'utf8');
-
-    // Local file header (30 bytes + filename)
-    const localHeader = Buffer.alloc(30);
-    localHeader.writeUInt32LE(0x04034b50, 0); // Local file header signature
-    localHeader.writeUInt16LE(20, 4); // Version needed to extract
-    localHeader.writeUInt16LE(0, 6); // General purpose bit flag
-    localHeader.writeUInt16LE(0, 8); // Compression method (0 = stored)
-    localHeader.writeUInt16LE(0, 10); // File last modification time
-    localHeader.writeUInt16LE(0, 12); // File last modification date
-    localHeader.writeUInt32LE(crc32, 14); // CRC-32
-    localHeader.writeUInt32LE(fileContent.length, 18); // Compressed size
-    localHeader.writeUInt32LE(fileContent.length, 22); // Uncompressed size
-    localHeader.writeUInt16LE(pathBuffer.length, 26); // File name length
-    localHeader.writeUInt16LE(0, 28); // Extra field length
-
-    // Write local file header
-    zipStream.write(localHeader);
-    zipStream.write(pathBuffer);
-    zipStream.write(fileContent);
-
-    // Store central directory entry info
-    centralDirectory.push({
-      relativePath: zipPath,
-      pathBuffer,
-      crc32,
-      compressedSize: fileContent.length,
-      uncompressedSize: fileContent.length,
-      localHeaderOffset: currentOffset,
+    // Setup archiver
+    const output = createWriteStream(buildName);
+    const archive = archiver('zip', {
+      zlib: { level: 9 }, // Maximum compression
     });
 
-    currentOffset += 30 + pathBuffer.length + fileContent.length;
+    // Setup promise for completion
+    const archiveComplete = new Promise((resolve, reject) => {
+      output.on('close', resolve);
+      archive.on('error', reject);
+    });
+
+    // Pipe archive data to output file
+    archive.pipe(output);
+
+    let totalSizeBeforeCompression = 0;
+
+    // Add each file to the archive
+    for (const file of allBuildFiles) {
+      const relativePath = relative(CONFIG.buildDir, file.fullPath);
+      const zipPath = relativePath.replace(/\\/g, '/');
+      archive.file(file.fullPath, { name: zipPath });
+      totalSizeBeforeCompression += file.size;
+    }
+
+    // Finalize and wait for completion
+    await archive.finalize();
+    await archiveComplete;
+
+    // Get compressed file size
+    const compressedSize = statSync(buildName).size;
+    const compressionRatio = (1 - compressedSize / totalSizeBeforeCompression) * 100;
+
+    spinner.stop(
+      `Created archive: ${colors.bright}${buildName}${colors.reset}\n` +
+        `  ${symbols.file} Files: ${colors.bright}${allBuildFiles.length}${colors.reset}\n` +
+        `  ${symbols.arrow} Original size: ${formatBytes(totalSizeBeforeCompression)}\n` +
+        `  ${symbols.arrow} Compressed size: ${formatBytes(compressedSize)}\n` +
+        `  ${symbols.arrow} Compression ratio: ${compressionRatio.toFixed(2)}%`,
+    );
+  } catch (error) {
+    spinner.fail(`Failed to create archive: ${error.message}`);
+    throw error;
   }
-
-  // Write central directory
-  const centralDirectoryOffset = currentOffset;
-  let centralDirectorySize = 0;
-
-  for (const entry of centralDirectory) {
-    // Central directory file header (46 bytes + filename)
-    const centralHeader = Buffer.alloc(46);
-    centralHeader.writeUInt32LE(0x02014b50, 0); // Central file header signature
-    centralHeader.writeUInt16LE(20, 4); // Version made by
-    centralHeader.writeUInt16LE(20, 6); // Version needed to extract
-    centralHeader.writeUInt16LE(0, 8); // General purpose bit flag
-    centralHeader.writeUInt16LE(0, 10); // Compression method
-    centralHeader.writeUInt16LE(0, 12); // File last modification time
-    centralHeader.writeUInt16LE(0, 14); // File last modification date
-    centralHeader.writeUInt32LE(entry.crc32, 16); // CRC-32
-    centralHeader.writeUInt32LE(entry.compressedSize, 20); // Compressed size
-    centralHeader.writeUInt32LE(entry.uncompressedSize, 24); // Uncompressed size
-    centralHeader.writeUInt16LE(entry.pathBuffer.length, 28); // File name length
-    centralHeader.writeUInt16LE(0, 30); // Extra field length
-    centralHeader.writeUInt16LE(0, 32); // File comment length
-    centralHeader.writeUInt16LE(0, 34); // Disk number where file starts
-    centralHeader.writeUInt16LE(0, 36); // Internal file attributes
-    centralHeader.writeUInt32LE(0, 38); // External file attributes
-    centralHeader.writeUInt32LE(entry.localHeaderOffset, 42); // Local header offset
-
-    zipStream.write(centralHeader);
-    zipStream.write(entry.pathBuffer);
-
-    centralDirectorySize += 46 + entry.pathBuffer.length;
-  }
-
-  // End of central directory record (22 bytes)
-  const endRecord = Buffer.alloc(22);
-  endRecord.writeUInt32LE(0x06054b50, 0); // End of central directory signature
-  endRecord.writeUInt16LE(0, 4); // Number of this disk
-  endRecord.writeUInt16LE(0, 6); // Disk where central directory starts
-  endRecord.writeUInt16LE(centralDirectory.length, 8); // Number of central directory records on this disk
-  endRecord.writeUInt16LE(centralDirectory.length, 10); // Total number of central directory records
-  endRecord.writeUInt32LE(centralDirectorySize, 12); // Size of central directory
-  endRecord.writeUInt32LE(centralDirectoryOffset, 16); // Offset of central directory
-  endRecord.writeUInt16LE(0, 20); // ZIP file comment length
-
-  zipStream.write(endRecord);
-  zipStream.end();
-
-  await new Promise((resolve, reject) => {
-    zipStream.on('finish', resolve);
-    zipStream.on('error', reject);
-  });
-
-  spinner.stop(
-    `Created archive: ${colors.bright}${buildName}${colors.reset} with ${colors.bright}${allBuildFiles.length}${colors.reset} files`,
-  );
 };
 
 const handleBuildError = (error) => {
@@ -491,7 +453,9 @@ const executeBuild = async () => {
     cleanDirectory(CONFIG.buildDir);
 
     const duration = Date.now() - startTime;
-    printFooter(duration);
+    const durationFormatted = duration > 1000 ? `${(duration / 1000).toFixed(2)}s` : `${duration}ms`;
+
+    printFooter(durationFormatted);
   } catch (error) {
     handleBuildError(error);
   }
