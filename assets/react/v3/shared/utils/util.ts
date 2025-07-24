@@ -454,40 +454,50 @@ export const formatSubscriptionRepeatUnit = ({
   showSingular?: boolean;
 }) => {
   if (unit === 'until_cancellation') {
-    const result = __('Until Cancellation', 'tutor-pro');
+    const result = __('Until Cancellation', 'tutor');
     return capitalize ? capitalizeWords(result) : result;
   }
 
   const unitFormats = {
     hour: {
-      plural: __('%d hours', 'tutor-pro'),
-      singular: __('%d hour', 'tutor-pro'),
-      suffix: __('hourly', 'tutor-pro'),
-      base: __('hour', 'tutor-pro'),
+      // translators: %d is the number of hours
+      plural: __('%d hours', 'tutor'),
+      // translators: %d is the number of hours
+      singular: __('%d hour', 'tutor'),
+      suffix: __('hourly', 'tutor'),
+      base: __('hour', 'tutor'),
     },
     day: {
-      plural: __('%d days', 'tutor-pro'),
-      singular: __('%d day', 'tutor-pro'),
-      suffix: __('daily', 'tutor-pro'),
-      base: __('day', 'tutor-pro'),
+      // translators: %d is the number of days
+      plural: __('%d days', 'tutor'),
+      // translators: %d is the number of days
+      singular: __('%d day', 'tutor'),
+      suffix: __('daily', 'tutor'),
+      base: __('day', 'tutor'),
     },
     week: {
-      plural: __('%d weeks', 'tutor-pro'),
-      singular: __('%d week', 'tutor-pro'),
-      suffix: __('weekly', 'tutor-pro'),
-      base: __('week', 'tutor-pro'),
+      // translators: %d is the number of weeks
+      plural: __('%d weeks', 'tutor'),
+      // translators: %d is the number of weeks
+      singular: __('%d week', 'tutor'),
+      suffix: __('weekly', 'tutor'),
+      base: __('week', 'tutor'),
     },
     month: {
-      plural: __('%d months', 'tutor-pro'),
-      singular: __('%d month', 'tutor-pro'),
-      suffix: __('monthly', 'tutor-pro'),
-      base: __('month', 'tutor-pro'),
+      // translators: %d is the number of months
+      plural: __('%d months', 'tutor'),
+      // translators: %d is the number of months
+      singular: __('%d month', 'tutor'),
+      suffix: __('monthly', 'tutor'),
+      base: __('month', 'tutor'),
     },
     year: {
-      plural: __('%d years', 'tutor-pro'),
-      singular: __('%d year', 'tutor-pro'),
-      suffix: __('yearly', 'tutor-pro'),
-      base: __('year', 'tutor-pro'),
+      // translators: %d is the number of years
+      plural: __('%d years', 'tutor'),
+      // translators: %d is the number of years
+      singular: __('%d year', 'tutor'),
+      suffix: __('yearly', 'tutor'),
+      base: __('year', 'tutor'),
     },
   };
 

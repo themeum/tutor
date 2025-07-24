@@ -19,6 +19,40 @@ try {
   console.log(`Error reading version from tutor.php: ${err}`);
 }
 
+const shouldKeepAssetFile = (assetPath) => {
+  // Early returns for directories/files to KEEP
+  if (assetPath.includes('assets/fonts/')) {
+    return true;
+  }
+
+  if (assetPath.includes('assets/icons/')) {
+    return true;
+  }
+
+  if (assetPath.includes('assets/images/')) {
+    return true;
+  }
+
+  if (assetPath.includes('assets/lib/')) {
+    return true;
+  }
+
+  if (assetPath.includes('assets/react/')) {
+    return true;
+  }
+
+  if (assetPath.includes('assets/scss/')) {
+    return true;
+  }
+
+  if (assetPath.includes('assets/json/')) {
+    return true;
+  }
+
+  // DELETE everything else (CSS, JS, generated files)
+  return false;
+};
+
 const createSwcLoaderOptions = (isDevelopment) => ({
   jsc: {
     parser: {
@@ -64,11 +98,41 @@ const createConfig = (env, options) => {
     module: {
       rules: [
         {
+          test: /\.s[ac]ss$/i,
+          use: [
+            rspack.CssExtractRspackPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                url: false,
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                implementation: 'sass',
+                sassOptions: {
+                  outputStyle: isDevelopment ? 'expanded' : 'compressed',
+                  silenceDeprecations: [
+                    'abs-percent',
+                    'color-functions',
+                    'global-builtin',
+                    'import',
+                    'legacy-js-api',
+                    'mixed-decls',
+                  ],
+                },
+              },
+            },
+          ],
+        },
+        {
           test: /\.css$/i,
+          exclude: /\.s[ac]ss$/i,
           use: ['style-loader', 'css-loader'],
         },
         {
-          test: /\.(js|ts|tsx)$/,
+          test: /\.(js|ts|jsx|tsx)$/,
           exclude: [/node_modules/, /\.cy\.(ts|tsx)$/],
           use: [
             {
@@ -81,7 +145,14 @@ const createConfig = (env, options) => {
           test: /\.(png|jp(e*)g|gif|webp)$/,
           type: 'asset/resource',
           generator: {
-            filename: 'images/[name]-[hash:8][ext]',
+            filename: 'js/images/[name]-[hash:8][ext]',
+          },
+        },
+        {
+          test: /\.(woff2?|woff|ttf|otf|eot)$/,
+          type: 'asset/resource',
+          generator: {
+            filename: 'fonts/[name][ext]',
           },
         },
         {
@@ -92,6 +163,16 @@ const createConfig = (env, options) => {
       ],
     },
     plugins: [
+      new rspack.CssExtractRspackPlugin({
+        filename: (pathData) => {
+          const entryName = pathData.chunk.name.replace('-scss', '');
+          return `css/${entryName}.min.css`;
+        },
+        chunkFilename: (pathData) => {
+          const entryName = pathData.chunk.name.replace('-scss', '');
+          return `css/${entryName}.min.css`;
+        },
+      }),
       new rspack.ProvidePlugin({
         React: 'react',
       }),
@@ -137,6 +218,7 @@ const createConfig = (env, options) => {
             mangle: true,
           },
         }),
+        new rspack.LightningCssMinimizerRspackPlugin(),
       ],
     };
   }
@@ -151,23 +233,34 @@ const createConfig = (env, options) => {
   return baseConfig;
 };
 
-const getReactEntries = () => ({
+const reactEntries = {
   tutor: './assets/react/v2/common.js',
   'tutor-front': './assets/react/front/tutor-front.js',
   'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
   'tutor-gutenberg': './assets/react/gutenberg/index.js',
+  'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
   'tutor-course-builder': './assets/react/v3/entries/course-builder/index.tsx',
   'tutor-order-details': './assets/react/v3/entries/order-details/index.tsx',
   'tutor-coupon': './assets/react/v3/entries/coupon-details/index.tsx',
   'tutor-tax-settings': './assets/react/v3/entries/tax-settings/index.tsx',
   'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
   'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
-  'tutor-template-import-script': './assets/react/admin-dashboard/template-import-script.js',
   'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
-});
+};
 
-const createResolveAliases = () => ({
+const scssEntries = {
+  'tutor-front-scss': './assets/scss/front/index.scss',
+  'tutor-admin-scss': './assets/scss/admin-dashboard/index.scss',
+  'tutor-setup-scss': './assets/scss/admin-dashboard/tutor-setup.scss',
+  'tutor-scss': './v2-library/src/scss/main.scss',
+  'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
+  'tutor-icon-scss': './v2-library/fonts/tutor-icon/tutor-icon.scss',
+  'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
+  'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
+};
+
+const resolveAliases = {
   '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
   '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
   '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
@@ -176,45 +269,49 @@ const createResolveAliases = () => ({
   '@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
   '@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
   '@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
-  '@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
-  '@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
-  '@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),
-  '@OrderContexts': path.resolve(__dirname, './assets/react/v3/entries/order-details/contexts/'),
-  '@CouponComponents': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/components/'),
-  '@CouponServices': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/services/'),
+  '@OrderDetails': path.resolve(__dirname, './assets/react/v3/entries/order-details/'),
+  '@CouponDetails': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/'),
   '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
-});
+};
 
-const createChunkFilename = (pathData) => {
-  if (pathData.chunk.name?.startsWith('icon-')) {
-    const iconName = pathData.chunk.name.replace(/^icon-/, '');
-    return `icons/${iconName}.js?ver=${version}`;
-  }
-  return `lazy-chunks/[name].js?ver=${version}`;
+const createChunkFilename = () => {
+  return `js/lazy-chunks/[name].js?ver=${version}`;
+};
+
+const isScssEntry = (entryPath) => {
+  return /\.css$/i.test(entryPath) || /\.s[ac]ss$/i.test(entryPath);
 };
 
 export default (env, options) => {
   const baseConfig = createConfig(env, options);
-  const reactEntries = getReactEntries();
-  const resolveAliases = createResolveAliases();
   const isDevelopment = options.mode === 'development';
 
+  const allEntries = { ...reactEntries, ...scssEntries };
+
   if (isDevelopment) {
-    return Object.entries(reactEntries).map(([entryKey, entryPath]) => ({
+    return Object.entries(allEntries).map(([entryKey, entryPath]) => ({
       ...baseConfig,
       name: entryKey,
       entry: {
         [entryKey]: entryPath,
       },
       output: {
-        path: path.resolve('./assets/js'),
-        filename: '[name].js',
+        path: path.resolve('./assets'),
+        filename: (pathData) => {
+          const entryName = pathData.chunk.name;
+          const originalEntryPath = allEntries[entryName];
+
+          if (isScssEntry(originalEntryPath)) {
+            return `[name].min.css`; // CSS files handled by CssExtractRspackPlugin
+          }
+          return `js/${entryName}.js`; // JavaScript files go to js/ directory
+        },
         chunkFilename: createChunkFilename,
         clean: false,
       },
       resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
         fallback: {
           fs: false,
           path: false,
@@ -227,15 +324,25 @@ export default (env, options) => {
 
   return {
     ...baseConfig,
-    entry: reactEntries,
+    entry: allEntries,
     output: {
-      path: path.resolve('./assets/js'),
-      filename: '[name].js',
+      path: path.resolve('./assets'),
+      filename: (pathData) => {
+        const entryName = pathData.chunk.name;
+        const originalEntryPath = allEntries[entryName];
+
+        if (isScssEntry(originalEntryPath)) {
+          return `[name].min.css`;
+        }
+        return `js/[name].js`;
+      },
       chunkFilename: createChunkFilename,
-      clean: true,
+      clean: {
+        keep: shouldKeepAssetFile,
+      },
     },
     resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
       fallback: {
         fs: false,
         path: false,

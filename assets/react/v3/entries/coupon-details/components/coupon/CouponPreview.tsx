@@ -1,4 +1,4 @@
-import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
+import type { Coupon, CouponAppliesTo } from '@CouponDetails/services/coupon';
 import { css } from '@emotion/react';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';

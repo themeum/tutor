@@ -30,12 +30,8 @@
       "@CourseBuilderUtils/*": ["assets/react/v3/entries/course-builder/utils/*"],
       "@CourseBuilderPublic/*": ["assets/react/v3/entries/course-builder/public/*"],
       "@CourseBuilderContexts/*": ["assets/react/v3/entries/course-builder/contexts/*"],
-      "@OrderComponents/*": ["assets/react/v3/entries/order-details/components/*"],
-      "@OrderServices/*": ["assets/react/v3/entries/order-details/services/*"],
-      "@OrderAtoms/*": ["assets/react/v3/entries/order-details/atoms/*"],
-      "@OrderContexts/*": ["assets/react/v3/entries/order-details/contexts/*"],
-      "@CouponComponents/*": ["assets/react/v3/entries/coupon-details/components/*"],
-      "@CouponServices/*": ["assets/react/v3/entries/coupon-details/services/*"],
+      "@OrderDetails/*": ["assets/react/v3/entries/order-details/*"],
+      "@CouponDetails/*": ["assets/react/v3/entries/coupon-details/*"],
       "@AddonList/*": ["assets/react/v3/entries/addon-list/*"],
       "@ImportExport/*": ["assets/react/v3/entries/import-export/*"]
     }

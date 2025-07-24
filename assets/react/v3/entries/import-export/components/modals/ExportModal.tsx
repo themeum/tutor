@@ -31,7 +31,6 @@ import {
 import { tutorConfig } from '@TutorShared/config/config';
 import { type Collection } from '@TutorShared/utils/types';
 import CollectionListModal from './CollectionList';
-import ExportContentBankState from './import-export-states/ExportContentBankState';
 
 interface ExportModalProps extends ModalProps {
   onClose: () => void;
@@ -42,7 +41,7 @@ interface ExportModalProps extends ModalProps {
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
-  isFromContentBank?: boolean;
+  collection?: Collection;
 }
 
 interface BulkSelectionFormData {
@@ -62,17 +61,20 @@ const ExportModal = ({
   fileSize,
   message,
   completedContents,
-  isFromContentBank,
+  collection,
 }: ExportModalProps) => {
   const form = useFormWithGlobalError<ExportFormData>({
-    defaultValues: defaultExportFormData,
+    defaultValues: {
+      ...defaultExportFormData,
+      content_bank: collection ? true : defaultExportFormData.content_bank,
+    },
   });
 
   const bulkSelectionForm = useFormWithGlobalError<BulkSelectionFormData>({
     defaultValues: {
       courses: [],
       'course-bundle': [],
-      content_bank: [],
+      content_bank: collection ? [collection] : [],
     },
   });
 
@@ -82,44 +84,44 @@ const ExportModal = ({
     : ([
         {
           key: 'courses',
-          label: 'Courses',
+          label: __('Courses', 'tutor'),
           contents: [
             {
-              label: 'Lessons',
+              label: __('Lessons', 'tutor'),
               key: 'lesson',
             },
             {
-              label: 'Quizzes',
+              label: __('Quizzes', 'tutor'),
               key: 'tutor_quiz',
             },
             {
-              label: 'Assignments',
+              label: __('Assignments', 'tutor'),
               key: 'tutor_assignments',
             },
             {
-              label: 'Attachments',
+              label: __('Attachments', 'tutor'),
               key: 'attachments',
             },
           ],
         },
         {
           key: 'course-bundle',
-          label: 'Bundles',
+          label: __('Bundles', 'tutor'),
           contents: [],
         },
         {
           key: 'content_bank',
-          label: 'Content Bank',
+          label: __('Content Bank', 'tutor'),
           contents: [],
         },
         {
           key: 'settings',
-          label: 'Settings',
+          label: __('Settings', 'tutor'),
           contents: [],
         },
         {
           key: 'keep_media_files',
-          label: 'Keep media files',
+          label: __('Keep Media Files', 'tutor'),
           contents: [],
         },
       ] as ExportableContent[]);
@@ -210,6 +212,7 @@ const ExportModal = ({
         props: {
           title: __('Select Collections', 'tutor'),
           form: bulkSelectionForm,
+          selectedCollectionFromContentBank: collection,
         },
       },
       bulkSelectionButtonLabel:
@@ -224,7 +227,7 @@ const ExportModal = ({
     onExport?.({
       data: {
         ...data,
-        ...(isFromContentBank
+        ...(collection?.ID
           ? {
               content_bank: true,
             }
@@ -242,9 +245,7 @@ const ExportModal = ({
   });
 
   const modalContent = {
-    initial: isFromContentBank ? (
-      <ExportContentBankState bulkSelectionForm={bulkSelectionForm} />
-    ) : (
+    initial: (
       <ExportInitialState
         form={form}
         bulkSelectionForm={bulkSelectionForm}
@@ -269,17 +270,19 @@ const ExportModal = ({
     error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
   };
 
-  const disableExportButton = () => {
-    if (isFromContentBank) {
-      return bulkSelectionForm.getValues('content_bank').length === 0;
-    }
+  const EXCLUDED_KEYS = ['keep_media_files'];
 
-    return !Object.entries(form.getValues()).some(([key, value]) => {
-      if (!key.includes('__')) {
+  const disableExportButton = () => {
+    const formValues = form.getValues();
+
+    const mainContentTypesSelected = Object.entries(formValues).some(([key, value]) => {
+      if (!key.includes('__') && !EXCLUDED_KEYS.includes(key)) {
         return value === true;
       }
       return false;
     });
+
+    return !mainContentTypesSelected;
   };
 
   return (

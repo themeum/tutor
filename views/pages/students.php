@@ -13,15 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use TUTOR\Students_List;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
-$students = new Students_List();
+$students = tutor_lms()->student_list;
 
-/**
- * Short able params
- */
+//phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 $user_id   = Input::get( 'user_id', '' );
 $course_id = Input::get( 'course-id', '' );
 $order     = Input::get( 'order', 'DESC' );
@@ -37,6 +34,7 @@ $offset   = ( $per_page * $paged ) - $per_page;
 
 $students_list = tutor_utils()->get_students( $offset, $per_page, $search, $course_id, $date, $order );
 $total         = tutor_utils()->get_total_students( $search, $course_id, $date );
+//phpcs:enable
 
 /**
  * Navbar data to make nav menu

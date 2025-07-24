@@ -15,8 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Input;
 use Tutor\Models\WithdrawModel;
-use TUTOR\Withdraw_Requests_List;
-$withdraw = new Withdraw_Requests_List();
+
+$withdraw = tutor_lms()->withdraw_list;
 
 //phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
 $order       = Input::get( 'order', 'DESC' );

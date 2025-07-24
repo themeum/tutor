@@ -13,12 +13,12 @@ import {
   type ExportableContent,
   type ExportFormData,
 } from '@ImportExport/services/import-export';
-import generateImportExportMessage from '@ImportExport/utils/utils';
+import { generateImportExportMessage } from '@ImportExport/utils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { getQueryParam } from '@TutorShared/utils/url';
+import { decodeParams } from '@TutorShared/utils/url';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const CONTENT_BANK_PAGE = 'tutor-content-bank';
@@ -45,10 +45,29 @@ const Export = () => {
   };
 
   useEffect(() => {
-    const isFromContentBank = getQueryParam('referrer', 'string') === CONTENT_BANK_PAGE;
-    const isExportingFromContentBank = getQueryParam('type', 'string') === 'export';
+    const urlParams = new URLSearchParams(window.location.search);
+    const encodedData = urlParams.get('referrer');
 
-    if (isTutorPro && isFromContentBank && isExportingFromContentBank) {
+    if (!encodedData || !isTutorPro) {
+      return;
+    }
+
+    const decodedParams = decodeParams<{
+      referrer: string;
+      type: string;
+      collection_id?: number;
+      collection_title?: string;
+      lesson_count?: number;
+      assignment_count?: number;
+      question_count?: number;
+      total?: number;
+    }>(encodedData);
+
+    const { referrer, type, collection_id, collection_title, lesson_count, assignment_count, question_count, total } =
+      decodedParams;
+
+    const isForContentBank = referrer === CONTENT_BANK_PAGE && type === 'export';
+    if (isForContentBank && collection_id) {
       showModal({
         id: 'export-modal',
         component: ExportModal,
@@ -58,7 +77,16 @@ const Export = () => {
           currentStep: 'initial',
           onExport: handleExport,
           progress: 0,
-          isFromContentBank: true,
+          collection: {
+            ID: collection_id,
+            post_title: collection_title || __('Selected Collection', 'tutor'),
+            count_stats: {
+              lesson: lesson_count || 0,
+              assignment: assignment_count || 0,
+              question: question_count || 0,
+              total: total || 0,
+            },
+          },
         },
       });
     }

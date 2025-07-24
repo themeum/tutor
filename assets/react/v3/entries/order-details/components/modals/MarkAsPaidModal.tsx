@@ -1,3 +1,4 @@
+import { useMarkAsPaidMutation } from '@OrderDetails/services/order';
 import Button from '@TutorShared/atoms/Button';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
@@ -5,7 +6,6 @@ import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { useMarkAsPaidMutation } from '@OrderServices/order';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';

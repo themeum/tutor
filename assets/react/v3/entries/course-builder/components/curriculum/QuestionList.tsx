@@ -242,7 +242,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         _data_status: QuizDataStatus.NEW,
         is_cb_question: true,
         // this is to ensure unique question_id for each question
-        question_id: `${content.ID}-${nanoid()}`,
+        question_id: `${question.question_id}-${nanoid()}`,
         question_answers: question.question_answers.map((answer) => ({
           ...answer,
           is_saved: true,

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
 
-import type { OrderSummaryItem } from '@OrderServices/order';
+import type { OrderSummaryItem } from '@OrderDetails/services/order';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';

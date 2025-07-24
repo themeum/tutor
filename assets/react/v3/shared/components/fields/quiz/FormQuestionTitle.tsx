@@ -178,7 +178,11 @@ const FormQuestionTitle = ({
                   {...additionalAttributes}
                   className="tutor-input-field"
                   rows={2}
-                  ref={inputRef}
+                  ref={(element) => {
+                    field.ref(element);
+                    // @ts-ignore
+                    inputRef.current = element; // this is not ideal but it is the only way to set ref to the input element
+                  }}
                   value={inputValue}
                   placeholder={placeholder}
                   onChange={(event) => {

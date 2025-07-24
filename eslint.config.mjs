@@ -2,6 +2,7 @@
 import storybook from 'eslint-plugin-storybook';
 
 import pluginJs from '@eslint/js';
+import wordpressEslintPlugin from '@wordpress/eslint-plugin';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import pluginReact from 'eslint-plugin-react';
@@ -19,15 +20,20 @@ export default [
   pluginReact.configs.flat.recommended,
   eslintPluginPrettierRecommended,
   eslintConfigPrettier,
+  reactHooks.configs['recommended-latest'],
   {
     plugins: {
-      'react-hooks': reactHooks,
+      '@wordpress': wordpressEslintPlugin,
     },
     rules: {
+      '@wordpress/i18n-text-domain': [
+        'error',
+        {
+          allowedTextDomain: ['tutor'],
+        },
+      ],
       'react/no-unknown-property': ['error', { ignore: ['css'] }],
       'react/react-in-jsx-scope': 'off',
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
       'react/display-name': 'off',
       'no-console': 'error',
       '@typescript-eslint/consistent-type-imports': [

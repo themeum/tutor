@@ -31,7 +31,7 @@ export const loginAsInstructor = () => {
     cy.visit(backendUrls.LOGIN);
     cy.getByInputName('log').clear().type(Cypress.env('instructor_username'));
     cy.getByInputName('pwd').clear().type(Cypress.env('instructor_password'));
-    cy.get('#tutor-login-form button').contains('Sign In').click();
+    cy.get('form#loginform').submit();
   });
 };
 

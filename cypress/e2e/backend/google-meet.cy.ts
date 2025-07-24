@@ -28,14 +28,16 @@ describe('Tutor Dashboard My Courses', () => {
 
   it('should start meeting', () => {
     cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found')
-      ) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
-        cy.get('a').contains('Start Meeting').invoke('removeAttr', 'target').click();
+        if ($body.find('a:contains("Start Meeting")').length > 0) {
+          cy.get('a').contains('Start Meeting').invoke('removeAttr', 'target').click();
+        }
+
+        if ($body.find('a:contains("Ongoing")').length > 0) {
+          cy.get('a').contains('Ongoing').invoke('removeAttr', 'target').click();
+        }
 
         cy.origin('https://calendar.google.com', () => {
           cy.url().should('include', '/calendar');
@@ -52,7 +54,7 @@ describe('Tutor Dashboard My Courses', () => {
     }).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Records Found') || $body.text().includes('No records found')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
         cy.get('a.tutor-btn.tutor-btn-outline-primary.tutor-btn-md').contains('Edit').eq(0).click();
@@ -108,7 +110,7 @@ describe('Tutor Dashboard My Courses', () => {
       }
     }).as('ajaxRequest');
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Records Found') || $body.text().includes('No records found')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
         cy.get('a.tutor-iconic-btn').eq(0).click({ force: true });
@@ -127,62 +129,17 @@ describe('Tutor Dashboard My Courses', () => {
   });
 
   it('should filter meetings', () => {
-    cy.get(':nth-child(2) > .tutor-js-form-select').click();
-    cy.get('body').then(($body) => {
-      if ($body.text().includes('No Records Found') || $body.text().includes('No records found')) {
-        cy.log('No data available');
-      } else {
-        cy.get('.tutor-form-select-options')
-          .eq(1)
-          .then(() => {
-            cy.get('.tutor-form-select-option')
-              .then(() => {
-                cy.get('.tutor-form-select-options>div:nth-child(2)').eq(0).click();
-              })
-              .then(() => {
-                cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
-                  .eq(0)
-                  .invoke('text')
-                  .then((retrievedText) => {
-                    cy.get(
-                      '.tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis',
-                    ).each(($category) => {
-                      cy.wrap($category)
-                        .invoke('text')
-                        .then((categoryText) => {
-                          if (categoryText.trim() === retrievedText.trim()) {
-                            cy.wrap($category).click({ force: true });
-                          }
-                        });
-                    });
-                  });
-              });
-          });
-      }
+    cy.unifiedFilterElements({
+      selectFieldName: 'course-id',
+      resultColumnIndex: 3,
     });
   });
 
   it('Should filter courses by a specific date', () => {
-    cy.get(
-      '.tutor-wp-dashboard-filter-items > :nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
-    ).click();
-
-    cy.get('.dropdown-years').click();
-    cy.get('.dropdown-years>.dropdown-list').contains('2025').click();
-    cy.get('.dropdown-months > .dropdown-label').click();
-    cy.get('.dropdown-months > .dropdown-list').contains('June').click();
-    cy.get('.react-datepicker__day--011').contains('11').click();
-
-    cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Found from your Search/Filter') || $body.text().includes('No records found')) {
-        cy.log('No data available');
-      } else {
-        cy.wait(2000);
-        cy.get('.tutor-fs-7 > span').each(($el) => {
-          const dateText = $el.text().trim();
-          expect(dateText).to.contain('June 11, 2025');
-        });
-      }
+    cy.unifiedFilterElements({
+      selectFieldName: 'date',
+      resultTableSelector: 'table.tutor-table',
+      resultColumnIndex: 1,
     });
   });
   // settings

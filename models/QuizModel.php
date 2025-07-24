@@ -25,6 +25,10 @@ class QuizModel {
 	const ATTEMPT_ENDED   = 'attempt_ended';
 	const REVIEW_REQUIRED = 'review_required';
 
+	const RESULT_PASS    = 'pass';
+	const RESULT_FAIL    = 'fail';
+	const RESULT_PENDING = 'pending';
+
 	/**
 	 * Get quiz table name
 	 *
@@ -612,7 +616,7 @@ class QuizModel {
 		}
 
 		$order = ' answer_order ASC ';
-		
+
 		if ( $rand ) {
 			$order = ' RAND() ';
 		}
@@ -773,7 +777,7 @@ class QuizModel {
 		$required_percentage = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
 
 		foreach ( $attempts as $attempt ) {
-			$earned_percentage = $attempt->earned_marks > 0 ? ( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) : 0;
+			$earned_percentage = self::calculate_attempt_earned_percentage( $attempt );
 			if ( $earned_percentage >= $required_percentage ) {
 				return true;
 			}
@@ -931,13 +935,13 @@ class QuizModel {
 		if ( false === $all_pending ) {
 			$required_percentage = tutor_utils()->get_quiz_option( $quiz_id, 'passing_grade', 0 );
 			foreach ( $attempt_list as $attempt ) {
-				$earned_percentage = $attempt->earned_marks > 0 ? ( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) : 0;
+				$earned_percentage = self::calculate_attempt_earned_percentage( $attempt );
 				if ( $earned_percentage >= $required_percentage ) {
 					// If at least one attempt passed then quiz passed.
-					$result = 'pass';
+					$result = self::RESULT_PASS;
 					break;
 				} else {
-					$result = 'fail';
+					$result = self::RESULT_FAIL;
 				}
 			}
 		}
@@ -1140,4 +1144,85 @@ class QuizModel {
 
 		return $quiz;
 	}
+
+	/**
+	 * Calculate attempt earned percentage
+	 *
+	 * @since 3.7.1
+	 *
+	 * @param int|object $attempt attempt id or attempt object.
+	 *
+	 * @return float
+	 */
+	public static function calculate_attempt_earned_percentage( $attempt ) {
+		if ( is_numeric( $attempt ) ) {
+			$attempt = tutor_utils()->get_attempt( $attempt );
+		}
+
+		if ( ! $attempt ) {
+			return 0;
+		}
+
+		$total_marks  = (float) $attempt->total_marks;
+		$earned_marks = (float) $attempt->earned_marks;
+
+		$earned_percentage = ( $earned_marks > 0 && $total_marks > 0 )
+				? number_format( ( $earned_marks * 100 ) / $total_marks )
+				: 0;
+
+		return $earned_percentage;
+	}
+
+
+	/**
+	 * Get a quiz attempt result
+	 *
+	 * @since 3.7.1
+	 *
+	 * @param int $attempt_id attempt id.
+	 *
+	 * @return string pass, fail, pending
+	 */
+	public static function get_attempt_result( $attempt_id ) {
+		$attempt = tutor_utils()->get_attempt( $attempt_id );
+		if ( ! $attempt ) {
+			return false;
+		}
+
+		/**
+		 * If result is processed then return it
+		 *
+		 * @since 3.7.1
+		 */
+		if ( isset( $attempt->result ) && ! empty( $attempt->result ) ) {
+			return $attempt->result;
+		}
+
+		/**
+		 * Backward compatibility for getting a attempt result
+		 *
+		 * @since 3.7.1
+		 */
+		$attempt_info = maybe_unserialize( $attempt->attempt_info );
+		$answers_map  = self::get_quiz_answers_by_attempt_id( $attempt_id, true );
+
+		$earned_percentage = self::calculate_attempt_earned_percentage( $attempt );
+		$passing_grade     = (int) $attempt_info['passing_grade'] ?? 0;
+
+		$answers = $answers_map[ $attempt->attempt_id ] ?? array();
+		$answers = is_array( $answers ) ? $answers : array();
+
+		$has_pending = (bool) count(
+			array_filter( $answers, fn( $answer ) => null === $answer->is_correct )
+		);
+
+		if ( $has_pending ) {
+			$result = self::RESULT_PENDING;
+		} else {
+			$result = ( $earned_percentage >= $passing_grade ) ? self::RESULT_PASS : self::RESULT_FAIL;
+		}
+
+		return $result;
+	}
+
 }

@@ -38,15 +38,6 @@ class TemplateImportHelper {
 	public $template_download_endpoint;
 
 	/**
-	 * $template_list_transient_key description.
-	 *
-	 * @since 3.6.0
-	 *
-	 * @var string
-	 */
-	public $template_list_transient_key = 'tutor_template_list_cache';
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 3.6.0
@@ -95,11 +86,6 @@ class TemplateImportHelper {
 	 * @throws \Exception If there is an error fetching or decoding the templates.
 	 */
 	public function get_template_list() {
-		$cached_template_list = get_transient( $this->template_list_transient_key );
-		if ( false !== $cached_template_list ) {
-			return $cached_template_list;
-		}
-
 		try {
 			$response             = wp_remote_get(
 				$this->template_list_endpoint,
@@ -120,7 +106,6 @@ class TemplateImportHelper {
 			if ( 200 !== $response_status_code ) {
 				throw new \Exception( 'Failed to fetch templates: ' . $template_list['response'] );
 			}
-			set_transient( $this->template_list_transient_key, $template_list['body_response'], HOUR_IN_SECONDS );
 			return $template_list['body_response'];
 		} catch ( \Exception $e ) {
 			return array();

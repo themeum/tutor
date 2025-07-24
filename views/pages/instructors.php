@@ -27,7 +27,7 @@ if ( Input::has( 'sub_page' ) ) {
 	}
 }
 
-$instructors = new Instructors_List();
+$instructors = tutor_lms()->instructor_list;
 
 /**
  * Short able params
@@ -67,9 +67,9 @@ if ( 'pending' === $active_tab ) {
 } elseif ( 'approved' === $active_tab ) {
 	$instructor_status = array( 'approved' );
 }
-$instructors_list = Instructors_List::get_instructors( $instructor_status, $offset, $per_page_data, $search_term, $course_id, $date, $data_order );
 
-$total = Instructors_List::count_total_instructors( $instructor_status, $search_term, $course_id, $date );
+$instructors_list = $instructors::get_instructors( $instructor_status, $offset, $per_page_data, $search_term, $course_id, $date, $data_order );
+$total            = $instructors::count_total_instructors( $instructor_status, $search_term, $course_id, $date );
 
 /**
  * Navbar data to make nav menu

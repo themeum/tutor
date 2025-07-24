@@ -4,19 +4,19 @@ import React, { useCallback, useMemo } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
-import SearchField from '@ImportExport/components/modals/CollectionList/SearchField';
 import { type BulkSelectionFormData } from '@ImportExport/services/import-export';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { type FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
 import { useGetCollectionsPaginatedQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection, type CollectionContentType } from '@TutorShared/utils/types';
+import SearchField from './SearchField';
 
 interface CourseListTableProps {
   form: FormWithGlobalErrorType<BulkSelectionFormData>;
@@ -43,23 +43,45 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
     [fetchedItems, selectedItemIds],
   );
 
+  const someItemsSelected = useMemo(
+    () => fetchedItems.length > 0 && fetchedItems.some((item) => selectedItemIds.includes(String(item.ID))),
+    [fetchedItems, selectedItemIds],
+  );
+
   const handleToggleSelection = useCallback(
     (isChecked: boolean) => {
       if (isChecked) {
-        // Add all fetched items that aren't already selected
-        const newItems = fetchedItems.filter((course) => !selectedItemIds.includes(String(course.ID)));
+        const newItems = fetchedItems.filter((item) => !selectedItemIds.includes(String(item.ID)));
         form.setValue('content_bank', [...selectedItems, ...newItems]);
-      } else {
-        // Keep only items that aren't in the current view
-        const newItems = selectedItems.filter((course) => !fetchedItemIds.includes(String(course.ID)));
-        form.setValue('content_bank', newItems);
+        return;
       }
+      const newItems = selectedItems.filter((item) => !fetchedItemIds.includes(String(item.ID)));
+      form.setValue('content_bank', newItems);
     },
     [fetchedItems, selectedItemIds, fetchedItemIds, selectedItems, form],
   );
 
   const handleItemToggle = useCallback(
-    (item: Collection) => {
+    (item: Collection, options?: { event: React.MouseEvent | React.KeyboardEvent } | { source: 'checkbox' }) => {
+      if (options && 'event' in options) {
+        const event = options.event;
+        if (event.type === 'keydown') {
+          const keyboardEvent = event as React.KeyboardEvent;
+          if (keyboardEvent.key !== 'Enter' && keyboardEvent.key !== ' ') {
+            return;
+          }
+          keyboardEvent.preventDefault();
+        }
+
+        if (event.type === 'click') {
+          const mouseEvent = event as React.MouseEvent;
+          const target = mouseEvent.target as HTMLElement;
+          if (target.closest('input[type="checkbox"]') || target.closest('label')) {
+            return;
+          }
+        }
+      }
+
       const isSelected = selectedItemIds.includes(String(item.ID));
 
       if (isSelected) {
@@ -80,13 +102,13 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
         Header: totalItems ? (
           <div css={styles.tableHeader}>
             <Checkbox
-              onChange={handleToggleSelection}
+              onChange={() => handleToggleSelection(!areAllItemsSelected)}
               checked={
                 getCollectionListQuery.isLoading || getCollectionListQuery.isRefetching ? false : areAllItemsSelected
               }
               label={__('Collection Name', 'tutor')}
               labelCss={styles.tableTitle}
-              isIndeterminate={fetchedItems.length > 0 && !areAllItemsSelected && selectedItems.length > 0}
+              isIndeterminate={fetchedItems.length > 0 && someItemsSelected}
               aria-label={__('Select all collections', 'tutor')}
             />
 
@@ -102,38 +124,43 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
           const totalLessons = Number(item.count_stats.lesson) || 0;
           const totalAssignments = Number(item.count_stats.assignment) || 0;
           const totalQuestions = Number(item.count_stats.question) || 0;
-          const totalItems = Number(item.count_stats.total) || 0;
+          const totalItemsCount = Number(item.count_stats.total) || 0;
 
           return (
-            <button
+            <div
               css={styles.collectionItemWrapper}
+              onClick={(event) => handleItemToggle(item, { event })}
+              onKeyDown={(event) => handleItemToggle(item, { event })}
+              tabIndex={0}
+              role="button"
               aria-label={
                 /* translators: %s is the collection title */
                 sprintf(__('Select collection: %s', 'tutor'), item.post_title)
               }
-              tabIndex={0}
+              aria-pressed={selectedItemIds.includes(String(item.ID))}
             >
               <div css={styles.rowWrapper}>
                 <Checkbox
                   checked={selectedItemIds.includes(String(item.ID))}
-                  onChange={() => {
-                    handleItemToggle(item);
-                  }}
-                  aria-label={__('Select this collection', 'tutor')}
+                  onChange={() => handleItemToggle(item, { source: 'checkbox' })}
+                  aria-label={
+                    /* translators: %s is the collection title */
+                    sprintf(__('Select collection: %s', 'tutor'), item.post_title)
+                  }
                 />
                 <div css={styles.title}>
                   <div data-collection-title>{item.post_title}</div>
-                  <Show when={(totalItems ?? 0) > 0}>
+                  <Show when={(totalItemsCount ?? 0) > 0}>
                     <div>
                       {
                         /* translators: %d is the total number of contents */
-                        sprintf(_n('%d Item', '%d Items', totalItems, 'tutor'), totalItems)
+                        sprintf(_n('%d Item', '%d Items', totalItemsCount, 'tutor'), totalItemsCount)
                       }
                     </div>
                   </Show>
                 </div>
               </div>
-              <Show when={totalItems > 0}>
+              <Show when={totalItemsCount > 0}>
                 <div css={styles.contentsWrapper}>
                   <Show when={totalLessons > 0}>
                     <span css={styles.contentBadge({ type: 'cb-lesson' })}>
@@ -151,16 +178,17 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
                       }
                     </span>
                   </Show>
-
-                  <span css={styles.contentBadge({ type: 'cb-question' })}>
-                    {
-                      /* translators: %d is the number of questions */
-                      sprintf(_n('%d Question', '%d Questions', totalQuestions, 'tutor'), totalQuestions)
-                    }
-                  </span>
+                  <Show when={totalQuestions > 0}>
+                    <span css={styles.contentBadge({ type: 'cb-question' })}>
+                      {
+                        /* translators: %d is the number of questions */
+                        sprintf(_n('%d Question', '%d Questions', totalQuestions, 'tutor'), totalQuestions)
+                      }
+                    </span>
+                  </Show>
                 </div>
               </Show>
-            </button>
+            </div>
           );
         },
       },
@@ -270,7 +298,7 @@ const styles = {
     color: ${colorTokens.text.primary};
   `,
   paginatorWrapper: css`
-    margin: ${spacing[20]} ${spacing[16]};
+    margin-top: ${spacing[20]};
   `,
   collectionItemWrapper: css`
     ${styleUtils.resetButton};
@@ -282,6 +310,7 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     gap: ${spacing[16]};
+    cursor: pointer;
   `,
   contentsWrapper: css`
     ${styleUtils.display.flex()};

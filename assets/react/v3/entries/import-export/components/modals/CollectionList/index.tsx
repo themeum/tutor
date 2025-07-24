@@ -14,18 +14,19 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection } from '@TutorShared/utils/types';
 
-interface CourseListModalProps extends ModalProps {
+interface CollectionListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any, any, undefined>;
+  selectedCollectionFromContentBank?: Collection;
 }
 
-export interface ContentSelectionForm {
-  selectedCollection: Collection | null;
-  contents: string[];
-}
-
-const CollectionListModal = ({ closeModal, actions, form }: CourseListModalProps) => {
+const CollectionListModal = ({
+  closeModal,
+  actions,
+  form,
+  selectedCollectionFromContentBank,
+}: CollectionListModalProps) => {
   const addedItems = form.getValues('content_bank') || [];
   const _form = useFormWithGlobalError<BulkSelectionFormData>({
     defaultValues: {
@@ -56,7 +57,7 @@ const CollectionListModal = ({ closeModal, actions, form }: CourseListModalProps
       maxWidth={720}
     >
       <div css={styles.tableWrapper}>
-        <CollectionListTable form={_form} />
+        <CollectionListTable selectedContentBankCollection={selectedCollectionFromContentBank} form={_form} />
       </div>
 
       <div css={styles.footer}>

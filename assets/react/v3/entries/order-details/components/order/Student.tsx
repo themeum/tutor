@@ -1,9 +1,9 @@
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
 import { Avatar } from '@TutorShared/atoms/Avatar';
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
 import { css } from '@emotion/react';
@@ -35,6 +35,7 @@ function Student() {
               <span>
                 {[student.billing_address.state, student.billing_address.zip_code, student.billing_address.country]
                   .filter(isDefined)
+                  .filter((item) => item.length)
                   .join(', ')}
               </span>
               <Show when={order.student.billing_address?.phone}>

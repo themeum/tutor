@@ -207,7 +207,7 @@ describe('Tutor Dashboard Zoom', () => {
         })
         .then(() => {
           cy.get('body').then(($body) => {
-            if ($body.text().includes('No Data Found from your Search/Filter')) {
+            if ($body.text().includes('No Data Found.')) {
               cy.log('No data available');
             } else {
               cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
@@ -243,7 +243,7 @@ describe('Tutor Dashboard Zoom', () => {
     cy.get('.dropdown-months > .dropdown-list').contains('June').click();
     cy.get('.react-datepicker__day--011').contains('11').click();
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Found from your Search/Filter')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
         cy.wait(2000);

@@ -18,6 +18,10 @@ describe('Tutor Admin ENROLLMENTS', () => {
         req.alias = 'getCourseBundleList';
       }
 
+      if (req.body.includes(endpoints.GET_MEMBERSHIP_PLANS)) {
+        req.alias = 'getMembershipPlans';
+      }
+
       if (req.body.includes(endpoints.GET_UNENROLLED_USERS)) {
         req.alias = 'getUnenrolledUsers';
       }
@@ -25,27 +29,43 @@ describe('Tutor Admin ENROLLMENTS', () => {
   });
 
   it('should enroll a student', () => {
-    cy.get('a').contains('Enroll Student').click();
+    cy.get('a').contains('Enroll Students').click();
     cy.wait(500);
     cy.get('body').then(($body) => {
       if ($body.text().includes('Select a course to enroll students')) {
-        cy.get('[data-cy=select-course]').click();
+        cy.get('[data-cy=select-course-plan]').click();
       }
     });
 
-    // Select course
-    cy.get('[data-cy=tutor-modal]').within(($elements) => {
-      cy.wrap($elements).should('contain.text', 'Select course');
-      cy.waitAfterRequest('getCourseBundleList');
-      if ($elements.text().includes('No Data!')) {
-        cy.get('[data-cy=tutor-modal-close]').click();
-        return;
+    cy.window().then((win) => {
+      const isMembershipOnlyMode = win?._tutorobject.settings?.membership_only_mode || false;
+
+      if (isMembershipOnlyMode) {
+        cy.get('[data-cy=tutor-modal]').within(($elements) => {
+          cy.wrap($elements).should('contain.text', 'Select plan');
+          cy.waitAfterRequest('getMembershipPlans');
+          if ($elements.text().includes('No Data!')) {
+            cy.get('[data-cy=tutor-modal-close]').click();
+            return;
+          } else {
+            cy.get('tbody tr:first-child').find('[data-cy=select-plan]').click({ force: true });
+          }
+        });
       } else {
-        cy.get('tbody tr:first-child').find('[data-cy=select-course]').click({ force: true });
+        cy.get('[data-cy=tutor-modal]').within(($elements) => {
+          cy.wrap($elements).should('contain.text', 'Select course');
+          cy.waitAfterRequest('getCourseBundleList');
+          if ($elements.text().includes('No Data!')) {
+            cy.get('[data-cy=tutor-modal-close]').click();
+            return;
+          } else {
+            cy.get('tbody tr:first-child').find('[data-cy=select-course]').click({ force: true });
+          }
+        });
       }
     });
 
-    cy.get('[data-cy=add-students').click();
+    cy.get('[data-cy=add-students]').click();
 
     // Add students
     cy.get('[data-cy=tutor-modal]').within(($elements) => {
@@ -56,7 +76,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
         return;
       } else {
         cy.get('tbody tr')
-          .find('input[type=checkbox]')
+          .find('input[type=checkbox]:not(:disabled)')
           .then(($checkboxes) => {
             cy.wrap($checkboxes).eq(0).check({ force: true });
             cy.wrap($checkboxes).eq(1).check({ force: true });
@@ -70,10 +90,10 @@ describe('Tutor Admin ENROLLMENTS', () => {
           if ($tbody.text().includes('No Data!')) {
             cy.log('No data found');
           } else {
-            cy.get('tbody tr').find('input[type="checkbox"]').first().check({ force: true });
+            cy.get('tbody tr').find('input[type="checkbox"]:not(:disabled)').first().check({ force: true });
           }
         });
-        cy.get('[data-cy=add-students').click();
+        cy.get('[data-cy=add-students]').click();
       }
     });
 
@@ -138,44 +158,21 @@ describe('Tutor Admin ENROLLMENTS', () => {
   });
 
   it('should filter enrollments', () => {
-    cy.get(':nth-child(2) > .tutor-js-form-select').click();
-    cy.get(
-      ':nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > .tutor-form-select-option:nth-child(2)',
-    )
-      .click()
-      .then(($option) => {
-        const selectedOptionText = $option.text().trim();
-        cy.log('Selected option: ' + selectedOptionText);
-        cy.reload();
-        cy.get('body').then(($body) => {
-          if (
-            $body.text().includes('No Data Found from your Search/Filter') ||
-            $body.text().includes('No Data Available in this Section')
-          ) {
-            cy.log('No data available');
-          } else {
-            cy.get('.tutor-d-flex.tutor-align-center.tutor-gap-2.tutor-text-nowrap').each(($announcement) => {
-              cy.wrap($announcement)
-                .invoke('text')
-                .then((announcementText) => {
-                  expect(selectedOptionText).to.include(announcementText.trim());
-                });
-            });
-          }
-        });
-      });
+    cy.unifiedFilterElements({
+      selectFieldName: 'data',
+      resultColumnIndex: 5,
+    });
   });
 
   it('should check if the elements are sorted', () => {
-    const formSelector = ':nth-child(3) > .tutor-js-form-select';
+    const sortButton = '.tutor-wp-dashboard-filter-order';
     const itemSelector = '.tutor-d-flex.tutor-align-center.tutor-gap-2';
-    function checkSorting(order: string) {
+    const checkSorting = (order: string) => {
+      cy.get(sortButton).click();
       cy.get('body').then(($body) => {
-        if ($body.text().includes('No Data Found from your Search/Filter')) {
+        if ($body.text().includes('No Data Found.')) {
           cy.log('No data available');
         } else {
-          cy.get(formSelector).click();
-          cy.get(`span[title="${order}"]`).click();
           cy.get(itemSelector).then(($items) => {
             const itemTexts = $items
               .map((index, item) => item.innerText.trim())
@@ -186,28 +183,14 @@ describe('Tutor Admin ENROLLMENTS', () => {
           });
         }
       });
-    }
+    };
     checkSorting('ASC');
     checkSorting('DESC');
   });
   it('should filter enrollments by a specific date', () => {
-    cy.get("input[placeholder='Y-M-d']").click();
-    cy.get('.dropdown-years').click();
-    cy.get('.dropdown-years>.dropdown-list').contains('2025').click();
-    cy.get('.dropdown-months > .dropdown-label').click();
-    cy.get('.dropdown-months > .dropdown-list').contains('June').click();
-    cy.get('.react-datepicker__day--011').contains('11').click();
-
-    cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Found from your Search/Filter')) {
-        cy.log('No data available');
-      } else {
-        cy.wait(2000);
-        cy.get('.tutor-fs-7 > span').each(($el) => {
-          const dateText = $el.text().trim();
-          expect(dateText).to.contain('June 11, 2025');
-        });
-      }
+    cy.unifiedFilterElements({
+      selectFieldName: 'date',
+      resultColumnIndex: 2,
     });
   });
 });

@@ -10,7 +10,8 @@ import type { ReactNode } from 'react';
 interface BaseColumn {
   name?: string;
   Header?: string | ReactNode;
-  width?: number;
+  width?: string;
+  css?: SerializedStyles;
   sortProperty?: string;
   headerColSpan?: number;
 }
@@ -150,7 +151,7 @@ const Table = <TableItem, TSortProperties extends readonly string[] = string[]>(
     return columns.map((column, index) => {
       if (column.Header !== null) {
         return (
-          <th key={index} css={[styles.th, { width: column.width }]} colSpan={column.headerColSpan}>
+          <th key={index} css={[styles.th, column.css, { width: column.width }]} colSpan={column.headerColSpan}>
             {renderHeaderWithSortIcon(column)}
           </th>
         );

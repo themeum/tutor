@@ -1,12 +1,11 @@
-import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
-import { OrderBadge } from '@OrderComponents/order/OrderBadge';
-import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
-import { useOrderContext } from '@OrderContexts/order-context';
+import CancelOrderModal from '@OrderDetails/components/modals/CancelOrderModal';
+import { OrderBadge } from '@OrderDetails/components/order/OrderBadge';
+import { PaymentBadge } from '@OrderDetails/components/order/PaymentBadge';
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Container from '@TutorShared/components/Container';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import { tutorConfig } from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -27,7 +26,7 @@ function Topbar() {
     if (redirectUrl) {
       window.location.href = decodeURIComponent(redirectUrl);
     } else {
-      window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_orders`;
+      window.history.back();
     }
   }
 

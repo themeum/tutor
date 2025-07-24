@@ -11,7 +11,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table-quiz-attempts a').eq(0).click();
@@ -38,7 +38,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
     });
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table-quiz-attempts a').eq(0).click();
@@ -71,7 +71,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
     });
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table-quiz-attempts a').eq(0).click();
@@ -108,13 +108,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
 
   it('should perform bulk action on all quiz attempts', () => {
     cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No request found') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found') ||
-        $body.text().includes('No Records Found')
-      ) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
         cy.get('#tutor-bulk-checkbox-all').click();
@@ -126,7 +120,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
           .click();
         cy.get('#tutor-admin-bulk-action-btn').click();
         cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
-        cy.contains('No Data Available in this Section');
+        cy.contains('No Data Found.');
       }
     });
   });
