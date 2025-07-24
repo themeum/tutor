@@ -145,7 +145,7 @@ export const hasAnyCourseWithChildren = (data: {
 }): boolean => {
   return data.data.some((item) => {
     if (item.content_type === 'courses') {
-      if (!item.data) {
+      if (!item.data || !Array.isArray(item.data)) {
         return false;
       }
       return item.data.some((course) => {
@@ -157,15 +157,15 @@ export const hasAnyCourseWithChildren = (data: {
         });
       });
     } else if (item.content_type === 'course-bundle') {
-      if (!item.data) {
+      if (!item.data || !Array.isArray(item.data)) {
         return false;
       }
       return item.data.some((bundle) => {
-        if (!bundle.courses) {
+        if (!bundle.courses || !Array.isArray(bundle.courses)) {
           return false;
         }
         return bundle.courses.some((bundleCourse) => {
-          if (!bundleCourse.contents) {
+          if (!bundleCourse.contents || !Array.isArray(bundleCourse.contents)) {
             return false;
           }
           return bundleCourse.contents.some((contentItem) => {
