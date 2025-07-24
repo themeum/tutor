@@ -8948,6 +8948,7 @@ class Utils {
 	public function get_list_empty_state_subtitle() {
 		$subtitle = __( 'Try adjusting your filters.', 'tutor' );
 
+		$post_type         = isset( $_GET['post-type'] ) ? true : false;
 		$course            = isset( $_GET['course-id'] ) ? true : false;
 		$data              = isset( $_GET['data'] ) ? true : false;
 		$date              = isset( $_GET['date'] ) ? true : false;
@@ -8957,7 +8958,7 @@ class Utils {
 		$subscription_type = isset( $_GET['subscription-type'] ) ? true : false;
 		$applies_to        = isset( $_GET['applies_to'] ) ? true : false;
 
-		if ( $course || $data || $date || $search || $category || $payment_status || $subscription_type || $applies_to ) {
+		if ( $post_type || $course || $data || $date || $search || $category || $payment_status || $subscription_type || $applies_to ) {
 			if ( $search ) {
 				return __( 'Try using different keywords.', 'tutor' );
 			}
