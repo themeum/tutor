@@ -134,20 +134,22 @@ const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false 
 
       <animated.div style={{ ...collapseAnimation }}>
         <div css={styles.content} ref={topicRef}>
-          <Show when={topic.contents.length > 0 && !topic.isCollapsed}>
-            <SortableContext
-              items={topic.contents.map((item) => ({ ...item, id: item.ID }))}
-              strategy={verticalListSortingStrategy}
-            >
-              <div>
-                <For each={topic.contents}>
-                  {(content) => <TopicContentWrapper key={content.ID} topic={topic} content={content} />}
-                </For>
-              </div>
-            </SortableContext>
-          </Show>
+          <Show when={!topic.isCollapsed}>
+            <Show when={topic.contents.length > 0}>
+              <SortableContext
+                items={topic.contents.map((item) => ({ ...item, id: item.ID }))}
+                strategy={verticalListSortingStrategy}
+              >
+                <div>
+                  <For each={topic.contents}>
+                    {(content) => <TopicContentWrapper key={content.ID} topic={topic} content={content} />}
+                  </For>
+                </div>
+              </SortableContext>
+            </Show>
 
-          <TopicFooter topic={topic} nextContentOrder={topic?.contents?.length + 1 || 1} />
+            <TopicFooter topic={topic} nextContentOrder={topic?.contents?.length + 1 || 1} />
+          </Show>
         </div>
       </animated.div>
     </div>
