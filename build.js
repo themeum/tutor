@@ -8,7 +8,7 @@ const {
   statSync,
   existsSync,
 } = require('fs');
-const { dirname, extname, join, relative, resolve } = require('path');
+const { dirname, join, relative, resolve } = require('path');
 const { pipeline } = require('stream/promises');
 const archiver = require('archiver');
 
