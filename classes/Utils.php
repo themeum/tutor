@@ -4463,6 +4463,7 @@ class Utils {
 					INNER JOIN {$wpdb->comments} reviews
 							ON courses.meta_value = reviews.comment_post_ID
 						   AND reviews.comment_type = 'tutor_course_rating'
+						   AND reviews.comment_approved = 'approved'
 					INNER JOIN {$wpdb->commentmeta} rating
 							ON reviews.comment_ID = rating.comment_id
 						   AND rating.meta_key = 'tutor_rating'
