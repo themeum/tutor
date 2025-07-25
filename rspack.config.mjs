@@ -70,7 +70,11 @@ const createConfig = (env, options) => {
             {
               loader: 'css-loader',
               options: {
-                url: false,
+                url: {
+                  filter: (url) => {
+                    return /\.(woff2?|woff|ttf|otf|eot)(\?.*)?$/i.test(url);
+                  },
+                },
               },
             },
             {

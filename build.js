@@ -470,19 +470,10 @@ const executeBuildProcess = async () => {
     fileUtils.cleanPath(`tutor-${versionNumber}.zip`);
 
     // Execute build steps
-    logger.step('1/4', 'Copying project files...');
+    logger.step('1/3', 'Copying project files...');
     await executeTaskWithSpinner('Scanning and copying files', buildTasks.copyProjectFiles);
 
-    logger.step('2/4', 'Copying font files...');
-    await executeTaskWithSpinner(
-      'Processing font files',
-      buildTasks.copySpecialFiles,
-      'v2-library/fonts/fonts',
-      'assets/fonts',
-      'font',
-    );
-
-    logger.step('3/4', 'Copying Droip files...');
+    logger.step('2/3', 'Copying Droip files...');
     await executeTaskWithSpinner(
       'Processing Droip distribution files',
       buildTasks.copySpecialFiles,
@@ -491,7 +482,7 @@ const executeBuildProcess = async () => {
       'Droip',
     );
 
-    logger.step('4/4', 'Creating ZIP archive...');
+    logger.step('3/3', 'Creating ZIP archive...');
     await executeTaskWithSpinner(`Creating tutor-${versionNumber}.zip`, buildTasks.createArchive);
 
     // Cleanup and finish
