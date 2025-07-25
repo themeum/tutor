@@ -10,7 +10,6 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import {} from '@TutorShared/hooks/useAnimation';
 import { isDefined } from '@TutorShared/utils/types';
 import Badge from '../atoms/Badge';
 
@@ -111,7 +110,7 @@ const Card = ({
         </div>
       </div>
       <animated.div style={{ ...collapseAnimation }}>
-        <div ref={cardRef}>{children}</div>
+        <div ref={cardRef}>{collapsed ? null : children}</div>
       </animated.div>
     </div>
   );
