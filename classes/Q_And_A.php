@@ -379,11 +379,11 @@ class Q_And_A {
 	public static function tabs_key_value( $asker_id = null ) {
 
 		$stats = array(
-			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, null, true ),
-			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'read', true ),
-			'unread'    => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'unread', true ),
-			'important' => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'important', true ),
-			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'archived', true ),
+			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, null, true, $_GET ),
+			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'read', true, $_GET ),
+			'unread'    => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'unread', true, $_GET ),
+			'important' => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'important', true, $_GET ),
+			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'archived', true, $_GET ),
 		);
 
 		// Assign value, url etc to the tab array.
