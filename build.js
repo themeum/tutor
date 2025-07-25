@@ -23,7 +23,6 @@ const ui = {
     yellow: '\x1b[38;5;221m',
     orange: '\x1b[38;5;209m',
     white: '\x1b[37m',
-    magenta: '\x1b[38;5;177m',
     brand: '\x1b[38;2;0;73;248m',
   },
   symbols: {
