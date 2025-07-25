@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -412,7 +412,13 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
   );
 };
 
-export default TopicFooter;
+export default memo(TopicFooter, (prev, next) => {
+  return (
+    prev.topic.id === next.topic.id &&
+    prev.topic.isSaved === next.topic.isSaved &&
+    prev.nextContentOrder === next.nextContentOrder
+  );
+});
 
 const styles = {
   contentButtons: css`
