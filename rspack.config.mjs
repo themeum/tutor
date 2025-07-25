@@ -19,40 +19,6 @@ try {
   console.log(`Error reading version from tutor.php: ${err}`);
 }
 
-const shouldKeepAssetFile = (assetPath) => {
-  // Early returns for directories/files to KEEP
-  if (assetPath.includes('assets/fonts/')) {
-    return true;
-  }
-
-  if (assetPath.includes('assets/icons/')) {
-    return true;
-  }
-
-  if (assetPath.includes('assets/images/')) {
-    return true;
-  }
-
-  if (assetPath.includes('assets/lib/')) {
-    return true;
-  }
-
-  if (assetPath.includes('assets/react/')) {
-    return true;
-  }
-
-  if (assetPath.includes('assets/scss/')) {
-    return true;
-  }
-
-  if (assetPath.includes('assets/json/')) {
-    return true;
-  }
-
-  // DELETE everything else (CSS, JS, generated files)
-  return false;
-};
-
 const createSwcLoaderOptions = (isDevelopment) => ({
   jsc: {
     parser: {
@@ -338,7 +304,19 @@ export default (env, options) => {
       },
       chunkFilename: createChunkFilename,
       clean: {
-        keep: shouldKeepAssetFile,
+        keep: (pathData) => {
+          const keepDirectories = [
+            'assets/fonts/',
+            'assets/icons/',
+            'assets/images/',
+            'assets/lib/',
+            'assets/react/',
+            'assets/scss/',
+            'assets/json/',
+          ];
+
+          return keepDirectories.some((dir) => pathData.includes(dir));
+        },
       },
     },
     resolve: {
