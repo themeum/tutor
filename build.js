@@ -1,5 +1,14 @@
-const { createReadStream, createWriteStream, mkdirSync, readFileSync, readdirSync, rmSync, statSync } = require('fs');
-const { dirname, extname, join, relative } = require('path');
+const {
+  createReadStream,
+  createWriteStream,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  existsSync,
+} = require('fs');
+const { dirname, extname, join, relative, resolve } = require('path');
 const { pipeline } = require('stream/promises');
 const archiver = require('archiver');
 
@@ -127,7 +136,7 @@ const CONFIG = {
     'assets/css/images/**',
     'assets/.sass-cache',
     'node_modules/**',
-    'v2-library/**',
+    'v2-library/*',
     'test/**',
     '.docz/**',
     '*.zip',
@@ -331,14 +340,30 @@ const buildTasks = {
   },
 
   copySpecialFiles: async (sourceDirectory, destinationDirectory, fileDescription) => {
+    const resolvedSourcePath = resolve(sourceDirectory);
+    const relativeSourcePath = relative('.', resolvedSourcePath);
+
+    if (!existsSync(resolvedSourcePath)) {
+      const warningMessage = `${fileDescription} directory not found at ${relativeSourcePath}, skipping...`;
+      logger.warning(warningMessage);
+      return { message: '' };
+    }
+
     try {
+      const directoryStats = statSync(resolvedSourcePath);
+      if (!directoryStats.isDirectory()) {
+        const warningMessage = `${resolvedSourcePath} is not a directory, skipping...`;
+        logger.warning(warningMessage);
+        return { message: '' };
+      }
+
       const specialFiles = fileUtils.getAllFilesRecursively(sourceDirectory);
 
       // Early return: Handle empty directory case
       if (specialFiles.length === 0) {
         const warningMessage = `${fileDescription} files not found in ${sourceDirectory}, skipping...`;
         logger.warning(warningMessage);
-        throw new Error(warningMessage); // Throw to prevent success message
+        return { message: '' };
       }
 
       let totalSizeInBytes = 0;
@@ -355,14 +380,6 @@ const buildTasks = {
         size: totalSizeInBytes,
       };
     } catch (specialFilesError) {
-      // Early return: Handle directory not found case
-      if (specialFilesError.code === 'ENOENT') {
-        const warningMessage = `${fileDescription} directory not found, skipping...`;
-        logger.warning(warningMessage);
-        throw new Error(warningMessage); // Throw to prevent success message
-      }
-
-      // For other errors, log and throw
       const errorMessage = `Failed to process ${fileDescription} files: ${specialFilesError.message}`;
       logger.error(errorMessage);
       throw specialFilesError;
@@ -460,7 +477,7 @@ const executeBuildProcess = async () => {
     await executeTaskWithSpinner(
       'Processing font files',
       buildTasks.copySpecialFiles,
-      'v2-library/fonts/tutor-icon',
+      'v2-library/fonts/fonts',
       'assets/fonts',
       'font',
     );
