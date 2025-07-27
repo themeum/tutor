@@ -1,4 +1,3 @@
-import path from 'path';
 import type { StorybookConfig } from 'storybook-react-rsbuild';
 
 const config: StorybookConfig = {
@@ -46,14 +45,6 @@ const config: StorybookConfig = {
       env: {
         targets: 'Chrome >= 58, Firefox >= 54, Safari >= 10.1, Edge >= 16',
       },
-    };
-
-    // Add aliases if needed
-    rsbuildConfig.resolve = rsbuildConfig.resolve || {};
-    rsbuildConfig.resolve.alias = {
-      ...rsbuildConfig.resolve.alias,
-      '@TutorShared': path.resolve(__dirname, '../assets/react/v3/shared'),
-      // Add other aliases as needed
     };
 
     return rsbuildConfig;

@@ -1,9 +1,9 @@
-import type { Preview } from '@storybook/react';
-import { tutorConfig } from '../assets/react/v3/shared/config/config';
-
 import { Global, css } from '@emotion/react';
 import { withThemeFromJSXProvider } from '@storybook/addon-themes';
-import { typography } from '../assets/react/v3/shared/config/typography';
+import type { Preview } from '@storybook/react';
+
+import { tutorConfig } from '@TutorShared/config/config';
+import { typography } from '@TutorShared/config/typography';
 
 const GlobalStyles = () => (
   <Global
