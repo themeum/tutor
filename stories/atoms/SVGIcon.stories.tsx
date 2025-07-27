@@ -3,7 +3,7 @@ import { icons, type IconCollection } from '@TutorShared/icons/types';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
 const meta: Meta<typeof SVGIcon> = {
-  title: 'Shared/Atoms/SVGIcon',
+  title: 'Atoms/SVGIcon',
   component: SVGIcon,
   parameters: {
     layout: 'centered',

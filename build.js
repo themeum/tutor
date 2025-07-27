@@ -1,119 +1,134 @@
-const { createReadStream, createWriteStream, mkdirSync, readFileSync, readdirSync, rmSync, statSync } = require('fs');
-const { dirname, extname, join, relative } = require('path');
+const {
+  createReadStream,
+  createWriteStream,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  statSync,
+  existsSync,
+} = require('fs');
+const { dirname, join, relative, resolve } = require('path');
 const { pipeline } = require('stream/promises');
 const archiver = require('archiver');
 
-// Console styling utilities
-const colors = {
-  reset: '\x1b[0m',
-  bright: '\x1b[1m',
-  dim: '\x1b[2m',
-  red: '\x1b[31m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  blue: '\x1b[34m',
-  magenta: '\x1b[35m',
-  cyan: '\x1b[36m',
-  white: '\x1b[37m',
-  bgRed: '\x1b[41m',
-  bgGreen: '\x1b[42m',
-  bgYellow: '\x1b[43m',
-  bgBlue: '\x1b[44m',
+const ui = {
+  colors: {
+    reset: '\x1b[0m',
+    bright: '\x1b[1m',
+    teal: '\x1b[38;5;43m',
+    green: '\x1b[38;5;114m',
+    red: '\x1b[38;5;203m',
+    blue: '\x1b[38;5;75m',
+    yellow: '\x1b[38;5;221m',
+    orange: '\x1b[38;5;209m',
+    white: '\x1b[37m',
+    brand: '\x1b[38;2;0;73;248m',
+  },
+  symbols: {
+    success: '✅',
+    error: '❌',
+    warning: '⚠️',
+    info: '💡',
+    rocket: '🚀',
+    package: '📦',
+    file: '📄',
+    arrow: '➡️',
+    clock: '⏱️',
+    spinner: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
+  },
 };
 
-const symbols = {
-  success: '✅',
-  error: '❌',
-  warning: '⚠️',
-  info: '💡',
-  rocket: '🚀',
-  package: '📦',
-  file: '📄',
-  folder: '📁',
-  clock: '⏱️',
-  checkmark: '✓',
-  cross: '✗',
-  arrow: '→',
-  spinner: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
-};
-
-const logSuccess = (message) => {
-  console.log(`${colors.green}${symbols.success} ${message}${colors.reset}`);
-};
-
-const logError = (message) => {
-  console.log(`${colors.red}${symbols.error} ${message}${colors.reset}`);
-};
-
-const logWarning = (message) => {
-  console.log(`${colors.yellow}${symbols.warning} ${message}${colors.reset}`);
-};
-
-const logInfo = (message) => {
-  console.log(`${colors.cyan}${symbols.info} ${message}${colors.reset}`);
-};
-
-const logStep = (step, message) => {
-  console.log(`${colors.blue}${colors.bright}[${step}]${colors.reset} ${colors.white}${message}${colors.reset}`);
-};
-
-const createSpinner = (message) => {
-  let index = 0;
-  const interval = setInterval(() => {
-    process.stdout.write(`\r${colors.yellow}${symbols.spinner[index]} ${message}${colors.reset}`);
-    index = (index + 1) % symbols.spinner.length;
-  }, 100);
-
-  return {
-    stop: (successMessage) => {
-      clearInterval(interval);
-      process.stdout.write(`\r${colors.green}${symbols.checkmark} ${successMessage || message}${colors.reset}\n`);
-    },
-    fail: (errorMessage) => {
-      clearInterval(interval);
-      process.stdout.write(`\r${colors.red}${symbols.cross} ${errorMessage || message}${colors.reset}\n`);
-    },
-  };
-};
-
-// Helper function for formatting bytes
 const formatBytes = (bytes, decimals = 2) => {
   if (bytes === 0) return '0 Bytes';
-
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
-
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(decimals))} ${sizes[i]}`;
 };
 
-const printHeader = () => {
-  console.log(`\n${colors.cyan}${colors.bright}╔═════════════════════════════════════════╗${colors.reset}`);
-  console.log(
-    `${colors.cyan}${colors.bright}║        ${symbols.rocket} TUTOR BUILD PROCESS ${symbols.package}        ║${colors.reset}`,
-  );
-  console.log(`${colors.cyan}${colors.bright}╚═════════════════════════════════════════╝${colors.reset}\n`);
+const getVisualWidth = (str) => {
+  const cleanStr = str.replace(/\x1b\[[0-9;]*m/g, '');
+  const emojiChars = ['✅', '❌', '⚠️', '💡', '🚀', '📦', '📄', '📁', '⏱️', '➡️'];
+  let width = 0;
+
+  for (let i = 0; i < cleanStr.length; i++) {
+    width += emojiChars.includes(cleanStr[i]) ? 2 : 1;
+    if (cleanStr[i] === '️' && i > 0) width--; // Variation selector
+  }
+  return width;
 };
 
-const printFooter = (duration) => {
-  console.log(`\n${colors.green}${colors.bright}╔══════════════════════════════════════════╗${colors.reset}`);
-  console.log(
-    `${colors.green}${colors.bright}║     ${symbols.success} BUILD COMPLETED SUCCESSFULLY!     ║${colors.reset}`,
-  );
-  console.log(
-    `${colors.green}${colors.bright}║           ${symbols.clock} Duration: ${duration}ms            ║${colors.reset}`,
-  );
-  console.log(`${colors.green}${colors.bright}╚══════════════════════════════════════════╝${colors.reset}\n`);
+const logger = {
+  step: (stepNumber, stepMessage) =>
+    console.log(
+      `\n${ui.colors.blue}${ui.colors.bright}[${stepNumber}]${ui.colors.reset} ${ui.colors.white}${stepMessage}${ui.colors.reset}`,
+    ),
+  success: (successMessage) =>
+    console.log(`${ui.colors.green}${ui.symbols.success} ${successMessage}${ui.colors.reset}`),
+  error: (errorMessage) => console.log(`${ui.colors.red}${ui.symbols.error} ${errorMessage}${ui.colors.reset}`),
+  warning: (warningMessage) =>
+    console.log(`${ui.colors.orange}${ui.symbols.warning} ${warningMessage}${ui.colors.reset}`),
+  info: (infoMessage) => console.log(`${ui.colors.blue}${ui.symbols.info} ${infoMessage}${ui.colors.reset}`),
+
+  box: (boxText, boxColor = ui.colors.teal) => {
+    const boxWidth = 50;
+    const textLines = boxText.split('\n');
+    const boxLines = [`\n${boxColor}${ui.colors.bright}╔${'═'.repeat(boxWidth)}╗${ui.colors.reset}`];
+
+    textLines.forEach((textLine) => {
+      const visualWidth = getVisualWidth(textLine);
+      const totalPadding = boxWidth - visualWidth;
+      const leftPadding = Math.max(0, Math.floor(totalPadding / 2));
+      const rightPadding = Math.max(0, totalPadding - leftPadding);
+      boxLines.push(
+        `${boxColor}${ui.colors.bright}║${' '.repeat(leftPadding)}${textLine}${' '.repeat(rightPadding)}║${ui.colors.reset}`,
+      );
+    });
+
+    boxLines.push(`${boxColor}${ui.colors.bright}╚${'═'.repeat(boxWidth)}╝${ui.colors.reset}\n`);
+    console.log(boxLines.join('\n'));
+  },
+
+  spinner: (spinnerMessage) => {
+    let spinnerIndex = 0;
+    const spinnerInterval = setInterval(() => {
+      process.stdout.write(
+        `\r${ui.colors.yellow}${ui.symbols.spinner[spinnerIndex]} ${spinnerMessage}${ui.colors.reset}`,
+      );
+      spinnerIndex = (spinnerIndex + 1) % ui.symbols.spinner.length;
+    }, 100);
+
+    return {
+      interval: spinnerInterval, // Expose interval for manual clearing
+      stop: (completionMessage) => {
+        clearInterval(spinnerInterval);
+        // Only show message if it's provided and not empty
+        if (completionMessage && completionMessage.trim()) {
+          process.stdout.write(`\r${ui.colors.green}${ui.symbols.success} ${completionMessage}${ui.colors.reset}\n`);
+        } else {
+          // Clear the line completely
+          process.stdout.write('\r\x1b[K');
+        }
+      },
+      fail: (failureMessage) => {
+        clearInterval(spinnerInterval);
+        process.stdout.write(
+          `\r${ui.colors.red}${ui.symbols.error} ${failureMessage || spinnerMessage}${ui.colors.reset}\n`,
+        );
+      },
+    };
+  },
 };
 
+// Configuration
 const CONFIG = {
   sourceDir: '.',
   buildDir: './build',
   excludePatterns: [
     '*.json',
     './build/**',
-    'assets/*.min.css',
-    'assets/*.min.css.map',
+    'assets/*.min.css*',
     'assets/**/*.map',
     'assets/react/**',
     'assets/scss/**',
@@ -121,7 +136,7 @@ const CONFIG = {
     'assets/css/images/**',
     'assets/.sass-cache',
     'node_modules/**',
-    'v2-library/**',
+    'v2-library/*',
     'test/**',
     '.docz/**',
     '*.zip',
@@ -149,13 +164,12 @@ const CONFIG = {
     'vendor/theseer/**',
     'vendor/webmozart/**',
     'vendor/yoast/**',
+    'vendor/composer/LICENSE',
     '.phpunit.result.cache',
     '*.yml',
     '*.yaml',
-    'phpunit.xml.dist',
-    'phpunit.xml',
-    'phpcs.xml',
-    'phpcs.xml.dist',
+    'phpunit.xml*',
+    'phpcs.xml*',
     'tutor-droip/**',
     'includes/droip/**',
     'cypress/**',
@@ -168,302 +182,324 @@ const CONFIG = {
 
 let versionNumber = '';
 
-const extractVersionNumber = () => {
-  const spinner = createSpinner('Extracting version number from tutor.php...');
+// File utilities
+const fileUtils = {
+  ensureDirectoryExists: (directoryPath) => mkdirSync(directoryPath, { recursive: true }),
 
-  try {
-    const tutorPhpContent = readFileSync('tutor.php', 'utf8');
-    versionNumber = tutorPhpContent.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+  cleanPath: (targetPath) => {
+    try {
+      rmSync(targetPath, { recursive: true, force: true });
+      logger.success(`Cleaned: ${targetPath}`);
+    } catch (cleanError) {
+      if (cleanError.code !== 'ENOENT') {
+        logger.error(`Failed to clean ${targetPath}: ${cleanError.message}`);
+        throw cleanError;
+      }
+    }
+  },
 
-    if (!versionNumber) {
-      spinner.fail('Failed to extract version number');
-      throw new Error('Could not extract version number from tutor.php');
+  copyFile: async (sourceFile, destinationPath) => {
+    fileUtils.ensureDirectoryExists(dirname(destinationPath));
+    try {
+      await pipeline(createReadStream(sourceFile.fullPath), createWriteStream(destinationPath));
+    } catch (copyError) {
+      logger.error(`Failed to copy ${sourceFile.relativePath}: ${copyError.message}`);
+      throw copyError;
+    }
+  },
+
+  shouldExcludeFile: (filePath) => {
+    // Early return: Exclude dot files/folders
+    const pathSegments = filePath.split('/');
+    if (pathSegments.some((segment) => segment.startsWith('.'))) {
+      return true;
     }
 
-    spinner.stop(`Version extracted: ${colors.bright}${versionNumber}${colors.reset}`);
-  } catch (error) {
-    spinner.fail('Error reading tutor.php');
-    logError(`Error reading version: ${error.message}`);
-    process.exit(1);
-  }
-};
+    // Check against all exclude patterns
+    return CONFIG.excludePatterns.some((pattern) => {
+      // Handle directory patterns (ending with /**)
+      if (pattern.endsWith('/**')) {
+        const basePath = pattern.replace(/\/\*\*$/, '');
+        return filePath.startsWith(basePath);
+      }
 
-/**
- * Determines if a file should be excluded from the build
- * @param {string} filePath - Relative path of the file to check
- * @returns {boolean} - True if the file should be excluded
- */
-const shouldExcludeFile = (filePath) => {
-  // Exclude files/folders starting with a dot (.)
-  const pathSegments = filePath.split('/');
-  if (pathSegments.some((segment) => segment.startsWith('.'))) {
-    return true;
-  }
+      // Handle wildcard patterns
+      if (pattern.includes('*')) {
+        const normalizedPattern = pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\./g, '\\.');
+        return new RegExp(`^${normalizedPattern}$`).test(filePath);
+      }
 
-  // Critical directories to always exclude
-  const criticalExclusions = ['assets/react', 'assets/scss', 'node_modules', 'v2-library', 'cypress', 'tests'];
+      // Direct string match
+      return filePath === pattern;
+    });
+  },
 
-  // Early return if path contains any critical exclusion
-  if (criticalExclusions.some((excluded) => filePath.includes(excluded))) {
-    return true;
-  }
+  getAllFilesRecursively: (directoryPath, collectedFiles = []) => {
+    try {
+      const files = readdirSync(directoryPath);
 
-  // Continue with existing pattern matching
-  return CONFIG.excludePatterns.some((pattern) => {
-    // Skip dot files as we've already handled them above
-    if (pattern.startsWith('.') && !pattern.includes('/') && !pattern.includes('*')) {
-      return false;
-    }
+      files.forEach((fileName) => {
+        const fullPath = join(directoryPath, fileName);
+        const relativePath = relative('.', fullPath).replace(/\\/g, '/');
 
-    // Handle patterns with wildcards
-    const normalizedPattern = pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\./g, '\\.');
+        if (fileUtils.shouldExcludeFile(relativePath)) return;
 
-    const regex = new RegExp(`^${normalizedPattern}$`);
-    return regex.test(filePath);
-  });
-};
-
-const getAllFiles = (dirPath, arrayOfFiles = []) => {
-  const files = readdirSync(dirPath);
-
-  files.forEach((file) => {
-    const fullPath = join(dirPath, file);
-    const relativePath = relative('.', fullPath);
-
-    if (shouldExcludeFile(relativePath)) {
-      return;
-    }
-
-    const fileStat = statSync(fullPath);
-
-    if (fileStat.isDirectory()) {
-      arrayOfFiles = getAllFiles(fullPath, arrayOfFiles);
-    } else {
-      arrayOfFiles.push({
-        fullPath,
-        relativePath: relativePath.replace(/\\/g, '/'),
-        size: fileStat.size,
+        try {
+          const fileStats = statSync(fullPath);
+          if (fileStats.isDirectory()) {
+            collectedFiles = fileUtils.getAllFilesRecursively(fullPath, collectedFiles);
+          } else {
+            collectedFiles.push({ fullPath, relativePath, size: fileStats.size });
+          }
+        } catch (fileStatError) {
+          logger.error(`Failed to read file stats for ${relativePath}: ${fileStatError.message}`);
+        }
       });
-    }
-  });
 
-  return arrayOfFiles;
+      return collectedFiles;
+    } catch (directoryReadError) {
+      logger.error(`Failed to read directory ${directoryPath}: ${directoryReadError.message}`);
+      throw directoryReadError;
+    }
+  },
 };
 
-const cleanDirectory = (dirPath) => {
+// Task executor with spinner - Fixed to handle warning cases properly
+const executeTaskWithSpinner = async (taskName, taskFunction, ...functionArguments) => {
+  const spinner = logger.spinner(`${taskName}...`);
   try {
-    rmSync(dirPath, { recursive: true, force: true });
-    logSuccess(`Cleaned: ${dirPath}`);
-  } catch (error) {
-    // Directory might not exist, which is fine
+    const taskResult = await taskFunction(...functionArguments);
+    spinner.stop(taskResult.message);
+    return taskResult;
+  } catch (taskError) {
+    // Check if this is a warning case (directory not found, skipping)
+    if (taskError.message.includes('not found, skipping') || taskError.message.includes('files not found')) {
+      // Stop spinner without any message for warning cases
+      clearInterval(spinner.interval);
+      process.stdout.write('\r\x1b[K'); // Clear the current line
+      return { message: '' }; // Return empty to avoid any logging
+    }
+
+    spinner.fail(`${taskName} failed: ${taskError.message}`);
+    logger.error(`Task execution failed for "${taskName}": ${taskError.message}`);
+    throw taskError;
   }
 };
 
-const ensureDirectoryExists = (dirPath) => {
-  try {
-    mkdirSync(dirPath, { recursive: true });
-  } catch (error) {
-    if (error.code !== 'EEXIST') {
-      throw error;
+// Build tasks
+const buildTasks = {
+  extractVersionNumber: () => {
+    try {
+      const fileContent = readFileSync('tutor.php', 'utf8');
+      versionNumber = fileContent.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+
+      if (!versionNumber) {
+        const errorMessage = 'Version number not found in tutor.php file';
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+
+      return { message: `Version detected: ${ui.colors.bright}${versionNumber}${ui.colors.reset}` };
+    } catch (versionExtractionError) {
+      if (versionExtractionError.code === 'ENOENT') {
+        const errorMessage = 'tutor.php file not found in current directory';
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+      throw versionExtractionError;
     }
-  }
-};
+  },
 
-const copyFileToDestination = async (sourceFile, destinationPath) => {
-  const destinationDir = dirname(destinationPath);
-  ensureDirectoryExists(destinationDir);
+  copyProjectFiles: async () => {
+    try {
+      const allProjectFiles = fileUtils.getAllFilesRecursively('.');
+      if (allProjectFiles.length === 0) {
+        const errorMessage = 'No project files found to copy';
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
+      }
 
-  const sourceStream = createReadStream(sourceFile.fullPath);
-  const destinationStream = createWriteStream(destinationPath);
+      const tutorBuildDirectory = join(CONFIG.buildDir, 'tutor');
+      let totalSizeInBytes = 0;
 
-  await pipeline(sourceStream, destinationStream);
-};
+      fileUtils.ensureDirectoryExists(tutorBuildDirectory);
 
-const copyProjectFiles = async () => {
-  logStep('1/4', 'Copying project files...');
-  const spinner = createSpinner('Scanning and copying files...');
+      for (const projectFile of allProjectFiles) {
+        await fileUtils.copyFile(projectFile, join(tutorBuildDirectory, projectFile.relativePath));
+        totalSizeInBytes += projectFile.size;
+      }
 
-  const allFiles = getAllFiles('.');
-  const tutorBuildDir = join(CONFIG.buildDir, 'tutor');
-  let totalSize = 0;
+      return {
+        message: `Copied ${ui.colors.bright}${allProjectFiles.length}${ui.colors.reset} files (${formatBytes(totalSizeInBytes)}) to build directory`,
+        files: allProjectFiles.length,
+        size: totalSizeInBytes,
+      };
+    } catch (copyError) {
+      logger.error(`Failed to copy project files: ${copyError.message}`);
+      throw copyError;
+    }
+  },
 
-  ensureDirectoryExists(tutorBuildDir);
+  copySpecialFiles: async (sourceDirectory, destinationDirectory, fileDescription) => {
+    const resolvedSourcePath = resolve(sourceDirectory);
+    const relativeSourcePath = relative('.', resolvedSourcePath);
 
-  for (const file of allFiles) {
-    const destinationPath = join(tutorBuildDir, file.relativePath);
-    await copyFileToDestination(file, destinationPath);
-    totalSize += file.size;
-  }
-
-  spinner.stop(
-    `Copied ${colors.bright}${allFiles.length}${colors.reset} files (${formatBytes(totalSize)}) to build directory`,
-  );
-};
-
-const copyFontFiles = async () => {
-  logStep('2/4', 'Copying font files...');
-  const spinner = createSpinner('Processing font files...');
-
-  try {
-    const fontSourceDir = 'v2-library/fonts/tutor-icon';
-    const fontDestDir = 'assets/fonts';
-    const buildFontDestDir = join(CONFIG.buildDir, 'tutor', fontDestDir);
-    let totalSize = 0;
-
-    ensureDirectoryExists(fontDestDir);
-    ensureDirectoryExists(buildFontDestDir);
-
-    const fontFiles = readdirSync(fontSourceDir).filter((file) => /\.(woff2|woff|ttf|otf|eot)$/i.test(extname(file)));
-
-    for (const fontFile of fontFiles) {
-      const sourcePath = join(fontSourceDir, fontFile);
-      const localDestPath = join(fontDestDir, fontFile);
-      const buildDestPath = join(buildFontDestDir, fontFile);
-
-      const fileSize = statSync(sourcePath).size;
-      totalSize += fileSize;
-
-      await copyFileToDestination({ fullPath: sourcePath }, localDestPath);
-      await copyFileToDestination({ fullPath: sourcePath }, buildDestPath);
+    if (!existsSync(resolvedSourcePath)) {
+      const warningMessage = `${fileDescription} directory not found at ${relativeSourcePath}, skipping...`;
+      logger.warning(warningMessage);
+      return { message: '' };
     }
 
-    spinner.stop(`Copied ${colors.bright}${fontFiles.length}${colors.reset} font files (${formatBytes(totalSize)})`);
-  } catch (error) {
-    spinner.fail('Font files not found, skipping...');
-    logWarning('Font files not found, skipping...');
-  }
-};
+    try {
+      const directoryStats = statSync(resolvedSourcePath);
+      if (!directoryStats.isDirectory()) {
+        const warningMessage = `${resolvedSourcePath} is not a directory, skipping...`;
+        logger.warning(warningMessage);
+        return { message: '' };
+      }
 
-const copyDroipFiles = async () => {
-  logStep('3/4', 'Copying Droip files...');
-  const spinner = createSpinner('Processing Droip distribution files...');
+      const specialFiles = fileUtils.getAllFilesRecursively(sourceDirectory);
 
-  try {
-    const droipSourceDir = 'includes/droip/dist';
-    const droipFiles = getAllFiles(droipSourceDir);
-    let totalSize = 0;
+      // Early return: Handle empty directory case
+      if (specialFiles.length === 0) {
+        const warningMessage = `${fileDescription} files not found in ${sourceDirectory}, skipping...`;
+        logger.warning(warningMessage);
+        return { message: '' };
+      }
 
-    for (const file of droipFiles) {
-      const relativeToDroip = relative(droipSourceDir, file.fullPath);
-      const destinationPath = join(CONFIG.buildDir, 'tutor', 'includes', 'droip', relativeToDroip);
-      await copyFileToDestination(file, destinationPath);
-      totalSize += file.size;
+      let totalSizeInBytes = 0;
+      for (const specialFile of specialFiles) {
+        const relativePath = relative(sourceDirectory, specialFile.fullPath);
+        const destinationPath = join(CONFIG.buildDir, 'tutor', destinationDirectory, relativePath);
+        await fileUtils.copyFile(specialFile, destinationPath);
+        totalSizeInBytes += specialFile.size;
+      }
+
+      return {
+        message: `Copied ${ui.colors.bright}${specialFiles.length}${ui.colors.reset} ${fileDescription} files (${formatBytes(totalSizeInBytes)})`,
+        files: specialFiles.length,
+        size: totalSizeInBytes,
+      };
+    } catch (specialFilesError) {
+      const errorMessage = `Failed to process ${fileDescription} files: ${specialFilesError.message}`;
+      logger.error(errorMessage);
+      throw specialFilesError;
     }
+  },
 
-    spinner.stop(`Copied ${colors.bright}${droipFiles.length}${colors.reset} Droip files (${formatBytes(totalSize)})`);
-  } catch (error) {
-    spinner.fail('Droip files not found, skipping...');
-    logWarning('Droip files not found, skipping...');
-  }
-};
-
-// Create ZIP archive using archiver
-const createValidZipArchive = async () => {
-  logStep('4/4', 'Creating ZIP archive...');
-  const buildName = `tutor-${versionNumber}.zip`;
-  const spinner = createSpinner(`Creating ${buildName}...`);
-
-  try {
-    // Remove existing zip if present
-    rmSync(buildName, { force: true });
-
-    const allBuildFiles = getAllFiles(CONFIG.buildDir);
-    if (allBuildFiles.length === 0) {
-      spinner.fail('No files found in build directory');
-      throw new Error('No files found in build directory');
-    }
-
-    // Setup archiver
-    const output = createWriteStream(buildName);
-    const archive = archiver('zip', {
-      zlib: { level: 9 }, // Maximum compression
-    });
-
-    // Setup promise for completion
-    const archiveComplete = new Promise((resolve, reject) => {
-      output.on('close', resolve);
-      archive.on('error', reject);
-    });
-
-    // Pipe archive data to output file
-    archive.pipe(output);
-
-    let totalSizeBeforeCompression = 0;
-
-    // Add each file to the archive
-    for (const file of allBuildFiles) {
-      const relativePath = relative(CONFIG.buildDir, file.fullPath);
-      const zipPath = relativePath.replace(/\\/g, '/');
-      archive.file(file.fullPath, { name: zipPath });
-      totalSizeBeforeCompression += file.size;
-    }
-
-    // Finalize and wait for completion
-    await archive.finalize();
-    await archiveComplete;
-
-    // Get compressed file size
-    const compressedSize = statSync(buildName).size;
-    const compressionRatio = (1 - compressedSize / totalSizeBeforeCompression) * 100;
-
-    spinner.stop(
-      `Created archive: ${colors.bright}${buildName}${colors.reset}\n` +
-        `  ${symbols.file} Files: ${colors.bright}${allBuildFiles.length}${colors.reset}\n` +
-        `  ${symbols.arrow} Original size: ${formatBytes(totalSizeBeforeCompression)}\n` +
-        `  ${symbols.arrow} Compressed size: ${formatBytes(compressedSize)}\n` +
-        `  ${symbols.arrow} Compression ratio: ${compressionRatio.toFixed(2)}%`,
-    );
-  } catch (error) {
-    spinner.fail(`Failed to create archive: ${error.message}`);
-    throw error;
-  }
-};
-
-const handleBuildError = (error) => {
-  logError(`Build failed: ${error.message}`);
-  console.log(`\n${colors.red}${colors.bright}╔════════════════════════════════════════╗${colors.reset}`);
-  console.log(`${colors.red}${colors.bright}║          ${symbols.error} BUILD FAILED!              ║${colors.reset}`);
-  console.log(`${colors.red}${colors.bright}╚════════════════════════════════════════╝${colors.reset}\n`);
-  process.exit(1);
-};
-
-const executeBuild = async () => {
-  const startTime = Date.now();
-
-  try {
-    printHeader();
-    logInfo('Starting build process...');
-
-    extractVersionNumber();
-
-    if (!versionNumber) {
-      throw new Error('Could not extract version number from tutor.php');
-    }
-
-    cleanDirectory(CONFIG.buildDir);
-
+  createArchive: async () => {
     const archiveName = `tutor-${versionNumber}.zip`;
-    cleanDirectory(archiveName);
 
-    await copyProjectFiles();
-    await copyFontFiles();
-    await copyDroipFiles();
-    await createValidZipArchive();
+    try {
+      const allBuildFiles = fileUtils.getAllFilesRecursively(CONFIG.buildDir);
+      if (allBuildFiles.length === 0) {
+        const errorMessage = 'No files found in build directory for archiving';
+        logger.error(errorMessage);
+        throw new Error(errorMessage);
+      }
 
-    cleanDirectory(CONFIG.buildDir);
+      const outputStream = createWriteStream(archiveName);
+      const archiveInstance = archiver('zip', { zlib: { level: 9 } });
 
-    const duration = Date.now() - startTime;
-    const durationFormatted = duration > 1000 ? `${(duration / 1000).toFixed(2)}s` : `${duration}ms`;
+      // Create Promise for archive completion
+      const handleArchiveCompletion = new Promise((resolve, reject) => {
+        outputStream.on('close', resolve);
+        outputStream.on('error', reject);
+        archiveInstance.on('error', reject);
+      });
 
-    printFooter(durationFormatted);
-  } catch (error) {
-    handleBuildError(error);
+      archiveInstance.pipe(outputStream);
+
+      let totalSizeBeforeCompression = 0;
+      for (const buildFile of allBuildFiles) {
+        const relativePath = relative(CONFIG.buildDir, buildFile.fullPath);
+        archiveInstance.file(buildFile.fullPath, { name: relativePath.replace(/\\/g, '/') });
+        totalSizeBeforeCompression += buildFile.size;
+      }
+
+      await archiveInstance.finalize();
+      await handleArchiveCompletion;
+
+      const compressedSize = statSync(archiveName).size;
+      const compressionRatio = (1 - compressedSize / totalSizeBeforeCompression) * 100;
+
+      return {
+        message:
+          `Created archive: ${ui.colors.bright}${archiveName}${ui.colors.reset}\n` +
+          `  ${ui.symbols.file} Files: ${ui.colors.bright}${allBuildFiles.length}${ui.colors.reset}\n` +
+          `  ${ui.symbols.arrow} Original size: ${formatBytes(totalSizeBeforeCompression)}\n` +
+          `  ${ui.symbols.arrow} Compressed size: ${formatBytes(compressedSize)}\n` +
+          `  ${ui.symbols.arrow} Compression ratio: ${compressionRatio.toFixed(2)}%`,
+      };
+    } catch (archiveError) {
+      logger.error(`Failed to create archive: ${archiveError.message}`);
+      throw archiveError;
+    }
+  },
+};
+
+// Main execution
+const executeBuildProcess = async () => {
+  const buildStartTime = Date.now();
+
+  try {
+    // Header
+    const asciiArt = `${ui.colors.brand}${ui.colors.bright}
+███████████████                                                                                      
+  █████████████         ███                  ███                                                      
+    ██████████          ███                  ███                                                      
+  ██████████████        ███                  ███                                                      
+███   █████   ███     ███████ ███      ███ ███████  ████████   ███ ██     ██     ███      ███  ██████ 
+██  ██ ███ ██  ██       ███   ███      ███   ███   ███    ███  █████      ██     ████    ████ ██    ██
+██  ██ ███ ██  ██       ███   ███      ███   ███  ███      ███ ███        ██     ██ ███ ██ ██ ████    
+██  ██ ███ ██  ██       ███   ███      ███   ███  ███      ███ ███        ██     ██  ████  ██    █████
+████   ███   ████       ███    ███    ████   ███   ███    ███  ███        ██     ██   ██   ██ █      █
+  ████     ██████       ███     ██████████   ███    ████████   ███        █████████        ██ ████████
+    █████████████                                                                                     
+       ██████████${ui.colors.reset}`;
+
+    console.log(asciiArt);
+    logger.box(`${ui.symbols.rocket} BUILD PROCESS ${ui.symbols.package}`, ui.colors.brand);
+    logger.info('Starting build process...');
+
+    // Extract version
+    await executeTaskWithSpinner('Extracting version number from tutor.php', buildTasks.extractVersionNumber);
+
+    // Clean directories
+    fileUtils.cleanPath(CONFIG.buildDir);
+    fileUtils.cleanPath(`tutor-${versionNumber}.zip`);
+
+    // Execute build steps
+    logger.step('1/3', 'Copying project files...');
+    await executeTaskWithSpinner('Scanning and copying files', buildTasks.copyProjectFiles);
+
+    logger.step('2/3', 'Copying Droip files...');
+    await executeTaskWithSpinner(
+      'Processing Droip distribution files',
+      buildTasks.copySpecialFiles,
+      'includes/droip/dist',
+      'includes/droip',
+      'Droip',
+    );
+
+    logger.step('3/3', 'Creating ZIP archive...');
+    await executeTaskWithSpinner(`Creating tutor-${versionNumber}.zip`, buildTasks.createArchive);
+
+    // Cleanup and finish
+    fileUtils.cleanPath(CONFIG.buildDir);
+
+    const buildDuration = `${((Date.now() - buildStartTime) / 1000).toFixed(2)}s`;
+    logger.box(`✅ BUILD COMPLETED SUCCESSFULLY!\n⏱️ Duration: ${buildDuration}`, ui.colors.green);
+  } catch (buildError) {
+    logger.error(`Build process failed: ${buildError.message}`);
+    logger.box(`${ui.symbols.error} BUILD FAILED!`, ui.colors.red);
+    process.exit(1);
   }
 };
 
 // Execute if run directly
 if (require.main === module) {
-  executeBuild();
+  executeBuildProcess();
 }
 
-module.exports = { executeBuild };
+module.exports = { executeBuild: executeBuildProcess };

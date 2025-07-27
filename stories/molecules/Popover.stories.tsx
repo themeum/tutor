@@ -1,14 +1,15 @@
-/** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
 import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import Button from '../assets/react/v3/shared/atoms/Button';
-import { borderRadius, colorTokens, spacing } from '../assets/react/v3/shared/config/styles';
-import { AnimationType } from '../assets/react/v3/shared/hooks/useAnimation';
-import Popover from '../assets/react/v3/shared/molecules/Popover';
+
+import Button from '@TutorShared/atoms/Button';
+import Popover from '@TutorShared/molecules/Popover';
+
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 
 const meta: Meta<typeof Popover> = {
-  title: 'Shared/Molecules/Popover',
+  title: 'Molecules/Popover',
   component: Popover,
   parameters: {
     layout: 'centered',

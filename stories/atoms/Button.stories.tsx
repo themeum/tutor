@@ -5,7 +5,7 @@ import { type IconCollection, icons } from '@TutorShared/icons/types';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const meta: Meta<typeof Button> = {
-  title: 'Shared/Atoms/Button',
+  title: 'Atoms/Button',
   component: Button,
   parameters: {
     layout: 'centered',
