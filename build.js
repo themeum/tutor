@@ -164,6 +164,7 @@ const CONFIG = {
     'vendor/theseer/**',
     'vendor/webmozart/**',
     'vendor/yoast/**',
+    'vendor/composer/LICENSE',
     '.phpunit.result.cache',
     '*.yml',
     '*.yaml',
@@ -388,7 +389,6 @@ const buildTasks = {
 
   createArchive: async () => {
     const archiveName = `tutor-${versionNumber}.zip`;
-    fileUtils.cleanPath(archiveName);
 
     try {
       const allBuildFiles = fileUtils.getAllFilesRecursively(CONFIG.buildDir);
@@ -450,10 +450,10 @@ const executeBuildProcess = async () => {
     ██████████          ███                  ███                                                      
   ██████████████        ███                  ███                                                      
 ███   █████   ███     ███████ ███      ███ ███████  ████████   ███ ██     ██     ███      ███  ██████ 
-██  ██ ███ ██  ██       ███   ███      ███   ███   ██████████  █████      ██     ████    ████ ██    ██
+██  ██ ███ ██  ██       ███   ███      ███   ███   ███    ███  █████      ██     ████    ████ ██    ██
 ██  ██ ███ ██  ██       ███   ███      ███   ███  ███      ███ ███        ██     ██ ███ ██ ██ ████    
 ██  ██ ███ ██  ██       ███   ███      ███   ███  ███      ███ ███        ██     ██  ████  ██    █████
-████   ███    ███       ███    ███    ████   ███   ███    ███  ███        ██     ██   ██   ██ █      █
+████   ███   ████       ███    ███    ████   ███   ███    ███  ███        ██     ██   ██   ██ █      █
   ████     ██████       ███     ██████████   ███    ████████   ███        █████████        ██ ████████
     █████████████                                                                                     
        ██████████${ui.colors.reset}`;
