@@ -2124,8 +2124,8 @@ class Course extends Tutor_Base {
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
-		$can_complete = apply_filters( 'tutor_user_can_complete_course', null, $user_id, $course_id );
-		if ( ! is_null( $can_complete ) && is_wp_error( $can_complete ) ) {
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
 		} else {
 			CourseModel::mark_course_as_completed( $course_id, $user_id );
