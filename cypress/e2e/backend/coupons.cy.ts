@@ -90,43 +90,10 @@ describe('Coupon Management', () => {
 
   it('should filter by category', () => {
     runIfMonetized(() => {
-      cy.get('.tutor-js-form-select').eq(1).click();
-      cy.get('.tutor-form-select-options')
-        .eq(1)
-        .then(() => {
-          cy.get('.tutor-form-select-option')
-            .then(($options) => {
-              const randomIndex = Cypress._.random(6, $options.length - 3);
-              const $randomOption = Cypress.$($options[randomIndex]);
-              cy.wrap($randomOption).find('span[tutor-dropdown-item]').click();
-            })
-            .then(() => {
-              cy.get('body').then(($body) => {
-                if (
-                  $body.text().includes('No Data Found from your Search/Filter') ||
-                  $body.text().includes('No request found') ||
-                  $body.text().includes('No Data Available in this Section') ||
-                  $body.text().includes('No records found') ||
-                  $body.text().includes('No Records Found')
-                ) {
-                  cy.log('No data available');
-                } else {
-                  cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
-                    .eq(1)
-                    .invoke('text')
-                    .then((retrievedText) => {
-                      cy.get('.tutor-badge-label').each(($category) => {
-                        cy.wrap($category)
-                          .invoke('text')
-                          .then((categoryText) => {
-                            expect(categoryText.trim().toLowerCase()).to.include(retrievedText.trim().toLowerCase());
-                          });
-                      });
-                    });
-                }
-              });
-            });
-        });
+      cy.unifiedFilterElements({
+        selectFieldName: 'applies_to',
+        resultColumnIndex: 3,
+      });
     });
   });
 

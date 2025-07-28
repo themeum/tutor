@@ -6,25 +6,8 @@ describe('Tutor Dashboard My Courses', () => {
     cy.loginAsAdmin();
     cy.url().should('include', backendUrls.GRADEBOOK);
   });
-  // overview
-  it('should filter grades by course', () => {
-    cy.get(':nth-child(2) > .tutor-js-form-select').click();
-    cy.get('body').then(($body) => {
-      if ($body.text().includes('No Records Found')) {
-        cy.log('No data available');
-      } else {
-        cy.get('.tutor-form-select-options')
-          .eq(1)
-          .then(() => {
-            cy.get('.tutor-form-select-option').then(() => {
-              cy.get('.tutor-form-select-options>div:nth-child(2)').eq(0).click();
-            });
-          });
-      }
-    });
-  });
 
-  it('should be able to search any announcement', () => {
+  it('should be able to search any grade', () => {
     const searchInputSelector = '#tutor-backend-filter-search';
     const searchQuery = 'meet';
     const courseLinkSelector = ':nth-child(2)>.tutor-d-flex.tutor-align-center.tutor-gap-2';
@@ -33,29 +16,20 @@ describe('Tutor Dashboard My Courses', () => {
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
 
-  it('should filter assignments', () => {
-    const filterFormSelector = ':nth-child(2) > .tutor-js-form-select';
-    const dropdownSelector = '.tutor-form-select-options';
-    const dropdownOptionSelector = '.tutor-form-select-option';
-    const dropdownTextSelector = 'span[tutor-dropdown-item]';
-    const elementTitleSelector = ':nth-child(2)>.tutor-d-flex.tutor-align-center.tutor-gap-2';
-    cy.filterElements(
-      filterFormSelector,
-      dropdownSelector,
-      dropdownOptionSelector,
-      dropdownTextSelector,
-      elementTitleSelector,
-    );
+  it('should filter by course', () => {
+    cy.unifiedFilterElements({
+      selectFieldName: 'course-id',
+      resultColumnIndex: 2,
+    });
   });
 
   it('should check if the elements are sorted', () => {
-    const formSelector = ':nth-child(3) > .tutor-form-control.tutor-form-select.tutor-js-form-select';
+    const sortButton = '.tutor-wp-dashboard-filter-order';
     const itemSelector = 'tbody>tr>td>div';
-    function checkSorting(order: string) {
-      cy.get(formSelector).click();
-      cy.get(`span[title=${order}]`).click();
+    const checkSorting = (order: string) => {
+      cy.get(sortButton).click();
       cy.get('body').then(($body) => {
-        if ($body.text().includes('No Data Available in this Section')) {
+        if ($body.text().includes('No Data Found.')) {
           cy.log('No data available');
         } else {
           cy.get(itemSelector).then(($items) => {
@@ -68,15 +42,16 @@ describe('Tutor Dashboard My Courses', () => {
           });
         }
       });
-    }
+    };
     checkSorting('ASC');
     checkSorting('DESC');
   });
 
   it('should filter by a specific date', () => {
-    const filterFormSelector = '.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control';
-    const elementDateSelector = 'tbody>tr>td:first-child';
-    cy.filterElementsByDate(filterFormSelector, elementDateSelector);
+    cy.unifiedFilterElements({
+      selectFieldName: 'date',
+      resultColumnIndex: 1,
+    });
   });
   //   grade settings
   it('should add new grade', () => {

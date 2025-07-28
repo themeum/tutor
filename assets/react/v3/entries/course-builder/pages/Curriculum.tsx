@@ -64,6 +64,7 @@ const Curriculum = () => {
   }, [navigate]);
 
   const [allCollapsed, setAllCollapsed] = useState(true);
+  const [isBatching, setIsBatching] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [topics, setTopics] = useState<CourseTopicWithCollapse[]>([]);
 
@@ -77,28 +78,42 @@ const Curriculum = () => {
       return;
     }
 
-    setTopics((previous) => {
-      if (allCollapsed) {
-        currentExpandedTopics.current = [];
-      }
+    setIsBatching(true);
 
-      if (!allCollapsed) {
-        currentExpandedTopics.current = previous.reduce((acc, item) => {
-          if (item.isSaved) {
-            acc.push(item.id);
+    const batchSize = 2;
+    let index = 0;
+    const updatedIds: ID[] = [];
+
+    const updateBatch = () => {
+      setTopics((prevTopics) => {
+        const newTopics = [...prevTopics];
+
+        for (let i = 0; i < batchSize && index < newTopics.length; i++, index++) {
+          const item = newTopics[index];
+
+          if (item.isSaved && item.isCollapsed !== allCollapsed) {
+            newTopics[index] = {
+              ...item,
+              isCollapsed: allCollapsed,
+            };
+            if (!allCollapsed) {
+              updatedIds.push(item.id);
+            }
           }
-          return acc;
-        }, [] as ID[]);
-      }
-
-      return previous.map((item) => {
-        if (!item.isSaved) {
-          return item;
         }
 
-        return { ...item, isCollapsed: allCollapsed };
+        return newTopics;
       });
-    });
+
+      if (index < topics.length) {
+        setTimeout(updateBatch, 0);
+      } else {
+        currentExpandedTopics.current = allCollapsed ? [] : updatedIds;
+        setIsBatching(false);
+      }
+    };
+
+    updateBatch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCollapsed]);
 
@@ -371,7 +386,12 @@ const Curriculum = () => {
           backUrl="/basics"
           rightButton={
             <Show when={topics.some((item) => item.isSaved)}>
-              <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => setAllCollapsed((previous) => !previous)}
+                disabled={isBatching}
+              >
                 {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
               </Button>
             </Show>
