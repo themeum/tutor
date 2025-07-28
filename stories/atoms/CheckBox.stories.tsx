@@ -74,6 +74,7 @@ const meta: Meta<typeof CheckBox> = {
     isIndeterminate: false,
     'aria-invalid': 'false',
   },
+  render: (args) => <CheckBox {...args} aria-label={typeof args.label === 'string' ? args.label : 'CheckBox'} />,
 };
 export default meta;
 
@@ -86,7 +87,6 @@ export const Default: Story = {
     disabled: false,
     isIndeterminate: false,
   },
-  render: (args) => <CheckBox {...args} aria-label={typeof args.label === 'string' ? args.label : 'CheckBox'} />,
 };
 
 export const Checked: Story = {
@@ -94,9 +94,6 @@ export const Checked: Story = {
     label: 'Checked CheckBox',
     checked: true,
   },
-  render: (args) => (
-    <CheckBox {...args} aria-label={typeof args.label === 'string' ? args.label : 'Checked CheckBox'} />
-  ),
 };
 
 export const Disabled: Story = {
@@ -104,9 +101,6 @@ export const Disabled: Story = {
     label: 'Disabled CheckBox',
     disabled: true,
   },
-  render: (args) => (
-    <CheckBox {...args} aria-label={typeof args.label === 'string' ? args.label : 'Disabled CheckBox'} />
-  ),
 };
 
 export const Indeterminate: Story = {
@@ -114,9 +108,6 @@ export const Indeterminate: Story = {
     label: 'Indeterminate CheckBox',
     isIndeterminate: true,
   },
-  render: (args) => (
-    <CheckBox {...args} aria-label={typeof args.label === 'string' ? args.label : 'Indeterminate CheckBox'} />
-  ),
 };
 
 export const WithCustomLabel: Story = {
