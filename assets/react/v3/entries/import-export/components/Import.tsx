@@ -12,7 +12,7 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
-import generateImportExportMessage from '@ImportExport/utils/utils';
+import { generateImportExportMessage } from '@ImportExport/utils/utils';
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
 import { useToast } from '@TutorShared/atoms/Toast';
 import { type ErrorResponse } from 'react-router-dom';
@@ -22,7 +22,7 @@ const Import = () => {
   const { data: importResponse, mutateAsync, isError, error, isPending } = useImportContentsMutation();
   const { showToast } = useToast();
 
-  const onImport = async ({ file }: { file: File }): Promise<void> => {
+  const onImport = async ({ file, collectionId }: { file: File; collectionId?: number }): Promise<void> => {
     updateModal<typeof ImportModal>('import-modal', {
       currentStep: 'progress',
       progress: 0,
@@ -31,6 +31,7 @@ const Import = () => {
 
     try {
       await mutateAsync({
+        ...(collectionId ? { collection_id: collectionId } : {}),
         data: file,
       });
     } catch (error) {

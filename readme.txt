@@ -312,7 +312,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.7.0 - Jul 21, 2025
+= 3.7.0 - Jul 22, 2025
 
 New: Content Bank — store and reuse lessons, questions, and assignments across multiple courses. (Pro)
 New: Option to customize certificate paper size. (Pro)

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback, useEffect, type FunctionComponent } from 'react';
+import { type FunctionComponent } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -41,7 +41,6 @@ interface ExportInitialStateProps {
     };
   };
   resetBulkSelection: (type: 'courses' | 'course-bundle' | 'content_bank') => void;
-  isFromContentBank?: boolean;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -53,26 +52,8 @@ const ExportInitialState = ({
   isLoading,
   componentMapping,
   resetBulkSelection,
-  isFromContentBank = false,
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
-
-  const handleOpenContentBankModal = useCallback(() => {
-    const modalConfig = componentMapping['content_bank'];
-    showModal({
-      component: modalConfig.modal.component,
-      props: modalConfig.modal.props,
-      depthIndex: zIndex.highest,
-    });
-  }, [componentMapping, showModal]);
-
-  useEffect(() => {
-    if (isFromContentBank && !isLoading) {
-      handleOpenContentBankModal();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isFromContentBank]);
-
   /**
    * Returns properly formatted label for form data keys with appropriate count information
    *
@@ -213,18 +194,14 @@ const ExportInitialState = ({
                     variant="secondary"
                     buttonCss={styles.selectButton}
                     size="small"
-                    onClick={
-                      contentKey === 'content_bank'
-                        ? handleOpenContentBankModal
-                        : () => {
-                            const modalConfig = componentMapping[contentKey];
-                            showModal({
-                              component: modalConfig.modal.component,
-                              props: modalConfig.modal.props,
-                              depthIndex: zIndex.highest,
-                            });
-                          }
-                    }
+                    onClick={() => {
+                      const modalConfig = componentMapping[contentKey];
+                      showModal({
+                        component: modalConfig.modal.component,
+                        props: modalConfig.modal.props,
+                        depthIndex: zIndex.highest,
+                      });
+                    }}
                   >
                     {componentMapping[contentKey]?.bulkSelectionButtonLabel}
                   </Button>
@@ -366,6 +343,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[8]};
+    min-height: 30px;
 
     button {
       flex-shrink: 0;

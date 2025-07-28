@@ -18,18 +18,18 @@ describe('Tutor Admin Withdraw Request', () => {
   });
 
   it('Should filter announcements by a specific date', () => {
-    const filterFormSelector = '.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control';
-    const elementDateSelector = 'tbody>tr>td>:nth-child(1).tutor-fs-7';
-    cy.filterElementsByDate(filterFormSelector, elementDateSelector);
+    cy.unifiedFilterElements({
+      selectFieldName: 'date',
+      resultColumnIndex: 1,
+    });
   });
   it('should check if the elements are sorted', () => {
-    const formSelector = '.tutor-wp-dashboard-filter-items > :nth-child(2) > .tutor-js-form-select';
+    const sortButton = '.tutor-wp-dashboard-filter-order';
     const itemSelector = '.tutor-color-black.tutor-fs-6.tutor-fw-medium';
     function checkSorting(order: string) {
-      cy.get(formSelector).click();
-      cy.get(`span[title=${order}]`).click();
+      cy.get(sortButton).click();
       cy.get('body').then(($body) => {
-        if ($body.text().includes('No request found')) {
+        if ($body.text().includes('No Data Found.')) {
           cy.log('No data available');
         } else {
           cy.get(itemSelector).then(($items) => {
@@ -54,7 +54,7 @@ describe('Tutor Admin Withdraw Request', () => {
     }).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No request found')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('tbody tr')
@@ -89,7 +89,7 @@ describe('Tutor Admin Withdraw Request', () => {
     }).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No request found')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('tbody tr')
