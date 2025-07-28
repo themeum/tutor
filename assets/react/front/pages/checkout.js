@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const paymentInstructions = payments[0].querySelector('.tutor-payment-item-instructions');
                 if (paymentInstructions) {
                     document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').innerHTML = atob(paymentInstructions);
+                    document.querySelector('.tutor-payment-instructions').innerHTML = paymentInstructions.innerHTML;
                 }
             }
         }
