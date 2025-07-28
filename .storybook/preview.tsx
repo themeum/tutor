@@ -8,6 +8,11 @@ import { typography } from '@TutorShared/config/typography';
 const GlobalStyles = () => (
   <Global
     styles={css`
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
       body {
         ${typography.body()}
       }
