@@ -40,7 +40,7 @@ const meta: Meta<typeof Alert> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof Alert>;
+type Story = StoryObj<typeof meta>;
 
 const Template = (args: React.ComponentProps<typeof Alert>) => <Alert {...args} />;
 
