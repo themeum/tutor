@@ -172,6 +172,7 @@ const CONFIG = {
     'phpcs.xml*',
     'tutor-droip/**',
     'includes/droip/**',
+    '!includes/droip/dist/**',
     'cypress/**',
     'cypress.config.ts',
     '.husky/**',
@@ -215,23 +216,36 @@ const fileUtils = {
       return true;
     }
 
+    let lastMatchIsNegation = null;
+
     // Check against all exclude patterns
-    return CONFIG.excludePatterns.some((pattern) => {
+    CONFIG.excludePatterns.forEach((pattern) => {
+      const isNegation = pattern.startsWith('!');
+      const testPattern = isNegation ? pattern.slice(1) : pattern;
+
+      let matches = false;
+
       // Handle directory patterns (ending with /**)
-      if (pattern.endsWith('/**')) {
-        const basePath = pattern.replace(/\/\*\*$/, '');
-        return filePath.startsWith(basePath);
+      if (testPattern.endsWith('/**')) {
+        const basePath = testPattern.replace(/\/\*\*$/, '');
+        matches = filePath.startsWith(basePath);
       }
-
       // Handle wildcard patterns
-      if (pattern.includes('*')) {
-        const normalizedPattern = pattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\./g, '\\.');
-        return new RegExp(`^${normalizedPattern}$`).test(filePath);
+      else if (testPattern.includes('*')) {
+        const normalizedPattern = testPattern.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*').replace(/\./g, '\\.');
+        matches = new RegExp(`^${normalizedPattern}$`).test(filePath);
+      }
+      // Direct string match
+      else {
+        matches = filePath === testPattern;
       }
 
-      // Direct string match
-      return filePath === pattern;
+      if (matches) {
+        lastMatchIsNegation = isNegation;
+      }
     });
+
+    return lastMatchIsNegation === null ? false : !lastMatchIsNegation;
   },
 
   getAllFilesRecursively: (directoryPath, collectedFiles = []) => {
