@@ -5,6 +5,15 @@ import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 const meta: Meta<typeof Avatar> = {
   title: 'Atoms/Avatar',
   component: Avatar,
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component:
+          'Avatar component displays a user image or, if not provided, a fallback with initials. Accessible and styled for modern UI.',
+      },
+    },
+  },
   tags: ['autodocs'],
   argTypes: {
     image: {
@@ -15,14 +24,6 @@ const meta: Meta<typeof Avatar> = {
       control: 'text',
       description: 'Full name to display and use for initials.',
       defaultValue: 'Jane Doe',
-    },
-  },
-  parameters: {
-    docs: {
-      description: {
-        component:
-          'Avatar component displays a user image or, if not provided, a fallback with initials. Accessible and styled for modern UI.',
-      },
     },
   },
 };

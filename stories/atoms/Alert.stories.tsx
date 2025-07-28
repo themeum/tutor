@@ -6,6 +6,19 @@ import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 const meta: Meta<typeof Alert> = {
   title: 'Atoms/Alert',
   component: Alert,
+  parameters: {
+    layout: 'centered',
+    accessibility: {
+      // Ensures the alert role is present for screen readers
+      element: 'div[role="alert"]',
+    },
+    docs: {
+      description: {
+        component:
+          'A versatile alert component that displays messages with different types and optional icons. It supports various alert types like success, warning, danger, info, and primary.\n\n> 🚨 **Notice:** Only `warning` and `danger` (error) alert types are implemented. Other types are not available.',
+      },
+    },
+  },
   tags: ['autodocs'],
   argTypes: {
     type: {
@@ -23,18 +36,6 @@ const meta: Meta<typeof Alert> = {
       control: 'text',
       description: 'Alert message content',
       defaultValue: 'This is an alert message.',
-    },
-  },
-  parameters: {
-    accessibility: {
-      // Ensures the alert role is present for screen readers
-      element: 'div[role="alert"]',
-    },
-    docs: {
-      description: {
-        component:
-          'A versatile alert component that displays messages with different types and optional icons. It supports various alert types like success, warning, danger, info, and primary.\n\n> 🚨 **Notice:** Only `warning` and `danger` (error) alert types are implemented. Other types are not available.',
-      },
     },
   },
 };
