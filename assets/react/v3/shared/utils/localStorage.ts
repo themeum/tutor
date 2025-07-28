@@ -1,20 +1,27 @@
-import type { LocalStorageKeys } from '@TutorShared/config/constants';
-import { EventEmitter } from 'events';
+import type { LocalStorage } from '@TutorShared/config/constants';
 
-export const localStorageEventEmitter = new EventEmitter();
-
-export const setToLocalStorage = (key: LocalStorageKeys, value: string) => {
-  localStorage.setItem(key, value);
-};
-
-export const deleteFromLocalStorage = (key: LocalStorageKeys) => {
-  localStorage.removeItem(key);
-};
-
-export const getFromLocalStorage = <T extends string>(key: LocalStorageKeys) => {
+export const getStorageItem = (key: LocalStorage) => {
   if (typeof window !== 'undefined') {
-    return (localStorage.getItem(key) as T) || null;
+    return window.localStorage.getItem(key) || null;
   }
 
   return null;
+};
+
+export const setStorageItem = (key: LocalStorage, value: string) => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(key, value);
+  }
+};
+
+export const removeStorageItem = (key: LocalStorage) => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.removeItem(key);
+  }
+};
+
+export const clearStorage = () => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.clear();
+  }
 };
