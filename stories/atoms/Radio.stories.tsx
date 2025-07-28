@@ -74,7 +74,7 @@ const meta: Meta<typeof Radio> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof Radio>;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
