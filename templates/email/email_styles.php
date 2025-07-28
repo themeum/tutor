@@ -4,14 +4,12 @@
  *
  * @since 3.0.0
  *
- * @author Themeum
+ * @package Tutor
+ * @subpackage Templates\Email
+ * @author Themeum <support@themeum.com>
  */
 
-$has_pro        = tutor()->has_pro;
-$email_settings = null;
-if ( $has_pro && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/tutor-email/tutor-email.php' ) ) {
-	$email_settings = new TUTOR_EMAIL\EmailSettings();
-}
+$email_settings = apply_filters( 'tutor_email_settings', null );
 
 $email_logo_position   = get_tutor_option( 'email_logo_position', 'left' );
 $email_button_position = get_tutor_option( 'email_template_button_position', 'center' );
