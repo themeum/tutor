@@ -104,7 +104,7 @@ const meta: Meta<typeof ImageInput> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof ImageInput>;
+type Story = StoryObj<typeof meta>;
 
 const handleUpload = () => {
   alert('Upload handler triggered');
