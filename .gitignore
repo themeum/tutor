@@ -1,6 +1,5 @@
 node_modules/
 assets/css/*
-assets/.rsdoctor
 !assets/css/.gitkeep
 assets/js/*
 languages/*
@@ -19,7 +18,6 @@ Thumbs.db
 .npm
 .sass-cache
 assets/**/*.map
-assets/*.min.css
 .prettierignore
 *.zip
 *.po
@@ -59,3 +57,5 @@ launch.json
 
 #rspack
 .swc
+assets/.rsdoctor
+assets/*.min.css
