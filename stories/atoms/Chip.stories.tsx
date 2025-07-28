@@ -40,6 +40,7 @@ const meta: Meta<typeof Chip> = {
       defaultValue: false,
     },
   },
+  render: (args) => <Chip {...args} aria-label={args.label} />,
 };
 export default meta;
 
@@ -57,7 +58,6 @@ export const Default: Story = {
     showIcon: true,
     isClickable: false,
   },
-  render: (args) => <Chip {...args} aria-label={args.label} />,
 };
 
 export const Clickable: Story = {
@@ -67,7 +67,6 @@ export const Clickable: Story = {
     isClickable: true,
     onClick: handleClick,
   },
-  render: (args) => <Chip {...args} aria-label={args.label} />,
 };
 
 export const WithCustomIcon: Story = {
@@ -78,7 +77,6 @@ export const WithCustomIcon: Story = {
     isClickable: true,
     onClick: handleClick,
   },
-  render: (args) => <Chip {...args} aria-label={args.label} />,
 };
 
 export const WithoutIcon: Story = {
@@ -87,7 +85,6 @@ export const WithoutIcon: Story = {
     showIcon: false,
     isClickable: false,
   },
-  render: (args) => <Chip {...args} aria-label={args.label} />,
 };
 
 export const WithLongLabel: Story = {
@@ -96,5 +93,4 @@ export const WithLongLabel: Story = {
     showIcon: true,
     isClickable: false,
   },
-  render: (args) => <Chip {...args} aria-label={args.label} />,
 };
