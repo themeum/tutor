@@ -31,10 +31,8 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-const Template = (args: React.ComponentProps<typeof Avatar>) => <Avatar {...args} />;
-
 export const WithImage: Story = {
-  render: Template,
+  render: Avatar,
   args: {
     image: 'https://randomuser.me/api/portraits/women/44.jpg',
     name: 'Jane Doe',
@@ -42,7 +40,7 @@ export const WithImage: Story = {
 };
 
 export const FallbackMultiWord: Story = {
-  render: Template,
+  render: Avatar,
   args: {
     name: 'Jane Doe',
     image: '',
@@ -50,7 +48,7 @@ export const FallbackMultiWord: Story = {
 };
 
 export const FallbackSingleWord: Story = {
-  render: Template,
+  render: Avatar,
   args: {
     name: 'Plato',
     image: '',
@@ -58,7 +56,7 @@ export const FallbackSingleWord: Story = {
 };
 
 export const FallbackLongName: Story = {
-  render: Template,
+  render: Avatar,
   args: {
     name: 'Alexandria Cassandra Johnson',
     image: '',
