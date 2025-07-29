@@ -188,12 +188,22 @@ class Upgrader {
 		global $wpdb;
 
 		/**
-		 * Result column to quiz attempt table.
+		 * Result column and index added.
 		 */
 		$result        = 'result';
 		$attempt_table = $wpdb->tutor_quiz_attempts;
 		if ( QueryHelper::table_exists( $attempt_table ) && ! QueryHelper::column_exist( $attempt_table, $result ) ) {
-			$wpdb->query( "ALTER TABLE {$attempt_table} ADD COLUMN result VARCHAR(10), ADD INDEX (result);" ); //phpcs:ignore
+			$wpdb->query( "ALTER TABLE {$attempt_table} ADD COLUMN result VARCHAR(10);" ); //phpcs:ignore
+
+			// Index Added to improve query performance.
+			$wpdb->query(
+				//phpcs:ignore
+				"ALTER TABLE {$attempt_table}
+					ADD INDEX (course_id),
+					ADD INDEX (quiz_id),
+					ADD INDEX (user_id),
+					ADD INDEX (result);"
+			);
 		}
 	}
 

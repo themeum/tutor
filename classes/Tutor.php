@@ -759,6 +759,9 @@ final class Tutor extends Singleton {
 				manually_reviewed_at datetime DEFAULT NULL,
 				result varchar(10) DEFAULT NULL,
 				PRIMARY KEY  (attempt_id),
+				INDEX (course_id),
+				INDEX (quiz_id),
+				INDEX (user_id),
 				INDEX (result)
 			) $charset_collate;";
 
