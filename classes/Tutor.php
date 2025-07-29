@@ -757,7 +757,9 @@ final class Tutor extends Singleton {
 				attempt_ended_at datetime DEFAULT NULL,
 				is_manually_reviewed int(1) DEFAULT NULL,
 				manually_reviewed_at datetime DEFAULT NULL,
-				PRIMARY KEY  (attempt_id)
+				result varchar(10) DEFAULT NULL,
+				PRIMARY KEY  (attempt_id),
+				INDEX (result)
 			) $charset_collate;";
 
 		$quiz_attempt_answers = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempt_answers (

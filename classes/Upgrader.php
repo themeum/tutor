@@ -84,6 +84,7 @@ class Upgrader {
 			$upgrades[] = 'upgrade_to_1_3_1';
 			$upgrades[] = 'upgrade_to_2_6_0';
 			$upgrades[] = 'upgrade_to_3_0_0';
+			$upgrades[] = 'upgrade_to_3_7_1';
 		}
 
 		return $upgrades;
@@ -147,6 +148,7 @@ class Upgrader {
 			if ( ! QueryHelper::column_exist( $order_items_table, 'discount_price' ) ) {
 				// If 'discount_price' does not exist, alter the table to add 'discount_price' and 'coupon_code', and update 'sale_price'.
 				$wpdb->query(
+					//phpcs:ignore
 					"ALTER TABLE {$order_items_table}
 						ADD COLUMN discount_price VARCHAR(13) DEFAULT NULL,
 						ADD COLUMN coupon_code VARCHAR(255) DEFAULT NULL,
@@ -175,6 +177,24 @@ class Upgrader {
 
 		CartController::create_cart_page();
 		CheckoutController::create_checkout_page();
+	}
+
+	/**
+	 * Migration logic when user upgrade to 3.7.1
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_3_7_1() {
+		global $wpdb;
+
+		/**
+		 * Result column to quiz attempt table.
+		 */
+		$result        = 'result';
+		$attempt_table = $wpdb->tutor_quiz_attempts;
+		if ( QueryHelper::table_exists( $attempt_table ) && ! QueryHelper::column_exist( $attempt_table, $result ) ) {
+			$wpdb->query( "ALTER TABLE {$attempt_table} ADD COLUMN result VARCHAR(10), ADD INDEX (result);" ); //phpcs:ignore
+		}
 	}
 
 	/**
