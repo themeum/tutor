@@ -10,25 +10,20 @@ const tabList: TabItem<TabValue>[] = [
   {
     label: 'Active',
     value: 'active',
-    icon: <SVGIcon name="active" width={18} height={18} />,
-    activeBadge: true,
   },
   {
     label: 'Profile',
     value: 'profile',
     count: 2,
-    icon: <SVGIcon name="user" width={18} height={18} />,
   },
   {
     label: 'Settings',
     value: 'settings',
-    icon: <SVGIcon name="settings" width={18} height={18} />,
     count: 12,
   },
   {
     label: 'Disabled',
     value: 'disabled',
-    icon: <SVGIcon name="lock" width={18} height={18} />,
     disabled: true,
   },
 ];
@@ -75,7 +70,7 @@ const meta: Meta<typeof Tabs> = {
     onChange: { control: false },
   },
   args: {
-    activeTab: 'home',
+    activeTab: 'active',
     tabList,
     orientation: 'horizontal',
     disabled: false,
@@ -87,17 +82,7 @@ const meta: Meta<typeof Tabs> = {
     const handleChangeTab = (value: TabValue) => setActiveTab(value);
 
     return (
-      <Tabs
-        {...args}
-        activeTab={activeTab}
-        onChange={handleChangeTab}
-        tabList={
-          args.tabList.map((tab) => ({
-            ...tab,
-            activeBadge: tab.value === activeTab,
-          })) as TabItem<TabValue>[]
-        }
-      />
+      <Tabs {...args} activeTab={activeTab} onChange={handleChangeTab} tabList={args.tabList as TabItem<TabValue>[]} />
     );
   },
 };
