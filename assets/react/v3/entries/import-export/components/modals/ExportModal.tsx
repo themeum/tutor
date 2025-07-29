@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 
-import CourseListModal from '@ImportExport/components/modals/CourseListModal';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Logo from '@TutorShared/components/Logo';
@@ -26,6 +25,7 @@ import {
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 
+import CourseListModal from '@TutorShared/components/modals/CourseListModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { type ExportableContent, useExportableContentQuery } from '@TutorShared/services/import-export';
 import { type Collection } from '@TutorShared/utils/types';
