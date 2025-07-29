@@ -11,12 +11,6 @@ import { css } from '@emotion/react';
 import { typography } from '../config/typography';
 
 export const createGlobalCss = () => css`
-  body:not(.tutor-screen-backend-settings, .tutor-backend-tutor-tools) {
-    #wpcontent {
-      padding-left: 0;
-    }
-  }
-
   body.tutor-backend-tutor-content-bank {
     @media screen and (max-width: 600px) {
       #wpadminbar {
