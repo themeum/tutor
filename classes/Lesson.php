@@ -236,7 +236,6 @@ class Lesson extends Tutor_Base {
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 		$topic_id  = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$course_id = tutor_utils()->get_course_id_by( 'topic', $topic_id );
 
 		if ( $lesson_id ) {
 			$is_update = true;
@@ -275,9 +274,9 @@ class Lesson extends Tutor_Base {
 
 		$lesson_data = array(
 			'post_type'      => $this->lesson_post_type,
-			'post_title'     => $title,
+			'post_title'     => wp_slash( $title ), // Note: Added wp_slash to support latex syntaxes.
 			'post_name'      => sanitize_title( $title ),
-			'post_content'   => $post_content,
+			'post_content'   => wp_slash( $post_content ),
 			'post_status'    => 'publish',
 			'comment_status' => 'open',
 			'post_author'    => get_current_user_id(),
