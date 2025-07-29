@@ -316,6 +316,8 @@ class CourseModel {
 		);
 		//phpcs:enable
 
+		$query = apply_filters( 'modify_get_courses_by_instructor_query', $query, $instructor_id, $where_post_status, $post_types, $limit_offset, $select_col );
+
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
 	}
@@ -673,7 +675,6 @@ class CourseModel {
 
 		$args = wp_parse_args( $args, $default_args );
 		return new \WP_Query( $args );
-
 	}
 
 	/**
