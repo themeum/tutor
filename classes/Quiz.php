@@ -1108,47 +1108,6 @@ class Quiz {
 	}
 
 	/**
-	 * Add true false type question answer options.
-	 *
-	 * @param int $question_id question id.
-	 *
-	 * @return void
-	 */
-	private function add_true_false_options( $question_id ) {
-		global $wpdb;
-		$question_type = 'true_false';
-
-		$wpdb->delete(
-			$wpdb->prefix . 'tutor_quiz_question_answers',
-			array(
-				'belongs_question_id'   => $question_id,
-				'belongs_question_type' => $question_type,
-			)
-		);
-
-		$data = array(
-			array(
-				'belongs_question_id'   => $question_id,
-				'belongs_question_type' => $question_type,
-				'answer_title'          => __( 'True', 'tutor' ),
-				'is_correct'            => 1,
-				'answer_two_gap_match'  => 'true',
-			),
-			array(
-				'belongs_question_id'   => $question_id,
-				'belongs_question_type' => $question_type,
-				'answer_title'          => __( 'False', 'tutor' ),
-				'is_correct'            => 0,
-				'answer_two_gap_match'  => 'false',
-			),
-		);
-
-		foreach ( $data as $row ) {
-			$wpdb->insert( $wpdb->prefix . 'tutor_quiz_question_answers', $row );
-		}
-	}
-
-	/**
 	 * Rendering quiz for frontend
 	 *
 	 * @since 1.0.0
