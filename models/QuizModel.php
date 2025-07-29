@@ -1175,6 +1175,46 @@ class QuizModel {
 
 
 	/**
+	 * Prepare attempt result from attempt data.
+	 *
+	 * @since 3.7.1
+	 *
+	 * @param int|object $attempt attempt id or object.
+	 *
+	 * @return string pass, fail, pending
+	 */
+	public static function prepare_attempt_result( $attempt ) {
+		if ( is_numeric( $attempt ) ) {
+			$attempt = tutor_utils()->get_attempt( $attempt );
+		}
+
+		if ( ! $attempt ) {
+			return false;
+		}
+
+		$attempt_info = maybe_unserialize( $attempt->attempt_info );
+		$answers_map  = self::get_quiz_answers_by_attempt_id( $attempt->attempt_id, true );
+
+		$earned_percentage = self::calculate_attempt_earned_percentage( $attempt );
+		$passing_grade     = (int) $attempt_info['passing_grade'] ?? 0;
+
+		$answers = $answers_map[ $attempt->attempt_id ] ?? array();
+		$answers = is_array( $answers ) ? $answers : array();
+
+		$has_pending = (bool) count(
+			array_filter( $answers, fn( $answer ) => null === $answer->is_correct )
+		);
+
+		if ( $has_pending ) {
+			$result = self::RESULT_PENDING;
+		} else {
+			$result = ( $earned_percentage >= $passing_grade ) ? self::RESULT_PASS : self::RESULT_FAIL;
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Get a quiz attempt result
 	 *
 	 * @since 3.7.1
@@ -1203,26 +1243,30 @@ class QuizModel {
 		 *
 		 * @since 3.7.1
 		 */
-		$attempt_info = maybe_unserialize( $attempt->attempt_info );
-		$answers_map  = self::get_quiz_answers_by_attempt_id( $attempt_id, true );
-
-		$earned_percentage = self::calculate_attempt_earned_percentage( $attempt );
-		$passing_grade     = (int) $attempt_info['passing_grade'] ?? 0;
-
-		$answers = $answers_map[ $attempt->attempt_id ] ?? array();
-		$answers = is_array( $answers ) ? $answers : array();
-
-		$has_pending = (bool) count(
-			array_filter( $answers, fn( $answer ) => null === $answer->is_correct )
-		);
-
-		if ( $has_pending ) {
-			$result = self::RESULT_PENDING;
-		} else {
-			$result = ( $earned_percentage >= $passing_grade ) ? self::RESULT_PASS : self::RESULT_FAIL;
-		}
+		$result = self::prepare_attempt_result( $attempt );
 
 		return $result;
 	}
 
+	/**
+	 * Update attempt result.
+	 *
+	 * @param int $attempt_id attempt id.
+	 *
+	 * @return bool
+	 */
+	public static function update_attempt_result( $attempt_id ) {
+		$attempt_result = self::prepare_attempt_result( $attempt_id );
+		if ( $attempt_result ) {
+			QueryHelper::update(
+				QueryHelper::prepare_table_name( 'tutor_quiz_attempts' ),
+				array( 'result' => $attempt_result ),
+				array( 'attempt_id' => $attempt_id )
+			);
+
+			return true;
+		}
+
+		return false;
+	}
 }

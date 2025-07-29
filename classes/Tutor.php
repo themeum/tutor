@@ -757,7 +757,12 @@ final class Tutor extends Singleton {
 				attempt_ended_at datetime DEFAULT NULL,
 				is_manually_reviewed int(1) DEFAULT NULL,
 				manually_reviewed_at datetime DEFAULT NULL,
-				PRIMARY KEY  (attempt_id)
+				result varchar(10) DEFAULT NULL,
+				PRIMARY KEY  (attempt_id),
+				INDEX (course_id),
+				INDEX (quiz_id),
+				INDEX (user_id),
+				INDEX (result)
 			) $charset_collate;";
 
 		$quiz_attempt_answers = "CREATE TABLE {$wpdb->prefix}tutor_quiz_attempt_answers (
@@ -1178,7 +1183,6 @@ final class Tutor extends Singleton {
 			'email_from_name'                   => get_option( 'blogname' ),
 			'email_from_address'                => get_option( 'admin_email' ),
 			'email_footer_text'                 => '',
-			'earning_admin_commission'          => '20',
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
 			'color_preset_type'                 => 'default',
