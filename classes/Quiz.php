@@ -961,8 +961,8 @@ class Quiz {
 		do_action( 'tutor_quiz_review_answer_before', $attempt_answer_id, $attempt_id, $mark_as );
 
 		if ( 'correct' === $mark_as ) {
-
-			$answer_update_data = array(
+			$attempt_update_data = array();
+			$answer_update_data  = array(
 				'achieved_mark' => $attempt_answer->question_mark,
 				'is_correct'    => 1,
 			);
@@ -982,11 +982,12 @@ class Quiz {
 				$attempt_update_data['attempt_status'] = 'attempt_ended';
 			}
 
-			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
-
+			if ( ! empty( $attempt_update_data ) ) {
+				$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
+			}
 		} elseif ( 'incorrect' === $mark_as ) {
-
-			$answer_update_data = array(
+			$attempt_update_data = array();
+			$answer_update_data  = array(
 				'achieved_mark' => '0.00',
 				'is_correct'    => 0,
 			);
@@ -1006,7 +1007,9 @@ class Quiz {
 				$attempt_update_data['attempt_status'] = 'attempt_ended';
 			}
 
-			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
+			if ( ! empty( $attempt_update_data ) ) {
+				$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
+			}
 		}
 
 		QuizModel::update_attempt_result( $attempt_id );
