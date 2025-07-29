@@ -205,6 +205,18 @@ class Upgrader {
 					ADD INDEX (result);"
 			);
 		}
+
+		/**
+		 * For content bank question.
+		 * Column `content_id` is added to the `tutor_quiz_questions` table
+		 *
+		 * @since 3.7.0
+		 */
+		$question_table = $wpdb->prefix . 'tutor_quiz_questions';
+		if ( QueryHelper::table_exists( $question_table ) && ! QueryHelper::column_exist( $question_table, 'content_id' ) ) {
+			$wpdb->query( "ALTER TABLE {$question_table} ADD COLUMN content_id BIGINT UNSIGNED DEFAULT NULL AFTER question_id" ); //phpcs:ignore
+			$wpdb->query( "ALTER TABLE {$question_table} ADD INDEX content_id(content_id)" );//phpcs:ignore
+		}
 	}
 
 	/**
