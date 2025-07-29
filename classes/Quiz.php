@@ -69,9 +69,6 @@ class Quiz {
 	 * @return void
 	 */
 	public function __construct() {
-		add_action( 'save_post_tutor_quiz', array( $this, 'save_quiz_meta' ) );
-		add_action( 'wp_ajax_remove_quiz_from_post', array( $this, 'remove_quiz_from_post' ) );
-
 		add_action( 'wp_ajax_tutor_quiz_timeout', array( $this, 'tutor_quiz_timeout' ) );
 
 		// User take the quiz.
@@ -305,43 +302,6 @@ class Quiz {
 			}
 		}
 		wp_send_json_error();
-	}
-
-	/**
-	 * Update quiz meta
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $post_ID post id.
-	 * @return void
-	 */
-	public function save_quiz_meta( $post_ID ) {
-		//phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( isset( $_POST['quiz_option'] ) ) {
-			$quiz_option = tutor_utils()->sanitize_array( $_POST['quiz_option'] ); //phpcs:ignore
-			update_post_meta( $post_ID, 'tutor_quiz_option', $quiz_option );
-		}
-	}
-
-	/**
-	 * Remove quiz from post
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function remove_quiz_from_post() {
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
-		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-
-		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
-
-		$wpdb->update( $wpdb->posts, array( 'post_parent' => 0 ), array( 'ID' => $quiz_id ) );
-		wp_send_json_success();
 	}
 
 	/**
