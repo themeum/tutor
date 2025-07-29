@@ -21,14 +21,13 @@ import ImportExportCompletedState from '@ImportExport/components/modals/import-e
 import ImportExportProgressState from '@ImportExport/components/modals/import-export-states/ImportExportProgressState';
 import {
   defaultExportFormData,
-  useExportableContentQuery,
-  type ExportableContent,
   type ExportFormData,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 
 import { tutorConfig } from '@TutorShared/config/config';
+import { type ExportableContent, useExportableContentQuery } from '@TutorShared/services/import-export';
 import { type Collection } from '@TutorShared/utils/types';
 import CollectionListModal from './CollectionList';
 

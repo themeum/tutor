@@ -11,18 +11,14 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import {
-  type BulkSelectionFormData,
-  type ExportableContent,
-  type ExportableCourseContentType,
-  type ExportFormData,
-} from '@ImportExport/services/import-export';
+import { type BulkSelectionFormData, type ExportFormData } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { type useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type ExportableContent, type ExportableCourseContentType } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface ExportInitialStateProps {
