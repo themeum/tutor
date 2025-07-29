@@ -9,4 +9,6 @@
  */
 
 ?>
-<div id="tutor-addon-list-wrapper"></div>
+<div class="tutor-admin-wrap">
+	<div id="tutor-addon-list-wrapper"></div>
+</div>
