@@ -312,24 +312,19 @@ class Quiz {
 	 * @return void
 	 */
 	public function start_the_quiz() {
-		if ( Input::post( 'tutor_action' ) !== 'tutor_start_quiz' ) {
+		if ( 'tutor_start_quiz' !== Input::post( 'tutor_action' ) ) {
 			return;
 		}
-		// Checking nonce.
+
 		tutor_utils()->checking_nonce();
 
 		if ( ! is_user_logged_in() ) {
-			// TODO: need to set a view in the next version.
-			die( 'Please sign in to do this operation' );
+			die( esc_html__( 'Please sign in to do this operation', 'tutor' ) );
 		}
 
 		$user_id = get_current_user_id();
-		$user    = get_userdata( $user_id );
-
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
-
-		$quiz   = get_post( $quiz_id );
-		$course = CourseModel::get_course_by_quiz( $quiz_id );
+		$course  = CourseModel::get_course_by_quiz( $quiz_id );
 
 		self::quiz_attempt( $course->ID, $quiz_id, $user_id );
 		wp_safe_redirect( get_permalink( $quiz_id ) );
