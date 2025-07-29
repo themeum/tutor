@@ -1184,7 +1184,6 @@ final class Tutor extends Singleton {
 			'email_from_address'                => get_option( 'admin_email' ),
 			'email_footer_text'                 => '',
 			'earning_admin_commission'          => '20',
-			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
 			'color_preset_type'                 => 'default',
 
