@@ -23,6 +23,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Q_And_A {
 
 	/**
+	 * List of all possible Q&A question statuses.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @var string[]
+	 */
+	const Q_AND_A_STATUS = array(
+		'all',
+		'read',
+		'unread',
+		'important',
+		'archived',
+	);
+
+	/**
 	 * Register hooks
 	 *
 	 * @param boolean $register_hooks true/false to execute the hooks.
@@ -378,14 +393,15 @@ class Q_And_A {
 	 */
 	public static function tabs_key_value( $asker_id = null ) {
 
-		$course_id = Input::get( 'course-id', '', Input::TYPE_STRING );
-		$stats = array(
-			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, null, true, array( 'course_id' => $course_id ) ),
-			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'read', true, array( 'course_id' => $course_id ) ),
-			'unread'    => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'unread', true, array( 'course_id' => $course_id ) ),
-			'important' => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'important', true, array( 'course_id' => $course_id ) ),
-			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'archived', true, array( 'course_id' => $course_id ) ),
-		);
+		$course_id_param = Input::get( 'course-id', '', Input::TYPE_STRING );
+		$course_id       = $course_id_param ? array( 'course_id' => $course_id_param ) : array();
+
+		// Loop through all predefined Q&A statuses to retrieve corresponding question statistics.
+		foreach ( self::Q_AND_A_STATUS as $status ) {
+
+			$label            = 'all' === $status ? null : $status;
+			$stats[ $status ] = tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, $label, true, $course_id );
+		}
 
 		// Assign value, url etc to the tab array.
 		$tabs = array_map(
