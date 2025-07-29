@@ -120,7 +120,7 @@ class FlashMessage extends AbstractCache {
 	public function show() {
 		$data = $this->get_cache();
 		if ( is_array( $data ) && count( $data ) ) {
-			tutor_closeable_alert_msg( $data['message'], $data['alert'] );
+			tutor_closeable_alert_msg( $data['message'], $data['alert'], array(), $data['css_class'] ?? '' );
 
 			// Delete flash message.
 			$this->delete_cache();

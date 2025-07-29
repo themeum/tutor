@@ -1,7 +1,7 @@
-import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
-import { OrderBadge } from '@OrderComponents/order/OrderBadge';
-import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
-import { useOrderContext } from '@OrderContexts/order-context';
+import CancelOrderModal from '@OrderDetails/components/modals/CancelOrderModal';
+import { OrderBadge } from '@OrderDetails/components/order/OrderBadge';
+import { PaymentBadge } from '@OrderDetails/components/order/PaymentBadge';
+import { useOrderContext } from '@OrderDetails/contexts/order-context';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Container from '@TutorShared/components/Container';

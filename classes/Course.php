@@ -22,6 +22,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\QuizModel;
 use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
@@ -2094,6 +2095,9 @@ class Course extends Tutor_Base {
 	 * Mark complete completed
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 3.7.1 Filter hook: tutor_user_can_complete_course added
+	 *
 	 * @return void
 	 */
 	public function mark_course_complete() {
@@ -2102,6 +2106,8 @@ class Course extends Tutor_Base {
 		if ( 'tutor_complete_course' !== $tutor_action || ! $course_id ) {
 			return;
 		}
+
+		$permalink = get_the_permalink( $course_id );
 
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
@@ -2113,15 +2119,22 @@ class Course extends Tutor_Base {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
 
-		CourseModel::mark_course_as_completed( $course_id, $user_id );
+		/**
+		 * Filter hook provided to restrict course completion. This is useful
+		 * for specific cases like prerequisites. WP_Error should be returned
+		 * from the filter value to prevent the completion.
+		 */
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		if ( is_wp_error( $can_complete ) ) {
+			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
+		} else {
+			CourseModel::mark_course_as_completed( $course_id, $user_id );
+			// Set temporary identifier to show review pop up.
+			self::set_review_popup_data( $user_id, $course_id, $permalink );
 
-		$permalink = get_the_permalink( $course_id );
-
-		// Set temporary identifier to show review pop up.
-		self::set_review_popup_data( $user_id, $course_id, $permalink );
-
-		wp_safe_redirect( $permalink );
-		exit;
+			wp_safe_redirect( $permalink );
+			exit;
+		}
 	}
 
 	/**
@@ -2802,7 +2815,7 @@ class Course extends Tutor_Base {
 				$attempt = tutor_utils()->get_quiz_attempt( $quiz->ID );
 				if ( $attempt ) {
 					$passing_grade     = tutor_utils()->get_quiz_option( $quiz->ID, 'passing_grade', 0 );
-					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
+					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
 						$required_quiz_pass++;

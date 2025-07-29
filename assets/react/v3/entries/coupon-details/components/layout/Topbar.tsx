@@ -12,7 +12,7 @@ import {
   convertFormDataToPayload,
   useCreateCouponMutation,
   useUpdateCouponMutation,
-} from '@CouponServices/coupon';
+} from '@CouponDetails/services/coupon';
 import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
