@@ -1269,5 +1269,4 @@ class QuizModel {
 
 		return false;
 	}
-
 }

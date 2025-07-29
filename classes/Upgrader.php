@@ -267,7 +267,6 @@ class Upgrader {
 			) {$charset_collate};";
 			dbDelta( $gradebook_results );
 		}
-
 	}
 
 	/**
