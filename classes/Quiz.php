@@ -812,7 +812,9 @@ class Quiz {
 				$attempt_info['attempt_status'] = 'review_required';
 			}
 
-			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $attempt_info, array( 'attempt_id' => $attempt_id ) );
+			$wpdb->update( $wpdb->tutor_quiz_attempts, $attempt_info, array( 'attempt_id' => $attempt_id ) );
+
+			QuizModel::update_attempt_result( $attempt_id );
 		}
 
 		// After hook.
@@ -964,7 +966,9 @@ class Quiz {
 				'achieved_mark' => $attempt_answer->question_mark,
 				'is_correct'    => 1,
 			);
+
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
+
 			if ( 0 == $previous_ans || null == $previous_ans ) {
 				// if previous answer was wrong or in review then add point as correct.
 				$attempt_update_data = array(
@@ -977,6 +981,7 @@ class Quiz {
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
 				$attempt_update_data['attempt_status'] = 'attempt_ended';
 			}
+
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
 
 		} elseif ( 'incorrect' === $mark_as ) {
@@ -985,6 +990,7 @@ class Quiz {
 				'achieved_mark' => '0.00',
 				'is_correct'    => 0,
 			);
+
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answer_update_data, array( 'attempt_answer_id' => $attempt_answer_id ) );
 
 			if ( 1 == $previous_ans ) {
@@ -995,12 +1001,16 @@ class Quiz {
 					'manually_reviewed_at' => date( 'Y-m-d H:i:s', tutor_time() ),//phpcs:ignore
 				);
 			}
+
 			if ( 'open_ended' === $question->question_type || 'short_answer' === $question->question_type ) {
 				$attempt_update_data['attempt_status'] = 'attempt_ended';
 			}
 
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $attempt_update_data, array( 'attempt_id' => $attempt_id ) );
 		}
+
+		QuizModel::update_attempt_result( $attempt_id );
+
 		do_action( 'tutor_quiz_review_answer_after', $attempt_answer_id, $attempt_id, $mark_as );
 		do_action( 'tutor_quiz/answer/review/after', $attempt_answer_id, $course_id, $student_id );
 
