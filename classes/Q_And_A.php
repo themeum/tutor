@@ -378,12 +378,13 @@ class Q_And_A {
 	 */
 	public static function tabs_key_value( $asker_id = null ) {
 
+		$course_id = Input::get( 'course-id', '', Input::TYPE_STRING );
 		$stats = array(
-			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, null, true, $_GET ),
-			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'read', true, $_GET ),
-			'unread'    => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'unread', true, $_GET ),
-			'important' => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'important', true, $_GET ),
-			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'archived', true, $_GET ),
+			'all'       => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, null, true, array( 'course_id' => $course_id ) ),
+			'read'      => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'read', true, array( 'course_id' => $course_id ) ),
+			'unread'    => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'unread', true, array( 'course_id' => $course_id ) ),
+			'important' => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'important', true, array( 'course_id' => $course_id ) ),
+			'archived'  => tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, 'archived', true, array( 'course_id' => $course_id ) ),
 		);
 
 		// Assign value, url etc to the tab array.
