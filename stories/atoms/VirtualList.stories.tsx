@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
 const items = Array.from({ length: 100 }, (_, i) => `Item ${i + 1}`);
 
-const meta: Meta<typeof VirtualList> = {
+const meta = {
   title: 'Atoms/VirtualList',
   component: VirtualList,
   tags: ['autodocs'],
@@ -72,20 +72,21 @@ const meta: Meta<typeof VirtualList> = {
       <VirtualList {...args} aria-label="Virtual List" />
     </div>
   ),
-};
+} satisfies Meta<typeof VirtualList>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const CustomHeight: Story = {
+export const CustomHeight = {
   args: {
     height: 500,
   },
-};
+} satisfies Story;
 
-export const CustomItemHeight: Story = {
+export const CustomItemHeight = {
   args: {
     itemHeight: 60,
     renderItem: (item: unknown, index: number, style: React.CSSProperties) => (
@@ -108,10 +109,10 @@ export const CustomItemHeight: Story = {
       </div>
     ),
   },
-};
+} satisfies Story;
 
-export const Empty: Story = {
+export const Empty = {
   args: {
     items: [],
   },
-};
+} satisfies Story;
