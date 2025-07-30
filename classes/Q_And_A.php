@@ -29,7 +29,7 @@ class Q_And_A {
 	 *
 	 * @var string[]
 	 */
-	const Q_AND_A_STATUS = array(
+	const STATUS_LIST = array(
 		'all',
 		'read',
 		'unread',
@@ -393,14 +393,14 @@ class Q_And_A {
 	 */
 	public static function tabs_key_value( $asker_id = null ) {
 
-		$course_id_param = Input::get( 'course-id', '', Input::TYPE_STRING );
-		$course_id       = $course_id_param ? array( 'course_id' => $course_id_param ) : array();
+		$args  = Input::has( 'course-id' ) ? array( 'course_id' => Input::get( 'course-id', 0, Input::TYPE_INT ) ) : array();
+		$stats = array();
 
 		// Loop through all predefined Q&A statuses to retrieve corresponding question statistics.
-		foreach ( self::Q_AND_A_STATUS as $status ) {
+		foreach ( self::STATUS_LIST as $status ) {
 
 			$label            = 'all' === $status ? null : $status;
-			$stats[ $status ] = tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, $label, true, $course_id );
+			$stats[ $status ] = tutor_utils()->get_qa_questions( 0, 99999, '', null, null, $asker_id, $label, true, $args );
 		}
 
 		// Assign value, url etc to the tab array.
