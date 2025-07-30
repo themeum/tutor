@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import Skeleton from '@TutorShared/atoms/Skeleton';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Skeleton> = {
+const meta = {
   title: 'Atoms/Skeleton',
   component: Skeleton,
   tags: ['autodocs'],
@@ -71,49 +71,50 @@ const meta: Meta<typeof Skeleton> = {
       <Skeleton {...args} aria-label="Skeleton Loader" tabIndex={0} />
     </div>
   ),
-};
+} satisfies Meta<typeof Skeleton>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const CustomSize: Story = {
+export const CustomSize = {
   args: {
     width: 400,
     height: 64,
   },
-};
+} satisfies Story;
 
-export const Animated: Story = {
+export const Animated = {
   args: {
     animation: true,
   },
-};
+} satisfies Story;
 
-export const MagicAi: Story = {
+export const MagicAi = {
   args: {
     isMagicAi: true,
     animation: true,
   },
-};
+} satisfies Story;
 
-export const Round: Story = {
+export const Round = {
   args: {
     isRound: true,
     width: 40,
     height: 40,
   },
-};
+} satisfies Story;
 
-export const CustomAnimationDuration: Story = {
+export const CustomAnimationDuration = {
   args: {
     animation: true,
     animationDuration: 3,
   },
-};
+} satisfies Story;
 
-export const CustomStyle: Story = {
+export const CustomStyle = {
   args: {
     width: 120,
     height: 24,
@@ -130,4 +131,4 @@ export const CustomStyle: Story = {
       tabIndex={0}
     />
   ),
-};
+} satisfies Story;
