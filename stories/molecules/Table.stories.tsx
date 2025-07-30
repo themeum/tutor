@@ -55,7 +55,7 @@ const columns: Column<User>[] = [
   },
 ];
 
-const meta: Meta<typeof Table> = {
+const meta = {
   title: 'Molecules/Table',
   component: Table,
   tags: ['autodocs'],
@@ -112,40 +112,41 @@ const meta: Meta<typeof Table> = {
       <Table {...args} />
     </div>
   ),
-};
+} satisfies Meta<typeof Table>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     loading: true,
     itemsPerPage: 4,
   },
-};
+} satisfies Story;
 
-export const NoData: Story = {
+export const NoData = {
   args: {
     data: [],
   },
-};
+} satisfies Story;
 
-export const NoHeader: Story = {
+export const NoHeader = {
   args: {
     noHeader: true,
   },
-};
+} satisfies Story;
 
-export const CustomHeader: Story = {
+export const CustomHeader = {
   args: {
     entireHeader: (
       <span
         css={css`
           font-size: 1.1rem;
           font-weight: bold;
-          color: ${colorTokens.text.brand};
+          color: ${colorTokens.text.brand} satisfies Story;
         `}
         aria-label="Custom Table Header"
         tabIndex={0}
@@ -154,21 +155,21 @@ export const CustomHeader: Story = {
       </span>
     ),
   },
-};
+} satisfies Story;
 
-export const Striped: Story = {
+export const Striped = {
   args: {
     isStriped: true,
   },
-};
+} satisfies Story;
 
-export const Rounded: Story = {
+export const Rounded = {
   args: {
     isRounded: true,
   },
-};
+} satisfies Story;
 
-export const CustomRowStyle: Story = {
+export const CustomRowStyle = {
   args: {
     rowStyle: css`
       td {
@@ -176,10 +177,10 @@ export const CustomRowStyle: Story = {
       }
     `,
   },
-};
+} satisfies Story;
 
-export const Sortable: Story = {
-  render: (args) => {
+export const Sortable = {
+  render: (args: React.ComponentProps<typeof Table>) => {
     const [sortDirections, setSortDirections] = useState<{ [key: string]: 'asc' | 'desc' }>({});
     const [sortProperty, setSortProperty] = useState<string | null>(null);
 
@@ -262,9 +263,9 @@ export const Sortable: Story = {
       </div>
     );
   },
-};
+} satisfies Story;
 
-export const LastRowCustomRender: Story = {
+export const LastRowCustomRender = {
   args: {
     renderInLastRow: (
       <span
@@ -280,4 +281,4 @@ export const LastRowCustomRender: Story = {
       </span>
     ),
   },
-};
+} satisfies Story;
