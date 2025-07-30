@@ -8,7 +8,7 @@ import Popover from '@TutorShared/molecules/Popover';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 
-const meta: Meta<typeof Popover> = {
+const meta = {
   title: 'Molecules/Popover',
   component: Popover,
   parameters: {
@@ -50,13 +50,24 @@ const meta: Meta<typeof Popover> = {
       description: 'Hide the arrow indicator',
     },
   },
-};
+  args: {
+    arrow: 'top',
+    gap: 8,
+    maxWidth: '200px',
+    closeOnEscape: true,
+    animationType: AnimationType.slideLeft,
+    hideArrow: false,
+    children: <Button variant="primary">Open Popover</Button>,
+    closePopover: () => {},
+    isOpen: false,
+    triggerRef: undefined,
+  },
+} satisfies Meta<typeof Popover>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const PopoverTemplate = (args: any) => {
+const PopoverTemplate = (args: React.ComponentProps<typeof Popover>) => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -68,7 +79,10 @@ const PopoverTemplate = (args: any) => {
     setIsOpen(false);
   };
 
-  const animationTypeValue = AnimationType[args.animationType as keyof typeof AnimationType];
+  const animationTypeValue: AnimationType =
+    typeof args.animationType === 'string'
+      ? (AnimationType[args.animationType as keyof typeof AnimationType] ?? AnimationType.slideLeft)
+      : AnimationType.slideLeft;
 
   return (
     <div css={templateStyles.container}>
@@ -97,7 +111,7 @@ const PopoverTemplate = (args: any) => {
   );
 };
 
-export const Default: Story = {
+export const Default = {
   render: PopoverTemplate,
   args: {
     arrow: 'top',
@@ -106,9 +120,9 @@ export const Default: Story = {
     animationType: AnimationType.slideLeft,
     hideArrow: false,
   },
-};
+} satisfies Story;
 
-export const ArrowLeft: Story = {
+export const ArrowLeft = {
   render: PopoverTemplate,
   args: {
     arrow: 'left',
@@ -116,9 +130,9 @@ export const ArrowLeft: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideRight,
   },
-};
+} satisfies Story;
 
-export const ArrowRight: Story = {
+export const ArrowRight = {
   render: PopoverTemplate,
   args: {
     arrow: 'right',
@@ -126,9 +140,9 @@ export const ArrowRight: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideLeft,
   },
-};
+} satisfies Story;
 
-export const ArrowBottom: Story = {
+export const ArrowBottom = {
   render: PopoverTemplate,
   args: {
     arrow: 'bottom',
@@ -136,9 +150,9 @@ export const ArrowBottom: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideUp,
   },
-};
+} satisfies Story;
 
-export const ArrowTop: Story = {
+export const ArrowTop = {
   render: PopoverTemplate,
   args: {
     arrow: 'top',
@@ -146,9 +160,9 @@ export const ArrowTop: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideDown,
   },
-};
+} satisfies Story;
 
-export const ArrowMiddle: Story = {
+export const ArrowMiddle = {
   render: PopoverTemplate,
   args: {
     arrow: 'middle',
@@ -156,9 +170,9 @@ export const ArrowMiddle: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideDown,
   },
-};
+} satisfies Story;
 
-export const ArrowAbsoluteCenter: Story = {
+export const ArrowAbsoluteCenter = {
   render: PopoverTemplate,
   args: {
     arrow: 'absoluteCenter',
@@ -166,9 +180,9 @@ export const ArrowAbsoluteCenter: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideDown,
   },
-};
+} satisfies Story;
 
-export const NoArrow: Story = {
+export const NoArrow = {
   render: PopoverTemplate,
   args: {
     hideArrow: true,
@@ -176,9 +190,9 @@ export const NoArrow: Story = {
     closeOnEscape: true,
     animationType: AnimationType.fadeIn,
   },
-};
+} satisfies Story;
 
-export const CustomWidth: Story = {
+export const CustomWidth = {
   render: PopoverTemplate,
   args: {
     arrow: 'top',
@@ -187,9 +201,9 @@ export const CustomWidth: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideDown,
   },
-};
+} satisfies Story;
 
-export const FadeAnimation: Story = {
+export const FadeAnimation = {
   render: PopoverTemplate,
   args: {
     arrow: 'bottom',
@@ -197,9 +211,9 @@ export const FadeAnimation: Story = {
     closeOnEscape: true,
     animationType: AnimationType.fadeIn,
   },
-};
+} satisfies Story;
 
-export const LargeGap: Story = {
+export const LargeGap = {
   render: PopoverTemplate,
   args: {
     arrow: 'top',
@@ -207,9 +221,9 @@ export const LargeGap: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideDown,
   },
-};
+} satisfies Story;
 
-export const CloseOnEscape: Story = {
+export const CloseOnEscape = {
   render: PopoverTemplate,
   args: {
     arrow: 'top',
@@ -217,10 +231,9 @@ export const CloseOnEscape: Story = {
     closeOnEscape: false,
     animationType: AnimationType.slideDown,
   },
-};
+} satisfies Story;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const RichContentTemplate = (args: any) => {
+const RichContentTemplate = (args: React.ComponentProps<typeof Popover>) => {
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -275,7 +288,7 @@ const RichContentTemplate = (args: any) => {
   );
 };
 
-export const RichContent: Story = {
+export const RichContent = {
   render: RichContentTemplate,
   args: {
     arrow: 'top',
@@ -284,7 +297,7 @@ export const RichContent: Story = {
     closeOnEscape: true,
     animationType: AnimationType.slideDown,
   },
-};
+} satisfies Story;
 
 const templateStyles = {
   container: css`
