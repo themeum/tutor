@@ -3,7 +3,7 @@ import TextInput from '@TutorShared/atoms/TextInput';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof TextInput> = {
+const meta = {
   title: 'Atoms/TextInput',
   component: TextInput,
   tags: ['autodocs'],
@@ -118,90 +118,91 @@ const meta: Meta<typeof TextInput> = {
 
     return <TextInput {...args} value={value} onChange={handleChange} />;
   },
-};
+} satisfies Meta<typeof TextInput>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const WithLabel: Story = {
+export const WithLabel = {
   args: {
     label: 'Your Name',
     placeholder: 'Enter your name',
   },
-};
+} satisfies Story;
 
-export const InlineLabel: Story = {
+export const InlineLabel = {
   args: {
     label: 'Email',
     isInlineLabel: true,
     placeholder: 'Enter your email',
   },
-};
+} satisfies Story;
 
-export const Placeholder: Story = {
+export const Placeholder = {
   args: {
     placeholder: 'Type something...',
   },
-};
+} satisfies Story;
 
-export const NumberType: Story = {
+export const NumberType = {
   args: {
     type: 'number',
     label: 'Age',
     placeholder: 'Enter your age',
   },
-};
+} satisfies Story;
 
-export const Clearable: Story = {
+export const Clearable = {
   args: {
     label: 'Clearable',
     isClearable: true,
     value: 'Clear me',
   },
-};
+} satisfies Story;
 
-export const SearchVariant: Story = {
+export const SearchVariant = {
   args: {
     variant: 'search',
     placeholder: 'Search...',
   },
-};
+} satisfies Story;
 
-export const SmallSize: Story = {
+export const SmallSize = {
   args: {
     size: 'small',
     label: 'Small Input',
     placeholder: 'Small input',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled',
     disabled: true,
     value: 'Disabled input',
   },
-};
+} satisfies Story;
 
-export const ReadOnly: Story = {
+export const ReadOnly = {
   args: {
     label: 'Read Only',
     readOnly: true,
     value: 'Read only value',
   },
-};
+} satisfies Story;
 
-export const FocusOnMount: Story = {
+export const FocusOnMount = {
   args: {
     label: 'Focus On Mount',
     focusOnMount: true,
     placeholder: 'Focused on mount',
   },
-};
+} satisfies Story;
 
-export const CustomStyle: Story = {
+export const CustomStyle = {
   args: {
     label: 'Styled Input',
     inputCss: css`
@@ -211,4 +212,4 @@ export const CustomStyle: Story = {
     `,
     placeholder: 'Styled input',
   },
-};
+} satisfies Story;
