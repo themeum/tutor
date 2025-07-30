@@ -2,7 +2,7 @@ import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof MagicButton> = {
+const meta = {
   title: 'Atoms/MagicButton',
   component: MagicButton,
   tags: ['autodocs'],
@@ -69,18 +69,19 @@ const meta: Meta<typeof MagicButton> = {
       {args.children}
     </MagicButton>
   ),
-};
+} satisfies Meta<typeof MagicButton>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default = {
   args: {
     children: 'Magic Button',
   },
-};
+} satisfies Story;
 
-export const Variants: Story = {
+export const Variants = {
   args: {
     children: 'Magic Button',
   },
@@ -99,9 +100,9 @@ export const Variants: Story = {
       ))}
     </div>
   ),
-};
+} satisfies Story;
 
-export const Sizes: Story = {
+export const Sizes = {
   args: {
     children: 'Magic Button',
   },
@@ -118,9 +119,9 @@ export const Sizes: Story = {
       </MagicButton>
     </div>
   ),
-};
+} satisfies Story;
 
-export const Rounded: Story = {
+export const Rounded = {
   args: {
     children: 'Rounded',
   },
@@ -134,23 +135,23 @@ export const Rounded: Story = {
       </MagicButton>
     </div>
   ),
-};
+} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     children: 'Loading...',
     loading: true,
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     children: 'Disabled',
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const WithIcon: Story = {
+export const WithIcon = {
   args: {
     children: (
       <>
@@ -159,4 +160,4 @@ export const WithIcon: Story = {
       </>
     ),
   },
-};
+} satisfies Story;
