@@ -4,7 +4,7 @@ import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof ThreeDots> = {
+const meta = {
   title: 'Molecules/ThreeDots',
   component: ThreeDots,
   tags: ['autodocs'],
@@ -92,6 +92,8 @@ const meta: Meta<typeof ThreeDots> = {
     disabled: false,
     closeOnEscape: true,
     wrapperCss: undefined,
+    closePopover: () => {},
+    onClick: () => {},
     children: (
       <>
         <ThreeDots.Option
@@ -139,45 +141,45 @@ const meta: Meta<typeof ThreeDots> = {
       </ThreeDots>
     );
   },
-};
+} satisfies Meta<typeof ThreeDots>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const Vertical: Story = {
+export const Vertical = {
   args: {
     dotsOrientation: 'vertical',
   },
-};
+} satisfies Story;
 
-export const Inverse: Story = {
+export const Inverse = {
   args: {
     isInverse: true,
   },
-};
+} satisfies Story;
 
-export const SmallSize: Story = {
+export const SmallSize = {
   args: {
     size: 'small',
   },
-};
+} satisfies Story;
 
-export const CustomMaxWidth: Story = {
+export const CustomMaxWidth = {
   args: {
     maxWidth: '220px',
   },
-};
+} satisfies Story;
 
-export const HideArrow: Story = {
+export const HideArrow = {
   args: {
     hideArrow: true,
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     disabled: true,
   },
-};
+} satisfies Story;
