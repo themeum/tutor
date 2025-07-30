@@ -4,7 +4,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { type IconCollection, icons } from '@TutorShared/icons/types';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Button> = {
+const meta = {
   title: 'Atoms/Button',
   component: Button,
   parameters: {
@@ -98,102 +98,102 @@ const meta: Meta<typeof Button> = {
       <Button {...rest} icon={iconElement} buttonCss={buttonCssStyles} buttonContentCss={buttonContentCssStyles} />
     );
   },
-};
+} satisfies Meta<typeof Button>;
 
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const Primary = {
   args: {
     children: 'Primary Button',
     variant: 'primary',
   },
-};
+} satisfies Story;
 
-export const Secondary: Story = {
+export const Secondary = {
   args: {
     children: 'Secondary Button',
     variant: 'secondary',
   },
-};
+} satisfies Story;
 
-export const Tertiary: Story = {
+export const Tertiary = {
   args: {
     children: 'Tertiary Button',
     variant: 'tertiary',
   },
-};
+} satisfies Story;
 
-export const Danger: Story = {
+export const Danger = {
   args: {
     children: 'Danger Button',
     variant: 'danger',
   },
-};
+} satisfies Story;
 
-export const WP: Story = {
+export const WP = {
   args: {
     children: 'WP Button',
     variant: 'WP',
   },
-};
+} satisfies Story;
 
-export const Text: Story = {
+export const Text = {
   args: {
     children: 'Text Button',
     variant: 'text',
   },
-};
+} satisfies Story;
 
-export const Outlined: Story = {
+export const Outlined = {
   args: {
     children: 'Outlined Button',
     variant: 'primary',
     isOutlined: true,
   },
-};
+} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     children: 'Loading Button',
     loading: true,
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     children: 'Disabled Button',
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const WithIconLeft: Story = {
+export const WithIconLeft = {
   args: {
     children: 'With Icon',
     icon: 'plus',
     iconPosition: 'left',
   },
-};
+} satisfies Story;
 
-export const WithIconRight: Story = {
+export const WithIconRight = {
   args: {
     children: 'Export',
     icon: 'export',
     iconPosition: 'right',
   },
-};
+} satisfies Story;
 
-export const Large: Story = {
+export const Large = {
   args: {
     children: 'Large Button',
     size: 'large',
   },
-};
+} satisfies Story;
 
-export const Small: Story = {
+export const Small = {
   args: {
     children: 'Small Button',
     size: 'small',
   },
-};
+} satisfies Story;
