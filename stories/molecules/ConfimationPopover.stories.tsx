@@ -54,9 +54,9 @@ const meta: Meta<typeof ConfirmationPopover> = {
     },
     animationType: {
       control: 'select',
-      options: ['slideLeft', 'slideRight', 'fade', 'none'],
+      options: Object.keys(AnimationType).filter((key) => isNaN(Number(key))),
       description: 'Popover animation type.',
-      defaultValue: 'slideLeft',
+      defaultValue: AnimationType.slideLeft,
     },
     maxWidth: {
       control: 'text',
@@ -95,6 +95,11 @@ const meta: Meta<typeof ConfirmationPopover> = {
     const [isOpen, setIsOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
+    const animationTypeValue: AnimationType =
+      typeof args.animationType === 'string'
+        ? (AnimationType[args.animationType as keyof typeof AnimationType] ?? AnimationType.slideLeft)
+        : AnimationType.slideLeft;
+
     const handleOpenPopover = () => setIsOpen(true);
     const handleClosePopover = () => setIsOpen(false);
 
@@ -131,6 +136,7 @@ const meta: Meta<typeof ConfirmationPopover> = {
           title="Caution!"
           message="This action will permanently delete your data. Are you sure you want to proceed?"
           triggerRef={triggerRef}
+          animationType={animationTypeValue}
           isOpen={isOpen}
           isLoading={isLoading}
           closePopover={handleClosePopover}
