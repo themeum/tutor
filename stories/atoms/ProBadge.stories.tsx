@@ -3,7 +3,7 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof ProBadge> = {
+const meta = {
   title: 'Atoms/ProBadge',
   component: ProBadge,
   tags: ['autodocs'],
@@ -39,7 +39,8 @@ const meta: Meta<typeof ProBadge> = {
     },
   },
   render: (args) => <ProBadge {...args} aria-label={typeof args.content === 'string' ? args.content : 'Pro Badge'} />,
-};
+} satisfies Meta<typeof ProBadge>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
@@ -50,7 +51,7 @@ export const Default: Story = {
     size: 'regular',
     textOnly: false,
   },
-};
+} satisfies Story;
 
 export const Sizes: Story = {
   args: {
@@ -64,7 +65,7 @@ export const Sizes: Story = {
       ))}
     </div>
   ),
-};
+} satisfies Story;
 
 export const SizesWithChildren: Story = {
   args: {
@@ -83,7 +84,7 @@ export const SizesWithChildren: Story = {
       ))}
     </div>
   ),
-};
+} satisfies Story;
 
 export const WithContent: Story = {
   args: {
@@ -91,7 +92,7 @@ export const WithContent: Story = {
     size: 'regular',
     textOnly: false,
   },
-};
+} satisfies Story;
 
 export const TextOnly: Story = {
   args: {
@@ -99,7 +100,7 @@ export const TextOnly: Story = {
     size: 'large',
     textOnly: true,
   },
-};
+} satisfies Story;
 
 export const WithChildren: Story = {
   args: {
@@ -112,4 +113,4 @@ export const WithChildren: Story = {
     size: 'regular',
     textOnly: false,
   },
-};
+} satisfies Story;
