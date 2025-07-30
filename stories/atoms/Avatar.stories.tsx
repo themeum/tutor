@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback } from '@TutorShared/atoms/Avatar';
-import React from 'react';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Avatar> = {
+const meta = {
   title: 'Atoms/Avatar',
   component: Avatar,
   parameters: {
@@ -26,44 +25,45 @@ const meta: Meta<typeof Avatar> = {
       defaultValue: 'Jane Doe',
     },
   },
-};
+} satisfies Meta<typeof Avatar>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const WithImage: Story = {
+export const WithImage = {
   render: Avatar,
   args: {
     image: 'https://randomuser.me/api/portraits/women/44.jpg',
     name: 'Jane Doe',
   },
-};
+} satisfies Story;
 
-export const FallbackMultiWord: Story = {
+export const FallbackMultiWord = {
   render: Avatar,
   args: {
     name: 'Jane Doe',
     image: '',
   },
-};
+} satisfies Story;
 
-export const FallbackSingleWord: Story = {
+export const FallbackSingleWord = {
   render: Avatar,
   args: {
     name: 'Plato',
     image: '',
   },
-};
+} satisfies Story;
 
-export const FallbackLongName: Story = {
+export const FallbackLongName = {
   render: Avatar,
   args: {
     name: 'Alexandria Cassandra Johnson',
     image: '',
   },
-};
+} satisfies Story;
 
-export const FallbackDirect: StoryObj<typeof AvatarFallback> = {
+export const FallbackDirect = {
   render: (args) => <AvatarFallback {...args} />,
   args: {
     name: 'Fallback Only',
@@ -75,4 +75,4 @@ export const FallbackDirect: StoryObj<typeof AvatarFallback> = {
       },
     },
   },
-};
+} satisfies StoryObj<typeof AvatarFallback>;
