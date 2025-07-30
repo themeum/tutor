@@ -3,7 +3,7 @@ import productPlaceholder from '@SharedImages/course-placeholder.png';
 import ImageCard from '@TutorShared/molecules/ImageCard';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof ImageCard> = {
+const meta = {
   title: 'Molecules/ImageCard',
   component: ImageCard,
   tags: ['autodocs'],
@@ -44,21 +44,21 @@ const meta: Meta<typeof ImageCard> = {
       <ImageCard {...args} />
     </div>
   ),
-};
+} satisfies Meta<typeof ImageCard>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const WithImage: Story = {
+export const WithImage = {
   args: {
     name: 'React Course',
     path: 'https://placehold.co/180x120?text=React+Course',
   },
-};
+} satisfies Story;
 
-export const CustomStyle: Story = {
+export const CustomStyle = {
   args: {
     name: 'Styled Image',
     path: productPlaceholder,
@@ -78,4 +78,4 @@ export const CustomStyle: Story = {
       <ImageCard {...args} />
     </div>
   ),
-};
+} satisfies Story;
