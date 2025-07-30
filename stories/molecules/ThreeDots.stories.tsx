@@ -31,7 +31,7 @@ const meta: Meta<typeof ThreeDots> = {
     },
     animationType: {
       control: 'select',
-      options: Object.values(AnimationType),
+      options: Object.keys(AnimationType).filter((key) => isNaN(Number(key))),
       description: 'Popover animation type.',
       defaultValue: AnimationType.slideLeft,
     },
@@ -122,8 +122,19 @@ const meta: Meta<typeof ThreeDots> = {
     const handleClickButton = () => setIsOpen((open) => !open);
     const handleClosePopover = () => setIsOpen(false);
 
+    const animationTypeValue: AnimationType =
+      typeof args.animationType === 'string'
+        ? (AnimationType[args.animationType as keyof typeof AnimationType] ?? AnimationType.slideLeft)
+        : AnimationType.slideLeft;
+
     return (
-      <ThreeDots {...args} isOpen={isOpen} onClick={handleClickButton} closePopover={handleClosePopover}>
+      <ThreeDots
+        {...args}
+        isOpen={isOpen}
+        onClick={handleClickButton}
+        closePopover={handleClosePopover}
+        animationType={animationTypeValue}
+      >
         {args.children}
       </ThreeDots>
     );
