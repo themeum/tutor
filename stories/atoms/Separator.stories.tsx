@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { Separator } from '@TutorShared/atoms/Separator';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Separator> = {
+const meta = {
   title: 'Atoms/Separator',
   component: Separator,
   tags: ['autodocs'],
@@ -55,24 +55,25 @@ const meta: Meta<typeof Separator> = {
       <span>{args.variant === 'horizontal' ? 'Bottom' : 'Right'}</span>
     </div>
   ),
-};
+} satisfies Meta<typeof Separator>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default = {
   args: {
     variant: 'horizontal',
   },
-};
+} satisfies Story;
 
-export const Vertical: Story = {
+export const Vertical = {
   args: {
     variant: 'vertical',
   },
-};
+} satisfies Story;
 
-export const CustomStyle: Story = {
+export const CustomStyle = {
   args: {
     variant: 'horizontal',
   },
@@ -99,4 +100,4 @@ export const CustomStyle: Story = {
       <span>Bottom</span>
     </div>
   ),
-};
+} satisfies Story;
