@@ -2,7 +2,7 @@ import Paginator from '@TutorShared/molecules/Paginator';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Paginator> = {
+const meta = {
   title: 'Molecules/Paginator',
   component: Paginator,
   tags: ['autodocs'],
@@ -37,6 +37,7 @@ const meta: Meta<typeof Paginator> = {
     currentPage: 1,
     totalItems: 100,
     itemsPerPage: 10,
+    onPageChange: () => {},
   },
   render: (args) => {
     const [currentPage, setCurrentPage] = useState(args.currentPage);
@@ -45,30 +46,31 @@ const meta: Meta<typeof Paginator> = {
 
     return <Paginator {...args} currentPage={currentPage} onPageChange={handlePageChange} />;
   },
-};
+} satisfies Meta<typeof Paginator>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const FewPages: Story = {
+export const FewPages = {
   args: {
     totalItems: 15,
     itemsPerPage: 5,
   },
-};
+} satisfies Story;
 
-export const SinglePage: Story = {
+export const SinglePage = {
   args: {
     totalItems: 5,
     itemsPerPage: 10,
   },
-};
+} satisfies Story;
 
-export const LargeDataset: Story = {
+export const LargeDataset = {
   args: {
     totalItems: 1000,
     itemsPerPage: 20,
   },
-};
+} satisfies Story;
