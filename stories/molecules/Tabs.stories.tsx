@@ -28,7 +28,7 @@ const tabList: TabItem<TabValue>[] = [
   },
 ];
 
-const meta: Meta<typeof Tabs> = {
+const meta = {
   title: 'Molecules/Tabs',
   component: Tabs,
   tags: ['autodocs'],
@@ -75,6 +75,7 @@ const meta: Meta<typeof Tabs> = {
     orientation: 'horizontal',
     disabled: false,
     wrapperCss: undefined,
+    onChange: () => {},
   },
   render: (args) => {
     const [activeTab, setActiveTab] = useState<TabValue>(args.activeTab as TabValue);
@@ -85,40 +86,41 @@ const meta: Meta<typeof Tabs> = {
       <Tabs {...args} activeTab={activeTab} onChange={handleChangeTab} tabList={args.tabList as TabItem<TabValue>[]} />
     );
   },
-};
+} satisfies Meta<typeof Tabs>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const Vertical: Story = {
+export const Vertical = {
   args: {
     orientation: 'vertical',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const WithBadge: Story = {
+export const WithBadge = {
   args: {
     tabList: tabList.map((tab) => (tab.value === 'profile' ? { ...tab, activeBadge: true } : tab)),
   },
-};
+} satisfies Story;
 
-export const WithCount: Story = {
+export const WithCount = {
   args: {
     tabList: tabList.map((tab) =>
       tab.value === 'active' || tab.value === 'settings' ? { ...tab, count: tab.value === 'active' ? 2 : 12 } : tab,
     ),
   },
-};
+} satisfies Story;
 
-export const WithIcons: Story = {
+export const WithIcons = {
   args: {
     tabList: tabList.map((tab) => ({
       ...tab,
@@ -139,9 +141,9 @@ export const WithIcons: Story = {
       ),
     })),
   },
-};
+} satisfies Story;
 
-export const CustomStyle: Story = {
+export const CustomStyle = {
   args: {
     wrapperCss: css`
       background: #f0f4ff;
@@ -150,4 +152,4 @@ export const CustomStyle: Story = {
       box-shadow: 0 2px 8px #1976d233;
     `,
   },
-};
+} satisfies Story;
