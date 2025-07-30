@@ -3,7 +3,7 @@ import Switch from '@TutorShared/atoms/Switch';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Switch> = {
+const meta = {
   title: 'Atoms/Switch',
   component: Switch,
   tags: ['autodocs'],
@@ -75,51 +75,52 @@ const meta: Meta<typeof Switch> = {
     size: 'regular',
   },
   render: (args) => <Switch {...args} aria-label={typeof args.label === 'string' ? args.label : 'Switch'} />,
-};
+} satisfies Meta<typeof Switch>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const Checked: Story = {
+export const Checked = {
   args: {
     checked: true,
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     loading: true,
     checked: true,
   },
-};
+} satisfies Story;
 
-export const LabelRight: Story = {
+export const LabelRight = {
   args: {
     labelPosition: 'right',
   },
-};
+} satisfies Story;
 
-export const Small: Story = {
+export const Small = {
   args: {
     size: 'small',
   },
-};
+} satisfies Story;
 
-export const Large: Story = {
+export const Large = {
   args: {
     size: 'large',
   },
-};
+} satisfies Story;
 
-export const CustomLabelStyle: Story = {
+export const CustomLabelStyle = {
   args: {
     label: 'Styled Label',
     labelCss: css`
@@ -128,9 +129,9 @@ export const CustomLabelStyle: Story = {
       font-size: 1.1rem;
     `,
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const [checked, setChecked] = useState(false);
     const handleChange = (nextChecked: boolean) => setChecked(nextChecked);
@@ -139,4 +140,4 @@ export const Controlled: Story = {
       <Switch label="Controlled Switch" checked={checked} onChange={handleChange} aria-label="Controlled Switch" />
     );
   },
-};
+} satisfies Story;
