@@ -43,6 +43,7 @@ const meta: Meta<typeof Popover> = {
       control: { type: 'select' },
       options: Object.keys(AnimationType).filter((key) => isNaN(Number(key))),
       description: 'Animation type for popover entrance/exit',
+      defaultValue: AnimationType.slideLeft,
     },
     hideArrow: {
       control: { type: 'boolean' },
