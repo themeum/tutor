@@ -3,7 +3,7 @@ import Button from '@TutorShared/atoms/Button';
 import ToastProvider, { useToast } from '@TutorShared/atoms/Toast';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof ToastProvider> = {
+const meta = {
   title: 'Atoms/Toast',
   component: ToastProvider,
   tags: ['autodocs'],
@@ -25,12 +25,16 @@ const meta: Meta<typeof ToastProvider> = {
       defaultValue: 'bottom-right',
     },
   },
+  args: {
+    position: 'bottom-right',
+  },
   render: (args) => (
     <ToastProvider {...args}>
       <ToastDemo />
     </ToastProvider>
   ),
-};
+} satisfies Meta<typeof ToastProvider>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
@@ -66,10 +70,12 @@ const ToastDemo = () => {
       css={css`
         display: flex;
         flex-direction: column;
+        justify-content: center;
+        align-items: center;
         gap: 20px;
         align-items: center;
-        max-height: 100dvh;
-        max-width: 100dvw;
+        min-height: 100dvh;
+        min-width: 100dvw;
       `}
     >
       <Button variant="primary" onClick={handleShowToast('success')} aria-label="Show Success Toast" tabIndex={0}>
@@ -104,4 +110,9 @@ const ToastDemo = () => {
   );
 };
 
-export const Default: Story = {};
+export const Default = {
+  args: {
+    position: 'bottom-right',
+    children: <ToastDemo />,
+  },
+} satisfies Story;
