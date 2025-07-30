@@ -72,9 +72,9 @@ const meta: Meta<typeof DropdownButton> = {
     },
     animationType: {
       control: 'select',
-      options: Object.values(AnimationType),
+      options: Object.keys(AnimationType).filter((key) => isNaN(Number(key))),
       description: 'Dropdown animation type.',
-      defaultValue: 'slideUp',
+      defaultValue: AnimationType.slideUp,
     },
     buttonCss: { control: false },
     buttonContentCss: { control: false },
@@ -127,7 +127,14 @@ const meta: Meta<typeof DropdownButton> = {
       </>
     ),
   },
-  render: (args) => <DropdownButton {...args} />,
+  render: (args) => {
+    const animationTypeValue: AnimationType =
+      typeof args.animationType === 'string'
+        ? (AnimationType[args.animationType as keyof typeof AnimationType] ?? AnimationType.slideUp)
+        : AnimationType.slideUp;
+
+    return <DropdownButton {...args} animationType={animationTypeValue} />;
+  },
 };
 export default meta;
 
