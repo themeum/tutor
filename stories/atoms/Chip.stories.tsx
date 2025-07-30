@@ -2,7 +2,7 @@ import Chip from '@TutorShared/atoms/Chip';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Chip> = {
+const meta = {
   title: 'Atoms/Chip',
   component: Chip,
   tags: ['autodocs'],
@@ -41,7 +41,8 @@ const meta: Meta<typeof Chip> = {
     },
   },
   render: (args) => <Chip {...args} aria-label={args.label} />,
-};
+} satisfies Meta<typeof Chip>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
@@ -52,24 +53,24 @@ const handleClick = () => {
 
 const customIcon = <SVGIcon name="star" width={20} height={20} />;
 
-export const Default: Story = {
+export const Default = {
   args: {
     label: 'Default Chip',
     showIcon: true,
     isClickable: false,
   },
-};
+} satisfies Story;
 
-export const Clickable: Story = {
+export const Clickable = {
   args: {
     label: 'Clickable Chip',
     showIcon: true,
     isClickable: true,
     onClick: handleClick,
   },
-};
+} satisfies Story;
 
-export const WithCustomIcon: Story = {
+export const WithCustomIcon = {
   args: {
     label: 'Custom Icon Chip',
     showIcon: true,
@@ -77,20 +78,20 @@ export const WithCustomIcon: Story = {
     isClickable: true,
     onClick: handleClick,
   },
-};
+} satisfies Story;
 
-export const WithoutIcon: Story = {
+export const WithoutIcon = {
   args: {
     label: 'No Icon Chip',
     showIcon: false,
     isClickable: false,
   },
-};
+} satisfies Story;
 
-export const WithLongLabel: Story = {
+export const WithLongLabel = {
   args: {
     label: 'This is a very long chip label to test overflow and responsiveness',
     showIcon: true,
     isClickable: false,
   },
-};
+} satisfies Story;
