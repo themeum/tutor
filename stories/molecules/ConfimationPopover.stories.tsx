@@ -4,7 +4,7 @@ import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof ConfirmationPopover> = {
+const meta = {
   title: 'Molecules/ConfirmationPopover',
   component: ConfirmationPopover,
   tags: ['autodocs'],
@@ -80,6 +80,19 @@ const meta: Meta<typeof ConfirmationPopover> = {
     },
   },
   args: {
+    triggerRef: undefined,
+    closePopover: () => {},
+    onConfirmation: () => {},
+    onCancel: () => {},
+    confirmButton: {
+      text: 'Confirm',
+      variant: 'primary',
+    },
+    cancelButton: {
+      text: 'Cancel',
+      variant: 'secondary',
+    },
+    positionModifier: undefined,
     title: 'Are you sure?',
     message: 'This action cannot be undone.',
     isOpen: true,
@@ -88,6 +101,7 @@ const meta: Meta<typeof ConfirmationPopover> = {
     animationType: AnimationType.slideLeft,
     maxWidth: '300px',
     gap: 8,
+    arrow: 'top',
   },
   render: (args) => {
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -145,14 +159,15 @@ const meta: Meta<typeof ConfirmationPopover> = {
       </>
     );
   },
-};
+} satisfies Meta<typeof ConfirmationPopover>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   render: (args) => {
     const triggerRef = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState(false);
@@ -188,9 +203,9 @@ export const Loading: Story = {
       </>
     );
   },
-};
+} satisfies Story;
 
-export const DeleteAction: Story = {
+export const DeleteAction = {
   args: {
     confirmButton: {
       text: 'Delete',
@@ -204,9 +219,9 @@ export const DeleteAction: Story = {
     title: 'Delete Item?',
     message: 'Are you sure you want to delete this item? This cannot be undone.',
   },
-};
+} satisfies Story;
 
-export const CustomButtons: Story = {
+export const CustomButtons = {
   args: {
     confirmButton: {
       text: 'Yes, Proceed',
@@ -219,22 +234,22 @@ export const CustomButtons: Story = {
     title: 'Proceed with Action?',
     message: 'Do you want to continue with this operation?',
   },
-};
+} satisfies Story;
 
-export const HideArrow: Story = {
+export const HideArrow = {
   args: {
     hideArrow: true,
   },
-};
+} satisfies Story;
 
-export const CustomAnimation: Story = {
+export const CustomAnimation = {
   args: {
     animationType: AnimationType.slideUp,
   },
-};
+} satisfies Story;
 
-export const CustomMaxWidth: Story = {
+export const CustomMaxWidth = {
   args: {
     maxWidth: '320px',
   },
-};
+} satisfies Story;
