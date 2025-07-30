@@ -6,7 +6,7 @@ import LoadingSpinner, {
 } from '@TutorShared/atoms/LoadingSpinner';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof LoadingSpinner> = {
+const meta = {
   title: 'Atoms/LoadingSpinner',
   component: LoadingSpinner,
   tags: ['autodocs'],
@@ -31,36 +31,37 @@ const meta: Meta<typeof LoadingSpinner> = {
       defaultValue: '#D1D5DB',
     },
   },
-};
+} satisfies Meta<typeof LoadingSpinner>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default = {
   args: {
     size: 30,
     color: '#D1D5DB',
   },
   render: (args) => <LoadingSpinner {...args} aria-label="Loading" />,
-};
+} satisfies Story;
 
-export const CustomSize: Story = {
+export const CustomSize = {
   args: {
     size: 60,
     color: '#D1D5DB',
   },
   render: (args) => <LoadingSpinner {...args} aria-label="Loading large" />,
-};
+} satisfies Story;
 
-export const CustomColor: Story = {
+export const CustomColor = {
   args: {
     size: 40,
     color: '#1976d2',
   },
   render: (args) => <LoadingSpinner {...args} aria-label="Loading blue" />,
-};
+} satisfies Story;
 
-export const Overlay: Story = {
+export const Overlay = {
   render: () => (
     <div
       style={{
@@ -76,19 +77,20 @@ export const Overlay: Story = {
       <span
         style={{
           position: 'absolute',
-          bottom: 8,
-          left: 16,
+          transform: 'translate(-50%, -50%)',
+          top: '50%',
+          left: '50%',
           fontSize: 12,
           color: '#888',
         }}
       >
-        Loading overlay
+        Loading overlay will be on top of this content
       </span>
     </div>
   ),
-};
+} satisfies Story;
 
-export const Section: Story = {
+export const Section = {
   render: () => (
     <div
       style={{
@@ -105,12 +107,12 @@ export const Section: Story = {
       <LoadingSection />
     </div>
   ),
-};
+} satisfies Story;
 
-export const Fullscreen: Story = {
+export const Fullscreen = {
   render: () => <FullscreenLoadingSpinner />,
-};
+} satisfies Story;
 
-export const Gradient: Story = {
+export const Gradient = {
   render: () => <GradientLoadingSpinner size={48} aria-label="Gradient loading" />,
-};
+} satisfies Story;
