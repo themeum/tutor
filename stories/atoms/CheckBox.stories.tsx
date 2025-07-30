@@ -3,7 +3,7 @@ import CheckBox from '@TutorShared/atoms/CheckBox';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof CheckBox> = {
+const meta = {
   title: 'Atoms/CheckBox',
   component: CheckBox,
   tags: ['autodocs'],
@@ -75,42 +75,43 @@ const meta: Meta<typeof CheckBox> = {
     'aria-invalid': 'false',
   },
   render: (args) => <CheckBox {...args} aria-label={typeof args.label === 'string' ? args.label : 'CheckBox'} />,
-};
+} satisfies Meta<typeof CheckBox>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default = {
   args: {
     label: 'Default CheckBox',
     checked: false,
     disabled: false,
     isIndeterminate: false,
   },
-};
+} satisfies Story;
 
-export const Checked: Story = {
+export const Checked = {
   args: {
     label: 'Checked CheckBox',
     checked: true,
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled CheckBox',
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const Indeterminate: Story = {
+export const Indeterminate = {
   args: {
     label: 'Indeterminate CheckBox',
     isIndeterminate: true,
   },
-};
+} satisfies Story;
 
-export const WithCustomLabel: Story = {
+export const WithCustomLabel = {
   render: () => (
     <CheckBox
       label={
@@ -124,9 +125,9 @@ export const WithCustomLabel: Story = {
       aria-label="Custom label with icon"
     />
   ),
-};
+} satisfies Story;
 
-export const WithCustomStyles: Story = {
+export const WithCustomStyles = {
   render: () => (
     <CheckBox
       label="Styled CheckBox"
@@ -144,9 +145,9 @@ export const WithCustomStyles: Story = {
       aria-label="Styled CheckBox"
     />
   ),
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const [checked, setChecked] = useState(false);
     const handleChange = (isChecked: boolean) => setChecked(isChecked);
@@ -160,4 +161,4 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;
