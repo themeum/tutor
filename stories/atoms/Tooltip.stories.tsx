@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
+import Button from '@TutorShared/atoms/Button';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-import Button from '../../assets/react/v3/shared/atoms/Button';
-import Tooltip from '../../assets/react/v3/shared/atoms/Tooltip';
-import { borderRadius, colorTokens, spacing } from '../../assets/react/v3/shared/config/styles';
-import { typography } from '../../assets/react/v3/shared/config/typography';
 
 const meta: Meta<typeof Tooltip> = {
   title: 'Atoms/Tooltip',
