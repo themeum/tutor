@@ -45,7 +45,7 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default = {
   args: {
     content: 'Pro',
     size: 'regular',
@@ -53,7 +53,7 @@ export const Default: Story = {
   },
 } satisfies Story;
 
-export const Sizes: Story = {
+export const Sizes = {
   args: {
     content: 'Pro',
     textOnly: false,
@@ -67,7 +67,7 @@ export const Sizes: Story = {
   ),
 } satisfies Story;
 
-export const SizesWithChildren: Story = {
+export const SizesWithChildren = {
   args: {
     content: 'Premium',
     textOnly: false,
@@ -86,7 +86,7 @@ export const SizesWithChildren: Story = {
   ),
 } satisfies Story;
 
-export const WithContent: Story = {
+export const WithContent = {
   args: {
     content: <span>Premium</span>,
     size: 'regular',
@@ -94,7 +94,7 @@ export const WithContent: Story = {
   },
 } satisfies Story;
 
-export const TextOnly: Story = {
+export const TextOnly = {
   args: {
     content: 'PRO',
     size: 'large',
@@ -102,7 +102,7 @@ export const TextOnly: Story = {
   },
 } satisfies Story;
 
-export const WithChildren: Story = {
+export const WithChildren = {
   args: {
     children: (
       <Button variant="secondary" size="small">
