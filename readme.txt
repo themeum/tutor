@@ -314,20 +314,19 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.7.1 - Jul 31, 2025
 
-Update: Sync existing course contents into content bank
-Update: Cancel subscription should cancel the subscription once its time period ends.
-Update: Admin should be able to Add/remove a course from course bundle whenever they want.
-Update: For prerequisites in a bundle course will be effected if the Prerequisite course included in the bundle
-Update: WPML compatibility
-Update: Security enhancements
-Fix: Unpublished rating is showing on instructor’s profile
-Fix: Latex compatibility
-Fix: Fatal Error on student registration
-Fix: Sorting issue in course builder
-Fix: Embedded videos cannot be added in lesson rest api
-Fix: Open Ended and Short Answer question are not being added on export
-Fix: Can not write course price with decimal in course builder
-
+Update: Sync existing course contents seamlessly into the Content Bank.
+Update: Cancelled subscriptions will now remain active until the end of their billing cycle.
+Update: Admins can now add or remove courses from a course bundle at any time.
+Update: Prerequisite rules within a course bundle will now be applied if the prerequisite course is included in the same bundle.
+Update: Enhanced compatibility with WPML for multilingual support.
+Update: Implemented various security enhancements for improved data protection.
+Fix: Unpublished ratings were incorrectly appearing on instructor profiles — this has been resolved.
+Fix: Improved LaTeX compatibility across course content and quizzes.
+Fix: Addressed a fatal error occurring during student registration.
+Fix: Resolved sorting inconsistencies within the course builder.
+Fix: Embedded videos can now be successfully added via the lesson REST API.
+Fix: Open-ended and short answer questions were missing from export files — this has been corrected.
+Fix: Course builder now supports decimal values in course pricing.
 
 = 3.7.0 - Jul 22, 2025
 
