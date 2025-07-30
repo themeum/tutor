@@ -3,7 +3,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Card from '@TutorShared/molecules/Card';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Card> = {
+const meta = {
   title: 'Molecules/Card',
   component: Card,
   tags: ['autodocs'],
@@ -81,44 +81,45 @@ const meta: Meta<typeof Card> = {
       {args.children}
     </Card>
   ),
-};
+} satisfies Meta<typeof Card>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const WithBorder: Story = {
+export const WithBorder = {
   args: {
     hasBorder: true,
   },
-};
+} satisfies Story;
 
-export const Collapsed: Story = {
+export const Collapsed = {
   args: {
     collapsed: true,
   },
-};
+} satisfies Story;
 
-export const NoSeparator: Story = {
+export const NoSeparator = {
   args: {
     noSeparator: true,
   },
-};
+} satisfies Story;
 
-export const HideArrow: Story = {
+export const HideArrow = {
   args: {
     hideArrow: true,
   },
-};
+} satisfies Story;
 
-export const AlternativeStyle: Story = {
+export const AlternativeStyle = {
   args: {
     isAlternative: true,
   },
-};
+} satisfies Story;
 
-export const WithActionTray: Story = {
+export const WithActionTray = {
   args: {
     actionTray: (
       <button
@@ -143,9 +144,9 @@ export const WithActionTray: Story = {
       </button>
     ),
   },
-};
+} satisfies Story;
 
-export const CustomContent: Story = {
+export const CustomContent = {
   args: {
     children: (
       <div
@@ -164,4 +165,4 @@ export const CustomContent: Story = {
       </div>
     ),
   },
-};
+} satisfies Story;
