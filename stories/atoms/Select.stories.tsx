@@ -133,6 +133,7 @@ const meta = {
   },
   render: (args) => <Select {...args} aria-label={args.label || 'Select'} />,
 } satisfies Meta<typeof Select>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
