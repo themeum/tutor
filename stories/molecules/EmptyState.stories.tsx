@@ -3,7 +3,7 @@ import Button from '@TutorShared/atoms/Button';
 import EmptyState from '@TutorShared/molecules/EmptyState';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof EmptyState> = {
+const meta = {
   title: 'Molecules/EmptyState',
   component: EmptyState,
   tags: ['autodocs'],
@@ -69,32 +69,35 @@ const meta: Meta<typeof EmptyState> = {
     imageAltText: '',
   },
   render: (args) => <EmptyState {...args} aria-label={args.title || 'Empty state'} wrapperCss={args.wrapperCss} />,
-};
+} satisfies Meta<typeof EmptyState>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const WithImage: Story = {
+export const WithImage = {
   args: {
     emptyStateImage: 'https://placehold.co/320x160?text=No+Image',
     imageAltText: 'No image available',
     title: 'No Images Found',
     description: 'Try uploading a new image.',
   },
-};
+} satisfies Story;
 
-export const SmallSize: Story = {
+export const SmallSize = {
   args: {
     size: 'small',
     title: 'Nothing Here',
     description: 'No items found in this section.',
   },
-};
+} satisfies Story;
 
-export const WithActions: Story = {
+export const WithActions = {
   args: {
+    emptyStateImage: 'https://placehold.co/620x360?text=No+Image',
+    imageAltText: 'No image available',
     actions: (
       <>
         <Button
@@ -128,17 +131,17 @@ export const WithActions: Story = {
     title: 'No Results',
     description: 'Try adding a new item or learn more.',
   },
-};
+} satisfies Story;
 
-export const WithBorder: Story = {
+export const WithBorder = {
   args: {
     removeBorder: false,
     title: 'No Courses',
     description: 'You have not created any courses yet.',
   },
-};
+} satisfies Story;
 
-export const CustomStyle: Story = {
+export const CustomStyle = {
   args: {
     title: 'Custom Styled Empty State',
     description: 'This empty state uses custom styles.',
@@ -149,4 +152,4 @@ export const CustomStyle: Story = {
       border: 2px dashed #1976d2;
     `,
   },
-};
+} satisfies Story;
