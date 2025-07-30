@@ -3,7 +3,7 @@ import { icons } from '@TutorShared/icons/types';
 import React from 'react';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Alert> = {
+const meta = {
   title: 'Atoms/Alert',
   component: Alert,
   parameters: {
@@ -38,63 +38,64 @@ const meta: Meta<typeof Alert> = {
       defaultValue: 'This is an alert message.',
     },
   },
-};
+} satisfies Meta<typeof Alert>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
 const Template = (args: React.ComponentProps<typeof Alert>) => <Alert {...args} />;
 
-export const Warning: Story = {
+export const Warning = {
   render: Template,
   args: {
     type: 'warning',
     icon: 'warning',
     children: 'This is a warning alert. Please pay attention.',
   },
-};
+} satisfies Story;
 
-export const Success: Story = {
+export const Success = {
   render: Template,
   args: {
     type: 'success',
     icon: 'checkFilled',
     children: 'Operation completed successfully!',
   },
-};
+} satisfies Story;
 
-export const Danger: Story = {
+export const Danger = {
   render: Template,
   args: {
     type: 'danger',
     icon: 'warning',
     children: 'There was an error processing your request.',
   },
-};
+} satisfies Story;
 
-export const Info: Story = {
+export const Info = {
   render: Template,
   args: {
     type: 'info',
     icon: 'info',
     children: 'For your information: updates are available.',
   },
-};
+} satisfies Story;
 
-export const Primary: Story = {
+export const Primary = {
   render: Template,
   args: {
     type: 'primary',
     icon: 'star',
     children: 'This is a primary alert.',
   },
-};
+} satisfies Story;
 
-export const WithoutIcon: Story = {
+export const WithoutIcon = {
   render: Template,
   args: {
     type: 'info',
     icon: undefined,
     children: 'This alert does not have an icon.',
   },
-};
+} satisfies Story;
