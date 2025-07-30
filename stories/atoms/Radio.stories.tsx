@@ -5,7 +5,7 @@ import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 import Radio from '@TutorShared/atoms/Radio';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-const meta: Meta<typeof Radio> = {
+const meta = {
   title: 'Atoms/Radio',
   component: Radio,
   tags: ['autodocs'],
@@ -71,42 +71,43 @@ const meta: Meta<typeof Radio> = {
     readOnly: false,
   },
   render: (args) => <Radio {...args} aria-label={typeof args.label === 'string' ? args.label : 'Radio'} />,
-};
+} satisfies Meta<typeof Radio>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default = {
   args: {
     label: 'Default Radio',
     checked: false,
     disabled: false,
     readOnly: false,
   },
-};
+} satisfies Story;
 
-export const Checked: Story = {
+export const Checked = {
   args: {
     label: 'Checked Radio',
     checked: true,
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled Radio',
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const WithDescription: Story = {
+export const WithDescription = {
   args: {
     label: 'Radio with Description',
     description: 'This is a helpful description for the radio button.',
   },
-};
+} satisfies Story;
 
-export const WithIcon: Story = {
+export const WithIcon = {
   args: {
     label: 'Radio with Icon',
     icon: (
@@ -120,9 +121,9 @@ export const WithIcon: Story = {
       />
     ),
   },
-};
+} satisfies Story;
 
-export const CustomStyles: Story = {
+export const CustomStyles = {
   args: {
     label: 'Styled Radio',
     labelCss: css`
@@ -137,9 +138,9 @@ export const CustomStyles: Story = {
       `,
     ],
   },
-};
+} satisfies Story;
 
-export const RadioGroup: Story = {
+export const RadioGroup = {
   render: () => {
     const [selected, setSelected] = useState('option1');
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => setSelected(event.target.value);
@@ -173,4 +174,4 @@ export const RadioGroup: Story = {
       </div>
     );
   },
-};
+} satisfies Story;
