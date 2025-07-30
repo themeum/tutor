@@ -26,6 +26,7 @@
 
         var templates = {
             twitter: 'https://twitter.com/intent/tweet?url={url}&text={text}',
+            pinterest: 'https://www.pinterest.com/pin/create/button/?media={image}&url={url}&description={text}',
             facebook: 'https://www.facebook.com/sharer/sharer.php?u={url}',
             linkedin: 'https://www.linkedin.com/shareArticle?url={url}&title={title}',
             reddit: 'https://www.reddit.com/submit?url={url}&title={title}',
@@ -80,7 +81,8 @@
 
         var social = {
             'linkedin': linkedin,
-            'facebook': facebook
+            'facebook': facebook,
+            'pinterest': pinterest
         }
 
         return this.each(function(i, elem){
@@ -125,6 +127,17 @@
                     callback(data.share.share_count)
                 }
             })
+            .fail(function(){callback(0)})
+        }
+
+        function pinterest(url, callback){
+            $.ajax({
+                type: 'GET',
+                dataType: 'jsonp',
+                url: 'https://api.pinterest.com/v1/urls/count.json',
+                data: {'url': url}
+            })
+            .done(function(data){callback(data.count)})
             .fail(function(){callback(0)})
         }
     }
