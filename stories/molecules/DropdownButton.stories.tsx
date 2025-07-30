@@ -3,7 +3,7 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import DropdownButton from '@TutorShared/molecules/DropdownButton';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof DropdownButton> = {
+const meta = {
   title: 'Molecules/DropdownButton',
   component: DropdownButton,
   tags: ['autodocs'],
@@ -135,21 +135,22 @@ const meta: Meta<typeof DropdownButton> = {
 
     return <DropdownButton {...args} animationType={animationTypeValue} />;
   },
-};
+} satisfies Meta<typeof DropdownButton>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const WithIcon: Story = {
+export const WithIcon = {
   args: {
     icon: <SVGIcon name="star" width={18} height={18} />,
     text: 'Starred',
   },
-};
+} satisfies Story;
 
-export const DangerOption: Story = {
+export const DangerOption = {
   args: {
     children: (
       <>
@@ -169,34 +170,34 @@ export const DangerOption: Story = {
       </>
     ),
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     loading: true,
   },
-};
+} satisfies Story;
 
-export const Small: Story = {
+export const Small = {
   args: {
     size: 'small',
   },
-};
+} satisfies Story;
 
-export const Large: Story = {
+export const Large = {
   args: {
     size: 'large',
   },
-};
+} satisfies Story;
 
-export const CustomDropdownWidth: Story = {
+export const CustomDropdownWidth = {
   args: {
     dropdownMaxWidth: '240px',
   },
-};
+} satisfies Story;
