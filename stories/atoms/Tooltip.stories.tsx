@@ -6,7 +6,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof Tooltip> = {
+const meta = {
   title: 'Atoms/Tooltip',
   component: Tooltip,
   parameters: {
@@ -49,31 +49,21 @@ const meta: Meta<typeof Tooltip> = {
       description: 'Whether the tooltip is always visible',
     },
   },
-};
+  args: {
+    content: 'This is a tooltip',
+    placement: 'top',
+    delay: 0,
+    children: <Button variant="primary">Hover me</Button>,
+  },
+  render: (args) => <Tooltip {...args}>{args.children}</Tooltip>,
+} satisfies Meta<typeof Tooltip>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const TooltipTemplate = (args: any) => {
-  return (
-    <div css={templateStyles.container}>
-      <Tooltip {...args}>
-        <Button>Hover me</Button>
-      </Tooltip>
-    </div>
-  );
-};
+export const Default = {} satisfies Story;
 
-export const Default: Story = {
-  render: TooltipTemplate,
-  args: {
-    content: 'This is a tooltip',
-    placement: 'top',
-  },
-};
-
-export const Placements: Story = {
+export const Placements = {
   render: () => (
     <div css={templateStyles.placementGrid}>
       <Tooltip content="Tooltip on top" placement="top">
@@ -97,10 +87,9 @@ export const Placements: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const WithHTMLContent: Story = {
-  render: TooltipTemplate,
+export const WithHTMLContent = {
   args: {
     content: '<strong>Bold text</strong><br/>Line break<br/><em>Italic text</em>',
     allowHTML: true,
@@ -113,10 +102,9 @@ export const WithHTMLContent: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const ReactNodeContent: Story = {
-  render: TooltipTemplate,
+export const ReactNodeContent = {
   args: {
     content: (
       <div>
@@ -149,10 +137,9 @@ export const ReactNodeContent: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const WithDelay: Story = {
-  render: TooltipTemplate,
+export const WithDelay = {
   args: {
     content: 'This tooltip appears after 1 second',
     delay: 1000,
@@ -165,10 +152,9 @@ export const WithDelay: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const AlwaysVisible: Story = {
-  render: TooltipTemplate,
+export const AlwaysVisible = {
   args: {
     content: 'This tooltip is always visible',
     visible: true,
@@ -181,10 +167,9 @@ export const AlwaysVisible: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const HideOnClick: Story = {
-  render: TooltipTemplate,
+export const HideOnClick = {
   args: {
     content: 'Click the button to hide this tooltip',
     hideOnClick: true,
@@ -197,10 +182,9 @@ export const HideOnClick: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
-  render: TooltipTemplate,
+export const Disabled = {
   args: {
     content: 'This tooltip will not show',
     disabled: true,
@@ -213,10 +197,9 @@ export const Disabled: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const LongContent: Story = {
-  render: TooltipTemplate,
+export const LongContent = {
   args: {
     content:
       'This is a very long tooltip content that demonstrates how the tooltip handles longer text. It should wrap appropriately and maintain good readability.',
@@ -229,9 +212,9 @@ export const LongContent: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const WithIcon: Story = {
+export const WithIcon = {
   render: () => (
     <div css={templateStyles.container}>
       <Tooltip content="Helpful information about this feature" placement="top">
@@ -248,9 +231,9 @@ export const WithIcon: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const VariantButtons: Story = {
+export const VariantButtons = {
   render: () => (
     <div css={templateStyles.variantGrid}>
       <Tooltip content="Primary button tooltip" placement="top">
@@ -277,9 +260,9 @@ export const VariantButtons: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const ButtonSizes: Story = {
+export const ButtonSizes = {
   render: () => (
     <div css={templateStyles.sizeGrid}>
       <Tooltip content="Large button tooltip" placement="top">
@@ -300,49 +283,49 @@ export const ButtonSizes: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
 const templateStyles = {
   container: css`
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: ${spacing[32]};
+    padding: ${spacing[32]} satisfies Story;
     ${typography.body()}
   `,
   placementGrid: css`
     display: grid;
-    gap: ${spacing[32]};
+    gap: ${spacing[32]} satisfies Story;
     grid-template-columns: repeat(2, 1fr);
-    padding: ${spacing[48]};
+    padding: ${spacing[48]} satisfies Story;
     ${typography.body()}
   `,
   variantGrid: css`
     display: flex;
-    gap: ${spacing[16]};
+    gap: ${spacing[16]} satisfies Story;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    padding: ${spacing[32]};
+    padding: ${spacing[32]} satisfies Story;
     ${typography.body()}
   `,
   sizeGrid: css`
     display: flex;
-    gap: ${spacing[16]};
+    gap: ${spacing[16]} satisfies Story;
     align-items: center;
     justify-content: center;
-    padding: ${spacing[32]};
+    padding: ${spacing[32]} satisfies Story;
     ${typography.body()}
   `,
   customContentTitle: css`
     font-weight: 600;
-    margin-bottom: ${spacing[4]};
-    color: ${colorTokens.text.white};
+    margin-bottom: ${spacing[4]} satisfies Story;
+    color: ${colorTokens.text.white} satisfies Story;
   `,
   customContentSubtitle: css`
     font-size: 12px;
     opacity: 0.8;
-    color: ${colorTokens.text.white};
+    color: ${colorTokens.text.white} satisfies Story;
   `,
   helpIcon: css`
     display: inline-flex;
@@ -350,21 +333,21 @@ const templateStyles = {
     justify-content: center;
     width: 20px;
     height: 20px;
-    color: ${colorTokens.text.primary};
-    border-radius: ${borderRadius[8]};
+    color: ${colorTokens.text.primary} satisfies Story;
+    border-radius: ${borderRadius[8]} satisfies Story;
     font-size: 12px;
     font-weight: 600;
     cursor: help;
-    border: 1px solid ${colorTokens.stroke.default};
+    border: 1px solid ${colorTokens.stroke.default} satisfies Story;
     transition: all 150ms ease-in-out;
 
     &:hover {
-      background-color: ${colorTokens.background.hover};
-      border-color: ${colorTokens.stroke.hover};
+      background-color: ${colorTokens.background.hover} satisfies Story;
+      border-color: ${colorTokens.stroke.hover} satisfies Story;
     }
 
     &:focus {
-      outline: 2px solid ${colorTokens.stroke.brand};
+      outline: 2px solid ${colorTokens.stroke.brand} satisfies Story;
       outline-offset: 1px;
     }
   `,

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof TutorBadge> = {
+const meta = {
   title: 'Atoms/TutorBadge',
   component: TutorBadge,
   tags: ['autodocs'],
@@ -44,14 +44,14 @@ const meta: Meta<typeof TutorBadge> = {
       {args.children}
     </TutorBadge>
   ),
-};
+} satisfies Meta<typeof TutorBadge>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const Variants: Story = {
+export const Variants = {
   render: () => (
     <div
       css={css`
@@ -68,9 +68,9 @@ export const Variants: Story = {
       ))}
     </div>
   ),
-};
+} satisfies Story;
 
-export const CustomStyle: Story = {
+export const CustomStyle = {
   args: {
     children: 'Custom Styled Badge',
     variant: 'success',
@@ -91,4 +91,4 @@ export const CustomStyle: Story = {
       {args.children}
     </TutorBadge>
   ),
-};
+} satisfies Story;
