@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import Button from '@TutorShared/atoms/Button';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
@@ -162,15 +161,7 @@ export const Loading: Story = {
     const handleClosePopover = () => setIsOpen(false);
 
     return (
-      <div
-        css={css`
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 32px;
-          min-height: 200px;
-        `}
-      >
+      <>
         <Button
           ref={triggerRef}
           variant="primary"
@@ -194,7 +185,7 @@ export const Loading: Story = {
           onConfirmation={handleClosePopover}
           onCancel={handleClosePopover}
         />
-      </div>
+      </>
     );
   },
 };
