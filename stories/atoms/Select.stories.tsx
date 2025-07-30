@@ -13,7 +13,7 @@ const manyOptions = Array.from({ length: 100 }, (_, i) => ({
   value: `${i + 1}`,
 }));
 
-const meta: Meta<typeof Select> = {
+const meta = {
   title: 'Atoms/Select',
   component: Select,
   tags: ['autodocs'],
@@ -132,79 +132,79 @@ const meta: Meta<typeof Select> = {
     clearOption: undefined,
   },
   render: (args) => <Select {...args} aria-label={args.label || 'Select'} />,
-};
+} satisfies Meta<typeof Select>;
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
+export const Default = {
   args: {
     options,
     placeholder: 'Select an option',
   },
-};
+} satisfies Story;
 
-export const WithLabelAndPlaceholder: Story = {
+export const WithLabelAndPlaceholder = {
   args: {
     options,
     label: 'Choose an option',
     placeholder: 'Please select...',
   },
-};
+} satisfies Story;
 
-export const Searchable: Story = {
+export const Searchable = {
   args: {
     options,
     isSearchable: true,
     placeholder: 'Search options...',
   },
-};
+} satisfies Story;
 
-export const Clearable: Story = {
+export const Clearable = {
   args: {
     options,
     isClearable: true,
     placeholder: 'Clearable select',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     options,
     disabled: true,
     label: 'Disabled Select',
     placeholder: 'Cannot select',
   },
-};
+} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     options,
     loading: true,
     label: 'Loading Select',
     placeholder: 'Loading...',
   },
-};
+} satisfies Story;
 
-export const SmallSize: Story = {
+export const SmallSize = {
   args: {
     options,
     size: 'small',
     label: 'Small Select',
     placeholder: 'Small size',
   },
-};
+} satisfies Story;
 
-export const CustomOptionStyle: Story = {
+export const CustomOptionStyle = {
   args: {
     options,
     optionsStyleVariant: 'small',
     label: 'Custom Option Style',
     placeholder: 'Small style options',
   },
-};
+} satisfies Story;
 
-export const WithManyOptionsInfiniteScroll: Story = {
+export const WithManyOptionsInfiniteScroll = {
   args: {
     options: manyOptions,
     infiniteScroll: true,
@@ -212,9 +212,9 @@ export const WithManyOptionsInfiniteScroll: Story = {
     label: 'Infinite Scroll',
     placeholder: 'Scroll or search...',
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const [selected, setSelected] = useState<{ label: string; value: string } | undefined>(undefined);
 
@@ -234,4 +234,4 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;
