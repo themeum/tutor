@@ -41,16 +41,7 @@ const meta: Meta<typeof Popover> = {
     },
     animationType: {
       control: { type: 'select' },
-      options: [
-        AnimationType.slideDown,
-        AnimationType.slideUp,
-        AnimationType.slideLeft,
-        AnimationType.slideRight,
-        AnimationType.collapseExpand,
-        AnimationType.zoomIn,
-        AnimationType.zoomOut,
-        AnimationType.fadeIn,
-      ],
+      options: Object.keys(AnimationType).filter((key) => isNaN(Number(key))),
       description: 'Animation type for popover entrance/exit',
     },
     hideArrow: {
@@ -76,13 +67,21 @@ const PopoverTemplate = (args: any) => {
     setIsOpen(false);
   };
 
+  const animationTypeValue = AnimationType[args.animationType as keyof typeof AnimationType];
+
   return (
     <div css={templateStyles.container}>
       <Button ref={triggerRef} onClick={handleTogglePopover} aria-expanded={isOpen} aria-haspopup="true">
         Toggle Popover
       </Button>
 
-      <Popover {...args} triggerRef={triggerRef} isOpen={isOpen} closePopover={handleClosePopover}>
+      <Popover
+        {...args}
+        triggerRef={triggerRef}
+        animationType={animationTypeValue}
+        isOpen={isOpen}
+        closePopover={handleClosePopover}
+      >
         <div css={templateStyles.popoverContent}>
           <h3 css={templateStyles.popoverTitle}>Popover Title</h3>
           <p css={templateStyles.popoverText}>
