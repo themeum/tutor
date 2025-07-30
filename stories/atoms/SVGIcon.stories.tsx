@@ -2,7 +2,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { icons, type IconCollection } from '@TutorShared/icons/types';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof SVGIcon> = {
+const meta = {
   title: 'Atoms/SVGIcon',
   component: SVGIcon,
   parameters: {
@@ -35,40 +35,42 @@ const meta: Meta<typeof SVGIcon> = {
       control: false,
     },
   },
-};
-
-export default meta;
-
-type Story = StoryObj<typeof SVGIcon>;
-
-export const Default: Story = {
   args: {
     name: 'plus',
     width: 24,
     height: 24,
     isColorIcon: false,
   },
-};
+  render: (args) => <SVGIcon {...args} aria-label={args.name} />,
+} satisfies Meta<typeof SVGIcon>;
 
-export const ColorIcon: Story = {
+export default meta;
+
+type Story = StoryObj<typeof SVGIcon>;
+
+export const Default = {
+  args: {
+    name: 'plus',
+  },
+} satisfies Story;
+
+export const ColorIcon = {
   args: {
     name: 'googleMeetColorize',
     width: 32,
     height: 32,
-    isColorIcon: true,
   },
-};
+} satisfies Story;
 
-export const CustomSize: Story = {
+export const CustomSize = {
   args: {
     name: 'alert',
     width: 48,
     height: 48,
-    isColorIcon: false,
   },
-};
+} satisfies Story;
 
-export const AllIcons: Story = {
+export const AllIcons = {
   render: (args) => {
     return (
       <div
@@ -88,4 +90,4 @@ export const AllIcons: Story = {
       </div>
     );
   },
-};
+} satisfies Story;
