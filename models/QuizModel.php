@@ -46,16 +46,28 @@ class QuizModel {
 	 *
 	 * @since 2.0.2
 	 *
+	 * @since 3.7.1 Course ids param added
+	 *
+	 * @param array $course_ids Array of course ids.
+	 *
 	 * @return int
 	 */
-	public static function get_total_quiz() {
+	public static function get_total_quiz( array $course_ids = array() ) {
 		global $wpdb;
+
+		$course_in_clause = '';
+		if ( count( $course_ids ) ) {
+			$prepare_ids      = QueryHelper::prepare_in_clause( $course_ids );
+			$course_in_clause = "AND course.ID IN ({$prepare_ids})";
+		}
 
 		$sql = "SELECT COUNT(DISTINCT quiz.ID) 
 			FROM {$wpdb->posts} quiz
 				INNER JOIN {$wpdb->posts} topic ON quiz.post_parent=topic.ID 
 				INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID 
-			WHERE course.post_type=%s
+			WHERE 1 = 1
+				{$course_in_clause}
+				AND course.post_type=%s
 				AND course.post_status = 'publish'
 				AND quiz.post_type='tutor_quiz'";
 
