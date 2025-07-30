@@ -3,7 +3,7 @@ import FileUploader from '@TutorShared/molecules/FileUploader';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
 
-const meta: Meta<typeof FileUploader> = {
+const meta = {
   title: 'Molecules/FileUploader',
   component: FileUploader,
   tags: ['autodocs'],
@@ -25,7 +25,7 @@ const meta: Meta<typeof FileUploader> = {
     acceptedTypes: {
       control: 'object',
       description: 'Accepted file extensions.',
-      defaultValue: ['jpg', 'jpeg', 'png', 'pdf'],
+      defaultValue: [],
     },
     multiple: {
       control: 'boolean',
@@ -57,6 +57,8 @@ const meta: Meta<typeof FileUploader> = {
     disabled: false,
     maxFileSize: 2 * 1024 * 1024,
     fullWidth: true,
+    onError: () => {},
+    onUpload: () => {},
   },
   render: (args) => {
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -125,37 +127,38 @@ const meta: Meta<typeof FileUploader> = {
       </div>
     );
   },
-};
+} satisfies Meta<typeof FileUploader>;
+
 export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {};
+export const Default = {} satisfies Story;
 
-export const MultipleFiles: Story = {
+export const MultipleFiles = {
   args: {
     multiple: true,
     label: 'Upload Multiple Files',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     disabled: true,
     label: 'Uploader Disabled',
   },
-};
+} satisfies Story;
 
-export const CustomFileTypes: Story = {
+export const CustomFileTypes = {
   args: {
     acceptedTypes: ['docx', 'xlsx', 'pptx'],
     label: 'Upload Document',
   },
-};
+} satisfies Story;
 
-export const CustomMaxFileSize: Story = {
+export const CustomMaxFileSize = {
   args: {
     maxFileSize: 512 * 1024, // 512KB
     label: 'Max 512KB',
   },
-};
+} satisfies Story;
