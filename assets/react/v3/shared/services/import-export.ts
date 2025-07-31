@@ -21,16 +21,22 @@ export interface ExportableContent {
   contents?: ContentItem[];
 }
 
-const getExportableContent = () => {
-  return wpAjaxInstance.get<ExportableContent[]>(endpoints.GET_EXPORTABLE_CONTENT);
+interface ExportableContentParams {
+  course_ids?: number[];
+}
+
+const getExportableContent = ({ course_ids }: ExportableContentParams) => {
+  return wpAjaxInstance.get<ExportableContent[]>(endpoints.GET_EXPORTABLE_CONTENT, {
+    params: { course_ids },
+  });
 };
 
-export const useExportableContentQuery = () => {
+export const useExportableContentQuery = ({ course_ids }: ExportableContentParams) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
 
   return useQuery({
-    queryKey: ['ExportableContent'],
-    queryFn: () => getExportableContent().then((res) => res.data),
+    queryKey: ['ExportableContent', course_ids],
+    queryFn: () => getExportableContent({ course_ids }).then((res) => res.data),
     enabled: isTutorPro,
   });
 };
