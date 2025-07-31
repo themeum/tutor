@@ -23,7 +23,7 @@ export interface ExportableContent {
 
 interface ExportableContentParams {
   course_ids?: number[];
-  context?: 'content-bank';
+  context?: 'content_bank';
 }
 
 const getExportableContent = ({ course_ids, context }: ExportableContentParams) => {
