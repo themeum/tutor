@@ -23,20 +23,24 @@ export interface ExportableContent {
 
 interface ExportableContentParams {
   course_ids?: number[];
+  context?: 'content-bank';
 }
 
-const getExportableContent = ({ course_ids }: ExportableContentParams) => {
+const getExportableContent = ({ course_ids, context }: ExportableContentParams) => {
   return wpAjaxInstance.get<ExportableContent[]>(endpoints.GET_EXPORTABLE_CONTENT, {
-    params: { course_ids },
+    params: {
+      course_ids,
+      ...(context ? { context } : {}),
+    },
   });
 };
 
-export const useExportableContentQuery = ({ course_ids }: ExportableContentParams = {}) => {
+export const useExportableContentQuery = ({ course_ids, context }: ExportableContentParams = {}) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
 
   return useQuery({
-    queryKey: ['ExportableContent', course_ids],
-    queryFn: () => getExportableContent({ course_ids }).then((res) => res.data),
+    queryKey: ['ExportableContent', course_ids, context],
+    queryFn: () => getExportableContent({ course_ids, context }).then((res) => res.data),
     enabled: isTutorPro,
   });
 };

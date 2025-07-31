@@ -232,7 +232,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
               render={(controllerProps) => (
                 <FormCheckbox
                   {...controllerProps}
-                  label={__('Import items into a specific collection in the Content Bank', 'tutor')}
+                  label={__('Import items into Content Bank without creating courses', 'tutor')}
                 />
               )}
             />
