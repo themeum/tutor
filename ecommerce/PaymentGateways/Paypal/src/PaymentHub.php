@@ -1,12 +1,12 @@
 <?php
 namespace Ollyo\PaymentHub;
 
-use Ollyo\PaymentHub\Core\Application;
 use Ollyo\PaymentHub\Core\Factory;
+use Ollyo\PaymentHub\Core\Application;
+use Ollyo\PaymentHub\Core\Support\Uri;
+use Ollyo\PaymentHub\Core\Support\System;
 use Ollyo\PaymentHub\Core\Payment\BaseConfig;
 use Ollyo\PaymentHub\Core\Payment\BasePayment;
-use Ollyo\PaymentHub\Core\Support\System;
-use Ollyo\PaymentHub\Core\Support\Uri;
 use Ollyo\PaymentHub\Exceptions\InvalidConfigurationException;
 
 define('PAYMENT_HUB_ROOT', __DIR__);
@@ -66,7 +66,7 @@ class PaymentHub
 			);
 
 			if (!$paymentInstance->check()) {
-				throw new InvalidConfigurationException(sprintf('%s payment method is not configured properly! Contact with Site Administrator.', ucfirst($configInstance->getName())));
+				throw new InvalidConfigurationException( esc_html( sprintf('%s payment method is not configured properly! Contact with Site Administrator.', ucfirst($configInstance->getName() ) ) ) );
 			}
 
 			$paymentInstance->setup();
