@@ -79,10 +79,11 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const META_ENROLLMENT_FEE      = 'plan_enrollment_fee';
-	const META_TRIAL_FEE           = 'plan_trial_fee';
-	const META_PLAN_INFO           = 'plan_info';
-	const META_IS_PLAN_TRIAL_ORDER = 'is_plan_trial_order';
+	const META_ENROLLMENT_FEE          = 'plan_enrollment_fee';
+	const META_TRIAL_FEE               = 'plan_trial_fee';
+	const META_PLAN_INFO               = 'plan_info';
+	const META_IS_PLAN_TRIAL_ORDER     = 'is_plan_trial_order';
+	const META_IS_RESUBSCRIPTION_ORDER = 'is_resubscription_order';
 
 	/**
 	 * Tax type constants
@@ -1915,7 +1916,6 @@ class OrderModel {
 				$limit
 			)
 		);
-		//phpcs:enable
 
 		$total_statements = $wpdb->get_var(
 			$wpdb->prepare(
@@ -1930,6 +1930,7 @@ class OrderModel {
 				$user_id
 			)
 		);
+		//phpcs:enable
 
 		return array(
 			'statements'       => $statements,

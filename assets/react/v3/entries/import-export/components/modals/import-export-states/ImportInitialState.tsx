@@ -14,6 +14,7 @@ import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -23,7 +24,7 @@ import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver'
 import { useGetCollectionsInfinityQuery } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Collection } from '@TutorShared/utils/types';
-import { formatBytes } from '@TutorShared/utils/util';
+import { formatBytes, isAddonEnabled } from '@TutorShared/utils/util';
 
 interface ImportInitialStateProps {
   files: File[];
@@ -223,7 +224,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </div>
 
-        <Show when={isTutorPro && hasContent.courseContent}>
+        <Show when={isTutorPro && isAddonEnabled(Addons.CONTENT_BANK) && hasContent.courseContent}>
           <div css={styles.contentBank}>
             <Controller
               control={form.control}
@@ -231,7 +232,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
               render={(controllerProps) => (
                 <FormCheckbox
                   {...controllerProps}
-                  label={__('Import items into a specific collection in the Content Bank', 'tutor')}
+                  label={__('Import items into Content Bank without creating courses', 'tutor')}
                 />
               )}
             />

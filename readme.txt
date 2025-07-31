@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,22 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.7.1 - Jul 31, 2025
+
+Update: Sync existing course contents seamlessly into the Content Bank.
+Update: Cancelled subscriptions will now remain active until the end of their billing cycle.
+Update: Admins can now add or remove courses from a course bundle at any time.
+Update: Prerequisite rules within a course bundle will now be applied if the prerequisite course is included in the same bundle.
+Update: Enhanced compatibility with WPML for multilingual support.
+Update: Implemented various security enhancements for improved data protection.
+Fix: Unpublished ratings were incorrectly appearing on instructor profiles — this has been resolved.
+Fix: Improved LaTeX compatibility across course content and quizzes.
+Fix: Addressed a fatal error occurring during student registration.
+Fix: Resolved sorting inconsistencies within the course builder.
+Fix: Embedded videos can now be successfully added via the lesson REST API.
+Fix: Open-ended and short answer questions were missing from export files — this has been corrected.
+Fix: Course builder now supports decimal values in course pricing.
 
 = 3.7.0 - Jul 22, 2025
 

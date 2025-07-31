@@ -316,6 +316,8 @@ class CourseModel {
 		);
 		//phpcs:enable
 
+		$query = apply_filters( 'modify_get_courses_by_instructor_query', $query, $instructor_id, $where_post_status, $post_types, $limit_offset, $select_col );
+
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
 	}
@@ -673,7 +675,6 @@ class CourseModel {
 
 		$args = wp_parse_args( $args, $default_args );
 		return new \WP_Query( $args );
-
 	}
 
 	/**
@@ -934,11 +935,11 @@ class CourseModel {
 	 *
 	 * @since 3.6.0
 	 *
-	 * @param int $course_id Course id to get only a particular course's attachment.
+	 * @param int|array $course_id Course id or array of ids, to get course's attachment.
 	 *
 	 * @return int
 	 */
-	public static function count_attachment( int $course_id = 0 ) {
+	public static function count_attachment( $course_id = 0 ) {
 		global $wpdb;
 
 		$total_count = 0;
@@ -956,8 +957,9 @@ class CourseModel {
 		$select = array( 'pm.meta_value' );
 		$where  = array();
 		if ( $course_id ) {
-			$where['p.ID'] = $course_id;
+			$where['p.ID'] = is_array( $course_id ) ? array( 'IN', $course_id ) : $course_id;
 		}
+
 		$search   = array();
 		$limit    = 0; // Get all.
 		$offset   = 0;
@@ -1002,25 +1004,26 @@ class CourseModel {
 	 * @since 3.6.0
 	 *
 	 * @param string $content_type Content type.
+	 * @param array  $course_ids Course ids.
 	 *
 	 * @return int
 	 */
-	public static function count_course_content( string $content_type ): int {
+	public static function count_course_content( string $content_type, array $course_ids = array() ): int {
 		$total_count = 0;
 		switch ( $content_type ) {
 			case tutor()->lesson_post_type:
-				$total_count = tutor_utils()->get_total_lesson();
+				$total_count = tutor_utils()->get_total_lesson( $course_ids );
 				break;
 			case tutor()->quiz_post_type:
-				$total_count = tutor_utils()->get_total_quiz();
+				$total_count = tutor_utils()->get_total_quiz( $course_ids );
 				break;
 			case tutor()->assignment_post_type:
 				if ( tutor_utils()->is_addon_enabled( 'tutor-assignments' ) ) {
-					$total_count = ( new Assignments( false ) )->get_total_assignment();
+					$total_count = ( new Assignments( false ) )->get_total_assignment( $course_ids );
 				}
 				break;
 			case 'attachments':
-				$total_count = self::count_attachment();
+				$total_count = self::count_attachment( $course_ids );
 				break;
 			default:
 				break;
