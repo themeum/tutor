@@ -77,7 +77,9 @@ const ExportModal = ({
     },
   });
 
-  const getExportableContentQuery = useExportableContentQuery();
+  const getExportableContentQuery = useExportableContentQuery({
+    course_ids: bulkSelectionForm.getValues('courses').map((course) => course.id),
+  });
   const exportableContent = isTutorPro
     ? getExportableContentQuery.data
     : ([
