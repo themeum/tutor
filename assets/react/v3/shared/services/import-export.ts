@@ -31,7 +31,7 @@ const getExportableContent = ({ course_ids }: ExportableContentParams) => {
   });
 };
 
-export const useExportableContentQuery = ({ course_ids }: ExportableContentParams) => {
+export const useExportableContentQuery = ({ course_ids }: ExportableContentParams = {}) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
 
   return useQuery({
