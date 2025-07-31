@@ -999,6 +999,62 @@ class CourseModel {
 	}
 
 	/**
+	 * Count total questions available in all or specific courses
+	 *
+	 * @since 3.7.1
+	 *
+	 * @param int|array $course_id Course id or array of ids, to get course's attachment.
+	 *
+	 * @return int
+	 */
+	public static function count_questions( $course_id = 0 ) {
+		global $wpdb;
+
+		$total_count      = 0;
+		$quiz_post_type   = tutor()->quiz_post_type;
+		$topic_post_type  = tutor()->topics_post_type;
+		$course_post_type = tutor()->course_post_type;
+
+		$primary_table = "{$wpdb->prefix}tutor_quiz_questions question";
+
+		$joining_tables = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} q",
+				'on'    => "q.ID = question.quiz_id AND q.post_type='{$quiz_post_type}'",
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} t",
+				'on'    => "q.post_parent = t.ID AND t.post_type='{$topic_post_type}'",
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} c",
+				'on'    => "c.ID = t.post_parent AND c.post_type='{$course_post_type}'",
+			),
+		);
+
+		// Prepare query.
+		$where = array();
+		if ( $course_id ) {
+			$where['c.ID'] = is_array( $course_id ) ? array( 'IN', $course_id ) : $course_id;
+		}
+
+		$search = array();
+
+		$total_count = QueryHelper::get_joined_count(
+			$primary_table,
+			$joining_tables,
+			$where,
+			$search,
+			'*'
+		);
+
+		return $total_count;
+	}
+
+	/**
 	 * Count course content
 	 *
 	 * @since 3.6.0
@@ -1024,6 +1080,9 @@ class CourseModel {
 				break;
 			case 'attachments':
 				$total_count = self::count_attachment( $course_ids );
+				break;
+			case 'questions':
+				$total_count = self::count_questions( $course_ids );
 				break;
 			default:
 				break;
