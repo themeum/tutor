@@ -94,11 +94,6 @@ const ExportInitialState = ({
         return key;
       }
 
-      const hasSelectedItems =
-        (mainType === 'courses' && bulkSelectionForm.getValues('courses').length > 0) ||
-        (mainType === 'course-bundle' && bulkSelectionForm.getValues('course-bundle').length > 0) ||
-        (mainType === 'content_bank' && bulkSelectionForm.getValues('content_bank').length > 0);
-
       if (!mainContent.contents) {
         return key;
       }
@@ -110,7 +105,7 @@ const ExportInitialState = ({
         return key;
       }
 
-      return hasSelectedItems ? subContent.label : createLabelWithCount(subContent.label, subContent.count, key);
+      return createLabelWithCount(subContent.label, subContent.count, key);
     }
 
     const content = exportableContent.find((item) => item.key === key);
