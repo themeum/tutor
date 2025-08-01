@@ -70,12 +70,15 @@ class PaymentHandler {
 	 * @return void
 	 */
 	public function handle_ecommerce_webhook( WP_REST_Request $request ) {
-		$webhook_data = (object) array(
+
+		// phpcs:disable
+		$webhook_data = (object) array( 
 			'get'    => $_GET,
 			'post'   => $_POST,
 			'server' => $_SERVER,
 			'stream' => file_get_contents( 'php://input' ),
 		);
+		// phpcs:enable
 
 		$route          = $request->get_route() ?? null;
 		$payment_method = ! is_null( $route ) && strpos( $route, self::AUTHORIZENET ) ? self::AUTHORIZENET : Input::get( 'payment_method', 'paypal' );

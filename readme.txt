@@ -312,9 +312,9 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.7.1 - Jul 31, 2025
+= 3.7.1 - Aug 04, 2025
 
-Update: Sync existing course contents seamlessly into the Content Bank.
+Update: Import existing course contents seamlessly into the Content Bank.
 Update: Cancelled subscriptions will now remain active until the end of their billing cycle.
 Update: Admins can now add or remove courses from a course bundle at any time.
 Update: Prerequisite rules within a course bundle will now be applied if the prerequisite course is included in the same bundle.

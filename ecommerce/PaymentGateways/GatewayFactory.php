@@ -24,14 +24,14 @@ abstract class GatewayFactory {
 	 */
 	public static function create( string $gateway ): GatewayBase {
 		if ( ! class_exists( $gateway ) ) {
-			throw new \InvalidArgumentException( "Gateway class {$gateway} does not exist." );
+			throw new \InvalidArgumentException( esc_html( "Gateway class {$gateway} does not exist." ) );
 		}
 
 		$obj = new $gateway();
 
 		// Ensure the object is an instance of GatewayBase.
 		if ( ! $obj instanceof GatewayBase ) {
-			throw new \InvalidArgumentException( "Gateway {$gateway} must be an instance of GatewayBase." );
+			throw new \InvalidArgumentException( esc_html( "Gateway {$gateway} must be an instance of GatewayBase." ) );
 		}
 
 		return $obj;
