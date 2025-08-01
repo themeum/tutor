@@ -23,6 +23,7 @@ import importSuccessImage from '@SharedImages/import-export/import-success.webp'
 
 interface ImportExportCompletedStateProps {
   state: ImportExportModalState;
+  isImportingToContentBank?: boolean;
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
@@ -35,6 +36,7 @@ const fileName = `tutor-lms-data-${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}.js
 
 const ImportExportCompletedState = ({
   state,
+  isImportingToContentBank = false,
   fileSize,
   message,
   completedContents,
@@ -230,7 +232,9 @@ const ImportExportCompletedState = ({
                 <div css={styles.reportInfo}>
                   <div css={styles.reportLeft}>
                     <div>{contentMapping[type as keyof typeof contentMapping].reportList.success}</div>
-                    <div>{formatCompletedItems()}</div>
+                    <Show when={!isImportingToContentBank}>
+                      <div>{formatCompletedItems()}</div>
+                    </Show>
                   </div>
                 </div>
               </div>
