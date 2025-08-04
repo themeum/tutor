@@ -437,8 +437,8 @@ export const convertToSlug = (value: string): string => {
       )
       .replace(/\s+/g, '-') // Replace multiple spaces with single dash
       .replace(/-+/g, '-') // Replace multiple dashes with single dash
-      .replace(/^-+|-+$/g, '')
-  ); // Remove leading and trailing dashes
+      .replace(/^-+|-+$/g, '') // Remove leading and trailing dashes
+  );
 };
 
 export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedField[]>; slotKey?: string }[]) => {
