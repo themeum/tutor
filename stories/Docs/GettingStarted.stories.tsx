@@ -3,7 +3,7 @@ import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
 const GettingStartedWithTutor = () => (
   <div>
-    <h1 css={typography.heading2('bold')}>Getting Started with Tutor Design Library</h1>
+    <h1 css={typography.heading5('bold')}>Getting Started with Tutor Design Library</h1>
     <p css={typography.body()}>
       The Tutor design library is your foundation for building robust, scalable, and visually consistent UI components.
       By centralizing all design tokens, typography, colors, and layout values in the <code>shared/config</code> folder,
@@ -12,7 +12,7 @@ const GettingStartedWithTutor = () => (
       <br />
       <b>Benefits:</b> Consistency, scalability, maintainability, and rapid development.
     </p>
-    <h2 css={typography.heading4('medium')}>Config Folder Deep Dive</h2>
+    <h2 css={typography.heading6('medium')}>Config Folder Deep Dive</h2>
     <ul>
       <li>
         <b>config.ts</b>: Contains runtime configuration for Tutor, such as API URLs, feature flags, and global objects.
@@ -48,7 +48,7 @@ const GettingStartedWithTutor = () => (
         <code>{`import { typography } from '@TutorShared/config/typography'; // Use for headings and body text`}</code>
       </li>
     </ul>
-    <h2 css={typography.heading4('medium')}>Atomic Design & Open/Closed Principle</h2>
+    <h2 css={typography.heading6('medium')}>Atomic Design & Open/Closed Principle</h2>
     <p css={typography.body()}>
       Tutor follows atomic design: <b>atoms</b> (Button), <b>molecules</b> (Card), and <b>organisms</b> (Form).
       <br />
@@ -59,7 +59,7 @@ const GettingStartedWithTutor = () => (
       <b>Always use config tokens and EmotionJs for styling.</b> Never hardcode values or use inline styles, as this
       breaks consistency and maintainability.
     </p>
-    <h3 css={typography.heading5('medium')}>✅ Correct Usage Example: Atom (Button)</h3>
+    <h3 css={typography.body('medium')}>✅ Correct Usage Example: Atom (Button)</h3>
     <pre>
       {`
 import { css } from '@emotion/react';
@@ -80,7 +80,7 @@ const Button = ({ children }) => (
 );
       `}
     </pre>
-    <h3 css={typography.heading5('medium')}>✅ Correct Usage Example: Molecule (Card)</h3>
+    <h3 css={typography.body('medium')}>✅ Correct Usage Example: Molecule (Card)</h3>
     <pre>
       {`
 import { css } from '@emotion/react';
@@ -100,7 +100,7 @@ const Card = ({ children }) => (
 );
       `}
     </pre>
-    <h3 css={typography.heading5('medium')}>✅ Correct Usage Example: Organism (Form)</h3>
+    <h3 css={typography.body('medium')}>✅ Correct Usage Example: Organism (Form)</h3>
     <pre>
       {`
 import { css } from '@emotion/react';
@@ -121,7 +121,7 @@ const Form = ({ children }) => (
 );
       `}
     </pre>
-    <h3 css={typography.heading5('medium')}>❌ Incorrect Usage Example (Hardcoded Styles)</h3>
+    <h3 css={typography.body('medium')}>❌ Incorrect Usage Example (Hardcoded Styles)</h3>
     <pre>
       {`
 const Button = ({ children }) => (
@@ -132,7 +132,7 @@ const Button = ({ children }) => (
 // Avoid hardcoded styles and inline styles. Use config tokens and EmotionJs instead.
       `}
     </pre>
-    <h3 css={typography.heading5('medium')}>❌ Incorrect Usage Example (Modifying Internal Logic)</h3>
+    <h3 css={typography.body('medium')}>❌ Incorrect Usage Example (Modifying Internal Logic)</h3>
     <pre>
       {`
 // Don't directly change internal logic or styling of shared components.
@@ -143,7 +143,7 @@ const CustomButton = (props) => {
 };
       `}
     </pre>
-    <h2 css={typography.heading4('medium')}>Accessibility & Best Practices</h2>
+    <h2 css={typography.heading6('medium')}>Accessibility & Best Practices</h2>
     <ul>
       <li>
         Always use <code>aria-label</code> and <code>tabIndex</code> for interactive elements to ensure accessibility.
