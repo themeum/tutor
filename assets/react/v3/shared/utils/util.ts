@@ -410,6 +410,7 @@ export const convertToSlug = (value: string): string => {
       .normalize('NFKD') // Normalize accented characters into base forms + diacritics
       .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
       .toLowerCase()
+      // Remove special characters !~@#$%^&*(){}[]|\;:"',./?
       // Remove characters that are NOT:
       // - Basic Latin letters and numbers (a-z, 0-9)
       // - Spaces and hyphens
