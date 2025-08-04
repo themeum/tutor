@@ -427,9 +427,12 @@ export const convertToSlug = (value: string): string => {
       // - Katakana (Japanese)
       // - CJK Unified Ideographs (Chinese/Japanese/Korean characters)
       // - Hangul Syllables (Korean)
+      // - Hangul Compatibility Jamo
+      // - Hangul Jamo Extended-A
+      // - Hangul Jamo Extended-B
       .replace(
         // eslint-disable-next-line no-misleading-character-class
-        /[^a-z0-9\s\-\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u0B80-\u0BFF\u10A0-\u10FF\u1100-\u11FF\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF]/g,
+        /[^a-z0-9\s\-\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u0B80-\u0BFF\u10A0-\u10FF\u1100-\u11FF\u3130-\u318F\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uA960-\uA97F\uAC00-\uD7AF\uD7B0-\uD7FF]/g,
         '',
       )
       .replace(/\s+/g, '-') // Replace multiple spaces with single dash
