@@ -22,7 +22,7 @@ $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 $course_id    = Input::get( 'course-id', 0, Input::TYPE_INT );
-$order_filter = Input::get( 'order', 'DESC' );
+$order_filter = tutor_utils()->get_valid_sort_order( Input::get( 'order', 'DESC' ) );
 $date_filter  = Input::get( 'date', '' );
 
 $current_user = get_current_user_id(); //phpcs:ignore
