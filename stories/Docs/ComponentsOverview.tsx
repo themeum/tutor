@@ -3,16 +3,25 @@ import { useState } from 'react';
 
 import Alert from '@TutorShared/atoms/Alert';
 import { Avatar } from '@TutorShared/atoms/Avatar';
+import { Box } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
+import ButtonGroup from '@TutorShared/atoms/ButtonGroup';
+import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
+import ImageInput from '@TutorShared/atoms/ImageInput';
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import ProBadge from '@TutorShared/atoms/ProBadge';
+import Radio from '@TutorShared/atoms/Radio';
+import Select from '@TutorShared/atoms/Select';
+import { Separator } from '@TutorShared/atoms/Separator';
 import Skeleton from '@TutorShared/atoms/Skeleton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Switch from '@TutorShared/atoms/Switch';
 import TextInput from '@TutorShared/atoms/TextInput';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
+import VirtualList from '@TutorShared/atoms/VirtualList';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Card from '@TutorShared/molecules/Card';
@@ -21,6 +30,7 @@ import ImageCard from '@TutorShared/molecules/ImageCard';
 import Table from '@TutorShared/molecules/Table';
 import Tabs from '@TutorShared/molecules/Tabs';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
+import { noop } from '@TutorShared/utils/util';
 
 export default {};
 interface ComponentItem {
@@ -56,6 +66,29 @@ const componentLibrary: ComponentItem[] = [
     storyPath: '?path=/docs/atoms-alert--docs',
   },
   {
+    name: 'Avatar',
+    category: 'atoms',
+    description: 'User avatar with image fallback to initials',
+    preview: (
+      <div css={previewContainerStyles}>
+        <Avatar name="John Doe" />
+        <Avatar name="Jane Smith" image="https://placehold.co/40x40" />
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-avatar--docs',
+  },
+  {
+    name: 'Box',
+    category: 'atoms',
+    description: 'Flexible box component for layout and styling',
+    preview: (
+      <div css={previewContainerStyles}>
+        <Box>This is a Box component</Box>
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-box--docs',
+  },
+  {
     name: 'Button',
     category: 'atoms',
     description: 'Versatile button component with multiple variants and states',
@@ -75,61 +108,37 @@ const componentLibrary: ComponentItem[] = [
     storyPath: '?path=/docs/atoms-button--docs',
   },
   {
-    name: 'MagicButton',
+    name: 'ButtonGroup',
     category: 'atoms',
-    description: 'Visually rich button with gradient effects and animations',
+    description: 'Group of buttons for related actions',
     preview: (
       <div css={previewContainerStyles}>
-        <MagicButton size="sm">Magic AI</MagicButton>
+        <ButtonGroup>
+          <Button variant="primary" size="small">
+            B1
+          </Button>
+          <Button variant="secondary" size="small">
+            B2
+          </Button>
+          <Button variant="danger" size="small">
+            B3
+          </Button>
+        </ButtonGroup>
       </div>
     ),
-    storyPath: '?path=/docs/atoms-magicbutton--docs',
+    storyPath: '?path=/docs/atoms-buttongroup--docs',
   },
   {
-    name: 'TextInput',
+    name: 'Checkbox',
     category: 'atoms',
-    description: 'Flexible input component with validation and styling options',
+    description: 'Custom checkbox component with label support',
     preview: (
       <div css={previewContainerStyles}>
-        <TextInput onChange={() => {}} placeholder="Enter text..." size="small" />
+        <Checkbox label="Unchecked" />
+        <Checkbox checked label="Checked" />
       </div>
     ),
-    storyPath: '?path=/docs/atoms-textinput--docs',
-  },
-  {
-    name: 'Switch',
-    category: 'atoms',
-    description: 'Toggle switch for boolean states',
-    preview: (
-      <div css={previewContainerStyles}>
-        <Switch checked={true} />
-        <Switch checked={false} />
-      </div>
-    ),
-    storyPath: '?path=/docs/atoms-switch--docs',
-  },
-  {
-    name: 'Avatar',
-    category: 'atoms',
-    description: 'User avatar with image fallback to initials',
-    preview: (
-      <div css={previewContainerStyles}>
-        <Avatar name="John Doe" />
-        <Avatar name="Jane Smith" image="https://placehold.co/40x40" />
-      </div>
-    ),
-    storyPath: '?path=/docs/atoms-avatar--docs',
-  },
-  {
-    name: 'LoadingSpinner',
-    category: 'atoms',
-    description: 'Animated loading indicator with multiple variants',
-    preview: (
-      <div css={previewContainerStyles}>
-        <LoadingSpinner size={24} />
-      </div>
-    ),
-    storyPath: '?path=/docs/atoms-loadingspinner--docs',
+    storyPath: '?path=/docs/atoms-checkbox--docs',
   },
   {
     name: 'Chip',
@@ -144,16 +153,37 @@ const componentLibrary: ComponentItem[] = [
     storyPath: '?path=/docs/atoms-chip--docs',
   },
   {
-    name: 'TutorBadge',
+    name: 'ImageInput',
     category: 'atoms',
-    description: 'Status badges with multiple variants',
+    description: 'Image upload input with preview and validation',
     preview: (
       <div css={previewContainerStyles}>
-        <TutorBadge variant="success">Active</TutorBadge>
-        <TutorBadge variant="warning">Pending</TutorBadge>
+        <ImageInput size="small" clearHandler={noop} uploadHandler={noop} value={null} />
       </div>
     ),
-    storyPath: '?path=/docs/atoms-tutorbadge--docs',
+    storyPath: '?path=/docs/atoms-imageinput--docs',
+  },
+  {
+    name: 'LoadingSpinner',
+    category: 'atoms',
+    description: 'Animated loading indicator with multiple variants',
+    preview: (
+      <div css={previewContainerStyles}>
+        <LoadingSpinner size={24} />
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-loadingspinner--docs',
+  },
+  {
+    name: 'MagicButton',
+    category: 'atoms',
+    description: 'Visually rich button with gradient effects and animations',
+    preview: (
+      <div css={previewContainerStyles}>
+        <MagicButton size="sm">Magic AI</MagicButton>
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-magicbutton--docs',
   },
   {
     name: 'ProBadge',
@@ -165,6 +195,49 @@ const componentLibrary: ComponentItem[] = [
       </div>
     ),
     storyPath: '?path=/docs/atoms-probadge--docs',
+  },
+  {
+    name: 'Radio',
+    category: 'atoms',
+    description: 'Custom radio button component with label support',
+    preview: (
+      <div css={previewContainerStyles}>
+        <Radio label="Not Selected" name="radio-example" />
+        <Radio checked label="Selected" name="radio-example" />
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-radio--docs',
+  },
+  {
+    name: 'Select',
+    category: 'atoms',
+    description: 'Custom select dropdown with search and multi-select support',
+    preview: (
+      <div css={previewContainerStyles}>
+        <Select
+          options={[
+            { value: 'option1', label: 'Option 1' },
+            { value: 'option2', label: 'Option 2' },
+          ]}
+          placeholder="Select an option"
+          onChange={() => {}}
+        />
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-select--docs',
+  },
+  {
+    name: 'Seperator',
+    category: 'atoms',
+    description: 'Horizontal line separator for visual breaks',
+    preview: (
+      <div css={previewContainerStyles}>
+        <span>Top</span>
+        <Separator />
+        <span>Bottom</span>
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-separator--docs',
   },
   {
     name: 'Skeleton',
@@ -190,6 +263,76 @@ const componentLibrary: ComponentItem[] = [
       </div>
     ),
     storyPath: '?path=/docs/atoms-svgicon--docs',
+  },
+  {
+    name: 'Switch',
+    category: 'atoms',
+    description: 'Toggle switch for boolean states',
+    preview: (
+      <div css={previewContainerStyles}>
+        <Switch checked={true} />
+        <Switch checked={false} />
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-switch--docs',
+  },
+  {
+    name: 'TextInput',
+    category: 'atoms',
+    description: 'Flexible input component with validation and styling options',
+    preview: (
+      <div css={previewContainerStyles}>
+        <TextInput onChange={() => {}} placeholder="Enter text..." size="small" />
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-textinput--docs',
+  },
+  {
+    name: 'Tooltip',
+    category: 'atoms',
+    description: 'Contextual tooltip with rich content support',
+    preview: (
+      <div css={previewContainerStyles}>
+        <Tooltip visible content="This is a tooltip">
+          <Button variant="primary" size="small">
+            Hover me
+          </Button>
+        </Tooltip>
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-tooltip--docs',
+  },
+  {
+    name: 'TutorBadge',
+    category: 'atoms',
+    description: 'Status badges with multiple variants',
+    preview: (
+      <div css={previewContainerStyles}>
+        <TutorBadge variant="success">Active</TutorBadge>
+        <TutorBadge variant="warning">Pending</TutorBadge>
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-tutorbadge--docs',
+  },
+  {
+    name: 'VirtualList',
+    category: 'atoms',
+    description: 'Virtualized list component for efficient rendering of large datasets',
+    preview: (
+      <div css={previewContainerStyles} style={{ width: '100px' }}>
+        <VirtualList
+          items={Array.from({ length: 1000 }, (_, i) => `Item ${i + 1}`)}
+          height={200}
+          itemHeight={20}
+          renderItem={(item, index, style) => (
+            <div key={index} style={style}>
+              {item}
+            </div>
+          )}
+        />
+      </div>
+    ),
+    storyPath: '?path=/docs/atoms-virtuallist--docs',
   },
   // Molecules
   {
