@@ -336,6 +336,9 @@ export const ComponentsOverview = () => {
   const atomsCount = componentLibrary.filter((c) => c.category === 'atoms').length;
   const moleculesCount = componentLibrary.filter((c) => c.category === 'molecules').length;
 
+  const filteredAtoms = filteredComponents.filter((c) => c.category === 'atoms');
+  const filteredMolecules = filteredComponents.filter((c) => c.category === 'molecules');
+
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
   };
@@ -369,12 +372,10 @@ export const ComponentsOverview = () => {
       <header css={overviewStyles.header}>
         <h1 css={overviewStyles.title}>Components Overview</h1>
         <p css={overviewStyles.subtitle}>
-          Tutor provides plenty of UI components to enrich your web applications, and we will improve components
-          experience consistently. We also recommend some great{' '}
-          <a href="#" css={overviewStyles.link}>
-            Third-Party Libraries
-          </a>{' '}
-          additionally.
+          Tutor has it&apos;s own component library that provides a set of reusable UI components to help you build .
+          These components are designed to be flexible, customizable, and easy to use, allowing you to create a
+          consistent user interface across your application. You can explore the components below and see how they can
+          be used in your projects.
         </p>
       </header>
 
@@ -402,60 +403,56 @@ export const ComponentsOverview = () => {
         </div>
       </div>
 
-      {selectedCategory !== 'molecules' && (
+      {selectedCategory !== 'molecules' && filteredAtoms.length > 0 && (
         <section css={overviewStyles.section}>
           <h2 css={overviewStyles.sectionTitle}>
             Atoms <span css={overviewStyles.sectionCount}>{atomsCount}</span>
           </h2>
           <div css={overviewStyles.grid}>
-            {filteredComponents
-              .filter((component) => component.category === 'atoms')
-              .map((component) => (
-                <div
-                  key={component.name}
-                  css={overviewStyles.componentCard}
-                  onClick={() => handleComponentClick(component.storyPath)}
-                  onKeyDown={(event) => handleKeyDown(event, component.storyPath)}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`Open ${component.name} component story`}
-                >
-                  <div css={overviewStyles.componentPreview}>{component.preview}</div>
-                  <div css={overviewStyles.componentInfo}>
-                    <h3 css={overviewStyles.componentName}>{component.name}</h3>
-                    <p css={overviewStyles.componentDescription}>{component.description}</p>
-                  </div>
+            {filteredAtoms.map((component) => (
+              <div
+                key={component.name}
+                css={overviewStyles.componentCard}
+                onClick={() => handleComponentClick(component.storyPath)}
+                onKeyDown={(event) => handleKeyDown(event, component.storyPath)}
+                tabIndex={0}
+                role="button"
+                aria-label={`Open ${component.name} component story`}
+              >
+                <div css={overviewStyles.componentPreview}>{component.preview}</div>
+                <div css={overviewStyles.componentInfo}>
+                  <h3 css={overviewStyles.componentName}>{component.name}</h3>
+                  <p css={overviewStyles.componentDescription}>{component.description}</p>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </section>
       )}
 
-      {selectedCategory !== 'atoms' && (
+      {selectedCategory !== 'atoms' && filteredMolecules.length > 0 && (
         <section css={overviewStyles.section}>
           <h2 css={overviewStyles.sectionTitle}>
             Molecules <span css={overviewStyles.sectionCount}>{moleculesCount}</span>
           </h2>
           <div css={overviewStyles.grid}>
-            {filteredComponents
-              .filter((component) => component.category === 'molecules')
-              .map((component) => (
-                <div
-                  key={component.name}
-                  css={overviewStyles.componentCard}
-                  onClick={() => handleComponentClick(component.storyPath)}
-                  onKeyDown={(event) => handleKeyDown(event, component.storyPath)}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`Open ${component.name} component story`}
-                >
-                  <div css={overviewStyles.componentPreview}>{component.preview}</div>
-                  <div css={overviewStyles.componentInfo}>
-                    <h3 css={overviewStyles.componentName}>{component.name}</h3>
-                    <p css={overviewStyles.componentDescription}>{component.description}</p>
-                  </div>
+            {filteredMolecules.map((component) => (
+              <div
+                key={component.name}
+                css={overviewStyles.componentCard}
+                onClick={() => handleComponentClick(component.storyPath)}
+                onKeyDown={(event) => handleKeyDown(event, component.storyPath)}
+                tabIndex={0}
+                role="button"
+                aria-label={`Open ${component.name} component story`}
+              >
+                <div css={overviewStyles.componentPreview}>{component.preview}</div>
+                <div css={overviewStyles.componentInfo}>
+                  <h3 css={overviewStyles.componentName}>{component.name}</h3>
+                  <p css={overviewStyles.componentDescription}>{component.description}</p>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         </section>
       )}
@@ -493,8 +490,6 @@ const overviewStyles = {
   subtitle: css`
     ${typography.body()}
     color: ${colorTokens.text.subdued};
-    max-width: 600px;
-    line-height: 1.6;
   `,
   link: css`
     color: ${colorTokens.text.primary};
