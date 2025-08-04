@@ -401,18 +401,41 @@ export const isAddonEnabled = (addon: Addon) => {
 };
 
 export const convertToSlug = (value: string): string => {
-  return value
-    .normalize('NFKD') // Normalize accented characters into base forms + diacritics
-    .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
-    .toLowerCase()
-    .replace(
-      // eslint-disable-next-line no-misleading-character-class
-      /[^a-z0-9\u0020-\u007F\u00A0-\u00FF\u0100-\u017F\u0180-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u0900-\u097F\u0E00-\u0E7F\u0B80-\u0BFF\u10A0-\u10FF\u0530-\u058F\u0980-\u09FF\u4E00-\u9FFF\u3000-\u303F\uAC00-\uD7AF\s-]/g,
-      '',
-    ) // Retain letters and combining marks
-    .replace(/\s+/g, '-') // Replace spaces with dashes
-    .replace(/-+/g, '-') // Replace multiple dashes with a single one
-    .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
+  if (!value || typeof value !== 'string') {
+    return '';
+  }
+
+  return (
+    value
+      .normalize('NFKD') // Normalize accented characters into base forms + diacritics
+      .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
+      .toLowerCase()
+      // Remove characters that are NOT:
+      // - Basic Latin letters and numbers (a-z, 0-9)
+      // - Spaces and hyphens
+      // - Latin Extended (À-ž, etc.)
+      // - Greek and Coptic (Α-ω)
+      // - Cyrillic (А-я)
+      // - Hebrew (א-ת)
+      // - Arabic (ا-ي)
+      // - Devanagari (Hindi)
+      // - Thai
+      // - Tamil
+      // - Georgian
+      // - Hangul Jamo (Korean building blocks)
+      // - Hiragana (Japanese)
+      // - Katakana (Japanese)
+      // - CJK Unified Ideographs (Chinese/Japanese/Korean characters)
+      // - Hangul Syllables (Korean)
+      .replace(
+        // eslint-disable-next-line no-misleading-character-class
+        /[^a-z0-9\s\-\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0900-\u097F\u0E00-\u0E7F\u0B80-\u0BFF\u10A0-\u10FF\u1100-\u11FF\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF\uAC00-\uD7AF]/g,
+        '',
+      )
+      .replace(/\s+/g, '-') // Replace multiple spaces with single dash
+      .replace(/-+/g, '-') // Replace multiple dashes with single dash
+      .replace(/^-+|-+$/g, '')
+  ); // Remove leading and trailing dashes
 };
 
 export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedField[]>; slotKey?: string }[]) => {
