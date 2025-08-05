@@ -3,7 +3,7 @@ import type ComponentsOverviewStories from './ComponentsOverview';
 import { ComponentsOverview } from './ComponentsOverview';
 
 const meta = {
-  title: 'Docs/Introductions',
+  title: 'Docs/Components Overview',
   component: ComponentsOverview,
   parameters: {
     layout: 'fullscreen',
