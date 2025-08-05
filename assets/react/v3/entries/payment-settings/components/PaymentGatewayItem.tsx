@@ -27,27 +27,28 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
       onInstallSuccess();
 
       const existingPaymentMethods = form.getValues('payment_methods') ?? [];
-      // Make is_installed false if already exist
+      let isPaymentExisting = false;
+
+      // Mark as is_installed and is_plugin_active if it already exists
       existingPaymentMethods.forEach((method) => {
         if (method.name === data.name) {
           method.is_installed = true;
+          method.is_plugin_active = true;
+          isPaymentExisting = true;
         }
       });
 
-      const existingPayment = existingPaymentMethods.find((method) => method.name === data.name);
-      if (!existingPayment) {
-        // Append fields to settings
-        form.setValue(
-          'payment_methods',
-          [
-            ...existingPaymentMethods,
-            { ...data, is_installed: true, fields: data.fields.map(({ name, value }) => ({ name, value })) },
-          ],
-          {
-            shouldDirty: true,
-          },
-        );
+      // Append new method if it does not exist
+      if (!isPaymentExisting) {
+        existingPaymentMethods.push({
+          ...data,
+          is_installed: true,
+          is_plugin_active: true,
+          fields: data.fields.map(({ name, value }) => ({ name, value })),
+        });
       }
+
+      form.setValue('payment_methods', existingPaymentMethods, { shouldDirty: true });
     }
   };
 

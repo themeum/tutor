@@ -171,7 +171,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
           {__('Plugin Not Installed', 'tutor')}
         </Badge>
       </Show>
-      <Show when={!data.is_plugin_active && data.is_installed && !data.is_plugin_active}>
+      <Show when={!data.is_manual && data.is_installed && !data.is_plugin_active}>
         <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
           {__('Plugin Not Activated', 'tutor')}
         </Badge>
