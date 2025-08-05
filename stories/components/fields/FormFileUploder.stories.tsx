@@ -39,49 +39,47 @@ It supports single/multiple uploads, file size and count limits, custom button t
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const WithHelpText: Story = {
+export const WithHelpText = {
   args: {
     helpText: 'Supported formats: PDF, DOCX, JPG, PNG.',
   },
-};
+} satisfies Story;
 
-export const MultipleFiles: Story = {
+export const MultipleFiles = {
   args: {
     selectMultiple: true,
     label: 'Upload Multiple Files',
     helpText: 'You can select multiple files.',
   },
-};
+} satisfies Story;
 
-export const MaxFiles: Story = {
+export const MaxFiles = {
   args: {
     selectMultiple: true,
     maxFiles: 2,
     label: 'Upload up to 2 files',
     helpText: 'Maximum 2 files allowed.',
   },
-};
+} satisfies Story;
 
-export const MaxFileSize: Story = {
+export const MaxFileSize = {
   args: {
     maxFileSize: 1024 * 1024, // 1MB
     label: 'Upload File (Max 1MB)',
     helpText: 'Maximum file size: 1MB.',
   },
-};
+} satisfies Story;
 
-export const CustomButtonText: Story = {
+export const CustomButtonText = {
   args: {
     buttonText: 'Attach Document',
     label: 'Document Upload',
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const form = useForm({
       defaultValues: {
@@ -104,4 +102,4 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;

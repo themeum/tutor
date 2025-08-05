@@ -35,26 +35,24 @@ It supports editing, saving, canceling, and displays the full URL with accessibi
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const CustomBaseURL: Story = {
+export const CustomBaseURL = {
   args: {
     baseURL: 'https://mysite.com/lesson',
     field: { ...DEFAULT_FORM_FIELD_PROPS, value: 'intro-to-react' },
   },
-};
+} satisfies Story;
 
-export const WithOnChange: Story = {
+export const WithOnChange = {
   args: {
     onChange: (newValue: string) => {
       alert(`Alias changed to: ${newValue}`);
     },
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const form = useForm({
       defaultValues: {
@@ -77,4 +75,4 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;

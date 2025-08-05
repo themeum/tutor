@@ -73,17 +73,15 @@ It supports labels, custom styling, disabled state, error state, and integrates 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const form = useForm({
       defaultValues: {
@@ -101,9 +99,9 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;
 
-export const WithError: Story = {
+export const WithError = {
   args: {
     label: 'Select an animal (required)',
     options,
@@ -115,11 +113,11 @@ export const WithError: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const MoreOptions: Story = {
+export const MoreOptions = {
   args: {
     label: 'Select your favorite animal',
     options: moreOptions,
   },
-};
+} satisfies Story;

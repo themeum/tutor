@@ -42,49 +42,47 @@ It supports labels, descriptions, tooltips, custom styling, disabled dates, load
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const WithHelpText: Story = {
+export const WithHelpText = {
   args: {
     label: 'Birthday',
     helpText: 'Select your birth date.',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled Date Input',
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     label: 'Loading Date Input',
     loading: true,
   },
-};
+} satisfies Story;
 
-export const WithDisabledRange: Story = {
+export const WithDisabledRange = {
   args: {
     label: 'Date Range',
     disabledBefore: '2024-01-01',
     disabledAfter: '2024-12-31',
     helpText: 'Only dates in 2024 are selectable.',
   },
-};
+} satisfies Story;
 
-export const CustomPlaceholder: Story = {
+export const CustomPlaceholder = {
   args: {
     label: 'Custom Placeholder',
     placeholder: 'YYYY-MM-DD',
     dateFormat: DateFormats.yearMonthDay,
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const form = useForm({
       defaultValues: {
@@ -107,4 +105,4 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;

@@ -163,74 +163,72 @@ It supports text, number, password, clearable, character limit, help text, AI in
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const WithPlaceholder: Story = {
+export const WithPlaceholder = {
   args: {
     placeholder: 'Enter course title...',
   },
-};
+} satisfies Story;
 
-export const Password: Story = {
+export const Password = {
   args: {
     label: 'Password',
     type: 'password',
     isPassword: true,
     placeholder: 'Enter password',
   },
-};
+} satisfies Story;
 
-export const Number: Story = {
+export const Number = {
   args: {
     label: 'Course Price',
     type: 'number',
     placeholder: 'Enter price',
   },
-};
+} satisfies Story;
 
-export const WithHelpText: Story = {
+export const WithHelpText = {
   args: {
     label: 'Course Subtitle',
     helpText: 'A short subtitle for your course.',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled Input',
     disabled: true,
     placeholder: 'Cannot edit',
   },
-};
+} satisfies Story;
 
-export const ReadOnly: Story = {
+export const ReadOnly = {
   args: {
     label: 'Read Only Input',
     readOnly: true,
     placeholder: 'Read only value',
     field: { ...DEFAULT_FORM_FIELD_PROPS, value: 'Read only value' },
   },
-};
+} satisfies Story;
 
-export const WithMaxLimit: Story = {
+export const WithMaxLimit = {
   args: {
     label: 'Limited Input',
     maxLimit: 10,
     placeholder: 'Max 10 characters',
   },
-};
+} satisfies Story;
 
-export const IsClearable: Story = {
+export const IsClearable = {
   args: {
     label: 'Clearable Input',
     isClearable: true,
     field: { ...DEFAULT_FORM_FIELD_PROPS, value: 'Clear me' },
   },
-};
+} satisfies Story;
 
-export const CustomLabelStyle: Story = {
+export const CustomLabelStyle = {
   args: {
     label: 'Styled Label',
     placeholder: 'Styled label input',
@@ -250,9 +248,9 @@ export const CustomLabelStyle: Story = {
       }
     />
   ),
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: (args) => {
     const form = useForm({
       defaultValues: {
@@ -275,9 +273,9 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;
 
-export const WithError: Story = {
+export const WithError = {
   args: {
     label: 'Error Input',
     fieldState: {
@@ -288,13 +286,13 @@ export const WithError: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const AI: Story = {
+export const AI = {
   args: {
     label: 'Generate with AI',
     generateWithAi: true,
     isMagicAi: true,
     placeholder: 'Let AI help you write a title',
   },
-};
+} satisfies Story;

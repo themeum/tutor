@@ -44,32 +44,30 @@ It supports labels, descriptions, tooltips, custom styling, and integrates with 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const WithDescription: Story = {
+export const WithDescription = {
   args: {
     label: 'Enable notifications',
     description: 'You will receive updates about new features.',
   },
-};
+} satisfies Story;
 
-export const WithHelpText: Story = {
+export const WithHelpText = {
   args: {
     label: 'I agree to the privacy policy',
     helpText: 'Read our privacy policy for more details.',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled Checkbox',
     disabled: true,
   },
-};
+} satisfies Story;
 
-export const WithError: Story = {
+export const WithError = {
   args: {
     label: 'Error Checkbox',
     fieldState: {
@@ -80,26 +78,26 @@ export const WithError: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const Hidden: Story = {
+export const Hidden = {
   args: {
     label: 'Hidden Checkbox',
     isHidden: true,
   },
-};
+} satisfies Story;
 
-export const CustomLabelStyle: Story = {
+export const CustomLabelStyle = {
   args: {
     label: 'Custom Styled Label',
     labelCss: css`
       ${typography.heading6('bold')}
-      color: ${colorTokens.brand.blue};
+      color: ${colorTokens.brand.blue} satisfies Story;
     `,
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: () => {
     const form = useForm({
       defaultValues: {
@@ -115,4 +113,4 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;

@@ -149,11 +149,9 @@ It supports left/right content (e.g., currency, unit), vertical bar, preset opti
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const WithLeftContent: Story = {
+export const WithLeftContent = {
   args: {
     content: '$',
     contentPosition: 'left',
@@ -161,9 +159,9 @@ export const WithLeftContent: Story = {
     presetOptions,
     placeholder: 'Enter amount',
   },
-};
+} satisfies Story;
 
-export const WithRightContent: Story = {
+export const WithRightContent = {
   args: {
     content: 'kg',
     contentPosition: 'right',
@@ -171,9 +169,9 @@ export const WithRightContent: Story = {
     presetOptions,
     placeholder: 'Enter weight',
   },
-};
+} satisfies Story;
 
-export const LargeSize: Story = {
+export const LargeSize = {
   args: {
     size: 'large',
     label: 'Large Input',
@@ -181,9 +179,9 @@ export const LargeSize: Story = {
     presetOptions,
     placeholder: 'Enter amount',
   },
-};
+} satisfies Story;
 
-export const NumberType: Story = {
+export const NumberType = {
   args: {
     type: 'number',
     label: 'Quantity',
@@ -196,9 +194,9 @@ export const NumberType: Story = {
     ],
     placeholder: 'Enter quantity',
   },
-};
+} satisfies Story;
 
-export const WithHelpText: Story = {
+export const WithHelpText = {
   args: {
     label: 'Price',
     content: '$',
@@ -206,9 +204,9 @@ export const WithHelpText: Story = {
     presetOptions,
     placeholder: '0.00',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled Input',
     content: '$',
@@ -216,9 +214,9 @@ export const Disabled: Story = {
     presetOptions,
     placeholder: 'Cannot edit',
   },
-};
+} satisfies Story;
 
-export const ReadOnly: Story = {
+export const ReadOnly = {
   args: {
     label: 'Read Only Input',
     content: '$',
@@ -227,9 +225,9 @@ export const ReadOnly: Story = {
     placeholder: 'Read only value',
     field: { ...DEFAULT_FORM_FIELD_PROPS, value: '123.45' },
   },
-};
+} satisfies Story;
 
-export const CustomContentStyle: Story = {
+export const CustomContentStyle = {
   args: {
     label: 'Styled Content',
     content: 'ETH',
@@ -241,13 +239,13 @@ export const CustomContentStyle: Story = {
       {...args}
       contentCss={css`
         ${typography.heading5('bold')}
-        color: ${colorTokens.brand.blue};
+        color: ${colorTokens.brand.blue} satisfies Story;
       `}
     />
   ),
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: (args) => {
     const form = useForm({
       defaultValues: {
@@ -272,9 +270,9 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;
 
-export const WithError: Story = {
+export const WithError = {
   args: {
     label: 'Error Input',
     content: '$',
@@ -287,9 +285,9 @@ export const WithError: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const NoMinWidth: Story = {
+export const NoMinWidth = {
   args: {
     label: 'No Min Width',
     content: '$',
@@ -297,4 +295,4 @@ export const NoMinWidth: Story = {
     removeOptionsMinWidth: true,
     placeholder: 'Dropdown has no min width',
   },
-};
+} satisfies Story;

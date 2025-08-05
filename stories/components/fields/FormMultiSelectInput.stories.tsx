@@ -104,45 +104,43 @@ It supports searching, selecting multiple options, custom styling, help text, er
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const WithPlaceholder: Story = {
+export const WithPlaceholder = {
   args: {
     placeholder: 'Search frameworks...',
   },
-};
+} satisfies Story;
 
-export const WithHelpText: Story = {
+export const WithHelpText = {
   args: {
     helpText: 'Select all frameworks you are familiar with.',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     disabled: true,
     placeholder: 'Cannot select',
   },
-};
+} satisfies Story;
 
-export const ReadOnly: Story = {
+export const ReadOnly = {
   args: {
     readOnly: true,
     placeholder: 'Read only',
     field: { ...DEFAULT_FORM_FIELD_PROPS, value: ['react', 'vue'] },
   },
-};
+} satisfies Story;
 
-export const Loading: Story = {
+export const Loading = {
   args: {
     loading: true,
     placeholder: 'Loading options...',
   },
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: (args) => {
     const form = useForm({
       defaultValues: {
@@ -166,9 +164,9 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;
 
-export const WithError: Story = {
+export const WithError = {
   args: {
     label: 'Error Multi-Select',
     fieldState: {
@@ -179,19 +177,19 @@ export const WithError: Story = {
       },
     },
   },
-};
+} satisfies Story;
 
-export const NoMinWidth: Story = {
+export const NoMinWidth = {
   args: {
     removeOptionsMinWidth: true,
     placeholder: 'Dropdown has no min width',
   },
-};
+} satisfies Story;
 
-export const ManyOptions: Story = {
+export const ManyOptions = {
   args: {
     label: 'Select Many Frameworks',
     options: manyOptions,
     placeholder: 'Search frameworks...',
   },
-};
+} satisfies Story;

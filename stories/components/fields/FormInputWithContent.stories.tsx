@@ -137,38 +137,36 @@ It supports left/right content (e.g., currency, unit), vertical bar, custom styl
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = {
-  args: {},
-};
+export const Default = {} satisfies Story;
 
-export const RightContent: Story = {
+export const RightContent = {
   args: {
     content: 'kg',
     contentPosition: 'right',
     label: 'Weight',
     placeholder: 'Enter weight',
   },
-};
+} satisfies Story;
 
-export const NoVerticalBar: Story = {
+export const NoVerticalBar = {
   args: {
     showVerticalBar: false,
     label: 'Amount',
     content: '$',
     placeholder: 'Enter amount',
   },
-};
+} satisfies Story;
 
-export const LargeSize: Story = {
+export const LargeSize = {
   args: {
     size: 'large',
     label: 'Large Input',
     content: 'USD',
     placeholder: 'Enter amount',
   },
-};
+} satisfies Story;
 
-export const NumberType: Story = {
+export const NumberType = {
   args: {
     type: 'number',
     label: 'Quantity',
@@ -176,27 +174,27 @@ export const NumberType: Story = {
     contentPosition: 'right',
     placeholder: 'Enter quantity',
   },
-};
+} satisfies Story;
 
-export const WithHelpText: Story = {
+export const WithHelpText = {
   args: {
     label: 'Price',
     content: '$',
     helpText: 'Enter the price in USD.',
     placeholder: '0.00',
   },
-};
+} satisfies Story;
 
-export const Disabled: Story = {
+export const Disabled = {
   args: {
     label: 'Disabled Input',
     content: '$',
     disabled: true,
     placeholder: 'Cannot edit',
   },
-};
+} satisfies Story;
 
-export const ReadOnly: Story = {
+export const ReadOnly = {
   args: {
     label: 'Read Only Input',
     content: '$',
@@ -204,9 +202,9 @@ export const ReadOnly: Story = {
     placeholder: 'Read only value',
     field: { ...DEFAULT_FORM_FIELD_PROPS, value: '123.45' },
   },
-};
+} satisfies Story;
 
-export const CustomContentStyle: Story = {
+export const CustomContentStyle = {
   args: {
     label: 'Styled Content',
     content: 'ETH',
@@ -217,13 +215,13 @@ export const CustomContentStyle: Story = {
       {...args}
       contentCss={css`
         ${typography.heading5('bold')}
-        color: ${colorTokens.brand.blue};
+        color: ${colorTokens.brand.blue} satisfies Story;
       `}
     />
   ),
-};
+} satisfies Story;
 
-export const Controlled: Story = {
+export const Controlled = {
   render: (args) => {
     const form = useForm({
       defaultValues: {
@@ -247,9 +245,9 @@ export const Controlled: Story = {
       />
     );
   },
-};
+} satisfies Story;
 
-export const WithError: Story = {
+export const WithError = {
   args: {
     label: 'Error Input',
     content: '$',
@@ -261,4 +259,4 @@ export const WithError: Story = {
       },
     },
   },
-};
+} satisfies Story;
