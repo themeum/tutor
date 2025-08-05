@@ -25,7 +25,9 @@ import VirtualList from '@TutorShared/atoms/VirtualList';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Card from '@TutorShared/molecules/Card';
+import DropdownButton from '@TutorShared/molecules/DropdownButton';
 import EmptyState from '@TutorShared/molecules/EmptyState';
+import FileUploader from '@TutorShared/molecules/FileUploader';
 import ImageCard from '@TutorShared/molecules/ImageCard';
 import Table from '@TutorShared/molecules/Table';
 import Tabs from '@TutorShared/molecules/Tabs';
@@ -461,6 +463,31 @@ const componentLibrary: ComponentItem[] = [
       </div>
     ),
     storyPath: '?path=/docs/molecules-imagecard--docs',
+  },
+  {
+    name: 'DropdownButton',
+    category: 'molecules',
+    description: 'Button with dropdown menu for actions',
+    preview: (
+      <div css={previewContainerStyles}>
+        <DropdownButton text="Actions">
+          <DropdownButton.Item text="Edit" onClick={() => {}} />
+          <DropdownButton.Item text="Delete" onClick={() => {}} />
+        </DropdownButton>
+      </div>
+    ),
+    storyPath: '?path=/docs/molecules-dropdownbutton--docs',
+  },
+  {
+    name: 'FileUploader',
+    category: 'molecules',
+    description: 'File upload component with drag-and-drop support',
+    preview: (
+      <div css={previewContainerStyles}>
+        <FileUploader acceptedTypes={['image/*']} onUpload={noop} onError={noop} label="Upload an image" />
+      </div>
+    ),
+    storyPath: '?path=/docs/molecules-fileuploader--docs',
   },
 ];
 
