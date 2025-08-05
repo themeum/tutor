@@ -43,26 +43,25 @@ const noResultsStyles = css`
   padding: ${spacing[48]};
 `;
 
-const iconItemWrapperStyles = css`
+const iconItemWrapperStyles = ({ isSelected = false }) => css`
   position: relative;
   cursor: pointer;
   padding: ${spacing[12]};
   border-radius: ${borderRadius[8]};
   transition: all 0.2s ease;
-  border: 1px solid transparent;
   ${styleUtils.display.flex()};
   align-items: center;
   justify-content: center;
+  transition: background 0.2s ease;
 
-  &:hover {
+  &:hover:not(${isSelected}) {
     background: ${colorTokens.background.hover};
-    border-color: ${colorTokens.stroke.hover};
   }
 
-  &:focus {
-    outline: 2px solid ${colorTokens.brand.blue};
-    outline-offset: 2px;
-  }
+  ${isSelected &&
+  css`
+    background: ${colorTokens.background.status.success};
+  `}
 `;
 
 const copyFeedbackStyles = css`
@@ -180,7 +179,7 @@ const IconGalleryPage = () => {
           {filteredIcons.map((iconName) => (
             <IconItem key={iconName} name={copiedIcon === iconName ? `Copied!` : iconName}>
               <div
-                css={iconItemWrapperStyles}
+                css={iconItemWrapperStyles({ isSelected: copiedIcon === iconName })}
                 onClick={() => handleIconClick(iconName)}
                 onKeyDown={(event) => handleIconKeyDown(event, iconName)}
                 tabIndex={0}
