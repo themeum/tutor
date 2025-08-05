@@ -312,7 +312,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.7.1 - Aug 04, 2025
+= 3.7.1 - Aug 05, 2025
 
 Update: Seamlessly import existing course contents into the Content Bank (Pro).
 Update: Cancelled subscriptions will now remain active until the end of their billing cycle (Pro).
