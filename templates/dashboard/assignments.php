@@ -13,6 +13,7 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 	return;
 }
 
+use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use TUTOR_ASSIGNMENTS\Assignments_List;
@@ -22,7 +23,7 @@ $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 
 $course_id    = Input::get( 'course-id', 0, Input::TYPE_INT );
-$order_filter = Input::get( 'order', 'DESC' );
+$order_filter = QueryHelper::get_valid_sort_order( Input::get( 'order', 'DESC' ) );
 $date_filter  = Input::get( 'date', '' );
 
 $current_user = get_current_user_id(); //phpcs:ignore
