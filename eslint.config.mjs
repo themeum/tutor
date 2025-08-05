@@ -1,12 +1,10 @@
-// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from 'eslint-plugin-storybook';
-
 import pluginJs from '@eslint/js';
 import wordpressEslintPlugin from '@wordpress/eslint-plugin';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import pluginReact from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
+import storybook from 'eslint-plugin-storybook';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
@@ -21,6 +19,7 @@ export default [
   eslintPluginPrettierRecommended,
   eslintConfigPrettier,
   reactHooks.configs['recommended-latest'],
+  ...storybook.configs['flat/recommended'],
   {
     plugins: {
       '@wordpress': wordpressEslintPlugin,
@@ -51,5 +50,4 @@ export default [
       },
     },
   },
-  ...storybook.configs['flat/recommended'],
 ];
