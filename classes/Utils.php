@@ -6940,7 +6940,7 @@ class Utils {
 				$date_query  = " AND DATE(post_date) = '{$date_filter}'";
 			}
 			if ( ! empty( $order_filter ) ) {
-				$order_filter = $this->get_valid_sort_order( $order_filter );
+				$order_filter = QueryHelper::get_valid_sort_order( $order_filter );
 				$sort_query   = " ORDER BY ID {$order_filter} ";
 			}
 			if ( ! empty( $per_page ) ) {
@@ -10808,18 +10808,5 @@ class Utils {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Get valid sort order.
-	 *
-	 * @since 3.7.1
-	 *
-	 * @param string $order order.
-	 *
-	 * @return string
-	 */
-	public function get_valid_sort_order( $order ) {
-		return 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
 	}
 }
