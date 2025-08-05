@@ -576,7 +576,7 @@ export const ComponentsOverview = () => {
       {selectedCategory !== 'molecules' && filteredAtoms.length > 0 && (
         <section css={overviewStyles.section}>
           <h2 css={overviewStyles.sectionTitle}>
-            Atoms <span css={overviewStyles.sectionCount}>{atomsCount}</span>
+            Atoms <span css={overviewStyles.sectionCount}>{searchTerm ? filteredAtoms.length : atomsCount}</span>
           </h2>
           <div css={overviewStyles.grid}>
             {filteredAtoms.map((component) => (
@@ -603,7 +603,8 @@ export const ComponentsOverview = () => {
       {selectedCategory !== 'atoms' && filteredMolecules.length > 0 && (
         <section css={overviewStyles.section}>
           <h2 css={overviewStyles.sectionTitle}>
-            Molecules <span css={overviewStyles.sectionCount}>{moleculesCount}</span>
+            Molecules{' '}
+            <span css={overviewStyles.sectionCount}>{searchTerm ? filteredMolecules.length : moleculesCount}</span>
           </h2>
           <div css={overviewStyles.grid}>
             {filteredMolecules.map((component) => (
