@@ -13,7 +13,7 @@ import {
   type ExportableContent,
   type ExportFormData,
 } from '@ImportExport/services/import-export';
-import generateImportExportMessage from '@ImportExport/utils/utils';
+import { generateImportExportMessage } from '@ImportExport/utils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';

@@ -1115,4 +1115,17 @@ class QueryHelper {
 		return $wpdb->insert_id;
 	}
 
+	/**
+	 * Get valid sort order.
+	 *
+	 * @since 3.7.1
+	 *
+	 * @param string $order order.
+	 *
+	 * @return string
+	 */
+	public static function get_valid_sort_order( $order ) {
+		return 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
+	}
+
 }

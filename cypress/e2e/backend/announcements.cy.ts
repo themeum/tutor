@@ -86,32 +86,23 @@ describe('Tutor Admin Announcements', () => {
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
 
-  it('should filter announcements', () => {
-    cy.get(':nth-child(2) > .tutor-js-form-select').click();
-    cy.get(
-      ':nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis',
-    ).click({ force: true });
-    cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No request found') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found') ||
-        $body.text().includes('No Records Found')
-      ) {
-        cy.log('No data available');
-      } else {
-        cy.get('.tutor-fs-7.tutor-fw-medium.tutor-color-muted').each(($announcement) => {
-          console.log($announcement);
-        });
-      }
+  it('should filter announcements by courses', () => {
+    cy.unifiedFilterElements({
+      selectFieldName: 'course-id',
+      resultTableSelector: 'table.tutor-table',
+      resultColumnIndex: 3,
     });
   });
 
   it('Should filter announcements by a specific date', () => {
-    const filterFormSelector = '.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control';
-    const elementDateSelector = 'tbody>tr>td:nth-child(2)';
-    cy.filterElementsByDate(filterFormSelector, elementDateSelector);
+    cy.unifiedFilterElements({
+      selectFieldName: 'date',
+      resultTableSelector: 'table.tutor-table',
+      resultColumnIndex: 2,
+      datePickerYear: '2024',
+      datePickerMonth: 'June',
+      datePickerDay: '11',
+    });
   });
 
   it('should perform bulk action on an announcement', () => {

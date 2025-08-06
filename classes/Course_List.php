@@ -536,12 +536,13 @@ class Course_List {
 	 * @param array  $args the query args.
 	 * @param int    $user_id the user id.
 	 * @param string $status the post status.
+	 * @param bool   $all_post_types should keep all post types.
 	 *
 	 * @return \WP_Query
 	 */
-	public static function course_list_query( $args, $user_id, $status ) {
+	public static function course_list_query( $args, $user_id, $status, $all_post_types = false ) {
 
-		$course_list_query = new \WP_Query( apply_filters( 'tutor_admin_course_list', $args, $user_id, $status ) );
+		$course_list_query = new \WP_Query( apply_filters( 'tutor_admin_course_list', $args, $user_id, $status, $all_post_types ) );
 		return $course_list_query;
 	}
 }

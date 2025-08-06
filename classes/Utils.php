@@ -4463,6 +4463,7 @@ class Utils {
 					INNER JOIN {$wpdb->comments} reviews
 							ON courses.meta_value = reviews.comment_post_ID
 						   AND reviews.comment_type = 'tutor_course_rating'
+						   AND reviews.comment_approved = 'approved'
 					INNER JOIN {$wpdb->commentmeta} rating
 							ON reviews.comment_ID = rating.comment_id
 						   AND rating.meta_key = 'tutor_rating'
@@ -6922,12 +6923,14 @@ class Utils {
 		$course_ids           = $this->get_assigned_courses_ids_by_instructors( $instructor_id );
 		$assignment_post_type = 'tutor_assignments';
 
-		$in_course_ids = implode( "','", $course_ids );
+		$in_course_ids = QueryHelper::prepare_in_clause( $course_ids );
 
-		$pagination_query = $date_query = '';
+		$pagination_query = '';
+		$date_query       = '';
 		$sort_query       = 'ORDER BY ID DESC';
+
 		if ( $this->count( $filter_data ) ) {
-			extract( $filter_data );
+			extract( $filter_data );//phpcs:ignore
 
 			if ( ! empty( $course_id ) ) {
 				$in_course_ids = $course_id;
@@ -6937,7 +6940,8 @@ class Utils {
 				$date_query  = " AND DATE(post_date) = '{$date_filter}'";
 			}
 			if ( ! empty( $order_filter ) ) {
-				$sort_query = " ORDER BY ID {$order_filter} ";
+				$order_filter = QueryHelper::get_valid_sort_order( $order_filter );
+				$sort_query   = " ORDER BY ID {$order_filter} ";
 			}
 			if ( ! empty( $per_page ) ) {
 				$offset           = (int) ! empty( $offset ) ? $offset : 0;
@@ -6954,7 +6958,7 @@ class Utils {
 						   AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE 	post_type = %s
 					AND assignment.post_parent>0
-					AND post_meta.meta_value IN('$in_course_ids')
+					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
 			",
 				$assignment_post_type
@@ -6970,7 +6974,7 @@ class Utils {
 						   AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE 	post_type = %s
 					AND assignment.post_parent>0
-					AND post_meta.meta_value IN('$in_course_ids')
+					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
 					{$sort_query}
 					{$pagination_query}
@@ -8948,6 +8952,7 @@ class Utils {
 	public function get_list_empty_state_subtitle() {
 		$subtitle = __( 'Try adjusting your filters.', 'tutor' );
 
+		$post_type         = isset( $_GET['post-type'] ) ? true : false;
 		$course            = isset( $_GET['course-id'] ) ? true : false;
 		$data              = isset( $_GET['data'] ) ? true : false;
 		$date              = isset( $_GET['date'] ) ? true : false;
@@ -8957,7 +8962,7 @@ class Utils {
 		$subscription_type = isset( $_GET['subscription-type'] ) ? true : false;
 		$applies_to        = isset( $_GET['applies_to'] ) ? true : false;
 
-		if ( $course || $data || $date || $search || $category || $payment_status || $subscription_type || $applies_to ) {
+		if ( $post_type || $course || $data || $date || $search || $category || $payment_status || $subscription_type || $applies_to ) {
 			if ( $search ) {
 				return __( 'Try using different keywords.', 'tutor' );
 			}

@@ -11,18 +11,14 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import {
-  type BulkSelectionFormData,
-  type ExportableContent,
-  type ExportableCourseContentType,
-  type ExportFormData,
-} from '@ImportExport/services/import-export';
+import { type BulkSelectionFormData, type ExportFormData } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { type useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type ExportableContent, type ExportableCourseContentType } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface ExportInitialStateProps {
@@ -98,11 +94,6 @@ const ExportInitialState = ({
         return key;
       }
 
-      const hasSelectedItems =
-        (mainType === 'courses' && bulkSelectionForm.getValues('courses').length > 0) ||
-        (mainType === 'course-bundle' && bulkSelectionForm.getValues('course-bundle').length > 0) ||
-        (mainType === 'content_bank' && bulkSelectionForm.getValues('content_bank').length > 0);
-
       if (!mainContent.contents) {
         return key;
       }
@@ -114,7 +105,7 @@ const ExportInitialState = ({
         return key;
       }
 
-      return hasSelectedItems ? subContent.label : createLabelWithCount(subContent.label, subContent.count, key);
+      return createLabelWithCount(subContent.label, subContent.count, key);
     }
 
     const content = exportableContent.find((item) => item.key === key);

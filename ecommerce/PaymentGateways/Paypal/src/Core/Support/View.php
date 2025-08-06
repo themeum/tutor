@@ -2,8 +2,8 @@
 
 namespace Ollyo\PaymentHub\Core\Support;
 
+
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
-use Throwable;
 
 final class View
 {
@@ -85,7 +85,7 @@ final class View
 		$viewPath = Path::check($viewPath);
 
 		if (!file_exists($viewPath)) {
-			throw new NotFoundException(sprintf('View path "%s" not found!', $viewPath));
+			throw new NotFoundException( esc_html( sprintf('View path "%s" not found!', $viewPath) ) );
 		}
 
 		return $viewPath;

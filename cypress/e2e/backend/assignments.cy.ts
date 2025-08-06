@@ -9,16 +9,10 @@ describe('Tutor Admin Assignments', () => {
 
   it('should evaluate an assignment', () => {
     cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No request found') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found') ||
-        $body.text().includes('No Records Found')
-      ) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
-        cy.get('.tutor-table-assignments tbody tr')
+        cy.get('.tutor-table tbody tr')
           .eq(0)
           .then(($row) => {
             if ($row.text().includes('Evaluate')) {
@@ -43,7 +37,7 @@ describe('Tutor Admin Assignments', () => {
     });
   });
 
-  it('should be able to search any assignement', () => {
+  it('should be able to search any assignment', () => {
     const searchInputSelector = '#tutor-backend-filter-search';
     const searchQuery = 'assignment';
     const courseLinkSelector = 'td>a';
@@ -53,19 +47,13 @@ describe('Tutor Admin Assignments', () => {
   });
 
   it('should check if the elements are sorted', () => {
-    const formSelector = ':nth-child(3) > .tutor-form-control.tutor-form-select.tutor-js-form-select';
+    const sortButton = '.tutor-wp-dashboard-filter-order';
     const itemSelector = 'tbody>tr>td>a';
-    function checkSorting(order: string) {
-      cy.get(formSelector).click();
-      cy.get(`span[title=${order}]`).click();
+
+    const checkSorting = (order: string) => {
+      cy.get(sortButton).click();
       cy.get('body').then(($body) => {
-        if (
-          $body.text().includes('No Data Found from your Search/Filter') ||
-          $body.text().includes('No request found') ||
-          $body.text().includes('No Data Available in this Section') ||
-          $body.text().includes('No records found') ||
-          $body.text().includes('No Records Found')
-        ) {
+        if ($body.text().includes('No Data Found.')) {
           cy.log('No data available');
         } else {
           cy.get(itemSelector).then(($items) => {
@@ -78,29 +66,27 @@ describe('Tutor Admin Assignments', () => {
           });
         }
       });
-    }
+    };
     checkSorting('ASC');
     checkSorting('DESC');
   });
 
-  it('should filter assignments', () => {
-    const filterFormSelector = ':nth-child(2) > .tutor-js-form-select';
-    const dropdownSelector = '.tutor-form-select-options';
-    const dropdownOptionSelector = '.tutor-form-select-option';
-    const dropdownTextSelector = 'span[tutor-dropdown-item]';
-    const elementTitleSelector = '.tutor-fw-normal';
-    cy.filterElements(
-      filterFormSelector,
-      dropdownSelector,
-      dropdownOptionSelector,
-      dropdownTextSelector,
-      elementTitleSelector,
-    );
+  it('should filter assignments by course', () => {
+    cy.unifiedFilterElements({
+      selectFieldName: 'course-id',
+      resultTableSelector: 'table.tutor-table',
+      resultColumnIndex: 1,
+    });
   });
 
   it('Should filter assignments by a specific date', () => {
-    const filterFormSelector = '.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control';
-    const elementDateSelector = '.tutor-fs-7 > span';
-    cy.filterElementsByDate(filterFormSelector, elementDateSelector);
+    cy.unifiedFilterElements({
+      selectFieldName: 'date',
+      resultTableSelector: 'table.tutor-table',
+      resultColumnIndex: 6,
+      datePickerYear: '2024',
+      datePickerMonth: 'June',
+      datePickerDay: '11',
+    });
   });
 });

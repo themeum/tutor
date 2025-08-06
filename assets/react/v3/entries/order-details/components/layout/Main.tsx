@@ -22,7 +22,7 @@ function Main() {
   }
 
   return (
-    <div css={styles.wrapper}>
+    <div>
       <OrderProvider orderId={orderId}>
         <Topbar />
         <Container>
@@ -47,13 +47,6 @@ function Main() {
 export default Main;
 
 const styles = {
-  wrapper: css`
-    margin-left: ${spacing[20]};
-
-    ${Breakpoint.mobile} {
-      margin-left: ${spacing[12]};
-    }
-  `,
   content: css`
     min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
     width: 100%;
