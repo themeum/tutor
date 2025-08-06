@@ -165,3 +165,20 @@ export const QuizDataStatus = {
   UPDATE: 'update',
   NO_CHANGE: 'no_change',
 } as const;
+
+export const DEFAULT_FORM_FIELD_PROPS = {
+  name: 'checkbox',
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: '' as any,
+  onChange: () => {},
+  onBlur: () => {},
+  ref: () => {},
+};
+
+export const DEFAULT_FORM_FILED_STATE_PROPS = {
+  invalid: false,
+  isTouched: false,
+  isDirty: false,
+  isValidating: false,
+  error: undefined,
+};

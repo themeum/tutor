@@ -32,7 +32,7 @@ interface FormDateInputProps extends FormControllerProps<string> {
 
 // Create DayPicker formatters based on WordPress locale
 const createFormatters = (): Partial<Formatters> | undefined => {
-  if (!wp.date) {
+  if (typeof window === 'undefined' || !window.wp || !window.wp.date) {
     return;
   }
 
@@ -71,9 +71,10 @@ const FormDateInput = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const parsedDate = parseDate(field.value);
+  const hasWpDate = typeof window !== 'undefined' && window.wp && window.wp.date;
   const fieldValue = parsedDate
-    ? wp.date
-      ? wp.date.format('F j, Y', parsedDate)
+    ? hasWpDate
+      ? window.wp.date.format('F j, Y', parsedDate)
       : format(parsedDate, dateFormat)
     : '';
 
@@ -176,7 +177,7 @@ const FormDateInput = ({
                   defaultMonth={parsedDate || new Date()}
                   startMonth={parsedDisabledBefore || new Date(new Date().getFullYear() - 10, 0)}
                   endMonth={parsedDisabledAfter || new Date(new Date().getFullYear() + 10, 11)}
-                  weekStartsOn={wp.date?.getSettings().l10n.startOfWeek}
+                  weekStartsOn={hasWpDate ? window.wp.date.getSettings().l10n.startOfWeek : 0}
                 />
               </div>
             </Portal>

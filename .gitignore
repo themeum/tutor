@@ -59,3 +59,5 @@ launch.json
 .swc
 assets/.rsdoctor
 assets/*.min.css
+*storybook.log
+storybook-static

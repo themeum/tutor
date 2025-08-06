@@ -174,10 +174,12 @@ const CONFIG = {
     'includes/droip/**',
     '!includes/droip/dist/**',
     'cypress/**',
-    'cypress.config.ts',
+    '*.config.ts',
     '.husky/**',
     '.lintstagedrc',
     'build.js',
+    'stories/**',
+    '*.zip',
   ],
 };
 
