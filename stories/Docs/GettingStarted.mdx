@@ -192,14 +192,14 @@ import { typography } from '@TutorShared/config/typography';
 
 // Component Styling with Tokens
 const cardStyles = css`
-  background: ${colorTokens.background.paper};
-  border: 1px solid ${colorTokens.border.default};
+  background: ${colorTokens.background.white};
+  border: 1px solid ${colorTokens.stroke.default};
   border-radius: ${borderRadius[12]};
   box-shadow: ${shadow[2]};
   padding: ${spacing[24]};
   
   &:hover {
-    border-color: ${colorTokens.border.active};
+    border-color: ${colorTokens.stroke.hover};
     box-shadow: ${shadow[4]};
     transform: translateY(-2px);
     transition: all 0.2s ease;

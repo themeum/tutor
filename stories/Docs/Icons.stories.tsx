@@ -10,94 +10,61 @@ import { copyToClipboard } from '@TutorShared/utils/util';
 import { useState } from 'react';
 import { type Meta as StorybookMeta, type StoryObj } from 'storybook-react-rsbuild';
 
-const containerStyles = css`
-  padding: ${spacing[24]};
-  max-width: 1200px;
-  margin: 0 auto;
-  ${styleUtils.display.flex('column')};
-  gap: ${spacing[20]};
-`;
+const styles = {
+  container: css`
+    padding: ${spacing[24]};
+    max-width: 1200px;
+    margin: 0 auto;
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[20]};
+  `,
+  header: css`
+    text-align: center;
+    margin-bottom: ${spacing[32]};
 
-const headerStyles = css`
-  text-align: center;
-  margin-bottom: ${spacing[32]};
-`;
-
-const searchContainerStyles = css`
-  display: flex;
-  justify-content: center;
-  margin-bottom: ${spacing[32]};
-`;
-
-const resultCountStyles = css`
-  ${typography.caption('medium')}
-  color: ${colorTokens.text.subdued};
-  text-align: center;
-  margin-bottom: ${spacing[16]};
-`;
-
-const noResultsStyles = css`
-  ${typography.body('regular')}
-  color: ${colorTokens.text.subdued};
-  text-align: center;
-  padding: ${spacing[48]};
-`;
-
-const iconItemWrapperStyles = ({ isSelected = false }) => css`
-  position: relative;
-  cursor: pointer;
-  padding: ${spacing[12]};
-  border-radius: ${borderRadius[8]};
-  transition: all 0.2s ease;
-  ${styleUtils.display.flex()};
-  align-items: center;
-  justify-content: center;
-  transition: background 0.2s ease;
-
-  &:hover:not(${isSelected}) {
-    background: ${colorTokens.background.hover};
-  }
-
-  ${isSelected &&
-  css`
-    background: ${colorTokens.background.status.success};
-  `}
-`;
-
-const copyFeedbackStyles = css`
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: ${colorTokens.background.black};
-  color: ${colorTokens.text.white};
-  padding: ${spacing[4]} ${spacing[8]};
-  border-radius: ${borderRadius[4]};
-  font-size: 12px;
-  white-space: nowrap;
-  z-index: 10;
-  opacity: 0;
-  animation: fadeInOut 2s ease-in-out;
-
-  @keyframes fadeInOut {
-    0% {
-      opacity: 0;
-      transform: translateX(-50%) translateY(-5px);
+    [data-subtitle] {
+      ${typography.body('regular')}
+      color: ${colorTokens.text.subdued};
     }
-    15% {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+  `,
+  search: css`
+    display: flex;
+    justify-content: center;
+    margin-bottom: ${spacing[32]};
+  `,
+  resultCount: css`
+    ${typography.caption('medium')}
+    color: ${colorTokens.text.subdued};
+    text-align: center;
+    margin-bottom: ${spacing[16]};
+  `,
+  noResults: css`
+    ${typography.body('regular')}
+    color: ${colorTokens.text.subdued};
+    text-align: center;
+    padding: ${spacing[48]};
+  `,
+  iconItemWrapper: ({ isSelected = false }) => css`
+    position: relative;
+    cursor: pointer;
+    padding: ${spacing[12]};
+    border-radius: ${borderRadius[8]};
+    transition: all 0.2s ease;
+    ${styleUtils.display.flex()};
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+
+    &:hover:not(${isSelected}) {
+      background: ${colorTokens.background.hover};
     }
-    85% {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-    100% {
-      opacity: 0;
-      transform: translateX(-50%) translateY(-5px);
-    }
-  }
-`;
+
+    ${isSelected &&
+    css`
+      background: ${colorTokens.background.status.success};
+    `}
+  `,
+};
 
 const IconGalleryPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -142,36 +109,29 @@ const IconGalleryPage = () => {
   const filteredIcons = icons.filter((iconName) => iconName.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
-    <div css={containerStyles}>
+    <div css={styles.container}>
       <Meta title="Design System/Icon Gallery" />
 
-      <header css={headerStyles}>
+      <header css={styles.header}>
         <h1 css={typography.heading1('bold')}>🎨 Icon Gallery</h1>
-        <p
-          css={[
-            typography.body('regular'),
-            css`
-              color: ${colorTokens.text.subdued};
-            `,
-          ]}
-        >
-          Explore our complete collection of SVG icons. Click any icon to copy its name to clipboard.
-        </p>
+        <p data-subtitle>Explore our complete collection of SVG icons. Click any icon to copy its name to clipboard.</p>
       </header>
 
-      <div css={searchContainerStyles}>
+      <div css={styles.search}>
         <TextInput variant="search" onChange={handleSearchChange} value={searchQuery} placeholder="Search icons..." />
       </div>
 
       {filteredIcons.length > 0 && (
-        <div css={resultCountStyles}>
+        <div css={styles.resultCount}>
           Showing {filteredIcons.length} of {icons.length} icons
           {searchQuery && ` matching "${searchQuery}"`}
         </div>
       )}
 
       {filteredIcons.length === 0 && searchQuery && (
-        <div css={noResultsStyles}>No icons found matching &quot;{searchQuery}&quot;. Try a different search term.</div>
+        <div css={styles.noResults}>
+          No icons found matching &quot;{searchQuery}&quot;. Try a different search term.
+        </div>
       )}
 
       {filteredIcons.length > 0 && (
@@ -179,7 +139,7 @@ const IconGalleryPage = () => {
           {filteredIcons.map((iconName) => (
             <IconItem key={iconName} name={copiedIcon === iconName ? `Copied!` : iconName}>
               <div
-                css={iconItemWrapperStyles({ isSelected: copiedIcon === iconName })}
+                css={styles.iconItemWrapper({ isSelected: copiedIcon === iconName })}
                 onClick={() => handleIconClick(iconName)}
                 onKeyDown={(event) => handleIconKeyDown(event, iconName)}
                 tabIndex={0}
@@ -188,11 +148,6 @@ const IconGalleryPage = () => {
                 title={`Click to copy "${iconName}" to clipboard`}
               >
                 <SVGIcon name={iconName as IconCollection} width={24} height={24} aria-hidden="true" />
-                {copiedIcon === iconName && (
-                  <div css={copyFeedbackStyles} aria-hidden="true">
-                    Copied!
-                  </div>
-                )}
               </div>
             </IconItem>
           ))}
