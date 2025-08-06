@@ -113,7 +113,7 @@ const IconGalleryPage = () => {
       <Meta title="Design System/Icon Gallery" />
 
       <header css={styles.header}>
-        <h1 css={typography.heading1('bold')}>🎨 Icon Gallery</h1>
+        <h1 css={typography.heading4('bold')}>🎨 Icon Gallery</h1>
         <p data-subtitle>Explore our complete collection of SVG icons. Click any icon to copy its name to clipboard.</p>
       </header>
 
