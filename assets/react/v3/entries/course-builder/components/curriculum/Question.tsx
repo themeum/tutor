@@ -12,13 +12,13 @@ import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { type QuizForm } from '@CourseBuilderServices/quiz';
-import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestion, type QuizQuestionType } from '@TutorShared/utils/types';
 
@@ -56,6 +56,8 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
   const form = useFormContext<QuizForm>();
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const activeQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -99,7 +101,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
           return;
         }
 
-        const validation = validateQuizQuestion(activeQuestionIndex, form);
+        const validation = validateQuizQuestion(activeQuestion);
 
         if (validation !== true) {
           setValidationError(validation);
@@ -115,7 +117,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
             return;
           }
 
-          const validation = validateQuizQuestion(activeQuestionIndex, form);
+          const validation = validateQuizQuestion(activeQuestion);
 
           if (validation !== true) {
             setValidationError(validation);
@@ -152,7 +154,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         isOpen={isThreeDotOpen}
         onClick={(event) => {
           event.stopPropagation();
-          const validation = validateQuizQuestion(activeQuestionIndex, form);
+          const validation = validateQuizQuestion(activeQuestion);
           setIsThreeDotOpen(true);
           if (validation !== true) {
             setValidationError(validation);

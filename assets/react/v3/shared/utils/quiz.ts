@@ -1,6 +1,11 @@
-import { type QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
-import { QuizDataStatus, type QuizQuestion } from '@TutorShared/utils/types';
+import {
+  QuizDataStatus,
+  type QuizQuestion,
+  type QuizQuestionOption,
+  type QuizValidationErrorType,
+} from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
+import { normalizeLineEndings } from './util';
 
 export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatus: QuizDataStatus) => {
   if (currentStatus === dataStatus) {
@@ -94,4 +99,97 @@ export const validateQuizQuestion = (
   }
 
   return true;
+};
+
+export const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
+  const calculateQuizDataStatus = (answer: QuizQuestionOption) => {
+    if (answer.image_url) {
+      return answer.answer_view_format === 'text_image' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
+    }
+
+    return answer.answer_view_format === 'text' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
+  };
+
+  if (question.question_settings) {
+    question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
+    question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
+    question.question_settings.randomize_question = !!Number(question.question_settings.randomize_question);
+  }
+  question.question_answers = question.question_answers.map((answer) => ({
+    ...answer,
+    _data_status: calculateQuizDataStatus(answer),
+    is_saved: true,
+    answer_view_format: answer.image_url ? 'text_image' : 'text',
+  }));
+  question.question_description = normalizeLineEndings(question.question_description) || '';
+  question.answer_explanation =
+    question.answer_explanation === '<p><br data-mce-bogus="1"></p>'
+      ? ''
+      : normalizeLineEndings(question.answer_explanation) || '';
+
+  switch (question.question_type) {
+    case 'single_choice': {
+      return {
+        ...question,
+        _data_status: QuizDataStatus.UPDATE,
+        question_type: 'multiple_choice',
+        question_answers: question.question_answers.map((answer) => ({
+          ...answer,
+          _data_status: QuizDataStatus.UPDATE,
+        })),
+        question_settings: {
+          ...question.question_settings,
+          question_type: 'multiple_choice',
+          has_multiple_correct_answer: false,
+        },
+      };
+    }
+    case 'multiple_choice': {
+      return {
+        ...question,
+        _data_status: question.question_settings.has_multiple_correct_answer
+          ? QuizDataStatus.NO_CHANGE
+          : QuizDataStatus.UPDATE,
+        question_settings: {
+          ...question.question_settings,
+          has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer
+            ? !!Number(question.question_settings.has_multiple_correct_answer)
+            : true,
+        },
+      };
+    }
+    case 'matching': {
+      return {
+        ...question,
+        _data_status: question.question_settings.is_image_matching ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE,
+        question_settings: {
+          ...question.question_settings,
+          is_image_matching: question.question_settings.is_image_matching
+            ? !!Number(question.question_settings.is_image_matching)
+            : false,
+        },
+      };
+    }
+    case 'image_matching': {
+      return {
+        ...question,
+        _data_status: QuizDataStatus.UPDATE,
+        question_type: 'matching',
+        question_answers: question.question_answers.map((answer) => ({
+          ...answer,
+          _data_status: QuizDataStatus.UPDATE,
+        })),
+        question_settings: {
+          ...question.question_settings,
+          question_type: 'matching',
+          is_image_matching: true,
+        },
+      };
+    }
+    default:
+      return {
+        ...question,
+        _data_status: QuizDataStatus.NO_CHANGE,
+      } as QuizQuestion;
+  }
 };

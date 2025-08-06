@@ -333,6 +333,19 @@ export interface QuizQuestion {
   question_answers: QuizQuestionOption[];
 }
 
+export interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings' | 'answer_explanation'> {
+  answer_explanation?: string;
+  question_settings: {
+    question_type: QuizQuestionType;
+    answer_required: '0' | '1';
+    randomize_question: '0' | '1';
+    question_mark: number;
+    show_question_mark: '0' | '1';
+    has_multiple_correct_answer?: '0' | '1';
+    is_image_matching?: '0' | '1';
+  };
+}
+
 export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
 
 export type CollectionContentType = 'cb-question' | 'cb-lesson' | 'cb-assignment';

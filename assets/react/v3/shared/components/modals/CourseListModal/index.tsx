@@ -6,7 +6,7 @@ import Button from '@TutorShared/atoms/Button';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
-import CourseListTable from '@ImportExport/components/modals/CourseListModal/CourseListTable';
+import CourseListTable from '@TutorShared/components/modals/CourseListModal/CourseListTable';
 import { spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Bundle, type Course } from '@TutorShared/services/course';

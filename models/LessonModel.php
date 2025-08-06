@@ -10,6 +10,8 @@
 
 namespace Tutor\Models;
 
+use Tutor\Helpers\QueryHelper;
+
 /**
  * LessonModel Class
  *
@@ -22,17 +24,29 @@ class LessonModel {
 	 *
 	 * @since 2.0.2
 	 *
+	 * @since 3.7.1 Course ids param added
+	 *
+	 * @param array $course_ids Array of course ids.
+	 *
 	 * @return int
 	 */
-	public static function get_total_lesson() {
+	public static function get_total_lesson( array $course_ids = array() ) {
 		global $wpdb;
 		$lesson_type = tutor()->lesson_post_type;
+
+		$course_in_clause = '';
+		if ( count( $course_ids ) ) {
+			$prepare_ids      = QueryHelper::prepare_in_clause( $course_ids );
+			$course_in_clause = "AND course.ID IN ({$prepare_ids})";
+		}
 
 		$sql = "SELECT COUNT(DISTINCT lesson.ID)
 				FROM {$wpdb->posts} lesson
 					INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
 					INNER JOIN {$wpdb->posts} course ON topic.post_parent=course.ID
-				WHERE lesson.post_type = %s
+				WHERE 1 = 1
+					{$course_in_clause}
+					AND lesson.post_type = %s
 					AND lesson.post_status = %s
 					AND course.post_status = %s
 					AND topic.post_status = %s";

@@ -76,12 +76,11 @@ class Path
 		// If a base path is defined then check the cleaned path is not outside of root
 		if (($basePath != '') && strpos($path, static::clean($basePath)) !== 0)
 		{
-			throw new FilesystemException(
-				sprintf(
+			throw new FilesystemException( esc_html( sprintf(
 					'%1$s() - Snooping out of bounds @ %2$s',
 					__METHOD__,
 					$path
-				),
+				) ),
 				20
 			);
 		}

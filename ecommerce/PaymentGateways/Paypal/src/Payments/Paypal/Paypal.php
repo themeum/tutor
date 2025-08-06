@@ -183,7 +183,7 @@ class Paypal extends BasePayment
         } catch (RequestException $error) {
 
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 
@@ -398,12 +398,14 @@ class Paypal extends BasePayment
         $responseData = $this->sendHttpRequest($requestData);
 
         if (!static::isOrderCompleted($responseData)) {
-            throw new ErrorException(sprintf("The Payment Capture Is Incomplete. Order Status: %s", $responseData->status));
+            throw new ErrorException( esc_html( sprintf( "The Payment Capture Is Incomplete. Order Status: %s", $responseData->status ) ) );
         }
 
-        if (isset($_GET['ba_token'])) {
-            $responseData->payment_source->paypal->billing_agreement_id = $_GET['ba_token'];
+        //phpcs:disable
+        if ( isset( $_GET['ba_token'] ) ) { 
+            $responseData->payment_source->paypal->billing_agreement_id = sanitize_text_field( wp_unslash( $_GET['ba_token'] ) );
         }
+        //phpcs:enable
 
         $responseData->encodedData = $payloadStream->encodedData ?? null;
 
@@ -444,7 +446,7 @@ class Paypal extends BasePayment
     private function processApprovedOrder($payload)
     {
         if (!static::isOrderApproved($payload)) {
-            throw new ErrorException(sprintf("The Payment Order is not Approved. Order Status: %s", $payload->status));
+            throw new ErrorException( esc_html( sprintf( "The Payment Order is not Approved. Order Status: %s", $payload->status) ) );
         }
 
         return $this->setReturnData($this->capturePayment($payload));
@@ -705,7 +707,7 @@ class Paypal extends BasePayment
         } catch (RequestException $error) {
 
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 
@@ -766,7 +768,7 @@ class Paypal extends BasePayment
 
         } catch (RequestException $error) {
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 
@@ -952,7 +954,7 @@ class Paypal extends BasePayment
 
         } catch (RequestException $error) {
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 
@@ -1013,7 +1015,7 @@ class Paypal extends BasePayment
 
         } catch (RequestException $error) {
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 
@@ -1056,7 +1058,7 @@ class Paypal extends BasePayment
 
         } catch (RequestException $error) {
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 
@@ -1115,7 +1117,7 @@ class Paypal extends BasePayment
             return $responseData->verification_status === "SUCCESS" ? true : false;
         } catch (RequestException $error) {
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 
@@ -1152,7 +1154,7 @@ class Paypal extends BasePayment
 
         } catch (RequestException $error) {
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            throw new ErrorException($errorMessage);
+            throw new ErrorException( esc_html( $errorMessage ) );
         }
     }
 }
