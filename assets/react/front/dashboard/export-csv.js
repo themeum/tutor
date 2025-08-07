@@ -11,13 +11,15 @@ document.addEventListener("DOMContentLoaded", function() {
     if ( purchased ) {
       purchased.onclick = (e) => {
         const target = e.currentTarget;
+        const courseNames = JSON.parse( target.dataset.courseName );
         const filename = `order-${target.dataset.order}-purchase-history.csv`;
+        const purchaseDate  = target.dataset.date.split(',').join('","');
         const data = [
           {
             "Order ID ": target.dataset.order,
-            "Course Name": target.dataset.courseName,
+            "Course Name": courseNames.join('","'),
             Price: target.dataset.price,
-            Date: target.dataset.date,
+            Date: purchaseDate,
             Status: target.dataset.status,
           },
         ];
