@@ -11,15 +11,13 @@ document.addEventListener("DOMContentLoaded", function() {
     if ( purchased ) {
       purchased.onclick = (e) => {
         const target = e.currentTarget;
-        const courseNames = JSON.parse( target.dataset.courseName );
         const filename = `order-${target.dataset.order}-purchase-history.csv`;
-        const purchaseDate  = target.dataset.date.split(',').join('","');
         const data = [
           {
             "Order ID ": target.dataset.order,
-            "Course Name": courseNames.join('","'),
+            "Course Name": target.dataset.courseName,
             Price: target.dataset.price,
-            Date: purchaseDate,
+            Date: target.dataset.date,
             Status: target.dataset.status,
           },
         ];
@@ -38,6 +36,8 @@ document.addEventListener("DOMContentLoaded", function() {
   function exportCSV(data, filename) {
     const keys = Object.keys(data[0]);
     const csvFile = [keys.join(","), data.map((row) => keys.map((key) => row[key]).join(",")).join("\n")].join("\n");
+        console.log(csvFile);
+
     //generate csv
     const blob = new Blob([csvFile], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
