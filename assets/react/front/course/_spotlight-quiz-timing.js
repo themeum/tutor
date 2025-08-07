@@ -29,11 +29,13 @@ window.jQuery(document).ready($=>{
 			// Get the timeout timestamp
 			var countDownDate = new Date(attempt_settings.attempt_started_at?.replaceAll('-', '/')).getTime() + attempt_meta.time_limit.time_limit_seconds * 1000;
 			var time_now = new Date(attempt_meta.date_time_now?.replaceAll('-', '/')).getTime();
+			var serverClientTimeDiff = Date.now() - time_now;
 
             // Set the time interval to show countdown
 			var tutor_quiz_interval = setInterval(function() {
 				// Distance between current time and the quiz timeout timestamp
-				var distance = countDownDate - time_now;
+				var now = Date.now() - serverClientTimeDiff;
+				var distance = countDownDate - now;
                 
                 // Distance in human readable fragments
 				var days = Math.floor(distance / (1000 * 60 * 60 * 24));
@@ -116,9 +118,6 @@ window.jQuery(document).ready($=>{
 						});
 					}
 				}
-
-                // Update the time_now variable
-				time_now = time_now + 1000;
 
                 // Update the alert content based on timing
 				$tutor_quiz_time_update.html(countdown_human);
