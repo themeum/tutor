@@ -115,7 +115,7 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function get_post_types( $post ) {
-		return apply_filters( 'tutor_check_course_post_type', get_post_type( $post ) );
+		return apply_filters( 'tutor_check_course_post_type', self::POST_TYPE === get_post_type( $post ), get_post_type( $post ) );
 	}
 
 	/**
