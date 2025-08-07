@@ -36,8 +36,6 @@ document.addEventListener("DOMContentLoaded", function() {
   function exportCSV(data, filename) {
     const keys = Object.keys(data[0]);
     const csvFile = [keys.join(","), data.map((row) => keys.map((key) => row[key]).join(",")).join("\n")].join("\n");
-        console.log(csvFile);
-
     //generate csv
     const blob = new Blob([csvFile], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
