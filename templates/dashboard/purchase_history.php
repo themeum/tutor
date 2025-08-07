@@ -284,7 +284,8 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 											<?php esc_html_e( 'Pay', 'tutor' ); ?>	
 										</a>
 										<?php endif; ?>
-										<a href="javascript:;" class="tutor-export-purchase-history tutor-iconic-btn tutor-iconic-btn-secondary" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
+										<?php $courses_data_string = implode( ',', array_map( fn( $course_data ) => get_the_title( $course_data['course_id'] ), $courses ) ); ?>
+										<a href="javascript:;" class="tutor-export-purchase-history tutor-iconic-btn tutor-iconic-btn-secondary" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( '"' . $courses_data_string . '"' ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( '"' . date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) . '"' ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
 											<span class="tutor-icon-receipt-line" area-hidden="true"></span>
 										</a>
 									</div>
