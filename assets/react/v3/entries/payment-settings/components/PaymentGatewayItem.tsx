@@ -30,13 +30,13 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
       let isPaymentExisting = false;
 
       // Mark as is_installed and is_plugin_active if it already exists
-      existingPaymentMethods.forEach((method) => {
+      for (const method of existingPaymentMethods) {
         if (method.name === data.name) {
           method.is_installed = true;
           method.is_plugin_active = true;
           isPaymentExisting = true;
         }
-      });
+      }
 
       // Append new method if it does not exist
       if (!isPaymentExisting) {
