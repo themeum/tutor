@@ -1,0 +1,98 @@
+.tutor-gift-course-card {
+	margin: 20px 0;
+	padding: 0;
+}
+
+.gift-card-container {
+	border: 1px solid #dee2e6;
+	border-radius: 16px;
+	padding: 22px;
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	min-height: 120px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gift-card-decoration-left {
+	position: absolute;
+	left: 0;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 1;
+}
+
+.gift-card-decoration-right {
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 1;
+}
+
+.gift-box-icon {
+	flex-shrink: 0;
+	margin-left: 54px;
+	margin-right: 47px;
+	z-index: 2;
+	position: relative;
+
+	.gift-box-icon-star {
+		position: absolute;
+	}
+	.gift-box-icon-star-1 {
+		top: -8px;
+		right: 2px;
+	}
+
+	.gift-box-icon-star-2 {
+		top: 32px;
+		left: -16px;
+	}
+}
+
+.gift-card-content {
+	flex: 1;
+	z-index: 2;
+	position: relative;
+}
+
+.gift-card-title {
+	line-height: 34px;
+}
+
+.gift-card-message {
+	line-height: 24px;
+	p {
+		font-weight: 400;
+		font-size: 16px;
+		line-height: 24px;
+		letter-spacing: 0px;
+		color: #41454F;
+	}
+	span {
+		font-weight: 600;
+	}
+}
+
+.gift-card-button:active {
+	transform: translateY(0);
+}
+
+/* Responsive design */
+@media (max-width: 991px) {
+	.gift-box-icon {
+		margin-left: 0px;
+		margin-right: 20px;
+	}
+
+	.gift-card-decoration-right {
+		display: none;
+	}
+
+	.gift-box-icon .gift-box-icon-star-2 {
+		top: 20px;
+		left: -10px;
+	}
+}

@@ -212,7 +212,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							}
 							$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
 							$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
-							$menu_link = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
+							$menu_link       = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
 							?>
 							<li class='tutor-dashboard-menu-item <?php echo esc_attr( $li_class . ' ' . $active_class ); ?>'>
 								<a <?php echo esc_html( $data_no_instant ); ?> href="<?php echo esc_url( $menu_link ); ?>" class='tutor-dashboard-menu-item-link tutor-fs-6 tutor-color-black'>
@@ -237,7 +237,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 			<div class="tutor-col-12 tutor-col-md-8 tutor-col-lg-9">
 				<div class="tutor-dashboard-content">
 					<?php
-
+					tutor_load_template( 'dashboard.gift-course' );
 					if ( $dashboard_page_name ) {
 						do_action( 'tutor_load_dashboard_template_before', $dashboard_page_name );
 
