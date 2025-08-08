@@ -110,6 +110,21 @@ if ( ! function_exists( 'tutor_is_item_in_cart' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_remove_cart_item' ) ) {
+	/**
+	 * Get cart items
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int $item_id Item id to check.
+	 *
+	 * @return bool
+	 */
+	function tutor_remove_cart_item( int $item_id ) {
+		return tutor_get_cart_object()->remove( $item_id );
+	}
+}
+
 if ( ! function_exists( 'tutor_get_cart_object' ) ) {
 	/**
 	 * Get cart items
