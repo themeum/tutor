@@ -251,15 +251,14 @@ const resolveAliases = {
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
 };
 
-const isScssEntry = (entryPath) => {
-  return /\.css$/i.test(entryPath) || /\.s[ac]ss$/i.test(entryPath);
+const isScssEntry = (entry) => {
+  return String(entry).includes('-scss');
 };
 
-const createOutputFileName = (pathData, allEntries) => {
+const createOutputFileName = (pathData) => {
   const entryName = pathData.chunk.name;
-  const originalEntryPath = allEntries[entryName];
 
-  if (isScssEntry(originalEntryPath)) {
+  if (isScssEntry(entryName)) {
     return `[name].min.css`;
   }
   return `js/[name].js`;
