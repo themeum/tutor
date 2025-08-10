@@ -185,7 +185,13 @@ const createConfig = (env, options) => {
           extractComments: false,
           minimizerOptions: {
             compress: false,
-            mangle: true,
+            ecma: 2015,
+            mangle: {
+              reserved: ['__'],
+            },
+            format: {
+              comments: /translators/i,
+            },
           },
         }),
         new rspack.LightningCssMinimizerRspackPlugin(),
@@ -203,7 +209,7 @@ const createConfig = (env, options) => {
   return baseConfig;
 };
 
-const reactEntries = {
+const jsEntries = {
   tutor: './assets/react/v2/common.js',
   'tutor-front': './assets/react/front/tutor-front.js',
   'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
@@ -245,19 +251,33 @@ const resolveAliases = {
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
 };
 
-const createChunkFilename = () => {
-  return `js/lazy-chunks/[name].js?ver=${version}`;
-};
-
 const isScssEntry = (entryPath) => {
   return /\.css$/i.test(entryPath) || /\.s[ac]ss$/i.test(entryPath);
+};
+
+const createOutputFileName = (pathData, allEntries) => {
+  const entryName = pathData.chunk.name;
+  const originalEntryPath = allEntries[entryName];
+
+  if (isScssEntry(originalEntryPath)) {
+    return `[name].min.css`;
+  }
+  return `js/[name].js`;
+};
+
+const createChunkFilename = (entryPath) => {
+  if (isScssEntry(entryPath)) {
+    return `css/lazy-chunks/[name].min.css?ver=${version}`;
+  }
+
+  return `js/lazy-chunks/[name].js?ver=${version}`;
 };
 
 export default (env, options) => {
   const baseConfig = createConfig(env, options);
   const isDevelopment = options.mode === 'development';
 
-  const allEntries = { ...reactEntries, ...scssEntries };
+  const allEntries = { ...jsEntries, ...scssEntries };
 
   if (isDevelopment) {
     return Object.entries(allEntries).map(([entryKey, entryPath]) => ({
@@ -268,15 +288,7 @@ export default (env, options) => {
       },
       output: {
         path: path.resolve('./assets'),
-        filename: (pathData) => {
-          const entryName = pathData.chunk.name;
-          const originalEntryPath = allEntries[entryName];
-
-          if (isScssEntry(originalEntryPath)) {
-            return `[name].min.css`; // CSS files handled by CssExtractRspackPlugin
-          }
-          return `js/${entryName}.js`; // JavaScript files go to js/ directory
-        },
+        filename: (pathData) => createOutputFileName(pathData, allEntries),
         chunkFilename: createChunkFilename,
         clean: false,
       },
@@ -298,15 +310,7 @@ export default (env, options) => {
     entry: allEntries,
     output: {
       path: path.resolve('./assets'),
-      filename: (pathData) => {
-        const entryName = pathData.chunk.name;
-        const originalEntryPath = allEntries[entryName];
-
-        if (isScssEntry(originalEntryPath)) {
-          return `[name].min.css`;
-        }
-        return `js/[name].js`;
-      },
+      filename: (pathData) => createOutputFileName(pathData, allEntries),
       chunkFilename: createChunkFilename,
       clean: {
         keep: (pathData) => {
