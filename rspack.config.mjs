@@ -140,7 +140,7 @@ const createConfig = (env, options) => {
         },
         chunkFilename: (pathData) => {
           const entryName = pathData.chunk.name.replace('-scss', '');
-          return `css/${entryName}.min.css`;
+          return `css/lazy-chunks/${entryName}.min.css`;
         },
       }),
       new rspack.ProvidePlugin({
