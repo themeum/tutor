@@ -166,14 +166,43 @@ const createConfig = (env, options) => {
       chunks: false,
       chunkModules: false,
       reasons: false,
-      usedExports: false,
-      providedExports: false,
-      optimizationBailout: false,
       children: false,
       entrypoints: true,
       assets: isDevelopment,
     },
     ignoreWarnings: [/CROSS-CHUNKS-PACKAGE/, /asset size limit/, /entrypoint size limit/],
+    output: {
+      path: path.resolve('./assets'),
+      filename: (pathData) => createOutputFileName(pathData),
+      chunkFilename: createChunkFilename,
+      clean: isDevelopment
+        ? false
+        : {
+            keep: (pathData) => {
+              const keepDirectories = [
+                'assets/fonts/',
+                'assets/icons/',
+                'assets/images/',
+                'assets/lib/',
+                'assets/react/',
+                'assets/scss/',
+                'assets/json/',
+              ];
+
+              return keepDirectories.some((dir) => pathData.includes(dir));
+            },
+          },
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
+      fallback: {
+        fs: false,
+        path: false,
+        os: false,
+        url: false,
+      },
+      alias: resolveAliases,
+    },
   };
 
   if ('production' === mode) {
@@ -285,57 +314,11 @@ export default (env, options) => {
       entry: {
         [entryKey]: entryPath,
       },
-      output: {
-        path: path.resolve('./assets'),
-        filename: (pathData) => createOutputFileName(pathData, allEntries),
-        chunkFilename: createChunkFilename,
-        clean: false,
-      },
-      resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
-        fallback: {
-          fs: false,
-          path: false,
-          os: false,
-          url: false,
-        },
-        alias: resolveAliases,
-      },
     }));
   }
 
   return {
     ...baseConfig,
     entry: allEntries,
-    output: {
-      path: path.resolve('./assets'),
-      filename: (pathData) => createOutputFileName(pathData, allEntries),
-      chunkFilename: createChunkFilename,
-      clean: {
-        keep: (pathData) => {
-          const keepDirectories = [
-            'assets/fonts/',
-            'assets/icons/',
-            'assets/images/',
-            'assets/lib/',
-            'assets/react/',
-            'assets/scss/',
-            'assets/json/',
-          ];
-
-          return keepDirectories.some((dir) => pathData.includes(dir));
-        },
-      },
-    },
-    resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
-      fallback: {
-        fs: false,
-        path: false,
-        os: false,
-        url: false,
-      },
-      alias: resolveAliases,
-    },
   };
 };
