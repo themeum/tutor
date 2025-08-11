@@ -57,7 +57,12 @@ class NativeCart extends BaseCart implements CartInterface {
 			return false;
 		}
 		if ( ! $this->user_id ) {
-			GuestCart::add_cart_item( $item_id );
+			try {
+				GuestCart::add_cart_item( $item_id );
+				return true;
+			} catch ( \Throwable $th ) {
+				return false;
+			}
 		}
 
 		return (bool) $this->cart_model->add_course_to_cart( $this->user_id, $item_id );
