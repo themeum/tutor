@@ -55,7 +55,7 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 		<svg class="tutor-gift-box-icon-star tutor-gift-box-icon-star-1" width="8" height="7" viewBox="0 0 8 7" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M1.72237 1.14393C1.64885 0.438211 2.49296 0.0218865 3.00814 0.509765L4.11309 1.55614C4.27506 1.70953 4.49596 1.7845 4.71783 1.76138L6.23142 1.60371C6.93714 1.53019 7.35346 2.3743 6.86558 2.88948L5.81921 3.99443C5.66582 4.1564 5.59085 4.3773 5.61397 4.59918L5.77164 6.11276C5.84515 6.81848 5.00105 7.2348 4.48587 6.74692L3.38092 5.70055C3.21895 5.54716 2.99805 5.47219 2.77617 5.49531L1.26259 5.65298C0.556871 5.72649 0.140546 4.88239 0.628425 4.36721L1.6748 3.26226C1.82819 3.10029 1.90316 2.87939 1.88004 2.65751L1.72237 1.14393Z" fill="#FE621E"/>
 		</svg>
-	</div>
+	</div><!--/ tutor-gift-box-icon -->
 
 	<!-- Main content -->
 	<div class="tutor-gift-card-content">
@@ -69,8 +69,8 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 	</div>
 
 	<!-- Right decorative element -->
-	<div class="gift-card-decoration-right tutor-d-none tutor-d-lg-block">
-		<svg width="103" height="152" viewBox="0 0 103 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+	<div class="tutor-gift-card-decoration-right tutor-d-none tutor-d-lg-block">
+		<svg class="tutor-d-block" width="103" height="152" viewBox="0 0 103 152" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<rect x="29.0985" width="11.358" height="152" fill="#FE621E"/>
 			<rect x="25.8698" y="70.0195" width="77.1302" height="11.9571" fill="#FE621E"/>
 			<rect x="60.7997" y="70.0195" width="12.6723" height="11.8622" fill="#C93E01"/>
@@ -115,28 +115,33 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 								</div>
 								<div class="tutor-greetings-signature"><?php esc_html_e( '- Joe Nevarro', 'tutor' ); ?></div>
 							</div>
-						</div>
+						</div><!--/ tutor-greetings-card -->
 					</div>
 				</div>
 				<div class="tutor-gifted-course-wrapper">
 					<div class="tutor-gifted-course">
 						<h3 class="tutor-gifted-course-title tutor-m-0 tutor-mb-12"><?php esc_html_e( 'Gifted Course', 'tutor' ); ?></h3>
 						<div class="tutor-gifted-course-card">
-							<div class="tutor-gifted-course-image">
-								<img src="https://picsum.photos/500/500" alt="Architectural Sketching" />
+							<div class="tutor-gifted-course-image tutor-flex-center tutor-w-s">
+								<img src="https://picsum.photos/500/200" alt="Architectural Sketching" />
 							</div>
 							<div class="tutor-gifted-course-content">
 								<h4 class="tutor-gifted-course-name"><?php esc_html_e( 'Architectural Sketching with Procreate', 'tutor' ); ?></h4>
-								<p class="tutor-gifted-course-author"><?php esc_html_e( 'By', 'tutor' ); ?> <a href="#"><?php esc_html_e( 'Alice Grey', 'tutor' ); ?></a></p>
+								<p class="tutor-gifted-course-author tutor-m-0"><?php esc_html_e( 'By', 'tutor' ); ?> <a href="#"><?php esc_html_e( 'Alice Grey', 'tutor' ); ?></a></p>
 								<div class="tutor-gifted-course-rating">
 									<span class="tutor-gifted-rating-value"><?php esc_html_e( '5.0', 'tutor' ); ?></span>
-									<span class="tutor-gifted-rating-stars"><?php esc_html_e( '★★★★★', 'tutor' ); ?></span>
-									<span class="tutor-gifted-rating-count"><?php esc_html_e( '(120)', 'tutor' ); ?></span>
+									<div class="tutor-d-flex tutor-gifted-rating-stars-wrapper">
+										<i class="tutor-icon-star-line tutor-gifted-rating-stars" data-rating-value="1"></i>
+										<i class="tutor-icon-star-line tutor-gifted-rating-stars" data-rating-value="2"></i>
+										<i class="tutor-icon-star-line tutor-gifted-rating-stars" data-rating-value="3"></i>
+										<i class="tutor-icon-star-line tutor-gifted-rating-stars" data-rating-value="4"></i>
+										<i class="tutor-icon-star-line tutor-gifted-rating-stars" data-rating-value="5"></i>
+									</div>
 								</div>
-							</div>
+							</div> <!--/ tutor-gifted-course-content -->
 						</div>
 						<button class="tutor-btn tutor-btn-primary tutor-w-100 tutor-justify-center"><?php esc_html_e( 'Start Learning', 'tutor' ); ?></button>
-					</div>
+					</div><!-- tutor-gifted-course -->
 				</div>
 			</div> <!-- end of modal body -->
 
