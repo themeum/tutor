@@ -73,8 +73,16 @@ class NativeCart extends BaseCart implements CartInterface {
 	 * @return boolean
 	 */
 	public function remove( int $item_id ): bool {
-		// @TODO
-		return false;
+		if ( $this->user_id ) {
+			return $this->cart_model->delete_cart_item( $item_id );
+		} else {
+			try {
+				GuestCart::delete_cart_item( $item_id );
+				return true;
+			} catch ( \Throwable $th ) {
+				return false;
+			}
+		}
 	}
 
 	/**

@@ -170,7 +170,7 @@ if ( ! function_exists( 'tutor_is_guest_checkout_enabled' ) ) {
 		$monetization = tutor_utils()->get_option( 'monetize_by' );
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
 			return function_exists( 'tutor_pro' ) && GuestCheckout::is_enable();
-		} else if ( 'wc' === $monetization ) {
+		} elseif ( 'wc' === $monetization ) {
 			return 'yes' === get_option( 'woocommerce_enable_guest_checkout', 'no' ) && tutor_utils()->get_option( 'enable_guest_course_cart', false );
 		}
 	}
