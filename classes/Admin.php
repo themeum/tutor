@@ -294,8 +294,6 @@ class Admin {
 				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_options', '#' );
 			}
 		}
-
-		// do_action( 'tutor_admin_register' );
 	}
 
 	/**
