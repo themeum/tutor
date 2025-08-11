@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce\Cart;
 use Tutor\Ecommerce\Cart\Contracts\CartInterface;
 use Tutor\Ecommerce\CartController;
 use Tutor\Models\CartModel;
+use TutorPro\Ecommerce\GuestCheckout\GuestCart;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -55,6 +56,9 @@ class NativeCart extends BaseCart implements CartInterface {
 			$this->cart_error = __( 'Item already exists in cart', 'tutor' );
 			return false;
 		}
+		if ( ! $this->user_id ) {
+			GuestCart::add_cart_item( $item_id );
+		}
 
 		return (bool) $this->cart_model->add_course_to_cart( $this->user_id, $item_id );
 	}
@@ -95,7 +99,7 @@ class NativeCart extends BaseCart implements CartInterface {
 	 */
 	public function get_cart_items(): array {
 		$items      = array();
-		$cart_items = $this->cart_model->get_cart_items( $this->user_id );
+		$cart_items = $this->user_id ? $this->cart_model->get_cart_items( $this->user_id ) : GuestCart::get_cart_items();
 		if ( is_array( $cart_items ) && ! empty( $cart_items['courses']['results'] ) ) {
 			foreach ( $cart_items['courses']['results'] as $cart_item ) {
 				$item = (object) array(
@@ -131,6 +135,9 @@ class NativeCart extends BaseCart implements CartInterface {
 	 * @return bool
 	 */
 	public function is_item_exists( int $item_id ): bool {
-		return $this->cart_model->is_course_in_user_cart( $this->user_id, $item_id );
+		if ( $this->user_id ) {
+			return $this->cart_model->is_course_in_user_cart( $this->user_id, $item_id );
+		}
+		return GuestCart::is_item_exists( $item_id );
 	}
 }
