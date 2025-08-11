@@ -61,7 +61,7 @@ class AdminMenu {
 			'callback'    => array( $this, 'orders_view' ),
 		);
 
-		$menu['group_two']['coupon'] = array(
+		$menu['group_two']['coupons'] = array(
 			'parent_slug' => 'tutor',
 			'page_title'  => __( 'Coupons', 'tutor' ),
 			'menu_title'  => __( 'Coupons', 'tutor' ),
