@@ -1,9 +1,16 @@
-.tutor-gift-course-card {
-	margin: 20px 0;
-	padding: 0;
+/**
+ * Dashboard Table
+ * @since 3.8.0
+ */
+
+.tutor-gift-course-card,
+#tutor-greetings-popup {
+	font-family: 'SF Pro Display', sans-serif;
 }
 
-.gift-card-container {
+
+.tutor-gift-course-card {
+	margin: 20px 0;
 	border: 1px solid #dee2e6;
 	border-radius: 16px;
 	padding: 22px;
@@ -13,10 +20,10 @@
 	justify-content: space-between;
 	min-height: 120px;
 	overflow: hidden;
-	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	box-shadow: 0px 0px 34px 0px #00349412;
 }
 
-.gift-card-decoration-left {
+.tutor-gift-card-decoration-left {
 	position: absolute;
 	left: 0;
 	top: 50%;
@@ -24,46 +31,48 @@
 	z-index: 1;
 }
 
-.gift-card-decoration-right {
+.tutor-gift-card-decoration-right {
 	position: absolute;
 	right: 0;
 	top: 0;
 	z-index: 1;
 }
 
-.gift-box-icon {
+.tutor-gift-box-icon {
 	flex-shrink: 0;
-	margin-left: 54px;
-	margin-right: 47px;
+	margin-left: 40px;
+	margin-right: 36px;
 	z-index: 2;
 	position: relative;
 
-	.gift-box-icon-star {
+	.tutor-gift-box-icon-star {
 		position: absolute;
 	}
-	.gift-box-icon-star-1 {
-		top: -8px;
-		right: 2px;
+
+	.tutor-gift-box-icon-star-1 {
+		top: 5px;
+		right: 0px;
 	}
 
-	.gift-box-icon-star-2 {
-		top: 32px;
+	.tutor-gift-box-icon-star-2 {
+		top: 43px;
 		left: -16px;
 	}
 }
 
-.gift-card-content {
+.tutor-gift-card-content {
 	flex: 1;
 	z-index: 2;
 	position: relative;
 }
 
-.gift-card-title {
+.tutor-gift-card-title {
 	line-height: 34px;
 }
 
-.gift-card-message {
+.tutor-gift-card-message {
 	line-height: 24px;
+
 	p {
 		font-weight: 400;
 		font-size: 16px;
@@ -71,12 +80,13 @@
 		letter-spacing: 0px;
 		color: #41454F;
 	}
+
 	span {
 		font-weight: 600;
 	}
 }
 
-.gift-card-button:active {
+.tutor-gift-card-button:active {
 	transform: translateY(0);
 }
 
@@ -87,12 +97,247 @@
 		margin-right: 20px;
 	}
 
-	.gift-card-decoration-right {
+	.tutor-gift-card-decoration-right {
 		display: none;
 	}
 
-	.gift-box-icon .gift-box-icon-star-2 {
+	.tutor-gift-box-icon .gift-box-icon-star-2 {
 		top: 20px;
 		left: -10px;
+	}
+}
+
+// modal scss
+.tutor-greetings-modal {
+	.tutor-modal-close-o {
+		z-index: 12px !important;
+	}
+}
+
+.tutor-greetings-card-wrapper {
+	background: #F3F8FF;
+	padding: 32px;
+	border-radius: 16px 16px 0px 0px;
+}
+
+.tutor-greetings-card {
+	max-width: 700px;
+	color: #374151;
+	position: relative;
+	padding: 40px;
+	background: #fff;
+	border: 1px solid #E2EDFC;
+
+	.tutor-greeting-to-person {
+		padding: 0px 0px 24px 0px;
+		position: relative;
+	}
+
+	.tutor-greetings-content {
+		padding: 24px 90px 0px 0px;
+		text-align: justify;
+		position: relative;
+
+		&::after,
+		&::before {
+			z-index: 10;
+		}
+
+		&::after {
+			content: '';
+			width: 1500px;
+			height: 3px;
+			position: absolute;
+			top: 0;
+			left: -160px;
+			background: #FE621E;
+		}
+
+		&:before {
+			content: "";
+			height: 1500px;
+			width: 3px;
+			position: absolute;
+			right: 30px;
+			top: -150px;
+			background: #fe621e;
+		}
+
+		.tutor-greetings-ribbon {
+			position: absolute;
+			right: -2px;
+			top: -27px;
+		}
+
+		.tutor-greetings-message {
+			font-weight: 400;
+			font-size: 16px;
+			line-height: 24px;
+			letter-spacing: 0px;
+			text-align: justify;
+			overflow: hidden;
+		}
+
+		.tutor-greetings-signature {
+			text-align: right;
+			margin-top: 26px;
+			font-weight: 400;
+			font-size: 16px;
+			line-height: 24px;
+			letter-spacing: 0px;
+			text-align: right;
+		}
+	}
+
+	.tutor-greetings-modal-overlay {
+		position: absolute;
+		inset: 0 0 0 0;
+	}
+
+	.greetings-card-border {
+		content: '';
+		position: absolute;
+		background: #E2EDFC;
+		z-index: 1;
+	}
+
+	.tutor-greetings-circle {
+		height: 70px;
+		width: 70px;
+		border: 1px solid #E2EDFC;
+		border-radius: 50%;
+		background: #F3F8FF;
+		position: absolute;
+	}
+
+	.tutor-greetings-circle-top-left {
+		left: -35px;
+		top: -35px;
+	}
+
+	.tutor-greetings-circle-top-right {
+		right: -35px;
+		top: -35px;
+	}
+
+	.tutor-greetings-circle-bottom-left {
+		left: -35px;
+		bottom: -35px;
+	}
+
+	.tutor-greetings-circle-bottom-right {
+		right: -35px;
+		bottom: -35px;
+	}
+}
+
+.tutor-gifted-course-wrapper {
+	background: white;
+	padding: 32px;
+	border-radius: 0px 0px 16px 16px;
+}
+
+.tutor-gifted-course {
+	font-family: Arial, sans-serif;
+
+	.tutor-gifted-course-title {
+		font-weight: 500;
+		font-size: 20px;
+		line-height: 28px;
+		letter-spacing: 0px;
+		color: #212327;
+	}
+
+	.tutor-gifted-course-card {
+		display: grid;
+		grid-template-columns: 200px 1fr;
+		align-items: center;
+		background: #fff;
+		overflow: hidden;
+		margin-bottom: 24px;
+
+		.tutor-gifted-course-image {
+			max-height: 115px;
+			overflow: hidden;
+			// flex: 0 0 120px;
+			// display: flex;
+			// align-items: center;
+			// justify-content: flex-start;
+
+			// img {
+			// 	max-width: 100%;
+			// 	max-height: 103px;
+			// 	width: 130px;
+			// 	display: block;
+			// 	border-radius: 10px 0px 0px 10px;
+			// }
+		}
+
+		.tutor-gifted-course-content {
+			width: 100%;
+			padding: 16px;
+			border-width: 1px 1px 1px 0px;
+			border-color: #e5e5e5;
+			border-style: solid;
+			border-radius: 0px 8px 8px 0px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+
+			.tutor-gifted-course-name {
+				font-size: 1rem;
+				margin: 0 0 5px;
+				font-weight: 600;
+			}
+
+			.tutor-gifted-course-author {
+				margin: 0;
+				font-size: 0.9rem;
+				color: #666;
+
+				a {
+					color: #3b82f6;
+					text-decoration: none;
+				}
+			}
+
+			.tutor-gifted-course-rating {
+				display: flex;
+				align-items: center;
+				margin-top: 8px;
+
+				.tutor-gifted-rating-value {
+					font-size: 0.9rem;
+					margin-right: 5px;
+				}
+
+				.tutor-gifted-stars {
+					color: #fbbf24;
+					font-size: 0.9rem;
+				}
+			}
+		}
+	}
+}
+
+@media (max-width: 500px) {
+	.tutor-greetings-card {
+		.tutor-greetings-content:before {
+			content: "";
+			height: 1500px;
+			width: 3px;
+			position: absolute;
+			right: 10px;
+			top: -150px;
+			background: #fe621e;
+		}
+
+		.tutor-greetings-content {
+			padding: 30px 50px 0px 0px;
+
+			.tutor-greetings-ribbon {
+				right: -22px;
+			}
+		}
 	}
 }
