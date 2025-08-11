@@ -113,15 +113,29 @@ class NativeCart extends BaseCart implements CartInterface {
 	public function get_cart_items(): array {
 		$items      = array();
 		$cart_items = $this->user_id ? $this->cart_model->get_cart_items( $this->user_id ) : GuestCart::get_cart_items();
-		if ( is_array( $cart_items ) && ! empty( $cart_items['courses']['results'] ) ) {
-			foreach ( $cart_items['courses']['results'] as $cart_item ) {
-				$item = (object) array(
-					'id'    => $cart_item->ID,
-					'title' => $cart_item->post_title,
-				);
+		if ( $this->user_id ) {
+			$cart_items = $this->cart_model->get_cart_items( $this->user_id );
+			if ( is_array( $cart_items ) && ! empty( $cart_items['courses']['results'] ) ) {
+				foreach ( $cart_items['courses']['results'] as $cart_item ) {
+					$item = (object) array(
+						'id'    => $cart_item->ID,
+						'title' => $cart_item->post_title,
+					);
 
-				$items[] = $item;
+					$items[] = $item;
+				}
 			}
+		} else {
+			$cart_items = GuestCart::get_cart_items();
+			$items      = array_map(
+				function( $item ) {
+					return (object) array(
+						'id'    => $item,
+						'title' => get_the_title( $item ),
+					);
+				},
+				$cart_items
+			);
 		}
 
 		return $items;
