@@ -58,7 +58,6 @@ class Admin {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
-		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
@@ -131,6 +130,8 @@ class Admin {
 			$icon_base64_uri,
 			$menu_position
 		);
+
+		new WhatsNew();
 
 		$admin_menu = apply_filters(
 			'tutor_admin_menu',
