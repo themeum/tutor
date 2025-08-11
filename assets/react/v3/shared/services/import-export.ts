@@ -3,7 +3,13 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 
-export type ExportableContentType = 'courses' | 'course-bundle' | 'content_bank' | 'settings' | 'keep_media_files';
+export type ExportableContentType =
+  | 'courses'
+  | 'course-bundle'
+  | 'content_bank'
+  | 'settings'
+  | 'keep_media_files'
+  | 'student_enrollments';
 export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
 export interface ContentItem {

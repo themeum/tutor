@@ -29,6 +29,8 @@ export interface ExportFormData {
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
   keep_media_files: boolean;
+  student_enrollments: boolean;
+  student_enrollments__ids: number[];
 }
 
 export interface BulkSelectionFormData {
@@ -49,6 +51,8 @@ export const defaultExportFormData: ExportFormData = {
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
   keep_media_files: false,
+  student_enrollments: false,
+  student_enrollments__ids: [],
 };
 
 export const convertExportFormDataToPayload = ({

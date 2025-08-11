@@ -167,10 +167,12 @@ const ExportModal = ({
     const courseIds = getContentIds(data, 'courses');
     const bundleIds = getContentIds(data, 'course-bundle');
     const collectionIds = getContentIds(data, 'content_bank');
+    const studentIds = getContentIds(data, 'student_enrollments');
 
     form.setValue('courses__ids', courseIds);
     form.setValue('course-bundle__ids', bundleIds);
     form.setValue('content_bank__ids', collectionIds);
+    form.setValue('student_enrollments__ids', studentIds);
   }, [getExportableContentQuery.isSuccess, getExportableContentQuery.data, form]);
 
   const handleClose = () => {
