@@ -37,7 +37,7 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { type IconCollection } from '@TutorShared/icons/types';
-import { validateQuizQuestion } from '@TutorShared/utils/quiz';
+import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   type ContentBankContent,
@@ -237,7 +237,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     }
 
     const convertedQuestions: QuizQuestion[] = contents.map((content) => {
-      const question = content.question;
+      const question = convertedQuestion(content.question);
       return {
         ...question,
         _data_status: QuizDataStatus.NEW,
@@ -246,7 +246,6 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         question_id: `${question.question_id}-${nanoid()}`,
         question_answers: question.question_answers.map((answer) => ({
           ...answer,
-          is_saved: true,
           _data_status: QuizDataStatus.NEW,
         })),
       };
