@@ -237,6 +237,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     }
 
     const convertedQuestions: QuizQuestion[] = contents.map((content) => {
+      // Converts a ContentBankContent question to the QuizQuestion format expected by the quiz builder.
       const question = convertedQuestion(content.question);
       return {
         ...question,
