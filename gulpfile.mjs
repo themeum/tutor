@@ -1,5 +1,6 @@
+/* eslint-disable no-console */
 import { deleteAsync } from 'del';
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import gulp from 'gulp';
 import zip from 'gulp-zip';
 
@@ -8,7 +9,7 @@ let versionNumber = '';
 try {
   const data = readFileSync('tutor.php', 'utf8');
   versionNumber = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
-  console.log(versionNumber)
+  console.log(versionNumber);
 } catch (err) {
   console.log(err);
 }
@@ -17,11 +18,11 @@ const build_name = `tutor-${versionNumber}.zip`;
 
 function cleanZip() {
   return deleteAsync(`./${build_name}`);
-};
+}
 
 function cleanBuild() {
   return deleteAsync('./build');
-};
+}
 
 function copy() {
   return gulp
@@ -75,22 +76,29 @@ function copy() {
       '!./cypress/**',
       '!./cypress.config.ts',
       '!.husky',
-      '!.lintstagedrc'
+      '!.lintstagedrc',
     ])
     .pipe(gulp.dest('build/tutor/'));
-};
+}
 
 function copyTutorDroip() {
+  const droipDistPath = 'includes/droip/dist';
+
+  if (!existsSync(droipDistPath)) {
+    console.log('⚠️ Droip files not found, skipping...');
+    return Promise.resolve();
+  }
+
   return gulp
-    .src("includes/droip/dist/**")
-    .pipe(gulp.dest("build/tutor/includes/droip"));
-};
+    .src(`${droipDistPath}/**`, {
+      allowEmpty: true,
+      buffer: true,
+    })
+    .pipe(gulp.dest('build/tutor/includes/droip'));
+}
 
 function makeZip() {
-  return gulp
-    .src('./build/**/*.*')
-    .pipe(zip(build_name))
-    .pipe(gulp.dest('./'));
-};
+  return gulp.src('./build/**/*.*').pipe(zip(build_name)).pipe(gulp.dest('./'));
+}
 
 export const build = gulp.series(cleanZip, cleanBuild, copy, copyTutorDroip, makeZip, cleanBuild);

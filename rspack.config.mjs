@@ -225,7 +225,7 @@ const createConfig = (env, options) => {
         ];
         return keepDirectories.some((dir) => assetPath.includes(dir));
       },
-    }
+    };
   }
 
   if (isMakePot) {
