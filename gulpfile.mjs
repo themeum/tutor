@@ -13,17 +13,17 @@ try {
   console.log(err);
 }
 
-const build_name = 'tutor-' + versionNumber + '.zip';
+const build_name = `tutor-${versionNumber}.zip`;
 
-gulp.task('clean-zip', function () {
-  return deleteAsync('./' + build_name);
-});
+function cleanZip() {
+  return deleteAsync(`./${build_name}`);
+};
 
-gulp.task('clean-build', function () {
+function cleanBuild() {
   return deleteAsync('./build');
-});
+};
 
-gulp.task('copy', function () {
+function copy() {
   return gulp
     .src([
       './**/*.*',
@@ -78,25 +78,19 @@ gulp.task('copy', function () {
       '!.lintstagedrc'
     ])
     .pipe(gulp.dest('build/tutor/'));
-});
+};
 
-gulp.task('copy-fonts', function () {
-  return gulp
-    .src('assets/fonts')
-    .pipe(gulp.dest('v2-library/fonts/fonts/*'));
-});
-
-gulp.task("copy-tutor-droip", function () {
+function copyTutorDroip() {
   return gulp
     .src("includes/droip/dist/**")
     .pipe(gulp.dest("build/tutor/includes/droip"));
-});
+};
 
-gulp.task('make-zip', function () {
+function makeZip() {
   return gulp
     .src('./build/**/*.*')
     .pipe(zip(build_name))
     .pipe(gulp.dest('./'));
-});
+};
 
-export const build = gulp.series('clean-zip', 'clean-build', 'copy', 'copy-fonts', 'copy-tutor-droip', 'make-zip', 'clean-build');
+export const build = gulp.series(cleanZip, cleanBuild, copy, copyTutorDroip, makeZip, cleanBuild);
