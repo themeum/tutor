@@ -9,7 +9,7 @@
   "scripts": {
     "build": "composer install --no-dev && npm run make-pot && rspack --mode=production && npm run tutor-droip && node build.js",
     "build-dev": "rspack --mode=production && node build.js",
-    "build-dev-gulp": "rspack --mode=production && gulp build --silent",
+    "build-dev-gulp": "rspack --mode=production && gulp build",
     "build-analysis": "RSDOCTOR=true npx rspack --mode=production",
     "watch": "rspack --watch --mode=development",
     "make-pot": "rspack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
