@@ -90,17 +90,21 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
     return () => clearInterval(interval);
   }, [installingIdx]);
 
+  const getContent = () => {
+    if (addon.required_pro_plugin && !addon.is_dependents_installed) {
+      return __('Install the following plugin(s) to enable this addon.', 'tutor');
+    } else if (addon.is_dependents_installed) {
+      // translators: %s is the addon name
+      return sprintf(__("The following plugin(s) will be activated upon activating the '%s'.", 'tutor'), addon.name);
+    } else {
+      // translators: %s is the addon name
+      return sprintf(__("The following plugin(s) will be installed upon activating the '%s'.", 'tutor'), addon.name);
+    }
+  };
+
   return (
     <div css={styles.wrapper}>
-      <p css={styles.content}>
-        {addon.required_pro_plugin && !addon.is_dependents_installed
-          ? __('Install the following plugin(s) to enable this addon.', 'tutor')
-          : addon.is_dependents_installed
-            ? // translators: %s is the addon name
-              sprintf(__("The following plugin(s) will be activated upon activating the '%s'.", 'tutor'), addon.name)
-            : // translators: %s is the addon name
-              sprintf(__("The following plugin(s) will be installed upon activating the '%s'.", 'tutor'), addon.name)}
-      </p>
+      <p css={styles.content}>{getContent()}</p>
 
       <div css={styles.pluginsWrapper}>
         <For
