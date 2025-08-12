@@ -14,16 +14,16 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 }
 ?>
 
-<div class="tutor-gift-course-card">
+<div class="tutor-gift-course-card tutor-d-flex tutor-align-center tutor-justify-between tutor-position-relative tutor-overflow-hidden">
 	<!-- Left decorative element -->
-	<div class="tutor-gift-card-decoration-left">
+	<div class="tutor-gift-card-decoration-left tutor-position-absolute">
 		<svg width="32" height="12" viewBox="0 0 32 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M0 0.0195312H31.583L30.0012 3.00953L31.583 5.99953L30.0012 8.98953L31.583 11.9795H0V0.0195312Z" fill="#FE621E"/>
 		</svg>
 	</div>
 
 	<!-- Gift box icon -->
-	<div class="tutor-gift-box-icon">
+	<div class="tutor-gift-box-icon tutor-position-relative">
 		<svg class="tutor-mt-12" width="77" height="90" viewBox="0 0 77 94" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<rect x="15.853" y="30.8945" width="30.969" height="39.4215" rx="1.59423" transform="rotate(-8.27728 15.853 30.8945)" fill="#FFB640"/>
 			<path d="M2.75119 22.497C2.58744 21.7058 3.09613 20.9316 3.88738 20.7678L63.3138 8.46964C64.105 8.30589 64.8792 8.81458 65.0429 9.60583L67.4304 21.1426C67.5942 21.9339 67.0855 22.7081 66.2943 22.8718L6.86788 35.17C6.07663 35.3337 5.30246 34.8251 5.13871 34.0338L2.75119 22.497Z" fill="#6DA4F3"/>
@@ -58,10 +58,10 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 	</div><!--/ tutor-gift-box-icon -->
 
 	<!-- Main content -->
-	<div class="tutor-gift-card-content">
-		<h2 class="tutor-gift-card-title tutor-fs-4 tutor-fw-medium tutor-color-primary tutor-m-0"><?php esc_html_e( 'Congratulations!', 'tutor' ); ?></h2>
-		<p class="tutor-gift-card-message tutor-fs-6 tutor-lh-1-5 tutor-fw-medium tutor-m-0">
-			<?php esc_html_e( 'You have received a Gift from', 'tutor' ); ?> <span class=""><?php esc_html_e( 'Joe Nevarro', 'tutor' ); ?></span>
+	<div class="tutor-gift-card-content tutor-position-relative">
+		<h3 class="tutor-gift-card-title tutor-fs-4 tutor-fw-medium tutor-color-primary tutor-m-0"><?php esc_html_e( 'Congratulations!', 'tutor' ); ?></h3>
+		<p class="tutor-gift-card-message tutor-fs-6 tutor-m-0">
+			<?php esc_html_e( 'You have received a Gift from', 'tutor' ); ?> <span class="tutor-fw-bold"><?php esc_html_e( 'Joe Nevarro', 'tutor' ); ?></span>
 		</p>
 		<button class="tutor-gift-card-button tutor-btn tutor-btn-sm tutor-btn-primary tutor-btn-md tutor-mt-16" data-tutor-modal-target="tutor-greetings-popup">
 			<?php esc_html_e( 'Open it Up', 'tutor' ); ?>
@@ -69,7 +69,7 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 	</div>
 
 	<!-- Right decorative element -->
-	<div class="tutor-gift-card-decoration-right tutor-d-none tutor-d-lg-block">
+	<div class="tutor-gift-card-decoration-right tutor-d-none tutor-d-lg-block tutor-position-absolute">
 		<svg class="tutor-d-block" width="103" height="152" viewBox="0 0 103 152" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<rect x="29.0985" width="11.358" height="152" fill="#FE621E"/>
 			<rect x="25.8698" y="70.0195" width="77.1302" height="11.9571" fill="#FE621E"/>
@@ -100,8 +100,8 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 							<span class="tutor-greetings-circle tutor-greetings-circle-bottom-left"></span>
 							<span class="tutor-greetings-circle tutor-greetings-circle-bottom-right"></span>
 
-							<div class="tutor-greeting-to-person">
-								<p class="tutor-m-0"><?php esc_html_e( 'Hey', 'tutor' ); ?> <strong><?php echo esc_html( $user->display_name ); ?> </strong>!</p>
+							<div class="tutor-greeting-to-person tutor-fs-6">
+								<p class="tutor-m-0"><?php esc_html_e( 'Hey', 'tutor' ); ?> <span class="tutor-fw-medium"><?php esc_html_e( 'Jilon Mask', 'tutor' ); ?> </span>!</p>
 							</div>
 							<div class="tutor-greetings-content">
 								<svg class="tutor-greetings-ribbon" width="68" height="57" viewBox="0 0 68 57" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -110,10 +110,10 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 									<path d="M34.4303 28.0586C30.9093 34.277 19.5745 48.3386 2.40381 54.8381" stroke="#FE621E" stroke-width="3" stroke-linecap="round"/>
 									<path d="M34.4085 28.0586C37.9296 34.277 49.2644 48.3386 66.4351 54.8381" stroke="#FE621E" stroke-width="3" stroke-linecap="round"/>
 								</svg>
-								<div class="tutor-greetings-message">
+								<div class="tutor-greetings-message tutor-fs-6 tutor-overflow-hidden tutor-text-justify">
 									<?php esc_html_e( 'Wishing you a fantastic birthday! May your day be overflowing with happiness and laughter.Dive into this course and let it be a stepping stone for you to enhance your skills even more. Celebrate big today!', 'tutor' ); ?>
 								</div>
-								<div class="tutor-greetings-signature"><?php esc_html_e( '- Joe Nevarro', 'tutor' ); ?></div>
+								<div class="tutor-greetings-signature tutor-fs-6 tutor-text-right"><?php esc_html_e( '- Joe Nevarro', 'tutor' ); ?></div>
 							</div>
 						</div><!--/ tutor-greetings-card -->
 					</div>
@@ -126,9 +126,9 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 								<img src="https://picsum.photos/500/200" alt="Architectural Sketching" />
 							</div>
 							<div class="tutor-gifted-course-content">
-								<h4 class="tutor-gifted-course-name"><?php esc_html_e( 'Architectural Sketching with Procreate', 'tutor' ); ?></h4>
-								<p class="tutor-gifted-course-author tutor-m-0"><?php esc_html_e( 'By', 'tutor' ); ?> <a href="#"><?php esc_html_e( 'Alice Grey', 'tutor' ); ?></a></p>
-								<div class="tutor-gifted-course-rating">
+								<h4 class="tutor-gifted-course-name tutor-fs-6 tutor-fw-bold"><?php esc_html_e( 'Architectural Sketching with Procreate', 'tutor' ); ?></h4>
+								<p class="tutor-gifted-course-author tutor-fw-bold tutor-m-0"><?php esc_html_e( 'By', 'tutor' ); ?> <a href="#"><?php esc_html_e( 'Alice Grey', 'tutor' ); ?></a></p>
+								<div class="tutor-gifted-course-rating tutor-d-flex tutor-align-center tutor-mt-16">
 									<span class="tutor-gifted-rating-value"><?php esc_html_e( '5.0', 'tutor' ); ?></span>
 									<div class="tutor-d-flex tutor-gifted-rating-stars-wrapper">
 										<i class="tutor-icon-star-line tutor-gifted-rating-stars" data-rating-value="1"></i>

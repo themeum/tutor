@@ -10,19 +10,14 @@
 
 .tutor-gift-course-card {
 	padding: 22px;
+	margin: 28px 0px 32px 0px;
 	border: 1px solid #dee2e6;
 	border-radius: 16px;
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
 	min-height: 120px;
-	overflow: hidden;
 	box-shadow: 0px 0px 34px 0px #00349412;
 }
 
 .tutor-gift-card-decoration-left {
-	position: absolute;
 	left: 0;
 	top: 50%;
 	transform: translateY(-50%);
@@ -30,7 +25,6 @@
 }
 
 .tutor-gift-card-decoration-right {
-	position: absolute;
 	right: 0;
 	top: 0;
 	z-index: 1;
@@ -41,7 +35,6 @@
 	margin-left: 40px;
 	margin-right: 36px;
 	z-index: 2;
-	position: relative;
 
 	.tutor-gift-box-icon-star {
 		position: absolute;
@@ -61,7 +54,7 @@
 .tutor-gift-card-content {
 	flex: 1;
 	z-index: 2;
-	position: relative;
+	margin-right: 100px;
 }
 
 .tutor-gift-card-title {
@@ -70,18 +63,8 @@
 
 .tutor-gift-card-message {
 	line-height: 24px;
-
-	p {
-		font-weight: 400;
-		font-size: 16px;
-		line-height: 24px;
-		letter-spacing: 0px;
-		color: #41454F;
-	}
-
-	span {
-		font-weight: 600;
-	}
+	color: var(--tutor-color-secondary);
+	letter-spacing: 0px;
 }
 
 .tutor-gift-card-button:active {
@@ -90,6 +73,11 @@
 
 /* Responsive design */
 @media (max-width: 991px) {
+
+	.tutor-gift-card-content {
+		margin-right: 0px;
+	}
+
 	.gift-box-icon {
 		margin-left: 0px;
 		margin-right: 20px;
@@ -105,12 +93,7 @@
 	}
 }
 
-// modal scss
-.tutor-greetings-modal {
-	.tutor-modal-close-o {
-		z-index: 12px !important;
-	}
-}
+// gift modal scss
 
 .tutor-greetings-card-wrapper {
 	background: #F3F8FF;
@@ -123,12 +106,22 @@
 	color: #374151;
 	position: relative;
 	padding: 40px;
-	background: #fff;
+	background: var(--tutor-color-white);
 	border: 1px solid #E2EDFC;
 
 	.tutor-greeting-to-person {
 		padding: 0px 0px 24px 0px;
 		position: relative;
+
+		p {
+			line-height: 24px;
+			letter-spacing: 0px;
+
+			span {
+				line-height: 26px;
+				letter-spacing: 0px;
+			}
+		}
 	}
 
 	.tutor-greetings-content {
@@ -168,22 +161,15 @@
 		}
 
 		.tutor-greetings-message {
-			font-weight: 400;
-			font-size: 16px;
 			line-height: 24px;
 			letter-spacing: 0px;
-			text-align: justify;
-			overflow: hidden;
 		}
 
 		.tutor-greetings-signature {
-			text-align: right;
+			color: var(--tutor-body-color);
 			margin-top: 26px;
-			font-weight: 400;
-			font-size: 16px;
 			line-height: 24px;
 			letter-spacing: 0px;
-			text-align: right;
 		}
 	}
 
@@ -243,18 +229,20 @@
 		font-size: 20px;
 		line-height: 28px;
 		letter-spacing: 0px;
-		color: #212327;
+		color: var(--tutor-body-color);
 	}
 
 	.tutor-gifted-course-card {
 		display: flex;
-		background: #fff;
+		background: var(--tutor-color-white);
 		overflow: hidden;
 		margin-bottom: 24px;
 		border-radius: 4px;
 		border: 1px solid #ddd;
+
 		.tutor-gifted-course-image {
 			width: 143px;
+
 			img {
 				max-width: 100%;
 				height: 100%;
@@ -264,27 +252,21 @@
 		.tutor-gifted-course-content {
 			width: calc(100% - 143px);
 			padding: 16px;
-			// border-width: 1px 1px 1px 0px;
-			// border-color: #e5e5e5;
-			// border-style: solid;
-			// border-radius: 0px 4px 4px 0px;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
 
 			.tutor-gifted-course-name {
-				font-size: 1rem;
 				margin: 0 0 8px;
-				font-weight: 600;
 				line-height: 124%;
 			}
 
 			.tutor-gifted-course-author {
-				font-weight: 600;
 				font-size: 14px;
 				line-height: 150%;
 				letter-spacing: -0.2%;
 				color: #595D7EB2;
+
 				a {
 					color: #595D7E;
 					text-decoration: none;
@@ -292,18 +274,16 @@
 			}
 
 			.tutor-gifted-course-rating {
-				display: flex;
-				align-items: center;
-				margin-top: 16px;
-
 				.tutor-gifted-rating-value {
 					font-size: 12px;
 					font-weight: bold;
 					margin-right: 5px;
 				}
+
 				.tutor-gifted-rating-stars-wrapper {
 					gap: 2px;
 					margin-left: 4px;
+
 					.tutor-gifted-rating-stars {
 						color: #fbbf24;
 						font-size: 12px;
@@ -315,6 +295,14 @@
 }
 
 @media (max-width: 500px) {
+
+	.tutor-gift-course-card {
+		flex-direction: column;
+		.tutor-gift-card-content {
+			text-align: center;
+		}
+	}
+
 	.tutor-greetings-card {
 		.tutor-greetings-content:before {
 			content: "";
@@ -334,12 +322,15 @@
 			}
 		}
 	}
+
 	.tutor-gifted-course {
 		.tutor-gifted-course-card {
 			flex-direction: column;
+
 			.tutor-gifted-course-image {
 				width: 100%;
 			}
+
 			.tutor-gifted-course-content {
 				width: 100%;
 			}
