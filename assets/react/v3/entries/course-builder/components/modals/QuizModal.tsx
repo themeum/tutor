@@ -37,9 +37,10 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
-import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
 import { findSlotFields } from '@TutorShared/utils/util';
 
@@ -173,7 +174,9 @@ const QuizModal = ({
       return;
     }
 
-    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    const activeQuestion = data.questions[activeQuestionIndex];
+
+    const validation = validateQuizQuestion(activeQuestion);
 
     if (validation !== true) {
       setValidationError(validation);

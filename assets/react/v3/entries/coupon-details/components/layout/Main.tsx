@@ -1,5 +1,3 @@
-import { Breakpoint, spacing } from '@TutorShared/config/styles';
-
 import {
   type Coupon,
   type Course,
@@ -13,12 +11,11 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type MembershipPlan } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate } from '@TutorShared/utils/util';
-import { css } from '@emotion/react';
 import { setLocaleData } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { lazy, Suspense, useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
-import Topbar, { TOPBAR_HEIGHT } from './Topbar';
+import Topbar from './Topbar';
 
 let MainContent: React.FC;
 
@@ -87,7 +84,7 @@ function Main() {
   }, [couponDetailsQuery.data, form.reset]);
 
   return (
-    <div css={styles.wrapper}>
+    <div>
       <FormProvider {...form}>
         <Topbar />
         <Suspense fallback={<LoadingSection />}>
@@ -99,37 +96,3 @@ function Main() {
 }
 
 export default Main;
-
-const styles = {
-  wrapper: css`
-    margin-left: ${spacing[20]};
-
-    ${Breakpoint.mobile} {
-      margin-left: ${spacing[12]};
-    }
-  `,
-
-  content: css`
-    min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr 342px;
-    gap: ${spacing[36]};
-    margin-top: ${spacing[32]};
-    padding-inline: ${spacing[8]};
-
-    ${Breakpoint.smallTablet} {
-      grid-template-columns: 1fr 280px;
-    }
-
-    ${Breakpoint.mobile} {
-      grid-template-columns: 1fr;
-    }
-  `,
-  left: css`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: ${spacing[16]};
-  `,
-};

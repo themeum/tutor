@@ -6923,12 +6923,14 @@ class Utils {
 		$course_ids           = $this->get_assigned_courses_ids_by_instructors( $instructor_id );
 		$assignment_post_type = 'tutor_assignments';
 
-		$in_course_ids = implode( "','", $course_ids );
+		$in_course_ids = QueryHelper::prepare_in_clause( $course_ids );
 
-		$pagination_query = $date_query = '';
+		$pagination_query = '';
+		$date_query       = '';
 		$sort_query       = 'ORDER BY ID DESC';
+
 		if ( $this->count( $filter_data ) ) {
-			extract( $filter_data );
+			extract( $filter_data );//phpcs:ignore
 
 			if ( ! empty( $course_id ) ) {
 				$in_course_ids = $course_id;
@@ -6938,7 +6940,8 @@ class Utils {
 				$date_query  = " AND DATE(post_date) = '{$date_filter}'";
 			}
 			if ( ! empty( $order_filter ) ) {
-				$sort_query = " ORDER BY ID {$order_filter} ";
+				$order_filter = QueryHelper::get_valid_sort_order( $order_filter );
+				$sort_query   = " ORDER BY ID {$order_filter} ";
 			}
 			if ( ! empty( $per_page ) ) {
 				$offset           = (int) ! empty( $offset ) ? $offset : 0;
@@ -6955,7 +6958,7 @@ class Utils {
 						   AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE 	post_type = %s
 					AND assignment.post_parent>0
-					AND post_meta.meta_value IN('$in_course_ids')
+					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
 			",
 				$assignment_post_type
@@ -6971,7 +6974,7 @@ class Utils {
 						   AND post_meta.meta_key = '_tutor_course_id_for_assignments'
 			WHERE 	post_type = %s
 					AND assignment.post_parent>0
-					AND post_meta.meta_value IN('$in_course_ids')
+					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
 					{$sort_query}
 					{$pagination_query}

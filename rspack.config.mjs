@@ -140,7 +140,7 @@ const createConfig = (env, options) => {
         },
         chunkFilename: (pathData) => {
           const entryName = pathData.chunk.name.replace('-scss', '');
-          return `css/${entryName}.min.css`;
+          return `css/lazy-chunks/${entryName}.min.css`;
         },
       }),
       new rspack.ProvidePlugin({
@@ -157,7 +157,7 @@ const createConfig = (env, options) => {
       'react-dom': 'ReactDOM',
       '@wordpress/i18n': 'wp.i18n',
     },
-    devtool: isDevelopment ? 'source-map' : false,
+    devtool: isDevelopment ? 'eval-source-map' : false,
     stats: {
       preset: 'errors-warnings',
       colors: true,
@@ -166,30 +166,65 @@ const createConfig = (env, options) => {
       chunks: false,
       chunkModules: false,
       reasons: false,
-      usedExports: false,
-      providedExports: false,
-      optimizationBailout: false,
       children: false,
       entrypoints: true,
       assets: isDevelopment,
     },
     ignoreWarnings: [/CROSS-CHUNKS-PACKAGE/, /asset size limit/, /entrypoint size limit/],
+    performance: {
+      hints: false,
+    },
+    output: {
+      path: path.resolve('./assets'),
+      filename: createOutputFileName,
+      chunkFilename: createChunkFilename,
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
+      fallback: {
+        fs: false,
+        path: false,
+        os: false,
+        url: false,
+      },
+      alias: resolveAliases,
+    },
   };
 
   if ('production' === mode) {
     baseConfig.optimization = {
-      minimize: true,
       splitChunks: false,
+      minimize: true,
       minimizer: [
         new rspack.SwcJsMinimizerRspackPlugin({
           extractComments: false,
           minimizerOptions: {
             compress: false,
-            mangle: true,
+            ecma: 2015,
+            mangle: {
+              reserved: ['__'],
+            },
+            format: {
+              comments: /translators/i,
+            },
           },
         }),
         new rspack.LightningCssMinimizerRspackPlugin(),
       ],
+    };
+    baseConfig.output.clean = {
+      keep: (assetPath) => {
+        const keepDirectories = [
+          'assets/fonts/',
+          'assets/icons/',
+          'assets/images/',
+          'assets/lib/',
+          'assets/react/',
+          'assets/scss/',
+          'assets/json/',
+        ];
+        return keepDirectories.some((dir) => assetPath.includes(dir));
+      },
     };
   }
 
@@ -203,7 +238,7 @@ const createConfig = (env, options) => {
   return baseConfig;
 };
 
-const reactEntries = {
+const jsEntries = {
   tutor: './assets/react/v2/common.js',
   'tutor-front': './assets/react/front/tutor-front.js',
   'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
@@ -245,19 +280,31 @@ const resolveAliases = {
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
 };
 
-const createChunkFilename = () => {
-  return `js/lazy-chunks/[name].js?ver=${version}`;
+const isScssEntry = (entry) => {
+  return String(entry).includes('-scss');
 };
 
-const isScssEntry = (entryPath) => {
-  return /\.css$/i.test(entryPath) || /\.s[ac]ss$/i.test(entryPath);
+const createOutputFileName = (pathData) => {
+  const entryName = pathData.chunk.name;
+  if (isScssEntry(entryName)) {
+    return '';
+  }
+  return `js/[name].js`;
+};
+
+const createChunkFilename = (entryPath) => {
+  if (isScssEntry(entryPath)) {
+    return '';
+  }
+  return `js/lazy-chunks/[name].js?ver=${version}`;
 };
 
 export default (env, options) => {
   const baseConfig = createConfig(env, options);
   const isDevelopment = options.mode === 'development';
+  const isMakePot = env?.['make-pot'];
 
-  const allEntries = { ...reactEntries, ...scssEntries };
+  const allEntries = { ...jsEntries, ...scssEntries };
 
   if (isDevelopment) {
     return Object.entries(allEntries).map(([entryKey, entryPath]) => ({
@@ -266,73 +313,11 @@ export default (env, options) => {
       entry: {
         [entryKey]: entryPath,
       },
-      output: {
-        path: path.resolve('./assets'),
-        filename: (pathData) => {
-          const entryName = pathData.chunk.name;
-          const originalEntryPath = allEntries[entryName];
-
-          if (isScssEntry(originalEntryPath)) {
-            return `[name].min.css`; // CSS files handled by CssExtractRspackPlugin
-          }
-          return `js/${entryName}.js`; // JavaScript files go to js/ directory
-        },
-        chunkFilename: createChunkFilename,
-        clean: false,
-      },
-      resolve: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
-        fallback: {
-          fs: false,
-          path: false,
-          os: false,
-          url: false,
-        },
-        alias: resolveAliases,
-      },
     }));
   }
 
   return {
     ...baseConfig,
-    entry: allEntries,
-    output: {
-      path: path.resolve('./assets'),
-      filename: (pathData) => {
-        const entryName = pathData.chunk.name;
-        const originalEntryPath = allEntries[entryName];
-
-        if (isScssEntry(originalEntryPath)) {
-          return `[name].min.css`;
-        }
-        return `js/[name].js`;
-      },
-      chunkFilename: createChunkFilename,
-      clean: {
-        keep: (pathData) => {
-          const keepDirectories = [
-            'assets/fonts/',
-            'assets/icons/',
-            'assets/images/',
-            'assets/lib/',
-            'assets/react/',
-            'assets/scss/',
-            'assets/json/',
-          ];
-
-          return keepDirectories.some((dir) => pathData.includes(dir));
-        },
-      },
-    },
-    resolve: {
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
-      fallback: {
-        fs: false,
-        path: false,
-        os: false,
-        url: false,
-      },
-      alias: resolveAliases,
-    },
+    entry: isMakePot ? jsEntries : allEntries,
   };
 };

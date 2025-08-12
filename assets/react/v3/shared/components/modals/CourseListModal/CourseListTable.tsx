@@ -7,7 +7,7 @@ import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
-import SearchField from '@ImportExport/components/modals/CourseListModal/SearchField';
+import SearchField from '@TutorShared/components/modals/CourseListModal/SearchField';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';

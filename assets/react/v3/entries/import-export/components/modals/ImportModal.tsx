@@ -11,6 +11,7 @@ import {
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
+import { useState } from 'react';
 import ImportExportCompletedState from './import-export-states/ImportExportCompletedState';
 import ImportExportProgressState from './import-export-states/ImportExportProgressState';
 import ImportInitialState from './import-export-states/ImportInitialState';
@@ -40,6 +41,8 @@ const ImportModal = ({
   progress,
   completedContents,
 }: ImportModalProps) => {
+  const [isImportingFromContentBank, setIsImportingFromContentBank] = useState(false);
+
   const renderCompletedState = (file: File, state: ImportExportModalState) => {
     return (
       <ImportExportCompletedState
@@ -47,6 +50,7 @@ const ImportModal = ({
         state={state}
         fileSize={file.size}
         completedContents={completedContents}
+        isImportingToContentBank={isImportingFromContentBank}
         type="import"
         importFileName={file.name}
         message={message || ''}
@@ -55,7 +59,19 @@ const ImportModal = ({
   };
 
   const modalContent = {
-    initial: <ImportInitialState files={files} currentStep={currentStep} onClose={onClose} onImport={onImport} />,
+    initial: (
+      <ImportInitialState
+        files={files}
+        currentStep={currentStep}
+        onClose={onClose}
+        onImport={({ file, collectionId }) => {
+          onImport({ file, collectionId });
+          if (collectionId) {
+            setIsImportingFromContentBank(true);
+          }
+        }}
+      />
+    ),
     progress: <ImportExportProgressState progress={progress || 0} message={message || files[0].name} type="import" />,
     success: renderCompletedState(files[0], 'success'),
     error: renderCompletedState(files[0], 'error'),

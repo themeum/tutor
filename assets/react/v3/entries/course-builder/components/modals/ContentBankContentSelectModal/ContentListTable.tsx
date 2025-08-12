@@ -15,13 +15,13 @@ import SearchField from '@CourseBuilderComponents/modals/ContentBankContentSelec
 import { getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import Select from '@TutorShared/atoms/Select';
 import { Addons } from '@TutorShared/config/constants';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import { CONTENT_BANK_POST_TYPE_MAP, useGetContentBankContents } from '@TutorShared/services/content-bank';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type ContentBankContent, type Option } from '@TutorShared/utils/types';
+import { type CollectionContentType, type ContentBankContent, type Option } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
 type SortDirection = 'asc' | 'desc';
@@ -148,7 +148,9 @@ const ContentListTable = () => {
       Cell: (item) => {
         return (
           <div css={styles.type}>
-            <span css={styles.checkboxLabel}>{CONTENT_BANK_POST_TYPE_MAP[item.post_type]}</span>
+            <span css={styles.contentBadge({ type: item.post_type })}>
+              {CONTENT_BANK_POST_TYPE_MAP[item.post_type]}
+            </span>
           </div>
         );
       },
@@ -327,6 +329,30 @@ const styles = {
     ${styleUtils.display.flex('row')};
     gap: ${spacing[4]};
     justify-content: end;
+  `,
+  contentBadge: ({ type }: { type: CollectionContentType }) => css`
+    ${typography.tiny('medium')};
+    padding: ${spacing[4]} ${spacing[8]};
+    border-radius: ${borderRadius[4]};
+    white-space: nowrap;
+
+    ${type === 'cb-lesson' &&
+    css`
+      background-color: #e8f4fd;
+      color: ${colorTokens.icon.brand};
+    `}
+
+    ${type === 'cb-assignment' &&
+    css`
+      background-color: #e6f8f1;
+      color: ${colorTokens.icon.processing};
+    `}
+  
+      ${type === 'cb-question' &&
+    css`
+      background-color: #fff5e6;
+      color: #ff7c02;
+    `}
   `,
   errorMessage: css`
     height: 100px;

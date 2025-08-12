@@ -86,6 +86,20 @@
 		padding: 12px;
 		cursor: pointer;
 		display: flex;
+		transition: 0.25s ease-in-out;
+
+		i {
+			transition: background-color 0.25s ease-in-out;
+		}
+
+		&:hover {
+			background-color: #f5f6fa;
+			border-color: #9095a3;
+
+			i {
+				color: var(--tutor-color-primary);
+			}
+		}
 	}
 
 	.tutor-wp-dashboard-filters {
@@ -102,6 +116,7 @@
 			display: flex;
 			align-items: center;
 			gap: 8px;
+			transition: 0.25s ease-in-out;
 
 			&.active {
 				padding: 4px 6px 4px 12px;
@@ -113,6 +128,16 @@
 
 			i {
 				color: #9197A8;
+				transition: background-color 0.25s ease-in-out;
+			}
+
+			&:hover {
+				background-color: #f5f6fa;
+				border-color: #9095a3;
+
+				i {
+					color: var(--tutor-color-primary);
+				}
 			}
 		}
 
@@ -124,10 +149,14 @@
 		}
 
 		&-count {
+			height: 30px;
+			width: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			background-color: #D2DBF5;
 			color: var(--tutor-color-primary);
 			border-radius: 4px;
-			padding: 8px 12px;
 		}
 
 		.tutor-dropdown {

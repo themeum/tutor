@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 
-import CourseListModal from '@ImportExport/components/modals/CourseListModal';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Logo from '@TutorShared/components/Logo';
@@ -21,14 +20,14 @@ import ImportExportCompletedState from '@ImportExport/components/modals/import-e
 import ImportExportProgressState from '@ImportExport/components/modals/import-export-states/ImportExportProgressState';
 import {
   defaultExportFormData,
-  useExportableContentQuery,
-  type ExportableContent,
   type ExportFormData,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 
+import CourseListModal from '@TutorShared/components/modals/CourseListModal';
 import { tutorConfig } from '@TutorShared/config/config';
+import { type ExportableContent, useExportableContentQuery } from '@TutorShared/services/import-export';
 import { type Collection } from '@TutorShared/utils/types';
 import CollectionListModal from './CollectionList';
 
@@ -78,7 +77,9 @@ const ExportModal = ({
     },
   });
 
-  const getExportableContentQuery = useExportableContentQuery();
+  const getExportableContentQuery = useExportableContentQuery({
+    course_ids: bulkSelectionForm.getValues('courses').map((course) => course.id),
+  });
   const exportableContent = isTutorPro
     ? getExportableContentQuery.data
     : ([
