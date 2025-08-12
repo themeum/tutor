@@ -291,7 +291,11 @@ class Admin {
 			}
 
 			if ( 'group_three' !== $group ) {
-				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_options', '#' );
+				if ( 'group_two' === $group && ! current_user_can( 'manage_options' ) ) {
+					continue;
+				}
+
+				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_tutor_instructor', '#' );
 			}
 		}
 	}
