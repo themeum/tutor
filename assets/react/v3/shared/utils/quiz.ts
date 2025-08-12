@@ -1,5 +1,9 @@
-import { type QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
-import { QuizDataStatus, type QuizQuestion, type QuizQuestionOption } from '@TutorShared/utils/types';
+import {
+  QuizDataStatus,
+  type QuizQuestion,
+  type QuizQuestionOption,
+  type QuizValidationErrorType,
+} from '@TutorShared/utils/types';
 import { __ } from '@wordpress/i18n';
 import { normalizeLineEndings } from './util';
 

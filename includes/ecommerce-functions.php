@@ -9,6 +9,7 @@
  */
 
 use Tutor\Ecommerce\Cart\CartFactory;
+use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! function_exists( 'tutor_add_to_cart' ) ) {
 	/**
@@ -25,6 +26,18 @@ if ( ! function_exists( 'tutor_add_to_cart' ) ) {
 		$response->success = true;
 		$response->message = __( 'Course added to cart', 'tutor' );
 		$response->data    = null;
+
+		$user_id                   = get_current_user_id();
+		$is_guest_checkout_enabled = tutor_is_guest_checkout_enabled();
+
+		if ( ! $user_id && ! $is_guest_checkout_enabled ) {
+			return array(
+				'success'  => false,
+				'message'  => __( 'Guest checkout is not enabled', 'tutor' ),
+				'data'     => tutor_utils()->tutor_dashboard_url(),
+				'redirect' => true,
+			);
+		}
 
 		try {
 			$cart = tutor_get_cart_object();
@@ -110,6 +123,21 @@ if ( ! function_exists( 'tutor_is_item_in_cart' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_remove_cart_item' ) ) {
+	/**
+	 * Get cart items
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param int $item_id Item id to check.
+	 *
+	 * @return bool
+	 */
+	function tutor_remove_cart_item( int $item_id ) {
+		return tutor_get_cart_object()->remove( $item_id );
+	}
+}
+
 if ( ! function_exists( 'tutor_get_cart_object' ) ) {
 	/**
 	 * Get cart items
@@ -126,6 +154,24 @@ if ( ! function_exists( 'tutor_get_cart_object' ) ) {
 			return CartFactory::create_cart( $monetization );
 		} catch ( \Throwable $th ) {
 			throw $th;
+		}
+	}
+}
+
+if ( ! function_exists( 'tutor_is_guest_checkout_enabled' ) ) {
+	/**
+	 * Get cart items
+	 *
+	 * @since 3.7.2
+	 *
+	 * @return bool
+	 */
+	function tutor_is_guest_checkout_enabled() {
+		$monetization = tutor_utils()->get_option( 'monetize_by' );
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			return function_exists( 'tutor_pro' ) && GuestCheckout::is_enable();
+		} elseif ( 'wc' === $monetization ) {
+			return tutor_utils()->get_option( 'enable_guest_course_cart', false );
 		}
 	}
 }
