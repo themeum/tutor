@@ -157,7 +157,7 @@ const createConfig = (env, options) => {
       'react-dom': 'ReactDOM',
       '@wordpress/i18n': 'wp.i18n',
     },
-    devtool: isDevelopment ? 'source-map' : false,
+    devtool: isDevelopment ? 'eval-source-map' : false,
     stats: {
       preset: 'errors-warnings',
       colors: true,
@@ -171,27 +171,13 @@ const createConfig = (env, options) => {
       assets: isDevelopment,
     },
     ignoreWarnings: [/CROSS-CHUNKS-PACKAGE/, /asset size limit/, /entrypoint size limit/],
+    performance: {
+      hints: false,
+    },
     output: {
       path: path.resolve('./assets'),
-      filename: (pathData) => createOutputFileName(pathData),
+      filename: createOutputFileName,
       chunkFilename: createChunkFilename,
-      clean: isDevelopment
-        ? false
-        : {
-            keep: (pathData) => {
-              const keepDirectories = [
-                'assets/fonts/',
-                'assets/icons/',
-                'assets/images/',
-                'assets/lib/',
-                'assets/react/',
-                'assets/scss/',
-                'assets/json/',
-              ];
-
-              return keepDirectories.some((dir) => pathData.includes(dir));
-            },
-          },
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css'],
@@ -207,8 +193,8 @@ const createConfig = (env, options) => {
 
   if ('production' === mode) {
     baseConfig.optimization = {
-      minimize: true,
       splitChunks: false,
+      minimize: true,
       minimizer: [
         new rspack.SwcJsMinimizerRspackPlugin({
           extractComments: false,
@@ -226,6 +212,20 @@ const createConfig = (env, options) => {
         new rspack.LightningCssMinimizerRspackPlugin(),
       ],
     };
+    baseConfig.output.clean = {
+      keep: (assetPath) => {
+        const keepDirectories = [
+          'assets/fonts/',
+          'assets/icons/',
+          'assets/images/',
+          'assets/lib/',
+          'assets/react/',
+          'assets/scss/',
+          'assets/json/',
+        ];
+        return keepDirectories.some((dir) => assetPath.includes(dir));
+      },
+    }
   }
 
   if (isMakePot) {
@@ -286,24 +286,23 @@ const isScssEntry = (entry) => {
 
 const createOutputFileName = (pathData) => {
   const entryName = pathData.chunk.name;
-
   if (isScssEntry(entryName)) {
-    return `[name].min.css`;
+    return '';
   }
   return `js/[name].js`;
 };
 
 const createChunkFilename = (entryPath) => {
   if (isScssEntry(entryPath)) {
-    return `css/lazy-chunks/[name].min.css?ver=${version}`;
+    return '';
   }
-
   return `js/lazy-chunks/[name].js?ver=${version}`;
 };
 
 export default (env, options) => {
   const baseConfig = createConfig(env, options);
   const isDevelopment = options.mode === 'development';
+  const isMakePot = env?.['make-pot'];
 
   const allEntries = { ...jsEntries, ...scssEntries };
 
@@ -319,6 +318,6 @@ export default (env, options) => {
 
   return {
     ...baseConfig,
-    entry: allEntries,
+    entry: isMakePot ? jsEntries : allEntries,
   };
 };

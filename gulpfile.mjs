@@ -1,167 +1,102 @@
-/* eslint-disable no-console */
 import { deleteAsync } from 'del';
 import { readFileSync } from 'fs';
 import gulp from 'gulp';
 import zip from 'gulp-zip';
-import { existsSync } from 'node:fs';
-import process from 'node:process';
 
 let versionNumber = '';
 
-// Extract version number
-const extractVersionNumber = () => {
-  try {
-    const data = readFileSync('tutor.php', 'utf8');
-    versionNumber = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+try {
+  const data = readFileSync('tutor.php', 'utf8');
+  versionNumber = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+  console.log(versionNumber)
+} catch (err) {
+  console.log(err);
+}
 
-    if (!versionNumber) {
-      console.error('Version number not found in tutor.php file');
-      process.exit(1);
-    }
+const build_name = 'tutor-' + versionNumber + '.zip';
 
-    console.info(`Version detected: ${versionNumber}`);
-  } catch (err) {
-    console.error(`Error reading version: ${err.message}`);
-    process.exit(1);
-  }
-};
+gulp.task('clean-zip', function () {
+  return deleteAsync('./' + build_name);
+});
 
-const initializeBuild = (done) => {
-  extractVersionNumber();
-  done();
-};
-initializeBuild.displayName = 'initializeBuild';
+gulp.task('clean-build', function () {
+  return deleteAsync('./build');
+});
 
-const buildName = () => `tutor-${versionNumber}.zip`;
-
-const cleanZipFile = () => {
-  return deleteAsync(`./${buildName()}`)
-    .then(() => {
-      console.info(`Cleaned: ${buildName()}`);
-    })
-    .catch((err) => {
-      console.error(`Failed to clean ${buildName()}: ${err.message}`);
-      throw err;
-    });
-};
-cleanZipFile.displayName = 'cleanZipFile';
-
-const cleanBuildDirectory = () => {
-  return deleteAsync('./build')
-    .then(() => {
-      console.info('Cleaned: ./build');
-    })
-    .catch((err) => {
-      console.error(`Failed to clean build directory: ${err.message}`);
-      throw err;
-    });
-};
-cleanBuildDirectory.displayName = 'cleanBuildDirectory';
-
-const copyProjectFiles = () => {
+gulp.task('copy', function () {
   return gulp
-    .src(
-      [
-        './**/*.*',
-        '!./build/**',
-        '!./assets/**/*.map',
-        '!./assets/react/**',
-        '!./assets/scss/**',
-        '!./assets/css/fonts/**',
-        '!./assets/css/images/**',
-        '!./assets/.sass-cache',
-        '!./node_modules/**',
-        '!./v2-library/**',
-        '!./test/**',
-        '!./.docz/**',
-        '!./**/*.zip',
-        '!.github',
-        '!.vscode',
-        '!./readme.md',
-        '!.DS_Store',
-        '!./**/.DS_Store',
-        '!./LICENSE.txt',
-        '!./*.lock',
-        '!./*.js',
-        '!./*.mjs',
-        '!./*.json',
-        '!yarn-error.log',
-        '!bin/**',
-        '!tests/**',
-        '!.env',
-        '!vendor/bin/**',
-        '!vendor/doctrine/**',
-        '!vendor/myclabs/**',
-        '!vendor/nikic/**',
-        '!vendor/phar-io/**',
-        '!vendor/phpdocumentor/**',
-        '!vendor/phpspec/**',
-        '!vendor/phpunit/**',
-        '!vendor/sebastian/**',
-        '!vendor/theseer/**',
-        '!vendor/webmozart/**',
-        '!vendor/yoast/**',
-        '!.phpunit.result.cache',
-        '!*.yml',
-        '!*.yaml',
-        '!phpunit.xml.dist',
-        '!phpunit.xml',
-        '!phpcs.xml',
-        '!phpcs.xml.dist',
-        '!./tutor-droip/**',
-        '!./includes/droip/**',
-        '!./cypress/**',
-        '!./cypress.config.ts',
-        '!.husky/**',
-        '!.lintstagedrc',
-        '!./assets/*.min.css',
-      ],
-      {
-        buffer: true,
-        encoding: false,
-      },
-    )
+    .src([
+      './**/*.*',
+      '!./build/**',
+      '!./assets/**/*.map',
+      '!./assets/react/**',
+      '!./assets/scss/**',
+      '!./assets/.sass-cache',
+      '!./node_modules/**',
+      '!./v2-library/**',
+      '!./test/**',
+      '!./.docz/**',
+      '!./**/*.zip',
+      '!.github',
+      '!.vscode',
+      '!./readme.md',
+      '!.DS_Store',
+      '!./**/.DS_Store',
+      '!./LICENSE.txt',
+      '!./*.lock',
+      '!./*.js',
+      '!./*.mjs',
+      '!./*.json',
+      '!yarn-error.log',
+      '!bin/**',
+      '!tests/**',
+      '!.env',
+      '!vendor/bin/**',
+      '!vendor/doctrine/**',
+      '!vendor/myclabs/**',
+      '!vendor/nikic/**',
+      '!vendor/phar-io/**',
+      '!vendor/phpdocumentor/**',
+      '!vendor/phpspec/**',
+      '!vendor/phpunit/**',
+      '!vendor/sebastian/**',
+      '!vendor/theseer/**',
+      '!vendor/webmozart/**',
+      '!vendor/yoast/**',
+      '!.phpunit.result.cache',
+      '!*.yml',
+      '!*.yaml',
+      '!phpunit.xml.dist',
+      '!phpunit.xml',
+      '!phpcs.xml',
+      '!phpcs.xml.dist',
+      '!./tutor-droip/**',
+      '!./includes/droip/**',
+      '!./cypress/**',
+      '!./cypress.config.ts',
+      '!.husky',
+      '!.lintstagedrc'
+    ])
     .pipe(gulp.dest('build/tutor/'));
-};
-copyProjectFiles.displayName = 'copyProjectFiles';
+});
 
-const copyDroipFiles = () => {
-  if (!existsSync('includes/droip/dist')) {
-    return Promise.resolve();
-  }
-
+gulp.task('copy-fonts', function () {
   return gulp
-    .src('includes/droip/dist/**', {
-      buffer: true,
-      encoding: false,
-      allowEmpty: true,
-    })
-    .pipe(gulp.dest('build/tutor/includes/droip'));
-};
-copyDroipFiles.displayName = 'copyDroipFiles';
+    .src('assets/fonts')
+    .pipe(gulp.dest('v2-library/fonts/fonts/*'));
+});
 
-const createZipFile = () => {
+gulp.task("copy-tutor-droip", function () {
   return gulp
-    .src('./build/**/*.*', {
-      buffer: true,
-      encoding: false,
-      base: './build',
-    })
-    .pipe(
-      zip(buildName(), {
-        compress: true,
-      }),
-    )
+    .src("includes/droip/dist/**")
+    .pipe(gulp.dest("build/tutor/includes/droip"));
+});
+
+gulp.task('make-zip', function () {
+  return gulp
+    .src('./build/**/*.*')
+    .pipe(zip(build_name))
     .pipe(gulp.dest('./'));
-};
-createZipFile.displayName = 'createZipFile';
+});
 
-export const build = gulp.series(
-  initializeBuild,
-  cleanZipFile,
-  cleanBuildDirectory,
-  copyProjectFiles,
-  copyDroipFiles,
-  createZipFile,
-);
-build.displayName = 'build';
+export const build = gulp.series('clean-zip', 'clean-build', 'copy', 'copy-fonts', 'copy-tutor-droip', 'make-zip', 'clean-build');
