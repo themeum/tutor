@@ -85,6 +85,7 @@ export const icons = [
   'file',
   'fla',
   'freeShippingType',
+  'gift',
   'giftCard',
   'googleMeet',
   'googleMeetColorize',
