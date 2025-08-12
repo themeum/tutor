@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.7.1
+Stable tag: 3.7.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,13 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.7.2 - Aug 11, 2025
+
+Update: Added guest checkout support for Tutor Themes when using WooCommerce monetization.
+Update: Added guest checkout support for Tutor Themes when using Native monetization. (Pro)
+Fix: Resolved course cart issues in Tutor Themes with WooCommerce monetization.
+Fix: Fixed a PHP error in the manual email editor. (Pro)
 
 = 3.7.1 - Aug 05, 2025
 

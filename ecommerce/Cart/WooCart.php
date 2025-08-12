@@ -73,7 +73,21 @@ class WooCart extends BaseCart implements CartInterface {
 	 * @return boolean
 	 */
 	public function remove( int $item_id ): bool {
-		// @TODO
+		$product_id = tutor_utils()->get_course_product_id( $item_id );
+
+		if ( ! $product_id ) {
+			$this->cart_error = __( 'Product not found for course', 'tutor' );
+			return false;
+		}
+
+		foreach ( $this->cart->get_cart() as $cart_item_key => $cart_item ) {
+			if ( (int) $cart_item['product_id'] === $product_id ) {
+				$this->cart->remove_cart_item( $cart_item_key );
+				return true;
+			}
+		}
+
+		$this->cart_error = __( 'Item not found in cart', 'tutor' );
 		return false;
 	}
 
@@ -82,13 +96,12 @@ class WooCart extends BaseCart implements CartInterface {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @return boolean
+	 * @return bool
 	 */
 	public function clear_cart(): bool {
-		// @TODO
-		return false;
+		$this->cart->empty_cart();
+		return true;
 	}
-
 
 	/**
 	 * Get cart items
@@ -99,7 +112,19 @@ class WooCart extends BaseCart implements CartInterface {
 	 */
 	public function get_cart_items(): array {
 		$items = array();
-		// @TODO need to implement this.
+		foreach ( $this->cart->get_cart() as $cart_item_key => $cart_item ) {
+			$product = $cart_item['data'];
+
+			$items[] = (object) array(
+				'key'        => $cart_item_key,
+				'product_id' => $cart_item['product_id'],
+				'quantity'   => $cart_item['quantity'],
+				'price'      => $product->get_price(),
+				'name'       => $product->get_name(),
+				'subtotal'   => $this->cart->get_product_subtotal( $product, $cart_item['quantity'] ),
+			);
+		}
+
 		return $items;
 	}
 
