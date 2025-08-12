@@ -9,7 +9,7 @@ export type ExportableContentType =
   | 'content_bank'
   | 'settings'
   | 'keep_media_files'
-  | 'student_enrollments';
+  | 'keep_user_data';
 export type ExportableCourseContentType = 'lesson' | 'tutor_assignments' | 'tutor_quiz' | 'attachment';
 
 export interface ContentItem {
@@ -24,6 +24,7 @@ export interface ExportableContent {
   ids?: number[];
   count?: number;
   keep_media_files?: boolean;
+  keep_user_data?: boolean;
   contents?: ContentItem[];
 }
 
