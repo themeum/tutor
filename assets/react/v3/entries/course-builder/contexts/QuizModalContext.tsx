@@ -3,9 +3,12 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { type ID, type QuizQuestion, type TopicContentType } from '@TutorShared/utils/types';
-
-export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+import {
+  type ID,
+  type QuizQuestion,
+  type QuizValidationErrorType,
+  type TopicContentType,
+} from '@TutorShared/utils/types';
 
 interface QuizModalContextProps {
   activeQuestionIndex: number;
