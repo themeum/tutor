@@ -77,6 +77,8 @@ function copy() {
       '!./cypress.config.ts',
       '!.husky',
       '!.lintstagedrc',
+      '!./stories/**',
+      '!rsbuild.config.ts',
     ])
     .pipe(gulp.dest('build/tutor/'));
 }
