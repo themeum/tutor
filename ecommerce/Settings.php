@@ -105,13 +105,6 @@ class Settings {
 				'desc'       => __( 'Select the page to be used as the checkout page.', 'tutor' ),
 				'searchable' => true,
 			),
-			array(
-				'key'     => 'enable_gift_course',
-				'type'    => 'toggle_switch',
-				'label'   => __( 'Enable Gift Course', 'tutor' ),
-				'default' => 'off',
-				'desc'    => __( 'Enable gift course', 'tutor' ),
-			),
 		);
 
 		$basic_settings_blocks = array(
