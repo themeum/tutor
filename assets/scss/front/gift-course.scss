@@ -11,7 +11,7 @@
 .tutor-gift-course-card {
 	padding: 22px;
 	margin: 28px 0px 32px 0px;
-	border: 1px solid #dee2e6;
+	border: 1px solid #E0E2EA;
 	border-radius: 16px;
 	min-height: 120px;
 	box-shadow: 0px 0px 34px 0px #00349412;
@@ -238,7 +238,7 @@
 		overflow: hidden;
 		margin-bottom: 24px;
 		border-radius: 4px;
-		border: 1px solid #ddd;
+		border: 1px solid #E0E2EA80;
 
 		.tutor-gifted-course-image {
 			width: 143px;
@@ -295,9 +295,9 @@
 }
 
 @media (max-width: 500px) {
-
 	.tutor-gift-course-card {
 		flex-direction: column;
+
 		.tutor-gift-card-content {
 			text-align: center;
 		}
