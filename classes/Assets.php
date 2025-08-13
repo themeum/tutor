@@ -160,6 +160,7 @@ class Assets {
 			'site_url'                     => rtrim( get_site_url(), '/' ),
 			'site_title'                   => get_bloginfo( 'title' ),
 			'base_path'                    => tutor()->basepath,
+			'tutor_version'                => TUTOR_VERSION,
 			'tutor_url'                    => tutor()->url,
 			'tutor_pro_url'                => function_exists( 'tutor_pro' ) ? tutor_pro()->url : null,
 			'nonce_key'                    => tutor()->nonce,

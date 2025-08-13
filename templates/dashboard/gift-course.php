@@ -117,7 +117,7 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 							</div>
 						</div><!--/ tutor-greetings-card -->
 					</div>
-				</div>
+				</div> <!-- tutor-greetings-card-wrapper -->
 				<div class="tutor-gifted-course-wrapper">
 					<div class="tutor-gifted-course">
 						<h3 class="tutor-gifted-course-title tutor-m-0 tutor-mb-12"><?php esc_html_e( 'Gifted Course', 'tutor' ); ?></h3>
@@ -141,10 +141,10 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 							</div> <!--/ tutor-gifted-course-content -->
 						</div>
 						<button class="tutor-btn tutor-btn-primary tutor-w-100 tutor-justify-center"><?php esc_html_e( 'Start Learning', 'tutor' ); ?></button>
-					</div><!-- tutor-gifted-course -->
-				</div>
-			</div> <!-- end of modal body -->
+					</div><!--/ tutor-gifted-course -->
+				</div> <!--/ tutor-gifted-course-wrapper -->
+			</div> <!--/ modal body -->
 
-		</div><!-- end of modal content -->
+		</div><!--/ modal content -->
 	</div>
 </div>
