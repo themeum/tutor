@@ -48,8 +48,8 @@ function AddonList() {
       <Show when={activeAddons.length}>
         <h5 css={styles.addonListTitle}>{__('Active Addons', 'tutor')}</h5>
         <div css={styles.addonListWrapper}>
-          {activeAddons.map((addon) => {
-            return <AddonCard key={addon.base_name} addon={addon} />;
+          {activeAddons.map((addon, key) => {
+            return <AddonCard key={key} addon={addon} />;
           })}
         </div>
       </Show>
@@ -57,8 +57,8 @@ function AddonList() {
       <Show when={availableAddons.length}>
         <h5 css={styles.addonListTitle}>{__('Available Addons', 'tutor')}</h5>
         <div css={styles.addonListWrapper}>
-          {availableAddons.map((addon) => {
-            return <AddonCard key={addon.base_name} addon={addon} />;
+          {availableAddons.map((addon, key) => {
+            return <AddonCard key={key} addon={addon} />;
           })}
         </div>
       </Show>
