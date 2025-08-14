@@ -10814,7 +10814,16 @@ class Utils {
 		return null;
 	}
 
-	public function get_all_enrollments_by_course_id( $course_id = 0 ) {
+	/**
+	 * Retrieve all enrollments for a specific course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id Optional. The ID of the course. Defaults to 0.
+	 *
+	 * @return array|null Array of enrollments as associative arrays, or null if an error occurs.
+	 */
+	public function get_all_enrollments_by_course_id( int $course_id = 0 ): ?array {
 
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
@@ -10822,20 +10831,20 @@ class Utils {
 		$student_data = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT *
-				FROM   	{$wpdb->posts} enroll
-				INNER JOIN {$wpdb->users} student
-				ON enroll.post_author = student.id
-				WHERE  	enroll.post_type = %s
-				AND enroll.post_parent = %d
-			",
+				FROM {$wpdb->posts} 
+				WHERE post_type = %s
+				AND post_parent = %d",
 				tutor()->enrollment_post_type,
 				$course_id
-			)
+			),
+			ARRAY_A
 		);
 
-		if( $wpdb->last_error )
-		{
-			error_log("Error While getting enrollments for " . __FUNCTION__ . " : " . $wpdb->last_error);
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting enrollments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return null;
 		}
+
+		return $student_data;
 	}
 }
