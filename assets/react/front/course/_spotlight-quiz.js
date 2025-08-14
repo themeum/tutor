@@ -29,9 +29,12 @@ window.jQuery(document).ready($ => {
 
     function has_quiz_expired() {
         const attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
+        var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
+
         const countDownDate =
-        new Date(attempt_settings.attempt_started_at?.replaceAll('-', '/')).getTime() +
-        attempt_meta.time_limit.time_limit_seconds * 1000;
+            new Date(attempt_settings.attempt_started_at?.replaceAll('-', '/')).getTime() +
+            attempt_meta.time_limit.time_limit_seconds * 1000;
+
         return countDownDate < Date.now();
     }
 
