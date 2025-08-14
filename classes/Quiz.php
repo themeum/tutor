@@ -469,6 +469,9 @@ class Quiz {
 		$attempt_id = Input::post( 'attempt_id', 0, Input::TYPE_INT );
 		$attempt    = tutor_utils()->get_attempt( $attempt_id );
 		$course_id  = CourseModel::get_course_by_quiz( $attempt->quiz_id )->ID;
+		if ( 'attempt_timeout' === $attempt->attempt_status ) {
+			return false;
+		}
 
 		// Sanitize data by helper method.
 		$attempt_answers = isset( $_POST['attempt'] ) ? tutor_sanitize_data( $_POST['attempt'] ) : false; //phpcs:ignore
@@ -508,7 +511,7 @@ class Quiz {
 			$question_ids = tutor_utils()->avalue_dot( 'quiz_question_ids', $attempt_answer );
 			$question_ids = array_filter(
 				$question_ids,
-				function( $id ) {
+				function ( $id ) {
 					return (int) $id;
 				}
 			);
@@ -577,7 +580,7 @@ class Quiz {
 
 						$given_answer         = array_filter(
 							$given_answer,
-							function( $id ) {
+							function ( $id ) {
 								return is_numeric( $id ) && $id > 0;
 							}
 						);
@@ -1207,5 +1210,4 @@ class Quiz {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 	}
-
 }
