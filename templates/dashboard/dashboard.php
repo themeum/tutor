@@ -132,7 +132,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	}
 }
 ?>
-
+<?php do_action( 'tutor_before_dashboard_content' ); ?>
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-text-capitalize tutor-mb-24 tutor-dashboard-title"><?php esc_html_e( 'Dashboard', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner">
 	<?php
