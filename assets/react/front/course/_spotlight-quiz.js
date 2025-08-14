@@ -27,7 +27,7 @@ window.jQuery(document).ready($ => {
         return _tutorobject.quiz_options.question_layout_view
     }
 
-    function isQuizTimeExpired() {
+    function has_quiz_expired() {
         const attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
         const countDownDate =
         new Date(attempt_settings.attempt_started_at?.replaceAll('-', '/')).getTime() +
@@ -216,7 +216,7 @@ window.jQuery(document).ready($ => {
      */
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
     $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function () {
-        if (!isQuizTimeExpired()) {
+        if (!has_quiz_expired()) {
             $('.tutor-quiz-next-btn-all').prop('disabled', false);
         }
     });
