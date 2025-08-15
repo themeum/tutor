@@ -10819,14 +10819,13 @@ class Utils {
 	 *
 	 * @since 3.8.0
 	 *
-	 * @param int $course_id Optional. The ID of the course. Defaults to 0.
+	 * @param int $id  The ID of the course/bundle. Defaults to 0.
 	 *
 	 * @return array|null Array of enrollments as associative arrays, or null if an error occurs.
 	 */
-	public function get_all_enrollments_by_course_id( int $course_id = 0 ): ?array {
+	public function get_all_enrollments( int $id = 0 ): ?array {
 
 		global $wpdb;
-		$course_id = $this->get_post_id( $course_id );
 
 		$student_data = $wpdb->get_results(
 			$wpdb->prepare(
@@ -10835,7 +10834,7 @@ class Utils {
 				WHERE post_type = %s
 				AND post_parent = %d",
 				tutor()->enrollment_post_type,
-				$course_id
+				$id
 			),
 			ARRAY_A
 		);
