@@ -27,17 +27,6 @@ window.jQuery(document).ready($ => {
         return _tutorobject.quiz_options.question_layout_view
     }
 
-    function has_quiz_expired() {
-        const attempt_settings = JSON.parse($tutor_quiz_time_update.attr('data-attempt-settings'));
-        var attempt_meta = JSON.parse($tutor_quiz_time_update.attr('data-attempt-meta'));
-
-        const countDownDate =
-            new Date(attempt_settings.attempt_started_at?.replaceAll('-', '/')).getTime() +
-            attempt_meta.time_limit.time_limit_seconds * 1000;
-
-        return countDownDate < Date.now();
-    }
-
     function get_hint_markup(text) {
         return `<span class="tutor-quiz-answer-single-info tutor-color-success tutor-mt-8">
             <i class="tutor-icon-mark tutor-color-success" area-hidden="true"></i>
@@ -219,7 +208,7 @@ window.jQuery(document).ready($ => {
      */
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
     $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function () {
-        if (!has_quiz_expired()) {
+        if ($('.tutor-quiz-time-expired').length === 0) {
             $('.tutor-quiz-next-btn-all').prop('disabled', false);
         }
     });
