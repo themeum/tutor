@@ -5,11 +5,17 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 
+import Switch from '@TutorShared/atoms/Switch';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { DurationUnit, SubscriptionFormData } from '@TutorShared/services/subscription';
+import {
+  convertFormDataToSubscription,
+  useSaveCourseSubscriptionMutation,
+  type SubscriptionFormData,
+} from '@TutorShared/services/subscription';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type DurationUnit } from '@TutorShared/utils/types';
 
 interface PreviewItemProps {
   courseId: number;
@@ -36,6 +42,15 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
 
 export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemProps) {
   const { showModal } = useModal();
+  const updateSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
+
+  const handleToggleSubscription = (isEnabled: boolean) => {
+    const payload = convertFormDataToSubscription(subscription);
+    updateSubscriptionMutation.mutate({
+      ...payload,
+      is_enabled: isEnabled ? '1' : '0',
+    });
+  };
 
   return (
     <div data-cy="subscription-preview-item" css={styles.wrapper}>
@@ -90,26 +105,33 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
           </Show>
         </div>
       </div>
-      <button
-        type="button"
-        css={styles.editButton}
-        onClick={() => {
-          showModal({
-            component: SubscriptionModal,
-            props: {
-              title: __('Manage Subscription Plans', 'tutor'),
-              icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
-              expandedSubscriptionId: subscription.id,
-              courseId,
-              isBundle,
-            },
-          });
-        }}
-        data-edit-button
-        data-cy="edit-subscription"
-      >
-        <SVGIcon name="pen" width={19} height={19} />
-      </button>
+      <div css={styles.actionButtons} data-action-buttons>
+        <Switch
+          checked={subscription.is_enabled}
+          onChange={handleToggleSubscription}
+          loading={updateSubscriptionMutation.isPending}
+        />
+        <button
+          type="button"
+          disabled={updateSubscriptionMutation.isPending}
+          css={styles.editButton}
+          onClick={() => {
+            showModal({
+              component: SubscriptionModal,
+              props: {
+                title: __('Manage Subscription Plans', 'tutor'),
+                icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
+                expandedSubscriptionId: subscription.id,
+                courseId,
+                isBundle,
+              },
+            });
+          }}
+          data-cy="edit-subscription"
+        >
+          <SVGIcon name="pen" width={19} height={19} />
+        </button>
+      </div>
     </div>
   );
 }
@@ -122,7 +144,7 @@ const styles = {
     background-color: ${colorTokens.background.white};
     padding: ${spacing[8]} ${spacing[12]};
 
-    [data-edit-button] {
+    [data-action-buttons] {
       opacity: 0;
       transition: opacity 0.3s ease;
     }
@@ -130,7 +152,7 @@ const styles = {
     &:hover {
       background-color: ${colorTokens.background.hover};
 
-      [data-edit-button] {
+      [data-action-buttons] {
         opacity: 1;
       }
     }
@@ -174,9 +196,18 @@ const styles = {
       color 0.3s ease,
       background 0.3s ease;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background: ${colorTokens.action.secondary.default};
       color: ${colorTokens.icon.brand};
     }
+
+    &:disabled {
+      color: ${colorTokens.icon.disable};
+    }
+  `,
+  actionButtons: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[8]};
   `,
 };
