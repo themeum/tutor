@@ -203,6 +203,7 @@ const styles = {
 
     &:disabled {
       color: ${colorTokens.icon.disable};
+      background: ${colorTokens.background.hover};
     }
   `,
   actionButtons: css`
