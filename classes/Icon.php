@@ -67,6 +67,7 @@ final class Icon {
 	const COPY                       = 'copy';
 	const COPY_PASTE                 = 'copy-paste';
 	const COUPON                     = 'coupon';
+	const COURSE                     = 'course';
 	const CROSS                      = 'cross';
 	const CROSS_CIRCLE               = 'cross-circle';
 	const CROWN                      = 'crown';
