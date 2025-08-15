@@ -52,8 +52,6 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^9.0.8",
     "@wordpress/eslint-plugin": "^22.12.0",
-    "archiver": "^7.0.1",
-    "concurrently": "^9.1.2",
     "css-loader": "^7.1.2",
     "cypress": "^14.4.0",
     "date-fns": "^2.25.0",
