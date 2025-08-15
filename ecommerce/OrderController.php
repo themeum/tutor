@@ -256,21 +256,22 @@ class OrderController {
 		}
 
 		$order_data = array(
-			'items'          => $items,
-			'payment_status' => $payment_status,
-			'order_type'     => $order_type,
-			'coupon_code'    => $coupon_code,
-			'coupon_amount'  => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
-			'subtotal_price' => $subtotal_price,
-			'total_price'    => $total_price,
-			'net_payment'    => $total_price,
-			'user_id'        => $user_id,
-			'payment_status' => $payment_status,
-			'order_status'   => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
-			'created_at_gmt' => current_time( 'mysql', true ),
-			'created_by'     => get_current_user_id(),
-			'updated_at_gmt' => current_time( 'mysql', true ),
-			'updated_by'     => get_current_user_id(),
+			'items'                  => $items,
+			'payment_status'         => $payment_status,
+			'order_type'             => $order_type,
+			'coupon_code'            => $coupon_code,
+			'coupon_amount'          => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
+			'subtotal_price'         => $subtotal_price,
+			'total_price_before_tax' => $total_price,
+			'total_price'            => $total_price,
+			'net_payment'            => $total_price,
+			'user_id'                => $user_id,
+			'payment_status'         => $payment_status,
+			'order_status'           => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
+			'created_at_gmt'         => current_time( 'mysql', true ),
+			'created_by'             => get_current_user_id(),
+			'updated_at_gmt'         => current_time( 'mysql', true ),
+			'updated_by'             => get_current_user_id(),
 		);
 
 		if ( isset( $args['discount_amount'] ) && $args['discount_amount'] > 0 ) {
