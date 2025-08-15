@@ -85,6 +85,7 @@ class Upgrader {
 			$upgrades[] = 'upgrade_to_2_6_0';
 			$upgrades[] = 'upgrade_to_3_0_0';
 			$upgrades[] = 'upgrade_to_3_7_1';
+			$upgrades[] = 'upgrade_to_3_8_0';
 		}
 
 		return $upgrades;
@@ -216,6 +217,19 @@ class Upgrader {
 		if ( QueryHelper::table_exists( $question_table ) && ! QueryHelper::column_exist( $question_table, 'content_id' ) ) {
 			$wpdb->query( "ALTER TABLE {$question_table} ADD COLUMN content_id BIGINT UNSIGNED DEFAULT NULL AFTER question_id" ); //phpcs:ignore
 			$wpdb->query( "ALTER TABLE {$question_table} ADD INDEX content_id(content_id)" );//phpcs:ignore
+		}
+	}
+
+	/**
+	 * Migration logic when user upgrade to 3.8.0
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_3_8_0() {
+		global $wpdb;
+		$order_table = $wpdb->prefix . 'tutor_orders';
+		if ( QueryHelper::table_exists( $order_table ) && ! QueryHelper::column_exist( $order_table, 'total_price_before_tax' ) ) {
+			$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN total_price_before_tax DECIMAL(13, 2) NOT NULL AFTER subtotal_price" ); //phpcs:ignore
 		}
 	}
 
