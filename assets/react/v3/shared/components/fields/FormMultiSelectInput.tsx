@@ -42,7 +42,7 @@ const FormMultiSelectInput = ({
   removeOptionsMinWidth = false,
   options,
 }: FormMultiSelectInputProps) => {
-  const fieldValue = field.value ?? [];
+  const fieldValue = field.value || [];
   const currentlySelectedOptions = options.filter((option) => fieldValue.includes(option.value));
 
   const [searchText, setSearchText] = useState('');

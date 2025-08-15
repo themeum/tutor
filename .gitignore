@@ -54,3 +54,10 @@ launch.json
 
 # Copilot Instructions
 .github/copilot-instructions.md
+
+#rspack
+.swc
+assets/.rsdoctor
+
+*storybook.log
+storybook-static

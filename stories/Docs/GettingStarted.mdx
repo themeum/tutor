@@ -1,0 +1,579 @@
+<div style={{ 
+  padding: '2rem', 
+  maxWidth: '1200px', 
+  margin: '0 auto',
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif'
+}}>
+
+# 🚀 Getting Started with Tutor Design Library
+
+<div style={{
+  background: 'linear-gradient(135deg, #9dadf3ff 0%, #c08cf4ff 100%)',
+  color: 'white',
+  padding: '2rem',
+  borderRadius: '12px',
+  marginBottom: '2rem',
+  textAlign: 'center'
+}}>
+  <h2 style={{ margin: '0 0 1rem 0', fontSize: '2rem' }}>Your Foundation for Excellence</h2>
+  <p style={{ margin: '0', fontSize: '1.1rem', opacity: '0.9' }}>
+    Build robust, scalable, and visually consistent UI components with our comprehensive design system
+  </p>
+</div>
+
+The Tutor design library is your **single source of truth** for building exceptional user interfaces. By centralizing all design tokens, typography, colors, and layout values in the `shared/config` folder, you ensure every part of your application looks and behaves as intended, regardless of who builds it or when it's built.
+
+<div style={{
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+  gap: '1rem',
+  margin: '2rem 0'
+}}>
+  <div style={{
+    background: '#f8fafc',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    padding: '1.5rem',
+    textAlign: 'center'
+  }}>
+    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🎯</div>
+    <h3 style={{ margin: '0 0 0.5rem 0', color: '#2d3748' }}>Consistency</h3>
+    <p style={{ margin: '0', color: '#4a5568', fontSize: '0.9rem' }}>Unified visual language across all components</p>
+  </div>
+  <div style={{
+    background: '#f8fafc',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    padding: '1.5rem',
+    textAlign: 'center'
+  }}>
+    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⚡</div>
+    <h3 style={{ margin: '0 0 0.5rem 0', color: '#2d3748' }}>Scalability</h3>
+    <p style={{ margin: '0', color: '#4a5568', fontSize: '0.9rem' }}>Effortlessly grow your application</p>
+  </div>
+  <div style={{
+    background: '#f8fafc',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    padding: '1.5rem',
+    textAlign: 'center'
+  }}>
+    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🔧</div>
+    <h3 style={{ margin: '0 0 0.5rem 0', color: '#2d3748' }}>Maintainability</h3>
+    <p style={{ margin: '0', color: '#4a5568', fontSize: '0.9rem' }}>Easy updates and modifications</p>
+  </div>
+  <div style={{
+    background: '#f8fafc',
+    border: '1px solid #e2e8f0',
+    borderRadius: '8px',
+    padding: '1.5rem',
+    textAlign: 'center'
+  }}>
+    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🚀</div>
+    <h3 style={{ margin: '0 0 0.5rem 0', color: '#2d3748' }}>Rapid Development</h3>
+    <p style={{ margin: '0', color: '#4a5568', fontSize: '0.9rem' }}>Accelerated feature delivery</p>
+  </div>
+</div>
+
+---
+
+## 📁 Configuration Architecture Deep Dive
+
+<div style={{
+  background: '#fff3cd',
+  border: '1px solid #ffeaa7',
+  borderRadius: '8px',
+  padding: '1rem',
+  marginBottom: '2rem'
+}}>
+  <strong>💡 Pro Tip:</strong> The config folder is the heart of our design system. Every visual element, spacing value, and style token originates here. Think of it as your design DNA.
+</div>
+
+### 🔧 config.ts - Runtime Configuration Hub
+
+Contains runtime configuration for Tutor, including API endpoints, feature flags, and global application state.
+
+```typescript
+// Real-world usage examples
+import { tutorConfig } from '@TutorShared/config/config';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+
+// API Integration
+const fetchCourses = async () => {
+  const response = await wpAjaxInstance.get('/courses');
+  return response.data;
+};
+
+// Feature Flag Usage
+const shouldShowNewFeature = tutorConfig.features?.newDashboard?.enabled;
+
+// Environment-specific Logic
+const isProduction = tutorConfig.environment === 'production';
+```
+
+### 📏 constants.ts - Universal Constants & Standards
+
+Defines shared constants, enums, breakpoints, file size limits, and standardized values used across the entire application.
+
+```typescript
+import { 
+  BREAKPOINTS, 
+  FILE_SIZE_LIMIT, 
+  DateFormats,
+  DEFAULT_FORM_FIELD_PROPS 
+} from '@TutorShared/config/constants';
+
+// Responsive Design Implementation
+const useResponsiveLayout = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < BREAKPOINTS.md);
+  
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < BREAKPOINTS.md);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  return { isMobile };
+};
+
+// File Upload Validation
+const validateFileSize = (file: File) => {
+  return file.size <= FILE_SIZE_LIMIT.image;
+};
+```
+
+### 🛣️ route-configs.ts - Type-Safe Navigation
+
+Provides utilities for defining and building route templates with typed parameters, ensuring type safety across navigation.
+
+```typescript
+import { defineRoute, RouteParams } from '@TutorShared/config/route-configs';
+
+// Type-safe Route Building
+const courseRoute = defineRoute('/courses/:courseId/lessons/:lessonId');
+
+// Usage with Type Safety
+const navigateToCourse = (courseId: string, lessonId: string) => {
+  const url = courseRoute({ courseId, lessonId });
+  router.push(url); // /courses/123/lessons/456
+};
+
+// Dynamic Route Generation
+const generateBreadcrumbs = (params: RouteParams) => {
+  return [
+    { label: 'Courses', url: buildRoute('/courses')({}) },
+    { label: params.courseName, url: courseRoute(params) }
+  ];
+};
+```
+
+### 🎨 styles.ts - Design Token Powerhouse
+
+The cornerstone of your design system—colors, spacing, typography scales, border radius, shadows, breakpoints, and all visual design tokens.
+
+<div style={{
+  background: '#e8f5e8',
+  border: '1px solid #a8d8a8',
+  borderRadius: '8px',
+  padding: '1rem',
+  marginBottom: '1rem'
+}}>
+  <strong>🎯 Best Practice:</strong> Always use design tokens instead of hardcoded values. This ensures consistency and makes global design changes effortless.
+</div>
+
+```typescript
+import { 
+  colorTokens, 
+  spacing, 
+  borderRadius, 
+  shadow,
+} from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+
+// Component Styling with Tokens
+const cardStyles = css`
+  background: ${colorTokens.background.white};
+  border: 1px solid ${colorTokens.stroke.default};
+  border-radius: ${borderRadius[12]};
+  box-shadow: ${shadow[2]};
+  padding: ${spacing[24]};
+  
+  &:hover {
+    border-color: ${colorTokens.stroke.hover};
+    box-shadow: ${shadow[4]};
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
+  }
+`;
+
+// Theme-aware Color Usage
+const getStatusColor = (status: 'success' | 'warning' | 'error') => {
+  const statusColors = {
+    success: colorTokens.status.success,
+    warning: colorTokens.status.warning,
+    error: colorTokens.status.error
+  };
+  return statusColors[status];
+};
+```
+
+### ✍️ typography.ts - Typography Excellence
+
+Centralizes all typography styles using EmotionJs, mapped directly to your design tokens for consistent text rendering.
+
+```typescript
+import { typography } from '@TutorShared/config/typography';
+
+// Semantic Typography Usage
+const ArticleHeader = ({ title, subtitle }) => (
+  <header>
+    <h1 css={typography.heading2('bold')}>{title}</h1>
+    <p css={typography.body('regular')}>
+      {subtitle}
+    </p>
+  </header>
+);
+
+// Responsive Typography
+const ResponsiveHeading = ({ children }) => (
+  <h1 css={[
+    typography.heading3('bold'),
+    css`
+      @media (max-width: ${BREAKPOINTS.md}px) {
+        ${typography.heading4('bold')}
+      }
+    `
+  ]}>
+    {children}
+  </h1>
+);
+```
+
+---
+
+## 🏗️ Atomic Design & Architecture Principles
+
+<div style={{
+  background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)',
+  color: '#2d3748',
+  padding: '2rem',
+  borderRadius: '12px',
+  marginBottom: '2rem'
+}}>
+  <h3 style={{ margin: '0 0 1rem 0' }}>🔬 Atomic Design Methodology</h3>
+  <p style={{ margin: '0' }}>
+    Our design system follows atomic design principles: <strong>Atoms</strong> (Button, Input) → <strong>Molecules</strong> (SearchBox, Card) → <strong>Organisms</strong> (Header, Form) → <strong>Templates</strong> → <strong>Pages</strong>
+  </p>
+</div>
+
+### Open/Closed Principle in Practice
+
+Each component should be **open for extension** (easy to add new features) but **closed for modification** (internal logic and styling should remain untouched).
+
+<div style={{
+  background: '#f7fafc',
+  border: '1px solid #e2e8f0',
+  borderRadius: '8px',
+  padding: '1.5rem',
+  marginBottom: '2rem'
+}}>
+  <h4 style={{ margin: '0 0 1rem 0', color: '#2d3748' }}>🛡️ Core Principles</h4>
+  <ul style={{ margin: '0', paddingLeft: '1.5rem' }}>
+    <li><strong>Immutable Core:</strong> Never modify shared component internals</li>
+    <li><strong>Composition First:</strong> Extend through composition, not inheritance</li>
+    <li><strong>Token-Driven:</strong> All styling through design tokens</li>
+    <li><strong>Accessibility First:</strong> WCAG 2.1 AA compliance by default</li>
+  </ul>
+</div>
+
+---
+
+## ✅ Exemplary Implementation Patterns
+
+### 🔹 Atom Level: Enhanced Button Component
+
+```tsx
+import { css } from '@emotion/react';
+import { colorTokens, spacing, borderRadius } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+
+interface ButtonProps {
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
+  disabled?: boolean;
+  loading?: boolean;
+  children: React.ReactNode;
+  onClick?: () => void;
+}
+
+const getButtonStyles = (variant: string, size: string) => css`
+  // Button styles implementation
+`;
+
+const Button: React.FC<ButtonProps> = ({ 
+  variant = 'primary', 
+  size = 'md', 
+  disabled = false,
+  loading = false,
+  children, 
+  onClick,
+  ...props 
+}) => (
+  <button
+    css={getButtonStyles(variant, size)}
+    disabled={disabled || loading}
+    onClick={onClick}
+    aria-label={typeof children === 'string' ? children : 'Button'}
+    tabIndex={0}
+    {...props}
+  >
+    {loading && <span aria-hidden="true">⏳</span>}
+    {children}
+  </button>
+);
+```
+
+### 🔹 Molecule Level: Smart Search Card
+
+```tsx
+import { css } from '@emotion/react';
+import { colorTokens, spacing, borderRadius, shadow } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+
+interface SearchCardProps {
+  title: string;
+  description: string;
+  tags?: string[];
+  onSelect: () => void;
+  featured?: boolean;
+}
+
+const SearchCard: React.FC<SearchCardProps> = ({ 
+  title, 
+  description, 
+  tags = [], 
+  onSelect, 
+  featured = false 
+}) => (
+  <article 
+    onClick={onSelect}
+    onKeyDown={(e) => e.key === 'Enter' && onSelect()}
+    tabIndex={0}
+    role="button"
+    aria-label={`Select ${title}`}
+  >
+    <h3>{title}</h3>
+    <p>{description}</p>
+    {/* Component implementation */}
+  </article>
+);
+```
+
+### 🔹 Organism Level: Advanced Course Form
+
+```tsx
+import { css } from '@emotion/react';
+import { spacing, colorTokens } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useForm, Controller } from 'react-hook-form';
+
+interface CourseFormData {
+  title: string;
+  description: string;
+  category: string;
+  level: 'beginner' | 'intermediate' | 'advanced';
+  price: number;
+  published: boolean;
+}
+
+const CourseForm: React.FC = () => {
+  const { control, handleSubmit, formState } = useForm<CourseFormData>();
+  
+  const handleFormSubmit = (data: CourseFormData) => {
+    console.log('Course data:', data);
+  };
+  
+  return (
+    <form 
+      onSubmit={handleSubmit(handleFormSubmit)}
+      aria-label="Create Course Form"
+      noValidate
+    >
+      {/* Form implementation with Controller components */}
+    </form>
+  );
+};
+```
+
+---
+
+## ❌ Anti-Patterns to Avoid
+
+<div style={{
+  background: '#fed7d7',
+  border: '1px solid #feb2b2',
+  borderRadius: '8px',
+  padding: '1.5rem',
+  marginBottom: '2rem'
+}}>
+  <h4 style={{ margin: '0 0 1rem 0', color: '#742a2a' }}>🚫 Common Mistakes</h4>
+  <p style={{ margin: '0', color: '#742a2a' }}>
+    These patterns break consistency, maintainability, and accessibility. Avoid them at all costs.
+  </p>
+</div>
+
+### ❌ Hardcoded Values & Inline Styles
+
+```tsx
+// ❌ WRONG: Breaks design system consistency
+const BadButton = ({ children }) => (
+  <button style={{ 
+    background: '#3b82f6', 
+    color: 'white', 
+    padding: '12px 24px',
+    borderRadius: '6px',
+    fontSize: '16px'
+  }}>
+    {children}
+  </button>
+);
+```
+
+### ❌ Direct Component Modification
+
+```tsx
+// ❌ WRONG: Modifying shared component internals
+const ModifiedButton = (props) => {
+  // Directly changing Button's internal logic is discouraged
+  return <div>Modified component</div>;
+};
+```
+
+### ❌ Accessibility Violations
+
+```tsx
+// ❌ WRONG: Missing accessibility features
+const InaccessibleCard = ({ onClick, children }) => (
+  <div onClick={onClick} style={{ cursor: 'pointer' }}>
+    {children}
+  </div>
+);
+```
+
+---
+
+## ♿ Accessibility & WCAG 2.1 Compliance
+
+<div style={{
+  background: '#e6fffa',
+  border: '1px solid #81e6d9',
+  borderRadius: '8px',
+  padding: '1.5rem',
+  marginBottom: '2rem'
+}}>
+  <h4 style={{ margin: '0 0 1rem 0', color: '#234e52' }}>🌟 Accessibility First</h4>
+  <p style={{ margin: '0', color: '#234e52' }}>
+    Every component must meet WCAG 2.1 AA standards. Accessibility is not optional—it's fundamental to great user experience.
+  </p>
+</div>
+
+### Essential Accessibility Checklist
+
+- **✅ Semantic HTML**: Use proper HTML elements for their intended purpose
+- **✅ Keyboard Navigation**: All interactive elements must be keyboard accessible
+- **✅ Focus Management**: Clear focus indicators and logical tab order
+- **✅ Screen Reader Support**: Proper ARIA labels and descriptions
+- **✅ Color Contrast**: Minimum 4.5:1 ratio for normal text, 3:1 for large text
+- **✅ Alternative Text**: Meaningful descriptions for images and icons
+- **✅ Form Labels**: Clear, descriptive labels for all form inputs
+
+### Implementation Examples
+
+```tsx
+// ✅ Accessible Interactive Element
+const AccessibleCard = ({ title, description, onClick }) => (
+  <article
+    role="button"
+    tabIndex={0}
+    onClick={onClick}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick();
+      }
+    }}
+    aria-label={`Select ${title}`}
+  >
+    <h3>{title}</h3>
+    <p>{description}</p>
+  </article>
+);
+```
+
+---
+
+## 🚀 Performance & Optimization
+
+### Bundle Size Optimization
+
+```tsx
+// ✅ Tree-shakeable imports
+import { colorTokens } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+
+// ❌ Avoid entire module imports
+import * as TutorConfig from '@TutorShared/config';
+```
+
+### Efficient Re-rendering Strategies
+
+```tsx
+// ✅ Memoized component with specific dependencies
+const OptimizedCard = React.memo(({ title, description, onClick }) => {
+  return (
+    <div onClick={onClick}>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
+  );
+});
+```
+
+---
+
+## 🧪 Testing Strategies
+
+### Component Testing with Storybook
+
+```tsx
+// Button.stories.tsx example
+export const AccessibilityTest = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole('button');
+    
+    // Test keyboard navigation
+    await userEvent.tab();
+    expect(button).toHaveFocus();
+  }
+};
+```
+
+---
+
+<div style={{
+  background: 'linear-gradient(135deg, #9dadf3ff 0%, #c08cf4ff 100%)',
+  color: 'white',
+  padding: '2rem',
+  borderRadius: '12px',
+  textAlign: 'center',
+  marginTop: '3rem'
+}}>
+  <h2 style={{ margin: '0 0 1rem 0' }}>🎉 Ready to Build Amazing UIs?</h2>
+  <p style={{ margin: '0', fontSize: '1.1rem', opacity: '0.9' }}>
+    You now have everything you need to create consistent, accessible, and maintainable components. 
+    Start building with confidence using our design system!
+  </p>
+</div>
+
+</div>
