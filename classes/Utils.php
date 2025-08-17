@@ -10846,4 +10846,85 @@ class Utils {
 
 		return $student_data;
 	}
+
+	public function get_quiz_attempts_and_answers_by_course_id( int $course_id, int $user_id ): ?array {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM $wpdb->tutor_quiz_attempts
+				WHERE user_id = %d 
+				AND course_id = %d",
+				$user_id,
+				$course_id
+			)
+		);
+
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return null;
+		}
+
+		// foreach($results as $result){
+		// 	$result->quiz_attempt_answers = $this->get_quiz_attempt_answers_by_attempt_id( $result->attempt_id );
+		// }
+
+		return array_map(
+			function ( $item ) {
+				$item->quiz_attempt_answers = $this->get_quiz_attempt_answers_by_attempt_id( $item->attempt_id );
+				return $item;
+			},
+			$results
+		);
+	}
+
+	public function get_quiz_attempt_answers_by_attempt_id( int $attempt_id ): ?array {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM $wpdb->tutor_quiz_attempt_answers
+				WHERE quiz_attempt_id = %d",
+				$attempt_id
+			)
+		);
+
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return null;
+		}
+
+		return $results;
+	}
+
+	public function get_user_assignments_by_course_id($user_id, $course_id){
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->comments}
+				WHERE comment_type = %s
+				AND user_id = %d
+				AND comment_parent = %d
+				",
+				'tutor_assignment',
+				$user_id,
+				$course_id
+			)
+		);
+
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return null;
+		}
+
+		return array_map( function($item){
+			$item->assignment->meta = get_comment_meta( $item->comment_ID );
+			return $item;
+		}, $result );
+	}
+	
 }
