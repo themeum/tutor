@@ -51,6 +51,7 @@ export const icons = [
   'copy',
   'copyPaste',
   'coupon',
+  'course',
   'cross',
   'crossCircle',
   'crown',
