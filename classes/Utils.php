@@ -10876,7 +10876,7 @@ class Utils {
 			return array();
 		}
 
-		if ( empty( $result ) ) {
+		if ( empty( $results ) ) {
 			return array();
 		}
 
@@ -10942,8 +10942,7 @@ class Utils {
 				FROM {$wpdb->comments}
 				WHERE comment_type = %s
 				AND user_id = %d
-				AND comment_parent = %d
-				",
+				AND comment_parent = %d",
 				'tutor_assignment',
 				$user_id,
 				$course_id
@@ -10986,10 +10985,11 @@ class Utils {
 				"SELECT *
 				FROM {$wpdb->comments}
 				WHERE comment_type = %s
-				AND comment_parent = %d
-				",
+				AND comment_post_ID = %d
+				AND comment_agent = %s",
 				'course_completed',
-				$course_id
+				$course_id,
+				'TutorLMSPlugin'
 			)
 		);
 
