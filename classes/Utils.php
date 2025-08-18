@@ -10821,9 +10821,9 @@ class Utils {
 	 *
 	 * @param int $id  The ID of the course/bundle. Defaults to 0.
 	 *
-	 * @return array|null Array of enrollments as associative arrays, or null if an error occurs.
+	 * @return array Array of enrollments as associative arrays, or an empty array if an error occurs.
 	 */
-	public function get_all_enrollments( int $id = 0 ): ?array {
+	public function get_all_enrollments( int $id = 0 ): array {
 
 		global $wpdb;
 
@@ -10841,13 +10841,23 @@ class Utils {
 
 		if ( $wpdb->last_error ) {
 			error_log( 'Error While getting enrollments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return null;
+			return array();
 		}
 
 		return $student_data;
 	}
 
-	public function get_quiz_attempts_and_answers_by_course_id( int $course_id, int $user_id ): ?array {
+	/**
+	 * Get all quiz attempts for a user in a specific course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id The ID of the course.
+	 * @param int $user_id The ID of the user.
+	 *
+	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
+	 */
+	public function get_quiz_attempts_and_answers_by_course_id( int $course_id, int $user_id ): array {
 		global $wpdb;
 
 		$results = $wpdb->get_results(
@@ -10863,7 +10873,11 @@ class Utils {
 
 		if ( $wpdb->last_error ) {
 			error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return null;
+			return array();
+		}
+
+		if ( empty( $result ) ) {
+			return array();
 		}
 
 		return array_map(
@@ -10875,7 +10889,16 @@ class Utils {
 		);
 	}
 
-	public function get_quiz_attempt_answers_by_attempt_id( int $attempt_id ): ?array {
+	/**
+	 * Get all quiz attempt answers for a specific quiz attempt.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $attempt_id The ID of the quiz attempt.
+	 *
+	 * @return array Returns an array of quiz attempt answers objects, or an empty array on error.
+	 */
+	public function get_quiz_attempt_answers_by_attempt_id( int $attempt_id ): array {
 		global $wpdb;
 
 		$results = $wpdb->get_results(
@@ -10887,15 +10910,30 @@ class Utils {
 			)
 		);
 
+		if ( empty( $results ) ) {
+			return array();
+		}
+
 		if ( $wpdb->last_error ) {
 			error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return null;
+			return array();
 		}
 
 		return $results;
 	}
 
-	public function get_user_assignments_by_course_id( $user_id, $course_id ) {
+
+	/**
+	 * Get all assignments submitted by a user for a specific course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $user_id The ID of the user.
+	 * @param int $course_id The ID of the course.
+	 *
+	 * @return array|null Returns an array of assignment comment objects with meta, empty array if none found, or null on error.
+	 */
+	public function get_user_assignments_by_course_id( $user_id, $course_id ): array {
 		global $wpdb;
 
 		$result = $wpdb->get_results(
@@ -10914,7 +10952,7 @@ class Utils {
 
 		if ( $wpdb->last_error ) {
 			error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return null;
+			return array();
 		}
 
 		if ( empty( $result ) ) {
@@ -10937,9 +10975,9 @@ class Utils {
 	 *
 	 * @param int $course_id The ID of the course.
 	 *
-	 * @return array|null Array of course completion objects with meta, empty array if none found, or null on database error.
+	 * @return array Array of course completion objects with meta, empty array if none found, or on database error.
 	 */
-	public function get_course_completion_data_by_course_id( int $course_id ): ?array {
+	public function get_course_completion_data_by_course_id( int $course_id ): array {
 
 		global $wpdb;
 
@@ -10957,7 +10995,7 @@ class Utils {
 
 		if ( $wpdb->last_error ) {
 			error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return null;
+			return array();
 		}
 
 		if ( empty( $result ) ) {
