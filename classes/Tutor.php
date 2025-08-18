@@ -847,7 +847,10 @@ final class Tutor extends Singleton {
 			order_status VARCHAR(50) NOT NULL,
 			payment_status VARCHAR(50) NOT NULL,
 			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
-			total_price_before_tax DECIMAL(13, 2) NOT NULL,
+			pre_tax_price DECIMAL(13, 2) NOT NULL,  -- total price before adding tax
+			tax_type VARCHAR(50),
+			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
+			tax_amount DECIMAL(13, 2),
 			total_price DECIMAL(13, 2) NOT NULL, -- final price
 			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
 			coupon_code VARCHAR(255),
@@ -855,8 +858,6 @@ final class Tutor extends Singleton {
 			discount_type ENUM('percentage', 'flat') DEFAULT NULL,
 			discount_amount DECIMAL(13, 2),
 			discount_reason TEXT,
-			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
-			tax_amount DECIMAL(13, 2),
 			fees DECIMAL(13, 2), -- payment gateway fees
 			earnings DECIMAL(13, 2), -- net earning
 			refund_amount DECIMAL(13, 2), -- Refund amount

@@ -172,7 +172,7 @@ class Upgrader {
 			 */
 			$tax_type = 'tax_type';
 			if ( ! QueryHelper::column_exist( $order_table, $tax_type ) ) {
-				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER discount_reason" );//phpcs:ignore
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER pre_tax_price" );//phpcs:ignore
 			}
 		}
 
@@ -228,8 +228,8 @@ class Upgrader {
 	public function upgrade_to_3_8_0() {
 		global $wpdb;
 		$order_table = $wpdb->prefix . 'tutor_orders';
-		if ( QueryHelper::table_exists( $order_table ) && ! QueryHelper::column_exist( $order_table, 'total_price_before_tax' ) ) {
-			$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN total_price_before_tax DECIMAL(13, 2) NOT NULL AFTER subtotal_price" ); //phpcs:ignore
+		if ( QueryHelper::table_exists( $order_table ) && ! QueryHelper::column_exist( $order_table, 'pre_tax_price' ) ) {
+			$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN pre_tax_price DECIMAL(13, 2) NOT NULL AFTER subtotal_price" ); //phpcs:ignore
 		}
 	}
 
