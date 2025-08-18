@@ -5,6 +5,7 @@ import { loginAsAdmin } from 'cypress/support/auth';
 
 describe('Content Bank - Create Collection', () => {
   let collectionId: string;
+  const collectionName = faker.lorem.words(3);
 
   beforeEach(() => {
     cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`, (req) => {
@@ -18,7 +19,7 @@ describe('Content Bank - Create Collection', () => {
 
     loginAsAdmin();
 
-    cy.visit('/wp-admin/admin.php?page=tutor-content-bank');
+    cy.visit(backendUrls.CONTENT_BANK);
   });
 
   it('should create a new collection', () => {
@@ -29,7 +30,7 @@ describe('Content Bank - Create Collection', () => {
     cy.get('[data-cy=tutor-modal]')
       .should('be.visible')
       .within(() => {
-        cy.get('input[name=name]').type(faker.lorem.words(3));
+        cy.get('input[name=name]').type(collectionName);
         cy.get('button[data-cy=save-collection-button]').click();
       });
 
@@ -42,7 +43,7 @@ describe('Content Bank - Create Collection', () => {
       cy.log(`Collection ID: ${collectionId}`);
       cy.wrap(collectionId).should('be.a', 'string').and('not.be.empty');
 
-      cy.writeFile('cypress/fixtures/collection.json', { collectionId });
+      cy.writeFile('cypress/fixtures/collection.json', { collectionId, name: collectionName });
     });
   });
 });

@@ -40,7 +40,7 @@ describe('Content Bank - Create Contents', () => {
 
     loginAsAdmin();
 
-    cy.visit('/wp-admin/admin.php?page=tutor-content-bank&collection_id=' + collectionId);
+    cy.visit(`${backendUrls.CONTENT_BANK}&collection_id=${collectionId}`);
   });
 
   it('should create a new question', () => {
