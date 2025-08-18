@@ -24,6 +24,7 @@ class QuizModel {
 	const ATTEMPT_STARTED = 'attempt_started';
 	const ATTEMPT_ENDED   = 'attempt_ended';
 	const REVIEW_REQUIRED = 'review_required';
+	const ATTEMPT_TIMEOUT = 'attempt_timeout';
 
 	const RESULT_PASS    = 'pass';
 	const RESULT_FAIL    = 'fail';
