@@ -10866,10 +10866,6 @@ class Utils {
 			return null;
 		}
 
-		// foreach($results as $result){
-		// 	$result->quiz_attempt_answers = $this->get_quiz_attempt_answers_by_attempt_id( $result->attempt_id );
-		// }
-
 		return array_map(
 			function ( $item ) {
 				$item->quiz_attempt_answers = $this->get_quiz_attempt_answers_by_attempt_id( $item->attempt_id );
@@ -10899,7 +10895,7 @@ class Utils {
 		return $results;
 	}
 
-	public function get_user_assignments_by_course_id($user_id, $course_id){
+	public function get_user_assignments_by_course_id( $user_id, $course_id ) {
 		global $wpdb;
 
 		$result = $wpdb->get_results(
@@ -10917,14 +10913,63 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error ) {
-			error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
 			return null;
 		}
 
-		return array_map( function($item){
-			$item->assignment->meta = get_comment_meta( $item->comment_ID );
-			return $item;
-		}, $result );
+		if ( empty( $result ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				$item->assignment_meta = get_comment_meta( $item->comment_ID );
+				return $item;
+			},
+			$result
+		);
 	}
-	
+
+	/**
+	 * Retrieve all course completion records for a specific course, including meta data.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id The ID of the course.
+	 *
+	 * @return array|null Array of course completion objects with meta, empty array if none found, or null on database error.
+	 */
+	public function get_course_completion_data_by_course_id( int $course_id ): ?array {
+
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->comments}
+				WHERE comment_type = %s
+				AND comment_parent = %d
+				",
+				'course_completed',
+				$course_id
+			)
+		);
+
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return null;
+		}
+
+		if ( empty( $result ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				$item->course_completion_meta = get_comment_meta( $item->comment_ID );
+				return $item;
+			},
+			$result
+		);
+	}
 }
