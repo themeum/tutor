@@ -202,13 +202,15 @@ class OrderModel {
 	 * Get recalculated order tax data.
 	 *
 	 * @since 3.4.0
-	 * @since 3.8.0 tax re-calculation based on total_price_before_tax column value.
+	 * @since 3.8.0 tax re-calculation based on pre_tax_price column value.
 	 *
 	 * @param int|object $order the order id or object.
 	 *
 	 * @return array
 	 */
 	public function get_recalculated_order_tax_data( $order ) {
+		$tax_type   = Tax::get_tax_type();
+		$tax_rate   = Tax::get_user_tax_rate( $order->user_id );
 		$order      = self::get_order( $order );
 		$order_data = array(
 			'tax_type'   => null,
@@ -216,28 +218,30 @@ class OrderModel {
 			'tax_amount' => null,
 		);
 
-		if ( ! Tax::should_calculate_tax() ) {
-			if ( $order->total_price_before_tax ) {
-				$order_data['total_price'] = $order->total_price_before_tax;
-				$order_data['net_payment'] = $order->total_price_before_tax;
-			}
-
+		if ( ! Tax::should_calculate_tax()
+			|| ! $tax_rate
+			|| ! $order
+			|| ! $order->pre_tax_price ) {
 			return $order_data;
 		}
 
-		$total_price_before_tax = $order->total_price_before_tax;
-		$tax_rate               = Tax::get_user_tax_rate( $order->user_id );
+		$order_data['tax_type'] = $tax_type;
+		$order_data['tax_rate'] = $tax_rate;
 
-		if ( $total_price_before_tax && $tax_rate ) {
-			$order_data['tax_type']   = Tax::get_tax_type();
-			$order_data['tax_rate']   = $tax_rate;
-			$order_data['tax_amount'] = Tax::calculate_tax( $total_price_before_tax, $tax_rate );
+		if ( ! Tax::is_tax_included_in_price() ) {
+			// For exclusive tax type.
+			$tax_amount  = Tax::calculate_tax( $order->pre_tax_price, $tax_rate );
+			$total_price = $order->pre_tax_price + $tax_amount;
 
-			if ( ! Tax::is_tax_included_in_price() ) {
-				$total_price               = $total_price_before_tax + $order_data['tax_amount'];
-				$order_data['total_price'] = $total_price;
-				$order_data['net_payment'] = $total_price;
-			}
+			$order_data['tax_amount']  = $tax_amount;
+			$order_data['total_price'] = $total_price;
+			$order_data['net_payment'] = $total_price;
+		} else {
+			// For inclusive tax type.
+			$tax_amount = Tax::calculate_tax( $order->total_price, $tax_rate );
+
+			$order_data['tax_amount']    = $tax_amount;
+			$order_data['pre_tax_price'] = $order->total_price - $tax_amount;
 		}
 
 		return $order_data;
