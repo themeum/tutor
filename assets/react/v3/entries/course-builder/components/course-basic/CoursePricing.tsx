@@ -54,6 +54,10 @@ const CoursePricing = () => {
     control: form.control,
     name: 'course_selling_option',
   });
+  const isPublicCourse = useWatch({
+    control: form.control,
+    name: 'is_public_course',
+  });
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
@@ -217,12 +221,30 @@ const CoursePricing = () => {
       <Controller
         name="course_price_type"
         control={form.control}
+        rules={{
+          validate: (value) => {
+            if (value === 'paid' && isPublicCourse) {
+              return __('Public courses cannot be paid.', 'tutor');
+            }
+            return true;
+          },
+          deps: ['is_public_course'],
+        }}
         render={(controllerProps) => (
           <FormRadioGroup
             {...controllerProps}
             label={__('Pricing Model', 'tutor')}
             options={coursePriceOptions}
             wrapperCss={styles.priceRadioGroup}
+            onSelect={(option) => {
+              if (option.value === 'paid' && isPublicCourse) {
+                form.setError('course_price_type', {
+                  type: 'validate',
+                  message: __('Public courses cannot be paid.', 'tutor'),
+                });
+                form.setValue('course_price_type', 'free');
+              }
+            }}
           />
         )}
       />
