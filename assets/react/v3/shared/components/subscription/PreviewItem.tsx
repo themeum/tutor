@@ -145,7 +145,7 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
             </TutorBadge>
           </Show>
         </p>
-        <div css={styles.information}>
+        <p css={styles.information}>
           <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
             <span>
               {
@@ -187,7 +187,7 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
               <span>{__('Until Cancellation', 'tutor')}</span>
             </Show>
           </Show>
-        </div>
+        </p>
       </div>
       <div css={styles.actionButtons} data-action-buttons>
         <Switch
@@ -251,6 +251,7 @@ const styles = {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     background-color: ${colorTokens.background.white};
     padding: ${spacing[8]} ${spacing[12]};
 
@@ -259,11 +260,11 @@ const styles = {
       margin-right: ${spacing[4]};
       color: ${colorTokens.icon.default};
       flex-shrink: 0;
+      cursor: grab;
     }
 
     [data-action-buttons] {
       opacity: ${isActionButtonVisible ? 1 : 0};
-      transition: opacity 0.3s ease;
     }
 
     &:hover {
@@ -282,6 +283,10 @@ const styles = {
     css`
       border-radius: ${borderRadius.card};
       box-shadow: ${shadow.drag};
+
+      [data-grabber] {
+        cursor: grabbing;
+      }
     `}
   `,
   item: css`
@@ -310,7 +315,14 @@ const styles = {
     color: ${colorTokens.icon.brand};
   `,
   actionButtons: css`
+    padding-left: ${spacing[8]};
+    position: absolute;
+    top: 50%;
+    right: ${spacing[12]};
+    transform: translateY(-50%);
     ${styleUtils.display.flex()};
+    height: 100%;
+    background-color: ${colorTokens.background.hover};
     align-items: center;
     gap: ${spacing[8]};
   `,
