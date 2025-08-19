@@ -10871,7 +10871,7 @@ class Utils {
 			)
 		);
 
-		if ( $wpdb->last_error || empty( $results )) {
+		if ( $wpdb->last_error || empty( $results ) ) {
 			error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
 			return array();
 		}
@@ -10941,7 +10941,7 @@ class Utils {
 			)
 		);
 
-		if ( $wpdb->last_error ||  empty( $result )) {
+		if ( $wpdb->last_error || empty( $result ) ) {
 			error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
 			return array();
 		}
@@ -10981,7 +10981,7 @@ class Utils {
 			)
 		);
 
-		if ( $wpdb->last_error || empty( $result )) {
+		if ( $wpdb->last_error || empty( $result ) ) {
 			error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
 			return array();
 		}
@@ -11040,7 +11040,7 @@ class Utils {
 
 			$total_order_column = count( $order_columns_info );
 
-			//Separate order data and order item data.
+			// Separate order data and order item data.
 			return array_map(
 				function ( $item ) use ( $total_order_column ) {
 
@@ -11081,6 +11081,40 @@ class Utils {
 
 		if ( $wpdb->last_error ) {
 			error_log( 'Error While getting order meta from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return array();
+		}
+
+		return $result ?? array();
+	}
+
+	/**
+	 * Retrieve earnings for a specific order and course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $order_id The ID of the order for which the earnings are being retrieved.
+	 * @param int $course_id The ID of the course for which the earnings are being retrieved.
+	 *
+	 * @return array An array of earnings data. Returns an empty array if no data is found or if an error occurs.
+	 */
+	public function get_earnings_by_order_and_course( $order_id, $course_id ) {
+
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->tutor_earnings}
+				WHERE order_id = %d
+				AND course_id = %d",
+				$order_id,
+				$course_id
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting earnings from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
 			return array();
 		}
 
