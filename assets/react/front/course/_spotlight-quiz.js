@@ -208,7 +208,9 @@ window.jQuery(document).ready($ => {
      */
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
     $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function () {
-        $('.tutor-quiz-next-btn-all').prop('disabled', false);
+        if ($('.tutor-quiz-time-expired').length === 0) {
+            $('.tutor-quiz-next-btn-all').prop('disabled', false);
+        }
     });
 
     $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
