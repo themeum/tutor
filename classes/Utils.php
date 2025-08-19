@@ -19,7 +19,6 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\DateTimeHelper;
-use TUTOR_ENROLLMENTS\Enrollments;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -36,6 +35,9 @@ class Utils {
 
 	const ENROLLMENT_STATUS_COMPLETE = 'complete';
 	const ENROLLMENT_STATUS_ALL      = 'all';
+	const COURSE_COMPLETED           = 'course_completed';
+	const COURSE_RATING        		 = 'tutor_course_rating';
+
 	/**
 	 * Compatibility for splitting utils functions to specific model
 	 *
@@ -10975,7 +10977,7 @@ class Utils {
 				WHERE comment_type = %s
 				AND comment_post_ID = %d
 				AND comment_agent = %s",
-				'course_completed',
+				self::COURSE_COMPLETED,
 				$course_id,
 				'TutorLMSPlugin'
 			)
@@ -11119,5 +11121,49 @@ class Utils {
 		}
 
 		return $result ?? array();
+	}
+
+	/**
+	 * Retrieves reviews for a specific course by its ID.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id The ID of the course for which reviews are being fetched.
+	 *
+	 * @return array An array of reviews. If there is an error or no reviews 
+	 *               are found, an empty array is returned.
+	 *
+	 */
+	public function get_reviews_by_course_id( $course_id ): array {
+
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->comments}
+				WHERE comment_type = %s
+				AND comment_post_ID = %d
+				AND comment_agent = %s",
+				self::COURSE_RATING,
+				$course_id,
+				'TutorLMSPlugin'
+			), ARRAY_A
+		);
+
+		if ( $wpdb->last_error || empty( $result ) ) {
+			error_log( 'Error While getting reviews for course id ' . $course_id . ' from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				return array(
+					'review' 	  => $item,
+					'review_meta' => get_comment_meta( $item->comment_ID )
+				);
+			},
+			$result
+		);
 	}
 }
