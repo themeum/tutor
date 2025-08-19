@@ -10,8 +10,7 @@ import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 import SubscriptionItem from '@TutorShared/components/subscription/SubscriptionItem';
 
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
   type SubscriptionFormData,
@@ -126,18 +125,6 @@ const styles = {
     ${Breakpoint.smallMobile} {
       padding-block: ${spacing[24]};
       padding-inline: ${spacing[8]};
-    }
-  `,
-  header: css`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    h6 {
-      ${typography.heading6('medium')};
-      color: ${colorTokens.text.primary};
-      text-transform: none;
-      letter-spacing: normal;
     }
   `,
   content: css`
