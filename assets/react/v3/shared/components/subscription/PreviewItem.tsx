@@ -117,7 +117,6 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
 
   return (
     <div
-      {...attributes}
       data-cy="subscription-preview-item"
       css={styles.wrapper({ isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending, isOverlay })}
       style={style}
@@ -126,6 +125,7 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
       <div css={styles.item}>
         <p
           css={styles.title}
+          {...attributes}
           {...listeners}
           onClick={handleEditSubscription}
           onKeyDown={(event) => {
@@ -135,7 +135,7 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
           }}
         >
           <SVGIcon data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
-          {subscription.plan_name}
+          <span>{subscription.plan_name}</span>
           <Show when={subscription.is_featured}>
             <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
           </Show>
@@ -280,6 +280,12 @@ const styles = {
       border-bottom: 1px solid ${colorTokens.stroke.default};
     }
 
+    &:focus-within {
+      [data-action-buttons] {
+        opacity: 1;
+      }
+    }
+
     ${isOverlay &&
     css`
       border-radius: ${borderRadius.card};
@@ -303,6 +309,11 @@ const styles = {
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    :focus-visible {
+      border-radius: ${borderRadius[4]};
+      outline: 2px solid ${colorTokens.stroke.brand};
+    }
   `,
   information: css`
     ${typography.small()};
