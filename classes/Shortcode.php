@@ -42,8 +42,17 @@ class Shortcode {
 	 * Register hooks
 	 *
 	 * @since 1.0.0
+	 * @since 3.8.0
+	 *
+	 * @param bool $register_hooks register hooks or not.
+	 *
+	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
+		}
+
 		add_shortcode( 'tutor_student_registration_form', array( $this, 'student_registration_form' ) );
 		add_shortcode( 'tutor_dashboard', array( $this, 'tutor_dashboard' ) );
 		add_shortcode( 'tutor_instructor_registration_form', array( $this, 'instructor_registration_form' ) );
