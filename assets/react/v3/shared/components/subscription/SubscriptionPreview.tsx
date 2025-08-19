@@ -32,6 +32,7 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
   convertSubscriptionToFormData,
+  defaultSubscriptionFormData,
   useCourseSubscriptionsQuery,
   useSortCourseSubscriptionsMutation,
 } from '@TutorShared/services/subscription';
@@ -196,7 +197,10 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
                 props: {
                   title: __('Manage Subscription Plans', 'tutor'),
                   icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
-                  createEmptySubscriptionOnMount: true,
+                  subscription: {
+                    ...defaultSubscriptionFormData,
+                    isSaved: false,
+                  },
                   courseId,
                   isBundle,
                 },
