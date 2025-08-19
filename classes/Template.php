@@ -306,6 +306,10 @@ class Template extends Tutor_Base {
 
 		$tutor_checkout_page_id = (int) tutor_utils()->get_option( 'tutor_checkout_page_id' );
 		if ( get_the_ID() === $tutor_checkout_page_id ) {
+			if ( ! apply_filters( 'tutor_should_load_checkout_page', true ) ) {
+				return;
+			}
+
 			$shortcode = new Shortcode( false );
 			return $shortcode->tutor_checkout_page();
 		}
