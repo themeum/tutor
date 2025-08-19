@@ -309,27 +309,6 @@ const styles = {
   featuredIcon: css`
     color: ${colorTokens.icon.brand};
   `,
-  editButton: css`
-    ${styleUtils.resetButton};
-    ${styleUtils.flexCenter()};
-    width: 24px;
-    height: 24px;
-    border-radius: ${borderRadius[4]};
-    color: ${colorTokens.icon.default};
-    transition:
-      color 0.3s ease,
-      background 0.3s ease;
-
-    &:hover:not(:disabled) {
-      background: ${colorTokens.action.secondary.default};
-      color: ${colorTokens.icon.brand};
-    }
-
-    &:disabled {
-      color: ${colorTokens.icon.disable};
-      background: ${colorTokens.background.hover};
-    }
-  `,
   actionButtons: css`
     ${styleUtils.display.flex()};
     align-items: center;
