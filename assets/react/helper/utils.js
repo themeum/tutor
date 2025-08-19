@@ -1,3 +1,5 @@
+const { __ } = wp.i18n;
+
 export async function fetchCountriesData() {
     try {
         const response = await fetch(`${_tutorobject.tutor_url}/assets/json/countries.json`);
@@ -14,15 +16,15 @@ export async function fetchCountriesData() {
 }
 
 /**
- * Extracts Tutor-Message header from response
- * 
- * @param {Response} response - Fetch Response object
- * @returns {string|undefined} Message from Tutor-Message header if exists, undefined otherwise 
+ * Get Tutor-Message header value from a fetch Response.
+ *
+ * @param {Response} response - Fetch response object
+ * @returns {string|null} - The Tutor-Message header value or null if not set
  */
-export function tutorHeaderMessage(response) {
-    try {
-        response.headers.get('Tutor-Message')
-    } catch (error) {
-        return undefined;
+export function getTutorMessage(response) {
+    const defaultErrorMessage = __('Something went wrong, please try again', 'tutor-pro');
+    if (!(response instanceof Response)) {
+        return defaultErrorMessage;
     }
+    return response.headers.get('Tutor-Message') || defaultErrorMessage;
 }
