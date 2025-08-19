@@ -5,7 +5,7 @@ import { loginAsAdmin } from 'cypress/support/auth';
 
 describe('Content Bank - Create Collection', () => {
   let collectionId: string;
-  const collectionName = faker.lorem.words(3);
+  const collectionName = faker.lorem.sentence(3);
 
   beforeEach(() => {
     cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`, (req) => {
