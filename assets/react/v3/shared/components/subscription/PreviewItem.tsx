@@ -1,14 +1,17 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import { useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 
 import Switch from '@TutorShared/atoms/Switch';
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import {
   convertFormDataToSubscription,
   useSaveCourseSubscriptionMutation,
@@ -43,6 +46,7 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
 export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemProps) {
   const { showModal } = useModal();
   const updateSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
+  const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
 
   const handleToggleSubscription = (isEnabled: boolean) => {
     const payload = convertFormDataToSubscription(subscription);
@@ -53,12 +57,20 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
   };
 
   return (
-    <div data-cy="subscription-preview-item" css={styles.wrapper}>
+    <div
+      data-cy="subscription-preview-item"
+      css={styles.wrapper({ isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending })}
+    >
       <div css={styles.item}>
         <p css={styles.title}>
           {subscription.plan_name}
           <Show when={subscription.is_featured}>
             <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
+          </Show>
+          <Show when={!subscription.is_enabled}>
+            <TutorBadge css={styles.badge} variant="secondary" title={__('Inactive', 'tutor')}>
+              {__('Inactive', 'tutor')}
+            </TutorBadge>
           </Show>
         </p>
         <div css={styles.information}>
@@ -110,34 +122,57 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
           checked={subscription.is_enabled}
           onChange={handleToggleSubscription}
           loading={updateSubscriptionMutation.isPending}
+          size="small"
         />
-        <button
-          type="button"
-          disabled={updateSubscriptionMutation.isPending}
-          css={styles.editButton}
-          onClick={() => {
-            showModal({
-              component: SubscriptionModal,
-              props: {
-                title: __('Manage Subscription Plans', 'tutor'),
-                icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
-                expandedSubscriptionId: subscription.id,
-                courseId,
-                isBundle,
-              },
-            });
-          }}
-          data-cy="edit-subscription"
+
+        <ThreeDots
+          isOpen={isThreeDotOpen}
+          closePopover={() => setIsThreeDotOpen(false)}
+          onClick={() => setIsThreeDotOpen(!isThreeDotOpen)}
+          dotsOrientation="vertical"
+          size="small"
         >
-          <SVGIcon name="pen" width={19} height={19} />
-        </button>
+          <ThreeDots.Option
+            icon={<SVGIcon name="edit" width={16} height={16} />}
+            text={__('Edit', 'tutor')}
+            data-cy="edit-subscription"
+            onClick={() => {
+              showModal({
+                component: SubscriptionModal,
+                props: {
+                  title: __('Manage Subscription Plans', 'tutor'),
+                  icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
+                  expandedSubscriptionId: subscription.id,
+                  courseId,
+                  isBundle,
+                },
+              });
+              setIsThreeDotOpen(false);
+            }}
+          />
+          <ThreeDots.Option
+            icon={<SVGIcon name="duplicate" width={16} height={16} />}
+            text={__('Duplicate', 'tutor')}
+            onClick={() => {
+              // Handle duplicate action
+            }}
+          />
+          <ThreeDots.Option
+            icon={<SVGIcon name="delete" width={16} height={16} />}
+            text={__('Delete', 'tutor')}
+            isTrash
+            onClick={() => {
+              // Handle delete action
+            }}
+          />
+        </ThreeDots>
       </div>
     </div>
   );
 }
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ isActionButtonVisible = false }) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -145,7 +180,7 @@ const styles = {
     padding: ${spacing[8]} ${spacing[12]};
 
     [data-action-buttons] {
-      opacity: 0;
+      opacity: ${isActionButtonVisible ? 1 : 0};
       transition: opacity 0.3s ease;
     }
 
@@ -210,5 +245,8 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
+  `,
+  badge: css`
+    margin-left: ${spacing[8]};
   `,
 };
