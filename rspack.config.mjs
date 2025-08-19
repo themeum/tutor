@@ -260,7 +260,7 @@ const scssEntries = {
   'tutor-setup-scss': './assets/scss/admin-dashboard/tutor-setup.scss',
   'tutor-scss': './v2-library/src/scss/main.scss',
   'tutor-rtl-scss': './v2-library/src/scss/main.rtl.scss',
-  'tutor-icon-scss': './v2-library/fonts/tutor-icon/tutor-icon.scss',
+  'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
   'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
   'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
 };

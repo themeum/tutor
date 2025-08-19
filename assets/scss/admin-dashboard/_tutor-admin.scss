@@ -159,14 +159,12 @@ table.tutor-table.tutor-table-with-checkbox {
 #toplevel_page_tutor {
 	a:has( > .tutor-admin-menu-separator){
 		pointer-events: none;
-		border-top: 1px solid #4A5257;
-		margin: 10px 12px;
+		margin: 8px 12px;
 		padding: 0!important;
 		height: 1px;
 		overflow: hidden;
-		background: none;
+		background: #4A5257;
 		color: transparent;
-		margin-bottom: 8px;
 	}
 }
 

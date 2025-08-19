@@ -8,7 +8,7 @@
   "yet-phpunit.xmlConfigFilepath": "${workspaceRoot}/wp-content/plugins/tutor/phpunit.xml.dist",
   "editor.formatOnSave": true,
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
