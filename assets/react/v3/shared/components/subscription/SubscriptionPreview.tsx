@@ -63,13 +63,13 @@ function SubscriptionPreview({ courseId, isBundle = false }: SubscriptionPreview
           <Button
             data-cy="add-subscription"
             variant="secondary"
-            icon={<SVGIcon name="dollar-recurring" width={24} height={24} />}
+            icon={<SVGIcon name="dollarRecurring" width={24} height={24} />}
             onClick={() => {
               showModal({
                 component: SubscriptionModal,
                 props: {
                   title: __('Manage Subscription Plans', 'tutor'),
-                  icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
+                  icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
                   createEmptySubscriptionOnMount: true,
                   courseId,
                   isBundle,
