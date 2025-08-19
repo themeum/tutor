@@ -397,18 +397,9 @@ class QuizModel {
 			}
 		}
 
-		switch ( $result_state ) {
-			case self::RESULT_PASS:
-				$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', self::RESULT_PASS );
-				break;
-
-			case self::RESULT_FAIL:
-				$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', self::RESULT_FAIL );
-				break;
-
-			case self::RESULT_PENDING:
-				$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', self::RESULT_PENDING );
-				break;
+		$result_clause = '';
+		if ( in_array( $result_state, array( self::RESULT_PASS, self::RESULT_FAIL, self::RESULT_PENDING ), true ) ) {
+			$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', $result_state );
 		}
 
 		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
