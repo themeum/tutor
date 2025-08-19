@@ -10,8 +10,8 @@
 
 namespace TUTOR;
 
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -452,6 +452,9 @@ final class Tutor extends Singleton {
 		$wpdb->tutor_quiz_question_answers = $wpdb->prefix . 'tutor_quiz_question_answers';
 		$wpdb->tutor_withdraws             = $wpdb->prefix . 'tutor_withdraws';
 		$wpdb->tutor_email_queue           = $wpdb->prefix . 'tutor_email_queue';
+		$wpdb->tutor_order_items           = $wpdb->prefix . 'tutor_order_items';
+		$wpdb->tutor_orders                = $wpdb->prefix . 'tutor_orders';
+		$wpdb->tutor_ordermeta             = $wpdb->prefix . 'tutor_ordermeta';
 
 		/**
 		 * Changing default wp doing ajax return based on tutor ajax action

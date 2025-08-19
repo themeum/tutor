@@ -10844,7 +10844,7 @@ class Utils {
 			return array();
 		}
 
-		return $student_data;
+		return $student_data ?? array();
 	}
 
 	/**
@@ -10871,12 +10871,8 @@ class Utils {
 			)
 		);
 
-		if ( $wpdb->last_error ) {
+		if ( $wpdb->last_error || empty( $results )) {
 			error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return array();
-		}
-
-		if ( empty( $results ) ) {
 			return array();
 		}
 
@@ -10910,11 +10906,7 @@ class Utils {
 			)
 		);
 
-		if ( empty( $results ) ) {
-			return array();
-		}
-
-		if ( $wpdb->last_error ) {
+		if ( $wpdb->last_error || empty( $results ) ) {
 			error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
 			return array();
 		}
@@ -10949,12 +10941,8 @@ class Utils {
 			)
 		);
 
-		if ( $wpdb->last_error ) {
+		if ( $wpdb->last_error ||  empty( $result )) {
 			error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return array();
-		}
-
-		if ( empty( $result ) ) {
 			return array();
 		}
 
@@ -10993,12 +10981,8 @@ class Utils {
 			)
 		);
 
-		if ( $wpdb->last_error ) {
+		if ( $wpdb->last_error || empty( $result )) {
 			error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return array();
-		}
-
-		if ( empty( $result ) ) {
 			return array();
 		}
 
@@ -11009,5 +10993,97 @@ class Utils {
 			},
 			$result
 		);
+	}
+
+	/**
+	 * Retrieve order details for a specific course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id The ID of the course for which the order details are to be retrieved.
+	 *
+	 * @return array An array containing order data and order item data. Each entry contains:
+	 *               - 'orders' (order data from the `wp_tutor_orders` table)
+	 *               - 'order_items' (order item data from the `wp_tutor_order_items` table)
+	 *               Returns an empty array if there is an error or no data is found.
+	 */
+	public function get_order_details( $course_id ) {
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+					orders.*,
+					order_items.order_id,
+					order_items.item_id,
+					order_items.regular_price,
+					order_items.sale_price,
+					order_items.discount_price,
+					order_items.coupon_code	
+				FROM $wpdb->tutor_order_items AS order_items
+				LEFT JOIN $wpdb->tutor_orders AS orders
+				ON orders.id = order_items.order_id
+				WHERE order_items.item_id = %d",
+				$course_id
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error || empty( $result ) ) {
+			error_log( 'Error While getting order_details from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return array();
+		}
+
+		$order_columns_info = $wpdb->get_results( "DESCRIBE {$wpdb->tutor_orders}", ARRAY_A );
+
+		if ( ! empty( $order_columns_info ) ) {
+
+			$total_order_column = count( $order_columns_info );
+
+			//Separate order data and order item data.
+			return array_map(
+				function ( $item ) use ( $total_order_column ) {
+
+					return array(
+						'orders'      => array_slice( $item, 0, $total_order_column ),
+						'order_items' => array_slice( $item, $total_order_column ),
+					);
+				},
+				$result
+			);
+		}
+
+		return array();
+	}
+
+	/**
+	 * Retrieve order meta for a specific order.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $order_id The ID of the order for which the metadata is to be retrieved.
+	 *
+	 * @return array An array of order meta. Returns an empty array if no meta is found or on error.
+	 */
+	public function get_order_meta_by_order_id( $order_id ) {
+
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->tutor_ordermeta}
+				WHERE order_id = %d",
+				$order_id,
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting order meta from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return array();
+		}
+
+		return $result ?? array();
 	}
 }
