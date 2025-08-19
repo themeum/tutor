@@ -1,3 +1,5 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from 'react';
@@ -8,7 +10,7 @@ import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal'
 
 import Switch from '@TutorShared/atoms/Switch';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
@@ -17,6 +19,7 @@ import {
   useSaveCourseSubscriptionMutation,
   type SubscriptionFormData,
 } from '@TutorShared/services/subscription';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type DurationUnit } from '@TutorShared/utils/types';
 
@@ -24,6 +27,7 @@ interface PreviewItemProps {
   courseId: number;
   subscription: SubscriptionFormData;
   isBundle?: boolean;
+  isOverlay?: boolean;
 }
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
@@ -43,10 +47,15 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
   }
 }
 
-export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemProps) {
+export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: PreviewItemProps) {
   const { showModal } = useModal();
   const updateSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: subscription.id || '',
+    animateLayoutChanges,
+  });
 
   const handleToggleSubscription = (isEnabled: boolean) => {
     const payload = convertFormDataToSubscription(subscription);
@@ -56,13 +65,24 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
     });
   };
 
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
+  };
+
   return (
     <div
+      {...attributes}
       data-cy="subscription-preview-item"
-      css={styles.wrapper({ isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending })}
+      css={styles.wrapper({ isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending, isOverlay })}
+      style={style}
+      ref={setNodeRef}
     >
       <div css={styles.item}>
-        <p css={styles.title}>
+        <p css={styles.title} {...listeners}>
+          <SVGIcon data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
           {subscription.plan_name}
           <Show when={subscription.is_featured}>
             <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
@@ -172,12 +192,18 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
 }
 
 const styles = {
-  wrapper: ({ isActionButtonVisible = false }) => css`
+  wrapper: ({ isActionButtonVisible = false, isOverlay = false }) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: ${colorTokens.background.white};
     padding: ${spacing[8]} ${spacing[12]};
+
+    [data-grabber] {
+      margin-left: -${spacing[4]};
+      color: ${colorTokens.icon.default};
+      flex-shrink: 0;
+    }
 
     [data-action-buttons] {
       opacity: ${isActionButtonVisible ? 1 : 0};
@@ -195,6 +221,12 @@ const styles = {
     &:not(:last-of-type) {
       border-bottom: 1px solid ${colorTokens.stroke.default};
     }
+
+    ${isOverlay &&
+    css`
+      border-radius: ${borderRadius.card};
+      box-shadow: ${shadow.drag};
+    `}
   `,
   item: css`
     min-height: 48px;
