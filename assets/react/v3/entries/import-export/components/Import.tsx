@@ -125,7 +125,7 @@ const Import = () => {
 
         <UploadButton
           size="small"
-          acceptedTypes={['.json']}
+          acceptedTypes={['.zip']}
           variant="secondary"
           onError={(errors) => {
             showToast({
@@ -138,7 +138,7 @@ const Import = () => {
           {__('Choose a File', 'tutor')}
         </UploadButton>
 
-        <div css={styles.description}>{__('Supported format: .JSON', 'tutor')}</div>
+        <div css={styles.description}>{__('Supported format: .zip', 'tutor')}</div>
       </div>
     </div>
   );
