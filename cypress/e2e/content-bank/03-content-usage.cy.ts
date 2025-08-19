@@ -27,7 +27,7 @@ describe('Content Bank - Usage', () => {
 
     // @ts-ignore
     courseData = {
-      post_title: 'Course for content bank testing',
+      post_title: 'Course for content bank testing ' + faker.string.alphanumeric(5),
       post_content: 'This is a course created for testing the content bank functionality.',
     };
 
@@ -234,7 +234,10 @@ describe('Content Bank - Usage', () => {
       cy.get('button').contains('Curriculum').click();
     });
 
-    cy.get('[data-cy=delete-topic]').first().click();
+    // Duplicating for future reference
+    cy.get('[data-cy=duplicate-topic]').first().click({ force: true });
+
+    cy.get('[data-cy=delete-topic]').first().click({ force: true });
     cy.get('.tutor-portal-popover [data-cy=confirm-button]').click();
     cy.waitAfterRequest('deleteTopic');
 
