@@ -8,20 +8,24 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import Switch from '@TutorShared/atoms/Switch';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
-import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import {
   convertFormDataToSubscription,
+  useDeleteCourseSubscriptionMutation,
+  useDuplicateCourseSubscriptionMutation,
   useSaveCourseSubscriptionMutation,
   type SubscriptionFormData,
 } from '@TutorShared/services/subscription';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type DurationUnit } from '@TutorShared/utils/types';
+import ConfirmationModal from '../modals/ConfirmationModal';
 
 interface PreviewItemProps {
   courseId: number;
@@ -48,14 +52,23 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
 }
 
 export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: PreviewItemProps) {
-  const { showModal } = useModal();
-  const updateSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
+  const { showModal, updateModal, closeModal } = useModal();
+  const updateSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
+  const deleteSubscriptionMutation = useDeleteCourseSubscriptionMutation(courseId);
+  const duplicateSubscriptionMutation = useDuplicateCourseSubscriptionMutation(courseId);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: subscription.id || '',
     animateLayoutChanges,
   });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
+  };
 
   const handleToggleSubscription = (isEnabled: boolean) => {
     const payload = convertFormDataToSubscription(subscription);
@@ -65,11 +78,41 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
     });
   };
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.3 : undefined,
-    background: isDragging ? colorTokens.stroke.hover : undefined,
+  const handleEditSubscription = () => {
+    const subscriptionWithSaved = {
+      ...subscription,
+      isSaved: true,
+    };
+    showModal({
+      component: SubscriptionModal,
+      props: {
+        icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
+        subscription: subscriptionWithSaved,
+        courseId,
+        isBundle,
+      },
+    });
+    setIsThreeDotOpen(false);
+  };
+
+  const handleDeleteSubscription = async () => {
+    updateModal<typeof ConfirmationModal>('subscription-delete-modal', {
+      isLoading: true,
+    });
+
+    const response = await deleteSubscriptionMutation.mutateAsync(Number(subscription.id));
+
+    if (response.status_code === 200) {
+      closeModal();
+    }
+  };
+
+  const handleDuplicateSubscription = async () => {
+    const response = await duplicateSubscriptionMutation.mutateAsync(Number(subscription.id));
+
+    if (response.status_code === 200) {
+      setIsThreeDotOpen(false);
+    }
   };
 
   return (
@@ -81,7 +124,16 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
       ref={setNodeRef}
     >
       <div css={styles.item}>
-        <p css={styles.title} {...listeners}>
+        <p
+          css={styles.title}
+          {...listeners}
+          onClick={handleEditSubscription}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              handleEditSubscription();
+            }
+          }}
+        >
           <SVGIcon data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
           {subscription.plan_name}
           <Show when={subscription.is_featured}>
@@ -156,33 +208,36 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
             icon={<SVGIcon name="edit" width={16} height={16} />}
             text={__('Edit', 'tutor')}
             data-cy="edit-subscription"
-            onClick={() => {
-              showModal({
-                component: SubscriptionModal,
-                props: {
-                  title: __('Manage Subscription Plans', 'tutor'),
-                  icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
-                  expandedSubscriptionId: subscription.id,
-                  courseId,
-                  isBundle,
-                },
-              });
-              setIsThreeDotOpen(false);
-            }}
+            onClick={handleEditSubscription}
           />
           <ThreeDots.Option
-            icon={<SVGIcon name="duplicate" width={16} height={16} />}
+            icon={
+              duplicateSubscriptionMutation.isPending ? (
+                <LoadingSpinner size={16} />
+              ) : (
+                <SVGIcon name="duplicate" width={16} height={16} />
+              )
+            }
             text={__('Duplicate', 'tutor')}
-            onClick={() => {
-              // Handle duplicate action
-            }}
+            onClick={handleDuplicateSubscription}
           />
           <ThreeDots.Option
             icon={<SVGIcon name="delete" width={16} height={16} />}
             text={__('Delete', 'tutor')}
             isTrash
             onClick={() => {
-              // Handle delete action
+              setIsThreeDotOpen(false);
+              showModal({
+                id: 'subscription-delete-modal',
+                component: ConfirmationModal,
+                props: {
+                  // translators: %s is the title of the item to be deleted
+                  title: sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name),
+                  description: __('Are you sure you want to delete this plan? This cannot be undone.', 'tutor'),
+                  onConfirm: handleDeleteSubscription,
+                  confirmButtonVariant: 'danger',
+                },
+              });
             }}
           />
         </ThreeDots>
@@ -201,6 +256,7 @@ const styles = {
 
     [data-grabber] {
       margin-left: -${spacing[4]};
+      margin-right: ${spacing[4]};
       color: ${colorTokens.icon.default};
       flex-shrink: 0;
     }
@@ -240,6 +296,7 @@ const styles = {
     color: ${colorTokens.text.primary};
     display: flex;
     align-items: center;
+    cursor: pointer;
   `,
   information: css`
     ${typography.small()};
@@ -280,5 +337,7 @@ const styles = {
   `,
   badge: css`
     margin-left: ${spacing[8]};
+    font-size: ${fontSize[11]};
+    padding: 0 ${spacing[6]};
   `,
 };
