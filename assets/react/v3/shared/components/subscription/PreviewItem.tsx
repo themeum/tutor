@@ -4,13 +4,14 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useState } from 'react';
 
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Switch from '@TutorShared/atoms/Switch';
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 
-import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
-import Switch from '@TutorShared/atoms/Switch';
-import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -25,7 +26,6 @@ import {
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type DurationUnit } from '@TutorShared/utils/types';
-import ConfirmationModal from '../modals/ConfirmationModal';
 
 interface PreviewItemProps {
   courseId: number;
