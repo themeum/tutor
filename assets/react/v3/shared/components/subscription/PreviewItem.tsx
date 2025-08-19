@@ -265,6 +265,7 @@ const styles = {
 
     [data-action-buttons] {
       opacity: ${isActionButtonVisible ? 1 : 0};
+      background-color: inherit;
     }
 
     &:hover {
@@ -315,14 +316,13 @@ const styles = {
     color: ${colorTokens.icon.brand};
   `,
   actionButtons: css`
-    padding-left: ${spacing[8]};
+    padding-inline: ${spacing[8]};
     position: absolute;
     top: 50%;
-    right: ${spacing[12]};
+    right: 0;
     transform: translateY(-50%);
     ${styleUtils.display.flex()};
     height: 100%;
-    background-color: ${colorTokens.background.hover};
     align-items: center;
     gap: ${spacing[8]};
   `,
