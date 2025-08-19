@@ -358,8 +358,8 @@ class QuizModel {
 	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
 
-		$start         = sanitize_text_field( $start );
-		$limit         = sanitize_text_field( $limit );
+		$start         = (int) $start;
+		$limit         = (int) $limit;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
@@ -369,63 +369,45 @@ class QuizModel {
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
 		// Filter by course.
-		if ( '' != $course_filter ) {
-			! is_array( $course_filter ) ? $course_filter = array( $course_filter ) : 0;
-			$course_ids                                   = implode( ',', array_map( 'intval', $course_filter ) );
-			$course_filter                                = " AND quiz_attempts.course_id IN ($course_ids) ";
+		if ( '' !== $course_filter ) {
+			if ( ! is_array( $course_filter ) ) {
+				$course_filter = array( $course_filter );
+			}
+
+			$course_ids    = QueryHelper::prepare_in_clause( array_map( 'intval', $course_filter ) );
+			$course_filter = " AND quiz_attempts.course_id IN ($course_ids) ";
 		}
 
 		// Filter by date.
-		$date_filter = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
+		$date_filter = '' !== $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
+		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
 
 		$result_clause  = '';
 		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
-		$limit_offset   = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
-
-		$pass_mark     = "((( SUBSTRING_INDEX(
-			SUBSTRING_INDEX(
-			  attempt_info,
-			  CONCAT(
-				  '\"passing_grade\";s:',
-				  SUBSTRING_INDEX(SUBSTRING_INDEX(attempt_info, '\"passing_grade\";s:', -1), ':\"', 1),
-				  ':\"'
-			  ),
-			  -1
-			), 
-			'\"', 
-			1
-  		))/100) * quiz_attempts.total_marks)";
-		$pending_count = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
+		$limit_offset   = $count_only ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
 
 		// Get attempts by instructor ID.
 		$instructor_clause = '';
-		$instructor_join   = '';
 		if ( $instructor_id_check ) {
 			$current_user_id = get_current_user_id();
 			$instructor_id   = tutor_utils()->has_user_role( 'administrator', $current_user_id ) ? null : $current_user_id;
 
 			if ( $instructor_id ) {
-				// $instructor_clause = " AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id)";
-				$instructor_clause = " INNER JOIN {$wpdb->prefix}usermeta AS instructor_meta ON course.ID = instructor_meta.meta_value AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id) ";
+				$instructor_clause = " INNER JOIN {$wpdb->usermeta} AS instructor_meta ON course.ID = instructor_meta.meta_value AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id) ";
 			}
 		}
 
-		// Switc hthrough result state and assign meta clause.
 		switch ( $result_state ) {
-			case 'pass':
-				// Just check if the earned mark is greater than pass mark.
-				// It doesn't matter if there is any pending or failed question.
-				$result_clause = " AND quiz_attempts.earned_marks>={$pass_mark}  ";
+			case self::RESULT_PASS:
+				$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', self::RESULT_PASS );
 				break;
 
-			case 'fail':
-				// Check if earned marks is less than pass mark and there is no pending question.
-				$result_clause = " AND quiz_attempts.earned_marks<{$pass_mark} AND {$pending_count} < 1 ";
+			case self::RESULT_FAIL:
+				$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', self::RESULT_FAIL );
 				break;
 
-			case 'pending':
-				$result_clause = " AND {$pending_count}>0 ";
+			case self::RESULT_PENDING:
+				$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', self::RESULT_PENDING );
 				break;
 		}
 
