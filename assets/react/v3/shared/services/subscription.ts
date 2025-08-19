@@ -62,7 +62,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   recurring_value: '1',
   recurring_interval: 'month',
   is_featured: false,
-  is_enabled: false,
+  is_enabled: true,
   regular_price: '0',
   sale_price: '0',
   sale_price_from_date: '',
