@@ -12,3 +12,17 @@ export async function fetchCountriesData() {
         return [];
     }
 }
+
+/**
+ * Extracts Tutor-Message header from response
+ * 
+ * @param {Response} response - Fetch Response object
+ * @returns {string|undefined} Message from Tutor-Message header if exists, undefined otherwise 
+ */
+export function tutorHeaderMessage(response) {
+    try {
+        response.headers.get('Tutor-Message')
+    } catch (error) {
+        return undefined;
+    }
+}
