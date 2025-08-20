@@ -435,24 +435,26 @@ document.addEventListener('DOMContentLoaded', function () {
 	 * On toggle switch change - show, hide setting's elements
 	 * @since 2.1.9
 	 */
-	function showHideToggleChildren(el) {
-		let isChecked = el.is(':checked')
-		let fields = el.data('toggle-fields').split(',')
+	function showHideToggleChildren(inputSwitchElement) {
+		let isChecked = inputSwitchElement.is(':checked')
+		let fields = inputSwitchElement.data('toggle-fields').split(',')
 		if (Array.isArray(fields) === false || fields.length === 0) return
 
 		fields = fields.map(s => s.trim());
 		isChecked
-			? fields.forEach((f) => $('#field_' + f).removeClass('tutor-hide-option'))
-			: fields.forEach((f) => $('#field_' + f).addClass('tutor-hide-option'))
+			? fields.forEach((f) => $(`#field_${f}`).removeClass('tutor-hide-option'))
+			: fields.forEach((f) => $(`#field_${f}`).addClass('tutor-hide-option'))
 
-		let toggleWrapper = el.parent().parent().parent()
-		let sectionWrapper = el.parent().parent().parent().parent()
-		let visibleElements = sectionWrapper.find('.tutor-option-field-row').not('div.tutor-hide-option').length
+		let tutorOptionFieldRow = inputSwitchElement.closest('.tutor-option-field-row')
+		let tutorOptionRowWrapper = inputSwitchElement.closest('.item-wrapper')
+		let visibleElements = tutorOptionRowWrapper.find('.tutor-option-field-row').not('div.tutor-hide-option')
 
-		visibleElements === 1
-			? toggleWrapper.addClass('tutor-option-no-bottom-border')
-			: toggleWrapper.removeClass('tutor-option-no-bottom-border')
-
+		if (visibleElements.length === 1) {
+			tutorOptionFieldRow.addClass('tutor-option-no-bottom-border')
+		} else {
+			tutorOptionFieldRow.removeClass('tutor-option-no-bottom-border')
+			visibleElements.last().addClass('tutor-option-no-bottom-border')
+		}
 	}
 
 	const btnToggles = $('input[type="checkbox"][data-toggle-fields]')

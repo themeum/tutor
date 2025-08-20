@@ -1213,20 +1213,21 @@ class Options_V2 {
 								'desc'    => __( 'Define how many columns you want to use to display courses.', 'tutor' ),
 							),
 							array(
-								'key'         => 'course_archive_filter',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Filter', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
-							),
-							array(
 								'key'         => 'courses_per_page',
 								'type'        => 'number',
 								'number_type' => 'integer',
 								'label'       => __( 'Courses Per Page', 'tutor' ),
 								'default'     => '12',
 								'desc'        => __( 'Set the number of courses to display per page on the Course List page.', 'tutor' ),
+							),
+							array(
+								'key'           => 'course_archive_filter',
+								'type'          => 'toggle_switch',
+								'label'         => __( 'Course Filter', 'tutor' ),
+								'label_title'   => '',
+								'default'       => 'off',
+								'desc'          => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
+								'toggle_fields' => 'supported_course_filters',
 							),
 							array(
 								'key'     => 'supported_course_filters',
@@ -2000,7 +2001,7 @@ class Options_V2 {
 	 */
 	public function update_settings_log( $new_settings_data, $action_type ) {
 		$get_final_data = array();
-		
+
 		$action = strtolower( $action_type );
 
 		$time = tutor_time();
