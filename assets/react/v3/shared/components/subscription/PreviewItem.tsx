@@ -126,7 +126,6 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
         <p
           css={styles.title}
           {...attributes}
-          {...listeners}
           onClick={handleEditSubscription}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
@@ -134,7 +133,7 @@ export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: Pre
             }
           }}
         >
-          <SVGIcon data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
+          <SVGIcon {...listeners} data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
           <span>{subscription.plan_name}</span>
           <Show when={subscription.is_featured}>
             <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
