@@ -11,6 +11,7 @@ import { type ImportContentResponse } from '@ImportExport/services/import-export
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getObjectEntries } from '@TutorShared/utils/util';
 
 interface ImportErrorListModalProps extends ModalProps {
   errors: ImportContentResponse['errors'];
@@ -59,7 +60,7 @@ const ImportErrorListModal = ({ errors, closeModal }: ImportErrorListModalProps)
       maxWidth={700}
     >
       <div css={styles.wrapper}>
-        {Object.entries(errors || {}).map(([errorType, errorList]) => {
+        {getObjectEntries(errors || {}).map(([errorType, errorList = []]) => {
           const key = errorType as keyof typeof errorTypeTextMap;
           const title = errorTypeTextMap[key] ?? errorType;
           return renderErrorList(title, errorList);
