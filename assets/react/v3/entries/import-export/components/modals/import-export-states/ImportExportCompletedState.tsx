@@ -21,8 +21,8 @@ import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import importErrorImage from '@SharedImages/import-export/import-error.webp';
 import importSuccessImage from '@SharedImages/import-export/import-success.webp';
+import ImportErrorListModal from '@TutorShared/components/modals/ImportErrorListModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import ImportErrorListModal from '../ImportErrorListModal';
 
 interface ImportExportCompletedStateProps {
   state: ImportExportModalState;
