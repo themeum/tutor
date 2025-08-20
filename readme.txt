@@ -319,14 +319,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.7.3 - Aug 20, 2025
 
-Update: Improved WPML compatibility
+Update: Improved WPML compatibility (Pro)
 Fix: Corrected an issue where public courses could be incorrectly set as paid
 Fix: Users with the Editor role were unable to view post previews
 Fix: The quiz timer paused when users were inactive or switched tabs
 Fix: Quiz submissions were possible even after the timer expired
-Fix: The calendar displayed incorrect dates when accessed from different time zones
-Fix: Future-dated meetings and assignments were not rendered on the calendar
-Fix: Users were unable to access bundle-based subscriptions
+Fix: The calendar displayed incorrect dates when accessed from different time zones (Pro)
+Fix: Future-dated meetings and assignments were not rendered on the calendar (Pro)
+Fix: Users were unable to access bundle-based subscriptions (Pro)
 Fix: Entries were missing in the WooCommerce purchase history CSV
 
 = 3.7.2 - Aug 11, 2025
