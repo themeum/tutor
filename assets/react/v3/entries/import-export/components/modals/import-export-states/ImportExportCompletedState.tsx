@@ -4,22 +4,25 @@ import { format } from 'date-fns';
 import { useState } from 'react';
 
 import {
+  type ImportContentResponse,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { formatBytes } from '@TutorShared/utils/util';
+import { formatBytes, getObjectKeys } from '@TutorShared/utils/util';
 
 import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import importErrorImage from '@SharedImages/import-export/import-error.webp';
 import importSuccessImage from '@SharedImages/import-export/import-success.webp';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import ImportErrorListModal from '../ImportErrorListModal';
 
 interface ImportExportCompletedStateProps {
   state: ImportExportModalState;
@@ -27,6 +30,7 @@ interface ImportExportCompletedStateProps {
   fileSize?: number;
   message?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
+  importErrors?: ImportContentResponse['errors'];
   onDownload?: (fileName: string) => void;
   onClose: () => void;
   importFileName?: string;
@@ -40,11 +44,13 @@ const ImportExportCompletedState = ({
   fileSize,
   message,
   completedContents,
+  importErrors,
   onDownload,
   onClose,
   type,
 }: ImportExportCompletedStateProps) => {
   const [isFailedDataVisible, setIsFailedDataVisible] = useState(false);
+  const { showModal } = useModal();
 
   const successFullyCompletedCourses = completedContents?.courses?.success || [];
   const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
@@ -374,7 +380,24 @@ const ImportExportCompletedState = ({
           </div>
         </Show>
         <Show when={type === 'import'}>
-          <div>
+          <div css={styles.footer}>
+            <Show when={getObjectKeys(importErrors || {}).length > 0}>
+              <Button
+                variant="tertiary"
+                size="small"
+                onClick={() => {
+                  showModal({
+                    component: ImportErrorListModal,
+                    props: {
+                      errors: importErrors,
+                    },
+                    depthIndex: zIndex.highest,
+                  });
+                }}
+              >
+                {__('Error Report', 'tutor')}
+              </Button>
+            </Show>
             <Button variant="primary" size="small" onClick={onClose}>
               {__('Okay', 'tutor')}
             </Button>
@@ -534,5 +557,9 @@ const styles = {
   fileSize: css`
     ${typography.tiny()};
     color: ${colorTokens.text.hints};
+  `,
+  footer: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[8]};
   `,
 };

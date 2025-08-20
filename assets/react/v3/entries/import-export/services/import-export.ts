@@ -227,8 +227,17 @@ interface ImportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-interface ImportContentResponse extends ImportExportContentResponseBase {
+export interface ImportContentResponse extends ImportExportContentResponseBase {
   imported_data: [];
+  errors?: {
+    topics?: string[];
+    lesson?: string[];
+    tutor_quiz?: string[];
+    tutor_assignments?: string[];
+    'cb-question'?: string[];
+    'cb-lesson'?: string[];
+    'cb-assignment'?: string[];
+  };
 }
 
 const importContents = async (payload: ImportContentPayload) => {

@@ -97,6 +97,7 @@ const Import = () => {
           closeModal({ action: 'CLOSE' });
         },
         completedContents: importResponse?.completed_contents,
+        importErrors: importResponse?.errors,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
