@@ -77,7 +77,7 @@ const ImportExportCompletedState = ({
       },
       subtitle: {
         success:
-          completedWithErrorsCourses.length || completedWithErrorsBundles.length
+          completedWithErrorsCourses.length || completedWithErrorsBundles.length || !!importErrors
             ? // prettier-ignore
               __( "Your Tutor LMS data was successfully imported. However, some items couldn't be imported. Here's the list:", 'tutor')
             : // prettier-ignore

@@ -75,7 +75,7 @@ const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
-    padding: ${spacing[16]} ${spacing[24]};
+    padding: ${spacing[16]} ${spacing[24]} ${spacing[24]} ${spacing[24]};
     max-height: 90vh;
     ${styleUtils.overflowYAuto}
 
