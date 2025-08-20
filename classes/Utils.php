@@ -36,7 +36,7 @@ class Utils {
 	const ENROLLMENT_STATUS_COMPLETE = 'complete';
 	const ENROLLMENT_STATUS_ALL      = 'all';
 	const COURSE_COMPLETED           = 'course_completed';
-	const COURSE_RATING        		 = 'tutor_course_rating';
+	const COURSE_RATING              = 'tutor_course_rating';
 
 	/**
 	 * Compatibility for splitting utils functions to specific model
@@ -10990,8 +10990,11 @@ class Utils {
 
 		return array_map(
 			function ( $item ) {
-				$item->course_completion_meta = get_comment_meta( $item->comment_ID );
-				return $item;
+
+				return array(
+					'completion'      => $item,
+					'completion_meta' => get_comment_meta( $item->comment_ID ),
+				);
 			},
 			$result
 		);
@@ -11130,9 +11133,8 @@ class Utils {
 	 *
 	 * @param int $course_id The ID of the course for which reviews are being fetched.
 	 *
-	 * @return array An array of reviews. If there is an error or no reviews 
+	 * @return array An array of reviews. If there is an error or no reviews
 	 *               are found, an empty array is returned.
-	 *
 	 */
 	public function get_reviews_by_course_id( $course_id ): array {
 
@@ -11148,7 +11150,8 @@ class Utils {
 				self::COURSE_RATING,
 				$course_id,
 				'TutorLMSPlugin'
-			), ARRAY_A
+			),
+			ARRAY_A
 		);
 
 		if ( $wpdb->last_error || empty( $result ) ) {
@@ -11159,8 +11162,8 @@ class Utils {
 		return array_map(
 			function ( $item ) {
 				return array(
-					'review' 	  => $item,
-					'review_meta' => get_comment_meta( $item->comment_ID )
+					'review'      => $item,
+					'review_meta' => get_comment_meta( $item->comment_ID ),
 				);
 			},
 			$result
