@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.7.2
+Stable tag: 3.7.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,18 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.7.3 - Aug 20, 2025
+
+Update: Improve public course accessibility by making them free
+Update: WPML compatibilities
+Fix: A user with the editor role is unable to see post preview
+Fix: The timer pauses if the user is inactive or switches to another tab during the quiz.
+Fix: Quiz submission remains possible even after the timer has expired
+Fix: The calendar shows an incorrect date when accessed from a different time zone
+Fix: Future-dated meetings or assignments are not being rendered on the calendar
+Fix: User is unable to access bundle-based subscription
+Fix: Missing entries in WooCommerce purchase history CSV
 
 = 3.7.2 - Aug 11, 2025
 
