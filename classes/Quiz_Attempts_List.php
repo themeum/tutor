@@ -90,6 +90,7 @@ class Quiz_Attempts_List {
 	 * Get the attempts stat from specific instructor context
 	 *
 	 * @since 2.0.0
+	 * @since 3.8.0 refactor and query optimize.
 	 *
 	 * @return array
 	 */
