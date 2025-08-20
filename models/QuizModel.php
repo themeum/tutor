@@ -341,7 +341,8 @@ class QuizModel {
 	 * Get the all quiz attempts
 	 *
 	 * @since 1.0.0
-	 * @since 1.9.5 sorting paramas added
+	 * @since 1.9.5 sorting params added.
+	 * @since 3.8.0 refactor and query optimize.
 	 *
 	 * @param integer $start start.
 	 * @param integer $limit limit.
@@ -427,7 +428,6 @@ class QuizModel {
 			$search_filter,
 			$search_filter
 		);
-
 		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -851,21 +851,18 @@ class QuizModel {
 		global $wpdb;
 
 		$all_pending = true;
-		$result      = 'pending';
+		$result      = self::RESULT_PENDING;
 
 		$user_id      = tutor_utils()->get_user_id( $user_id );
 		$attempt_list = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id=%d AND quiz_id=%d", $user_id, $quiz_id ) );
 
 		$total_pending_attempt = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(quiz_attempt_id) total_pending_attempt
-				FROM (
-					SELECT qa.quiz_attempt_id, COUNT(*) AS total_pending
-					FROM {$wpdb->prefix}tutor_quiz_attempt_answers qa
-					WHERE qa.quiz_id = %d AND qa.user_id=%d AND qa.is_correct IS NULL
-					GROUP BY qa.quiz_attempt_id
-				) a
+				"SELECT COUNT(quiz_attempt_id) total
+				FROM {$wpdb->prefix}tutor_quiz_attempts
+				WHERE result=%s AND quiz_id = %d AND user_id = %d
 				",
+				self::RESULT_PENDING,
 				$quiz_id,
 				$user_id
 			)
