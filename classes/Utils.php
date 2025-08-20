@@ -11001,19 +11001,21 @@ class Utils {
 	}
 
 	/**
-	 * Retrieve order details for a specific course.
+	 * Get order details for given course IDs.
 	 *
 	 * @since 3.8.0
 	 *
-	 * @param int $course_id The ID of the course for which the order details are to be retrieved.
+	 * @param int[] $course_ids Array of course IDs to fetch order details.
 	 *
-	 * @return array An array containing order data and order item data. Each entry contains:
-	 *               - 'orders' (order data from the `wp_tutor_orders` table)
-	 *               - 'order_items' (order item data from the `wp_tutor_order_items` table)
-	 *               Returns an empty array if there is an error or no data is found.
+	 * @return array Returns an array of order details with each element containing:
+	 *               - order data (all columns from tutor_orders table)
+	 *               - order_items data (al columns except id)
+	 *               Returns an empty array if no results found or on error.
 	 */
-	public function get_order_details( $course_id ) {
+	public function get_order_details( array $course_ids ) {
 		global $wpdb;
+
+		$in_clause = QueryHelper::prepare_in_clause( $course_ids );
 
 		$result = $wpdb->get_results(
 			$wpdb->prepare(
@@ -11024,12 +11026,11 @@ class Utils {
 					order_items.regular_price,
 					order_items.sale_price,
 					order_items.discount_price,
-					order_items.coupon_code	
+					order_items.coupon_code	AS item_coupon_code
 				FROM $wpdb->tutor_order_items AS order_items
-				LEFT JOIN $wpdb->tutor_orders AS orders
+				JOIN $wpdb->tutor_orders AS orders
 				ON orders.id = order_items.order_id
-				WHERE order_items.item_id = %d",
-				$course_id
+				WHERE order_items.item_id IN ( $in_clause)"
 			),
 			ARRAY_A
 		);
@@ -11039,26 +11040,7 @@ class Utils {
 			return array();
 		}
 
-		$order_columns_info = $wpdb->get_results( "DESCRIBE {$wpdb->tutor_orders}", ARRAY_A );
-
-		if ( ! empty( $order_columns_info ) ) {
-
-			$total_order_column = count( $order_columns_info );
-
-			// Separate order data and order item data.
-			return array_map(
-				function ( $item ) use ( $total_order_column ) {
-
-					return array(
-						'orders'      => array_slice( $item, 0, $total_order_column ),
-						'order_items' => array_slice( $item, $total_order_column ),
-					);
-				},
-				$result
-			);
-		}
-
-		return array();
+		return $result;
 	}
 
 	/**
@@ -11168,5 +11150,43 @@ class Utils {
 			},
 			$result
 		);
+	}
+
+	/**
+	 * Get subscription plans associated with a specific object ID.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $id The object ID to retrieve subscription plans for.
+	 *
+	 * @return array Returns an array of subscription plans with each element containing:
+	 *               - plan data (all columns from `tutor_subscription_plans` table)
+	 *               - plan_items data (all columns from `tutor_subscription_plan_items` table except id)
+	 *               Returns an empty array if no results found or on error.
+	 */
+	public function get_subscription_plans_by_id( $id ): array {
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT plans.*,
+				plan_items.plan_id,
+				plan_items.object_name,
+				plan_items.object_id			
+				FROM {$wpdb->tutor_subscription_plan_items} as plan_items
+				INNER JOIN {$wpdb->tutor_subscription_plans} as plans
+				ON plans.id = plan_items.plan_id
+				WHERE plan_items.object_id = %d",
+				$id
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error || empty( $result ) ) {
+			error_log( 'Error While getting subscription plans for object id ' . $id . ' from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return array();
+		}
+
+		return $result;
 	}
 }
