@@ -68,21 +68,6 @@ export default function SubscriptionItem() {
             )}
           />
 
-          {/* <Controller
-              control={form.control}
-              name={`subscriptions.${index}.payment_type`}
-              render={(controllerProps) => (
-                <FormSelectInput
-                  {...controllerProps}
-                  label={__('Pricing option', 'tutor')}
-                  options={[
-                    { label: __('Recurring payments', 'tutor'), value: 'recurring' },
-                    { label: __('One time payment', 'tutor'), value: 'onetime' },
-                  ]}
-                />
-              )}
-            /> */}
-
           <div css={styles.inputGroup}>
             <Controller
               control={form.control}
