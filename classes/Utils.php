@@ -10055,7 +10055,7 @@ class Utils {
 					content.post_type AS content_type
 			FROM {$wpdb->posts} course
 				LEFT JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
-				INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
+				LEFT JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
 				LEFT JOIN {$wpdb->posts} enrollment ON course.ID=enrollment.post_parent
 			WHERE topic.post_parent IN ($course_ids)"
 		);
