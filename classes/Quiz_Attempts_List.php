@@ -228,7 +228,7 @@ class Quiz_Attempts_List {
 	 *
 	 * @return array
 	 */
-	public function prpare_bulk_actions(): array {
+	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
 			$this->bulk_action_delete(),
