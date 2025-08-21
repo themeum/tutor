@@ -10875,7 +10875,7 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error || empty( $results ) ) {
-			error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempts found for user ' . $user_id . ' in course ' . $course_id;
 			return array();
 		}
 
@@ -10910,7 +10910,7 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error || empty( $results ) ) {
-			error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempt answers found for attempt ID ' . $attempt_id;
 			return array();
 		}
 
@@ -10945,7 +10945,7 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error || empty( $result ) ) {
-			error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
 			return array();
 		}
 
@@ -10985,7 +10985,7 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error || empty( $result ) ) {
-			error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
 			return array();
 		}
 
@@ -11037,7 +11037,7 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error || empty( $result ) ) {
-			error_log( 'Error While getting order_details from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting order_details from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
 			return array();
 		}
 
@@ -11068,7 +11068,7 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error ) {
-			error_log( 'Error While getting order meta from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting order meta from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
 			return array();
 		}
 
@@ -11089,20 +11089,21 @@ class Utils {
 
 		global $wpdb;
 
+		$where_clause = ! empty( $course_id ) ? 'AND course_id = ' . (int) $course_id : '';
+
 		$result = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT *
 				FROM {$wpdb->tutor_earnings}
 				WHERE order_id = %d
-				AND course_id = %d",
-				$order_id,
-				$course_id
+				{$where_clause}",
+				$order_id
 			),
 			ARRAY_A
 		);
 
 		if ( $wpdb->last_error ) {
-			error_log( 'Error While getting earnings from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting earnings from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
 			return array();
 		}
 
@@ -11138,7 +11139,7 @@ class Utils {
 		);
 
 		if ( $wpdb->last_error || empty( $result ) ) {
-			error_log( 'Error While getting reviews for course id ' . $course_id . ' from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			$wpdb->last_error ? error_log( 'Error While getting reviews for course id ' . $course_id . ' from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
 			return array();
 		}
 
@@ -11146,74 +11147,10 @@ class Utils {
 			function ( $item ) {
 				return array(
 					'review'      => $item,
-					'review_meta' => get_comment_meta( $item->comment_ID ),
+					'review_meta' => get_comment_meta( $item['comment_ID'] ),
 				);
 			},
 			$result
 		);
-	}
-
-	/**
-	 * Get subscription plans associated with a specific object ID.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param int $id The object ID to retrieve subscription plans for.
-	 *
-	 * @return array Returns an array of subscription plans with each element containing:
-	 *               - plan data (all columns from `tutor_subscription_plans` table)
-	 *               - plan_items data (all columns from `tutor_subscription_plan_items` table except id)
-	 *               Returns an empty array if no results found or on error.
-	 */
-	public function get_subscription_plans_by_id( $where ): array {
-		global $wpdb;
-
-		if ( empty( $where) || ! is_array( $where)) {
-			return array();
-		}
-
-		$where_clause = ' AND ' . QueryHelper::build_where_clause( $where );
-
-		$result = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT plans.*,
-				plan_items.plan_id,
-				plan_items.object_name,
-				plan_items.object_id			
-				FROM {$wpdb->tutor_subscription_plan_items} as plan_items
-				INNER JOIN {$wpdb->tutor_subscription_plans} as plans
-				ON plans.id = plan_items.plan_id
-				WHERE 1=1
-				{$where_clause}",
-			),
-			ARRAY_A
-		);
-
-		if ( $wpdb->last_error || empty( $result ) ) {
-			error_log( 'Error While getting subscription plans from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return array();
-		}
-
-		return $result;
-	}
-
-	public function get_all_membership_plan_ids()
-	{
-		global $wpdb;
-
-		$in_clause = QueryHelper::prepare_in_clause( PlanModel::get_membership_plan_types());
-
-		$results = $wpdb->get_col(
-			"SELECT id
-			FROM {$wpdb->tutor_subscription_plans}
-			WHERE plan_type IN ( $in_clause )"
-		);
-
-		if ( $wpdb->last_error || empty( $results ) ) {
-			error_log( 'Error While getting membership subscription ids from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return array();
-		}
-
-		return $results;
 	}
 }
