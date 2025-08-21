@@ -38,12 +38,15 @@ class CartModel {
 	/**
 	 * Add a course to the user's cart.
 	 *
-	 * @param int $user_id User ID.
-	 * @param int $course_id Course ID.
+	 * @since 3.8.0 $items_details Param added
+	 *
+	 * @param int   $user_id User ID.
+	 * @param int   $course_id Course ID.
+	 * @param mixed $item_details Cart item details.
 	 *
 	 * @return array Array containing the result of the insert operation.
 	 */
-	public function add_course_to_cart( $user_id, $course_id ) {
+	public function add_course_to_cart( $user_id, $course_id, $item_details = '' ) {
 		global $wpdb;
 
 		$current_time = current_time( 'mysql', true );
@@ -72,8 +75,9 @@ class CartModel {
 		return QueryHelper::insert(
 			"{$wpdb->prefix}tutor_cart_items",
 			array(
-				'cart_id'   => $user_cart_id,
-				'course_id' => $course_id,
+				'cart_id'      => $user_cart_id,
+				'course_id'    => $course_id,
+				'item_details' => $item_details,
 			)
 		);
 	}
