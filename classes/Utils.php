@@ -19,6 +19,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\DateTimeHelper;
+use TutorPro\Subscription\Models\PlanModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -11164,8 +11165,14 @@ class Utils {
 	 *               - plan_items data (all columns from `tutor_subscription_plan_items` table except id)
 	 *               Returns an empty array if no results found or on error.
 	 */
-	public function get_subscription_plans_by_id( $id ): array {
+	public function get_subscription_plans_by_id( $where ): array {
 		global $wpdb;
+
+		if ( empty( $where) || ! is_array( $where)) {
+			return array();
+		}
+
+		$where_clause = ' AND ' . QueryHelper::build_where_clause( $where );
 
 		$result = $wpdb->get_results(
 			$wpdb->prepare(
@@ -11176,17 +11183,37 @@ class Utils {
 				FROM {$wpdb->tutor_subscription_plan_items} as plan_items
 				INNER JOIN {$wpdb->tutor_subscription_plans} as plans
 				ON plans.id = plan_items.plan_id
-				WHERE plan_items.object_id = %d",
-				$id
+				WHERE 1=1
+				{$where_clause}",
 			),
 			ARRAY_A
 		);
 
 		if ( $wpdb->last_error || empty( $result ) ) {
-			error_log( 'Error While getting subscription plans for object id ' . $id . ' from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			error_log( 'Error While getting subscription plans from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
 			return array();
 		}
 
 		return $result;
+	}
+
+	public function get_all_membership_plan_ids()
+	{
+		global $wpdb;
+
+		$in_clause = QueryHelper::prepare_in_clause( PlanModel::get_membership_plan_types());
+
+		$results = $wpdb->get_col(
+			"SELECT id
+			FROM {$wpdb->tutor_subscription_plans}
+			WHERE plan_type IN ( $in_clause )"
+		);
+
+		if ( $wpdb->last_error || empty( $results ) ) {
+			error_log( 'Error While getting membership subscription ids from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return array();
+		}
+
+		return $results;
 	}
 }
