@@ -435,17 +435,25 @@ class OrderModel {
 		// Set order id on each item.
 		foreach ( $items as $key => $item ) {
 			$items[ $key ]['order_id'] = $order_id;
+
+			try {
+				$insert = QueryHelper::insert(
+					$this->order_item_table,
+					$items,
+				);
+				if ( $insert ) {
+					if ( ! empty( $item['meta_data'] ) ) {
+						foreach ( $item['meta_data'] as $meta ) {
+							( new OrderItemMetaModel() )->add_meta( $item['item_id'], $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
+						}
+					}
+				}
+			} catch ( \Throwable $th ) {
+				return false;
+			}
 		}
 
-		try {
-			$insert = QueryHelper::insert_multiple_rows(
-				$this->order_item_table,
-				$items
-			);
-			return $insert ? true : false;
-		} catch ( \Throwable $th ) {
-			throw new Exception( $th->getMessage() );
-		}
+		return true;
 	}
 
 	/**
