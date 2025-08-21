@@ -9,7 +9,7 @@
  * @since 3.8.0
  */
 
-namespace Tutor\Ecommerce\Models;
+namespace Tutor\Models;
 
 use Tutor\Models\BaseModel;
 
