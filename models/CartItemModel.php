@@ -32,5 +32,5 @@ class CartItemModel extends BaseModel {
 	 *
 	 * @var string
 	 */
-	protected $table_name = 'tutor_order_items';
+	protected $table_name = 'tutor_cart_items';
 }
