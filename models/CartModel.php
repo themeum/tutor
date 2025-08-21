@@ -85,11 +85,14 @@ class CartModel {
 	/**
 	 * Get items from the user's cart.
 	 *
-	 * @param int $user_id User ID.
+	 * @since 3.8.0 $is_details param added.
+	 *
+	 * @param int  $user_id User ID.
+	 * @param bool $is_details If false then just cart items will be returned.
 	 *
 	 * @return array Array containing the cart items and their total count.
 	 */
-	public function get_cart_items( $user_id ) {
+	public function get_cart_items( $user_id, $is_details = true ) {
 		global $wpdb;
 
 		$cart_data = array(
@@ -131,7 +134,7 @@ class CartModel {
 			);
 		}
 
-		return $cart_data;
+		return $is_details ? $cart_data : $cart_data['courses']['results'];
 	}
 
 	/**
