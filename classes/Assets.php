@@ -425,7 +425,7 @@ class Assets {
 
 		// Common css library.
 		if ( is_rtl() ) {
-			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.rtl.min.css', array(), TUTOR_VERSION );
+			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
 		} else {
 			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
 		}
