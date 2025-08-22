@@ -433,18 +433,19 @@ class OrderModel {
 		}
 
 		// Set order id on each item.
-		foreach ( $items as $key => $item ) {
-			$items[ $key ]['order_id'] = $order_id;
-
+		foreach ( $items as $item ) {
+			$item['order_id'] = $order_id;
+			$meta_data        = $item['meta_data'] ?? null;
 			try {
+				unset( $item['meta_data'] );
 				$insert = QueryHelper::insert(
 					$this->order_item_table,
-					$items,
+					$item,
 				);
 				if ( $insert ) {
-					if ( ! empty( $item['meta_data'] ) ) {
-						foreach ( $item['meta_data'] as $meta ) {
-							( new OrderItemMetaModel() )->add_meta( $item['item_id'], $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
+					if ( ! empty( $meta_data ) ) {
+						foreach ( $meta_data as $meta ) {
+							( new OrderItemMetaModel() )->add_meta( $insert, $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
 						}
 					}
 				}
