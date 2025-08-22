@@ -57,7 +57,13 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
           {__('Cancel', 'tutor')}
         </Button>
-        <Button size="small" variant="primary" onClick={handleAddCourses} disabled={selectedItems.length === 0}>
+        <Button
+          size="small"
+          variant="primary"
+          onClick={handleAddCourses}
+          disabled={selectedItems.length === 0}
+          data-cy="add-courses"
+        >
           {__('Add', 'tutor')}
         </Button>
       </div>

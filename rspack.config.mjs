@@ -61,6 +61,7 @@ const createConfig = (env, options) => {
 
   const baseConfig = {
     mode,
+    cache: false,
     module: {
       rules: [
         {
