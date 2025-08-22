@@ -20,6 +20,7 @@ export type Subscription = {
   plan_type: PlanType;
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
+  plan_order: string;
   recurring_value: string;
   recurring_interval: Exclude<DurationUnit, 'hour'>;
   is_featured: '0' | '1';
@@ -59,6 +60,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   plan_type: 'course',
   assign_id: '0',
   plan_name: '',
+  plan_order: '0',
   recurring_value: '1',
   recurring_interval: 'month',
   is_featured: false,
@@ -87,6 +89,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     plan_type: subscription.plan_type ?? 'course',
     assign_id: subscription.assign_id,
     plan_name: subscription.plan_name ?? '',
+    plan_order: subscription.plan_order ?? '0',
     recurring_value: subscription.recurring_value ?? '0',
     recurring_interval: subscription.recurring_interval ?? 'month',
     is_featured: !!Number(subscription.is_featured),
@@ -125,6 +128,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
     plan_type: formData.plan_type,
     assign_id: formData.assign_id,
     plan_name: formData.plan_name,
+    ...(formData.id && String(formData.id) === '0' && { plan_order: formData.plan_order }),
     ...(formData.payment_type === 'recurring' && {
       recurring_value: formData.recurring_value,
       recurring_interval: formData.recurring_interval,
@@ -150,6 +154,7 @@ export type SubscriptionPayload = {
   plan_type: PlanType;
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
+  plan_order?: string;
   recurring_value?: string;
   recurring_interval?: Exclude<DurationUnit, 'hour'>;
   regular_price: string;
