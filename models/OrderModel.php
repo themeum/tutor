@@ -445,7 +445,7 @@ class OrderModel {
 				if ( $insert ) {
 					if ( ! empty( $meta_data ) ) {
 						foreach ( $meta_data as $meta ) {
-							( new OrderItemMetaModel() )->add_meta( $item['item_id'], $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
+							( new OrderItemMetaModel() )->add_meta( $insert, $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
 						}
 					}
 				}
@@ -644,7 +644,7 @@ class OrderModel {
 
 		$where = array( 'order_id' => $order_id );
 
-		$select_columns = array( 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type' );
+		$select_columns = array( 'oi.id AS primary_id', 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type' );
 
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];

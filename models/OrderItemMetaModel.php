@@ -86,7 +86,7 @@ class OrderItemMetaModel {
 			$meta = QueryHelper::get_row(
 				$this->table,
 				$where,
-				'id'
+				'item_id'
 			);
 			if ( $meta ) {
 				$meta->meta_value = maybe_unserialize( $meta->meta_value );
@@ -95,7 +95,7 @@ class OrderItemMetaModel {
 			$meta = QueryHelper::get_all(
 				$this->table,
 				$where,
-				'id'
+				'item_id'
 			);
 
 			if ( tutor_utils()->count( $meta ) ) {

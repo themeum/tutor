@@ -328,7 +328,7 @@ class HooksHandler {
 
 		foreach ( $order->items as $item ) {
 			$object_id    = $item->id; // It could be course/bundle/plan id.
-			$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item->item_id );
+			$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item->primary_id );
 			if ( $is_gift_item ) {
 				continue;
 			}
