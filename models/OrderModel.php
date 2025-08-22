@@ -445,7 +445,7 @@ class OrderModel {
 				if ( $insert ) {
 					if ( ! empty( $meta_data ) ) {
 						foreach ( $meta_data as $meta ) {
-							( new OrderItemMetaModel() )->add_meta( $insert, $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
+							( new OrderItemMetaModel() )->add_meta( $item['item_id'], $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
 						}
 					}
 				}
