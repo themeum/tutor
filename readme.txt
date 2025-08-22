@@ -319,7 +319,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.7.4 - Aug 22, 2025
 
-Fix:  Fix a design issue when site language is RTL
+Fix: Resolved design issues when using RTL site languages
 
 = 3.7.3 - Aug 20, 2025
 
