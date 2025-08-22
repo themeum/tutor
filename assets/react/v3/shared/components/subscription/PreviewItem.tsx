@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
@@ -34,6 +34,8 @@ interface PreviewItemProps {
   isOverlay?: boolean;
 }
 
+const MARQUEE_SPEED_PX_PER_SEC = 60;
+
 export const formatRepeatUnit = (unit: Omit<DurationUnit, 'hour'>, value: number) => {
   switch (unit) {
     case 'hour':
@@ -51,42 +53,83 @@ export const formatRepeatUnit = (unit: Omit<DurationUnit, 'hour'>, value: number
   }
 };
 
-const MARQUEE_SPEED_PX_PER_SEC = 180;
-
 export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: PreviewItemProps) => {
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
   const [isItemHovered, setIsItemHovered] = useState(false);
   const [marqueeDuration, setMarqueeDuration] = useState(0);
+  const [marqueeDistance, setMarqueeDistance] = useState(0);
+
   const { showModal, updateModal, closeModal } = useModal();
   const updateSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
   const deleteSubscriptionMutation = useDeleteCourseSubscriptionMutation(courseId);
   const duplicateSubscriptionMutation = useDuplicateCourseSubscriptionMutation(courseId);
+
   const marqueeContainerRef = useRef<HTMLParagraphElement>(null);
   const marqueeContentRef = useRef<HTMLSpanElement>(null);
-  const marqueeSeparatorRef = useRef<HTMLSpanElement>(null);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: subscription.id || '',
     animateLayoutChanges,
   });
 
-  const style = {
+  const sortableStyle = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : undefined,
     background: isDragging ? colorTokens.stroke.hover : undefined,
   };
 
-  const handleToggleSubscription = (isEnabled: boolean) => {
-    const payload = convertFormDataToSubscription(subscription);
-    updateSubscriptionMutation.mutate({
-      ...payload,
-      is_enabled: isEnabled ? '1' : '0',
-    });
-  };
+  const marqueeText = useMemo(
+    () => (
+      <>
+        <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
+          <span>
+            {sprintf(
+              __('Renew every %1$s %2$s', 'tutor'),
+              subscription.recurring_value.toString().padStart(2, '0'),
+              formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
+            )}
+          </span>
+        </Show>
+        <Show when={subscription.payment_type !== 'onetime'}>
+          <Show
+            when={subscription.recurring_limit === __('Until cancelled', 'tutor')}
+            fallback={
+              <>
+                <span>•</span>
+                <span>
+                  {subscription.recurring_limit.toString().padStart(2, '0')} {__('Billing Cycles', 'tutor')}
+                </span>
+              </>
+            }
+          >
+            <span>•</span>
+            <span>{__('Until Cancellation', 'tutor')}</span>
+          </Show>
+        </Show>
+      </>
+    ),
+    [
+      subscription.payment_type,
+      subscription.recurring_value,
+      subscription.recurring_interval,
+      subscription.recurring_limit,
+    ],
+  );
 
-  const handleEditSubscription = () => {
+  const handleToggleSubscription = useCallback(
+    (isEnabled: boolean) => {
+      const payload = convertFormDataToSubscription(subscription);
+      updateSubscriptionMutation.mutate({
+        ...payload,
+        is_enabled: isEnabled ? '1' : '0',
+      });
+    },
+    [subscription, updateSubscriptionMutation],
+  );
+
+  const handleEditSubscription = useCallback(() => {
     const subscriptionWithSaved = {
       ...subscription,
       isSaved: true,
@@ -101,9 +144,9 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
       },
     });
     setIsThreeDotOpen(false);
-  };
+  }, [subscription, showModal, courseId, isBundle]);
 
-  const handleDeleteSubscription = async () => {
+  const handleDeleteSubscription = useCallback(async () => {
     updateModal<typeof ConfirmationModal>('subscription-delete-modal', {
       isLoading: true,
     });
@@ -113,65 +156,52 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
     if (response.status_code === 200) {
       closeModal();
     }
-  };
+  }, [updateModal, deleteSubscriptionMutation, subscription.id, closeModal]);
 
-  const handleDuplicateSubscription = async () => {
+  const handleDuplicateSubscription = useCallback(async () => {
     const response = await duplicateSubscriptionMutation.mutateAsync(Number(subscription.id));
 
     if (response.data) {
       setIsThreeDotOpen(false);
     }
-  };
+  }, [duplicateSubscriptionMutation, subscription.id]);
 
-  const handleItemMouseEnter = () => setIsItemHovered(true);
-  const handleItemMouseLeave = () => setIsItemHovered(false);
-
-  const marqueeText = (
-    <>
-      <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
-        <span>
-          {sprintf(
-            __('Renew every %1$s %2$s', 'tutor'),
-            subscription.recurring_value.toString().padStart(2, '0'),
-            formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
-          )}
-        </span>
-      </Show>
-      <Show when={subscription.payment_type !== 'onetime'}>
-        <Show
-          when={subscription.recurring_limit === __('Until cancelled', 'tutor')}
-          fallback={
-            <>
-              <span>•</span>
-              <span>
-                {subscription.recurring_limit.toString().padStart(2, '0')} {__('Billing Cycles', 'tutor')}
-              </span>
-            </>
-          }
-        >
-          <span>•</span>
-          <span>{__('Until Cancellation', 'tutor')}</span>
-        </Show>
-      </Show>
-    </>
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        handleEditSubscription();
+      }
+    },
+    [handleEditSubscription],
   );
+
+  const handleDeleteClick = useCallback(() => {
+    setIsThreeDotOpen(false);
+    showModal({
+      id: 'subscription-delete-modal',
+      component: ConfirmationModal,
+      props: {
+        title: sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name),
+        description: __('Are you sure you want to delete this plan? This cannot be undone.', 'tutor'),
+        onConfirm: handleDeleteSubscription,
+        confirmButtonVariant: 'danger' as const,
+      },
+    });
+  }, [showModal, subscription.plan_name, handleDeleteSubscription]);
 
   useLayoutEffect(() => {
     const container = marqueeContainerRef.current;
     const content = marqueeContentRef.current;
+
     if (!container || !content) return;
 
     const overflow = content.scrollWidth > container.clientWidth;
     setShouldAnimate(overflow);
 
-    if (overflow) {
-      // Calculate separator width when animating
-      const separator = marqueeSeparatorRef.current;
-      const separatorWidth = separator ? separator.offsetWidth : 0;
-
-      // Calculate duration for seamless loop (content width + separator width + duplicate content width)
-      const totalWidth = content.scrollWidth * 2 + separatorWidth;
-      setMarqueeDuration(totalWidth / MARQUEE_SPEED_PX_PER_SEC);
+    if (overflow && isItemHovered) {
+      const distance = content.scrollWidth - container.clientWidth;
+      setMarqueeDistance(distance);
+      setMarqueeDuration(distance / MARQUEE_SPEED_PX_PER_SEC);
     }
   }, [
     subscription.plan_name,
@@ -179,33 +209,27 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
     subscription.recurring_value,
     subscription.recurring_interval,
     subscription.recurring_limit,
-    isItemHovered, // Re-calculate when hover state changes to ensure separator is rendered
+    isItemHovered,
   ]);
 
   return (
     <div
       data-cy="subscription-preview-item"
       css={styles.wrapper({ isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending, isOverlay })}
-      style={style}
+      style={sortableStyle}
       ref={setNodeRef}
-      onMouseEnter={handleItemMouseEnter}
-      onMouseLeave={handleItemMouseLeave}
-      tabIndex={0}
+      onMouseEnter={() => setIsItemHovered(true)}
+      onMouseLeave={() => setIsItemHovered(false)}
       aria-label={__('Subscription plan item', 'tutor')}
     >
-      <SVGIcon {...listeners} data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
+      <SVGIcon {...listeners} {...attributes} data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
 
       <div css={styles.item}>
         <div css={styles.header}>
           <p
             css={styles.title}
-            {...attributes}
             onClick={handleEditSubscription}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter' || event.key === ' ') {
-                handleEditSubscription();
-              }
-            }}
+            onKeyDown={handleKeyDown}
             tabIndex={0}
             aria-label={__('Edit subscription plan', 'tutor')}
           >
@@ -258,47 +282,22 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
                 icon={<SVGIcon name="delete" width={16} height={16} />}
                 text={__('Delete', 'tutor')}
                 isTrash
-                onClick={() => {
-                  setIsThreeDotOpen(false);
-                  showModal({
-                    id: 'subscription-delete-modal',
-                    component: ConfirmationModal,
-                    props: {
-                      title: sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name),
-                      description: __('Are you sure you want to delete this plan? This cannot be undone.', 'tutor'),
-                      onConfirm: handleDeleteSubscription,
-                      confirmButtonVariant: 'danger',
-                    },
-                  });
-                }}
+                onClick={handleDeleteClick}
               />
             </ThreeDots>
           </div>
         </div>
         <p css={styles.information} ref={marqueeContainerRef} aria-label={__('Subscription plan details', 'tutor')}>
           <span
-            css={[
-              styles.marqueeContent({ shouldEllipsis: shouldAnimate && !isItemHovered }),
-              shouldAnimate && isItemHovered && styles.marqueeLoop,
-            ]}
+            css={styles.marqueeSlide({
+              shouldAnimate,
+              isItemHovered,
+              marqueeDuration,
+              marqueeDistance,
+            })}
             ref={marqueeContentRef}
-            style={
-              shouldAnimate && isItemHovered
-                ? {
-                    ['--marquee-duration' as string]: `${marqueeDuration}s`,
-                  }
-                : undefined
-            }
           >
             <span>{marqueeText}</span>
-            {shouldAnimate && isItemHovered && (
-              <>
-                <span css={styles.marqueeSeparator} ref={marqueeSeparatorRef} aria-hidden="true">
-                  •
-                </span>
-                <span aria-hidden="true">{marqueeText}</span>
-              </>
-            )}
           </span>
         </p>
       </div>
@@ -320,6 +319,11 @@ const styles = {
       color: ${colorTokens.icon.default};
       flex-shrink: 0;
       cursor: grab;
+
+      &:focus-visible {
+        border-radius: ${borderRadius[4]};
+        outline: 2px solid ${colorTokens.stroke.brand};
+      }
     }
 
     [data-three-dot] {
@@ -405,25 +409,25 @@ const styles = {
     display: flex;
     align-items: center;
     flex-grow: 1;
-    gap: ${spacing[4]};
     overflow: hidden;
     position: relative;
     white-space: nowrap;
   `,
   marqueeContent: ({ shouldEllipsis = false }: { shouldEllipsis?: boolean }) => css`
-    display: ${shouldEllipsis ? 'inline-block' : 'flex'};
+    display: inline-block;
     white-space: nowrap;
     vertical-align: middle;
     min-width: 100%;
-    align-items: center;
+
     span {
       margin-right: ${spacing[4]};
       white-space: nowrap;
 
-      &:last-of-type {
+      &:last-child {
         margin-right: 0;
       }
     }
+
     ${shouldEllipsis &&
     css`
       overflow: hidden;
@@ -432,20 +436,57 @@ const styles = {
       min-width: 0;
     `}
   `,
-  marqueeSeparator: css`
-    flex-shrink: 0;
-  `,
-  marqueeLoop: css`
-    animation: marquee-loop var(--marquee-duration, 4s) linear infinite;
-    will-change: transform;
-    @keyframes marquee-loop {
-      0% {
-        transform: translateX(0);
-      }
-      100% {
-        transform: translateX(-50%);
+  marqueeSlide: ({
+    shouldAnimate = false,
+    isItemHovered = false,
+    marqueeDuration = 0,
+    marqueeDistance = 0,
+  }: {
+    shouldAnimate?: boolean;
+    isItemHovered?: boolean;
+    marqueeDuration?: number;
+    marqueeDistance?: number;
+  }) => css`
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: middle;
+    min-width: 100%;
+    --marquee-duration: ${marqueeDuration}s;
+    --marquee-distance: -${marqueeDistance}px;
+
+    span {
+      margin-right: ${spacing[4]};
+      white-space: nowrap;
+
+      &:last-child {
+        margin-right: 0;
       }
     }
+
+    ${shouldAnimate &&
+    !isItemHovered &&
+    css`
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      min-width: 0;
+    `}
+
+    ${shouldAnimate &&
+    isItemHovered &&
+    css`
+      animation: marquee-slide var(--marquee-duration, 4s) ease-out forwards;
+      will-change: transform;
+
+      @keyframes marquee-slide {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(var(--marquee-distance, 0));
+        }
+      }
+    `}
   `,
   featuredIcon: css`
     flex-shrink: 0;
