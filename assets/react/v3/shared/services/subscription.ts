@@ -154,7 +154,7 @@ export type SubscriptionPayload = {
   plan_type: PlanType;
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
-  plan_order?: string;
+  plan_order?: string; // only send when creating a new plan
   recurring_value?: string;
   recurring_interval?: Exclude<DurationUnit, 'hour'>;
   regular_price: string;
