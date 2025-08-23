@@ -451,8 +451,6 @@ const styles = {
     white-space: nowrap;
     vertical-align: middle;
     min-width: 100%;
-    --marquee-duration: ${marqueeDuration}s;
-    --marquee-distance: -${marqueeDistance}px;
 
     span {
       margin-right: ${spacing[4]};
@@ -475,7 +473,7 @@ const styles = {
     ${shouldAnimate &&
     isItemHovered &&
     css`
-      animation: marquee-slide var(--marquee-duration, 4s) ease-out forwards;
+      animation: marquee-slide ${marqueeDuration}s ease-out forwards;
       will-change: transform;
 
       @keyframes marquee-slide {
@@ -483,7 +481,7 @@ const styles = {
           transform: translateX(0);
         }
         100% {
-          transform: translateX(var(--marquee-distance, 0));
+          transform: translateX(-${marqueeDistance}px);
         }
       }
     `}
