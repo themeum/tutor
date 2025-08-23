@@ -6,16 +6,16 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
-import { useModal } from '@TutorShared/components/modals/Modal';
-import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
-
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import Switch from '@TutorShared/atoms/Switch';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
+
+import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import {
   convertFormDataToSubscription,
   useDeleteCourseSubscriptionMutation,
