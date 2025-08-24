@@ -4,15 +4,15 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Switch from '@TutorShared/atoms/Switch';
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
-import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
+import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -56,7 +56,6 @@ export const formatRepeatUnit = (unit: Omit<DurationUnit, 'hour'>, value: number
 export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: PreviewItemProps) => {
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
   const [shouldAnimate, setShouldAnimate] = useState(false);
-  const [isItemHovered, setIsItemHovered] = useState(false);
   const [marqueeDuration, setMarqueeDuration] = useState(0);
   const [marqueeDistance, setMarqueeDistance] = useState(0);
 
@@ -198,7 +197,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
     const overflow = content.scrollWidth > container.clientWidth;
     setShouldAnimate(overflow);
 
-    if (overflow && isItemHovered) {
+    if (overflow) {
       const distance = content.scrollWidth - container.clientWidth;
       setMarqueeDistance(distance);
       setMarqueeDuration(distance / MARQUEE_SPEED_PX_PER_SEC);
@@ -209,17 +208,20 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
     subscription.recurring_value,
     subscription.recurring_interval,
     subscription.recurring_limit,
-    isItemHovered,
   ]);
 
   return (
     <div
       data-cy="subscription-preview-item"
-      css={styles.wrapper({ isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending, isOverlay })}
+      css={styles.wrapper({
+        isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending,
+        isOverlay,
+        shouldAnimate,
+        marqueeDuration,
+        marqueeDistance,
+      })}
       style={sortableStyle}
       ref={setNodeRef}
-      onMouseEnter={() => setIsItemHovered(true)}
-      onMouseLeave={() => setIsItemHovered(false)}
       aria-label={__('Subscription plan item', 'tutor')}
     >
       <SVGIcon {...listeners} {...attributes} data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
@@ -287,16 +289,13 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
             </ThreeDots>
           </div>
         </div>
-        <p css={styles.information} ref={marqueeContainerRef} aria-label={__('Subscription plan details', 'tutor')}>
-          <span
-            css={styles.marqueeSlide({
-              shouldAnimate,
-              isItemHovered,
-              marqueeDuration,
-              marqueeDistance,
-            })}
-            ref={marqueeContentRef}
-          >
+        <p
+          css={styles.information}
+          ref={marqueeContainerRef}
+          aria-label={__('Subscription plan details', 'tutor')}
+          title={marqueeContainerRef.current?.textContent}
+        >
+          <span css={styles.marqueeSlide} ref={marqueeContentRef} data-marquee-content>
             <span>{marqueeText}</span>
           </span>
         </p>
@@ -306,7 +305,13 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
 };
 
 const styles = {
-  wrapper: ({ isActionButtonVisible = false, isOverlay = false }) => css`
+  wrapper: ({
+    isActionButtonVisible = false,
+    isOverlay = false,
+    shouldAnimate = false,
+    marqueeDuration = 0,
+    marqueeDistance = 0,
+  }) => css`
     ${styleUtils.display.flex()};
     gap: ${spacing[4]};
     background-color: ${colorTokens.background.white};
@@ -342,11 +347,40 @@ const styles = {
       background-color: inherit;
     }
 
+    [data-marquee-content] {
+      ${shouldAnimate &&
+      css`
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        min-width: 0;
+      `}
+    }
+
     &:hover {
       background-color: ${colorTokens.background.hover};
 
       [data-action-buttons] {
         opacity: 1;
+      }
+
+      [data-marquee-content] {
+        ${shouldAnimate &&
+        css`
+          overflow: unset;
+          text-overflow: unset;
+          animation: marquee-slide ${marqueeDuration}s ease-out forwards;
+          will-change: transform;
+
+          @keyframes marquee-slide {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(-${marqueeDistance}px);
+            }
+          }
+        `}
       }
     }
 
@@ -395,7 +429,7 @@ const styles = {
       ${styleUtils.text.ellipsis(1)};
     }
 
-    :focus-visible {
+    &:focus-visible {
       border-radius: ${borderRadius[4]};
       outline: 2px solid ${colorTokens.stroke.brand};
     }
@@ -436,17 +470,7 @@ const styles = {
       min-width: 0;
     `}
   `,
-  marqueeSlide: ({
-    shouldAnimate = false,
-    isItemHovered = false,
-    marqueeDuration = 0,
-    marqueeDistance = 0,
-  }: {
-    shouldAnimate?: boolean;
-    isItemHovered?: boolean;
-    marqueeDuration?: number;
-    marqueeDistance?: number;
-  }) => css`
+  marqueeSlide: css`
     display: inline-block;
     white-space: nowrap;
     vertical-align: middle;
@@ -460,31 +484,6 @@ const styles = {
         margin-right: 0;
       }
     }
-
-    ${shouldAnimate &&
-    !isItemHovered &&
-    css`
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
-      min-width: 0;
-    `}
-
-    ${shouldAnimate &&
-    isItemHovered &&
-    css`
-      animation: marquee-slide ${marqueeDuration}s ease-out forwards;
-      will-change: transform;
-
-      @keyframes marquee-slide {
-        0% {
-          transform: translateX(0);
-        }
-        100% {
-          transform: translateX(-${marqueeDistance}px);
-        }
-      }
-    `}
   `,
   featuredIcon: css`
     flex-shrink: 0;
