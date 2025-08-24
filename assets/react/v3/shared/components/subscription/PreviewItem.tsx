@@ -55,7 +55,6 @@ export const formatRepeatUnit = (unit: Omit<DurationUnit, 'hour'>, value: number
 
 export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: PreviewItemProps) => {
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
-  const [shouldAnimate, setShouldAnimate] = useState(false);
   const [marqueeDuration, setMarqueeDuration] = useState(0);
   const [marqueeDistance, setMarqueeDistance] = useState(0);
 
@@ -192,10 +191,11 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
     const container = marqueeContainerRef.current;
     const content = marqueeContentRef.current;
 
-    if (!container || !content) return;
+    if (!container || !content) {
+      return;
+    }
 
     const overflow = content.scrollWidth > container.clientWidth;
-    setShouldAnimate(overflow);
 
     if (overflow) {
       const distance = content.scrollWidth - container.clientWidth;
@@ -216,7 +216,6 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
       css={styles.wrapper({
         isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending,
         isOverlay,
-        shouldAnimate,
         marqueeDuration,
         marqueeDistance,
       })}
@@ -305,13 +304,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
 };
 
 const styles = {
-  wrapper: ({
-    isActionButtonVisible = false,
-    isOverlay = false,
-    shouldAnimate = false,
-    marqueeDuration = 0,
-    marqueeDistance = 0,
-  }) => css`
+  wrapper: ({ isActionButtonVisible = false, isOverlay = false, marqueeDuration = 0, marqueeDistance = 0 }) => css`
     ${styleUtils.display.flex()};
     gap: ${spacing[4]};
     background-color: ${colorTokens.background.white};
@@ -348,7 +341,7 @@ const styles = {
     }
 
     [data-marquee-content] {
-      ${shouldAnimate &&
+      ${marqueeDistance &&
       css`
         overflow: hidden;
         text-overflow: ellipsis;
@@ -365,7 +358,7 @@ const styles = {
       }
 
       [data-marquee-content] {
-        ${shouldAnimate &&
+        ${marqueeDistance &&
         css`
           overflow: unset;
           text-overflow: unset;
