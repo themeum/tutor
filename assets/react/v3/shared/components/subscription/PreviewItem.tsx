@@ -341,7 +341,7 @@ const styles = {
     }
 
     [data-marquee-content] {
-      ${marqueeDistance &&
+      ${marqueeDistance > 0 &&
       css`
         overflow: hidden;
         text-overflow: ellipsis;
@@ -358,7 +358,7 @@ const styles = {
       }
 
       [data-marquee-content] {
-        ${marqueeDistance &&
+        ${marqueeDistance > 0 &&
         css`
           overflow: unset;
           text-overflow: unset;
