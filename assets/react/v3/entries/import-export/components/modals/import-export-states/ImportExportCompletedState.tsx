@@ -1,20 +1,24 @@
 import { css } from '@emotion/react';
-import { __, _n, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import {
+  type ImportContentResponse,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
-import Button from '@TutorShared/atoms/Button';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import ImportErrorListModal from '@TutorShared/components/modals/ImportErrorListModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { formatBytes } from '@TutorShared/utils/util';
+import { formatBytes, getObjectEntries, getObjectKeys, getObjectValues } from '@TutorShared/utils/util';
 
 import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
@@ -26,7 +30,9 @@ interface ImportExportCompletedStateProps {
   isImportingToContentBank?: boolean;
   fileSize?: number;
   message?: string;
+  failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
+  importErrors?: ImportContentResponse['errors'];
   onDownload?: (fileName: string) => void;
   onClose: () => void;
   importFileName?: string;
@@ -39,21 +45,35 @@ const ImportExportCompletedState = ({
   isImportingToContentBank = false,
   fileSize,
   message,
+  failedMessage,
   completedContents,
+  importErrors,
   onDownload,
   onClose,
   type,
 }: ImportExportCompletedStateProps) => {
   const [isFailedDataVisible, setIsFailedDataVisible] = useState(false);
+  const { showModal } = useModal();
 
-  const successFullyCompletedCourses = completedContents?.courses?.success || [];
-  const successFullyCompletedBundles = completedContents?.['course-bundle']?.success || [];
-  const successFullyCompletedContentBank = completedContents?.content_bank?.success || [];
-  const successFullyCompletedSettings = completedContents?.settings;
+  const hasCompletedSuccessfully =
+    completedContents &&
+    getObjectValues(completedContents).some((item) => {
+      if (typeof item === 'boolean') {
+        return item;
+      }
 
-  const completedWithErrorsCourses = completedContents?.courses?.failed || [];
-  const completedWithErrorsBundles = completedContents?.['course-bundle']?.failed || [];
-  const completedWithErrorsCollections = completedContents?.content_bank?.failed || [];
+      return item?.success?.length > 0;
+    });
+
+  const hasCompletedWithErrors =
+    completedContents &&
+    getObjectValues(completedContents).some((item) => {
+      if (typeof item === 'boolean') {
+        return !item;
+      }
+
+      return item?.failed?.length > 0;
+    });
 
   const contentMapping = {
     import: {
@@ -71,7 +91,7 @@ const ImportExportCompletedState = ({
       },
       subtitle: {
         success:
-          completedWithErrorsCourses.length || completedWithErrorsBundles.length
+          hasCompletedSuccessfully && importErrors
             ? // prettier-ignore
               __( "Your Tutor LMS data was successfully imported. However, some items couldn't be imported. Here's the list:", 'tutor')
             : // prettier-ignore
@@ -98,7 +118,7 @@ const ImportExportCompletedState = ({
       },
       subtitle: {
         success:
-          completedWithErrorsCourses.length || completedWithErrorsBundles.length
+          hasCompletedSuccessfully && hasCompletedWithErrors
             ? // prettier-ignore
               __('The export process has finished. However, certain items could not be exported. Check the summary below:', 'tutor')
             : // prettier-ignore
@@ -112,68 +132,32 @@ const ImportExportCompletedState = ({
     },
   };
 
-  const formatItemCount = (count: number, type: 'course' | 'bundle' | 'content_bank'): string => {
-    if (type === 'course') {
-      // translators: %d is the number of courses
-      return sprintf(_n('Course (%d)', 'Courses (%d)', count, 'tutor'), count);
-    }
+  const renderCompletedWithErrorsItems = () => {
+    return (
+      completedContents &&
+      getObjectEntries(completedContents).map(([key, value]) => {
+        if (typeof value === 'boolean') return null;
 
-    if (type === 'content_bank') {
-      // translators: %d is the number of content bank items
-      return sprintf(_n('Collection (%d)', 'Collections (%d)', count, 'tutor'), count);
-    }
+        const { label = '', failed = [] } = value;
 
-    // translators: %d is the number of bundles
-    return sprintf(_n('Bundle (%d)', 'Bundles (%d)', count, 'tutor'), count);
-  };
-
-  const formatFailedItems = (): string => {
-    const failedItems: string[] = [];
-
-    if (completedWithErrorsCourses.length > 0) {
-      const coursesText = formatItemCount(completedWithErrorsCourses.length, 'course');
-      failedItems.push(coursesText);
-    }
-
-    if (completedWithErrorsBundles.length > 0) {
-      const bundlesText = formatItemCount(completedWithErrorsBundles.length, 'bundle');
-      failedItems.push(bundlesText);
-    }
-
-    if (completedWithErrorsCollections.length > 0) {
-      const collectionsText = formatItemCount(completedWithErrorsCollections.length, 'content_bank');
-      failedItems.push(collectionsText);
-    }
-
-    return failedItems.join(', ');
-  };
-
-  const formatCompletedItems = (): string => {
-    if (!completedContents) return '';
-
-    const { settings } = completedContents;
-    const formattedItems: string[] = [];
-
-    if (successFullyCompletedCourses.length) {
-      const courseText = formatItemCount(successFullyCompletedCourses.length, 'course');
-      formattedItems.push(courseText);
-    }
-
-    if (successFullyCompletedBundles.length) {
-      const bundleText = formatItemCount(successFullyCompletedBundles.length, 'bundle');
-      formattedItems.push(bundleText);
-    }
-
-    if (successFullyCompletedContentBank.length) {
-      const contentBankText = formatItemCount(successFullyCompletedContentBank.length, 'content_bank');
-      formattedItems.push(contentBankText);
-    }
-
-    if (settings) {
-      formattedItems.push(__('Settings', 'tutor'));
-    }
-
-    return formattedItems.join(', ');
+        return (
+          <Show when={failed.length > 0} key={key}>
+            <div key={key} css={styles.failedItem}>
+              <label>{label}</label>
+              <div css={styles.failedList}>
+                <For each={failed}>
+                  {(courseId) => (
+                    <div key={String(courseId)} css={styles.failedId}>
+                      {String(courseId)}
+                    </div>
+                  )}
+                </For>
+              </div>
+            </div>
+          </Show>
+        );
+      })
+    );
   };
 
   return (
@@ -219,12 +203,7 @@ const ImportExportCompletedState = ({
         }
       >
         <div css={styles.reportList}>
-          <Show
-            when={
-              [...successFullyCompletedCourses, ...successFullyCompletedBundles, ...successFullyCompletedContentBank]
-                .length > 0 || successFullyCompletedSettings
-            }
-          >
+          <Show when={hasCompletedSuccessfully}>
             <div css={styles.reportWrapper}>
               <div css={styles.report}>
                 <SVGIcon data-check-icon name="checkFilledWhite" width={24} height={24} />
@@ -233,7 +212,7 @@ const ImportExportCompletedState = ({
                   <div css={styles.reportLeft}>
                     <div>{contentMapping[type as keyof typeof contentMapping].reportList.success}</div>
                     <Show when={!isImportingToContentBank}>
-                      <div>{formatCompletedItems()}</div>
+                      <div>{message}</div>
                     </Show>
                   </div>
                 </div>
@@ -241,12 +220,7 @@ const ImportExportCompletedState = ({
             </div>
           </Show>
 
-          <Show
-            when={
-              [...completedWithErrorsCourses, ...completedWithErrorsBundles, ...completedWithErrorsCollections].length >
-              0
-            }
-          >
+          <Show when={hasCompletedWithErrors}>
             <button
               css={[styleUtils.resetButton, styles.reportWrapper]}
               onClick={() => setIsFailedDataVisible(!isFailedDataVisible)}
@@ -257,97 +231,18 @@ const ImportExportCompletedState = ({
                 <div css={styles.reportInfo}>
                   <div css={styles.reportLeft}>
                     <div>{contentMapping[type as keyof typeof contentMapping].reportList.error}</div>
-                    <div>{formatFailedItems()}</div>
+                    <div>{failedMessage}</div>
                   </div>
 
                   <SVGIcon data-down-icon name="chevronDown" width={24} height={24} />
                 </div>
               </div>
 
-              <Show when={isFailedDataVisible}>
-                <Show when={completedWithErrorsCourses.length > 0}>
-                  <div css={styles.failedItem}>
-                    <label>
-                      {
-                        /* translators: %d is the number of course IDs */
-                        sprintf(
-                          _n('Course ID (%d)', 'Course IDs (%d)', completedWithErrorsCourses.length, 'tutor'),
-                          completedWithErrorsCourses.length,
-                        )
-                      }
-                    </label>
-                    <div css={styles.failedList}>
-                      <For each={completedWithErrorsCourses}>
-                        {(courseId) => (
-                          <div key={courseId} css={styles.failedId}>
-                            {courseId}
-                          </div>
-                        )}
-                      </For>
-                    </div>
-                  </div>
-                </Show>
-                <Show when={completedWithErrorsBundles.length > 0}>
-                  <div css={styles.failedItem}>
-                    <label>
-                      {
-                        /* translators: %d is the number of bundle IDs */
-                        sprintf(
-                          _n('Bundle ID (%d)', 'Bundle IDs (%d)', completedWithErrorsBundles.length, 'tutor'),
-                          completedWithErrorsBundles.length,
-                        )
-                      }
-                    </label>
-                    <div css={styles.failedList}>
-                      <For each={completedWithErrorsBundles}>
-                        {(bundleId) => (
-                          <div key={bundleId} css={styles.failedId}>
-                            {bundleId}
-                          </div>
-                        )}
-                      </For>
-                    </div>
-                  </div>
-                </Show>
-                <Show when={completedWithErrorsCollections.length > 0}>
-                  <div css={styles.failedItem}>
-                    <label>
-                      {
-                        /* translators: %d is the number of collection IDs */
-                        sprintf(
-                          _n(
-                            'Collection ID (%d)',
-                            'Collection IDs (%d)',
-                            completedWithErrorsCollections.length,
-                            'tutor',
-                          ),
-                          completedWithErrorsCollections.length,
-                        )
-                      }
-                    </label>
-                    <div css={styles.failedList}>
-                      <For each={completedWithErrorsCollections}>
-                        {(collectionId) => (
-                          <div key={collectionId} css={styles.failedId}>
-                            {collectionId}
-                          </div>
-                        )}
-                      </For>
-                    </div>
-                  </div>
-                </Show>
-              </Show>
+              <Show when={isFailedDataVisible}>{renderCompletedWithErrorsItems()}</Show>
             </button>
           </Show>
         </div>
-        <Show
-          when={
-            type === 'export' &&
-            ([...successFullyCompletedCourses, ...successFullyCompletedBundles, ...successFullyCompletedContentBank]
-              .length > 0 ||
-              successFullyCompletedSettings)
-          }
-        >
+        <Show when={type === 'export' && hasCompletedSuccessfully}>
           <div css={styles.file}>
             <div css={styles.fileIcon}>
               <SVGIcon name="attachmentLine" width={24} height={24} />
@@ -374,7 +269,24 @@ const ImportExportCompletedState = ({
           </div>
         </Show>
         <Show when={type === 'import'}>
-          <div>
+          <div css={styles.footer}>
+            <Show when={getObjectKeys(importErrors || {}).length > 0}>
+              <Button
+                variant="tertiary"
+                size="small"
+                onClick={() => {
+                  showModal({
+                    component: ImportErrorListModal,
+                    props: {
+                      errors: importErrors,
+                    },
+                    depthIndex: zIndex.highest,
+                  });
+                }}
+              >
+                {__('Error Report', 'tutor')}
+              </Button>
+            </Show>
             <Button variant="primary" size="small" onClick={onClose}>
               {__('Okay', 'tutor')}
             </Button>
@@ -534,5 +446,9 @@ const styles = {
   fileSize: css`
     ${typography.tiny()};
     color: ${colorTokens.text.hints};
+  `,
+  footer: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[8]};
   `,
 };
