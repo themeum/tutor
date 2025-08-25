@@ -4,7 +4,7 @@
  * operations
  *
  * @package Tutor\Helper
- * @since v2.0.7
+ * @since 2.0.7
  */
 
 namespace Tutor\Helpers;
@@ -32,7 +32,8 @@ class QueryHelper {
 	public static function insert( string $table, array $data, array $sanitize_mapping = array() ): int {
 		global $wpdb;
 
-		$data = \TUTOR\Input::sanitize_array( $data, $sanitize_mapping );
+		$table = self::prepare_table_name( $table );
+		$data  = \TUTOR\Input::sanitize_array( $data, $sanitize_mapping );
 
 		$insert = $wpdb->insert(
 			$table,
@@ -61,6 +62,7 @@ class QueryHelper {
 	public static function update( string $table, array $data, array $where ): bool {
 		global $wpdb;
 
+		$table        = self::prepare_table_name( $table );
 		$set_clause   = self::prepare_set_clause( $data );
 		$where_clause = self::build_where_clause( $where );
 
@@ -91,6 +93,8 @@ class QueryHelper {
 	 */
 	public static function delete( string $table, array $where ): bool {
 		global $wpdb;
+
+		$table  = self::prepare_table_name( $table );
 		$delete = $wpdb->delete(
 			$table,
 			$where
@@ -109,8 +113,11 @@ class QueryHelper {
 	 * @return int|boolean
 	 */
 	public static function bulk_delete( $table, array $where ): bool {
-		$where_clause = self::build_where_clause( $where );
 		global $wpdb;
+
+		$table        = self::prepare_table_name( $table );
+		$where_clause = self::build_where_clause( $where );
+
 		return $wpdb->query( "DELETE FROM {$table} WHERE {$where_clause}" ); //phpcs:ignore --$where clause sanitized.
 	}
 
@@ -131,7 +138,8 @@ class QueryHelper {
 	public static function bulk_delete_by_ids( string $table, array $ids ): bool {
 		global $wpdb;
 
-		$ids = self::prepare_in_clause( $ids );
+		$table = self::prepare_table_name( $table );
+		$ids   = self::prepare_in_clause( $ids );
 		//phpcs:ignore --ids already sanitized.
 		$wpdb->query( "DELETE FROM {$table} WHERE id IN ( $ids )");
 
@@ -153,6 +161,8 @@ class QueryHelper {
 	 */
 	public static function table_clean( string $table ): bool {
 		global $wpdb;
+
+		$table  = self::prepare_table_name( $table );
 		$delete = $wpdb->query(
 			//phpcs:ignore
 			$wpdb->prepare( "DELETE FROM {$table} WHERE 1 = %d", 1 )
@@ -177,6 +187,8 @@ class QueryHelper {
 	 */
 	public static function insert_multiple_rows( $table, $request, $return_ids = false, $do_sanitize = true ) {
 		global $wpdb;
+
+		$table         = self::prepare_table_name( $table );
 		$column_keys   = '';
 		$column_values = '';
 		$sql           = '';
@@ -526,6 +538,7 @@ class QueryHelper {
 	public static function get_row( string $table, array $where, string $order_by, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
 
+		$table        = self::prepare_table_name( $table );
 		$where_clause = self::build_where_clause( $where );
 
 		//phpcs:disable
@@ -565,6 +578,7 @@ class QueryHelper {
 	public static function get_all( string $table, array $where, string $order_by, $limit = 1000, string $order = 'DESC', string $output = 'OBJECT' ) {
 		global $wpdb;
 
+		$table        = self::prepare_table_name( $table );
 		$where_clause = self::build_where_clause( $where );
 		$limit        = (int) sanitize_text_field( $limit );
 		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
@@ -599,6 +613,8 @@ class QueryHelper {
 	 */
 	public static function update_where_in( string $table, array $data, string $where_in, string $where_col = 'ID' ) {
 		global $wpdb;
+
+		$table = self::prepare_table_name( $table );
 		if ( empty( $where_in ) || empty( $where_col ) ) {
 			return false;
 		}
@@ -690,7 +706,9 @@ class QueryHelper {
 	 */
 	public static function table_exists( $table ) {
 		global $wpdb;
-		$sql = "SHOW TABLES LIKE '{$table}'";
+
+		$table = self::prepare_table_name( $table );
+		$sql   = "SHOW TABLES LIKE '{$table}'";
 		return $wpdb->get_var( $sql ) === $table;
 	}
 
@@ -706,7 +724,9 @@ class QueryHelper {
 	 */
 	public static function column_exist( $table, $column ) {
 		global $wpdb;
-		$sql = "SHOW COLUMNS FROM {$table} LIKE '{$column}'";
+
+		$table = self::prepare_table_name( $table );
+		$sql   = "SHOW COLUMNS FROM {$table} LIKE '{$column}'";
 		return $wpdb->get_var( $sql ) === $column;
 	}
 
@@ -746,22 +766,19 @@ class QueryHelper {
 	) {
 		global $wpdb;
 
-		$select_clause = implode(', ', $select_columns);
-
-		$from_clause = $primary_table;
+		$select_clause = implode( ', ', $select_columns );
+		$from_clause   = self::prepare_table_name( $primary_table );
 
 		$join_clauses = '';
-		foreach ($joining_tables as $relation) {
-			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
+		foreach ( $joining_tables as $relation ) {
+			$join_table    = self::prepare_table_name( $relation['table'] );
+			$join_clauses .= " {$relation['type']} JOIN {$join_table} ON {$relation['on']}";
 		}
 
 		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
 
-		if (!empty($search)) {
+		if ( ! empty( $search ) ) {
 			$search_clause = self::build_like_clause( $search );
-			// foreach ($search as $column => $value) {
-			// 	$search_clauses[] = $wpdb->prepare("{$column} LIKE %s", '%' . $wpdb->esc_like($value) . '%');
-			// }
 			$where_clause .= !empty($where_clause) ? ' AND (' . $search_clause . ')' : 'WHERE ' . $search_clause;
 		}
 
@@ -775,9 +792,9 @@ class QueryHelper {
 			{$where_clause}
 		";
 
-		$total_count = $wpdb->get_var($count_query);
+		$total_count = $wpdb->get_var( $count_query );
 
-		if (empty($limit) && empty($offset)) {
+		if ( empty( $limit ) && empty( $offset ) ) {
 			$query = "SELECT 
 				{$select_clause}
 				FROM {$from_clause}
@@ -798,11 +815,11 @@ class QueryHelper {
 		}
 
 
-		$results = $wpdb->get_results($query, $output);
+		$results = $wpdb->get_results( $query, $output );
 
 		// Throw exception if error occurred.
-		if ($wpdb->last_error) {
-			throw new \Exception($wpdb->last_error);
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
 		}
 
 		// Prepare response array.
@@ -831,7 +848,8 @@ class QueryHelper {
 	public static function get_count( $table, $where = [], $search = [], $count_column = 'id' ): int {
 		global $wpdb;
 
-		$where_clause = !empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
+		$table         = self::prepare_table_name( $table );
+		$where_clause  = !empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
 		$search_clause = !empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
 
 		if ( !empty( $search_clause ) ) {
@@ -874,18 +892,19 @@ class QueryHelper {
 	public static function get_joined_count(string $primary_table, array $joining_tables, array $where = [], array $search = [], string $count_column = '*'): int {
 		global $wpdb;
 		
-		$from_clause = $primary_table;
+		$from_clause = self::prepare_table_name( $primary_table );
 		
 		$join_clauses = '';
 		foreach ($joining_tables as $relation) {
-			$join_clauses .= " {$relation['type']} JOIN {$relation['table']} ON {$relation['on']}";
+			$join_table    = self::prepare_table_name( $relation['table'] );
+			$join_clauses .= " {$relation['type']} JOIN {$join_table} ON {$relation['on']}";
 		}
 		
-		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
-		$search_clause = !empty($search) ? self::build_like_clause($search, 'AND') : '';
+		$where_clause  = ! empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
+		$search_clause = ! empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
 
-		if (!empty($search_clause)) {
-			if (!empty($where_clause)) {
+		if ( ! empty( $search_clause ) ) {
+			if ( ! empty( $where_clause ) ) {
 				$where_clause .= ' AND (' . $search_clause . ')';
 			} else {
 				$where_clause = 'WHERE ' . $search_clause;
@@ -899,11 +918,11 @@ class QueryHelper {
 			{$where_clause}
 		";
 
-		$total_count = $wpdb->get_var($count_query);
+		$total_count = $wpdb->get_var( $count_query );
 
 		// If error occurred then throw new exception.
-		if ($wpdb->last_error) {
-			throw new \Exception($wpdb->last_error);
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
 		}
 
 		return (int) $total_count;
@@ -927,19 +946,21 @@ class QueryHelper {
 	 *
 	 * @return mixed  Based on output param, default OBJECT.
 	 */
-	public static function get_all_with_search(string $table, array $where, array $search, string $order_by, $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT'): array {
+	public static function get_all_with_search( string $table, array $where, array $search, string $order_by, $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT' ): array {
 		global $wpdb;
-	
-		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
-		$search_clause = !empty($search) ? self::build_like_clause($search, 'AND') : '';
-	
-		if (!empty($search_clause)) {
-			if (!empty($where_clause)) {
+
+		$table         = self::prepare_table_name( $table );
+		$where_clause  = ! empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
+		$search_clause = ! empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
+
+		if ( ! empty( $search_clause ) ) {
+			if ( ! empty( $where_clause ) ) {
 				$where_clause .= ' AND (' . $search_clause . ')';
 			} else {
 				$where_clause = 'WHERE ' . $search_clause;
 			}
 		}
+
 	
 		// Query to get total count
 		$count_query = "
@@ -947,11 +968,12 @@ class QueryHelper {
 			FROM {$table}
 			{$where_clause}
 		";
-		$total_count = $wpdb->get_var($count_query);
+
+		$total_count = $wpdb->get_var( $count_query );
 	
 		// If error occurred then throw new exception.
-		if ($wpdb->last_error) {
-			throw new \Exception($wpdb->last_error);
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
 		}
 	
 		$query = $wpdb->prepare(
@@ -964,11 +986,11 @@ class QueryHelper {
 			$offset
 		);
 	
-		$results = $wpdb->get_results($query, $output);
+		$results = $wpdb->get_results( $query, $output );
 	
 		// If error occurred then throw new exception.
-		if ($wpdb->last_error) {
-			throw new \Exception($wpdb->last_error);
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
 		}
 	
 		// Prepare response array.
@@ -1074,6 +1096,7 @@ class QueryHelper {
 	public static function duplicate_row( $table_name, array $where, ?callable $modifier = null ) {
 		global $wpdb;
 
+		$table_name = self::prepare_table_name( $table_name );
 		if ( empty( $where ) ) {
 			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
 		}
