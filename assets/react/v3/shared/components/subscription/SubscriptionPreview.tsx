@@ -199,6 +199,7 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
                   icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
                   subscription: {
                     ...defaultSubscriptionFormData,
+                    plan_order: String(subscriptionFields.length + 1),
                     isSaved: false,
                   },
                   courseId,
