@@ -63,7 +63,7 @@ class QuizAttemptMigrator extends BatchProcessor {
 	 * @return int
 	 */
 	protected function get_total_items(): int {
-		return QueryHelper::get_count( 'tutor_quiz_attempts', array( 'result' => 'null' ), array(), 'attempt_id' );
+		return QueryHelper::get_count( 'tutor_quiz_attempts', array( 'result' => array( 'IS', 'NULL' ) ), array(), 'attempt_id' );
 	}
 
 	/**
