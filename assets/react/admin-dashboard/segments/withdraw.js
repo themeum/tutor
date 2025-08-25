@@ -1,7 +1,5 @@
 const { sprintf } = wp.i18n;
 
-console.log(sprintf, 'sprintf');
-
 document.addEventListener('DOMContentLoaded', function () {
   const { __, _x, _n, _nx } = wp.i18n;
   // Approve and Reject button
