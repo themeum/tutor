@@ -14,10 +14,14 @@ use Tutor\Models\QuizModel;
 
 /**
  * Class QuizAttemptMigrator
+ *
+ * @since 3.8.0
  */
 class QuizAttemptMigrator extends BatchProcessor {
 	/**
 	 * Name of the migration
+	 *
+	 * @since 3.8.0
 	 *
 	 * @var string
 	 */
@@ -26,12 +30,16 @@ class QuizAttemptMigrator extends BatchProcessor {
 	/**
 	 * Action
 	 *
+	 * @since 3.8.0
+	 *
 	 * @var string
 	 */
 	protected $action = 'quiz_attempt_migrator';
 
 	/**
 	 * Batch size
+	 *
+	 * @since 3.8.0
 	 *
 	 * @var integer
 	 */
@@ -40,6 +48,8 @@ class QuizAttemptMigrator extends BatchProcessor {
 	/**
 	 * Schedule interval.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @var integer
 	 */
 	protected $schedule_interval = 5;
@@ -47,9 +57,11 @@ class QuizAttemptMigrator extends BatchProcessor {
 	/**
 	 * Get total unprocessed result.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @return int
 	 */
-	protected function get_total_items() {
+	protected function get_total_items(): int {
 		global $wpdb;
 		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE result IS NULL" );
 	}
@@ -57,12 +69,14 @@ class QuizAttemptMigrator extends BatchProcessor {
 	/**
 	 * Get items to batch process.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @param int $offset offset.
 	 * @param int $limit limit.
 	 *
 	 * @return array
 	 */
-	protected function get_items( $offset, $limit ) {
+	protected function get_items( $offset, $limit ) : array {
 		global $wpdb;
 		return $wpdb->get_results(
 			$wpdb->prepare(
@@ -79,16 +93,20 @@ class QuizAttemptMigrator extends BatchProcessor {
 	/**
 	 * Process each quiz attempt record to prepare result.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @param object $item item.
 	 *
 	 * @return void
 	 */
-	protected function process_item( $item ) {
+	protected function process_item( $item ) : void {
 		QuizModel::update_attempt_result( $item->attempt_id );
 	}
 
 	/**
 	 * On migration complete event.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @return void
 	 */

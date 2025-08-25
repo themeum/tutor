@@ -12,10 +12,14 @@ namespace Tutor\Migrations;
 
 /**
  * Class BatchProcessor
+ *
+ * @since 3.8.0
  */
 abstract class BatchProcessor {
 	/**
 	 * Batch size.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @var int
 	 */
@@ -24,12 +28,16 @@ abstract class BatchProcessor {
 	/**
 	 * Schedule interval
 	 *
+	 * @since 3.8.0
+	 *
 	 * @var int
 	 */
 	protected $schedule_interval;
 
 	/**
 	 * Progress option name to keep track of each process status.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @var string
 	 */
@@ -38,12 +46,16 @@ abstract class BatchProcessor {
 	/**
 	 * Manage child class as singleton behavior.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @var object
 	 */
 	protected static $instance = null;
 
 	/**
 	 * Action name to invoke wp-cron.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @var string
 	 */
@@ -52,12 +64,16 @@ abstract class BatchProcessor {
 	/**
 	 * Name of the process.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @var string
 	 */
 	protected $name;
 
 	/**
 	 * Constructor.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @throws \Exception If action is not set.
 	 */
@@ -73,6 +89,8 @@ abstract class BatchProcessor {
 	/**
 	 * Get child class instance.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @return object
 	 */
 	public static function instance() {
@@ -86,36 +104,44 @@ abstract class BatchProcessor {
 	 * Get items to process.
 	 * Must be implemented in child class.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @param int $offset offset.
 	 * @param int $limit limit.
 	 *
 	 * @return array
 	 */
-	abstract protected function get_items( $offset, $limit);
+	abstract protected function get_items( $offset, $limit) : array;
 
 	/**
 	 * Get total items to process.
 	 * Must be implemented in child class.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @return int
 	 */
-	abstract protected function get_total_items();
+	abstract protected function get_total_items() : int;
 
 	/**
 	 * Process a single item.
 	 * Must be implemented in child class.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @param mixed $item item.
 	 *
 	 * @return void
 	 */
-	abstract protected function process_item( $item);
+	abstract protected function process_item( $item) : void;
 
 	/**
 	 * Schedule the batch processing.
 	 *
 	 * This method checks if the action is already scheduled, and if not, it schedules a single event
 	 * to trigger the batch processing after the specified interval.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @return void
 	 */
@@ -130,6 +156,8 @@ abstract class BatchProcessor {
 	 *
 	 * This method retrieves a batch of items based on the current offset and batch size,
 	 * processes each item, updates the progress, and schedules the next batch processing.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @return void
 	 */
@@ -183,6 +211,8 @@ abstract class BatchProcessor {
 	 * This method updates the progress option to indicate that the batch processing is complete
 	 * and calls the optional `on_complete` method for any additional actions needed upon completion.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @return void
 	 */
 	protected function mark_complete() {
@@ -203,12 +233,16 @@ abstract class BatchProcessor {
 	/**
 	 * Optional method to override in child classes to perform actions when the batch processing is complete.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @return void
 	 */
 	protected function on_complete() {}
 
 	/**
 	 * Check is complete.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @return boolean
 	 */
@@ -220,6 +254,8 @@ abstract class BatchProcessor {
 	/**
 	 * Get the progress option name.
 	 *
+	 * @since 3.8.0
+	 *
 	 * @return string
 	 */
 	public function get_progress_option_name() {
@@ -228,6 +264,8 @@ abstract class BatchProcessor {
 
 	/**
 	 * Get the progress stats.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @return array
 	 */
@@ -248,6 +286,8 @@ abstract class BatchProcessor {
 
 	/**
 	 * Reset the progress option.
+	 *
+	 * @since 3.8.0
 	 *
 	 * @return void
 	 */
