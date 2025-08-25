@@ -111,6 +111,7 @@ const CollectionListModal = ({
               onClick={form.handleSubmit(handleAddContent)}
               disabled={form.watch('contents').length === 0}
               loading={type === 'lesson_assignment' && addContentBankContentToCourseMutation.isPending}
+              data-cy="add-content-button"
             >
               {__('Add', 'tutor')}
             </Button>
