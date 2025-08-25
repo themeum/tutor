@@ -30,6 +30,7 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   }) => void;
   progress?: number;
   message?: string;
+  failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
   importErrors?: ImportContentResponse['errors'];
 }
@@ -40,6 +41,7 @@ const ImportModal = ({
   onClose,
   onImport,
   message,
+  failedMessage,
   progress,
   completedContents,
   importErrors,
@@ -57,6 +59,7 @@ const ImportModal = ({
         type="import"
         importFileName={file.name}
         message={message || ''}
+        failedMessage={failedMessage || ''}
         importErrors={importErrors}
       />
     );
