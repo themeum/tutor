@@ -18,6 +18,6 @@ class Migration {
 	 * Constructor
 	 */
 	public function __construct() {
-		QuizAttemptMigrator::instance()->schedule();
+		QuizAttemptMigrator::instance()->is_completed() ? null : QuizAttemptMigrator::instance()->schedule();
 	}
 }
