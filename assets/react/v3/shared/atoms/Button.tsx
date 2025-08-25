@@ -1,11 +1,11 @@
-import { type SerializedStyles, css, keyframes } from '@emotion/react';
+import { css, keyframes, type SerializedStyles } from '@emotion/react';
 import React, { type ReactNode } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { createVariation } from '@TutorShared/utils/create-variation';
+import { createVariation, type VariantProps } from '@TutorShared/utils/create-variation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text' | 'WP';
@@ -13,7 +13,7 @@ export type ButtonSize = 'large' | 'regular' | 'small';
 export type ButtonIconPosition = 'left' | 'right';
 
 // Base props that are common to both button and anchor elements
-interface BaseButtonProps {
+interface BaseButtonProps extends VariantProps<typeof buttonVariants> {
   variant?: ButtonVariant;
   isOutlined?: boolean;
   size?: ButtonSize;
@@ -24,10 +24,6 @@ interface BaseButtonProps {
   buttonCss?: SerializedStyles;
   buttonContentCss?: SerializedStyles;
   id?: string;
-  'aria-label'?: string;
-  'aria-describedby'?: string;
-  'aria-expanded'?: boolean;
-  'aria-pressed'?: boolean;
 }
 
 // Props for regular buttons with children
@@ -47,7 +43,7 @@ interface IconOnlyButtonProps extends BaseButtonProps {
 }
 
 // Button element specific props
-interface ButtonElementProps {
+interface ButtonElementProps extends React.HTMLAttributes<HTMLButtonElement> {
   as?: 'button';
   type?: 'submit' | 'button' | 'reset';
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -62,7 +58,7 @@ interface ButtonElementProps {
 }
 
 // Anchor element specific props
-interface AnchorElementProps {
+interface AnchorElementProps extends React.HTMLAttributes<HTMLAnchorElement> {
   as: 'a';
   href: string;
   target?: '_blank' | '_self' | '_parent' | '_top';
@@ -108,7 +104,7 @@ const Button = React.forwardRef<HTMLButtonElement | HTMLAnchorElement, ButtonPro
       outlined: isOutlined ? variant : 'none',
       size,
       isLoading: loading ? 'true' : 'false',
-      isIconOnly: isIconOnly ? 'true' : 'false',
+      iconOnly: isIconOnly ? 'true' : 'false',
     }),
     buttonCss,
   ];
@@ -617,7 +613,7 @@ const buttonVariants = createVariation(
         true: styles.isLoading.true,
         false: styles.isLoading.false,
       },
-      isIconOnly: {
+      iconOnly: {
         true: styles.isIconOnly.true,
         false: styles.isIconOnly.false,
       },
@@ -644,7 +640,7 @@ const buttonVariants = createVariation(
       outlined: 'none',
       size: 'regular',
       isLoading: 'false',
-      isIconOnly: 'false',
+      iconOnly: 'false',
     },
   },
   styles.base,
