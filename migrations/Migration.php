@@ -18,6 +18,25 @@ class Migration {
 	 * Constructor
 	 */
 	public function __construct() {
-		QuizAttemptMigrator::instance()->is_completed() ? null : QuizAttemptMigrator::instance()->schedule();
+		$this->schedule_migrations();
+	}
+
+	/**
+	 * Schedule migrations.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @return void
+	 */
+	public function schedule_migrations() {
+		$migrators = array(
+			QuizAttemptMigrator::instance(),
+		);
+
+		foreach ( $migrators as $migrator ) {
+			if ( ! $migrator->is_completed() ) {
+				$migrator->schedule();
+			}
+		}
 	}
 }
