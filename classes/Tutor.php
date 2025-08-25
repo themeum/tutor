@@ -10,8 +10,8 @@
 
 namespace TUTOR;
 
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -443,15 +443,22 @@ final class Tutor extends Singleton {
 		 * @since 1.4.2
 		 */
 		global $wpdb;
-		$wpdb->tutor_earnings              = $wpdb->prefix . 'tutor_earnings';
-		$wpdb->tutor_gradebooks            = $wpdb->prefix . 'tutor_gradebooks';
-		$wpdb->tutor_gradebooks_results    = $wpdb->prefix . 'tutor_gradebooks_results';
-		$wpdb->tutor_quiz_attempts         = $wpdb->prefix . 'tutor_quiz_attempts';
-		$wpdb->tutor_quiz_attempt_answers  = $wpdb->prefix . 'tutor_quiz_attempt_answers';
-		$wpdb->tutor_quiz_questions        = $wpdb->prefix . 'tutor_quiz_questions';
-		$wpdb->tutor_quiz_question_answers = $wpdb->prefix . 'tutor_quiz_question_answers';
-		$wpdb->tutor_withdraws             = $wpdb->prefix . 'tutor_withdraws';
-		$wpdb->tutor_email_queue           = $wpdb->prefix . 'tutor_email_queue';
+		$wpdb->tutor_earnings                = $wpdb->prefix . 'tutor_earnings';
+		$wpdb->tutor_gradebooks              = $wpdb->prefix . 'tutor_gradebooks';
+		$wpdb->tutor_gradebooks_results      = $wpdb->prefix . 'tutor_gradebooks_results';
+		$wpdb->tutor_quiz_attempts           = $wpdb->prefix . 'tutor_quiz_attempts';
+		$wpdb->tutor_quiz_attempt_answers    = $wpdb->prefix . 'tutor_quiz_attempt_answers';
+		$wpdb->tutor_quiz_questions          = $wpdb->prefix . 'tutor_quiz_questions';
+		$wpdb->tutor_quiz_question_answers   = $wpdb->prefix . 'tutor_quiz_question_answers';
+		$wpdb->tutor_withdraws               = $wpdb->prefix . 'tutor_withdraws';
+		$wpdb->tutor_email_queue             = $wpdb->prefix . 'tutor_email_queue';
+		$wpdb->tutor_order_items             = $wpdb->prefix . 'tutor_order_items';
+		$wpdb->tutor_orders                  = $wpdb->prefix . 'tutor_orders';
+		$wpdb->tutor_ordermeta               = $wpdb->prefix . 'tutor_ordermeta';
+		$wpdb->tutor_subscription_plan_items = $wpdb->prefix . 'tutor_subscription_plan_items';
+		$wpdb->tutor_subscription_plans      = $wpdb->prefix . 'tutor_subscription_plans';
+		$wpdb->tutor_subscriptions 			 = $wpdb->prefix . 'tutor_subscriptions';
+		$wpdb->tutor_subscriptionmeta 		 = $wpdb->prefix . 'tutor_subscriptionmeta';
 
 		/**
 		 * Changing default wp doing ajax return based on tutor ajax action
@@ -847,6 +854,10 @@ final class Tutor extends Singleton {
 			order_status VARCHAR(50) NOT NULL,
 			payment_status VARCHAR(50) NOT NULL,
 			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
+			pre_tax_price DECIMAL(13, 2) NOT NULL,  -- total price before adding tax
+			tax_type VARCHAR(50),
+			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
+			tax_amount DECIMAL(13, 2),
 			total_price DECIMAL(13, 2) NOT NULL, -- final price
 			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
 			coupon_code VARCHAR(255),
@@ -854,8 +865,6 @@ final class Tutor extends Singleton {
 			discount_type ENUM('percentage', 'flat') DEFAULT NULL,
 			discount_amount DECIMAL(13, 2),
 			discount_reason TEXT,
-			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
-			tax_amount DECIMAL(13, 2),
 			fees DECIMAL(13, 2), -- payment gateway fees
 			earnings DECIMAL(13, 2), -- net earning
 			refund_amount DECIMAL(13, 2), -- Refund amount

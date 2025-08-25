@@ -40,7 +40,8 @@ $secondary_button_text_color  = $email_settings ? $email_settings::get_color( 's
 body{direction:<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;padding: 0px;margin: 0px;color: #5B616F;}
 .tutor-email-body{font-weight:400;padding: 50px 20px 50px;color: #5B616F;background-color: #EFF1F6;line-height: 26px;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
 .tutor-email-body a, .tutor-email-body strong {color: <?php echo esc_html( $email_short_code_color ); ?>;font-weight:500!important;text-decoration: none;}
-.tutor-email-body a{ color: royalblue;}
+.tutor-email-body b {font-weight: 700; color: #333333;}
+.tutor-email-body a { color: royalblue;}
 .tutor-email-body table {width: 100%; font-size: 16px; border-spacing: 0;}
 .tutor-email-body table td{padding: 0;margin: 0;}
 .tutor-email-header{ background-color: <?php echo esc_html( $header_background_color ); ?>; border-bottom: 1px solid <?php echo esc_html( $header_divider_color ); ?>; padding: 20px 50px;}
@@ -76,6 +77,9 @@ body{direction:<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;padding: 0px;margin: 0px;
 .tutor-email-datatable{margin-bottom: 20px;width:100%;margin-top: 0;}
 .tutor-email-datatable tr td{vertical-align: top;}
 .tutor-email-datatable tr td.label{min-width: 150px;width: 150px;}
+.tutor-email-datatable.tutor-email-datatable-bordered {border: 1px solid #F0F0F0;border-radius: 6px; background: #FCFCFC;}
+.tutor-email-datatable.tutor-email-datatable-bordered td{border-bottom: 1px solid #F0F0F0;padding: 10px; border-right: 1px solid #F0F0F0; &:last-child {border-right: none;}}
+.tutor-email-datatable.tutor-email-datatable-bordered tr:last-child td{border-bottom: none;}
 .tutor-email-from{margin-top: 20px;}
 .tutor-panel-block{background: #E9EDFB;color: #212327;font-weight: 400;font-size: 16px;margin-bottom: 30px;padding:25px;border: 1px solid #95AAED;border-radius: 6px}
 .tutor-panel-block [data-source="email-block-heading"]{margin-top: 0;font-weight: 500;margin-bottom: 10px;}

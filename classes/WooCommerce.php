@@ -704,6 +704,8 @@ class WooCommerce extends Tutor_Base {
 	 *
 	 * @since 1.6.7
 	 *
+	 * @since 3.8.0 Filter hook: tutor_is_gift_item added
+	 *
 	 * @param int   $item_id item id.
 	 * @param mixed $item order item.
 	 * @param int   $order_id wc order id.
@@ -718,6 +720,11 @@ class WooCommerce extends Tutor_Base {
 		$item          = new \WC_Order_Item_Product( $item );
 		$product_id    = $item->get_product_id();
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+
+		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item, $product_id );
+		if ( $is_gift_item ) {
+			return;
+		}
 
 		if ( $if_has_course ) {
 			$order = wc_get_order( $order_id );

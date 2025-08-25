@@ -125,6 +125,11 @@ const ExportModal = ({
           label: __('Keep Media Files', 'tutor'),
           contents: [],
         },
+        {
+          key: 'keep_user_data',
+          label: __('Keep User Data', 'tutor'),
+          contents: [],
+        },
       ] as ExportableContent[]);
 
   const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'content_bank') => {
@@ -271,7 +276,7 @@ const ExportModal = ({
     error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
   };
 
-  const EXCLUDED_KEYS = ['keep_media_files'];
+  const EXCLUDED_KEYS = ['keep_media_files', 'keep_user_data'];
 
   const disableExportButton = () => {
     const formValues = form.getValues();
