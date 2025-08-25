@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -187,7 +187,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
     });
   }, [showModal, subscription.plan_name, handleDeleteSubscription]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const container = marqueeContainerRef.current;
     const content = marqueeContentRef.current;
 
