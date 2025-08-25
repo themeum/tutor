@@ -3,6 +3,7 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { type IconCollection, icons } from '@TutorShared/icons/types';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
+import { expect, within } from 'storybook/test';
 
 const meta = {
   title: 'Atoms/Button',
@@ -26,6 +27,10 @@ const meta = {
       control: 'boolean',
       description: 'If true, renders the outlined style for the variant.',
     },
+    isIconOnly: {
+      control: 'boolean',
+      description: 'If true, renders the button as an icon-only button.',
+    },
     size: {
       control: 'select',
       options: ['large', 'regular', 'small'],
@@ -48,12 +53,13 @@ const meta = {
       control: 'radio',
       options: ['left', 'right'],
       description: 'Position of the icon.',
+      if: { arg: 'isIconOnly', eq: false },
     },
     children: {
       control: 'text',
       description: 'Button content.',
     },
-    onClick: { action: 'clicked', description: 'Click handler.' },
+    onClick: { control: false, action: 'clicked', description: 'Click handler.' },
     tabIndex: {
       control: 'number',
       description: 'Tab index for accessibility.',
@@ -66,6 +72,32 @@ const meta = {
       control: false,
       table: { disable: true },
     },
+    as: {
+      control: 'select',
+      options: ['button', 'a'],
+      description: 'The HTML element to use.',
+    },
+    href: {
+      control: 'text',
+      description: 'Href for anchor element (required if as="a").',
+      if: { arg: 'as', eq: 'a' },
+    },
+    target: {
+      control: 'select',
+      options: ['_blank', '_self', '_parent', '_top'],
+      description: 'Target for anchor element.',
+      if: { arg: 'as', eq: 'a' },
+    },
+    rel: {
+      control: 'text',
+      description: 'Rel for anchor element.',
+      if: { arg: 'as', eq: 'a' },
+    },
+    download: {
+      control: 'text',
+      description: 'Download attribute for anchor element.',
+      if: { arg: 'as', eq: 'a' },
+    },
   },
   args: {
     children: 'Button',
@@ -76,7 +108,9 @@ const meta = {
     loading: false,
     icon: undefined,
     iconPosition: 'left',
+    isIconOnly: false,
     tabIndex: 0,
+    as: 'button',
   },
   render: (args) => {
     const { icon, buttonCss, buttonContentCss, ...rest } = args;
@@ -97,6 +131,37 @@ const meta = {
     return (
       <Button {...rest} icon={iconElement} buttonCss={buttonCssStyles} buttonContentCss={buttonContentCssStyles} />
     );
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const buttonLabel = typeof args.children === 'string' ? args.children : '';
+    const button = await canvas.findByRole('button', { name: new RegExp(buttonLabel, 'i') });
+
+    const styles = window.getComputedStyle(button);
+
+    const expectedStats: Record<string, { height: string; fontSize: string }> = {
+      large: {
+        height: '48px',
+        fontSize: '16px',
+      },
+      regular: {
+        height: '40px',
+        fontSize: '15.008px',
+      },
+      small: {
+        height: '32px',
+        fontSize: '13.008px',
+      },
+    };
+
+    if (args.size && expectedStats[args.size]) {
+      expect(styles.height).toBe(expectedStats[args.size].height);
+      expect(styles.fontSize).toBe(expectedStats[args.size].fontSize);
+
+      if (args.isIconOnly) {
+        expect(styles.height).toBe(styles.width);
+      }
+    }
   },
 } satisfies Meta<typeof Button>;
 
@@ -154,6 +219,15 @@ export const Outlined = {
   },
 } satisfies Story;
 
+export const IconOnly = {
+  args: {
+    isIconOnly: true,
+    'aria-label': 'Icon Only Button',
+    icon: 'plus',
+    children: undefined,
+  },
+} satisfies Story;
+
 export const Loading = {
   args: {
     children: 'Loading Button',
@@ -195,5 +269,16 @@ export const Small = {
   args: {
     children: 'Small Button',
     size: 'small',
+  },
+} satisfies Story;
+
+export const AsAnchor = {
+  args: {
+    children: 'Anchor Button',
+    as: 'a',
+    href: 'https://example.com',
+    target: '_blank',
+    rel: 'noopener noreferrer',
+    variant: 'primary',
   },
 } satisfies Story;
