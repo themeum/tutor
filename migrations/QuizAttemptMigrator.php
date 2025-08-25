@@ -10,6 +10,7 @@
 
 namespace Tutor\Migrations;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
 
 /**
@@ -62,8 +63,7 @@ class QuizAttemptMigrator extends BatchProcessor {
 	 * @return int
 	 */
 	protected function get_total_items(): int {
-		global $wpdb;
-		return (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}tutor_quiz_attempts WHERE result IS NULL" );
+		return QueryHelper::get_count( 'tutor_quiz_attempts', array( 'result' => 'null' ), array(), 'attempt_id' );
 	}
 
 	/**
