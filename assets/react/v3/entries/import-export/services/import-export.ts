@@ -160,11 +160,14 @@ export interface ExportContentPayload {
 }
 
 interface ImportExportCompletedContentsItem {
+  label?: string; // Failed Label; will only be sent when progress is 100% and has failed item
+  failed_message?: string; // Failed Message; will only be sent when progress is 100% and has failed item
   success: string[];
   failed: string[];
 }
 
 export interface ImportExportContentResponseBase {
+  message: string;
   job_id: string;
   job_progress: number;
   job_status: string;
