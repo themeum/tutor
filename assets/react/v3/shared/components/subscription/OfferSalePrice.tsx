@@ -18,20 +18,18 @@ import { requiredRule } from '@TutorShared/utils/validation';
 
 const { tutor_currency } = tutorConfig;
 
-export function OfferSalePrice({ index }: { index: number }) {
-  const form = useFormContext<{
-    subscriptions: SubscriptionFormDataWithSaved[];
-  }>();
-  const hasSale = form.watch(`subscriptions.${index}.offer_sale_price`);
-  const regularPrice = form.watch(`subscriptions.${index}.regular_price`);
-  const hasScheduledSale = !!form.watch(`subscriptions.${index}.schedule_sale_price`);
+export function OfferSalePrice() {
+  const form = useFormContext<SubscriptionFormDataWithSaved>();
+  const hasSale = form.watch('offer_sale_price');
+  const regularPrice = form.watch('regular_price');
+  const hasScheduledSale = !!form.watch('schedule_sale_price');
 
   return (
     <div css={saleStyles.wrapper}>
       <div>
         <Controller
           control={form.control}
-          name={`subscriptions.${index}.offer_sale_price`}
+          name={'offer_sale_price'}
           render={(props) => <FormSwitch {...props} label={__('Offer sale price', 'tutor')} />}
         />
       </div>
@@ -39,7 +37,7 @@ export function OfferSalePrice({ index }: { index: number }) {
         <div css={saleStyles.inputWrapper}>
           <Controller
             control={form.control}
-            name={`subscriptions.${index}.sale_price`}
+            name={'sale_price'}
             rules={{
               ...requiredRule(),
               validate: (value) => {
@@ -67,7 +65,7 @@ export function OfferSalePrice({ index }: { index: number }) {
           />
           <Controller
             control={form.control}
-            name={`subscriptions.${index}.schedule_sale_price`}
+            name={'schedule_sale_price'}
             render={(props) => <FormCheckbox {...props} label={__('Schedule the sale price', 'tutor')} />}
           />
           <Show when={hasScheduledSale}>
@@ -75,7 +73,7 @@ export function OfferSalePrice({ index }: { index: number }) {
               <label>{__('Sale starts from', 'tutor')}</label>
               <div css={styleUtils.dateAndTimeWrapper}>
                 <Controller
-                  name={`subscriptions.${index}.sale_price_from_date`}
+                  name={'sale_price_from_date'}
                   control={form.control}
                   rules={{
                     required: __('Schedule date is required', 'tutor'),
@@ -91,7 +89,7 @@ export function OfferSalePrice({ index }: { index: number }) {
                 />
 
                 <Controller
-                  name={`subscriptions.${index}.sale_price_from_time`}
+                  name={'sale_price_from_time'}
                   control={form.control}
                   rules={{
                     required: __('Schedule time is required', 'tutor'),
@@ -106,13 +104,13 @@ export function OfferSalePrice({ index }: { index: number }) {
               <label>{__('Sale ends to', 'tutor')}</label>
               <div css={styleUtils.dateAndTimeWrapper}>
                 <Controller
-                  name={`subscriptions.${index}.sale_price_to_date`}
+                  name={'sale_price_to_date'}
                   control={form.control}
                   rules={{
                     required: __('Schedule date is required', 'tutor'),
                     validate: {
                       checkEndDate: (value) => {
-                        const startDate = form.watch(`subscriptions.${index}.sale_price_from_date`);
+                        const startDate = form.watch('sale_price_from_date');
                         const endDate = value;
                         if (startDate && endDate) {
                           return new Date(startDate) > new Date(endDate)
@@ -122,28 +120,28 @@ export function OfferSalePrice({ index }: { index: number }) {
                         return undefined;
                       },
                     },
-                    deps: [`subscriptions.${index}.sale_price_from_date`],
+                    deps: ['sale_price_from_date'],
                   }}
                   render={(controllerProps) => (
                     <FormDateInput
                       {...controllerProps}
                       isClearable={false}
                       placeholder="yyyy-mm-dd"
-                      disabledBefore={form.watch(`subscriptions.${index}.sale_price_from_date`) || undefined}
+                      disabledBefore={form.watch('sale_price_from_date') || undefined}
                     />
                   )}
                 />
 
                 <Controller
-                  name={`subscriptions.${index}.sale_price_to_time`}
+                  name={'sale_price_to_time'}
                   control={form.control}
                   rules={{
                     required: __('Schedule time is required', 'tutor'),
                     validate: {
                       checkEndTime: (value) => {
-                        const startDate = form.watch(`subscriptions.${index}.sale_price_from_date`);
-                        const startTime = form.watch(`subscriptions.${index}.sale_price_from_time`);
-                        const endDate = form.watch(`subscriptions.${index}.sale_price_to_date`);
+                        const startDate = form.watch('sale_price_from_date');
+                        const startTime = form.watch('sale_price_from_time');
+                        const endDate = form.watch('sale_price_to_date');
                         const endTime = value;
                         if (startDate && endDate && startTime && endTime) {
                           return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
@@ -153,11 +151,7 @@ export function OfferSalePrice({ index }: { index: number }) {
                         return undefined;
                       },
                     },
-                    deps: [
-                      `subscriptions.${index}.sale_price_from_date`,
-                      `subscriptions.${index}.sale_price_from_time`,
-                      `subscriptions.${index}.sale_price_to_date`,
-                    ],
+                    deps: ['sale_price_from_date', 'sale_price_from_time', 'sale_price_to_date'],
                   }}
                   render={(controllerProps) => (
                     <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
