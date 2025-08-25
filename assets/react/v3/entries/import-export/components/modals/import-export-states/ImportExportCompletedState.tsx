@@ -3,13 +3,16 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useState } from 'react';
 
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import {
   type ImportContentResponse,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
-import Button from '@TutorShared/atoms/Button';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ImportErrorListModal from '@TutorShared/components/modals/ImportErrorListModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
@@ -21,8 +24,6 @@ import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import importErrorImage from '@SharedImages/import-export/import-error.webp';
 import importSuccessImage from '@SharedImages/import-export/import-success.webp';
-import ImportErrorListModal from '@TutorShared/components/modals/ImportErrorListModal';
-import { useModal } from '@TutorShared/components/modals/Modal';
 
 interface ImportExportCompletedStateProps {
   state: ImportExportModalState;
@@ -154,34 +155,6 @@ const ImportExportCompletedState = ({
     return failedItems.join(', ');
   };
 
-  const formatCompletedItems = (): string => {
-    if (!completedContents) return '';
-
-    const { settings } = completedContents;
-    const formattedItems: string[] = [];
-
-    if (successFullyCompletedCourses.length) {
-      const courseText = formatItemCount(successFullyCompletedCourses.length, 'course');
-      formattedItems.push(courseText);
-    }
-
-    if (successFullyCompletedBundles.length) {
-      const bundleText = formatItemCount(successFullyCompletedBundles.length, 'bundle');
-      formattedItems.push(bundleText);
-    }
-
-    if (successFullyCompletedContentBank.length) {
-      const contentBankText = formatItemCount(successFullyCompletedContentBank.length, 'content_bank');
-      formattedItems.push(contentBankText);
-    }
-
-    if (settings) {
-      formattedItems.push(__('Settings', 'tutor'));
-    }
-
-    return formattedItems.join(', ');
-  };
-
   return (
     <div css={styles.statusWrapper}>
       <img
@@ -239,7 +212,7 @@ const ImportExportCompletedState = ({
                   <div css={styles.reportLeft}>
                     <div>{contentMapping[type as keyof typeof contentMapping].reportList.success}</div>
                     <Show when={!isImportingToContentBank}>
-                      <div>{formatCompletedItems()}</div>
+                      <div>{message}</div>
                     </Show>
                   </div>
                 </div>
