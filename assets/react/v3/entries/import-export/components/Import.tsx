@@ -91,7 +91,8 @@ const Import = () => {
     if (progress === 100) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'success',
-        message: importResponse?.message || __('Import completed successfully!', 'tutor'),
+        message: importResponse?.message || '',
+        failedMessage: importResponse?.failed_message || '',
         progress: 100,
         onClose: () => {
           closeModal({ action: 'CLOSE' });

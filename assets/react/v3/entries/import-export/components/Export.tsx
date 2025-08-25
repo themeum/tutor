@@ -10,13 +10,12 @@ import ExportModal from '@ImportExport/components/modals/ExportModal';
 import {
   convertExportFormDataToPayload,
   useExportContentsMutation,
-  type ExportableContent,
   type ExportFormData,
 } from '@ImportExport/services/import-export';
-import { generateImportExportMessage } from '@ImportExport/utils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import { type ExportableContent } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeParams } from '@TutorShared/utils/url';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
@@ -127,7 +126,7 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'progress',
         progress,
-        message: generateImportExportMessage(exportContentResponse, 'export'),
+        message: exportContentResponse?.message || '',
       });
     }
 
@@ -136,6 +135,7 @@ const Export = () => {
         currentStep: 'success',
         progress: 100,
         fileSize: JSON.stringify(exportContentResponse?.exported_data).length,
+        message: exportContentResponse?.message || '',
         completedContents: exportContentResponse?.completed_contents,
         onDownload: (fileName) => {
           const jsonFile = new Blob([JSON.stringify(exportContentResponse?.exported_data)], {
