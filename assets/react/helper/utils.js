@@ -21,10 +21,18 @@ export async function fetchCountriesData() {
  * @param {Response} response - Fetch response object
  * @returns {string|null} - The Tutor-Message header value or null if not set
  */
-export function getTutorMessage(response) {
+export async function getTutorMessage(response) {
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor-pro');
+    
     if (!(response instanceof Response)) {
         return defaultErrorMessage;
     }
-    return response.headers.get('Tutor-Message') || defaultErrorMessage;
+
+    const res = await response.json();
+    if (res && res.message) {
+        console.log('log', res.message);
+        return res.message;
+    }
+
+    return defaultErrorMessage;
 }
