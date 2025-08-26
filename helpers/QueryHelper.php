@@ -1072,16 +1072,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table         = self::prepare_table_name( $table );
-		$where_clause  = !empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
-		$search_clause = !empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
-
-		if ( !empty( $search_clause ) ) {
-			if ( !empty( $where_clause ) ) {
-				$where_clause .= ' AND (' . $search_clause . ')';
-			} else {
-				$where_clause = 'WHERE ' . $search_clause;
-			}
-		}
+		$where_clause  = self::build_where_search_clause( $where, $search, 'AND' );
 
 		$count = $wpdb->get_var(
 			"SELECT COUNT($count_column)
