@@ -71,6 +71,7 @@ const Export = () => {
         id: 'export-modal',
         component: ExportModal,
         depthIndex: zIndex.highest,
+        closeOnEscape: false,
         props: {
           onClose: closeModal,
           currentStep: 'initial',
