@@ -283,6 +283,7 @@ const styles = {
       &:not(:disabled):not([aria-disabled='true']) {
         &:hover,
         &:focus {
+          color: ${colorTokens.text.white};
           background-color: ${colorTokens.action.primary.hover};
         }
         &:active {
@@ -355,6 +356,7 @@ const styles = {
         &:focus,
         &:active {
           background-color: ${colorTokens.background.status.errorFail};
+          color: ${colorTokens.text.error};
         }
       }
     `,
@@ -366,6 +368,7 @@ const styles = {
         &:hover,
         &:focus {
           background-color: ${colorTokens.action.primary.wp_hover};
+          color: ${colorTokens.text.white};
         }
         &:active {
           background-color: ${colorTokens.action.primary.wp};
