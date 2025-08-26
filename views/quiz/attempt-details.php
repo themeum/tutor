@@ -698,7 +698,6 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												}
 												?>
 												</div>
-												<?php do_action( 'tutor_quiz_attempt_details_after_correct_answer', $answer, $answer_status ); ?>
 												</td>
 												<?php
 											break;
@@ -706,25 +705,29 @@ if ( is_array( $answers ) && count( $answers ) ) {
 										case 'result':
 											?>
 												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
-												<?php do_action( 'tutor_quiz_attempt_after_result_column', $answer, $answer_status ); ?>
+													<div class="tutor-d-flex tutor-align-center tutor-justify-between">
+														<?php do_action( 'tutor_quiz_attempt_after_result_column', $answer, $answer_status ); ?>
 
-												<?php
-												if ( 'h5p' !== $answer->question_type ) {
-													switch ( $answer_status ) {
-														case 'correct':
-															echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
-															break;
+														<?php
+														if ( 'h5p' !== $answer->question_type ) {
+															switch ( $answer_status ) {
+																case 'correct':
+																	echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
+																	break;
 
-														case 'pending':
-															echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
-															break;
+																case 'pending':
+																	echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
+																	break;
 
-														case 'wrong':
-															echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
-															break;
-													}
-												}
-												?>
+																case 'wrong':
+																	echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
+																	break;
+															}
+														}
+														?>
+
+														<?php do_action( 'tutor_quiz_attempt_details_after_result', $answer, $answer_status ); ?>
+													</div>
 												</td>
 												<?php
 											break;
