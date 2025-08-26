@@ -1001,23 +1001,11 @@ class QueryHelper {
 	) {
 		global $wpdb;
 
-		$select_clause = implode( ', ', $select_columns );
-		$from_clause   = self::prepare_table_name( $primary_table );
-
-		$join_clauses = '';
-		foreach ( $joining_tables as $relation ) {
-			$join_table    = self::prepare_table_name( $relation['table'] );
-			$join_clauses .= " {$relation['type']} JOIN {$join_table} ON {$relation['on']}";
-		}
-
-		$where_clause = !empty($where) ? 'WHERE ' . self::build_where_clause($where) : '';
-
-		if ( ! empty( $search ) ) {
-			$search_clause = self::build_like_clause( $search );
-			$where_clause .= !empty($where_clause) ? ' AND (' . $search_clause . ')' : 'WHERE ' . $search_clause;
-		}
-
-		$order_by_clause = !empty($order_by) ? "ORDER BY {$order_by} {$order}" : '';
+		$select_clause   = implode( ', ', $select_columns );
+		$from_clause     = self::prepare_table_name( $primary_table );
+		$join_clauses    = self::build_join_clause( $joining_tables );
+		$where_clause    = self::build_where_search_clause( $where, $search );
+		$order_by_clause = ! empty( $order_by ) ? "ORDER BY {$order_by} {$order}" : '';
 
 		// Query to get total count.
 		$count_query = "
