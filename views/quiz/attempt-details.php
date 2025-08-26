@@ -698,6 +698,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												}
 												?>
 												</div>
+												<?php do_action( 'tutor_quiz_attempt_details_after_correct_answer', $answer, $answer_status ); ?>
 												</td>
 												<?php
 											break;
@@ -747,7 +748,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 								<?php endforeach; ?>
 							</tr>
 
-							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status ); ?>
+							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status, $table_2_columns ); ?>
 
 							<?php
 				}
