@@ -10860,22 +10860,20 @@ class Utils {
 	 *
 	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
 	 */
-	public function get_quiz_attempts_and_answers_by_course_id( int $course_id, int $user_id ): array {
+	public function get_quiz_attempts_and_answers_by_course_id( int $course_id ): array {
 		global $wpdb;
 
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT *
 				FROM $wpdb->tutor_quiz_attempts
-				WHERE user_id = %d 
-				AND course_id = %d",
-				$user_id,
+				WHERE course_id = %d",
 				$course_id
 			)
 		);
 
 		if ( $wpdb->last_error || empty( $results ) ) {
-			$wpdb->last_error ? error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempts found for user ' . $user_id . ' in course ' . $course_id;
+			$wpdb->last_error ? error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempts found for course ' . $course_id;
 			return array();
 		}
 
@@ -10928,7 +10926,7 @@ class Utils {
 	 *
 	 * @return array|null Returns an array of assignment comment objects with meta, empty array if none found, or null on error.
 	 */
-	public function get_user_assignments_by_course_id( $user_id, $course_id ): array {
+	public function get_assignments_by_course_id( $course_id ): array {
 		global $wpdb;
 
 		$result = $wpdb->get_results(
@@ -10936,10 +10934,8 @@ class Utils {
 				"SELECT *
 				FROM {$wpdb->comments}
 				WHERE comment_type = %s
-				AND user_id = %d
 				AND comment_parent = %d",
 				'tutor_assignment',
-				$user_id,
 				$course_id
 			)
 		);
