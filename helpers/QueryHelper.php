@@ -1005,7 +1005,7 @@ class QueryHelper {
 		$from_clause     = self::prepare_table_name( $primary_table );
 		$join_clauses    = self::build_join_clause( $joining_tables );
 		$where_clause    = self::build_where_search_clause( $where, $search );
-		$order_by_clause = ! empty( $order_by ) ? "ORDER BY {$order_by} {$order}" : '';
+		$order_by_clause = self::build_order_clause( $order_by, $order );
 
 		// Query to get total count.
 		$count_query = "
