@@ -1115,24 +1115,9 @@ class QueryHelper {
 	public static function get_joined_count(string $primary_table, array $joining_tables, array $where = [], array $search = [], string $count_column = '*'): int {
 		global $wpdb;
 		
-		$from_clause = self::prepare_table_name( $primary_table );
-		
-		$join_clauses = '';
-		foreach ($joining_tables as $relation) {
-			$join_table    = self::prepare_table_name( $relation['table'] );
-			$join_clauses .= " {$relation['type']} JOIN {$join_table} ON {$relation['on']}";
-		}
-		
-		$where_clause  = ! empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
-		$search_clause = ! empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
-
-		if ( ! empty( $search_clause ) ) {
-			if ( ! empty( $where_clause ) ) {
-				$where_clause .= ' AND (' . $search_clause . ')';
-			} else {
-				$where_clause = 'WHERE ' . $search_clause;
-			}
-		}
+		$from_clause  = self::prepare_table_name( $primary_table );
+		$join_clauses = self::build_join_clause( $joining_tables );
+		$where_clause = self::build_where_search_clause( $where, $search, 'AND' );
 
 		$count_query = "
 			SELECT COUNT($count_column) as total_count
