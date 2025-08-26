@@ -1,31 +1,28 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const { __, _x, _n, _nx, sprintf } = wp.i18n;
-    // Approve and Reject button
-    const approveButton = document.querySelectorAll('.tutor-admin-open-withdraw-approve-modal');
-    const rejectButton = document.querySelectorAll('.tutor-admin-open-withdraw-reject-modal');
-    let withdrawId;
+document.addEventListener("DOMContentLoaded", function(){
+   const { __, _x, _n, _nx, sprintf } = wp.i18n; 
+   // Approve and Reject button
+   const approveButton = document.querySelectorAll('.tutor-admin-open-withdraw-approve-modal');
+   const rejectButton = document.querySelectorAll('.tutor-admin-open-withdraw-reject-modal');
+   let withdrawId;
 
-    // Onclick button dynamically create content
-    if (approveButton) {
-        for (let button of approveButton) {
+   // Onclick button dynamically create content
+   if (approveButton) {
+       for (let button of approveButton) {
             button.onclick = (e) => {
                 withdrawId = e.currentTarget.dataset.id;
                 const amount = e.currentTarget.dataset.amount;
                 const accountName = e.currentTarget.dataset.name;
                 const content = document.getElementById('tutor-admin-withdraw-approve-content');
                 content.innerHTML = `${
-                    /* translators: %1$s is the Account name and %2$s is the Amount */
-                    sprintf(
-                        __('You are approving %s withdrawal request for %s. Are you sure you want to approve?', 'tutor'),
-                        `<strong style="color:#000;">${accountName}</strong>`,
-                        `<strong  style="color:#000;">${amount}</strong>`,
-                    )
-                    }`;
-            };
-        }
-    }
+                /* translators: %1$s is the Account name and %2$s is the Amount */
+                   sprintf( __( 'You are approving %1$s withdrawal request for %2$s. Are you sure you want to approve?', 'tutor'), `<strong style="color:#000;">${accountName}</strong>`, `<strong  style="color:#000;">${amount}</strong>` )
+                }`;
+            }
+       }
+
+   }
     // Onclick button dynamically create content
-    if (rejectButton) {
+   if (rejectButton) {
         for (let button of rejectButton) {
             button.onclick = (e) => {
                 withdrawId = e.currentTarget.dataset.id;
@@ -34,16 +31,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 const content = document.getElementById('tutor-admin-withdraw-reject-content');
                 content.innerHTML = `${
                     /* translators: %1$s is the Account name and %2$s is the Amount */
-                    sprintf(
-                        __('You are rejecting %1$s withdrawal request for %2$s. Are you sure you want to reject?', 'tutor'),
-                        `<strong style="color:#000;">${accountName}</strong>`,
-                        `<strong style="color:#000;">${amount}</strong>`,
-                    )
-                    }`;
-            };
+                   sprintf( __( 'You are rejecting %1$s withdrawal request for %2$s. Are you sure you want to reject?', 'tutor' ), `<strong style="color:#000;">${accountName}</strong>`, `<strong style="color:#000;">${amount}</strong>` )
+                }`;
+            }
         }
-    }
-    // Approve & Reject form
+   }
+   // Approve & Reject form
     const approveForm = document.getElementById('tutor-admin-withdraw-approve-form');
     const rejectForm = document.getElementById('tutor-admin-withdraw-reject-form');
 
@@ -59,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (success) {
                     location.reload();
                 } else {
-                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), 'error');
+                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), "error");
                 }
             }
-        };
+        }
     }
 
     if (rejectForm) {
@@ -76,10 +69,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (success) {
                     location.reload();
                 } else {
-                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), 'error');
+                    tutor_toast(__('Failed', 'tutor'), __('Something went wrong, please try again!', 'tutor'), "error");
                 }
             }
-        };
+        }
     }
 
     // Onchange reject reason if other is value then create input field for adding reason
@@ -88,10 +81,9 @@ document.addEventListener('DOMContentLoaded', function () {
         rejectType.onchange = (e) => {
             const type = e.target.value;
             if (type === 'Other') {
-                document.getElementById('tutor-withdraw-reject-other').innerHTML =
-                    `<input type="text" name="reject-comment" class="tutor-form-control" placeholder="${__('Withdraw Reject Reason', 'tutor')}" required/>`;
-            }
-        };
+                document.getElementById('tutor-withdraw-reject-other').innerHTML = `<input type="text" name="reject-comment" class="tutor-form-control" placeholder="${__('Withdraw Reject Reason', 'tutor')}" required/>`;
+            } 
+        }
     }
 
     /**
@@ -99,30 +91,32 @@ document.addEventListener('DOMContentLoaded', function () {
      *
      * @param {*} formData including action and all form fields
      */
-    async function ajaxHandler(formData, target) {
+     async function ajaxHandler(formData, target) {
+    
         formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
         try {
             // select loading button
-            const submitButton = target.querySelector('[data-tutor-modal-submit]');
+            const submitButton = target.querySelector("[data-tutor-modal-submit]");
             submitButton.classList.add('is-loading');
 
             const post = await fetch(window._tutorobject.ajaxurl, {
-                method: 'POST',
+                method: "POST",
                 body: formData,
             });
 
             submitButton.classList.remove('is-loading');
             return post;
         } catch (error) {
-            tutor_toast(__('Operation failed', 'tutor'), error, 'error');
+            tutor_toast(__("Operation failed", "tutor"), error, "error")
         }
-    }
+    }  
+
 
     /*
-     * function to copy
-     * @textToCopy string
-     * return a promise
-     */
+    * function to copy 
+    * @textToCopy string
+    * return a promise
+    */
     function copyToClipboard(textToCopy) {
         // navigator clipboard api needs a secure context (https)
         if (navigator.clipboard && window.isSecureContext) {
@@ -130,12 +124,12 @@ document.addEventListener('DOMContentLoaded', function () {
             return navigator.clipboard.writeText(textToCopy);
         } else {
             // text area method
-            let textArea = document.createElement('textarea');
+            let textArea = document.createElement("textarea");
             textArea.value = textToCopy;
             // make the textarea out of viewport
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
@@ -148,17 +142,15 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const withDrawCopyBtns = document.querySelectorAll('.withdraw-tutor-copy-to-clipboard');
-    if (withDrawCopyBtns) {
+    if(withDrawCopyBtns) {
         for (let withDrawCopyBtn of withDrawCopyBtns) {
             withDrawCopyBtn.addEventListener('click', (event) => {
-                copyToClipboard(event.currentTarget.dataset.textCopy).then((text) => {
+                copyToClipboard(event.currentTarget.dataset.textCopy).then(text => {
                     let html = withDrawCopyBtn.innerHTML;
                     withDrawCopyBtn.innerHTML = `${__('Copied', 'tutor')}`;
-                    setTimeout(() => {
-                        withDrawCopyBtn.innerHTML = html;
-                    }, 5000);
-                });
-            });
+                    setTimeout(() => {withDrawCopyBtn.innerHTML = html }, 5000);
+                })
+            })
         }
     }
 });
