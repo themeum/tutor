@@ -60,6 +60,7 @@ const Import = () => {
         onClose: closeModal,
         onImport: onImport,
       },
+      closeOnEscape: false,
     });
   };
 
