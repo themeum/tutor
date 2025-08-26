@@ -524,6 +524,241 @@ class QueryHelper {
 	}
 
 	/**
+	 * Build SELECT clause.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param mixed $columns Column name or list of columns.
+	 *
+	 * @return string
+	 */
+	protected static function build_select_clause( $columns = '' ) {
+		if ( empty( $columns ) ) {
+			return '*';
+		}
+
+		if ( is_array( $columns ) ) {
+			return implode( ',', $columns );
+		}
+
+		return $columns;
+	}
+
+	/**
+	 * Build JOIN clause.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param array $joins Array of joins, each item:
+	 *   - type: join type (LEFT, INNER, RIGHT etc).
+	 *   - table: table name.
+	 *   - on: join condition.
+	 *
+	 * @return string
+	 */
+	protected static function build_join_clause( $joins = array() ) {
+		if ( empty( $joins ) || ! is_array( $joins ) ) {
+			return '';
+		}
+
+		$clause = '';
+		foreach ( $joins as $join ) {
+			$type  = strtoupper( $join['type'] ?? 'LEFT' );
+			$table = self::prepare_table_name( $join['table'] );
+			$on    = $join['on'];
+			if ( $table && $on ) {
+				$clause .= " {$type} JOIN {$table} ON {$on} ";
+			}
+		}
+
+		return $clause;
+	}
+
+	/**
+	 * Build WHERE + SEARCH clause together.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param array  $where  Array of key => value pairs.
+	 * @param array  $search Array of key => search string pairs.
+	 * @param string $search_operator Operator for search conditions (AND/OR).
+	 *
+	 * @return string
+	 */
+	protected static function build_where_search_clause( $where = array(), $search = array(), $search_operator = 'OR' ) {
+		$clauses = array();
+
+		// Handle WHERE conditions.
+		if ( ! empty( $where ) && is_array( $where ) ) {
+			$clauses[] = self::build_where_clause( $where );
+		}
+
+		// Handle SEARCH conditions.
+		if ( ! empty( $search ) && is_array( $search ) ) {
+			$clauses[] = self::build_like_clause( $search, $search_operator );
+		}
+
+		if ( empty( $clauses ) ) {
+			return '';
+		}
+
+		return 'WHERE ' . implode( ' AND ', $clauses );
+	}
+
+	/**
+	 * Build order by clause.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param string $orderby order by column.
+	 * @param string $order order ASC|DESC.
+	 *
+	 * @return string
+	 */
+	protected static function build_order_clause( $orderby = '', $order = 'DESC' ) {
+		if ( empty( $orderby ) ) {
+			return '';
+		}
+
+		$order = strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
+		return 'ORDER BY ' . sanitize_sql_orderby( "{$orderby} {$order}" );
+	}
+
+	/**
+	 * Build LIMIT clause.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $per_page per page.
+	 * @param int $page page number.
+	 *
+	 * @return string
+	 */
+	protected static function build_limit_clause( $per_page = 0, $page = 1 ) {
+		$page     = max( 1, (int) $page );
+		$per_page = max( 0, (int) $per_page );
+
+		if ( ! $per_page ) {
+			return '';
+		}
+
+		$offset = ( $page - 1 ) * $per_page;
+		return sprintf( 'LIMIT %d, %d', $offset, $per_page );
+	}
+
+	/**
+	 * Run a database query with flexible arguments.
+	 *
+	 * Supports SELECT, JOIN, WHERE, SEARCH, GROUP BY, HAVING, ORDER BY,
+	 * LIMIT (pagination), and can return count, single row or full result set.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param string $table table name.
+	 * @param array  $args {
+	 *     Query arguments.
+	 *
+	 *     @type string|array $select   Columns to select, defaults to "*".
+	 *     @type string       $alias    Table alias.
+	 *     @type array        $where    WHERE conditions [ 'col' => 'val', ... ].
+	 *     @type array        $search   LIKE conditions [ 'col' => 'keyword', ... ].
+	 *     @type array        $joins    JOIN clauses [ [ 'type' => 'LEFT', 'table' => '...', 'on' => '...' ], ... ].
+	 *     @type string       $groupby  GROUP BY clause.
+	 *     @type string       $having   HAVING clause.
+	 *     @type string       $orderby  Column to order by.
+	 *     @type string       $order    ASC|DESC, default DESC.
+	 *     @type int          $per_page Results per page for pagination.
+	 *     @type int          $page     Current page number.
+	 *     @type bool         $count    If true, return only total count.
+	 *     @type bool         $single   If true, return only single row.
+	 *     @type string       $output   OBJECT|ARRAY_A default is OBJECT.
+	 * }
+	 *
+	 * @return mixed
+	 */
+	public static function query( $table, $args = array() ) {
+		// Flags.
+		$count      = isset( $args['count'] ) && $args['count'];
+		$single     = isset( $args['single'] ) && $args['single'];
+		$pagination = isset( $args['per_page'], $args['page'] );
+		$output     = $args['output'] ?? 'OBJECT';
+
+		// Primary table.
+		$table            = self::prepare_table_name( $table );
+		$alias            = $args['alias'] ?? 'main';
+		$table_with_alias = "{$table} AS {$alias}";
+
+		// Build clauses.
+		$select_clause   = self::build_select_clause( $args['select'] ?? '' );
+		$join_clause     = self::build_join_clause( $args['joins'] ?? array() );
+		$where_clause    = self::build_where_search_clause( $args['where'] ?? array(), $args['search'] ?? array() );
+		$groupby_clause  = empty( $args['groupby'] ) ? '' : 'GROUP BY ' . $args['groupby'];
+		$having_clause   = empty( $args['having'] ) ? '' : 'HAVING ' . $args['having'];
+		$order_by_clause = self::build_order_clause( $args['orderby'] ?? '', $args['order'] ?? 'DESC' );
+
+		global $wpdb;
+
+		// Count only.
+		if ( $count ) {
+			$sql_query = "SELECT COUNT(*)
+						FROM {$table_with_alias} 
+						{$join_clause} 
+						{$where_clause} 
+						{$groupby_clause} 
+						{$having_clause}";
+
+			return (int) $wpdb->get_var( $sql_query ); //phpcs:ignore
+		}
+
+		// Single record.
+		if ( $single ) {
+			$sql_query = "SELECT {$select_clause} 
+						FROM {$table_with_alias} 
+						{$join_clause} 
+						{$where_clause} 
+						{$groupby_clause} 
+						{$having_clause}
+						{$order_by_clause}
+						LIMIT 1";
+
+			return $wpdb->get_row( $sql_query, $output ); //phpcs:ignore
+		}
+
+		$calc_found_rows = $pagination ? 'SQL_CALC_FOUND_ROWS' : '';
+		$limit_clause    = $pagination ? self::build_limit_clause( $args['per_page'], $args['page'] ) : '';
+
+		$sql_query = "SELECT {$calc_found_rows} {$select_clause} 
+					FROM {$table_with_alias} 
+					{$join_clause} 
+					{$where_clause} 
+					{$groupby_clause} 
+					{$having_clause}
+					{$order_by_clause}
+					{$limit_clause}";
+
+		$rows = $wpdb->get_results( $sql_query, $output ); //phpcs:ignore
+
+		if ( $pagination ) {
+			$has_records  = is_array( $rows ) && count( $rows );
+			$page         = (int) $args['page'];
+			$per_page     = (int) $args['per_page'];
+			$total_record = (int) $has_records ? $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
+			$total_page   = (int) ceil( $total_record / $per_page );
+
+			return array(
+				'total_record' => (int) $total_record,
+				'per_page'     => $per_page,
+				'current_page' => $page,
+				'total_page'   => $total_page,
+				'data'         => $rows,
+			);
+
+		}
+
+		return $rows;
+	}
+
+	/**
 	 * Get a single row from any table with where clause
 	 *
 	 * @param string $table  table name with prefix.
