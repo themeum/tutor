@@ -43,6 +43,17 @@ class QuizModel {
 	}
 
 	/**
+	 * Get manual review types.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @return array
+	 */
+	public static function get_manual_review_types() {
+		return array( 'open_ended', 'short_answer' );
+	}
+
+	/**
 	 * Get total number of quiz
 	 *
 	 * @since 2.0.2
@@ -758,7 +769,7 @@ class QuizModel {
 	 */
 	public static function is_manual_review_required( $quiz_id ) {
 		$required              = false;
-		$review_question_types = array( 'open_ended', 'short_answer' );
+		$review_question_types = self::get_manual_review_types();
 		$question_types        = self::get_quiz_question_types( $quiz_id );
 
 		foreach ( $review_question_types as $type ) {
