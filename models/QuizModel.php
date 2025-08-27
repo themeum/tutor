@@ -858,7 +858,7 @@ class QuizModel {
 
 		$total_pending_attempt = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(quiz_attempt_id) total
+				"SELECT COUNT(attempt_id) total
 				FROM {$wpdb->prefix}tutor_quiz_attempts
 				WHERE result=%s AND quiz_id = %d AND user_id = %d
 				",
