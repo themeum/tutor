@@ -72,10 +72,10 @@ export const SizesWithChildren = {
     content: 'Premium',
     textOnly: false,
   },
-  render: (args) => (
+  render: () => (
     <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
       {(['tiny', 'small', 'regular', 'large'] as const).map((size) => (
-        <ProBadge {...args} key={size} size={size} aria-label={`Premium Badge ${size}`}>
+        <ProBadge key={size} size={size} aria-label={`Premium Badge ${size}`}>
           <Button variant="tertiary" size="small">
             <SVGIcon name="magicAi" width={16} height={16} />
             {size.charAt(0).toUpperCase() + size.slice(1)}
@@ -111,6 +111,5 @@ export const WithChildren = {
       </Button>
     ),
     size: 'regular',
-    textOnly: false,
   },
 } satisfies Story;
