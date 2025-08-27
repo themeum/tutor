@@ -38,7 +38,7 @@ class CartModel {
 	/**
 	 * Add a course to the user's cart.
 	 *
-	 * @since 3.8.0 $items_details Param added
+	 * @since 3.8.0 $item_type & $items_details Param added
 	 *
 	 * @param int    $user_id User ID.
 	 * @param int    $course_id Course ID.

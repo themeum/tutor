@@ -76,10 +76,9 @@ class OrderItemMetaModel {
 		$where = array(
 			'item_id' => $item_id,
 		);
+
 		if ( $meta_key ) {
-			if ( $meta_key ) {
-				$where['meta_key'] = sanitize_key( $meta_key );
-			}
+			$where['meta_key'] = sanitize_key( $meta_key );
 		}
 
 		if ( $single ) {
