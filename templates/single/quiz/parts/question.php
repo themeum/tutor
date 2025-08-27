@@ -191,7 +191,7 @@
 
 					<div class="answer-help-block tutor-mt-24"></div>
 
-					<?php do_action( 'tutor_quiz_question_after_answers', $feedback_mode, $question ); ?>
+					<?php do_action( 'tutor_quiz_question_after_answers', $post, $quiz_details, $question ); ?>
 
 					<?php if ( 'question_below_each_other' !== $question_layout_view ) : ?>
 						<div class="tutor-quiz-btn-group tutor-mt-60 tutor-d-flex">
