@@ -215,7 +215,7 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
                   maxFileSize={20 * 1024 * 1024} // 20 MB
                   onUpload={handleUpload}
                   onError={handleUploadError}
-                  acceptedTypes={['.csv', '.json']}
+                  acceptedTypes={['.csv', '.json', '.zip']}
                 >
                   {__('Replace', 'tutor')}
                 </UploadButton>

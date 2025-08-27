@@ -5,6 +5,7 @@ import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper'
 import { type ModalProps } from '@TutorShared/components/modals/Modal';
 
 import {
+  type ImportContentResponse,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
@@ -29,7 +30,9 @@ interface ImportModalProps extends Omit<ModalProps, 'title' | 'actions' | 'icon'
   }) => void;
   progress?: number;
   message?: string;
+  failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
+  importErrors?: ImportContentResponse['errors'];
 }
 
 const ImportModal = ({
@@ -38,8 +41,10 @@ const ImportModal = ({
   onClose,
   onImport,
   message,
+  failedMessage,
   progress,
   completedContents,
+  importErrors,
 }: ImportModalProps) => {
   const [isImportingFromContentBank, setIsImportingFromContentBank] = useState(false);
 
@@ -54,6 +59,8 @@ const ImportModal = ({
         type="import"
         importFileName={file.name}
         message={message || ''}
+        failedMessage={failedMessage || ''}
+        importErrors={importErrors}
       />
     );
   };

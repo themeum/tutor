@@ -166,11 +166,14 @@ export interface ExportContentPayload {
 }
 
 interface ImportExportCompletedContentsItem {
+  label?: string; // Failed Label; will only be sent when progress is 100% and has failed item
   success: string[];
   failed: string[];
 }
 
 export interface ImportExportContentResponseBase {
+  message: string;
+  failed_message?: string; // Failed Message; will only be sent when progress is 100% and has failed item
   job_id: string;
   job_progress: number;
   job_status: string;
@@ -234,8 +237,17 @@ interface ImportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-interface ImportContentResponse extends ImportExportContentResponseBase {
+export interface ImportContentResponse extends ImportExportContentResponseBase {
   imported_data: [];
+  errors?: {
+    topics?: string[];
+    lesson?: string[];
+    tutor_quiz?: string[];
+    tutor_assignments?: string[];
+    'cb-question'?: string[];
+    'cb-lesson'?: string[];
+    'cb-assignment'?: string[];
+  };
 }
 
 const importContents = async (payload: ImportContentPayload) => {
