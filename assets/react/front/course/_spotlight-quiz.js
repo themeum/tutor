@@ -94,7 +94,7 @@ window.jQuery(document).ready($ => {
                     }
 
                     // Display answer explanation if available
-                    $question_wrap.find('.tutor-quiz-answer-explanation').removeClass('tutor-d-none');
+                    $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
                 }
             });
         }
