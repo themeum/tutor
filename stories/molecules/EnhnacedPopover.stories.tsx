@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import type { PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
@@ -37,7 +38,7 @@ const meta = {
   argTypes: {
     placement: {
       control: 'select',
-      options: placements,
+      options: [...placements, 'middle', 'absoluteCenter'],
       description: 'Popover placement relative to the trigger.',
       defaultValue: 'bottom',
     },
@@ -100,12 +101,10 @@ const meta = {
         <Button
           ref={buttonRef}
           onClick={handleToggle}
-          aria-controls="enhanced-popover"
-          aria-expanded={open}
-          aria-haspopup="dialog"
-        >
-          Toggle Popover
-        </Button>
+          isIconOnly
+          icon={<SVGIcon name="plus" width={24} height={24} />}
+          aria-label="Open Popover"
+        />
         <EnhancedPopover {...args} isOpen={open} triggerRef={buttonRef} closePopover={handleClose}>
           <div
             id="enhanced-popover"
@@ -116,7 +115,7 @@ const meta = {
           >
             <strong>Popover Content</strong>
             <div style={{ marginTop: 8 }}>You can put any content here.</div>
-            <Button variant="secondary" size="small" onClick={handleClose} style={{ marginTop: 16 }}>
+            <Button variant="danger" size="small" onClick={handleClose} style={{ marginTop: 16 }}>
               Close
             </Button>
           </div>

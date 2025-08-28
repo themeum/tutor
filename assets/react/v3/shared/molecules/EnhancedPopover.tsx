@@ -83,6 +83,7 @@ const styles = {
             position: absolute;
             width: 0;
             height: 0;
+            border-color: transparent;
             border-style: solid;
             ${placement.startsWith('top') &&
             css`

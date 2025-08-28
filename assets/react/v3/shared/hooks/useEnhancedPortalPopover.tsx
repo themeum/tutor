@@ -9,6 +9,12 @@ import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/use
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
+const ARROW_SAFE_MARGIN = 12; // Minimum px from edge of popover for arrow
+const ARROW_MAX_OFFSET_VERTICAL = 6; // Max px from right edge for vertical arrow
+const ARROW_MAX_OFFSET_HORIZONTAL = 12; // Max px from bottom edge for horizontal arrow
+const ARROW_CENTER_OFFSET = 8; // Half arrow size (for centering, assuming 16px arrow)
+const POPOVER_BOUNDARY_MARGIN = 4;
+
 export const PLACEMENTS = {
   // Top placements
   TOP: 'top',
@@ -31,7 +37,7 @@ export const PLACEMENTS = {
   LEFT_BOTTOM: 'leftBottom',
 
   // Center placements
-  CENTER: 'center',
+  middle: 'middle',
   ABSOLUTE_CENTER: 'absoluteCenter',
 } as const;
 
@@ -44,18 +50,6 @@ interface PopoverPosition {
   arrowLeft?: number;
   arrowTop?: number;
 }
-
-enum ArrowPosition {
-  left = 'left',
-  right = 'right',
-  top = 'top',
-  bottom = 'bottom',
-  middle = 'middle',
-  auto = 'auto',
-  absoluteCenter = 'absoluteCenter',
-}
-
-export type arrowPosition = `${ArrowPosition}`;
 
 interface PopoverHookArgs<T> {
   isOpen: boolean;
@@ -169,6 +163,16 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
         top: triggerRect.bottom - popoverHeight,
         left: triggerRect.left - popoverWidth - gap,
       },
+
+      // center placements
+      middle: {
+        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2,
+        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2,
+      },
+      absoluteCenter: {
+        top: window.innerHeight / 2 - popoverHeight / 2,
+        left: window.innerWidth / 2 - popoverWidth / 2,
+      },
     };
 
     calculatedPosition = positions[finalPlacement as keyof typeof positions] || positions.bottom;
@@ -194,7 +198,7 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
         rightTop: 'leftTop',
         leftBottom: 'rightBottom',
         rightBottom: 'leftBottom',
-        center: 'center',
+        middle: 'middle',
         absoluteCenter: 'absoluteCenter',
       } as const satisfies Record<PopoverPlacement, PopoverPlacement>;
 
@@ -214,15 +218,15 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
 
       // Fine-tune position to stay within bounds
       if (calculatedPosition.left < containerRect.left) {
-        calculatedPosition.left = containerRect.left + 4;
+        calculatedPosition.left = containerRect.left + POPOVER_BOUNDARY_MARGIN;
       } else if (calculatedPosition.left + popoverWidth > containerRect.left + containerRect.width) {
-        calculatedPosition.left = containerRect.left + containerRect.width - popoverWidth - 4;
+        calculatedPosition.left = containerRect.left + containerRect.width - popoverWidth - POPOVER_BOUNDARY_MARGIN;
       }
 
       if (calculatedPosition.top < containerRect.top) {
-        calculatedPosition.top = containerRect.top + 4;
+        calculatedPosition.top = containerRect.top + POPOVER_BOUNDARY_MARGIN;
       } else if (calculatedPosition.top + popoverHeight > containerRect.top + containerRect.height) {
-        calculatedPosition.top = containerRect.top + containerRect.height - popoverHeight - 4;
+        calculatedPosition.top = containerRect.top + containerRect.height - popoverHeight - POPOVER_BOUNDARY_MARGIN;
       }
     }
 
@@ -235,12 +239,18 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
         // Arrow points up/down, positioned horizontally
         const triggerCenter = triggerRect.left + triggerRect.width / 2;
         const popoverLeft = calculatedPosition.left;
-        arrowLeft = Math.max(12, Math.min(popoverWidth - 12, triggerCenter - popoverLeft));
+        arrowLeft =
+          Math.max(ARROW_SAFE_MARGIN, Math.min(popoverWidth - ARROW_MAX_OFFSET_VERTICAL, triggerCenter - popoverLeft)) -
+          ARROW_CENTER_OFFSET;
       } else if (isHorizontalPlacement) {
         // Arrow points left/right, positioned vertically
         const triggerCenter = triggerRect.top + triggerRect.height / 2;
         const popoverTop = calculatedPosition.top;
-        arrowTop = Math.max(12, Math.min(popoverHeight - 12, triggerCenter - popoverTop));
+        arrowTop =
+          Math.max(
+            ARROW_SAFE_MARGIN,
+            Math.min(popoverHeight - ARROW_MAX_OFFSET_HORIZONTAL, triggerCenter - popoverTop),
+          ) - ARROW_CENTER_OFFSET;
       }
     }
 
