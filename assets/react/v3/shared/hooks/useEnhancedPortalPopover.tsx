@@ -58,6 +58,10 @@ interface PopoverHookArgs<T> {
   arrow?: boolean;
   autoAdjustOverflow?: boolean;
   gap?: number;
+  positionModifier?: {
+    top: number;
+    left: number;
+  };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: any[];
 }
@@ -69,6 +73,10 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
   arrow = false,
   gap = 10,
   autoAdjustOverflow = true,
+  positionModifier = {
+    top: 0,
+    left: 0,
+  },
   dependencies = [],
 }: PopoverHookArgs<T>) => {
   const triggerRef = useMemo(() => {
@@ -110,68 +118,68 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
     const positions = {
       // top placements
       top: {
-        top: triggerRect.top - popoverHeight - gap,
-        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2,
+        top: triggerRect.top - popoverHeight - gap + positionModifier.top,
+        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2 + positionModifier.left,
       },
       topLeft: {
-        top: triggerRect.top - popoverHeight - gap,
-        left: triggerRect.left,
+        top: triggerRect.top - popoverHeight - gap + positionModifier.top,
+        left: triggerRect.left + positionModifier.left,
       },
       topRight: {
-        top: triggerRect.top - popoverHeight - gap,
-        left: triggerRect.right - popoverWidth,
+        top: triggerRect.top - popoverHeight - gap + positionModifier.top,
+        left: triggerRect.right - popoverWidth + positionModifier.left,
       },
 
       // right placements
       right: {
-        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2,
-        left: triggerRect.right + gap,
+        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2 + positionModifier.top,
+        left: triggerRect.right + gap + positionModifier.left,
       },
       rightTop: {
-        top: triggerRect.top,
-        left: triggerRect.right + gap,
+        top: triggerRect.top + positionModifier.top,
+        left: triggerRect.right + gap + positionModifier.left,
       },
       rightBottom: {
-        top: triggerRect.bottom - popoverHeight,
-        left: triggerRect.right + gap,
+        top: triggerRect.bottom - popoverHeight + positionModifier.top,
+        left: triggerRect.right + gap + positionModifier.left,
       },
 
       // Bottom placements
       bottom: {
-        top: triggerRect.bottom + gap,
-        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2,
+        top: triggerRect.bottom + gap + positionModifier.top,
+        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2 + positionModifier.left,
       },
       bottomLeft: {
-        top: triggerRect.bottom + gap,
-        left: triggerRect.left,
+        top: triggerRect.bottom + gap + positionModifier.top,
+        left: triggerRect.left + positionModifier.left,
       },
       bottomRight: {
-        top: triggerRect.bottom + gap,
-        left: triggerRect.right - popoverWidth,
+        top: triggerRect.bottom + gap + positionModifier.top,
+        left: triggerRect.right - popoverWidth + positionModifier.left,
       },
 
       // left placements
       left: {
-        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2,
-        left: triggerRect.left - popoverWidth - gap,
+        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2 + positionModifier.top,
+        left: triggerRect.left - popoverWidth - gap + positionModifier.left,
       },
       leftTop: {
-        top: triggerRect.top,
-        left: triggerRect.left - popoverWidth - gap,
+        top: triggerRect.top + positionModifier.top,
+        left: triggerRect.left - popoverWidth - gap + positionModifier.left,
       },
       leftBottom: {
-        top: triggerRect.bottom - popoverHeight,
-        left: triggerRect.left - popoverWidth - gap,
+        top: triggerRect.bottom - popoverHeight + positionModifier.top,
+        left: triggerRect.left - popoverWidth - gap + positionModifier.left,
       },
 
       // center placements
       middle: {
-        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2,
-        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2,
+        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2 + positionModifier.top,
+        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2 + positionModifier.left,
       },
       absoluteCenter: {
-        top: window.innerHeight / 2 - popoverHeight / 2,
-        left: window.innerWidth / 2 - popoverWidth / 2,
+        top: window.innerHeight / 2 - popoverHeight / 2 + positionModifier.top,
+        left: window.innerWidth / 2 - popoverWidth / 2 + positionModifier.left,
       },
     };
 
