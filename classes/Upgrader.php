@@ -81,6 +81,9 @@ class Upgrader {
 
 		$upgrades = array();
 		if ( $version ) {
+			// Required to use dbDelta.
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
 			$upgrades[] = 'upgrade_to_1_3_1';
 			$upgrades[] = 'upgrade_to_2_6_0';
 			$upgrades[] = 'upgrade_to_3_0_0';
