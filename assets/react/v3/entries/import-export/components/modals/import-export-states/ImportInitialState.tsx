@@ -229,7 +229,8 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </div>
 
-        <Show when={isTutorPro && isAddonEnabled(Addons.CONTENT_BANK) && hasContent.courseContent}>
+        {/* @TODO: wii be removed later `&& hasContent.courseContent}` */}
+        <Show when={isTutorPro && isAddonEnabled(Addons.CONTENT_BANK)}>
           <div css={styles.contentBank}>
             <Controller
               control={form.control}
@@ -302,17 +303,17 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </Show>
 
-        <Show when={isFileValid && hasContent.settings}>
-          <div css={styles.alert}>
-            <SVGIcon name="infoFill" width={40} height={40} />
-            <p>
-              {
-                // prettier-ignore
-                __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')
-              }
-            </p>
-          </div>
-        </Show>
+        {/* <Show when={isFileValid && hasContent.settings}> */}
+        <div css={styles.alert}>
+          <SVGIcon name="infoFill" width={40} height={40} />
+          <p>
+            {
+              // prettier-ignore
+              __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')
+            }
+          </p>
+        </div>
+        {/* </Show> */}
       </div>
       <div css={styles.footer}>
         <div css={styles.actionButtons}>
