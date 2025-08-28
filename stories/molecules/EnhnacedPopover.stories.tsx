@@ -80,6 +80,14 @@ const meta = {
       description: 'Automatically adjust popover position to prevent overflow.',
       defaultValue: true,
     },
+    positionModifier: {
+      control: 'object',
+      description: 'Position modifier for the popover.',
+      defaultValue: {
+        top: 0,
+        left: 0,
+      },
+    },
     triggerRef: { control: false },
     children: { control: false },
     closePopover: { control: false },
