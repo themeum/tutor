@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					iframe.style.transformOrigin = 'center top';
 				} else {
 					iframe.style.transform = 'scale(0.8085714286)';
-					iframe.style.transformOrigin = 'left top';
+					iframe.style.transformOrigin = wp.i18n.isRTL() ? 'right top' : 'left top';
 				}
 			});
 		});
