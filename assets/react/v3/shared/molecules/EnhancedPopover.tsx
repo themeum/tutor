@@ -1,11 +1,12 @@
+import { css } from '@emotion/react';
+import type React from 'react';
+import type { RefObject } from 'react';
+
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, zIndex } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useEnhancedPortalPopover, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { Portal } from '@TutorShared/hooks/usePortalPopover';
-import { css } from '@emotion/react';
-import type React from 'react';
-import type { RefObject } from 'react';
 
 interface PopoverProps<T> {
   children: React.ReactNode;
