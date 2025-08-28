@@ -27,8 +27,6 @@ trait JsonResponse {
 	 * @return void   JSON data response.
 	 */
 	public function json_response( string $message = '', $data = null, int $status_code = 200 ) {
-		header( 'Tutor-Message: ' . $message );
-
 		wp_send_json(
 			array(
 				'status_code' => $status_code,
