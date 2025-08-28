@@ -148,7 +148,7 @@ const ExportInitialState = ({
           const bulkSelectionCount =
             bulkSelectionForm.getValues(contentKey as keyof BulkSelectionFormData)?.length || 0;
 
-          if (contentKey === 'keep_media_files') {
+          if (['keep_media_files', 'keep_user_data'].includes(contentKey)) {
             return null;
           }
 
@@ -241,7 +241,7 @@ const ExportInitialState = ({
 
         <Show
           when={
-            (exportableContent || []).some((item) => item.key === 'keep_media_files') &&
+            (exportableContent || []).some((item) => ['keep_media_files', 'keep_user_data'].includes(item.key)) &&
             (form.getValues('courses') || form.getValues('course-bundle') || form.getValues('content_bank'))
           }
         >
@@ -257,6 +257,24 @@ const ExportInitialState = ({
                   description={
                     // prettier-ignore
                     __('If checked, course media files will also be exported with the course data.', 'tutor')
+                  }
+                />
+              )}
+            />
+          </div>
+
+          <div css={styles.contentCheckboxFooter}>
+            <Controller
+              control={form.control}
+              name="keep_user_data"
+              render={(controllerProps) => (
+                <FormCheckbox
+                  {...controllerProps}
+                  label={__('Keep User Data', 'tutor')}
+                  disabled={!isTutorPro}
+                  description={
+                    // prettier-ignore
+                    __('If checked, user data will also be exported with the course data.', 'tutor')
                   }
                 />
               )}

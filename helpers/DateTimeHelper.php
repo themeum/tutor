@@ -256,4 +256,22 @@ final class DateTimeHelper {
 				->set_timezone( \TUTOR\User::get_user_timezone_string( $user ) )
 				->format( $format );
 	}
+
+	/**
+	 * Convert user timezone date time to GMT date time
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string      $datetime date time string.
+	 * @param string|null $timezone user' timezone string, default is WordPress timezone.
+	 *
+	 * @return string GMT date time in MySQL format
+	 */
+	public static function get_user_time_to_gmt_time( string $datetime, $timezone = null ): string {
+		$timezone = $timezone ? $timezone : wp_timezone_string();
+
+		return self::create( $datetime, $timezone )
+				->set_timezone( 'UTC' )
+				->format( self::FORMAT_MYSQL );
+	}
 }

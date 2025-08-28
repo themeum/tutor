@@ -16,42 +16,80 @@ namespace TUTOR;
 class WhatsNew {
 
 	/**
-	 * What's new page.
+	 * Constructor
 	 *
-	 * @since 2.2.4
+	 * @since 3.8.0
 	 *
 	 * @return void
 	 */
-	public static function whats_new_menu() {
-		$transient_key = 'tutor_plugin_info';
-		$plugin_info   = get_transient( $transient_key );
+	public function __construct() {
+		add_filter( 'tutor_admin_menu', array( $this, 'add_whats_new_menu_item' ) );
+	}
 
-		if ( false === $plugin_info ) {
-			$plugin_info     = tutils()->get_remote_plugin_info();
-			$hour_in_seconds = 1800;
-			set_transient( $transient_key, $plugin_info, $hour_in_seconds );
-		}
-
-		$remote_version    = $plugin_info->version ?? TUTOR_VERSION;
-		$installed_version = TUTOR_VERSION;
-		$update_required   = version_compare( $remote_version, $installed_version, '>' );
+	/**
+	 * What's new menu item
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param array $menu menu.
+	 *
+	 * @return array
+	 */
+	public function add_whats_new_menu_item( $menu ) {
+		$update_required = $this->get_plugin_version_info()[2];
 
 		$menu_text = __( "What's New", 'tutor' );
 		if ( $update_required ) {
 			$menu_text .= ' <span class="update-plugins"><span class="plugin-count">1</span></span>';
 		}
 
-		add_submenu_page(
-			'tutor',
-			__( "What's New", 'tutor' ),
-			$menu_text,
-			'manage_options',
-			'tutor-whats-new',
-			function() use ( $remote_version, $installed_version, $update_required ) {
-				$changelogs = self::build_changelog_array();
-				include tutor()->path . 'views/pages/whats-new.php';
-			}
+		$menu['group_three']['whats_new'] = array(
+			'parent_slug' => 'tutor',
+			'page_title'  => __( "What's New", 'tutor' ),
+			'menu_title'  => $menu_text,
+			'capability'  => 'manage_options',
+			'menu_slug'   => 'tutor-whats-new',
+			'callback'    => array( $this, 'whats_new_page' ),
 		);
+
+		return $menu;
+	}
+
+	/**
+	 * What's new page.
+	 *
+	 * @since 2.2.4
+	 *
+	 * @return void
+	 */
+	public function whats_new_page() {
+		list( $remote_version, $installed_version, $update_required ) = $this->get_plugin_version_info();
+		$changelogs = self::build_changelog_array();
+
+		include tutor()->path . 'views/pages/whats-new.php';
+	}
+
+	/**
+	 * Get tutor plugin version info
+	 *
+	 * @since 3.8.0
+	 *
+	 * @return array
+	 */
+	private function get_plugin_version_info() {
+		$transient_key = 'tutor_plugin_info';
+		$plugin_info   = get_transient( $transient_key );
+
+		if ( false === $plugin_info ) {
+			$plugin_info = tutils()->get_remote_plugin_info();
+			set_transient( $transient_key, $plugin_info, HOUR_IN_SECONDS );
+		}
+
+		$remote_version    = $plugin_info->version ?? TUTOR_VERSION;
+		$installed_version = TUTOR_VERSION;
+		$update_required   = version_compare( $remote_version, $installed_version, '>' );
+
+		return array( $remote_version, $installed_version, $update_required );
 	}
 
 	/**

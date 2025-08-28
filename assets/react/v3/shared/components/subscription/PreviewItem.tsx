@@ -1,20 +1,37 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import { useState } from 'react';
 
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Switch from '@TutorShared/atoms/Switch';
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { DurationUnit, SubscriptionFormData } from '@TutorShared/services/subscription';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
+import {
+  convertFormDataToSubscription,
+  useDeleteCourseSubscriptionMutation,
+  useDuplicateCourseSubscriptionMutation,
+  useSaveCourseSubscriptionMutation,
+  type SubscriptionFormData,
+} from '@TutorShared/services/subscription';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type DurationUnit } from '@TutorShared/utils/types';
 
 interface PreviewItemProps {
   courseId: number;
   subscription: SubscriptionFormData;
   isBundle?: boolean;
+  isOverlay?: boolean;
 }
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
@@ -34,19 +51,100 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
   }
 }
 
-export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemProps) {
-  const { showModal } = useModal();
+export function PreviewItem({ subscription, courseId, isBundle, isOverlay }: PreviewItemProps) {
+  const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
+  const { showModal, updateModal, closeModal } = useModal();
+  const updateSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
+  const deleteSubscriptionMutation = useDeleteCourseSubscriptionMutation(courseId);
+  const duplicateSubscriptionMutation = useDuplicateCourseSubscriptionMutation(courseId);
+
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: subscription.id || '',
+    animateLayoutChanges,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : undefined,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
+  };
+
+  const handleToggleSubscription = (isEnabled: boolean) => {
+    const payload = convertFormDataToSubscription(subscription);
+    updateSubscriptionMutation.mutate({
+      ...payload,
+      is_enabled: isEnabled ? '1' : '0',
+    });
+  };
+
+  const handleEditSubscription = () => {
+    const subscriptionWithSaved = {
+      ...subscription,
+      isSaved: true,
+    };
+    showModal({
+      component: SubscriptionModal,
+      props: {
+        icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
+        subscription: subscriptionWithSaved,
+        courseId,
+        isBundle,
+      },
+    });
+    setIsThreeDotOpen(false);
+  };
+
+  const handleDeleteSubscription = async () => {
+    updateModal<typeof ConfirmationModal>('subscription-delete-modal', {
+      isLoading: true,
+    });
+
+    const response = await deleteSubscriptionMutation.mutateAsync(Number(subscription.id));
+
+    if (response.status_code === 200) {
+      closeModal();
+    }
+  };
+
+  const handleDuplicateSubscription = async () => {
+    const response = await duplicateSubscriptionMutation.mutateAsync(Number(subscription.id));
+
+    if (response.status_code === 200) {
+      setIsThreeDotOpen(false);
+    }
+  };
 
   return (
-    <div data-cy="subscription-preview-item" css={styles.wrapper}>
+    <div
+      data-cy="subscription-preview-item"
+      css={styles.wrapper({ isActionButtonVisible: isThreeDotOpen || updateSubscriptionMutation.isPending, isOverlay })}
+      style={style}
+      ref={setNodeRef}
+    >
       <div css={styles.item}>
-        <p css={styles.title}>
-          {subscription.plan_name}
+        <p
+          css={styles.title}
+          {...attributes}
+          onClick={handleEditSubscription}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              handleEditSubscription();
+            }
+          }}
+        >
+          <SVGIcon {...listeners} data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
+          <span>{subscription.plan_name}</span>
           <Show when={subscription.is_featured}>
             <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
           </Show>
+          <Show when={!subscription.is_enabled}>
+            <TutorBadge css={styles.badge} variant="secondary" title={__('Inactive', 'tutor')}>
+              {__('Inactive', 'tutor')}
+            </TutorBadge>
+          </Show>
         </p>
-        <div css={styles.information}>
+        <p css={styles.information}>
           <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
             <span>
               {
@@ -88,49 +186,91 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
               <span>{__('Until Cancellation', 'tutor')}</span>
             </Show>
           </Show>
-        </div>
+        </p>
       </div>
-      <button
-        type="button"
-        css={styles.editButton}
-        onClick={() => {
-          showModal({
-            component: SubscriptionModal,
-            props: {
-              title: __('Manage Subscription Plans', 'tutor'),
-              icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
-              expandedSubscriptionId: subscription.id,
-              courseId,
-              isBundle,
-            },
-          });
-        }}
-        data-edit-button
-        data-cy="edit-subscription"
-      >
-        <SVGIcon name="pen" width={19} height={19} />
-      </button>
+      <div css={styles.actionButtons} data-action-buttons>
+        <Switch
+          checked={subscription.is_enabled}
+          onChange={handleToggleSubscription}
+          loading={updateSubscriptionMutation.isPending}
+          size="small"
+        />
+
+        <ThreeDots
+          isOpen={isThreeDotOpen}
+          closePopover={() => setIsThreeDotOpen(false)}
+          onClick={() => setIsThreeDotOpen(!isThreeDotOpen)}
+          dotsOrientation="vertical"
+          size="small"
+        >
+          <ThreeDots.Option
+            icon={<SVGIcon name="edit" width={16} height={16} />}
+            text={__('Edit', 'tutor')}
+            data-cy="edit-subscription"
+            onClick={handleEditSubscription}
+          />
+          <ThreeDots.Option
+            icon={
+              duplicateSubscriptionMutation.isPending ? (
+                <LoadingSpinner size={16} />
+              ) : (
+                <SVGIcon name="duplicate" width={16} height={16} />
+              )
+            }
+            text={__('Duplicate', 'tutor')}
+            onClick={handleDuplicateSubscription}
+          />
+          <ThreeDots.Option
+            icon={<SVGIcon name="delete" width={16} height={16} />}
+            text={__('Delete', 'tutor')}
+            isTrash
+            onClick={() => {
+              setIsThreeDotOpen(false);
+              showModal({
+                id: 'subscription-delete-modal',
+                component: ConfirmationModal,
+                props: {
+                  // translators: %s is the title of the item to be deleted
+                  title: sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name),
+                  description: __('Are you sure you want to delete this plan? This cannot be undone.', 'tutor'),
+                  onConfirm: handleDeleteSubscription,
+                  confirmButtonVariant: 'danger',
+                },
+              });
+            }}
+          />
+        </ThreeDots>
+      </div>
     </div>
   );
 }
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ isActionButtonVisible = false, isOverlay = false }) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
     background-color: ${colorTokens.background.white};
     padding: ${spacing[8]} ${spacing[12]};
 
-    [data-edit-button] {
-      opacity: 0;
-      transition: opacity 0.3s ease;
+    [data-grabber] {
+      margin-left: -${spacing[4]};
+      margin-right: ${spacing[4]};
+      color: ${colorTokens.icon.default};
+      flex-shrink: 0;
+      cursor: grab;
+    }
+
+    [data-action-buttons] {
+      opacity: ${isActionButtonVisible ? 1 : 0};
+      background-color: inherit;
     }
 
     &:hover {
       background-color: ${colorTokens.background.hover};
 
-      [data-edit-button] {
+      [data-action-buttons] {
         opacity: 1;
       }
     }
@@ -138,6 +278,22 @@ const styles = {
     &:not(:last-of-type) {
       border-bottom: 1px solid ${colorTokens.stroke.default};
     }
+
+    &:focus-within {
+      [data-action-buttons] {
+        opacity: 1;
+      }
+    }
+
+    ${isOverlay &&
+    css`
+      border-radius: ${borderRadius.card};
+      box-shadow: ${shadow.drag};
+
+      [data-grabber] {
+        cursor: grabbing;
+      }
+    `}
   `,
   item: css`
     min-height: 48px;
@@ -151,6 +307,12 @@ const styles = {
     color: ${colorTokens.text.primary};
     display: flex;
     align-items: center;
+    cursor: pointer;
+
+    :focus-visible {
+      border-radius: ${borderRadius[4]};
+      outline: 2px solid ${colorTokens.stroke.brand};
+    }
   `,
   information: css`
     ${typography.small()};
@@ -163,20 +325,20 @@ const styles = {
   featuredIcon: css`
     color: ${colorTokens.icon.brand};
   `,
-  editButton: css`
-    ${styleUtils.resetButton};
-    ${styleUtils.flexCenter()};
-    width: 24px;
-    height: 24px;
-    border-radius: ${borderRadius[4]};
-    color: ${colorTokens.icon.default};
-    transition:
-      color 0.3s ease,
-      background 0.3s ease;
-
-    &:hover {
-      background: ${colorTokens.action.secondary.default};
-      color: ${colorTokens.icon.brand};
-    }
+  actionButtons: css`
+    padding-inline: ${spacing[8]};
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    ${styleUtils.display.flex()};
+    height: 100%;
+    align-items: center;
+    gap: ${spacing[8]};
+  `,
+  badge: css`
+    margin-left: ${spacing[8]};
+    font-size: ${fontSize[11]};
+    padding: 0 ${spacing[6]};
   `,
 };

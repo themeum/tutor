@@ -32,15 +32,20 @@ export type Subscription = {
   enrollment_fee: string;
   trial_value: string;
   trial_interval: DurationUnit;
+  is_enabled: '0' | '1';
 };
 
 export interface SubscriptionFormData
-  extends Omit<Subscription, 'provide_certificate' | 'sale_price_from' | 'sale_price_to' | 'is_featured'> {
+  extends Omit<
+    Subscription,
+    'provide_certificate' | 'sale_price_from' | 'sale_price_to' | 'is_featured' | 'is_enabled'
+  > {
   charge_enrollment_fee: boolean;
   enable_free_trial: boolean;
   offer_sale_price: boolean;
   schedule_sale_price: boolean;
   is_featured: boolean;
+  is_enabled: boolean;
   do_not_provide_certificate: boolean;
   sale_price_from_date: string;
   sale_price_from_time: string;
@@ -57,6 +62,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   recurring_value: '1',
   recurring_interval: 'month',
   is_featured: false,
+  is_enabled: true,
   regular_price: '0',
   sale_price: '0',
   sale_price_from_date: '',
@@ -84,6 +90,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     recurring_value: subscription.recurring_value ?? '0',
     recurring_interval: subscription.recurring_interval ?? 'month',
     is_featured: !!Number(subscription.is_featured),
+    is_enabled: !!Number(subscription.is_enabled),
     regular_price: subscription.regular_price ?? '0',
     recurring_limit:
       subscription.recurring_limit === '0' ? __('Until cancelled', 'tutor') : subscription.recurring_limit || '',
@@ -125,6 +132,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
     regular_price: formData.regular_price,
     recurring_limit: formData.recurring_limit === __('Until cancelled', 'tutor') ? '0' : formData.recurring_limit,
     is_featured: formData.is_featured ? '1' : '0',
+    is_enabled: formData.is_enabled ? '1' : '0',
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
     ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),
     sale_price: formData.offer_sale_price ? formData.sale_price : '0',
@@ -132,7 +140,6 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
       sale_price_from: convertToGMT(new Date(`${formData.sale_price_from_date} ${formData.sale_price_from_time}`)),
       sale_price_to: convertToGMT(new Date(`${formData.sale_price_to_date} ${formData.sale_price_to_time}`)),
     }),
-
     provide_certificate: formData.do_not_provide_certificate ? '0' : '1',
   };
 };
@@ -152,6 +159,7 @@ export type SubscriptionPayload = {
   recurring_limit: string; // 0 for until canceled
   provide_certificate: '0' | '1';
   is_featured: '0' | '1';
+  is_enabled: '0' | '1';
   enrollment_fee?: string;
   trial_value?: string;
   trial_interval?: DurationUnit;
