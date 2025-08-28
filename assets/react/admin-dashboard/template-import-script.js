@@ -56,10 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				iframe.style.width = width;
 				if ('desktop' !== device) {
 					iframe.style.transform = 'scale(0.8085714286)';
-					iframe.style.transformOrigin = 'center top';
 				} else {
 					iframe.style.transform = 'scale(0.8085714286)';
-					iframe.style.transformOrigin = 'left top';
 				}
 			});
 		});
