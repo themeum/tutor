@@ -108,6 +108,11 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     if (files.length === 0) {
       return;
     }
+
+    if (files[0].type !== 'application/json') {
+      return;
+    }
+
     setIsReadingFile(true);
     readJsonFile(files[0])
       .then((data) => {
