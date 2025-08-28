@@ -282,11 +282,11 @@ class Upgrader {
 			$is_detail_column_exists = QueryHelper::column_exist( $cart_item_table, $detail_column );
 			$is_type_column_exists   = QueryHelper::column_exist( $cart_item_table, $type_column );
 
-			if ( 0 === $is_detail_column_exists ) {
+			if ( ! $is_detail_column_exists ) {
 				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$detail_column} JSON AFTER course_id" );
 			}
 
-			if ( 0 === $is_type_column_exists ) {
+			if ( ! $is_type_column_exists ) {
 				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$type_column} VARCHAR(255) AFTER course_id" );
 			}
 		}
