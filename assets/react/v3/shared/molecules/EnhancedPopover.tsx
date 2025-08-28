@@ -20,6 +20,10 @@ interface PopoverProps<T> {
   animationType?: AnimationType;
   arrow?: boolean;
   autoAdjustOverflow?: boolean;
+  positionModifier?: {
+    top: number;
+    left: number;
+  };
 }
 
 const EnhancedPopover = <T extends HTMLElement>({
@@ -34,6 +38,10 @@ const EnhancedPopover = <T extends HTMLElement>({
   animationType = AnimationType.slideLeft,
   arrow = true,
   autoAdjustOverflow = true,
+  positionModifier = {
+    top: 0,
+    left: 0,
+  },
 }: PopoverProps<T>) => {
   const { position, triggerWidth, popoverRef } = useEnhancedPortalPopover<T, HTMLDivElement>({
     triggerRef,
@@ -42,6 +50,7 @@ const EnhancedPopover = <T extends HTMLElement>({
     placement,
     arrow,
     gap,
+    positionModifier,
   });
 
   return (
