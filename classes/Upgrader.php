@@ -81,6 +81,9 @@ class Upgrader {
 
 		$upgrades = array();
 		if ( $version ) {
+			// Required to use dbDelta.
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
 			$upgrades[] = 'upgrade_to_1_3_1';
 			$upgrades[] = 'upgrade_to_2_6_0';
 			$upgrades[] = 'upgrade_to_3_0_0';
@@ -253,7 +256,7 @@ class Upgrader {
 					KEY idx_status (status),
 					KEY idx_scheduled_at_gmt (scheduled_at_gmt)
 				) $charset_collate;";
-				dbDelta( $table_schema );
+				\dbDelta( $table_schema );
 			}
 
 			// Create order_item_meta table.
@@ -268,7 +271,7 @@ class Upgrader {
 				KEY meta_key (meta_key),
 				CONSTRAINT fk_tutor_itemmeta FOREIGN KEY (item_id) REFERENCES {$wpdb->prefix}tutor_order_items(id) ON DELETE CASCADE
 			) $charset_collate;";
-				dbDelta( $item_meta_table );
+				\dbDelta( $item_meta_table );
 			}
 
 			// Check if the column already exists.
