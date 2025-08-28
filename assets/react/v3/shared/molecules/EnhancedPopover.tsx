@@ -1,0 +1,146 @@
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, zIndex } from '@TutorShared/config/styles';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useEnhancedPortalPopover, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { Portal } from '@TutorShared/hooks/usePortalPopover';
+import { css } from '@emotion/react';
+import type React from 'react';
+import type { RefObject } from 'react';
+
+interface PopoverProps<T> {
+  children: React.ReactNode;
+  triggerRef: RefObject<T>;
+  isOpen: boolean;
+  placement: PopoverPlacement;
+  gap?: number;
+  maxWidth?: string;
+  closePopover: () => void;
+  closeOnEscape?: boolean;
+  animationType?: AnimationType;
+  arrow?: boolean;
+  autoAdjustOverflow?: boolean;
+}
+
+const EnhancedPopover = <T extends HTMLElement>({
+  children,
+  placement,
+  triggerRef,
+  isOpen,
+  gap,
+  maxWidth,
+  closePopover,
+  closeOnEscape = true,
+  animationType = AnimationType.slideLeft,
+  arrow = true,
+  autoAdjustOverflow = true,
+}: PopoverProps<T>) => {
+  const { position, triggerWidth, popoverRef } = useEnhancedPortalPopover<T, HTMLDivElement>({
+    triggerRef,
+    isOpen,
+    autoAdjustOverflow,
+    placement,
+    arrow,
+    gap,
+  });
+
+  return (
+    <Portal
+      isOpen={isOpen}
+      onClickOutside={closePopover}
+      animationType={animationType}
+      onEscape={closeOnEscape ? closePopover : undefined}
+    >
+      <div
+        css={styles.wrapper(position.placement, !arrow, position.arrowLeft, position.arrowTop)}
+        style={{
+          [isRTL ? 'right' : 'left']: position.left,
+          top: position.top,
+          maxWidth: maxWidth ?? triggerWidth,
+        }}
+        ref={popoverRef}
+      >
+        <div css={styles.content}>{children}</div>
+      </div>
+    </Portal>
+  );
+};
+
+const styles = {
+  wrapper: (
+    placement: PopoverPlacement | undefined,
+    hideArrow: boolean | undefined,
+    arrowLeft?: number,
+    arrowTop?: number,
+  ) => css`
+    position: absolute;
+    width: 100%;
+    z-index: ${zIndex.dropdown};
+
+    &::before {
+      ${placement && !hideArrow
+        ? css`
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            ${placement.startsWith('top') &&
+            css`
+              border-left: 8px solid transparent;
+              border-right: 8px solid transparent;
+              border-top: 8px solid ${colorTokens.surface.tutor};
+              border-bottom: none;
+              left: ${arrowLeft !== undefined ? `${arrowLeft}px` : '50%'};
+              bottom: -8px;
+              transform: ${arrowLeft === undefined ? 'translateX(-50%)' : 'none'};
+            `}
+            ${placement.startsWith('bottom') &&
+            css`
+              border-left: 8px solid transparent;
+              border-right: 8px solid transparent;
+              border-bottom: 8px solid ${colorTokens.surface.tutor};
+              border-top: none;
+              left: ${arrowLeft !== undefined ? `${arrowLeft}px` : '50%'};
+              top: -8px;
+              transform: ${arrowLeft === undefined ? 'translateX(-50%)' : 'none'};
+            `}
+            ${placement.startsWith('left') &&
+            css`
+              border-top: 8px solid transparent;
+              border-bottom: 8px solid transparent;
+              border-left: 8px solid ${colorTokens.surface.tutor};
+              border-right: none;
+              right: -8px;
+              top: ${arrowTop !== undefined ? `${arrowTop}px` : '50%'};
+              transform: ${arrowTop === undefined ? 'translateY(-50%)' : 'none'};
+            `}
+            ${placement.startsWith('right') &&
+            css`
+              border-top: 8px solid transparent;
+              border-bottom: 8px solid transparent;
+              border-right: 8px solid ${colorTokens.surface.tutor};
+              border-left: none;
+              left: -8px;
+              top: ${arrowTop !== undefined ? `${arrowTop}px` : '50%'};
+              transform: ${arrowTop === undefined ? 'translateY(-50%)' : 'none'};
+            `}
+          `
+        : ''}
+    }
+  `,
+  content: css`
+    background-color: ${colorTokens.surface.tutor};
+    box-shadow: ${shadow.popover};
+    border-radius: ${borderRadius[6]};
+    ::-webkit-scrollbar {
+      background-color: ${colorTokens.surface.tutor};
+      width: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: ${colorTokens.action.secondary.default};
+      border-radius: ${borderRadius[6]};
+    }
+  `,
+};
+
+export default EnhancedPopover;
