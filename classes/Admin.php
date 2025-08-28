@@ -285,8 +285,20 @@ class Admin {
 					continue;
 				}
 
+				// Backward compatibility hook.
+				if ( 'addons' === $name ) {
+					do_action( 'tutor_admin_register' );
+				}
+
+				// Backward compatibility hook.
 				do_action( "tutor_before_{$name}_admin_menu" );
+
+				do_action( "tutor_before_{$name}_menu" );
 				add_submenu_page( $args['parent_slug'], $args['page_title'], $args['menu_title'], $args['capability'], $args['menu_slug'], $args['callback'] ?? '', $args['position'] ?? null );
+
+				// Backward compatibility hook.
+				do_action( "tutor_after_{$name}_menu" );
+
 				do_action( "tutor_after_{$name}_admin_menu" );
 			}
 
