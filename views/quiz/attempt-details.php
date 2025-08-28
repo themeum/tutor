@@ -705,7 +705,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 										case 'result':
 											?>
 												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
-													<div class="tutor-d-flex tutor-align-center tutor-justify-between">
+													<div class="tutor-d-flex tutor-align-center tutor-justify-between tutor-gap-4px">
 														<?php do_action( 'tutor_quiz_attempt_after_result_column', $answer, $answer_status ); ?>
 
 														<?php

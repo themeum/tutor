@@ -43,6 +43,17 @@ class QuizModel {
 	}
 
 	/**
+	 * Get manual review types.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @return array
+	 */
+	public static function get_manual_review_types() {
+		return array( 'open_ended', 'short_answer' );
+	}
+
+	/**
 	 * Get total number of quiz
 	 *
 	 * @since 2.0.2
@@ -758,7 +769,7 @@ class QuizModel {
 	 */
 	public static function is_manual_review_required( $quiz_id ) {
 		$required              = false;
-		$review_question_types = array( 'open_ended', 'short_answer' );
+		$review_question_types = self::get_manual_review_types();
 		$question_types        = self::get_quiz_question_types( $quiz_id );
 
 		foreach ( $review_question_types as $type ) {
@@ -858,7 +869,7 @@ class QuizModel {
 
 		$total_pending_attempt = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(quiz_attempt_id) total
+				"SELECT COUNT(attempt_id) total
 				FROM {$wpdb->prefix}tutor_quiz_attempts
 				WHERE result=%s AND quiz_id = %d AND user_id = %d
 				",
