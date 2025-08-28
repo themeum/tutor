@@ -51,7 +51,12 @@ const EnhancedPopover = <T extends HTMLElement>({
       onEscape={closeOnEscape ? closePopover : undefined}
     >
       <div
-        css={styles.wrapper(position.placement, !arrow, position.arrowLeft, position.arrowTop)}
+        css={styles.wrapper({
+          placement: position.placement,
+          hideArrow: !arrow || (position.arrowLeft === undefined && position.arrowTop === undefined),
+          arrowLeft: position.arrowLeft,
+          arrowTop: position.arrowTop,
+        })}
         style={{
           [isRTL ? 'right' : 'left']: position.left,
           top: position.top,
@@ -66,12 +71,17 @@ const EnhancedPopover = <T extends HTMLElement>({
 };
 
 const styles = {
-  wrapper: (
-    placement: PopoverPlacement | undefined,
-    hideArrow: boolean | undefined,
-    arrowLeft?: number,
-    arrowTop?: number,
-  ) => css`
+  wrapper: ({
+    placement,
+    hideArrow,
+    arrowLeft,
+    arrowTop,
+  }: {
+    placement: PopoverPlacement | undefined;
+    hideArrow: boolean | undefined;
+    arrowLeft?: number;
+    arrowTop?: number;
+  }) => css`
     position: absolute;
     width: 100%;
     z-index: ${zIndex.dropdown};

@@ -231,7 +231,14 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
     }
 
     // Calculate arrow position if arrow is enabled
-    if (arrow) {
+    const isCoveringTrigger =
+      ['middle', 'absoluteCenter'].includes(finalPlacement) ||
+      (calculatedPosition.left < triggerRect.left + ARROW_SAFE_MARGIN &&
+        calculatedPosition.left + popoverWidth > triggerRect.right - ARROW_SAFE_MARGIN &&
+        calculatedPosition.top < triggerRect.top + ARROW_SAFE_MARGIN &&
+        calculatedPosition.top + popoverHeight > triggerRect.bottom - ARROW_SAFE_MARGIN);
+
+    if (arrow && !isCoveringTrigger) {
       const isVerticalPlacement = finalPlacement.startsWith('top') || finalPlacement.startsWith('bottom');
       const isHorizontalPlacement = finalPlacement.startsWith('left') || finalPlacement.startsWith('right');
 
