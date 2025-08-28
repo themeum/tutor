@@ -193,6 +193,7 @@ const CollectionListTable = ({ form }: CourseListTableProps) => {
         },
       },
     ],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       areAllItemsSelected,
       fetchedItems.length,
