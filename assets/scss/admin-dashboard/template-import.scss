@@ -464,6 +464,10 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		width: 1400px;
 		transform: scale(0.808);
 		transform-origin: left top;
+		
+		.rtl & {
+			transform-origin: right top;
+		}
 	}
 
 	.tutor-template-preview-import-area {
@@ -472,6 +476,10 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		padding-left: 20px;
 		padding: 0px 10px 0px 20px;
 		max-height: 700px;
+		
+		.rtl & {
+			padding: 0px 20px 0px 10px;
+		}
 	}
 }
 
