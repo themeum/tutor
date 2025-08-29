@@ -620,8 +620,13 @@ class QueryHelper {
 			return '';
 		}
 
+		// Allow only safe patterns: letters, numbers, dot, underscore.
+		if ( ! preg_match( '/^[a-zA-Z0-9._]+$/', $orderby ) ) {
+			return '';
+		}
+
 		$order = strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
-		return 'ORDER BY ' . sanitize_sql_orderby( "{$orderby} {$order}" );
+		return "ORDER BY {$orderby} {$order}";
 	}
 
 	/**
@@ -1006,39 +1011,19 @@ class QueryHelper {
 		$join_clauses    = self::build_join_clause( $joining_tables );
 		$where_clause    = self::build_where_search_clause( $where, $search );
 		$order_by_clause = self::build_order_clause( $order_by, $order );
+		$limit_clause    = ( empty( $limit ) && empty( $offset ) ) ? '' : $wpdb->prepare( 'LIMIT %d OFFSET %d', $limit, $offset );
 
-		// Query to get total count.
-		$count_query = "
-			SELECT COUNT(*) as total_count
-			FROM {$from_clause}
-			{$join_clauses}
-			{$where_clause}
-		";
-
-		$total_count = $wpdb->get_var( $count_query );
-
-		if ( empty( $limit ) && empty( $offset ) ) {
-			$query = "SELECT 
+		$query = "SELECT SQL_CALC_FOUND_ROWS 
 				{$select_clause}
 				FROM {$from_clause}
 				{$join_clauses}
 				{$where_clause}
-				{$order_by_clause}";
-		} else {
-			$query = $wpdb->prepare(
-				"SELECT {$select_clause}
-				FROM {$from_clause}
-				{$join_clauses}
-				{$where_clause}
 				{$order_by_clause}
-				LIMIT %d OFFSET %d",
-				$limit,
-				$offset
-			);
-		}
+				{$limit_clause}";
 
-
-		$results = $wpdb->get_results( $query, $output );
+		$results     = $wpdb->get_results( $query, $output );
+		$has_records = is_array( $results ) && count( $results );	
+		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 
 		// Throw exception if error occurred.
 		if ( $wpdb->last_error ) {
@@ -1047,7 +1032,7 @@ class QueryHelper {
 
 		// Prepare response array.
 		$response = array(
-			'total_count' => (int) $total_count,
+			'total_count' => $total_count,
 			'results'     => $results,
 		);
 
