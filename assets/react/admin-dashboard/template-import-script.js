@@ -52,7 +52,14 @@ document.addEventListener('DOMContentLoaded', function () {
 				removeActiveClassFromDeviceList(deviceSwitchers);
 				deviceSwitcher.classList.add("active");
 				let width = this.getAttribute("data-width");
+				let height = this.getAttribute("data-height");
+				let device = this.getAttribute("data-device");
 				iframe.style.width = width;
+				if ('desktop' !== device) {
+					iframe.style.transform = 'none';
+				} else {
+					iframe.style.transform = 'scale(0.8)';
+				}
 			});
 		});
 
@@ -64,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			deviceSwitchers[0].classList.add("active");
 			tutorTemplateShimmerEffect.style.display = "none";
 			document.body.style.overflow = 'visible';
-			iframe.style.width = "1120px";
+			iframe.style.width = "1400px";
 			colorPresetBlock.style.display = "none";
 		}
 

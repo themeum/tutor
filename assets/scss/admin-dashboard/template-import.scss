@@ -454,8 +454,10 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	}
 
 	#tutor-template-preview-iframe {
-		width: 1120px;
-		height: 100%;
+		width: 1400px;
+		height: calc(100% / 0.8);
+		transform: scale(0.8);
+		transform-origin: left top;
 		transition: width 0.25s ease-in-out;
 	}
 
