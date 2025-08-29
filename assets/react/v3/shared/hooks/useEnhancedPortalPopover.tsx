@@ -37,8 +37,8 @@ export const PLACEMENTS = {
   LEFT_BOTTOM: 'leftBottom',
 
   // Center placements
-  middle: 'middle',
-  ABSOLUTE_CENTER: 'absoluteCenter',
+  middle: 'middle', // Centered based on trigger
+  ABSOLUTE_CENTER: 'absoluteCenter', // Centered based on viewport
 } as const;
 
 export type PopoverPlacement = (typeof PLACEMENTS)[keyof typeof PLACEMENTS];
@@ -238,15 +238,15 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
       }
     }
 
-    // Calculate arrow position if arrow is enabled
-    const isCoveringTrigger =
+    // Calculate arrow position if arrow is enabled and popover does not cover the trigger
+    const isTriggerCoveredByPopover =
       ['middle', 'absoluteCenter'].includes(finalPlacement) ||
       (calculatedPosition.left < triggerRect.left + ARROW_SAFE_MARGIN &&
         calculatedPosition.left + popoverWidth > triggerRect.right - ARROW_SAFE_MARGIN &&
         calculatedPosition.top < triggerRect.top + ARROW_SAFE_MARGIN &&
         calculatedPosition.top + popoverHeight > triggerRect.bottom - ARROW_SAFE_MARGIN);
 
-    if (arrow && !isCoveringTrigger) {
+    if (arrow && !isTriggerCoveredByPopover) {
       const isVerticalPlacement = finalPlacement.startsWith('top') || finalPlacement.startsWith('bottom');
       const isHorizontalPlacement = finalPlacement.startsWith('left') || finalPlacement.startsWith('right');
 
