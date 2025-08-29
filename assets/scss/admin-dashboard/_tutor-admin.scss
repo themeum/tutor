@@ -1854,7 +1854,7 @@ h2.tutor-page-heading {
 				border-left: 1px solid #E6E6E6;
 				padding: 16px;
 
-				.rtl * {
+				.rtl & {
 					border-left: none;
 					border-right: 1px solid #E6E6E6;
 				}
