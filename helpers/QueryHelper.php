@@ -524,7 +524,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build SELECT clause.
+	 * Prepare SELECT clause.
 	 *
 	 * @since 3.8.0
 	 *
@@ -532,7 +532,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_select_clause( $columns = '' ) {
+	protected static function prepare_select_clause( $columns = '' ) {
 		if ( empty( $columns ) ) {
 			return '*';
 		}
@@ -545,7 +545,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build JOIN clause.
+	 * Prepare JOIN clause.
 	 *
 	 * @since 3.8.0
 	 *
@@ -556,7 +556,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_join_clause( $joins = array() ) {
+	protected static function prepare_join_clause( $joins = array() ) {
 		if ( empty( $joins ) || ! is_array( $joins ) ) {
 			return '';
 		}
@@ -575,7 +575,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build WHERE + SEARCH clause together.
+	 * Prepare WHERE + SEARCH clause together.
 	 *
 	 * @since 3.8.0
 	 *
@@ -585,7 +585,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_where_search_clause( $where = array(), $search = array(), $search_operator = 'OR' ) {
+	protected static function prepare_where_search_clause( $where = array(), $search = array(), $search_operator = 'OR' ) {
 		$clauses = array();
 
 		// Handle WHERE conditions.
@@ -606,7 +606,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build order by clause.
+	 * Prepare order by clause.
 	 *
 	 * @since 3.8.0
 	 *
@@ -615,7 +615,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_order_clause( $orderby = '', $order = 'DESC' ) {
+	protected static function prepare_order_clause( $orderby = '', $order = 'DESC' ) {
 		if ( empty( $orderby ) ) {
 			return '';
 		}
@@ -694,12 +694,12 @@ class QueryHelper {
 		$table_with_alias = "{$table} AS {$alias}";
 
 		// Build clauses.
-		$select_clause   = self::build_select_clause( $args['select'] ?? '' );
-		$join_clause     = self::build_join_clause( $args['joins'] ?? array() );
-		$where_clause    = self::build_where_search_clause( $args['where'] ?? array(), $args['search'] ?? array() );
+		$select_clause   = self::prepare_select_clause( $args['select'] ?? '' );
+		$join_clause     = self::prepare_join_clause( $args['joins'] ?? array() );
+		$where_clause    = self::prepare_where_search_clause( $args['where'] ?? array(), $args['search'] ?? array() );
 		$groupby_clause  = empty( $args['groupby'] ) ? '' : 'GROUP BY ' . $args['groupby'];
 		$having_clause   = empty( $args['having'] ) ? '' : 'HAVING ' . $args['having'];
-		$order_by_clause = self::build_order_clause( $args['orderby'] ?? '', $args['order'] ?? 'DESC' );
+		$order_by_clause = self::prepare_order_clause( $args['orderby'] ?? '', $args['order'] ?? 'DESC' );
 
 		global $wpdb;
 
@@ -1008,9 +1008,9 @@ class QueryHelper {
 
 		$select_clause   = implode( ', ', $select_columns );
 		$from_clause     = self::prepare_table_name( $primary_table );
-		$join_clauses    = self::build_join_clause( $joining_tables );
-		$where_clause    = self::build_where_search_clause( $where, $search );
-		$order_by_clause = self::build_order_clause( $order_by, $order );
+		$join_clauses    = self::prepare_join_clause( $joining_tables );
+		$where_clause    = self::prepare_where_search_clause( $where, $search );
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
 		$limit_clause    = ( empty( $limit ) && empty( $offset ) ) ? '' : $wpdb->prepare( 'LIMIT %d OFFSET %d', $limit, $offset );
 
 		$query = "SELECT SQL_CALC_FOUND_ROWS 
@@ -1057,7 +1057,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table         = self::prepare_table_name( $table );
-		$where_clause  = self::build_where_search_clause( $where, $search, 'AND' );
+		$where_clause  = self::prepare_where_search_clause( $where, $search, 'AND' );
 
 		$count = $wpdb->get_var(
 			"SELECT COUNT($count_column)
@@ -1092,8 +1092,8 @@ class QueryHelper {
 		global $wpdb;
 		
 		$from_clause  = self::prepare_table_name( $primary_table );
-		$join_clauses = self::build_join_clause( $joining_tables );
-		$where_clause = self::build_where_search_clause( $where, $search, 'AND' );
+		$join_clauses = self::prepare_join_clause( $joining_tables );
+		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
 
 		$count_query = "
 			SELECT COUNT($count_column) as total_count
@@ -1134,7 +1134,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table         = self::prepare_table_name( $table );
-		$where_clause  = self::build_where_search_clause( $where, $search, 'AND' );
+		$where_clause  = self::prepare_where_search_clause( $where, $search, 'AND' );
 	
 		// Query to get total count
 		$count_query = "
