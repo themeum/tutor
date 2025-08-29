@@ -244,7 +244,11 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	grid-template-columns: repeat(auto-fit, minmax(374px, 1fr));
 	gap: 24px;
 
-	@media (max-width: 991px) {
+	@media (max-width: 1370px) {
+		grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	}
+
+	@media (max-width: 1170px) {
 		grid-template-columns: repeat(auto-fit, minmax(274px, 1fr));
 	}
 
@@ -461,6 +465,7 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 		padding-left: 20px;
 		
 		.rtl & {
+			padding-left: 0px;
 			padding-right: 20px;
 		}
 	}
