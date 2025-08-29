@@ -4,7 +4,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import type { PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
-import { createRef, useEffect, useMemo, useRef, useState } from 'react';
+import { createRef, useMemo, useRef, useState } from 'react';
 import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
 
 const placements: PopoverPlacement[] = [
@@ -302,72 +302,6 @@ export const AllPlacements = {
     );
   },
 } satisfies Story;
-
-// Scrollable container to demonstrate auto-shifting
-export const AutoShift = {
-  render: () => {
-    const buttonRef = useRef<HTMLButtonElement>(null);
-    const [isOpen, setIsOpen] = useState(false);
-
-    useEffect(() => {
-      if (buttonRef.current) {
-        // scroll to center
-        buttonRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
-    }, []);
-
-    return (
-      <div
-        style={{
-          width: '400px',
-          height: '400px',
-          maxHeight: '300px',
-          overflowY: 'auto',
-          border: '1px solid #ccc',
-        }}
-      >
-        <div
-          style={{
-            height: '100vh',
-            width: '100vw',
-            borderRadius: 4,
-            padding: 8,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Button ref={buttonRef} onClick={() => setIsOpen(true)}>
-            Open Popover
-          </Button>
-
-          <EnhancedPopover
-            triggerRef={buttonRef}
-            placement="bottom"
-            isOpen={isOpen}
-            closePopover={() => setIsOpen(false)}
-            autoAdjustOverflow={true}
-            maxWidth="200px"
-          >
-            <div
-              id={`enhanced-popover`}
-              role="dialog"
-              aria-modal="true"
-              tabIndex={-1}
-              style={{ padding: 24, minWidth: 180, textAlign: 'center' }}
-            >
-              <strong>Popover Content</strong>
-              <div style={{ marginTop: 8 }}>You can put any content here.</div>
-              <Button variant="danger" size="small" onClick={() => setIsOpen(false)} style={{ marginTop: 16 }}>
-                Close
-              </Button>
-            </div>
-          </EnhancedPopover>
-        </div>
-      </div>
-    );
-  },
-};
 
 export const TopPlacement = {
   args: {
