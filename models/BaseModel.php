@@ -240,7 +240,7 @@ abstract class BaseModel {
 
 		if ( isset( $args['search'] ) && is_array( $args['search'] ) ) {
 			if ( count( $args['search'] ) ) {
-				$where_clause .= ( empty( $where_clause ) ? 'WHERE ' : ' AND ' ) . QueryHelper::build_like_clause( $args['search'], 'AND' );
+				$where_clause .= ( empty( $where_clause ) ? 'WHERE ' : ' AND ' ) . QueryHelper::prepare_like_clause( $args['search'], 'AND' );
 			}
 		}
 

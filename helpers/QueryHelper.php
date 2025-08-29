@@ -418,7 +418,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build like clause string with or
+	 * Prepare like clause string with or
 	 *
 	 * @since 1.0.0
 	 *
@@ -427,7 +427,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	public static function build_like_clause( array $where, $relation = 'OR' ) {
+	public static function prepare_like_clause( array $where, $relation = 'OR' ) {
 		global $wpdb;
 
 		$like_conditions = array();
@@ -595,7 +595,7 @@ class QueryHelper {
 
 		// Handle SEARCH conditions.
 		if ( ! empty( $search ) && is_array( $search ) ) {
-			$clauses[] = self::build_like_clause( $search, $search_operator );
+			$clauses[] = self::prepare_like_clause( $search, $search_operator );
 		}
 
 		if ( empty( $clauses ) ) {
@@ -630,7 +630,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build LIMIT clause.
+	 * Prepare LIMIT clause.
 	 *
 	 * @since 3.8.0
 	 *
@@ -639,7 +639,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_limit_clause( $per_page = 0, $page = 1 ) {
+	protected static function prepare_limit_clause( $per_page = 0, $page = 1 ) {
 		$page     = max( 1, (int) $page );
 		$per_page = max( 0, (int) $per_page );
 
@@ -730,7 +730,7 @@ class QueryHelper {
 		}
 
 		$calc_found_rows = $pagination ? 'SQL_CALC_FOUND_ROWS' : '';
-		$limit_clause    = $pagination ? self::build_limit_clause( $args['per_page'], $args['page'] ) : '';
+		$limit_clause    = $pagination ? self::prepare_limit_clause( $args['per_page'], $args['page'] ) : '';
 
 		$sql_query = "SELECT {$calc_found_rows} {$select_clause} 
 					FROM {$table_with_alias} 
