@@ -9,36 +9,30 @@ import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/use
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
-const ARROW_SAFE_MARGIN = 12; // Minimum px from edge of popover for arrow
-const ARROW_MAX_OFFSET_VERTICAL = 6; // Max px from right edge for vertical arrow
-const ARROW_MAX_OFFSET_HORIZONTAL = 12; // Max px from bottom edge for horizontal arrow
-const ARROW_CENTER_OFFSET = 8; // Half arrow size (for centering, assuming 16px arrow)
+const ARROW_CONFIG = {
+  SAFE_MARGIN: 12,
+  MAX_OFFSET_VERTICAL: 6,
+  MAX_OFFSET_HORIZONTAL: 12,
+  CENTER_OFFSET: 8,
+} as const;
+
 const POPOVER_BOUNDARY_MARGIN = 4;
 
 export const PLACEMENTS = {
-  // Top placements
   TOP: 'top',
   TOP_LEFT: 'topLeft',
   TOP_RIGHT: 'topRight',
-
-  // Right placements
   RIGHT: 'right',
   RIGHT_TOP: 'rightTop',
   RIGHT_BOTTOM: 'rightBottom',
-
-  // Bottom placements
   BOTTOM: 'bottom',
   BOTTOM_LEFT: 'bottomLeft',
   BOTTOM_RIGHT: 'bottomRight',
-
-  // Left placements
   LEFT: 'left',
   LEFT_TOP: 'leftTop',
   LEFT_BOTTOM: 'leftBottom',
-
-  // Center placements
-  middle: 'middle', // Centered based on trigger
-  ABSOLUTE_CENTER: 'absoluteCenter', // Centered based on viewport
+  MIDDLE: 'middle',
+  ABSOLUTE_CENTER: 'absoluteCenter',
 } as const;
 
 export type PopoverPlacement = (typeof PLACEMENTS)[keyof typeof PLACEMENTS];
@@ -51,6 +45,11 @@ interface PopoverPosition {
   arrowTop?: number;
 }
 
+interface Dimensions {
+  width: number;
+  height: number;
+}
+
 interface PopoverHookArgs<T> {
   isOpen: boolean;
   triggerRef?: RefObject<T>;
@@ -58,14 +57,281 @@ interface PopoverHookArgs<T> {
   arrow?: boolean;
   autoAdjustOverflow?: boolean;
   gap?: number;
-  positionModifier?: {
-    top: number;
-    left: number;
-  };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dependencies?: any[];
+  positionModifier?: { top: number; left: number };
+  dependencies?: unknown[];
 }
 
+interface PortalProps {
+  isOpen: boolean;
+  children: ReactNode;
+  onClickOutside?: () => void;
+  onEscape?: () => void;
+  animationType?: AnimationType;
+}
+
+const checkOverflow = (
+  position: { top: number; left: number },
+  dimensions: Dimensions,
+): { top: boolean; bottom: boolean; left: boolean; right: boolean } => {
+  const { width, height } = dimensions;
+
+  return {
+    top: position.top < 0,
+    bottom: position.top + height > window.innerHeight,
+    left: position.left < 0,
+    right: position.left + width > window.innerWidth,
+  };
+};
+
+const willPlacementOverflow = (
+  placement: PopoverPlacement,
+  overflow: { top: boolean; bottom: boolean; left: boolean; right: boolean },
+): boolean => {
+  return (
+    (placement.startsWith('top') && overflow.top) ||
+    (placement.startsWith('bottom') && overflow.bottom) ||
+    (placement.startsWith('left') && overflow.left) ||
+    (placement.startsWith('right') && overflow.right)
+  );
+};
+
+const calculatePositionForPlacement = (
+  placement: PopoverPlacement,
+  triggerRect: DOMRect,
+  dimensions: Dimensions,
+  gap: number,
+  modifier: { top: number; left: number },
+): { top: number; left: number } => {
+  const { width, height } = dimensions;
+  const { top: modTop, left: modLeft } = modifier;
+
+  const centerX = triggerRect.left + triggerRect.width / 2 - width / 2;
+  const centerY = triggerRect.top + triggerRect.height / 2 - height / 2;
+
+  const positionMap: Record<PopoverPlacement, { top: number; left: number }> = {
+    [PLACEMENTS.TOP]: {
+      top: triggerRect.top - height - gap,
+      left: centerX,
+    },
+    [PLACEMENTS.TOP_LEFT]: {
+      top: triggerRect.top - height - gap,
+      left: triggerRect.left,
+    },
+    [PLACEMENTS.TOP_RIGHT]: {
+      top: triggerRect.top - height - gap,
+      left: triggerRect.right - width,
+    },
+
+    [PLACEMENTS.BOTTOM]: {
+      top: triggerRect.bottom + gap,
+      left: centerX,
+    },
+    [PLACEMENTS.BOTTOM_LEFT]: {
+      top: triggerRect.bottom + gap,
+      left: triggerRect.left,
+    },
+    [PLACEMENTS.BOTTOM_RIGHT]: {
+      top: triggerRect.bottom + gap,
+      left: triggerRect.right - width,
+    },
+
+    [PLACEMENTS.LEFT]: {
+      top: centerY,
+      left: triggerRect.left - width - gap,
+    },
+    [PLACEMENTS.LEFT_TOP]: {
+      top: triggerRect.top,
+      left: triggerRect.left - width - gap,
+    },
+    [PLACEMENTS.LEFT_BOTTOM]: {
+      top: triggerRect.bottom - height,
+      left: triggerRect.left - width - gap,
+    },
+
+    [PLACEMENTS.RIGHT]: {
+      top: centerY,
+      left: triggerRect.right + gap,
+    },
+    [PLACEMENTS.RIGHT_TOP]: {
+      top: triggerRect.top,
+      left: triggerRect.right + gap,
+    },
+    [PLACEMENTS.RIGHT_BOTTOM]: {
+      top: triggerRect.bottom - height,
+      left: triggerRect.right + gap,
+    },
+
+    [PLACEMENTS.MIDDLE]: {
+      top: centerY,
+      left: centerX,
+    },
+    [PLACEMENTS.ABSOLUTE_CENTER]: {
+      top: window.innerHeight / 2 - height / 2,
+      left: window.innerWidth / 2 - width / 2,
+    },
+  };
+
+  const position = positionMap[placement] || positionMap[PLACEMENTS.BOTTOM];
+  return {
+    top: position.top + modTop,
+    left: position.left + modLeft,
+  };
+};
+
+const calculateOptimalPosition = (
+  placement: PopoverPlacement,
+  triggerRect: DOMRect,
+  dimensions: Dimensions,
+  modifier: { top: number; left: number },
+): { top: number; left: number } => {
+  const { width, height } = dimensions;
+  const { top: modTop, left: modLeft } = modifier;
+
+  const getPlacementDirection = (placement: PopoverPlacement): string => {
+    if (placement.startsWith('bottom')) {
+      return 'bottom';
+    }
+
+    if (placement.startsWith('top')) {
+      return 'top';
+    }
+
+    if (placement.startsWith('right')) {
+      return 'right';
+    }
+
+    if (placement.startsWith('left')) {
+      return 'left';
+    }
+
+    return 'fallback';
+  };
+
+  const direction = getPlacementDirection(placement);
+
+  switch (direction) {
+    case 'bottom':
+      return {
+        top: window.innerHeight - height - POPOVER_BOUNDARY_MARGIN + modTop,
+        left: triggerRect.left + triggerRect.width / 2 - width / 2 + modLeft,
+      };
+
+    case 'top':
+      return {
+        top: POPOVER_BOUNDARY_MARGIN + modTop,
+        left: triggerRect.left + triggerRect.width / 2 - width / 2 + modLeft,
+      };
+
+    case 'right':
+      return {
+        top: triggerRect.top + triggerRect.height / 2 - height / 2 + modTop,
+        left: window.innerWidth - width - POPOVER_BOUNDARY_MARGIN + modLeft,
+      };
+
+    case 'left':
+      return {
+        top: triggerRect.top + triggerRect.height / 2 - height / 2 + modTop,
+        left: POPOVER_BOUNDARY_MARGIN + modLeft,
+      };
+
+    default:
+      return calculatePositionForPlacement(placement, triggerRect, dimensions, 0, modifier);
+  }
+};
+
+const adjustPositionForOverflow = (
+  position: { top: number; left: number },
+  placement: PopoverPlacement,
+  dimensions: Dimensions,
+  triggerRect: DOMRect,
+  gap: number,
+  modifier: { top: number; left: number },
+): { position: { top: number; left: number }; placement: PopoverPlacement } => {
+  const oppositeMapping = {
+    [PLACEMENTS.TOP]: PLACEMENTS.BOTTOM,
+    [PLACEMENTS.TOP_LEFT]: PLACEMENTS.BOTTOM_LEFT,
+    [PLACEMENTS.TOP_RIGHT]: PLACEMENTS.BOTTOM_RIGHT,
+    [PLACEMENTS.BOTTOM]: PLACEMENTS.TOP,
+    [PLACEMENTS.BOTTOM_LEFT]: PLACEMENTS.TOP_LEFT,
+    [PLACEMENTS.BOTTOM_RIGHT]: PLACEMENTS.TOP_RIGHT,
+    [PLACEMENTS.LEFT]: PLACEMENTS.RIGHT,
+    [PLACEMENTS.LEFT_TOP]: PLACEMENTS.RIGHT_TOP,
+    [PLACEMENTS.LEFT_BOTTOM]: PLACEMENTS.RIGHT_BOTTOM,
+    [PLACEMENTS.RIGHT]: PLACEMENTS.LEFT,
+    [PLACEMENTS.RIGHT_TOP]: PLACEMENTS.LEFT_TOP,
+    [PLACEMENTS.RIGHT_BOTTOM]: PLACEMENTS.LEFT_BOTTOM,
+    [PLACEMENTS.MIDDLE]: PLACEMENTS.MIDDLE,
+    [PLACEMENTS.ABSOLUTE_CENTER]: PLACEMENTS.ABSOLUTE_CENTER,
+  };
+  const originalOverflow = checkOverflow(position, dimensions);
+  const originalWouldOverflow = willPlacementOverflow(placement, originalOverflow);
+
+  if (!originalWouldOverflow) {
+    return { position, placement };
+  }
+
+  // Try opposite placement
+  const oppositePlacement = oppositeMapping[placement];
+  const oppositePosition = calculatePositionForPlacement(oppositePlacement, triggerRect, dimensions, gap, modifier);
+  const oppositeOverflow = checkOverflow(oppositePosition, dimensions);
+  const oppositeWouldOverflow = willPlacementOverflow(oppositePlacement, oppositeOverflow);
+
+  if (!oppositeWouldOverflow) {
+    return { position: oppositePosition, placement: oppositePlacement };
+  }
+
+  // Both overflow - use optimal position for original placement
+  const optimalPosition = calculateOptimalPosition(placement, triggerRect, dimensions, modifier);
+  return { position: optimalPosition, placement };
+};
+
+const calculateArrowPosition = (
+  placement: PopoverPlacement,
+  triggerRect: DOMRect,
+  popoverPosition: { top: number; left: number },
+  dimensions: Dimensions,
+): { arrowLeft?: number; arrowTop?: number } => {
+  const { width, height } = dimensions;
+
+  // Skip arrow for covered triggers or special placements
+  const isSpecialPlacement = ([PLACEMENTS.MIDDLE, PLACEMENTS.ABSOLUTE_CENTER] as PopoverPlacement[]).includes(
+    placement,
+  );
+  const isTriggerCovered =
+    popoverPosition.left < triggerRect.left + ARROW_CONFIG.SAFE_MARGIN &&
+    popoverPosition.left + width > triggerRect.right - ARROW_CONFIG.SAFE_MARGIN &&
+    popoverPosition.top < triggerRect.top + ARROW_CONFIG.SAFE_MARGIN &&
+    popoverPosition.top + height > triggerRect.bottom - ARROW_CONFIG.SAFE_MARGIN;
+
+  if (isSpecialPlacement || isTriggerCovered) return {};
+
+  const isVertical = placement.startsWith('top') || placement.startsWith('bottom');
+  const isHorizontal = placement.startsWith('left') || placement.startsWith('right');
+
+  if (isVertical) {
+    const triggerCenter = triggerRect.left + triggerRect.width / 2;
+    const arrowLeft =
+      Math.max(
+        ARROW_CONFIG.SAFE_MARGIN,
+        Math.min(width - ARROW_CONFIG.MAX_OFFSET_VERTICAL, triggerCenter - popoverPosition.left),
+      ) - ARROW_CONFIG.CENTER_OFFSET;
+    return { arrowLeft };
+  }
+
+  if (isHorizontal) {
+    const triggerCenter = triggerRect.top + triggerRect.height / 2;
+    const arrowTop =
+      Math.max(
+        ARROW_CONFIG.SAFE_MARGIN,
+        Math.min(height - ARROW_CONFIG.MAX_OFFSET_HORIZONTAL, triggerCenter - popoverPosition.top),
+      ) - ARROW_CONFIG.CENTER_OFFSET;
+    return { arrowTop };
+  }
+
+  return {};
+};
+
+// Main hook
 export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLElement>({
   isOpen,
   triggerRef: popoverTriggerRef,
@@ -73,15 +339,10 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
   arrow = false,
   gap = 10,
   autoAdjustOverflow = true,
-  positionModifier = {
-    top: 0,
-    left: 0,
-  },
+  positionModifier = { top: 0, left: 0 },
   dependencies = [],
 }: PopoverHookArgs<T>) => {
-  const triggerRef = useMemo(() => {
-    return popoverTriggerRef || { current: null };
-  }, [popoverTriggerRef]);
+  const triggerRef = useMemo(() => popoverTriggerRef || { current: null }, [popoverTriggerRef]);
   const popoverRef = useRef<D>(null);
   const [triggerWidth, setTriggerWidth] = useState(0);
   const [position, setPosition] = useState<PopoverPosition>({
@@ -92,188 +353,43 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
 
   useEffect(() => {
     if (!triggerRef.current) return;
-
-    const triggerRect = triggerRef.current.getBoundingClientRect();
-    setTriggerWidth(triggerRect.width);
+    setTriggerWidth(triggerRef.current.getBoundingClientRect().width);
   }, [triggerRef]);
 
   useEffect(() => {
-    if (!isOpen || !triggerRef.current || !popoverRef.current) {
-      return;
-    }
+    if (!isOpen || !triggerRef.current || !popoverRef.current) return;
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const popoverRect = popoverRef.current.getBoundingClientRect();
-    const popoverWidth = popoverRect.width || triggerRect.width;
-    const popoverHeight = popoverRect.height;
-
-    const container = document.body;
-    const containerRect = container.getBoundingClientRect();
-
-    let calculatedPosition: { top: number; left: number } = { top: 0, left: 0 };
-    let finalPlacement: PopoverPosition['placement'] = placement;
-    let arrowLeft: number | undefined;
-    let arrowTop: number | undefined;
-
-    const positions = {
-      // top placements
-      top: {
-        top: triggerRect.top - popoverHeight - gap + positionModifier.top,
-        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2 + positionModifier.left,
-      },
-      topLeft: {
-        top: triggerRect.top - popoverHeight - gap + positionModifier.top,
-        left: triggerRect.left + positionModifier.left,
-      },
-      topRight: {
-        top: triggerRect.top - popoverHeight - gap + positionModifier.top,
-        left: triggerRect.right - popoverWidth + positionModifier.left,
-      },
-
-      // right placements
-      right: {
-        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2 + positionModifier.top,
-        left: triggerRect.right + gap + positionModifier.left,
-      },
-      rightTop: {
-        top: triggerRect.top + positionModifier.top,
-        left: triggerRect.right + gap + positionModifier.left,
-      },
-      rightBottom: {
-        top: triggerRect.bottom - popoverHeight + positionModifier.top,
-        left: triggerRect.right + gap + positionModifier.left,
-      },
-
-      // Bottom placements
-      bottom: {
-        top: triggerRect.bottom + gap + positionModifier.top,
-        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2 + positionModifier.left,
-      },
-      bottomLeft: {
-        top: triggerRect.bottom + gap + positionModifier.top,
-        left: triggerRect.left + positionModifier.left,
-      },
-      bottomRight: {
-        top: triggerRect.bottom + gap + positionModifier.top,
-        left: triggerRect.right - popoverWidth + positionModifier.left,
-      },
-
-      // left placements
-      left: {
-        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2 + positionModifier.top,
-        left: triggerRect.left - popoverWidth - gap + positionModifier.left,
-      },
-      leftTop: {
-        top: triggerRect.top + positionModifier.top,
-        left: triggerRect.left - popoverWidth - gap + positionModifier.left,
-      },
-      leftBottom: {
-        top: triggerRect.bottom - popoverHeight + positionModifier.top,
-        left: triggerRect.left - popoverWidth - gap + positionModifier.left,
-      },
-
-      // center placements
-      middle: {
-        top: triggerRect.top + triggerRect.height / 2 - popoverHeight / 2 + positionModifier.top,
-        left: triggerRect.left + triggerRect.width / 2 - popoverWidth / 2 + positionModifier.left,
-      },
-      absoluteCenter: {
-        top: window.innerHeight / 2 - popoverHeight / 2 + positionModifier.top,
-        left: window.innerWidth / 2 - popoverWidth / 2 + positionModifier.left,
-      },
+    const dimensions = {
+      width: popoverRect.width || triggerRect.width,
+      height: popoverRect.height,
     };
 
-    calculatedPosition = positions[finalPlacement as keyof typeof positions] || positions.bottom;
+    let calculatedPosition = calculatePositionForPlacement(placement, triggerRect, dimensions, gap, positionModifier);
+    let finalPlacement = placement;
 
     if (autoAdjustOverflow) {
-      const wouldOverflow = {
-        top: calculatedPosition.top < containerRect.top,
-        bottom: calculatedPosition.top + popoverHeight > containerRect.top + containerRect.height,
-        left: calculatedPosition.left < containerRect.left,
-        right: calculatedPosition.left + popoverWidth > containerRect.left + containerRect.width,
-      };
-
-      const oppositePlacements = {
-        top: 'bottom',
-        bottom: 'top',
-        left: 'right',
-        right: 'left',
-        topLeft: 'bottomLeft',
-        bottomLeft: 'topLeft',
-        topRight: 'bottomRight',
-        bottomRight: 'topRight',
-        leftTop: 'rightTop',
-        rightTop: 'leftTop',
-        leftBottom: 'rightBottom',
-        rightBottom: 'leftBottom',
-        middle: 'middle',
-        absoluteCenter: 'absoluteCenter',
-      } as const satisfies Record<PopoverPlacement, PopoverPlacement>;
-
-      if (finalPlacement.startsWith('top') && wouldOverflow.top) {
-        finalPlacement = oppositePlacements[finalPlacement];
-        calculatedPosition = positions[finalPlacement as keyof typeof positions];
-      } else if (finalPlacement.startsWith('bottom') && wouldOverflow.bottom) {
-        finalPlacement = oppositePlacements[finalPlacement];
-        calculatedPosition = positions[finalPlacement as keyof typeof positions];
-      } else if (finalPlacement.startsWith('left') && wouldOverflow.left) {
-        finalPlacement = oppositePlacements[finalPlacement];
-        calculatedPosition = positions[finalPlacement as keyof typeof positions];
-      } else if (finalPlacement.startsWith('right') && wouldOverflow.right) {
-        finalPlacement = oppositePlacements[finalPlacement];
-        calculatedPosition = positions[finalPlacement as keyof typeof positions];
-      }
-
-      // Fine-tune position to stay within bounds
-      if (calculatedPosition.left < containerRect.left) {
-        calculatedPosition.left = containerRect.left + POPOVER_BOUNDARY_MARGIN;
-      } else if (calculatedPosition.left + popoverWidth > containerRect.left + containerRect.width) {
-        calculatedPosition.left = containerRect.left + containerRect.width - popoverWidth - POPOVER_BOUNDARY_MARGIN;
-      }
-
-      if (calculatedPosition.top < containerRect.top) {
-        calculatedPosition.top = containerRect.top + POPOVER_BOUNDARY_MARGIN;
-      } else if (calculatedPosition.top + popoverHeight > containerRect.top + containerRect.height) {
-        calculatedPosition.top = containerRect.top + containerRect.height - popoverHeight - POPOVER_BOUNDARY_MARGIN;
-      }
+      const adjusted = adjustPositionForOverflow(
+        calculatedPosition,
+        placement,
+        dimensions,
+        triggerRect,
+        gap,
+        positionModifier,
+      );
+      calculatedPosition = adjusted.position;
+      finalPlacement = adjusted.placement;
     }
 
-    // Calculate arrow position if arrow is enabled and popover does not cover the trigger
-    const isTriggerCoveredByPopover =
-      ['middle', 'absoluteCenter'].includes(finalPlacement) ||
-      (calculatedPosition.left < triggerRect.left + ARROW_SAFE_MARGIN &&
-        calculatedPosition.left + popoverWidth > triggerRect.right - ARROW_SAFE_MARGIN &&
-        calculatedPosition.top < triggerRect.top + ARROW_SAFE_MARGIN &&
-        calculatedPosition.top + popoverHeight > triggerRect.bottom - ARROW_SAFE_MARGIN);
-
-    if (arrow && !isTriggerCoveredByPopover) {
-      const isVerticalPlacement = finalPlacement.startsWith('top') || finalPlacement.startsWith('bottom');
-      const isHorizontalPlacement = finalPlacement.startsWith('left') || finalPlacement.startsWith('right');
-
-      if (isVerticalPlacement) {
-        // Arrow points up/down, positioned horizontally
-        const triggerCenter = triggerRect.left + triggerRect.width / 2;
-        const popoverLeft = calculatedPosition.left;
-        arrowLeft =
-          Math.max(ARROW_SAFE_MARGIN, Math.min(popoverWidth - ARROW_MAX_OFFSET_VERTICAL, triggerCenter - popoverLeft)) -
-          ARROW_CENTER_OFFSET;
-      } else if (isHorizontalPlacement) {
-        // Arrow points left/right, positioned vertically
-        const triggerCenter = triggerRect.top + triggerRect.height / 2;
-        const popoverTop = calculatedPosition.top;
-        arrowTop =
-          Math.max(
-            ARROW_SAFE_MARGIN,
-            Math.min(popoverHeight - ARROW_MAX_OFFSET_HORIZONTAL, triggerCenter - popoverTop),
-          ) - ARROW_CENTER_OFFSET;
-      }
-    }
+    const arrowPosition = arrow
+      ? calculateArrowPosition(finalPlacement, triggerRect, calculatedPosition, dimensions)
+      : {};
 
     setPosition({
       ...calculatedPosition,
       placement: finalPlacement,
-      arrowLeft,
-      arrowTop,
+      ...arrowPosition,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerRef, popoverRef, isOpen, placement, gap, arrow, autoAdjustOverflow, ...dependencies]);
@@ -281,14 +397,7 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
   return { position, triggerWidth, triggerRef, popoverRef };
 };
 
-interface PortalProps {
-  isOpen: boolean;
-  children: ReactNode;
-  onClickOutside?: () => void;
-  onEscape?: () => void;
-  animationType?: AnimationType;
-}
-
+// Portal component
 let portalCount = 0;
 
 export const Portal = ({
@@ -306,25 +415,21 @@ export const Portal = ({
         onEscape?.();
       }
     };
-    if (isOpen) {
-      portalCount++;
-      document.body.style.overflow = 'hidden';
-      document.addEventListener('keydown', handleKeyDown, true);
-    }
+
+    if (!isOpen) return;
+
+    portalCount++;
+    document.body.style.overflow = 'hidden';
+    document.addEventListener('keydown', handleKeyDown, true);
 
     return () => {
-      if (isOpen) {
-        portalCount--;
-      }
-
+      portalCount--;
       if (!hasModalOnStack && portalCount === 0) {
         document.body.style.overflow = 'initial';
       }
-
       document.removeEventListener('keydown', handleKeyDown, true);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, hasModalOnStack]);
+  }, [isOpen, hasModalOnStack, onEscape]);
 
   const { transitions } = useAnimation({
     data: isOpen,
@@ -332,26 +437,28 @@ export const Portal = ({
   });
 
   return transitions((style, openState) => {
-    if (openState) {
-      return createPortal(
-        <AnimatedDiv css={styles.wrapper} style={style}>
-          <FocusTrap>
-            <div className="tutor-portal-popover" role="presentation">
-              <div
-                css={styles.backdrop}
-                onKeyUp={noop}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onClickOutside?.();
-                }}
-              />
-              {children}
-            </div>
-          </FocusTrap>
-        </AnimatedDiv>,
-        document.body,
-      );
+    if (!openState) {
+      return null;
     }
+
+    return createPortal(
+      <AnimatedDiv css={styles.wrapper} style={style}>
+        <FocusTrap>
+          <div className="tutor-portal-popover" role="presentation">
+            <div
+              css={styles.backdrop}
+              onKeyUp={noop}
+              onClick={(event) => {
+                event.stopPropagation();
+                onClickOutside?.();
+              }}
+            />
+            {children}
+          </div>
+        </FocusTrap>
+      </AnimatedDiv>,
+      document.body,
+    );
   });
 };
 
