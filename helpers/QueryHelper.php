@@ -64,7 +64,7 @@ class QueryHelper {
 
 		$table        = self::prepare_table_name( $table );
 		$set_clause   = self::prepare_set_clause( $data );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 
 		// phpcs:ignore
 		$query = $wpdb->prepare( "UPDATE {$table} {$set_clause} WHERE {$where_clause} AND 1 = %d", 1 );
@@ -116,7 +116,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table        = self::prepare_table_name( $table );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 
 		return $wpdb->query( "DELETE FROM {$table} WHERE {$where_clause}" ); //phpcs:ignore --$where clause sanitized.
 	}
@@ -305,7 +305,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build where clause string
+	 * Prepare where clause string
 	 *
 	 * @since 2.0.9
 	 * @since 3.0.0 Null value support added, if need to check with null: [name => 'null']
@@ -328,7 +328,7 @@ class QueryHelper {
 	 *
 	 * @return  string
 	 */
-	public static function build_where_clause( array $where ) {
+	public static function prepare_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			$operator = null;
@@ -473,7 +473,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
+		$where = self::prepare_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
@@ -505,7 +505,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
+		$where = self::prepare_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
@@ -590,7 +590,7 @@ class QueryHelper {
 
 		// Handle WHERE conditions.
 		if ( ! empty( $where ) && is_array( $where ) ) {
-			$clauses[] = self::build_where_clause( $where );
+			$clauses[] = self::prepare_where_clause( $where );
 		}
 
 		// Handle SEARCH conditions.
@@ -779,7 +779,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table        = self::prepare_table_name( $table );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
@@ -819,7 +819,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table        = self::prepare_table_name( $table );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 		$limit        = (int) sanitize_text_field( $limit );
 		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
 
@@ -1275,7 +1275,7 @@ class QueryHelper {
 			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
 		}
 
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 		$sql          = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$where_clause} LIMIT %d", 1 );
 		$row          = $wpdb->get_row( $sql, ARRAY_A );
 
