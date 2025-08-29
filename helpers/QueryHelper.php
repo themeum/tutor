@@ -620,8 +620,8 @@ class QueryHelper {
 			return '';
 		}
 
-		// Allow only safe patterns: letters, numbers, dot, underscore.
-		if ( ! preg_match( '/^[a-zA-Z0-9._]+$/', $orderby ) ) {
+		// Allowed: foo, foo_bar, _foo, foo.bar etc.
+		if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9._]*$/', $orderby ) ) {
 			return '';
 		}
 
