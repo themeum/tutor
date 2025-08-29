@@ -10,9 +10,10 @@
  */
 
 ?>
-<div class="tutor-template-import-wrapper">
+<div class="tutor-admin-wrap">
+<div class="tutor-admin-container tutor-admin-container-lg tutor-template-import-wrapper">
 	<div class="tutor-template-import-area">
-		<div class="tutor-template-import-area-top tutor-d-flex tutor-flex-wrap tutor-justify-between tutor-gap-4 tutor-pb-20 tutor-my-24">
+		<div class="tutor-template-import-area-top tutor-d-flex tutor-flex-wrap tutor-justify-between tutor-gap-4 tutor-py-20 tutor-mb-28 tutor-divider-bottom">
 			<div class="tutor-template-import-area-left tutor-d-flex tutor-gap-1">
 				<div class="tutor-template-area-top-left-icon">
 					<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.667 11.666v10.667a4 4 0 0 0 4 4h5.666M3.667 11.667v-2a4 4 0 0 1 4-4h16.666a4 4 0 0 1 4 4v2m-24.666 0h9.666m0 14.666h11a4 4 0 0 0 4-4V11.667m-15 14.666V11.667m15 0h-15" stroke="#4B505C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -39,7 +40,7 @@
 					<div><?php esc_html_e( 'Themes', 'tutor' ); ?></div>
 				</div>
 				<ul class="tutor-template-preview-device-switcher">
-					<li class="active" data-device="desktop" data-width="1400px" data-height="100%">
+					<li class="active" data-device="desktop" data-width="1120px" data-height="100%">
 						<svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<path d="M2.6573 12.9234H17.3392C18.4991 12.9234 19.0902 12.3547 19.0902 11.1724V2.55183C19.0902 1.3695 18.4991 0.800781 17.3392 0.800781H2.6573C1.48993 0.800781 0.90625 1.3695 0.90625 2.55183V11.1724C0.90625 12.3547 1.48993 12.9234 2.6573 12.9234ZM2.67975 11.9955C2.10355 11.9955 1.83416 11.7411 1.83416 11.1499V2.5668C1.83416 1.98312 2.10355 1.72869 2.67975 1.72869H17.3167C17.8929 1.72869 18.1623 1.98312 18.1623 2.5668V11.1499C18.1623 11.7411 17.8929 11.9955 17.3167 11.9955H2.67975ZM6.339 15.1983H13.6575C13.9119 15.1983 14.1215 14.9963 14.1215 14.7418C14.1215 14.4799 13.9119 14.2704 13.6575 14.2704H6.339C6.07709 14.2704 5.86756 14.4799 5.86756 14.7418C5.86756 14.9963 6.07709 15.1983 6.339 15.1983Z" fill="#9197A8"/>
 						</svg>
@@ -116,4 +117,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 </div>
