@@ -10,7 +10,7 @@ function resizeIframe() {
 		if (scale > 0) {
 			iframe.style.transform = `scale(${scale})`;
 			iframe.style.transformOrigin = 'left top';
-			iframe.style.height = `${wrapper.offsetHeight / scale}px`;
+			iframe.style.height = `${100 / scale}%`;
 		}
 	} else {
 		iframe.style.transformOrigin = 'center top';
@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			tutorTemplateShimmerEffect.style.display = "none";
 			document.body.style.overflow = 'visible';
 			iframe.style.width = "1400px";
+			iframe.style.transformOrigin = "left top";
 			colorPresetBlock.style.display = "none";
 		}
 
