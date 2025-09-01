@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			const button = e.target.closest('.tutor-cart-remove-button');
 			if (button) {
 				const formData = tutorFormData([
-					{ action: 'tutor_delete_course_from_cart', course_id: button.dataset.courseId },
+					{ action: 'tutor_delete_course_from_cart', item_id: button.dataset.itemId },
 				]);
 
 				try {

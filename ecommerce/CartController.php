@@ -276,17 +276,17 @@ class CartController {
 		}
 
 		$user_id   = tutils()->get_user_id();
-		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$item_id = Input::post( 'item_id', 0, Input::TYPE_INT );
 
-		if ( ! $course_id ) {
+		if ( ! $item_id ) {
 			$this->json_response(
-				__( 'Invalid course id.', 'tutor' ),
+				__( 'Invalid item id.', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
 
-		$response = $this->model->delete_course_from_cart( $user_id, $course_id );
+		$response = $this->model->delete_course_from_cart( $user_id, $item_id );
 
 		if ( $response ) {
 			ob_start();
