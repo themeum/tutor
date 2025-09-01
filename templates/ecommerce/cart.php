@@ -100,7 +100,7 @@ $checkout_page_url = CheckoutController::get_page_url();
 										</div>
 										<?php endif; ?>
 									</div>
-									<button class="tutor-btn tutor-btn-link tutor-cart-remove-button" data-item-id="<?php echo esc_attr( $course->cart_item_id ); ?>">
+									<button class="tutor-btn tutor-btn-link tutor-cart-remove-button" data-course-id="<?php echo esc_attr( $course->ID ); ?>">
 										<?php esc_html_e( 'Remove', 'tutor' ); ?>
 									</button>
 								</div>

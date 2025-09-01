@@ -125,7 +125,7 @@ class CartModel {
 				),
 			);
 			$where                = array( 'item.cart_id' => $user_cart->id );
-			$select_columns       = array( 'post.*', 'item.id as cart_item_id' );
+			$select_columns       = array( 'post.*' );
 			$cart_data['courses'] = QueryHelper::get_joined_data(
 				$primary_table,
 				$joining_tables,
@@ -177,11 +177,11 @@ class CartModel {
 	 * @since 3.0.0
 	 *
 	 * @param int $user_id User ID.
-	 * @param int $item_id Course ID.
+	 * @param int $course_id Course ID.
 	 *
 	 * @return boolean True if the course was successfully deleted, otherwise false.
 	 */
-	public function delete_course_from_cart( $user_id, $item_id ) {
+	public function delete_course_from_cart( $user_id, $course_id ) {
 		global $wpdb;
 
 		$user_cart = QueryHelper::get_row(
@@ -195,8 +195,8 @@ class CartModel {
 		return QueryHelper::delete(
 			"{$wpdb->prefix}tutor_cart_items",
 			array(
-				'cart_id' => $user_cart->id,
-				'id'      => $item_id,
+				'cart_id'   => $user_cart->id,
+				'course_id' => $course_id,
 			)
 		);
 	}
