@@ -1,8 +1,28 @@
+function resizeIframe() {
+	const wrapper = document.querySelector('.tutor-template-preview-iframe-parent');
+	const iframe = wrapper.querySelector('.tutor-template-preview-iframe-parent iframe');
+	const activeSwitcher = document.querySelector('.tutor-template-preview-device-switcher li.active');
+
+	const designWidth = activeSwitcher.getAttribute('data-width') || 1400;
+	const containerWidth = wrapper.offsetWidth;
+	if (containerWidth < Number(designWidth)) {
+		const scale = containerWidth / Number(designWidth);
+		if (scale > 0) {
+			iframe.style.transform = `scale(${scale})`;
+			iframe.style.transformOrigin = 'left top';
+			iframe.style.height = `${100 / scale}%`;
+		}
+	} else {
+		iframe.style.transformOrigin = 'center top';
+	}
+}
+
+window.addEventListener('resize', resizeIframe);
+
 document.addEventListener('DOMContentLoaded', function () {
 	const templateDemoImportRoot = document.querySelector(".tutor-template-import-area");
 	const livePreviewModal = document.querySelector(".tutor-template-preview-modal");
-	const livePreviewModalOverlay = document.querySelector(".tutor-template-preview-modal-overlay");
-	const iframeWrapper = document.querySelector(".tutor-template-preview-iframe-wrapper");
+	const iframeParent = document.querySelector(".tutor-template-preview-iframe-parent");
 	const iframe = document.getElementById("tutor-template-preview-iframe");
 	const livePreviewCloseModal = document.querySelector(".tutor-template-preview-modal-back-link");
 	const deviceSwitchers = document.querySelectorAll(".tutor-template-preview-device-switcher li");
@@ -18,6 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (event.target.closest('.tutor-template-preview-btn')) {
 				document.body.style.overflow = 'hidden';
 				tutorTemplateShimmerEffect.style.display = "block";
+				iframeParent.classList.remove('tutor-divider');
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
 				tutorTemplateCourseDataUrl.value = event.target.dataset.template_course_data_url;
@@ -31,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		// Hide loading indicator when iframe is fully loaded
 		iframe.addEventListener('load', function () {
 			tutorTemplateShimmerEffect.style.display = "none";
+			iframeParent.classList.add('tutor-divider');
 		});
 
 		livePreviewCloseModal?.addEventListener("click", function () {
@@ -51,16 +73,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				removeActiveClassFromDeviceList(deviceSwitchers);
 				deviceSwitcher.classList.add("active");
 				let width = this.getAttribute("data-width");
-				let height = this.getAttribute("data-height");
-				let device = this.getAttribute("data-device");
-				iframe.style.width = width;
-				if ('desktop' !== device) {
-					iframe.style.transform = 'scale(0.8085714286)';
-					iframe.style.transformOrigin = 'center top';
-				} else {
-					iframe.style.transform = 'scale(0.8085714286)';
-					iframe.style.transformOrigin = wp.i18n.isRTL() ? 'right top' : 'left top';
-				}
+				iframe.style.width = width + 'px';
+				resizeIframe();
 			});
 		});
 
@@ -73,6 +87,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			tutorTemplateShimmerEffect.style.display = "none";
 			document.body.style.overflow = 'visible';
 			iframe.style.width = "1400px";
+			iframe.style.transformOrigin = "left top";
 			colorPresetBlock.style.display = "none";
 		}
 
@@ -91,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.addEventListener("DOMContentLoaded", () => {
 		// Wait for the iframe to load before interacting with it
 		iframe.addEventListener("load", () => {
+			resizeIframe();
 			window.addEventListener("message", handleMessage);
 			const effect2 = document.querySelector('.tutor-template-preview-import-area .tutor-template-shimmer-effect-2');
 			effect2.style.display = 'none';
