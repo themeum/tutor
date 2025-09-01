@@ -634,21 +634,17 @@ class QueryHelper {
 	 *
 	 * @since 3.8.0
 	 *
-	 * @param int $per_page per page.
-	 * @param int $page page number.
+	 * @param int $limit limit.
+	 * @param int $offset offset.
 	 *
 	 * @return string
 	 */
-	protected static function prepare_limit_clause( $per_page = 0, $page = 1 ) {
-		$page     = max( 1, (int) $page );
-		$per_page = max( 0, (int) $per_page );
-
-		if ( ! $per_page ) {
+	protected static function prepare_limit_clause( int $limit = 0, int $offset = 0 ) {
+		if ( $limit < 1 || $offset < 0 ) {
 			return '';
 		}
 
-		$offset = ( $page - 1 ) * $per_page;
-		return sprintf( 'LIMIT %d, %d', $offset, $per_page );
+		return sprintf( 'LIMIT %d OFFSET %d', $limit, $offset );
 	}
 
 	/**
@@ -672,14 +668,16 @@ class QueryHelper {
 	 *     @type string       $having   HAVING clause.
 	 *     @type string       $orderby  Column to order by.
 	 *     @type string       $order    ASC|DESC, default DESC.
+	 *     @type int          $limit    Limit.
+	 *     @type int          $offset   Offset.
 	 *     @type int          $per_page Results per page for pagination.
-	 *     @type int          $page     Current page number.
+	 *     @type int          $page     Current page number for pagination.
 	 *     @type bool         $count    If true, return only total count.
 	 *     @type bool         $single   If true, return only single row.
 	 *     @type string       $output   OBJECT|ARRAY_A default is OBJECT.
 	 * }
 	 *
-	 * @return mixed
+	 * @return mixed          Result set, count or single row.
 	 */
 	public static function query( $table, $args = array() ) {
 		// Flags.
@@ -730,7 +728,15 @@ class QueryHelper {
 		}
 
 		$calc_found_rows = $pagination ? 'SQL_CALC_FOUND_ROWS' : '';
-		$limit_clause    = $pagination ? self::prepare_limit_clause( $args['per_page'], $args['page'] ) : '';
+		$limit           = isset( $args['limit'] ) ? (int) $args['limit'] : 0;
+		$offset          = isset( $args['offset'] ) ? (int) $args['offset'] : 0;
+
+		if ( $pagination ) {
+			$limit  = (int) $args['per_page'];
+			$offset = (int) ( $args['page'] - 1 ) * $limit;
+		}
+
+		$limit_clause = self::prepare_limit_clause( $limit, $offset );
 
 		$sql_query = "SELECT {$calc_found_rows} {$select_clause} 
 					FROM {$table_with_alias} 
