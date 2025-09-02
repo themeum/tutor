@@ -68,7 +68,7 @@ $checkout_page_url = CheckoutController::get_page_url();
 								</div>
 								<div class="tutor-cart-course-title">
 									<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
-										<?php do_action( 'tutor_cart_course_item_badges', $course ); ?>
+										<?php do_action( 'tutor_cart_item_badge', $course ); ?>
 									</div>
 									<h5 class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 										<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">

@@ -82,7 +82,7 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 							?>
 							<div class="tutor-checkout-course-item" data-course-id="<?php echo esc_attr( $item->item_id ); ?>">
 								<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
-									<?php do_action( 'tutor_checkout_course_item_badges', $course ); ?>
+									<?php do_action( 'tutor_cart_item_badge', $course ); ?>
 								</div>
 								<div class="tutor-checkout-course-content">
 									<div class="tutor-d-flex tutor-flex-column tutor-gap-1">
