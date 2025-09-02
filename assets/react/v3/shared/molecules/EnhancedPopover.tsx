@@ -150,11 +150,11 @@ const styles = {
     }
   `,
   content: css`
-    background-color: ${colorTokens.stroke.white};
+    background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
     ::-webkit-scrollbar {
-      background-color: ${colorTokens.stroke.white};
+      background-color: ${colorTokens.background.white};
       width: 10px;
     }
     ::-webkit-scrollbar-thumb {
