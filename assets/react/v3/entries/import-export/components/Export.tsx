@@ -142,8 +142,9 @@ const Export = () => {
         onClose: () => {
           const newUrl = new URL(url);
           newUrl.searchParams.set('download', 'false'); // this will delete the generated download link and file
-          fetch(newUrl);
-          closeModal();
+          fetch(newUrl).then(() => {
+            closeModal();
+          });
         },
         onDownload: () => {
           const url = exportContentResponse.download_url.replace(/&amp;/g, '&');
