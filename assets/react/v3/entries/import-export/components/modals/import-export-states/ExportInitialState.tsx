@@ -241,7 +241,7 @@ const ExportInitialState = ({
 
         <Show
           when={
-            (exportableContent || []).some((item) => ['keep_media_files', 'keep_user_data'].includes(item.key)) &&
+            (exportableContent || []).some((item) => item.key === 'keep_media_files') &&
             (form.getValues('courses') || form.getValues('course-bundle') || form.getValues('content_bank'))
           }
         >
@@ -262,7 +262,14 @@ const ExportInitialState = ({
               )}
             />
           </div>
+        </Show>
 
+        <Show
+          when={
+            (exportableContent || []).some((item) => item.key === 'keep_user_data') &&
+            (form.getValues('courses') || form.getValues('course-bundle'))
+          }
+        >
           <div css={styles.contentCheckboxFooter}>
             <Controller
               control={form.control}
@@ -352,7 +359,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[8]};
-    min-height: 30px;
+    min-height: 32px;
 
     button {
       flex-shrink: 0;
