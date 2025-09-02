@@ -109,7 +109,7 @@ const styles = {
             css`
               border-left: 8px solid transparent;
               border-right: 8px solid transparent;
-              border-top: 8px solid ${colorTokens.surface.tutor};
+              border-top: 8px solid ${colorTokens.stroke.white};
               border-bottom: none;
               left: ${arrowLeft !== undefined ? `${arrowLeft}px` : '50%'};
               bottom: -8px;
@@ -119,7 +119,7 @@ const styles = {
             css`
               border-left: 8px solid transparent;
               border-right: 8px solid transparent;
-              border-bottom: 8px solid ${colorTokens.surface.tutor};
+              border-bottom: 8px solid ${colorTokens.stroke.white};
               border-top: none;
               left: ${arrowLeft !== undefined ? `${arrowLeft}px` : '50%'};
               top: -8px;
@@ -129,7 +129,7 @@ const styles = {
             css`
               border-top: 8px solid transparent;
               border-bottom: 8px solid transparent;
-              border-left: 8px solid ${colorTokens.surface.tutor};
+              border-left: 8px solid ${colorTokens.stroke.white};
               border-right: none;
               right: -8px;
               top: ${arrowTop !== undefined ? `${arrowTop}px` : '50%'};
@@ -139,7 +139,7 @@ const styles = {
             css`
               border-top: 8px solid transparent;
               border-bottom: 8px solid transparent;
-              border-right: 8px solid ${colorTokens.surface.tutor};
+              border-right: 8px solid ${colorTokens.stroke.white};
               border-left: none;
               left: -8px;
               top: ${arrowTop !== undefined ? `${arrowTop}px` : '50%'};
@@ -150,11 +150,11 @@ const styles = {
     }
   `,
   content: css`
-    background-color: ${colorTokens.surface.tutor};
+    background-color: ${colorTokens.stroke.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
     ::-webkit-scrollbar {
-      background-color: ${colorTokens.surface.tutor};
+      background-color: ${colorTokens.stroke.white};
       width: 10px;
     }
     ::-webkit-scrollbar-thumb {
