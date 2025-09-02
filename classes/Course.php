@@ -3114,6 +3114,10 @@ class Course extends Tutor_Base {
 		$info['course_duration'] = tutor_utils()->get_course_duration( $post->ID, false );
 		$info['total_enrolled']  = tutor_utils()->count_enrolled_users_by_course( $post->ID );
 
+		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
+			$info['course_duration'] = BundleModel::get_bundle_course_duration( $post->ID );
+		}
+
 		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
 
 		return $card_data;

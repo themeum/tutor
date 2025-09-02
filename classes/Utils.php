@@ -8774,9 +8774,9 @@ class Utils {
 		's' => 'sec',
 	) ) {
 		$duration        = maybe_unserialize( get_post_meta( $course_id, '_course_duration', true ) );
-		$durationHours   = $this->avalue_dot( 'hours', $duration );
-		$durationMinutes = $this->avalue_dot( 'minutes', $duration );
-		$durationSeconds = $this->avalue_dot( 'seconds', $duration );
+		$durationHours   = $this->avalue_dot( 'hours', $duration ) ?: 0;
+		$durationMinutes = $this->avalue_dot( 'minutes', $duration ) ?: 0;
+		$durationSeconds = $this->avalue_dot( 'seconds', $duration ) ?: 0;
 
 		if ( $return_array ) {
 			return array(
