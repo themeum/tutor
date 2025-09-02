@@ -555,14 +555,18 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_now() {
-		tutor_utils()->check_nonce();
 		global $wpdb;
-
-		$errors     = array();
-		$order_data = null;
-
-		$billing_model   = new BillingModel();
+		$errors          = array();
+		$order_data      = null;
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
+
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			array_push( $errors, 'Fishy!, security verification failed' );
+			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'nonce_alert' . $current_user_id, $errors );
+			return;
+		}
+
+		$billing_model = new BillingModel();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );

@@ -44,6 +44,19 @@ $is_checkout_page = true;
 	}
 	?>
 
+	<!-- alert if nonce failed -->
+	<?php
+	$nonce_alert = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'nonce_alert' . $user_id );
+	if ( $nonce_alert ) {
+		?>
+		<div class="tutor-alert tutor-danger">
+			<div class="tutor-color-danger"><?php echo esc_html( $nonce_alert[0] ); ?></div>
+		</div>
+	<?php
+		delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'nonce_alert' . $user_id );
+	}
+	?>
+
 	<form method="post" id="tutor-checkout-form">
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
@@ -71,7 +84,7 @@ $is_checkout_page = true;
 							</div>
 					<?php } ?>
 
-						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
+						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12 tutor-mt-0">
 							<?php
 							$address_title = __( 'Billing Address', 'tutor' );
 							if ( ! is_user_logged_in() ) {
