@@ -140,11 +140,10 @@ const Export = () => {
         message: exportContentResponse?.message || '',
         completedContents: exportContentResponse?.completed_contents,
         onClose: () => {
+          closeModal();
           const newUrl = new URL(url);
           newUrl.searchParams.set('download', 'false'); // this will delete the generated download link and file
-          fetch(newUrl).then(() => {
-            closeModal();
-          });
+          fetch(newUrl);
         },
         onDownload: () => {
           const url = exportContentResponse.download_url.replace(/&amp;/g, '&');
