@@ -1017,7 +1017,7 @@ class QueryHelper {
 		$join_clauses    = self::prepare_join_clause( $joining_tables );
 		$where_clause    = self::prepare_where_search_clause( $where, $search );
 		$order_by_clause = self::prepare_order_clause( $order_by, $order );
-		$limit_clause    = ( empty( $limit ) && empty( $offset ) ) ? '' : $wpdb->prepare( 'LIMIT %d OFFSET %d', $limit, $offset );
+		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
 
 		$query = "SELECT SQL_CALC_FOUND_ROWS 
 				{$select_clause}
@@ -1139,34 +1139,25 @@ class QueryHelper {
 	public static function get_all_with_search( string $table, array $where, array $search, string $order_by, $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT' ): array {
 		global $wpdb;
 
-		$table         = self::prepare_table_name( $table );
-		$where_clause  = self::prepare_where_search_clause( $where, $search, 'AND' );
-	
-		// Query to get total count
-		$count_query = "
-			SELECT COUNT(*)
-			FROM {$table}
-			{$where_clause}
-		";
-
-		$total_count = $wpdb->get_var( $count_query );
+		$table           = self::prepare_table_name( $table );
+		$where_clause    = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
+		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
 	
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		}
 	
-		$query = $wpdb->prepare(
-			"SELECT *
+		$query = "SELECT SQL_CALC_FOUND_ROWS *
 			 FROM {$table}
 			 {$where_clause}
-			 ORDER BY {$order_by} {$order}
-			 LIMIT %d OFFSET %d",
-			$limit,
-			$offset
-		);
+			 {$order_by_clause}
+			 {$limit_clause}";
 	
-		$results = $wpdb->get_results( $query, $output );
+		$results     = $wpdb->get_results( $query, $output );
+		$has_records = is_array( $results ) && count( $results );
+		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 	
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -1175,8 +1166,8 @@ class QueryHelper {
 	
 		// Prepare response array.
 		$response = array(
-			'results' => $results,
-			'total_count' => (int) $total_count,
+			'results'     => $results,
+			'total_count' => $total_count,
 		);
 	
 		return $response;
