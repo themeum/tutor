@@ -191,8 +191,10 @@ export interface ImportExportContentResponseBase {
 }
 
 export interface ExportContentResponse extends ImportExportContentResponseBase {
-  download_url: string;
-  file_size: number;
+  export_file: {
+    url: string;
+    file_size: number;
+  };
   exported_data: string;
 }
 const exportContents = async (payload: ExportContentPayload) => {

@@ -252,7 +252,7 @@ const ImportExportCompletedState = ({
                 <div css={styles.fileName} title={fileName}>
                   {fileName}
                 </div>
-                <div css={styles.fileSize}>{formatBytes(fileSize || 0)}</div>
+                <div css={styles.fileSize}>{fileSize || formatBytes(0)}</div>
               </div>
 
               <div>

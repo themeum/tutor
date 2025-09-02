@@ -132,11 +132,11 @@ const Export = () => {
     }
 
     if (progress === 100 && exportContentResponse?.exported_data) {
-      const url = exportContentResponse.download_url.replace(/&amp;/g, '&');
+      const url = exportContentResponse?.export_file?.url;
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
         progress: 100,
-        fileSize: exportContentResponse.file_size || 0,
+        fileSize: exportContentResponse?.export_file?.file_size || 0,
         message: exportContentResponse?.message || '',
         completedContents: exportContentResponse?.completed_contents,
         onClose: () => {
@@ -146,7 +146,7 @@ const Export = () => {
           fetch(newUrl);
         },
         onDownload: () => {
-          const url = exportContentResponse.download_url.replace(/&amp;/g, '&');
+          const url = exportContentResponse?.export_file?.url;
           const a = document.createElement('a');
           a.href = url;
           document.body.appendChild(a);
