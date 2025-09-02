@@ -191,14 +191,9 @@ export interface ImportExportContentResponseBase {
 }
 
 export interface ExportContentResponse extends ImportExportContentResponseBase {
-  exported_data: {
-    schema_version: string;
-    data: {
-      content_type: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data: Record<string, any>;
-    }[];
-  };
+  download_url: string;
+  file_size: number;
+  exported_data: string;
 }
 const exportContents = async (payload: ExportContentPayload) => {
   return wpAjaxInstance

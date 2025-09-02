@@ -132,24 +132,26 @@ const Export = () => {
     }
 
     if (progress === 100 && exportContentResponse?.exported_data) {
+      const url = exportContentResponse.download_url.replace(/&amp;/g, '&');
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
         progress: 100,
-        fileSize: JSON.stringify(exportContentResponse?.exported_data).length,
+        fileSize: exportContentResponse.file_size || 0,
         message: exportContentResponse?.message || '',
         completedContents: exportContentResponse?.completed_contents,
-        onDownload: (fileName) => {
-          const jsonFile = new Blob([JSON.stringify(exportContentResponse?.exported_data)], {
-            type: 'application/json',
-          });
-          const url = URL.createObjectURL(jsonFile);
+        onClose: () => {
+          const newUrl = new URL(url);
+          newUrl.searchParams.set('download', 'false'); // this will delete the generated download link and file
+          fetch(newUrl);
+          closeModal();
+        },
+        onDownload: () => {
+          const url = exportContentResponse.download_url.replace(/&amp;/g, '&');
           const a = document.createElement('a');
           a.href = url;
-          a.download = fileName;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-          URL.revokeObjectURL(url);
         },
       });
     }
