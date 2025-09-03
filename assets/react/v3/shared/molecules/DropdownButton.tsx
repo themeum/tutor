@@ -9,8 +9,8 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { typography } from '@TutorShared/config/typography';
-import { type arrowPosition } from '@TutorShared/hooks/usePortalPopover';
-import Popover from './Popover';
+import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import EnhancedPopover from './EnhancedPopover';
 
 interface DropdownOptionProps {
   type?: 'button' | 'submit';
@@ -53,7 +53,7 @@ interface DropdownButtonProps {
   text: string | ReactNode;
   children: ReactNode;
   variant?: ButtonVariant;
-  arrowPosition?: arrowPosition;
+  placement?: PopoverPlacement;
   animationType?: AnimationType;
   type?: 'submit' | 'button';
   size?: ButtonSize;
@@ -74,7 +74,7 @@ const DropdownButton = ({
   text,
   children,
   variant = 'primary',
-  arrowPosition = 'top',
+  placement = POPOVER_PLACEMENTS.BOTTOM_RIGHT,
   animationType = AnimationType.slideUp,
   size = 'regular',
   icon,
@@ -169,15 +169,15 @@ const DropdownButton = ({
           <SVGIcon name="chevronDown" width={24} height={24} />
         </button>
       </div>
-      <Popover
+      <EnhancedPopover
         gap={4}
         maxWidth={dropdownMaxWidth}
-        arrow={arrowPosition}
+        placement={placement}
         triggerRef={dropdownTriggerRef}
         isOpen={isOpen}
         closePopover={() => setIsOpen(false)}
         animationType={animationType}
-        hideArrow
+        arrow={false}
       >
         <div css={styles.dropdownWrapper}>
           {React.Children.map(children, (child) => {
@@ -195,7 +195,7 @@ const DropdownButton = ({
             return child;
           })}
         </div>
-      </Popover>
+      </EnhancedPopover>
     </>
   );
 };
