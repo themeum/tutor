@@ -11,7 +11,6 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
-import Popover from '@TutorShared/molecules/Popover';
 
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
@@ -35,7 +34,9 @@ import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/con
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { ID, TopicContentType } from '@TutorShared/utils/types';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
@@ -359,14 +360,14 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           </Tooltip>
         </div>
       </div>
-      <Popover
+      <EnhancedPopover
         triggerRef={editButtonRef}
         isOpen={meetingType !== null}
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
+        arrow={false}
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
@@ -380,7 +381,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
         <Show when={meetingType === 'tutor-google-meet'}>
           <GoogleMeetForm data={null} topicId={topicId} onCancel={() => setMeetingType(null)} meetingId={contentId} />
         </Show>
-      </Popover>
+      </EnhancedPopover>
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         isLoading={
