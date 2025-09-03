@@ -12,7 +12,6 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import Show from '@TutorShared/controls/Show';
 
 import { useFileUploader } from '@TutorShared/molecules/FileUploader';
-import Popover from '@TutorShared/molecules/Popover';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
@@ -29,6 +28,8 @@ import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
@@ -371,14 +372,14 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
 
       <input css={styles.input} type="file" ref={fileInputRef} onChange={handleChange} multiple={false} accept=".csv" />
 
-      <Popover
+      <EnhancedPopover
         triggerRef={triggerGoogleMeetRef}
         isOpen={meetingType === 'tutor-google-meet'}
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
+        arrow={false}
       >
         <GoogleMeetForm
           topicId={topicId}
@@ -388,15 +389,15 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             setIsThreeDotOpen(false);
           }}
         />
-      </Popover>
-      <Popover
+      </EnhancedPopover>
+      <EnhancedPopover
         triggerRef={triggerZoomRef}
         isOpen={meetingType === 'tutor_zoom_meeting'}
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
+        arrow={false}
       >
         <ZoomMeetingForm
           topicId={topicId}
@@ -407,7 +408,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             setIsThreeDotOpen(false);
           }}
         />
-      </Popover>
+      </EnhancedPopover>
     </>
   );
 };
