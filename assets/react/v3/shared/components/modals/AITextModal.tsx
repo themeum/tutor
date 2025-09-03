@@ -12,7 +12,6 @@ import {
 import Button from '@TutorShared/atoms/Button';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import { OptionList } from '@TutorShared/components/magic-ai-content/OptionList';
@@ -40,6 +39,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { copyToClipboard } from '@TutorShared/utils/util';
 
 import { isRTL } from '@TutorShared/config/constants';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
 
@@ -321,7 +321,7 @@ const AITextModal = <T extends FieldValues>({
             </Show>
           </Show>
         </div>
-        <Popover
+        <EnhancedPopover
           isOpen={popover === 'tone'}
           triggerRef={toneRef}
           closePopover={() => setPopover(null)}
@@ -335,8 +335,8 @@ const AITextModal = <T extends FieldValues>({
               await handleContentModification('change_tone', value);
             }}
           />
-        </Popover>
-        <Popover
+        </EnhancedPopover>
+        <EnhancedPopover
           isOpen={popover === 'translate'}
           triggerRef={translateRef}
           closePopover={() => setPopover(null)}
@@ -350,7 +350,7 @@ const AITextModal = <T extends FieldValues>({
               await handleContentModification('translation', value);
             }}
           />
-        </Popover>
+        </EnhancedPopover>
         <div css={styles.footer}>
           <Show
             when={content.length > 0}
