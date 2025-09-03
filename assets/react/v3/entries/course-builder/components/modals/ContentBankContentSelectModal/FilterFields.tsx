@@ -5,7 +5,6 @@ import { useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -14,6 +13,7 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type IconCollection } from '@TutorShared/icons/types';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestionType } from '@TutorShared/utils/types';
 
@@ -139,9 +139,8 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
         <div>
           <Button
             variant="tertiary"
-            size="small"
+            isIconOnly
             icon={<SVGIcon name={order === 'asc' ? 'sortASC' : 'sortDESC'} width={18} height={18} />}
-            buttonCss={styles.sortButton}
             onClick={() => {
               const newOrder = order === 'asc' ? 'desc' : 'asc';
               form.setValue('order', newOrder);
@@ -152,11 +151,10 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
         </div>
       </div>
 
-      <Popover
+      <EnhancedPopover
         isOpen={isFiltersPopoverOpen}
         closeOnEscape
-        hideArrow
-        arrow="top"
+        arrow={false}
         animationType={AnimationType.slideDown}
         closePopover={() => {
           form.reset();
@@ -204,7 +202,7 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
             </Button>
           </div>
         </div>
-      </Popover>
+      </EnhancedPopover>
     </>
   );
 };
@@ -225,12 +223,6 @@ const styles = {
     css`
       padding-right: ${spacing[6]};
     `}
-  `,
-  sortButton: css`
-    flex-shrink: 0;
-    padding: ${spacing[10]} ${spacing[12]};
-    background-color: ${colorTokens.background.white};
-    color: ${colorTokens.icon.default};
   `,
   clearButton: css`
     flex-shrink: 0;
