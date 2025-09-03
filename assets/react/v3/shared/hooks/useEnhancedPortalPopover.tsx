@@ -331,7 +331,19 @@ const calculateArrowPosition = (
   return {};
 };
 
-// Main hook
+const clampPositionToBoundaries = (
+  position: { top: number; left: number },
+  dimensions: Dimensions,
+  margin: number = POPOVER_BOUNDARY_MARGIN,
+): { top: number; left: number } => {
+  const { width, height } = dimensions;
+
+  return {
+    left: Math.max(margin, Math.min(window.innerWidth - width - margin, position.left)),
+    top: Math.max(margin, Math.min(window.innerHeight - height - margin, position.top)),
+  };
+};
+
 export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLElement>({
   isOpen,
   triggerRef: popoverTriggerRef,
@@ -382,6 +394,8 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
       finalPlacement = adjusted.placement;
     }
 
+    calculatedPosition = clampPositionToBoundaries(calculatedPosition, dimensions);
+
     const arrowPosition = arrow
       ? calculateArrowPosition(finalPlacement, triggerRect, calculatedPosition, dimensions)
       : {};
@@ -397,7 +411,6 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
   return { position, triggerWidth, triggerRef, popoverRef };
 };
 
-// Portal component
 let portalCount = 0;
 
 export const Portal = ({
