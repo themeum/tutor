@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
-import Popover from '@TutorShared/molecules/Popover';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -18,6 +18,7 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
+
 import ZoomMeetingForm from './ZoomMeetingForm';
 
 interface ZoomMeetingCardProps {
@@ -144,7 +145,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
           </div>
         </div>
       </div>
-      <Popover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
+      <EnhancedPopover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
         <ZoomMeetingForm
           data={data}
           meetingHost={meetingHost}
@@ -153,7 +154,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
             setIsOpen(false);
           }}
         />
-      </Popover>
+      </EnhancedPopover>
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         triggerRef={deleteRef}
