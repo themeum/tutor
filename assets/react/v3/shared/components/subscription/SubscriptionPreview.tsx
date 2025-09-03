@@ -153,8 +153,13 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
         >
           <SortableContext items={subscriptionFields} strategy={verticalListSortingStrategy}>
             <For each={subscriptionFields}>
-              {(subscription, index) => (
-                <PreviewItem key={index} subscription={subscription} courseId={courseId} isBundle={isBundle} />
+              {(subscription) => (
+                <PreviewItem
+                  key={subscription.id}
+                  subscription={subscription}
+                  courseId={courseId}
+                  isBundle={isBundle}
+                />
               )}
             </For>
           </SortableContext>

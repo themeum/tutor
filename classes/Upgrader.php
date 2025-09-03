@@ -251,6 +251,8 @@ class Upgrader {
 					payload LONGTEXT,
 					created_at_gmt DATETIME,
 					updated_at_gmt DATETIME,
+					scheduled_by BIGINT UNSIGNED COMMENT 'User who scheduled the action',
+					scheduled_for BIGINT UNSIGNED COMMENT 'Target user of the scheduled action',
 					PRIMARY KEY (id),
 					KEY idx_context_status (type, status),
 					KEY idx_status (status),
