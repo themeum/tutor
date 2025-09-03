@@ -317,7 +317,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.8.0 - Aug 28, 2025
+= 3.8.0 - Sep 04, 2025
 
 Coming soon...
 
