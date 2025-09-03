@@ -136,6 +136,7 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
         progress: 100,
+        fileName: exportContentResponse?.exported_data,
         fileSize: exportContentResponse?.export_file?.file_size || 0,
         message: exportContentResponse?.message || '',
         completedContents: exportContentResponse?.completed_contents,
