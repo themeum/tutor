@@ -35,7 +35,7 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
 import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
@@ -411,10 +411,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           maxWidth={'240px'}
           placement={
             CURRENT_VIEWPORT.isAboveTablet
-              ? PLACEMENTS.BOTTOM
+              ? POPOVER_PLACEMENTS.BOTTOM
               : CURRENT_VIEWPORT.isAboveMobile
-                ? PLACEMENTS.RIGHT
-                : PLACEMENTS.ABSOLUTE_CENTER
+                ? POPOVER_PLACEMENTS.RIGHT
+                : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
           }
           triggerRef={addButtonRef}
           isOpen={isOpen}

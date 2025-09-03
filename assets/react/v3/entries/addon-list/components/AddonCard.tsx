@@ -7,7 +7,8 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import Popover from '@TutorShared/molecules/Popover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useAddonContext } from '../contexts/addon-context';
@@ -119,14 +120,14 @@ function AddonCard({ addon }: { addon: Addon }) {
         </div>
         <div css={styles.addonDescription}>{addon.description}</div>
       </div>
-      <Popover
+      <EnhancedPopover
         triggerRef={popoverRef}
         isOpen={isOpen}
         closePopover={() => setIsOpen(false)}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
-        arrow="auto"
-        hideArrow
+        placement={POPOVER_PLACEMENTS.BOTTOM}
+        arrow={false}
       >
         <Show
           when={!addon.required_settings}
@@ -142,7 +143,7 @@ function AddonCard({ addon }: { addon: Addon }) {
             }}
           />
         </Show>
-      </Popover>
+      </EnhancedPopover>
     </div>
   );
 }

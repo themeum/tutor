@@ -7,7 +7,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import EnhancedPopover from './EnhancedPopover';
@@ -79,7 +79,7 @@ const ThreeDots = ({
   isOpen,
   disabled = false,
   closePopover,
-  placement = PLACEMENTS.BOTTOM_RIGHT,
+  placement = POPOVER_PLACEMENTS.BOTTOM_RIGHT,
   children,
   animationType = AnimationType.slideLeft,
   dotsOrientation = 'horizontal',

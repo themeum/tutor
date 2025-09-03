@@ -1,6 +1,6 @@
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
@@ -26,7 +26,7 @@ const meta = {
     },
     placement: {
       control: 'select',
-      options: Object.values(PLACEMENTS),
+      options: Object.values(POPOVER_PLACEMENTS),
       description: 'Arrow position for popover.',
       defaultValue: 'top',
     },
@@ -83,7 +83,7 @@ const meta = {
   },
   args: {
     isOpen: false,
-    placement: PLACEMENTS.BOTTOM_RIGHT,
+    placement: POPOVER_PLACEMENTS.BOTTOM_RIGHT,
     animationType: AnimationType.slideUp,
     dotsOrientation: 'horizontal',
     maxWidth: '148px',

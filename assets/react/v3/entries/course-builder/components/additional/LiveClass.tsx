@@ -8,7 +8,7 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import EmptyState from '@TutorShared/molecules/EmptyState';
-import Popover from '@TutorShared/molecules/Popover';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -31,6 +31,7 @@ import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 import liveClassPro2x from '@SharedImages/pro-placeholders/live-class-2x.webp';
 import liveClassPro from '@SharedImages/pro-placeholders/live-class.webp';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -167,14 +168,14 @@ const LiveClass = () => {
         </Show>
       </Show>
 
-      <Popover
+      <EnhancedPopover
         triggerRef={zoomButtonRef}
         isOpen={showMeetingForm === 'zoom'}
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
+        arrow={false}
       >
         <ZoomMeetingForm
           data={null}
@@ -183,15 +184,15 @@ const LiveClass = () => {
             setShowMeetingForm(null);
           }}
         />
-      </Popover>
-      <Popover
+      </EnhancedPopover>
+      <EnhancedPopover
         triggerRef={googleMeetButtonRef}
         isOpen={showMeetingForm === 'google_meet'}
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
+        arrow={false}
       >
         <GoogleMeetForm
           data={null}
@@ -199,7 +200,7 @@ const LiveClass = () => {
             setShowMeetingForm(null);
           }}
         />
-      </Popover>
+      </EnhancedPopover>
     </div>
   );
 };

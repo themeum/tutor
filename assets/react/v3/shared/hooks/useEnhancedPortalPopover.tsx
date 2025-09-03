@@ -18,7 +18,7 @@ const ARROW_CONFIG = {
 
 const POPOVER_BOUNDARY_MARGIN = 4;
 
-export const PLACEMENTS = {
+export const POPOVER_PLACEMENTS = {
   TOP: 'top',
   TOP_LEFT: 'topLeft',
   TOP_RIGHT: 'topRight',
@@ -35,7 +35,7 @@ export const PLACEMENTS = {
   ABSOLUTE_CENTER: 'absoluteCenter',
 } as const;
 
-export type PopoverPlacement = (typeof PLACEMENTS)[keyof typeof PLACEMENTS];
+export type PopoverPlacement = (typeof POPOVER_PLACEMENTS)[keyof typeof POPOVER_PLACEMENTS];
 
 interface PopoverPosition {
   left: number;
@@ -109,69 +109,69 @@ const calculatePositionForPlacement = (
   const centerY = triggerRect.top + triggerRect.height / 2 - height / 2;
 
   const positionMap: Record<PopoverPlacement, { top: number; left: number }> = {
-    [PLACEMENTS.TOP]: {
+    [POPOVER_PLACEMENTS.TOP]: {
       top: triggerRect.top - height - gap,
       left: centerX,
     },
-    [PLACEMENTS.TOP_LEFT]: {
+    [POPOVER_PLACEMENTS.TOP_LEFT]: {
       top: triggerRect.top - height - gap,
       left: triggerRect.left,
     },
-    [PLACEMENTS.TOP_RIGHT]: {
+    [POPOVER_PLACEMENTS.TOP_RIGHT]: {
       top: triggerRect.top - height - gap,
       left: triggerRect.right - width,
     },
 
-    [PLACEMENTS.BOTTOM]: {
+    [POPOVER_PLACEMENTS.BOTTOM]: {
       top: triggerRect.bottom + gap,
       left: centerX,
     },
-    [PLACEMENTS.BOTTOM_LEFT]: {
+    [POPOVER_PLACEMENTS.BOTTOM_LEFT]: {
       top: triggerRect.bottom + gap,
       left: triggerRect.left,
     },
-    [PLACEMENTS.BOTTOM_RIGHT]: {
+    [POPOVER_PLACEMENTS.BOTTOM_RIGHT]: {
       top: triggerRect.bottom + gap,
       left: triggerRect.right - width,
     },
 
-    [PLACEMENTS.LEFT]: {
+    [POPOVER_PLACEMENTS.LEFT]: {
       top: centerY,
       left: triggerRect.left - width - gap,
     },
-    [PLACEMENTS.LEFT_TOP]: {
+    [POPOVER_PLACEMENTS.LEFT_TOP]: {
       top: triggerRect.top,
       left: triggerRect.left - width - gap,
     },
-    [PLACEMENTS.LEFT_BOTTOM]: {
+    [POPOVER_PLACEMENTS.LEFT_BOTTOM]: {
       top: triggerRect.bottom - height,
       left: triggerRect.left - width - gap,
     },
 
-    [PLACEMENTS.RIGHT]: {
+    [POPOVER_PLACEMENTS.RIGHT]: {
       top: centerY,
       left: triggerRect.right + gap,
     },
-    [PLACEMENTS.RIGHT_TOP]: {
+    [POPOVER_PLACEMENTS.RIGHT_TOP]: {
       top: triggerRect.top,
       left: triggerRect.right + gap,
     },
-    [PLACEMENTS.RIGHT_BOTTOM]: {
+    [POPOVER_PLACEMENTS.RIGHT_BOTTOM]: {
       top: triggerRect.bottom - height,
       left: triggerRect.right + gap,
     },
 
-    [PLACEMENTS.MIDDLE]: {
+    [POPOVER_PLACEMENTS.MIDDLE]: {
       top: centerY,
       left: centerX,
     },
-    [PLACEMENTS.ABSOLUTE_CENTER]: {
+    [POPOVER_PLACEMENTS.ABSOLUTE_CENTER]: {
       top: window.innerHeight / 2 - height / 2,
       left: window.innerWidth / 2 - width / 2,
     },
   };
 
-  const position = positionMap[placement] || positionMap[PLACEMENTS.BOTTOM];
+  const position = positionMap[placement] || positionMap[POPOVER_PLACEMENTS.BOTTOM];
   return {
     top: position.top + modTop,
     left: position.left + modLeft,
@@ -248,20 +248,20 @@ const adjustPositionForOverflow = (
   modifier: { top: number; left: number },
 ): { position: { top: number; left: number }; placement: PopoverPlacement } => {
   const oppositeMapping = {
-    [PLACEMENTS.TOP]: PLACEMENTS.BOTTOM,
-    [PLACEMENTS.TOP_LEFT]: PLACEMENTS.BOTTOM_LEFT,
-    [PLACEMENTS.TOP_RIGHT]: PLACEMENTS.BOTTOM_RIGHT,
-    [PLACEMENTS.BOTTOM]: PLACEMENTS.TOP,
-    [PLACEMENTS.BOTTOM_LEFT]: PLACEMENTS.TOP_LEFT,
-    [PLACEMENTS.BOTTOM_RIGHT]: PLACEMENTS.TOP_RIGHT,
-    [PLACEMENTS.LEFT]: PLACEMENTS.RIGHT,
-    [PLACEMENTS.LEFT_TOP]: PLACEMENTS.RIGHT_TOP,
-    [PLACEMENTS.LEFT_BOTTOM]: PLACEMENTS.RIGHT_BOTTOM,
-    [PLACEMENTS.RIGHT]: PLACEMENTS.LEFT,
-    [PLACEMENTS.RIGHT_TOP]: PLACEMENTS.LEFT_TOP,
-    [PLACEMENTS.RIGHT_BOTTOM]: PLACEMENTS.LEFT_BOTTOM,
-    [PLACEMENTS.MIDDLE]: PLACEMENTS.MIDDLE,
-    [PLACEMENTS.ABSOLUTE_CENTER]: PLACEMENTS.ABSOLUTE_CENTER,
+    [POPOVER_PLACEMENTS.TOP]: POPOVER_PLACEMENTS.BOTTOM,
+    [POPOVER_PLACEMENTS.TOP_LEFT]: POPOVER_PLACEMENTS.BOTTOM_LEFT,
+    [POPOVER_PLACEMENTS.TOP_RIGHT]: POPOVER_PLACEMENTS.BOTTOM_RIGHT,
+    [POPOVER_PLACEMENTS.BOTTOM]: POPOVER_PLACEMENTS.TOP,
+    [POPOVER_PLACEMENTS.BOTTOM_LEFT]: POPOVER_PLACEMENTS.TOP_LEFT,
+    [POPOVER_PLACEMENTS.BOTTOM_RIGHT]: POPOVER_PLACEMENTS.TOP_RIGHT,
+    [POPOVER_PLACEMENTS.LEFT]: POPOVER_PLACEMENTS.RIGHT,
+    [POPOVER_PLACEMENTS.LEFT_TOP]: POPOVER_PLACEMENTS.RIGHT_TOP,
+    [POPOVER_PLACEMENTS.LEFT_BOTTOM]: POPOVER_PLACEMENTS.RIGHT_BOTTOM,
+    [POPOVER_PLACEMENTS.RIGHT]: POPOVER_PLACEMENTS.LEFT,
+    [POPOVER_PLACEMENTS.RIGHT_TOP]: POPOVER_PLACEMENTS.LEFT_TOP,
+    [POPOVER_PLACEMENTS.RIGHT_BOTTOM]: POPOVER_PLACEMENTS.LEFT_BOTTOM,
+    [POPOVER_PLACEMENTS.MIDDLE]: POPOVER_PLACEMENTS.MIDDLE,
+    [POPOVER_PLACEMENTS.ABSOLUTE_CENTER]: POPOVER_PLACEMENTS.ABSOLUTE_CENTER,
   };
   const originalOverflow = checkOverflow(position, dimensions);
   const originalWouldOverflow = willPlacementOverflow(placement, originalOverflow);
@@ -294,9 +294,9 @@ const calculateArrowPosition = (
   const { width, height } = dimensions;
 
   // Skip arrow for covered triggers or special placements
-  const isSpecialPlacement = ([PLACEMENTS.MIDDLE, PLACEMENTS.ABSOLUTE_CENTER] as PopoverPlacement[]).includes(
-    placement,
-  );
+  const isSpecialPlacement = (
+    [POPOVER_PLACEMENTS.MIDDLE, POPOVER_PLACEMENTS.ABSOLUTE_CENTER] as PopoverPlacement[]
+  ).includes(placement);
   const isTriggerCovered =
     popoverPosition.left < triggerRect.left + ARROW_CONFIG.SAFE_MARGIN &&
     popoverPosition.left + width > triggerRect.right - ARROW_CONFIG.SAFE_MARGIN &&
@@ -335,7 +335,7 @@ const calculateArrowPosition = (
 export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLElement>({
   isOpen,
   triggerRef: popoverTriggerRef,
-  placement = PLACEMENTS.BOTTOM,
+  placement = POPOVER_PLACEMENTS.BOTTOM,
   arrow = false,
   gap = 10,
   autoAdjustOverflow = true,
@@ -348,7 +348,7 @@ export const useEnhancedPortalPopover = <T extends HTMLElement, D extends HTMLEl
   const [position, setPosition] = useState<PopoverPosition>({
     left: 0,
     top: 0,
-    placement: PLACEMENTS.BOTTOM,
+    placement: POPOVER_PLACEMENTS.BOTTOM,
   });
 
   useEffect(() => {
