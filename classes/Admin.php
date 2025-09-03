@@ -170,6 +170,9 @@ class Admin {
 					),
 				),
 				'group_two'   => array(
+					'orders'            => null,
+					'subscriptions'     => null,
+					'coupons'           => null,
 					'students'          => array(
 						'parent_slug' => 'tutor',
 						'page_title'  => __( 'Students', 'tutor' ),
@@ -208,9 +211,6 @@ class Admin {
 					'enrollments'       => null,
 					'reports'           => null,
 					'gradebook'         => null,
-					'orders'            => null,
-					'subscriptions'     => null,
-					'coupons'           => null,
 					'instructors'       => $enable_course_marketplace ? array(
 						'parent_slug' => 'tutor',
 						'page_title'  => __( 'Instructors', 'tutor' ),
