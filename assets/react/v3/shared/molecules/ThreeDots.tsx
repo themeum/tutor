@@ -7,9 +7,10 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import Popover from './Popover';
+import EnhancedPopover from './EnhancedPopover';
 
 interface ThreeDotsOptionProps {
   text: string | ReactNode;
@@ -54,20 +55,20 @@ export const ThreeDotsOption = ({
   );
 };
 
-export type ArrowPosition = 'top' | 'bottom' | 'left' | 'right' | 'auto';
 export type DotsOrientation = 'vertical' | 'horizontal';
+
 interface ThreeDotsProps {
   isOpen: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
   closePopover: () => void;
   children: ReactNode;
-  arrowPosition?: ArrowPosition;
+  placement?: PopoverPlacement;
   animationType?: AnimationType;
   dotsOrientation?: DotsOrientation;
   maxWidth?: string;
   isInverse?: boolean;
-  hideArrow?: boolean;
+  arrow?: boolean;
   size?: 'small' | 'medium';
   closeOnEscape?: boolean;
   wrapperCss?: SerializedStyles;
@@ -78,13 +79,13 @@ const ThreeDots = ({
   isOpen,
   disabled = false,
   closePopover,
-  arrowPosition = 'top',
+  placement = PLACEMENTS.BOTTOM_RIGHT,
   children,
   animationType = AnimationType.slideLeft,
   dotsOrientation = 'horizontal',
   maxWidth = '148px',
   isInverse = false,
-  hideArrow = false,
+  arrow = true,
   size = 'medium',
   closeOnEscape = true,
   wrapperCss,
@@ -104,15 +105,15 @@ const ThreeDots = ({
       >
         <SVGIcon name={dotsOrientation === 'horizontal' ? 'threeDots' : 'threeDotsVertical'} width={32} height={32} />
       </button>
-      <Popover
+      <EnhancedPopover
         gap={13}
         maxWidth={maxWidth}
-        arrow={arrowPosition}
+        placement={placement}
         triggerRef={ref}
         isOpen={isOpen}
         closePopover={closePopover}
         animationType={animationType}
-        hideArrow={hideArrow}
+        arrow={arrow}
         closeOnEscape={closeOnEscape}
       >
         <div css={styles.wrapper({ size })}>
@@ -128,7 +129,7 @@ const ThreeDots = ({
             return child;
           })}
         </div>
-      </Popover>
+      </EnhancedPopover>
     </>
   );
 };

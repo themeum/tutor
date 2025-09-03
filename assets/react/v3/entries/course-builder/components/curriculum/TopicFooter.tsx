@@ -313,8 +313,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
               dotsOrientation="vertical"
               maxWidth={isTutorPro ? '220px' : '250px'}
               isInverse
-              arrowPosition="auto"
-              hideArrow
+              arrow={false}
               closeOnEscape={false}
               size={CURRENT_VIEWPORT.isAboveMobile ? 'medium' : 'small'}
             >

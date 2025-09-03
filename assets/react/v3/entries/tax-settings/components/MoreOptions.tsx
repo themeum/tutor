@@ -1,12 +1,16 @@
-import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
-import { useModal } from '@TutorShared/components/modals/Modal';
-import { spacing, zIndex } from '@TutorShared/config/styles';
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
+
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
+
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { spacing, zIndex } from '@TutorShared/config/styles';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+
 import type { TaxSettings } from '../services/tax';
 import type { ColumnDataType } from './TaxRates';
 
@@ -22,13 +26,14 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
   return (
     <div css={styles.tableMoreOptions}>
       <ThreeDots
-        arrowPosition="top"
+        placement={PLACEMENTS.BOTTOM}
         animationType={AnimationType.slideDown}
         isOpen={isOpen}
         onClick={() => {
           setIsOpen(true);
         }}
         closePopover={() => setIsOpen(false)}
+        size="small"
       >
         <ThreeDots.Option
           text={__('Edit', 'tutor')}

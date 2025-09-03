@@ -165,9 +165,8 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         dotsOrientation="vertical"
         maxWidth={isTutorPro ? '150px' : '160px'}
         isInverse
-        arrowPosition="auto"
         size="small"
-        hideArrow
+        arrow={false}
         data-three-dots
       >
         {!validationError && contentType !== 'tutor_h5p_quiz' && (

@@ -1,5 +1,6 @@
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
@@ -23,9 +24,9 @@ const meta = {
       description: 'Whether the popover is open.',
       defaultValue: false,
     },
-    arrowPosition: {
+    placement: {
       control: 'select',
-      options: ['top', 'bottom', 'left', 'right', 'auto'],
+      options: Object.values(PLACEMENTS),
       description: 'Arrow position for popover.',
       defaultValue: 'top',
     },
@@ -51,9 +52,9 @@ const meta = {
       description: 'Inverse style for button.',
       defaultValue: false,
     },
-    hideArrow: {
+    arrow: {
       control: 'boolean',
-      description: 'Hide the popover arrow.',
+      description: 'Show the popover arrow.',
       defaultValue: false,
     },
     size: {
@@ -82,12 +83,12 @@ const meta = {
   },
   args: {
     isOpen: false,
-    arrowPosition: 'top',
+    placement: PLACEMENTS.BOTTOM_RIGHT,
     animationType: AnimationType.slideUp,
     dotsOrientation: 'horizontal',
     maxWidth: '148px',
     isInverse: false,
-    hideArrow: false,
+    arrow: true,
     size: 'medium',
     disabled: false,
     closeOnEscape: true,
@@ -174,7 +175,7 @@ export const CustomMaxWidth = {
 
 export const HideArrow = {
   args: {
-    hideArrow: true,
+    arrow: false,
   },
 } satisfies Story;
 
