@@ -20,7 +20,6 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
@@ -36,7 +35,9 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
@@ -405,10 +406,16 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
             )}
           </DndContext>
         </Show>
-        <Popover
+        <EnhancedPopover
           gap={4}
           maxWidth={'240px'}
-          arrow={CURRENT_VIEWPORT.isAboveTablet ? 'top' : CURRENT_VIEWPORT.isAboveMobile ? 'right' : 'absoluteCenter'}
+          placement={
+            CURRENT_VIEWPORT.isAboveTablet
+              ? PLACEMENTS.BOTTOM
+              : CURRENT_VIEWPORT.isAboveMobile
+                ? PLACEMENTS.RIGHT
+                : PLACEMENTS.ABSOLUTE_CENTER
+          }
           triggerRef={addButtonRef}
           isOpen={isOpen}
           closePopover={() => setIsOpen(false)}
@@ -492,7 +499,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               </div>
             </Show>
           </div>
-        </Popover>
+        </EnhancedPopover>
       </div>
     </div>
   );
