@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Migrations\Migration;
 use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -532,9 +533,16 @@ final class Tutor extends Singleton {
 		new Ecommerce();
 
 		/**
+		 * Data migrations
+		 *
+		 * @since 3.8.0
+		 */
+		new Migration();
+
+		/**
 		 * Run Method
 		 *
-		 * @since v.1.2.0
+		 * @since 1.2.0
 		 */
 		$this->run();
 
@@ -847,6 +855,10 @@ final class Tutor extends Singleton {
 			order_status VARCHAR(50) NOT NULL,
 			payment_status VARCHAR(50) NOT NULL,
 			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
+			pre_tax_price DECIMAL(13, 2) NOT NULL,  -- total price before adding tax
+			tax_type VARCHAR(50),
+			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
+			tax_amount DECIMAL(13, 2),
 			total_price DECIMAL(13, 2) NOT NULL, -- final price
 			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
 			coupon_code VARCHAR(255),
@@ -854,8 +866,6 @@ final class Tutor extends Singleton {
 			discount_type ENUM('percentage', 'flat') DEFAULT NULL,
 			discount_amount DECIMAL(13, 2),
 			discount_reason TEXT,
-			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
-			tax_amount DECIMAL(13, 2),
 			fees DECIMAL(13, 2), -- payment gateway fees
 			earnings DECIMAL(13, 2), -- net earning
 			refund_amount DECIMAL(13, 2), -- Refund amount

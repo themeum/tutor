@@ -8774,9 +8774,9 @@ class Utils {
 		's' => 'sec',
 	) ) {
 		$duration        = maybe_unserialize( get_post_meta( $course_id, '_course_duration', true ) );
-		$durationHours   = $this->avalue_dot( 'hours', $duration );
-		$durationMinutes = $this->avalue_dot( 'minutes', $duration );
-		$durationSeconds = $this->avalue_dot( 'seconds', $duration );
+		$durationHours   = (int) $this->avalue_dot( 'hours', $duration, 0 );
+		$durationMinutes = (int) $this->avalue_dot( 'minutes', $duration, 0 );
+		$durationSeconds = (int) $this->avalue_dot( 'seconds', $duration, 0 );
 
 		if ( $return_array ) {
 			return array(
@@ -10055,7 +10055,7 @@ class Utils {
 					content.post_type AS content_type
 			FROM {$wpdb->posts} course
 				LEFT JOIN {$wpdb->posts} topic ON course.ID=topic.post_parent
-				INNER JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
+				LEFT JOIN {$wpdb->posts} content ON topic.ID=content.post_parent
 				LEFT JOIN {$wpdb->posts} enrollment ON course.ID=enrollment.post_parent
 			WHERE topic.post_parent IN ($course_ids)"
 		);

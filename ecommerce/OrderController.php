@@ -262,6 +262,7 @@ class OrderController {
 			'coupon_code'    => $coupon_code,
 			'coupon_amount'  => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
 			'subtotal_price' => $subtotal_price,
+			'pre_tax_price'  => $total_price,
 			'total_price'    => $total_price,
 			'net_payment'    => $total_price,
 			'user_id'        => $user_id,
@@ -294,9 +295,11 @@ class OrderController {
 				$order_data['tax_amount'] = $tax_amount;
 
 				if ( ! Tax::is_tax_included_in_price() ) {
-					$total_price              += $order_data['tax_amount'];
+					$total_price              += $tax_amount;
 					$order_data['total_price'] = $total_price;
 					$order_data['net_payment'] = $total_price;
+				} else {
+					$order_data['pre_tax_price'] = $total_price - $tax_amount;
 				}
 			}
 		}
@@ -513,6 +516,16 @@ class OrderController {
 
 		$order_status   = $order_data->order_status;
 		$payment_status = $order_data->payment_status;
+
+		try {
+			do_action( 'tutor_before_initiate_refund', $order_data );
+		} catch ( \Throwable $th ) {
+			$this->json_response(
+				$th->getMessage(),
+				'',
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
 
 		$meta_key = OrderActivitiesModel::META_KEY_REFUND;
 		if ( $amount < (float) $order_data->net_payment ) {

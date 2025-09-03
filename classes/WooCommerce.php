@@ -704,6 +704,8 @@ class WooCommerce extends Tutor_Base {
 	 *
 	 * @since 1.6.7
 	 *
+	 * @since 3.8.0 Filter hook: tutor_is_gift_item added
+	 *
 	 * @param int   $item_id item id.
 	 * @param mixed $item order item.
 	 * @param int   $order_id wc order id.
@@ -712,6 +714,11 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public function course_placing_order_from_customer( $item_id, $item, $order_id ) {
 		if ( is_admin() ) {
+			return;
+		}
+
+		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
+		if ( $is_gift_item ) {
 			return;
 		}
 

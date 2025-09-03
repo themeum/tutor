@@ -921,9 +921,9 @@ Cypress.Commands.add('saveQuiz', (quizData) => {
     cy.get('button').contains('True/False').click();
   });
 
-  cy.doesElementExist('[data-cy=quiz-next').then((exists) => {
+  cy.doesElementExist('[data-cy=quiz-next]').then((exists) => {
     if (exists) {
-      cy.get('[data-cy=quiz-next').click();
+      cy.get('[data-cy=quiz-next]').click();
       cy.wait(500);
       cy.getByInputName('quiz_option.time_limit.time_value')
         .clear()

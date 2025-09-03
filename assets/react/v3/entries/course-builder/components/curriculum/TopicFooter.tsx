@@ -235,6 +235,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                   icon={<SVGIcon name="contentBank" width={24} height={24} />}
                   disabled={!topic.isSaved}
                   buttonCss={styles.contentButton}
+                  data-cy="add-from-content-bank"
                   onClick={() => {
                     showModal({
                       id: 'content-bank-collection-list',

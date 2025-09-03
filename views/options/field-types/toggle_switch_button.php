@@ -31,7 +31,7 @@ data-to="' . esc_attr( $field_key ) . '" data-label="' . $field_label . '" data-
 		</div>
 		<?php if ( $tooltip_desc ) { ?>
 			<div class="tooltip-wrap tooltip-icon">
-				<span class="tooltip-txt tooltip-right"><?php echo esc_attr( $tooltip_desc ); ?></span>
+				<span class="tooltip-txt tooltip-top"><?php echo esc_attr( $tooltip_desc ); ?></span>
 			</div>
 			<span style="white-space: nowrap;"></span>
 		<?php } ?>

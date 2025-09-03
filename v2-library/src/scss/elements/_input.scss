@@ -316,11 +316,19 @@ select.tutor-form-control,
 	}
 	input.tutor-form-check-input {
 		margin-top: 0px !important;
-		margin-right: 8px; // 12px was before
+		@if ($is-rtl) {
+			margin-left: 8px;
+		} @else {
+			margin-right: 8px;
+		}
 	}
 
 	& + & {
-		margin-left: 16px;
+		@if ($is-rtl) {
+			margin-right: 16px;
+		} @else {
+			margin-left: 16px;
+		}
 	}
 }
 
@@ -397,6 +405,7 @@ select.tutor-form-control,
 	input {
 		display: none;
 		~ .tutor-form-toggle-control {
+			flex-shrink: 0;
 			display: inline-block;
 			width: 40px;
 			height: 24px;

@@ -9,6 +9,7 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
@@ -1499,10 +1500,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 					continue;
 				}
 
-				$name                = $method['name'];
-				$basename            = "tutor-{$name}/tutor-{$name}.php";
-				$is_plugin_activated = is_plugin_active( $basename );
-				if ( ! $is_manual && 'paypal' !== $name && ! $is_plugin_activated ) {
+				if ( ! Ecommerce::is_payment_gateway_configured( $method['name'] ) ) {
 					continue;
 				}
 

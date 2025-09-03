@@ -59,8 +59,9 @@ trait JsonResponse {
 	public function response_success( $message, $status_code = 200 ) {
 		wp_send_json(
 			array(
-				'success' => true,
-				'message' => $message,
+				'status_code' => $status_code,
+				'success'     => true,
+				'message'     => $message,
 			),
 			$status_code
 		);

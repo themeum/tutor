@@ -1,6 +1,5 @@
 import '../admin-dashboard/segments/filter';
 import '../admin-dashboard/segments/lib';
-import sprintf from '../helper/sprintf';
 import './_select_dd_search';
 import './course/index';
 import './dashboard';
@@ -31,7 +30,7 @@ jQuery(document).ready(function($) {
 	 * wp.i18n translatable functions
 	 * @since 1.9.0
 	 */
-	const { __, _x, _n, _nx } = wp.i18n;
+	const { __, _x, _n, _nx, sprintf } = wp.i18n;
 	/**
 	 * Initiate Select2
 	 * @since v.1.3.4

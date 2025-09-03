@@ -31,6 +31,7 @@ export const ThreeDotsOption = ({
   size = 'medium',
   buttonCss,
   disabled,
+  ...props
 }: ThreeDotsOptionProps) => {
   return (
     <button
@@ -45,6 +46,7 @@ export const ThreeDotsOption = ({
         }
       }}
       disabled={disabled}
+      {...props}
     >
       {icon && icon}
       <span>{text}</span>

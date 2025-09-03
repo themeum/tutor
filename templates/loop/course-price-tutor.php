@@ -81,7 +81,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 						<span class="tutor-mr-8 tutor-color-warning tutor-icon-circle-info"></span>
 					</div>
 					<div class="tutor-fs-7 tutor-fw-medium tutor-color-black">
-						<?php __( 'Fully Booked', 'tutor' ); ?>
+						<?php esc_html_e( 'Fully Booked', 'tutor' ); ?>
 					</div>
 				</div>
 			</div>

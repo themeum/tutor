@@ -44,7 +44,7 @@
 		display: flex;
 		align-items: start;
 		justify-content: space-between;
-		gap: 56px;
+		gap: 24px;
 	}
 	.tutor-checkout-course-thumb-title {
 		display: grid;
@@ -64,16 +64,6 @@
 		justify-content: space-between;
 		font-size: 14px;
 		margin-top: 16px;
-	}
-	.tutor-checkout-course-bundle-badge {
-		width: fit-content;
-		display: inline-block;
-		font-size: 11px;
-		line-height: 16px;
-		background-color: #9342E7;
-		color: #ffffff;
-		border-radius: 13px;
-		padding: 0px 6px;
 	}
 	.tutor-checkout-course-plan-badge {
 		width: fit-content;

@@ -38,12 +38,16 @@ class CartModel {
 	/**
 	 * Add a course to the user's cart.
 	 *
-	 * @param int $user_id User ID.
-	 * @param int $course_id Course ID.
+	 * @since 3.8.0 $item_type & $items_details Param added
+	 *
+	 * @param int    $user_id User ID.
+	 * @param int    $course_id Course ID.
+	 * @param string $item_type Cart item type.
+	 * @param mixed  $item_details Cart item details.
 	 *
 	 * @return array Array containing the result of the insert operation.
 	 */
-	public function add_course_to_cart( $user_id, $course_id ) {
+	public function add_course_to_cart( $user_id, $course_id, $item_type = '', $item_details = '' ) {
 		global $wpdb;
 
 		$current_time = current_time( 'mysql', true );
@@ -72,8 +76,10 @@ class CartModel {
 		return QueryHelper::insert(
 			"{$wpdb->prefix}tutor_cart_items",
 			array(
-				'cart_id'   => $user_cart_id,
-				'course_id' => $course_id,
+				'cart_id'      => $user_cart_id,
+				'course_id'    => $course_id,
+				'item_type'    => $item_type,
+				'item_details' => $item_details ? wp_json_encode( $item_details ) : null,
 			)
 		);
 	}
@@ -81,11 +87,14 @@ class CartModel {
 	/**
 	 * Get items from the user's cart.
 	 *
-	 * @param int $user_id User ID.
+	 * @since 3.8.0 $is_details param added.
+	 *
+	 * @param int  $user_id User ID.
+	 * @param bool $is_details If false then just cart items will be returned.
 	 *
 	 * @return array Array containing the cart items and their total count.
 	 */
-	public function get_cart_items( $user_id ) {
+	public function get_cart_items( $user_id, $is_details = true ) {
 		global $wpdb;
 
 		$cart_data = array(
@@ -127,7 +136,7 @@ class CartModel {
 			);
 		}
 
-		return $cart_data;
+		return $is_details ? $cart_data : $cart_data['courses']['results'];
 	}
 
 	/**

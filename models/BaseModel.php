@@ -180,7 +180,7 @@ abstract class BaseModel {
 	 * @return array
 	 */
 	public function get_col( $column_name, $where ) {
-		$where_clause = count( $where ) ? 'WHERE ' . QueryHelper::build_where_clause( $where ) : '';
+		$where_clause = count( $where ) ? 'WHERE ' . QueryHelper::prepare_where_clause( $where ) : '';
 		$query        = $this->db->prepare( "SELECT {$column_name} FROM {$this->table_name} {$where_clause}" );
 
 		return $this->db->get_col( $query );
@@ -235,12 +235,12 @@ abstract class BaseModel {
 
 		if ( isset( $args['where'] ) && is_array( $args['where'] ) ) {
 			$where        = $args['where'];
-			$where_clause = count( $where ) ? 'WHERE ' . QueryHelper::build_where_clause( $where ) : '';
+			$where_clause = count( $where ) ? 'WHERE ' . QueryHelper::prepare_where_clause( $where ) : '';
 		}
 
 		if ( isset( $args['search'] ) && is_array( $args['search'] ) ) {
 			if ( count( $args['search'] ) ) {
-				$where_clause .= ( empty( $where_clause ) ? 'WHERE ' : ' AND ' ) . QueryHelper::build_like_clause( $args['search'], 'AND' );
+				$where_clause .= ( empty( $where_clause ) ? 'WHERE ' : ' AND ' ) . QueryHelper::prepare_like_clause( $args['search'], 'AND' );
 			}
 		}
 
