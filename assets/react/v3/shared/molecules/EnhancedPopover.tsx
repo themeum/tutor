@@ -5,13 +5,18 @@ import type { RefObject } from 'react';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, zIndex } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { Portal, useEnhancedPortalPopover, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import {
+  POPOVER_PLACEMENTS,
+  Portal,
+  useEnhancedPortalPopover,
+  type PopoverPlacement,
+} from '@TutorShared/hooks/useEnhancedPortalPopover';
 
 interface PopoverProps<T> {
   children: React.ReactNode;
   triggerRef: RefObject<T>;
   isOpen: boolean;
-  placement: PopoverPlacement;
+  placement?: PopoverPlacement;
   gap?: number;
   maxWidth?: string;
   closePopover: () => void;
@@ -27,7 +32,7 @@ interface PopoverProps<T> {
 
 const EnhancedPopover = <T extends HTMLElement>({
   children,
-  placement,
+  placement = POPOVER_PLACEMENTS.BOTTOM,
   triggerRef,
   isOpen,
   gap,
