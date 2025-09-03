@@ -4,7 +4,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import Popover from '@TutorShared/molecules/Popover';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { useStoreAIGeneratedImageMutation } from '@TutorShared/services/magic-ai';
 import { downloadBase64Image } from '@TutorShared/utils/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -84,7 +84,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
           </MagicButton>
         </div>
       </div>
-      <Popover
+      <EnhancedPopover
         triggerRef={ref}
         isOpen={isOpen}
         closePopover={() => {
@@ -125,7 +125,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
             )}
           </For>
         </div>
-      </Popover>
+      </EnhancedPopover>
     </>
   );
 };
