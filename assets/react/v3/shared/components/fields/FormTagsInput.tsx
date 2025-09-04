@@ -209,7 +209,6 @@ const styles = {
     margin-top: ${spacing[8]};
   `,
   options: (removeOptionsMinWidth: boolean) => css`
-    width: 100%;
     z-index: ${zIndex.dropdown};
     background-color: ${colorTokens.background.white};
     list-style-type: none;
