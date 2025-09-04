@@ -1,5 +1,6 @@
 import Button from '@TutorShared/atoms/Button';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';
@@ -38,10 +39,10 @@ const meta = {
       description: 'Show loading spinner on confirm button.',
       defaultValue: false,
     },
-    hideArrow: {
+    arrow: {
       control: 'boolean',
-      description: 'Hide the popover arrow.',
-      defaultValue: false,
+      description: 'Show the popover arrow.',
+      defaultValue: true,
     },
     confirmButton: {
       control: false,
@@ -72,11 +73,11 @@ const meta = {
     onConfirmation: { control: false },
     onCancel: { control: false },
     positionModifier: { control: false },
-    arrow: {
+    placement: {
       control: 'select',
-      options: ['top', 'bottom', 'left', 'right', 'middle'],
+      options: Object.values(POPOVER_PLACEMENTS),
       description: 'Position of the popover arrow.',
-      defaultValue: 'top',
+      defaultValue: POPOVER_PLACEMENTS.BOTTOM,
     },
   },
   args: {
@@ -86,22 +87,23 @@ const meta = {
     onCancel: () => {},
     confirmButton: {
       text: 'Confirm',
-      variant: 'primary',
+      variant: 'text',
+      isDelete: true,
     },
     cancelButton: {
       text: 'Cancel',
-      variant: 'secondary',
+      variant: 'text',
     },
     positionModifier: undefined,
     title: 'Are you sure?',
     message: 'This action cannot be undone.',
     isOpen: true,
     isLoading: false,
-    hideArrow: false,
+    placement: POPOVER_PLACEMENTS.BOTTOM,
     animationType: AnimationType.slideLeft,
     maxWidth: '300px',
     gap: 8,
-    arrow: 'top',
+    arrow: true,
   },
   render: (args) => {
     const triggerRef = useRef<HTMLButtonElement>(null);
@@ -238,7 +240,7 @@ export const CustomButtons = {
 
 export const HideArrow = {
   args: {
-    hideArrow: true,
+    arrow: false,
   },
 } satisfies Story;
 
@@ -250,6 +252,6 @@ export const CustomAnimation = {
 
 export const CustomMaxWidth = {
   args: {
-    maxWidth: '320px',
+    maxWidth: '420px',
   },
 } satisfies Story;
