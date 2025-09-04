@@ -202,26 +202,46 @@ class OrderModel {
 	 * Get recalculated order tax data.
 	 *
 	 * @since 3.4.0
+	 * @since 3.8.0 tax re-calculation based on pre_tax_price column value.
 	 *
 	 * @param int|object $order the order id or object.
 	 *
 	 * @return array
 	 */
 	public function get_recalculated_order_tax_data( $order ) {
-		$order       = self::get_order( $order );
-		$total_price = $order->total_price;
-		$tax_rate    = Tax::get_user_tax_rate( $order->user_id );
-		$order_data  = array();
-		if ( $tax_rate ) {
-			$order_data['tax_type']   = Tax::get_tax_type();
-			$order_data['tax_rate']   = $tax_rate;
-			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+		$tax_type   = Tax::get_tax_type();
+		$tax_rate   = Tax::get_user_tax_rate( $order->user_id );
+		$order      = self::get_order( $order );
+		$order_data = array(
+			'tax_type'   => null,
+			'tax_rate'   => null,
+			'tax_amount' => null,
+		);
 
-			if ( ! Tax::is_tax_included_in_price() ) {
-				$total_price              += $order_data['tax_amount'];
-				$order_data['total_price'] = $total_price;
-				$order_data['net_payment'] = $total_price;
-			}
+		if ( ! Tax::should_calculate_tax()
+			|| ! $tax_rate
+			|| ! $order
+			|| ! $order->pre_tax_price ) {
+			return $order_data;
+		}
+
+		$order_data['tax_type'] = $tax_type;
+		$order_data['tax_rate'] = $tax_rate;
+
+		if ( ! Tax::is_tax_included_in_price() ) {
+			// For exclusive tax type.
+			$tax_amount  = Tax::calculate_tax( $order->pre_tax_price, $tax_rate );
+			$total_price = $order->pre_tax_price + $tax_amount;
+
+			$order_data['tax_amount']  = $tax_amount;
+			$order_data['total_price'] = $total_price;
+			$order_data['net_payment'] = $total_price;
+		} else {
+			// For inclusive tax type.
+			$tax_amount = Tax::calculate_tax( $order->total_price, $tax_rate );
+
+			$order_data['tax_amount']    = $tax_amount;
+			$order_data['pre_tax_price'] = $order->total_price - $tax_amount;
 		}
 
 		return $order_data;
@@ -413,19 +433,28 @@ class OrderModel {
 		}
 
 		// Set order id on each item.
-		foreach ( $items as $key => $item ) {
-			$items[ $key ]['order_id'] = $order_id;
+		foreach ( $items as $item ) {
+			$item['order_id'] = $order_id;
+			$meta_data        = $item['meta_data'] ?? null;
+			try {
+				unset( $item['meta_data'] );
+				$insert = QueryHelper::insert(
+					$this->order_item_table,
+					$item,
+				);
+				if ( $insert ) {
+					if ( ! empty( $meta_data ) ) {
+						foreach ( $meta_data as $meta ) {
+							( new OrderItemMetaModel() )->add_meta( $insert, $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
+						}
+					}
+				}
+			} catch ( \Throwable $th ) {
+				return false;
+			}
 		}
 
-		try {
-			$insert = QueryHelper::insert_multiple_rows(
-				$this->order_item_table,
-				$items
-			);
-			return $insert ? true : false;
-		} catch ( \Throwable $th ) {
-			throw new Exception( $th->getMessage() );
-		}
+		return true;
 	}
 
 	/**
@@ -615,7 +644,7 @@ class OrderModel {
 
 		$where = array( 'order_id' => $order_id );
 
-		$select_columns = array( 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type' );
+		$select_columns = array( 'oi.id AS primary_id', 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type' );
 
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
@@ -633,6 +662,10 @@ class OrderModel {
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
 				$course->image         = get_the_post_thumbnail_url( $course->id );
+
+				// Add meta items.
+				$order_item_meta        = new OrderItemMetaModel();
+				$course->item_meta_list = apply_filters( 'tutor_order_item_meta', $order_item_meta->get_meta( $course->primary_id, null, false ) );
 			}
 		}
 

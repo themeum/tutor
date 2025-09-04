@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -14,7 +14,7 @@ import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboar
 import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type Option, isDefined } from '@TutorShared/utils/types';
+import { isDefined, type Option } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
@@ -44,6 +44,7 @@ type FormSelectInputProps<T> = {
   isMagicAi?: boolean;
   isAiOutline?: boolean;
   selectOnFocus?: boolean;
+  optionItemCss?: SerializedStyles;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -70,6 +71,7 @@ const FormSelectInput = <T,>({
   isMagicAi = false,
   isAiOutline = false,
   selectOnFocus,
+  optionItemCss,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = useCallback(
     () =>
@@ -283,11 +285,14 @@ const FormSelectInput = <T,>({
                     <li
                       key={String(option.value)}
                       ref={option.value === field.value ? optionRef : activeIndex === index ? activeItemRef : null}
-                      css={styles.optionItem({
-                        isSelected: option.value === field.value,
-                        isActive: index === activeIndex,
-                        isDisabled: !!option.disabled,
-                      })}
+                      css={[
+                        styles.optionItem({
+                          isSelected: option.value === field.value,
+                          isActive: index === activeIndex,
+                          isDisabled: !!option.disabled,
+                        }),
+                        optionItemCss,
+                      ]}
                     >
                       <button
                         type="button"

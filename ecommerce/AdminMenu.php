@@ -21,15 +21,20 @@ class AdminMenu {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'tutor_after_courses_admin_menu', array( $this, 'register_menu' ) );
+		add_filter( 'tutor_admin_menu', array( $this, 'register_menu' ) );
 	}
 
 	/**
 	 * Register menu
 	 *
-	 * @return void
+	 * @since 3.0.0
+	 * @since 3.8.0 param menu added.
+	 *
+	 * @param array $menu menu.
+	 *
+	 * @return array
 	 */
-	public function register_menu() {
+	public function register_menu( $menu ) {
 		$order_menu_title  = __( 'Orders', 'tutor' );
 		$order_badge_count = get_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT );
 
@@ -47,9 +52,25 @@ class AdminMenu {
 			$order_menu_title .= ' <span class="update-plugins"><span class="plugin-count">' . $order_badge_count . '</span></span>';
 		}
 
-		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), $order_menu_title, 'manage_options', OrderController::PAGE_SLUG, array( $this, 'orders_view' ) );
-		do_action( 'tutor_after_orders_admin_menu' );
-		add_submenu_page( 'tutor', __( 'Coupons', 'tutor' ), __( 'Coupons', 'tutor' ), 'manage_options', CouponController::PAGE_SLUG, array( $this, 'coupons_view' ) );
+		$menu['group_two']['orders'] = array(
+			'parent_slug' => 'tutor',
+			'page_title'  => __( 'Orders', 'tutor' ),
+			'menu_title'  => $order_menu_title,
+			'capability'  => 'manage_options',
+			'menu_slug'   => OrderController::PAGE_SLUG,
+			'callback'    => array( $this, 'orders_view' ),
+		);
+
+		$menu['group_two']['coupons'] = array(
+			'parent_slug' => 'tutor',
+			'page_title'  => __( 'Coupons', 'tutor' ),
+			'menu_title'  => __( 'Coupons', 'tutor' ),
+			'capability'  => 'manage_options',
+			'menu_slug'   => CouponController::PAGE_SLUG,
+			'callback'    => array( $this, 'coupons_view' ),
+		);
+
+		return $menu;
 	}
 
 	/**

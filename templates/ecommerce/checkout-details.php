@@ -81,16 +81,9 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 							array_push( $object_ids, $item->item_id );
 							?>
 							<div class="tutor-checkout-course-item" data-course-id="<?php echo esc_attr( $item->item_id ); ?>">
-								<?php if ( tutor()->has_pro && 'course-bundle' === $course->post_type ) : ?>
-								<div class="tutor-checkout-course-bundle-badge">
-									<?php
-										$bundle_model      = new \TutorPro\CourseBundle\Models\BundleModel();
-										$bundle_course_ids = $bundle_model::get_bundle_course_ids( $course->ID );
-										// translators: %d: Number of courses in the cart.
-										echo esc_html( sprintf( __( '%d Course bundle', 'tutor' ), count( $bundle_course_ids ) ) );
-									?>
+								<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
+									<?php do_action( 'tutor_cart_item_badge', $course ); ?>
 								</div>
-								<?php endif; ?>
 								<div class="tutor-checkout-course-content">
 									<div class="tutor-d-flex tutor-flex-column tutor-gap-1">
 										<div class="tutor-checkout-course-thumb-title">
