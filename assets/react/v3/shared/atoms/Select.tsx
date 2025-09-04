@@ -1,16 +1,15 @@
 import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Option } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { isRTL } from '@TutorShared/config/constants';
 import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import SVGIcon from './SVGIcon';
@@ -68,6 +67,7 @@ const Select = <T,>({
   const [searchText, setSearchText] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [currentOptions, setCurrentOptions] = useState<Option<T>[]>([]);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   const debouncedSearchText = useDebounce(searchText);
 
@@ -85,11 +85,6 @@ const Select = <T,>({
 
     return options;
   }, [debouncedSearchText, isSearchable, options]);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-  });
 
   const { intersectionEntry, intersectionElementRef } = useIntersectionObserver<HTMLDivElement>();
   const hasMoreItems = selections.length > currentOptions.length;
@@ -150,18 +145,8 @@ const Select = <T,>({
         </div>
       </div>
 
-      <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-        <div
-          css={[
-            styles.optionsWrapper,
-            {
-              [isRTL ? 'right' : 'left']: position.left,
-              top: position.top,
-              maxWidth: triggerWidth,
-            },
-          ]}
-          ref={popoverRef}
-        >
+      <EnhancedPopover triggerRef={triggerRef} arrow={false} isOpen={isOpen} closePopover={() => setIsOpen(false)}>
+        <div css={styles.optionsWrapper}>
           <ul css={styles.options}>
             {currentOptions.map((option) => (
               <li
@@ -211,7 +196,7 @@ const Select = <T,>({
             </div>
           )}
         </div>
-      </Portal>
+      </EnhancedPopover>
     </div>
   );
 };
