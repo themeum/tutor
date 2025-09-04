@@ -2,6 +2,7 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import {
   borderRadius,
@@ -15,12 +16,12 @@ import {
 } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Option } from '@TutorShared/utils/types';
 
-import { type IconCollection } from '@TutorShared/icons/types';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
@@ -136,8 +137,8 @@ const FormInputWithPresets = ({
               triggerRef={triggerRef}
               isOpen={isOpen}
               closePopover={() => setIsOpen(false)}
-              maxWidth={`${triggerRef.current?.getBoundingClientRect().width}px`}
               arrow={false}
+              animationType={AnimationType.slideDown}
             >
               <div css={[styles.optionsWrapper]}>
                 <ul css={[styles.options(removeOptionsMinWidth)]}>

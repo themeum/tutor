@@ -1,17 +1,20 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useRef, useState } from 'react';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Switch from '@TutorShared/atoms/Switch';
 import { useToast } from '@TutorShared/atoms/Toast';
 import Tooltip from '@TutorShared/atoms/Tooltip';
+
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
-import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
 import { useAddonContext } from '../contexts/addon-context';
+
 import { useEnableDisableAddon, type Addon } from '../services/addons';
 import InstallationPopover from './InstallationPopover';
 import SettingsPopover from './SettingsPopover';

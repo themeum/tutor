@@ -8,6 +8,7 @@ import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { VideoRegex } from '@TutorShared/config/constants';
@@ -16,6 +17,7 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type IconCollection } from '@TutorShared/icons/types';
@@ -32,8 +34,6 @@ import {
   getVimeoVideoDuration,
 } from '@TutorShared/utils/video';
 
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';

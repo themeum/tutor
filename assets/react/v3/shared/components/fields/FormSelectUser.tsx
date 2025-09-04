@@ -10,6 +10,7 @@ import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 
@@ -280,6 +281,7 @@ const FormSelectUser = ({
               arrow={false}
               isOpen={isOpen}
               dependencies={[filteredOption.length]}
+              animationType={AnimationType.slideDown}
               closePopover={() => {
                 setIsOpen(false);
                 setSearchText('');

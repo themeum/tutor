@@ -5,18 +5,19 @@ import { useRef, useState } from 'react';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities } from '@TutorShared/utils/util';
 
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTagsInputProps extends FormControllerProps<Tag[] | null> {
@@ -133,8 +134,8 @@ const FormTagsInput = ({
               isOpen={isOpen}
               arrow={false}
               closePopover={() => setIsOpen(false)}
-              maxWidth={`${triggerRef.current?.getBoundingClientRect().width}px`}
               dependencies={[tagListQuery.data?.length]}
+              animationType={AnimationType.slideDown}
             >
               <ul css={[styles.options(removeOptionsMinWidth)]}>
                 {searchText.length > 0 && (

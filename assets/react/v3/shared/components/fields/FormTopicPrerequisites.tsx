@@ -12,6 +12,7 @@ import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -265,6 +266,7 @@ const FormTopicPrerequisites = ({
               isOpen={isOpen}
               arrow={false}
               dependencies={[filteredOption.length]}
+              animationType={AnimationType.slideDown}
               closePopover={() => {
                 setIsOpen(false);
                 setSearchText('');

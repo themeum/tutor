@@ -4,10 +4,12 @@ import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } fro
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -15,8 +17,6 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type Option, isDefined } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {

@@ -1,16 +1,20 @@
+import { css } from '@emotion/react';
+import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { type FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
-import { useEffect, useMemo, useRef, useState } from 'react';
 
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
-import { useSelectKeyboardNavigation } from '../../hooks/useSelectKeyboardNavigation';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTimeInputProps extends FormControllerProps<string> {
@@ -127,7 +131,7 @@ const FormTimeInput = ({
               arrow={false}
               isOpen={isOpen}
               closePopover={() => setIsOpen(false)}
-              maxWidth={`${triggerRef.current?.getBoundingClientRect().width}px`}
+              animationType={AnimationType.slideDown}
             >
               <ul css={styles.list}>
                 {options.map((option, index) => {

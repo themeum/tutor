@@ -8,11 +8,13 @@ import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
@@ -25,7 +27,6 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
@@ -191,7 +192,13 @@ const FormMultiLevelInput = ({
               </Show>
             </div>
 
-            <EnhancedPopover triggerRef={triggerRef} arrow={false} isOpen={isOpen} closePopover={handlePortalClose}>
+            <EnhancedPopover
+              triggerRef={triggerRef}
+              arrow={false}
+              isOpen={isOpen}
+              closePopover={handlePortalClose}
+              animationType={AnimationType.slideDown}
+            >
               <div css={styles.categoryFormWrapper}>
                 <Controller
                   name="name"

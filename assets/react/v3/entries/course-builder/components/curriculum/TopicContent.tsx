@@ -10,6 +10,7 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
@@ -36,7 +37,6 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { ID, TopicContentType } from '@TutorShared/utils/types';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';

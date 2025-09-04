@@ -11,6 +11,7 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import Show from '@TutorShared/controls/Show';
 
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { useFileUploader } from '@TutorShared/molecules/FileUploader';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
@@ -29,7 +30,6 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 

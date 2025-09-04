@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -13,7 +14,6 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type IconCollection } from '@TutorShared/icons/types';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type QuizQuestionType } from '@TutorShared/utils/types';
 

@@ -4,16 +4,18 @@ import { useEffect, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useCategoryListQuery, type CategoryWithChildren } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
 
-import Show from '@TutorShared/controls/Show';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiLevelSelectProps extends FormControllerProps<number | null> {
@@ -111,8 +113,8 @@ const FormMultiLevelSelect = ({
               arrow={false}
               isOpen={isOpen}
               closePopover={() => setIsOpen(false)}
-              maxWidth={`${triggerRef.current?.getBoundingClientRect().width}px`}
               dependencies={[options.length]}
+              animationType={AnimationType.slideDown}
             >
               <div css={styles.categoryWrapper}>
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}

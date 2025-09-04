@@ -1,18 +1,21 @@
+import { css, keyframes } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useRef, useState } from 'react';
+
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { useStoreAIGeneratedImageMutation } from '@TutorShared/services/magic-ai';
 import { downloadBase64Image } from '@TutorShared/utils/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Option } from '@TutorShared/utils/types';
 import { nanoid } from '@TutorShared/utils/util';
-import { css, keyframes } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
+
 import { type DropdownState, useMagicImageGeneration } from './ImageContext';
 
 const options: Option<DropdownState>[] = [

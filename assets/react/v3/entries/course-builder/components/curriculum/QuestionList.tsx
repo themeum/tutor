@@ -20,6 +20,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
@@ -37,7 +38,6 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
@@ -413,7 +413,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
             CURRENT_VIEWPORT.isAboveTablet
               ? POPOVER_PLACEMENTS.BOTTOM
               : CURRENT_VIEWPORT.isAboveMobile
-                ? POPOVER_PLACEMENTS.RIGHT
+                ? POPOVER_PLACEMENTS.LEFT
                 : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
           }
           triggerRef={addButtonRef}

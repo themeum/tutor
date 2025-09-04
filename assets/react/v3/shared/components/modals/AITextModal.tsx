@@ -12,12 +12,14 @@ import {
 import Button from '@TutorShared/atoms/Button';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import { OptionList } from '@TutorShared/components/magic-ai-content/OptionList';
 import { PromptControls } from '@TutorShared/components/magic-ai-content/PromptControls';
 import SkeletonLoader from '@TutorShared/components/magic-ai-content/SkeletonLoader';
 
+import { isRTL } from '@TutorShared/config/constants';
 import {
   type ChatFormat,
   type ChatLanguage,
@@ -38,8 +40,6 @@ import {
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { copyToClipboard } from '@TutorShared/utils/util';
 
-import { isRTL } from '@TutorShared/config/constants';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
 
@@ -326,7 +326,7 @@ const AITextModal = <T extends FieldValues>({
           triggerRef={toneRef}
           closePopover={() => setPopover(null)}
           maxWidth={'160px'}
-          animationType={AnimationType.slideUp}
+          animationType={AnimationType.slideDown}
         >
           <OptionList
             options={toneOptions}
@@ -341,7 +341,7 @@ const AITextModal = <T extends FieldValues>({
           triggerRef={translateRef}
           closePopover={() => setPopover(null)}
           maxWidth={'160px'}
-          animationType={AnimationType.slideUp}
+          animationType={AnimationType.slideDown}
         >
           <OptionList
             options={languageOptions}

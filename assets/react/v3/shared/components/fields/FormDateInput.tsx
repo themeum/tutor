@@ -5,17 +5,18 @@ import { DayPicker, type Formatters } from 'react-day-picker';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import 'react-day-picker/style.css';
 
-import { typography } from '@TutorShared/config/typography';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormDateInputProps extends FormControllerProps<string> {
@@ -146,6 +147,7 @@ const FormDateInput = ({
               triggerRef={triggerRef}
               isOpen={isOpen}
               closePopover={handleClosePortal}
+              animationType={AnimationType.slideDown}
               placement={POPOVER_PLACEMENTS.BOTTOM_LEFT}
               arrow={false}
               maxWidth="fit-content"
