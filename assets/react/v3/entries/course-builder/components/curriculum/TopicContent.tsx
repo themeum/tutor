@@ -403,8 +403,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')
         }
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
+        arrow={false}
         confirmButton={{
           text: __('Delete', 'tutor'),
           variant: 'text',
