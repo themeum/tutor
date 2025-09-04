@@ -634,21 +634,17 @@ class QueryHelper {
 	 *
 	 * @since 3.8.0
 	 *
-	 * @param int $per_page per page.
-	 * @param int $page page number.
+	 * @param int $limit limit.
+	 * @param int $offset offset.
 	 *
 	 * @return string
 	 */
-	protected static function prepare_limit_clause( $per_page = 0, $page = 1 ) {
-		$page     = max( 1, (int) $page );
-		$per_page = max( 0, (int) $per_page );
-
-		if ( ! $per_page ) {
+	protected static function prepare_limit_clause( $limit = 0, $offset = 0 ) {
+		if ( $limit < 1 || $offset < 0 ) {
 			return '';
 		}
 
-		$offset = ( $page - 1 ) * $per_page;
-		return sprintf( 'LIMIT %d, %d', $offset, $per_page );
+		return sprintf( 'LIMIT %d OFFSET %d', $limit, $offset );
 	}
 
 	/**
@@ -672,14 +668,16 @@ class QueryHelper {
 	 *     @type string       $having   HAVING clause.
 	 *     @type string       $orderby  Column to order by.
 	 *     @type string       $order    ASC|DESC, default DESC.
+	 *     @type int          $limit    Limit.
+	 *     @type int          $offset   Offset.
 	 *     @type int          $per_page Results per page for pagination.
-	 *     @type int          $page     Current page number.
+	 *     @type int          $page     Current page number for pagination.
 	 *     @type bool         $count    If true, return only total count.
 	 *     @type bool         $single   If true, return only single row.
 	 *     @type string       $output   OBJECT|ARRAY_A default is OBJECT.
 	 * }
 	 *
-	 * @return mixed
+	 * @return mixed          Result set, count or single row.
 	 */
 	public static function query( $table, $args = array() ) {
 		// Flags.
@@ -730,7 +728,15 @@ class QueryHelper {
 		}
 
 		$calc_found_rows = $pagination ? 'SQL_CALC_FOUND_ROWS' : '';
-		$limit_clause    = $pagination ? self::prepare_limit_clause( $args['per_page'], $args['page'] ) : '';
+		$limit           = isset( $args['limit'] ) ? (int) $args['limit'] : 0;
+		$offset          = isset( $args['offset'] ) ? (int) $args['offset'] : 0;
+
+		if ( $pagination ) {
+			$limit  = (int) $args['per_page'];
+			$offset = (int) ( $args['page'] - 1 ) * $limit;
+		}
+
+		$limit_clause = self::prepare_limit_clause( $limit, $offset );
 
 		$sql_query = "SELECT {$calc_found_rows} {$select_clause} 
 					FROM {$table_with_alias} 
@@ -1011,7 +1017,7 @@ class QueryHelper {
 		$join_clauses    = self::prepare_join_clause( $joining_tables );
 		$where_clause    = self::prepare_where_search_clause( $where, $search );
 		$order_by_clause = self::prepare_order_clause( $order_by, $order );
-		$limit_clause    = ( empty( $limit ) && empty( $offset ) ) ? '' : $wpdb->prepare( 'LIMIT %d OFFSET %d', $limit, $offset );
+		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
 
 		$query = "SELECT SQL_CALC_FOUND_ROWS 
 				{$select_clause}
@@ -1133,34 +1139,25 @@ class QueryHelper {
 	public static function get_all_with_search( string $table, array $where, array $search, string $order_by, $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT' ): array {
 		global $wpdb;
 
-		$table         = self::prepare_table_name( $table );
-		$where_clause  = self::prepare_where_search_clause( $where, $search, 'AND' );
-	
-		// Query to get total count
-		$count_query = "
-			SELECT COUNT(*)
-			FROM {$table}
-			{$where_clause}
-		";
-
-		$total_count = $wpdb->get_var( $count_query );
+		$table           = self::prepare_table_name( $table );
+		$where_clause    = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
+		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
 	
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		}
 	
-		$query = $wpdb->prepare(
-			"SELECT *
+		$query = "SELECT SQL_CALC_FOUND_ROWS *
 			 FROM {$table}
 			 {$where_clause}
-			 ORDER BY {$order_by} {$order}
-			 LIMIT %d OFFSET %d",
-			$limit,
-			$offset
-		);
+			 {$order_by_clause}
+			 {$limit_clause}";
 	
-		$results = $wpdb->get_results( $query, $output );
+		$results     = $wpdb->get_results( $query, $output );
+		$has_records = is_array( $results ) && count( $results );
+		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 	
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -1169,8 +1166,8 @@ class QueryHelper {
 	
 		// Prepare response array.
 		$response = array(
-			'results' => $results,
-			'total_count' => (int) $total_count,
+			'results'     => $results,
+			'total_count' => $total_count,
 		);
 	
 		return $response;
