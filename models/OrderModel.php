@@ -17,6 +17,8 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\OrderActivitiesController;
+use TutorPro\GiftCourse\GiftCourse;
+use TutorPro\GiftCourse\InitGift;
 
 /**
  * OrderModel Class
@@ -662,6 +664,10 @@ class OrderModel {
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
 				$course->image         = get_the_post_thumbnail_url( $course->id );
+
+				// Add meta items.
+				$order_item_meta        = new OrderItemMetaModel();
+				$course->item_meta_list = apply_filters( 'tutor_order_item_meta', $order_item_meta->get_meta( $course->primary_id, null, false ) );
 			}
 		}
 
