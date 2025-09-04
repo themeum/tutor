@@ -13,8 +13,8 @@ import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
-import { useAddonContext } from '../contexts/addon-context';
 
+import { useAddonContext } from '../contexts/addon-context';
 import { useEnableDisableAddon, type Addon } from '../services/addons';
 import InstallationPopover from './InstallationPopover';
 import SettingsPopover from './SettingsPopover';
