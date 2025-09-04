@@ -10,14 +10,13 @@ import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import config, { tutorConfig } from '@TutorShared/config/config';
-import { VideoRegex, isRTL } from '@TutorShared/config/constants';
+import { VideoRegex } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { useGetYouTubeVideoDuration } from '@TutorShared/services/video';
@@ -33,6 +32,8 @@ import {
   getVimeoVideoDuration,
 } from '@TutorShared/utils/video';
 
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -197,14 +198,6 @@ const FormVideoInput = ({
   const [localPoster, setLocalPoster] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    triggerRef,
-    positionModifier: {
-      top: triggerRef.current?.getBoundingClientRect().top || 0,
-      left: 0,
-    },
-  });
 
   const handleVideoFileUpdate = async (files: WPMedia | WPMedia[] | null) => {
     if (!files) {
@@ -660,85 +653,78 @@ const FormVideoInput = ({
           );
         }}
       </FormFieldWrapper>
-      <Portal
+      <EnhancedPopover
+        triggerRef={triggerRef}
         isOpen={isOpen}
-        onClickOutside={() => setIsOpen(false)}
-        onEscape={() => setIsOpen(false)}
+        arrow={false}
+        placement={POPOVER_PLACEMENTS.MIDDLE}
         animationType={AnimationType.fadeIn}
+        closePopover={() => setIsOpen(false)}
+        positionModifier={{
+          top: 17,
+          left: 0,
+        }}
+        maxWidth={`${triggerRef.current?.offsetWidth || 300}px`}
       >
-        <div
-          ref={popoverRef}
-          css={[
-            styles.popover,
-            {
-              [isRTL ? 'right' : 'left']: position.left,
-              top: triggerRef.current?.getBoundingClientRect().top,
-              maxWidth: triggerRef.current?.offsetWidth,
-            },
-          ]}
-        >
-          <div css={styles.popoverContent}>
-            <Controller
-              control={form.control}
-              name="videoSource"
-              rules={{ ...requiredRule() }}
-              render={(controllerProps) => {
-                return (
-                  <FormSelectInput
-                    {...controllerProps}
-                    options={videoSourcesSelectOptions}
-                    disabled={videoSourceOptions.length <= 1}
-                    placeholder={__('Select source', 'tutor')}
-                    hideCaret={videoSourceOptions.length <= 1}
-                  />
-                );
-              }}
-            />
-            <Controller
-              control={form.control}
-              name="videoUrl"
-              rules={{
-                ...requiredRule(),
-                validate: validateVideoUrl,
-              }}
-              render={(controllerProps) => {
-                return (
-                  <FormTextareaInput
-                    {...controllerProps}
-                    inputCss={css`
-                      border-style: dashed;
-                    `}
-                    rows={2}
-                    placeholder={
-                      placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')
-                    }
-                  />
-                );
-              }}
-            />
+        <div css={styles.popoverContent}>
+          <Controller
+            control={form.control}
+            name="videoSource"
+            rules={{ ...requiredRule() }}
+            render={(controllerProps) => {
+              return (
+                <FormSelectInput
+                  {...controllerProps}
+                  options={videoSourcesSelectOptions}
+                  disabled={videoSourceOptions.length <= 1}
+                  placeholder={__('Select source', 'tutor')}
+                  hideCaret={videoSourceOptions.length <= 1}
+                />
+              );
+            }}
+          />
+          <Controller
+            control={form.control}
+            name="videoUrl"
+            rules={{
+              ...requiredRule(),
+              validate: validateVideoUrl,
+            }}
+            render={(controllerProps) => {
+              return (
+                <FormTextareaInput
+                  {...controllerProps}
+                  inputCss={css`
+                    border-style: dashed;
+                  `}
+                  rows={2}
+                  placeholder={placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')}
+                />
+              );
+            }}
+          />
 
-            <div css={styles.popoverButtonWrapper}>
-              <Button
-                variant="text"
-                size="small"
-                onClick={() => {
-                  setIsOpen(false);
-                }}
-              >
-                {__('Cancel', 'tutor')}
-              </Button>
-              <Button
-                data-cy="submit-url"
-                variant="secondary"
-                size="small"
-                onClick={form.handleSubmit(handleDataFromUrl)}
-              >
-                {__('Ok', 'tutor')}
-              </Button>
-            </div>
+          <div css={styles.popoverButtonWrapper}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              {__('Cancel', 'tutor')}
+            </Button>
+            <Button
+              data-cy="submit-url"
+              variant="secondary"
+              size="small"
+              onClick={form.handleSubmit(handleDataFromUrl)}
+            >
+              {__('Ok', 'tutor')}
+            </Button>
           </div>
         </div>
-      </Portal>
+      </EnhancedPopover>
     </>
   );
 };
