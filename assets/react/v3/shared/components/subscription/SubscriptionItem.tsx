@@ -550,8 +550,7 @@ export default function SubscriptionItem({
         }
         message={__('Are you sure you want to delete this plan? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
+        arrow={false}
         isLoading={deleteSubscriptionMutation.isPending}
         confirmButton={{
           text: __('Delete', 'tutor'),
