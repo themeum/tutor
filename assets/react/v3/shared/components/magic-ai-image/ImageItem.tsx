@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -87,7 +87,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
           </MagicButton>
         </div>
       </div>
-      <EnhancedPopover
+      <Popover
         triggerRef={ref}
         isOpen={isOpen}
         closePopover={() => {
@@ -128,7 +128,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
             )}
           </For>
         </div>
-      </EnhancedPopover>
+      </Popover>
     </>
   );
 };

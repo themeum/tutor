@@ -10,8 +10,8 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
@@ -35,7 +35,7 @@ import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/con
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { ID, TopicContentType } from '@TutorShared/utils/types';
@@ -360,7 +360,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           </Tooltip>
         </div>
       </div>
-      <EnhancedPopover
+      <Popover
         triggerRef={editButtonRef}
         isOpen={meetingType !== null}
         closePopover={noop}
@@ -381,7 +381,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
         <Show when={meetingType === 'tutor-google-meet'}>
           <GoogleMeetForm data={null} topicId={topicId} onCancel={() => setMeetingType(null)} meetingId={contentId} />
         </Show>
-      </EnhancedPopover>
+      </Popover>
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         isLoading={

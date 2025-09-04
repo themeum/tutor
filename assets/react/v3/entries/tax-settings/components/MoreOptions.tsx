@@ -9,7 +9,7 @@ import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal'
 import { useModal } from '@TutorShared/components/modals/Modal';
 import { spacing, zIndex } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 
 import type { TaxSettings } from '../services/tax';
 import type { ColumnDataType } from './TaxRates';

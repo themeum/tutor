@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -108,7 +108,7 @@ const FormMultiLevelSelect = ({
               </button>
             </div>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               arrow={false}
               isOpen={isOpen}
@@ -163,7 +163,7 @@ const FormMultiLevelSelect = ({
                   </div>
                 )}
               </div>
-            </EnhancedPopover>
+            </Popover>
           </>
         );
       }}

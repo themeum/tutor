@@ -2,7 +2,7 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -148,7 +148,7 @@ const Select = <T,>({
         </div>
       </div>
 
-      <EnhancedPopover
+      <Popover
         triggerRef={triggerRef}
         arrow={false}
         isOpen={isOpen}
@@ -203,7 +203,7 @@ const Select = <T,>({
             </Button>
           </div>
         )}
-      </EnhancedPopover>
+      </Popover>
     </div>
   );
 };

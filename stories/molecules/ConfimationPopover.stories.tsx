@@ -1,6 +1,6 @@
 import Button from '@TutorShared/atoms/Button';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from 'storybook-react-rsbuild';

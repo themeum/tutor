@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';
@@ -276,7 +276,7 @@ const FormSelectUser = ({
                   <p>{emptyStateText}</p>
                 </div>
               ))}
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               arrow={false}
               isOpen={isOpen}
@@ -360,7 +360,7 @@ const FormSelectUser = ({
                   ))}
                 </Show>
               </ul>
-            </EnhancedPopover>
+            </Popover>
           </div>
         );
       }}

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import EmptyState from '@TutorShared/molecules/EmptyState';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import type { Content, CourseTopic } from '@CourseBuilderServices/curriculum';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
@@ -261,7 +261,7 @@ const FormTopicPrerequisites = ({
               </div>
             </Show>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               isOpen={isOpen}
               arrow={false}
@@ -337,7 +337,7 @@ const FormTopicPrerequisites = ({
                   </For>
                 </Show>
               </ul>
-            </EnhancedPopover>
+            </Popover>
           </div>
         );
       }}

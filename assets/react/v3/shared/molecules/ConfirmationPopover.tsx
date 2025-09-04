@@ -7,10 +7,10 @@ import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
 import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { type PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import EnhancedPopover from './EnhancedPopover';
+import Popover from './Popover';
 
 interface ConfirmationPopoverProps<TRef> {
   triggerRef: RefObject<TRef>;
@@ -60,7 +60,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
   positionModifier,
 }: ConfirmationPopoverProps<TRef>) => {
   return (
-    <EnhancedPopover
+    <Popover
       triggerRef={triggerRef}
       isOpen={isOpen}
       arrow={arrow}
@@ -94,7 +94,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
           </Button>
         </div>
       </div>
-    </EnhancedPopover>
+    </Popover>
   );
 };
 

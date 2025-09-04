@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -126,7 +126,7 @@ const FormTimeInput = ({
               )}
             </div>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               arrow={false}
               isOpen={isOpen}
@@ -159,7 +159,7 @@ const FormTimeInput = ({
                   );
                 })}
               </ul>
-            </EnhancedPopover>
+            </Popover>
           </div>
         );
       }}

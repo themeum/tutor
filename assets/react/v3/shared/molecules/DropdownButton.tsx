@@ -9,8 +9,8 @@ import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { typography } from '@TutorShared/config/typography';
-import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
-import EnhancedPopover from './EnhancedPopover';
+import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
+import Popover from './Popover';
 
 interface DropdownOptionProps {
   type?: 'button' | 'submit';
@@ -169,7 +169,7 @@ const DropdownButton = ({
           <SVGIcon name="chevronDown" width={24} height={24} />
         </button>
       </div>
-      <EnhancedPopover
+      <Popover
         gap={4}
         maxWidth={dropdownMaxWidth}
         placement={placement}
@@ -195,7 +195,7 @@ const DropdownButton = ({
             return child;
           })}
         </div>
-      </EnhancedPopover>
+      </Popover>
     </>
   );
 };

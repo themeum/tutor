@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import EmptyState from '@TutorShared/molecules/EmptyState';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -208,7 +208,7 @@ const FormCoursePrerequisites = ({
               </div>
             </Show>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               arrow={false}
               isOpen={isOpen}
@@ -261,7 +261,7 @@ const FormCoursePrerequisites = ({
                   </For>
                 </Show>
               </ul>
-            </EnhancedPopover>
+            </Popover>
           </div>
         );
       }}

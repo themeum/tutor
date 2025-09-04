@@ -5,13 +5,13 @@ import { DayPicker, type Formatters } from 'react-day-picker';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
@@ -143,7 +143,7 @@ const FormDateInput = ({
               )}
             </div>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               isOpen={isOpen}
               closePopover={handleClosePortal}
@@ -184,7 +184,7 @@ const FormDateInput = ({
                   weekStartsOn={hasWpDate ? window.wp.date.getSettings().l10n.startOfWeek : 0}
                 />
               </div>
-            </EnhancedPopover>
+            </Popover>
           </div>
         );
       }}

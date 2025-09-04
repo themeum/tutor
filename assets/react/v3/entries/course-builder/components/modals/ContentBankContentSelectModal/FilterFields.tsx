@@ -5,7 +5,7 @@ import { useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -151,7 +151,7 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
         </div>
       </div>
 
-      <EnhancedPopover
+      <Popover
         isOpen={isFiltersPopoverOpen}
         closeOnEscape
         arrow={false}
@@ -202,7 +202,7 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
             </Button>
           </div>
         </div>
-      </EnhancedPopover>
+      </Popover>
     </>
   );
 };

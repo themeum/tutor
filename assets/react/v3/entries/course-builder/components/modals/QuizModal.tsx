@@ -39,8 +39,8 @@ import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotCo
 import { type ContentDripType } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
 import { findSlotFields } from '@TutorShared/utils/util';

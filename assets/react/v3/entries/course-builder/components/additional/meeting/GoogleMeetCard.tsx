@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -128,7 +128,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
           </div>
         </div>
       </div>
-      <EnhancedPopover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
+      <Popover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
         <GoogleMeetForm
           data={data}
           topicId={topicId}
@@ -136,7 +136,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
             setIsOpen(false);
           }}
         />
-      </EnhancedPopover>
+      </Popover>
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         triggerRef={deleteRef}

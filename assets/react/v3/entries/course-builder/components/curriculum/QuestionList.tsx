@@ -20,7 +20,7 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import Button from '@TutorShared/atoms/Button';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@TutorShared/components/modals/H5PContentListModal';
@@ -36,7 +36,7 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -406,7 +406,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
             )}
           </DndContext>
         </Show>
-        <EnhancedPopover
+        <Popover
           gap={4}
           maxWidth={'240px'}
           placement={
@@ -499,7 +499,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               </div>
             </Show>
           </div>
-        </EnhancedPopover>
+        </Popover>
       </div>
     </div>
   );

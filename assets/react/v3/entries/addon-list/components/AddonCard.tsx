@@ -11,8 +11,8 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { useAddonContext } from '../contexts/addon-context';
 import { useEnableDisableAddon, type Addon } from '../services/addons';
@@ -123,7 +123,7 @@ function AddonCard({ addon }: { addon: Addon }) {
         </div>
         <div css={styles.addonDescription}>{addon.description}</div>
       </div>
-      <EnhancedPopover
+      <Popover
         triggerRef={popoverRef}
         isOpen={isOpen}
         closePopover={() => setIsOpen(false)}
@@ -146,7 +146,7 @@ function AddonCard({ addon }: { addon: Addon }) {
             }}
           />
         </Show>
-      </EnhancedPopover>
+      </Popover>
     </div>
   );
 }

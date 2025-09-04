@@ -8,7 +8,7 @@ import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -192,7 +192,7 @@ const FormMultiLevelInput = ({
               </Show>
             </div>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               arrow={false}
               isOpen={isOpen}
@@ -237,7 +237,7 @@ const FormMultiLevelInput = ({
                   </Button>
                 </div>
               </div>
-            </EnhancedPopover>
+            </Popover>
           </>
         );
       }}

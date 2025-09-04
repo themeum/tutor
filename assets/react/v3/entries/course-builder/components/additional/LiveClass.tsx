@@ -8,7 +8,7 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import EmptyState from '@TutorShared/molecules/EmptyState';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -31,7 +31,7 @@ import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 import liveClassPro2x from '@SharedImages/pro-placeholders/live-class-2x.webp';
 import liveClassPro from '@SharedImages/pro-placeholders/live-class.webp';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -168,7 +168,7 @@ const LiveClass = () => {
         </Show>
       </Show>
 
-      <EnhancedPopover
+      <Popover
         triggerRef={zoomButtonRef}
         isOpen={showMeetingForm === 'zoom'}
         closePopover={noop}
@@ -184,8 +184,8 @@ const LiveClass = () => {
             setShowMeetingForm(null);
           }}
         />
-      </EnhancedPopover>
-      <EnhancedPopover
+      </Popover>
+      <Popover
         triggerRef={googleMeetButtonRef}
         isOpen={showMeetingForm === 'google_meet'}
         closePopover={noop}
@@ -200,7 +200,7 @@ const LiveClass = () => {
             setShowMeetingForm(null);
           }}
         />
-      </EnhancedPopover>
+      </Popover>
     </div>
   );
 };

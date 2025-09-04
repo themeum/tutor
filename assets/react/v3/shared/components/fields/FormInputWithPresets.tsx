@@ -2,7 +2,7 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import {
   borderRadius,
@@ -133,7 +133,7 @@ const FormInputWithPresets = ({
               )}
             </div>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               isOpen={isOpen}
               closePopover={() => setIsOpen(false)}
@@ -167,7 +167,7 @@ const FormInputWithPresets = ({
                   ))}
                 </ul>
               </div>
-            </EnhancedPopover>
+            </Popover>
           </>
         );
       }}

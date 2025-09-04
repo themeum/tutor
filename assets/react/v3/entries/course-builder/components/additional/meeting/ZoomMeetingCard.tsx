@@ -6,7 +6,7 @@ import { useRef, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -145,7 +145,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
           </div>
         </div>
       </div>
-      <EnhancedPopover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
+      <Popover isOpen={isOpen} triggerRef={triggerRef} closePopover={() => setIsOpen(false)} maxWidth={'306px'}>
         <ZoomMeetingForm
           data={data}
           meetingHost={meetingHost}
@@ -154,7 +154,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
             setIsOpen(false);
           }}
         />
-      </EnhancedPopover>
+      </Popover>
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         triggerRef={deleteRef}

@@ -11,8 +11,8 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import Show from '@TutorShared/controls/Show';
 
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { useFileUploader } from '@TutorShared/molecules/FileUploader';
+import Popover from '@TutorShared/molecules/Popover';
 import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
@@ -29,7 +29,7 @@ import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
@@ -372,7 +372,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
 
       <input css={styles.input} type="file" ref={fileInputRef} onChange={handleChange} multiple={false} accept=".csv" />
 
-      <EnhancedPopover
+      <Popover
         triggerRef={triggerGoogleMeetRef}
         isOpen={meetingType === 'tutor-google-meet'}
         closePopover={noop}
@@ -389,8 +389,8 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             setIsThreeDotOpen(false);
           }}
         />
-      </EnhancedPopover>
-      <EnhancedPopover
+      </Popover>
+      <Popover
         triggerRef={triggerZoomRef}
         isOpen={meetingType === 'tutor_zoom_meeting'}
         closePopover={noop}
@@ -408,7 +408,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
             setIsThreeDotOpen(false);
           }}
         />
-      </EnhancedPopover>
+      </Popover>
     </>
   );
 };

@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -104,7 +104,7 @@ const FormMultiSelectInput = ({
               </div>
             )}
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               arrow={false}
               isOpen={isOpen}
@@ -129,7 +129,7 @@ const FormMultiSelectInput = ({
                   </For>
                 </Show>
               </ul>
-            </EnhancedPopover>
+            </Popover>
           </div>
         );
       }}

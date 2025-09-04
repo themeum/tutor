@@ -4,7 +4,7 @@ import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } fro
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -261,7 +261,7 @@ const FormSelectInput = <T,>({
               )}
             </div>
 
-            <EnhancedPopover
+            <Popover
               triggerRef={triggerRef}
               isOpen={isOpen}
               dependencies={[selections.length]}
@@ -334,7 +334,7 @@ const FormSelectInput = <T,>({
                   </div>
                 )}
               </ul>
-            </EnhancedPopover>
+            </Popover>
           </div>
         );
       }}

@@ -7,10 +7,10 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/useEnhancedPortalPopover';
+import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import EnhancedPopover from './EnhancedPopover';
+import Popover from './Popover';
 
 interface ThreeDotsOptionProps {
   text: string | ReactNode;
@@ -105,7 +105,7 @@ const ThreeDots = ({
       >
         <SVGIcon name={dotsOrientation === 'horizontal' ? 'threeDots' : 'threeDotsVertical'} width={32} height={32} />
       </button>
-      <EnhancedPopover
+      <Popover
         gap={13}
         maxWidth={maxWidth}
         placement={placement}
@@ -129,7 +129,7 @@ const ThreeDots = ({
             return child;
           })}
         </div>
-      </EnhancedPopover>
+      </Popover>
     </>
   );
 };
