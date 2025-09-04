@@ -58,7 +58,6 @@ class Admin {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
-		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
@@ -90,6 +89,8 @@ class Admin {
 	 * Register admin menus
 	 *
 	 * @since 1.0.0
+	 * @since 3.8.0 re-organize admin menu.
+	 *
 	 * @return void
 	 */
 	public function register_menu() {
@@ -130,49 +131,184 @@ class Admin {
 			$menu_position
 		);
 
-		// Added @since v2.0.0.
-		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
+		new WhatsNew();
 
-		// Ecommerce menu @since 3.0.0.
-		do_action( 'tutor_after_courses_admin_menu' );
+		$admin_menu = apply_filters(
+			'tutor_admin_menu',
+			array(
+				'group_one'   => array(
+					'courses'        => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Courses', 'tutor' ),
+						'menu_title'  => __( 'Courses', 'tutor' ),
+						'capability'  => 'manage_tutor_instructor',
+						'menu_slug'   => 'tutor',
+						'callback'    => array( $this, 'tutor_course_list' ),
+					),
+					'content_bank'   => null,
+					'course_builder' => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Course Builder', 'tutor' ),
+						'menu_title'  => '<span class="tutor-create-course">Create Course</span>',
+						'capability'  => 'manage_tutor_instructor',
+						'menu_slug'   => 'create-course',
+						'callback'    => array( new Course( false ), 'load_course_builder' ),
+					),
+					'categories'     => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Categories', 'tutor' ),
+						'menu_title'  => __( 'Categories', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type,
+					),
+					'tags'           => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Tags', 'tutor' ),
+						'menu_title'  => __( 'Tags', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type,
+					),
+				),
+				'group_two'   => array(
+					'orders'            => null,
+					'subscriptions'     => null,
+					'coupons'           => null,
+					'students'          => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Students', 'tutor' ),
+						'menu_title'  => __( 'Students', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => Students_List::STUDENTS_LIST_PAGE,
+						'callback'    => array( $this, 'tutor_students' ),
 
-		add_submenu_page( 'tutor', __( 'Course Builder', 'tutor' ), '<span class="tutor-create-course">Create Course</span>', 'manage_tutor_instructor', 'create-course', array( new Course( false ), 'load_course_builder' ) );
+					),
+					'announcements'     => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Announcements', 'tutor' ),
+						'menu_title'  => __( 'Announcements', 'tutor' ),
+						'capability'  => 'manage_tutor_instructor',
+						'menu_slug'   => 'tutor_announcements',
+						'callback'    => array( $this, 'tutor_announcements' ),
 
-		// Extendable action hook @since 2.2.0.
-		do_action( 'tutor_after_courses_menu' );
+					),
+					'assignments'       => null,
+					'quiz_attempts'     => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Quiz Attempts', 'tutor' ),
+						'menu_title'  => __( 'Quiz Attempts', 'tutor' ),
+						'capability'  => 'manage_tutor_instructor',
+						'menu_slug'   => Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE,
+						'callback'    => array( $this, 'quiz_attempts' ),
+					),
+					'q_and_a'           => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Q&A', 'tutor' ),
+						'menu_title'  => __( 'Q&A ', 'tutor' ) . $unanswered_bubble,
+						'capability'  => 'manage_tutor_instructor',
+						'menu_slug'   => Question_Answers_List::QUESTION_ANSWER_PAGE,
+						'callback'    => array( $this, 'question_answer' ),
+					),
+					'enrollments'       => null,
+					'reports'           => null,
+					'gradebook'         => null,
+					'instructors'       => $enable_course_marketplace ? array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Instructors', 'tutor' ),
+						'menu_title'  => __( 'Instructors', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => Instructors_List::INSTRUCTOR_LIST_PAGE,
+						'callback'    => array( $this, 'tutor_instructors' ),
+					) : null,
+					'withdraw_requests' => $enable_course_marketplace ? array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Withdraw Requests', 'tutor' ),
+						'menu_title'  => __( 'Withdraw Requests', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE,
+						'callback'    => array( $this, 'withdraw_requests' ),
+					) : null,
+				),
+				'group_three' => array(
+					'google_classroom' => null,
+					'zoom'             => null,
+					'google_meet'      => null,
+					'h5p'              => null,
+					'themes'           => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Themes', 'tutor' ),
+						'menu_title'  => __( 'Themes', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => 'tutor-themes',
+						'callback'    => array( $this, 'tutor_themes' ),
+					),
+					'addons'           => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Addons', 'tutor' ),
+						'menu_title'  => __( 'Addons', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => 'tutor-addons',
+						'callback'    => array( $this, 'enable_disable_addons' ),
+					),
+					'tools'            => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Tools', 'tutor' ),
+						'menu_title'  => __( 'Tools', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => 'tutor-tools',
+						'callback'    => array( new Tools_V2(), 'load_tools_page' ),
+					),
+					'settings'         => array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Settings', 'tutor' ),
+						'menu_title'  => __( 'Settings', 'tutor' ),
+						'capability'  => 'manage_tutor',
+						'menu_slug'   => 'tutor_settings',
+						'callback'    => array( new Options_V2(), 'load_settings_page' ),
+					),
+					'license'          => null,
+					'whats_new'        => null,
+					'upgrade_to_pro'   => $has_pro ? null : array(
+						'parent_slug' => 'tutor',
+						'page_title'  => __( 'Upgrade to Pro', 'tutor' ),
+						'menu_title'  => sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ),
+						'capability'  => 'manage_options',
+						'menu_slug'   => 'tutor-get-pro',
+						'callback'    => array( $this, 'tutor_get_pro' ),
+					),
+				),
+			)
+		);
 
-		// Templates menu @since 3.6.0.
-		add_submenu_page( 'tutor', __( 'Themes', 'tutor' ), __( 'Themes', 'tutor' ), 'manage_tutor', 'tutor-themes', array( $this, 'tutor_themes' ) );
+		foreach ( $admin_menu as $group => $menu ) {
+			foreach ( $menu as $name => $args ) {
+				if ( empty( $args ) ) {
+					continue;
+				}
 
-		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
+				// Backward compatibility hook.
+				if ( 'addons' === $name ) {
+					do_action( 'tutor_admin_register' );
+				}
 
-		add_submenu_page( 'tutor', __( 'Tags', 'tutor' ), __( 'Tags', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type, null );
+				// Backward compatibility hook.
+				do_action( "tutor_before_{$name}_admin_menu" );
 
-		add_submenu_page( 'tutor', __( 'Students', 'tutor' ), __( 'Students', 'tutor' ), 'manage_tutor', Students_List::STUDENTS_LIST_PAGE, array( $this, 'tutor_students' ) );
+				do_action( "tutor_before_{$name}_menu" );
+				add_submenu_page( $args['parent_slug'], $args['page_title'], $args['menu_title'], $args['capability'], $args['menu_slug'], $args['callback'] ?? '', $args['position'] ?? null );
 
-		if ( $enable_course_marketplace ) {
-			add_submenu_page( 'tutor', __( 'Instructors', 'tutor' ), __( 'Instructors', 'tutor' ), 'manage_tutor', Instructors_List::INSTRUCTOR_LIST_PAGE, array( $this, 'tutor_instructors' ) );
-			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
-		}
+				// Backward compatibility hook.
+				do_action( "tutor_after_{$name}_menu" );
 
-		add_submenu_page( 'tutor', __( 'Announcements', 'tutor' ), __( 'Announcements', 'tutor' ), 'manage_tutor_instructor', 'tutor_announcements', array( $this, 'tutor_announcements' ) );
+				do_action( "tutor_after_{$name}_admin_menu" );
+			}
 
-		add_submenu_page( 'tutor', __( 'Q&A', 'tutor' ), __( 'Q&A ', 'tutor' ) . $unanswered_bubble, 'manage_tutor_instructor', Question_Answers_List::QUESTION_ANSWER_PAGE, array( $this, 'question_answer' ) );
+			if ( 'group_three' !== $group ) {
+				if ( 'group_two' === $group && ! current_user_can( 'manage_options' ) ) {
+					continue;
+				}
 
-		add_submenu_page( 'tutor', __( 'Quiz Attempts', 'tutor' ), __( 'Quiz Attempts', 'tutor' ), 'manage_tutor_instructor', Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE, array( $this, 'quiz_attempts' ) );
-
-		add_submenu_page( 'tutor', __( 'Addons', 'tutor' ), __( 'Addons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
-
-		do_action( 'tutor_admin_register' );
-
-		add_submenu_page( 'tutor', __( 'Tools', 'tutor' ), __( 'Tools', 'tutor' ), 'manage_tutor', 'tutor-tools', array( new \TUTOR\Tools_V2(), 'load_tools_page' ) );
-
-		add_submenu_page( 'tutor', __( 'Settings', 'tutor' ), __( 'Settings', 'tutor' ), 'manage_tutor', 'tutor_settings', array( new \TUTOR\Options_V2(), 'load_settings_page' ) );
-
-		do_action( 'tutor_after_settings_menu' );
-
-		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
+				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_tutor_instructor', '#' );
+			}
 		}
 	}
 

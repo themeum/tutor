@@ -327,7 +327,12 @@ class HooksHandler {
 		$enrollment_status = ( OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : ( OrderModel::ORDER_INCOMPLETE === $order->order_status ? 'pending' : 'cancel' ) );
 
 		foreach ( $order->items as $item ) {
-			$object_id = $item->id; // It could be course/bundle/plan id.
+			$object_id    = $item->id; // It could be course/bundle/plan id.
+			$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item->primary_id );
+			if ( $is_gift_item ) {
+				continue;
+			}
+
 			if ( $this->order_model::TYPE_SINGLE_ORDER !== $order->order_type ) {
 				/**
 				 * Do not process enrollment for membership plan.

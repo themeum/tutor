@@ -102,6 +102,7 @@ final class Icon {
 	const FILE                       = 'file';
 	const FLA                        = 'fla';
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
+	const GIFT                       = 'gift';
 	const GIFT_CARD                  = 'gift-card';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
