@@ -1,21 +1,20 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
-import { isRTL } from '@TutorShared/config/constants';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import type { Option } from '@TutorShared/utils/types';
 
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiSelectInputProps extends FormControllerProps<string[] | null> {
@@ -52,11 +51,7 @@ const FormMultiSelectInput = ({
   );
 
   const [isOpen, setIsOpen] = useState(false);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-  });
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   const handleCheckboxChange = (checked: boolean, selectedId: string) => {
     if (checked) {
@@ -108,38 +103,31 @@ const FormMultiSelectInput = ({
               </div>
             )}
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div
-                css={[
-                  styles.optionsWrapper,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
-                <ul css={[styles.options(removeOptionsMinWidth)]}>
-                  <Show
-                    when={filteredOptions.length > 0}
-                    fallback={<div css={styles.notTag}>{__('No option available.', 'tutor')}</div>}
-                  >
-                    <For each={filteredOptions}>
-                      {(option) => (
-                        <li key={option.value} css={styles.optionItem}>
-                          <Checkbox
-                            label={option.label}
-                            checked={!!fieldValue.find((item) => item === option.value)}
-                            onChange={(checked) => handleCheckboxChange(checked, option.value)}
-                          />
-                        </li>
-                      )}
-                    </For>
-                  </Show>
-                </ul>
-              </div>
-            </Portal>
+            <EnhancedPopover
+              triggerRef={triggerRef}
+              arrow={false}
+              isOpen={isOpen}
+              closePopover={() => setIsOpen(false)}
+            >
+              <ul css={[styles.options(removeOptionsMinWidth)]}>
+                <Show
+                  when={filteredOptions.length > 0}
+                  fallback={<div css={styles.notTag}>{__('No option available.', 'tutor')}</div>}
+                >
+                  <For each={filteredOptions}>
+                    {(option) => (
+                      <li key={option.value} css={styles.optionItem}>
+                        <Checkbox
+                          label={option.label}
+                          checked={!!fieldValue.find((item) => item === option.value)}
+                          onChange={(checked) => handleCheckboxChange(checked, option.value)}
+                        />
+                      </li>
+                    )}
+                  </For>
+                </Show>
+              </ul>
+            </EnhancedPopover>
           </div>
         );
       }}
@@ -184,10 +172,6 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
     margin-top: ${spacing[8]};
-  `,
-  optionsWrapper: css`
-    position: absolute;
-    width: 100%;
   `,
   options: (removeOptionsMinWidth: boolean) => css`
     z-index: ${zIndex.dropdown};
