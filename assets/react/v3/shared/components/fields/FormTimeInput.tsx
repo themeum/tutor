@@ -1,15 +1,15 @@
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { DateFormats, isRTL } from '@TutorShared/config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { DateFormats } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { type FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import { useSelectKeyboardNavigation } from '../../hooks/useSelectKeyboardNavigation';
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -36,6 +36,7 @@ const FormTimeInput = ({
 }: FormTimeInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const triggerRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 
   const options = useMemo(() => {
@@ -52,11 +53,6 @@ const FormTimeInput = ({
 
     return range.map((date) => format(date, DateFormats.hoursMinutes));
   }, [interval]);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-  });
 
   const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
     options: options.map((option) => ({ label: option, value: option })),
@@ -126,46 +122,40 @@ const FormTimeInput = ({
               )}
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div
-                css={[
-                  styles.popover,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
-                <ul css={styles.list}>
-                  {options.map((option, index) => {
-                    return (
-                      <li
-                        key={index}
-                        css={styles.listItem}
-                        ref={activeIndex === index ? activeItemRef : null}
-                        data-active={activeIndex === index}
+            <EnhancedPopover
+              triggerRef={triggerRef}
+              arrow={false}
+              isOpen={isOpen}
+              closePopover={() => setIsOpen(false)}
+              maxWidth={`${triggerRef.current?.getBoundingClientRect().width}px`}
+            >
+              <ul css={styles.list}>
+                {options.map((option, index) => {
+                  return (
+                    <li
+                      key={index}
+                      css={styles.listItem}
+                      ref={activeIndex === index ? activeItemRef : null}
+                      data-active={activeIndex === index}
+                    >
+                      <button
+                        type="button"
+                        css={styles.itemButton}
+                        onClick={() => {
+                          field.onChange(option);
+                          setIsOpen(false);
+                        }}
+                        onMouseOver={() => setActiveIndex(index)}
+                        onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
+                        onFocus={() => setActiveIndex(index)}
                       >
-                        <button
-                          type="button"
-                          css={styles.itemButton}
-                          onClick={() => {
-                            field.onChange(option);
-                            setIsOpen(false);
-                          }}
-                          onMouseOver={() => setActiveIndex(index)}
-                          onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
-                          onFocus={() => setActiveIndex(index)}
-                        >
-                          {option}
-                        </button>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </Portal>
+                        {option}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </EnhancedPopover>
           </div>
         );
       }}
@@ -198,19 +188,12 @@ const styles = {
     transform: translateY(-50%);
     color: ${colorTokens.icon.default};
   `,
-  popover: css`
-    position: absolute;
-    width: 100%;
-    background-color: ${colorTokens.background.white};
-    box-shadow: ${shadow.popover};
-    height: 380px;
-    overflow-y: auto;
-    border-radius: ${borderRadius[6]};
-  `,
   list: css`
+    height: 380px;
     list-style: none;
     padding: 0;
     margin: 0;
+    ${styleUtils.overflowYAuto};
   `,
   listItem: css`
     width: 100%;
