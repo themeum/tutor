@@ -41,7 +41,7 @@ class PaymentHandler {
 
 		register_rest_route(
 			'tutor/v1',
-			'/ecommerce-webhook(/(?<payment_gateway>[a-z0-9_-]+))?',
+			'/ecommerce-webhook(/(?<payment_method>[a-z0-9_-]+))?',
 			array(
 				'methods'             => WP_REST_Server::ALLMETHODS,
 				'callback'            => array( $this, 'handle_ecommerce_webhook' ),
@@ -70,7 +70,7 @@ class PaymentHandler {
 		);
 		// phpcs:enable
 
-		$payment_method = $request->get_param( 'payment_method' ) ?? $request->get_param( 'payment_gateway' ) ?? '';
+		$payment_method = $request->get_param( 'payment_method' ) ?? '';
 
 		if ( empty( $payment_method ) ) {
 			error_log( 'No Payment Method found from webhook url,' ); //phpcs:ignore
