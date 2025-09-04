@@ -38,20 +38,10 @@ class PaymentHandler {
 	 * @return void
 	 */
 	public function register_webhook_route() {
-		register_rest_route(
-			'tutor/v1',
-			'/ecommerce-webhook',
-			array(
-				'methods'             => WP_REST_Server::ALLMETHODS,
-				'callback'            => array( $this, 'handle_ecommerce_webhook' ),
-				'permission_callback' => '__return_true', // Allows public access to the route.
-			)
-		);
 
-		// Register route for authorizenet.
 		register_rest_route(
 			'tutor/v1',
-			'/ecommerce-webhook/authorizenet',
+			'/ecommerce-webhook(/(?<payment_method>[a-z0-9_-]+))?',
 			array(
 				'methods'             => WP_REST_Server::ALLMETHODS,
 				'callback'            => array( $this, 'handle_ecommerce_webhook' ),
@@ -80,14 +70,16 @@ class PaymentHandler {
 		);
 		// phpcs:enable
 
-		$route          = $request->get_route() ?? null;
-		$payment_method = ! is_null( $route ) && strpos( $route, self::AUTHORIZENET ) ? self::AUTHORIZENET : Input::get( 'payment_method', 'paypal' );
+		$payment_method = $request->get_param( 'payment_method' ) ?? '';
+
+		if ( empty( $payment_method ) ) {
+			error_log( 'No Payment Method found from webhook url,' ); //phpcs:ignore
+			exit();
+		}
 
 		$payment_gateways = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
-		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
-								? $payment_gateways[ $payment_method ]['gateway_class']
-								: null;
+		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] ) ? $payment_gateways[ $payment_method ]['gateway_class'] : null;
 
 		if ( $payment_gateway_class ) {
 			$payment = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
