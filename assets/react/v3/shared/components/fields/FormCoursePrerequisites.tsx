@@ -6,7 +6,6 @@ import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import EmptyState from '@TutorShared/molecules/EmptyState';
 
-import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
@@ -16,13 +15,13 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 import { type Course } from '@TutorShared/services/course';
 
 import notFound2x from '@SharedImages/not-found-2x.webp';
 import notFound from '@SharedImages/not-found.webp';
 
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormCoursePrerequisitesProps = {
@@ -57,6 +56,7 @@ const FormCoursePrerequisites = ({
   const inputValue = field.value ?? [];
   const selectedIds = inputValue.map((course) => String(course.id));
 
+  const triggerRef = useRef<HTMLDivElement>(null);
   const activeItemRef = useRef<HTMLLIElement | null>(null);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -76,12 +76,6 @@ const FormCoursePrerequisites = ({
       // Handle local filter
     }
   }, [debouncedSearchText, handleSearchOnChange]);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-    dependencies: [filteredOption.length],
-  });
 
   const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
     options: filteredOption.map((option) => ({
@@ -214,72 +208,59 @@ const FormCoursePrerequisites = ({
               </div>
             </Show>
 
-            <Portal
+            <EnhancedPopover
+              triggerRef={triggerRef}
+              arrow={false}
               isOpen={isOpen}
-              onClickOutside={() => {
-                setIsOpen(false);
-                setSearchText('');
-              }}
-              onEscape={() => {
+              dependencies={[filteredOption.length]}
+              closePopover={() => {
                 setIsOpen(false);
                 setSearchText('');
               }}
             >
-              <div
-                css={[
-                  styles.optionsWrapper,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
-                <ul css={[styles.options]}>
-                  <Show
-                    when={filteredOption.length > 0}
-                    fallback={
-                      <li css={styles.emptyOption}>
-                        <p>{__('No courses found', 'tutor')}</p>
+              <ul css={[styles.options]}>
+                <Show
+                  when={filteredOption.length > 0}
+                  fallback={
+                    <li css={styles.emptyOption}>
+                      <p>{__('No courses found', 'tutor')}</p>
+                    </li>
+                  }
+                >
+                  <For each={filteredOption}>
+                    {(course, index) => (
+                      <li key={course.id} ref={activeIndex === index ? activeItemRef : null}>
+                        <button
+                          type="button"
+                          css={styles.courseCard({
+                            onPopover: true,
+                            isActive: activeIndex === index,
+                          })}
+                          onClick={() => {
+                            field.onChange([...inputValue, course]);
+                            onChange([...inputValue, course]);
+                            setIsOpen(false);
+                            setSearchText('');
+                          }}
+                          onMouseOver={() => setActiveIndex(index)}
+                          onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
+                          onFocus={() => setActiveIndex(index)}
+                          aria-selected={activeIndex === index}
+                        >
+                          <div css={styles.imageWrapper}>
+                            <img src={course.image} alt={course.title} css={styles.image} />
+                          </div>
+                          <div css={styles.cardContent}>
+                            <span css={styles.cardTitle}>{course.title}</span>
+                            <p css={typography.tiny()}>{course.id}</p>
+                          </div>
+                        </button>
                       </li>
-                    }
-                  >
-                    <For each={filteredOption}>
-                      {(course, index) => (
-                        <li key={course.id} ref={activeIndex === index ? activeItemRef : null}>
-                          <button
-                            type="button"
-                            css={styles.courseCard({
-                              onPopover: true,
-                              isActive: activeIndex === index,
-                            })}
-                            onClick={() => {
-                              field.onChange([...inputValue, course]);
-                              onChange([...inputValue, course]);
-                              setIsOpen(false);
-                              setSearchText('');
-                            }}
-                            onMouseOver={() => setActiveIndex(index)}
-                            onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
-                            onFocus={() => setActiveIndex(index)}
-                            aria-selected={activeIndex === index}
-                          >
-                            <div css={styles.imageWrapper}>
-                              <img src={course.image} alt={course.title} css={styles.image} />
-                            </div>
-                            <div css={styles.cardContent}>
-                              <span css={styles.cardTitle}>{course.title}</span>
-                              <p css={typography.tiny()}>{course.id}</p>
-                            </div>
-                          </button>
-                        </li>
-                      )}
-                    </For>
-                  </Show>
-                </ul>
-              </div>
-            </Portal>
+                    )}
+                  </For>
+                </Show>
+              </ul>
+            </EnhancedPopover>
           </div>
         );
       }}
@@ -327,10 +308,6 @@ const styles = {
     height: 100%;
     margin-top: ${spacing[8]};
     ${styleUtils.overflowYAuto};
-  `,
-  optionsWrapper: css`
-    position: absolute;
-    width: 100%;
   `,
   options: css`
     z-index: ${zIndex.dropdown};
