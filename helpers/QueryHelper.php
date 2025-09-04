@@ -639,7 +639,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function prepare_limit_clause( int $limit = 0, int $offset = 0 ) {
+	protected static function prepare_limit_clause( $limit = 0, $offset = 0 ) {
 		if ( $limit < 1 || $offset < 0 ) {
 			return '';
 		}
