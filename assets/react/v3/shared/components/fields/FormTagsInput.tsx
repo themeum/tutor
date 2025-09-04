@@ -1,23 +1,22 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import Chip from '@TutorShared/atoms/Chip';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities } from '@TutorShared/utils/util';
 
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTagsInputProps extends FormControllerProps<Tag[] | null> {
@@ -47,16 +46,11 @@ const FormTagsInput = ({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
 
+  const triggerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const tagListQuery = useTagListQuery({ search: debouncedSearchText });
   const createTagMutation = useCreateTagMutation();
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-    dependencies: [tagListQuery.data?.length],
-  });
 
   const tags = tagListQuery.data ?? [];
 
@@ -134,45 +128,40 @@ const FormTagsInput = ({
               </div>
             )}
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div
-                css={[
-                  styles.optionsWrapper,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
-                <ul css={[styles.options(removeOptionsMinWidth)]}>
-                  {searchText.length > 0 && (
-                    <li>
-                      <button type="button" css={styles.addTag} onClick={handleAddTag}>
-                        <SVGIcon name="plus" width={24} height={24} />
-                        <strong>{__('Add', 'tutor')}</strong> {searchText}
-                      </button>
-                    </li>
-                  )}
+            <EnhancedPopover
+              triggerRef={triggerRef}
+              isOpen={isOpen}
+              arrow={false}
+              closePopover={() => setIsOpen(false)}
+              maxWidth={`${triggerRef.current?.getBoundingClientRect().width}px`}
+              dependencies={[tagListQuery.data?.length]}
+            >
+              <ul css={[styles.options(removeOptionsMinWidth)]}>
+                {searchText.length > 0 && (
+                  <li>
+                    <button type="button" css={styles.addTag} onClick={handleAddTag}>
+                      <SVGIcon name="plus" width={24} height={24} />
+                      <strong>{__('Add', 'tutor')}</strong> {searchText}
+                    </button>
+                  </li>
+                )}
 
-                  <Show
-                    when={tags.length > 0}
-                    fallback={<div css={styles.notTag}>{__('No tag created yet.', 'tutor')}</div>}
-                  >
-                    {tags.map((tag) => (
-                      <li key={String(tag.id)} css={styles.optionItem}>
-                        <Checkbox
-                          label={decodeHtmlEntities(tag.name)}
-                          checked={!!fieldValue.find((item) => item.id === tag.id)}
-                          onChange={(checked) => handleCheckboxChange(checked, tag)}
-                        />
-                      </li>
-                    ))}
-                  </Show>
-                </ul>
-              </div>
-            </Portal>
+                <Show
+                  when={tags.length > 0}
+                  fallback={<div css={styles.notTag}>{__('No tag created yet.', 'tutor')}</div>}
+                >
+                  {tags.map((tag) => (
+                    <li key={String(tag.id)} css={styles.optionItem}>
+                      <Checkbox
+                        label={decodeHtmlEntities(tag.name)}
+                        checked={!!fieldValue.find((item) => item.id === tag.id)}
+                        onChange={(checked) => handleCheckboxChange(checked, tag)}
+                      />
+                    </li>
+                  ))}
+                </Show>
+              </ul>
+            </EnhancedPopover>
           </div>
         );
       }}
@@ -218,11 +207,8 @@ const styles = {
     gap: ${spacing[4]};
     margin-top: ${spacing[8]};
   `,
-  optionsWrapper: css`
-    position: absolute;
-    width: 100%;
-  `,
   options: (removeOptionsMinWidth: boolean) => css`
+    width: 100%;
     z-index: ${zIndex.dropdown};
     background-color: ${colorTokens.background.white};
     list-style-type: none;

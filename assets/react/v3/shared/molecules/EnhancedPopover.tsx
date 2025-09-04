@@ -28,6 +28,8 @@ interface PopoverProps<T> {
     top: number;
     left: number;
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dependencies?: any[];
 }
 
 const EnhancedPopover = <T extends HTMLElement>({
@@ -46,6 +48,7 @@ const EnhancedPopover = <T extends HTMLElement>({
     top: 0,
     left: 0,
   },
+  dependencies = [],
 }: PopoverProps<T>) => {
   const { position, triggerWidth, popoverRef } = useEnhancedPortalPopover<T, HTMLDivElement>({
     triggerRef,
@@ -55,6 +58,7 @@ const EnhancedPopover = <T extends HTMLElement>({
     arrow,
     gap,
     positionModifier,
+    dependencies,
   });
 
   return (
