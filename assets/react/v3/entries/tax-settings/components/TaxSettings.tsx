@@ -1,7 +1,12 @@
-import taxBanner from '@SharedImages/tax-banner.png';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
+import { FormProvider } from 'react-hook-form';
+
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -9,10 +14,9 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { getCountryByCode } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
-import { FormProvider } from 'react-hook-form';
+
+import taxBanner from '@SharedImages/tax-banner.png';
+
 import Card from '../molecules/Card';
 import EmptyState from '../molecules/EmptyState';
 import { type TaxSettings, useTaxSettingsQuery } from '../services/tax';
