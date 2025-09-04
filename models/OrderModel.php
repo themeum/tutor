@@ -17,8 +17,6 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\OrderActivitiesController;
-use TutorPro\GiftCourse\GiftCourse;
-use TutorPro\GiftCourse\InitGift;
 
 /**
  * OrderModel Class
