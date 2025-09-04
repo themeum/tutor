@@ -5,13 +5,10 @@ import React from 'react';
 import type { OrderSummaryItem } from '@OrderDetails/services/order';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
-import { makeFirstCharacterUpperCase } from '@TutorShared/utils/util';
-import { format } from 'date-fns';
 
 interface OrderItemProps extends React.HTMLAttributes<HTMLDivElement> {
   item: OrderSummaryItem;
@@ -47,32 +44,11 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
 
           {item.item_meta_list && item.item_meta_list.length > 0 && (
             <ul css={styles.itemMeta}>
-              {item.item_meta_list.map((item) => {
-                switch (item.meta_key) {
-                  case 'tutor_gift_status':
-                    return (
-                      <li key={item.id}>
-                        <strong>{__('Gift status', 'tutor')}</strong>: {makeFirstCharacterUpperCase(item.meta_value)}
-                      </li>
-                    );
-                  case 'tutor_gift_sent_at':
-                    return (
-                      <li key={item.id}>
-                        <strong>{__('Gift sent at', 'tutor')}</strong>:{' '}
-                        {format(new Date(item.meta_value), DateFormats.monthDayYearHoursMinutes)}
-                      </li>
-                    );
-                  case 'tutor_gift_received_at':
-                    return (
-                      <li key={item.id}>
-                        <strong>{__('Gift sent at', 'tutor')}</strong>:{' '}
-                        {format(new Date(item.meta_value), DateFormats.monthDayYearHoursMinutes)}
-                      </li>
-                    );
-                  default:
-                    return null;
-                }
-              })}
+              {item.item_meta_list.map((item) => (
+                <li key={item.id}>
+                  <strong>{item.meta_key}</strong>: {item.meta_value}
+                </li>
+              ))}
             </ul>
           )}
         </div>
