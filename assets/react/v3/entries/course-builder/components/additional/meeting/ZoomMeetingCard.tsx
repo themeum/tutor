@@ -166,8 +166,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
         }
         message={__('Are you sure you want to delete this meeting? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
+        arrow={false}
         isLoading={deleteZoomMeetingMutation.isPending}
         confirmButton={{
           text: __('Delete', 'tutor'),
