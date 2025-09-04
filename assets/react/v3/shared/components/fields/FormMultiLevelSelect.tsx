@@ -1,20 +1,19 @@
 import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { useCategoryListQuery, type CategoryWithChildren } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
 
 import Show from '@TutorShared/controls/Show';
+import EnhancedPopover from '@TutorShared/molecules/EnhancedPopover';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiLevelSelectProps extends FormControllerProps<number | null> {
@@ -42,17 +41,12 @@ const FormMultiLevelSelect = ({
   listItemsLabel,
   optionsWrapperStyle,
 }: FormMultiLevelSelectProps) => {
+  const triggerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const debouncedSearchValue = useDebounce(searchValue, 300);
   const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
   const options = generateTree(categoryListQuery.data ?? []);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-    dependencies: [options.length],
-  });
 
   useEffect(() => {
     if (!isOpen) {
@@ -112,14 +106,15 @@ const FormMultiLevelSelect = ({
               </button>
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div
-                css={[styles.categoryWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
-                ref={popoverRef}
-                style={{
-                  maxWidth: triggerWidth,
-                }}
-              >
+            <EnhancedPopover
+              triggerRef={triggerRef}
+              arrow={false}
+              isOpen={isOpen}
+              closePopover={() => setIsOpen(false)}
+              maxWidth={`${triggerRef.current?.getBoundingClientRect().width}px`}
+              dependencies={[options.length]}
+            >
+              <div css={styles.categoryWrapper}>
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}
                 <div css={styles.searchInput}>
                   <div css={styles.searchIcon}>
@@ -166,7 +161,7 @@ const FormMultiLevelSelect = ({
                   </div>
                 )}
               </div>
-            </Portal>
+            </EnhancedPopover>
           </>
         );
       }}
@@ -208,7 +203,6 @@ export const Branch = ({ option, onChange, level = 0 }: BranchProps) => {
 
 const styles = {
   categoryWrapper: css`
-    position: absolute;
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
