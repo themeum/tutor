@@ -5,7 +5,7 @@ import React from 'react';
 import type { OrderSummaryItem } from '@OrderDetails/services/order';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
@@ -131,5 +131,9 @@ const styles = {
   `,
   itemMeta: css`
     list-style: none;
+
+    strong {
+      font-weight: ${fontWeight.medium};
+    }
   `,
 };
