@@ -90,6 +90,7 @@ class Quiz_Attempts_List {
 	 * Get the attempts stat from specific instructor context
 	 *
 	 * @since 2.0.0
+	 * @since 3.8.0 refactor and query optimize.
 	 *
 	 * @return array
 	 */
@@ -100,39 +101,6 @@ class Quiz_Attempts_List {
 			tutor_utils()->checking_nonce();
 		}
 
-		/**
-		 * Parse `passing_grade` value from `attempt_info` serialized data.
-		 *
-		 * Data Format     : "passing_grade";s:2:"80" or "passing_grade";s:3:"100"
-		 * Expected Output : 80 or 100
-		 *
-		 * TODO: Optimize SQL query.
-		 */
-		$pass_mark = "((( SUBSTRING_INDEX(
-			SUBSTRING_INDEX(
-			  attempt_info,
-			  CONCAT(
-				  '\"passing_grade\";s:',
-				  SUBSTRING_INDEX(SUBSTRING_INDEX(attempt_info, '\"passing_grade\";s:', -1), ':\"', 1),
-				  ':\"'
-			  ),
-			  -1
-			), 
-			'\"', 
-			1
-  		))/100) * quiz_attempts.total_marks)";
-
-		$pending_count  = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
-		$pass_clause    = " AND quiz_attempts.earned_marks >= {$pass_mark}  ";
-		$fail_clause    = " AND quiz_attempts.earned_marks < {$pass_mark} AND {$pending_count} < 1 ";
-		$pending_clause = " AND {$pending_count} > 0 ";
-
-		$user_id     = get_current_user_id();
-		$user_clause = '';
-		if ( ! current_user_can( 'administrator' ) ) {
-			$user_clause = "AND quiz.post_author = {$user_id}";
-		}
-
 		$count_obj = (object) array(
 			'pass'    => 0,
 			'fail'    => 0,
@@ -140,14 +108,10 @@ class Quiz_Attempts_List {
 		);
 
 		$is_ajax_action = 'tutor_quiz_attempts_count' === Input::post( 'action' );
-		$course_id      = Input::post( 'course_id', '' );
+		$user_id        = get_current_user_id();
+		$course_id      = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$date           = Input::post( 'date', '' );
 		$search         = Input::post( 'search', '' );
-
-		$course_filter   = '' !== $course_id ? $wpdb->prepare( ' AND quiz_attempts.course_id = %d', $course_id ) : '';
-		$date_filter     = '' !== $date ? $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) = %s ', $date ) : '';
-		$search_term_raw = $search;
-		$search_filter   = '%' . $wpdb->esc_like( $search ) . '%';
 
 		if ( $is_ajax_action ) {
 			$current_params = compact( 'course_id', 'date', 'search' );
@@ -157,80 +121,46 @@ class Quiz_Attempts_List {
 			if ( $attempt_cache->has_cache() && $attempt_cache->is_same_query() && isset( $cached_attempts['result'] ) ) {
 				$count_obj = $cached_attempts['result'];
 			} else {
-				$select_stmt = "SELECT COUNT( DISTINCT attempt_id)
+
+				$course_filter = $course_id ? $wpdb->prepare( ' AND quiz_attempts.course_id = %d', $course_id ) : '';
+				$date_filter   = empty( $date ) ? '' : $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) = %s ', $date );
+				$user_clause   = User::is_admin() ? '' : $wpdb->prepare( ' AND quiz.post_author = %d', $user_id );
+
+				$search_term_raw = $search;
+				$search_filter   = '%' . $wpdb->esc_like( $search ) . '%';
+
+				//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$results = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT result, COUNT( DISTINCT attempt_id) AS total
 								FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 								INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
 								INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
-								INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id";
-
-				$count_obj->pass = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"{$select_stmt}		
-						WHERE attempt_status != %s
+								INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
+						WHERE result IS NOT NULL
 						AND (
 							users.user_email = %s
 							OR users.display_name LIKE %s
 							OR quiz.post_title LIKE %s
 							OR course.post_title LIKE %s
 						)
-							{$pass_clause}
-							{$user_clause}
-							{$course_filter}
-							{$date_filter}
-							",
-						'attempt_started',
+						{$user_clause}
+						{$course_filter}
+						{$date_filter}
+						GROUP BY result",
 						$search_term_raw,
 						$search_filter,
 						$search_filter,
 						$search_filter
 					)
 				);
+				//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-				$count_obj->fail = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"{$select_stmt}		
-						WHERE attempt_status != %s
-						AND (
-							users.user_email = %s
-							OR users.display_name LIKE %s
-							OR quiz.post_title LIKE %s
-							OR course.post_title LIKE %s
-						)
-							{$fail_clause}
-							{$user_clause}
-							{$course_filter}
-							{$date_filter}
-							",
-						'attempt_started',
-						$search_term_raw,
-						$search_filter,
-						$search_filter,
-						$search_filter
-					)
-				);
-
-				$count_obj->pending = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"{$select_stmt}		
-						WHERE attempt_status != %s
-						AND (
-							users.user_email = %s
-							OR users.display_name LIKE %s
-							OR quiz.post_title LIKE %s
-							OR course.post_title LIKE %s
-						)
-							{$pending_clause}
-							{$user_clause}
-							{$course_filter}
-							{$date_filter}
-							",
-						'attempt_started',
-						$search_term_raw,
-						$search_filter,
-						$search_filter,
-						$search_filter
-					)
-				);
+				foreach ( $results as $row ) {
+					if ( isset( $count_obj->{$row->result} ) ) {
+						$count_obj->{$row->result} = (int) $row->total;
+					}
+				}
 
 				$attempt_cache->data = $count_obj;
 				$attempt_cache->set_cache();
@@ -299,7 +229,7 @@ class Quiz_Attempts_List {
 	 *
 	 * @return array
 	 */
-	public function prpare_bulk_actions(): array {
+	public function prepare_bulk_actions(): array {
 		$actions = array(
 			$this->bulk_action_default(),
 			$this->bulk_action_delete(),

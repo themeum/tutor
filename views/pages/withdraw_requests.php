@@ -283,7 +283,7 @@ $filters = array(
 										<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
 									</div>
 								<?php elseif ( 'rejected' === $list->status ) : ?>
-									<div class="tutor-d-flex ">
+									<div class="tutor-d-flex tutor-justify-between">
 										<div class="tutor-fs-7 tutor-fw-medium tutor-color-muted">
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'date_format' ), $list->updated_at ) : '' ); ?>,<br>
 											<?php echo esc_html( $list->updated_at ? tutor_get_formated_date( get_option( 'time_format' ), $list->updated_at ) : '' ); ?>
@@ -292,7 +292,7 @@ $filters = array(
 											<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 												<i class="tutor-icon-circle-info tutor-color-muted"></i>
 											</span>
-											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt tooltip-left">
+											<div class="tutor-tooltip-wrap-area tutor-fs-7 tooltip-txt <?php echo esc_attr( is_rtl() ? 'tooltip-right' : 'tooltip-left' ); ?>">
 												<div class="withdraw-tutor-tooltip-content tutor-fs-7 tutor-d-flex tutor-align-center">
 													<span>
 													<?php

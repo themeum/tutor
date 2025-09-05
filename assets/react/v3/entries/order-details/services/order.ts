@@ -14,6 +14,12 @@ interface OrderSummary {
   sale_price?: number;
   discount_price: string;
   coupon_code: string;
+  item_meta_list?: {
+    id: string;
+    item_id: string;
+    meta_key: string;
+    meta_value: string;
+  }[];
 }
 
 interface OrderCourse extends OrderSummary {

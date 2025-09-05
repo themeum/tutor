@@ -43,6 +43,17 @@ class QuizModel {
 	}
 
 	/**
+	 * Get manual review types.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @return array
+	 */
+	public static function get_manual_review_types() {
+		return array( 'open_ended', 'short_answer' );
+	}
+
+	/**
 	 * Get total number of quiz
 	 *
 	 * @since 2.0.2
@@ -288,93 +299,50 @@ class QuizModel {
 	public static function get_total_quiz_attempts( $search_term = '', int $course_id = 0, string $tab = '', $date_filter = '' ) {
 		global $wpdb;
 
+		// Prepare search term.
+		$search_term = empty( $search_term ) ? '' : '%' . $wpdb->esc_like( $search_term ) . '%';
+
+		// Prepare course filter.
+		$course_filter = $course_id ? $wpdb->prepare( ' AND quiz_attempts.course_id = %d', $course_id ) : '';
+
+		// Prepare date filter.
+		$date_filter = empty( $date_filter ) ? '' : tutor_get_formated_date( 'Y-m-d', $date_filter );
+		$date_filter = empty( $date_filter ) ? '' : $wpdb->prepare( ' AND DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter );
+
+		// Prepare user join and clause.
+		$user_join   = '';
+		$user_clause = '';
 		if ( '' !== $search_term ) {
-			$search_term = '%' . $wpdb->esc_like( $search_term ) . '%';
+			$user_join   = "INNER JOIN {$wpdb->users} ON quiz_attempts.user_id = {$wpdb->users}.ID";
+			$user_clause = $wpdb->prepare(
+				" AND ( {$wpdb->users}.user_email LIKE %s OR {$wpdb->users}.display_name LIKE %s )",
+				$search_term,
+				$search_term
+			);
 		}
 
-		// Set query based on action tab.
-		$pass_mark     = "((( SUBSTRING_INDEX(
-			SUBSTRING_INDEX(
-			  attempt_info,
-			  CONCAT(
-				  '\"passing_grade\";s:',
-				  SUBSTRING_INDEX(SUBSTRING_INDEX(attempt_info, '\"passing_grade\";s:', -1), ':\"', 1),
-				  ':\"'
-			  ),
-			  -1
-			), 
-			'\"', 
-			1
-  		))/100) * quiz_attempts.total_marks)";
-		$pending_count = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
-
-		$tab_join   = '';
+		// Prepare tab filter.
 		$tab_clause = '';
-		if ( '' !== $tab ) {
-			$tab_join = "INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
-		}
-		switch ( $tab ) {
-			case 'pass':
-				// Just check if the earned mark is greater than pass mark.
-				// It doesn't matter if there is any pending or failed question.
-				$tab_clause = " AND quiz_attempts.earned_marks >= {$pass_mark}  ";
-				break;
-
-			case 'fail':
-				// Check if earned marks is less than pass mark and there is no pending question.
-				$tab_clause = " AND quiz_attempts.earned_marks < {$pass_mark} AND {$pending_count} < 1 ";
-				break;
-			case 'pending':
-				$tab_clause = " AND {$pending_count} > 0 ";
-				break;
-		}
-
-		$course_join   = '';
-		$course_clause = '';
-		if ( $course_id || '' !== $search_term ) {
-			$course_join = "INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id";
-		}
-		if ( $course_id ) {
-			$course_clause = " AND quiz_attempts.course_id = $course_id";
-		}
-
-		$user_join    = '';
-		$user_clause  = '';
-		$search_term1 = sanitize_text_field( $search_term );
-		$search_term2 = sanitize_text_field( $search_term );
-		$search_term3 = sanitize_text_field( $search_term );
-		if ( '' !== $search_term ) {
-			$user_join = "INNER JOIN {$wpdb->users}
-			ON quiz_attempts.user_id = {$wpdb->users}.ID";
-
-			$user_clause = "AND ( user_email LIKE '%$search_term1%' OR display_name LIKE '%$search_term2%' OR course.post_title LIKE '%$search_term3%' )";
-		}
-
-		if ( '' !== $date_filter ) {
-			$date_filter = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-			$date_filter = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
+		if ( in_array( $tab, array( self::RESULT_PASS, self::RESULT_FAIL, self::RESULT_PENDING ), true ) ) {
+			$tab_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', $tab );
 		}
 
 		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT( DISTINCT attempt_id)
-		 	FROM 	{$wpdb->prefix}tutor_quiz_attempts quiz_attempts
-					INNER JOIN {$wpdb->posts} quiz
-							ON quiz_attempts.quiz_id = quiz.ID
-					{$user_join}
-					{$course_join}
-					{$tab_join}
-			WHERE 	attempt_status != %s
+				"SELECT COUNT(DISTINCT quiz_attempts.attempt_id) AS total
+            FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
+            	INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
+            	INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
+            	{$user_join}
+            WHERE attempt_status != %s AND quiz_attempts.result IS NOT NULL
 				{$user_clause}
-				{$course_clause}
+				{$course_filter}
 				{$tab_clause}
-				{$date_filter}
-			",
+				{$date_filter}",
 				'attempt_started'
 			)
 		);
-
 		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		return (int) $count;
@@ -384,7 +352,8 @@ class QuizModel {
 	 * Get the all quiz attempts
 	 *
 	 * @since 1.0.0
-	 * @since 1.9.5 sorting paramas added
+	 * @since 1.9.5 sorting params added.
+	 * @since 3.8.0 refactor and query optimize.
 	 *
 	 * @param integer $start start.
 	 * @param integer $limit limit.
@@ -401,8 +370,8 @@ class QuizModel {
 	public static function get_quiz_attempts( $start = 0, $limit = 10, $search_filter = '', $course_filter = array(), $date_filter = '', $order_filter = 'DESC', $result_state = null, $count_only = false, $instructor_id_check = false ) {
 		global $wpdb;
 
-		$start         = sanitize_text_field( $start );
-		$limit         = sanitize_text_field( $limit );
+		$start         = (int) $start;
+		$limit         = (int) $limit;
 		$search_filter = sanitize_text_field( $search_filter );
 		$course_filter = sanitize_text_field( $course_filter );
 		$date_filter   = sanitize_text_field( $date_filter );
@@ -412,64 +381,37 @@ class QuizModel {
 		$search_filter   = '%' . $wpdb->esc_like( $search_filter ) . '%';
 
 		// Filter by course.
-		if ( '' != $course_filter ) {
-			! is_array( $course_filter ) ? $course_filter = array( $course_filter ) : 0;
-			$course_ids                                   = implode( ',', array_map( 'intval', $course_filter ) );
-			$course_filter                                = " AND quiz_attempts.course_id IN ($course_ids) ";
+		if ( '' !== $course_filter ) {
+			if ( ! is_array( $course_filter ) ) {
+				$course_filter = array( $course_filter );
+			}
+
+			$course_ids    = QueryHelper::prepare_in_clause( array_map( 'intval', $course_filter ) );
+			$course_filter = " AND quiz_attempts.course_id IN ($course_ids) ";
 		}
 
 		// Filter by date.
-		$date_filter = '' != $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
-		$date_filter = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
+		$date_filter = '' !== $date_filter ? tutor_get_formated_date( 'Y-m-d', $date_filter ) : '';
+		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
 
 		$result_clause  = '';
 		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
-		$limit_offset   = $count_only ? '' : ' LIMIT ' . $limit . ' OFFSET ' . $start;
-
-		$pass_mark     = "((( SUBSTRING_INDEX(
-			SUBSTRING_INDEX(
-			  attempt_info,
-			  CONCAT(
-				  '\"passing_grade\";s:',
-				  SUBSTRING_INDEX(SUBSTRING_INDEX(attempt_info, '\"passing_grade\";s:', -1), ':\"', 1),
-				  ':\"'
-			  ),
-			  -1
-			), 
-			'\"', 
-			1
-  		))/100) * quiz_attempts.total_marks)";
-		$pending_count = "(SELECT COUNT(DISTINCT attempt_answer_id) FROM {$wpdb->prefix}tutor_quiz_attempt_answers WHERE quiz_attempt_id=quiz_attempts.attempt_id AND is_correct IS NULL)";
+		$limit_offset   = $count_only ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
 
 		// Get attempts by instructor ID.
 		$instructor_clause = '';
-		$instructor_join   = '';
 		if ( $instructor_id_check ) {
 			$current_user_id = get_current_user_id();
 			$instructor_id   = tutor_utils()->has_user_role( 'administrator', $current_user_id ) ? null : $current_user_id;
 
 			if ( $instructor_id ) {
-				// $instructor_clause = " AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id)";
-				$instructor_clause = " INNER JOIN {$wpdb->prefix}usermeta AS instructor_meta ON course.ID = instructor_meta.meta_value AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id) ";
+				$instructor_clause = " INNER JOIN {$wpdb->usermeta} AS instructor_meta ON course.ID = instructor_meta.meta_value AND (instructor_meta.meta_key='_tutor_instructor_course_id' AND instructor_meta.user_id=$instructor_id) ";
 			}
 		}
 
-		// Switc hthrough result state and assign meta clause.
-		switch ( $result_state ) {
-			case 'pass':
-				// Just check if the earned mark is greater than pass mark.
-				// It doesn't matter if there is any pending or failed question.
-				$result_clause = " AND quiz_attempts.earned_marks>={$pass_mark}  ";
-				break;
-
-			case 'fail':
-				// Check if earned marks is less than pass mark and there is no pending question.
-				$result_clause = " AND quiz_attempts.earned_marks<{$pass_mark} AND {$pending_count} < 1 ";
-				break;
-
-			case 'pending':
-				$result_clause = " AND {$pending_count}>0 ";
-				break;
+		$result_clause = '';
+		if ( in_array( $result_state, array( self::RESULT_PASS, self::RESULT_FAIL, self::RESULT_PENDING ), true ) ) {
+			$result_clause = $wpdb->prepare( ' AND quiz_attempts.result = %s', $result_state );
 		}
 
 		//phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -497,7 +439,6 @@ class QuizModel {
 			$search_filter,
 			$search_filter
 		);
-
 		//phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
@@ -828,7 +769,7 @@ class QuizModel {
 	 */
 	public static function is_manual_review_required( $quiz_id ) {
 		$required              = false;
-		$review_question_types = array( 'open_ended', 'short_answer' );
+		$review_question_types = self::get_manual_review_types();
 		$question_types        = self::get_quiz_question_types( $quiz_id );
 
 		foreach ( $review_question_types as $type ) {
@@ -921,21 +862,18 @@ class QuizModel {
 		global $wpdb;
 
 		$all_pending = true;
-		$result      = 'pending';
+		$result      = self::RESULT_PENDING;
 
 		$user_id      = tutor_utils()->get_user_id( $user_id );
 		$attempt_list = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_attempts WHERE user_id=%d AND quiz_id=%d", $user_id, $quiz_id ) );
 
 		$total_pending_attempt = (int) $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(quiz_attempt_id) total_pending_attempt
-				FROM (
-					SELECT qa.quiz_attempt_id, COUNT(*) AS total_pending
-					FROM {$wpdb->prefix}tutor_quiz_attempt_answers qa
-					WHERE qa.quiz_id = %d AND qa.user_id=%d AND qa.is_correct IS NULL
-					GROUP BY qa.quiz_attempt_id
-				) a
+				"SELECT COUNT(attempt_id) total
+				FROM {$wpdb->prefix}tutor_quiz_attempts
+				WHERE result=%s AND quiz_id = %d AND user_id = %d
 				",
+				self::RESULT_PENDING,
 				$quiz_id,
 				$user_id
 			)

@@ -6,6 +6,7 @@
     "psr-4": {
       "TUTOR\\": "classes/",
       "Tutor\\Cache\\": "cache/",
+      "Tutor\\Migrations\\":"migrations/",
       "Tutor\\Models\\": "models/",
       "Tutor\\Helpers\\": "helpers/",
       "Tutor\\Traits\\": "traits/",

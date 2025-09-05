@@ -1,12 +1,9 @@
-(function($) {
-	document.addEventListener('click', function(e) {
-		/**
-		 * Table td/tr toggle
-		 */
-		const dataTdTarget = e.target.dataset.tdTarget;
-		if (dataTdTarget) {
-			e.target.classList.toggle('is-active');
-			$(`#${dataTdTarget}`).toggle();
-		}
+(function ($) {
+	$(document).on('click', '[data-td-target]', function (e) {
+		const $el = $(this);
+		const dataTdTarget = $el.data('td-target');
+
+		$el.toggleClass('is-active');
+		$('#' + dataTdTarget).toggle();
 	});
 })(jQuery);

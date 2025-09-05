@@ -170,6 +170,9 @@ class Admin {
 					),
 				),
 				'group_two'   => array(
+					'orders'            => null,
+					'subscriptions'     => null,
+					'coupons'           => null,
 					'students'          => array(
 						'parent_slug' => 'tutor',
 						'page_title'  => __( 'Students', 'tutor' ),
@@ -208,9 +211,6 @@ class Admin {
 					'enrollments'       => null,
 					'reports'           => null,
 					'gradebook'         => null,
-					'orders'            => null,
-					'subscriptions'     => null,
-					'coupons'           => null,
 					'instructors'       => $enable_course_marketplace ? array(
 						'parent_slug' => 'tutor',
 						'page_title'  => __( 'Instructors', 'tutor' ),
@@ -285,8 +285,20 @@ class Admin {
 					continue;
 				}
 
+				// Backward compatibility hook.
+				if ( 'addons' === $name ) {
+					do_action( 'tutor_admin_register' );
+				}
+
+				// Backward compatibility hook.
 				do_action( "tutor_before_{$name}_admin_menu" );
+
+				do_action( "tutor_before_{$name}_menu" );
 				add_submenu_page( $args['parent_slug'], $args['page_title'], $args['menu_title'], $args['capability'], $args['menu_slug'], $args['callback'] ?? '', $args['position'] ?? null );
+
+				// Backward compatibility hook.
+				do_action( "tutor_after_{$name}_menu" );
+
 				do_action( "tutor_after_{$name}_admin_menu" );
 			}
 
