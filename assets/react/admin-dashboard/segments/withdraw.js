@@ -1,5 +1,7 @@
+const { default: sprintf } = require("../../helper/sprintf");
+
 document.addEventListener("DOMContentLoaded", function(){
-   const { __, _x, _n, _nx, sprintf } = wp.i18n; 
+   const { __, _x, _n, _nx } = wp.i18n; 
    // Approve and Reject button
    const approveButton = document.querySelectorAll('.tutor-admin-open-withdraw-approve-modal');
    const rejectButton = document.querySelectorAll('.tutor-admin-open-withdraw-reject-modal');
@@ -153,4 +155,5 @@ document.addEventListener("DOMContentLoaded", function(){
             })
         }
     }
+
 });

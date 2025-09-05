@@ -110,7 +110,7 @@ const Card = ({
         </div>
       </div>
       <animated.div style={{ ...collapseAnimation }}>
-        <div ref={cardRef}>{children}</div>
+        <div ref={cardRef}>{collapsed ? null : children}</div>
       </animated.div>
     </div>
   );

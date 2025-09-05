@@ -61,7 +61,5 @@ ${phpNames}
 
 writeFileSync(PHP_OUTPUT_FILE, phpClass);
 exec('phpcbf classes/Icon.php');
-exec('phpcbfwp classes/Icon.php');
-
 // eslint-disable-next-line no-console
 console.log('✅ PHP Icon class generated.');

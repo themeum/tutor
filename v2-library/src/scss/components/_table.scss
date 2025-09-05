@@ -86,11 +86,7 @@
 			}
 
 			&:not(.tutor-text-left):not(.tutor-text-center):not(.tutor-text-right) {
-				@if ($is-rtl) {
-					text-align: right;
-				} @else {
-					text-align: left;
-				}
+				text-align: left;
 			}
 
 			&:first-child {

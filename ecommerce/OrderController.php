@@ -266,7 +266,6 @@ class OrderController {
 			'total_price'    => $total_price,
 			'net_payment'    => $total_price,
 			'user_id'        => $user_id,
-			'payment_status' => $payment_status,
 			'order_status'   => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
 			'created_at_gmt' => current_time( 'mysql', true ),
 			'created_by'     => get_current_user_id(),
@@ -516,16 +515,6 @@ class OrderController {
 
 		$order_status   = $order_data->order_status;
 		$payment_status = $order_data->payment_status;
-
-		try {
-			do_action( 'tutor_before_initiate_refund', $order_data );
-		} catch ( \Throwable $th ) {
-			$this->json_response(
-				$th->getMessage(),
-				'',
-				HttpHelper::STATUS_BAD_REQUEST
-			);
-		}
 
 		$meta_key = OrderActivitiesModel::META_KEY_REFUND;
 		if ( $amount < (float) $order_data->net_payment ) {
