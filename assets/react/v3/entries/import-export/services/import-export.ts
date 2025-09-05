@@ -160,11 +160,14 @@ export interface ExportContentPayload {
 }
 
 interface ImportExportCompletedContentsItem {
+  label?: string; // Failed Label; will only be sent when progress is 100% and has failed item
   success: string[];
   failed: string[];
 }
 
 export interface ImportExportContentResponseBase {
+  message: string;
+  failed_message?: string; // Failed Message; will only be sent when progress is 100% and has failed item
   job_id: string;
   job_progress: number;
   job_status: string;
@@ -227,8 +230,17 @@ interface ImportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-interface ImportContentResponse extends ImportExportContentResponseBase {
+export interface ImportContentResponse extends ImportExportContentResponseBase {
   imported_data: [];
+  errors?: {
+    topics?: string[];
+    lesson?: string[];
+    tutor_quiz?: string[];
+    tutor_assignments?: string[];
+    'cb-question'?: string[];
+    'cb-lesson'?: string[];
+    'cb-assignment'?: string[];
+  };
 }
 
 const importContents = async (payload: ImportContentPayload) => {
@@ -257,29 +269,11 @@ export const useImportContentsMutation = () => {
 };
 
 export interface ImportExportHistory {
-  option_id: string;
-  option_name: string;
-  option_value: {
-    created_at: string;
-    user_name: string;
-    job_id: number;
-    job_progress: number;
-    job_status: string;
-    job_requirements: {
-      type: string;
-      ids: string[];
-    }[];
-    exported_data?: unknown;
-    imported_data?: ExportableContentType[];
-    completed_contents?: {
-      courses: ImportExportCompletedContentsItem;
-      'course-bundle': ImportExportCompletedContentsItem;
-      content_bank: ImportExportCompletedContentsItem;
-      settings: boolean;
-    };
-    failed_course_ids?: [];
-    failed_bundle_ids?: [];
-  };
+  id: string;
+  title: string;
+  created_at: string;
+  type: 'import' | 'export';
+  user_name: string;
 }
 
 const getImportExportHistory = () => {

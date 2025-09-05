@@ -39,6 +39,7 @@ interface ExportModalProps extends ModalProps {
   progress: number;
   fileSize?: number;
   message?: string;
+  failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
   collection?: Collection;
 }
@@ -59,6 +60,7 @@ const ExportModal = ({
   progress,
   fileSize,
   message,
+  failedMessage,
   completedContents,
   collection,
 }: ExportModalProps) => {
@@ -262,13 +264,22 @@ const ExportModal = ({
         state="success"
         fileSize={fileSize}
         message={message}
+        failedMessage={failedMessage}
         completedContents={completedContents}
         onDownload={onDownload}
         onClose={handleClose}
         type="export"
       />
     ),
-    error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
+    error: (
+      <ImportExportCompletedState
+        state="error"
+        message={message}
+        failedMessage={failedMessage}
+        onClose={handleClose}
+        type="export"
+      />
+    ),
   };
 
   const EXCLUDED_KEYS = ['keep_media_files'];
