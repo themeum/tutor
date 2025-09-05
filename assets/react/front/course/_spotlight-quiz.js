@@ -92,9 +92,6 @@ window.jQuery(document).ready($ => {
                         validatedTrue = false;
                         goNext = true;
                     }
-
-                    // Display answer explanation if available
-                    $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
                 }
             });
         }

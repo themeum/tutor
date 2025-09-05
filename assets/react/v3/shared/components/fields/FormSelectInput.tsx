@@ -1,4 +1,4 @@
-import { css, type SerializedStyles } from '@emotion/react';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -44,7 +44,6 @@ type FormSelectInputProps<T> = {
   isMagicAi?: boolean;
   isAiOutline?: boolean;
   selectOnFocus?: boolean;
-  optionItemCss?: SerializedStyles;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -71,7 +70,6 @@ const FormSelectInput = <T,>({
   isMagicAi = false,
   isAiOutline = false,
   selectOnFocus,
-  optionItemCss,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = useCallback(
     () =>
@@ -302,14 +300,11 @@ const FormSelectInput = <T,>({
                       <li
                         key={String(option.value)}
                         ref={option.value === field.value ? optionRef : activeIndex === index ? activeItemRef : null}
-                        css={[
-                          styles.optionItem({
-                            isSelected: option.value === field.value,
-                            isActive: index === activeIndex,
-                            isDisabled: !!option.disabled,
-                          }),
-                          optionItemCss,
-                        ]}
+                        css={styles.optionItem({
+                          isSelected: option.value === field.value,
+                          isActive: index === activeIndex,
+                          isDisabled: !!option.disabled,
+                        })}
                       >
                         <button
                           type="button"
@@ -329,9 +324,7 @@ const FormSelectInput = <T,>({
                           <Show when={option.icon}>
                             <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
                           </Show>
-                          <Show when={option.labelContent} fallback={<span>{option.label}</span>}>
-                            {option.labelContent}
-                          </Show>
+                          <span>{option.label}</span>
                         </button>
                       </li>
                     ))}

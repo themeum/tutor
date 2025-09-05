@@ -10,12 +10,6 @@ $arrow: 5px;
 	&.tooltip-icon {
 		margin-left: 12px;
 		color: var(--tutor-color-muted);
-
-		.rtl & {
-			margin-left: 0;
-			margin-right: 12px;
-		}
-
 		&:after {
 			content: "\e99a";
 			font-family: "tutor";

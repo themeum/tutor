@@ -46,12 +46,6 @@
 }
 
 .tutor-quiz-attempt-details {
-	table-layout: fixed;
-
-	img {
-		width: 100%;
-	}
-
 	.tutor-icon-rounded {
 		display: inline-flex;
 		align-items: center;
@@ -99,6 +93,14 @@
 				}
 			}
 		}
+	}
+
+	.quiz-explanation-wrapper{
+		display: flex;
+		background:#E5F5EB;
+		padding:15px;
+		border-radius:8px;
+		box-sizing: border-box;
 	}
 
 	.explain-toggle{

@@ -12,7 +12,6 @@ namespace TUTOR;
 
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Migrations\Migration;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -540,16 +539,9 @@ final class Tutor extends Singleton {
 		new Ecommerce();
 
 		/**
-		 * Data migrations
-		 *
-		 * @since 3.8.0
-		 */
-		new Migration();
-
-		/**
 		 * Run Method
 		 *
-		 * @since 1.2.0
+		 * @since v.1.2.0
 		 */
 		$this->run();
 

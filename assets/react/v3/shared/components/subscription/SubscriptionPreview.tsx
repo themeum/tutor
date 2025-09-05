@@ -153,13 +153,8 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
         >
           <SortableContext items={subscriptionFields} strategy={verticalListSortingStrategy}>
             <For each={subscriptionFields}>
-              {(subscription) => (
-                <PreviewItem
-                  key={subscription.id}
-                  subscription={subscription}
-                  courseId={courseId}
-                  isBundle={isBundle}
-                />
+              {(subscription, index) => (
+                <PreviewItem key={index} subscription={subscription} courseId={courseId} isBundle={isBundle} />
               )}
             </For>
           </SortableContext>
@@ -204,7 +199,6 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
                   icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
                   subscription: {
                     ...defaultSubscriptionFormData,
-                    plan_order: String(subscriptionFields.length + 1),
                     isSaved: false,
                   },
                   courseId,
