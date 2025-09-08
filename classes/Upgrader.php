@@ -81,10 +81,14 @@ class Upgrader {
 
 		$upgrades = array();
 		if ( $version ) {
+			// Required to use dbDelta.
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
 			$upgrades[] = 'upgrade_to_1_3_1';
 			$upgrades[] = 'upgrade_to_2_6_0';
 			$upgrades[] = 'upgrade_to_3_0_0';
 			$upgrades[] = 'upgrade_to_3_7_1';
+			$upgrades[] = 'upgrade_to_3_8_0';
 		}
 
 		return $upgrades;
@@ -171,7 +175,7 @@ class Upgrader {
 			 */
 			$tax_type = 'tax_type';
 			if ( ! QueryHelper::column_exist( $order_table, $tax_type ) ) {
-				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER discount_reason" );//phpcs:ignore
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER pre_tax_price" );//phpcs:ignore
 			}
 		}
 
@@ -216,6 +220,77 @@ class Upgrader {
 		if ( QueryHelper::table_exists( $question_table ) && ! QueryHelper::column_exist( $question_table, 'content_id' ) ) {
 			$wpdb->query( "ALTER TABLE {$question_table} ADD COLUMN content_id BIGINT UNSIGNED DEFAULT NULL AFTER question_id" ); //phpcs:ignore
 			$wpdb->query( "ALTER TABLE {$question_table} ADD INDEX content_id(content_id)" );//phpcs:ignore
+		}
+	}
+
+	/**
+	 * Migration logic when user upgrade to 3.8.0
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_3_8_0() {
+		if ( version_compare( TUTOR_VERSION, '3.8.0', '>=' ) ) {
+			global $wpdb;
+			$order_table = $wpdb->prefix . 'tutor_orders';
+			if ( QueryHelper::table_exists( $order_table ) && ! QueryHelper::column_exist( $order_table, 'pre_tax_price' ) ) {
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN pre_tax_price DECIMAL(13, 2) NOT NULL AFTER subtotal_price" ); //phpcs:ignore
+			}
+
+			$charset_collate = $wpdb->get_charset_collate();
+			$scheduler_table = QueryHelper::table_exists( $wpdb->prefix . 'tutor_scheduler' );
+			$item_meta_table = QueryHelper::table_exists( $wpdb->prefix . 'tutor_order_itemmeta' );
+
+			// Create tutor_scheduler table.
+			if ( ! $scheduler_table ) {
+				$table_schema = "CREATE TABLE {$wpdb->prefix}tutor_scheduler (
+					id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+					type VARCHAR(50) NOT NULL COMMENT 'Type of schedule, e.g., gift, email, reminder',
+					reference_id VARCHAR(255) NOT NULL COMMENT 'Unique reference id, token, etc',
+					scheduled_at_gmt DATETIME NOT NULL COMMENT 'When the action should be executed',
+					status VARCHAR(255) NOT NULL DEFAULT 'processing',
+					payload LONGTEXT,
+					created_at_gmt DATETIME,
+					updated_at_gmt DATETIME,
+					scheduled_by BIGINT UNSIGNED COMMENT 'User who scheduled the action',
+					scheduled_for BIGINT UNSIGNED COMMENT 'Target user of the scheduled action',
+					PRIMARY KEY (id),
+					KEY idx_context_status (type, status),
+					KEY idx_status (status),
+					KEY idx_scheduled_at_gmt (scheduled_at_gmt)
+				) $charset_collate;";
+				dbDelta( $table_schema );
+			}
+
+			// Create order_item_meta table.
+			if ( ! $item_meta_table ) {
+				$item_meta_table = "CREATE TABLE {$wpdb->prefix}tutor_order_itemmeta (
+				id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+				item_id BIGINT(20) UNSIGNED NOT NULL,
+				meta_key VARCHAR(255) NOT NULL,
+				meta_value LONGTEXT NOT NULL,
+				PRIMARY KEY (id),
+				KEY item_id (item_id),
+				KEY meta_key (meta_key),
+				CONSTRAINT fk_tutor_itemmeta FOREIGN KEY (item_id) REFERENCES {$wpdb->prefix}tutor_order_items(id) ON DELETE CASCADE
+			) $charset_collate;";
+				dbDelta( $item_meta_table );
+			}
+
+			// Check if the column already exists.
+			$cart_item_table = $wpdb->prefix . 'tutor_cart_items';
+			$detail_column   = 'item_details';
+			$type_column     = 'item_type';
+
+			$is_detail_column_exists = QueryHelper::column_exist( $cart_item_table, $detail_column );
+			$is_type_column_exists   = QueryHelper::column_exist( $cart_item_table, $type_column );
+
+			if ( ! $is_detail_column_exists ) {
+				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$detail_column} JSON AFTER course_id" );
+			}
+
+			if ( ! $is_type_column_exists ) {
+				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$type_column} VARCHAR(255) AFTER course_id" );
+			}
 		}
 	}
 

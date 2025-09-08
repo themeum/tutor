@@ -3086,11 +3086,7 @@ class Course extends Tutor_Base {
 			'sale_price'     => $sale_price,
 		);
 
-		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
-			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
-		}
-
-		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
+		$card_data = apply_filters( 'tutor_course_mini_info', $info, $post );
 
 		return $card_data;
 	}
@@ -3114,7 +3110,7 @@ class Course extends Tutor_Base {
 		$info['course_duration'] = tutor_utils()->get_course_duration( $post->ID, false );
 		$info['total_enrolled']  = tutor_utils()->count_enrolled_users_by_course( $post->ID );
 
-		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
+		$card_data = apply_filters( 'tutor_course_card_data', $info, $post );
 
 		return $card_data;
 	}

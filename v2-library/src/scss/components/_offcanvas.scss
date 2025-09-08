@@ -148,7 +148,13 @@
 		min-height: 200px;
 		max-height: calc(100vmin - 120px);
 		overflow-y: auto;
-		padding-right: var(--padding);
+
+		@if ($is-rtl) {
+			padding-left: var(--padding);
+		} @else {
+			padding-right: var(--padding);
+		}
+
 		&-item {
 			display: none;
 			&.is-active {

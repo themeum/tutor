@@ -12,6 +12,11 @@
         font-size: 20px;
         vertical-align: middle;
         background-color: var(--tutor-color-primary);
+
+        .rtl & {
+            margin-left: 8px;
+            margin-right: 0px;
+        }
     }
 
     &-boolean {
