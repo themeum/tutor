@@ -273,29 +273,11 @@ export const useImportContentsMutation = () => {
 };
 
 export interface ImportExportHistory {
-  option_id: string;
-  option_name: string;
-  option_value: {
-    created_at: string;
-    user_name: string;
-    job_id: number;
-    job_progress: number;
-    job_status: string;
-    job_requirements: {
-      type: string;
-      ids: string[];
-    }[];
-    exported_data?: unknown;
-    imported_data?: ExportableContentType[];
-    completed_contents?: {
-      courses: ImportExportCompletedContentsItem;
-      'course-bundle': ImportExportCompletedContentsItem;
-      content_bank: ImportExportCompletedContentsItem;
-      settings: boolean;
-    };
-    failed_course_ids?: [];
-    failed_bundle_ids?: [];
-  };
+  id: string;
+  title: string;
+  created_at: string;
+  type: 'import' | 'export';
+  user_name: string;
 }
 
 const getImportExportHistory = () => {
