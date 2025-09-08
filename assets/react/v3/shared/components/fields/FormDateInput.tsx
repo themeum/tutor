@@ -146,7 +146,11 @@ const FormDateInput = ({
 
             <Portal isOpen={isOpen} onClickOutside={handleClosePortal} onEscape={handleClosePortal}>
               <div
-                css={[styles.pickerWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                css={styles.pickerWrapper}
+                style={{
+                  [isRTL ? 'right' : 'left']: position.left,
+                  top: position.top,
+                }}
                 ref={popoverRef}
               >
                 <DayPicker
