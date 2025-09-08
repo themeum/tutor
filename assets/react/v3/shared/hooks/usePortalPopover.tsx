@@ -178,67 +178,6 @@ const calculatePositionForPlacement = (
   };
 };
 
-const calculateOptimalPosition = (
-  placement: PopoverPlacement,
-  triggerRect: DOMRect,
-  dimensions: Dimensions,
-  modifier: { top: number; left: number },
-): { top: number; left: number } => {
-  const { width, height } = dimensions;
-  const { top: modTop, left: modLeft } = modifier;
-
-  const getPlacementDirection = (placement: PopoverPlacement): string => {
-    if (placement.startsWith('bottom')) {
-      return 'bottom';
-    }
-
-    if (placement.startsWith('top')) {
-      return 'top';
-    }
-
-    if (placement.startsWith('right')) {
-      return 'right';
-    }
-
-    if (placement.startsWith('left')) {
-      return 'left';
-    }
-
-    return 'fallback';
-  };
-
-  const direction = getPlacementDirection(placement);
-
-  switch (direction) {
-    case 'bottom':
-      return {
-        top: window.innerHeight - height - POPOVER_BOUNDARY_MARGIN + modTop,
-        left: triggerRect.left + triggerRect.width / 2 - width / 2 + modLeft,
-      };
-
-    case 'top':
-      return {
-        top: POPOVER_BOUNDARY_MARGIN + modTop,
-        left: triggerRect.left + triggerRect.width / 2 - width / 2 + modLeft,
-      };
-
-    case 'right':
-      return {
-        top: triggerRect.top + triggerRect.height / 2 - height / 2 + modTop,
-        left: window.innerWidth - width - POPOVER_BOUNDARY_MARGIN + modLeft,
-      };
-
-    case 'left':
-      return {
-        top: triggerRect.top + triggerRect.height / 2 - height / 2 + modTop,
-        left: POPOVER_BOUNDARY_MARGIN + modLeft,
-      };
-
-    default:
-      return calculatePositionForPlacement(placement, triggerRect, dimensions, 0, modifier);
-  }
-};
-
 const adjustPositionForOverflow = (
   position: { top: number; left: number },
   placement: PopoverPlacement,
@@ -280,9 +219,7 @@ const adjustPositionForOverflow = (
     return { position: oppositePosition, placement: oppositePlacement };
   }
 
-  // Both overflow - use optimal position for original placement
-  const optimalPosition = calculateOptimalPosition(placement, triggerRect, dimensions, modifier);
-  return { position: optimalPosition, placement };
+  return { position, placement };
 };
 
 const calculateArrowPosition = (
