@@ -62,7 +62,7 @@ class QueryHelperTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Test QueryHelper::build_where_clause()
+	 * Test QueryHelper::prepare_where_clause()
 	 *
 	 * @since 3.6.0
 	 *
@@ -102,9 +102,9 @@ class QueryHelperTest extends \WP_UnitTestCase {
 		$expect_2 = 'age >= 20';
 		$expect_3 = 'id BETWEEN 10 AND 20 AND DATE(value) = CAST(value as date) AND id = 10';
 
-		$this->assertEquals( $expect_1, QueryHelper::build_where_clause( $case_1 ) );
-		$this->assertEquals( $expect_2, QueryHelper::build_where_clause( $case_2 ) );
-		$this->assertEquals( $expect_3, QueryHelper::build_where_clause( $case_3 ) );
+		$this->assertEquals( $expect_1, QueryHelper::prepare_where_clause( $case_1 ) );
+		$this->assertEquals( $expect_2, QueryHelper::prepare_where_clause( $case_2 ) );
+		$this->assertEquals( $expect_3, QueryHelper::prepare_where_clause( $case_3 ) );
 	}
 
 	/**

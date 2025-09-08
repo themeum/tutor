@@ -42,6 +42,7 @@ export function isObject<T>(value: T): value is T {
 
 export interface Option<T> {
   label: string;
+  labelContent?: ReactNode | string;
   value: T;
   icon?: ReactNode | string;
   disabled?: boolean;
