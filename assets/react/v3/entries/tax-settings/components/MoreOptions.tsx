@@ -34,6 +34,7 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
         }}
         closePopover={() => setIsOpen(false)}
         size="small"
+        arrow={true}
       >
         <ThreeDots.Option
           text={__('Edit', 'tutor')}

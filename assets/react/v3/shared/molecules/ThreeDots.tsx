@@ -85,7 +85,7 @@ const ThreeDots = ({
   dotsOrientation = 'horizontal',
   maxWidth = '148px',
   isInverse = false,
-  arrow = true,
+  arrow = false,
   size = 'medium',
   closeOnEscape = true,
   wrapperCss,

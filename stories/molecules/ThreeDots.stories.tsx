@@ -88,7 +88,7 @@ const meta = {
     dotsOrientation: 'horizontal',
     maxWidth: '148px',
     isInverse: false,
-    arrow: true,
+    arrow: false,
     size: 'medium',
     disabled: false,
     closeOnEscape: true,
