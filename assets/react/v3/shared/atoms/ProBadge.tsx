@@ -9,12 +9,26 @@ import SVGIcon from './SVGIcon';
 
 type ProBadgeSize = 'tiny' | 'small' | 'regular' | 'large';
 
-interface ProBadgeProps {
-  children?: React.ReactNode;
-  content?: React.ReactNode;
+interface ProBadgeBaseProps {
   size?: ProBadgeSize;
   textOnly?: boolean;
+  children?: React.ReactNode;
+  content?: React.ReactNode;
 }
+
+interface ProBadgeWithContent extends ProBadgeBaseProps {
+  content: React.ReactNode;
+  children?: never;
+  textOnly?: boolean;
+}
+
+interface ProBadgeWithChildren extends ProBadgeBaseProps {
+  content?: never;
+  children: React.ReactNode;
+  textOnly?: never;
+}
+
+type ProBadgeProps = ProBadgeWithContent | ProBadgeWithChildren;
 
 const ProBadge = ({ children, content, size = 'regular', textOnly }: ProBadgeProps) => {
   return (

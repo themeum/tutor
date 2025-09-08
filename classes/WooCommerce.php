@@ -717,14 +717,14 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
-		$item          = new \WC_Order_Item_Product( $item );
-		$product_id    = $item->get_product_id();
-		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
-
-		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item, $product_id );
+		$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item );
 		if ( $is_gift_item ) {
 			return;
 		}
+
+		$item          = new \WC_Order_Item_Product( $item );
+		$product_id    = $item->get_product_id();
+		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
 		if ( $if_has_course ) {
 			$order = wc_get_order( $order_id );

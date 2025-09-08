@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.7.3
+Stable tag: 3.8.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -317,16 +317,37 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.8.0 - Sep 04, 2025
+
+New: Gift Course – Users can now send courses as gifts to others. (Pro)
+New: Improved WP Admin menu organization for easier navigation.
+New: Manual enrollment support for subscription courses and course bundles. (Pro)
+Update: Assignment filter now accurately filters data by selected start and end dates. (Pro)
+Update: Enhanced Content Bank experience for instructors. (Pro)
+Update: Improved quiz explanation.
+Update: Added option to enable or disable course and bundle subscription plans. (Pro)
+Update: Optimized the PDF certificate download process. (Pro)
+Fix: Paid courses could be mistakenly set as public.
+Fix: Incorrect tax was calculated during manual enrollment. (Pro)
+Fix: Topic count did not display on the backend courses page when no content was added.
+Fix: Students were able to access courses even after a custom extension date had expired. (Pro)
+Fix: Preferred course filter did not appear when the course filter was enabled.
+Fix: Lesson Preview was turning off after editing with the WordPress editor. (Pro)
+
+= 3.7.4 - Aug 22, 2025
+
+Fix: Resolved design issues when using RTL site languages
+
 = 3.7.3 - Aug 20, 2025
 
-Update: Improved WPML compatibility
+Update: Improved WPML compatibility (Pro)
 Fix: Corrected an issue where public courses could be incorrectly set as paid
 Fix: Users with the Editor role were unable to view post previews
 Fix: The quiz timer paused when users were inactive or switched tabs
 Fix: Quiz submissions were possible even after the timer expired
-Fix: The calendar displayed incorrect dates when accessed from different time zones
-Fix: Future-dated meetings and assignments were not rendered on the calendar
-Fix: Users were unable to access bundle-based subscriptions
+Fix: The calendar displayed incorrect dates when accessed from different time zones (Pro)
+Fix: Future-dated meetings and assignments were not rendered on the calendar (Pro)
+Fix: Users were unable to access bundle-based subscriptions (Pro)
 Fix: Entries were missing in the WooCommerce purchase history CSV
 
 = 3.7.2 - Aug 11, 2025

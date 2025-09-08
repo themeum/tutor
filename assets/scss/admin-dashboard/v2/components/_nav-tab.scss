@@ -32,6 +32,11 @@
 
 		.tutor-option-submenu-nav {
 			margin-left: 36px;
+			
+			.rtl & {
+				margin-right: 36px;
+				margin-left: 0;
+			}
 
 			.tutor-nav-link {
 				padding: 8px 12px;
@@ -43,10 +48,16 @@
 
 			@include breakpoint-max(desktop) {
 				margin-left: 0px;
+				margin-right: 0px;
 			}
 
 			@include breakpoint-max(mobile) {
 				margin-left: 20px;
+
+				.rtl & {
+					margin-right: 20px;
+					margin-left: 0;
+				}
 			}
 		}
 	}
