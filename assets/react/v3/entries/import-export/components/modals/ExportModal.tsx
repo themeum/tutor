@@ -161,6 +161,16 @@ const ExportModal = ({
   };
 
   useEffect(() => {
+    if (currentStep === 'progress') {
+      window.onbeforeunload = () => true;
+    }
+
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, [currentStep]);
+
+  useEffect(() => {
     if (!getExportableContentQuery.isSuccess || !getExportableContentQuery.data) {
       return;
     }
