@@ -395,7 +395,6 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
         maxWidth="306px"
         closeOnEscape={false}
         placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
-        arrow={false}
       >
         <ZoomMeetingForm
           topicId={topicId}
