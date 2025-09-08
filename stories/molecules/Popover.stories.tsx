@@ -275,7 +275,7 @@ export const AllPlacements = {
                 }));
               }}
             >
-              Popover {placement}
+              {placement}
             </Button>
 
             <Popover
