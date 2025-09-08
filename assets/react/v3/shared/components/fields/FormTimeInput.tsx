@@ -128,7 +128,6 @@ const FormTimeInput = ({
 
             <Popover
               triggerRef={triggerRef}
-              arrow={false}
               isOpen={isOpen}
               closePopover={() => setIsOpen(false)}
               animationType={AnimationType.slideDown}

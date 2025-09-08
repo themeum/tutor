@@ -656,7 +656,6 @@ const FormVideoInput = ({
       <Popover
         triggerRef={triggerRef}
         isOpen={isOpen}
-        arrow={false}
         placement={POPOVER_PLACEMENTS.MIDDLE}
         animationType={AnimationType.fadeIn}
         closePopover={() => setIsOpen(false)}

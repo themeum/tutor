@@ -367,7 +367,6 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
         maxWidth="306px"
         closeOnEscape={false}
         placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
-        arrow={false}
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
@@ -403,7 +402,6 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')
         }
         animationType={AnimationType.slideUp}
-        arrow={false}
         confirmButton={{
           text: __('Delete', 'tutor'),
           variant: 'text',

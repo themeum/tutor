@@ -398,7 +398,6 @@ const QuizModal = ({
                 CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
               }
               positionModifier={{ top: -55, left: quizId ? 34 : 2 }}
-              arrow={false}
               confirmButton={{
                 text: __('Yes', 'tutor'),
                 variant: 'primary',

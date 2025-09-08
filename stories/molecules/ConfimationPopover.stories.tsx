@@ -42,7 +42,7 @@ const meta = {
     arrow: {
       control: 'boolean',
       description: 'Show the popover arrow.',
-      defaultValue: true,
+      defaultValue: false,
     },
     confirmButton: {
       control: false,

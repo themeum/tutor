@@ -278,7 +278,6 @@ const FormSelectUser = ({
               ))}
             <Popover
               triggerRef={triggerRef}
-              arrow={false}
               isOpen={isOpen}
               dependencies={[filteredOption.length]}
               animationType={AnimationType.slideDown}

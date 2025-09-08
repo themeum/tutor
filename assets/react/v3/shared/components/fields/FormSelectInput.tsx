@@ -268,7 +268,6 @@ const FormSelectInput = <T,>({
               isOpen={isOpen}
               dependencies={[selections.length]}
               animationType={AnimationType.slideDown}
-              arrow={false}
               closePopover={() => {
                 setIsOpen(false);
                 setIsSearching(false);

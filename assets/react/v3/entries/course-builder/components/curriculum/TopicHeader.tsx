@@ -319,7 +319,6 @@ const TopicHeader = ({
         }
         message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
-        arrow={false}
         confirmButton={{
           text: __('Delete', 'tutor'),
           variant: 'text',

@@ -42,7 +42,7 @@ const Popover = <T extends HTMLElement>({
   closePopover,
   closeOnEscape = true,
   animationType = AnimationType.slideLeft,
-  arrow = true,
+  arrow = false,
   autoAdjustOverflow = true,
   positionModifier = {
     top: 0,

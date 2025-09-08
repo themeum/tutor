@@ -194,7 +194,6 @@ const FormMultiLevelInput = ({
 
             <Popover
               triggerRef={triggerRef}
-              arrow={false}
               isOpen={isOpen}
               closePopover={handlePortalClose}
               animationType={AnimationType.slideDown}

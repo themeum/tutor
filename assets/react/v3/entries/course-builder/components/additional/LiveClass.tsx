@@ -175,7 +175,6 @@ const LiveClass = () => {
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
         placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
-        arrow={false}
       >
         <ZoomMeetingForm
           data={null}

@@ -54,7 +54,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
   maxWidth,
   closePopover,
   animationType = AnimationType.slideLeft,
-  arrow = true,
+  arrow = false,
   confirmButton,
   cancelButton,
   positionModifier,

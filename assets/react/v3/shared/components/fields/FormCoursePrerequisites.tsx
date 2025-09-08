@@ -210,7 +210,6 @@ const FormCoursePrerequisites = ({
 
             <Popover
               triggerRef={triggerRef}
-              arrow={false}
               isOpen={isOpen}
               animationType={AnimationType.slideDown}
               dependencies={[filteredOption.length]}

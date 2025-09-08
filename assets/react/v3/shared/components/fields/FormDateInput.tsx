@@ -149,7 +149,6 @@ const FormDateInput = ({
               closePopover={handleClosePortal}
               animationType={AnimationType.slideDown}
               placement={POPOVER_PLACEMENTS.BOTTOM_LEFT}
-              arrow={false}
               maxWidth="fit-content"
             >
               <div css={[styles.pickerWrapper]}>

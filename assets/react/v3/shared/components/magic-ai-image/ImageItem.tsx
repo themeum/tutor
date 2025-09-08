@@ -90,6 +90,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
       <Popover
         triggerRef={ref}
         isOpen={isOpen}
+        arrow={true}
         closePopover={() => {
           setIsOpen(false);
         }}

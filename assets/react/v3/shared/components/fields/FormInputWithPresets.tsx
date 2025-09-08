@@ -137,7 +137,6 @@ const FormInputWithPresets = ({
               triggerRef={triggerRef}
               isOpen={isOpen}
               closePopover={() => setIsOpen(false)}
-              arrow={false}
               animationType={AnimationType.slideDown}
             >
               <div css={[styles.optionsWrapper]}>

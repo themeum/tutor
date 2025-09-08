@@ -148,7 +148,6 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
         }
         message={__('Are you sure you want to delete this meeting? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
-        arrow={false}
         isLoading={deleteGoogleMeetMeetingMutation.isPending}
         confirmButton={{
           text: __('Delete', 'tutor'),

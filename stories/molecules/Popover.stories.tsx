@@ -73,7 +73,7 @@ const meta = {
     arrow: {
       control: 'boolean',
       description: 'Show arrow on popover.',
-      defaultValue: true,
+      defaultValue: false,
     },
     autoAdjustOverflow: {
       control: 'boolean',

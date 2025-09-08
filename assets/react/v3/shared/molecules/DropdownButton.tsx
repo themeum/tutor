@@ -177,7 +177,6 @@ const DropdownButton = ({
         isOpen={isOpen}
         closePopover={() => setIsOpen(false)}
         animationType={animationType}
-        arrow={false}
       >
         <div css={styles.dropdownWrapper}>
           {React.Children.map(children, (child) => {

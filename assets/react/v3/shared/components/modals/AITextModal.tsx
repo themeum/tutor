@@ -324,6 +324,7 @@ const AITextModal = <T extends FieldValues>({
         <Popover
           isOpen={popover === 'tone'}
           triggerRef={toneRef}
+          arrow={true}
           closePopover={() => setPopover(null)}
           maxWidth={'160px'}
           animationType={AnimationType.slideDown}

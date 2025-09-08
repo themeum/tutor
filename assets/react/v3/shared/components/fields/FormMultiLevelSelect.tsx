@@ -110,7 +110,6 @@ const FormMultiLevelSelect = ({
 
             <Popover
               triggerRef={triggerRef}
-              arrow={false}
               isOpen={isOpen}
               closePopover={() => setIsOpen(false)}
               dependencies={[options.length]}

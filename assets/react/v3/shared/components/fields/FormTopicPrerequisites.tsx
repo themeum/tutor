@@ -264,7 +264,6 @@ const FormTopicPrerequisites = ({
             <Popover
               triggerRef={triggerRef}
               isOpen={isOpen}
-              arrow={false}
               dependencies={[filteredOption.length]}
               animationType={AnimationType.slideDown}
               closePopover={() => {

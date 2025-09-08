@@ -154,7 +154,6 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
       <Popover
         isOpen={isFiltersPopoverOpen}
         closeOnEscape
-        arrow={false}
         animationType={AnimationType.slideDown}
         closePopover={() => {
           form.reset();

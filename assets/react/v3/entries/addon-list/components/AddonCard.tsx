@@ -130,7 +130,6 @@ function AddonCard({ addon }: { addon: Addon }) {
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
         placement={POPOVER_PLACEMENTS.BOTTOM}
-        arrow={false}
       >
         <Show
           when={!addon.required_settings}

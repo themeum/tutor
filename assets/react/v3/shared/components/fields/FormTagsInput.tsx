@@ -132,7 +132,6 @@ const FormTagsInput = ({
             <Popover
               triggerRef={triggerRef}
               isOpen={isOpen}
-              arrow={false}
               closePopover={() => setIsOpen(false)}
               dependencies={[tagListQuery.data?.length]}
               animationType={AnimationType.slideDown}

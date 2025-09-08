@@ -420,6 +420,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           isOpen={isOpen}
           closePopover={() => setIsOpen(false)}
           animationType={AnimationType.slideUp}
+          arrow={true}
         >
           <div css={styles.questionOptionsWrapper}>
             <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>
