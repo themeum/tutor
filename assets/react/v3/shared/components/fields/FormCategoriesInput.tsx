@@ -1,23 +1,23 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { produce } from 'immer';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, type FieldValues } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
+import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import {
   type CategoryWithChildren,
   useCategoryListQuery,
@@ -64,7 +64,6 @@ const FormMultiLevelInput = ({
   const [isOpen, setIsOpen] = useState(false);
   const [hasCategories, setHasCategories] = useState(false);
   const { ref: scrollElementRef, isScrolling } = useIsScrolling<HTMLDivElement>();
-  const triggerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!categoryListQuery.isLoading && (categoryListQuery.data || []).length > 0) {
@@ -84,6 +83,10 @@ const FormMultiLevelInput = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
+
+  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+  });
 
   const treeOptions = generateTree(categoryListQuery.data ?? []);
 
@@ -192,13 +195,11 @@ const FormMultiLevelInput = ({
               </Show>
             </div>
 
-            <Popover
-              triggerRef={triggerRef}
-              isOpen={isOpen}
-              closePopover={handlePortalClose}
-              animationType={AnimationType.slideDown}
-            >
-              <div css={styles.categoryFormWrapper}>
+            <Portal isOpen={isOpen} onClickOutside={handlePortalClose} onEscape={handlePortalClose}>
+              <div
+                css={[styles.categoryFormWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                ref={popoverRef}
+              >
                 <Controller
                   name="name"
                   control={form.control}
@@ -236,7 +237,7 @@ const FormMultiLevelInput = ({
                   </Button>
                 </div>
               </div>
-            </Popover>
+            </Portal>
           </>
         );
       }}
