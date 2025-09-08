@@ -109,6 +109,7 @@ const FormDateInput = ({
               <input
                 {...restInputProps}
                 css={[css, styles.input]}
+                title={fieldValue}
                 ref={(element) => {
                   field.ref(element);
                   // @ts-ignore
