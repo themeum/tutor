@@ -5,18 +5,16 @@ import { DayPicker, type Formatters } from 'react-day-picker';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Popover from '@TutorShared/molecules/Popover';
 
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
+import { POPOVER_PLACEMENTS, Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import 'react-day-picker/style.css';
 
+import { typography } from '@TutorShared/config/typography';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormDateInputProps extends FormControllerProps<string> {
@@ -71,8 +69,6 @@ const FormDateInput = ({
   dateFormat = DateFormats.monthDayYear,
 }: FormDateInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const triggerRef = useRef<HTMLDivElement>(null);
-
   const [isOpen, setIsOpen] = useState(false);
   const parsedDate = parseDate(field.value);
   const hasWpDate = typeof window !== 'undefined' && window.wp && window.wp.date;
@@ -81,6 +77,11 @@ const FormDateInput = ({
       ? window.wp.date.format('F j, Y', parsedDate)
       : format(parsedDate, dateFormat)
     : '';
+
+  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    placement: POPOVER_PLACEMENTS.BOTTOM_LEFT,
+  });
 
   const handleClosePortal = () => {
     setIsOpen(false);
@@ -143,15 +144,11 @@ const FormDateInput = ({
               )}
             </div>
 
-            <Popover
-              triggerRef={triggerRef}
-              isOpen={isOpen}
-              closePopover={handleClosePortal}
-              animationType={AnimationType.slideDown}
-              placement={POPOVER_PLACEMENTS.BOTTOM_LEFT}
-              maxWidth="fit-content"
-            >
-              <div css={[styles.pickerWrapper]}>
+            <Portal isOpen={isOpen} onClickOutside={handleClosePortal} onEscape={handleClosePortal}>
+              <div
+                css={[styles.pickerWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                ref={popoverRef}
+              >
                 <DayPicker
                   dir={isRTL ? 'rtl' : 'ltr'}
                   animate
@@ -183,7 +180,7 @@ const FormDateInput = ({
                   weekStartsOn={hasWpDate ? window.wp.date.getSettings().l10n.startOfWeek : 0}
                 />
               </div>
-            </Popover>
+            </Portal>
           </div>
         );
       }}
