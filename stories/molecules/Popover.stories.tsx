@@ -1,12 +1,28 @@
 import { css } from '@emotion/react';
-import { useRef, useState } from 'react';
-import type { Meta, StoryObj } from 'storybook-react-rsbuild';
-
 import Button from '@TutorShared/atoms/Button';
-import Popover from '@TutorShared/molecules/Popover';
-
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import type { PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
+import Popover from '@TutorShared/molecules/Popover';
+import { createRef, useMemo, useRef, useState } from 'react';
+import { type Meta, type StoryObj } from 'storybook-react-rsbuild';
+
+const placements: PopoverPlacement[] = [
+  'topLeft',
+  'top',
+  'topRight',
+  'leftTop',
+  'left',
+  'leftBottom',
+  'rightTop',
+  'right',
+  'rightBottom',
+  'bottomLeft',
+  'bottom',
+  'bottomRight',
+  'middle',
+  'absoluteCenter',
+];
 
 const meta = {
   title: 'Molecules/Popover',
@@ -16,28 +32,37 @@ const meta = {
     docs: {
       description: {
         component:
-          'A versatile popover component that can display rich content, supports various animations, and can be customized with different arrow positions and styles.',
+          'Popover is a flexible popover component that supports custom placement, animation, arrow, and accessibility features. It uses a portal and can be anchored to any trigger element.',
       },
     },
   },
   tags: ['autodocs'],
   argTypes: {
-    arrow: {
-      control: { type: 'select' },
-      options: ['left', 'right', 'top', 'bottom', 'middle', 'auto', 'absoluteCenter'],
-      description: 'Position of the arrow relative to the popover',
+    placement: {
+      control: 'select',
+      options: placements,
+      description: 'Popover placement relative to the trigger.',
+      defaultValue: 'bottom',
+    },
+    isOpen: {
+      control: 'boolean',
+      description: 'Whether the popover is open.',
+      defaultValue: false,
     },
     gap: {
-      control: { type: 'number', min: 0, max: 50 },
-      description: 'Gap between trigger and popover in pixels',
+      control: 'number',
+      description: 'Gap (px) between trigger and popover.',
+      defaultValue: 8,
     },
     maxWidth: {
-      control: { type: 'text' },
-      description: 'Maximum width of the popover',
+      control: 'text',
+      description: 'Max width of the popover.',
+      defaultValue: '240px',
     },
     closeOnEscape: {
-      control: { type: 'boolean' },
-      description: 'Whether to close popover on Escape key',
+      control: 'boolean',
+      description: 'Close popover on Escape key.',
+      defaultValue: true,
     },
     animationType: {
       control: { type: 'select' },
@@ -45,257 +70,320 @@ const meta = {
       description: 'Animation type for popover entrance/exit',
       defaultValue: AnimationType.slideLeft,
     },
-    hideArrow: {
-      control: { type: 'boolean' },
-      description: 'Hide the arrow indicator',
+    arrow: {
+      control: 'boolean',
+      description: 'Show arrow on popover.',
+      defaultValue: false,
     },
+    autoAdjustOverflow: {
+      control: 'boolean',
+      description: 'Automatically adjust popover position to prevent overflow.',
+      defaultValue: true,
+    },
+    positionModifier: {
+      control: 'object',
+      description: 'Position modifier for the popover.',
+      defaultValue: {
+        top: 0,
+        left: 0,
+      },
+    },
+    triggerRef: { control: false },
+    children: { control: false },
+    closePopover: { control: false },
   },
   args: {
-    arrow: 'top',
+    placement: 'bottom',
     gap: 8,
-    maxWidth: '200px',
+    maxWidth: '240px',
     closeOnEscape: true,
     animationType: AnimationType.slideLeft,
-    hideArrow: false,
-    children: <Button variant="primary">Open Popover</Button>,
-    closePopover: () => {},
-    isOpen: false,
+    arrow: true,
+    isOpen: undefined,
     triggerRef: undefined,
+    closePopover: undefined,
+    children: undefined,
+  },
+  render: (args) => {
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const [isOpen, setOpen] = useState(args.isOpen);
+
+    const handleTogglePopover = () => setOpen((prev) => !prev);
+    const handleClosePopover = () => setOpen(false);
+
+    const animationTypeValue: AnimationType =
+      typeof args.animationType === 'string'
+        ? (AnimationType[args.animationType as keyof typeof AnimationType] ?? AnimationType.slideLeft)
+        : AnimationType.slideLeft;
+
+    return (
+      <div css={templateStyles.container}>
+        <Button ref={triggerRef} onClick={handleTogglePopover} aria-expanded={isOpen} aria-haspopup="true">
+          Toggle Popover
+        </Button>
+
+        <Popover
+          {...args}
+          triggerRef={triggerRef}
+          animationType={animationTypeValue}
+          isOpen={isOpen}
+          closePopover={handleClosePopover}
+        >
+          <div css={templateStyles.popoverContent}>
+            <h3 css={templateStyles.popoverTitle}>Popover Title</h3>
+            <p css={templateStyles.popoverText}>
+              This is a sample popover content. You can put any React components here.
+            </p>
+            <Button onClick={handleClosePopover} variant="danger" size="small">
+              Close
+            </Button>
+          </div>
+        </Popover>
+      </div>
+    );
   },
 } satisfies Meta<typeof Popover>;
 
 export default meta;
+
 type Story = StoryObj<typeof meta>;
 
-const PopoverTemplate = (args: React.ComponentProps<typeof Popover>) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-
-  const handleTogglePopover = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleClosePopover = () => {
-    setIsOpen(false);
-  };
-
-  const animationTypeValue: AnimationType =
-    typeof args.animationType === 'string'
-      ? (AnimationType[args.animationType as keyof typeof AnimationType] ?? AnimationType.slideLeft)
-      : AnimationType.slideLeft;
-
-  return (
-    <div css={templateStyles.container}>
-      <Button ref={triggerRef} onClick={handleTogglePopover} aria-expanded={isOpen} aria-haspopup="true">
-        Toggle Popover
-      </Button>
-
-      <Popover
-        {...args}
-        triggerRef={triggerRef}
-        animationType={animationTypeValue}
-        isOpen={isOpen}
-        closePopover={handleClosePopover}
-      >
-        <div css={templateStyles.popoverContent}>
-          <h3 css={templateStyles.popoverTitle}>Popover Title</h3>
-          <p css={templateStyles.popoverText}>
-            This is a sample popover content. You can put any React components here.
-          </p>
-          <Button onClick={handleClosePopover} variant="danger" size="small">
-            Close
-          </Button>
-        </div>
-      </Popover>
-    </div>
-  );
-};
-
 export const Default = {
-  render: PopoverTemplate,
   args: {
-    arrow: 'top',
+    placement: 'bottom',
     gap: 8,
+    maxWidth: '240px',
     closeOnEscape: true,
     animationType: AnimationType.slideLeft,
-    hideArrow: false,
+    arrow: true,
   },
 } satisfies Story;
 
-export const ArrowLeft = {
-  render: PopoverTemplate,
-  args: {
-    arrow: 'left',
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.slideRight,
-  },
-} satisfies Story;
+export const AllPlacements = {
+  render: (args) => {
+    const triggerRefs = useMemo(
+      () =>
+        placements.reduce(
+          (acc, placement) => ({
+            ...acc,
+            [placement]: createRef<HTMLButtonElement>(),
+          }),
+          {} as Record<PopoverPlacement, React.RefObject<HTMLButtonElement>>,
+        ),
+      [],
+    );
+    const [openPopovers, setOpenPopovers] = useState<Record<string, boolean>>({});
 
-export const ArrowRight = {
-  render: PopoverTemplate,
-  args: {
-    arrow: 'right',
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.slideLeft,
-  },
-} satisfies Story;
+    const animationTypeValue: AnimationType =
+      typeof args.animationType === 'string'
+        ? (AnimationType[args.animationType as keyof typeof AnimationType] ?? AnimationType.slideLeft)
+        : AnimationType.slideLeft;
 
-export const ArrowBottom = {
-  render: PopoverTemplate,
-  args: {
-    arrow: 'bottom',
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.slideUp,
-  },
-} satisfies Story;
+    const handleClosePopover = () => setOpenPopovers({});
 
-export const ArrowTop = {
-  render: PopoverTemplate,
-  args: {
-    arrow: 'top',
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.slideDown,
-  },
-} satisfies Story;
+    return (
+      <div
+        css={css`
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          grid-template-rows: repeat(5, 1fr);
+          gap: 16px;
 
-export const ArrowMiddle = {
-  render: PopoverTemplate,
-  args: {
-    arrow: 'middle',
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.slideDown,
-  },
-} satisfies Story;
+          button:nth-child(1) {
+            grid-column: 2;
+            grid-row: 1;
+          }
 
-export const ArrowAbsoluteCenter = {
-  render: PopoverTemplate,
-  args: {
-    arrow: 'absoluteCenter',
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.slideDown,
+          button:nth-child(2) {
+            grid-column: 3;
+            grid-row: 1;
+          }
+
+          button:nth-child(3) {
+            grid-column: 4;
+            grid-row: 1;
+          }
+
+          button:nth-child(4) {
+            grid-column: 1;
+            grid-row: 2;
+          }
+
+          button:nth-child(5) {
+            grid-column: 1;
+            grid-row: 3;
+          }
+
+          button:nth-child(6) {
+            grid-column: 1;
+            grid-row: 4;
+          }
+
+          button:nth-child(7) {
+            grid-column: 5;
+            grid-row: 2;
+          }
+
+          button:nth-child(8) {
+            grid-column: 5;
+            grid-row: 3;
+          }
+
+          button:nth-child(9) {
+            grid-column: 5;
+            grid-row: 4;
+          }
+
+          button:nth-child(10) {
+            grid-column: 2;
+            grid-row: 5;
+          }
+
+          button:nth-child(11) {
+            grid-column: 3;
+            grid-row: 5;
+          }
+
+          button:nth-child(12) {
+            grid-column: 4;
+            grid-row: 5;
+          }
+
+          button:nth-child(13) {
+            grid-column: 2 / 6;
+            grid-row: 3;
+            justify-self: center;
+            margin-right: 50%;
+          }
+
+          button:nth-child(14) {
+            grid-column: 4 / 6;
+            grid-row: 3;
+            justify-self: center;
+            margin-right: 100%;
+          }
+        `}
+      >
+        {placements.map((placement) => (
+          <>
+            <Button
+              ref={triggerRefs[placement]}
+              onClick={() => {
+                setOpenPopovers((prev) => ({
+                  ...prev,
+                  [placement]: !prev[placement],
+                }));
+              }}
+            >
+              {placement}
+            </Button>
+
+            <Popover
+              {...args}
+              placement={placement}
+              triggerRef={triggerRefs[placement]}
+              animationType={animationTypeValue}
+              isOpen={!!openPopovers[placement]}
+              closePopover={handleClosePopover}
+            >
+              <div css={templateStyles.popoverContent}>
+                <h3 css={templateStyles.popoverTitle}>Popover Title</h3>
+                <p css={templateStyles.popoverText}>
+                  This is a sample popover content. You can put any React components here.
+                </p>
+                <Button onClick={handleClosePopover} variant="danger" size="small">
+                  Close
+                </Button>
+              </div>
+            </Popover>
+          </>
+        ))}
+      </div>
+    );
   },
 } satisfies Story;
 
 export const NoArrow = {
-  render: PopoverTemplate,
   args: {
-    hideArrow: true,
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.fadeIn,
+    ...Default.args,
+    arrow: false,
   },
 } satisfies Story;
 
-export const CustomWidth = {
-  render: PopoverTemplate,
+export const TopPlacement = {
   args: {
-    arrow: 'top',
-    gap: 12,
-    maxWidth: '300px',
-    closeOnEscape: true,
-    animationType: AnimationType.slideDown,
+    ...Default.args,
+    placement: 'top',
   },
 } satisfies Story;
 
-export const FadeAnimation = {
-  render: PopoverTemplate,
+export const RightPlacement = {
   args: {
-    arrow: 'bottom',
-    gap: 8,
-    closeOnEscape: true,
-    animationType: AnimationType.fadeIn,
+    ...Default.args,
+    placement: 'right',
   },
 } satisfies Story;
 
-export const LargeGap = {
-  render: PopoverTemplate,
+export const LeftPlacement = {
   args: {
-    arrow: 'top',
-    gap: 20,
-    closeOnEscape: true,
-    animationType: AnimationType.slideDown,
+    ...Default.args,
+    placement: 'left',
   },
 } satisfies Story;
 
-export const CloseOnEscape = {
-  render: PopoverTemplate,
+export const TopLeftPlacement = {
   args: {
-    arrow: 'top',
-    gap: 8,
-    closeOnEscape: false,
-    animationType: AnimationType.slideDown,
+    ...Default.args,
+    placement: 'topLeft',
   },
 } satisfies Story;
 
-const RichContentTemplate = (args: React.ComponentProps<typeof Popover>) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef<HTMLButtonElement>(null);
-
-  const handleTogglePopover = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleClosePopover = () => {
-    setIsOpen(false);
-  };
-
-  return (
-    <div css={templateStyles.container}>
-      <Button ref={triggerRef} onClick={handleTogglePopover} aria-expanded={isOpen} aria-haspopup="true">
-        Open Rich Content Popover
-      </Button>
-
-      <Popover {...args} triggerRef={triggerRef} isOpen={isOpen} closePopover={handleClosePopover}>
-        <div css={templateStyles.richContent}>
-          <div css={templateStyles.header}>
-            <h3 css={templateStyles.richTitle}>Course Options</h3>
-            <Button onClick={handleClosePopover} variant="danger" size="small" css={templateStyles.headerCloseButton}>
-              &times;
-            </Button>
-          </div>
-          <div css={templateStyles.menuList}>
-            <button css={templateStyles.menuItem}>
-              <span>📚</span>
-              View Course Details
-            </button>
-            <button css={templateStyles.menuItem}>
-              <span>📝</span>
-              Edit Course
-            </button>
-            <button css={templateStyles.menuItem}>
-              <span>👥</span>
-              Manage Students
-            </button>
-            <button css={templateStyles.menuItem}>
-              <span>📊</span>
-              View Analytics
-            </button>
-            <hr css={templateStyles.divider} />
-            <button css={[templateStyles.menuItem, templateStyles.dangerItem]}>
-              <span>🗑️</span>
-              Delete Course
-            </button>
-          </div>
-        </div>
-      </Popover>
-    </div>
-  );
-};
-
-export const RichContent = {
-  render: RichContentTemplate,
+export const TopRightPlacement = {
   args: {
-    arrow: 'top',
-    gap: 8,
-    maxWidth: '250px',
-    closeOnEscape: true,
-    animationType: AnimationType.slideDown,
+    ...Default.args,
+    placement: 'topRight',
+  },
+} satisfies Story;
+
+export const RightTopPlacement = {
+  args: {
+    ...Default.args,
+    placement: 'rightTop',
+  },
+} satisfies Story;
+
+export const RightBottomPlacement = {
+  args: {
+    ...Default.args,
+    placement: 'rightBottom',
+  },
+} satisfies Story;
+
+export const BottomLeftPlacement = {
+  args: {
+    ...Default.args,
+    placement: 'bottomLeft',
+  },
+} satisfies Story;
+
+export const BottomRightPlacement = {
+  args: {
+    ...Default.args,
+    placement: 'bottomRight',
+  },
+} satisfies Story;
+
+export const LeftTopPlacement = {
+  args: {
+    ...Default.args,
+    placement: 'leftTop',
+  },
+} satisfies Story;
+
+export const LeftBottomPlacement = {
+  args: {
+    ...Default.args,
+    placement: 'leftBottom',
   },
 } satisfies Story;
 

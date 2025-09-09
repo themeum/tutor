@@ -8,7 +8,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { POPOVER_PLACEMENTS, Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
@@ -80,7 +80,7 @@ const FormDateInput = ({
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
-    isDropdown: true,
+    placement: POPOVER_PLACEMENTS.BOTTOM_LEFT,
   });
 
   const handleClosePortal = () => {
@@ -109,6 +109,7 @@ const FormDateInput = ({
               <input
                 {...restInputProps}
                 css={[css, styles.input]}
+                title={fieldValue}
                 ref={(element) => {
                   field.ref(element);
                   // @ts-ignore
@@ -146,7 +147,11 @@ const FormDateInput = ({
 
             <Portal isOpen={isOpen} onClickOutside={handleClosePortal} onEscape={handleClosePortal}>
               <div
-                css={[styles.pickerWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                css={styles.pickerWrapper}
+                style={{
+                  [isRTL ? 'right' : 'left']: position.left,
+                  top: position.top,
+                }}
                 ref={popoverRef}
               >
                 <DayPicker
