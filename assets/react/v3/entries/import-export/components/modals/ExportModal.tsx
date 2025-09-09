@@ -35,8 +35,9 @@ interface ExportModalProps extends ModalProps {
   onClose: () => void;
   onExport: ({ data, exportableContent }: { data: ExportFormData; exportableContent: ExportableContent[] }) => void;
   currentStep: ImportExportModalState;
-  onDownload?: (fileName: string) => void;
+  onDownload?: () => void;
   progress: number;
+  fileName?: string;
   fileSize?: number;
   message?: string;
   failedMessage?: string;
@@ -58,6 +59,7 @@ const ExportModal = ({
   currentStep,
   onDownload,
   progress,
+  fileName,
   fileSize,
   message,
   failedMessage,
@@ -125,6 +127,11 @@ const ExportModal = ({
         {
           key: 'keep_media_files',
           label: __('Keep Media Files', 'tutor'),
+          contents: [],
+        },
+        {
+          key: 'keep_user_data',
+          label: __('Keep User Data', 'tutor'),
           contents: [],
         },
       ] as ExportableContent[]);
@@ -272,6 +279,7 @@ const ExportModal = ({
     success: (
       <ImportExportCompletedState
         state="success"
+        exportFileName={fileName}
         fileSize={fileSize}
         message={message}
         failedMessage={failedMessage}
@@ -292,7 +300,7 @@ const ExportModal = ({
     ),
   };
 
-  const EXCLUDED_KEYS = ['keep_media_files'];
+  const EXCLUDED_KEYS = ['keep_media_files', 'keep_user_data'];
 
   const disableExportButton = () => {
     const formValues = form.getValues();

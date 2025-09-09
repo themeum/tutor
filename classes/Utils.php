@@ -10,15 +10,16 @@
 
 namespace TUTOR;
 
-use Tutor\Cache\TutorCache;
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
-use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Models\CourseModel;
+use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
+use Tutor\Helpers\HttpHelper;
+use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\DateTimeHelper;
+use TutorPro\Subscription\Models\PlanModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,6 +32,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Utils {
 	use JsonResponse;
+
+
+	const ENROLLMENT_STATUS_COMPLETE = 'complete';
+	const ENROLLMENT_STATUS_ALL      = 'all';
+	const COURSE_COMPLETED           = 'course_completed';
+	const COURSE_RATING              = 'tutor_course_rating';
 
 	/**
 	 * Compatibility for splitting utils functions to specific model
@@ -8189,7 +8196,7 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
 
-		$course_id = Input::get('course', 0, Input::TYPE_INT );
+		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
 		if ( ! $course_id ) {
 			$course_id = $this->get_course_id_by( $content, $object_id );
 		}
@@ -10641,7 +10648,7 @@ class Utils {
 	 *
 	 * @return bool
 	 */
-	public function delete_enrollment_record( int $student_id, int $course_id ):bool {
+	public function delete_enrollment_record( int $student_id, int $course_id ): bool {
 		global $wpdb;
 		return QueryHelper::delete(
 			$wpdb->posts,
@@ -10700,7 +10707,7 @@ class Utils {
 
 		while ( get_user_by( 'login', $username ) ) {
 			$username = $original_username . '_' . $counter;
-			$counter++;
+			++$counter;
 		}
 
 		return $username;
@@ -10771,7 +10778,7 @@ class Utils {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 
 	/**
@@ -10786,12 +10793,12 @@ class Utils {
 	public function get_svg_icon_url( $name ) {
 		return tutor()->url . 'assets/icons/' . $name . '.svg';
 	}
-	
+
 	/**
 	 * Get script locale data for dynamic scripts
 	 *
 	 * @since 3.7.0
-	 * 
+	 *
 	 * @param string $filename Filename
 	 * @param string $locale Locale
 	 *
@@ -10800,7 +10807,7 @@ class Utils {
 	public function get_script_locale_data( string $filename, string $locale = 'en_US' ) {
 		$hash      = md5( "assets/js/lazy-chunks/{$filename}.js" );
 		$json_path = WP_CONTENT_DIR . "/languages/plugins/tutor-{$locale}-{$hash}.json";
-		
+
 		if ( file_exists( $json_path ) ) {
 			$contents = file_get_contents( $json_path );
 			$data     = json_decode( $contents, true );
@@ -10808,5 +10815,338 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Retrieve all enrollments for a specific course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $id  The ID of the course/bundle. Defaults to 0.
+	 *
+	 * @return array Array of enrollments as associative arrays, or an empty array if an error occurs.
+	 */
+	public function get_all_enrollments( int $id = 0 ): array {
+
+		global $wpdb;
+
+		$student_data = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->posts} 
+				WHERE post_type = %s
+				AND post_parent = %d",
+				tutor()->enrollment_post_type,
+				$id
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error ) {
+			error_log( 'Error While getting enrollments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
+			return array();
+		}
+
+		return $student_data ?? array();
+	}
+
+	/**
+	 * Get all quiz attempts for a user in a specific course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id The ID of the course.
+	 * @param int $user_id The ID of the user.
+	 *
+	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
+	 */
+	public function get_quiz_attempts_and_answers_by_course_id( int $course_id ): array {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM $wpdb->tutor_quiz_attempts
+				WHERE course_id = %d",
+				$course_id
+			)
+		);
+
+		if ( $wpdb->last_error || empty( $results ) ) {
+			$wpdb->last_error ? error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempts found for course ' . $course_id;
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				$item->quiz_attempt_answers = $this->get_quiz_attempt_answers_by_attempt_id( $item->attempt_id );
+				return $item;
+			},
+			$results
+		);
+	}
+
+	/**
+	 * Get all quiz attempt answers for a specific quiz attempt.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $attempt_id The ID of the quiz attempt.
+	 *
+	 * @return array Returns an array of quiz attempt answers objects, or an empty array on error.
+	 */
+	public function get_quiz_attempt_answers_by_attempt_id( int $attempt_id ): array {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM $wpdb->tutor_quiz_attempt_answers
+				WHERE quiz_attempt_id = %d",
+				$attempt_id
+			)
+		);
+
+		if ( $wpdb->last_error || empty( $results ) ) {
+			$wpdb->last_error ? error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempt answers found for attempt ID ' . $attempt_id;
+			return array();
+		}
+
+		return $results;
+	}
+
+
+	/**
+	 * Get all assignments submitted by a user for a specific course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $user_id The ID of the user.
+	 * @param int $course_id The ID of the course.
+	 *
+	 * @return array|null Returns an array of assignment comment objects with meta, empty array if none found, or null on error.
+	 */
+	public function get_assignments_by_course_id( $course_id ): array {
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->comments}
+				WHERE comment_type = %s
+				AND comment_parent = %d",
+				'tutor_assignment',
+				$course_id
+			)
+		);
+
+		if ( $wpdb->last_error || empty( $result ) ) {
+			$wpdb->last_error ? error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				$item->assignment_meta = get_comment_meta( $item->comment_ID );
+				return $item;
+			},
+			$result
+		);
+	}
+
+	/**
+	 * Retrieve all course completion records for a specific course, including meta data.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id The ID of the course.
+	 *
+	 * @return array Array of course completion objects with meta, empty array if none found, or on database error.
+	 */
+	public function get_course_completion_data_by_course_id( int $course_id ): array {
+
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->comments}
+				WHERE comment_type = %s
+				AND comment_post_ID = %d
+				AND comment_agent = %s",
+				self::COURSE_COMPLETED,
+				$course_id,
+				'TutorLMSPlugin'
+			)
+		);
+
+		if ( $wpdb->last_error || empty( $result ) ) {
+			$wpdb->last_error ? error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+
+				return array(
+					'completion'      => $item,
+					'completion_meta' => get_comment_meta( $item->comment_ID ),
+				);
+			},
+			$result
+		);
+	}
+
+	/**
+	 * Get order details for given course IDs.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int[] $course_ids Array of course IDs to fetch order details.
+	 *
+	 * @return array Returns an array of order details with each element containing:
+	 *               - order data (all columns from tutor_orders table)
+	 *               - order_items data (al columns except id)
+	 *               Returns an empty array if no results found or on error.
+	 */
+	public function get_order_details( array $course_ids ) {
+		global $wpdb;
+
+		$in_clause = QueryHelper::prepare_in_clause( $course_ids );
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+					orders.*,
+					order_items.order_id,
+					order_items.item_id,
+					order_items.regular_price,
+					order_items.sale_price,
+					order_items.discount_price,
+					order_items.coupon_code	AS item_coupon_code
+				FROM $wpdb->tutor_order_items AS order_items
+				JOIN $wpdb->tutor_orders AS orders
+				ON orders.id = order_items.order_id
+				WHERE order_items.item_id IN ( $in_clause)"
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error || empty( $result ) ) {
+			$wpdb->last_error ? error_log( 'Error While getting order_details from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
+			return array();
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Retrieve order meta for a specific order.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $order_id The ID of the order for which the metadata is to be retrieved.
+	 *
+	 * @return array An array of order meta. Returns an empty array if no meta is found or on error.
+	 */
+	public function get_order_meta_by_order_id( $order_id ) {
+
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->tutor_ordermeta}
+				WHERE order_id = %d",
+				$order_id,
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error ) {
+			$wpdb->last_error ? error_log( 'Error While getting order meta from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
+			return array();
+		}
+
+		return $result ?? array();
+	}
+
+	/**
+	 * Retrieve earnings for a specific order and course.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $order_id The ID of the order for which the earnings are being retrieved.
+	 * @param int $course_id The ID of the course for which the earnings are being retrieved.
+	 *
+	 * @return array An array of earnings data. Returns an empty array if no data is found or if an error occurs.
+	 */
+	public function get_earnings_by_order_and_course( $order_id, $course_id ) {
+
+		global $wpdb;
+
+		$where_clause = ! empty( $course_id ) ? 'AND course_id = ' . (int) $course_id : '';
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->tutor_earnings}
+				WHERE order_id = %d
+				{$where_clause}",
+				$order_id
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error ) {
+			$wpdb->last_error ? error_log( 'Error While getting earnings from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
+			return array();
+		}
+
+		return $result ?? array();
+	}
+
+	/**
+	 * Retrieves reviews for a specific course by its ID.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $course_id The ID of the course for which reviews are being fetched.
+	 *
+	 * @return array An array of reviews. If there is an error or no reviews
+	 *               are found, an empty array is returned.
+	 */
+	public function get_reviews_by_course_id( $course_id ): array {
+
+		global $wpdb;
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *
+				FROM {$wpdb->comments}
+				WHERE comment_type = %s
+				AND comment_post_ID = %d
+				AND comment_agent = %s",
+				self::COURSE_RATING,
+				$course_id,
+				'TutorLMSPlugin'
+			),
+			ARRAY_A
+		);
+
+		if ( $wpdb->last_error || empty( $result ) ) {
+			$wpdb->last_error ? error_log( 'Error While getting reviews for course id ' . $course_id . ' from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				return array(
+					'review'      => $item,
+					'review_meta' => get_comment_meta( $item['comment_ID'] ),
+				);
+			},
+			$result
+		);
 	}
 }

@@ -10,9 +10,9 @@
 
 namespace Tutor;
 
-use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
+use Tutor\Ecommerce\OptionKeys;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1983,6 +1983,7 @@ class Options_V2 {
 			'schema_version'   => '1.0.0',
 			'exported_at'      => current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 			'keep_media_files' => false,
+			'keep_user_data'   => false,
 			'data'             => array(),
 		);
 

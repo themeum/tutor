@@ -29,6 +29,7 @@ export interface ExportFormData {
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
   keep_media_files: boolean;
+  keep_user_data: boolean;
 }
 
 export interface BulkSelectionFormData {
@@ -49,6 +50,7 @@ export const defaultExportFormData: ExportFormData = {
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
   keep_media_files: false,
+  keep_user_data: false,
 };
 
 export const convertExportFormDataToPayload = ({
@@ -61,6 +63,7 @@ export const convertExportFormDataToPayload = ({
   const payload: ExportContentPayload = {
     export_contents: [],
     keep_media_files: data.keep_media_files ? '1' : '0',
+    keep_user_data: data.keep_user_data ? '1' : '0',
   };
 
   const isContentInExportableContent = (contentType: ExportableContentType): boolean => {
@@ -81,10 +84,11 @@ export const convertExportFormDataToPayload = ({
 
   // Add direct content types (those without '__')
   Object.keys(data).forEach((key) => {
+    const isValidKey = key !== 'keep_media_files' && key !== 'keep_user_data';
     if (
       !key.includes('__') &&
       data[key as keyof ExportFormData] &&
-      key !== 'keep_media_files' &&
+      isValidKey &&
       isContentInExportableContent(key as ExportableContentType)
     ) {
       contentTypes.add(key);
@@ -123,6 +127,7 @@ export const convertExportFormDataToPayload = ({
           suffix &&
           suffix !== 'ids' &&
           suffix !== 'keep_media_files' &&
+          suffix !== 'keep_user_data' &&
           isSubContentInExportableContent(contentType as ExportableContentType, suffix as ExportableCourseContentType)
         ) {
           subContents.push(suffix as ExportableCourseContentType);
@@ -156,6 +161,7 @@ interface ExportContentItem {
 export interface ExportContentPayload {
   export_contents?: ExportContentItem[];
   keep_media_files?: '0' | '1';
+  keep_user_data?: '0' | '1';
   job_id?: string | number; // need to send back the job id to get the status
 }
 
@@ -185,14 +191,11 @@ export interface ImportExportContentResponseBase {
 }
 
 export interface ExportContentResponse extends ImportExportContentResponseBase {
-  exported_data: {
-    schema_version: string;
-    data: {
-      content_type: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data: Record<string, any>;
-    }[];
+  export_file: {
+    url: string;
+    file_size: number;
   };
+  exported_data: string;
 }
 const exportContents = async (payload: ExportContentPayload) => {
   return wpAjaxInstance
@@ -203,6 +206,7 @@ const exportContents = async (payload: ExportContentPayload) => {
         : {
             export_contents: payload.export_contents,
             keep_media_files: payload.keep_media_files,
+            keep_user_data: payload.keep_user_data,
           },
     )
     .then((res) => res.data);

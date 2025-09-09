@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
 import { useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
@@ -33,12 +32,11 @@ interface ImportExportCompletedStateProps {
   failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
   importErrors?: ImportContentResponse['errors'];
-  onDownload?: (fileName: string) => void;
+  onDownload?: () => void;
   onClose: () => void;
-  importFileName?: string;
+  exportFileName?: string;
   type: 'import' | 'export';
 }
-const fileName = `tutor-lms-data-${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}.json`;
 
 const ImportExportCompletedState = ({
   state,
@@ -50,6 +48,7 @@ const ImportExportCompletedState = ({
   importErrors,
   onDownload,
   onClose,
+  exportFileName = 'tutor-export.json',
   type,
 }: ImportExportCompletedStateProps) => {
   const [isFailedDataVisible, setIsFailedDataVisible] = useState(false);
@@ -249,10 +248,10 @@ const ImportExportCompletedState = ({
             </div>
             <div css={styles.fileRight}>
               <div css={styles.fileDetails}>
-                <div css={styles.fileName} title={fileName}>
-                  {fileName}
+                <div css={styles.fileName} title={exportFileName}>
+                  {exportFileName}
                 </div>
-                <div css={styles.fileSize}>{formatBytes(fileSize || 0)}</div>
+                <div css={styles.fileSize}>{fileSize || formatBytes(0)}</div>
               </div>
 
               <div>
@@ -260,7 +259,7 @@ const ImportExportCompletedState = ({
                   variant="primary"
                   size="small"
                   icon={<SVGIcon name="download" width={24} height={24} />}
-                  onClick={() => onDownload?.(fileName)}
+                  onClick={() => onDownload?.()}
                 >
                   {__('Download', 'tutor')}
                 </Button>
