@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
 import { hasAnyCourseWithChildren } from '@ImportExport/utils/utils';
-import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
@@ -35,7 +35,7 @@ interface ImportInitialStateProps {
     collectionId,
   }: {
     file: File;
-    collectionId?: number; // Optional for content bank import
+    collectionId?: number; // only needed if importing into Content Bank
   }) => void;
 }
 
@@ -303,7 +303,6 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </Show>
 
-        {/* <Show when={isFileValid && hasContent.settings}> */}
         <div css={styles.alert}>
           <SVGIcon name="infoFill" width={40} height={40} />
           <p>
@@ -313,7 +312,6 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
             }
           </p>
         </div>
-        {/* </Show> */}
       </div>
       <div css={styles.footer}>
         <div css={styles.actionButtons}>
