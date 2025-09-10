@@ -40,6 +40,7 @@ const Export = () => {
     updateModal<typeof ExportModal>('export-modal', {
       currentStep: 'progress',
       progress: 0,
+      message: __('Export in progress', 'tutor'),
     });
   };
 

@@ -67,7 +67,6 @@ const ImportModal = ({
         completedContents={completedContents}
         isImportingToContentBank={isImportingFromContentBank}
         type="import"
-        importFileName={file.name}
         message={message || ''}
         failedMessage={failedMessage || ''}
         importErrors={importErrors}

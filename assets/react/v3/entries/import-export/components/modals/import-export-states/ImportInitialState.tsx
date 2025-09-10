@@ -294,22 +294,16 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
         <Show when={!isFileValid}>
           <div css={styles.alert}>
             <SVGIcon name="warning" width={40} height={40} />
-            <p>
-              {
-                // prettier-ignore
-                __('WARNING! Invalid file. Please upload a valid JSON file and try again.', 'tutor')
-              }
-            </p>
+            <p>{__('WARNING! Invalid file. Please upload a valid JSON file and try again.', 'tutor')}</p>
           </div>
         </Show>
 
         <div css={styles.alert}>
           <SVGIcon name="infoFill" width={40} height={40} />
           <p>
-            {
-              // prettier-ignore
-              __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')
-            }
+            {isContentBankSelectionEnabled
+              ? __('Note: Only lessons, quizzes, and assignments will be uploaded to the Content Bank.', 'tutor')
+              : __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')}
           </p>
         </div>
       </div>
