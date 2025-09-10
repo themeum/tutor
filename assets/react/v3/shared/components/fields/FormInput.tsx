@@ -21,6 +21,7 @@ import { parseNumberOnly } from '@TutorShared/utils/util';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -203,29 +204,26 @@ const FormInput = ({
                 }}
               />
               <Show when={isPassword}>
-                <div css={styles.actionButton}>
-                  <Button
-                    isIconOnly
-                    variant="text"
-                    size="small"
-                    onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
-                    icon={<SVGIcon name="eye" width={24} height={24} />}
-                    aria-label={__('Show/Hide Password', 'tutor')}
-                    buttonCss={styles.eyeButton({ type: fieldType })}
-                  />
-                </div>
+                <Button
+                  isIconOnly
+                  variant="text"
+                  size="small"
+                  onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
+                  icon={<SVGIcon name="eye" width={24} height={24} />}
+                  aria-label={__('Show/Hide Password', 'tutor')}
+                  buttonCss={styles.eyeButton({ type: fieldType })}
+                />
               </Show>
               <Show when={isClearable && !!field.value && fieldType !== 'password'}>
-                <div css={styles.actionButton}>
-                  <Button
-                    isIconOnly
-                    variant="text"
-                    size="small"
-                    onClick={() => field.onChange('')}
-                    icon={<SVGIcon name="cross" width={24} height={24} />}
-                    aria-label={__('Clear', 'tutor')}
-                  />
-                </div>
+                <Button
+                  isIconOnly
+                  variant="text"
+                  size="small"
+                  onClick={() => field.onChange('')}
+                  buttonCss={styleUtils.inputClearButton}
+                  icon={<SVGIcon name="cross" width={24} height={24} />}
+                  aria-label={__('Clear', 'tutor')}
+                />
               </Show>
             </div>
           </>
@@ -248,15 +246,8 @@ const styles = {
       }
     }
   `,
-  actionButton: css`
-    position: absolute;
-    top: 50%;
-    right: ${spacing[4]};
-    transform: translateY(-50%);
-    background: transparent;
-  `,
-
   eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
+    ${styleUtils.inputClearButton};
     ${type !== 'password' &&
     css`
       color: ${colorTokens.icon.brand};

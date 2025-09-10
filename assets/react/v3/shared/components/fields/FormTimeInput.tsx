@@ -7,7 +7,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
 
 import { DateFormats } from '@TutorShared/config/constants';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { type FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -15,6 +15,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 
+import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTimeInputProps extends FormControllerProps<string> {
@@ -120,9 +121,15 @@ const FormTimeInput = ({
               <SVGIcon name="clock" width={32} height={32} style={styles.icon} />
 
               {isClearable && field.value && (
-                <Button variant="text" buttonCss={styles.clearButton} onClick={() => field.onChange('')}>
-                  <SVGIcon name="times" width={12} height={12} />
-                </Button>
+                <Button
+                  isIconOnly
+                  aria-label={__('Clear', 'tutor')}
+                  size="small"
+                  variant="text"
+                  buttonCss={styleUtils.inputClearButton}
+                  onClick={() => field.onChange('')}
+                  icon={<SVGIcon name="times" width={12} height={12} />}
+                />
               )}
             </div>
 
@@ -226,24 +233,6 @@ const styles = {
     &:hover {
       background: none;
       color: ${colorTokens.text.primary};
-    }
-  `,
-  clearButton: css`
-    position: absolute;
-    top: 50%;
-    right: ${spacing[4]};
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    ${styleUtils.flexCenter()};
-    opacity: 0;
-    transition:
-      background-color 0.3s ease-in-out,
-      opacity 0.3s ease-in-out;
-    border-radius: ${borderRadius[2]};
-
-    :hover {
-      background-color: ${colorTokens.background.hover};
     }
   `,
 };
