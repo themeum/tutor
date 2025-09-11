@@ -31,6 +31,9 @@ if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course
 	return;
 }
 $has_video = apply_filters( 'tutor_course_has_video', tutor_utils()->has_video_in_single(), $course_id );
+
+$toggle_course_wishlist = tutor_utils()->get_option( 'toggle_course_wishlist' );
+
 ?>
 
 <?php do_action( 'tutor_course/single/before/wrap' ); ?>

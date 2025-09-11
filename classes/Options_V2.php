@@ -1362,6 +1362,13 @@ class Options_V2 {
 										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
 									),
 									array(
+										'key'     => 'toggle_course_wishlist',
+										'type'    => 'toggle_single',
+										'label'   => __( 'Wishlist', 'tutor' ),
+										'default' => 'on',
+										'desc'    => __( 'Toggle to disable/enable wishlist', 'tutor' ),
+									),
+									array(
 										'key'     => 'enable_q_and_a_on_course',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Q&A', 'tutor' ),
@@ -1487,7 +1494,7 @@ class Options_V2 {
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
 										'desc'        => __( 'Enable to show course review section', 'tutor' ),
-									),
+									)
 								),
 							),
 						),

@@ -10,9 +10,8 @@
  */
 
 ?>
-
 <?php tutor_course_loop_thumbnail(); ?>
-
+<?php if ( $toggle_course_wishlist ) : ?>
 <div class="tutor-course-bookmark">
 	<?php
 	$course_id      = get_the_ID();
@@ -30,9 +29,10 @@
 			$login_url_attr = 'data-login_url="' . esc_url( wp_login_url() ) . '"';
 		}
 	}
-		//phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $login_url_attr contain safe data
-		echo '<a href="javascript:;" ' . $login_url_attr . ' class="' . esc_attr( $action_class ) . ' save-bookmark-btn tutor-iconic-btn tutor-iconic-btn-secondary" data-course-id="' . esc_attr( $course_id ) . '">
-            <i class="' . ( $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line' ) . '"></i>
-        </a>';
+	//phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- $login_url_attr contain safe data
+	echo '<a href="javascript:;" ' . $login_url_attr . ' class="' . esc_attr( $action_class ) . ' save-bookmark-btn tutor-iconic-btn tutor-iconic-btn-secondary" data-course-id="' . esc_attr( $course_id ) . '">
+		<i class="' . ( $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line' ) . '"></i>
+	</a>';
 	?>
 </div>
+<?php endif; ?>
