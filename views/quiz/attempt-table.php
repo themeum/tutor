@@ -70,9 +70,9 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 					if ( is_array( $answers ) && count( $answers ) > 0 ) {
 						foreach ( $answers as $answer ) {
 							if ( (bool) $answer->is_correct ) {
-								$correct++;
+								++$correct;
 							} elseif ( ! ( null === $answer->is_correct ) ) {
-								$incorrect++;
+								++$incorrect;
 							}
 						}
 					}
