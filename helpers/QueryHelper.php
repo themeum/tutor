@@ -1323,7 +1323,7 @@ class QueryHelper {
 	/**
 	 * Get the schema of a database table.
 	 *
-	 * @since 3.8.0
+	 * @since 3.8.1
 	 *
 	 * @param string $table_name The name of the database table.
 	 *
