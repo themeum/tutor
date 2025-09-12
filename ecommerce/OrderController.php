@@ -266,7 +266,6 @@ class OrderController {
 			'total_price'    => $total_price,
 			'net_payment'    => $total_price,
 			'user_id'        => $user_id,
-			'payment_status' => $payment_status,
 			'order_status'   => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
 			'created_at_gmt' => current_time( 'mysql', true ),
 			'created_by'     => get_current_user_id(),

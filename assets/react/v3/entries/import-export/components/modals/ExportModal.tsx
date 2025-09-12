@@ -35,10 +35,12 @@ interface ExportModalProps extends ModalProps {
   onClose: () => void;
   onExport: ({ data, exportableContent }: { data: ExportFormData; exportableContent: ExportableContent[] }) => void;
   currentStep: ImportExportModalState;
-  onDownload?: (fileName: string) => void;
+  onDownload?: () => void;
   progress: number;
+  fileName?: string;
   fileSize?: number;
   message?: string;
+  failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
   collection?: Collection;
 }
@@ -57,8 +59,10 @@ const ExportModal = ({
   currentStep,
   onDownload,
   progress,
+  fileName,
   fileSize,
   message,
+  failedMessage,
   completedContents,
   collection,
 }: ExportModalProps) => {
@@ -125,6 +129,11 @@ const ExportModal = ({
           label: __('Keep Media Files', 'tutor'),
           contents: [],
         },
+        {
+          key: 'keep_user_data',
+          label: __('Keep User Data', 'tutor'),
+          contents: [],
+        },
       ] as ExportableContent[]);
 
   const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'content_bank') => {
@@ -157,6 +166,16 @@ const ExportModal = ({
     const contentItem = data?.find((item) => item.key === key);
     return contentItem?.ids || [];
   };
+
+  useEffect(() => {
+    if (currentStep === 'progress') {
+      window.onbeforeunload = () => true;
+    }
+
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, [currentStep]);
 
   useEffect(() => {
     if (!getExportableContentQuery.isSuccess || !getExportableContentQuery.data) {
@@ -260,18 +279,28 @@ const ExportModal = ({
     success: (
       <ImportExportCompletedState
         state="success"
+        exportFileName={fileName}
         fileSize={fileSize}
         message={message}
+        failedMessage={failedMessage}
         completedContents={completedContents}
         onDownload={onDownload}
         onClose={handleClose}
         type="export"
       />
     ),
-    error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
+    error: (
+      <ImportExportCompletedState
+        state="error"
+        message={message}
+        failedMessage={failedMessage}
+        onClose={handleClose}
+        type="export"
+      />
+    ),
   };
 
-  const EXCLUDED_KEYS = ['keep_media_files'];
+  const EXCLUDED_KEYS = ['keep_media_files', 'keep_user_data'];
 
   const disableExportButton = () => {
     const formValues = form.getValues();
