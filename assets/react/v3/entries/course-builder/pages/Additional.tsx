@@ -10,6 +10,7 @@ import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import EmptyState from '@TutorShared/molecules/EmptyState';
 
+import Certificate from '@TutorShared/components/certificate/Certificate';
 import FormCoursePrerequisites from '@TutorShared/components/fields/FormCoursePrerequisites';
 import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
@@ -36,7 +37,6 @@ import { isAddonEnabled } from '@TutorShared/utils/util';
 
 import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@SharedImages/pro-placeholders/attachments.webp';
-import Certificate from '@TutorShared/components/certificate/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();

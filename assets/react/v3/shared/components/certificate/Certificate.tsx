@@ -6,6 +6,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 import Tabs from '@TutorShared/molecules/Tabs';
 
+import CertificatePreviewModal from '@TutorShared/components/modals/CertificatePreviewModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
@@ -20,7 +21,6 @@ import { isAddonEnabled } from '@TutorShared/utils/util';
 import notFound2x from '@SharedImages/not-found-2x.webp';
 import notFound from '@SharedImages/not-found.webp';
 
-import CertificatePreviewModal from '../modals/CertificatePreviewModal';
 import CertificateCard from './CertificateCard';
 import CertificateEmptyState from './CertificateEmptyState';
 
