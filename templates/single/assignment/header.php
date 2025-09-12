@@ -10,7 +10,7 @@
 
 $total_mark   = $data['total_mark'];
 $pass_mark    = $data['pass_mark'];
-$earned_marks = $data['earned_marks'];
+$earned_marks = $data['earned_marks']; // @TODO: Get the earned marks based on assignment grading.
 $duration     = $data['duration'];
 $deadline     = $data['deadline'];
 $has_back_url = ! empty( $data['has_back_url'] );

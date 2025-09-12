@@ -65,6 +65,8 @@ $next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $pos
 $content              = get_the_content();
 $s_content            = $content;
 $allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' );
+$feedback_mode        = tutor_utils()->get_assignment_option( $post_id, 'feedback_mode' );
+$attempts_allowed     = (int) tutor_utils()->get_assignment_option( $post_id, 'attempts_allowed' );
 $course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
 
 $upload_dir     = wp_get_upload_dir();
@@ -357,7 +359,6 @@ if ( $time_value ) {
 									array(
 										'attempts' => array(
 											$submitted_assignment,
-											$submitted_assignment,
 										),
 									)
 								);
@@ -372,16 +373,23 @@ if ( $time_value ) {
 							);
 						?>
 					<?php endif; ?>
-
-
-					<?php if ( $next_prev_content_id->next_id ) : ?>
-						<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
-							<a class="tutor-btn tutor-btn-primary tutor-static-loader"
+					
+					<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
+						<!-- @TODO: need to check against the count of attempts -->
+						<?php if ( 1 < $attempts_allowed && 'retry' === $feedback_mode && ! $is_expired ) : ?>
+							<a class="tutor-btn tutor-btn-primary tutor-static-loader tutor-mr-16"
 								href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
-								<?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
+								<?php esc_html_e( 'Retry', 'tutor' ); ?>
 							</a>
-						</div>
-					<?php endif; ?>
+						<?php endif; ?>
+
+						<?php if ( $next_prev_content_id->next_id ) : ?>
+							<a class="tutor-btn tutor-btn-primary tutor-static-loader"
+							href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
+							<?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
+							</a>
+						<?php endif; ?>
+					</div>
 				<?php else : ?>
 					<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
 						<div class="tutor-assignment-footer-btn tutor-d-flex tutor-justify-between">
