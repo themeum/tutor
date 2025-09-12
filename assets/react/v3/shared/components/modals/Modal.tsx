@@ -172,11 +172,13 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const currentlyOpenPopovers = document.querySelectorAll('.tutor-portal-popover');
+      const isWPModalOpen = !!document.body.classList.contains('modal-open');
 
       if (
         event.key === 'Escape' &&
         state.modals[state.modals.length - 1]?.closeOnEscape &&
-        !currentlyOpenPopovers.length
+        !currentlyOpenPopovers.length &&
+        !isWPModalOpen
       ) {
         closeModal({ action: 'CLOSE' });
       }
