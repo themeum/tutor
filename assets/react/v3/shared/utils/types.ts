@@ -398,3 +398,14 @@ export interface ContentBankContents {
   data: ContentBankContent[];
   collection: Collection;
 }
+
+export interface Certificate {
+  name: string;
+  orientation: 'landscape' | 'portrait';
+  edit_url?: string;
+  url: string;
+  preview_src: string;
+  background_src: string;
+  key: string;
+  is_default?: boolean;
+}

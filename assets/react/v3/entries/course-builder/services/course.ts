@@ -17,6 +17,7 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
   isDefined,
+  type Certificate,
   type Editor,
   type ID,
   type Prettify,
@@ -432,17 +433,6 @@ interface PrerequisiteCourses {
   id: number;
   post_title: string;
   featured_image: string;
-}
-
-export interface Certificate {
-  name: string;
-  orientation: 'landscape' | 'portrait';
-  edit_url?: string;
-  url: string;
-  preview_src: string;
-  background_src: string;
-  key: string;
-  is_default?: boolean;
 }
 
 export interface ZoomMeetingPayload {
