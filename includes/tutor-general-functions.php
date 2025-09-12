@@ -1241,6 +1241,16 @@ if ( ! function_exists( 'tutor_getallheaders' ) ) {
 			}
 		}
 
+		if ( ! isset( $headers['Authorization'] ) ) {
+			foreach ( $headers as $name => $value ) {
+				if ( strtolower( $name ) === 'authorization' ) {
+					unset( $headers[$name] );
+					$headers['Authorization'] = $value;
+					break;
+				}
+			}
+		}
+
 		return $headers;
 	}
 }
