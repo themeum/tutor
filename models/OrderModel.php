@@ -2010,11 +2010,7 @@ class OrderModel {
 
 		$result = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), '', -1 );
 
-		if ( $result['results'] ) {
-			return $result['results'];
-		}
-
-		return $result;
+		return $result['results'];
 	}
 
 	/**

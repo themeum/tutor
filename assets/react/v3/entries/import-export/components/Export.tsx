@@ -148,6 +148,7 @@ const Export = () => {
           fetch(newUrl);
         },
         onDownload: () => {
+          closeModal();
           const url = exportContentResponse?.export_file?.url;
           const a = document.createElement('a');
           a.href = url;
