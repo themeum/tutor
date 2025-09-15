@@ -10828,24 +10828,12 @@ class Utils {
 
 		global $wpdb;
 
-		$student_data = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-				FROM {$wpdb->posts} 
-				WHERE post_type = %s
-				AND post_parent = %d",
-				tutor()->enrollment_post_type,
-				$id
-			),
-			ARRAY_A
+		$where = array(
+			'post_type'   => tutor()->enrollment_post_type,
+			'post_parent' => $id,
 		);
 
-		if ( $wpdb->last_error ) {
-			error_log( 'Error While getting enrollments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error );
-			return array();
-		}
-
-		return $student_data ?? array();
+		return QueryHelper::get_all( $wpdb->posts, $where, 'ID' );
 	}
 
 	/**
