@@ -35,7 +35,6 @@ class Utils {
 
 	const ENROLLMENT_STATUS_COMPLETE = 'complete';
 	const ENROLLMENT_STATUS_ALL      = 'all';
-	const COURSE_COMPLETED           = 'course_completed';
 
 	/**
 	 * Compatibility for splitting utils functions to specific model
@@ -10818,7 +10817,7 @@ class Utils {
 	/**
 	 * Retrieve all enrollments for a specific course.
 	 *
-	 * @since 3.8.0
+	 * @since 3.8.1
 	 *
 	 * @param int $id  The ID of the course/bundle. Defaults to 0.
 	 *
@@ -10834,152 +10833,5 @@ class Utils {
 		);
 
 		return QueryHelper::get_all( $wpdb->posts, $where, 'ID' );
-	}
-
-	/**
-	 * Get all quiz attempts for a user in a specific course.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param int $course_id The ID of the course.
-	 * @param int $user_id The ID of the user.
-	 *
-	 * @return array Returns an array of quiz attempt objects with their answers, or an empty array on error.
-	 */
-	public function get_quiz_attempts_and_answers_by_course_id( int $course_id ): array {
-		global $wpdb;
-
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-				FROM $wpdb->tutor_quiz_attempts
-				WHERE course_id = %d",
-				$course_id
-			)
-		);
-
-		if ( $wpdb->last_error || empty( $results ) ) {
-			$wpdb->last_error ? error_log( 'Error While getting quiz attempts from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempts found for course ' . $course_id;
-			return array();
-		}
-
-		return array_map(
-			function ( $item ) {
-				$item->quiz_attempt_answers = $this->get_quiz_attempt_answers_by_attempt_id( $item->attempt_id );
-				return $item;
-			},
-			$results
-		);
-	}
-
-	/**
-	 * Get all quiz attempt answers for a specific quiz attempt.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param int $attempt_id The ID of the quiz attempt.
-	 *
-	 * @return array Returns an array of quiz attempt answers objects, or an empty array on error.
-	 */
-	public function get_quiz_attempt_answers_by_attempt_id( int $attempt_id ): array {
-		global $wpdb;
-
-		$results = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-				FROM $wpdb->tutor_quiz_attempt_answers
-				WHERE quiz_attempt_id = %d",
-				$attempt_id
-			)
-		);
-
-		if ( $wpdb->last_error || empty( $results ) ) {
-			$wpdb->last_error ? error_log( 'Error While getting quiz attempts answers from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : 'No quiz attempt answers found for attempt ID ' . $attempt_id;
-			return array();
-		}
-
-		return $results;
-	}
-
-
-	/**
-	 * Get all assignments submitted by a user for a specific course.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param int $user_id The ID of the user.
-	 * @param int $course_id The ID of the course.
-	 *
-	 * @return array|null Returns an array of assignment comment objects with meta, empty array if none found, or null on error.
-	 */
-	public function get_assignments_by_course_id( $course_id ): array {
-		global $wpdb;
-
-		$result = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-				FROM {$wpdb->comments}
-				WHERE comment_type = %s
-				AND comment_parent = %d",
-				'tutor_assignment',
-				$course_id
-			)
-		);
-
-		if ( $wpdb->last_error || empty( $result ) ) {
-			$wpdb->last_error ? error_log( 'Error While getting assignments from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
-			return array();
-		}
-
-		return array_map(
-			function ( $item ) {
-				$item->assignment_meta = get_comment_meta( $item->comment_ID );
-				return $item;
-			},
-			$result
-		);
-	}
-
-	/**
-	 * Retrieve all course completion records for a specific course, including meta data.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param int $course_id The ID of the course.
-	 *
-	 * @return array Array of course completion objects with meta, empty array if none found, or on database error.
-	 */
-	public function get_course_completion_data_by_course_id( int $course_id ): array {
-
-		global $wpdb;
-
-		$result = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-				FROM {$wpdb->comments}
-				WHERE comment_type = %s
-				AND comment_post_ID = %d
-				AND comment_agent = %s",
-				self::COURSE_COMPLETED,
-				$course_id,
-				'TutorLMSPlugin'
-			)
-		);
-
-		if ( $wpdb->last_error || empty( $result ) ) {
-			$wpdb->last_error ? error_log( 'Error While getting completed courses from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
-			return array();
-		}
-
-		return array_map(
-			function ( $item ) {
-
-				return array(
-					'completion'      => $item,
-					'completion_meta' => get_comment_meta( $item->comment_ID ),
-				);
-			},
-			$result
-		);
 	}
 }
