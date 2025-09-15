@@ -460,6 +460,7 @@ final class Tutor extends Singleton {
 		$wpdb->tutor_subscription_plans      = $wpdb->prefix . 'tutor_subscription_plans';
 		$wpdb->tutor_subscriptions           = $wpdb->prefix . 'tutor_subscriptions';
 		$wpdb->tutor_subscriptionmeta        = $wpdb->prefix . 'tutor_subscriptionmeta';
+		$wpdb->tutor_order_itemmeta          = $wpdb->prefix . 'tutor_order_itemmeta';
 
 		/**
 		 * Changing default wp doing ajax return based on tutor ajax action
