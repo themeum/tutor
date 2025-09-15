@@ -55,7 +55,7 @@ function tutor_render_answer_list( $answers = array(), $dump_data = false ) {
 		foreach ( $answers as $key => $ans ) {
 			$type = isset( $ans->answer_view_format ) ? $ans->answer_view_format : 'text_image';
 
-			if ( isset( $ans->answer_two_gap_match ) ) {
+			if ( ! empty( $ans->answer_two_gap_match ) ) {
 				echo '<div class="matching-type">';
 			}
 
@@ -79,7 +79,7 @@ function tutor_render_answer_list( $answers = array(), $dump_data = false ) {
 							. esc_html( stripslashes( $ans->answer_title ) ) .
 						'</span>';
 
-					if ( isset( $ans->answer_title ) && ! isset( $ans->answer_two_gap_match ) ) {
+					if ( isset( $ans->answer_title ) && empty( $ans->answer_two_gap_match ) ) {
 						$multi_texts[ $ans->answer_title ] = $ans_string;
 					} else {
 						echo $ans_string; //phpcs:ignore -- contain safe data
@@ -101,13 +101,13 @@ function tutor_render_answer_list( $answers = array(), $dump_data = false ) {
 					break;
 			}
 
-			if ( isset( $ans->answer_two_gap_match ) ) {
+			if ( ! empty( $ans->answer_two_gap_match ) ) {
 					echo '<div class="image-match">' . esc_html( stripslashes( $ans->answer_two_gap_match ) ) . '</div>';
 				echo '</div>';
 			}
 		}
             //phpcs:ignore
-			echo count( $multi_texts ) ? implode( ', ', wp_unslash( $multi_texts ) ) : '';
+			echo count( $multi_texts ) ? implode( ', ', $multi_texts ) : '';
 
 		echo '</div>';
 	}
