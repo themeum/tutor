@@ -35,6 +35,7 @@ import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/con
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { ID, TopicContentType } from '@TutorShared/utils/types';
@@ -365,8 +366,7 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
@@ -402,8 +402,6 @@ const TopicContent = ({ type, topic, content, listeners, isDragging = false, onC
           __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')
         }
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
         confirmButton={{
           text: __('Delete', 'tutor'),
           variant: 'text',

@@ -7,6 +7,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS, type PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import Popover from './Popover';
@@ -54,20 +55,20 @@ export const ThreeDotsOption = ({
   );
 };
 
-export type ArrowPosition = 'top' | 'bottom' | 'left' | 'right' | 'auto';
 export type DotsOrientation = 'vertical' | 'horizontal';
+
 interface ThreeDotsProps {
   isOpen: boolean;
   disabled?: boolean;
   onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
   closePopover: () => void;
   children: ReactNode;
-  arrowPosition?: ArrowPosition;
+  placement?: PopoverPlacement;
   animationType?: AnimationType;
   dotsOrientation?: DotsOrientation;
   maxWidth?: string;
   isInverse?: boolean;
-  hideArrow?: boolean;
+  arrow?: boolean;
   size?: 'small' | 'medium';
   closeOnEscape?: boolean;
   wrapperCss?: SerializedStyles;
@@ -78,13 +79,13 @@ const ThreeDots = ({
   isOpen,
   disabled = false,
   closePopover,
-  arrowPosition = 'top',
+  placement = POPOVER_PLACEMENTS.BOTTOM_RIGHT,
   children,
   animationType = AnimationType.slideLeft,
   dotsOrientation = 'horizontal',
   maxWidth = '148px',
   isInverse = false,
-  hideArrow = false,
+  arrow = false,
   size = 'medium',
   closeOnEscape = true,
   wrapperCss,
@@ -107,12 +108,12 @@ const ThreeDots = ({
       <Popover
         gap={13}
         maxWidth={maxWidth}
-        arrow={arrowPosition}
+        placement={placement}
         triggerRef={ref}
         isOpen={isOpen}
         closePopover={closePopover}
         animationType={animationType}
-        hideArrow={hideArrow}
+        arrow={arrow}
         closeOnEscape={closeOnEscape}
       >
         <div css={styles.wrapper({ size })}>
