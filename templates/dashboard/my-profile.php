@@ -59,13 +59,13 @@ $profile_data = array(
 	),
 );
 
+$profile_data = apply_filters( 'tutor_profile_data', $profile_data );
 ?>
 
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'My Profile', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner tutor-dashboard-profile-data">
 	<?php
 	foreach ( $profile_data as $key => $data ) :
-		ob_start();
 		?>
 		<div class="tutor-row tutor-mb-24">
 			<div class="tutor-col-12 tutor-col-sm-5 tutor-col-lg-3">
@@ -76,9 +76,10 @@ $profile_data = array(
 			echo 'biography' === $key ?
 					'<span class="tutor-fs-6 tutor-color-secondary">' . wp_kses_post( wpautop( $data['value'] ) ) . '</span>'
 					: '<span class="tutor-fs-6 tutor-fw-medium tutor-color-black">' . esc_html( $data['value'] ) . '</span>';
+
+				do_action( 'tutor_after_profile_data_item_value', $key, $data );
 			?>
 			</div>
 		</div>
-		<?php echo apply_filters( 'tutor_profile_data_item', ob_get_clean(), $key, $data ); //phpcs:ignore -- sanitized ?>
 	<?php endforeach; ?>
 </div>
