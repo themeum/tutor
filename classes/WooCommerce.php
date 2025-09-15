@@ -554,7 +554,11 @@ class WooCommerce extends Tutor_Base {
 					if ( 'completed' === $status_to ) {
 						$user_id   = get_post_field( 'post_author', $enrolled_id );
 						$course_id = get_post_field( 'post_parent', $enrolled_id );
-						do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
+
+						$should_fire_hook = apply_filters( 'tutor_should_fire_after_enrolled_for_wc_order', true, $order_id, $enrolled_id );
+						if ( $should_fire_hook ) {
+							do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
+						}
 					}
 				}
 			}
