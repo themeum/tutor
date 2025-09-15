@@ -200,7 +200,6 @@ const styles = {
     height: 32px;
     width: 32px;
     overflow: hidden;
-    border-radius: ${borderRadius.circle};
 
     img {
       max-width: 100%;
