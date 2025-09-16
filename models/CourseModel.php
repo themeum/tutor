@@ -67,9 +67,9 @@ class CourseModel {
 
 	/**
 	 * The constant representing the status when a course is completed.
-	 * 
+	 *
 	 * @since 3.8.1
-	 * 
+	 *
 	 * @var string
 	 */
 	const COURSE_COMPLETED = 'course_completed';
@@ -1175,13 +1175,13 @@ class CourseModel {
 
 		global $wpdb;
 
-		$where  = array( 
-			'comment_type' => self::COURSE_COMPLETED, 
+		$where = array(
+			'comment_type'    => self::COURSE_COMPLETED,
 			'comment_post_ID' => $course_id,
-			'comment_agent'  => 'TutorLMSPlugin'
+			'comment_agent'   => 'TutorLMSPlugin',
 		);
 
-		$result = QueryHelper::get_all($wpdb->comments, $where, 'comment_post_ID', -1 );
+		$result = QueryHelper::get_all( $wpdb->comments, $where, 'comment_post_ID', -1 );
 
 		if ( empty( $result ) ) {
 			return array();
