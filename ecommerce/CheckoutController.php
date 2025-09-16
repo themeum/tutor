@@ -561,8 +561,8 @@ class CheckoutController {
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			array_push( $errors, 'Fishy!, security verification failed' );
-			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'nonce_alert' . $current_user_id, $errors );
+			array_push( $errors, 'Security verification failed' );
+			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
 			return;
 		}
 
