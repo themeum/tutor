@@ -518,7 +518,11 @@ class Options_V2 {
 		$option = Input::sanitize_array(
 			$option,
 			array(
-				'payment_settings' => 'wp_kses_post',
+				'payment_settings'                         => 'wp_kses_post',
+				'tutor_bank_transfer_withdraw_instruction' => 'sanitize_textarea_field',
+				'certificate_showcase_desc'                => 'sanitize_textarea_field',
+				'invoice_from_address'                     => 'sanitize_textarea_field',
+				'fees_name'                                => 'sanitize_textarea_field',
 			)
 		);
 		$option = apply_filters( 'tutor_option_input', $option );
@@ -2028,7 +2032,11 @@ class Options_V2 {
 			$update_option = Input::sanitize_array(
 				$update_option,
 				array(
-					'payment_settings' => 'wp_kses_post',
+					'payment_settings'          => 'wp_kses_post',
+					'tutor_bank_transfer_withdraw_instruction' => 'sanitize_textarea_field',
+					'certificate_showcase_desc' => 'sanitize_textarea_field',
+					'invoice_from_address'      => 'sanitize_textarea_field',
+					'fees_name'                 => 'sanitize_textarea_field',
 				)
 			);
 
