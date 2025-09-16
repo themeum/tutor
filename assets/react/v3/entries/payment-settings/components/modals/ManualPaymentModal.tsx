@@ -118,6 +118,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                       {...controllerProps}
                       label={field.label}
                       toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
+                      toolbar2=""
                     />
                   )}
                 />
