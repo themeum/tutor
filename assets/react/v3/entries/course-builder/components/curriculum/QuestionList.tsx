@@ -36,6 +36,7 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
@@ -408,11 +409,18 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         <Popover
           gap={4}
           maxWidth={'240px'}
-          arrow={CURRENT_VIEWPORT.isAboveTablet ? 'top' : CURRENT_VIEWPORT.isAboveMobile ? 'right' : 'absoluteCenter'}
+          placement={
+            CURRENT_VIEWPORT.isAboveTablet
+              ? POPOVER_PLACEMENTS.BOTTOM
+              : CURRENT_VIEWPORT.isAboveMobile
+                ? POPOVER_PLACEMENTS.LEFT
+                : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
+          }
           triggerRef={addButtonRef}
           isOpen={isOpen}
           closePopover={() => setIsOpen(false)}
           animationType={AnimationType.slideUp}
+          arrow={true}
         >
           <div css={styles.questionOptionsWrapper}>
             <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>

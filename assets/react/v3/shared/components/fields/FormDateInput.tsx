@@ -8,13 +8,14 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { POPOVER_PLACEMENTS, Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import 'react-day-picker/style.css';
 
 import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormDateInputProps extends FormControllerProps<string> {
@@ -80,7 +81,7 @@ const FormDateInput = ({
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
-    isDropdown: true,
+    placement: POPOVER_PLACEMENTS.BOTTOM_LEFT,
   });
 
   const handleClosePortal = () => {
@@ -109,6 +110,7 @@ const FormDateInput = ({
               <input
                 {...restInputProps}
                 css={[css, styles.input]}
+                title={fieldValue}
                 ref={(element) => {
                   field.ref(element);
                   // @ts-ignore
@@ -133,20 +135,26 @@ const FormDateInput = ({
 
               {isClearable && field.value && (
                 <Button
+                  isIconOnly
+                  aria-label={__('Clear', 'tutor')}
+                  size="small"
                   variant="text"
-                  buttonCss={styles.clearButton}
+                  buttonCss={styleUtils.inputClearButton}
                   onClick={() => {
                     field.onChange('');
                   }}
-                >
-                  <SVGIcon name="times" width={12} height={12} />
-                </Button>
+                  icon={<SVGIcon name="times" width={12} height={12} />}
+                />
               )}
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={handleClosePortal} onEscape={handleClosePortal}>
               <div
-                css={[styles.pickerWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                css={styles.pickerWrapper}
+                style={{
+                  [isRTL ? 'right' : 'left']: position.left,
+                  top: position.top,
+                }}
                 ref={popoverRef}
               >
                 <DayPicker
@@ -321,24 +329,6 @@ const styles = {
         opacity: 1;
         background-color: var(--rdp-accent-color);
       }
-    }
-  `,
-  clearButton: css`
-    position: absolute;
-    top: 50%;
-    right: ${spacing[4]};
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    ${styleUtils.flexCenter()};
-    opacity: 0;
-    transition:
-      background-color 0.3s ease-in-out,
-      opacity 0.3s ease-in-out;
-    border-radius: ${borderRadius[2]};
-
-    :hover {
-      background-color: ${colorTokens.background.hover};
     }
   `,
 };

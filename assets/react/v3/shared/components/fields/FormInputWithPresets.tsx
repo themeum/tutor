@@ -2,8 +2,8 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { isRTL } from '@TutorShared/config/constants';
 import {
   borderRadius,
   colorTokens,
@@ -16,12 +16,12 @@ import {
 } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Option } from '@TutorShared/utils/types';
 
-import { type IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
@@ -71,12 +71,8 @@ const FormInputWithPresets = ({
   const fieldValue = field.value ?? '';
 
   const ref = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-  });
 
   return (
     <FormFieldWrapper
@@ -137,18 +133,13 @@ const FormInputWithPresets = ({
               )}
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div
-                css={[
-                  styles.optionsWrapper,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
+            <Popover
+              triggerRef={triggerRef}
+              isOpen={isOpen}
+              closePopover={() => setIsOpen(false)}
+              animationType={AnimationType.slideDown}
+            >
+              <div css={[styles.optionsWrapper]}>
                 <ul css={[styles.options(removeOptionsMinWidth)]}>
                   {presetOptions.map((option) => (
                     <li
@@ -175,7 +166,7 @@ const FormInputWithPresets = ({
                   ))}
                 </ul>
               </div>
-            </Portal>
+            </Popover>
           </>
         );
       }}
@@ -223,27 +214,23 @@ const styles = {
       border: none;
       box-shadow: none;
       background-color: transparent;
-      padding-${contentPosition}: 0;
+      ${`padding-${contentPosition}`}: 0;
 
-      ${
-        showVerticalBar &&
-        css`
+      ${showVerticalBar &&
+      css`
           padding-${contentPosition}: ${spacing[10]};
-        `
-      };
+        `};
 
-      ${
-        size === 'large' &&
+      ${size === 'large' &&
+      css`
+        font-size: ${fontSize[24]};
+        font-weight: ${fontWeight.medium};
+        height: 34px;
+        ${showVerticalBar &&
         css`
-          font-size: ${fontSize[24]};
-          font-weight: ${fontWeight.medium};
-          height: 34px;
-          ${showVerticalBar &&
-          css`
               padding-${contentPosition}: ${spacing[12]};
             `};
-        `
-      }
+      `}
 
       &:focus {
         box-shadow: none;

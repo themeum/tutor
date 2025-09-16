@@ -67,16 +67,9 @@ $checkout_page_url = CheckoutController::get_page_url();
 									</a>
 								</div>
 								<div class="tutor-cart-course-title">
-									<?php if ( tutor()->has_pro && 'course-bundle' === $course->post_type ) : ?>
-									<div class="tutor-cart-course-bundle-badge">
-										<?php
-										$bundle_model      = new \TutorPro\CourseBundle\Models\BundleModel();
-										$bundle_course_ids = $bundle_model::get_bundle_course_ids( $course->ID );
-										// translators: %d: Number of courses in the cart.
-										echo esc_html( sprintf( __( '%d Course bundle', 'tutor' ), count( $bundle_course_ids ) ) );
-										?>
+									<div class="tutor-d-flex tutor-align-center tutor-gap-4px">
+										<?php do_action( 'tutor_cart_item_badge', $course ); ?>
 									</div>
-									<?php endif; ?>
 									<h5 class="tutor-fs-6 tutor-fw-medium tutor-color-black">
 										<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
 											<?php echo esc_html( $course->post_title ); ?>

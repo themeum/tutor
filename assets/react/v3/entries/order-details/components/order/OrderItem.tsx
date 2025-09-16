@@ -5,7 +5,7 @@ import React from 'react';
 import type { OrderSummaryItem } from '@OrderDetails/services/order';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
@@ -41,6 +41,16 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
               </div>
             )}
           </div>
+
+          {item.item_meta_list && item.item_meta_list.length > 0 && (
+            <ul css={styles.itemMeta}>
+              {item.item_meta_list.map((item) => (
+                <li key={item.id}>
+                  <strong>{item.meta_key}</strong>: {item.meta_value}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
       <div css={styles.right}>
@@ -92,7 +102,7 @@ const styles = {
   `,
   right: css`
     display: flex;
-    gap: ${spacing[32]};
+    gap: ${spacing[8]};
     ${typography.caption()};
     color: ${colorTokens.text.primary};
 
@@ -118,5 +128,12 @@ const styles = {
     padding: ${spacing[2]} ${spacing[4]};
     gap: ${spacing[4]};
     width: fit-content;
+  `,
+  itemMeta: css`
+    list-style: none;
+
+    strong {
+      font-weight: ${fontWeight.medium};
+    }
   `,
 };

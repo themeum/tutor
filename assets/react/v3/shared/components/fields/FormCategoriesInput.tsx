@@ -9,7 +9,6 @@ import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -27,6 +26,7 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 
+import { isRTL } from '@TutorShared/config/constants';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
@@ -197,7 +197,11 @@ const FormMultiLevelInput = ({
 
             <Portal isOpen={isOpen} onClickOutside={handlePortalClose} onEscape={handlePortalClose}>
               <div
-                css={[styles.categoryFormWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                css={styles.categoryFormWrapper}
+                style={{
+                  [isRTL ? 'right' : 'left']: position.left,
+                  top: position.top,
+                }}
                 ref={popoverRef}
               >
                 <Controller
@@ -367,7 +371,7 @@ const styles = {
       height: ${leftBarHeight};
       width: 1px;
       left: 9px;
-      top: 26px;
+      top: 25px;
       background-color: ${colorTokens.stroke.divider};
       z-index: ${zIndex.level};
     }

@@ -251,6 +251,8 @@ class Upgrader {
 					payload LONGTEXT,
 					created_at_gmt DATETIME,
 					updated_at_gmt DATETIME,
+					scheduled_by BIGINT UNSIGNED COMMENT 'User who scheduled the action',
+					scheduled_for BIGINT UNSIGNED COMMENT 'Target user of the scheduled action',
 					PRIMARY KEY (id),
 					KEY idx_context_status (type, status),
 					KEY idx_status (status),
@@ -282,11 +284,11 @@ class Upgrader {
 			$is_detail_column_exists = QueryHelper::column_exist( $cart_item_table, $detail_column );
 			$is_type_column_exists   = QueryHelper::column_exist( $cart_item_table, $type_column );
 
-			if ( 0 === $is_detail_column_exists ) {
+			if ( ! $is_detail_column_exists ) {
 				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$detail_column} JSON AFTER course_id" );
 			}
 
-			if ( 0 === $is_type_column_exists ) {
+			if ( ! $is_type_column_exists ) {
 				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$type_column} VARCHAR(255) AFTER course_id" );
 			}
 		}
