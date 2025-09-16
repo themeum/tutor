@@ -515,7 +515,12 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_before', $option );
 
-		$option = Input::sanitize_array( $option );
+		$option = Input::sanitize_array(
+			$option,
+			array(
+				'payment_settings' => 'wp_kses_post',
+			)
+		);
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		$time                                  = strtotime( 'now' ) + ( 6 * 60 * 60 );
@@ -2020,7 +2025,12 @@ class Options_V2 {
 
 			$update_option = array_merge( $import_data, $get_option_data );
 
-			$update_option = Input::sanitize_array( $update_option );
+			$update_option = Input::sanitize_array(
+				$update_option,
+				array(
+					'payment_settings' => 'wp_kses_post',
+				)
+			);
 
 			if ( ! empty( $update_option ) ) {
 				update_option( 'tutor_settings_log', $update_option );
