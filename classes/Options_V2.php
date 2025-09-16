@@ -169,7 +169,7 @@ class Options_V2 {
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
-				foreach ( tutor_utils()->sanitize_recursively( $sections ) as $section ) {
+				foreach ( Input::sanitize_array( $sections ) as $section ) {
 					foreach ( $section['blocks'] as $blocks ) {
 						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
 							foreach ( $blocks['fields'] as $fields ) {
@@ -184,7 +184,7 @@ class Options_V2 {
 					 * @since 3.0.0
 					 */
 					if ( isset( $section['submenu'] ) && is_array( $section['submenu'] ) ) {
-						foreach ( tutor_utils()->sanitize_recursively( $section['submenu'] ) as $submenu_section ) {
+						foreach ( Input::sanitize_array( $section['submenu'] ) as $submenu_section ) {
 							foreach ( $submenu_section['blocks'] as $block ) {
 								if ( isset( $block['fields'] ) && ! empty( $block['fields'] ) ) {
 									foreach ( $block['fields'] as $fields ) {
@@ -515,7 +515,16 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_before', $option );
 
-		$option = tutor_utils()->sanitize_recursively( $option );
+		$option = Input::sanitize_array(
+			$option,
+			array(
+				'payment_settings'                         => 'wp_kses_post',
+				'tutor_bank_transfer_withdraw_instruction' => 'sanitize_textarea_field',
+				'certificate_showcase_desc'                => 'sanitize_textarea_field',
+				'invoice_from_address'                     => 'sanitize_textarea_field',
+				'fees_name'                                => 'sanitize_textarea_field',
+			)
+		);
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		$time                                  = strtotime( 'now' ) + ( 6 * 60 * 60 );
@@ -2020,7 +2029,16 @@ class Options_V2 {
 
 			$update_option = array_merge( $import_data, $get_option_data );
 
-			$update_option = tutor_utils()->sanitize_recursively( $update_option );
+			$update_option = Input::sanitize_array(
+				$update_option,
+				array(
+					'payment_settings'          => 'wp_kses_post',
+					'tutor_bank_transfer_withdraw_instruction' => 'sanitize_textarea_field',
+					'certificate_showcase_desc' => 'sanitize_textarea_field',
+					'invoice_from_address'      => 'sanitize_textarea_field',
+					'fees_name'                 => 'sanitize_textarea_field',
+				)
+			);
 
 			if ( ! empty( $update_option ) ) {
 				update_option( 'tutor_settings_log', $update_option );
