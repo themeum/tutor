@@ -515,7 +515,7 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_before', $option );
 
-		$option = tutor_utils()->sanitize_recursively( wp_unslash( $option ) );
+		$option = tutor_utils()->sanitize_recursively( $option );
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		$time                                  = strtotime( 'now' ) + ( 6 * 60 * 60 );
