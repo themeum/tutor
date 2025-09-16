@@ -32,10 +32,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Utils {
 	use JsonResponse;
 
-
-	const ENROLLMENT_STATUS_COMPLETE = 'complete';
-	const ENROLLMENT_STATUS_ALL      = 'all';
-
 	/**
 	 * Compatibility for splitting utils functions to specific model
 	 *
@@ -10812,26 +10808,5 @@ class Utils {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Retrieve all enrollments for a specific course.
-	 *
-	 * @since 3.8.1
-	 *
-	 * @param int $id  The ID of the course/bundle. Defaults to 0.
-	 *
-	 * @return array Array of enrollments as associative arrays, or an empty array if an error occurs.
-	 */
-	public function get_all_enrollments( int $id = 0 ): array {
-
-		global $wpdb;
-
-		$where = array(
-			'post_type'   => tutor()->enrollment_post_type,
-			'post_parent' => $id,
-		);
-
-		return QueryHelper::get_all( $wpdb->posts, $where, 'ID' );
 	}
 }
