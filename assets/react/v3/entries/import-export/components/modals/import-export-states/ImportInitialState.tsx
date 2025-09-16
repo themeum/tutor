@@ -217,10 +217,9 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
                   data-cy="replace-file"
                   variant="tertiary"
                   size="small"
-                  maxFileSize={20 * 1024 * 1024} // 20 MB
                   onUpload={handleUpload}
                   onError={handleUploadError}
-                  acceptedTypes={['.csv', '.json', '.zip']}
+                  acceptedTypes={isTutorPro ? ['.json', '.zip'] : ['.json']}
                 >
                   {__('Replace', 'tutor')}
                 </UploadButton>

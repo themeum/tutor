@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { type ErrorResponse } from 'react-router-dom';
 
@@ -9,12 +9,15 @@ import { UploadButton } from '@TutorShared/molecules/FileUploader';
 import ImportModal from '@ImportExport/components/modals/ImportModal';
 import { useImportContentsMutation } from '@ImportExport/services/import-export';
 import { useModal } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
@@ -128,7 +131,7 @@ const Import = () => {
 
         <UploadButton
           size="small"
-          acceptedTypes={['.json', '.zip']}
+          acceptedTypes={isTutorPro ? ['.json', '.zip'] : ['.json']}
           variant="secondary"
           onError={(errors) => {
             showToast({
@@ -141,7 +144,9 @@ const Import = () => {
           {__('Choose a File', 'tutor')}
         </UploadButton>
 
-        <div css={styles.description}>{__('Supported format: .JSON, .ZIP', 'tutor')}</div>
+        <div css={styles.description}>
+          {sprintf(__('Supported format: %s', 'tutor'), isTutorPro ? '.JSON, .ZIP' : '.JSON')}
+        </div>
       </div>
     </div>
   );
