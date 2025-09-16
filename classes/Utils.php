@@ -8698,6 +8698,8 @@ class Utils {
 	 * Sanitize array key abd values recursively
 	 *
 	 * @since 2.0.0
+	 * @deprecated This function will be removed soon. 
+	 *             It is discouraged to use in new implementations.
 	 *
 	 * @param array $array array.
 	 * @param array $skip skip.
