@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\QueryHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -140,24 +142,15 @@ class Reviews {
 	 */
 	public function get_reviews_by_course_id( $course_id ): array {
 
-		global $wpdb;
-
-		$result = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT *
-				FROM {$wpdb->comments}
-				WHERE comment_type = %s
-				AND comment_post_ID = %d
-				AND comment_agent = %s",
-				self::COURSE_RATING,
-				$course_id,
-				'TutorLMSPlugin'
-			),
-			ARRAY_A
+		$where = array(
+			'comment_type'    => self::COURSE_RATING,
+			'comment_post_ID' => $course_id,
+			'comment_agent'   => 'TutorLMSPlugin',
 		);
 
-		if ( $wpdb->last_error || empty( $result ) ) {
-			$wpdb->last_error ? tutor_log( 'Error While getting reviews for course id ' . $course_id . ' from ' . __FUNCTION__ . ' : ' . $wpdb->last_error ) : '';
+		$result = QueryHelper::get_all( 'comments', $where, 'comment_post_ID', -1, '', ARRAY_A );
+
+		if ( empty( $result ) ) {
 			return array();
 		}
 

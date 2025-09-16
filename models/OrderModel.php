@@ -2024,9 +2024,7 @@ class OrderModel {
 	 */
 	public function get_order_meta_by_order_id( $order_id ) {
 
-		global $wpdb;
-
-		return QueryHelper::get_all( $wpdb->tutor_ordermeta, array( 'order_id' => $order_id ), 'order_id' );
+		return QueryHelper::get_all( 'tutor_ordermeta', array( 'order_id' => $order_id ), 'order_id' );
 	}
 
 	/**
@@ -2041,14 +2039,12 @@ class OrderModel {
 	 */
 	public function get_earnings_by_order_and_course( $order_id, $course_id ) {
 
-		global $wpdb;
-
 		$where = array( 'order_id' => $order_id );
 
 		if ( ! empty( $course_id ) ) {
 			$where['course_id'] = $course_id;
 		}
 
-		return QueryHelper::get_all( $wpdb->tutor_earnings, $where, 'order_id' );
+		return QueryHelper::get_all( 'tutor_earnings', $where, 'order_id' );
 	}
 }
