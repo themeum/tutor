@@ -371,13 +371,11 @@ class QueryHelper {
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
-			} else {
-				if ( 'null' === strtolower( $value ) ) {
+			} elseif ( 'null' === strtolower( $value ) ) {
 					$clause = array( $field, 'IS', 'NULL' );
-				} else {
-					$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
-					$clause = array( $field, '=', $value );
-				}
+			} else {
+				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
+				$clause = array( $field, '=', $value );
 			}
 
 			$arr[] = ( 'RAW' === $operator ) ? $clause : self::make_clause( $clause );
@@ -1320,6 +1318,31 @@ class QueryHelper {
 	 */
 	public static function get_valid_sort_order( $order ) {
 		return 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
+	}
+
+	/**
+	 * Get the schema of a database table.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param string $table_name The name of the database table.
+	 *
+	 * @throws \Exception Throws an exception if there is a database error.
+	 *
+	 * @return array Returns an array of table columns and their details.
+	 */
+	public static function get_table_schema( $table_name) {
+		
+		global $wpdb;
+
+		$result = $wpdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
+
+		// If error occurred then throw new exception.
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
+		}
+
+		return $result;
 	}
 
 }

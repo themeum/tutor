@@ -29,6 +29,7 @@ export interface ExportFormData {
   courses__tutor_quiz: boolean;
   courses__tutor_assignments: boolean;
   keep_media_files: boolean;
+  keep_user_data: boolean;
 }
 
 export interface BulkSelectionFormData {
@@ -49,6 +50,7 @@ export const defaultExportFormData: ExportFormData = {
   courses__tutor_quiz: true,
   courses__tutor_assignments: true,
   keep_media_files: false,
+  keep_user_data: false,
 };
 
 export const convertExportFormDataToPayload = ({
@@ -61,6 +63,7 @@ export const convertExportFormDataToPayload = ({
   const payload: ExportContentPayload = {
     export_contents: [],
     keep_media_files: data.keep_media_files ? '1' : '0',
+    keep_user_data: data.keep_user_data ? '1' : '0',
   };
 
   const isContentInExportableContent = (contentType: ExportableContentType): boolean => {
@@ -81,10 +84,11 @@ export const convertExportFormDataToPayload = ({
 
   // Add direct content types (those without '__')
   Object.keys(data).forEach((key) => {
+    const isValidKey = key !== 'keep_media_files' && key !== 'keep_user_data';
     if (
       !key.includes('__') &&
       data[key as keyof ExportFormData] &&
-      key !== 'keep_media_files' &&
+      isValidKey &&
       isContentInExportableContent(key as ExportableContentType)
     ) {
       contentTypes.add(key);
@@ -123,6 +127,7 @@ export const convertExportFormDataToPayload = ({
           suffix &&
           suffix !== 'ids' &&
           suffix !== 'keep_media_files' &&
+          suffix !== 'keep_user_data' &&
           isSubContentInExportableContent(contentType as ExportableContentType, suffix as ExportableCourseContentType)
         ) {
           subContents.push(suffix as ExportableCourseContentType);
@@ -156,15 +161,19 @@ interface ExportContentItem {
 export interface ExportContentPayload {
   export_contents?: ExportContentItem[];
   keep_media_files?: '0' | '1';
+  keep_user_data?: '0' | '1';
   job_id?: string | number; // need to send back the job id to get the status
 }
 
 interface ImportExportCompletedContentsItem {
+  label?: string; // Failed Label; will only be sent when progress is 100% and has failed item
   success: string[];
   failed: string[];
 }
 
 export interface ImportExportContentResponseBase {
+  message: string;
+  failed_message?: string; // Failed Message; will only be sent when progress is 100% and has failed item
   job_id: string;
   job_progress: number;
   job_status: string;
@@ -182,14 +191,11 @@ export interface ImportExportContentResponseBase {
 }
 
 export interface ExportContentResponse extends ImportExportContentResponseBase {
-  exported_data: {
-    schema_version: string;
-    data: {
-      content_type: string;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      data: Record<string, any>;
-    }[];
+  export_file: {
+    url: string;
+    file_size: number;
   };
+  exported_data: string;
 }
 const exportContents = async (payload: ExportContentPayload) => {
   return wpAjaxInstance
@@ -200,6 +206,7 @@ const exportContents = async (payload: ExportContentPayload) => {
         : {
             export_contents: payload.export_contents,
             keep_media_files: payload.keep_media_files,
+            keep_user_data: payload.keep_user_data,
           },
     )
     .then((res) => res.data);
@@ -227,8 +234,17 @@ interface ImportContentPayload {
   job_id?: string | number; // need to send back the job id to get the status
 }
 
-interface ImportContentResponse extends ImportExportContentResponseBase {
+export interface ImportContentResponse extends ImportExportContentResponseBase {
   imported_data: [];
+  errors?: {
+    topics?: string[];
+    lesson?: string[];
+    tutor_quiz?: string[];
+    tutor_assignments?: string[];
+    'cb-question'?: string[];
+    'cb-lesson'?: string[];
+    'cb-assignment'?: string[];
+  };
 }
 
 const importContents = async (payload: ImportContentPayload) => {
@@ -257,29 +273,11 @@ export const useImportContentsMutation = () => {
 };
 
 export interface ImportExportHistory {
-  option_id: string;
-  option_name: string;
-  option_value: {
-    created_at: string;
-    user_name: string;
-    job_id: number;
-    job_progress: number;
-    job_status: string;
-    job_requirements: {
-      type: string;
-      ids: string[];
-    }[];
-    exported_data?: unknown;
-    imported_data?: ExportableContentType[];
-    completed_contents?: {
-      courses: ImportExportCompletedContentsItem;
-      'course-bundle': ImportExportCompletedContentsItem;
-      content_bank: ImportExportCompletedContentsItem;
-      settings: boolean;
-    };
-    failed_course_ids?: [];
-    failed_bundle_ids?: [];
-  };
+  id: string;
+  title: string;
+  created_at: string;
+  type: 'import' | 'export';
+  user_name: string;
 }
 
 const getImportExportHistory = () => {

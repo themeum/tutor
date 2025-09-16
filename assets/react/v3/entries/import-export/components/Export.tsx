@@ -10,13 +10,12 @@ import ExportModal from '@ImportExport/components/modals/ExportModal';
 import {
   convertExportFormDataToPayload,
   useExportContentsMutation,
-  type ExportableContent,
   type ExportFormData,
 } from '@ImportExport/services/import-export';
-import { generateImportExportMessage } from '@ImportExport/utils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import { type ExportableContent } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeParams } from '@TutorShared/utils/url';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
@@ -41,6 +40,7 @@ const Export = () => {
     updateModal<typeof ExportModal>('export-modal', {
       currentStep: 'progress',
       progress: 0,
+      message: __('Export in progress', 'tutor'),
     });
   };
 
@@ -72,6 +72,7 @@ const Export = () => {
         id: 'export-modal',
         component: ExportModal,
         depthIndex: zIndex.highest,
+        closeOnEscape: false,
         props: {
           onClose: closeModal,
           currentStep: 'initial',
@@ -127,28 +128,33 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'progress',
         progress,
-        message: generateImportExportMessage(exportContentResponse, 'export'),
+        message: exportContentResponse?.message || '',
       });
     }
 
     if (progress === 100 && exportContentResponse?.exported_data) {
+      const url = exportContentResponse?.export_file?.url;
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
         progress: 100,
-        fileSize: JSON.stringify(exportContentResponse?.exported_data).length,
+        fileName: exportContentResponse?.exported_data,
+        fileSize: exportContentResponse?.export_file?.file_size || 0,
+        message: exportContentResponse?.message || '',
         completedContents: exportContentResponse?.completed_contents,
-        onDownload: (fileName) => {
-          const jsonFile = new Blob([JSON.stringify(exportContentResponse?.exported_data)], {
-            type: 'application/json',
-          });
-          const url = URL.createObjectURL(jsonFile);
+        onClose: () => {
+          closeModal();
+          const newUrl = new URL(url);
+          newUrl.searchParams.set('download', 'false'); // this will delete the generated download link and file
+          fetch(newUrl);
+        },
+        onDownload: () => {
+          closeModal();
+          const url = exportContentResponse?.export_file?.url;
           const a = document.createElement('a');
           a.href = url;
-          a.download = fileName;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-          URL.revokeObjectURL(url);
         },
       });
     }
@@ -182,6 +188,7 @@ const Export = () => {
               id: 'export-modal',
               component: ExportModal,
               depthIndex: zIndex.highest,
+              closeOnEscape: false,
               props: {
                 onClose: closeModal,
                 currentStep: 'initial',

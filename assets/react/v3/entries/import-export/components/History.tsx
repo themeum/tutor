@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useCallback, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -40,77 +40,6 @@ const History = () => {
     );
   }, []);
 
-  const itemType = useCallback((item: ImportExportHistory) => {
-    if (item.option_name.includes('export')) {
-      return 'export';
-    }
-    if (item.option_name.includes('import')) {
-      return 'import';
-    }
-    return 'import';
-  }, []);
-
-  const formatItemCount = (count: number, type: 'course' | 'bundle' | 'content_bank'): string => {
-    if (type === 'course') {
-      if (count === 1) {
-        return __('Course', 'tutor');
-      }
-
-      // translators: %d is the number of courses
-      return sprintf(__('Courses (%d)', 'tutor'), count);
-    }
-
-    if (type === 'content_bank') {
-      if (count === 1) {
-        return __('Collection', 'tutor');
-      }
-
-      // translators: %d is the number of content bank items
-      return sprintf(__('Collections (%d)', 'tutor'), count);
-    }
-
-    if (count === 1) {
-      return __('Bundle', 'tutor');
-    }
-
-    // translators: %d is the number of bundles
-    return sprintf(__('Bundles (%d)', 'tutor'), count);
-  };
-
-  const generateHistoryTitle = (item: ImportExportHistory): string => {
-    const completedContents = item.option_value.completed_contents;
-
-    if (!completedContents) {
-      return '';
-    }
-
-    const formattedItems: string[] = [];
-
-    const successfulCourses = completedContents.courses?.success || [];
-    if (successfulCourses.length > 0) {
-      const coursesText = formatItemCount(successfulCourses.length, 'course');
-      formattedItems.push(coursesText);
-    }
-
-    const successfulBundles = completedContents['course-bundle']?.success || [];
-    if (successfulBundles.length > 0) {
-      const bundlesText = formatItemCount(successfulBundles.length, 'bundle');
-      formattedItems.push(bundlesText);
-    }
-
-    const successfulContentBank = completedContents['content_bank']?.success || [];
-    if (successfulContentBank.length > 0) {
-      const contentBankText = formatItemCount(successfulContentBank.length, 'content_bank');
-      formattedItems.push(contentBankText);
-    }
-
-    if (completedContents.settings === true) {
-      formattedItems.push('Settings');
-    }
-
-    return formattedItems.join(', ');
-  };
-
   if (!getImportExportHistoryQuery.isLoading && history.length === 0) {
     return null;
   }
@@ -119,30 +48,30 @@ const History = () => {
     {
       Header: <span css={styles.tableHeader}>{__('Title', 'tutor')}</span>,
       Cell: (item) => {
-        return <div css={styles.historyTitle}>{generateHistoryTitle(item)}</div>;
+        return <div css={styles.historyTitle}>{item.title}</div>;
       },
     },
     {
       Header: <span css={styles.tableHeader}>{__('Type', 'tutor')}</span>,
       Cell: (item) => {
-        return renderImportExportLabel(itemType(item));
+        return renderImportExportLabel(item.type);
       },
     },
     {
       Header: <span css={styles.tableHeader}>{__('User', 'tutor')}</span>,
       Cell: (item) => {
-        return <div css={styles.historyTitle}>{item.option_value.user_name}</div>;
+        return <div css={styles.historyTitle}>{item.user_name}</div>;
       },
     },
     {
       Header: <span css={styles.tableHeader}>{__('Date', 'tutor')}</span>,
       Cell: (item) => {
-        return <div css={styles.historyTitle}>{item.option_value.created_at}</div>;
+        return <div css={styles.historyTitle}>{item.created_at}</div>;
       },
     },
     {
       Cell: (item) => {
-        const isCurrentItemDeleting = deletingItemId === item.option_id;
+        const isCurrentItemDeleting = deletingItemId === item.id;
 
         return (
           <div css={styles.action}>
@@ -152,7 +81,7 @@ const History = () => {
               variant="secondary"
               isOutlined
               loading={isCurrentItemDeleting}
-              onClick={() => handleDeleteHistory(item.option_id)}
+              onClick={() => handleDeleteHistory(item.id)}
             >
               {__('Delete', 'tutor')}
             </Button>

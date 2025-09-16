@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -316,6 +316,16 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.8.1 - Sep 12, 2025
+
+Update: Updated import/export to allow admin to export courses with user data, including students, courses progress, course reviews, orders, subscriptions & report.
+Fix: Quiz reveal mode waiting time fixed for supported types
+Fix: Create any meeting (google meet), it goes to the top instead of bottom
+Fix: First name and last name is not registered after guest checkout
+Fix: Import from courses not including scheduled course and assignment count
+Fix: Dashboard page slug getting added on other pages when using WPML plugin
+
 
 = 3.8.0 - Sep 04, 2025
 
