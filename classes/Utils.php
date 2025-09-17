@@ -10,15 +10,15 @@
 
 namespace TUTOR;
 
-use Tutor\Cache\TutorCache;
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
-use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Models\CourseModel;
+use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
+use Tutor\Helpers\HttpHelper;
+use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\DateTimeHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10644,7 +10644,7 @@ class Utils {
 	 *
 	 * @return bool
 	 */
-	public function delete_enrollment_record( int $student_id, int $course_id ):bool {
+	public function delete_enrollment_record( int $student_id, int $course_id ): bool {
 		global $wpdb;
 		return QueryHelper::delete(
 			$wpdb->posts,
@@ -10703,7 +10703,7 @@ class Utils {
 
 		while ( get_user_by( 'login', $username ) ) {
 			$username = $original_username . '_' . $counter;
-			$counter++;
+			++$counter;
 		}
 
 		return $username;
@@ -10774,7 +10774,7 @@ class Utils {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 
 	/**
