@@ -318,7 +318,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.8.1 - Sep 16, 2025
+= 3.8.1 - Sep 17, 2025
 
 Update: Admins can now export courses with user data, including student details, course progress, reviews, orders, subscriptions, etc. (Pro)
 Fix: Resolved the quiz waiting time issue for supported quiz types.
