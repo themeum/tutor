@@ -18,7 +18,7 @@ import { typography } from '@TutorShared/config/typography';
 import { type ExportableContent } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeParams } from '@TutorShared/utils/url';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { convertToErrorMessage, formatBytes } from '@TutorShared/utils/util';
 
 const CONTENT_BANK_PAGE = 'tutor-content-bank';
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -110,6 +110,7 @@ const Export = () => {
 
   useEffect(() => {
     const progress = Number(exportContentResponse?.job_progress);
+
     if (isError) {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'error',
@@ -137,9 +138,11 @@ const Export = () => {
       updateModal<typeof ExportModal>('export-modal', {
         currentStep: 'success',
         progress: 100,
-        fileName: exportContentResponse?.exported_data,
-        fileSize: exportContentResponse?.export_file?.file_size || 0,
-        message: exportContentResponse?.message || '',
+        fileName: isTutorPro ? exportContentResponse?.exported_data : '',
+        fileSize: isTutorPro
+          ? exportContentResponse?.export_file?.file_size
+          : formatBytes(JSON.stringify(exportContentResponse?.exported_data).length),
+        message: isTutorPro ? exportContentResponse?.message || '' : __('Settings', 'tutor'),
         completedContents: exportContentResponse?.completed_contents,
         onClose: () => {
           closeModal();
@@ -147,14 +150,31 @@ const Export = () => {
           newUrl.searchParams.set('download', 'false'); // this will delete the generated download link and file
           fetch(newUrl);
         },
-        onDownload: () => {
+        onDownload: (fileName: string) => {
           closeModal();
-          const url = exportContentResponse?.export_file?.url;
+
+          if (isTutorPro) {
+            const url = exportContentResponse?.export_file?.url;
+            const a = document.createElement('a');
+            a.href = url;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            return;
+          }
+
+          const jsonFile = new Blob([JSON.stringify(exportContentResponse?.exported_data)], {
+            type: 'application/json',
+          });
+          const url = URL.createObjectURL(jsonFile);
           const a = document.createElement('a');
           a.href = url;
+          a.download = fileName;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
+          URL.revokeObjectURL(url);
         },
       });
     }

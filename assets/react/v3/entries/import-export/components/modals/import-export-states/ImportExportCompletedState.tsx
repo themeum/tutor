@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
+import { format } from 'date-fns';
 import { useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
@@ -23,16 +24,20 @@ import exportErrorImage from '@SharedImages/import-export/export-error.webp';
 import exportSuccessImage from '@SharedImages/import-export/export-success.webp';
 import importErrorImage from '@SharedImages/import-export/import-error.webp';
 import importSuccessImage from '@SharedImages/import-export/import-success.webp';
+import { tutorConfig } from '@TutorShared/config/config';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+const fileName = `tutor-lms-data-${format(new Date(), 'yyyy-MM-dd-HH-mm-ss')}.json`;
 
 interface ImportExportCompletedStateProps {
   state: ImportExportModalState;
   isImportingToContentBank?: boolean;
-  fileSize?: number;
+  fileSize?: number | string;
   message?: string;
   failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
   importErrors?: ImportContentResponse['errors'];
-  onDownload?: () => void;
+  onDownload?: (fileName: string) => void;
   onClose: () => void;
   exportFileName?: string;
   type: 'import' | 'export';
@@ -121,7 +126,7 @@ const ImportExportCompletedState = ({
             ? // prettier-ignore
               __('The export process has finished. However, certain items could not be exported. Check the summary below:', 'tutor')
             : // prettier-ignore
-              __('Download the JSON file and use it to import your data into another Tutor LMS website.', 'tutor'),
+              sprintf(__('Download the %s file and use it to import your data into another Tutor LMS website.', 'tutor'), isTutorPro ? 'ZIP' : 'JSON'),
         error: message || __('Something went wrong during export. Please try again!', 'tutor'),
       },
       reportList: {
@@ -248,8 +253,8 @@ const ImportExportCompletedState = ({
             </div>
             <div css={styles.fileRight}>
               <div css={styles.fileDetails}>
-                <div css={styles.fileName} title={exportFileName}>
-                  {exportFileName}
+                <div css={styles.fileName} title={exportFileName || fileName}>
+                  {exportFileName || fileName}
                 </div>
                 <div css={styles.fileSize}>{fileSize || formatBytes(0)}</div>
               </div>
@@ -259,7 +264,7 @@ const ImportExportCompletedState = ({
                   variant="primary"
                   size="small"
                   icon={<SVGIcon name="download" width={24} height={24} />}
-                  onClick={() => onDownload?.()}
+                  onClick={() => onDownload?.(fileName)}
                 >
                   {__('Download', 'tutor')}
                 </Button>
