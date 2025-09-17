@@ -2251,7 +2251,7 @@ class Utils {
 		if ( count( $course_ids ) ) {
 			$course_post_type = tutor()->course_post_type;
 			$course_args      = array(
-				'post_type'      => $course_post_type,
+				'post_type'      => apply_filters( 'tutor_completed_courses_post_types', array( $course_post_type ) ),
 				'post_status'    => 'publish',
 				'post__in'       => $course_ids,
 				'posts_per_page' => $posts_per_page,
@@ -2284,7 +2284,7 @@ class Utils {
 		if ( count( $active_courses ) ) {
 			$course_post_type = tutor()->course_post_type;
 			$course_args      = array(
-				'post_type'      => $course_post_type,
+				'post_type'      => apply_filters( 'tutor_active_courses_post_types', array( $course_post_type ) ),
 				'post_status'    => 'publish',
 				'post__in'       => $active_courses,
 				'posts_per_page' => $posts_per_page,
@@ -2445,7 +2445,7 @@ class Utils {
 		if ( count( $course_ids ) ) {
 			$course_post_type = tutor()->course_post_type;
 			$course_args      = array(
-				'post_type'      => $course_post_type,
+				'post_type'      => apply_filters( 'tutor_enrolled_courses_post_types', array( $course_post_type ) ),
 				'post_status'    => $post_status,
 				'post__in'       => $course_ids,
 				'offset'         => $offset,

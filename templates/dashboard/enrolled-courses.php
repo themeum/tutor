@@ -44,6 +44,9 @@ $full_courses_list_array = array(
 $courses_list           = $courses_list_array[ $active_tab ];
 $paginated_courses_list = $full_courses_list_array[ $active_tab ];
 
+$post_type_query = Input::get( 'type', '' );
+$post_type_args  = $post_type_query ? array( 'type' => $post_type_query ) : array();
+
 ?>
 
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16 tutor-text-capitalize"><?php echo esc_html( $page_tabs[ $active_tab ] ); ?></div>
@@ -52,7 +55,7 @@ $paginated_courses_list = $full_courses_list_array[ $active_tab ];
 		<ul class="tutor-nav" tutor-priority-nav>
 			<?php foreach ( $page_tabs as $slug => $tab ) : ?>
 				<li class="tutor-nav-item">
-					<a class="tutor-nav-link<?php echo $slug == $active_tab ? ' is-active' : ''; ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( $slug ) ); ?>">
+					<a class="tutor-nav-link<?php echo $slug == $active_tab ? ' is-active' : ''; ?>" href="<?php echo esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $slug ) ) ); ?>">
 						<?php
 						echo esc_html( $tab );
 
@@ -64,6 +67,8 @@ $paginated_courses_list = $full_courses_list_array[ $active_tab ];
 					</a>
 				</li>
 			<?php endforeach; ?>
+
+			<?php do_action( 'tutor_dashboard_enrolled_courses_filter' ); ?>
 
 			<li class="tutor-nav-item tutor-nav-more tutor-d-none">
 				<a class="tutor-nav-link tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php esc_html_e( 'More', 'tutor' ); ?></span> <span class="tutor-nav-more-icon tutor-icon-times"></span></a>
