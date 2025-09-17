@@ -431,7 +431,15 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$request = json_decode( stripslashes( $_POST['data'] ), true );
+		$data = $_FILES['data'];
+
+		if ( ! isset( $data['tmp_name'] ) ) {
+			$this->response_bad_request( __( 'Invalid file', 'tutor' ) );
+		}
+
+		$request = json_decode( file_get_contents( $data['tmp_name'] ), true );
+
+		unlink( $data['tmp_name'] );
 
 		$settings_found = false;
 

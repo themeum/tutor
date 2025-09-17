@@ -35,10 +35,10 @@ interface ExportModalProps extends ModalProps {
   onClose: () => void;
   onExport: ({ data, exportableContent }: { data: ExportFormData; exportableContent: ExportableContent[] }) => void;
   currentStep: ImportExportModalState;
-  onDownload?: () => void;
+  onDownload?: (fileName: string) => void;
   progress: number;
   fileName?: string;
-  fileSize?: number;
+  fileSize?: number | string;
   message?: string;
   failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
@@ -61,8 +61,8 @@ const ExportModal = ({
   progress,
   fileName,
   fileSize,
-  message,
-  failedMessage,
+  message = '',
+  failedMessage = '',
   completedContents,
   collection,
 }: ExportModalProps) => {
