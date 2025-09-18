@@ -213,7 +213,7 @@ if ( $time_value ) {
 			<?php endif; ?>
 
 			<?php if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || 0 === $time_value ) ) : ?>
-				<div class="tutor-assignment-submission tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
+				<div class="tutor-assignment-submission tutor-pb-48 tutor-pb-sm-72 <?php echo !$is_single_attempt ? 'tutor-assignment-border-bottom' : ''; ?>">
 					<form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 						<input type="hidden" value="tutor_assignment_submit" name="tutor_action" />
@@ -333,7 +333,7 @@ if ( $time_value ) {
 					</form>
 				</div>
 
-				<?php if ( $next_prev_content_id->next_id ) : ?>
+				<?php if ( $next_prev_content_id->next_id && ! $is_single_attempt ) : ?>
 					<div class="tutor-assignment-footer tutor-d-flex tutor-justify-end tutor-pt-32 tutor-pt-sm-44">
 						<a href="<?php echo esc_url( get_permalink( $next_prev_content_id->next_id ) ); ?>" class="tuttor-assignment-skip-button tutor-btn tutor-btn-ghost tutor-mt-md-0 tutor-mt-12">
 							<?php esc_html_e( 'Skip To Next', 'tutor' ); ?>
@@ -348,7 +348,10 @@ if ( $time_value ) {
 						tutor_load_template_from_custom_path(
 							tutor()->path . 'templates/single/assignment/single-attempt.php',
 							array(
-								'attempt_id' => $is_single_attempt,
+								'attempt_id'     => $is_single_attempt,
+								'remaining_time' => $remaining_time,
+								'now'            => $now,
+								'time_value'     => $time_value,
 							)
 						);
 						return;
