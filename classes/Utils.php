@@ -2602,15 +2602,17 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 2.6.0 Return enrolled id
 	 * @since 3.3.0 Added $fire_hook parameter.
+	 * @since 3.9.0 Added $from_bundle parameter.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $order_id order id.
 	 * @param int  $user_id user id.
 	 * @param bool $fire_hook fire hook.
+	 * @param bool $from_bundle from bundle enrollment.
 	 *
 	 * @return int enrolled id
 	 */
-	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
+	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true, $from_bundle = false ) {
 		$enrolled_id = 0;
 		if ( ! $course_id ) {
 			return $enrolled_id;
@@ -2623,7 +2625,7 @@ class Utils {
 		if ( $course_id && $user_id ) {
 			$enrolled_info = $this->is_enrolled( $course_id, $user_id );
 			if ( $enrolled_info ) {
-				return $enrolled_info->ID;
+				return $from_bundle ? null : $enrolled_info->ID;
 			}
 		}
 
