@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$assignment_id        = $data['attempt_id'];
+$attempt_id           = $data['attempt_id'];
 $remaining_time       = $data['remaining_time'];
 $now                  = $data['now'];
 $time_value           = $data['time_value'];
