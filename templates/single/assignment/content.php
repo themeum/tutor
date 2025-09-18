@@ -23,11 +23,16 @@ global $assignment_submitted_id;
 $is_submitting = tutor_utils()->is_assignment_submitting( get_the_ID() );
 
 // Get the comment.
-$post_id              = get_the_ID(); //phpcs:ignore
-$user_id              = get_current_user_id();
-$user_data            = get_userdata( $user_id );
-$assignment_comment   = tutor_utils()->get_single_comment_user_post_id( $post_id, $user_id );
-$submitted_assignment = tutor_utils()->is_assignment_submitted( get_the_ID() );
+$post_id                   = get_the_ID(); //phpcs:ignore
+$user_id                   = get_current_user_id();
+$user_data                 = get_userdata( $user_id );
+$assignment_comment        = tutor_utils()->get_single_comment_user_post_id( $post_id, $user_id );
+$submitted_assignment      = tutor_utils()->is_assignment_submitted( get_the_ID() );
+$is_reviewed_by_instructor = false;
+
+if ( $submitted_assignment ) {
+	$is_reviewed_by_instructor = get_comment_meta( $submitted_assignment[ count( $submitted_assignment ) - 1 ]->comment_ID, 'evaluate_time', true );
+}
 
 // Get the ID of this content and the corresponding course.
 $course_content_id = get_the_ID();
@@ -73,7 +78,7 @@ $upload_baseurl = trailingslashit( $upload_dir['baseurl'] ?? '' );
 $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
 $total_mark   = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' );
-$pass_mark    = tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
+$pass_mark    = (int) tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
 $earned_marks = 0; // @TODO: Get the earned marks based on assignment grading.
 
 $is_single_attempt = Input::get( 'view_assignment_attempt_id', 0 );
@@ -213,7 +218,7 @@ if ( $time_value ) {
 			<?php endif; ?>
 
 			<?php if ( ( $is_submitting || isset( $_GET['update-assignment'] ) ) && ( $remaining_time > $now || 0 === $time_value ) ) : ?>
-				<div class="tutor-assignment-submission tutor-pb-48 tutor-pb-sm-72 <?php echo !$is_single_attempt ? 'tutor-assignment-border-bottom' : ''; ?>">
+				<div class="tutor-assignment-submission tutor-pb-48 tutor-pb-sm-72 <?php echo ! $is_single_attempt ? 'tutor-assignment-border-bottom' : ''; ?>">
 					<form action="" method="post" id="tutor_assignment_submit_form" enctype="multipart/form-data">
 						<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 						<input type="hidden" value="tutor_assignment_submit" name="tutor_action" />
@@ -380,7 +385,7 @@ if ( $time_value ) {
 					<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
 						<!-- @TODO: need to check against the count of attempts -->
 						<div class="tutor-assignment-footer-btn tutor-d-flex">
-							<?php if ( 1 < $attempts_allowed && 'retry' === $feedback_mode ) : ?>
+							<?php if ( 1 < $attempts_allowed && 'retry' === $feedback_mode && $earned_marks < $pass_mark && $is_reviewed_by_instructor ) : ?>
 								<form action="" method="post" id="tutor_assignment_start_form">
 									<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 									<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
