@@ -10,15 +10,15 @@
 
 namespace TUTOR;
 
-use Tutor\Cache\TutorCache;
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
-use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Models\CourseModel;
+use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
+use Tutor\Helpers\HttpHelper;
+use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\DateTimeHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -8189,7 +8189,7 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
 
-		$course_id = Input::get('course', 0, Input::TYPE_INT );
+		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
 		if ( ! $course_id ) {
 			$course_id = $this->get_course_id_by( $content, $object_id );
 		}
@@ -10641,7 +10641,7 @@ class Utils {
 	 *
 	 * @return bool
 	 */
-	public function delete_enrollment_record( int $student_id, int $course_id ):bool {
+	public function delete_enrollment_record( int $student_id, int $course_id ): bool {
 		global $wpdb;
 		return QueryHelper::delete(
 			$wpdb->posts,
@@ -10700,7 +10700,7 @@ class Utils {
 
 		while ( get_user_by( 'login', $username ) ) {
 			$username = $original_username . '_' . $counter;
-			$counter++;
+			++$counter;
 		}
 
 		return $username;
@@ -10771,7 +10771,7 @@ class Utils {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 
 	/**
@@ -10786,12 +10786,12 @@ class Utils {
 	public function get_svg_icon_url( $name ) {
 		return tutor()->url . 'assets/icons/' . $name . '.svg';
 	}
-	
+
 	/**
 	 * Get script locale data for dynamic scripts
 	 *
 	 * @since 3.7.0
-	 * 
+	 *
 	 * @param string $filename Filename
 	 * @param string $locale Locale
 	 *
@@ -10800,7 +10800,7 @@ class Utils {
 	public function get_script_locale_data( string $filename, string $locale = 'en_US' ) {
 		$hash      = md5( "assets/js/lazy-chunks/{$filename}.js" );
 		$json_path = WP_CONTENT_DIR . "/languages/plugins/tutor-{$locale}-{$hash}.json";
-		
+
 		if ( file_exists( $json_path ) ) {
 			$contents = file_get_contents( $json_path );
 			$data     = json_decode( $contents, true );

@@ -40,6 +40,9 @@ class LessonModel {
 			$course_in_clause = "AND course.ID IN ({$prepare_ids})";
 		}
 
+		$post_status           = QueryHelper::prepare_in_clause( array( 'publish', 'future', 'draft', 'private', 'pending' ) );
+		$post_status_in_clause = "AND course.post_status IN ({$post_status})";
+
 		$sql = "SELECT COUNT(DISTINCT lesson.ID)
 				FROM {$wpdb->posts} lesson
 					INNER JOIN {$wpdb->posts} topic ON lesson.post_parent=topic.ID
@@ -48,11 +51,12 @@ class LessonModel {
 					{$course_in_clause}
 					AND lesson.post_type = %s
 					AND lesson.post_status = %s
-					AND course.post_status = %s
+					{$post_status_in_clause}
 					AND topic.post_status = %s";
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		return $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish', 'publish' ) );
+		$result = $wpdb->get_var( $wpdb->prepare( $sql, $lesson_type, 'publish', 'publish' ) );
+		return $result;
 	}
 
 	/**

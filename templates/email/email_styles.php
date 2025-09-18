@@ -78,7 +78,8 @@ body{direction:<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;padding: 0px;margin: 0px;
 .tutor-email-datatable tr td{vertical-align: top;}
 .tutor-email-datatable tr td.label{min-width: 150px;width: 150px;}
 .tutor-email-datatable.tutor-email-datatable-bordered {border: 1px solid #F0F0F0;border-radius: 6px; background: #FCFCFC;}
-.tutor-email-datatable.tutor-email-datatable-bordered td{border-bottom: 1px solid #F0F0F0;padding: 10px; border-right: 1px solid #F0F0F0; &:last-child {border-right: none;}}
+.tutor-email-datatable.tutor-email-datatable-bordered td{border-bottom: 1px solid #F0F0F0;padding: 10px; border-right: 1px solid #F0F0F0;}
+.tutor-email-datatable.tutor-email-datatable-bordered td:last-child{border-right: none;}
 .tutor-email-datatable.tutor-email-datatable-bordered tr:last-child td{border-bottom: none;}
 .tutor-email-from{margin-top: 20px;}
 .tutor-panel-block{background: #E9EDFB;color: #212327;font-weight: 400;font-size: 16px;margin-bottom: 30px;padding:25px;border: 1px solid #95AAED;border-radius: 6px}

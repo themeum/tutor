@@ -10,9 +10,9 @@
 
 namespace Tutor;
 
-use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
+use Tutor\Ecommerce\OptionKeys;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -431,7 +431,15 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$request = json_decode( stripslashes( $_POST['data'] ), true );
+		$data = $_FILES['data'];
+
+		if ( ! isset( $data['tmp_name'] ) ) {
+			$this->response_bad_request( __( 'Invalid file', 'tutor' ) );
+		}
+
+		$request = json_decode( file_get_contents( $data['tmp_name'] ), true );
+
+		unlink( $data['tmp_name'] );
 
 		$settings_found = false;
 
@@ -1983,6 +1991,7 @@ class Options_V2 {
 			'schema_version'   => '1.0.0',
 			'exported_at'      => current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 			'keep_media_files' => false,
+			'keep_user_data'   => false,
 			'data'             => array(),
 		);
 
