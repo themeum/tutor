@@ -6608,13 +6608,15 @@ class Utils {
 	 * Determine if any assignment submitted by user to a assignment.
 	 *
 	 * @since 1.3.3
+	 * @since 3.8.2 param $attempt_id added.
 	 *
 	 * @param int $assignment_id assignment id.
 	 * @param int $user_id user id.
+	 * @param int $attempt_id the attempt id.
 	 *
 	 * @return array|null|object
 	 */
-	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0 ) {
+	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0, $attempt_id = 0 ) {
 		global $wpdb;
 
 		$assignment_id = $this->get_post_id( $assignment_id );
@@ -6624,20 +6626,31 @@ class Utils {
 		$has_submitted = TutorCache::get( $cache_key );
 
 		if ( false === $has_submitted ) {
-			$has_submitted = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT *
-				FROM 	{$wpdb->comments}
-				WHERE 	comment_type = %s
-						AND comment_approved = %s
-						AND user_id = %d
-						AND comment_post_ID = %d;
-				",
-					'tutor_assignment',
-					'submitted',
-					$user_id,
-					$assignment_id
-				)
+
+			$has_submitted = QueryHelper::get_all(
+				$wpdb->comments,
+				array(
+					'comment_type'     => 'tutor_assignment',
+					'comment_approved' => 'submitted',
+					'user_id'          => $user_id,
+					'comment_post_ID'  => $assignment_id,
+				),
+				'comment_ID'
+			);
+			TutorCache::set( $cache_key, $has_submitted );
+		}
+
+		if ( $attempt_id ) {
+			$has_submitted = QueryHelper::get_row(
+				$wpdb->comments,
+				array(
+					'comment_ID'       => $attempt_id,
+					'comment_type'     => 'tutor_assignment',
+					'comment_approved' => 'submitted',
+					'user_id'          => $user_id,
+					'comment_post_ID'  => $assignment_id,
+				),
+				'comment_ID'
 			);
 			TutorCache::set( $cache_key, $has_submitted );
 		}

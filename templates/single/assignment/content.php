@@ -10,7 +10,6 @@
  */
 
 use TUTOR\Input;
-use TUTOR_ASSIGNMENTS\Assignments;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -77,7 +76,7 @@ $total_mark   = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark'
 $pass_mark    = tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
 $earned_marks = 0; // @TODO: Get the earned marks based on assignment grading.
 
-$is_single_attempt = isset( $_GET['view_assignment_attempt_id'] ) ? intval( wp_unslash( $_GET['view_assignment_attempt_id'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+$is_single_attempt = Input::get( 'view_assignment_attempt_id', 0 );
 
 $time_duration = tutor_utils()->get_assignment_option(
 	get_the_ID(),
@@ -152,7 +151,7 @@ if ( $time_value ) {
 			esc_html( $time_value ),
 			esc_html( strtolower( $time_map[ $time_unit ] ) )
 		);
-	} elseif ( $now > $remaining_time && ! $submitted_assignment ) {
+	} elseif ( $now > $remaining_time ) {
 			$is_expired = true;
 			$deadline   = __( 'Expired', 'tutor' );
 	} else {
@@ -359,9 +358,8 @@ if ( $time_value ) {
 								tutor_load_template_from_custom_path(
 									tutor()->path . 'templates/single/assignment/attempts.php',
 									array(
-										'attempts' => array(
+										'attempts' =>
 											$submitted_assignment,
-										),
 									)
 								);
 								// You can add your HTML here inside the else block.
@@ -378,19 +376,25 @@ if ( $time_value ) {
 					
 					<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
 						<!-- @TODO: need to check against the count of attempts -->
-						<?php if ( 1 < $attempts_allowed && 'retry' === $feedback_mode && ! $is_expired ) : ?>
-							<a class="tutor-btn tutor-btn-primary tutor-static-loader tutor-mr-16"
-								href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
-								<?php esc_html_e( 'Retry', 'tutor' ); ?>
-							</a>
-						<?php endif; ?>
+						<div class="tutor-assignment-footer-btn tutor-d-flex">
+							<?php if ( 1 < $attempts_allowed && 'retry' === $feedback_mode ) : ?>
+								<form action="" method="post" id="tutor_assignment_start_form">
+									<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
+									<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
+									<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
+									<button type="submit" id="tutor_assignment_start_btn" class="tutor-btn tutor-btn-primary tutor-mr-16"<?php echo $is_expired ? ' disabled' : ''; ?>>
+										<?php esc_html_e( 'Retry', 'tutor' ); ?>
+									</button>
+								</form>
+							<?php endif; ?>
 
-						<?php if ( $next_prev_content_id->next_id ) : ?>
-							<a class="tutor-btn tutor-btn-primary tutor-static-loader"
-							href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
-							<?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
-							</a>
-						<?php endif; ?>
+							<?php if ( $next_prev_content_id->next_id ) : ?>
+								<a class="tutor-btn tutor-btn-primary tutor-static-loader"
+								href="<?php echo esc_url( get_the_permalink( $next_prev_content_id->next_id ) ); ?>">
+								<?php esc_html_e( 'Continue Lesson', 'tutor' ); ?>
+								</a>
+							<?php endif; ?>
+						</div>
 					</div>
 				<?php else : ?>
 					<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
