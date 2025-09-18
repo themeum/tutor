@@ -15,6 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $assignment_id        = $data['attempt_id'];
+$remaining_time       = $data['remaining_time'];
+$now                  = $data['now'];
+$time_value           = $data['time_value'];
 $post_id              = get_the_ID(); //phpcs:ignore
 $user_id              = get_current_user_id();
 $user_data            = get_userdata( $user_id );
@@ -94,64 +97,65 @@ if ( ! empty( $instructor_note ) && $is_reviewed_by_instructor ) :
 </div>
 <?php endif; ?>
 
-<div class="tutor-assignment-details tutor-assignment-border-bottom tutor-pb-48 tutor-pb-sm-72">
-					<div class="tutor-ar-body tutor-pt-24 tutor-pb-40 tutor-px-16 tutor-px-md-32">
-						<div class="tutor-ar-header tutor-d-flex tutor-justify-between tutor-align-center">
-							<div class="tutor-ar-title tutor-fs-6 tutor-fw-medium tutor-color-black">
-								<?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
-							</div>
+<div class="tutor-assignment-details  tutor-pb-48 tutor-pb-sm-72">
+	<div class="tutor-ar-body tutor-pt-24 tutor-pb-40 tutor-px-16 tutor-px-md-32">
+		<div class="tutor-ar-header tutor-d-flex tutor-justify-between tutor-align-center">
+			<div class="tutor-ar-title tutor-fs-6 tutor-fw-medium tutor-color-black">
+				<?php esc_html_e( 'Your Assignment', 'tutor' ); ?>
+			</div>
 
-							<?php
-							$result = Assignments::get_assignment_result( $post_id, $user_id );
-							if ( in_array( $result, array( 'pending', 'fail' ), true ) && ( $remaining_time > $now || 0 === $time_value ) ) :
+			<?php
+			$result = Assignments::get_assignment_result( $post_id, $user_id );
+			if ( in_array( $result, array( 'pending', 'fail' ), true ) && ( $remaining_time > $now || 0 === $time_value ) ) :
+				?>
+				<div class="tutor-ar-btn">
+					<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>"
+						class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+					<?php esc_html_e( 'Edit', 'tutor' ); ?>
+					</a>
+				</div>
+			<?php endif; ?>
+		</div>
+
+		<div class="tutor-fs-6 tutor-color-secondary tutor-pt-16 tutor-entry-content">
+			<?php echo wp_kses_post( nl2br( stripslashes( $submitted_assignment->comment_content ) ) ); ?>
+		</div>
+
+		<?php
+			$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
+		if ( $attached_files ) :
+			?>
+			<?php
+			$attached_files = json_decode( $attached_files, true );
+			if ( tutor_utils()->count( $attached_files ) ) :
+				?>
+					<div class="tutor-attachment-files submited-files tutor-d-flex tutor-flex-column tutor-mt-20 tutor-mt-sm-40">
+						<?php foreach ( $attached_files as $attached_file ) : ?>
+							<div class="tutor-instructor-card tutor-mt-12">
+								<div class="tutor-icard-content">
+									<div class="tutor-fs-6 tutor-color-secondary">
+								<?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?>
+									</div>
+									<div class="tutor-fs-7"><?php esc_html_e( 'Size', 'tutor' ); ?>:
+								<?php
+									echo esc_html(
+										tutor_utils()->get_readable_filesize( $upload_basedir . $attached_file['uploaded_path'] )
+									);
 								?>
-								<div class="tutor-ar-btn">
-									<a href="<?php echo esc_url( add_query_arg( 'update-assignment', $submitted_assignment->comment_ID ) ); ?>"
-										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-									<?php esc_html_e( 'Edit', 'tutor' ); ?>
+									</div>
+								</div>
+								<div class="tutor-d-flex tutor-align-center">
+									<a class="tutor-iconic-btn tutor-iconic-btn-outline" download
+										href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>"
+										target="_blank">
+										<span class="tutor-icon-download"></span>
 									</a>
 								</div>
-							<?php endif; ?>
-						</div>
-
-						<div class="tutor-fs-6 tutor-color-secondary tutor-pt-16 tutor-entry-content">
-							<?php echo wp_kses_post( nl2br( stripslashes( $submitted_assignment->comment_content ) ) ); ?>
-						</div>
-
-						<?php
-							$attached_files = get_comment_meta( $submitted_assignment->comment_ID, 'uploaded_attachments', true );
-						if ( $attached_files ) :
-							?>
-							<?php
-							$attached_files = json_decode( $attached_files, true );
-							if ( tutor_utils()->count( $attached_files ) ) :
-								?>
-									<div class="tutor-attachment-files submited-files tutor-d-flex tutor-flex-column tutor-mt-20 tutor-mt-sm-40">
-										<?php foreach ( $attached_files as $attached_file ) : ?>
-											<div class="tutor-instructor-card tutor-mt-12">
-												<div class="tutor-icard-content">
-													<div class="tutor-fs-6 tutor-color-secondary">
-												<?php echo esc_html( tutor_utils()->array_get( 'name', $attached_file ) ); ?>
-													</div>
-													<div class="tutor-fs-7"><?php esc_html_e( 'Size', 'tutor' ); ?>:
-												<?php
-													echo esc_html(
-														tutor_utils()->get_readable_filesize( $upload_basedir . $attached_file['uploaded_path'] )
-													);
-												?>
-													</div>
-												</div>
-												<div class="tutor-d-flex tutor-align-center">
-													<a class="tutor-iconic-btn tutor-iconic-btn-outline" download
-														href="<?php echo esc_url( $upload_baseurl . tutor_utils()->array_get( 'uploaded_path', $attached_file ) ); ?>"
-														target="_blank">
-														<span class="tutor-icon-download"></span>
-													</a>
-												</div>
-											</div>
-										<?php endforeach; ?>
-									</div>
-								<?php endif; ?>
-							<?php endif; ?>
-						</div>
+							</div>
+						<?php endforeach; ?>
 					</div>
+				<?php endif; ?>
+			<?php endif; ?>
+	</div>
+</div>
+	
