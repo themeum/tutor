@@ -165,6 +165,8 @@ if ( $time_value ) {
 
 <?php do_action( 'tutor_assignment/single/before/content' ); ?>
 
+<?php tutor_load_template( 'single.common.header', array( 'course_id' => $course_id ) ); ?>
+
 <?php tutor_load_template_from_custom_path( tutor()->path . 'templates/single/assignment/navigation.php', array( 'next_prev_content_id' => $next_prev_content_id ) ); ?>
 
 <div class="tutor-course-topic-single-body">
