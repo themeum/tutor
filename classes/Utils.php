@@ -837,130 +837,128 @@ class Utils {
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
 
-		$override = apply_filters( 'tutor_course_completed_percent', null, $course_id, $user_id, $get_stats );
-		if ( null !== $override ) {
-			return $override;
-		}
+		$post_type = get_post_type( $course_id );
+		$result    = 0;
 
-		$completed_lesson = $this->get_completed_lesson_count_by_course( $course_id, $user_id );
-		$course_contents  = $this->get_course_contents_by_id( $course_id );
-		$total_contents   = $this->count( $course_contents );
-		$total_contents   = $total_contents ? $total_contents : 0;
-		$completed_count  = $completed_lesson;
+		if ( tutor()->course_post_type === $post_type ) {
+			$completed_lesson = $this->get_completed_lesson_count_by_course( $course_id, $user_id );
+			$course_contents  = $this->get_course_contents_by_id( $course_id );
+			$total_contents   = $this->count( $course_contents );
+			$total_contents   = $total_contents ? $total_contents : 0;
+			$completed_count  = $completed_lesson;
 
-		$quiz_ids       = array();
-		$assignment_ids = array();
+			$quiz_ids       = array();
+			$assignment_ids = array();
 
-		foreach ( $course_contents as $content ) {
-			if ( 'tutor_quiz' === $content->post_type ) {
-				$quiz_ids[] = (int) $content->ID;
-			}
-			if ( 'tutor_assignments' === $content->post_type ) {
-				$assignment_ids[] = (int) $content->ID;
-			}
-		}
-
-		global $wpdb;
-
-		if ( count( $quiz_ids ) ) {
-			$quiz_ids_str = QueryHelper::prepare_in_clause( $quiz_ids );
-
-			// Get data from cache.
-			$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
-			$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
-			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
-
-			if ( false === $quiz_completed ) {
-				//phpcs:disable
-				$quiz_completed = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT count(quiz_id) completed 
-						FROM (
-							SELECT  DISTINCT quiz_id 
-							FROM 	{$wpdb->tutor_quiz_attempts} 
-							WHERE 	quiz_id IN ({$quiz_ids_str}) 
-									AND user_id = % d 
-									AND attempt_status != %s
-						) a",
-						$user_id,
-						QuizModel::ATTEMPT_STARTED
-					)
-				);
-				//phpcs:enable
-				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
-			}
-			$completed_count += $quiz_completed;
-		}
-
-		if ( count( $assignment_ids ) ) {
-			$assignment_ids_str = QueryHelper::prepare_in_clause( $assignment_ids );
-
-			// Get data from cache.
-			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
-			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
-			$assignment_submitted           = TutorCache::get( $assignment_submitted_cache_key );
-
-			if ( false === $assignment_submitted ) {
-				$assignment_submitted = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT count(*) completed
-						FROM 	{$wpdb->comments}
-						WHERE 	comment_type = %s
-								AND comment_approved = %s
-								AND user_id = %d
-								AND comment_post_ID IN({$assignment_ids_str});
-						",
-						'tutor_assignment',
-						'submitted',
-						$user_id
-					)
-				);
-				TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
-			}
-			$completed_count += $assignment_submitted;
-		}
-
-		if ( $this->count( $course_contents ) ) {
 			foreach ( $course_contents as $content ) {
-				if ( 'tutor_zoom_meeting' === $content->post_type ) {
-					/**
-					 * Count zoom lesson completion for course progress
-					 *
-					 * @since 2.0.0
-					 */
-					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
-					if ( $is_completed ) {
-						++$completed_count;
-					}
-				} elseif ( 'tutor-google-meet' === $content->post_type ) {
-					/**
-					 * Count zoom lesson completion for course progress
-					 *
-					 * @since 2.0.0
-					 */
-					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
-					if ( $is_completed ) {
-						++$completed_count;
+				if ( 'tutor_quiz' === $content->post_type ) {
+					$quiz_ids[] = (int) $content->ID;
+				}
+				if ( 'tutor_assignments' === $content->post_type ) {
+					$assignment_ids[] = (int) $content->ID;
+				}
+			}
+
+			global $wpdb;
+
+			if ( count( $quiz_ids ) ) {
+				$quiz_ids_str = QueryHelper::prepare_in_clause( $quiz_ids );
+
+				// Get data from cache.
+				$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
+				$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
+				$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
+
+				if ( false === $quiz_completed ) {
+					//phpcs:disable
+					$quiz_completed = (int) $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT count(quiz_id) completed 
+							FROM (
+								SELECT  DISTINCT quiz_id 
+								FROM 	{$wpdb->tutor_quiz_attempts} 
+								WHERE 	quiz_id IN ({$quiz_ids_str}) 
+										AND user_id = % d 
+										AND attempt_status != %s
+							) a",
+							$user_id,
+							QuizModel::ATTEMPT_STARTED
+						)
+					);
+					//phpcs:enable
+					TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
+				}
+				$completed_count += $quiz_completed;
+			}
+
+			if ( count( $assignment_ids ) ) {
+				$assignment_ids_str = QueryHelper::prepare_in_clause( $assignment_ids );
+
+				// Get data from cache.
+				$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
+				$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
+				$assignment_submitted           = TutorCache::get( $assignment_submitted_cache_key );
+
+				if ( false === $assignment_submitted ) {
+					$assignment_submitted = (int) $wpdb->get_var(
+						$wpdb->prepare(
+							"SELECT count(*) completed
+							FROM 	{$wpdb->comments}
+							WHERE 	comment_type = %s
+									AND comment_approved = %s
+									AND user_id = %d
+									AND comment_post_ID IN({$assignment_ids_str});
+							",
+							'tutor_assignment',
+							'submitted',
+							$user_id
+						)
+					);
+					TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
+				}
+				$completed_count += $assignment_submitted;
+			}
+
+			if ( $this->count( $course_contents ) ) {
+				foreach ( $course_contents as $content ) {
+					if ( 'tutor_zoom_meeting' === $content->post_type ) {
+						/**
+						 * Count zoom lesson completion for course progress
+						 *
+						 * @since 2.0.0
+						 */
+						$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+						if ( $is_completed ) {
+							++$completed_count;
+						}
+					} elseif ( 'tutor-google-meet' === $content->post_type ) {
+						/**
+						 * Count zoom lesson completion for course progress
+						 *
+						 * @since 2.0.0
+						 */
+						$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
+						if ( $is_completed ) {
+							++$completed_count;
+						}
 					}
 				}
 			}
+
+			if ( $total_contents > 0 && $completed_count > 0 ) {
+				$result = number_format( ( $completed_count * 100 ) / $total_contents );
+			}
+
+			if ( $get_stats ) {
+				$result = array(
+					'completed_percent' => $result,
+					'completed_count'   => $completed_count,
+					'total_count'       => $total_contents,
+				);
+			}
 		}
 
-		$percent_complete = 0;
-
-		if ( $total_contents > 0 && $completed_count > 0 ) {
-			$percent_complete = number_format( ( $completed_count * 100 ) / $total_contents );
-		}
-
-		if ( $get_stats ) {
-			return array(
-				'completed_percent' => $percent_complete,
-				'completed_count'   => $completed_count,
-				'total_count'       => $total_contents,
-			);
-		}
-
-		return $percent_complete;
+		return apply_filters( 'tutor_course_completed_percent', $result, $course_id, $user_id, $get_stats );
 	}
 
 	/**
@@ -2602,17 +2600,15 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 2.6.0 Return enrolled id
 	 * @since 3.3.0 Added $fire_hook parameter.
-	 * @since 3.9.0 Added $from_bundle parameter.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $order_id order id.
 	 * @param int  $user_id user id.
 	 * @param bool $fire_hook fire hook.
-	 * @param bool $from_bundle from bundle enrollment.
 	 *
 	 * @return int enrolled id
 	 */
-	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true, $from_bundle = false ) {
+	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
 		$enrolled_id = 0;
 		if ( ! $course_id ) {
 			return $enrolled_id;
@@ -2625,7 +2621,7 @@ class Utils {
 		if ( $course_id && $user_id ) {
 			$enrolled_info = $this->is_enrolled( $course_id, $user_id );
 			if ( $enrolled_info ) {
-				return $from_bundle ? null : $enrolled_info->ID;
+				return $enrolled_info->ID;
 			}
 		}
 
