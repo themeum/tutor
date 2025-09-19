@@ -66,13 +66,14 @@ function tutor_assignment_convert_seconds( $seconds ) {
 	return $days . ' ' . _n( 'Day', 'Days', $days, 'tutor' ) . ', ' . $hours . ' ' . _n( 'Hour', 'Hours', $hours, 'tutor' ) . ', ' . $minutes . ' ' . _n( 'Minute', 'Minutes', $minutes, 'tutor' );
 }
 
-$next_prev_content_id = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
-$content              = get_the_content();
-$s_content            = $content;
-$allow_to_upload      = (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' );
-$feedback_mode        = tutor_utils()->get_assignment_option( $post_id, 'feedback_mode' );
-$attempts_allowed     = (int) tutor_utils()->get_assignment_option( $post_id, 'attempts_allowed' );
-$course_id            = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
+$next_prev_content_id         = tutor_utils()->get_course_prev_next_contents_by_id( $post_id );
+$content                      = get_the_content();
+$s_content                    = $content;
+$allow_to_upload              = (int) tutor_utils()->get_assignment_option( $post_id, 'upload_files_limit' );
+$feedback_mode                = tutor_utils()->get_assignment_option( $post_id, 'feedback_mode' );
+$attempts_allowed             = (int) tutor_utils()->get_assignment_option( $post_id, 'attempts_allowed' );
+$course_id                    = tutor_utils()->get_course_id_by( 'lesson', get_the_ID() );
+$has_reached_maximum_attempts = count( $submitted_assignment ) > 1 && count( $submitted_assignment ) >= $attempts_allowed;
 
 $upload_dir     = wp_get_upload_dir();
 $upload_baseurl = trailingslashit( $upload_dir['baseurl'] ?? '' );
@@ -204,6 +205,21 @@ if ( $time_value ) {
 							<span class="tutor-icon-circle-times-bold tutor-color-danger tutor-mr-8"></span>
 							<span class="tutor-fs-7 tutor-color-danger-100">
 								<?php esc_html_e( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor' ); ?>
+							</span>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+
+			<?php
+			if ( $has_reached_maximum_attempts && $earned_marks < $pass_mark && $is_reviewed_by_instructor ) :
+				?>
+				<div class="quiz-flash-message tutor-mt-24 tutor-mt-sm-32">
+					<div class="tutor-quiz-warning-box time-over tutor-d-flex tutor-align-center tutor-justify-between">
+						<div class="flash-info tutor-d-flex tutor-align-center">
+							<span class="tutor-icon-circle-times-bold tutor-color-danger tutor-mr-8"></span>
+							<span class="tutor-fs-7 tutor-color-danger-100">
+								<?php esc_html_e( 'You have reached maximum assignment retry attempts. Please contact the instructor for more information.', 'tutor' ); ?>
 							</span>
 						</div>
 					</div>
@@ -391,7 +407,7 @@ if ( $time_value ) {
 									<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
 									<input type="hidden" value="tutor_assignment_start_submit" name="tutor_action" />
 									<input type="hidden" name="assignment_id" value="<?php echo get_the_ID(); ?>">
-									<button type="submit" id="tutor_assignment_start_btn" class="tutor-btn tutor-btn-primary tutor-mr-16"<?php echo $is_expired ? ' disabled' : ''; ?>>
+									<button type="submit" id="tutor_assignment_start_btn" class="tutor-btn tutor-btn-primary tutor-mr-16"<?php echo $is_expired || $has_reached_maximum_attempts ? ' disabled' : ''; ?>>
 										<?php esc_html_e( 'Retry', 'tutor' ); ?>
 									</button>
 								</form>
