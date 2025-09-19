@@ -8,6 +8,8 @@
  * @since 3.8.2
  */
 
+use Tutor\Helpers\DateTimeHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -48,7 +50,7 @@ if ( empty( $attempts ) ) {
 					);
 					?>
 					<tr>
-						<td><?php echo esc_html( tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date ) ); ?></td>
+						<td><?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $submitted_assignment->comment_date_gmt ) ); ?></td>
                         <td><?php esc_html_e( $total_mark, 'tutor' ); // phpcs:ignore ?></td>
                         <td><?php esc_html_e( $pass_mark, 'tutor' ); // phpcs:ignore ?></td>
                         <td><?php esc_html_e( $given_mark, 'tutor' ); // phpcs:ignore ?></td>
