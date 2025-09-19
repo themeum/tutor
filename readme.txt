@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -52,6 +52,7 @@ Here are the most notable features of Tutor LMS:
 🖥️ Tutor LMS AI Studio
 📚 Unlimited courses and lessons
 🎓 Course bundle
+🎁 Gift course
 👁️ Course preview
 🧩 Advanced quiz builder
 ⏱️ Quiz timer
@@ -64,8 +65,8 @@ Here are the most notable features of Tutor LMS:
 📅 Content drip
 👩‍🏫 Unlimited teacher profiles
 📝 Lesson management
-🏆 Advanced drag-and-drop certificate builder
 💳 Centralized monetization settings
+🛍️ Guest checkout
 💰 Earning and commission allocation
 💸 Multiple withdrawal options
 📜 Purchase history
@@ -73,16 +74,15 @@ Here are the most notable features of Tutor LMS:
 📊 Course widget
 📝 Instructor registration form
 ⭐ Course review and rating system
-❓ Q&A for students with the course teacher
+❓ Q&A for students with the instructor
 🎥 Video thumbnail (trailer/teaser)
 🚀 Tracking course progress
 🌟 Course difficulty level
-⏳ Define course duration
+⏳ Set course duration
 🌐 Course marketplace
 📋 Add course requirements and instruction
 🔦 Spotlight mode
 🏗️ Page builder support
-📚 Gutenberg compatible
 🔐 Content security
 📈 Advanced analytics and more
 👥 Manual enrollment
@@ -93,6 +93,7 @@ Here are the most notable features of Tutor LMS:
 📧 Email verification
 ✉️ Email template editor
 🔒 Tutor LMS REST API authentication support
+🏆 Advanced drag-and-drop certificate builder
 👤 Manage active login sessions
 📱 Two-factor authentication
 🛡️ Fraud protection
@@ -133,11 +134,9 @@ This free LMS plugin supports various quizzes that you can use to fulfill all yo
 
 == 🛒 NATIVE ECOMMERCE ==
 
-Tutor LMS has the most important streamlined [Native eCommerce](https://tutorlms.com/ecommerce/) solution to sell courses directly without relying on third-party plugins. It simplifies the payment processing with support for lots of popular payment gateways, like PayPal, Stripe, Paddle, Mollie, Razorpay, etc. 
+Tutor LMS has the most important streamlined [Native eCommerce](https://tutorlms.com/ecommerce/) solution to sell courses directly without relying on third-party plugins. It supports both individual and guest checkout and is compatible with popular payment gateways like PayPal, Stripe, Paddle, Mollie, Razorpay, etc.
 
-With features like advanced coupon management, you can create custom codes or automatic discounts, set validity periods, and run promotional campaigns. Managing taxes is equally simple, with auto-calculated regional tax rates ensuring compliance for learners across the globe. 
-
-Additionally, the upgraded order management interface enables you to track, update, and refund orders quickly and efficiently. Native eCommerce brings unparalleled speed and convenience, empowering you to manage your online course sales like a pro.
+With features like advanced coupon management, you can create custom coupon codes, set validity periods, and run promotional campaigns. Managing taxes is equally simple, with auto-calculated regional tax rates ensuring compliance for learners across the globe. Additionally, the upgraded order management interface enables you to track, update, and refund orders efficiently.
 
 == 📆 BUILT-IN SUBSCRIPTIONS ==
 
@@ -159,33 +158,35 @@ With Tutor LMS, you can sell multiple courses in a [course bundle](https://tutor
 
 Tutor LMS Content Bank lets you create a personal library of reusable lessons, quizzes, and assignments. You can easily organize content in Collections, reuse it across courses, and monitor the usage too. It also lets you import or export collections to share or back up your materials across multiple Tutor LMS websites.
 
+== 🎁 GIFT COURSE ==
+
+The Tutor LMS Gift Course feature allows users to purchase a course and send it to another person as a gift. The recipient receives an email notification with access details to the gifted course.
+
 == 🖥 FRONTEND STUDENT DASHBOARD ==
 
-Each student registered on your WordPress learning management system will have a frontend dashboard to see their enrolled courses, progress, results, announcements, etc.
+Each student and instructor registered on your WordPress learning management system will have a frontend dashboard to see their enrolled courses, progress, results, announcements, etc.
 
 == 🧑‍🏫 CREATE COURSE MARKETPLACE and SHARE COMMISSION ==
 
-Tutor LMS is the best LMS plugin to create a course marketplace. You can add unlimited courses and instructors using Tutor LMS. As an Admin, you can review instructor profiles before approval, manage instructor’s earnings distribution, set commission rates, deduct charges, and more. Instructors can also withdraw their earnings conveniently via bank transfer, PayPal, eCheck, etc.
+Tutor LMS is the best LMS plugin to create a course marketplace. You can create unlimited courses and instructors using Tutor LMS. As an Admin, you can review instructor profiles before approval, manage instructor’s earnings distribution, set commission rates, deduct charges, and more. Instructors can also withdraw their earnings conveniently via bank transfer, PayPal, eCheck, etc.
 
 == 📹 MULTIMEDIA ATTACHMENTS ==
 
-Keep your eLearning students engaged using multimedia lessons, H5P interactive lessons, SCORM files, etc. Tutor LMS supports versatile video sources such as Vimeo, YouTube, Bunny Stream, etc. You can also set an introductory video for your course. This video will act as the featured video of your course.
+Keep your eLearning students engaged using multimedia lessons, H5P interactive lessons, SCORM files, etc. Tutor LMS supports versatile video sources such as Vimeo, YouTube, Bunny Stream, etc. You can also set an introductory video aka feature video for your course.
 
 == 💬 ENGAGE STUDENTS WITH LIVE LESSONS ==
 
-Conduct live video sessions with students within Tutor LMS courses and lessons and increase interaction with students and connect with them. Instructors can schedule real-time video meetings using Google Meet, Zoom, etc. Just share the meeting link within the lesson, and students can join your live classes with one click.
-
-Video sessions enable interactive class lectures, discussions, and collaboration. During the live lessons, instructors can use all of the required features to conduct a live class. For example, screen sharing, live question answering, engaging students face-to-face online, etc. 
+Conduct live video sessions with students within Tutor LMS courses and lessons and increase interaction with students and connect with them. Instructors can schedule real-time video meetings using Google Meet, Zoom, etc. Just share the meeting link within the lesson, and students can join your live classes with one click. During the live lessons, instructors can use all of the required features to conduct a live class like screen sharing, live Q&A, face-to-face engagement, etc. 
 
 == 🧑‍🎓 STUDENT QUESTION AND ANSWERS (Q&A) ==
 
-Students can submit questions about courses from their respective profiles even before enrolling in a course. This feature of the Tutor LMS plugin encourages student interactions and helps boost conversion rates.
+Students can submit questions about courses from their respective profiles even before enrolling in a course. This feature of the Tutor LMS plugin encourages student interactions and boosts conversion rates.
 
-== ✉️ BUILT-IN EMAIL MARKETING AND AUTOMATION ==
+== ✉️ BUILT-IN EMAIL MARKETING & AUTOMATION ==
 
-Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 40+ email triggers and numerous placeholders. You can use those placeholders to send highly customizable and personalized emails right from your LMS plugin. 
+Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 50+ email triggers and numerous placeholders. You can use those placeholders to send personalized emails right from your LMS plugin. The built-in email editor lets you use those [Tutor LMS email placeholders](https://docs.themeum.com/tutor-lms/tutorials/email-placeholders/) in both the subject lines and the email body. 
 
-The built-in email editor of Tutor LMS lets you use those placeholders in both the subject lines and the body of your customized email. A few common automated email triggers are user registration, course enrollment, inactivity reminders, quiz completions, course completions, assignment grading, announcements, eCommerce orders, subscriptions, etc. This comprehensive system ensures that all user interactions are met with relevant and timely email notifications.
+A few common automated email triggers are user registration, course enrollment, inactivity reminders, quiz completions, course completions, assignment grading, announcements, eCommerce orders, subscriptions, etc. This comprehensive system ensures that all user interactions are met with relevant and timely email notifications.
 
 == 💵 MULTIPLE COURSE MONETIZATION TOOLS ==
 
@@ -316,6 +317,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.8.1 - Sep 17, 2025
+
+Update: Admins can now export courses with user data, including student details, course progress, reviews, orders, subscriptions, etc. (Pro)
+Fix: Resolved the quiz waiting time issue for supported quiz types.
+Fix: Guest checkout now correctly registers students’ first and last names. (Pro)
+Fix: Importing courses now properly includes scheduled courses and assignment counts. (Pro)
+Fix: Resolved the dashboard slug issue when using the WPML plugin. (Pro)
 
 = 3.8.0 - Sep 04, 2025
 

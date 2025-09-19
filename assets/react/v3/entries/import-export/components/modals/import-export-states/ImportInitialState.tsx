@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
 import { hasAnyCourseWithChildren } from '@ImportExport/utils/utils';
-import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
@@ -35,7 +35,7 @@ interface ImportInitialStateProps {
     collectionId,
   }: {
     file: File;
-    collectionId?: number; // Optional for content bank import
+    collectionId?: number; // only needed if importing into Content Bank
   }) => void;
 }
 
@@ -108,6 +108,11 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
     if (files.length === 0) {
       return;
     }
+
+    if (files[0].type !== 'application/json') {
+      return;
+    }
+
     setIsReadingFile(true);
     readJsonFile(files[0])
       .then((data) => {
@@ -212,10 +217,9 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
                   data-cy="replace-file"
                   variant="tertiary"
                   size="small"
-                  maxFileSize={20 * 1024 * 1024} // 20 MB
                   onUpload={handleUpload}
                   onError={handleUploadError}
-                  acceptedTypes={['.csv', '.json']}
+                  acceptedTypes={isTutorPro ? ['.json', '.zip'] : ['.json']}
                 >
                   {__('Replace', 'tutor')}
                 </UploadButton>
@@ -224,7 +228,8 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
           </div>
         </div>
 
-        <Show when={isTutorPro && isAddonEnabled(Addons.CONTENT_BANK) && hasContent.courseContent}>
+        {/* @TODO: wii be removed later `&& hasContent.courseContent}` */}
+        <Show when={isTutorPro && isAddonEnabled(Addons.CONTENT_BANK)}>
           <div css={styles.contentBank}>
             <Controller
               control={form.control}
@@ -288,26 +293,18 @@ const ImportInitialState = ({ files: propsFiles, currentStep, onClose, onImport 
         <Show when={!isFileValid}>
           <div css={styles.alert}>
             <SVGIcon name="warning" width={40} height={40} />
-            <p>
-              {
-                // prettier-ignore
-                __('WARNING! Invalid file. Please upload a valid JSON file and try again.', 'tutor')
-              }
-            </p>
+            <p>{__('WARNING! Invalid file. Please upload a valid JSON file and try again.', 'tutor')}</p>
           </div>
         </Show>
 
-        <Show when={isFileValid && hasContent.settings}>
-          <div css={styles.alert}>
-            <SVGIcon name="infoFill" width={40} height={40} />
-            <p>
-              {
-                // prettier-ignore
-                __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')
-              }
-            </p>
-          </div>
-        </Show>
+        <div css={styles.alert}>
+          <SVGIcon name="infoFill" width={40} height={40} />
+          <p>
+            {isContentBankSelectionEnabled
+              ? __('Note: Only lessons, quizzes, and assignments will be uploaded to the Content Bank.', 'tutor')
+              : __('WARNING! This will overwrite all existing settings, please proceed with caution.', 'tutor')}
+          </p>
+        </div>
       </div>
       <div css={styles.footer}>
         <div css={styles.actionButtons}>

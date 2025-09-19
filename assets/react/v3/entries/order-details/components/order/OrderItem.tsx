@@ -9,6 +9,7 @@ import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/con
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { formatPrice } from '@TutorShared/utils/currency';
+import { isString } from '@TutorShared/utils/types';
 
 interface OrderItemProps extends React.HTMLAttributes<HTMLDivElement> {
   item: OrderSummaryItem;
@@ -46,7 +47,7 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
             <ul css={styles.itemMeta}>
               {item.item_meta_list.map((item) => (
                 <li key={item.id}>
-                  <strong>{item.meta_key}</strong>: {item.meta_value}
+                  <strong>{item.meta_key}</strong>: {isString(item.meta_value) ? item.meta_value : ''}
                 </li>
               ))}
             </ul>

@@ -139,9 +139,8 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
         <div>
           <Button
             variant="tertiary"
-            size="small"
+            isIconOnly
             icon={<SVGIcon name={order === 'asc' ? 'sortASC' : 'sortDESC'} width={18} height={18} />}
-            buttonCss={styles.sortButton}
             onClick={() => {
               const newOrder = order === 'asc' ? 'desc' : 'asc';
               form.setValue('order', newOrder);
@@ -155,8 +154,6 @@ const FilterFields = ({ onFilterChange, initialValues, type }: FilterFieldsProps
       <Popover
         isOpen={isFiltersPopoverOpen}
         closeOnEscape
-        hideArrow
-        arrow="top"
         animationType={AnimationType.slideDown}
         closePopover={() => {
           form.reset();
@@ -225,12 +222,6 @@ const styles = {
     css`
       padding-right: ${spacing[6]};
     `}
-  `,
-  sortButton: css`
-    flex-shrink: 0;
-    padding: ${spacing[10]} ${spacing[12]};
-    background-color: ${colorTokens.background.white};
-    color: ${colorTokens.icon.default};
   `,
   clearButton: css`
     flex-shrink: 0;

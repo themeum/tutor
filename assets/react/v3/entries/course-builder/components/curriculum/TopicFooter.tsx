@@ -29,6 +29,7 @@ import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
@@ -313,8 +314,6 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
               dotsOrientation="vertical"
               maxWidth={isTutorPro ? '220px' : '250px'}
               isInverse
-              arrowPosition="auto"
-              hideArrow
               closeOnEscape={false}
               size={CURRENT_VIEWPORT.isAboveMobile ? 'medium' : 'small'}
             >
@@ -378,8 +377,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
       >
         <GoogleMeetForm
           topicId={topicId}
@@ -396,8 +394,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
       >
         <ZoomMeetingForm
           topicId={topicId}
