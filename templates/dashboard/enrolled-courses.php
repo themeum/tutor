@@ -16,10 +16,13 @@ $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset   = ( $per_page * $paged ) - $per_page;
 
-$page_tabs = array(
-	'enrolled-courses'                   => __( 'Enrolled Courses', 'tutor' ),
-	'enrolled-courses/active-courses'    => __( 'Active Courses', 'tutor' ),
-	'enrolled-courses/completed-courses' => __( 'Completed Courses', 'tutor' ),
+$page_tabs = apply_filters(
+	'tutor_enrolled_courses_page_tabs',
+	array(
+		'enrolled-courses'                   => __( 'Enrolled Courses', 'tutor' ),
+		'enrolled-courses/active-courses'    => __( 'Active Courses', 'tutor' ),
+		'enrolled-courses/completed-courses' => __( 'Completed Courses', 'tutor' ),
+	)
 );
 
 // Default tab set.
