@@ -9,7 +9,6 @@
  */
 
 use Tutor\Helpers\DateTimeHelper;
-use TUTOR_ASSIGNMENTS\Assignments;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -106,7 +105,7 @@ if ( ! empty( $instructor_note ) && $is_reviewed_by_instructor ) :
 			</div>
 
 			<?php
-			$result = Assignments::get_assignment_result( $post_id, $user_id );
+			$result = tutor()->has_pro ? \TUTOR_ASSIGNMENTS\Assignments::get_assignment_result( $post_id, $user_id ) : 'pending';
 			if ( in_array( $result, array( 'pending', 'fail' ), true ) && ( $remaining_time > $now || 0 === $time_value ) ) :
 				?>
 				<div class="tutor-ar-btn">

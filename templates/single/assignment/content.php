@@ -26,6 +26,7 @@ $is_submitting = tutor_utils()->is_assignment_submitting( get_the_ID() );
 $post_id                   = get_the_ID(); //phpcs:ignore
 $user_id                   = get_current_user_id();
 $user_data                 = get_userdata( $user_id );
+$assignment_attempt        = tutor_utils()->get_assignment_attempt( $post_id, $user_id );
 $assignment_comment        = tutor_utils()->get_single_comment_user_post_id( $post_id, $user_id );
 $submitted_assignment      = tutor_utils()->is_assignment_submitted( get_the_ID() );
 $is_reviewed_by_instructor = false;
@@ -77,9 +78,9 @@ $upload_dir     = wp_get_upload_dir();
 $upload_baseurl = trailingslashit( $upload_dir['baseurl'] ?? '' );
 $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
-$total_mark   = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' );
-$pass_mark    = (int) tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
-$earned_marks = 0; // @TODO: Get the earned marks based on assignment grading.
+$total_mark   = number_format( floatval( tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' ) ), 2 );
+$pass_mark    = number_format( floatval( tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' ) ), 2 );
+$earned_marks = number_format( floatval( $assignment_attempt->earned_marks ), 2 ) ?? 0; // @TODO: Get the earned marks based on assignment grading.
 
 $is_single_attempt = Input::get( 'view_assignment_attempt_id', 0 );
 
