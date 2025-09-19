@@ -23,7 +23,7 @@ $show_author            = tutor_utils()->get_option( 'enable_course_author' );
 $course_categories      = get_tutor_course_categories();
 $disable_reviews        = ! get_tutor_option( 'enable_course_review' );
 $is_wish_listed         = tutor_utils()->is_wishlisted( $post->ID, get_current_user_id() );
-$toggle_course_wishlist = tutor_utils()->get_option( 'toggle_course_wishlist' );
+$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
 /**
  * Global $course_rating get null for third party
  * who only include this file without single-course.php file.
@@ -97,7 +97,7 @@ if ( is_null( $course_rating ) ) {
 
 			<div class="tutor-col-auto">
 				<div class="tutor-course-details-actions tutor-mt-12 tutor-mt-sm-0">
-					<?php if ( $toggle_course_wishlist ) : ?>
+					<?php if ( $is_enabled_wishlist ) : ?>
 					<a href="#" class="tutor-btn tutor-btn-ghost tutor-course-wishlist-btn tutor-mr-16" data-course-id="<?php echo esc_attr( get_the_ID() ); ?>">
 						<i class="<?php echo $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line'; ?> tutor-mr-8"></i> <?php esc_html_e( 'Wishlist', 'tutor' ); ?>
 					</a>

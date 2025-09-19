@@ -10,8 +10,11 @@
  */
 
 ?>
-<?php tutor_course_loop_thumbnail(); ?>
-<?php if ( $toggle_course_wishlist ) : ?>
+<?php 
+	tutor_course_loop_thumbnail(); 
+	$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
+?>
+<?php if ( $is_enabled_wishlist ) : ?>
 <div class="tutor-course-bookmark">
 	<?php
 	$course_id      = get_the_ID();

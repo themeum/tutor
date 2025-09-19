@@ -1362,7 +1362,7 @@ class Options_V2 {
 										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
 									),
 									array(
-										'key'     => 'toggle_course_wishlist',
+										'key'     => 'enable_wishlist',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Wishlist', 'tutor' ),
 										'default' => 'on',
