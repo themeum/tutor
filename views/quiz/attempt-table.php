@@ -19,9 +19,8 @@ $table_columns             = include __DIR__ . '/contexts.php';
 $enabled_hide_quiz_details = tutor_utils()->get_option( 'hide_quiz_details' );
 
 if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) && count( $attempt_list ) ) {
-	// Provide the attempt data from the first attempt.
-	// For now now attempt specific data is shown, that's why no problem if we take meta data from any attempt.
-	$attempt_data = $attempt_list[0];
+	// Now attempt data is calculated based on the final grade calculation in settings.
+	$attempt_data = ( new QuizModel() )->get_quiz_attempt( $quiz_id, $user_id );
 	include __DIR__ . '/header.php';
 }
 ?>
