@@ -887,31 +887,14 @@ class Utils {
 		}
 
 		if ( count( $assignment_ids ) ) {
-			$assignment_ids_str = QueryHelper::prepare_in_clause( $assignment_ids );
 
-			// Get data from cache.
-			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
-			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
-			$assignment_submitted           = TutorCache::get( $assignment_submitted_cache_key );
+			foreach ( $assignment_ids as $assignment_id ) {
+				$submitted_assignment = $this->is_assignment_submitted( $assignment_id );
 
-			if ( false === $assignment_submitted ) {
-				$assignment_submitted = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT count(*) completed
-						FROM 	{$wpdb->comments}
-						WHERE 	comment_type = %s
-								AND comment_approved = %s
-								AND user_id = %d
-								AND comment_post_ID IN({$assignment_ids_str});
-						",
-						'tutor_assignment',
-						'submitted',
-						$user_id
-					)
-				);
-				TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
+				if ( $submitted_assignment ) {
+					++$completed_count;
+				}
 			}
-			$completed_count += $assignment_submitted;
 		}
 
 		if ( $this->count( $course_contents ) ) {
@@ -6622,7 +6605,7 @@ class Utils {
 		$assignment_id = $this->get_post_id( $assignment_id );
 		$user_id       = $this->get_user_id( $user_id );
 
-		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}";
+		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}_{$attempt_id}";
 		$has_submitted = TutorCache::get( $cache_key );
 
 		if ( false === $has_submitted ) {

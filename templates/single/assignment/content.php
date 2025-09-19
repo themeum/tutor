@@ -31,7 +31,7 @@ $submitted_assignment      = tutor_utils()->is_assignment_submitted( get_the_ID(
 $is_reviewed_by_instructor = false;
 
 if ( $submitted_assignment ) {
-	$is_reviewed_by_instructor = get_comment_meta( $submitted_assignment[ count( $submitted_assignment ) - 1 ]->comment_ID, 'evaluate_time', true );
+	$is_reviewed_by_instructor = get_comment_meta( $submitted_assignment[0]->comment_ID, 'evaluate_time', true );
 }
 
 // Get the ID of this content and the corresponding course.
