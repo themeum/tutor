@@ -7,7 +7,6 @@ import { useSettingsData, useSettingsMutation } from '@Settings/hooks/useSetting
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 
 const styles = {
   adminWrap: css`
@@ -69,7 +68,9 @@ const styles = {
 };
 
 const SettingsPage: React.FC = () => {
-  const { section } = useParams<{ section?: string }>();
+  const url = new URL(window.location.href);
+  const section = url.searchParams.get('tab_page');
+
   const { state, dispatch } = useSettings();
   const { isLoading } = useSettingsData();
   const { saveSettings, isSaving } = useSettingsMutation();

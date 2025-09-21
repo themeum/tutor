@@ -3,7 +3,6 @@ import { useSettings } from '@Settings/contexts/SettingsContext';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 const styles = {
   sidebar: css`
@@ -101,11 +100,12 @@ const styles = {
 
 const SettingsSidebar: React.FC = () => {
   const { state, dispatch } = useSettings();
-  const navigate = useNavigate();
 
   const handleSectionClick = (sectionKey: string) => {
     dispatch({ type: 'SET_CURRENT_SECTION', payload: sectionKey });
-    navigate(`/${sectionKey}`);
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab_page', sectionKey);
+    window.history.pushState({}, '', url.toString());
   };
 
   return (

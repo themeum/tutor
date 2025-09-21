@@ -3,7 +3,6 @@ import { useSettings } from '@Settings/contexts/SettingsContext';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
 interface SearchResult {
   key: string;
@@ -115,12 +114,13 @@ const styles = {
 };
 
 const SearchResults: React.FC<SearchResultsProps> = ({ results, isLoading, onClose }) => {
-  const navigate = useNavigate();
   const { dispatch } = useSettings();
 
   const handleResultClick = (result: SearchResult) => {
     dispatch({ type: 'SET_CURRENT_SECTION', payload: result.section_slug });
-    navigate(`/${result.section_slug}`);
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab_page', result.section_slug);
+    window.history.pushState({}, '', url.toString());
     onClose();
   };
 
