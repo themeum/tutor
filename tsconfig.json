@@ -33,7 +33,8 @@
       "@OrderDetails/*": ["assets/react/v3/entries/order-details/*"],
       "@CouponDetails/*": ["assets/react/v3/entries/coupon-details/*"],
       "@AddonList/*": ["assets/react/v3/entries/addon-list/*"],
-      "@ImportExport/*": ["assets/react/v3/entries/import-export/*"]
+      "@ImportExport/*": ["assets/react/v3/entries/import-export/*"],
+      "@Settings/*": ["assets/react/v3/entries/settings/*"]
     }
   },
   "include": [

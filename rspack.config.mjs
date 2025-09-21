@@ -253,6 +253,7 @@ const jsEntries = {
   'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
   'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
   'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
+  'tutor-settings': './assets/react/v3/entries/settings/index.tsx',
 };
 
 const scssEntries = {
@@ -279,6 +280,7 @@ const resolveAliases = {
   '@CouponDetails': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/'),
   '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
+  '@Settings': path.resolve(__dirname, './assets/react/v3/entries/settings/'),
 };
 
 const isScssEntry = (entry) => {

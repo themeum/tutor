@@ -246,6 +246,11 @@ class Assets {
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
 
+		// React Settings 2 App (dedicated React settings page)
+		if ( 'tutor_settings_2' === $page ) {
+			wp_enqueue_script( 'tutor-settings-app', tutor()->url . 'assets/js/tutor-settings.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+		}
+
 		if ( 'tutor-themes' === $page ) {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
 			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );

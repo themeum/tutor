@@ -97,6 +97,15 @@ final class Tutor extends Singleton {
 	public $options;
 
 	/**
+	 * Options class object
+	 *
+	 * @since 1.1.0
+	 *
+	 * @var object
+	 */
+	public $settings2;
+
+	/**
 	 * Short code class object
 	 *
 	 * @since 1.1.0
@@ -473,6 +482,7 @@ final class Tutor extends Singleton {
 		$this->admin                 = new Admin();
 		$this->ajax                  = new Ajax();
 		$this->options               = new Options_V2();
+		$this->settings2             = new Settings2();
 		$this->shortcode             = new Shortcode();
 		$this->course                = new Course();
 		$this->lesson                = new Lesson();
