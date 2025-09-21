@@ -99,13 +99,14 @@ const styles = {
 const SettingsField: React.FC<SettingsFieldProps> = ({ field }) => {
   const { state, dispatch } = useSettings();
 
-  const value = state.values[field.key] ?? field.default ?? '';
+  const val = state.values[field.key] ?? field.default ?? '';
+  const value = field.event ? val[field.event] : val;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleChange = (newValue: any) => {
     dispatch({
       type: 'UPDATE_VALUE',
-      payload: { key: field.key, value: newValue },
+      payload: { key: field.key, value: field.event ? { ...val, [field.event]: newValue } : newValue },
     });
   };
 

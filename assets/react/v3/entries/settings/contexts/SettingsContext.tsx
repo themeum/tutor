@@ -10,6 +10,7 @@ export interface SettingsField {
   key: string;
   type: string;
   label: string;
+  event: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   default?: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
