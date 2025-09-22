@@ -26,10 +26,10 @@ $back_url  = wp_get_referer() ? wp_get_referer() : CheckoutController::get_page_
 			</div>
 
 			<div class="tutor-order-status-content">
-				<h2 class="tutor-fs-4 tutor-fw-medium tutor-color-black">
+				<h2 class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-4">
 					<?php esc_html_e( 'Payment failed', 'tutor' ); ?>
 				</h2>
-				<p class="tutor-fs-6 tutor-color-secondary">
+				<p class="tutor-fs-6 tutor-color-secondary tutor-mb-0">
 					<?php echo $error_msg ? esc_html( $error_msg ) : esc_html__( 'An error occurred. Please try to place the order again.', 'tutor' ); ?>
 				</p>
 			</div>

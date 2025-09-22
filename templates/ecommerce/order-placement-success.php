@@ -21,10 +21,10 @@ $order_id;
 			</div>
 
 			<div class="tutor-order-status-content">
-				<h2 class="tutor-fs-4 tutor-fw-medium tutor-color-black">
+				<h2 class="tutor-fs-4 tutor-fw-medium tutor-color-black tutor-mb-4">
 					<?php esc_html_e( 'Order Confirmed', 'tutor' ); ?>
 				</h2>
-				<p class="tutor-fs-6 tutor-color-secondary">
+				<p class="tutor-fs-6 tutor-color-secondary tutor-mb-0">
 					<?php echo esc_html( apply_filters( 'tutor_order_placement_success_message', __( 'You will receive an order confirmation email shortly.', 'tutor' ), $order_id, $order_status ) ); ?>
 				</p>
 			</div>
