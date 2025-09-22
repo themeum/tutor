@@ -219,7 +219,7 @@ if ( $time_value ) {
 						<div class="flash-info tutor-d-flex tutor-align-center">
 							<span class="tutor-icon-circle-times-bold tutor-color-danger tutor-mr-8"></span>
 							<span class="tutor-fs-7 tutor-color-danger-100">
-								<?php esc_html_e( 'You have reached maximum assignment retry attempts. Please contact the instructor for more information.', 'tutor' ); ?>
+								<?php esc_html_e( 'Retry limit reached. Please contact your instructor for further guidance.', 'tutor' ); ?>
 							</span>
 						</div>
 					</div>
