@@ -9551,10 +9551,6 @@ class Utils {
 				'title' => __( 'Enrolled Courses', 'tutor' ),
 				'icon'  => 'tutor-icon-mortarboard-o',
 			),
-			'wishlist'         => array(
-				'title' => __( 'Wishlist', 'tutor' ),
-				'icon'  => 'tutor-icon-bookmark-bold',
-			),
 			'reviews'          => array(
 				'title' => __( 'Reviews', 'tutor' ),
 				'icon'  => 'tutor-icon-star-bold',
@@ -9564,6 +9560,15 @@ class Utils {
 				'icon'  => 'tutor-icon-quiz-attempt',
 			),
 		);
+
+		$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
+
+		if( $is_enabled_wishlist ) {
+			$items['wishlist'] = array(
+				'title' => __( 'Wishlist', 'tutor' ),
+				'icon'  => 'tutor-icon-bookmark-bold',
+			);
+		}
 
 		$items['purchase_history'] = array(
 			'title' => __( 'Order History', 'tutor' ),
