@@ -6600,7 +6600,6 @@ class Utils {
 	 * @return array|null|object
 	 */
 	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0, $attempt_id = 0 ) {
-		global $wpdb;
 
 		$assignment_id = $this->get_post_id( $assignment_id );
 		$user_id       = $this->get_user_id( $user_id );
@@ -6611,7 +6610,7 @@ class Utils {
 		if ( false === $has_submitted ) {
 
 			$has_submitted = QueryHelper::get_all(
-				$wpdb->comments,
+				'comments',
 				array(
 					'comment_type'     => 'tutor_assignment',
 					'comment_approved' => 'submitted',
@@ -6625,7 +6624,7 @@ class Utils {
 
 		if ( $attempt_id ) {
 			$has_submitted = QueryHelper::get_row(
-				$wpdb->comments,
+				'comments',
 				array(
 					'comment_ID'       => $attempt_id,
 					'comment_type'     => 'tutor_assignment',
