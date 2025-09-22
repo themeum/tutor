@@ -68,7 +68,7 @@ const SettingsBlock: React.FC<SettingsBlockProps> = ({ block }) => {
 
       <div css={styles.body}>
         {/* Regular fields */}
-        {block.fields && block.fields.map((field) => <SettingsField key={field.key} field={field} />)}
+        {block.fields && block.fields.map((field, idx) => <SettingsField key={field.key || idx} field={field} />)}
 
         {/* Fields group */}
         {block.fields_group && block.fields_group.map((field) => <SettingsField key={field.key} field={field} />)}
