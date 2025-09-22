@@ -1,19 +1,19 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import EmptyState from '@TutorShared/molecules/EmptyState';
+import Popover from '@TutorShared/molecules/Popover';
 
 import type { Content, CourseTopic } from '@CourseBuilderServices/curriculum';
-import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ID } from '@TutorShared/utils/types';
@@ -92,6 +92,7 @@ const FormTopicPrerequisites = ({
     }, contents);
   }, [] as Content[]);
 
+  const triggerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const [searchText, setSearchText] = useState('');
@@ -139,12 +140,6 @@ const FormTopicPrerequisites = ({
       // Handle local filter
     }
   }, [debouncedSearchText, handleSearchOnChange]);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-    dependencies: [filteredOption.length],
-  });
 
   const handleDeleteSelection = (id: ID) => {
     if (Array.isArray(inputValue)) {
@@ -233,11 +228,11 @@ const FormTopicPrerequisites = ({
                         })}
                       >
                         <SVGIcon
-                          name={icons[content.post_type]?.name || 'lesson'}
+                          name={icons[content.post_type as keyof typeof icons]?.name || 'lesson'}
                           width={24}
                           height={24}
                           style={css`
-                            color: ${icons[content.post_type].color};
+                            color: ${icons[content.post_type as keyof typeof icons].color};
                           `}
                         />
                         <span css={styles.title} title={content.post_title}>
@@ -266,95 +261,82 @@ const FormTopicPrerequisites = ({
               </div>
             </Show>
 
-            <Portal
+            <Popover
+              triggerRef={triggerRef}
               isOpen={isOpen}
-              onClickOutside={() => {
-                setIsOpen(false);
-                setSearchText('');
-              }}
-              onEscape={() => {
+              dependencies={[filteredOption.length]}
+              animationType={AnimationType.slideDown}
+              closePopover={() => {
                 setIsOpen(false);
                 setSearchText('');
               }}
             >
-              <div
-                css={[
-                  styles.optionsWrapper,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
-                <ul css={[styles.options]}>
-                  <Show
-                    when={filteredOption.length > 0}
-                    fallback={
-                      <li css={styles.emptyOption}>
-                        <p>{__('No topics content found', 'tutor')}</p>
-                      </li>
-                    }
-                  >
-                    <For each={filteredOption}>
-                      {(topic) => (
-                        <li key={topic.id} css={styles.group}>
-                          <span css={styles.groupTitle} title={topic.title}>
-                            {topic.title}
-                          </span>
-                          <For each={topic.contents}>
-                            {(content) => (
-                              <button
-                                key={content.ID}
-                                type="button"
-                                css={styles.groupItems({
+              <ul css={[styles.options]}>
+                <Show
+                  when={filteredOption.length > 0}
+                  fallback={
+                    <li css={styles.emptyOption}>
+                      <p>{__('No topics content found', 'tutor')}</p>
+                    </li>
+                  }
+                >
+                  <For each={filteredOption}>
+                    {(topic) => (
+                      <li key={topic.id} css={styles.group}>
+                        <span css={styles.groupTitle} title={topic.title}>
+                          {topic.title}
+                        </span>
+                        <For each={topic.contents}>
+                          {(content) => (
+                            <button
+                              key={content.ID}
+                              type="button"
+                              css={styles.groupItems({
+                                onPopover: true,
+                              })}
+                              onClick={() => {
+                                const updatedValue = [...inputValue, content.ID];
+                                field.onChange(updatedValue);
+                                onChange(updatedValue);
+                                setIsOpen(false);
+                                setSearchText('');
+                              }}
+                            >
+                              <div
+                                css={styles.iconAndTitle({
                                   onPopover: true,
                                 })}
-                                onClick={() => {
-                                  const updatedValue = [...inputValue, content.ID];
-                                  field.onChange(updatedValue);
-                                  onChange(updatedValue);
-                                  setIsOpen(false);
-                                  setSearchText('');
-                                }}
+                                data-content-icon
                               >
-                                <div
-                                  css={styles.iconAndTitle({
-                                    onPopover: true,
-                                  })}
-                                  data-content-icon
-                                >
-                                  <SVGIcon
-                                    name={icons[content.post_type]?.name || 'lesson'}
-                                    width={24}
-                                    height={24}
-                                    style={css`
-                                      color: ${icons[content.post_type].color};
-                                    `}
-                                  />
-                                  <span css={styles.title} title={content.post_title}>
-                                    {content.post_title}
+                                <SVGIcon
+                                  name={icons[content.post_type as keyof typeof icons]?.name || 'lesson'}
+                                  width={24}
+                                  height={24}
+                                  style={css`
+                                    color: ${icons[content.post_type as keyof typeof icons].color};
+                                  `}
+                                />
+                                <span css={styles.title} title={content.post_title}>
+                                  {content.post_title}
+                                </span>
+                                <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
+                                  <span data-question-count css={typography.tiny()}>
+                                    {
+                                      /* translators: %d is the number of questions */
+                                      sprintf(__('(%d questions)', 'tutor'), content.total_question)
+                                    }
                                   </span>
-                                  <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
-                                    <span data-question-count css={typography.tiny()}>
-                                      {
-                                        /* translators: %d is the number of questions */
-                                        sprintf(__('(%d questions)', 'tutor'), content.total_question)
-                                      }
-                                    </span>
-                                  </Show>
-                                </div>
-                              </button>
-                            )}
-                          </For>
-                        </li>
-                      )}
-                    </For>
-                  </Show>
-                </ul>
-              </div>
-            </Portal>
+                                </Show>
+                              </div>
+                            </button>
+                          )}
+                        </For>
+                      </li>
+                    )}
+                  </For>
+                </Show>
+              </ul>
+            </Popover>
           </div>
         );
       }}
@@ -403,10 +385,6 @@ const styles = {
     margin-top: ${spacing[8]};
     ${styleUtils.overflowYAuto};
     padding: 1px; // fix the box-shadow issue
-  `,
-  optionsWrapper: css`
-    position: absolute;
-    width: 100%;
   `,
   options: css`
     z-index: ${zIndex.dropdown};

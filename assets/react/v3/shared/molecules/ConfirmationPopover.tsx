@@ -1,13 +1,16 @@
-import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
-import { isRTL } from '@TutorShared/config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { Portal, type arrowPosition, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import type { ReactNode, RefObject } from 'react';
+
+import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
+
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { type PopoverPlacement } from '@TutorShared/hooks/usePortalPopover';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import Popover from './Popover';
 
 interface ConfirmationPopoverProps<TRef> {
   triggerRef: RefObject<TRef>;
@@ -17,12 +20,12 @@ interface ConfirmationPopoverProps<TRef> {
   onConfirmation: () => void;
   onCancel?: () => void;
   isLoading?: boolean;
-  arrow?: arrowPosition;
+  placement?: PopoverPlacement;
   gap?: number;
   maxWidth?: string;
   closePopover: () => void;
   animationType?: AnimationType;
-  hideArrow?: boolean;
+  arrow?: boolean;
   positionModifier?: {
     top: number;
     left: number;
@@ -39,7 +42,7 @@ interface ConfirmationPopoverProps<TRef> {
 }
 
 const ConfirmationPopover = <TRef extends HTMLElement>({
-  arrow,
+  placement,
   triggerRef,
   isOpen,
   title,
@@ -51,108 +54,53 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
   maxWidth,
   closePopover,
   animationType = AnimationType.slideLeft,
-  hideArrow = false,
+  arrow = false,
   confirmButton,
   cancelButton,
   positionModifier,
 }: ConfirmationPopoverProps<TRef>) => {
-  const { position, triggerWidth, popoverRef } = usePortalPopover<TRef, HTMLDivElement>({
-    triggerRef,
-    isOpen,
-    arrow,
-    gap,
-    positionModifier,
-  });
-
   return (
-    <Portal isOpen={isOpen} onClickOutside={closePopover} animationType={animationType}>
-      <div
-        css={[
-          styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
-          {
-            [isRTL ? 'right' : 'left']: position.left,
-            top: position.top,
-            maxWidth: maxWidth ?? triggerWidth,
-          },
-        ]}
-        ref={popoverRef}
-      >
-        <div css={styles.content}>
-          <div css={styles.body}>
-            <div css={styles.title}>{title}</div>
-            <p css={styles.description}>{message}</p>
-          </div>
-          <div css={styles.footer({ isDelete: confirmButton?.isDelete ?? false })}>
-            <Button variant={cancelButton?.variant ?? 'text'} size="small" onClick={onCancel ?? closePopover}>
-              {cancelButton?.text ?? __('Cancel', 'tutor')}
-            </Button>
-            <Button
-              data-cy="confirm-button"
-              variant={confirmButton?.variant ?? 'text'}
-              onClick={() => {
-                onConfirmation();
-                closePopover();
-              }}
-              loading={isLoading}
-              size="small"
-            >
-              {confirmButton?.text ?? __('Ok', 'tutor')}
-            </Button>
-          </div>
+    <Popover
+      triggerRef={triggerRef}
+      isOpen={isOpen}
+      arrow={arrow}
+      placement={placement}
+      closePopover={closePopover}
+      animationType={animationType}
+      maxWidth={maxWidth}
+      positionModifier={positionModifier}
+      gap={gap}
+    >
+      <div css={styles.content}>
+        <div css={styles.body}>
+          <div css={styles.title}>{title}</div>
+          <p css={styles.description}>{message}</p>
+        </div>
+        <div css={styles.footer({ isDelete: confirmButton?.isDelete ?? false })}>
+          <Button variant={cancelButton?.variant ?? 'text'} size="small" onClick={onCancel ?? closePopover}>
+            {cancelButton?.text ?? __('Cancel', 'tutor')}
+          </Button>
+          <Button
+            data-cy="confirm-button"
+            variant={confirmButton?.variant ?? 'text'}
+            onClick={() => {
+              onConfirmation();
+              closePopover();
+            }}
+            loading={isLoading}
+            size="small"
+          >
+            {confirmButton?.text ?? __('Ok', 'tutor')}
+          </Button>
         </div>
       </div>
-    </Portal>
+    </Popover>
   );
 };
 
 export default ConfirmationPopover;
 
 const styles = {
-  wrapper: (arrow: arrowPosition | undefined, hideArrow: boolean) => css`
-    position: absolute;
-    width: 100%;
-    z-index: ${zIndex.dropdown};
-
-    &::before {
-      ${arrow &&
-      !hideArrow &&
-      css`
-        content: '';
-        position: absolute;
-        border: ${spacing[8]} solid transparent;
-
-        ${arrow === 'left' && styles.arrowLeft}
-        ${arrow === 'right' && styles.arrowRight}
-        ${arrow === 'top' && styles.arrowTop}
-        ${arrow === 'bottom' && styles.arrowBottom}
-      `}
-    }
-  `,
-  arrowLeft: css`
-    border-right-color: ${colorTokens.surface.tutor};
-    top: 50%;
-    transform: translateY(-50%);
-    left: -${spacing[16]};
-  `,
-  arrowRight: css`
-    border-left-color: ${colorTokens.surface.tutor};
-    top: 50%;
-    transform: translateY(-50%);
-    right: -${spacing[16]};
-  `,
-  arrowTop: css`
-    border-bottom-color: ${colorTokens.surface.tutor};
-    left: 50%;
-    transform: translateX(-50%);
-    top: -${spacing[16]};
-  `,
-  arrowBottom: css`
-    border-top-color: ${colorTokens.surface.tutor};
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: -${spacing[16]};
-  `,
-
   content: css`
     background-color: ${colorTokens.surface.tutor};
     box-shadow: ${shadow.popover};

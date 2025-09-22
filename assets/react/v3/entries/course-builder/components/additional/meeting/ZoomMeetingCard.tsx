@@ -18,6 +18,7 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
+
 import ZoomMeetingForm from './ZoomMeetingForm';
 
 interface ZoomMeetingCardProps {
@@ -165,8 +166,6 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
         }
         message={__('Are you sure you want to delete this meeting? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
         isLoading={deleteZoomMeetingMutation.isPending}
         confirmButton={{
           text: __('Delete', 'tutor'),

@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -36,9 +37,15 @@ const CanvasHead = ({ title, backUrl, rightButton, isExternalUrl }: CanvasHeadPr
     <div css={styles.wrapper}>
       <div css={styles.left}>
         <Show when={backUrl}>
-          <Button variant="text" buttonCss={styles.button({ isRTL: isRTL })} onClick={handleBackClick}>
-            <SVGIcon name="back" width={32} height={32} />
-          </Button>
+          <Button
+            isIconOnly
+            size="small"
+            variant="text"
+            aria-label={__('Back', 'tutor')}
+            buttonCss={styles.button({ isRTL: isRTL })}
+            onClick={handleBackClick}
+            icon={<SVGIcon name="back" width={32} height={32} />}
+          />
         </Show>
         <h6 css={styles.title}>{title}</h6>
       </div>

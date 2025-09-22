@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\QueryHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -19,6 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 2.0.0
  */
 class Reviews {
+
+	const COURSE_RATING = 'tutor_course_rating';
 
 	/**
 	 * Handle actions & dependencies
@@ -124,5 +128,40 @@ class Reviews {
 		}
 
 		wp_send_json_success();
+	}
+
+	/**
+	 * Retrieves reviews for a specific course by its ID.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int $course_id The ID of the course for which reviews are being fetched.
+	 *
+	 * @return array An array of reviews. If there is an error or no reviews
+	 *               are found, an empty array is returned.
+	 */
+	public function get_reviews_by_course_id( $course_id ): array {
+
+		$where = array(
+			'comment_type'    => self::COURSE_RATING,
+			'comment_post_ID' => $course_id,
+			'comment_agent'   => 'TutorLMSPlugin',
+		);
+
+		$result = QueryHelper::get_all( 'comments', $where, 'comment_post_ID', -1, '', ARRAY_A );
+
+		if ( empty( $result ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+				return array(
+					'review'      => $item,
+					'review_meta' => get_comment_meta( $item['comment_ID'] ),
+				);
+			},
+			$result
+		);
 	}
 }

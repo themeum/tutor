@@ -637,4 +637,17 @@ export const styleUtils = {
     object-fit: ${fit};
     object-position: ${position};
   `,
+  inputClearButton: css`
+    position: absolute;
+    top: 50%;
+    right: ${spacing[4]};
+    transform: translateY(-50%);
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[2]};
+
+    &:not(:disabled):not([aria-disabled='true']):hover,
+    &:not(:disabled):not([aria-disabled='true']):focus {
+      background-color: ${colorTokens.background.hover};
+    }
+  `,
 };

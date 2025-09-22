@@ -260,6 +260,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
               onClick={() => setIsThreeDotOpen(!isThreeDotOpen)}
               dotsOrientation="vertical"
               size="small"
+              arrow={true}
               data-three-dot
             >
               <ThreeDots.Option

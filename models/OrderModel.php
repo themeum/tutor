@@ -1970,4 +1970,81 @@ class OrderModel {
 			'total_statements' => $total_statements,
 		);
 	}
+
+	/**
+	 * Get order details for given course IDs.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int[] $course_ids Array of course IDs to fetch order details.
+	 *
+	 * @return array Returns an array of order details with each element containing:
+	 *               - order data (all columns from tutor_orders table)
+	 *               - order_items data (al columns except id)
+	 *               Returns an empty array if no results found or on error.
+	 */
+	public function get_order_details( array $course_ids ) {
+		global $wpdb;
+
+		$result = array();
+
+		$select_columns = array(
+			'orders.*,
+			order_items.id AS order_items_id,
+			order_items.order_id,
+			order_items.item_id,
+			order_items.regular_price,
+			order_items.sale_price,
+			order_items.discount_price,
+			order_items.coupon_code	AS item_coupon_code',
+		);
+		$primary_table  = "{$wpdb->tutor_order_items} AS order_items";
+		$joining_tables = array(
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->tutor_orders} AS orders",
+				'on'    => 'orders.id = order_items.order_id',
+			),
+		);
+		$where          = array( 'order_items.item_id' => array( 'IN', $course_ids ) );
+
+		$result = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), '', -1 );
+
+		return $result['results'];
+	}
+
+	/**
+	 * Retrieve order meta for a specific order.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int $order_id The ID of the order for which the metadata is to be retrieved.
+	 *
+	 * @return array An array of order meta. Returns an empty array if no meta is found.
+	 */
+	public function get_order_meta_by_order_id( $order_id ) {
+
+		return QueryHelper::get_all( 'tutor_ordermeta', array( 'order_id' => $order_id ), 'order_id' );
+	}
+
+	/**
+	 * Retrieve earnings for a specific order and course.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int $order_id The ID of the order for which the earnings are being retrieved.
+	 * @param int $course_id The ID of the course for which the earnings are being retrieved.
+	 *
+	 * @return array An array of earnings data. Returns an empty array if no data is found.
+	 */
+	public function get_earnings_by_order_and_course( $order_id, $course_id ) {
+
+		$where = array( 'order_id' => $order_id );
+
+		if ( ! empty( $course_id ) ) {
+			$where['course_id'] = $course_id;
+		}
+
+		return QueryHelper::get_all( 'tutor_earnings', $where, 'order_id' );
+	}
 }

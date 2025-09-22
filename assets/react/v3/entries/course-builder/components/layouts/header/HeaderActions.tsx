@@ -167,13 +167,12 @@ const HeaderActions = () => {
             actions: (
               <div css={styleUtils.flexCenter()}>
                 <Button
-                  onClick={() => {
-                    if (window.location.href.includes('wp-admin')) {
-                      window.location.href = tutorConfig.backend_course_list_url;
-                    } else {
-                      window.location.href = tutorConfig.frontend_course_list_url;
-                    }
-                  }}
+                  as="a"
+                  href={
+                    window.location.href.includes('wp-admin')
+                      ? tutorConfig.backend_course_list_url
+                      : tutorConfig.frontend_course_list_url
+                  }
                   size="small"
                 >
                   {__('Back to Courses', 'tutor')}
@@ -361,10 +360,12 @@ const HeaderActions = () => {
         when={postStatus === 'draft' && postVisibility !== 'private'}
         fallback={
           <Button
+            as="a"
+            href={previewLink}
+            target="_blank"
             variant="text"
             icon={<SVGIcon name="linkExternal" width={24} height={24} />}
             iconPosition="right"
-            onClick={() => window.open(previewLink, '_blank', 'noopener')}
             disabled={!previewLink}
             size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           >
