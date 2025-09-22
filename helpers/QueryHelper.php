@@ -1009,7 +1009,7 @@ class QueryHelper {
 		$offset = 0,
 		string $order = 'DESC',
 		string $output = 'OBJECT',
-		bool $get_row = false,
+		bool $get_row = false
 	) {
 		global $wpdb;
 
