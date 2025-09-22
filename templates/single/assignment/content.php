@@ -81,7 +81,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 
 $total_mark   = number_format( floatval( tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' ) ), 2 );
 $pass_mark    = number_format( floatval( tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' ) ), 2 );
-$earned_marks = number_format( floatval( $assignment_attempt->earned_marks ), 2 ) ?? 0; // @TODO: Get the earned marks based on assignment grading.
+$earned_marks = number_format( floatval( $assignment_attempt->earned_marks ), 2 ) ?? 0;
 
 $is_single_attempt = Input::get( 'view_assignment_attempt_id', 0 );
 
@@ -400,7 +400,6 @@ if ( $time_value ) {
 					<?php endif; ?>
 					
 					<div class="tutor-assignment-footer tutor-pt-32 tutor-pt-sm-44">
-						<!-- @TODO: need to check against the count of attempts -->
 						<div class="tutor-assignment-footer-btn tutor-d-flex">
 							<?php if ( 1 < $attempts_allowed && 'retry' === $feedback_mode && $earned_marks < $pass_mark && $is_reviewed_by_instructor ) : ?>
 								<form action="" method="post" id="tutor_assignment_start_form">
