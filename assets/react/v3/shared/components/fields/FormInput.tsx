@@ -254,15 +254,5 @@ const styles = {
         color: ${colorTokens.icon.brand};
       }
     `}
-
-    :not(:disabled):not([aria-disabled='true']) {
-      &:focus,
-      &:active,
-      &:hover {
-        svg {
-          color: ${colorTokens.icon.brand};
-        }
-      }
-    }
   `,
 };
