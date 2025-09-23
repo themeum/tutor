@@ -10,15 +10,15 @@
 
 namespace Tutor\Ecommerce;
 
-use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
-use Tutor\Models\BillingModel;
-use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
+use Tutor\Models\OrderModel;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
-use Tutor\Models\OrderModel;
+use Tutor\Helpers\QueryHelper;
+use Tutor\Models\BillingModel;
+use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\ValidationHelper;
 use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -1049,6 +1049,11 @@ class CheckoutController {
 			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
+					// If payment method not selected then redirect to checkout page.
+					if ( empty( $payment_method ) && empty( $order_data->payment_method ) ) {
+						tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'checkout' ) );
+					}
+					
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {

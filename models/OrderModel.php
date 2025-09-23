@@ -1782,8 +1782,8 @@ class OrderModel {
 	public static function should_show_pay_btn( object $order ) {
 		$order_items            = ( new self() )->get_order_items_by_id( $order->id );
 		$is_enrolled_any_course = false;
-		$is_incomplete_payment  = ! empty( $order->payment_method ) && self::ORDER_INCOMPLETE === $order->order_status;
-		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : true;
+		$is_incomplete_payment  = self::PAYMENT_UNPAID === $order->payment_status && self::ORDER_INCOMPLETE === $order->order_status;
+		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : false;
 
 		if ( $is_incomplete_payment && ! $is_manual_payment && $order_items ) {
 			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
