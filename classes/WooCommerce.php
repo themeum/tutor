@@ -745,7 +745,11 @@ class WooCommerce extends Tutor_Base {
 				update_post_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
 				return;
 			}
-			tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+
+			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, false );
+			if ( ! $has_enrollment ) {
+				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+			}
 		}
 	}
 
