@@ -56,7 +56,7 @@ export interface Assignment extends Content {
     pass_mark: number;
     upload_files_limit: number;
     upload_file_size_limit: number;
-    feedback_mode: 'default' | 'retry';
+    is_retry_allowed: '0' | '1';
     attempts_allowed: number;
   };
   content_drip_settings: {
@@ -127,7 +127,7 @@ export interface AssignmentPayload {
   'assignment_option[pass_mark]': number;
   'assignment_option[upload_files_limit]': number;
   'assignment_option[upload_file_size_limit]': number;
-  'assignment_option[feedback_mode]': 'default' | 'retry';
+  'assignment_option[is_retry_allowed]': '0' | '1';
   'assignment_option[attempts_allowed]'?: number;
 
   'content_drip_settings[unlock_date]'?: string;
@@ -228,9 +228,9 @@ export const convertAssignmentDataToPayload = (
     'assignment_option[pass_mark]': data.pass_mark,
     'assignment_option[upload_files_limit]': data.upload_files_limit,
     'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
-    'assignment_option[feedback_mode]': data.feedback_mode,
+    'assignment_option[is_retry_allowed]': data.is_retry_allowed ? '1' : '0',
 
-    ...(data.feedback_mode === 'retry' && {
+    ...(data.is_retry_allowed && {
       'assignment_option[attempts_allowed]': data.attempts_allowed,
     }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&

@@ -63,7 +63,7 @@ export interface AssignmentForm {
   pass_mark: number;
   upload_files_limit: number;
   upload_file_size_limit: number;
-  feedback_mode: 'default' | 'retry';
+  is_retry_allowed: boolean;
   attempts_allowed: number;
   content_drip_settings: {
     unlock_date: string;
@@ -125,8 +125,8 @@ const AssignmentModal = ({
       pass_mark: 5,
       upload_files_limit: 1,
       upload_file_size_limit: 2,
-      feedback_mode: 'default',
-      attempts_allowed: 10,
+      is_retry_allowed: true,
+      attempts_allowed: 5,
       content_drip_settings: {
         unlock_date: '',
         after_xdays_of_enroll: '',
@@ -138,7 +138,7 @@ const AssignmentModal = ({
   });
 
   const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
-  const feedbackMode = form.watch('feedback_mode');
+  const isRetryAllowed = form.watch('is_retry_allowed');
 
   useEffect(() => {
     if (assignmentDetails) {
@@ -156,7 +156,7 @@ const AssignmentModal = ({
           pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
           upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
           upload_file_size_limit: assignmentDetails.assignment_option.upload_file_size_limit || 2,
-          feedback_mode: assignmentDetails.assignment_option.feedback_mode || 'default',
+          is_retry_allowed: assignmentDetails.assignment_option.is_retry_allowed === '1' ? true : false,
           attempts_allowed: assignmentDetails.assignment_option.attempts_allowed || 10,
           content_drip_settings: {
             unlock_date: assignmentDetails?.content_drip_settings?.unlock_date || '',
@@ -486,30 +486,14 @@ const AssignmentModal = ({
             />
 
             <Controller
-              name="feedback_mode"
+              name="is_retry_allowed"
               control={form.control}
               render={(controllerProps) => (
-                <FormSelectInput
-                  {...controllerProps}
-                  label={__('Feedback Mode', 'tutor')}
-                  leftIcon={<SVGIcon name="eye" width={32} height={32} />}
-                  options={[
-                    {
-                      label: __('Default', 'tutor'),
-                      value: 'default',
-                      description: __('Students can see feedback after submitting the assignment.', 'tutor'),
-                    },
-                    {
-                      label: __('Retry', 'tutor'),
-                      value: 'retry',
-                      description: __('Allows students to resubmit the assignment.', 'tutor'),
-                    },
-                  ]}
-                />
+                <FormSwitch {...controllerProps} label={__('Allow Students to Retry', 'tutor')} />
               )}
             />
 
-            <Show when={feedbackMode === 'retry'}>
+            <Show when={isRetryAllowed}>
               <Controller
                 name="attempts_allowed"
                 control={form.control}
