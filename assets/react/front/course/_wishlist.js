@@ -1,7 +1,6 @@
 window.jQuery(document).ready(($) => {
 	const { __ } = wp.i18n;
-
-	$(document).on('click', '.tutor-course-wishlist-btn', function(e) {
+	$(document).on('click', '.tutor-course-wishlist-btn', function (e) {
 		e.preventDefault();
 		var $that = $(this);
 		var course_id = $that.attr('data-course-id');
@@ -13,10 +12,10 @@ window.jQuery(document).ready(($) => {
 				course_id,
 				action: 'tutor_course_add_to_wishlist',
 			},
-			beforeSend: function() {
+			beforeSend: function () {
 				$that.attr('disabled', 'disabled').addClass('is-loading');
 			},
-			success: function(data) {
+			success: function (data) {
 				if (data.success) {
 					if (data.data.status === 'added') {
 						$that
@@ -28,13 +27,19 @@ window.jQuery(document).ready(($) => {
 							.find('i')
 							.addClass('tutor-icon-bookmark-line')
 							.removeClass('tutor-icon-bookmark-bold');
+						$that.blur();
 					}
 				} else {
-					//window.location = data.data.redirect_to;
+					tutor_toast(__('Error', 'tutor-pro'), data?.data?.message ?? 'Something went wrong!!', 'error');
 					$('.tutor-login-modal').addClass('tutor-is-active');
+					$that.blur();
 				}
 			},
-			complete: function() {
+			error: function (xhr, status, error) {
+				tutor_toast(__('Error', 'tutor-pro'), 'Something went wrong!!', 'error');
+				$that.blur();
+			},
+			complete: function () {
 				$that.removeAttr('disabled').removeClass('is-loading');
 			},
 		});
