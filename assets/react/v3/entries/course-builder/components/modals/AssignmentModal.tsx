@@ -510,7 +510,7 @@ const AssignmentModal = ({
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={__('Maximum Submission Attempts', 'tutor')}
+                    label={__('Maximum Resubmission Attempts', 'tutor')}
                     helpText={__('Define how many times a student can resubmit this assignment.', 'tutor')}
                     selectOnFocus
                   />
