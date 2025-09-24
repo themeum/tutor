@@ -489,7 +489,7 @@ const AssignmentModal = ({
               name="is_retry_allowed"
               control={form.control}
               render={(controllerProps) => (
-                <FormSwitch {...controllerProps} label={__('Allow Students to Retry', 'tutor')} />
+                <FormSwitch {...controllerProps} label={__('Allow Assignment Resubmission', 'tutor')} />
               )}
             />
 
@@ -510,7 +510,7 @@ const AssignmentModal = ({
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={__('Attempts Allowed', 'tutor')}
+                    label={__('Maximum Submission Attempts', 'tutor')}
                     helpText={__('Define how many times a student can resubmit this assignment.', 'tutor')}
                     selectOnFocus
                   />
