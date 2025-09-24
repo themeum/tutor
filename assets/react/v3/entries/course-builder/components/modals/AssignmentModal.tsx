@@ -511,10 +511,7 @@ const AssignmentModal = ({
                     {...controllerProps}
                     type="number"
                     label={__('Attempts Allowed', 'tutor')}
-                    helpText={
-                      // prettier-ignore
-                      __('Define how many times a student can resubmit this assignment. Setting it to "0" allows unlimited attempts', 'tutor')
-                    }
+                    helpText={__('Define how many times a student can resubmit this assignment.', 'tutor')}
                     selectOnFocus
                   />
                 )}
