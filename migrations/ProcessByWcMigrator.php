@@ -91,7 +91,8 @@ class ProcessByWcMigrator extends BatchProcessor {
 	 */
 	protected function get_items( $offset, $limit ) : array {
 		global $wpdb;
-		return $wpdb->get_results(
+
+		$items = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT te.* FROM {$wpdb->prefix}tutor_earnings AS te
 				INNER JOIN {$wpdb->prefix}wc_orders_meta AS wcom ON te.order_id = wcom.order_id
@@ -104,6 +105,8 @@ class ProcessByWcMigrator extends BatchProcessor {
 				$limit
 			)
 		);
+
+		return $items;
 	}
 
 	/**
