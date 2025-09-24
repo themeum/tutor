@@ -250,13 +250,9 @@ const styles = {
     ${styleUtils.inputClearButton};
     ${type !== 'password' &&
     css`
-      color: ${colorTokens.icon.brand};
+      svg {
+        color: ${colorTokens.icon.brand};
+      }
     `}
-
-    &:focus,
-    &:active,
-    &:hover {
-      color: ${colorTokens.icon.default};
-    }
   `,
 };
