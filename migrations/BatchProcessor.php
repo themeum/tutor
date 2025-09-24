@@ -26,6 +26,15 @@ abstract class BatchProcessor {
 	protected $batch_size;
 
 	/**
+	 * Bulk process: process all items in a batch at once.
+	 *
+	 * @since 3.8.2
+	 *
+	 * @var bool
+	 */
+	protected $bulk_process = false;
+
+	/**
 	 * Schedule interval
 	 *
 	 * @since 3.8.0
@@ -136,6 +145,18 @@ abstract class BatchProcessor {
 	abstract protected function process_item( $item) : void;
 
 	/**
+	 * Process a batch of items.
+	 * Must be implemented in child class.
+	 *
+	 * @since 3.8.2
+	 *
+	 * @param array $items items.
+	 *
+	 * @return void
+	 */
+	abstract protected function process_items( $items) : void;
+
+	/**
 	 * Schedule the batch processing.
 	 *
 	 * This method checks if the action is already scheduled, and if not, it schedules a single event
@@ -194,8 +215,12 @@ abstract class BatchProcessor {
 			return;
 		}
 
-		foreach ( $items as $item ) {
-			$this->process_item( $item );
+		if ( $this->bulk_process ) {
+			$this->process_items( $items );
+		} else {
+			foreach ( $items as $item ) {
+				$this->process_item( $item );
+			}
 		}
 
 		$progress['offset']       += count( $items );
