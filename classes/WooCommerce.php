@@ -600,8 +600,14 @@ class WooCommerce extends Tutor_Base {
 		global $wpdb;
 		$item = new \WC_Order_Item_Product( $item );
 
-		$product_id    = $item->get_product_id();
-		$order         = wc_get_order( $order_id );
+		$product_id = $item->get_product_id();
+		$order      = wc_get_order( $order_id );
+		$order_type = $order->get_type();
+
+		if ( 'shop_subscription' === $order_type ) {
+			return;
+		}
+
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
 		if ( $if_has_course && is_object( $order ) ) {
