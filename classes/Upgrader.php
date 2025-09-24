@@ -304,6 +304,8 @@ class Upgrader {
 	 */
 	public function upgrade_to_3_8_2() {
 		if ( version_compare( $this->installed_version, '3.8.2', '<' ) ) {
+			update_option( 'tutor_version', '3.8.2' );
+
 			global $wpdb;
 			$earnings_table = $wpdb->prefix . 'tutor_earnings';
 
@@ -323,8 +325,6 @@ class Upgrader {
 			 * Update process by to 'tutor' where it is 'Tutor'
 			 */
 			QueryHelper::update( $earnings_table, array( 'process_by' => 'tutor' ), array( 'process_by' => 'Tutor' ) );
-
-			update_option( 'tutor_version', TUTOR_VERSION );
 		}
 	}
 
