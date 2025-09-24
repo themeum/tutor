@@ -50,7 +50,7 @@ abstract class BatchProcessor {
 	 *
 	 * @var object
 	 */
-	protected static $instance = null;
+	protected static $instances = array();
 
 	/**
 	 * Action name to invoke wp-cron.
@@ -94,10 +94,10 @@ abstract class BatchProcessor {
 	 * @return object
 	 */
 	public static function instance() {
-		if ( null === static::$instance ) {
-			static::$instance = new static();
+		if ( ! isset( static::$instances[ static::class ] ) ) {
+			static::$instances[ static::class ] = new static();
 		}
-		return static::$instance;
+		return static::$instances[ static::class ];
 	}
 
 	/**
