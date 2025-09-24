@@ -64,16 +64,26 @@ class ProcessByWcMigrator extends BatchProcessor {
 	 * @return int
 	 */
 	protected function get_total_items() : int {
-		global $wpdb;
+		$primary_table  = 'tutor_earnings te';
+		$joining_tables = array(
+			array(
+				'table' => 'wc_orders_meta wcom',
+				'on'    => 'te.order_id = wcom.order_id',
+				'type'  => 'INNER',
+			),
+		);
 
-		$total_items = $wpdb->get_var(
-			$wpdb->prepare(
-				"SELECT COUNT(*) FROM {$wpdb->prefix}tutor_earnings AS te
-			INNER JOIN {$wpdb->prefix}wc_orders_meta AS wcom ON te.order_id = wcom.order_id
-			WHERE te.process_by = %s
-			AND wcom.meta_key = '_is_tutor_order_for_course'",
-				Earnings::PROCESS_BY_TUTOR
-			)
+		$where = array(
+			'te.process_by' => Earnings::PROCESS_BY_TUTOR,
+			'wcom.meta_key' => '_is_tutor_order_for_course',
+		);
+
+		$total_items = QueryHelper::get_joined_count(
+			$primary_table,
+			$joining_tables,
+			$where,
+			array(),
+			'te.earning_id'
 		);
 
 		return $total_items;
@@ -90,21 +100,33 @@ class ProcessByWcMigrator extends BatchProcessor {
 	 * @return array
 	 */
 	protected function get_items( $offset, $limit ) : array {
-		global $wpdb;
-
-		$items = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT te.* FROM {$wpdb->prefix}tutor_earnings AS te
-				INNER JOIN {$wpdb->prefix}wc_orders_meta AS wcom ON te.order_id = wcom.order_id
-				WHERE te.process_by = %s
-				AND wcom.meta_key = '_is_tutor_order_for_course'
-				ORDER BY earning_id DESC
-				LIMIT %d, %d",
-				Earnings::PROCESS_BY_TUTOR,
-				$offset,
-				$limit
-			)
+		$primary_table  = 'tutor_earnings te';
+		$joining_tables = array(
+			array(
+				'table' => 'wc_orders_meta wcom',
+				'on'    => 'te.order_id = wcom.order_id',
+				'type'  => 'INNER',
+			),
 		);
+
+		$where = array(
+			'te.process_by' => Earnings::PROCESS_BY_TUTOR,
+			'wcom.meta_key' => '_is_tutor_order_for_course',
+		);
+
+		$response = QueryHelper::get_joined_data(
+			$primary_table,
+			$joining_tables,
+			array( 'te.*' ),
+			$where,
+			array(),
+			'te.earning_id',
+			$limit,
+			$offset,
+			'DESC'
+		);
+
+		$items = $response['total_count'] > 0 ? $response['results'] : array();
 
 		return $items;
 	}
