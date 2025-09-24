@@ -500,10 +500,10 @@ const AssignmentModal = ({
                 rules={{
                   ...requiredRule(),
                   validate: (value) => {
-                    if (value >= 0 && value <= 20) {
+                    if (value >= 1 && value <= 20) {
                       return true;
                     }
-                    return __('Allowed attempts must be between 0 and 20', 'tutor');
+                    return __('Allowed attempts must be between 1 and 20', 'tutor');
                   },
                 }}
                 render={(controllerProps) => (
