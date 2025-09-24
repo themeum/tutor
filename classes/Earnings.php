@@ -225,7 +225,7 @@ class Earnings extends Singleton {
 			'admin_rate'               => $admin_rate,
 
 			'commission_type'          => $commission_type,
-			'process_by'               => tutor_utils()->get_option( 'monetize_by' ),
+			'process_by'               => 'Tutor',
 			'created_at'               => current_time( 'mysql', true ),
 		);
 		$earning_data = apply_filters( 'tutor_new_earning_data', array_merge( $earning_data, $fees_deduct_data ) );
