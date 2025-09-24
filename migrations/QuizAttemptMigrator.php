@@ -11,6 +11,7 @@
 namespace Tutor\Migrations;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Migrations\Contracts\SingleProcessor;
 use Tutor\Models\QuizModel;
 
 /**
@@ -18,7 +19,7 @@ use Tutor\Models\QuizModel;
  *
  * @since 3.8.0
  */
-class QuizAttemptMigrator extends BatchProcessor {
+class QuizAttemptMigrator extends BatchProcessor implements SingleProcessor {
 	/**
 	 * Name of the migration
 	 *
