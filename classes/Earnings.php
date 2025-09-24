@@ -13,7 +13,6 @@ namespace TUTOR;
 use Tutor\Ecommerce\Ecommerce;
 use TUTOR\Singleton;
 use Tutor\Models\OrderModel;
-use Tutor\Traits\EarningData;
 use Tutor\Helpers\QueryHelper;
 
 /**
