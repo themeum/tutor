@@ -45,7 +45,7 @@ class QuizAttemptMigrator extends BatchProcessor implements SingleProcessor {
 	 *
 	 * @var integer
 	 */
-	protected $batch_size = 1000;
+	protected $batch_size = 100;
 
 	/**
 	 * Schedule interval.
