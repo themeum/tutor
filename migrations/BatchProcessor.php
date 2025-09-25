@@ -10,6 +10,9 @@
 
 namespace Tutor\Migrations;
 
+use Tutor\Migrations\Contracts\BulkProcessor;
+use Tutor\Migrations\Contracts\SingleProcessor;
+
 /**
  * Class BatchProcessor
  *
@@ -24,15 +27,6 @@ abstract class BatchProcessor {
 	 * @var int
 	 */
 	protected $batch_size;
-
-	/**
-	 * Bulk process: process all items in a batch at once.
-	 *
-	 * @since 3.8.2
-	 *
-	 * @var bool
-	 */
-	protected $bulk_process = false;
 
 	/**
 	 * Schedule interval
@@ -133,30 +127,6 @@ abstract class BatchProcessor {
 	abstract protected function get_total_items() : int;
 
 	/**
-	 * Process a single item.
-	 * Must be implemented in child class.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param mixed $item item.
-	 *
-	 * @return void
-	 */
-	abstract protected function process_item( $item) : void;
-
-	/**
-	 * Process a batch of items.
-	 * Must be implemented in child class.
-	 *
-	 * @since 3.8.2
-	 *
-	 * @param array $items items.
-	 *
-	 * @return void
-	 */
-	abstract protected function process_items( $items) : void;
-
-	/**
 	 * Schedule the batch processing.
 	 *
 	 * This method checks if the action is already scheduled, and if not, it schedules a single event
@@ -181,6 +151,8 @@ abstract class BatchProcessor {
 	 * @since 3.8.0
 	 *
 	 * @return void
+	 *
+	 * @throws \Exception If not implemented any interface on child class..
 	 */
 	public function process_batch() {
 		$progress = get_option(
@@ -215,12 +187,14 @@ abstract class BatchProcessor {
 			return;
 		}
 
-		if ( $this->bulk_process ) {
+		if ( $this instanceof BulkProcessor ) {
 			$this->process_items( $items );
-		} else {
+		} elseif ( $this instanceof SingleProcessor ) {
 			foreach ( $items as $item ) {
 				$this->process_item( $item );
 			}
+		} else {
+			throw new \Exception( 'Child class must implement SingleProcessor or BulkProcessor interface.' );
 		}
 
 		$progress['offset']       += count( $items );

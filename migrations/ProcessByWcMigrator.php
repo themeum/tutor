@@ -13,13 +13,14 @@ namespace Tutor\Migrations;
 
 use TUTOR\Earnings;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Migrations\Contracts\BulkProcessor;
 
 /**
  * Class ProcessByWcMigrator
  *
  * @since 3.8.2
  */
-class ProcessByWcMigrator extends BatchProcessor {
+class ProcessByWcMigrator extends BatchProcessor implements BulkProcessor {
 	/**
 	 * Name of the migration
 	 *
@@ -55,15 +56,6 @@ class ProcessByWcMigrator extends BatchProcessor {
 	 * @var integer
 	 */
 	protected $schedule_interval = 10;
-
-	/**
-	 * Bulk process: process all items in a batch at once.
-	 *
-	 * @since 3.8.2
-	 *
-	 * @var bool
-	 */
-	protected $bulk_process = true;
 
 	/**
 	 * Get the total count of the data to be processed
@@ -141,19 +133,6 @@ class ProcessByWcMigrator extends BatchProcessor {
 	}
 
 	/**
-	 * Process a single item
-	 *
-	 * @since 3.8.2
-	 *
-	 * @param object $item item.
-	 *
-	 * @return void
-	 */
-	protected function process_item( $item ):void {
-		// Do nothing.
-	}
-
-	/**
 	 * Process a batch of items
 	 *
 	 * @since 3.8.2
@@ -162,7 +141,7 @@ class ProcessByWcMigrator extends BatchProcessor {
 	 *
 	 * @return void
 	 */
-	protected function process_items( $items ) : void {
+	public function process_items( $items ) : void {
 		$ids   = wp_list_pluck( $items, 'earning_id' );
 		$data  = array( 'process_by' => Earnings::PROCESS_BY_WOOCOMMERCE );
 		$where = array( 'earning_id' => $ids );

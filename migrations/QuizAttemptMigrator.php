@@ -11,6 +11,7 @@
 namespace Tutor\Migrations;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Migrations\Contracts\SingleProcessor;
 use Tutor\Models\QuizModel;
 
 /**
@@ -18,7 +19,7 @@ use Tutor\Models\QuizModel;
  *
  * @since 3.8.0
  */
-class QuizAttemptMigrator extends BatchProcessor {
+class QuizAttemptMigrator extends BatchProcessor implements SingleProcessor {
 	/**
 	 * Name of the migration
 	 *
@@ -53,7 +54,7 @@ class QuizAttemptMigrator extends BatchProcessor {
 	 *
 	 * @var integer
 	 */
-	protected $schedule_interval = 5;
+	protected $schedule_interval = 10;
 
 	/**
 	 * Get total unprocessed result.
@@ -99,21 +100,8 @@ class QuizAttemptMigrator extends BatchProcessor {
 	 *
 	 * @return void
 	 */
-	protected function process_item( $item ) : void {
+	public function process_item( $item ) : void {
 		QuizModel::update_attempt_result( $item->attempt_id );
-	}
-
-	/**
-	 * Process a batch of items.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param array $items items.
-	 *
-	 * @return void
-	 */
-	protected function process_items( $items ) : void {
-		// Do nothing.
 	}
 
 	/**
