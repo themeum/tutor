@@ -511,7 +511,7 @@ const AssignmentModal = ({
                     {...controllerProps}
                     type="number"
                     label={__('Maximum Resubmission Attempts', 'tutor')}
-                    helpText={__('Define how many times a student can resubmit this assignment.', 'tutor')}
+                    helpText={__('Set how many times students can resubmit even after the deadline.', 'tutor')}
                     selectOnFocus
                   />
                 )}
