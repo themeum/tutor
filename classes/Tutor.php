@@ -840,7 +840,11 @@ final class Tutor extends Singleton {
 			deduct_fees_type varchar(20) DEFAULT NULL,
 			process_by varchar(20) DEFAULT NULL,
 			created_at datetime DEFAULT NULL,
-			PRIMARY KEY (earning_id)
+			PRIMARY KEY (earning_id),
+			INDEX (user_id),
+			INDEX (course_id),
+			INDEX (order_id),
+			INDEX (process_by)
 		) $charset_collate;";
 
 		$withdraw_table = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}tutor_withdraws (

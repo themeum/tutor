@@ -10,15 +10,22 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\Ecommerce;
 use TUTOR\Singleton;
 use Tutor\Models\OrderModel;
-use Tutor\Traits\EarningData;
 use Tutor\Helpers\QueryHelper;
 
 /**
  * Manage earnings
  */
 class Earnings extends Singleton {
+	/**
+	 * Constant for earning process by
+	 *
+	 * @since 3.8.2
+	 */
+	const PROCESS_BY_TUTOR       = 'tutor';
+	const PROCESS_BY_WOOCOMMERCE = 'woocommerce';
 
 	/**
 	 * Error message for the invalid earning data
@@ -132,6 +139,31 @@ class Earnings extends Singleton {
 	}
 
 	/**
+	 * Get process by
+	 *
+	 * @since 3.8.2
+	 *
+	 * @return string
+	 */
+	private function get_process_by() {
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+
+		switch ( $monetize_by ) {
+			case Ecommerce::MONETIZE_BY:
+				$process_by = self::PROCESS_BY_TUTOR;
+				break;
+			case WooCommerce::MONETIZE_BY:
+				$process_by = self::PROCESS_BY_WOOCOMMERCE;
+				break;
+			default:
+				$process_by = '';
+				break;
+		}
+
+		return $process_by;
+	}
+
+	/**
 	 * Prepare earning data
 	 *
 	 * @since 3.0.0
@@ -225,7 +257,7 @@ class Earnings extends Singleton {
 			'admin_rate'               => $admin_rate,
 
 			'commission_type'          => $commission_type,
-			'process_by'               => 'Tutor',
+			'process_by'               => self::get_process_by(),
 			'created_at'               => current_time( 'mysql', true ),
 		);
 		$earning_data = apply_filters( 'tutor_new_earning_data', array_merge( $earning_data, $fees_deduct_data ) );
