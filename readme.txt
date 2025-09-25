@@ -322,6 +322,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 New: Introduced the assignment resubmission functionality. (Pro)
 New: Added an option to disable the course Wishlist feature.
+New: Introduced Phase 2 of Tutor LMS x Droip integration.
 Update: Enabled students and instructors to update their email addresses from frontend profile settings. (Pro)
 Fix: Resolved the incorrect email being sent on WooCommerce subscription renewal. (Pro)
 Fix: Course bundle product defaulting to physical instead of virtual in WooCommerce. (Pro)
