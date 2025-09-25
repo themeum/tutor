@@ -46,7 +46,7 @@ function editorConfig(
   propsToolbar2?: string,
 ) {
   let toolbar1 =
-    propsToolbar1 ||
+    propsToolbar1 ??
     (isMinimal
       ? `bold italic underline | image | ${isTutorPro ? 'codesample' : ''}`
       : `formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | wp_more ${
@@ -54,7 +54,7 @@ function editorConfig(
         } | wp_adv`);
 
   const toolbar2 =
-    propsToolbar2 ||
+    propsToolbar2 ??
     'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown';
 
   toolbar1 = isAboveMobile ? toolbar1 : toolbar1.replaceAll(' | ', ' ');

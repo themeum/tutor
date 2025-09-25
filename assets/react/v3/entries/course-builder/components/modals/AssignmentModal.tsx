@@ -39,7 +39,7 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type ID } from '@TutorShared/utils/types';
 import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
-import { maxLimitRule } from '@TutorShared/utils/validation';
+import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -63,6 +63,8 @@ export interface AssignmentForm {
   pass_mark: number;
   upload_files_limit: number;
   upload_file_size_limit: number;
+  is_retry_allowed: boolean;
+  attempts_allowed: number;
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
@@ -123,6 +125,8 @@ const AssignmentModal = ({
       pass_mark: 5,
       upload_files_limit: 1,
       upload_file_size_limit: 2,
+      is_retry_allowed: true,
+      attempts_allowed: 5,
       content_drip_settings: {
         unlock_date: '',
         after_xdays_of_enroll: '',
@@ -134,6 +138,7 @@ const AssignmentModal = ({
   });
 
   const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
+  const isRetryAllowed = form.watch('is_retry_allowed');
 
   useEffect(() => {
     if (assignmentDetails) {
@@ -151,6 +156,8 @@ const AssignmentModal = ({
           pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
           upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
           upload_file_size_limit: assignmentDetails.assignment_option.upload_file_size_limit || 2,
+          is_retry_allowed: assignmentDetails.assignment_option.is_retry_allowed === '1' ? true : false,
+          attempts_allowed: assignmentDetails.assignment_option.attempts_allowed || 10,
           content_drip_settings: {
             unlock_date: assignmentDetails?.content_drip_settings?.unlock_date || '',
             after_xdays_of_enroll: assignmentDetails?.content_drip_settings?.after_xdays_of_enroll || '',
@@ -477,6 +484,39 @@ const AssignmentModal = ({
                 />
               )}
             />
+
+            <Controller
+              name="is_retry_allowed"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch {...controllerProps} label={__('Allow Assignment Resubmission', 'tutor')} />
+              )}
+            />
+
+            <Show when={isRetryAllowed}>
+              <Controller
+                name="attempts_allowed"
+                control={form.control}
+                rules={{
+                  ...requiredRule(),
+                  validate: (value) => {
+                    if (value >= 1 && value <= 20) {
+                      return true;
+                    }
+                    return __('Allowed attempts must be between 1 and 20', 'tutor');
+                  },
+                }}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    type="number"
+                    label={__('Maximum Resubmission Attempts', 'tutor')}
+                    helpText={__('Define how many times a student can resubmit this assignment.', 'tutor')}
+                    selectOnFocus
+                  />
+                )}
+              />
+            </Show>
 
             <CourseBuilderInjectionSlot section="Curriculum.Assignment.bottom_of_sidebar" form={form} />
           </div>
