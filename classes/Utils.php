@@ -867,8 +867,8 @@ class Utils {
 			if ( false === $quiz_completed ) {
 				//phpcs:disable
 				$quiz_completed = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT count(quiz_id) completed 
+				$wpdb->prepare(
+					"SELECT count(quiz_id) completed 
 						FROM (
 							SELECT  DISTINCT quiz_id 
 							FROM 	{$wpdb->tutor_quiz_attempts} 
@@ -876,9 +876,9 @@ class Utils {
 									AND user_id = % d 
 									AND attempt_status != %s
 						) a",
-						$user_id,
-						QuizModel::ATTEMPT_STARTED
-					)
+					$user_id,
+					QuizModel::ATTEMPT_STARTED
+				)
 				);
 				//phpcs:enable
 				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
@@ -887,31 +887,14 @@ class Utils {
 		}
 
 		if ( count( $assignment_ids ) ) {
-			$assignment_ids_str = QueryHelper::prepare_in_clause( $assignment_ids );
 
-			// Get data from cache.
-			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
-			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
-			$assignment_submitted           = TutorCache::get( $assignment_submitted_cache_key );
+			foreach ( $assignment_ids as $assignment_id ) {
+				$submitted_assignment = $this->is_assignment_submitted( $assignment_id, $user_id );
 
-			if ( false === $assignment_submitted ) {
-				$assignment_submitted = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT count(*) completed
-						FROM 	{$wpdb->comments}
-						WHERE 	comment_type = %s
-								AND comment_approved = %s
-								AND user_id = %d
-								AND comment_post_ID IN({$assignment_ids_str});
-						",
-						'tutor_assignment',
-						'submitted',
-						$user_id
-					)
-				);
-				TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
+				if ( $submitted_assignment ) {
+					++$completed_count;
+				}
 			}
-			$completed_count += $assignment_submitted;
 		}
 
 		if ( $this->count( $course_contents ) ) {
@@ -1285,10 +1268,10 @@ class Utils {
 		$tax_rate   = 0;
 
 		if ( $should_calculate_tax
-			&& $show_price_with_tax
-			&& $tax_collection
-			&& is_numeric( $display_price )
-			&& ! Tax::is_tax_included_in_price()
+		&& $show_price_with_tax
+		&& $tax_collection
+		&& is_numeric( $display_price )
+		&& ! Tax::is_tax_included_in_price()
 		) {
 
 			$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
@@ -2057,12 +2040,12 @@ class Utils {
 			if ( $video && $this->array_get( 'source', $video ) !== '-1' ) {
 
 				$not_empty = ! empty( $video['source_video_id'] ) ||
-					! empty( $video['source_external_url'] ) ||
-					! empty( $video['source_youtube'] ) ||
-					! empty( $video['source_vimeo'] ) ||
-					! empty( $video['source_embedded'] ) ||
-					! empty( $video['source_shortcode'] ) ||
-					( isset( $video['source_bunnynet'] ) && ! empty( $video['source_bunnynet'] ) );
+				! empty( $video['source_external_url'] ) ||
+				! empty( $video['source_youtube'] ) ||
+				! empty( $video['source_vimeo'] ) ||
+				! empty( $video['source_embedded'] ) ||
+				! empty( $video['source_shortcode'] ) ||
+				( isset( $video['source_bunnynet'] ) && ! empty( $video['source_bunnynet'] ) );
 
 				return $not_empty ? $video : false;
 			}
@@ -3348,7 +3331,7 @@ class Utils {
 		if ( count( $cat_ids ) ) {
 
 			$category_join =
-				"INNER JOIN {$wpdb->posts} course
+			"INNER JOIN {$wpdb->posts} course
 					ON course.post_author = user.ID
 			INNER JOIN {$wpdb->prefix}term_relationships term_rel
 					ON term_rel.object_id = course.ID
@@ -3391,8 +3374,8 @@ class Utils {
 
 		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
 		$select_col   = $count_only ?
-						' COUNT(DISTINCT user.ID) ' :
-						' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
+					' COUNT(DISTINCT user.ID) ' :
+					' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
 
 		$query = $wpdb->prepare(
 			"SELECT {$select_col}
@@ -3746,7 +3729,7 @@ class Utils {
 		$student_id = sanitize_text_field( $student_id );
 		$count      = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(ID) FROM {$wpdb->posts}
+				"SELECT COUNT( DISTINCT ID ) FROM {$wpdb->posts}
 				INNER JOIN {$wpdb->comments} c ON c.comment_post_ID = ID  AND c.user_id = %d AND c.comment_approved = %s
 				WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d AND post_status = %s)
 					AND post_type =%s
@@ -3842,7 +3825,7 @@ class Utils {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<i class="tutor-icon-star-bold" data-rating-value="' . $i . '"></i>';
 			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
-					$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
+				$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
 			} else {
 				$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
 			}
@@ -3878,18 +3861,18 @@ class Utils {
 		?>
 		<div class="tutor-ratings<?php echo esc_attr( $css_class ); ?>">
 			<div class="tutor-ratings-stars">
-				<?php
-				for ( $i = 1; $i <= 5; $i++ ) {
-					$class = 'tutor-icon-star-line';
+			<?php
+			for ( $i = 1; $i <= 5; $i++ ) {
+				$class = 'tutor-icon-star-line';
 
-					if ( $i <= round( $current_rating ) ) {
-						$class = 'tutor-icon-star-bold';
-					}
-
-					// Todo: Add half start later. tutor-icon-star-half-bold.
-					echo '<span class="' . $class . '"></span>';
+				if ( $i <= round( $current_rating ) ) {
+					$class = 'tutor-icon-star-bold';
 				}
-				?>
+
+				// Todo: Add half start later. tutor-icon-star-half-bold.
+				echo '<span class="' . $class . '"></span>';
+			}
+			?>
 			</div>
 			<?php if ( $show_avg_rate && $total_count > 0 ) : ?>
 				<div class="tutor-ratings-average">
@@ -3900,7 +3883,7 @@ class Utils {
 				</div>
 			<?php endif; ?>
 		</div>
-		<?php
+			<?php
 	}
 
 	/**
@@ -3919,7 +3902,7 @@ class Utils {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<span class="tutor-icon-star-bold" data-rating-value="' . $i . '"></span>';
 			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
-					$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
+				$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
 			} else {
 				$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
 			}
@@ -4107,7 +4090,7 @@ class Utils {
 		$include_user_id = implode( ',', $include_user_id );
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
-			'_reviews.comment_ID,
+		'_reviews.comment_ID,
 			_reviews.comment_post_ID,
 			_reviews.comment_author,
 			_reviews.comment_author_email,
@@ -4752,7 +4735,7 @@ class Utils {
 		}
 
 		$columns_select = $count_only ? 'COUNT(DISTINCT _question.comment_ID)' :
-			"DISTINCT _question.comment_ID,
+		"DISTINCT _question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -5820,8 +5803,8 @@ class Utils {
 		}
 
 		$addon_field = ( strpos( $addon_field, 'tutor-pro/addons/' ) === 0 )
-						? $addon_field
-						: "tutor-pro/addons/{$addon_field}/{$addon_field}.php";
+					? $addon_field
+					: "tutor-pro/addons/{$addon_field}/{$addon_field}.php";
 
 		$addons_config = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
@@ -6196,7 +6179,7 @@ class Utils {
 						continue;
 					}
 
-					$del_rows[] = $earning->earning_id;
+						$del_rows[] = $earning->earning_id;
 				}
 			}
 
@@ -6608,36 +6591,48 @@ class Utils {
 	 * Determine if any assignment submitted by user to a assignment.
 	 *
 	 * @since 1.3.3
+	 * @since 3.8.2 param $attempt_id added.
 	 *
 	 * @param int $assignment_id assignment id.
 	 * @param int $user_id user id.
+	 * @param int $attempt_id the attempt id.
 	 *
 	 * @return array|null|object
 	 */
-	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0 ) {
-		global $wpdb;
+	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0, $attempt_id = 0 ) {
 
 		$assignment_id = $this->get_post_id( $assignment_id );
 		$user_id       = $this->get_user_id( $user_id );
 
-		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}";
+		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}_{$attempt_id}";
 		$has_submitted = TutorCache::get( $cache_key );
 
 		if ( false === $has_submitted ) {
-			$has_submitted = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT *
-				FROM 	{$wpdb->comments}
-				WHERE 	comment_type = %s
-						AND comment_approved = %s
-						AND user_id = %d
-						AND comment_post_ID = %d;
-				",
-					'tutor_assignment',
-					'submitted',
-					$user_id,
-					$assignment_id
-				)
+
+			$has_submitted = QueryHelper::get_all(
+				'comments',
+				array(
+					'comment_type'     => 'tutor_assignment',
+					'comment_approved' => 'submitted',
+					'user_id'          => $user_id,
+					'comment_post_ID'  => $assignment_id,
+				),
+				'comment_ID'
+			);
+			TutorCache::set( $cache_key, $has_submitted );
+		}
+
+		if ( $attempt_id ) {
+			$has_submitted = QueryHelper::get_row(
+				'comments',
+				array(
+					'comment_ID'       => $attempt_id,
+					'comment_type'     => 'tutor_assignment',
+					'comment_approved' => 'submitted',
+					'user_id'          => $user_id,
+					'comment_post_ID'  => $assignment_id,
+				),
+				'comment_ID'
 			);
 			TutorCache::set( $cache_key, $has_submitted );
 		}
@@ -7659,16 +7654,16 @@ class Utils {
 
 			//phpcs:disable
 			$instructor = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT umeta_id
+			$wpdb->prepare(
+				"SELECT umeta_id
 				FROM   {$wpdb->usermeta}
 				WHERE  user_id = %d
 					AND meta_key = '_tutor_instructor_course_id'
 					AND meta_value = %d
 				",
-					$instructor_id,
-					$course_id
-				)
+				$instructor_id,
+				$course_id
+			)
 			);
 			//phpcs:enable
 
@@ -8611,7 +8606,7 @@ class Utils {
 				case 'tutor_assignments':
 					switch ( $ancestor_type ) {
 
-							// Get lesson, quiz, assignment IDs by course ID.
+						// Get lesson, quiz, assignment IDs by course ID.
 						case tutor()->course_post_type:
 							$content_ids = $wpdb->get_col(
 								$wpdb->prepare(
@@ -8667,12 +8662,12 @@ class Utils {
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
 		$ancestor_ids                               = implode( ',', $ancestor_ids );
 		switch ( $content_type ) {
-				// Get lesson, quiz, assignment IDs.
+			// Get lesson, quiz, assignment IDs.
 			case tutor()->lesson_post_type:
 			case 'tutor_quiz':
 			case 'tutor_assignments':
 				switch ( $ancestor_type ) {
-						// Get lesson, quiz, assignment IDs by course ID.
+					// Get lesson, quiz, assignment IDs by course ID.
 					case tutor()->course_post_type:
 						$content_ids = $wpdb->get_results(
 							$wpdb->prepare(
@@ -8698,6 +8693,9 @@ class Utils {
 	 * Sanitize array key abd values recursively
 	 *
 	 * @since 2.0.0
+	 * @deprecated This function will be removed soon.
+	 *             It is discouraged to use in new implementations.
+	 *             Use Input::sanitize_array() instead.
 	 *
 	 * @param array $array array.
 	 * @param array $skip skip.
@@ -8792,8 +8790,8 @@ class Utils {
 		}
 
 		return $durationHours . $texts['h'] . ' ' .
-			$durationMinutes . $texts['m'] . ' ' .
-			$durationSeconds . $texts['s'];
+		$durationMinutes . $texts['m'] . ' ' .
+		$durationSeconds . $texts['s'];
 	}
 
 	/**
@@ -8923,7 +8921,7 @@ class Utils {
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php echo esc_attr( $title ); ?>" width="85%" />
 			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
-				<?php echo esc_html( $title, 'tutor' ); ?>
+			<?php echo esc_html( $title, 'tutor' ); ?>
 			</div>
 		</div>
 		<?php
@@ -9034,8 +9032,8 @@ class Utils {
 
 		if ( $add_badge && isset( $key_value[ $key ] ) ) {
 			return '<' . $badge_tag . ' class="tutor-badge-label label-' . $key_value[ $key ]['badge'] . '">' .
-				$key_value[ $key ]['text'] .
-				'</' . $badge_tag . '>';
+			$key_value[ $key ]['text'] .
+			'</' . $badge_tag . '>';
 		}
 
 		// Revert to linear textual array.
@@ -9551,10 +9549,6 @@ class Utils {
 				'title' => __( 'Enrolled Courses', 'tutor' ),
 				'icon'  => 'tutor-icon-mortarboard-o',
 			),
-			'wishlist'         => array(
-				'title' => __( 'Wishlist', 'tutor' ),
-				'icon'  => 'tutor-icon-bookmark-bold',
-			),
 			'reviews'          => array(
 				'title' => __( 'Reviews', 'tutor' ),
 				'icon'  => 'tutor-icon-star-bold',
@@ -9564,6 +9558,15 @@ class Utils {
 				'icon'  => 'tutor-icon-quiz-attempt',
 			),
 		);
+
+		$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
+
+		if ( $is_enabled_wishlist ) {
+			$items['wishlist'] = array(
+				'title' => __( 'Wishlist', 'tutor' ),
+				'icon'  => 'tutor-icon-bookmark-bold',
+			);
+		}
 
 		$items['purchase_history'] = array(
 			'title' => __( 'Order History', 'tutor' ),
@@ -9718,15 +9721,15 @@ class Utils {
 				<html <?php language_attributes(); ?>>
 				<head>
 					<meta charset="<?php bloginfo( 'charset' ); ?>">
-					<?php wp_head(); ?>
+				<?php wp_head(); ?>
 				</head>
 				<body <?php body_class(); ?>>
-				<?php wp_body_open(); ?>
+			<?php wp_body_open(); ?>
 					<div class="wp-site-blocks">
-					<?php
-						$theme      = wp_get_theme();
-						$theme_slug = $theme->get( 'TextDomain' );
-						echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
+				<?php
+					$theme      = wp_get_theme();
+					$theme_slug = $theme->get( 'TextDomain' );
+					echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
 		} else {
 			get_header();
 		}

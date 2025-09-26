@@ -45,13 +45,6 @@ class CourseModel {
 	const MODE_STRICT   = 'strict';
 
 	/**
-	 * Course mapped with the product using this meta key
-	 *
-	 * @var string
-	 */
-	const WC_PRODUCT_META_KEY = '_tutor_course_product_id';
-
-	/**
 	 * Course attachment/downloadable resources meta key
 	 *
 	 * @var string

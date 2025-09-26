@@ -38,23 +38,7 @@ class Tax {
 			return;
 		}
 
-		add_filter( 'tutor_option_input', array( $this, 'format_tax_data_before_save' ) );
 		add_action( 'wp_ajax_tutor_get_tax_settings', array( $this, 'ajax_get_tax_settings' ) );
-	}
-
-	/**
-	 * Format ecommerce tax setting data before save it to tutor settings.
-	 *
-	 * @param array $option option.
-	 *
-	 * @return array
-	 */
-	public function format_tax_data_before_save( $option ) {
-		if ( ! empty( $option['ecommerce_tax'] ) ) {
-			$option['ecommerce_tax'] = wp_unslash( $option['ecommerce_tax'] );
-		}
-
-		return $option;
 	}
 
 	/**

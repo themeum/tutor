@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.8.1
+Stable tag: 3.8.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -317,6 +317,19 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.8.2 - Sep 25, 2025
+
+New: Introduced the assignment resubmission functionality. (Pro)
+New: Added an option to disable the course Wishlist feature.
+New: Introduced Phase 2 of Tutor LMS x Droip integration.
+Update: Enabled students and instructors to update their email addresses from frontend profile settings. (Pro)
+Fix: Resolved the incorrect email being sent on WooCommerce subscription renewal. (Pro)
+Fix: Course bundle product defaulting to physical instead of virtual in WooCommerce. (Pro)
+Fix: Resolved the LaTeX equation rendering issue.
+Fix: Corrected quiz total marks calculation based on final grade.
+Fix: Fixed backslash appearing in the certificate’s authorized name. (Pro)
+Fix: Hid the gift course button for WooCommerce subscriptions. (Pro)
 
 = 3.8.1 - Sep 17, 2025
 
