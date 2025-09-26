@@ -182,6 +182,7 @@ tutor_load_template(
 							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
 								<?php the_content(); ?>
 							</div>
+							<?php do_action( 'tutor_lesson_after_the_content', $post, $course_id ); ?>
 						</div>
 					</div>
 				</div>
