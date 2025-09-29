@@ -33,7 +33,7 @@ abstract class GatewayBase {
 	 *
 	 * @var string
 	 */
-	abstract public function get_root_dir_name():string;
+	abstract public function get_root_dir_name(): string;
 
 	/**
 	 * Payment class from payment hub
@@ -42,7 +42,7 @@ abstract class GatewayBase {
 	 *
 	 * @var string
 	 */
-	abstract public function get_payment_class():string;
+	abstract public function get_payment_class(): string;
 
 	/**
 	 * Config class
@@ -51,7 +51,7 @@ abstract class GatewayBase {
 	 *
 	 * @since 3.0.0
 	 */
-	abstract public function get_config_class():string;
+	abstract public function get_config_class(): string;
 
 	/**
 	 * Include autoload file & init payment object
@@ -71,10 +71,8 @@ abstract class GatewayBase {
 					require_once $file;
 				}
 			}
-		} else {
-			if ( file_exists( $autoload_file ) ) {
+		} elseif ( isset( $autoload_file ) && file_exists( $autoload_file ) ) {
 				require_once $autoload_file;
-			}
 		}
 
 		if ( ! class_exists( '\Brick\Money' ) ) {
@@ -227,5 +225,4 @@ abstract class GatewayBase {
 		$this->payment->setData( $refund_data );
 		$this->payment->createRefund();
 	}
-
 }

@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Exception;
+use TUTOR\Earnings;
 use Tutor\Ecommerce\Tax;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
@@ -881,7 +882,7 @@ class OrderModel {
 					$wpdb->prefix . 'tutor_earnings',
 					array(
 						'order_id'   => $order_id,
-						'process_by' => 'Tutor',
+						'process_by' => Earnings::PROCESS_BY_TUTOR,
 					)
 				);
 

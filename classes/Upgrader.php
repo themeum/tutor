@@ -89,6 +89,7 @@ class Upgrader {
 			$upgrades[] = 'upgrade_to_3_0_0';
 			$upgrades[] = 'upgrade_to_3_7_1';
 			$upgrades[] = 'upgrade_to_3_8_0';
+			$upgrades[] = 'upgrade_to_3_8_2';
 		}
 
 		return $upgrades;
@@ -291,6 +292,39 @@ class Upgrader {
 			if ( ! $is_type_column_exists ) {
 				$wpdb->query( "ALTER TABLE {$cart_item_table} ADD {$type_column} VARCHAR(255) AFTER course_id" );
 			}
+		}
+	}
+
+	/**
+	 * Upgrade to version 3.8.2
+	 *
+	 * @since 3.8.2
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_3_8_2() {
+		if ( version_compare( $this->installed_version, '3.8.2', '<' ) ) {
+			update_option( 'tutor_version', '3.8.2' );
+
+			global $wpdb;
+			$earnings_table = $wpdb->prefix . 'tutor_earnings';
+
+			/**
+			 * Index added to improve performance.
+			 */
+			$wpdb->query(
+				//phpcs:ignore
+				"ALTER TABLE {$earnings_table}
+					ADD INDEX (user_id),
+					ADD INDEX (course_id),
+					ADD INDEX (order_id),
+					ADD INDEX (process_by);"
+			);
+
+			/**
+			 * Update process by to 'tutor' where it is 'Tutor'
+			 */
+			QueryHelper::update( $earnings_table, array( 'process_by' => 'tutor' ), array( 'process_by' => 'Tutor' ) );
 		}
 	}
 

@@ -16,13 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use stdClass;
 use TUTOR\Input;
+use Tutor\Ecommerce\Tax;
+use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Ecommerce\Tax;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use Tutor\Models\QuizModel;
 use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
@@ -2353,21 +2353,17 @@ class Course extends Tutor_Base {
 				}
 
 				// Set course regular & sale price.
-				update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
-				update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
+				self::set_course_regular_and_sale_price( $post_ID, $product_obj->get_regular_price(), $product_obj->get_sale_price() );
 			} else {
 				// Create new WC product name with course title.
 				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
 					$product_obj = wc_get_product( $product_id );
-					update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
-					// Mark product for woocommerce.
-					update_post_meta( $product_id, '_virtual', 'yes' );
-					update_post_meta( $product_id, '_tutor_product', 'yes' );
+
+					self::sync_course_with_wc_product( $post_ID, $product_id );
 
 					// Set course regular & sale price.
-					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
-					update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
+					self::set_course_regular_and_sale_price( $post_ID, $product_obj->get_regular_price(), $product_obj->get_sale_price() );
 				}
 			}
 
@@ -3169,5 +3165,40 @@ class Course extends Tutor_Base {
 			'pending',
 			'future',
 		);
+	}
+
+	/**
+	 * Link a course/bundle post to a WooCommerce product.
+	 *
+	 * @since 3.8.2
+	 *
+	 * @param int $post_ID    The WordPress post ID of the course.
+	 * @param int $product_id The WooCommerce product ID to associate with the course.
+	 * @return void
+	 */
+	public static function sync_course_with_wc_product( $post_ID, $product_id ) {
+
+		update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
+
+		// Mark product for woocommerce.
+		update_post_meta( $product_id, '_virtual', 'yes' );
+		update_post_meta( $product_id, '_tutor_product', 'yes' );
+	}
+
+	/**
+	 * Map Tutor's course prices to WooCommerce.
+	 *
+	 * @since 3.8.2
+	 *
+	 * @param int              $post_ID       The WordPress post ID of the course.
+	 * @param string|int|float $regular_price The regular price.
+	 * @param string|int|float $sale_price    The sale price.
+	 * @return void
+	 */
+	private static function set_course_regular_and_sale_price( $post_ID, $regular_price, $sale_price ) {
+
+		// Set course regular & sale price.
+		update_post_meta( $post_ID, self::COURSE_PRICE_META, $regular_price );
+		update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $sale_price );
 	}
 }
