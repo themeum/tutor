@@ -84,7 +84,7 @@ tutor_load_template(
 	<?php endif; ?>
 	<div class="tutor-video-player-wrapper">
 		<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); //phpcs:ignore ?>
-		<?php echo apply_filters( 'tutor_lesson_notes_on_video_player', $video_info,  $course_content_id ); //phpcs:ignore ?>
+		<?php do_action( 'tutor_lesson_after_lesson_video', $video_info, $course_content_id ); ?>
 	</div>
 
 	<?php
@@ -170,6 +170,8 @@ tutor_load_template(
 					</a>
 				</li>
 			<?php endforeach; ?>
+
+			<?php do_action( 'tutor_lesson_single_after_nav_items', $course_content_id, $active_tab ); ?>
 		</ul>
 		<?php endif; ?>
 
@@ -183,7 +185,6 @@ tutor_load_template(
 							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
 								<?php the_content(); ?>
 							</div>
-							<?php do_action( 'tutor_lesson_after_the_content', $post, $course_id ); ?>
 						</div>
 					</div>
 				</div>
