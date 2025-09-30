@@ -101,6 +101,14 @@
 				}
 
 				navTabBodyItem.classList.add('is-active');
+
+				// Trigger event after tab change
+				const event = new CustomEvent('tutor_tab_changed', {
+					detail: {
+						tabId: id,
+					},
+				});
+				document.dispatchEvent(event);
 			}
 		}
 	});
