@@ -889,7 +889,7 @@ class Utils {
 		if ( count( $assignment_ids ) ) {
 
 			foreach ( $assignment_ids as $assignment_id ) {
-				$submitted_assignment = $this->is_assignment_submitted( $assignment_id );
+				$submitted_assignment = $this->is_assignment_submitted( $assignment_id, $user_id );
 
 				if ( $submitted_assignment ) {
 					++$completed_count;
@@ -3729,7 +3729,7 @@ class Utils {
 		$student_id = sanitize_text_field( $student_id );
 		$count      = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(ID) FROM {$wpdb->posts}
+				"SELECT COUNT( DISTINCT ID ) FROM {$wpdb->posts}
 				INNER JOIN {$wpdb->comments} c ON c.comment_post_ID = ID  AND c.user_id = %d AND c.comment_approved = %s
 				WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d AND post_status = %s)
 					AND post_type =%s
@@ -9561,7 +9561,7 @@ class Utils {
 
 		$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
 
-		if( $is_enabled_wishlist ) {
+		if ( $is_enabled_wishlist ) {
 			$items['wishlist'] = array(
 				'title' => __( 'Wishlist', 'tutor' ),
 				'icon'  => 'tutor-icon-bookmark-bold',
@@ -10812,5 +10812,4 @@ class Utils {
 
 		return null;
 	}
-
 }

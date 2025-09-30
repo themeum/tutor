@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WooCommerce extends Tutor_Base {
 
+	const MONETIZE_BY = 'wc';
 
 	const TUTOR_WC_GUEST_CUSTOMER_ID   = '_tutor_wc_guest_customer_id';
 	const WC_STORE_API_DRAFT_ORDER     = 'store_api_draft_order';
@@ -577,7 +578,7 @@ class WooCommerce extends Tutor_Base {
 	public function tutor_monetization_options( $arr ) {
 		$has_wc = tutor_utils()->has_wc();
 		if ( $has_wc ) {
-			$arr['wc'] = __( 'WooCommerce', 'tutor' );
+			$arr[ self::MONETIZE_BY ] = __( 'WooCommerce', 'tutor' );
 		}
 		return $arr;
 	}
