@@ -603,6 +603,10 @@ class WooCommerce extends Tutor_Base {
 
 		$product_id = $item->get_product_id();
 		$order      = wc_get_order( $order_id );
+		if ( ! $order ) {
+			return;
+		}
+
 		$order_type = $order->get_type();
 
 		if ( 'shop_subscription' === $order_type ) {
