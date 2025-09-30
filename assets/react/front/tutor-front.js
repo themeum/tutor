@@ -221,6 +221,11 @@ jQuery(document).ready(function($) {
 						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 1);
 					}
 				});
+
+				// Set player to window if lesson single page
+				if ($(that.player_DOM).closest('.tutor-course-topic-single-body .tutor-video-player-wrapper').length) {
+					window.tutorLessonPlayer = player;
+				}
 			}
 		},
 		sync_time: function(instance, options) {
