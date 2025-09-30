@@ -321,6 +321,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 = 3.8.3 - Sep 30, 2025
 
 Update: Improved Tutor LMS x Droip integration for better compatibility and performance.
+Fix: PHP fatal error on the WooCommerce email preview screen.
 
 = 3.8.2 - Sep 25, 2025
 
