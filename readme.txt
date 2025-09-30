@@ -320,7 +320,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.8.3 - Sep 30, 2025
 
-Update: Tutor LMS x Droip integration
+Update: Improved Tutor LMS x Droip integration for better compatibility and performance.
 
 = 3.8.2 - Sep 25, 2025
 
