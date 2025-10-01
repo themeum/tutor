@@ -11,7 +11,7 @@
 namespace TUTOR;
 
 /**
- * Icon class for Icon Names
+ * Icon class for Icon Names.
  *
  * @since 3.7.0
  */
@@ -67,6 +67,7 @@ final class Icon {
 	const COPY                       = 'copy';
 	const COPY_PASTE                 = 'copy-paste';
 	const COUPON                     = 'coupon';
+	const COURSE                     = 'course';
 	const CROSS                      = 'cross';
 	const CROSS_CIRCLE               = 'cross-circle';
 	const CROWN                      = 'crown';
@@ -101,6 +102,7 @@ final class Icon {
 	const FILE                       = 'file';
 	const FLA                        = 'fla';
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
+	const GIFT                       = 'gift';
 	const GIFT_CARD                  = 'gift-card';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';

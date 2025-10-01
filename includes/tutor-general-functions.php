@@ -9,6 +9,7 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
@@ -1097,16 +1098,18 @@ if ( ! function_exists( 'tutor_closeable_alert_msg' ) ) {
 	 * Create a close-able alert message
 	 *
 	 * @since 2.1.9
+	 * @since 3.7.1 param css_class added to pass any custom css class.
 	 *
 	 * @param string $message alert message.
 	 * @param string $alert alert key like: success, warning, danger, etc.
 	 * @param array  $allowed_tags allowed tags to use with WP_KSES.
+	 * @param string $css_class custom css class.
 	 *
 	 * @return void
 	 */
-	function tutor_closeable_alert_msg( string $message, string $alert = 'success', $allowed_tags = array() ) {
+	function tutor_closeable_alert_msg( string $message, string $alert = 'success', $allowed_tags = array(), $css_class = '' ) {
 		?>
-		<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
+		<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?> <?php echo esc_attr( $css_class ); ?> tutor-mb-12 tutor-alert tutor-success tutor-mb-12 tutor-d-flex tutor-align-center tutor-justify-between">
 			<span>
 				<?php echo is_array( $allowed_tags ) && count( $allowed_tags ) ? wp_kses( $message, $allowed_tags ) : esc_html( $message ); ?>
 			</span>
@@ -1497,10 +1500,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 					continue;
 				}
 
-				$name                = $method['name'];
-				$basename            = "tutor-{$name}/tutor-{$name}.php";
-				$is_plugin_activated = is_plugin_active( $basename );
-				if ( ! $is_manual && 'paypal' !== $name && ! $is_plugin_activated ) {
+				if ( ! Ecommerce::is_payment_gateway_configured( $method['name'] ) ) {
 					continue;
 				}
 

@@ -71,7 +71,8 @@
 					<?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-" . esc_attr( $next_question->question_id ) . "'" : ''; ?> 
 					<?php echo 'h5p' === $question->question_type ? 'data-h5p-quiz-content-id=' . esc_attr( $question->question_description ) : ''; ?>
 					data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>"  
-					data-question_index="<?php echo esc_attr( $question_i ); ?>">
+					data-question_index="<?php echo esc_attr( $question_i ); ?>"
+					data-question-type="<?php echo esc_attr( $question->question_type ); ?>">
 
 					<div class="quiz-question tutor-mt-44 tutor-mr-md-100">
 					<?php
@@ -190,6 +191,8 @@
 					?>
 
 					<div class="answer-help-block tutor-mt-24"></div>
+
+					<?php do_action( 'tutor_quiz_question_after_answers', $post, $quiz_details, $question ); ?>
 
 					<?php if ( 'question_below_each_other' !== $question_layout_view ) : ?>
 						<div class="tutor-quiz-btn-group tutor-mt-60 tutor-d-flex">

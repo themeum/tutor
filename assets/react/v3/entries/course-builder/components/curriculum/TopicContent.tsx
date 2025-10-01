@@ -1,9 +1,8 @@
-import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
+import { type SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
@@ -32,10 +31,11 @@ import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServ
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { ID, TopicContentType } from '@TutorShared/utils/types';
@@ -45,7 +45,8 @@ interface TopicContentProps {
   type: TopicContentType;
   topic: CourseTopicWithCollapse;
   content: { id: ID; title: string; total_question: number };
-  isOverlay?: boolean;
+  listeners?: SyntheticListenerMap;
+  isDragging?: boolean;
   onDelete?: () => void;
   onCopy?: () => void;
 }
@@ -137,13 +138,10 @@ const editAbleContentTypes = [
   'tutor-google-meet',
 ];
 
-const animateLayoutChanges: AnimateLayoutChanges = (args) =>
-  defaultAnimateLayoutChanges({ ...args, wasDragging: true });
-
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
-const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = false }: TopicContentProps) => {
+const TopicContent = ({ type, topic, content, listeners, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
   const topicId = getIdWithoutPrefix('topic-', topic.id);
   const contentId = getIdWithoutPrefix('content-', content.id);
 
@@ -160,20 +158,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
     name: 'lesson',
     color: colorTokens.icon.default,
   };
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: content.id,
-    data: {
-      type: 'content',
-    },
-    animateLayoutChanges,
-  });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.3 : undefined,
-    background: isDragging ? colorTokens.stroke.hover : undefined,
-  };
   const { showModal } = useModal();
   const duplicateContentMutation = useDuplicateContentMutation();
   const deleteContentMutation = useDeleteContentMutation();
@@ -261,16 +246,12 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   return (
     <>
       <div
-        {...attributes}
         css={styles.wrapper({
           isDragging,
-          isOverlay,
           isActive: meetingType === type || isDeletePopoverOpen || duplicateContentMutation.isPending,
         })}
-        ref={setNodeRef}
-        style={style}
       >
-        <div css={styles.iconAndTitle({ isDragging: isOverlay })} {...listeners}>
+        <div css={styles.iconAndTitle({ isDragging })} {...listeners}>
           <div data-content-icon>
             <SVGIcon
               name={icon.name as IconCollection}
@@ -385,8 +366,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
@@ -422,8 +402,6 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')
         }
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
         confirmButton={{
           text: __('Delete', 'tutor'),
           variant: 'text',
@@ -440,16 +418,21 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   );
 };
 
-export default TopicContent;
+export default memo(TopicContent, (prev, next) => {
+  return (
+    prev.content.id === next.content.id &&
+    prev.content.title === next.content.title &&
+    prev.content.total_question === next.content.total_question &&
+    prev.isDragging === next.isDragging
+  );
+});
 
 const styles = {
   wrapper: ({
     isDragging = false,
-    isOverlay = false,
     isActive: isMeetingSelected = false,
   }: {
     isDragging: boolean;
-    isOverlay: boolean;
     isActive: boolean;
   }) => css`
     width: 100%;
@@ -459,6 +442,13 @@ const styles = {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    opacity: 1;
+
+    ${isDragging &&
+    css`
+      background-color: ${colorTokens.stroke.hover};
+      opacity: 0.3;
+    `}
 
     [data-content-icon],
     [data-bar-icon] {
@@ -493,17 +483,6 @@ const styles = {
       [data-bar-icon] {
         display: none;
       }
-      [data-actions] {
-        opacity: 1;
-      }
-    `}
-
-    ${isOverlay &&
-    css`
-      box-shadow: ${shadow.drag};
-      border-color: ${colorTokens.stroke.border};
-      background-color: ${colorTokens.background.white};
-
       [data-actions] {
         opacity: 1;
       }

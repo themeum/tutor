@@ -2,7 +2,7 @@ import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { css } from '@emotion/react';
 import { animated } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -319,8 +319,6 @@ const TopicHeader = ({
         }
         message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
         confirmButton={{
           text: __('Delete', 'tutor'),
           variant: 'text',
@@ -341,7 +339,14 @@ const TopicHeader = ({
   );
 };
 
-export default TopicHeader;
+export default memo(TopicHeader, (prev, next) => {
+  return (
+    prev.topic.id === next.topic.id &&
+    prev.topic.isSaved === next.topic.isSaved &&
+    prev.topic.isCollapsed === next.topic.isCollapsed &&
+    prev.isEdit === next.isEdit
+  );
+});
 
 const styles = {
   header: ({

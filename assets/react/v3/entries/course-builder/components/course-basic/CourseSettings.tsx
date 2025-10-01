@@ -43,6 +43,7 @@ const CourseSettings = () => {
 
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
+  const isPaidCourse = form.watch('course_price_type') === 'paid';
 
   const availableTabs = [
     isGeneralSettingsVisible && {
@@ -131,12 +132,30 @@ const CourseSettings = () => {
                 <Controller
                   name="is_public_course"
                   control={form.control}
+                  rules={{
+                    validate: (value) => {
+                      if (value && isPaidCourse) {
+                        return __('Paid courses cannot be public.', 'tutor');
+                      }
+                      return true;
+                    },
+                    deps: ['course_price_type'],
+                  }}
                   render={(controllerProps) => (
                     <FormSwitch
                       {...controllerProps}
                       label={__('Public Course', 'tutor')}
                       helpText={__('Make This Course Public. No Enrollment Required.', 'tutor')}
                       loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                      onChange={(value) => {
+                        if (isPaidCourse && value) {
+                          form.setValue('is_public_course', false);
+                          form.setError('is_public_course', {
+                            type: 'validate',
+                            message: __('Paid courses cannot be public.', 'tutor'),
+                          });
+                        }
+                      }}
                     />
                   )}
                 />

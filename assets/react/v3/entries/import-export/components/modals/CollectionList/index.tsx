@@ -21,12 +21,7 @@ interface CollectionListModalProps extends ModalProps {
   selectedCollectionFromContentBank?: Collection;
 }
 
-const CollectionListModal = ({
-  closeModal,
-  actions,
-  form,
-  selectedCollectionFromContentBank,
-}: CollectionListModalProps) => {
+const CollectionListModal = ({ closeModal, actions, form }: CollectionListModalProps) => {
   const addedItems = form.getValues('content_bank') || [];
   const _form = useFormWithGlobalError<BulkSelectionFormData>({
     defaultValues: {
@@ -57,7 +52,7 @@ const CollectionListModal = ({
       maxWidth={720}
     >
       <div css={styles.tableWrapper}>
-        <CollectionListTable selectedContentBankCollection={selectedCollectionFromContentBank} form={_form} />
+        <CollectionListTable form={_form} />
       </div>
 
       <div css={styles.footer}>

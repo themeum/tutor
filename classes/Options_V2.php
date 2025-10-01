@@ -10,9 +10,9 @@
 
 namespace Tutor;
 
-use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
+use Tutor\Ecommerce\OptionKeys;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -169,7 +169,7 @@ class Options_V2 {
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
-				foreach ( tutor_utils()->sanitize_recursively( $sections ) as $section ) {
+				foreach ( Input::sanitize_array( $sections ) as $section ) {
 					foreach ( $section['blocks'] as $blocks ) {
 						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
 							foreach ( $blocks['fields'] as $fields ) {
@@ -184,7 +184,7 @@ class Options_V2 {
 					 * @since 3.0.0
 					 */
 					if ( isset( $section['submenu'] ) && is_array( $section['submenu'] ) ) {
-						foreach ( tutor_utils()->sanitize_recursively( $section['submenu'] ) as $submenu_section ) {
+						foreach ( Input::sanitize_array( $section['submenu'] ) as $submenu_section ) {
 							foreach ( $submenu_section['blocks'] as $block ) {
 								if ( isset( $block['fields'] ) && ! empty( $block['fields'] ) ) {
 									foreach ( $block['fields'] as $fields ) {
@@ -431,7 +431,15 @@ class Options_V2 {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$request = json_decode( stripslashes( $_POST['data'] ), true );
+		$data = $_FILES['data'];
+
+		if ( ! isset( $data['tmp_name'] ) ) {
+			$this->response_bad_request( __( 'Invalid file', 'tutor' ) );
+		}
+
+		$request = json_decode( file_get_contents( $data['tmp_name'] ), true );
+
+		unlink( $data['tmp_name'] );
 
 		$settings_found = false;
 
@@ -515,7 +523,16 @@ class Options_V2 {
 
 		do_action( 'tutor_option_save_before', $option );
 
-		$option = tutor_utils()->sanitize_recursively( $option );
+		$option = Input::sanitize_array(
+			$option,
+			array(
+				'payment_settings'                         => 'wp_kses_post',
+				'tutor_bank_transfer_withdraw_instruction' => 'sanitize_textarea_field',
+				'certificate_showcase_desc'                => 'sanitize_textarea_field',
+				'invoice_from_address'                     => 'sanitize_textarea_field',
+				'fees_name'                                => 'sanitize_textarea_field',
+			)
+		);
 		$option = apply_filters( 'tutor_option_input', $option );
 
 		$time                                  = strtotime( 'now' ) + ( 6 * 60 * 60 );
@@ -1213,20 +1230,21 @@ class Options_V2 {
 								'desc'    => __( 'Define how many columns you want to use to display courses.', 'tutor' ),
 							),
 							array(
-								'key'         => 'course_archive_filter',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Course Filter', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
-							),
-							array(
 								'key'         => 'courses_per_page',
 								'type'        => 'number',
 								'number_type' => 'integer',
 								'label'       => __( 'Courses Per Page', 'tutor' ),
 								'default'     => '12',
 								'desc'        => __( 'Set the number of courses to display per page on the Course List page.', 'tutor' ),
+							),
+							array(
+								'key'           => 'course_archive_filter',
+								'type'          => 'toggle_switch',
+								'label'         => __( 'Course Filter', 'tutor' ),
+								'label_title'   => '',
+								'default'       => 'off',
+								'desc'          => __( 'Show sorting and filtering options on course archive page', 'tutor' ),
+								'toggle_fields' => 'supported_course_filters',
 							),
 							array(
 								'key'     => 'supported_course_filters',
@@ -1361,6 +1379,13 @@ class Options_V2 {
 										'desc'    => __( 'Toggle to show instructor info', 'tutor' ),
 									),
 									array(
+										'key'     => 'enable_wishlist',
+										'type'    => 'toggle_single',
+										'label'   => __( 'Wishlist', 'tutor' ),
+										'default' => 'on',
+										'desc'    => __( 'Toggle to disable/enable wishlist', 'tutor' ),
+									),
+									array(
 										'key'     => 'enable_q_and_a_on_course',
 										'type'    => 'toggle_single',
 										'label'   => __( 'Q&A', 'tutor' ),
@@ -1486,7 +1511,7 @@ class Options_V2 {
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
 										'desc'        => __( 'Enable to show course review section', 'tutor' ),
-									),
+									)
 								),
 							),
 						),
@@ -1982,6 +2007,7 @@ class Options_V2 {
 			'schema_version'   => '1.0.0',
 			'exported_at'      => current_time( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
 			'keep_media_files' => false,
+			'keep_user_data'   => false,
 			'data'             => array(),
 		);
 
@@ -2000,7 +2026,7 @@ class Options_V2 {
 	 */
 	public function update_settings_log( $new_settings_data, $action_type ) {
 		$get_final_data = array();
-		
+
 		$action = strtolower( $action_type );
 
 		$time = tutor_time();
@@ -2019,7 +2045,16 @@ class Options_V2 {
 
 			$update_option = array_merge( $import_data, $get_option_data );
 
-			$update_option = tutor_utils()->sanitize_recursively( $update_option );
+			$update_option = Input::sanitize_array(
+				$update_option,
+				array(
+					'payment_settings'          => 'wp_kses_post',
+					'tutor_bank_transfer_withdraw_instruction' => 'sanitize_textarea_field',
+					'certificate_showcase_desc' => 'sanitize_textarea_field',
+					'invoice_from_address'      => 'sanitize_textarea_field',
+					'fees_name'                 => 'sanitize_textarea_field',
+				)
+			);
 
 			if ( ! empty( $update_option ) ) {
 				update_option( 'tutor_settings_log', $update_option );

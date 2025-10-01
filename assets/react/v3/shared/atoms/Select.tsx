@@ -1,16 +1,18 @@
-import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+import Popover from '@TutorShared/molecules/Popover';
+
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { Option } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useState } from 'react';
 
-import { isRTL } from '@TutorShared/config/constants';
-import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
 import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import SVGIcon from './SVGIcon';
@@ -68,6 +70,7 @@ const Select = <T,>({
   const [searchText, setSearchText] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [currentOptions, setCurrentOptions] = useState<Option<T>[]>([]);
+  const triggerRef = useRef<HTMLDivElement>(null);
 
   const debouncedSearchText = useDebounce(searchText);
 
@@ -85,11 +88,6 @@ const Select = <T,>({
 
     return options;
   }, [debouncedSearchText, isSearchable, options]);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-  });
 
   const { intersectionEntry, intersectionElementRef } = useIntersectionObserver<HTMLDivElement>();
   const hasMoreItems = selections.length > currentOptions.length;
@@ -150,68 +148,61 @@ const Select = <T,>({
         </div>
       </div>
 
-      <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-        <div
-          css={[
-            styles.optionsWrapper,
-            {
-              [isRTL ? 'right' : 'left']: position.left,
-              top: position.top,
-              maxWidth: triggerWidth,
-            },
-          ]}
-          ref={popoverRef}
-        >
-          <ul css={styles.options}>
-            {currentOptions.map((option) => (
-              <li
-                key={String(option.value)}
-                css={styles.optionItem({
-                  isSelected: option.value === value?.value,
-                  optionsStyleVariant,
-                  isDisabled: !!option.disabled,
-                })}
-              >
-                <Button
-                  variant="text"
-                  buttonCss={styles.optionButton({
-                    fontWeight: isFontWeight ? (option.value as number) : 'inherit',
-                  })}
-                  onClick={() => {
-                    setInputValue(option.label);
-                    setSearchText('');
-                    onChange(option);
-                    setIsOpen(false);
-                  }}
-                >
-                  {option.label}
-                </Button>
-              </li>
-            ))}
-
-            <div ref={intersectionElementRef} css={styles.spinnerWrapper({ isVisible: hasMoreItems })}>
-              <LoadingSpinner />
-            </div>
-          </ul>
-          {isClearable && (
-            <div css={styles.clearButton({ isDisabled: inputValue === '' })}>
+      <Popover
+        triggerRef={triggerRef}
+        isOpen={isOpen}
+        closePopover={() => setIsOpen(false)}
+        animationType={AnimationType.slideDown}
+      >
+        <ul css={styles.options}>
+          {currentOptions.map((option) => (
+            <li
+              key={String(option.value)}
+              css={styles.optionItem({
+                isSelected: option.value === value?.value,
+                optionsStyleVariant,
+                isDisabled: !!option.disabled,
+              })}
+            >
               <Button
                 variant="text"
-                disabled={inputValue === ''}
-                icon={<SVGIcon name="delete" />}
+                buttonCss={styles.optionButton({
+                  fontWeight: isFontWeight ? (option.value as number) : 'inherit',
+                })}
                 onClick={() => {
-                  clearOption();
-                  setInputValue('');
+                  setInputValue(option.label);
                   setSearchText('');
+                  onChange(option);
                   setIsOpen(false);
                 }}
               >
-                {__('Clear', 'tutor')}
+                {option.label}
               </Button>
-            </div>
-          )}
-        </div>
-      </Portal>
+            </li>
+          ))}
+
+          <div ref={intersectionElementRef} css={styles.spinnerWrapper({ isVisible: hasMoreItems })}>
+            <LoadingSpinner />
+          </div>
+        </ul>
+        {isClearable && (
+          <div css={styles.clearButton({ isDisabled: inputValue === '' })}>
+            <Button
+              variant="text"
+              disabled={inputValue === ''}
+              icon={<SVGIcon name="delete" />}
+              onClick={() => {
+                clearOption();
+                setInputValue('');
+                setSearchText('');
+                setIsOpen(false);
+              }}
+            >
+              {__('Clear', 'tutor')}
+            </Button>
+          </div>
+        )}
+      </Popover>
     </div>
   );
 };
@@ -321,14 +312,6 @@ const styles = {
         }
       `}
     }
-  `,
-  optionsWrapper: css`
-    position: absolute;
-    width: 100%;
-    z-index: ${zIndex.dropdown};
-    background-color: ${colorTokens.background.white};
-    box-shadow: ${shadow.popover};
-    border-radius: ${borderRadius[6]};
   `,
   options: css`
     list-style-type: none;

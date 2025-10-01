@@ -11,7 +11,7 @@ describe('Tutor Dashboard Student Question and Answers', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('tbody tr').eq(0).find('a').contains('Reply').click();
@@ -31,7 +31,7 @@ describe('Tutor Dashboard Student Question and Answers', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('tbody tr').eq(0).find('.tutor-icon-kebab-menu').parent().click();
@@ -48,7 +48,7 @@ describe('Tutor Dashboard Student Question and Answers', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('tbody tr').eq(0).find('.tutor-icon-kebab-menu').parent().click();

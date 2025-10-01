@@ -211,7 +211,7 @@ if ( 0 === $total_courses_count ) {
 		'update_post_term_cache' => false,
 		'order_by'               => 'none',
 	);
-	$total_list_query    = Course_List::course_list_query( $list_args, $current_user_id, 'any' );
+	$total_list_query    = Course_List::course_list_query( $list_args, $current_user_id, 'any', true );
 	$total_courses_count = $total_list_query->found_posts;
 
 	if ( 0 === $total_courses_count ) {

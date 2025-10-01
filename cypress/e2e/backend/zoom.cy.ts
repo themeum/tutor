@@ -28,11 +28,7 @@ describe('Tutor Dashboard My Courses', () => {
 
   it('should start meeting', () => {
     cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found')
-      ) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
         cy.get('a.tutor-btn.tutor-btn-primary').contains('Start Meeting').invoke('removeAttr', 'target').click();
@@ -47,11 +43,7 @@ describe('Tutor Dashboard My Courses', () => {
     cy.intercept('POST', '/wp-admin/admin-ajax.php').as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found')
-      ) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
         cy.get('a.tutor-btn.tutor-btn-outline-primary.tutor-btn-md').contains('Edit').eq(0).click();
@@ -68,7 +60,7 @@ describe('Tutor Dashboard My Courses', () => {
           .clear()
           .click();
         cy.get('.dropdown-years > .dropdown-label').click();
-        cy.get('.dropdown-container.dropdown-years .dropdown-list li').contains('2025').click();
+        cy.get('.dropdown-container.dropdown-years .dropdown-list li').contains('2026').click();
         cy.get('.dropdown-container.dropdown-months .dropdown-label').click();
         cy.get('.dropdown-container.dropdown-months .dropdown-list li').contains('May').click();
         // Select the desired day
@@ -98,11 +90,7 @@ describe('Tutor Dashboard My Courses', () => {
   it('should delete a zoom meeting', () => {
     cy.intercept('POST', '/wp-admin/admin-ajax.php').as('ajaxRequest');
     cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found')
-      ) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data available');
       } else {
         cy.get('a.tutor-iconic-btn').eq(0).click({ force: true });
@@ -150,71 +138,15 @@ describe('Tutor Dashboard My Courses', () => {
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
   it('should filter meetings', () => {
-    cy.get(':nth-child(2) > .tutor-js-form-select').click();
-    cy.get(':nth-child(2) > .tutor-nowrap-ellipsis').then(() => {
-      cy.get('.tutor-form-select-option')
-        .then(() => {
-          cy.get(
-            ' .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(2) > .tutor-nowrap-ellipsis',
-          )
-            .eq(0)
-            .click();
-        })
-        .then(() => {
-          cy.get('body').then(($body) => {
-            if (
-              $body.text().includes('No Data Found from your Search/Filter') ||
-              $body.text().includes('No Data Available in this Section') ||
-              $body.text().includes('No records found')
-            ) {
-              cy.log('No data available');
-            } else {
-              cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
-                .eq(1)
-                .invoke('text')
-                .then((retrievedText) => {
-                  cy.get(
-                    '.tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis',
-                  ).each(($category) => {
-                    cy.wrap($category)
-                      .invoke('text')
-                      .then((categoryText) => {
-                        if (categoryText.trim() === retrievedText.trim()) {
-                          cy.wrap($category).click();
-                        }
-                      });
-                  });
-                });
-            }
-          });
-        });
+    cy.unifiedFilterElements({
+      selectFieldName: 'course-id',
+      resultColumnIndex: 2,
     });
   });
   it('should filter courses by a specific date', () => {
-    cy.get(
-      ':nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
-    ).click();
-
-    cy.get('.dropdown-years').click();
-    cy.get('.dropdown-years>.dropdown-list').contains('2025').click();
-    cy.get('.dropdown-months > .dropdown-label').click();
-    cy.get('.dropdown-months > .dropdown-list').contains('June').click();
-    cy.get('.react-datepicker__day--011').contains('11').click();
-
-    cy.get('body').then(($body) => {
-      if (
-        $body.text().includes('No Data Found from your Search/Filter') ||
-        $body.text().includes('No Data Available in this Section') ||
-        $body.text().includes('No records found')
-      ) {
-        cy.log('No data available');
-      } else {
-        cy.wait(2000);
-        cy.get('.tutor-zoom-meeting-item>td>.tutor-fs-7').each(($el) => {
-          const dateText = $el.text().trim();
-          expect(dateText).to.contain('June 11, 2025');
-        });
-      }
+    cy.unifiedFilterElements({
+      selectFieldName: 'date',
+      resultColumnIndex: 1,
     });
   });
 });

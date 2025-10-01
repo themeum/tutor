@@ -11,7 +11,7 @@ describe('Tutor Admin Question and Answers', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table tbody tr').eq(0).find('a').contains('Reply').click();
@@ -31,7 +31,7 @@ describe('Tutor Admin Question and Answers', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table tbody tr').eq(0).find('.tutor-icon-kebab-menu').parent().click();
@@ -48,7 +48,7 @@ describe('Tutor Admin Question and Answers', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table tbody tr').eq(0).find('.tutor-icon-kebab-menu').parent().click();
@@ -64,10 +64,13 @@ describe('Tutor Admin Question and Answers', () => {
   it('should delete a question', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
-    cy.get('a[data-keypage=archived]').contains('Archived').click();
+    cy.unifiedFilterElements({
+      selectFieldName: 'tab',
+      selectFieldValue: 'Archived',
+    });
 
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found')) {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table tbody tr').eq(0).find('.tutor-icon-kebab-menu').parent().click();
@@ -98,7 +101,7 @@ describe('Tutor Admin Question and Answers', () => {
       }
     });
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Data Found.')) {
         cy.log('No data found');
       } else {
         cy.getByInputName('tutor-bulk-checkbox-all').eq(0).check();

@@ -6,6 +6,27 @@ import { type Interception } from 'cypress/types/net-stubbing';
 /* eslint-disable @typescript-eslint/no-namespace */
 export {};
 
+interface UnifiedFilterOptions {
+  selectFieldName: string;
+  selectFieldValue?: string;
+  filterButtonSelector?: string;
+  filterFormSelector?: string;
+  selectFieldSelector?: string;
+  applyButtonText?: string;
+  resultTableSelector?: string;
+  resultColumnIndex?: number;
+  noDataMessages?: string[];
+  skipFirstOption?: boolean;
+  waitAfterSelection?: number;
+
+  datePickerYear?: string;
+  datePickerMonth?: string;
+  datePickerDay?: string;
+  onNoData?: () => void;
+  onFilterSuccess?: (selectedText: string) => void;
+  customValidation?: (selectedText: string, resultElements: JQuery<HTMLElement>) => void;
+}
+
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -26,6 +47,7 @@ declare global {
         elementTitleSelector: string,
       ): Chainable<JQuery<HTMLElement>>;
       filterElementsByDate(filterFormSelector: string, elementDateSelector: string): Chainable<JQuery<HTMLElement>>;
+      unifiedFilterElements(options: UnifiedFilterOptions): Chainable<JQuery<HTMLElement>>;
       search(
         searchInputSelector: string,
         searchQuery: string,
@@ -204,7 +226,7 @@ Cypress.Commands.add('performBulkAction', (option) => {
 
   cy.get('body').then(($body) => {
     if (
-      $body.text().includes('No Data Found from your Search/Filter') ||
+      $body.text().includes('No Data Found.') ||
       $body.text().includes('No request found') ||
       $body.text().includes('No Data Available in this Section') ||
       $body.text().includes('No records found') ||
@@ -400,7 +422,8 @@ Cypress.Commands.add(
         $body.text().includes('No Data Available in this Section') ||
         $body.text().includes('No records found') ||
         $body.text().includes('No Records Found') ||
-        $body.text().includes('No Courses Found.')
+        $body.text().includes('No Courses Found.') ||
+        $body.text().includes('No Data Found.')
       ) {
         cy.log('No data available');
       } else {
@@ -898,9 +921,9 @@ Cypress.Commands.add('saveQuiz', (quizData) => {
     cy.get('button').contains('True/False').click();
   });
 
-  cy.doesElementExist('[data-cy=quiz-next').then((exists) => {
+  cy.doesElementExist('[data-cy=quiz-next]').then((exists) => {
     if (exists) {
-      cy.get('[data-cy=quiz-next').click();
+      cy.get('[data-cy=quiz-next]').click();
       cy.wait(500);
       cy.getByInputName('quiz_option.time_limit.time_value')
         .clear()
@@ -988,6 +1011,9 @@ Cypress.Commands.add('saveTutorSettings', () => {
 
 Cypress.Commands.add('deleteCourseById', (id: string) => {
   cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+    if (req.body.includes(endpoints.GET_COURSE_DETAILS)) {
+      req.alias = 'getCourseDetails';
+    }
     if (req.body.includes(endpoints.UPDATE_COURSE)) {
       req.alias = 'updateCourse';
     }
@@ -995,6 +1021,7 @@ Cypress.Commands.add('deleteCourseById', (id: string) => {
   cy.visit(`${Cypress.env('base_url')}${backendUrls.COURSE_BUILDER}${id}`);
   cy.loginAsAdmin();
 
+  cy.waitAfterRequest('getCourseDetails');
   cy.get('[data-cy=dropdown-trigger]').click();
   cy.get('.tutor-portal-popover').within(() => {
     cy.get('[data-cy=move-to-trash]').click();
@@ -1003,4 +1030,165 @@ Cypress.Commands.add('deleteCourseById', (id: string) => {
   cy.waitAfterRequest('updateCourse');
   cy.wait(1000);
   cy.url().should('include', '/wp-admin/admin.php?page=tutor');
+});
+
+Cypress.Commands.add('unifiedFilterElements', (options: UnifiedFilterOptions) => {
+  const defaultUnifiedFilterOptions: Partial<UnifiedFilterOptions> = {
+    filterButtonSelector: '.tutor-wp-dashboard-filters-button',
+    filterFormSelector: '.tutor-admin-dashboard-filter-form',
+    applyButtonText: 'Apply Filters',
+    noDataMessages: ['No Data Found.'],
+    skipFirstOption: true,
+    waitAfterSelection: 1000,
+    datePickerYear: '2024',
+    datePickerMonth: 'June',
+    datePickerDay: '11',
+  };
+
+  cy.get('body').then(($body) => {
+    if (options.noDataMessages?.some((message) => $body.text().includes(message))) {
+      cy.log('No data found, skipping filter test');
+      return;
+    }
+
+    const config = { ...defaultUnifiedFilterOptions, ...options };
+
+    // Validate required options
+    if (!config.filterButtonSelector || !config.filterFormSelector) {
+      throw new Error('filterButtonSelector and filterFormSelector are required');
+    }
+
+    if (!config.selectFieldName && !config.selectFieldSelector) {
+      throw new Error('Either selectFieldName or selectFieldSelector must be provided');
+    }
+
+    let selectedOptionText = '';
+
+    cy.get('body').then(($body) => {
+      const filterButtonExists = $body.find(config.filterButtonSelector || '').length > 0;
+
+      if (!filterButtonExists) {
+        cy.log('Filter button not found, skipping filter test');
+        return;
+      }
+
+      cy.get(config.filterButtonSelector || '').click();
+
+      cy.get(config.filterFormSelector || '')
+        .should('be.visible')
+        .within(() => {
+          const handleOptionSelection = ($options: JQuery<HTMLElement>) => {
+            if ($options.length <= 1) {
+              cy.log('No valid options available for selection');
+              return;
+            }
+
+            if (config.selectFieldName !== 'date' && config.selectFieldValue) {
+              const selectedOption = $options.filter((index, option) => {
+                return option.innerText.trim().includes(config?.selectFieldValue || '');
+              });
+              if (selectedOption.length > 0) {
+                selectedOptionText = selectedOption.text().trim();
+                cy.log(`Selected predefined option: ${selectedOptionText}`);
+                cy.wrap(selectedOption).scrollIntoView().click();
+                return;
+              } else {
+                cy.log(`Predefined option "${config.selectFieldValue}" not found`);
+              }
+            } else {
+              const startIndex = config.skipFirstOption ? 1 : 0;
+              const validOptionsCount = $options.length - startIndex;
+              const randomIndex = Math.floor(Math.random() * validOptionsCount) + startIndex;
+
+              const selectedOption = $options[randomIndex];
+              selectedOptionText = selectedOption.innerText.trim();
+
+              cy.log(`Selected: ${selectedOptionText} (${randomIndex}/${$options.length})`);
+
+              cy.wrap(selectedOption).scrollIntoView().click();
+            }
+
+            if (config.waitAfterSelection) {
+              cy.wait(config.waitAfterSelection);
+            }
+          };
+
+          if (config.selectFieldName !== 'date') {
+            cy.get('.tutor-wp-dashboard-filters-item').each(($filterItem) => {
+              const hasTargetSelect = $filterItem.find(`select[name="${config.selectFieldName}"]`).length > 0;
+
+              if (!hasTargetSelect) {
+                return;
+              }
+
+              cy.wrap($filterItem).click();
+              cy.wrap($filterItem).within(() => {
+                cy.get('.tutor-form-select-options')
+                  .should('be.visible')
+                  .within(() => {
+                    cy.get('.tutor-form-select-option').then(handleOptionSelection);
+                  });
+              });
+            });
+          } else if (config.selectFieldName === 'date') {
+            cy.get('.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control').click();
+            cy.get('.dropdown-years').click();
+            cy.get('.dropdown-years>.dropdown-list')
+              .contains(config.datePickerYear || '2024')
+              .click();
+
+            cy.get('.dropdown-months > .dropdown-label').click();
+            cy.get('.dropdown-months > .dropdown-list>li')
+              .contains(config.datePickerMonth || 'June')
+              .click();
+
+            cy.get(`.react-datepicker__day--0${(config.datePickerDay || '11').padStart(2, '0').slice(-2)}`)
+              .contains(config.datePickerDay || '')
+              .click();
+            selectedOptionText = `${config.datePickerMonth} ${config.datePickerDay}, ${config.datePickerYear}`;
+          } else if (config.selectFieldSelector) {
+            cy.get(config.selectFieldSelector).click();
+            cy.get('.tutor-form-select-options')
+              .should('be.visible')
+              .within(() => {
+                cy.get('.tutor-form-select-option').then(handleOptionSelection);
+              });
+          }
+
+          if (config.applyButtonText) {
+            cy.get('button.tutor-btn.tutor-btn-outline-primary')
+              .contains(config.applyButtonText)
+              .click({ force: true });
+          }
+        });
+
+      // Handle results verification
+      if (config.resultTableSelector && selectedOptionText) {
+        cy.get('body').then(($bodyAfterFilter) => {
+          const hasNoDataMessage = config.noDataMessages?.some((message) => $bodyAfterFilter.text().includes(message));
+
+          if (hasNoDataMessage) {
+            cy.log('No data found after applying filter');
+            config.onNoData?.();
+            return;
+          }
+
+          if (config.resultColumnIndex) {
+            const resultSelector = `${config.resultTableSelector}>tbody>tr>td:nth-child(${config.resultColumnIndex})`;
+            cy.get(resultSelector).then(($results) => {
+              if (config.customValidation) {
+                config.customValidation(selectedOptionText, $results);
+              } else {
+                cy.wrap($results).each(($resultRow) => {
+                  cy.wrap($resultRow).should('contain.text', selectedOptionText);
+                });
+              }
+
+              config.onFilterSuccess?.(selectedOptionText);
+            });
+          }
+        });
+      }
+    });
+  });
 });

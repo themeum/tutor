@@ -45,13 +45,6 @@ class CourseModel {
 	const MODE_STRICT   = 'strict';
 
 	/**
-	 * Course mapped with the product using this meta key
-	 *
-	 * @var string
-	 */
-	const WC_PRODUCT_META_KEY = '_tutor_course_product_id';
-
-	/**
 	 * Course attachment/downloadable resources meta key
 	 *
 	 * @var string
@@ -64,6 +57,15 @@ class CourseModel {
 	 * @var string
 	 */
 	const BENEFITS_META_KEY = '_tutor_course_benefits';
+
+	/**
+	 * The constant representing the status when a course is completed.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @var string
+	 */
+	const COURSE_COMPLETED = 'course_completed';
 
 	/**
 	 * Get available status list.
@@ -115,7 +117,7 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function get_post_types( $post ) {
-		return apply_filters( 'tutor_check_course_post_type', get_post_type( $post ) );
+		return apply_filters( 'tutor_check_course_post_type', self::POST_TYPE === get_post_type( $post ), get_post_type( $post ) );
 	}
 
 	/**
@@ -315,6 +317,8 @@ class CourseModel {
 			$instructor_id
 		);
 		//phpcs:enable
+
+		$query = apply_filters( 'modify_get_courses_by_instructor_query', $query, $instructor_id, $where_post_status, $post_types, $limit_offset, $select_col );
 
 		//phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
 		return $count_only ? $wpdb->get_var( $query ) : $wpdb->get_results( $query, OBJECT );
@@ -673,7 +677,6 @@ class CourseModel {
 
 		$args = wp_parse_args( $args, $default_args );
 		return new \WP_Query( $args );
-
 	}
 
 	/**
@@ -934,11 +937,11 @@ class CourseModel {
 	 *
 	 * @since 3.6.0
 	 *
-	 * @param int $course_id Course id to get only a particular course's attachment.
+	 * @param int|array $course_id Course id or array of ids, to get course's attachment.
 	 *
 	 * @return int
 	 */
-	public static function count_attachment( int $course_id = 0 ) {
+	public static function count_attachment( $course_id = 0 ) {
 		global $wpdb;
 
 		$total_count = 0;
@@ -956,8 +959,9 @@ class CourseModel {
 		$select = array( 'pm.meta_value' );
 		$where  = array();
 		if ( $course_id ) {
-			$where['p.ID'] = $course_id;
+			$where['p.ID'] = is_array( $course_id ) ? array( 'IN', $course_id ) : $course_id;
 		}
+
 		$search   = array();
 		$limit    = 0; // Get all.
 		$offset   = 0;
@@ -997,30 +1001,90 @@ class CourseModel {
 	}
 
 	/**
+	 * Count total questions available in all or specific courses
+	 *
+	 * @since 3.7.1
+	 *
+	 * @param int|array $course_id Course id or array of ids, to get course's attachment.
+	 *
+	 * @return int
+	 */
+	public static function count_questions( $course_id = 0 ) {
+		global $wpdb;
+
+		$total_count      = 0;
+		$quiz_post_type   = tutor()->quiz_post_type;
+		$topic_post_type  = tutor()->topics_post_type;
+		$course_post_type = tutor()->course_post_type;
+
+		$primary_table = "{$wpdb->prefix}tutor_quiz_questions question";
+
+		$joining_tables = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} q",
+				'on'    => "q.ID = question.quiz_id AND q.post_type='{$quiz_post_type}'",
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} t",
+				'on'    => "q.post_parent = t.ID AND t.post_type='{$topic_post_type}'",
+			),
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} c",
+				'on'    => "c.ID = t.post_parent AND c.post_type='{$course_post_type}'",
+			),
+		);
+
+		// Prepare query.
+		$where = array();
+		if ( $course_id ) {
+			$where['c.ID'] = is_array( $course_id ) ? array( 'IN', $course_id ) : $course_id;
+		}
+
+		$search = array();
+
+		$total_count = QueryHelper::get_joined_count(
+			$primary_table,
+			$joining_tables,
+			$where,
+			$search,
+			'*'
+		);
+
+		return $total_count;
+	}
+
+	/**
 	 * Count course content
 	 *
 	 * @since 3.6.0
 	 *
 	 * @param string $content_type Content type.
+	 * @param array  $course_ids Course ids.
 	 *
 	 * @return int
 	 */
-	public static function count_course_content( string $content_type ): int {
+	public static function count_course_content( string $content_type, array $course_ids = array() ): int {
 		$total_count = 0;
 		switch ( $content_type ) {
 			case tutor()->lesson_post_type:
-				$total_count = tutor_utils()->get_total_lesson();
+				$total_count = tutor_utils()->get_total_lesson( $course_ids );
 				break;
 			case tutor()->quiz_post_type:
-				$total_count = tutor_utils()->get_total_quiz();
+				$total_count = tutor_utils()->get_total_quiz( $course_ids );
 				break;
 			case tutor()->assignment_post_type:
 				if ( tutor_utils()->is_addon_enabled( 'tutor-assignments' ) ) {
-					$total_count = ( new Assignments( false ) )->get_total_assignment();
+					$total_count = ( new Assignments( false ) )->get_total_assignment( $course_ids );
 				}
 				break;
 			case 'attachments':
-				$total_count = self::count_attachment();
+				$total_count = self::count_attachment( $course_ids );
+				break;
+			case 'questions':
+				$total_count = self::count_questions( $course_ids );
 				break;
 			default:
 				break;
@@ -1089,5 +1153,42 @@ class CourseModel {
 		}
 
 		return $category_options;
+	}
+
+	/**
+	 * Retrieve all course completion records for a specific course, including meta data.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int $course_id The ID of the course.
+	 *
+	 * @return array Array of course completion objects with meta, empty array if none found, or on database error.
+	 */
+	public function get_course_completion_data_by_course_id( int $course_id ): array {
+
+		global $wpdb;
+
+		$where = array(
+			'comment_type'    => self::COURSE_COMPLETED,
+			'comment_post_ID' => $course_id,
+			'comment_agent'   => 'TutorLMSPlugin',
+		);
+
+		$result = QueryHelper::get_all( $wpdb->comments, $where, 'comment_post_ID', -1 );
+
+		if ( empty( $result ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+
+				return array(
+					'completion'      => $item,
+					'completion_meta' => get_comment_meta( $item->comment_ID ),
+				);
+			},
+			$result
+		);
 	}
 }

@@ -327,7 +327,12 @@ class HooksHandler {
 		$enrollment_status = ( OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : ( OrderModel::ORDER_INCOMPLETE === $order->order_status ? 'pending' : 'cancel' ) );
 
 		foreach ( $order->items as $item ) {
-			$object_id = $item->id; // It could be course/bundle/plan id.
+			$object_id    = $item->id; // It could be course/bundle/plan id.
+			$is_gift_item = apply_filters( 'tutor_is_gift_item', false, $item->primary_id );
+			if ( $is_gift_item ) {
+				continue;
+			}
+
 			if ( $this->order_model::TYPE_SINGLE_ORDER !== $order->order_type ) {
 				/**
 				 * Do not process enrollment for membership plan.
@@ -520,9 +525,15 @@ class HooksHandler {
 		$user_id      = $order_data['user_id'];
 		$billing_info = ( new BillingController( false ) )->get_billing_info( $user_id );
 
+		/**
+		 * JSON_UNESCAPED_UNICODE is used to ensure that the billing info is stored in a readable format.
+		 * This is important for languages that use non-ASCII characters like ñ, á, é, í, ó, ú, ü, etc.
+		 *
+		 * @since 3.7.1
+		 */
 		$meta_value = '{}';
 		if ( $billing_info ) {
-			$meta_value = wp_json_encode( $billing_info );
+			$meta_value = wp_json_encode( $billing_info, JSON_UNESCAPED_UNICODE );
 		} else {
 			/**
 			 * Store user data as billing info
@@ -534,7 +545,8 @@ class HooksHandler {
 					'billing_first_name' => $user_data->first_name,
 					'billing_last_name'  => $user_data->last_name,
 					'billing_email'      => $user_data->user_email,
-				)
+				),
+				JSON_UNESCAPED_UNICODE
 			);
 		}
 

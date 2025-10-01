@@ -139,7 +139,6 @@ const endpoints = {
   DELETE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_delete',
   GET_CONTENT_BANK_CONTENTS: 'tutor_content_bank_contents',
   DELETE_CONTENT_BANK_CONTENTS: 'tutor_content_bank_content_delete',
-  CREATE_CONTENT_BANK_COLLECTION: 'tutor-pro_create_content_bank_collection',
   GET_CONTENT_DETAILS: 'tutor_pro_get_content_details',
   GET_CONTENT_BANK_LESSON_DETAILS: 'tutor_content_bank_lesson_details',
   GET_CONTENT_BANK_ASSIGNMENT_DETAILS: 'tutor_content_bank_assignment_details',
@@ -150,6 +149,7 @@ const endpoints = {
   DUPLICATE_CONTENT_BANK_CONTENT: 'tutor_content_bank_content_duplicate',
   MOVE_CONTENT_BANK_CONTENT: 'tutor_content_bank_content_move',
   DUPLICATE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_duplicate',
+  IMPORT_FROM_COURSES: 'tutor_content_bank_content_synchronize',
 } as const;
 
 export default endpoints;

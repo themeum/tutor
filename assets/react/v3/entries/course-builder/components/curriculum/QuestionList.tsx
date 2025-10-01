@@ -29,7 +29,6 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import CollectionListModal from '@CourseBuilderComponents/modals/ContentBankContentSelectModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
-import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -37,7 +36,9 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { type IconCollection } from '@TutorShared/icons/types';
+import { convertedQuestion, validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import {
   type ContentBankContent,
@@ -145,9 +146,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   }, [activeSortId, questionFields]);
 
   const questions = form.watch('questions') || [];
+  const activeQuestion = form.getValues(`questions.${activeQuestionIndex}` as 'questions.0');
 
   const handleAddQuestion = (questionType: QuizQuestionType, content?: H5PContent) => {
-    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    const validation = validateQuizQuestion(activeQuestion);
     if (validation !== true) {
       setValidationError(validation);
       setIsOpen(false);
@@ -228,7 +230,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       question: QuizQuestion;
     })[],
   ) => {
-    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    const validation = validateQuizQuestion(activeQuestion);
     if (validation !== true) {
       setValidationError(validation);
       setIsOpen(false);
@@ -236,7 +238,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     }
 
     const convertedQuestions: QuizQuestion[] = contents.map((content) => {
-      const question = content.question;
+      // Converts a ContentBankContent question to the QuizQuestion format expected by the quiz builder.
+      const question = convertedQuestion(content.question);
       return {
         ...question,
         _data_status: QuizDataStatus.NEW,
@@ -245,7 +248,6 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         question_id: `${question.question_id}-${nanoid()}`,
         question_answers: question.question_answers.map((answer) => ({
           ...answer,
-          is_saved: true,
           _data_status: QuizDataStatus.NEW,
         })),
       };
@@ -407,11 +409,18 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         <Popover
           gap={4}
           maxWidth={'240px'}
-          arrow={CURRENT_VIEWPORT.isAboveTablet ? 'top' : CURRENT_VIEWPORT.isAboveMobile ? 'right' : 'absoluteCenter'}
+          placement={
+            CURRENT_VIEWPORT.isAboveTablet
+              ? POPOVER_PLACEMENTS.BOTTOM
+              : CURRENT_VIEWPORT.isAboveMobile
+                ? POPOVER_PLACEMENTS.LEFT
+                : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
+          }
           triggerRef={addButtonRef}
           isOpen={isOpen}
           closePopover={() => setIsOpen(false)}
           animationType={AnimationType.slideUp}
+          arrow={true}
         >
           <div css={styles.questionOptionsWrapper}>
             <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>
@@ -468,6 +477,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                         setIsOpen(false);
                       }}
                       icon={<SVGIcon name="contentBank" width={24} height={24} />}
+                      data-cy="add-from-content-bank"
                     >
                       {__('Add from Content Bank', 'tutor')}
                     </Button>

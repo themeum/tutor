@@ -39,6 +39,8 @@ if ( Input::has( 'view_quiz_attempt_id' ) ) {
 tutor_load_template_from_custom_path(
 	tutor()->path . '/views/quiz/attempt-table.php',
 	array(
+		'quiz_id'      => $quiz_id,
+		'user_id'      => get_current_user_id(),
 		'attempt_list' => $previous_attempts,
 		'context'      => 'course-single-previous-attempts',
 	)

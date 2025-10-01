@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Exception;
+use TUTOR\Earnings;
 use Tutor\Ecommerce\Tax;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
@@ -79,10 +80,11 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const META_ENROLLMENT_FEE      = 'plan_enrollment_fee';
-	const META_TRIAL_FEE           = 'plan_trial_fee';
-	const META_PLAN_INFO           = 'plan_info';
-	const META_IS_PLAN_TRIAL_ORDER = 'is_plan_trial_order';
+	const META_ENROLLMENT_FEE          = 'plan_enrollment_fee';
+	const META_TRIAL_FEE               = 'plan_trial_fee';
+	const META_PLAN_INFO               = 'plan_info';
+	const META_IS_PLAN_TRIAL_ORDER     = 'is_plan_trial_order';
+	const META_IS_RESUBSCRIPTION_ORDER = 'is_resubscription_order';
 
 	/**
 	 * Tax type constants
@@ -201,26 +203,46 @@ class OrderModel {
 	 * Get recalculated order tax data.
 	 *
 	 * @since 3.4.0
+	 * @since 3.8.0 tax re-calculation based on pre_tax_price column value.
 	 *
 	 * @param int|object $order the order id or object.
 	 *
 	 * @return array
 	 */
 	public function get_recalculated_order_tax_data( $order ) {
-		$order       = self::get_order( $order );
-		$total_price = $order->total_price;
-		$tax_rate    = Tax::get_user_tax_rate( $order->user_id );
-		$order_data  = array();
-		if ( $tax_rate ) {
-			$order_data['tax_type']   = Tax::get_tax_type();
-			$order_data['tax_rate']   = $tax_rate;
-			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+		$tax_type   = Tax::get_tax_type();
+		$tax_rate   = Tax::get_user_tax_rate( $order->user_id );
+		$order      = self::get_order( $order );
+		$order_data = array(
+			'tax_type'   => null,
+			'tax_rate'   => null,
+			'tax_amount' => null,
+		);
 
-			if ( ! Tax::is_tax_included_in_price() ) {
-				$total_price              += $order_data['tax_amount'];
-				$order_data['total_price'] = $total_price;
-				$order_data['net_payment'] = $total_price;
-			}
+		if ( ! Tax::should_calculate_tax()
+			|| ! $tax_rate
+			|| ! $order
+			|| ! $order->pre_tax_price ) {
+			return $order_data;
+		}
+
+		$order_data['tax_type'] = $tax_type;
+		$order_data['tax_rate'] = $tax_rate;
+
+		if ( ! Tax::is_tax_included_in_price() ) {
+			// For exclusive tax type.
+			$tax_amount  = Tax::calculate_tax( $order->pre_tax_price, $tax_rate );
+			$total_price = $order->pre_tax_price + $tax_amount;
+
+			$order_data['tax_amount']  = $tax_amount;
+			$order_data['total_price'] = $total_price;
+			$order_data['net_payment'] = $total_price;
+		} else {
+			// For inclusive tax type.
+			$tax_amount = Tax::calculate_tax( $order->total_price, $tax_rate );
+
+			$order_data['tax_amount']    = $tax_amount;
+			$order_data['pre_tax_price'] = $order->total_price - $tax_amount;
 		}
 
 		return $order_data;
@@ -412,19 +434,28 @@ class OrderModel {
 		}
 
 		// Set order id on each item.
-		foreach ( $items as $key => $item ) {
-			$items[ $key ]['order_id'] = $order_id;
+		foreach ( $items as $item ) {
+			$item['order_id'] = $order_id;
+			$meta_data        = $item['meta_data'] ?? null;
+			try {
+				unset( $item['meta_data'] );
+				$insert = QueryHelper::insert(
+					$this->order_item_table,
+					$item,
+				);
+				if ( $insert ) {
+					if ( ! empty( $meta_data ) ) {
+						foreach ( $meta_data as $meta ) {
+							( new OrderItemMetaModel() )->add_meta( $insert, $meta['meta_key'], maybe_serialize( $meta['meta_value'] ) );
+						}
+					}
+				}
+			} catch ( \Throwable $th ) {
+				return false;
+			}
 		}
 
-		try {
-			$insert = QueryHelper::insert_multiple_rows(
-				$this->order_item_table,
-				$items
-			);
-			return $insert ? true : false;
-		} catch ( \Throwable $th ) {
-			throw new Exception( $th->getMessage() );
-		}
+		return true;
 	}
 
 	/**
@@ -614,7 +645,7 @@ class OrderModel {
 
 		$where = array( 'order_id' => $order_id );
 
-		$select_columns = array( 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type' );
+		$select_columns = array( 'oi.id AS primary_id', 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type' );
 
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
@@ -632,6 +663,10 @@ class OrderModel {
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
 				$course->image         = get_the_post_thumbnail_url( $course->id );
+
+				// Add meta items.
+				$order_item_meta        = new OrderItemMetaModel();
+				$course->item_meta_list = apply_filters( 'tutor_order_item_meta', $order_item_meta->get_meta( $course->primary_id, null, false ) );
 			}
 		}
 
@@ -847,7 +882,7 @@ class OrderModel {
 					$wpdb->prefix . 'tutor_earnings',
 					array(
 						'order_id'   => $order_id,
-						'process_by' => 'Tutor',
+						'process_by' => Earnings::PROCESS_BY_TUTOR,
 					)
 				);
 
@@ -1915,7 +1950,6 @@ class OrderModel {
 				$limit
 			)
 		);
-		//phpcs:enable
 
 		$total_statements = $wpdb->get_var(
 			$wpdb->prepare(
@@ -1930,10 +1964,88 @@ class OrderModel {
 				$user_id
 			)
 		);
+		//phpcs:enable
 
 		return array(
 			'statements'       => $statements,
 			'total_statements' => $total_statements,
 		);
+	}
+
+	/**
+	 * Get order details for given course IDs.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int[] $course_ids Array of course IDs to fetch order details.
+	 *
+	 * @return array Returns an array of order details with each element containing:
+	 *               - order data (all columns from tutor_orders table)
+	 *               - order_items data (al columns except id)
+	 *               Returns an empty array if no results found or on error.
+	 */
+	public function get_order_details( array $course_ids ) {
+		global $wpdb;
+
+		$result = array();
+
+		$select_columns = array(
+			'orders.*,
+			order_items.id AS order_items_id,
+			order_items.order_id,
+			order_items.item_id,
+			order_items.regular_price,
+			order_items.sale_price,
+			order_items.discount_price,
+			order_items.coupon_code	AS item_coupon_code',
+		);
+		$primary_table  = "{$wpdb->tutor_order_items} AS order_items";
+		$joining_tables = array(
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->tutor_orders} AS orders",
+				'on'    => 'orders.id = order_items.order_id',
+			),
+		);
+		$where          = array( 'order_items.item_id' => array( 'IN', $course_ids ) );
+
+		$result = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), '', -1 );
+
+		return $result['results'];
+	}
+
+	/**
+	 * Retrieve order meta for a specific order.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int $order_id The ID of the order for which the metadata is to be retrieved.
+	 *
+	 * @return array An array of order meta. Returns an empty array if no meta is found.
+	 */
+	public function get_order_meta_by_order_id( $order_id ) {
+
+		return QueryHelper::get_all( 'tutor_ordermeta', array( 'order_id' => $order_id ), 'order_id' );
+	}
+
+	/**
+	 * Retrieve earnings for a specific order and course.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int $order_id The ID of the order for which the earnings are being retrieved.
+	 * @param int $course_id The ID of the course for which the earnings are being retrieved.
+	 *
+	 * @return array An array of earnings data. Returns an empty array if no data is found.
+	 */
+	public function get_earnings_by_order_and_course( $order_id, $course_id ) {
+
+		$where = array( 'order_id' => $order_id );
+
+		if ( ! empty( $course_id ) ) {
+			$where['course_id'] = $course_id;
+		}
+
+		return QueryHelper::get_all( 'tutor_earnings', $where, 'order_id' );
 	}
 }

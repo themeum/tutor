@@ -16,10 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use stdClass;
 use TUTOR\Input;
+use Tutor\Ecommerce\Tax;
+use Tutor\Models\QuizModel;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Ecommerce\Tax;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -2094,6 +2095,9 @@ class Course extends Tutor_Base {
 	 * Mark complete completed
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 3.7.1 Filter hook: tutor_user_can_complete_course added
+	 *
 	 * @return void
 	 */
 	public function mark_course_complete() {
@@ -2102,6 +2106,8 @@ class Course extends Tutor_Base {
 		if ( 'tutor_complete_course' !== $tutor_action || ! $course_id ) {
 			return;
 		}
+
+		$permalink = get_the_permalink( $course_id );
 
 		// Checking nonce.
 		tutor_utils()->checking_nonce();
@@ -2113,15 +2119,22 @@ class Course extends Tutor_Base {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
 
-		CourseModel::mark_course_as_completed( $course_id, $user_id );
+		/**
+		 * Filter hook provided to restrict course completion. This is useful
+		 * for specific cases like prerequisites. WP_Error should be returned
+		 * from the filter value to prevent the completion.
+		 */
+		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+		if ( is_wp_error( $can_complete ) ) {
+			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
+		} else {
+			CourseModel::mark_course_as_completed( $course_id, $user_id );
+			// Set temporary identifier to show review pop up.
+			self::set_review_popup_data( $user_id, $course_id, $permalink );
 
-		$permalink = get_the_permalink( $course_id );
-
-		// Set temporary identifier to show review pop up.
-		self::set_review_popup_data( $user_id, $course_id, $permalink );
-
-		wp_safe_redirect( $permalink );
-		exit;
+			wp_safe_redirect( $permalink );
+			exit;
+		}
 	}
 
 	/**
@@ -2340,21 +2353,17 @@ class Course extends Tutor_Base {
 				}
 
 				// Set course regular & sale price.
-				update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
-				update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
+				self::set_course_regular_and_sale_price( $post_ID, $product_obj->get_regular_price(), $product_obj->get_sale_price() );
 			} else {
 				// Create new WC product name with course title.
 				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
 					$product_obj = wc_get_product( $product_id );
-					update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
-					// Mark product for woocommerce.
-					update_post_meta( $product_id, '_virtual', 'yes' );
-					update_post_meta( $product_id, '_tutor_product', 'yes' );
+
+					self::sync_course_with_wc_product( $post_ID, $product_id );
 
 					// Set course regular & sale price.
-					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
-					update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
+					self::set_course_regular_and_sale_price( $post_ID, $product_obj->get_regular_price(), $product_obj->get_sale_price() );
 				}
 			}
 
@@ -2802,7 +2811,7 @@ class Course extends Tutor_Base {
 				$attempt = tutor_utils()->get_quiz_attempt( $quiz->ID );
 				if ( $attempt ) {
 					$passing_grade     = tutor_utils()->get_quiz_option( $quiz->ID, 'passing_grade', 0 );
-					$earned_percentage = $attempt->earned_marks > 0 ? ( number_format( ( $attempt->earned_marks * 100 ) / $attempt->total_marks ) ) : 0;
+					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
 						$required_quiz_pass++;
@@ -3073,11 +3082,7 @@ class Course extends Tutor_Base {
 			'sale_price'     => $sale_price,
 		);
 
-		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
-			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
-		}
-
-		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
+		$card_data = apply_filters( 'tutor_course_mini_info', $info, $post );
 
 		return $card_data;
 	}
@@ -3101,7 +3106,7 @@ class Course extends Tutor_Base {
 		$info['course_duration'] = tutor_utils()->get_course_duration( $post->ID, false );
 		$info['total_enrolled']  = tutor_utils()->count_enrolled_users_by_course( $post->ID );
 
-		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
+		$card_data = apply_filters( 'tutor_course_card_data', $info, $post );
 
 		return $card_data;
 	}
@@ -3160,5 +3165,40 @@ class Course extends Tutor_Base {
 			'pending',
 			'future',
 		);
+	}
+
+	/**
+	 * Link a course/bundle post to a WooCommerce product.
+	 *
+	 * @since 3.8.2
+	 *
+	 * @param int $post_ID    The WordPress post ID of the course.
+	 * @param int $product_id The WooCommerce product ID to associate with the course.
+	 * @return void
+	 */
+	public static function sync_course_with_wc_product( $post_ID, $product_id ) {
+
+		update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
+
+		// Mark product for woocommerce.
+		update_post_meta( $product_id, '_virtual', 'yes' );
+		update_post_meta( $product_id, '_tutor_product', 'yes' );
+	}
+
+	/**
+	 * Map Tutor's course prices to WooCommerce.
+	 *
+	 * @since 3.8.2
+	 *
+	 * @param int              $post_ID       The WordPress post ID of the course.
+	 * @param string|int|float $regular_price The regular price.
+	 * @param string|int|float $sale_price    The sale price.
+	 * @return void
+	 */
+	private static function set_course_regular_and_sale_price( $post_ID, $regular_price, $sale_price ) {
+
+		// Set course regular & sale price.
+		update_post_meta( $post_ID, self::COURSE_PRICE_META, $regular_price );
+		update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $sale_price );
 	}
 }

@@ -1,20 +1,20 @@
-import { css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type Option, isDefined } from '@TutorShared/utils/types';
+import { isDefined, type Option } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
@@ -44,6 +44,7 @@ type FormSelectInputProps<T> = {
   isMagicAi?: boolean;
   isAiOutline?: boolean;
   selectOnFocus?: boolean;
+  optionItemCss?: SerializedStyles;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -70,6 +71,7 @@ const FormSelectInput = <T,>({
   isMagicAi = false,
   isAiOutline = false,
   selectOnFocus,
+  optionItemCss,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = useCallback(
     () =>
@@ -89,6 +91,7 @@ const FormSelectInput = <T,>({
   const [isOpen, setIsOpen] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const triggerRef = useRef<HTMLDivElement>(null);
   const optionRef = useRef<HTMLLIElement>(null);
   const activeItemRef = useRef<HTMLLIElement>(null);
 
@@ -103,12 +106,6 @@ const FormSelectInput = <T,>({
   const selectedItem = useMemo(() => {
     return options.find((item) => item.value === field.value);
   }, [field.value, options]);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-    dependencies: [selections.length],
-  });
 
   const additionalAttributes = {
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
@@ -266,94 +263,83 @@ const FormSelectInput = <T,>({
               )}
             </div>
 
-            <Portal
+            <Popover
+              triggerRef={triggerRef}
               isOpen={isOpen}
-              onClickOutside={() => {
-                setIsOpen(false);
-                setIsSearching(false);
-                setSearchText('');
-              }}
-              onEscape={() => {
+              dependencies={[selections.length]}
+              animationType={AnimationType.slideDown}
+              closePopover={() => {
                 setIsOpen(false);
                 setIsSearching(false);
                 setSearchText('');
               }}
             >
-              <div
-                css={[
-                  styles.optionsWrapper,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
-                <ul css={[styles.options(removeOptionsMinWidth)]}>
-                  {!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
-                  <Show
-                    when={selections.length > 0}
-                    fallback={<li css={styles.emptyState}>{__('No options available', 'tutor')}</li>}
-                  >
-                    {selections.map((option, index) => (
-                      <li
-                        key={String(option.value)}
-                        ref={option.value === field.value ? optionRef : activeIndex === index ? activeItemRef : null}
-                        css={styles.optionItem({
+              <ul css={[styles.options(removeOptionsMinWidth)]}>
+                {!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
+                <Show
+                  when={selections.length > 0}
+                  fallback={<li css={styles.emptyState}>{__('No options available', 'tutor')}</li>}
+                >
+                  {selections.map((option, index) => (
+                    <li
+                      key={String(option.value)}
+                      ref={option.value === field.value ? optionRef : activeIndex === index ? activeItemRef : null}
+                      css={[
+                        styles.optionItem({
                           isSelected: option.value === field.value,
                           isActive: index === activeIndex,
                           isDisabled: !!option.disabled,
-                        })}
-                      >
-                        <button
-                          type="button"
-                          css={styles.label}
-                          onClick={(event) => {
-                            if (!option.disabled) {
-                              handleOptionSelect(option, event);
-                            }
-                          }}
-                          disabled={option.disabled}
-                          title={option.label}
-                          onMouseOver={() => setActiveIndex(index)}
-                          onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
-                          onFocus={() => setActiveIndex(index)}
-                          aria-selected={activeIndex === index}
-                        >
-                          <Show when={option.icon}>
-                            <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
-                          </Show>
-                          <span>{option.label}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </Show>
-
-                  {isClearable && (
-                    <div
-                      css={styles.clearButton({
-                        isDisabled: inputValue === '',
-                      })}
+                        }),
+                        optionItemCss,
+                      ]}
                     >
-                      <Button
-                        variant="text"
-                        disabled={inputValue === ''}
-                        icon={<SVGIcon name="delete" />}
-                        onClick={() => {
-                          field.onChange(null);
-                          setInputValue('');
-                          setSearchText('');
-                          setIsOpen(false);
+                      <button
+                        type="button"
+                        css={styles.label}
+                        onClick={(event) => {
+                          if (!option.disabled) {
+                            handleOptionSelect(option, event);
+                          }
                         }}
+                        disabled={option.disabled}
+                        title={option.label}
+                        onMouseOver={() => setActiveIndex(index)}
+                        onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
+                        onFocus={() => setActiveIndex(index)}
+                        aria-selected={activeIndex === index}
                       >
-                        {__('Clear', 'tutor')}
-                      </Button>
-                    </div>
-                  )}
-                </ul>
-              </div>
-            </Portal>
+                        <Show when={option.icon}>
+                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                        </Show>
+                        <span>{option.label}</span>
+                      </button>
+                    </li>
+                  ))}
+                </Show>
+
+                {isClearable && (
+                  <div
+                    css={styles.clearButton({
+                      isDisabled: inputValue === '',
+                    })}
+                  >
+                    <Button
+                      variant="text"
+                      disabled={inputValue === ''}
+                      icon={<SVGIcon name="delete" />}
+                      onClick={() => {
+                        field.onChange(null);
+                        setInputValue('');
+                        setSearchText('');
+                        setIsOpen(false);
+                      }}
+                    >
+                      {__('Clear', 'tutor')}
+                    </Button>
+                  </div>
+                )}
+              </ul>
+            </Popover>
           </div>
         );
       }}
@@ -507,10 +493,6 @@ const styles = {
         }
       `}
     }
-  `,
-  optionsWrapper: css`
-    position: absolute;
-    width: 100%;
   `,
   options: (removeOptionsMinWidth: boolean) => css`
     z-index: ${zIndex.dropdown};

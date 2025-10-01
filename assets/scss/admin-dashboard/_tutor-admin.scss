@@ -156,6 +156,18 @@ table.tutor-table.tutor-table-with-checkbox {
 	}
 }
 
+#toplevel_page_tutor {
+	a:has( > .tutor-admin-menu-separator){
+		pointer-events: none;
+		margin: 8px 12px;
+		padding: 0!important;
+		height: 1px;
+		overflow: hidden;
+		background: #4A5257;
+		color: transparent;
+	}
+}
+
 body.tutor-backend {
 	background-color: #f5f5f5;
 }
@@ -1842,7 +1854,7 @@ h2.tutor-page-heading {
 				border-left: 1px solid #E6E6E6;
 				padding: 16px;
 
-				.rtl * {
+				.rtl & {
 					border-left: none;
 					border-right: 1px solid #E6E6E6;
 				}
@@ -1902,4 +1914,9 @@ h2.tutor-page-heading {
 	.tutor-avatar {
 		box-shadow: none;
 	}
+}
+
+.tutor-backend .notice {
+	margin-left: 0px;
+	margin-right: 20px;
 }

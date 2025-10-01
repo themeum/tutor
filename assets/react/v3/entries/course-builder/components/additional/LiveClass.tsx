@@ -31,6 +31,7 @@ import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 import liveClassPro2x from '@SharedImages/pro-placeholders/live-class-2x.webp';
 import liveClassPro from '@SharedImages/pro-placeholders/live-class.webp';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -173,8 +174,7 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
       >
         <ZoomMeetingForm
           data={null}
@@ -190,8 +190,8 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
+        arrow={false}
       >
         <GoogleMeetForm
           data={null}

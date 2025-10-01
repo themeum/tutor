@@ -12,16 +12,16 @@ import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModa
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import type { FormControllerProps } from '@TutorShared/utils/form';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
 import { parseNumberOnly } from '@TutorShared/utils/util';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -204,22 +204,26 @@ const FormInput = ({
                 }}
               />
               <Show when={isPassword}>
-                <div css={styles.eyeButtonWrapper}>
-                  <button
-                    type="button"
-                    css={styles.eyeButton({ type: fieldType })}
-                    onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
-                  >
-                    <SVGIcon name="eye" height={24} width={24} />
-                  </button>
-                </div>
+                <Button
+                  isIconOnly
+                  variant="text"
+                  size="small"
+                  onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
+                  icon={<SVGIcon name="eye" width={24} height={24} />}
+                  aria-label={__('Show/Hide Password', 'tutor')}
+                  buttonCss={styles.eyeButton({ type: fieldType })}
+                />
               </Show>
               <Show when={isClearable && !!field.value && fieldType !== 'password'}>
-                <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange('')}>
-                    <SVGIcon name="timesAlt" />
-                  </Button>
-                </div>
+                <Button
+                  isIconOnly
+                  variant="text"
+                  size="small"
+                  onClick={() => field.onChange('')}
+                  buttonCss={styleUtils.inputClearButton}
+                  icon={<SVGIcon name="cross" width={24} height={24} />}
+                  aria-label={__('Clear', 'tutor')}
+                />
               </Show>
             </div>
           </>
@@ -242,50 +246,13 @@ const styles = {
       }
     }
   `,
-  clearButton: css`
-    position: absolute;
-    right: ${spacing[4]};
-    top: ${spacing[4]};
-    width: 32px;
-    height: 32px;
-    background: transparent;
-
-    button {
-      padding: ${spacing[8]};
-      border-radius: ${borderRadius[2]};
-    }
-  `,
-  eyeButtonWrapper: css`
-    position: absolute;
-    display: flex;
-    right: ${spacing[4]};
-    top: 50%;
-    transform: translateY(-50%);
-  `,
-
   eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
-    ${styleUtils.resetButton}
-    ${styleUtils.flexCenter()}
-    color: ${colorTokens.icon.default};
-    padding: ${spacing[4]};
-    border-radius: ${borderRadius[2]};
-    background: transparent;
-
+    ${styleUtils.inputClearButton};
     ${type !== 'password' &&
     css`
-      color: ${colorTokens.icon.brand};
+      svg {
+        color: ${colorTokens.icon.brand};
+      }
     `}
-
-    &:focus,
-    &:active,
-    &:hover {
-      background: none;
-      color: ${colorTokens.icon.default};
-    }
-
-    :focus-visible {
-      outline: 2px solid ${colorTokens.stroke.brand};
-      outline-offset: 2px;
-    }
   `,
 };

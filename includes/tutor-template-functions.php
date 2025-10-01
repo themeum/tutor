@@ -1484,9 +1484,7 @@ if ( ! function_exists( 'tutor_lesson_sidebar_question_and_answer' ) ) {
 
 if ( ! function_exists( 'tutor_assignment_content' ) ) {
 	function tutor_assignment_content( $echo = true ) {
-		ob_start();
-		tutor_load_template( 'single.assignment.content' );
-		$output = apply_filters( 'tutor_assignment/single/content', ob_get_clean() );
+		$output = apply_filters( 'tutor_assignment/single/content', '' );
 
 		if ( $echo ) {
 			echo tutor_kses_html( $output ); //phpcs:ignore -- already escaped inside template file

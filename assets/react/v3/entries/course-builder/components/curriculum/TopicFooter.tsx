@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
+import { memo, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -29,6 +29,7 @@ import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
@@ -235,6 +236,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
                   icon={<SVGIcon name="contentBank" width={24} height={24} />}
                   disabled={!topic.isSaved}
                   buttonCss={styles.contentButton}
+                  data-cy="add-from-content-bank"
                   onClick={() => {
                     showModal({
                       id: 'content-bank-collection-list',
@@ -312,8 +314,6 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
               dotsOrientation="vertical"
               maxWidth={isTutorPro ? '220px' : '250px'}
               isInverse
-              arrowPosition="auto"
-              hideArrow
               closeOnEscape={false}
               size={CURRENT_VIEWPORT.isAboveMobile ? 'medium' : 'small'}
             >
@@ -377,8 +377,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
       >
         <GoogleMeetForm
           topicId={topicId}
@@ -395,8 +394,7 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
-        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
-        hideArrow
+        placement={CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER}
       >
         <ZoomMeetingForm
           topicId={topicId}
@@ -412,7 +410,13 @@ const TopicFooter = ({ topic, nextContentOrder }: TopicFooterProps) => {
   );
 };
 
-export default TopicFooter;
+export default memo(TopicFooter, (prev, next) => {
+  return (
+    prev.topic.id === next.topic.id &&
+    prev.topic.isSaved === next.topic.isSaved &&
+    prev.nextContentOrder === next.nextContentOrder
+  );
+});
 
 const styles = {
   contentButtons: css`

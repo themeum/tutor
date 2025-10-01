@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 
-import CourseListModal from '@ImportExport/components/modals/CourseListModal';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Logo from '@TutorShared/components/Logo';
@@ -21,14 +20,14 @@ import ImportExportCompletedState from '@ImportExport/components/modals/import-e
 import ImportExportProgressState from '@ImportExport/components/modals/import-export-states/ImportExportProgressState';
 import {
   defaultExportFormData,
-  useExportableContentQuery,
-  type ExportableContent,
   type ExportFormData,
   type ImportExportContentResponseBase,
   type ImportExportModalState,
 } from '@ImportExport/services/import-export';
 
+import CourseListModal from '@TutorShared/components/modals/CourseListModal';
 import { tutorConfig } from '@TutorShared/config/config';
+import { type ExportableContent, useExportableContentQuery } from '@TutorShared/services/import-export';
 import { type Collection } from '@TutorShared/utils/types';
 import CollectionListModal from './CollectionList';
 
@@ -38,8 +37,10 @@ interface ExportModalProps extends ModalProps {
   currentStep: ImportExportModalState;
   onDownload?: (fileName: string) => void;
   progress: number;
-  fileSize?: number;
+  fileName?: string;
+  fileSize?: number | string;
   message?: string;
+  failedMessage?: string;
   completedContents?: ImportExportContentResponseBase['completed_contents'];
   collection?: Collection;
 }
@@ -58,8 +59,10 @@ const ExportModal = ({
   currentStep,
   onDownload,
   progress,
+  fileName,
   fileSize,
-  message,
+  message = '',
+  failedMessage = '',
   completedContents,
   collection,
 }: ExportModalProps) => {
@@ -78,7 +81,9 @@ const ExportModal = ({
     },
   });
 
-  const getExportableContentQuery = useExportableContentQuery();
+  const getExportableContentQuery = useExportableContentQuery({
+    course_ids: bulkSelectionForm.getValues('courses').map((course) => course.id),
+  });
   const exportableContent = isTutorPro
     ? getExportableContentQuery.data
     : ([
@@ -124,6 +129,11 @@ const ExportModal = ({
           label: __('Keep Media Files', 'tutor'),
           contents: [],
         },
+        {
+          key: 'keep_user_data',
+          label: __('Keep User Data', 'tutor'),
+          contents: [],
+        },
       ] as ExportableContent[]);
 
   const resetBulkSelection = (type: 'courses' | 'course-bundle' | 'content_bank') => {
@@ -156,6 +166,16 @@ const ExportModal = ({
     const contentItem = data?.find((item) => item.key === key);
     return contentItem?.ids || [];
   };
+
+  useEffect(() => {
+    if (currentStep === 'progress') {
+      window.onbeforeunload = () => true;
+    }
+
+    return () => {
+      window.onbeforeunload = null;
+    };
+  }, [currentStep]);
 
   useEffect(() => {
     if (!getExportableContentQuery.isSuccess || !getExportableContentQuery.data) {
@@ -253,31 +273,46 @@ const ExportModal = ({
         isLoading={getExportableContentQuery.isLoading}
         componentMapping={componentMapping}
         resetBulkSelection={resetBulkSelection}
-        isFromContentBank={!!collection}
       />
     ),
     progress: <ImportExportProgressState progress={progress} message={message} type="export" />,
     success: (
       <ImportExportCompletedState
         state="success"
+        exportFileName={fileName}
         fileSize={fileSize}
         message={message}
+        failedMessage={failedMessage}
         completedContents={completedContents}
         onDownload={onDownload}
         onClose={handleClose}
         type="export"
       />
     ),
-    error: <ImportExportCompletedState state="error" message={message} onClose={handleClose} type="export" />,
+    error: (
+      <ImportExportCompletedState
+        state="error"
+        message={message}
+        failedMessage={failedMessage}
+        onClose={handleClose}
+        type="export"
+      />
+    ),
   };
 
+  const EXCLUDED_KEYS = ['keep_media_files', 'keep_user_data'];
+
   const disableExportButton = () => {
-    return !Object.entries(form.getValues()).some(([key, value]) => {
-      if (!key.includes('__')) {
+    const formValues = form.getValues();
+
+    const mainContentTypesSelected = Object.entries(formValues).some(([key, value]) => {
+      if (!key.includes('__') && !EXCLUDED_KEYS.includes(key)) {
         return value === true;
       }
       return false;
     });
+
+    return !mainContentTypesSelected;
   };
 
   return (

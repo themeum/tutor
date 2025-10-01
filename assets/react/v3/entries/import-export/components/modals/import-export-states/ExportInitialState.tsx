@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useCallback, useEffect, type FunctionComponent } from 'react';
+import { type FunctionComponent } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -11,18 +11,14 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import {
-  type BulkSelectionFormData,
-  type ExportableContent,
-  type ExportableCourseContentType,
-  type ExportFormData,
-} from '@ImportExport/services/import-export';
+import { type BulkSelectionFormData, type ExportFormData } from '@ImportExport/services/import-export';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { type useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type ExportableContent, type ExportableCourseContentType } from '@TutorShared/services/import-export';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface ExportInitialStateProps {
@@ -41,7 +37,6 @@ interface ExportInitialStateProps {
     };
   };
   resetBulkSelection: (type: 'courses' | 'course-bundle' | 'content_bank') => void;
-  isFromContentBank?: boolean;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -53,26 +48,8 @@ const ExportInitialState = ({
   isLoading,
   componentMapping,
   resetBulkSelection,
-  isFromContentBank = false,
 }: ExportInitialStateProps) => {
   const { showModal } = useModal();
-
-  const handleOpenContentBankModal = useCallback(() => {
-    const modalConfig = componentMapping['content_bank'];
-    showModal({
-      component: modalConfig.modal.component,
-      props: modalConfig.modal.props,
-      depthIndex: zIndex.highest,
-    });
-  }, [componentMapping, showModal]);
-
-  useEffect(() => {
-    if (isFromContentBank && !isLoading) {
-      handleOpenContentBankModal();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, isFromContentBank]);
-
   /**
    * Returns properly formatted label for form data keys with appropriate count information
    *
@@ -117,11 +94,6 @@ const ExportInitialState = ({
         return key;
       }
 
-      const hasSelectedItems =
-        (mainType === 'courses' && bulkSelectionForm.getValues('courses').length > 0) ||
-        (mainType === 'course-bundle' && bulkSelectionForm.getValues('course-bundle').length > 0) ||
-        (mainType === 'content_bank' && bulkSelectionForm.getValues('content_bank').length > 0);
-
       if (!mainContent.contents) {
         return key;
       }
@@ -133,7 +105,7 @@ const ExportInitialState = ({
         return key;
       }
 
-      return hasSelectedItems ? subContent.label : createLabelWithCount(subContent.label, subContent.count, key);
+      return createLabelWithCount(subContent.label, subContent.count, key);
     }
 
     const content = exportableContent.find((item) => item.key === key);
@@ -176,7 +148,7 @@ const ExportInitialState = ({
           const bulkSelectionCount =
             bulkSelectionForm.getValues(contentKey as keyof BulkSelectionFormData)?.length || 0;
 
-          if (contentKey === 'keep_media_files') {
+          if (['keep_media_files', 'keep_user_data'].includes(contentKey)) {
             return null;
           }
 
@@ -213,18 +185,14 @@ const ExportInitialState = ({
                     variant="secondary"
                     buttonCss={styles.selectButton}
                     size="small"
-                    onClick={
-                      contentKey === 'content_bank'
-                        ? handleOpenContentBankModal
-                        : () => {
-                            const modalConfig = componentMapping[contentKey];
-                            showModal({
-                              component: modalConfig.modal.component,
-                              props: modalConfig.modal.props,
-                              depthIndex: zIndex.highest,
-                            });
-                          }
-                    }
+                    onClick={() => {
+                      const modalConfig = componentMapping[contentKey];
+                      showModal({
+                        component: modalConfig.modal.component,
+                        props: modalConfig.modal.props,
+                        depthIndex: zIndex.highest,
+                      });
+                    }}
                   >
                     {componentMapping[contentKey]?.bulkSelectionButtonLabel}
                   </Button>
@@ -289,6 +257,31 @@ const ExportInitialState = ({
                   description={
                     // prettier-ignore
                     __('If checked, course media files will also be exported with the course data.', 'tutor')
+                  }
+                />
+              )}
+            />
+          </div>
+        </Show>
+
+        <Show
+          when={
+            (exportableContent || []).some((item) => item.key === 'keep_user_data') &&
+            (form.getValues('courses') || form.getValues('course-bundle'))
+          }
+        >
+          <div css={styles.contentCheckboxFooter}>
+            <Controller
+              control={form.control}
+              name="keep_user_data"
+              render={(controllerProps) => (
+                <FormCheckbox
+                  {...controllerProps}
+                  label={__('Keep User Data', 'tutor')}
+                  disabled={!isTutorPro}
+                  description={
+                    // prettier-ignore
+                    __('If checked, user data will also be exported with the course data.', 'tutor')
                   }
                 />
               )}
@@ -366,6 +359,7 @@ const styles = {
     ${styleUtils.display.flex()}
     align-items: center;
     gap: ${spacing[8]};
+    min-height: 32px;
 
     button {
       flex-shrink: 0;

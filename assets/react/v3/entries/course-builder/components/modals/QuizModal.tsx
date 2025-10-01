@@ -37,9 +37,11 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
-import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { POPOVER_PLACEMENTS } from '@TutorShared/hooks/usePortalPopover';
+import { validateQuizQuestion } from '@TutorShared/utils/quiz';
 import { type ID, isDefined, type TopicContentType } from '@TutorShared/utils/types';
 import { findSlotFields } from '@TutorShared/utils/util';
 
@@ -173,7 +175,9 @@ const QuizModal = ({
       return;
     }
 
-    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    const activeQuestion = data.questions[activeQuestionIndex];
+
+    const validation = validateQuizQuestion(activeQuestion);
 
     if (validation !== true) {
       setValidationError(validation);
@@ -390,9 +394,10 @@ const QuizModal = ({
               title={__('Your quiz has unsaved changes. If you cancel, you will lose your progress.', 'tutor')}
               message={__('Are you sure you want to continue?', 'tutor')}
               animationType={AnimationType.slideUp}
-              arrow={CURRENT_VIEWPORT.isAboveMobile ? 'top' : 'absoluteCenter'}
-              positionModifier={{ top: -50, left: quizId ? 88 : activeTab === 'settings' ? 30 : 26 }}
-              hideArrow
+              placement={
+                CURRENT_VIEWPORT.isAboveMobile ? POPOVER_PLACEMENTS.BOTTOM : POPOVER_PLACEMENTS.ABSOLUTE_CENTER
+              }
+              positionModifier={{ top: -55, left: quizId ? 34 : 2 }}
               confirmButton={{
                 text: __('Yes', 'tutor'),
                 variant: 'primary',

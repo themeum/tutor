@@ -57,7 +57,7 @@ $navbar_data = array(
 
 $filters = array(
 	'bulk_action'  => $quiz_attempts->bulk_action,
-	'bulk_actions' => $quiz_attempts->prpare_bulk_actions(),
+	'bulk_actions' => $quiz_attempts->prepare_bulk_actions(),
 	'ajax_action'  => 'tutor_quiz_attempts_bulk_action',
 	'filters'      => array(
 		array(

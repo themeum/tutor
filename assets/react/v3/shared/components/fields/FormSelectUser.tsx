@@ -3,14 +3,15 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
 
 import { tutorConfig } from '@TutorShared/config/config';
-import { isRTL, TutorRoles } from '@TutorShared/config/constants';
+import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 
 import Show from '@TutorShared/controls/Show';
@@ -74,6 +75,7 @@ const FormSelectUser = ({
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
   const isCurrentUserAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
 
+  const triggerRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const [searchText, setSearchText] = useState('');
@@ -95,12 +97,6 @@ const FormSelectUser = ({
       // Handle local filter
     }
   }, [debouncedSearchText, handleSearchOnChange]);
-
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-    dependencies: [filteredOption.length],
-  });
 
   const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
     options: filteredOption.map((option) => ({
@@ -280,103 +276,90 @@ const FormSelectUser = ({
                   <p>{emptyStateText}</p>
                 </div>
               ))}
-            <Portal
+            <Popover
+              triggerRef={triggerRef}
               isOpen={isOpen}
-              onClickOutside={() => {
-                setIsOpen(false);
-                setSearchText('');
-              }}
-              onEscape={() => {
+              dependencies={[filteredOption.length]}
+              animationType={AnimationType.slideDown}
+              closePopover={() => {
                 setIsOpen(false);
                 setSearchText('');
               }}
             >
-              <div
-                css={[
-                  styles.optionsWrapper,
-                  {
-                    [isRTL ? 'right' : 'left']: position.left,
-                    top: position.top,
-                    maxWidth: triggerWidth,
-                  },
-                ]}
-                ref={popoverRef}
-              >
-                <ul css={[styles.options]}>
-                  {!isMultiSelect && (
-                    <li css={styles.inputWrapperListItem}>
-                      <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
-                        <div css={styles.leftIcon}>
-                          <SVGIcon name="search" width={24} height={24} />
-                        </div>
-                        <input
-                          {...restInputProps}
-                          autoFocus
-                          className="tutor-input-field"
-                          css={[inputCss, styles.input]}
-                          autoComplete="off"
-                          readOnly={readOnly || !isSearchable}
-                          placeholder={placeholder}
-                          value={searchText}
-                          onChange={(event) => {
-                            setSearchText(event.target.value);
-                          }}
-                        />
+              <ul css={[styles.options]}>
+                {!isMultiSelect && (
+                  <li css={styles.inputWrapperListItem}>
+                    <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
+                      <div css={styles.leftIcon}>
+                        <SVGIcon name="search" width={24} height={24} />
                       </div>
+                      <input
+                        {...restInputProps}
+                        autoFocus
+                        className="tutor-input-field"
+                        css={[inputCss, styles.input]}
+                        autoComplete="off"
+                        readOnly={readOnly || !isSearchable}
+                        placeholder={placeholder}
+                        value={searchText}
+                        onChange={(event) => {
+                          setSearchText(event.target.value);
+                        }}
+                      />
+                    </div>
+                  </li>
+                )}
+                <Show
+                  when={filteredOption.length > 0}
+                  fallback={
+                    <li css={styles.noUserFound}>
+                      <p>{__('No user found', 'tutor')}</p>
                     </li>
-                  )}
-                  <Show
-                    when={filteredOption.length > 0}
-                    fallback={
-                      <li css={styles.noUserFound}>
-                        <p>{__('No user found', 'tutor')}</p>
-                      </li>
-                    }
-                  >
-                    {filteredOption.map((instructor, index) => (
-                      <li
-                        key={String(instructor.id)}
-                        css={styles.optionItem}
-                        data-active={activeIndex === index}
-                        onMouseOver={() => setActiveIndex(index)}
-                        onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
-                        ref={activeIndex === index ? activeItemRef : null}
-                        onFocus={() => setActiveIndex(index)}
+                  }
+                >
+                  {filteredOption.map((instructor, index) => (
+                    <li
+                      key={String(instructor.id)}
+                      css={styles.optionItem}
+                      data-active={activeIndex === index}
+                      onMouseOver={() => setActiveIndex(index)}
+                      onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
+                      ref={activeIndex === index ? activeItemRef : null}
+                      onFocus={() => setActiveIndex(index)}
+                    >
+                      <button
+                        type="button"
+                        css={styles.label}
+                        onClick={() => {
+                          const selectedValue = isInstructorMode
+                            ? {
+                                ...instructor,
+                                isRemoveAble: true,
+                              }
+                            : instructor;
+                          const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
+                          field.onChange(newValue);
+                          setSearchText('');
+                          onChange(newValue);
+                          setIsOpen(false);
+                        }}
+                        aria-selected={activeIndex === index}
                       >
-                        <button
-                          type="button"
-                          css={styles.label}
-                          onClick={() => {
-                            const selectedValue = isInstructorMode
-                              ? {
-                                  ...instructor,
-                                  isRemoveAble: true,
-                                }
-                              : instructor;
-                            const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
-                            field.onChange(newValue);
-                            setSearchText('');
-                            onChange(newValue);
-                            setIsOpen(false);
-                          }}
-                          aria-selected={activeIndex === index}
-                        >
-                          <img
-                            src={instructor.avatar_url ? instructor.avatar_url : profileImage}
-                            alt={instructor.name}
-                            css={styles.instructorAvatar}
-                          />
-                          <div>
-                            <div css={styles.instructorName}>{instructor.name}</div>
-                            <div css={styles.instructorEmail}>{instructor.email}</div>
-                          </div>
-                        </button>
-                      </li>
-                    ))}
-                  </Show>
-                </ul>
-              </div>
-            </Portal>
+                        <img
+                          src={instructor.avatar_url ? instructor.avatar_url : profileImage}
+                          alt={instructor.name}
+                          css={styles.instructorAvatar}
+                        />
+                        <div>
+                          <div css={styles.instructorName}>{instructor.name}</div>
+                          <div css={styles.instructorEmail}>{instructor.email}</div>
+                        </div>
+                      </button>
+                    </li>
+                  ))}
+                </Show>
+              </ul>
+            </Popover>
           </div>
         );
       }}

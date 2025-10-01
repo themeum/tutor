@@ -10,9 +10,9 @@ import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import TopicFooter from '@CourseBuilderComponents/curriculum//TopicFooter';
-import TopicHeader from '@CourseBuilderComponents/curriculum//TopicHeader';
-import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
+import TopicContentWrapper from '@CourseBuilderComponents/curriculum/TopicContentWrapper';
+import TopicFooter from '@CourseBuilderComponents/curriculum/TopicFooter';
+import TopicHeader from '@CourseBuilderComponents/curriculum/TopicHeader';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
 import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
@@ -134,33 +134,22 @@ const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false 
 
       <animated.div style={{ ...collapseAnimation }}>
         <div css={styles.content} ref={topicRef}>
-          <Show when={topic.contents.length > 0}>
-            <SortableContext
-              items={topic.contents.map((item) => ({ ...item, id: item.ID }))}
-              strategy={verticalListSortingStrategy}
-            >
-              <div>
-                <For each={topic.contents}>
-                  {(content) => {
-                    return (
-                      <TopicContent
-                        key={content.ID}
-                        type={content.post_type}
-                        topic={topic}
-                        content={{
-                          id: content.ID,
-                          title: content.post_title,
-                          total_question: content.total_question || 0,
-                        }}
-                      />
-                    );
-                  }}
-                </For>
-              </div>
-            </SortableContext>
-          </Show>
+          <Show when={!topic.isCollapsed}>
+            <Show when={topic.contents.length > 0}>
+              <SortableContext
+                items={topic.contents.map((item) => ({ ...item, id: item.ID }))}
+                strategy={verticalListSortingStrategy}
+              >
+                <div>
+                  <For each={topic.contents}>
+                    {(content) => <TopicContentWrapper key={content.ID} topic={topic} content={content} />}
+                  </For>
+                </div>
+              </SortableContext>
+            </Show>
 
-          <TopicFooter topic={topic} nextContentOrder={topic?.contents?.length + 1 || 1} />
+            <TopicFooter topic={topic} nextContentOrder={topic?.contents?.length + 1 || 1} />
+          </Show>
         </div>
       </animated.div>
     </div>

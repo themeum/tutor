@@ -1,6 +1,9 @@
 window.jQuery(document).ready($ => {
     const { __ } = window.wp.i18n;
 
+    // Currently only these types of question supports answer reveal mode.
+    const revealModeSupportedQuestions = ['true_false', 'single_choice', 'multiple_choice'];
+
     let quiz_options = _tutorobject.quiz_options
     let interactions = new Map();
 
@@ -92,6 +95,9 @@ window.jQuery(document).ready($ => {
                         validatedTrue = false;
                         goNext = true;
                     }
+
+                    // Display answer explanation if available
+                    $question_wrap.find('.tutor-quiz-explanation-wrapper').removeClass('tutor-d-none');
                 }
             });
         }
@@ -208,7 +214,9 @@ window.jQuery(document).ready($ => {
      */
     $('.tutor-quiz-next-btn-all').prop('disabled', false);
     $('.quiz-attempt-single-question input').filter('[type="radio"], [type="checkbox"]').change(function () {
-        $('.tutor-quiz-next-btn-all').prop('disabled', false);
+        if ($('.tutor-quiz-time-expired').length === 0) {
+            $('.tutor-quiz-next-btn-all').prop('disabled', false);
+        }
     });
 
     $(document).on('click', '.tutor-quiz-answer-next-btn, .tutor-quiz-answer-previous-btn', function (e) {
@@ -266,7 +274,7 @@ window.jQuery(document).ready($ => {
                  * @since 1.8.10
                  */
 
-                if (is_reveal_mode()) {
+                if (is_reveal_mode() && revealModeSupportedQuestions.includes($question_wrap.data('question-type'))) {
                     setTimeout(() => {
                         $('.quiz-attempt-single-question').hide();
                         $nextQuestion.show();
@@ -341,11 +349,16 @@ window.jQuery(document).ready($ => {
 
         let quiz_validated = true;
         let feedback_validated = true;
+        let hasAnyRevealModeQuestion = false;
 
         if ($questions_wrap.length) {
             $questions_wrap.each(function (index, question) {
                 quiz_validated = tutor_quiz_validation($(question), quiz_validated);
                 feedback_validated = feedback_response($(question));
+
+                if (revealModeSupportedQuestions.includes($(question).data('question-type'))) {
+                    hasAnyRevealModeQuestion = true;
+                }
             });
         }
         //If auto submit option is enabled after time expire submit current progress
@@ -356,7 +369,7 @@ window.jQuery(document).ready($ => {
 
         if (quiz_validated && feedback_validated) {
             let wait = 500
-            if (is_reveal_mode() && get_quiz_layout_view() === 'question_below_each_other') {
+            if (is_reveal_mode() && get_quiz_layout_view() === 'question_below_each_other' && hasAnyRevealModeQuestion) {
                 wait = get_reveal_wait_time()
                 submitted_form.find(':submit').addClass('is-loading').attr('disabled', 'disabled')
             }
@@ -371,9 +384,12 @@ window.jQuery(document).ready($ => {
 
     $(".tutor-quiz-submit-btn").click(function (event) {
         event.preventDefault();
+        var $questions_wrap = $('.quiz-attempt-single-question');
 
-        if (is_reveal_mode()) {
-            var $questions_wrap = $('.quiz-attempt-single-question');
+        const lastQuestion = $questions_wrap[$questions_wrap.length - 1];
+        const lastQuestionType = $(lastQuestion).data('question-type');
+
+        if (is_reveal_mode() && revealModeSupportedQuestions.includes(lastQuestionType)) {
             var validated = true;
             if ($questions_wrap.length) {
                 $questions_wrap.each(function (index, question) {

@@ -22,6 +22,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 class ValidationHelper {
 
 	/**
+	 * Store all validation errors.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @var array
+	 */
+	private static $errors = array();
+
+	/**
 	 * Validate array elements
 	 *
 	 * @since 2.6.0
@@ -35,8 +44,7 @@ class ValidationHelper {
 	 * @return object validation response
 	 */
 	public static function validate( array $validation_rules, array $data ): object {
-		$validation_pass   = true;
-		$validation_errors = array();
+		self::$errors = array();
 
 		foreach ( $validation_rules as $key => $validation_rule ) {
 			$rules = explode( '|', $validation_rule );
@@ -63,85 +71,81 @@ class ValidationHelper {
 					switch ( $nested_rule ) {
 						case 'required':
 							if ( ! self::has_key( $key, $data ) || self::is_empty( $data[ $key ] ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' is required', 'tutor' );
-								$required_rule_failed        = true;
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s is required', 'tutor' ), self::humanize_key( $key ) ) );
+
+								$required_rule_failed = true;
 							}
 							break;
 						case 'numeric':
 							if ( ! self::is_numeric( $data[ $key ] ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' is not numeric', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s is not numeric', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 						/* Greater than (gt) */
 						case 'gt':
 							if ( $data[ $key ] < $nested_rules[1] ) {
-								$validation_pass = false;
 								/* translators: %1$s: field name, %2$d: value */
-								$validation_errors[ $key ][] = sprintf( __( '%1$s need to be greater than %2$d', 'tutor' ), $key, $nested_rules[1] );
+								self::add_error( $key, sprintf( __( '%1$s need to be greater than %2$d', 'tutor' ), self::humanize_key( $key ), $nested_rules[1] ) );
 							}
 							break;
 						/* Less than (lt) */
 						case 'lt':
 							if ( $data[ $key ] > $nested_rules[1] ) {
-								$validation_pass = false;
 								/* translators: %1$s: field name, %2$d: value */
-								$validation_errors[ $key ][] = sprintf( __( '%1$s need to be less than %2$d', 'tutor' ), $key, $nested_rules[1] );
+								self::add_error( $key, sprintf( __( '%1$s need to be less than %2$d', 'tutor' ), self::humanize_key( $key ), $nested_rules[1] ) );
 							}
 							break;
 						case 'email':
 							if ( ! is_email( $data[ $key ] ) ) {
-								$validation_pass = false;
 								/* translators: %s: field name */
-								$validation_errors[ $key ][] = sprintf( __( '%s is not valid email', 'tutor' ), $key );
+								self::add_error( $key, sprintf( __( '%s is not valid email', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 						case 'min_length':
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
-								$validation_pass = false;
 								/* translators: %1$s: field name, %2$d: value */
-								$validation_errors[ $key ][] = sprintf( __( '%1$s minimum length is %2$d', 'tutor' ), $key, $nested_rule[1] );
+								self::add_error( $key, sprintf( __( '%1$s minimum length is %2$d', 'tutor' ), self::humanize_key( $key ), $nested_rules[1] ) );
 							}
 							break;
 						case 'max_length':
 							if ( strlen( $data[ $key ] ) > $nested_rules[1] ) {
-								$validation_pass = false;
 								/* translators: %1$s: field name, %2$d: value */
-								$validation_errors[ $key ][] = sprintf( __( '%1$s maximum length is %2$d', 'tutor' ), $key, $nested_rule[1] );
+								self::add_error( $key, sprintf( __( '%1$s maximum length is %2$d', 'tutor' ), self::humanize_key( $key ), $nested_rules[1] ) );
 							}
 							break;
 						case 'mimes':
 							$extensions = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $extensions ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' extension is not valid', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s extension is not valid', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 						case 'match_string':
 							$strings = explode( ',', $nested_rules[1] );
 							if ( ! self::in_array( $data[ $key ], $strings ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' string is not valid', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s string is not valid', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 						case 'boolean':
 							if ( ! self::is_boolean( $data[ $key ] ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' is not boolean', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s is not boolean', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 						case 'is_array':
 							if ( ! self::is_array( $data[ $key ] ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' is not an array', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s is not an array', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 						case 'date_format':
 							$format = explode( ':', $rule, 2 )[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' invalid date format', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s invalid date format', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 
@@ -151,8 +155,8 @@ class ValidationHelper {
 							$value      = $data[ $key ];
 							$has_record = self::has_record( $table, $column, $value );
 							if ( ! $has_record ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' record not found', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s record not found', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 
@@ -160,8 +164,8 @@ class ValidationHelper {
 							$user_id   = (int) $data[ $key ];
 							$is_exists = self::is_user_exists( $user_id );
 							if ( ! $is_exists ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' user does not exist', 'tutor' );
+								/* translators: %s: field name */
+								self::add_error( $key, sprintf( __( '%s user does not exist', 'tutor' ), self::humanize_key( $key ) ) );
 							}
 							break;
 						default:
@@ -173,11 +177,48 @@ class ValidationHelper {
 		}
 
 		$response = array(
-			'success' => $validation_pass,
-			'errors'  => $validation_errors,
+			'success' => empty( self::$errors ),
+			'errors'  => self::$errors,
 		);
 
 		return (object) $response;
+	}
+
+	/**
+	 * Add validation error.
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param string $key key.
+	 * @param string $error error message.
+	 *
+	 * @return void
+	 */
+	private static function add_error( $key, $error ) {
+		self::$errors[ $key ][] = $error;
+	}
+
+	/**
+	 * Humanize key name.
+	 * Example: course_id to Course ID, api_url to API URL
+	 *
+	 * @since 3.7.2
+	 *
+	 * @param string $key key to humanize.
+	 *
+	 * @return string
+	 */
+	private static function humanize_key( $key ) {
+		$key = str_replace( '_', ' ', $key );
+		$key = ucwords( $key );
+
+		// All know word replace.
+		$key = preg_replace( '/\bId\b/i', 'ID', $key );
+		$key = preg_replace( '/\bUrl\b/i', 'URL', $key );
+		$key = preg_replace( '/\bApi\b/i', 'API', $key );
+		$key = preg_replace( '/\bIp\b/i', 'IP', $key );
+
+		return $key;
 	}
 
 	/**
