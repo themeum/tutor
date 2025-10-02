@@ -1,6 +1,6 @@
 import { type SettingsField } from '@Settings/contexts/SettingsContext';
 import CheckBox from '@TutorShared/atoms/CheckBox';
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import React from 'react';
@@ -16,48 +16,16 @@ interface CheckboxNotificationProps {
 
 const styles = {
   container: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${spacing[16]};
-  `,
-
-  notificationGroup: css`
-    padding: ${spacing[16]};
-    border: 1px solid ${colorTokens.stroke.divider};
-    border-radius: ${borderRadius[8]};
-    background-color: ${colorTokens.color.black[2]};
-  `,
-
-  groupTitle: css`
-    ${typography.body()};
-    color: ${colorTokens.text.title};
-    margin: 0 0 ${spacing[12]} 0;
-    font-weight: 500;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+      padding-bottom: ${spacing[16]};
+    }
   `,
 
   optionsContainer: css`
     display: flex;
+    flex-shrink: 0;
     gap: ${spacing[12]};
-  `,
-
-  optionItem: css`
-    display: flex;
-    align-items: center;
-    gap: ${spacing[8]};
-    padding: ${spacing[8]};
-    border-radius: ${borderRadius[4]};
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: ${colorTokens.color.black[3]};
-    }
-  `,
-
-  optionLabel: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.title};
-    margin: 0;
-    flex: 1;
   `,
 
   optionDescription: css`
@@ -87,7 +55,7 @@ const CheckboxNotification: React.FC<CheckboxNotificationProps> = ({ field, valu
   }
 
   return (
-    <div css={fieldStyles.fieldRow}>
+    <div css={[fieldStyles.fieldRow, styles.container]}>
       <div css={fieldStyles.labelContainer}>
         <label css={fieldStyles.label}>{field.label}</label>
         {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
@@ -114,13 +82,11 @@ const CheckboxNotification: React.FC<CheckboxNotificationProps> = ({ field, valu
 
           return (
             <div key={optionKey}>
-              <div css={styles.optionItem}>
-                <CheckBox
-                  label={optionLabel}
-                  checked={isSelected}
-                  onChange={(checked) => handleOptionChange(optionKey, checked)}
-                />
-              </div>
+              <CheckBox
+                label={optionLabel}
+                checked={isSelected}
+                onChange={(checked) => handleOptionChange(optionKey, checked)}
+              />
 
               {optionDesc && (
                 <div css={styles.optionDescription}>

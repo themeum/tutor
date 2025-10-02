@@ -11,21 +11,24 @@ interface NotificationBlockProps {
 
 const styles = {
   container: css`
-    margin-bottom: ${spacing[8]};
-  `,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
 
+    &:not(:last-of-type) {
+      margin-bottom: ${spacing[8]};
+    }
+  `,
   header: css`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: ${spacing[16]};
+    padding-right: ${spacing[16]};
   `,
-
   title: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
   `,
-
   body: css`
     display: flex;
     flex-direction: column;

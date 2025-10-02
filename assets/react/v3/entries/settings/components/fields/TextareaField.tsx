@@ -14,6 +14,9 @@ interface TextareaFieldProps {
 }
 
 const styles = {
+  inputContainer: css`
+    width: 50%;
+  `,
   textarea: css`
     ${typography.body()};
     width: 100%;
@@ -55,28 +58,24 @@ const TextareaField: React.FC<TextareaFieldProps> = ({ field, value, onChange })
 
   return (
     <div css={fieldStyles.fieldRow}>
-      <div css={fieldStyles.labelColumn}>
-        <div css={fieldStyles.labelContainer}>
-          <label css={fieldStyles.label}>{field.label}</label>
-          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
-          {field.desc && (
-            <div css={fieldStyles.description}>
-              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
-            </div>
-          )}
-        </div>
+      <div css={fieldStyles.labelContainer}>
+        <label css={fieldStyles.label}>{field.label}</label>
+        {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+        {field.desc && (
+          <div css={fieldStyles.description}>
+            <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+          </div>
+        )}
       </div>
 
-      <div css={fieldStyles.inputColumn}>
-        <div css={fieldStyles.inputContainer}>
-          <textarea
-            css={styles.textarea}
-            value={value || ''}
-            onChange={handleChange}
-            placeholder="Enter text..."
-            rows={4}
-          />
-        </div>
+      <div css={[fieldStyles.inputContainer, styles.inputContainer]}>
+        <textarea
+          css={styles.textarea}
+          value={value || ''}
+          onChange={handleChange}
+          placeholder="Enter text..."
+          rows={4}
+        />
       </div>
     </div>
   );

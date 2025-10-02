@@ -34,28 +34,24 @@ const SelectField: React.FC<SelectFieldProps> = ({ field, value, onChange }) => 
 
   return (
     <div css={fieldStyles.fieldRow}>
-      <div css={fieldStyles.labelColumn}>
-        <div css={fieldStyles.labelContainer}>
-          <label css={fieldStyles.label}>{field.label}</label>
-          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
-          {field.desc && (
-            <div css={fieldStyles.description}>
-              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
-            </div>
-          )}
-        </div>
+      <div css={fieldStyles.labelContainer}>
+        <label css={fieldStyles.label}>{field.label}</label>
+        {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+        {field.desc && (
+          <div css={fieldStyles.description}>
+            <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+          </div>
+        )}
       </div>
 
-      <div css={fieldStyles.inputColumn}>
-        <div css={fieldStyles.inputContainer}>
-          <Select
-            options={options}
-            value={selectedOption}
-            onChange={handleChange}
-            placeholder="Select an option..."
-            isSearchable={field.searchable}
-          />
-        </div>
+      <div css={fieldStyles.inputContainer}>
+        <Select
+          options={options}
+          value={selectedOption}
+          onChange={handleChange}
+          placeholder="Select an option..."
+          isSearchable={field.searchable}
+        />
       </div>
     </div>
   );

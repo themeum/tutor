@@ -10,20 +10,16 @@ interface UniformBlockProps {
 }
 
 const styles = {
-  container: css`
-    /* margin-bottom: ${spacing[32]}; */
+  wrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
   `,
-
-  header: css`
-    margin-bottom: ${spacing[16]};
-  `,
-
   title: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     margin: 0;
   `,
-
   body: css`
     display: flex;
     flex-direction: column;
@@ -34,23 +30,35 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.divider};
     border-radius: ${borderRadius[6]};
   `,
+  blockItem: css`
+    &:not(:last-of-type) {
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+      padding-bottom: ${spacing[16]};
+    }
+  `,
 };
 
 const UniformBlock: React.FC<UniformBlockProps> = ({ block }) => {
   return (
-    <div css={styles.container}>
-      {block.label && (
-        <div css={styles.header}>
-          <h2 css={styles.title}>{block.label}</h2>
-        </div>
-      )}
+    <div css={styles.wrapper}>
+      {block.label && <h2 css={styles.title}>{block.label}</h2>}
 
       <div css={styles.body}>
         {/* Regular fields */}
-        {block.fields && block.fields.map((field, idx) => <SettingsField key={field.key || idx} field={field} />)}
+        {block.fields &&
+          block.fields.map((field, idx) => (
+            <div css={styles.blockItem} key={field.key || idx}>
+              <SettingsField field={field} />
+            </div>
+          ))}
 
         {/* Fields group */}
-        {block.fields_group && block.fields_group.map((field) => <SettingsField key={field.key} field={field} />)}
+        {block.fields_group &&
+          block.fields_group.map((field) => (
+            <div css={styles.blockItem} key={field.key}>
+              <SettingsField field={field} />
+            </div>
+          ))}
       </div>
     </div>
   );

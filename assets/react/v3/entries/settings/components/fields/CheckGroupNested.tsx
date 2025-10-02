@@ -128,20 +128,6 @@ const CheckGroupNested: React.FC<CheckGroupNestedProps> = ({ field, value, onCha
         {field.group_options.map((nestedField) => (
           <div key={nestedField.key} css={styles.fieldWrapper}>
             {renderNestedField(nestedField)}
-            {/* <div css={nestedFieldStyles.fieldRow}>
-              <div css={nestedFieldStyles.labelColumn}>
-                <div css={nestedFieldStyles.labelContainer}>
-                  <label css={nestedFieldStyles.label}>{nestedField.label}</label>
-                  {nestedField.label_title && <div css={nestedFieldStyles.labelTitle}>{nestedField.label_title}</div>}
-                </div>
-              </div>
-
-              <div css={nestedFieldStyles.inputColumn}>
-                <div css={nestedFieldStyles.inputContainer}>
-                  {renderNestedField(nestedField)}
-                </div>
-              </div>
-            </div> */}
           </div>
         ))}
       </div>

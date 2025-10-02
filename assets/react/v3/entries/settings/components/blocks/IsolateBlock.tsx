@@ -10,26 +10,21 @@ interface IsolateBlockProps {
 }
 
 const styles = {
-  container: css`
-    /* margin-bottom: ${spacing[32]}; */
+  wrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
   `,
-
-  header: css`
-    margin-bottom: ${spacing[16]};
-  `,
-
   title: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     margin: 0;
   `,
-
   body: css`
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
   `,
-
   blockItem: css`
     background-color: ${colorTokens.background.white};
     border: 1px solid ${colorTokens.stroke.divider};
@@ -40,12 +35,8 @@ const styles = {
 
 const IsolateBlock: React.FC<IsolateBlockProps> = ({ block }) => {
   return (
-    <div css={styles.container}>
-      {block.label && (
-        <div css={styles.header}>
-          <h2 css={styles.title}>{block.label}</h2>
-        </div>
-      )}
+    <div css={styles.wrapper}>
+      {block.label && <h2 css={styles.title}>{block.label}</h2>}
 
       <div css={styles.body}>
         {/* Regular fields */}

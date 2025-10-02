@@ -26,8 +26,9 @@ wp_localize_script( 'tutor-settings-app', 'tutorConfig', array(
 	'baseUrl'      => get_site_url(),
 ) );
 ?>
-
-<div id="tutor-settings-app"></div>
+<div class="tutor-admin-wrap">
+	<div id="tutor-settings-app"></div>
+</div>
 
 <style>
 /* Ensure the React app container takes full height */

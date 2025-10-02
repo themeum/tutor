@@ -9,36 +9,25 @@ export const fieldStyles = {
     justify-content: space-between;
     gap: ${spacing[24]};
 
-    &:not(:last-of-type) {
-      border-bottom: 1px solid ${colorTokens.stroke.divider};
-      padding-bottom: ${spacing[16]};
-    }
-
     @media (max-width: 991px) {
       flex-direction: column;
     }
   `,
-
-  labelColumn: css``,
-
   labelContainer: css`
     display: flex;
     flex-direction: column;
     gap: ${spacing[4]};
   `,
-
   label: css`
     ${typography.body('medium')};
     color: ${colorTokens.text.title};
     margin: 0;
   `,
-
   labelTitle: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
     margin: 0;
   `,
-
   description: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
@@ -58,9 +47,6 @@ export const fieldStyles = {
       }
     }
   `,
-
-  inputColumn: css``,
-
   inputContainer: css`
     display: flex;
     flex-direction: column;

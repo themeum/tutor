@@ -15,6 +15,11 @@ interface RadioFieldProps {
 }
 
 const styles = {
+  wrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[24]};
+  `,
   container: (isVertical: boolean, isHorizontalFull: boolean) => css`
     display: flex;
     flex-direction: ${isVertical ? 'column' : 'row'};
@@ -61,53 +66,47 @@ const RadioField: React.FC<RadioFieldProps> = ({ field, value, onChange }) => {
   const isHorizontalFull = field.type === 'radio_horizontal_full';
 
   return (
-    <div css={fieldStyles.fieldRow}>
-      <div css={fieldStyles.labelColumn}>
-        <div css={fieldStyles.labelContainer}>
-          <label css={fieldStyles.label}>{field.label}</label>
-          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
-          {field.desc && (
-            <div css={fieldStyles.description}>
-              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
-            </div>
-          )}
-        </div>
+    <div css={styles.wrapper}>
+      <div css={fieldStyles.labelContainer}>
+        <label css={fieldStyles.label}>{field.label}</label>
+        {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+        {field.desc && (
+          <div css={fieldStyles.description}>
+            <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+          </div>
+        )}
       </div>
 
-      <div css={fieldStyles.inputColumn}>
-        <div css={fieldStyles.inputContainer}>
-          <div css={styles.container(isVertical, isHorizontalFull)}>
-            {field.options &&
-              Object.entries(field.options).map(([optionValue, optionData]) => {
-                const isSelected = value === optionValue;
-                const optionLabel =
-                  typeof optionData === 'object' && optionData !== null
-                    ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      (optionData as any).label
-                    : String(optionData);
-                const optionDesc =
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  typeof optionData === 'object' && optionData !== null ? (optionData as any).desc : null;
+      <div css={styles.container(isVertical, isHorizontalFull)}>
+        {field.options &&
+          Object.entries(field.options).map(([optionValue, optionData]) => {
+            const isSelected = value === optionValue;
+            const optionLabel =
+              typeof optionData === 'object' && optionData !== null
+                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  (optionData as any).label
+                : String(optionData);
+            const optionDesc =
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              typeof optionData === 'object' && optionData !== null ? (optionData as any).desc : null;
 
-                return (
-                  <div key={optionValue} css={styles.optionItem}>
-                    <Radio
-                      name={field.key}
-                      value={optionValue}
-                      checked={isSelected}
-                      onChange={handleChange}
-                      label={optionLabel}
-                    />
-                    {optionDesc && (
-                      <div css={styles.description}>
-                        <div dangerouslySetInnerHTML={{ __html: optionDesc }} />
-                      </div>
-                    )}
+            return (
+              <div key={optionValue} css={styles.optionItem}>
+                <Radio
+                  name={field.key}
+                  value={optionValue}
+                  checked={isSelected}
+                  onChange={handleChange}
+                  label={optionLabel}
+                />
+                {optionDesc && (
+                  <div css={styles.description}>
+                    <div dangerouslySetInnerHTML={{ __html: optionDesc }} />
                   </div>
-                );
-              })}
-          </div>
-        </div>
+                )}
+              </div>
+            );
+          })}
       </div>
     </div>
   );
