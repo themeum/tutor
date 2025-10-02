@@ -56,7 +56,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
         <Checkbox
           onChange={toggleSelection}
           checked={courseListQuery.isLoading || courseListQuery.isRefetching ? false : handleAllIsChecked()}
-          label={type === 'courses' ? __('Courses', 'tutor') : __('Bundles', 'tutor')}
+          label={type === 'courses' ? __('Courses', __TUTOR_TEXT_DOMAIN__) : __('Bundles', __TUTOR_TEXT_DOMAIN__)}
           labelCss={styles.checkboxLabel}
         />
       ) : (
@@ -78,7 +78,11 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
               }}
               checked={selectedCourses.map((course) => course.id).includes(item.id)}
             />
-            <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('course item', 'tutor')} />
+            <img
+              src={item.image || coursePlaceholder}
+              css={styles.thumbnail}
+              alt={__('course item', __TUTOR_TEXT_DOMAIN__)}
+            />
             <div css={styles.courseItem}>
               <div>{item.title}</div>
               <p>{item.author}</p>
@@ -88,7 +92,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
       },
     },
     {
-      Header: __('Price', 'tutor'),
+      Header: __('Price', __TUTOR_TEXT_DOMAIN__),
       Cell: (item) => {
         return (
           <div css={styles.price}>
@@ -96,7 +100,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
               <span css={styles.startingFrom}>
                 {
                   /* translators: %s is the starting price. */
-                  sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)
+                  sprintf(__('Starting from %s', __TUTOR_TEXT_DOMAIN__), item.plan_start_price)
                 }
               </span>
             ) : (
@@ -116,7 +120,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
   }
 
   if (!courseListQuery.data) {
-    return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor')}</div>;
+    return <div css={styles.errorMessage}>{__('Something went wrong', __TUTOR_TEXT_DOMAIN__)}</div>;
   }
 
   return (

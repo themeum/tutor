@@ -108,15 +108,15 @@ export const VideoRegex = {
 
 export const visibilityStatusOptions = [
   {
-    label: __('Public', 'tutor'),
+    label: __('Public', __TUTOR_TEXT_DOMAIN__),
     value: 'publish',
   },
   {
-    label: __('Password Protected', 'tutor'),
+    label: __('Password Protected', __TUTOR_TEXT_DOMAIN__),
     value: 'password_protected',
   },
   {
-    label: __('Private', 'tutor'),
+    label: __('Private', __TUTOR_TEXT_DOMAIN__),
     value: 'private',
   },
 ];

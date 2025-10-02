@@ -43,16 +43,16 @@ interface ImageContextType<T extends FieldValues> {
 }
 
 export const inspirationPrompts = [
-  __('A serene classroom setting with books and a chalkboard', 'tutor'),
-  __('An abstract representation of innovation and creativity', 'tutor'),
-  __('A vibrant workspace with a laptop and coffee cup', 'tutor'),
-  __('A modern design with digital learning icons', 'tutor'),
-  __('A futuristic cityscape with a glowing pathway', 'tutor'),
-  __('A peaceful nature scene with soft colors', 'tutor'),
-  __('A professional boardroom with sleek visuals', 'tutor'),
-  __('A stack of books with warm, inviting lighting', 'tutor'),
-  __('A dynamic collage of technology and education themes', 'tutor'),
-  __('A bold and minimalistic design with striking colors', 'tutor'),
+  __('A serene classroom setting with books and a chalkboard', __TUTOR_TEXT_DOMAIN__),
+  __('An abstract representation of innovation and creativity', __TUTOR_TEXT_DOMAIN__),
+  __('A vibrant workspace with a laptop and coffee cup', __TUTOR_TEXT_DOMAIN__),
+  __('A modern design with digital learning icons', __TUTOR_TEXT_DOMAIN__),
+  __('A futuristic cityscape with a glowing pathway', __TUTOR_TEXT_DOMAIN__),
+  __('A peaceful nature scene with soft colors', __TUTOR_TEXT_DOMAIN__),
+  __('A professional boardroom with sleek visuals', __TUTOR_TEXT_DOMAIN__),
+  __('A stack of books with warm, inviting lighting', __TUTOR_TEXT_DOMAIN__),
+  __('A dynamic collage of technology and education themes', __TUTOR_TEXT_DOMAIN__),
+  __('A bold and minimalistic design with striking colors', __TUTOR_TEXT_DOMAIN__),
 ];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

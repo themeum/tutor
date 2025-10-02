@@ -47,7 +47,7 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
       onClose={() => closeModal({ action: 'CLOSE' })}
       title={
         /* translators: %s is the number of selected items */
-        selectedItems.length > 0 ? sprintf(__('%s selected', 'tutor'), selectedItems.length) : title
+        selectedItems.length > 0 ? sprintf(__('%s selected', __TUTOR_TEXT_DOMAIN__), selectedItems.length) : title
       }
       actions={actions}
       maxWidth={720}
@@ -55,7 +55,7 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
       <CourseListTable form={_form} type={type} />
       <div css={styles.footer}>
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-          {__('Cancel', 'tutor')}
+          {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
         </Button>
         <Button
           size="small"
@@ -64,7 +64,7 @@ function CourseListModal({ title, closeModal, actions, form, type = 'courses' }:
           disabled={selectedItems.length === 0}
           data-cy="add-courses"
         >
-          {__('Add', 'tutor')}
+          {__('Add', __TUTOR_TEXT_DOMAIN__)}
         </Button>
       </div>
     </BasicModalWrapper>

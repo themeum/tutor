@@ -348,14 +348,14 @@ export const copyToClipboard = (text: string) => {
 
 export const convertToErrorMessage = (error: ErrorResponse) => {
   if (!error || !error.response || !error.response.data) {
-    return __('Something went wrong', 'tutor');
+    return __('Something went wrong', __TUTOR_TEXT_DOMAIN__);
   }
 
   let errorMessage = error.response.data.message;
   if (error.response.data.status_code === 422 && error.response.data.data) {
     errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
   }
-  return errorMessage || __('Something went wrong', 'tutor');
+  return errorMessage || __('Something went wrong', __TUTOR_TEXT_DOMAIN__);
 };
 
 export const fetchImageUrlAsBase64 = async (url: string): Promise<string> => {
@@ -481,50 +481,50 @@ export const formatSubscriptionRepeatUnit = ({
   showSingular?: boolean;
 }) => {
   if (unit === 'until_cancellation') {
-    const result = __('Until Cancellation', 'tutor');
+    const result = __('Until Cancellation', __TUTOR_TEXT_DOMAIN__);
     return capitalize ? capitalizeWords(result) : result;
   }
 
   const unitFormats = {
     hour: {
       // translators: %d is the number of hours
-      plural: __('%d hours', 'tutor'),
+      plural: __('%d hours', __TUTOR_TEXT_DOMAIN__),
       // translators: %d is the number of hours
-      singular: __('%d hour', 'tutor'),
-      suffix: __('hourly', 'tutor'),
-      base: __('hour', 'tutor'),
+      singular: __('%d hour', __TUTOR_TEXT_DOMAIN__),
+      suffix: __('hourly', __TUTOR_TEXT_DOMAIN__),
+      base: __('hour', __TUTOR_TEXT_DOMAIN__),
     },
     day: {
       // translators: %d is the number of days
-      plural: __('%d days', 'tutor'),
+      plural: __('%d days', __TUTOR_TEXT_DOMAIN__),
       // translators: %d is the number of days
-      singular: __('%d day', 'tutor'),
-      suffix: __('daily', 'tutor'),
-      base: __('day', 'tutor'),
+      singular: __('%d day', __TUTOR_TEXT_DOMAIN__),
+      suffix: __('daily', __TUTOR_TEXT_DOMAIN__),
+      base: __('day', __TUTOR_TEXT_DOMAIN__),
     },
     week: {
       // translators: %d is the number of weeks
-      plural: __('%d weeks', 'tutor'),
+      plural: __('%d weeks', __TUTOR_TEXT_DOMAIN__),
       // translators: %d is the number of weeks
-      singular: __('%d week', 'tutor'),
-      suffix: __('weekly', 'tutor'),
-      base: __('week', 'tutor'),
+      singular: __('%d week', __TUTOR_TEXT_DOMAIN__),
+      suffix: __('weekly', __TUTOR_TEXT_DOMAIN__),
+      base: __('week', __TUTOR_TEXT_DOMAIN__),
     },
     month: {
       // translators: %d is the number of months
-      plural: __('%d months', 'tutor'),
+      plural: __('%d months', __TUTOR_TEXT_DOMAIN__),
       // translators: %d is the number of months
-      singular: __('%d month', 'tutor'),
-      suffix: __('monthly', 'tutor'),
-      base: __('month', 'tutor'),
+      singular: __('%d month', __TUTOR_TEXT_DOMAIN__),
+      suffix: __('monthly', __TUTOR_TEXT_DOMAIN__),
+      base: __('month', __TUTOR_TEXT_DOMAIN__),
     },
     year: {
       // translators: %d is the number of years
-      plural: __('%d years', 'tutor'),
+      plural: __('%d years', __TUTOR_TEXT_DOMAIN__),
       // translators: %d is the number of years
-      singular: __('%d year', 'tutor'),
-      suffix: __('yearly', 'tutor'),
-      base: __('year', 'tutor'),
+      singular: __('%d year', __TUTOR_TEXT_DOMAIN__),
+      suffix: __('yearly', __TUTOR_TEXT_DOMAIN__),
+      base: __('year', __TUTOR_TEXT_DOMAIN__),
     },
   };
 
