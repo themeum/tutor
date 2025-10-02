@@ -89,8 +89,6 @@ class Settings2 {
 		// Normalize the sections structure for React
 		$normalized_sections = $this->normalize_sections_structure( $sections );
 
-
-
 		// Debug: Log the structure for troubleshooting
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			error_log( 'Tutor Settings API - Original sections count: ' . count( $sections ) );

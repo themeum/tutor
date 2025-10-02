@@ -16,6 +16,7 @@ import { typography } from '@TutorShared/config/typography';
 import AnchorField from './fields/AnchorField';
 import CheckboxNotification from './fields/CheckboxNotification';
 import CheckGroupNested from './fields/CheckGroupNested';
+import SegmentedField from './fields/SegmentedField';
 import ToggleSingle from './fields/ToggleSingle';
 import UploadField from './fields/UploadField';
 
@@ -109,6 +110,11 @@ const SettingsField: React.FC<SettingsFieldProps> = ({ field }) => {
       payload: { key: field.key, value: field.event ? { ...val, [field.event]: newValue } : newValue },
     });
   };
+
+  // Segments fields should be rendered with full width layout
+  if (field.type === 'segments') {
+    return <SegmentedField field={field} value={value} onChange={handleChange} />;
+  }
 
   const renderField = () => {
     const commonProps = {

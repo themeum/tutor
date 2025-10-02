@@ -4,6 +4,13 @@ export interface SettingsSegment {
   label: string;
   slug: string;
   fields: SettingsField[];
+  block_type?: string; // For segments that have their own block type
+}
+
+export interface VisibilityControlSection {
+  label: string;
+  fields: SettingsField[];
+  roles: Record<string, string>;
 }
 
 export interface SettingsField {
@@ -42,8 +49,15 @@ export interface SettingsBlock {
   label: string | false;
   slug: string;
   block_type: string;
-  fields: SettingsField[];
+  fields?: SettingsField[];
   fields_group?: SettingsField[];
+  // For blocks with segments (tabs)
+  segments?: SettingsSegment[];
+  // For custom blocks
+  template_path?: string;
+  placement?: string;
+  // For visibility control blocks
+  sections?: VisibilityControlSection[];
 }
 
 export interface SettingsSection {
