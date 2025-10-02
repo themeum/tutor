@@ -150,6 +150,7 @@ const createConfig = (env, options) => {
       new rspack.DefinePlugin({
         'process.env.MAKE_POT': JSON.stringify(!!isMakePot),
         'process.env.NODE_ENV': JSON.stringify(mode),
+        __TUTOR_TEXT_DOMAIN__: JSON.stringify(process.env.TEXT_DOMAIN || 'tutor'),
       }),
       process.env.RSDOCTOR && new RsdoctorRspackPlugin({}),
     ].filter(Boolean),
