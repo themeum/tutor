@@ -60,6 +60,10 @@ export default [
           selector: 'CallExpression[callee.name="__"] > Literal.arguments:nth-child(2)',
           message: 'In shared folder, use __TUTOR_TEXT_DOMAIN__ instead of hardcoded string literal for text domain.',
         },
+        {
+          selector: 'CallExpression[callee.name="__"]:not(:has(.arguments:nth-child(2)))',
+          message: 'Translation function must include __TUTOR_TEXT_DOMAIN__ as the second argument.',
+        },
       ],
     },
   },
