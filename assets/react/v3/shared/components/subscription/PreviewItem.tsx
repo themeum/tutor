@@ -84,6 +84,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
         <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
           <span>
             {sprintf(
+              // translators: %1$s - recurring value, %2$s - recurring unit
               __('Renew every %1$s %2$s', 'tutor'),
               subscription.recurring_value.toString().padStart(2, '0'),
               formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
@@ -179,7 +180,11 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
       id: 'subscription-delete-modal',
       component: ConfirmationModal,
       props: {
-        title: sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name),
+        title: sprintf(
+          // translators: %s - plan name
+          __('Delete "%s"', 'tutor'),
+          subscription.plan_name,
+        ),
         description: __('Are you sure you want to delete this plan? This cannot be undone.', 'tutor'),
         onConfirm: handleDeleteSubscription,
         confirmButtonVariant: 'danger' as const,
