@@ -54,6 +54,13 @@ export default [
     files: ['./assets/react/v3/shared/**/*.{ts,tsx,js,jsx}'],
     rules: {
       '@wordpress/i18n-text-domain': 'off',
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'CallExpression[callee.name="__"] > Literal.arguments:nth-child(2)',
+          message: 'In shared folder, use __TUTOR_TEXT_DOMAIN__ instead of hardcoded string literal for text domain.',
+        },
+      ],
     },
   },
 ];
