@@ -14,6 +14,9 @@ interface TextareaFieldProps {
 }
 
 const styles = {
+  labelContainer: css`
+    width: 50%;
+  `,
   inputContainer: css`
     width: 50%;
   `,
@@ -58,7 +61,7 @@ const TextareaField: React.FC<TextareaFieldProps> = ({ field, value, onChange })
 
   return (
     <div css={fieldStyles.fieldRow}>
-      <div css={fieldStyles.labelContainer}>
+      <div css={[fieldStyles.labelContainer, styles.labelContainer]}>
         <label css={fieldStyles.label}>{field.label}</label>
         {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
         {field.desc && (

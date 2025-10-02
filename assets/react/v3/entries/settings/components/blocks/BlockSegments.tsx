@@ -18,15 +18,9 @@ const styles = {
     gap: ${spacing[24]};
   `,
 
-  header: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${spacing[8]};
-  `,
-
   title: css`
-    ${typography.heading6('medium')};
-    color: ${colorTokens.text.title};
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
     margin: 0;
   `,
 
@@ -45,6 +39,13 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
+  `,
+
+  blockItem: css`
+    &:not(:last-of-type) {
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+      padding-bottom: ${spacing[16]};
+    }
   `,
 };
 
@@ -66,11 +67,7 @@ const BlockSegments: React.FC<BlockSegmentsProps> = ({ segments, blockLabel }) =
 
   return (
     <div css={styles.container}>
-      {blockLabel && (
-        <div css={styles.header}>
-          <h3 css={styles.title}>{blockLabel}</h3>
-        </div>
-      )}
+      {blockLabel && <h3 css={styles.title}>{blockLabel}</h3>}
 
       <div css={styles.tabsContainer}>
         <Tabs activeTab={activeTab} onChange={setActiveTab} tabList={tabItems} orientation="horizontal" />
@@ -79,7 +76,9 @@ const BlockSegments: React.FC<BlockSegmentsProps> = ({ segments, blockLabel }) =
           {activeSegment && (
             <div css={styles.fieldsContainer}>
               {activeSegment.fields.map((field, idx) => (
-                <SettingsField key={field.key || idx} field={field} />
+                <div key={field.key || idx} css={styles.blockItem}>
+                  <SettingsField field={field} />
+                </div>
               ))}
             </div>
           )}

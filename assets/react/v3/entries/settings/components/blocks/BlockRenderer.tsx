@@ -1,7 +1,7 @@
-import BlockSegments from '@Settings/components/BlockSegments';
 import { type SettingsBlock } from '@Settings/contexts/SettingsContext';
 import React from 'react';
 import {
+  BlockSegments,
   ColorPickerBlock,
   CustomBlock,
   IsolateBlock,

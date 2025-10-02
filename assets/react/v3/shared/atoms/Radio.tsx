@@ -58,7 +58,7 @@ const Radio = React.forwardRef<HTMLInputElement, RadioProps>((props: RadioProps,
         {icon}
         {label}
       </label>
-      {description && <p css={styles.description}>{description}</p>}
+      {description && <div css={styles.description}>{description}</div>}
     </div>
   );
 });

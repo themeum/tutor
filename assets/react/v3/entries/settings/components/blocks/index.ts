@@ -1,3 +1,4 @@
+export { default as BlockSegments } from './BlockSegments';
 export { default as ColorPickerBlock } from './ColorPickerBlock';
 export { default as CustomBlock } from './CustomBlock';
 export { default as IsolateBlock } from './IsolateBlock';

@@ -10,7 +10,6 @@ interface CustomBlockProps {
 
 const styles = {
   container: css`
-    margin-bottom: ${spacing[32]};
     padding: ${spacing[24]};
     background-color: ${colorTokens.background.white};
     border: 1px solid ${colorTokens.stroke.divider};

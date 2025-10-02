@@ -1,7 +1,6 @@
 import { type SettingsField } from '@Settings/contexts/SettingsContext';
 import Radio from '@TutorShared/atoms/Radio';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import React from 'react';
 import { fieldStyles } from './fieldStyles';
@@ -34,26 +33,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
-  `,
-
-  description: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.subdued};
-    margin: 0;
-    margin-top: ${spacing[4]};
-
-    p {
-      margin: 0;
-    }
-
-    a {
-      color: ${colorTokens.text.brand};
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   `,
 };
 
@@ -98,12 +77,8 @@ const RadioField: React.FC<RadioFieldProps> = ({ field, value, onChange }) => {
                   checked={isSelected}
                   onChange={handleChange}
                   label={optionLabel}
+                  description={optionDesc}
                 />
-                {optionDesc && (
-                  <div css={styles.description}>
-                    <div dangerouslySetInnerHTML={{ __html: optionDesc }} />
-                  </div>
-                )}
               </div>
             );
           })}

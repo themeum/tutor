@@ -19,17 +19,19 @@ const styles = {
     list-style: none;
     margin: 0;
     padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
   `,
 
-  navItem: css`
-    margin-bottom: ${spacing[4]};
-  `,
+  navItem: css``,
 
-  navLink: css`
+  navLink: (isActive = false) => css`
     display: flex;
     align-items: center;
     width: 100%;
-    padding: ${spacing[12]} ${spacing[16]};
+    padding: ${spacing[8]} ${spacing[20]};
     background: none;
     border: none;
     border-radius: ${borderRadius[6]};
@@ -40,15 +42,14 @@ const styles = {
     transition: all 0.2s ease;
 
     &:hover {
-      background-color: ${colorTokens.color.black[5]};
-      color: ${colorTokens.text.title};
+      color: ${colorTokens.text.brand};
     }
 
-    &.active {
-      background-color: ${colorTokens.primary[40]};
-      color: ${colorTokens.primary.main};
-      font-weight: 500;
-    }
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.white};
+      color: ${colorTokens.text.brand};
+    `}
   `,
 
   navIcon: css`
@@ -63,15 +64,17 @@ const styles = {
 
   submenu: css`
     list-style: none;
-    margin: ${spacing[8]} 0 0 ${spacing[24]};
+    margin: ${spacing[8]} 0 0 ${spacing[24]} !important;
     padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[2]};
   `,
 
-  submenuItem: css`
-    margin-bottom: ${spacing[2]};
-  `,
+  submenuItem: css``,
 
-  submenuLink: css`
+  submenuLink: (isActive = false) => css`
     display: block;
     width: 100%;
     padding: ${spacing[8]} ${spacing[12]};
@@ -86,15 +89,13 @@ const styles = {
     text-align: left;
 
     &:hover {
-      background-color: ${colorTokens.color.black[3]};
-      color: ${colorTokens.text.subdued};
+      color: ${colorTokens.text.brand};
     }
-  `,
 
-  submenuLinkActive: css`
-    background-color: ${colorTokens.primary[30]};
-    color: ${colorTokens.primary.main};
-    font-weight: 500;
+    ${isActive &&
+    css`
+      color: ${colorTokens.text.brand};
+    `}
   `,
 };
 
@@ -122,19 +123,7 @@ const SettingsSidebar: React.FC = () => {
 
             return (
               <li key={key} css={styles.navItem}>
-                <button
-                  type="button"
-                  css={[
-                    styles.navLink,
-                    isSectionActive &&
-                      css`
-                        background-color: ${colorTokens.primary[40]};
-                        color: ${colorTokens.primary.main};
-                        font-weight: 500;
-                      `,
-                  ]}
-                  onClick={() => handleSectionClick(key)}
-                >
+                <button type="button" css={styles.navLink(isSectionActive)} onClick={() => handleSectionClick(key)}>
                   <span css={styles.navIcon} className={`tutor-icon ${section.icon}`}></span>
                   <span css={styles.navText}>{section.label}</span>
                 </button>
@@ -149,7 +138,7 @@ const SettingsSidebar: React.FC = () => {
                         <li key={submenuItem.slug} css={styles.submenuItem}>
                           <button
                             type="button"
-                            css={[styles.submenuLink, isSubmenuActive && styles.submenuLinkActive]}
+                            css={styles.submenuLink(isSubmenuActive)}
                             onClick={() => handleSectionClick(submenuItem.slug)}
                           >
                             {submenuItem.label}
