@@ -41,7 +41,7 @@ export default function SubscriptionItem() {
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
     ...lifetimePresets.map((preset) => ({
-      /* translators: %s is the number of times */
+      /* translators: %s: number of times. */
       label: sprintf(__('%s times', 'tutor'), preset.toString()),
       value: String(preset),
     })),
