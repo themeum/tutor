@@ -10,7 +10,7 @@ export const fieldStyles = {
     gap: ${spacing[24]};
 
     &:not(:last-of-type) {
-      border-bottom: 1px solid ${colorTokens.stroke.default};
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
       padding-bottom: ${spacing[16]};
     }
 

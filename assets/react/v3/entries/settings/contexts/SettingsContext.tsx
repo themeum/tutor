@@ -47,6 +47,7 @@ export interface SettingsField {
 
 export interface SettingsBlock {
   label: string | false;
+  status_label?: string;
   slug: string;
   block_type: string;
   fields?: SettingsField[];

@@ -16,13 +16,13 @@ const styles = {
   `,
 
   header: css`
-    margin-bottom: ${spacing[16]};
+    margin-bottom: ${spacing[32]};
   `,
 
   title: css`
-    ${typography.heading4('medium')};
+    ${typography.heading5('medium')};
     color: ${colorTokens.text.title};
-    margin: 0 0 ${spacing[4]} 0;
+    margin: 0;
   `,
 
   description: css`
@@ -74,8 +74,8 @@ const SettingsContent: React.FC = () => {
   return (
     <div css={styles.container}>
       <div css={styles.header}>
-        <h1 css={styles.title}>{currentSection.label}</h1>
-        {currentSection.desc && <div css={styles.description}>{currentSection.desc}</div>}
+        <h5 css={styles.title}>{currentSection.label}</h5>
+        {/* {currentSection.desc && <div css={styles.description}>{currentSection.desc}</div>} */}
       </div>
 
       <div css={styles.body}>
