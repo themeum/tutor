@@ -3,6 +3,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import React from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface TextareaFieldProps {
   field: SettingsField;
@@ -46,14 +47,38 @@ const styles = {
     }
   `,
 };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 const TextareaField: React.FC<TextareaFieldProps> = ({ field, value, onChange }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     onChange(e.target.value);
   };
 
   return (
-    <textarea css={styles.textarea} value={value || ''} onChange={handleChange} placeholder="Enter text..." rows={4} />
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelColumn}>
+        <div css={fieldStyles.labelContainer}>
+          <label css={fieldStyles.label}>{field.label}</label>
+          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+          {field.desc && (
+            <div css={fieldStyles.description}>
+              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div css={fieldStyles.inputColumn}>
+        <div css={fieldStyles.inputContainer}>
+          <textarea
+            css={styles.textarea}
+            value={value || ''}
+            onChange={handleChange}
+            placeholder="Enter text..."
+            rows={4}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 

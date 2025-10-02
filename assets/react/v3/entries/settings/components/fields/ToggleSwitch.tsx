@@ -1,6 +1,7 @@
 import { type SettingsField } from '@Settings/contexts/SettingsContext';
 import Switch from '@TutorShared/atoms/Switch';
 import React from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface ToggleSwitchProps {
   field: SettingsField;
@@ -17,7 +18,27 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ field, value, onChange }) =
     onChange(checked ? 'on' : 'off');
   };
 
-  return <Switch checked={isChecked} onChange={handleToggle} label={field.label_title} disabled={false} />;
+  return (
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelColumn}>
+        <div css={fieldStyles.labelContainer}>
+          <label css={fieldStyles.label}>{field.label}</label>
+          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+          {field.desc && (
+            <div css={fieldStyles.description}>
+              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div css={fieldStyles.inputColumn}>
+        <div css={fieldStyles.inputContainer}>
+          <Switch checked={isChecked} onChange={handleToggle} disabled={false} />
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ToggleSwitch;

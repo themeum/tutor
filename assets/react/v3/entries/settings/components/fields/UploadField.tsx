@@ -4,6 +4,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import React, { useRef, useState } from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface UploadFieldProps {
   field: SettingsField;
@@ -137,30 +138,52 @@ const UploadField: React.FC<UploadFieldProps> = ({ field, value, onChange }) => 
   const isImage = preview && (preview.startsWith('data:image') || preview.match(/\.(jpg|jpeg|png|gif|webp)$/i));
 
   return (
-    <div css={styles.container}>
-      <div css={styles.uploadArea}>
-        {isImage && <img src={preview} alt="Preview" css={styles.preview} />}
-
-        <div css={styles.uploadContent}>
-          <p css={styles.uploadText}>{fileName ? 'File selected' : 'Choose a file to upload'}</p>
-          {fileName && <p css={styles.fileName}>{fileName}</p>}
-          <p css={styles.uploadHint}>Supported formats: JPG, PNG, GIF, PDF (Max size: 2MB)</p>
-        </div>
-
-        <div css={styles.actions}>
-          <Button variant="primary" isOutlined={true} size="small" onClick={handleFileSelect}>
-            {fileName ? 'Change' : 'Browse'}
-          </Button>
-
-          {fileName && (
-            <Button variant="text" size="small" onClick={handleRemove}>
-              Remove
-            </Button>
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelColumn}>
+        <div css={fieldStyles.labelContainer}>
+          <label css={fieldStyles.label}>{field.label}</label>
+          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+          {field.desc && (
+            <div css={fieldStyles.description}>
+              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+            </div>
           )}
         </div>
       </div>
 
-      <input ref={fileInputRef} type="file" css={styles.hiddenInput} onChange={handleFileChange} accept={acceptTypes} />
+      <div css={fieldStyles.inputColumn}>
+        <div css={fieldStyles.inputContainer}>
+          <div css={styles.uploadArea}>
+            {isImage && <img src={preview} alt="Preview" css={styles.preview} />}
+
+            <div css={styles.uploadContent}>
+              <p css={styles.uploadText}>{fileName ? 'File selected' : 'Choose a file to upload'}</p>
+              {fileName && <p css={styles.fileName}>{fileName}</p>}
+              <p css={styles.uploadHint}>Supported formats: JPG, PNG, GIF, PDF (Max size: 2MB)</p>
+            </div>
+
+            <div css={styles.actions}>
+              <Button variant="primary" isOutlined={true} size="small" onClick={handleFileSelect}>
+                {fileName ? 'Change' : 'Browse'}
+              </Button>
+
+              {fileName && (
+                <Button variant="text" size="small" onClick={handleRemove}>
+                  Remove
+                </Button>
+              )}
+            </div>
+          </div>
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            css={styles.hiddenInput}
+            onChange={handleFileChange}
+            accept={acceptTypes}
+          />
+        </div>
+      </div>
     </div>
   );
 };

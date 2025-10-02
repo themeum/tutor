@@ -5,6 +5,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import React from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface CheckGroupProps {
   field: SettingsField;
@@ -112,56 +113,77 @@ const CheckGroup: React.FC<CheckGroupProps> = ({ field, value, onChange }) => {
   const someSelected = selectedValues.length > 0 && !allSelected;
 
   return (
-    <div css={styles.wrapper}>
-      {/* Select All / Deselect All Button */}
-      {field.options && Object.keys(field.options).length > 1 && (
-        <div css={styles.selectAllContainer}>
-          <Button variant="text" size="small" onClick={handleSelectAll}>
-            {allSelected ? 'Deselect All' : 'Select All'}
-            {someSelected && ' (Some Selected)'}
-          </Button>
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelColumn}>
+        <div css={fieldStyles.labelContainer}>
+          <label css={fieldStyles.label}>{field.label}</label>
+          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+          {field.desc && (
+            <div css={fieldStyles.description}>
+              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+            </div>
+          )}
         </div>
-      )}
-
-      {/* Switch Group */}
-      <div css={styles.optionsContainer(isVertical)}>
-        {field.options &&
-          Object.entries(field.options).map(([optionValue, optionData]) => {
-            const isSelected = selectedValues.includes(optionValue);
-            const optionLabel =
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              typeof optionData === 'object' && optionData !== null ? (optionData as any).label : String(optionData);
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const optionDesc = typeof optionData === 'object' && optionData !== null ? (optionData as any).desc : null;
-
-            return (
-              <div key={optionValue} css={styles.optionItem}>
-                <Switch
-                  checked={isSelected}
-                  onChange={(checked) => handleChange(optionValue, checked)}
-                  label={optionLabel}
-                  labelPosition="right"
-                  size="regular"
-                />
-
-                {optionDesc && (
-                  <div css={styles.optionDescription}>
-                    <div dangerouslySetInnerHTML={{ __html: optionDesc }} />
-                  </div>
-                )}
-              </div>
-            );
-          })}
       </div>
 
-      {/* Summary */}
-      {selectedValues.length > 0 && (
-        <div css={styles.summary}>
-          <p css={styles.summaryText}>
-            Selected: {selectedValues.length} of {allValues.length} options
-          </p>
+      <div css={fieldStyles.inputColumn}>
+        <div css={fieldStyles.inputContainer}>
+          <div css={styles.wrapper}>
+            {/* Select All / Deselect All Button */}
+            {field.options && Object.keys(field.options).length > 1 && (
+              <div css={styles.selectAllContainer}>
+                <Button variant="text" size="small" onClick={handleSelectAll}>
+                  {allSelected ? 'Deselect All' : 'Select All'}
+                  {someSelected && ' (Some Selected)'}
+                </Button>
+              </div>
+            )}
+
+            {/* Switch Group */}
+            <div css={styles.optionsContainer(isVertical)}>
+              {field.options &&
+                Object.entries(field.options).map(([optionValue, optionData]) => {
+                  const isSelected = selectedValues.includes(optionValue);
+                  const optionLabel =
+                    typeof optionData === 'object' && optionData !== null
+                      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                        (optionData as any).label
+                      : String(optionData);
+                  const optionDesc =
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    typeof optionData === 'object' && optionData !== null ? (optionData as any).desc : null;
+
+                  return (
+                    <div key={optionValue} css={styles.optionItem}>
+                      <Switch
+                        checked={isSelected}
+                        onChange={(checked) => handleChange(optionValue, checked)}
+                        label={optionLabel}
+                        labelPosition="right"
+                        size="regular"
+                      />
+
+                      {optionDesc && (
+                        <div css={styles.optionDescription}>
+                          <div dangerouslySetInnerHTML={{ __html: optionDesc }} />
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+
+            {/* Summary */}
+            {selectedValues.length > 0 && (
+              <div css={styles.summary}>
+                <p css={styles.summaryText}>
+                  Selected: {selectedValues.length} of {allValues.length} options
+                </p>
+              </div>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -30,6 +30,13 @@ const styles = {
     border-left: 4px solid ${colorTokens.primary.main};
   `,
 
+  notificationBlock: css`
+    padding: ${spacing[24]};
+    background-color: ${colorTokens.background.white};
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius[8]};
+  `,
+
   header: css`
     margin-bottom: ${spacing[16]};
   `,
@@ -55,6 +62,8 @@ const SettingsBlock: React.FC<SettingsBlockProps> = ({ block }) => {
       baseStyles.push(styles.uniformBlock);
     } else if (block.block_type === 'isolate') {
       baseStyles.push(styles.isolateBlock);
+    } else if (block.block_type === 'notification') {
+      baseStyles.push(styles.notificationBlock);
     }
 
     return baseStyles;
@@ -83,7 +92,7 @@ const SettingsBlock: React.FC<SettingsBlockProps> = ({ block }) => {
             css={css`
               padding: ${spacing[16]};
               background-color: ${colorTokens.color.warning[50]};
-              border: 1px solid ${colorTokens.color.warning[200]};
+              border: 1px solid ${colorTokens.color.warning[100]};
               border-radius: ${borderRadius[6]};
               ${typography.caption()};
               color: ${colorTokens.text.subdued};

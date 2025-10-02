@@ -4,6 +4,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import React from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface CheckboxNotificationProps {
   field: SettingsField;
@@ -36,7 +37,6 @@ const styles = {
 
   optionsContainer: css`
     display: flex;
-    flex-direction: column;
     gap: ${spacing[12]};
   `,
 
@@ -87,40 +87,49 @@ const CheckboxNotification: React.FC<CheckboxNotificationProps> = ({ field, valu
   }
 
   return (
-    <div css={styles.container}>
-      <div css={styles.notificationGroup}>
-        <h4 css={styles.groupTitle}>{field.label}</h4>
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelContainer}>
+        <label css={fieldStyles.label}>{field.label}</label>
+        {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+        {field.desc && (
+          <div css={fieldStyles.description}>
+            <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+          </div>
+        )}
+      </div>
 
-        <div css={styles.optionsContainer}>
-          {Object.entries(field.options).map(([optionKey, optionData]) => {
-            const isSelected = selectedValues.includes(optionKey);
-            const optionLabel =
-              typeof optionData === 'object' && optionData !== null
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  (optionData as any).label || optionKey
-                : String(optionData);
-            const optionDesc =
-              typeof optionData === 'object' && optionData !== null
-                ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  (optionData as any).desc
-                : null;
+      <div css={styles.optionsContainer}>
+        {Object.entries(field.options).map(([optionKey, optionData]) => {
+          const isSelected = selectedValues.includes(optionKey);
+          const optionLabel =
+            typeof optionData === 'object' && optionData !== null
+              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (optionData as any).label || optionKey
+              : String(optionData);
+          const optionDesc =
+            typeof optionData === 'object' && optionData !== null
+              ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (optionData as any).desc
+              : null;
 
-            return (
-              <div key={optionKey}>
-                <div css={styles.optionItem}>
-                  <CheckBox checked={isSelected} onChange={(checked) => handleOptionChange(optionKey, checked)} />
-                  <span css={styles.optionLabel}>{optionLabel}</span>
-                </div>
-
-                {optionDesc && (
-                  <div css={styles.optionDescription}>
-                    <div dangerouslySetInnerHTML={{ __html: optionDesc }} />
-                  </div>
-                )}
+          return (
+            <div key={optionKey}>
+              <div css={styles.optionItem}>
+                <CheckBox
+                  label={optionLabel}
+                  checked={isSelected}
+                  onChange={(checked) => handleOptionChange(optionKey, checked)}
+                />
               </div>
-            );
-          })}
-        </div>
+
+              {optionDesc && (
+                <div css={styles.optionDescription}>
+                  <div dangerouslySetInnerHTML={{ __html: optionDesc }} />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

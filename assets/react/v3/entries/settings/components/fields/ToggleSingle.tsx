@@ -1,9 +1,7 @@
 import { type SettingsField } from '@Settings/contexts/SettingsContext';
 import Switch from '@TutorShared/atoms/Switch';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { css } from '@emotion/react';
 import React from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface ToggleSingleProps {
   field: SettingsField;
@@ -13,32 +11,6 @@ interface ToggleSingleProps {
   onChange: (value: any) => void;
 }
 
-const styles = {
-  container: css`
-    display: flex;
-    align-items: center;
-    gap: ${spacing[12]};
-  `,
-
-  labelContainer: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${spacing[4]};
-  `,
-
-  mainLabel: css`
-    ${typography.body()};
-    color: ${colorTokens.text.title};
-    margin: 0;
-  `,
-
-  toggleLabel: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.subdued};
-    margin: 0;
-  `,
-};
-
 const ToggleSingle: React.FC<ToggleSingleProps> = ({ field, value, onChange }) => {
   const isChecked = value === 'on' || value === true || value === '1';
 
@@ -47,13 +19,24 @@ const ToggleSingle: React.FC<ToggleSingleProps> = ({ field, value, onChange }) =
   };
 
   return (
-    <div css={styles.container}>
-      <div css={styles.labelContainer}>
-        <p css={styles.mainLabel}>{field.label}</p>
-        {field.label_title && <p css={styles.toggleLabel}>{field.label_title}</p>}
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelColumn}>
+        <div css={fieldStyles.labelContainer}>
+          <label css={fieldStyles.label}>{field.label}</label>
+          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+          {field.desc && (
+            <div css={fieldStyles.description}>
+              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+            </div>
+          )}
+        </div>
       </div>
 
-      <Switch checked={isChecked} onChange={handleChange} size="regular" labelPosition="left" />
+      <div css={fieldStyles.inputColumn}>
+        <div css={fieldStyles.inputContainer}>
+          <Switch checked={isChecked} onChange={handleChange} size="regular" labelPosition="left" />
+        </div>
+      </div>
     </div>
   );
 };

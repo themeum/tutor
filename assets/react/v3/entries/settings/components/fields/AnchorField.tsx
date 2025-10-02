@@ -4,6 +4,7 @@ import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import React from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface AnchorFieldProps {
   field: SettingsField;
@@ -48,17 +49,27 @@ const AnchorField: React.FC<AnchorFieldProps> = ({ field }) => {
   };
 
   return (
-    <div css={styles.container}>
-      {field.desc && (
-        <p css={styles.description}>
-          <div dangerouslySetInnerHTML={{ __html: field.desc }} />
-        </p>
-      )}
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelColumn}>
+        <div css={fieldStyles.labelContainer}>
+          <label css={fieldStyles.label}>{field.label}</label>
+          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+          {field.desc && (
+            <div css={fieldStyles.description}>
+              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+            </div>
+          )}
+        </div>
+      </div>
 
-      <div css={styles.buttonContainer}>
-        <Button variant="primary" size="regular" onClick={handleClick} disabled={!buttonUrl || buttonUrl === '#'}>
-          {buttonText}
-        </Button>
+      <div css={fieldStyles.inputColumn}>
+        <div css={fieldStyles.inputContainer}>
+          <div css={styles.buttonContainer}>
+            <Button variant="primary" size="regular" onClick={handleClick} disabled={!buttonUrl || buttonUrl === '#'}>
+              {buttonText}
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );

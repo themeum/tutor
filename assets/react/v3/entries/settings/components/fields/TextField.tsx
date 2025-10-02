@@ -1,6 +1,7 @@
 import { type SettingsField } from '@Settings/contexts/SettingsContext';
 import TextInput from '@TutorShared/atoms/TextInput';
 import React from 'react';
+import { fieldStyles } from './fieldStyles';
 
 interface TextFieldProps {
   field: SettingsField;
@@ -31,12 +32,30 @@ const TextField: React.FC<TextFieldProps> = ({ field, value, onChange }) => {
   };
 
   return (
-    <TextInput
-      type={getInputType()}
-      value={value?.toString() || ''}
-      onChange={onChange}
-      placeholder={getPlaceholder()}
-    />
+    <div css={fieldStyles.fieldRow}>
+      <div css={fieldStyles.labelColumn}>
+        <div css={fieldStyles.labelContainer}>
+          <label css={fieldStyles.label}>{field.label}</label>
+          {field.label_title && <div css={fieldStyles.labelTitle}>{field.label_title}</div>}
+          {field.desc && (
+            <div css={fieldStyles.description}>
+              <div dangerouslySetInnerHTML={{ __html: field.desc }} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div css={fieldStyles.inputColumn}>
+        <div css={fieldStyles.inputContainer}>
+          <TextInput
+            type={getInputType()}
+            value={value?.toString() || ''}
+            onChange={onChange}
+            placeholder={getPlaceholder()}
+          />
+        </div>
+      </div>
+    </div>
   );
 };
 
