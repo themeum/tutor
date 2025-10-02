@@ -50,4 +50,10 @@ export default [
       },
     },
   },
+  {
+    files: ['./assets/react/v3/shared/**/*.{ts,tsx,js,jsx}'],
+    rules: {
+      '@wordpress/i18n-text-domain': 'off',
+    },
+  },
 ];
