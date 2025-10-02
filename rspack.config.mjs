@@ -159,7 +159,7 @@ const createConfig = (env, options) => {
       'react-dom': 'ReactDOM',
       '@wordpress/i18n': 'wp.i18n',
     },
-    devtool: isDevelopment ? 'eval-source-map' : false,
+    devtool: isDevelopment ? 'source-map' : false,
     stats: {
       preset: 'errors-warnings',
       colors: true,
@@ -289,14 +289,14 @@ const isScssEntry = (entry) => {
 const createOutputFileName = (pathData) => {
   const entryName = pathData.chunk.name;
   if (isScssEntry(entryName)) {
-    return '';
+    return '[name].css.ignore';
   }
   return `js/[name].js`;
 };
 
 const createChunkFilename = (entryPath) => {
   if (isScssEntry(entryPath)) {
-    return '';
+    return `[name].css.ignore?ver=${version}`;
   }
   return `js/lazy-chunks/[name].js?ver=${version}`;
 };
