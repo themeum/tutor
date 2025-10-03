@@ -184,6 +184,15 @@ jQuery(document).ready(function($) {
 						});
 					}
 					that.sync_time(instance);
+
+					// Set player to window and dispatch custom event if lesson single page
+					if ($(that.player_DOM).closest('.tutor-course-topic-single-body .tutor-video-player-wrapper').length) {
+						const customEvent = new CustomEvent('tutorLessonPlayerReady', {
+							detail: { player: instance }
+						});
+						window.dispatchEvent(customEvent);
+						window.tutorLessonPlayer = player;
+					}
 				});
 				
 				player.on('play', (event) => {
@@ -221,11 +230,6 @@ jQuery(document).ready(function($) {
 						$('.plyr--youtube.plyr__poster-enabled .plyr__poster').css('opacity', 1);
 					}
 				});
-
-				// Set player to window if lesson single page
-				if ($(that.player_DOM).closest('.tutor-course-topic-single-body .tutor-video-player-wrapper').length) {
-					window.tutorLessonPlayer = player;
-				}
 			}
 		},
 		sync_time: function(instance, options) {

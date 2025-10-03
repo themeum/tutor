@@ -84,7 +84,6 @@ tutor_load_template(
 	<?php endif; ?>
 	<div class="tutor-video-player-wrapper">
 		<?php echo apply_filters( 'tutor_single_lesson_video', tutor_lesson_video( false ), $video_info, $source_key ); //phpcs:ignore ?>
-		<?php do_action( 'tutor_lesson_after_lesson_video', $video_info, $course_content_id ); ?>
 	</div>
 
 	<?php
