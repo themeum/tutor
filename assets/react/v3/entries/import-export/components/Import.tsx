@@ -1,21 +1,23 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
+import { type ErrorResponse } from 'react-router-dom';
 
-import { useModal } from '@TutorShared/components/modals/Modal';
+import { useToast } from '@TutorShared/atoms/Toast';
 import { UploadButton } from '@TutorShared/molecules/FileUploader';
 
 import ImportModal from '@ImportExport/components/modals/ImportModal';
 import { useImportContentsMutation } from '@ImportExport/services/import-export';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
-import { generateImportExportMessage } from '@ImportExport/utils/utils';
 import importInitialImage from '@SharedImages/import-export/import-initial.webp';
-import { useToast } from '@TutorShared/atoms/Toast';
-import { type ErrorResponse } from 'react-router-dom';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Import = () => {
   const { showModal, updateModal, closeModal } = useModal();
@@ -61,6 +63,7 @@ const Import = () => {
         onClose: closeModal,
         onImport: onImport,
       },
+      closeOnEscape: false,
     });
   };
 
@@ -85,18 +88,21 @@ const Import = () => {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'progress',
         progress,
-        message: generateImportExportMessage(importResponse, 'import'),
+        message: importResponse?.message || __('Import in progress...', 'tutor'),
       });
     }
 
     if (progress === 100) {
       updateModal<typeof ImportModal>('import-modal', {
         currentStep: 'success',
+        message: importResponse?.message || '',
+        failedMessage: importResponse?.failed_message || '',
         progress: 100,
         onClose: () => {
           closeModal({ action: 'CLOSE' });
         },
         completedContents: importResponse?.completed_contents,
+        importErrors: importResponse?.errors,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,7 +131,7 @@ const Import = () => {
 
         <UploadButton
           size="small"
-          acceptedTypes={['.json']}
+          acceptedTypes={isTutorPro ? ['.json', '.zip'] : ['.json']}
           variant="secondary"
           onError={(errors) => {
             showToast({
@@ -138,7 +144,9 @@ const Import = () => {
           {__('Choose a File', 'tutor')}
         </UploadButton>
 
-        <div css={styles.description}>{__('Supported format: .JSON', 'tutor')}</div>
+        <div css={styles.description}>
+          {sprintf(__('Supported format: %s', 'tutor'), isTutorPro ? '.JSON, .ZIP' : '.JSON')}
+        </div>
       </div>
     </div>
   );

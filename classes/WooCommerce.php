@@ -21,6 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WooCommerce extends Tutor_Base {
 
+	const MONETIZE_BY = 'wc';
 
 	const TUTOR_WC_GUEST_CUSTOMER_ID   = '_tutor_wc_guest_customer_id';
 	const WC_STORE_API_DRAFT_ORDER     = 'store_api_draft_order';
@@ -554,7 +555,11 @@ class WooCommerce extends Tutor_Base {
 					if ( 'completed' === $status_to ) {
 						$user_id   = get_post_field( 'post_author', $enrolled_id );
 						$course_id = get_post_field( 'post_parent', $enrolled_id );
-						do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
+
+						$should_fire_hook = apply_filters( 'tutor_should_fire_after_enrolled_for_wc_order', true, $order_id, $enrolled_id );
+						if ( $should_fire_hook ) {
+							do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
+						}
 					}
 				}
 			}
@@ -573,7 +578,7 @@ class WooCommerce extends Tutor_Base {
 	public function tutor_monetization_options( $arr ) {
 		$has_wc = tutor_utils()->has_wc();
 		if ( $has_wc ) {
-			$arr['wc'] = __( 'WooCommerce', 'tutor' );
+			$arr[ self::MONETIZE_BY ] = __( 'WooCommerce', 'tutor' );
 		}
 		return $arr;
 	}
@@ -596,8 +601,14 @@ class WooCommerce extends Tutor_Base {
 		global $wpdb;
 		$item = new \WC_Order_Item_Product( $item );
 
-		$product_id    = $item->get_product_id();
-		$order         = wc_get_order( $order_id );
+		$product_id = $item->get_product_id();
+		$order      = wc_get_order( $order_id );
+		$order_type = $order->get_type();
+
+		if ( 'shop_subscription' === $order_type ) {
+			return;
+		}
+
 		$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
 
 		if ( $if_has_course && is_object( $order ) ) {
@@ -741,7 +752,11 @@ class WooCommerce extends Tutor_Base {
 				update_post_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
 				return;
 			}
-			tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+
+			$has_enrollment = tutor_utils()->is_enrolled( $course_id, $customer_id, false );
+			if ( ! $has_enrollment ) {
+				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+			}
 		}
 	}
 

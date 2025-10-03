@@ -371,13 +371,11 @@ class QueryHelper {
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
-			} else {
-				if ( 'null' === strtolower( $value ) ) {
+			} elseif ( 'null' === strtolower( $value ) ) {
 					$clause = array( $field, 'IS', 'NULL' );
-				} else {
-					$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
-					$clause = array( $field, '=', $value );
-				}
+			} else {
+				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
+				$clause = array( $field, '=', $value );
 			}
 
 			$arr[] = ( 'RAW' === $operator ) ? $clause : self::make_clause( $clause );
@@ -982,6 +980,7 @@ class QueryHelper {
 	 * Argument should be SQL escaped.
 	 *
 	 * @since 3.0.0
+	 * @since 3.8.2 param $get_row added.
 	 *
 	 * @param string $primary_table The primary table name with prefix.
 	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
@@ -993,6 +992,7 @@ class QueryHelper {
 	 * @param int    $offset Offset for pagination.
 	 * @param string $order  DESC or ASC, default is DESC.
 	 * @param string $output  Expected output type, default is OBJECT.
+	 * @param bool   $get_row Get a single row.
 	 *
 	 * @throws \Exception If an error occurred during the query execution.
 	 *
@@ -1008,7 +1008,8 @@ class QueryHelper {
 		$limit = 10,
 		$offset = 0,
 		string $order = 'DESC',
-		string $output = 'OBJECT'
+		string $output = 'OBJECT',
+		bool $get_row = false
 	) {
 		global $wpdb;
 
@@ -1026,6 +1027,10 @@ class QueryHelper {
 				{$where_clause}
 				{$order_by_clause}
 				{$limit_clause}";
+
+		if ( $get_row ) {
+			return $wpdb->get_row( $query, $output );
+		}
 
 		$results     = $wpdb->get_results( $query, $output );
 		$has_records = is_array( $results ) && count( $results );	
@@ -1320,6 +1325,31 @@ class QueryHelper {
 	 */
 	public static function get_valid_sort_order( $order ) {
 		return 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
+	}
+
+	/**
+	 * Get the schema of a database table.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param string $table_name The name of the database table.
+	 *
+	 * @throws \Exception Throws an exception if there is a database error.
+	 *
+	 * @return array Returns an array of table columns and their details.
+	 */
+	public static function get_table_schema( $table_name) {
+		
+		global $wpdb;
+
+		$result = $wpdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
+
+		// If error occurred then throw new exception.
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
+		}
+
+		return $result;
 	}
 
 }

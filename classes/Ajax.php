@@ -316,6 +316,11 @@ class Ajax {
 	public function tutor_course_add_to_wishlist() {
 		tutor_utils()->checking_nonce();
 
+		$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
+		if ( ! $is_enabled_wishlist ) {
+			wp_send_json_error( array( 'message' => __( 'Wishlist option is disabled', 'tutor' ) ) );
+		}
+
 		// Redirect login since only logged in user can add courses to wishlist.
 		if ( ! is_user_logged_in() ) {
 			wp_send_json_error(

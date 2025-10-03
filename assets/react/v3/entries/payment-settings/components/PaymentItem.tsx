@@ -270,6 +270,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               label={field.label}
                               helpText={field.hint}
                               toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
+                              toolbar2=""
                             />
                           );
 

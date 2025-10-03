@@ -31,7 +31,6 @@ class Settings {
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
 		add_action( 'wp_ajax_tutor_delete_manual_payment_method', __CLASS__ . '::ajax_delete_manual_payment_method' );
 
-		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
 		add_action( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
 		add_action( 'wp_ajax_tutor_payment_gateways', array( $this, 'ajax_tutor_payment_gateways' ) );
 	}
@@ -57,23 +56,6 @@ class Settings {
 	 */
 	public static function is_coupon_usage_enabled() {
 		return (bool) tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICABLE, false );
-	}
-
-	/**
-	 * Format payment settings data.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $option option.
-	 *
-	 * @return array
-	 */
-	public function format_payment_settings_data( $option ) {
-		if ( ! empty( $option['payment_settings'] ) ) {
-			$option['payment_settings'] = wp_unslash( $option['payment_settings'] );
-		}
-
-		return $option;
 	}
 
 	/**

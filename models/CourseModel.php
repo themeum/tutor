@@ -45,13 +45,6 @@ class CourseModel {
 	const MODE_STRICT   = 'strict';
 
 	/**
-	 * Course mapped with the product using this meta key
-	 *
-	 * @var string
-	 */
-	const WC_PRODUCT_META_KEY = '_tutor_course_product_id';
-
-	/**
 	 * Course attachment/downloadable resources meta key
 	 *
 	 * @var string
@@ -64,6 +57,15 @@ class CourseModel {
 	 * @var string
 	 */
 	const BENEFITS_META_KEY = '_tutor_course_benefits';
+
+	/**
+	 * The constant representing the status when a course is completed.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @var string
+	 */
+	const COURSE_COMPLETED = 'course_completed';
 
 	/**
 	 * Get available status list.
@@ -1151,5 +1153,42 @@ class CourseModel {
 		}
 
 		return $category_options;
+	}
+
+	/**
+	 * Retrieve all course completion records for a specific course, including meta data.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param int $course_id The ID of the course.
+	 *
+	 * @return array Array of course completion objects with meta, empty array if none found, or on database error.
+	 */
+	public function get_course_completion_data_by_course_id( int $course_id ): array {
+
+		global $wpdb;
+
+		$where = array(
+			'comment_type'    => self::COURSE_COMPLETED,
+			'comment_post_ID' => $course_id,
+			'comment_agent'   => 'TutorLMSPlugin',
+		);
+
+		$result = QueryHelper::get_all( $wpdb->comments, $where, 'comment_post_ID', -1 );
+
+		if ( empty( $result ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $item ) {
+
+				return array(
+					'completion'      => $item,
+					'completion_meta' => get_comment_meta( $item->comment_ID ),
+				);
+			},
+			$result
+		);
 	}
 }
