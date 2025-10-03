@@ -212,6 +212,7 @@ const FormMultipleChoiceAndOrdering = ({
               >
                 <Button
                   variant="text"
+                  size="small"
                   icon={<SVGIcon name="addImage" width={24} height={24} />}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -558,6 +559,7 @@ const styles = {
     place-self: center start;
     button {
       padding: 0;
+      min-height: 24px;
     }
   `,
   optionActions: css`
