@@ -185,7 +185,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
       component: ConfirmationModal,
       props: {
         title: sprintf(
-          // translators: %s - plan name
+          // translators: %s is the title of the item to be deleted
           __('Delete "%s"', __TUTOR_TEXT_DOMAIN__),
           subscription.plan_name,
         ),
