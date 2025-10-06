@@ -112,7 +112,7 @@ tutor_load_template(
 	$nav_items = array();
 
 	if ( $has_lesson_content ) {
-		$nav_items[] = array(
+		$nav_items['overview'] = array(
 			'label' => esc_html__( 'Overview', 'tutor' ),
 			'value' => 'overview',
 			'icon'  => 'document-text',
@@ -120,7 +120,7 @@ tutor_load_template(
 	}
 
 	if ( $has_lesson_attachment ) {
-		$nav_items[] = array(
+		$nav_items['files'] = array(
 			'label' => esc_html__( 'Exercise Files', 'tutor' ),
 			'value' => 'files',
 			'icon'  => 'paperclip',
@@ -128,7 +128,7 @@ tutor_load_template(
 	}
 
 	if ( $is_comment_enabled ) {
-		$nav_items[] = array(
+		$nav_items['comments'] = array(
 			'label' => esc_html__( 'Comments', 'tutor' ),
 			'value' => 'comments',
 			'icon'  => 'comment',
@@ -136,6 +136,7 @@ tutor_load_template(
 	}
 
 	$nav_items = apply_filters( 'tutor_lesson_single_nav_items', $nav_items );
+	$nav_items = array_values( $nav_items );
 
 	$active_tab = $page_tab;
 	$valid_tabs = wp_list_pluck( $nav_items, 'value' );
