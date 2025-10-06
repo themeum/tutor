@@ -289,14 +289,14 @@ const isScssEntry = (entry) => {
 const createOutputFileName = (pathData) => {
   const entryName = pathData.chunk.name;
   if (isScssEntry(entryName)) {
-    return '[name].css.ignore';
+    return 'css/ignore/[name].css.ignore';
   }
   return `js/[name].js`;
 };
 
 const createChunkFilename = (entryPath) => {
   if (isScssEntry(entryPath)) {
-    return `[name].css.ignore?ver=${version}`;
+    return `css/ignore/[name].css.ignore?ver=${version}`;
   }
   return `js/lazy-chunks/[name].js?ver=${version}`;
 };
