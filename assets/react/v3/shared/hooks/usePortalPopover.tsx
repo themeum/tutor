@@ -70,7 +70,7 @@ interface PortalProps {
   animationType?: AnimationType;
 }
 
-const getMirroredPlacement = (placement: PopoverPlacement): PopoverPlacement => {
+export const getMirroredPlacement = (placement: PopoverPlacement): PopoverPlacement => {
   const mirrorMap: Record<PopoverPlacement, PopoverPlacement> = {
     [POPOVER_PLACEMENTS.TOP]: POPOVER_PLACEMENTS.TOP,
     [POPOVER_PLACEMENTS.TOP_LEFT]: POPOVER_PLACEMENTS.TOP_RIGHT,
@@ -276,11 +276,16 @@ const calculateArrowPosition = (
 
   if (isVertical) {
     const triggerCenter = triggerRect.left + triggerRect.width / 2;
-    const arrowLeft =
+    let arrowLeft =
       Math.max(
         ARROW_CONFIG.SAFE_MARGIN,
         Math.min(width - ARROW_CONFIG.MAX_OFFSET_VERTICAL, triggerCenter - popoverPosition.left),
       ) - ARROW_CONFIG.CENTER_OFFSET;
+
+    if (isRTL) {
+      arrowLeft = width - arrowLeft - ARROW_CONFIG.CENTER_OFFSET * 2;
+    }
+
     return { arrowLeft };
   }
 
