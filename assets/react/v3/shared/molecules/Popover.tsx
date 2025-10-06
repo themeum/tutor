@@ -2,9 +2,11 @@ import { css } from '@emotion/react';
 import type React from 'react';
 import type { RefObject } from 'react';
 
+import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, zIndex } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import {
+  getMirroredPlacement,
   POPOVER_PLACEMENTS,
   Portal,
   usePortalPopover,
@@ -69,7 +71,7 @@ const Popover = <T extends HTMLElement>({
     >
       <div
         css={styles.wrapper({
-          placement: position.placement,
+          placement: isRTL ? getMirroredPlacement(position.placement) : position.placement,
           hideArrow: !arrow || (position.arrowLeft === undefined && position.arrowTop === undefined),
           arrowLeft: position.arrowLeft,
           arrowTop: position.arrowTop,
