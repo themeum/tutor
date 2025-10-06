@@ -982,8 +982,9 @@ class CheckoutController {
 		$has_cart_item = $cart_model->has_item_in_cart( $user_id );
 		$buy_now       = Settings::is_buy_now_enabled();
 		$plan_id       = Input::get( 'plan', 0, Input::TYPE_INT );
+		$order_id      = Input::get( 'order_id', 0, Input::TYPE_INT );
 
-		if ( ! $has_cart_item && ! $buy_now && ! $plan_id ) {
+		if ( ! $has_cart_item && ! $buy_now && ! $plan_id && ! $order_id ) {
 			wp_safe_redirect( $cart_page_url );
 			exit;
 		}
@@ -1051,9 +1052,10 @@ class CheckoutController {
 				try {
 					// If payment method not selected then redirect to checkout page.
 					if ( empty( $payment_method ) && empty( $order_data->payment_method ) ) {
-						tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'checkout' ) );
+
+						tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'checkout' ) . '?order_id=' . $order_id );
 					}
-					
+
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
@@ -1132,5 +1134,30 @@ class CheckoutController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
+	 * Retrieve course data for a given set of order items.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param array $order_items Array of order item objects.
+	 * @return array{
+	 *     courses: array{
+	 *         total_count: int,
+	 *         results: \WP_Post[]
+	 *     }
+	 * }
+	 */
+	public function get_courses_data_by_order_id( $order_items ): array {
+
+		$results = array_map( fn( $item ): \WP_Post => get_post( $item->id ), $order_items );
+
+		return array(
+			'courses' => array(
+				'total_count' => count( $results ),
+				'results'     => $results,
+			),
+		);
 	}
 }
