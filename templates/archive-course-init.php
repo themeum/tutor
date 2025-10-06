@@ -123,7 +123,7 @@ if ( isset( $the_query ) ) {
 	$has_course_filters = $course_filter && count( $supported_filters );
 
 	$supported_filters_keys = array_keys( $supported_filters );
-	?>
+?>
 
 <div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode( $GLOBALS['tutor_course_archive_arg'] ) ); ?>">
 	<?php if ( $has_course_filters ) : ?>
@@ -143,16 +143,12 @@ if ( isset( $the_query ) ) {
 				</div>
 			</div>
 
-			<!-- <?php if ( $columns < 3 ) : ?>
-				<div class="tutor-col-1 tutor-d-none tutor-d-xl-block" area-hidden="true"></div>
-			<?php endif; ?> -->
-
 			<div class="tutor-col-xl-<?php echo $columns < 3 ? 8 : 9; ?> ">
 				<div>
 					<?php tutor_load_template( 'course-filter.course-archive-filter-bar' ); ?>
 				</div>
 				<div class="tutor-pagination-wrapper-replaceable" tutor-course-list-container>
-					<?php echo $course_loop; //phpcs:ignore --$course_loop contain sanitized data ?> 
+					<?php echo $course_loop; //phpcs:ignore --$course_loop contain sanitized data ?>
 				</div>
 			</div>
 		<?php else : ?>

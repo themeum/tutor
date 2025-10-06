@@ -2,10 +2,9 @@
 
 namespace Tutor\PaymentGateways\Configs;
 
-use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
-use Ollyo\PaymentHub\Payments\Paypal\Config;
-use phpDocumentor\Reflection\Types\Self_;
 use Tutor\Ecommerce\Settings;
+use Ollyo\PaymentHub\Payments\Paypal\Config;
+use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
 
 /**
  * PaypalConfig class.
@@ -68,6 +67,14 @@ class PaypalConfig extends Config implements ConfigContract {
 	 * @since 3.0.0
 	 */
 	private $webhook_id;
+
+	/**
+	 * PayPal webhook URL.
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	private $webhook_url;
 
 	/**
 	 * The name of the payment gateway.
