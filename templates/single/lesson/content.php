@@ -164,7 +164,18 @@ tutor_load_template(
 						data-tutor-query-variable="page_tab" 
 						data-tutor-query-value="<?php echo esc_attr( $nav_item['value'] ); ?>"
 					>
-						<span class="tutor-icon-<?php echo esc_attr( $nav_item['icon'] ); ?> tutor-mr-8" area-hidden="true"></span>
+						<?php
+						if ( isset( $nav_item['icon_type'] ) && 'svg' === $nav_item['icon_type'] ) {
+							tutor_utils()->render_svg_icon( $nav_item['icon'], 20, 20 );
+						} else {
+							?>
+							<span 
+								class="tutor-icon-<?php echo esc_attr( $nav_item['icon'] ); ?> tutor-mr-8" 
+								aria-hidden="true">
+							</span>
+							<?php
+						}
+						?>
 						<span><?php echo esc_html( $nav_item['label'] ); ?></span>
 					</a>
 				</li>
