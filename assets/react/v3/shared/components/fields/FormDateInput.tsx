@@ -81,7 +81,7 @@ const FormDateInput = ({
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
-    placement: isRTL ? POPOVER_PLACEMENTS.BOTTOM_RIGHT : POPOVER_PLACEMENTS.BOTTOM_LEFT,
+    placement: POPOVER_PLACEMENTS.BOTTOM_LEFT,
   });
 
   const handleClosePortal = () => {
