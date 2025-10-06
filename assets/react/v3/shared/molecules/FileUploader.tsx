@@ -35,7 +35,7 @@ export const useFileUploader = ({
   acceptedTypes,
   onUpload,
   onError,
-  maxFileSize = formatReadAbleBytesToBytes(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
+  maxFileSize = Number(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
 }: UseFileUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -143,7 +143,7 @@ export const UploadButton = ({
   multiple = false,
   disabled = false,
   children,
-  maxFileSize = formatReadAbleBytesToBytes(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
+  maxFileSize = Number(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
   ...buttonProps
 }: UploadButtonProps) => {
   const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError, maxFileSize });

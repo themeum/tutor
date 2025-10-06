@@ -211,7 +211,17 @@ export const formatBytes = (bytes: number, decimals = 2) => {
 
   const kilobit = 1024;
   const decimal = Math.max(0, decimals);
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  const sizes = [
+    __('Bytes', __TUTOR_TEXT_DOMAIN__),
+    __('KB', __TUTOR_TEXT_DOMAIN__),
+    __('MB', __TUTOR_TEXT_DOMAIN__),
+    __('GB', __TUTOR_TEXT_DOMAIN__),
+    __('TB', __TUTOR_TEXT_DOMAIN__),
+    __('PB', __TUTOR_TEXT_DOMAIN__),
+    __('EB', __TUTOR_TEXT_DOMAIN__),
+    __('ZB', __TUTOR_TEXT_DOMAIN__),
+    __('YB', __TUTOR_TEXT_DOMAIN__),
+  ];
 
   const index = Math.floor(Math.log(bytes) / Math.log(kilobit));
 
