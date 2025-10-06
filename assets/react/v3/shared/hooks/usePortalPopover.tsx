@@ -91,6 +91,13 @@ const getMirroredPlacement = (placement: PopoverPlacement): PopoverPlacement => 
   return mirrorMap[placement] || placement;
 };
 
+const getMirroredModifier = (modifier: { top: number; left: number }): { top: number; left: number } => {
+  return {
+    top: modifier.top,
+    left: -modifier.left,
+  };
+};
+
 const checkOverflow = (
   position: { top: number; left: number },
   dimensions: Dimensions,
@@ -326,6 +333,10 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     return isRTL ? getMirroredPlacement(placement) : placement;
   }, [placement]);
 
+  const effectiveModifier = useMemo(() => {
+    return isRTL ? getMirroredModifier(positionModifier) : positionModifier;
+  }, [positionModifier]);
+
   useEffect(() => {
     if (!triggerRef.current) return;
     setTriggerWidth(triggerRef.current.getBoundingClientRect().width);
@@ -346,7 +357,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
       triggerRect,
       dimensions,
       gap,
-      positionModifier,
+      effectiveModifier,
     );
     let finalPlacement = effectivePlacement;
 
@@ -357,7 +368,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
         dimensions,
         triggerRect,
         gap,
-        positionModifier,
+        effectiveModifier,
       );
       calculatedPosition = adjusted.position;
       finalPlacement = adjusted.placement;
@@ -374,8 +385,18 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
       placement: finalPlacement,
       ...arrowPosition,
     });
+  }, [
+    triggerRef,
+    popoverRef,
+    isOpen,
+    effectivePlacement,
+    effectiveModifier,
+    gap,
+    arrow,
+    autoAdjustOverflow,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerRef, popoverRef, isOpen, effectivePlacement, gap, arrow, autoAdjustOverflow, ...dependencies]);
+    ...dependencies,
+  ]);
 
   return { position, triggerWidth, triggerRef, popoverRef };
 };
