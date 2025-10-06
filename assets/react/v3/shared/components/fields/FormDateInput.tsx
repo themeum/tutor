@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { format, isValid } from 'date-fns';
 import { useRef, useState } from 'react';
 import { DayPicker, type Formatters } from 'react-day-picker';
@@ -8,15 +9,14 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { POPOVER_PLACEMENTS, Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+
+import FormFieldWrapper from './FormFieldWrapper';
 
 import 'react-day-picker/style.css';
-
-import { typography } from '@TutorShared/config/typography';
-import { styleUtils } from '@TutorShared/utils/style-utils';
-import { __ } from '@wordpress/i18n';
-import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormDateInputProps extends FormControllerProps<string> {
   label?: string | React.ReactNode;
@@ -81,7 +81,7 @@ const FormDateInput = ({
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
-    placement: POPOVER_PLACEMENTS.BOTTOM_LEFT,
+    placement: isRTL ? POPOVER_PLACEMENTS.BOTTOM_RIGHT : POPOVER_PLACEMENTS.BOTTOM_LEFT,
   });
 
   const handleClosePortal = () => {
@@ -152,7 +152,7 @@ const FormDateInput = ({
               <div
                 css={styles.pickerWrapper}
                 style={{
-                  [isRTL ? 'right' : 'left']: position.left,
+                  left: position.left,
                   top: position.top,
                 }}
                 ref={popoverRef}

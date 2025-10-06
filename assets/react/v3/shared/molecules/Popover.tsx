@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import type React from 'react';
 import type { RefObject } from 'react';
 
-import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, zIndex } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import {
@@ -76,7 +75,7 @@ const Popover = <T extends HTMLElement>({
           arrowTop: position.arrowTop,
         })}
         style={{
-          [isRTL ? 'right' : 'left']: position.left,
+          left: position.left,
           top: position.top,
           maxWidth: maxWidth ?? triggerWidth,
         }}
