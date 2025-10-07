@@ -27,7 +27,9 @@ const getScrollbarWidth = (): number => {
 };
 
 const applyScrollLock = () => {
-  if (originalStyles) return;
+  if (originalStyles) {
+    return;
+  }
 
   const scrollBarWidth = getScrollbarWidth();
   const hasScrollbar = window.innerWidth > document.documentElement.clientWidth;
@@ -46,7 +48,9 @@ const applyScrollLock = () => {
 };
 
 const removeScrollLock = () => {
-  if (!originalStyles) return;
+  if (!originalStyles) {
+    return;
+  }
 
   document.body.style.overflow = originalStyles.overflow;
   document.body.style.paddingRight = originalStyles.paddingRight;
