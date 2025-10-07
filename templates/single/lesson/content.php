@@ -114,13 +114,13 @@ tutor_load_template(
 
 	if ( $has_lesson_content ) {
 		$nav_items['overview'] = array(
-			'label' => esc_html__( 'Overview', 'tutor' ),
+			'label' => __( 'Overview', 'tutor' ),
 			'value' => 'overview',
 			'icon'  => 'document-text',
 		);
 
 		$nav_contents['overview'] = array(
-			'label'         => esc_html__( 'Overview', 'tutor' ),
+			'label'         => __( 'Overview', 'tutor' ),
 			'value'         => 'overview',
 			'template_path' => 'single.lesson.parts.overview',
 		);
@@ -128,13 +128,13 @@ tutor_load_template(
 
 	if ( $has_lesson_attachment ) {
 		$nav_items['files'] = array(
-			'label' => esc_html__( 'Exercise Files', 'tutor' ),
+			'label' => __( 'Exercise Files', 'tutor' ),
 			'value' => 'files',
 			'icon'  => 'paperclip',
 		);
 
 		$nav_contents['files'] = array(
-			'label'         => esc_html__( 'Files', 'tutor' ),
+			'label'         => __( 'Files', 'tutor' ),
 			'value'         => 'files',
 			'template_path' => 'single.lesson.parts.files',
 		);
@@ -142,13 +142,13 @@ tutor_load_template(
 
 	if ( $is_comment_enabled ) {
 		$nav_items['comments'] = array(
-			'label' => esc_html__( 'Comments', 'tutor' ),
+			'label' => __( 'Comments', 'tutor' ),
 			'value' => 'comments',
 			'icon'  => 'comment',
 		);
 
 		$nav_contents['comments'] = array(
-			'label'         => esc_html__( 'Comments', 'tutor' ),
+			'label'         => __( 'Comments', 'tutor' ),
 			'value'         => 'comments',
 			'template_path' => 'single.lesson.parts.comments',
 		);
