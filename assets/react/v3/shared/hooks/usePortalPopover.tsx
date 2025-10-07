@@ -7,6 +7,7 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import { isRTL } from '@TutorShared/config/constants';
 import { zIndex } from '@TutorShared/config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
+import { useScrollLock } from '@TutorShared/utils/scroll-lock';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
@@ -406,8 +407,6 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
   return { position, triggerWidth, triggerRef, popoverRef };
 };
 
-let portalCount = 0;
-
 export const Portal = ({
   isOpen,
   children,
@@ -416,6 +415,7 @@ export const Portal = ({
   animationType = AnimationType.slideDown,
 }: PortalProps) => {
   const { hasModalOnStack } = useModal();
+  useScrollLock(isOpen);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -426,15 +426,9 @@ export const Portal = ({
 
     if (!isOpen) return;
 
-    portalCount++;
-    document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', handleKeyDown, true);
 
     return () => {
-      portalCount--;
-      if (!hasModalOnStack && portalCount === 0) {
-        document.body.style.overflow = 'initial';
-      }
       document.removeEventListener('keydown', handleKeyDown, true);
     };
   }, [isOpen, hasModalOnStack, onEscape]);
