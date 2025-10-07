@@ -2225,25 +2225,29 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $posts_per_page posts per page.
+	 * @param int   $user_id user id.
+	 * @param int   $offset offset.
+	 * @param int   $posts_per_page posts per page.
+	 * @param array $args Args to override the defaults.
 	 *
 	 * @return bool|\WP_Query
 	 */
-	public function get_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
+	public function get_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1, $args = array() ) {
 		$user_id    = $this->get_user_id( $user_id );
 		$course_ids = $this->get_completed_courses_ids_by_user( $user_id );
 
 		if ( count( $course_ids ) ) {
 			$course_post_type = tutor()->course_post_type;
 			$course_args      = array(
-				'post_type'      => apply_filters( 'tutor_completed_courses_post_types', array( $course_post_type ) ),
+				'post_type'      => $course_post_type,
 				'post_status'    => 'publish',
 				'post__in'       => $course_ids,
 				'posts_per_page' => $posts_per_page,
 				'offset'         => $offset,
 			);
+
+			$args        = apply_filters( 'tutor_get_completed_courses_by_user', $args, $user_id, $course_post_type );
+			$course_args = wp_parse_args( $args, $course_args );
 
 			return new \WP_Query( $course_args );
 		}
@@ -2256,13 +2260,14 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $posts_per_page posts per page.
+	 * @param int   $user_id user id.
+	 * @param int   $offset offset.
+	 * @param int   $posts_per_page posts per page.
+	 * @param array $args Args to override the defaults.
 	 *
 	 * @return bool|\WP_Query
 	 */
-	public function get_active_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
+	public function get_active_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1, $args = array() ) {
 		$user_id             = $this->get_user_id( $user_id );
 		$course_ids          = $this->get_completed_courses_ids_by_user( $user_id );
 		$enrolled_course_ids = $this->get_enrolled_courses_ids_by_user( $user_id );
@@ -2277,6 +2282,9 @@ class Utils {
 				'posts_per_page' => $posts_per_page,
 				'offset'         => $offset,
 			);
+
+			$args        = apply_filters( 'tutor_get_active_courses_by_user', $args, $user_id, $course_post_type );
+			$course_args = wp_parse_args( $args, $course_args );
 
 			return new \WP_Query( $course_args );
 		}
@@ -2432,13 +2440,14 @@ class Utils {
 		if ( count( $course_ids ) ) {
 			$course_post_type = tutor()->course_post_type;
 			$course_args      = array(
-				'post_type'      => apply_filters( 'tutor_enrolled_courses_post_types', array( $course_post_type ) ),
+				'post_type'      => $course_post_type,
 				'post_status'    => $post_status,
 				'post__in'       => $course_ids,
 				'offset'         => $offset,
 				'posts_per_page' => $posts_per_page,
 			);
 
+			$args        = apply_filters( 'tutor_get_enrolled_courses_by_user', $args, $user_id, $course_post_type );
 			$course_args = wp_parse_args( $args, $course_args );
 
 			$result = new \WP_Query( $course_args );
