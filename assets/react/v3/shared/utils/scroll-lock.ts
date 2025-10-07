@@ -42,14 +42,6 @@ const applyScrollLock = () => {
   if (hasScrollbar && scrollBarWidth > 0) {
     const currentPadding = parseInt(window.getComputedStyle(document.body).paddingRight || '0', 10);
     document.body.style.paddingRight = `${currentPadding + scrollBarWidth}px`;
-
-    const fixedElements = document.querySelectorAll('[data-fixed-element]');
-    fixedElements.forEach((el) => {
-      const element = el as HTMLElement;
-      const elementPadding = parseInt(window.getComputedStyle(element).paddingRight || '0', 10);
-      element.style.paddingRight = `${elementPadding + scrollBarWidth}px`;
-      element.dataset.originalPadding = elementPadding.toString();
-    });
   }
 };
 
@@ -58,14 +50,6 @@ const removeScrollLock = () => {
 
   document.body.style.overflow = originalStyles.overflow;
   document.body.style.paddingRight = originalStyles.paddingRight;
-
-  const fixedElements = document.querySelectorAll('[data-fixed-element]');
-  fixedElements.forEach((el) => {
-    const element = el as HTMLElement;
-    const originalPadding = element.dataset.originalPadding;
-    element.style.paddingRight = originalPadding ? `${originalPadding}px` : '';
-    delete element.dataset.originalPadding;
-  });
 
   originalStyles = null;
 };
