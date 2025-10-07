@@ -9,6 +9,7 @@
  * @since 1.0.0
  */
 
+use TUTOR\Lesson;
 use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -109,55 +110,8 @@ tutor_load_template(
 	$has_lesson_attachment = count( tutor_utils()->get_attachments() ) > 0;
 	$has_lesson_comment    = (int) get_comments_number( $course_content_id );
 
-	$nav_items    = array();
-	$nav_contents = array();
-
-	if ( $has_lesson_content ) {
-		$nav_items['overview'] = array(
-			'label' => __( 'Overview', 'tutor' ),
-			'value' => 'overview',
-			'icon'  => 'document-text',
-		);
-
-		$nav_contents['overview'] = array(
-			'label'         => __( 'Overview', 'tutor' ),
-			'value'         => 'overview',
-			'template_path' => 'single.lesson.parts.overview',
-		);
-	}
-
-	if ( $has_lesson_attachment ) {
-		$nav_items['files'] = array(
-			'label' => __( 'Exercise Files', 'tutor' ),
-			'value' => 'files',
-			'icon'  => 'paperclip',
-		);
-
-		$nav_contents['files'] = array(
-			'label'         => __( 'Files', 'tutor' ),
-			'value'         => 'files',
-			'template_path' => 'single.lesson.parts.files',
-		);
-	}
-
-	if ( $is_comment_enabled ) {
-		$nav_items['comments'] = array(
-			'label' => __( 'Comments', 'tutor' ),
-			'value' => 'comments',
-			'icon'  => 'comment',
-		);
-
-		$nav_contents['comments'] = array(
-			'label'         => __( 'Comments', 'tutor' ),
-			'value'         => 'comments',
-			'template_path' => 'single.lesson.parts.comments',
-		);
-	}
-
-	$nav_items = apply_filters( 'tutor_lesson_single_nav_items', $nav_items );
-	$nav_items = array_values( $nav_items );
-
-	$nav_contents = apply_filters( 'tutor_lesson_single_nav_contents', $nav_contents );
+	$nav_items    = Lesson::get_nav_items( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled );
+	$nav_contents = Lesson::get_nav_contents( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled );
 
 	$active_tab = $page_tab;
 	$valid_tabs = wp_list_pluck( $nav_items, 'value' );

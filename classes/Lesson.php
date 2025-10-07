@@ -609,4 +609,90 @@ class Lesson extends Tutor_Base {
 		return wp_insert_comment( $comment_data );
 	}
 
+	/**
+	 * Get navigation items for lesson single page
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param bool $has_lesson_content whether lesson has content.
+	 * @param bool $has_lesson_attachment whether lesson has attachment.
+	 * @param bool $is_comment_enabled whether comment is enabled.
+	 *
+	 * @return array navigation items array
+	 */
+	public static function get_nav_items( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled ) {
+		$nav_items = array();
+
+		if ( $has_lesson_content ) {
+			$nav_items['overview'] = array(
+				'label' => __( 'Overview', 'tutor' ),
+				'value' => 'overview',
+				'icon'  => 'document-text',
+			);
+		}
+
+		if ( $has_lesson_attachment ) {
+			$nav_items['files'] = array(
+				'label' => __( 'Exercise Files', 'tutor' ),
+				'value' => 'files',
+				'icon'  => 'paperclip',
+			);
+		}
+
+		if ( $is_comment_enabled ) {
+			$nav_items['comments'] = array(
+				'label' => __( 'Comments', 'tutor' ),
+				'value' => 'comments',
+				'icon'  => 'comment',
+			);
+		}
+
+		$nav_items = apply_filters( 'tutor_lesson_single_nav_items', $nav_items );
+		$nav_items = array_values( $nav_items );
+
+		return $nav_items;
+	}
+
+	/**
+	 * Get navigation contents for lesson single page
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param bool $has_lesson_content whether lesson has content.
+	 * @param bool $has_lesson_attachment whether lesson has attachment.
+	 * @param bool $is_comment_enabled whether comment is enabled.
+	 *
+	 * @return array navigation contents array
+	 */
+	public static function get_nav_contents( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled ) {
+		$nav_contents = array();
+
+		if ( $has_lesson_content ) {
+			$nav_contents['overview'] = array(
+				'label'         => __( 'Overview', 'tutor' ),
+				'value'         => 'overview',
+				'template_path' => 'single.lesson.parts.overview',
+			);
+		}
+
+		if ( $has_lesson_attachment ) {
+			$nav_contents['files'] = array(
+				'label'         => __( 'Files', 'tutor' ),
+				'value'         => 'files',
+				'template_path' => 'single.lesson.parts.files',
+			);
+		}
+
+		if ( $is_comment_enabled ) {
+			$nav_contents['comments'] = array(
+				'label'         => __( 'Comments', 'tutor' ),
+				'value'         => 'comments',
+				'template_path' => 'single.lesson.parts.comments',
+			);
+		}
+
+		$nav_contents = apply_filters( 'tutor_lesson_single_nav_contents', $nav_contents );
+
+		return $nav_contents;
+	}
 }
