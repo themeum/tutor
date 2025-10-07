@@ -557,7 +557,7 @@ class CheckoutController {
 	public function pay_now() {
 		$errors = array();
 		if ( ! tutor_utils()->is_nonce_verified() ) {
-			array_push( $errors, 'Security verification failed' );
+			array_push( $errors, tutor_utils()->error_message( 'nonce' ) );
 			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
 			return;
 		}
