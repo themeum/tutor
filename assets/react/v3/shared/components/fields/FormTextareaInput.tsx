@@ -6,6 +6,7 @@ import { typography } from '@TutorShared/config/typography';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTextareaInputProps extends FormControllerProps<string | null> {
@@ -154,6 +155,7 @@ const styles = {
       height: auto;
       padding: ${spacing[8]} ${spacing[12]};
       resize: none;
+      ${styleUtils.overflowYAuto};
 
       &.tutor-input-field {
         ${inputCss};
