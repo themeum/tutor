@@ -1,6 +1,5 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import type React from 'react';
-import { useEffect } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
@@ -10,6 +9,7 @@ import { modal } from '@TutorShared/config/constants';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { useScrollLock } from '@TutorShared/utils/scroll-lock';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface BasicModalWrapperProps {
@@ -41,13 +41,7 @@ const BasicModalWrapper = ({
   isCloseAble = true,
   blurTriggerElement = true,
 }: BasicModalWrapperProps) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = 'initial';
-    };
-  }, []);
+  useScrollLock();
 
   return (
     <FocusTrap blurPrevious={blurTriggerElement}>
