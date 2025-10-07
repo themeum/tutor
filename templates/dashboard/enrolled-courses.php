@@ -10,6 +10,7 @@
  */
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 // Pagination.
 $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -30,16 +31,16 @@ $page_tabs = apply_filters(
 
 // Get Paginated course list.
 $courses_list_array = array(
-	'enrolled-courses'                   => tutor_utils()->get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $per_page ),
-	'enrolled-courses/active-courses'    => tutor_utils()->get_active_courses_by_user( null, $offset, $per_page ),
-	'enrolled-courses/completed-courses' => tutor_utils()->get_courses_by_user( null, $offset, $per_page ),
+	'enrolled-courses'                   => CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $per_page ),
+	'enrolled-courses/active-courses'    => CourseModel::get_active_courses_by_user( null, $offset, $per_page ),
+	'enrolled-courses/completed-courses' => CourseModel::get_completed_courses_by_user( null, $offset, $per_page ),
 );
 
 // Get Full course list.
 $full_courses_list_array = array(
-	'enrolled-courses'                   => tutor_utils()->get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ) ),
-	'enrolled-courses/active-courses'    => tutor_utils()->get_active_courses_by_user(),
-	'enrolled-courses/completed-courses' => tutor_utils()->get_courses_by_user(),
+	'enrolled-courses'                   => CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ) ),
+	'enrolled-courses/active-courses'    => CourseModel::get_active_courses_by_user(),
+	'enrolled-courses/completed-courses' => CourseModel::get_completed_courses_by_user(),
 );
 
 
