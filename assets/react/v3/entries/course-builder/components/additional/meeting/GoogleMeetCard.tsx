@@ -17,6 +17,7 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
+
 import GoogleMeetForm from './GoogleMeetForm';
 
 interface GoogleMeetMeetingCardProps {
@@ -147,8 +148,6 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
         }
         message={__('Are you sure you want to delete this meeting? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
-        arrow="auto"
-        hideArrow
         isLoading={deleteGoogleMeetMeetingMutation.isPending}
         confirmButton={{
           text: __('Delete', 'tutor'),

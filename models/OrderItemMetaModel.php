@@ -119,10 +119,15 @@ class OrderItemMetaModel {
 	 * @return bool True on success, false on failure.
 	 */
 	public function update_meta( int $item_id, string $meta_key, $meta_value ): bool {
+		$is_meta_exists = $this->get_meta( $item_id, $meta_key );
+		if ( ! $is_meta_exists ) {
+			return $this->add_meta( $item_id, $meta_key, $meta_value );
+		}
+
 		return QueryHelper::update(
 			$this->table,
 			array(
-				'meta_value'     => maybe_serialize( $meta_value ),
+				'meta_value' => maybe_serialize( $meta_value ),
 			),
 			array(
 				'item_id'  => $item_id,

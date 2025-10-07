@@ -64,7 +64,7 @@ class QueryHelper {
 
 		$table        = self::prepare_table_name( $table );
 		$set_clause   = self::prepare_set_clause( $data );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 
 		// phpcs:ignore
 		$query = $wpdb->prepare( "UPDATE {$table} {$set_clause} WHERE {$where_clause} AND 1 = %d", 1 );
@@ -116,7 +116,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table        = self::prepare_table_name( $table );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 
 		return $wpdb->query( "DELETE FROM {$table} WHERE {$where_clause}" ); //phpcs:ignore --$where clause sanitized.
 	}
@@ -305,7 +305,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build where clause string
+	 * Prepare where clause string
 	 *
 	 * @since 2.0.9
 	 * @since 3.0.0 Null value support added, if need to check with null: [name => 'null']
@@ -328,7 +328,7 @@ class QueryHelper {
 	 *
 	 * @return  string
 	 */
-	public static function build_where_clause( array $where ) {
+	public static function prepare_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			$operator = null;
@@ -371,13 +371,11 @@ class QueryHelper {
 				}
 			} elseif ( is_array( $value ) ) {
 				$clause = array( $field, 'IN', $value );
-			} else {
-				if ( 'null' === strtolower( $value ) ) {
+			} elseif ( 'null' === strtolower( $value ) ) {
 					$clause = array( $field, 'IS', 'NULL' );
-				} else {
-					$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
-					$clause = array( $field, '=', $value );
-				}
+			} else {
+				$value  = is_numeric( $value ) ? $value : "'" . $value . "'";
+				$clause = array( $field, '=', $value );
 			}
 
 			$arr[] = ( 'RAW' === $operator ) ? $clause : self::make_clause( $clause );
@@ -418,7 +416,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build like clause string with or
+	 * Prepare like clause string with or
 	 *
 	 * @since 1.0.0
 	 *
@@ -427,7 +425,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	public static function build_like_clause( array $where, $relation = 'OR' ) {
+	public static function prepare_like_clause( array $where, $relation = 'OR' ) {
 		global $wpdb;
 
 		$like_conditions = array();
@@ -473,7 +471,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
+		$where = self::prepare_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT comment_id FROM {$wpdb->comments} WHERE {$where}" );//phpcs:ignore
@@ -505,7 +503,7 @@ class QueryHelper {
 			return false;
 		}
 
-		$where = self::build_where_clause( self::sanitize_assoc_array( $where ) );
+		$where = self::prepare_where_clause( self::sanitize_assoc_array( $where ) );
 
 		global $wpdb;
 		$ids = $wpdb->get_col( "SELECT id FROM {$wpdb->posts} WHERE {$where}" );//phpcs:ignore
@@ -524,7 +522,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build SELECT clause.
+	 * Prepare SELECT clause.
 	 *
 	 * @since 3.8.0
 	 *
@@ -532,7 +530,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_select_clause( $columns = '' ) {
+	protected static function prepare_select_clause( $columns = '' ) {
 		if ( empty( $columns ) ) {
 			return '*';
 		}
@@ -545,7 +543,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build JOIN clause.
+	 * Prepare JOIN clause.
 	 *
 	 * @since 3.8.0
 	 *
@@ -556,7 +554,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_join_clause( $joins = array() ) {
+	protected static function prepare_join_clause( $joins = array() ) {
 		if ( empty( $joins ) || ! is_array( $joins ) ) {
 			return '';
 		}
@@ -575,7 +573,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build WHERE + SEARCH clause together.
+	 * Prepare WHERE + SEARCH clause together.
 	 *
 	 * @since 3.8.0
 	 *
@@ -585,17 +583,17 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_where_search_clause( $where = array(), $search = array(), $search_operator = 'OR' ) {
+	protected static function prepare_where_search_clause( $where = array(), $search = array(), $search_operator = 'OR' ) {
 		$clauses = array();
 
 		// Handle WHERE conditions.
 		if ( ! empty( $where ) && is_array( $where ) ) {
-			$clauses[] = self::build_where_clause( $where );
+			$clauses[] = self::prepare_where_clause( $where );
 		}
 
 		// Handle SEARCH conditions.
 		if ( ! empty( $search ) && is_array( $search ) ) {
-			$clauses[] = self::build_like_clause( $search, $search_operator );
+			$clauses[] = self::prepare_like_clause( $search, $search_operator );
 		}
 
 		if ( empty( $clauses ) ) {
@@ -606,7 +604,7 @@ class QueryHelper {
 	}
 
 	/**
-	 * Build order by clause.
+	 * Prepare order by clause.
 	 *
 	 * @since 3.8.0
 	 *
@@ -615,35 +613,36 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	protected static function build_order_clause( $orderby = '', $order = 'DESC' ) {
+	protected static function prepare_order_clause( $orderby = '', $order = 'DESC' ) {
 		if ( empty( $orderby ) ) {
 			return '';
 		}
 
-		$order = strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
-		return 'ORDER BY ' . sanitize_sql_orderby( "{$orderby} {$order}" );
-	}
-
-	/**
-	 * Build LIMIT clause.
-	 *
-	 * @since 3.8.0
-	 *
-	 * @param int $per_page per page.
-	 * @param int $page page number.
-	 *
-	 * @return string
-	 */
-	protected static function build_limit_clause( $per_page = 0, $page = 1 ) {
-		$page     = max( 1, (int) $page );
-		$per_page = max( 0, (int) $per_page );
-
-		if ( ! $per_page ) {
+		// Allowed: foo, foo_bar, _foo, foo.bar etc.
+		if ( ! preg_match( '/^[A-Za-z_][A-Za-z0-9._]*$/', $orderby ) ) {
 			return '';
 		}
 
-		$offset = ( $page - 1 ) * $per_page;
-		return sprintf( 'LIMIT %d, %d', $offset, $per_page );
+		$order = strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
+		return "ORDER BY {$orderby} {$order}";
+	}
+
+	/**
+	 * Prepare LIMIT clause.
+	 *
+	 * @since 3.8.0
+	 *
+	 * @param int $limit limit.
+	 * @param int $offset offset.
+	 *
+	 * @return string
+	 */
+	protected static function prepare_limit_clause( $limit = 0, $offset = 0 ) {
+		if ( $limit < 1 || $offset < 0 ) {
+			return '';
+		}
+
+		return sprintf( 'LIMIT %d OFFSET %d', $limit, $offset );
 	}
 
 	/**
@@ -667,14 +666,16 @@ class QueryHelper {
 	 *     @type string       $having   HAVING clause.
 	 *     @type string       $orderby  Column to order by.
 	 *     @type string       $order    ASC|DESC, default DESC.
+	 *     @type int          $limit    Limit.
+	 *     @type int          $offset   Offset.
 	 *     @type int          $per_page Results per page for pagination.
-	 *     @type int          $page     Current page number.
+	 *     @type int          $page     Current page number for pagination.
 	 *     @type bool         $count    If true, return only total count.
 	 *     @type bool         $single   If true, return only single row.
 	 *     @type string       $output   OBJECT|ARRAY_A default is OBJECT.
 	 * }
 	 *
-	 * @return mixed
+	 * @return mixed          Result set, count or single row.
 	 */
 	public static function query( $table, $args = array() ) {
 		// Flags.
@@ -689,12 +690,12 @@ class QueryHelper {
 		$table_with_alias = "{$table} AS {$alias}";
 
 		// Build clauses.
-		$select_clause   = self::build_select_clause( $args['select'] ?? '' );
-		$join_clause     = self::build_join_clause( $args['joins'] ?? array() );
-		$where_clause    = self::build_where_search_clause( $args['where'] ?? array(), $args['search'] ?? array() );
+		$select_clause   = self::prepare_select_clause( $args['select'] ?? '' );
+		$join_clause     = self::prepare_join_clause( $args['joins'] ?? array() );
+		$where_clause    = self::prepare_where_search_clause( $args['where'] ?? array(), $args['search'] ?? array() );
 		$groupby_clause  = empty( $args['groupby'] ) ? '' : 'GROUP BY ' . $args['groupby'];
 		$having_clause   = empty( $args['having'] ) ? '' : 'HAVING ' . $args['having'];
-		$order_by_clause = self::build_order_clause( $args['orderby'] ?? '', $args['order'] ?? 'DESC' );
+		$order_by_clause = self::prepare_order_clause( $args['orderby'] ?? '', $args['order'] ?? 'DESC' );
 
 		global $wpdb;
 
@@ -725,7 +726,15 @@ class QueryHelper {
 		}
 
 		$calc_found_rows = $pagination ? 'SQL_CALC_FOUND_ROWS' : '';
-		$limit_clause    = $pagination ? self::build_limit_clause( $args['per_page'], $args['page'] ) : '';
+		$limit           = isset( $args['limit'] ) ? (int) $args['limit'] : 0;
+		$offset          = isset( $args['offset'] ) ? (int) $args['offset'] : 0;
+
+		if ( $pagination ) {
+			$limit  = (int) $args['per_page'];
+			$offset = (int) ( $args['page'] - 1 ) * $limit;
+		}
+
+		$limit_clause = self::prepare_limit_clause( $limit, $offset );
 
 		$sql_query = "SELECT {$calc_found_rows} {$select_clause} 
 					FROM {$table_with_alias} 
@@ -774,7 +783,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table        = self::prepare_table_name( $table );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 
 		//phpcs:disable
 		$query = $wpdb->prepare(
@@ -814,7 +823,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table        = self::prepare_table_name( $table );
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 		$limit        = (int) sanitize_text_field( $limit );
 		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
 
@@ -971,6 +980,7 @@ class QueryHelper {
 	 * Argument should be SQL escaped.
 	 *
 	 * @since 3.0.0
+	 * @since 3.8.2 param $get_row added.
 	 *
 	 * @param string $primary_table The primary table name with prefix.
 	 * @param array  $joining_tables An array of join relations. Each relation should be an array with keys 'type', 'table', 'on'.
@@ -982,6 +992,7 @@ class QueryHelper {
 	 * @param int    $offset Offset for pagination.
 	 * @param string $order  DESC or ASC, default is DESC.
 	 * @param string $output  Expected output type, default is OBJECT.
+	 * @param bool   $get_row Get a single row.
 	 *
 	 * @throws \Exception If an error occurred during the query execution.
 	 *
@@ -997,48 +1008,33 @@ class QueryHelper {
 		$limit = 10,
 		$offset = 0,
 		string $order = 'DESC',
-		string $output = 'OBJECT'
+		string $output = 'OBJECT',
+		bool $get_row = false
 	) {
 		global $wpdb;
 
 		$select_clause   = implode( ', ', $select_columns );
 		$from_clause     = self::prepare_table_name( $primary_table );
-		$join_clauses    = self::build_join_clause( $joining_tables );
-		$where_clause    = self::build_where_search_clause( $where, $search );
-		$order_by_clause = ! empty( $order_by ) ? "ORDER BY {$order_by} {$order}" : '';
+		$join_clauses    = self::prepare_join_clause( $joining_tables );
+		$where_clause    = self::prepare_where_search_clause( $where, $search );
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
+		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
 
-		// Query to get total count.
-		$count_query = "
-			SELECT COUNT(*) as total_count
-			FROM {$from_clause}
-			{$join_clauses}
-			{$where_clause}
-		";
-
-		$total_count = $wpdb->get_var( $count_query );
-
-		if ( empty( $limit ) && empty( $offset ) ) {
-			$query = "SELECT 
+		$query = "SELECT SQL_CALC_FOUND_ROWS 
 				{$select_clause}
 				FROM {$from_clause}
 				{$join_clauses}
 				{$where_clause}
-				{$order_by_clause}";
-		} else {
-			$query = $wpdb->prepare(
-				"SELECT {$select_clause}
-				FROM {$from_clause}
-				{$join_clauses}
-				{$where_clause}
 				{$order_by_clause}
-				LIMIT %d OFFSET %d",
-				$limit,
-				$offset
-			);
+				{$limit_clause}";
+
+		if ( $get_row ) {
+			return $wpdb->get_row( $query, $output );
 		}
 
-
-		$results = $wpdb->get_results( $query, $output );
+		$results     = $wpdb->get_results( $query, $output );
+		$has_records = is_array( $results ) && count( $results );	
+		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 
 		// Throw exception if error occurred.
 		if ( $wpdb->last_error ) {
@@ -1047,7 +1043,7 @@ class QueryHelper {
 
 		// Prepare response array.
 		$response = array(
-			'total_count' => (int) $total_count,
+			'total_count' => $total_count,
 			'results'     => $results,
 		);
 
@@ -1072,16 +1068,7 @@ class QueryHelper {
 		global $wpdb;
 
 		$table         = self::prepare_table_name( $table );
-		$where_clause  = !empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
-		$search_clause = !empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
-
-		if ( !empty( $search_clause ) ) {
-			if ( !empty( $where_clause ) ) {
-				$where_clause .= ' AND (' . $search_clause . ')';
-			} else {
-				$where_clause = 'WHERE ' . $search_clause;
-			}
-		}
+		$where_clause  = self::prepare_where_search_clause( $where, $search, 'AND' );
 
 		$count = $wpdb->get_var(
 			"SELECT COUNT($count_column)
@@ -1116,8 +1103,8 @@ class QueryHelper {
 		global $wpdb;
 		
 		$from_clause  = self::prepare_table_name( $primary_table );
-		$join_clauses = self::build_join_clause( $joining_tables );
-		$where_clause = self::build_where_search_clause( $where, $search, 'AND' );
+		$join_clauses = self::prepare_join_clause( $joining_tables );
+		$where_clause = self::prepare_where_search_clause( $where, $search, 'AND' );
 
 		$count_query = "
 			SELECT COUNT($count_column) as total_count
@@ -1157,44 +1144,25 @@ class QueryHelper {
 	public static function get_all_with_search( string $table, array $where, array $search, string $order_by, $limit = 10, $offset = 0, string $order = 'DESC', string $output = 'OBJECT' ): array {
 		global $wpdb;
 
-		$table         = self::prepare_table_name( $table );
-		$where_clause  = ! empty( $where ) ? 'WHERE ' . self::build_where_clause( $where ) : '';
-		$search_clause = ! empty( $search ) ? self::build_like_clause( $search, 'AND' ) : '';
-
-		if ( ! empty( $search_clause ) ) {
-			if ( ! empty( $where_clause ) ) {
-				$where_clause .= ' AND (' . $search_clause . ')';
-			} else {
-				$where_clause = 'WHERE ' . $search_clause;
-			}
-		}
-
-	
-		// Query to get total count
-		$count_query = "
-			SELECT COUNT(*)
-			FROM {$table}
-			{$where_clause}
-		";
-
-		$total_count = $wpdb->get_var( $count_query );
+		$table           = self::prepare_table_name( $table );
+		$where_clause    = self::prepare_where_search_clause( $where, $search, 'AND' );
+		$order_by_clause = self::prepare_order_clause( $order_by, $order );
+		$limit_clause    = self::prepare_limit_clause( $limit, $offset );
 	
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
 		}
 	
-		$query = $wpdb->prepare(
-			"SELECT *
+		$query = "SELECT SQL_CALC_FOUND_ROWS *
 			 FROM {$table}
 			 {$where_clause}
-			 ORDER BY {$order_by} {$order}
-			 LIMIT %d OFFSET %d",
-			$limit,
-			$offset
-		);
+			 {$order_by_clause}
+			 {$limit_clause}";
 	
-		$results = $wpdb->get_results( $query, $output );
+		$results     = $wpdb->get_results( $query, $output );
+		$has_records = is_array( $results ) && count( $results );
+		$total_count = $has_records ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
 	
 		// If error occurred then throw new exception.
 		if ( $wpdb->last_error ) {
@@ -1203,8 +1171,8 @@ class QueryHelper {
 	
 		// Prepare response array.
 		$response = array(
-			'results' => $results,
-			'total_count' => (int) $total_count,
+			'results'     => $results,
+			'total_count' => $total_count,
 		);
 	
 		return $response;
@@ -1309,7 +1277,7 @@ class QueryHelper {
 			return new \WP_Error( 'missing_where', 'No WHERE condition provided.' );
 		}
 
-		$where_clause = self::build_where_clause( $where );
+		$where_clause = self::prepare_where_clause( $where );
 		$sql          = $wpdb->prepare( "SELECT * FROM `$table_name` WHERE {$where_clause} LIMIT %d", 1 );
 		$row          = $wpdb->get_row( $sql, ARRAY_A );
 
@@ -1357,6 +1325,31 @@ class QueryHelper {
 	 */
 	public static function get_valid_sort_order( $order ) {
 		return 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
+	}
+
+	/**
+	 * Get the schema of a database table.
+	 *
+	 * @since 3.8.1
+	 *
+	 * @param string $table_name The name of the database table.
+	 *
+	 * @throws \Exception Throws an exception if there is a database error.
+	 *
+	 * @return array Returns an array of table columns and their details.
+	 */
+	public static function get_table_schema( $table_name) {
+		
+		global $wpdb;
+
+		$result = $wpdb->get_results( "DESCRIBE {$table_name}", ARRAY_A );
+
+		// If error occurred then throw new exception.
+		if ($wpdb->last_error) {
+			throw new \Exception($wpdb->last_error);
+		}
+
+		return $result;
 	}
 
 }

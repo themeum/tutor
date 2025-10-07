@@ -3,6 +3,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
+import Button from '@TutorShared/atoms/Button';
 import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
@@ -27,7 +28,6 @@ import {
   colorTokens,
   containerMaxWidth,
   headerHeight,
-  shadow,
   spacing,
   zIndex,
 } from '@TutorShared/config/styles';
@@ -146,9 +146,15 @@ const Header = () => {
           <HeaderActions />
         </Show>
         <Tooltip delay={200} content={__('Exit', 'tutor')} placement="left">
-          <button type="button" css={styles.closeButton} onClick={handleExitButtonClick}>
-            <SVGIcon name="cross" width={32} height={32} />
-          </button>
+          <Button
+            isIconOnly
+            size="small"
+            variant="danger"
+            buttonCss={styles.closeButton}
+            aria-label={__('Exit', 'tutor')}
+            onClick={handleExitButtonClick}
+            icon={<SVGIcon name="cross" width={32} height={32} />}
+          />
         </Tooltip>
       </div>
     </div>
@@ -249,23 +255,17 @@ const styles = {
     }
   `,
   closeButton: css`
-    ${styleUtils.resetButton};
-    ${styleUtils.flexCenter()};
-    cursor: pointer;
-    color: ${colorTokens.icon.default};
-    margin-left: ${spacing[4]};
-    border-radius: ${borderRadius[4]};
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background-color: ${colorTokens.background.status.errorFail};
-      color: ${colorTokens.icon.error};
+    background-color: transparent;
+    svg {
+      color: ${colorTokens.icon.default};
     }
 
+    &:hover,
     &:focus {
       background-color: ${colorTokens.background.status.errorFail};
-      color: ${colorTokens.icon.error};
-      box-shadow: ${shadow.focus};
+      svg {
+        color: ${colorTokens.icon.error};
+      }
     }
   `,
   previewButton: css`

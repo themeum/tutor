@@ -80,6 +80,7 @@ function copy() {
         '!.lintstagedrc',
         '!./stories/**',
         '!rsbuild.config.ts',
+        '!phpstan.neon',
       ],
       {
         allowEmpty: true,

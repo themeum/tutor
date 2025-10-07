@@ -171,7 +171,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
           {__('Plugin Not Installed', 'tutor')}
         </Badge>
       </Show>
-      <Show when={!data.is_manual && data.is_installed && !data.is_plugin_active}>
+      <Show when={!data.is_manual && data.is_installed && data.is_plugin_active === false}>
         <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
           {__('Plugin Not Activated', 'tutor')}
         </Badge>
@@ -270,6 +270,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               label={field.label}
                               helpText={field.hint}
                               toolbar1="formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink"
+                              toolbar2=""
                             />
                           );
 

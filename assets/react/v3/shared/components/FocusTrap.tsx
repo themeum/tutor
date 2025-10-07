@@ -89,6 +89,7 @@ const FocusTrap = ({ children, blurPrevious = false }: FocusTrapProps) => {
         previousActiveElementRef.current.focus();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return cloneElement(Children.only(children) as ReactElement, {
