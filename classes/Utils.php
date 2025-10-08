@@ -328,21 +328,21 @@ class Utils {
 	 * @return array|bool|mixed
 	 */
 	public function avalue_dot( $key = null, $array = array(), $default = false ) {
-		$array = (array) $array;
-		if ( ! $key || ! count( $array ) ) {
+		if ( '' === $key || null === $key || ! $this->count( $array ) ) {
 			return $default;
 		}
-		$option_key_array = explode( '.', $key );
 
+		$keys  = explode( '.', $key );
 		$value = $array;
 
-		foreach ( $option_key_array as $dot_key ) {
+		foreach ( $keys as $dot_key ) {
 			if ( isset( $value[ $dot_key ] ) ) {
 				$value = $value[ $dot_key ];
 			} else {
 				return $default;
 			}
 		}
+
 		return $value;
 	}
 
