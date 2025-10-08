@@ -26,7 +26,6 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 
-import { isRTL } from '@TutorShared/config/constants';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
@@ -199,7 +198,7 @@ const FormMultiLevelInput = ({
               <div
                 css={styles.categoryFormWrapper}
                 style={{
-                  [isRTL ? 'right' : 'left']: position.left,
+                  left: position.left,
                   top: position.top,
                 }}
                 ref={popoverRef}
