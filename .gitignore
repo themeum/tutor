@@ -57,6 +57,7 @@ launch.json
 #rspack
 .swc
 assets/.rsdoctor
+*.ignore
 
 *storybook.log
 storybook-static

@@ -49,7 +49,7 @@ type FormSelectUserProps = {
 
 const userPlaceholderData: UserOption = {
   id: 0,
-  name: __('Click to select user', 'tutor'),
+  name: __('Click to select user', __TUTOR_TEXT_DOMAIN__),
   email: 'example@example.com',
   avatar_url: 'https://gravatar.com/avatar',
 };
@@ -68,7 +68,7 @@ const FormSelectUser = ({
   loading,
   isSearchable = false,
   helpText,
-  emptyStateText = __('No user selected', 'tutor'),
+  emptyStateText = __('No user selected', __TUTOR_TEXT_DOMAIN__),
   isInstructorMode = false,
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
@@ -313,7 +313,7 @@ const FormSelectUser = ({
                   when={filteredOption.length > 0}
                   fallback={
                     <li css={styles.noUserFound}>
-                      <p>{__('No user found', 'tutor')}</p>
+                      <p>{__('No user found', __TUTOR_TEXT_DOMAIN__)}</p>
                     </li>
                   }
                 >

@@ -13,25 +13,34 @@ export const PromptControls = ({ form }: { form: UseFormReturn<GenerateTextField
       <Controller
         control={form.control}
         name="characters"
-        render={(props) => <FormInput {...props} isMagicAi label={__('Character Limit', 'tutor')} type="number" />}
+        render={(props) => (
+          <FormInput {...props} isMagicAi label={__('Character Limit', __TUTOR_TEXT_DOMAIN__)} type="number" />
+        )}
       />
       <Controller
         control={form.control}
         name="language"
         render={(props) => (
-          <FormSelectInput {...props} isMagicAi label={__('Language', 'tutor')} options={languageOptions} />
+          <FormSelectInput
+            {...props}
+            isMagicAi
+            label={__('Language', __TUTOR_TEXT_DOMAIN__)}
+            options={languageOptions}
+          />
         )}
       />
       <Controller
         control={form.control}
         name="tone"
-        render={(props) => <FormSelectInput {...props} isMagicAi options={toneOptions} label={__('Tone', 'tutor')} />}
+        render={(props) => (
+          <FormSelectInput {...props} isMagicAi options={toneOptions} label={__('Tone', __TUTOR_TEXT_DOMAIN__)} />
+        )}
       />
       <Controller
         control={form.control}
         name="format"
         render={(props) => (
-          <FormSelectInput {...props} isMagicAi label={__('Format', 'tutor')} options={formatOptions} />
+          <FormSelectInput {...props} isMagicAi label={__('Format', __TUTOR_TEXT_DOMAIN__)} options={formatOptions} />
         )}
       />
     </div>

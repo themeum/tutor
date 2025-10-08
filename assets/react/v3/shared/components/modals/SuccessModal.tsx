@@ -59,7 +59,7 @@ const SuccessModal = ({
                 }
                 size="small"
               >
-                {__('Ok', 'tutor')}
+                {__('Ok', __TUTOR_TEXT_DOMAIN__)}
               </Button>
             }
           >

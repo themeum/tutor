@@ -160,7 +160,7 @@ const FormImageAnswering = ({
             </button>
 
             <div css={styles.optionActions} data-visually-hidden>
-              <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <Tooltip content={__('Edit', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <button
                   type="button"
                   css={styleUtils.actionButton}
@@ -172,7 +172,7 @@ const FormImageAnswering = ({
                   <SVGIcon name="edit" width={24} height={24} />
                 </button>
               </Tooltip>
-              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+              <Tooltip content={__('Duplicate', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <Show
                   when={!isTutorPro}
                   fallback={
@@ -195,7 +195,7 @@ const FormImageAnswering = ({
                   </ProBadge>
                 </Show>
               </Tooltip>
-              <Tooltip content={__('Delete', 'tutor')} delay={200}>
+              <Tooltip content={__('Delete', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <button
                   type="button"
                   css={styleUtils.actionButton}
@@ -230,7 +230,7 @@ const FormImageAnswering = ({
                   )}
                 </Show>
                 <div css={styles.optionPlaceholder}>
-                  {inputValue.answer_title || __('Write answer option...', 'tutor')}
+                  {inputValue.answer_title || __('Write answer option...', __TUTOR_TEXT_DOMAIN__)}
                 </div>
               </div>
             }
@@ -242,8 +242,8 @@ const FormImageAnswering = ({
                   url: inputValue.image_url || '',
                   title: inputValue.image_url || '',
                 }}
-                buttonText={__('Upload Image', 'tutor')}
-                infoText={__('Standard Size: 700x430 pixels', 'tutor')}
+                buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
+                infoText={__('Standard Size: 700x430 pixels', __TUTOR_TEXT_DOMAIN__)}
                 uploadHandler={openMediaLibrary}
                 clearHandler={clearHandler}
                 emptyImageCss={styles.emptyImageInput}
@@ -254,7 +254,7 @@ const FormImageAnswering = ({
                   {...field}
                   ref={inputRef}
                   type="text"
-                  placeholder={__('Input answer here', 'tutor')}
+                  placeholder={__('Input answer here', __TUTOR_TEXT_DOMAIN__)}
                   value={inputValue.answer_title}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -297,9 +297,12 @@ const FormImageAnswering = ({
                 <div css={styles.inputHints}>
                   <SVGIcon name="info" height={20} width={20} />
                   <p>
-                    {__('Students need to type their answers exactly as you write them here. Use ', 'tutor')}
-                    <span css={{ fontWeight: fontWeight.semiBold }}>{__('small caps', 'tutor')}</span>
-                    {__(' when writing the answer.', 'tutor')}
+                    {__(
+                      'Students need to type their answers exactly as you write them here. Use ',
+                      __TUTOR_TEXT_DOMAIN__,
+                    )}
+                    <span css={{ fontWeight: fontWeight.semiBold }}>{__('small caps', __TUTOR_TEXT_DOMAIN__)}</span>
+                    {__(' when writing the answer.', __TUTOR_TEXT_DOMAIN__)}
                   </p>
                 </div>
               </div>
@@ -321,7 +324,7 @@ const FormImageAnswering = ({
                     }
                   }}
                 >
-                  {__('Cancel', 'tutor')}
+                  {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
                 <Button
                   variant="secondary"
@@ -358,7 +361,7 @@ const FormImageAnswering = ({
                   }}
                   disabled={!inputValue.answer_title || !inputValue.image_id}
                 >
-                  {__('Ok', 'tutor')}
+                  {__('Ok', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
               </div>
             </div>

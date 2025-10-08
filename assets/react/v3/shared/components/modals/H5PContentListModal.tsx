@@ -104,19 +104,19 @@ const H5PContentListModal = ({
       },
     },
     {
-      Header: <div css={styles.tableLabel}>{__('Title', 'tutor')}</div>,
+      Header: <div css={styles.tableLabel}>{__('Title', __TUTOR_TEXT_DOMAIN__)}</div>,
       Cell: (item) => {
         return <div css={styles.title}>{item.title}</div>;
       },
     },
     {
-      Header: <div css={styles.tableLabel}>{__('Content Type', 'tutor')}</div>,
+      Header: <div css={styles.tableLabel}>{__('Content Type', __TUTOR_TEXT_DOMAIN__)}</div>,
       Cell: (item) => {
         return <div css={typography.caption()}>{item.content_type}</div>;
       },
     },
     {
-      Header: <div css={styles.tableLabel}>{__('Created At', 'tutor')}</div>,
+      Header: <div css={styles.tableLabel}>{__('Created At', __TUTOR_TEXT_DOMAIN__)}</div>,
       Cell: (item) => {
         return (
           <div css={typography.caption()}>
@@ -138,7 +138,7 @@ const H5PContentListModal = ({
     <BasicModalWrapper
       title={
         /* translators: %s is the number of selected items */
-        selectedContents.length > 0 ? sprintf(__('%s selected', 'tutor'), selectedContents.length) : title
+        selectedContents.length > 0 ? sprintf(__('%s selected', __TUTOR_TEXT_DOMAIN__), selectedContents.length) : title
       }
       onClose={() => closeModal({ action: 'CLOSE' })}
       maxWidth={920}
@@ -150,7 +150,7 @@ const H5PContentListModal = ({
           render={(controllerProps) => (
             <FormInputWithContent
               {...controllerProps}
-              placeholder={__('Search by title', 'tutor')}
+              placeholder={__('Search by title', __TUTOR_TEXT_DOMAIN__)}
               showVerticalBar={false}
               content={<SVGIcon name="search" width={24} height={24} />}
             />
@@ -168,7 +168,7 @@ const H5PContentListModal = ({
       <Show when={filteredContent?.length}>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-            {__('Cancel', 'tutor')}
+            {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
           </Button>
           <Button
             type="submit"
@@ -180,7 +180,7 @@ const H5PContentListModal = ({
             }}
             disabled={!selectedContents.length}
           >
-            {__('Add', 'tutor')}
+            {__('Add', __TUTOR_TEXT_DOMAIN__)}
           </Button>
         </div>
       </Show>

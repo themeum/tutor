@@ -136,7 +136,7 @@ const FormDateInput = ({
               {isClearable && field.value && (
                 <Button
                   isIconOnly
-                  aria-label={__('Clear', 'tutor')}
+                  aria-label={__('Clear', __TUTOR_TEXT_DOMAIN__)}
                   size="small"
                   variant="text"
                   buttonCss={styleUtils.inputClearButton}

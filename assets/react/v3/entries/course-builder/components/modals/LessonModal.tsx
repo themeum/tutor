@@ -44,7 +44,7 @@ import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type H5PContent, type ID } from '@TutorShared/utils/types';
-import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { findSlotFields, formatBytes, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface LessonModalProps extends ModalProps {
@@ -383,7 +383,10 @@ const LessonModal = ({
                   buttonText={__('Upload Image', 'tutor')}
                   infoText={
                     /* translators: %s is the maximum allowed upload file size (e.g., "2MB") */
-                    sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+                    sprintf(
+                      __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                      formatBytes(Number(tutorConfig?.max_upload_size || 0)),
+                    )
                   }
                   visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.FEATURED_IMAGE}
                 />
@@ -399,7 +402,10 @@ const LessonModal = ({
                   buttonText={__('Upload Video', 'tutor')}
                   infoText={
                     // translators: %s is the maximum allowed file size
-                    sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+                    sprintf(
+                      __('MP4, and WebM formats, up to %s', 'tutor'),
+                      formatBytes(Number(tutorConfig?.max_upload_size || 0)),
+                    )
                   }
                   onGetDuration={(duration) => {
                     form.setValue('duration.hour', duration.hours);

@@ -30,7 +30,7 @@ export function OfferSalePrice() {
         <Controller
           control={form.control}
           name={'offer_sale_price'}
-          render={(props) => <FormSwitch {...props} label={__('Offer sale price', 'tutor')} />}
+          render={(props) => <FormSwitch {...props} label={__('Offer sale price', __TUTOR_TEXT_DOMAIN__)} />}
         />
       </div>
       <Show when={hasSale}>
@@ -42,11 +42,11 @@ export function OfferSalePrice() {
               ...requiredRule(),
               validate: (value) => {
                 if (value && regularPrice && Number(value) >= Number(regularPrice)) {
-                  return __('Sale price should be less than regular price', 'tutor');
+                  return __('Sale price should be less than regular price', __TUTOR_TEXT_DOMAIN__);
                 }
 
                 if (value && regularPrice && Number(value) <= 0) {
-                  return __('Sale price should be greater than 0', 'tutor');
+                  return __('Sale price should be greater than 0', __TUTOR_TEXT_DOMAIN__);
                 }
 
                 return undefined;
@@ -56,7 +56,7 @@ export function OfferSalePrice() {
               <FormInputWithContent
                 {...props}
                 type="number"
-                label={__('Sale Price', 'tutor')}
+                label={__('Sale Price', __TUTOR_TEXT_DOMAIN__)}
                 content={tutor_currency?.symbol || '$'}
                 selectOnFocus
                 contentCss={styleUtils.inputCurrencyStyle}
@@ -66,17 +66,17 @@ export function OfferSalePrice() {
           <Controller
             control={form.control}
             name={'schedule_sale_price'}
-            render={(props) => <FormCheckbox {...props} label={__('Schedule the sale price', 'tutor')} />}
+            render={(props) => <FormCheckbox {...props} label={__('Schedule the sale price', __TUTOR_TEXT_DOMAIN__)} />}
           />
           <Show when={hasScheduledSale}>
             <div css={saleStyles.datetimeWrapper}>
-              <label>{__('Sale starts from', 'tutor')}</label>
+              <label>{__('Sale starts from', __TUTOR_TEXT_DOMAIN__)}</label>
               <div css={styleUtils.dateAndTimeWrapper}>
                 <Controller
                   name={'sale_price_from_date'}
                   control={form.control}
                   rules={{
-                    required: __('Schedule date is required', 'tutor'),
+                    required: __('Schedule date is required', __TUTOR_TEXT_DOMAIN__),
                   }}
                   render={(controllerProps) => (
                     <FormDateInput
@@ -92,7 +92,7 @@ export function OfferSalePrice() {
                   name={'sale_price_from_time'}
                   control={form.control}
                   rules={{
-                    required: __('Schedule time is required', 'tutor'),
+                    required: __('Schedule time is required', __TUTOR_TEXT_DOMAIN__),
                   }}
                   render={(controllerProps) => (
                     <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
@@ -101,20 +101,20 @@ export function OfferSalePrice() {
               </div>
             </div>
             <div css={saleStyles.datetimeWrapper}>
-              <label>{__('Sale ends to', 'tutor')}</label>
+              <label>{__('Sale ends to', __TUTOR_TEXT_DOMAIN__)}</label>
               <div css={styleUtils.dateAndTimeWrapper}>
                 <Controller
                   name={'sale_price_to_date'}
                   control={form.control}
                   rules={{
-                    required: __('Schedule date is required', 'tutor'),
+                    required: __('Schedule date is required', __TUTOR_TEXT_DOMAIN__),
                     validate: {
                       checkEndDate: (value) => {
                         const startDate = form.watch('sale_price_from_date');
                         const endDate = value;
                         if (startDate && endDate) {
                           return new Date(startDate) > new Date(endDate)
-                            ? __('Sales End date should be greater than start date', 'tutor')
+                            ? __('Sales End date should be greater than start date', __TUTOR_TEXT_DOMAIN__)
                             : undefined;
                         }
                         return undefined;
@@ -136,7 +136,7 @@ export function OfferSalePrice() {
                   name={'sale_price_to_time'}
                   control={form.control}
                   rules={{
-                    required: __('Schedule time is required', 'tutor'),
+                    required: __('Schedule time is required', __TUTOR_TEXT_DOMAIN__),
                     validate: {
                       checkEndTime: (value) => {
                         const startDate = form.watch('sale_price_from_date');
@@ -145,7 +145,7 @@ export function OfferSalePrice() {
                         const endTime = value;
                         if (startDate && endDate && startTime && endTime) {
                           return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
-                            ? __('Sales End time should be greater than start time', 'tutor')
+                            ? __('Sales End time should be greater than start time', __TUTOR_TEXT_DOMAIN__)
                             : undefined;
                         }
                         return undefined;

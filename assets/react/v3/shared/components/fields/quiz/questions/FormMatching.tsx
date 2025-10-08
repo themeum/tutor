@@ -157,7 +157,7 @@ const FormMatching = ({
             </button>
 
             <div css={styles.optionActions} data-visually-hidden>
-              <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <Tooltip content={__('Edit', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <button
                   type="button"
                   css={styleUtils.actionButton}
@@ -170,7 +170,7 @@ const FormMatching = ({
                   <SVGIcon name="edit" width={24} height={24} />
                 </button>
               </Tooltip>
-              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+              <Tooltip content={__('Duplicate', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <Show
                   when={!isTutorPro}
                   fallback={
@@ -193,7 +193,7 @@ const FormMatching = ({
                   </ProBadge>
                 </Show>
               </Tooltip>
-              <Tooltip content={__('Delete', 'tutor')} delay={200}>
+              <Tooltip content={__('Delete', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <button
                   type="button"
                   css={styleUtils.actionButton}
@@ -218,7 +218,7 @@ const FormMatching = ({
                   when={isImageMatching}
                   fallback={
                     <div css={styles.optionPlaceholder}>
-                      {inputValue.answer_title || __('Answer title...', 'tutor')}
+                      {inputValue.answer_title || __('Answer title...', __TUTOR_TEXT_DOMAIN__)}
                     </div>
                   }
                 >
@@ -251,7 +251,7 @@ const FormMatching = ({
                     url: inputValue.image_url || '',
                     title: inputValue.image_url || '',
                   }}
-                  infoText={__('Standard Size: 700x430 pixels', 'tutor')}
+                  infoText={__('Standard Size: 700x430 pixels', __TUTOR_TEXT_DOMAIN__)}
                   uploadHandler={openMediaLibrary}
                   clearHandler={clearHandler}
                   emptyImageCss={styles.emptyImageInput}
@@ -262,7 +262,11 @@ const FormMatching = ({
                 {...field}
                 type="text"
                 ref={inputRef}
-                placeholder={!isImageMatching ? __('Question', 'tutor') : __('Image matched text..', 'tutor')}
+                placeholder={
+                  !isImageMatching
+                    ? __('Question', __TUTOR_TEXT_DOMAIN__)
+                    : __('Image matched text..', __TUTOR_TEXT_DOMAIN__)
+                }
                 value={inputValue.answer_title}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -304,7 +308,7 @@ const FormMatching = ({
                 <input
                   {...field}
                   type="text"
-                  placeholder={__('Matched option..', 'tutor')}
+                  placeholder={__('Matched option..', __TUTOR_TEXT_DOMAIN__)}
                   value={inputValue.answer_two_gap_match}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -366,7 +370,7 @@ const FormMatching = ({
                     }
                   }}
                 >
-                  {__('Cancel', 'tutor')}
+                  {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
                 <Button
                   variant="secondary"
@@ -405,7 +409,7 @@ const FormMatching = ({
                     (isImageMatching ? !inputValue.image_id : !inputValue.answer_two_gap_match)
                   }
                 >
-                  {__('Ok', 'tutor')}
+                  {__('Ok', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
               </div>
             </div>

@@ -45,16 +45,16 @@ class ErrorBoundaryProd extends Component<ErrorBoundaryProps, ErrorBoundaryState
         <div css={styles.container}>
           <div css={styles.productionErrorWrapper}>
             <div css={styles.productionErrorHeader}>
-              <img src={productionError} srcSet={`${productionError2x} 2x`} alt={__('Error', 'tutor')} />
-              <h5 css={typography.heading5('medium')}>{__('Oops! Something went wrong', 'tutor')}</h5>
+              <img src={productionError} srcSet={`${productionError2x} 2x`} alt={__('Error', __TUTOR_TEXT_DOMAIN__)} />
+              <h5 css={typography.heading5('medium')}>{__('Oops! Something went wrong', __TUTOR_TEXT_DOMAIN__)}</h5>
 
               <div css={styles.instructions}>
-                <p>{__('Try the following steps to resolve the issue:', 'tutor')}</p>
+                <p>{__('Try the following steps to resolve the issue:', __TUTOR_TEXT_DOMAIN__)}</p>
                 <ul>
-                  <li>{__('Refresh the page.', 'tutor')}</li>
-                  <li>{__('Clear your browser cache.', 'tutor')}</li>
+                  <li>{__('Refresh the page.', __TUTOR_TEXT_DOMAIN__)}</li>
+                  <li>{__('Clear your browser cache.', __TUTOR_TEXT_DOMAIN__)}</li>
                   <Show when={tutorConfig.tutor_pro_url}>
-                    <li>{__('Ensure the Free and Pro plugins are on the same version.', 'tutor')}</li>
+                    <li>{__('Ensure the Free and Pro plugins are on the same version.', __TUTOR_TEXT_DOMAIN__)}</li>
                   </Show>
                 </ul>
               </div>
@@ -67,14 +67,14 @@ class ErrorBoundaryProd extends Component<ErrorBoundaryProps, ErrorBoundaryState
                   icon={<SVGIcon name="refresh" height={24} width={24} />}
                   onClick={() => window.location.reload()}
                 >
-                  {__('Reload', 'tutor')}
+                  {__('Reload', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
               </div>
               <div css={styles.support}>
-                <span>{__('Still having trouble?', 'tutor')}</span>
-                <span>{__('Contact', 'tutor')}</span>
-                <a href={config.TUTOR_SUPPORT_PAGE_URL}>{__('Support', 'tutor')}</a>
-                <span>{__('for assistance.', 'tutor')}</span>
+                <span>{__('Still having trouble?', __TUTOR_TEXT_DOMAIN__)}</span>
+                <span>{__('Contact', __TUTOR_TEXT_DOMAIN__)}</span>
+                <a href={config.TUTOR_SUPPORT_PAGE_URL}>{__('Support', __TUTOR_TEXT_DOMAIN__)}</a>
+                <span>{__('for assistance.', __TUTOR_TEXT_DOMAIN__)}</span>
               </div>
             </div>
           </div>

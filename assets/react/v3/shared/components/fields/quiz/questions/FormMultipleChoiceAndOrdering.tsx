@@ -206,19 +206,20 @@ const FormMultipleChoiceAndOrdering = ({
                       clearHandler();
                     }}
                   >
-                    {__('Remove Image', 'tutor')}
+                    {__('Remove Image', __TUTOR_TEXT_DOMAIN__)}
                   </Button>
                 }
               >
                 <Button
                   variant="text"
+                  size="small"
                   icon={<SVGIcon name="addImage" width={24} height={24} />}
                   onClick={(event) => {
                     event.stopPropagation();
                     openMediaLibrary();
                   }}
                 >
-                  {__('Add Image', 'tutor')}
+                  {__('Add Image', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
               </Show>
             </Show>
@@ -230,7 +231,7 @@ const FormMultipleChoiceAndOrdering = ({
             </button>
 
             <div css={styles.optionActions} data-visually-hidden>
-              <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <Tooltip content={__('Edit', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <button
                   type="button"
                   css={styleUtils.actionButton}
@@ -242,7 +243,7 @@ const FormMultipleChoiceAndOrdering = ({
                   <SVGIcon name="edit" width={24} height={24} />
                 </button>
               </Tooltip>
-              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+              <Tooltip content={__('Duplicate', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <Show
                   when={!isTutorPro}
                   fallback={
@@ -265,7 +266,7 @@ const FormMultipleChoiceAndOrdering = ({
                   </ProBadge>
                 </Show>
               </Tooltip>
-              <Tooltip content={__('Delete', 'tutor')} delay={200}>
+              <Tooltip content={__('Delete', __TUTOR_TEXT_DOMAIN__)} delay={200}>
                 <button
                   type="button"
                   css={styleUtils.actionButton}
@@ -293,7 +294,7 @@ const FormMultipleChoiceAndOrdering = ({
                   }
                 </Show>
                 <div css={styles.optionPlaceholder}>
-                  {inputValue.answer_title || __('Write answer option...', 'tutor')}
+                  {inputValue.answer_title || __('Write answer option...', __TUTOR_TEXT_DOMAIN__)}
                 </div>
               </div>
             }
@@ -304,10 +305,10 @@ const FormMultipleChoiceAndOrdering = ({
                   value={{
                     id: Number(inputValue.image_id),
                     url: inputValue.image_url || '',
-                    title: __('Image', 'tutor'),
+                    title: __('Image', __TUTOR_TEXT_DOMAIN__),
                   }}
-                  buttonText={__('Upload Image', 'tutor')}
-                  infoText={__('Size: 700x430 pixels', 'tutor')}
+                  buttonText={__('Upload Image', __TUTOR_TEXT_DOMAIN__)}
+                  infoText={__('Size: 700x430 pixels', __TUTOR_TEXT_DOMAIN__)}
                   uploadHandler={openMediaLibrary}
                   clearHandler={clearHandler}
                   emptyImageCss={styles.emptyImageInput}
@@ -318,7 +319,7 @@ const FormMultipleChoiceAndOrdering = ({
               <textarea
                 {...field}
                 ref={inputRef}
-                placeholder={__('Write option...', 'tutor')}
+                placeholder={__('Write option...', __TUTOR_TEXT_DOMAIN__)}
                 value={inputValue.answer_title}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -377,7 +378,7 @@ const FormMultipleChoiceAndOrdering = ({
                     }
                   }}
                 >
-                  {__('Cancel', 'tutor')}
+                  {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
                 <Button
                   variant="secondary"
@@ -412,7 +413,7 @@ const FormMultipleChoiceAndOrdering = ({
                   }}
                   disabled={!inputValue.answer_title && !inputValue.image_url}
                 >
-                  {__('Ok', 'tutor')}
+                  {__('Ok', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
               </div>
             </div>
@@ -558,6 +559,7 @@ const styles = {
     place-self: center start;
     button {
       padding: 0;
+      min-height: 24px;
     }
   `,
   optionActions: css`

@@ -47,21 +47,21 @@ export const validateQuizQuestion = (
 
     if (answers.length === 0 && currentQuestionType !== 'open_ended' && currentQuestionType !== 'short_answer') {
       return {
-        message: __('Please add an option.', 'tutor'),
+        message: __('Please add an option.', __TUTOR_TEXT_DOMAIN__),
         type: 'add_option',
       };
     }
 
     if (!isAllSaved) {
       return {
-        message: __('Please finish editing all newly created options.', 'tutor'),
+        message: __('Please finish editing all newly created options.', __TUTOR_TEXT_DOMAIN__),
         type: 'save_option',
       };
     }
 
     if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
       return {
-        message: __('Please select a correct answer.', 'tutor'),
+        message: __('Please select a correct answer.', __TUTOR_TEXT_DOMAIN__),
         type: 'correct_option',
       };
     }
@@ -73,7 +73,7 @@ export const validateQuizQuestion = (
 
       if (!everyOptionHasTitle) {
         return {
-          message: __('Please add titles to all options.', 'tutor'),
+          message: __('Please add titles to all options.', __TUTOR_TEXT_DOMAIN__),
           type: 'save_option',
         };
       }
@@ -82,7 +82,7 @@ export const validateQuizQuestion = (
         const everyOptionHasImage = answers.every((answer) => answer.image_url);
         if (!everyOptionHasImage) {
           return {
-            message: __('Please add images to all options.', 'tutor'),
+            message: __('Please add images to all options.', __TUTOR_TEXT_DOMAIN__),
             type: 'question',
           };
         }
@@ -90,7 +90,7 @@ export const validateQuizQuestion = (
         const everyOptionHasMatch = answers.every((answer) => answer.answer_two_gap_match);
         if (!everyOptionHasMatch) {
           return {
-            message: __('Please add matched text to all options.', 'tutor'),
+            message: __('Please add matched text to all options.', __TUTOR_TEXT_DOMAIN__),
             type: 'save_option',
           };
         }

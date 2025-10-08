@@ -125,8 +125,11 @@ const ImportExportCompletedState = ({
           hasCompletedSuccessfully && hasCompletedWithErrors
             ? // prettier-ignore
               __('The export process has finished. However, certain items could not be exported. Check the summary below:', 'tutor')
-            : // prettier-ignore
-              sprintf(__('Download the %s file and use it to import your data into another Tutor LMS website.', 'tutor'), isTutorPro ? 'ZIP' : 'JSON'),
+            : sprintf(
+                // translators: %s is the file extension
+                __('Download the %s file and use it to import your data into another Tutor LMS website.', 'tutor'),
+                isTutorPro ? 'ZIP' : 'JSON',
+              ),
         error: message || __('Something went wrong during export. Please try again!', 'tutor'),
       },
       reportList: {

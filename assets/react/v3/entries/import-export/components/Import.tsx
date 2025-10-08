@@ -145,7 +145,11 @@ const Import = () => {
         </UploadButton>
 
         <div css={styles.description}>
-          {sprintf(__('Supported format: %s', 'tutor'), isTutorPro ? '.JSON, .ZIP' : '.JSON')}
+          {sprintf(
+            // translators: %s is the file extension
+            __('Supported format: %s', 'tutor'),
+            isTutorPro ? '.JSON, .ZIP' : '.JSON',
+          )}
         </div>
       </div>
     </div>

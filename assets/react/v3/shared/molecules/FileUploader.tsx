@@ -35,7 +35,7 @@ export const useFileUploader = ({
   acceptedTypes,
   onUpload,
   onError,
-  maxFileSize = formatReadAbleBytesToBytes(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
+  maxFileSize = Number(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
 }: UseFileUploaderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,7 +43,7 @@ export const useFileUploader = ({
     const { files } = event.target;
 
     if (!files || files.length === 0) {
-      onError([__('No files selected', 'tutor')]);
+      onError([__('No files selected', __TUTOR_TEXT_DOMAIN__)]);
       return;
     }
 
@@ -52,9 +52,9 @@ export const useFileUploader = ({
 
     for (const file of [...files]) {
       if (!acceptedTypes.includes(getFileExtensionFromName(file.name))) {
-        errorMessages.push(__('Invalid file type', 'tutor'));
+        errorMessages.push(__('Invalid file type', __TUTOR_TEXT_DOMAIN__));
       } else if (file.size > maxFileSize) {
-        errorMessages.push(__('Maximum upload size exceeded', 'tutor'));
+        errorMessages.push(__('Maximum upload size exceeded', __TUTOR_TEXT_DOMAIN__));
       } else {
         validFiles.push(file);
       }
@@ -143,7 +143,7 @@ export const UploadButton = ({
   multiple = false,
   disabled = false,
   children,
-  maxFileSize = formatReadAbleBytesToBytes(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
+  maxFileSize = Number(tutorConfig?.max_upload_size || '') || MAX_FILE_SIZE,
   ...buttonProps
 }: UploadButtonProps) => {
   const { fileInputRef, handleChange } = useFileUploader({ acceptedTypes, onUpload, onError, maxFileSize });

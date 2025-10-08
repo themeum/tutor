@@ -153,7 +153,7 @@ const FormFieldWrapper = <T,>({
             content={
               characterCount.maxLimit - characterCount.inputCharacter >= 0
                 ? characterCount.maxLimit - characterCount.inputCharacter
-                : __('Limit exceeded', 'tutor')
+                : __('Limit exceeded', __TUTOR_TEXT_DOMAIN__)
             }
           >
             {inputContent}

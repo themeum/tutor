@@ -38,7 +38,7 @@ const sizeMap: Record<ImageInputSize, ButtonSize> = {
 };
 
 const ImageInput = ({
-  buttonText = __('Upload Media', 'tutor'),
+  buttonText = __('Upload Media', __TUTOR_TEXT_DOMAIN__),
   infoText,
   size = 'regular',
   value,
@@ -137,7 +137,7 @@ const ImageInput = ({
                   }}
                   data-cy="replace-media"
                 >
-                  {replaceButtonText || __('Replace Image', 'tutor')}
+                  {replaceButtonText || __('Replace Image', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
                 <Show when={isClearAble}>
                   <Button
@@ -150,7 +150,7 @@ const ImageInput = ({
                     }}
                     data-cy="clear-media"
                   >
-                    {__('Remove', 'tutor')}
+                    {__('Remove', __TUTOR_TEXT_DOMAIN__)}
                   </Button>
                 </Show>
               </div>

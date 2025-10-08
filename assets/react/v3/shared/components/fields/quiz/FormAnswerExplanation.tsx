@@ -83,7 +83,7 @@ const FormAnswerExplanation = ({
                   setIsEdit(false);
                 }}
               >
-                {__('Cancel', 'tutor')}
+                {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
               </Button>
               <Button
                 variant="secondary"
@@ -94,7 +94,7 @@ const FormAnswerExplanation = ({
                 }}
                 disabled={field.value === previousValue}
               >
-                {__('Ok', 'tutor')}
+                {__('Ok', __TUTOR_TEXT_DOMAIN__)}
               </Button>
             </div>
           </Show>

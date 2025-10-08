@@ -58,7 +58,7 @@ const defaultTutorConfig = {
     filter: null,
   },
   settings: {
-    monetize_by: 'tutor',
+    monetize_by: __TUTOR_TEXT_DOMAIN__,
     enable_course_marketplace: 'off',
     course_permalink_base: '',
     supported_video_sources: '',

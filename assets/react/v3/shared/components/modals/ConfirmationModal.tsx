@@ -31,10 +31,12 @@ const ConfirmationModal = ({
 }: ConfirmationModalProps) => {
   return (
     <BasicModalWrapper icon={icon} onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={maxWidth}>
-      <div css={styles.content}>{description ?? __('Once you perform this action this can’t be undone.', 'tutor')}</div>
+      <div css={styles.content}>
+        {description ?? __('Once you perform this action this can’t be undone.', __TUTOR_TEXT_DOMAIN__)}
+      </div>
       <div css={styles.footerWrapper}>
         <Button variant="text" onClick={() => closeModal({ action: 'CLOSE' })} size="small">
-          {cancelButtonText ?? __('Cancel', 'tutor')}
+          {cancelButtonText ?? __('Cancel', __TUTOR_TEXT_DOMAIN__)}
         </Button>
         <Button
           variant={confirmButtonVariant ?? 'danger'}
@@ -48,7 +50,7 @@ const ConfirmationModal = ({
             }
           }}
         >
-          {confirmButtonText ?? __('Delete', 'tutor')}
+          {confirmButtonText ?? __('Delete', __TUTOR_TEXT_DOMAIN__)}
         </Button>
       </div>
     </BasicModalWrapper>

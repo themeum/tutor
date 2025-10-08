@@ -78,7 +78,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
         </div>
         <div css={styles.footer({ isDelete: confirmButton?.isDelete ?? false })}>
           <Button variant={cancelButton?.variant ?? 'text'} size="small" onClick={onCancel ?? closePopover}>
-            {cancelButton?.text ?? __('Cancel', 'tutor')}
+            {cancelButton?.text ?? __('Cancel', __TUTOR_TEXT_DOMAIN__)}
           </Button>
           <Button
             data-cy="confirm-button"
@@ -90,7 +90,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
             loading={isLoading}
             size="small"
           >
-            {confirmButton?.text ?? __('Ok', 'tutor')}
+            {confirmButton?.text ?? __('Ok', __TUTOR_TEXT_DOMAIN__)}
           </Button>
         </div>
       </div>

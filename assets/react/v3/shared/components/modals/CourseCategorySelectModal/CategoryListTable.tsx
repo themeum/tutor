@@ -53,10 +53,10 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
         <Checkbox
           onChange={toggleSelection}
           checked={categoryListQuery.isLoading || categoryListQuery.isRefetching ? false : handleAllIsChecked()}
-          label={__('Category', 'tutor')}
+          label={__('Category', __TUTOR_TEXT_DOMAIN__)}
         />
       ) : (
-        __('Category', 'tutor')
+        __('Category', __TUTOR_TEXT_DOMAIN__)
       ),
       Cell: (item) => {
         return (
@@ -74,10 +74,14 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
               }}
               checked={selectedCategories.map((category) => category.id).includes(item.id)}
             />
-            <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('category item', 'tutor')} />
+            <img
+              src={item.image || coursePlaceholder}
+              css={styles.thumbnail}
+              alt={__('category item', __TUTOR_TEXT_DOMAIN__)}
+            />
             <div css={styles.courseItem}>
               <div>{item.title}</div>
-              <p>{`${item.total_courses} ${__('Courses', 'tutor')}`}</p>
+              <p>{`${item.total_courses} ${__('Courses', __TUTOR_TEXT_DOMAIN__)}`}</p>
             </div>
           </div>
         );
@@ -91,7 +95,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
   }
 
   if (!categoryListQuery.data) {
-    return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor')}</div>;
+    return <div css={styles.errorMessage}>{__('Something went wrong', __TUTOR_TEXT_DOMAIN__)}</div>;
   }
 
   return (

@@ -98,7 +98,7 @@ const FormMultiLevelSelect = ({
                 tabIndex={-1}
                 type="button"
                 disabled={disabled || options.length === 0}
-                aria-label={__('Toggle options', 'tutor')}
+                aria-label={__('Toggle options', __TUTOR_TEXT_DOMAIN__)}
                 css={styles.toggleIcon(isOpen)}
                 onClick={() => {
                   setIsOpen((prev) => !prev);
@@ -123,7 +123,7 @@ const FormMultiLevelSelect = ({
                   </div>
                   <input
                     type="text"
-                    placeholder={__('Search', 'tutor')}
+                    placeholder={__('Search', __TUTOR_TEXT_DOMAIN__)}
                     value={searchValue}
                     onChange={(event) => {
                       setSearchValue(event.target.value);
@@ -132,7 +132,7 @@ const FormMultiLevelSelect = ({
                 </div>
                 <Show
                   when={options.length > 0}
-                  fallback={<div css={styles.notFound}>{__('No categories found.', 'tutor')}</div>}
+                  fallback={<div css={styles.notFound}>{__('No categories found.', __TUTOR_TEXT_DOMAIN__)}</div>}
                 >
                   <div css={[styles.options, optionsWrapperStyle]}>
                     {options.map((option) => (
@@ -157,7 +157,7 @@ const FormMultiLevelSelect = ({
                         setIsOpen(false);
                       }}
                     >
-                      {__('Clear selection', 'tutor')}
+                      {__('Clear selection', __TUTOR_TEXT_DOMAIN__)}
                     </Button>
                   </div>
                 )}

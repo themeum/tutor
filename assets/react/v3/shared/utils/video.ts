@@ -11,7 +11,7 @@ export async function getVimeoVideoDuration(videoUrl: string): Promise<number | 
   try {
     const response = await fetch(jsonUrl);
     if (!response.ok) {
-      throw new Error(__('Failed to fetch the video data', 'tutor'));
+      throw new Error(__('Failed to fetch the video data', __TUTOR_TEXT_DOMAIN__));
     }
 
     const textData = await response.text();
@@ -121,7 +121,7 @@ export const generateVideoThumbnail = async (
 
               const ctx = canvas.getContext('2d');
               if (!ctx) {
-                throw new Error(__('Failed to get canvas context', 'tutor'));
+                throw new Error(__('Failed to get canvas context', __TUTOR_TEXT_DOMAIN__));
               }
 
               ctx.drawImage(video, 0, 0);
@@ -131,7 +131,8 @@ export const generateVideoThumbnail = async (
               resolve(thumbnail);
             } catch (error) {
               cleanup();
-              const errorMessage = error instanceof Error ? error.message : __('Unknown error occurred', 'tutor');
+              const errorMessage =
+                error instanceof Error ? error.message : __('Unknown error occurred', __TUTOR_TEXT_DOMAIN__);
               reject(new Error(`Thumbnail generation failed: ${errorMessage}`));
             }
           }
@@ -169,7 +170,7 @@ export const generateVideoThumbnail = async (
         // 30 seconds is a reasonable maximum time to wait for video metadata and frame capture
         const timeoutId = setTimeout(() => {
           cleanup();
-          reject(new Error(__('Thumbnail generation timed out', 'tutor')));
+          reject(new Error(__('Thumbnail generation timed out', __TUTOR_TEXT_DOMAIN__)));
         }, 30000);
 
         // Add elements to DOM
@@ -185,5 +186,5 @@ export const generateVideoThumbnail = async (
     });
   }
 
-  throw new Error(__('Unsupported video source', 'tutor'));
+  throw new Error(__('Unsupported video source', __TUTOR_TEXT_DOMAIN__));
 };

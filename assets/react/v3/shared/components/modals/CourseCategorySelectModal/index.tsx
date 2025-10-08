@@ -44,7 +44,7 @@ function CourseCategorySelectModal({
   return (
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      title={selectedItems.length ? sprintf(__('%d Selected', 'tutor'), selectedItems.length) : title}
+      title={selectedItems.length ? sprintf(__('%d Selected', __TUTOR_TEXT_DOMAIN__), selectedItems.length) : title}
       actions={actions}
       maxWidth={720}
     >
@@ -56,10 +56,10 @@ function CourseCategorySelectModal({
       </Show>
       <div css={styles.footer}>
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-          {__('Cancel', 'tutor')}
+          {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
         </Button>
         <Button size="small" variant="primary" onClick={handleApply}>
-          {__('Apply', 'tutor')}
+          {__('Apply', __TUTOR_TEXT_DOMAIN__)}
         </Button>
       </div>
     </BasicModalWrapper>

@@ -25,7 +25,7 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useInstructorListQuery, useUserListQuery } from '@TutorShared/services/users';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isAddonEnabled } from '@TutorShared/utils/util';
+import { formatBytes, isAddonEnabled } from '@TutorShared/utils/util';
 
 import CoursePricing from './CoursePricing';
 
@@ -181,7 +181,10 @@ const CourseBasicSidebar = () => {
             buttonText={__('Upload Thumbnail', 'tutor')}
             infoText={
               // translators: %s is the maximum allowed upload file size (e.g., "2MB")
-              sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+              sprintf(
+                __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                formatBytes(Number(tutorConfig?.max_upload_size || 0)),
+              )
             }
             generateWithAi={!isTutorPro || isOpenAiEnabled}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
@@ -200,7 +203,10 @@ const CourseBasicSidebar = () => {
             buttonText={__('Upload Video', 'tutor')}
             infoText={
               // translators: %s is the maximum allowed file size
-              sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+              sprintf(
+                __('MP4, and WebM formats, up to %s', 'tutor'),
+                formatBytes(Number(tutorConfig?.max_upload_size || 0)),
+              )
             }
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.INTRO_VIDEO}

@@ -126,15 +126,15 @@ const FormInput = ({
         component: AITextModal,
         isMagicAi: true,
         props: {
-          title: __('AI Studio', 'tutor'),
+          title: __('AI Studio', __TUTOR_TEXT_DOMAIN__),
           icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
           characters: 120,
           field,
           fieldState,
           format: 'title',
           is_html: false,
-          fieldLabel: __('Create a Compelling Title', 'tutor'),
-          fieldPlaceholder: __('Describe the main focus of your course in a few words', 'tutor'),
+          fieldLabel: __('Create a Compelling Title', __TUTOR_TEXT_DOMAIN__),
+          fieldPlaceholder: __('Describe the main focus of your course in a few words', __TUTOR_TEXT_DOMAIN__),
         },
       });
       onClickAiButton?.();
@@ -210,7 +210,7 @@ const FormInput = ({
                   size="small"
                   onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
                   icon={<SVGIcon name="eye" width={24} height={24} />}
-                  aria-label={__('Show/Hide Password', 'tutor')}
+                  aria-label={__('Show/Hide Password', __TUTOR_TEXT_DOMAIN__)}
                   buttonCss={styles.eyeButton({ type: fieldType })}
                 />
               </Show>
@@ -222,7 +222,7 @@ const FormInput = ({
                   onClick={() => field.onChange('')}
                   buttonCss={styleUtils.inputClearButton}
                   icon={<SVGIcon name="cross" width={24} height={24} />}
-                  aria-label={__('Clear', 'tutor')}
+                  aria-label={__('Clear', __TUTOR_TEXT_DOMAIN__)}
                 />
               </Show>
             </div>

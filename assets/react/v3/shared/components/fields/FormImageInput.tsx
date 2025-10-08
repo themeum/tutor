@@ -41,7 +41,7 @@ const FormImageInput = ({
   label,
   size,
   helpText,
-  buttonText = __('Upload Media', 'tutor'),
+  buttonText = __('Upload Media', __TUTOR_TEXT_DOMAIN__),
   infoText,
   onChange,
   generateWithAi = false,
@@ -107,7 +107,7 @@ const FormImageInput = ({
         component: AIImageModal,
         isMagicAi: true,
         props: {
-          title: __('AI Studio', 'tutor'),
+          title: __('AI Studio', __TUTOR_TEXT_DOMAIN__),
           icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
           field,
           fieldState,
