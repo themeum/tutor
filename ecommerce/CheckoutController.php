@@ -1149,9 +1149,18 @@ class CheckoutController {
 	 *     }
 	 * }
 	 */
-	public function get_courses_data_by_order_id( $order_items ): array {
+	public function get_courses_data_by_order_items( $order_items ): array {
 
-		$results = array_map( fn( $item ): \WP_Post => get_post( $item->id ), $order_items );
+		$results = array();
+
+		foreach ( $order_items as $item ) {
+
+			$course = get_post( $item->id );
+
+			if ( $course instanceof \WP_Post ) {
+				$results[] = $course;
+			}
+		}
 
 		return array(
 			'courses' => array(
