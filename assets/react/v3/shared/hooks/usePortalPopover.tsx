@@ -7,7 +7,7 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import { isRTL } from '@TutorShared/config/constants';
 import { zIndex } from '@TutorShared/config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
-import { useScrollLock } from '@TutorShared/utils/scroll-lock';
+import { useScrollLock } from '@TutorShared/hooks/useScrollLock';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 

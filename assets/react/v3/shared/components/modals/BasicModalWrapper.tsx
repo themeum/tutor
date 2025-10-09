@@ -9,7 +9,7 @@ import { modal } from '@TutorShared/config/constants';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useScrollLock } from '@TutorShared/utils/scroll-lock';
+import { useScrollLock } from '@TutorShared/hooks/useScrollLock';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface BasicModalWrapperProps {

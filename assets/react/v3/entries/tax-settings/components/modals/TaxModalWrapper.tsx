@@ -1,7 +1,7 @@
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { useScrollLock } from '@TutorShared/utils/scroll-lock';
+import { useScrollLock } from '@TutorShared/hooks/useScrollLock';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
 import type React from 'react';
