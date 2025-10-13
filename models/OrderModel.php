@@ -489,14 +489,11 @@ class OrderModel {
 		}
 
 		$user_info = get_userdata( $order_data->user_id );
-		if ( ! is_a( $user_info, 'WP_User' ) ) {
-			return false;
-		}
 
 		$student                  = new \stdClass();
-		$student->id              = (int) $user_info->ID;
-		$student->name            = $user_info->data->display_name;
-		$student->email           = $user_info->data->user_email;
+		$student->id              = (int) $user_info->ID ?? 0;
+		$student->name            = $user_info->data->display_name ?? '';
+		$student->email           = $user_info->data->user_email ?? '';
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
 		$student->billing_address = $this->get_order_billing_address( $order_id, $order_data->user_id );
 		$student->image           = get_avatar_url( $order_data->user_id );
