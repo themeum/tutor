@@ -14,6 +14,12 @@ import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@Tut
 type PlanType = 'course' | 'bundle' | 'category' | 'full_site';
 type PaymentType = 'onetime' | 'recurring';
 
+export const BILLING_CYCLE_PRESETS = [3, 6, 9, 12];
+export const BILLING_CYCLE_CUSTOM_PRESETS = {
+  untilCancelled: __('Until cancelled', 'tutor'),
+  noRenewal: __('No Renewal', 'tutor'),
+};
+
 export type Subscription = {
   id: string;
   payment_type: PaymentType;
@@ -83,6 +89,18 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
 };
 
 export const convertSubscriptionToFormData = (subscription: Subscription): SubscriptionFormData => {
+  const determineRecurringLimit = () => {
+    if (subscription.recurring_limit === '0') {
+      return BILLING_CYCLE_CUSTOM_PRESETS.untilCancelled;
+    }
+
+    if (subscription.recurring_limit === '-1') {
+      return BILLING_CYCLE_CUSTOM_PRESETS.noRenewal;
+    }
+
+    return subscription.recurring_limit || '';
+  };
+
   return {
     id: subscription.id,
     payment_type: subscription.payment_type ?? 'recurring',
@@ -95,8 +113,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     is_featured: !!Number(subscription.is_featured),
     is_enabled: !!Number(subscription.is_enabled),
     regular_price: subscription.regular_price ?? '0',
-    recurring_limit:
-      subscription.recurring_limit === '0' ? __('Until cancelled', 'tutor') : subscription.recurring_limit || '',
+    recurring_limit: determineRecurringLimit(),
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
@@ -122,6 +139,18 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
 };
 
 export const convertFormDataToSubscription = (formData: SubscriptionFormData): SubscriptionPayload => {
+  const determineRecurringLimit = () => {
+    if (formData.recurring_limit === BILLING_CYCLE_CUSTOM_PRESETS.untilCancelled) {
+      return '0';
+    }
+
+    if (formData.recurring_limit === BILLING_CYCLE_CUSTOM_PRESETS.noRenewal) {
+      return '-1';
+    }
+
+    return formData.recurring_limit;
+  };
+
   return {
     ...(formData.id && String(formData.id) !== '0' && { id: formData.id }),
     payment_type: formData.payment_type,
@@ -134,7 +163,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
       recurring_interval: formData.recurring_interval,
     }),
     regular_price: formData.regular_price,
-    recurring_limit: formData.recurring_limit === __('Until cancelled', 'tutor') ? '0' : formData.recurring_limit,
+    recurring_limit: determineRecurringLimit(),
     is_featured: formData.is_featured ? '1' : '0',
     is_enabled: formData.is_enabled ? '1' : '0',
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
@@ -161,7 +190,7 @@ export type SubscriptionPayload = {
   sale_price?: string;
   sale_price_from?: string; // start date
   sale_price_to?: string; // end date
-  recurring_limit: string; // 0 for until canceled
+  recurring_limit: string; // 0 for until canceled or -1 for no renewal
   provide_certificate: '0' | '1';
   is_featured: '0' | '1';
   is_enabled: '0' | '1';
