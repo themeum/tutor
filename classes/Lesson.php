@@ -610,20 +610,78 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
+	 * Check if lesson has content
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return bool True if lesson has content, false otherwise.
+	 */
+	public static function has_lesson_content( $lesson_id ) {
+		/**
+		 * If lesson has no content, lesson tab will be hidden.
+		 * To enable elementor and SCORM, only admin can see lesson tab.
+		 *
+		 * @since 2.2.2
+		 */
+		return apply_filters(
+			'tutor_has_lesson_content',
+			User::is_admin() || ! in_array( trim( get_the_content() ), array( null, '', '&nbsp;' ), true ),
+			$lesson_id
+		);
+	}
+
+	/**
+	 * Check if lesson has attachments
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return bool True if lesson has attachments, false otherwise.
+	 */
+	public static function has_lesson_attachment( $lesson_id ) {
+		return count( tutor_utils()->get_attachments( $lesson_id ) ) > 0;
+	}
+
+	/**
+	 * Check if comments are enabled for lessons
+	 *
+	 * @since 3.9.0
+	 *
+	 * @return bool True if comments are enabled, false otherwise.
+	 */
+	public static function is_comment_enabled() {
+		return tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
+	}
+
+	/**
+	 * Check if lesson has comments
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return int Number of comments for the lesson.
+	 */
+	public static function has_lesson_comment( $lesson_id ) {
+		return (int) get_comments_number( $lesson_id );
+	}
+
+	/**
 	 * Get navigation items for lesson single page
 	 *
 	 * @since 3.9.0
 	 *
-	 * @param bool $has_lesson_content whether lesson has content.
-	 * @param bool $has_lesson_attachment whether lesson has attachment.
-	 * @param bool $is_comment_enabled whether comment is enabled.
+	 * @param int $lesson_id Lesson ID.
 	 *
 	 * @return array navigation items array
 	 */
-	public static function get_nav_items( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled ) {
+	public static function get_nav_items( $lesson_id ) {
 		$nav_items = array();
 
-		if ( $has_lesson_content ) {
+		if ( self::has_lesson_content( $lesson_id ) ) {
 			$nav_items['overview'] = array(
 				'label' => __( 'Overview', 'tutor' ),
 				'value' => 'overview',
@@ -631,7 +689,7 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
-		if ( $has_lesson_attachment ) {
+		if ( self::has_lesson_attachment( $lesson_id ) ) {
 			$nav_items['files'] = array(
 				'label' => __( 'Exercise Files', 'tutor' ),
 				'value' => 'files',
@@ -639,7 +697,7 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
-		if ( $is_comment_enabled ) {
+		if ( self::is_comment_enabled() ) {
 			$nav_items['comments'] = array(
 				'label' => __( 'Comments', 'tutor' ),
 				'value' => 'comments',
@@ -658,16 +716,14 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @since 3.9.0
 	 *
-	 * @param bool $has_lesson_content whether lesson has content.
-	 * @param bool $has_lesson_attachment whether lesson has attachment.
-	 * @param bool $is_comment_enabled whether comment is enabled.
+	 * @param int $lesson_id Lesson ID.
 	 *
 	 * @return array navigation contents array
 	 */
-	public static function get_nav_contents( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled ) {
+	public static function get_nav_contents( $lesson_id ) {
 		$nav_contents = array();
 
-		if ( $has_lesson_content ) {
+		if ( self::has_lesson_content( $lesson_id ) ) {
 			$nav_contents['overview'] = array(
 				'label'         => __( 'Overview', 'tutor' ),
 				'value'         => 'overview',
@@ -675,7 +731,7 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
-		if ( $has_lesson_attachment ) {
+		if ( self::has_lesson_attachment( $lesson_id ) ) {
 			$nav_contents['files'] = array(
 				'label'         => __( 'Files', 'tutor' ),
 				'value'         => 'files',
@@ -683,7 +739,7 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
-		if ( $is_comment_enabled ) {
+		if ( self::is_comment_enabled() ) {
 			$nav_contents['comments'] = array(
 				'label'         => __( 'Comments', 'tutor' ),
 				'value'         => 'comments',

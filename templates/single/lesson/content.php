@@ -47,9 +47,6 @@ $best_watch_time = tutor_utils()->get_lesson_reading_info( get_the_ID(), 0, 'vid
 if ( $best_watch_time > 0 ) {
 	$json_data['best_watch_time'] = $best_watch_time;
 }
-
-$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
-
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
@@ -95,23 +92,14 @@ tutor_load_template(
 
 	isset( $url_components['query'] ) ? parse_str( $url_components['query'], $output ) : null;
 
-	/**
-	 * If lesson has no content, lesson tab will be hidden.
-	 * To enable elementor and SCORM, only admin can see lesson tab.
-	 *
-	 * @since 2.2.2
-	 */
-	$has_lesson_content = apply_filters(
-		'tutor_has_lesson_content',
-		User::is_admin() || ! in_array( trim( get_the_content() ), array( null, '', '&nbsp;' ), true ),
-		$course_content_id
-	);
+	$has_lesson_content    = Lesson::has_lesson_content( $course_content_id );
+	$has_lesson_attachment = Lesson::has_lesson_attachment( $course_content_id );
 
-	$has_lesson_attachment = count( tutor_utils()->get_attachments() ) > 0;
-	$has_lesson_comment    = (int) get_comments_number( $course_content_id );
+	$is_comment_enabled = Lesson::is_comment_enabled();
+	$has_lesson_comment = Lesson::has_lesson_comment( $course_content_id );
 
-	$nav_items    = Lesson::get_nav_items( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled );
-	$nav_contents = Lesson::get_nav_contents( $has_lesson_content, $has_lesson_attachment, $is_comment_enabled );
+	$nav_items    = Lesson::get_nav_items( $course_content_id );
+	$nav_contents = Lesson::get_nav_contents( $course_content_id );
 
 	$active_tab = $page_tab;
 	$valid_tabs = wp_list_pluck( $nav_items, 'value' );
