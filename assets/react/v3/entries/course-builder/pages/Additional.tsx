@@ -10,12 +10,12 @@ import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import ProBadge from '@TutorShared/atoms/ProBadge';
 import EmptyState from '@TutorShared/molecules/EmptyState';
 
+import Certificate from '@TutorShared/components/certificate/Certificate';
 import FormCoursePrerequisites from '@TutorShared/components/fields/FormCoursePrerequisites';
 import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 
-import Certificate from '@CourseBuilderComponents/additional/Certificate';
 import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
@@ -60,7 +60,6 @@ const Additional = () => {
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
-
   const isCourseBenefitsVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_BENEFITS);
   const isCourseTargetAudienceVisible = useVisibilityControl(
     VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_TARGET_AUDIENCE,
@@ -97,6 +96,9 @@ const Additional = () => {
     return null;
   }
 
+  const currentCertificateKey = form.watch('tutor_course_certificate_template');
+  const certificateTemplates = courseDetails?.course_certificates_templates ?? [];
+
   const isOverViewVisible =
     isCourseBenefitsVisible ||
     isCourseTargetAudienceVisible ||
@@ -112,6 +114,11 @@ const Additional = () => {
       Addons.TUTOR_ZOOM_INTEGRATION,
       Addons.TUTOR_GOOGLE_MEET_INTEGRATION,
     ].some(isAddonEnabled);
+  const handleCertificateSelection = (certificateKey: string) => {
+    form.setValue('tutor_course_certificate_template', certificateKey, {
+      shouldDirty: true,
+    });
+  };
 
   const SidebarContent = () => (
     <div css={styles.sidebarContent}>
@@ -316,12 +323,17 @@ const Additional = () => {
                       <ProBadge content={__('Pro', 'tutor')} />
                     </Show>
                   </BoxTitle>
-                  <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+                  <Show when={isTutorPro && isCertificateAddonEnabled}>
                     <BoxSubtitle>{__('Select a certificate to award your learners.', 'tutor')}</BoxSubtitle>
                   </Show>
                 </div>
                 <Show when={!isCourseDetailsFetching} fallback={<LoadingSection />}>
-                  <Certificate isSidebarVisible={hasSidebarContent} />
+                  <Certificate
+                    isSidebarVisible={hasSidebarContent}
+                    currentCertificateKey={currentCertificateKey}
+                    onSelect={handleCertificateSelection}
+                    certificateTemplates={certificateTemplates}
+                  />
                 </Show>
               </Box>
             </Show>
