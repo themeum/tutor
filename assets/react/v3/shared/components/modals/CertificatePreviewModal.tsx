@@ -6,11 +6,11 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import type { Certificate } from '@CourseBuilderServices/course';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type Certificate } from '@TutorShared/utils/types';
 
 export interface CertificatePreviewModalProps {
   certificates: Certificate[];

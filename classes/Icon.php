@@ -44,6 +44,7 @@ final class Icon {
 	const BUY_GET_TYPE               = 'buy-get-type';
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_LINE              = 'calendar-line';
+	const CALENDAR_LINES             = 'calendar-lines';
 	const CERTIFICATE                = 'certificate';
 	const CHANGE                     = 'change';
 	const CHECK                      = 'check';
@@ -95,10 +96,12 @@ final class Icon {
 	const DWG                        = 'dwg';
 	const EDIT                       = 'edit';
 	const ELEMENTOR_COLORIZED        = 'elementor-colorized';
+	const ENTER                      = 'enter';
 	const ERASER                     = 'eraser';
 	const EXE                        = 'exe';
 	const EXPORT                     = 'export';
 	const EYE                        = 'eye';
+	const FEATHER                    = 'feather';
 	const FILE                       = 'file';
 	const FLA                        = 'fla';
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
@@ -146,11 +149,13 @@ final class Icon {
 	const MP3                        = 'mp3';
 	const MP4                        = 'mp4';
 	const NOTE                       = 'note';
+	const NOTEBOOK                   = 'notebook';
 	const OUTLINE_NONE               = 'outline-none';
 	const PAUSE_CIRCLE               = 'pause-circle';
 	const PDF                        = 'pdf';
 	const PEN                        = 'pen';
 	const PEN_TO_SQUARE              = 'pen-to-square';
+	const PLAY                       = 'play';
 	const PLUS                       = 'plus';
 	const PLUS_MINUS                 = 'plus-minus';
 	const PLUS_SQUARE                = 'plus-square';

@@ -328,21 +328,21 @@ class Utils {
 	 * @return array|bool|mixed
 	 */
 	public function avalue_dot( $key = null, $array = array(), $default = false ) {
-		$array = (array) $array;
-		if ( ! $key || ! count( $array ) ) {
+		if ( '' === $key || null === $key || ! $this->count( $array ) ) {
 			return $default;
 		}
-		$option_key_array = explode( '.', $key );
 
+		$keys  = explode( '.', $key );
 		$value = $array;
 
-		foreach ( $option_key_array as $dot_key ) {
+		foreach ( $keys as $dot_key ) {
 			if ( isset( $value[ $dot_key ] ) ) {
 				$value = $value[ $dot_key ];
 			} else {
 				return $default;
 			}
 		}
+
 		return $value;
 	}
 
@@ -834,110 +834,114 @@ class Utils {
 	 * @return mixed
 	 */
 	public function get_course_completed_percent( $course_id = 0, $user_id = 0, $get_stats = false ) {
-		$course_id        = $this->get_post_id( $course_id );
-		$user_id          = $this->get_user_id( $user_id );
-		$completed_lesson = $this->get_completed_lesson_count_by_course( $course_id, $user_id );
-		$course_contents  = $this->get_course_contents_by_id( $course_id );
-		$total_contents   = $this->count( $course_contents );
-		$total_contents   = $total_contents ? $total_contents : 0;
-		$completed_count  = $completed_lesson;
+		$course_id = $this->get_post_id( $course_id );
+		$user_id   = $this->get_user_id( $user_id );
 
-		$quiz_ids       = array();
-		$assignment_ids = array();
+		$post_type = get_post_type( $course_id );
+		$result    = 0;
 
-		foreach ( $course_contents as $content ) {
-			if ( 'tutor_quiz' === $content->post_type ) {
-				$quiz_ids[] = (int) $content->ID;
-			}
-			if ( 'tutor_assignments' === $content->post_type ) {
-				$assignment_ids[] = (int) $content->ID;
-			}
-		}
+		if ( tutor()->course_post_type === $post_type ) {
+			$completed_lesson = $this->get_completed_lesson_count_by_course( $course_id, $user_id );
+			$course_contents  = $this->get_course_contents_by_id( $course_id );
+			$total_contents   = $this->count( $course_contents );
+			$total_contents   = $total_contents ? $total_contents : 0;
+			$completed_count  = $completed_lesson;
 
-		global $wpdb;
+			$quiz_ids       = array();
+			$assignment_ids = array();
 
-		if ( count( $quiz_ids ) ) {
-			$quiz_ids_str = QueryHelper::prepare_in_clause( $quiz_ids );
-
-			// Get data from cache.
-			$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
-			$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
-			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
-
-			if ( false === $quiz_completed ) {
-				//phpcs:disable
-				$quiz_completed = (int) $wpdb->get_var(
-				$wpdb->prepare(
-					"SELECT count(quiz_id) completed 
-						FROM (
-							SELECT  DISTINCT quiz_id 
-							FROM 	{$wpdb->tutor_quiz_attempts} 
-							WHERE 	quiz_id IN ({$quiz_ids_str}) 
-									AND user_id = % d 
-									AND attempt_status != %s
-						) a",
-					$user_id,
-					QuizModel::ATTEMPT_STARTED
-				)
-				);
-				//phpcs:enable
-				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
-			}
-			$completed_count += $quiz_completed;
-		}
-
-		if ( count( $assignment_ids ) ) {
-
-			foreach ( $assignment_ids as $assignment_id ) {
-				$submitted_assignment = $this->is_assignment_submitted( $assignment_id, $user_id );
-
-				if ( $submitted_assignment ) {
-					++$completed_count;
-				}
-			}
-		}
-
-		if ( $this->count( $course_contents ) ) {
 			foreach ( $course_contents as $content ) {
-				if ( 'tutor_zoom_meeting' === $content->post_type ) {
-					/**
-					 * Count zoom lesson completion for course progress
-					 *
-					 * @since 2.0.0
-					 */
-					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
-					if ( $is_completed ) {
-						++$completed_count;
-					}
-				} elseif ( 'tutor-google-meet' === $content->post_type ) {
-					/**
-					 * Count zoom lesson completion for course progress
-					 *
-					 * @since 2.0.0
-					 */
-					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
-					if ( $is_completed ) {
+				if ( 'tutor_quiz' === $content->post_type ) {
+					$quiz_ids[] = (int) $content->ID;
+				}
+				if ( 'tutor_assignments' === $content->post_type ) {
+					$assignment_ids[] = (int) $content->ID;
+				}
+			}
+
+			global $wpdb;
+
+			if ( count( $quiz_ids ) ) {
+				$quiz_ids_str = QueryHelper::prepare_in_clause( $quiz_ids );
+
+				// Get data from cache.
+				$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
+				$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
+				$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
+
+				if ( false === $quiz_completed ) {
+					//phpcs:disable
+					$quiz_completed = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT count(quiz_id) completed 
+							FROM (
+								SELECT  DISTINCT quiz_id 
+								FROM 	{$wpdb->tutor_quiz_attempts} 
+								WHERE 	quiz_id IN ({$quiz_ids_str}) 
+										AND user_id = % d 
+										AND attempt_status != %s
+							) a",
+						$user_id,
+						QuizModel::ATTEMPT_STARTED
+					)
+					);
+					//phpcs:enable
+					TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
+				}
+				$completed_count += $quiz_completed;
+			}
+
+			if ( count( $assignment_ids ) ) {
+
+				foreach ( $assignment_ids as $assignment_id ) {
+					$submitted_assignment = $this->is_assignment_submitted( $assignment_id, $user_id );
+
+					if ( $submitted_assignment ) {
 						++$completed_count;
 					}
 				}
 			}
+
+			if ( $this->count( $course_contents ) ) {
+				foreach ( $course_contents as $content ) {
+					if ( 'tutor_zoom_meeting' === $content->post_type ) {
+						/**
+						 * Count zoom lesson completion for course progress
+						 *
+						 * @since 2.0.0
+						 */
+						$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+						if ( $is_completed ) {
+							++$completed_count;
+						}
+					} elseif ( 'tutor-google-meet' === $content->post_type ) {
+						/**
+						 * Count zoom lesson completion for course progress
+						 *
+						 * @since 2.0.0
+						 */
+						$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
+						if ( $is_completed ) {
+							++$completed_count;
+						}
+					}
+				}
+			}
+
+			if ( $total_contents > 0 && $completed_count > 0 ) {
+				$result = number_format( ( $completed_count * 100 ) / $total_contents );
+			}
+
+			if ( $get_stats ) {
+				$result = array(
+					'completed_percent' => $result,
+					'completed_count'   => $completed_count,
+					'total_count'       => $total_contents,
+				);
+			}
 		}
 
-		$percent_complete = 0;
-
-		if ( $total_contents > 0 && $completed_count > 0 ) {
-			$percent_complete = number_format( ( $completed_count * 100 ) / $total_contents );
-		}
-
-		if ( $get_stats ) {
-			return array(
-				'completed_percent' => $percent_complete,
-				'completed_count'   => $completed_count,
-				'total_count'       => $total_contents,
-			);
-		}
-
-		return $percent_complete;
+		return apply_filters( 'tutor_course_completed_percent', $result, $course_id, $user_id, $get_stats );
 	}
 
 	/**
@@ -2217,70 +2221,6 @@ class Utils {
 	}
 
 	/**
-	 * Return completed courses by user_id
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $posts_per_page posts per page.
-	 *
-	 * @return bool|\WP_Query
-	 */
-	public function get_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
-		$user_id    = $this->get_user_id( $user_id );
-		$course_ids = $this->get_completed_courses_ids_by_user( $user_id );
-
-		if ( count( $course_ids ) ) {
-			$course_post_type = tutor()->course_post_type;
-			$course_args      = array(
-				'post_type'      => $course_post_type,
-				'post_status'    => 'publish',
-				'post__in'       => $course_ids,
-				'posts_per_page' => $posts_per_page,
-				'offset'         => $offset,
-			);
-
-			return new \WP_Query( $course_args );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get the active course by user
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $posts_per_page posts per page.
-	 *
-	 * @return bool|\WP_Query
-	 */
-	public function get_active_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
-		$user_id             = $this->get_user_id( $user_id );
-		$course_ids          = $this->get_completed_courses_ids_by_user( $user_id );
-		$enrolled_course_ids = $this->get_enrolled_courses_ids_by_user( $user_id );
-		$active_courses      = array_diff( $enrolled_course_ids, $course_ids );
-
-		if ( count( $active_courses ) ) {
-			$course_post_type = tutor()->course_post_type;
-			$course_args      = array(
-				'post_type'      => $course_post_type,
-				'post_status'    => 'publish',
-				'post__in'       => $active_courses,
-				'posts_per_page' => $posts_per_page,
-				'offset'         => $offset,
-			);
-
-			return new \WP_Query( $course_args );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Get enrolled course ids by a user
 	 *
 	 * @since 1.0.0
@@ -2403,60 +2343,6 @@ class Utils {
 		}
 
 		return (int) $course_ids;
-	}
-
-	/**
-	 * Get the enrolled courses by user
-	 *
-	 * @since 1.0.0
-	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
-	 *
-	 * @since 3.4.0 $filters replaced with $args to override the defaults.
-	 *
-	 * @param integer $user_id user id.
-	 * @param string  $post_status post status.
-	 * @param integer $offset offset.
-	 * @param integer $posts_per_page post per page.
-	 * @param array   $args Args to override the defaults.
-	 *
-	 * @return bool|\WP_Query
-	 */
-	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $args = array() ) {
-		$user_id    = $this->get_user_id( $user_id );
-		$course_ids = array_unique( $this->get_enrolled_courses_ids_by_user( $user_id ) );
-
-		if ( count( $course_ids ) ) {
-			$course_post_type = tutor()->course_post_type;
-			$course_args      = array(
-				'post_type'      => $course_post_type,
-				'post_status'    => $post_status,
-				'post__in'       => $course_ids,
-				'offset'         => $offset,
-				'posts_per_page' => $posts_per_page,
-			);
-
-			$course_args = wp_parse_args( $args, $course_args );
-
-			$result = new \WP_Query( $course_args );
-
-			if ( is_object( $result ) && is_array( $result->posts ) ) {
-
-				// Sort courses according to the id list.
-				$new_array = array();
-
-				foreach ( $course_ids as $id ) {
-					foreach ( $result->posts as $post ) {
-						$post->ID == $id ? $new_array[] = $post : 0;
-					}
-				}
-
-				$result->posts = $new_array;
-			}
-
-			return $result;
-		}
-
-		return false;
 	}
 
 	/**
@@ -8730,7 +8616,7 @@ class Utils {
 	 */
 	public function course_with_materials(): array {
 		$user_id          = get_current_user_id();
-		$enrolled_courses = $this->get_enrolled_courses_by_user( $user_id );
+		$enrolled_courses = CourseModel::get_enrolled_courses_by_user( $user_id );
 
 		if ( false === $enrolled_courses ) {
 			return array();

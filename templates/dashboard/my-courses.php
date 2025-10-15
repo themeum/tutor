@@ -233,7 +233,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											<!-- # Submit Action -->
 
 											<!-- Duplicate Action -->
-											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_PENDING, CourseModel::STATUS_DRAFT ) ) ) : ?>
+											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_PENDING, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ) ) ) : ?>
 												<?php
 												$params = http_build_query(
 													array(
@@ -250,7 +250,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											<!-- # Duplicate Action -->
 											
 											<!-- Move to Draf Action -->
-											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH ) ) ) : ?>
+											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_FUTURE ) ) ) : ?>
 												<?php
 												$params = http_build_query(
 													array(
@@ -288,7 +288,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											<!-- # Cancel Submission -->
 											
 											<!-- Delete Action -->
-											<?php if ( $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT ) ) ) : ?>
+											<?php if ( $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ) ) ) : ?>
 												<?php if ( $show_course_delete ) : ?>
 												<a href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-dropdown-item tutor-admin-course-delete">
 													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
