@@ -555,12 +555,14 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_now() {
-		tutor_utils()->check_nonce();
+		$errors = array();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			array_push( $errors, tutor_utils()->error_message( 'nonce' ) );
+			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
+			return;
+		}
 		global $wpdb;
-
-		$errors     = array();
-		$order_data = null;
-
+		$order_data      = null;
 		$billing_model   = new BillingModel();
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
