@@ -1050,11 +1050,9 @@ class CheckoutController {
 			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
-					// If payment method not selected then redirect to checkout page.
-					if ( empty( $payment_method ) && empty( $order_data->payment_method ) ) {
 
-						tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'checkout' ) . '?order_id=' . $order_id );
-					}
+					// Validate the selected payment method.
+					$this->validate_payment_method_or_redirect( $payment_method, $order_data );
 
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
@@ -1168,5 +1166,25 @@ class CheckoutController {
 				'results'     => $results,
 			),
 		);
+	}
+
+	/**
+	 * Validate the selected payment method and redirect to checkout if invalid.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param string|null $payment_method  The selected payment method.
+	 * @param object      $order_data      The current order data.
+	 * @return void
+	 */
+	private function validate_payment_method_or_redirect( $payment_method, $order_data ): void {
+
+		$selected_payment_method = empty( $payment_method ) ? $order_data->payment_method : $payment_method;
+		$is_valid_payment_method = in_array( $selected_payment_method, array_column( tutor_get_all_active_payment_gateways(), 'name' ), true );
+
+		// If payment method not selected then redirect to checkout page.
+		if ( empty( $selected_payment_method ) || ! $is_valid_payment_method ) {
+			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'checkout' ) . '?order_id=' . $order_data->id );
+		}
 	}
 }
