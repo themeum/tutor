@@ -135,6 +135,7 @@ class PaypalConfig extends BaseConfig implements ConfigContract {
 			'api_url'             => $this->getApiURL(),
 			'client_secret'       => $this->getClientSecret(),
 			'save_payment_method' => true,
+			'webhook_id'          => $this->webhook_id
 		);
 
 		$this->updateConfig( $config );
