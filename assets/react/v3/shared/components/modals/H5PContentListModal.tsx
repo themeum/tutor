@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -126,13 +126,6 @@ const H5PContentListModal = ({
       },
     },
   ];
-
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, []);
 
   return (
     <BasicModalWrapper

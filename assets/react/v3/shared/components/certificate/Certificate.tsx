@@ -1,16 +1,13 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 import Tabs from '@TutorShared/molecules/Tabs';
 
-import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import CertificatePreviewModal from '@TutorShared/components/modals/CertificatePreviewModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -18,11 +15,13 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type Certificate as CertificateType } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
 import notFound2x from '@SharedImages/not-found-2x.webp';
 import notFound from '@SharedImages/not-found.webp';
 
+import CertificateCard from './CertificateCard';
 import CertificateEmptyState from './CertificateEmptyState';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
@@ -33,26 +32,28 @@ interface CertificateTabItem {
 }
 
 interface CertificateProps {
-  isSidebarVisible: boolean;
+  isSidebarVisible?: boolean;
+  certificateTemplates: CertificateType[];
+  currentCertificateKey: string;
+  onSelect: (certificateKey: string) => void;
 }
 
-const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
-const Certificate = ({ isSidebarVisible }: CertificateProps) => {
-  const queryClient = useQueryClient();
-
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
-  const certificatesData = courseDetails?.course_certificates_templates ?? [];
+const Certificate = ({
+  isSidebarVisible = true,
+  currentCertificateKey,
+  onSelect,
+  certificateTemplates,
+}: CertificateProps) => {
+  const certificatesData = certificateTemplates ?? [];
   const defaultTemplates = certificatesData.filter((certificate) => certificate.is_default);
-
-  const form = useFormContext<CourseFormData>();
-  const currentCertificateKey = form.watch('tutor_course_certificate_template');
 
   const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>('templates');
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>('landscape');
   const [selectedCertificate, setSelectedCertificate] = useState(currentCertificateKey);
+  const { showModal } = useModal();
 
   const landScapeCertificates = certificatesData.some(
     (certificate) =>
@@ -128,18 +129,32 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   };
 
   const handleCertificateSelection = (certificateKey: string) => {
-    form.setValue('tutor_course_certificate_template', certificateKey, {
-      shouldDirty: true,
-    });
+    onSelect(certificateKey);
     setSelectedCertificate(certificateKey);
+  };
+
+  const handlePreviewCertificate = (certificate: CertificateType) => {
+    showModal({
+      component: CertificatePreviewModal,
+      props: {
+        certificates: certificatesData,
+        selectedCertificate: currentCertificateKey,
+        currentCertificate: certificate,
+        onSelectCertificate: (certificate: CertificateType) => {
+          handleCertificateSelection(certificate.key);
+        },
+      },
+    });
   };
 
   const certificateTabs: CertificateTabItem[] = [
     ...(defaultTemplates.length
-      ? ([{ label: __('Templates', 'tutor'), value: 'templates' }] as CertificateTabItem[])
+      ? ([{ label: __('Templates', __TUTOR_TEXT_DOMAIN__), value: 'templates' }] as CertificateTabItem[])
       : []),
     {
-      label: CURRENT_VIEWPORT.isAboveSmallMobile ? __('Custom Certificates', 'tutor') : __('Certificates', 'tutor'),
+      label: CURRENT_VIEWPORT.isAboveSmallMobile
+        ? __('Custom Certificates', __TUTOR_TEXT_DOMAIN__)
+        : __('Certificates', __TUTOR_TEXT_DOMAIN__),
       value: 'custom_certificates',
     },
   ];
@@ -156,7 +171,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
           />
           <div css={styles.orientation}>
             <Show when={landScapeCertificates && portraitCertificates}>
-              <Tooltip delay={200} content={__('Landscape', 'tutor')}>
+              <Tooltip delay={200} content={__('Landscape', __TUTOR_TEXT_DOMAIN__)}>
                 <button
                   type="button"
                   css={[
@@ -174,7 +189,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
                   />
                 </button>
               </Tooltip>
-              <Tooltip delay={200} content={__('Portrait', 'tutor')}>
+              <Tooltip delay={200} content={__('Portrait', __TUTOR_TEXT_DOMAIN__)}>
                 <button
                   type="button"
                   css={[
@@ -208,9 +223,10 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
             <CertificateCard
               selectedCertificate={selectedCertificate}
               onSelectCertificate={handleCertificateSelection}
+              onPreviewCertificate={(data) => handlePreviewCertificate(data)}
               data={{
                 key: 'none',
-                name: __('None', 'tutor'),
+                name: __('None', __TUTOR_TEXT_DOMAIN__),
                 preview_src: '',
                 background_src: '',
                 orientation: 'landscape',
@@ -229,7 +245,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
                   })}
                   src={notFound}
                   srcSet={`${notFound} 1x, ${notFound2x} 2x`}
-                  alt={__('Not Found', 'tutor')}
+                  alt={__('Not Found', __TUTOR_TEXT_DOMAIN__)}
                 />
 
                 <div css={styles.featureAndActionWrapper}>
@@ -239,7 +255,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
                       color: ${colorTokens.text.subdued};
                     `}
                   >
-                    {__('You didn’t create any certificate yet!', 'tutor')}
+                    {__('You didn’t create any certificate yet!', __TUTOR_TEXT_DOMAIN__)}
                   </p>
                 </div>
               </div>
@@ -253,6 +269,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
                   onSelectCertificate={handleCertificateSelection}
                   data={certificate}
                   orientation={activeOrientation}
+                  onPreviewCertificate={handlePreviewCertificate}
                 />
               )}
             </For>

@@ -9,6 +9,7 @@
  * @since 1.0.0
  */
 
+use TUTOR\Lesson;
 use TUTOR\User;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,9 +47,6 @@ $best_watch_time = tutor_utils()->get_lesson_reading_info( get_the_ID(), 0, 'vid
 if ( $best_watch_time > 0 ) {
 	$json_data['best_watch_time'] = $best_watch_time;
 }
-
-$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
-
 ?>
 
 <?php do_action( 'tutor_lesson/single/before/content' ); ?>
@@ -94,20 +92,20 @@ tutor_load_template(
 
 	isset( $url_components['query'] ) ? parse_str( $url_components['query'], $output ) : null;
 
-	/**
-	 * If lesson has no content, lesson tab will be hidden.
-	 * To enable elementor and SCORM, only admin can see lesson tab.
-	 *
-	 * @since 2.2.2
-	 */
-	$has_lesson_content = apply_filters(
-		'tutor_has_lesson_content',
-		User::is_admin() || ! in_array( trim( get_the_content() ), array( null, '', '&nbsp;' ), true ),
-		$course_content_id
-	);
+	$has_lesson_content    = Lesson::has_lesson_content( $course_content_id );
+	$has_lesson_attachment = Lesson::has_lesson_attachment( $course_content_id );
 
-	$has_lesson_attachment = count( tutor_utils()->get_attachments() ) > 0;
-	$has_lesson_comment    = (int) get_comments_number( $course_content_id );
+	$is_comment_enabled = Lesson::is_comment_enabled();
+	$has_lesson_comment = Lesson::has_lesson_comment( $course_content_id );
+
+	$nav_items    = Lesson::get_nav_items( $course_content_id );
+	$nav_contents = Lesson::get_nav_contents( $course_content_id );
+
+	$active_tab = $page_tab;
+	$valid_tabs = wp_list_pluck( $nav_items, 'value' );
+	if ( ! in_array( $active_tab, $valid_tabs, true ) && ! empty( $nav_items ) ) {
+		$active_tab = $nav_items[0]['value'];
+	}
 	?>
 
 	<style>
@@ -119,77 +117,56 @@ tutor_load_template(
 	</style>
 
 	<div class="tutor-course-spotlight-wrapper">
+		<?php if ( count( $nav_items ) > 1 ) : ?>
 		<ul class="tutor-nav tutor-course-spotlight-nav tutor-justify-center">
-			<?php if ( $has_lesson_content && ( $has_lesson_attachment || $is_comment_enabled ) ) : ?>
-			<li class="tutor-nav-item">
-				<a href="#" class="tutor-nav-link<?php echo 'overview' == $page_tab ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-overview" data-tutor-query-variable="page_tab" data-tutor-query-value="overview">
-					<span class="tutor-icon-document-text tutor-mr-8" area-hidden="true"></span>
-					<span><?php esc_html_e( 'Overview', 'tutor' ); ?></span>
-				</a>
-			</li>
-			<?php endif; ?>
-			
-			<?php if ( $has_lesson_attachment && ( $has_lesson_content || $is_comment_enabled ) ) : ?>
-			<li class="tutor-nav-item">
-				<a href="#" class="tutor-nav-link<?php echo ( 'files' == $page_tab || false === $has_lesson_content ) ? ' is-active' : ''; ?>" data-tutor-nav-target="tutor-course-spotlight-files" data-tutor-query-variable="page_tab" data-tutor-query-value="files">
-					<span class="tutor-icon-paperclip tutor-mr-8" area-hidden="true"></span>
-					<span><?php esc_html_e( 'Exercise Files', 'tutor' ); ?></span>
-				</a>
-			</li>
-			<?php endif; ?>
+			<?php foreach ( $nav_items as $index => $nav_item ) : ?>
+				<li class="tutor-nav-item">
+					<a 
+						href="#" 
+						class="tutor-nav-link<?php echo esc_attr( ( $nav_item['value'] === $page_tab || ( 'overview' === $page_tab && 0 === $index ) ) ? ' is-active' : '' ); ?>" 
+						data-tutor-nav-target="tutor-course-spotlight-<?php echo esc_attr( $nav_item['value'] ); ?>" 
+						data-tutor-query-variable="page_tab" 
+						data-tutor-query-value="<?php echo esc_attr( $nav_item['value'] ); ?>"
+					>
+						<?php
+						if ( isset( $nav_item['icon_type'] ) && 'svg' === $nav_item['icon_type'] ) {
+							tutor_utils()->render_svg_icon( $nav_item['icon'], 20, 20 );
+						} else {
+							?>
+							<span 
+								class="tutor-icon-<?php echo esc_attr( $nav_item['icon'] ); ?> tutor-mr-8" 
+								aria-hidden="true">
+							</span>
+							<?php
+						}
+						?>
+						<span><?php echo esc_html( $nav_item['label'] ); ?></span>
+					</a>
+				</li>
+			<?php endforeach; ?>
 
-			<?php if ( $is_comment_enabled && ( $has_lesson_content || $has_lesson_attachment ) ) : ?>
-			<li class="tutor-nav-item">
-				<a  href="#" 
-					class="tutor-nav-link<?php echo ( 'comments' == $page_tab || ( false === $has_lesson_content && false === $has_lesson_attachment ) ) ? ' is-active' : ''; ?>" 
-					data-tutor-nav-target="tutor-course-spotlight-comments" data-tutor-query-variable="page_tab" 
-					data-tutor-query-value="comments">
-					
-					<span class="tutor-icon-comment tutor-mr-8" area-hidden="true"></span>
-					<span><?php esc_html_e( 'Comments', 'tutor' ); ?></span>
-				</a>
-			</li>
-			<?php endif; ?>
+			<?php do_action( 'tutor_lesson_single_after_nav_items', $course_content_id, $active_tab ); ?>
 		</ul>
+		<?php endif; ?>
 
 		<div class="tutor-tab tutor-course-spotlight-tab">
-			<?php if ( $has_lesson_content ) : ?>
-			<div id="tutor-course-spotlight-overview" class="tutor-tab-item<?php echo 'overview' == $page_tab ? esc_attr( ' is-active' ) : esc_attr( '' ); ?>">
-				<div class="tutor-container">
-					<div class="tutor-row tutor-justify-center">
-						<div class="tutor-col-xl-8">
-							<?php do_action( 'tutor_lesson_before_the_content', $post, $course_id ); ?>
-							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
-								<?php the_content(); ?>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<?php endif; ?>
-
-			<?php if ( $has_lesson_attachment ) : ?>
-			<div id="tutor-course-spotlight-files" class="tutor-tab-item<?php echo esc_attr( ( 'files' == $page_tab || false === $has_lesson_content ) ? ' is-active' : '' ); ?>">
-				<div class="tutor-container">
-					<div class="tutor-row tutor-justify-center">
-						<div class="tutor-col-xl-8">
-							<div class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Exercise Files', 'tutor' ); ?></div>
-							<?php get_tutor_posts_attachments(); ?>
-						</div>
-					</div>
-				</div>
-			</div>
-			<?php endif; ?>
-			
-			<?php if ( $is_comment_enabled ) : ?>
-			<div id="tutor-course-spotlight-comments" class="tutor-tab-item<?php echo esc_attr( ( 'comments' == $page_tab || ( false === $has_lesson_content && false === $has_lesson_attachment ) ) ? ' is-active' : '' ); ?>">
-				<div class="tutor-container">
-					<div class="tutor-course-spotlight-comments">
-						<?php require __DIR__ . '/comment.php'; ?>
-					</div>
-				</div>
-			</div>
-			<?php endif; ?>
+			<?php
+			if ( ! empty( $nav_contents ) ) {
+				foreach ( $nav_contents as $key => $content ) {
+					$is_pro = isset( $content['is_pro'] ) && true === $content['is_pro'];
+					tutor_load_template(
+						$content['template_path'],
+						array(
+							'is_active' => $content['value'] === $active_tab,
+							'post'      => $post,
+							'course_id' => $course_id,
+							'lesson_id' => $course_content_id,
+						),
+						$is_pro
+					);
+				}
+			}
+			?>
 		</div>
 	</div>
 </div>
