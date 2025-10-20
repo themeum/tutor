@@ -220,8 +220,8 @@ class Paypal extends BasePayment {
 		} catch ( RequestException $error ) {
 
 			// Handle the error response.
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			return $this->setReturnData( $paymentData, $errorMessage );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			throw new \Exception( $error_message ); //phpcs:ignore
 		}
 	}
 
@@ -233,11 +233,10 @@ class Paypal extends BasePayment {
 	 * Otherwise, sets the order data with successful transaction details from the payload stream.
 	 *
 	 * @param  object      $payloadStream The payload stream object containing order and payment details.
-	 * @param  string|null $errorMessage  Optional. Error message to indicate payment failure reason.
 	 * @return object                     The constructed order data object.
 	 * @since  3.0.0
 	 */
-	private function setReturnData( $payloadStream, $errorMessage = null ): object {
+	private function setReturnData( $payloadStream ): object {
 		$returnData = System::defaultOrderData();
 
 		$statusMap = array(
@@ -246,20 +245,13 @@ class Paypal extends BasePayment {
 			'PENDING'   => 'pending',
 		);
 
-		if ( $errorMessage ) {
-			$returnData->id                   = $payloadStream->purchase_units[0]->custom_id;
-			$returnData->payment_status       = 'failed';
-			$returnData->payment_error_reason = $errorMessage;
-
-		} else {
-			$transactionInfo            = $payloadStream->resource;
-			$returnData->id             = $transactionInfo->custom_id;
-			$returnData->payment_status = $statusMap[ $transactionInfo->status ];
-			$returnData->transaction_id = $transactionInfo->id;
-			$returnData->fees           = $transactionInfo->seller_receivable_breakdown->paypal_fee->value ?? null;
-			$returnData->earnings       = $transactionInfo->seller_receivable_breakdown->net_amount->value ?? null;
-		}
-
+		$transactionInfo            = $payloadStream->resource;
+		$returnData->id             = $transactionInfo->custom_id;
+		$returnData->payment_status = $statusMap[ $transactionInfo->status ];
+		$returnData->transaction_id = $transactionInfo->id;
+		$returnData->fees           = $transactionInfo->seller_receivable_breakdown->paypal_fee->value ?? null;
+		$returnData->earnings       = $transactionInfo->seller_receivable_breakdown->net_amount->value ?? null;
+		
 		$returnData->payment_payload = addslashes( json_encode( $payloadStream ) );
 		$returnData->payment_method  = $this->config->get( 'name' );
 
