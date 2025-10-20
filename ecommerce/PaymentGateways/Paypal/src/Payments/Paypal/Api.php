@@ -2,14 +2,14 @@
 
 namespace Ollyo\PaymentHub\Payments\Paypal;
 
-use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
+use ErrorException;
 use Ollyo\PaymentHub\Core\Support\System;
 use GuzzleHttp\Exception\RequestException;
-use ErrorException;
+use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 
 final class Api {
 
-    /**
+	/**
 	 * The Paypal config Repository instance
 	 *
 	 * @var   RepositoryContract
@@ -17,7 +17,7 @@ final class Api {
 	 */
 	protected static $config;
 
-    /**
+	/**
 	 * Stores the headers to be used in HTTP requests.
 	 *
 	 * @var     array $headers
@@ -25,22 +25,22 @@ final class Api {
 	 */
 	protected static $headers;
 
-    /**
+	/**
 	 * @var string|null $accessToken
 	 * This property holds the access token required for authenticating API requests.
 	 * @since 1.0.0
 	 */
 	protected $accessToken;
 
-    public function __construct( RepositoryContract $config) {
-        self::$config  = $config;
-        self::$headers = array(
+	public function __construct( RepositoryContract $config ) {
+		self::$config  = $config;
+		self::$headers = array(
 			'Content-Type'  => 'application/json',
 			'Authorization' => $this->getAccessToken(),
 		);
-    }
+	}
 
-    /**
+	/**
 	 * Retrieves an access token from the OAuth2 token endpoint.
 	 *
 	 * This method constructs and sends a POST request to the OAuth2 token endpoint using
@@ -73,14 +73,14 @@ final class Api {
 		return $this->accessToken;
 	}
 
-    /**
+	/**
 	 * Creates a new PayPal order by sending a POST request to the PayPal API.
-     * 
-     * @since  1.0.0
 	 *
-     * @param object $data The order data to be sent in the request body. 
-     * @param string $order_id A unique identifier for the order.
-     * 
+	 * @since  1.0.0
+	 *
+	 * @param object $data The order data to be sent in the request body.
+	 * @param string $order_id A unique identifier for the order.
+	 *
 	 * @return object The response from the PayPal API, decoded from JSON.
 	 */
 	public static function createOrder( $data, $order_id ): object {
@@ -99,17 +99,17 @@ final class Api {
 		return System::sendHttpRequest( $requestData );
 	}
 
-    	/**
-	 * Captures a payment for an authorized PayPal order.
-	 *
-	 * This method constructs the capture payment URL and headers, including the access token,
-	 * PayPal request ID. It then sends a POST request to the capture payment URL using the specified headers.
-	 *
-	 * @param  object $payloadStream  The payload stream sent from Paypal Webhook Notification.
-	 * @return object                           The response object from the capture payment request.
-	 * @throws ErrorException                   If the payment capture is incomplete or the order status is not completed.
-	 * @since  1.0.0
-	 */
+		/**
+		 * Captures a payment for an authorized PayPal order.
+		 *
+		 * This method constructs the capture payment URL and headers, including the access token,
+		 * PayPal request ID. It then sends a POST request to the capture payment URL using the specified headers.
+		 *
+		 * @param  object $payloadStream  The payload stream sent from Paypal Webhook Notification.
+		 * @return object                           The response object from the capture payment request.
+		 * @throws ErrorException                   If the payment capture is incomplete or the order status is not completed.
+		 * @since  1.0.0
+		 */
 	public static function capturePayment( $payloadStream ) {
 
 		$capturePaymentUrl = Helper::getUrl( $payloadStream->resource->links, 'capture' );
@@ -126,28 +126,36 @@ final class Api {
 		System::sendHttpRequest( $requestData );
 	}
 
-    public static function webhook_signature_validation( $payload ) {
-		$payload_stream = json_decode( $payload->stream );
-		$data           = array(
-			'auth_algo'         => $payload->server['HTTP_PAYPAL_AUTH_ALGO'],
-			'cert_url'          => $payload->server['HTTP_PAYPAL_CERT_URL'],
-			'transmission_id'   => $payload->server['HTTP_PAYPAL_TRANSMISSION_ID'],
-			'transmission_sig'  => $payload->server['HTTP_PAYPAL_TRANSMISSION_SIG'],
-			'transmission_time' => $payload->server['HTTP_PAYPAL_TRANSMISSION_TIME'],
-			'webhook_id'        => self::$config->get( 'webhook_id' ),
-			'webhook_event'     => $payload_stream
-		);
+	public static function webhook_signature_validation( $payload ) {
 
-		$requestData = (object) array(
-			'method'  => 'post',
-			'url'     => self::$config->get( 'api_url' ) . '/v1/notifications/verify-webhook-signature',
-			'options' => array(
-				'headers' => self::$headers,
-				'body'    => json_encode( $data ),
-			),
-		);
+		try {
+			$payload_stream = json_decode( $payload->stream );
+			$data           = array(
+				'auth_algo'         => $payload->server['HTTP_PAYPAL_AUTH_ALGO'],
+				'cert_url'          => $payload->server['HTTP_PAYPAL_CERT_URL'],
+				'transmission_id'   => $payload->server['HTTP_PAYPAL_TRANSMISSION_ID'],
+				'transmission_sig'  => $payload->server['HTTP_PAYPAL_TRANSMISSION_SIG'],
+				'transmission_time' => $payload->server['HTTP_PAYPAL_TRANSMISSION_TIME'],
+				'webhook_id'        => self::$config->get( 'webhook_id' ),
+				'webhook_event'     => $payload_stream,
+			);
 
-		return System::sendHttpRequest( $requestData );
+			$requestData = (object) array(
+				'method'  => 'post',
+				'url'     => self::$config->get( 'api_url' ) . '/v1/notifications/verify-webhook-signature',
+				'options' => array(
+					'headers' => self::$headers,
+					'body'    => json_encode( $data ),
+				),
+			);
+
+			$responseData = System::sendHttpRequest( $requestData );
+
+			return $responseData->verification_status === 'SUCCESS' ? true : false;
+		} catch ( \Throwable $error ) {
+			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			throw new ErrorException( esc_html( $errorMessage ) );
+		}
 	}
 
 	/**
@@ -167,8 +175,7 @@ final class Api {
 		}
 	}
 
-	public static function get_order_details( $url )
-	{
+	public static function get_order_details( $url ) {
 		try {
 
 			$requestData = (object) array(
@@ -182,6 +189,29 @@ final class Api {
 		} catch ( RequestException $error ) {
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
+		}
+	}
+
+	public static function refund( $refund_url, $order_id, $data ) {
+
+		try {
+
+			$unique_id                          = uniqid( 'refund-' );
+			self::$headers['PayPal-Request-Id'] = "{$unique_id}-order-id-{$order_id}";
+			self::$headers['Prefer']            = 'return=representation';
+
+			$request_data = (object) array(
+				'method'  => 'post',
+				'url'     => $refund_url,
+				'options' => array(
+					'headers' => self::$headers,
+					'body'    => json_encode( $data ),
+				),
+			);
+
+			System::sendHttpRequest( $request_data );
+		} catch ( \Throwable $th ) {
+			throw $th;
 		}
 	}
 }

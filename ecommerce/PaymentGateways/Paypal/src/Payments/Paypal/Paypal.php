@@ -37,9 +37,10 @@ class Paypal extends BasePayment {
 
 	protected $refundLink;
 
-	const CHECKOUT_ORDER_APPROVED = "CHECKOUT.ORDER.APPROVED";
-	const VERIFICATION_STATUS = 'SUCCESS';
-	const PAYMENT_CAPTURE_COMPLETED = "PAYMENT.CAPTURE.COMPLETED";
+	const CHECKOUT_ORDER_APPROVED   = 'CHECKOUT.ORDER.APPROVED';
+	const VERIFICATION_STATUS       = 'SUCCESS';
+	const PAYMENT_CAPTURE_COMPLETED = 'PAYMENT.CAPTURE.COMPLETED';
+	const PAYMENT_CAPTURE_REFUNDED  = 'PAYMENT.CAPTURE.REFUNDED';
 
 	/**
 	 * Checks if all required configuration keys are present and not empty.
@@ -114,8 +115,8 @@ class Paypal extends BasePayment {
 
 		$this->orderID = $data->order_id;
 		$type          = $data->type ?? 'one-time';
-		$items         = $type === 'one-time' ? Helper::getItems( $data ) : null;
-		$amount        = $type === 'one-time' ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
+		$items         = 'one-time' === $type ? Helper::getItems( $data ) : null;
+		$amount        = 'one-time' === $type ? Helper::createAmountData( $data ) : Helper::createAmountForRecurring( $data );
 
 		$returnData = array(
 			'purchase_units' => array(
@@ -129,10 +130,10 @@ class Paypal extends BasePayment {
 			'intent'         => 'CAPTURE',
 		);
 
-		if ( $type === 'one-time' ) {
+		if ( 'one-time' === $type ) {
 			Helper::getPaymentSourceForOneTime( $returnData, $this->config );
 
-		} elseif ( $type === 'recurring' ) {
+		} elseif ( 'recurring' === $type ) {
 
 			$this->previousPayload = json_decode( stripslashes( $data->previous_payload ) );
 			Helper::getPaymentSourceForRecurring( $returnData, $this->previousPayload );
@@ -181,15 +182,15 @@ class Paypal extends BasePayment {
 	 *
 	 * @param  object $payload  The payload object containing the webhook data.
 	 * @return object           Returns the processed order data or an error response.
-	 * @throws RequestException if the request fails.
+	 * @throws RequestException If the request fails.
 	 * @since  1.0.0
 	 */
 	public function verifyAndCreateOrderData( object $payload ): object {
 		try {
 
-			$verification_status = Api::webhook_signature_validation( $payload );
+			$is_verified = Api::webhook_signature_validation( $payload );
 
-			if( self::VERIFICATION_STATUS !== $verification_status->verification_status) {
+			if ( ! $is_verified || ! Helper::checkWebhookVariables( $payload->server ) ) {
 				return new \stdClass();
 			}
 
@@ -197,48 +198,25 @@ class Paypal extends BasePayment {
 
 			$payload_stream = json_decode( $payload->stream );
 
-			if ( self::CHECKOUT_ORDER_APPROVED === $payload_stream->event_type && Helper::checkWebhookVariables( $payload->server ) ) {
-				Api::capturePayment( $payload_stream );
+			switch ( $payload_stream->event_type ) {
+				case self::CHECKOUT_ORDER_APPROVED:
+					Api::capturePayment( $payload_stream );
+					return new \stdClass();
+
+				case self::PAYMENT_CAPTURE_COMPLETED:
+					return $this->setReturnData( $payload_stream );
+
+				case self::PAYMENT_CAPTURE_REFUNDED:
+					// $this->orderID = $paymentData->resource->custom_id;
+					// return static::processRefund($paymentData);
+					return new \stdClass();
+				default:
+					return new \stdClass();
 			}
 
-			if( self::PAYMENT_CAPTURE_COMPLETED === $payload_stream->event_type && Helper::checkWebhookVariables( $payload->server ) ) {
-				return $this->setReturnData( $payload_stream );
-			}
-
-			if ( $payload->server['REQUEST_METHOD'] === 'POST' && ! empty( $payload->stream ) ) {
-
-				$paymentData = json_decode( $payload->stream );
-
-				if ( isset( $paymentData->payment_type ) ) {
-
-					if ( $paymentData->payment_type === 'recurring' ) {
-						return $this->setReturnData( $paymentData );
-					}
-
-					if ( $paymentData->payment_type === 'refund' ) {
-						// return $paymentData;
-						return new \stdClass();
-					}
-				}
-
-				// Payment Refund From Merchant Account
-				if ( $paymentData->event_type === 'PAYMENT.CAPTURE.REFUNDED' && Helper::checkWebhookVariables( $payload->server ) ) {
-
-					$isVerified = static::verifySignature( $payload->server, $paymentData );
-
-					if ( $isVerified ) {
-
-						$this->orderID = $paymentData->resource->custom_id;
-						// return static::processRefund($paymentData);
-						return new \stdClass();
-					}
-				}
-			}
-
-			return new \stdClass();
 		} catch ( RequestException $error ) {
 
-			// Handle the error response
+			// Handle the error response.
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			return $this->setReturnData( $paymentData, $errorMessage );
 		}
@@ -294,55 +272,12 @@ class Paypal extends BasePayment {
 	 */
 	public function createRecurringPayment() {
 		try {
-
 			Api::createOrder( $this->getData(), $this->orderID );
 		} catch ( RequestException $error ) {
 
 			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
-	}
-
-	/**
-	 * Checks if the required query parameters are present and valid.
-	 *
-	 * @param  array $params    The query parameters to check.
-	 * @return bool             True if params are present and non-empty, false otherwise.
-	 * @since  1.0.0
-	 */
-	private function checkQueryParams( $params ): bool {
-		return $params['token'] && $params['PayerID'] && $params['encodedData'];
-	}
-
-	/**
-	 * Verifies payment authentication by retrieving order details from the PayPal API.
-	 *
-	 * @param   array $payload  The payload for the order.
-	 * @return  object          The response data from the PayPal API, containing order details.
-	 * @since   1.0.0
-	 */
-	private function verifyPaymentAuthentication( $payload ): object {
-		$orderID            = $payload['token'];
-		$getOrderDetailsUrl = $this->config->get( 'api_url' ) . "/v2/checkout/orders/{$orderID}";
-
-		$requestData = (object) array(
-			'method'  => 'get',
-			'url'     => $getOrderDetailsUrl,
-			'options' => array( 'headers' => $this->headers ),
-		);
-
-		return $this->sendHttpRequest( $requestData );
-	}
-
-	/**
-	 * Checks if the order is completed based on the payload stream.
-	 *
-	 * @param  object $payloadStream    The payload stream containing order details.
-	 * @return bool                     Returns true if the order is completed, otherwise false.
-	 * @since  1.0.0
-	 */
-	private function isOrderCompleted( $payloadStream ): bool {
-		return $payloadStream->intent === 'CAPTURE' && $payloadStream->status === 'COMPLETED';
 	}
 
 	/**
@@ -361,7 +296,7 @@ class Paypal extends BasePayment {
 
 		$this->orderID    = $data->order_id;
 		$paymentPayload   = json_decode( stripslashes( $data->payment_payload ) );
-		$this->refundLink = $this->getUrl( $paymentPayload->purchase_units[0]->payments->captures[0]->links, 'refund' );
+		$this->refundLink = Helper::getUrl( $paymentPayload->resource->links, 'refund' );
 
 		return array(
 			'custom_id'     => (string) $data->order_id,
@@ -382,50 +317,13 @@ class Paypal extends BasePayment {
 	 * @since  1.0.0
 	 */
 	public function createRefund() {
-		$returnData = System::defaultOrderData( 'refund' );
+
 		try {
 
-			$uniqueID                           = uniqid( 'refund-' );
-			$this->headers['PayPal-Request-Id'] = "{$uniqueID}-order-id-{$this->orderID}";
-			$this->headers['Prefer']            = 'return=representation';
-
-			$requestData = (object) array(
-				'method'  => 'post',
-				'url'     => $this->refundLink,
-				'options' => array(
-					'headers' => $this->headers,
-					'body'    => json_encode( $this->getData() ),
-				),
-			);
-
-			$responseData = $this->sendHttpRequest( $requestData );
-
-			if ( strtoupper( $responseData->status ) === strtoupper( 'Completed' ) ) {
-
-				$returnData->id             = $responseData->custom_id;
-				$returnData->refund_id      = $responseData->id;
-				$returnData->payment_method = $this->config->get( 'name' );
-				$returnData->refund_amount  = $responseData->amount->value;
-				$returnData->refund_payload = json_encode( $responseData );
-				$returnData->payment_type   = 'refund';
-			}
-
-			$returnData->refund_status = static::getRefundStatus( $responseData->links );
-
-			$refundHeaders     = array( 'Content-Type' => 'application/json' );
-			$refundRequestData = (object) array(
-				'method'  => 'post',
-				'url'     => $this->config->get( 'webhook_url' ),
-				'options' => array(
-					'headers' => $refundHeaders,
-					'body'    => json_encode( $returnData ),
-				),
-			);
-
-			$this->sendHttpRequest( $refundRequestData, false );
+			Api::refund( $this->refundLink, $this->orderID, $this->getData() );
 
 		} catch ( RequestException $error ) {
-			$errorMessage = $this->handleErrorResponse( $error ) ?? $error->getMessage();
+			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
 	}
@@ -447,7 +345,7 @@ class Paypal extends BasePayment {
 			'options' => array( 'headers' => $this->headers ),
 		);
 
-		$responseData = $this->sendHttpRequest( $requestData );
+		$responseData = System::sendHttpRequest( $requestData );
 
 		return strtolower( $responseData->status ) ?? null;
 	}
@@ -484,7 +382,7 @@ class Paypal extends BasePayment {
 			throw new ErrorException( 'Webhook Information Not Found' );
 
 		} catch ( RequestException $error ) {
-			$errorMessage = $this->handleErrorResponse( $error ) ?? $error->getMessage();
+			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
 	}
@@ -529,51 +427,7 @@ class Paypal extends BasePayment {
 			throw new InvalidDataException( 'Invalid Webhook Information' );
 
 		} catch ( RequestException $error ) {
-			$errorMessage = $this->handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
-		}
-	}
-
-	/**
-	 * Verifies the signature of a PayPal webhook request.
-	 *
-	 * @param array  $serverVariables The server variables containing the PayPal webhook headers
-	 * @param object $paymentData     The payment data received from PayPal, which will be used in the verification process.
-	 *
-	 * @return bool Returns true if the signature verification is successful, false otherwise.
-	 *
-	 * @throws ErrorException Throws an exception if there is an error during the HTTP request or signature verification.
-	 * @since  1.0.0
-	 */
-	private function verifySignature( $serverVariables, $paymentData ) {
-		try {
-
-			$webhookVerifyUrl = $this->config->get( 'api_url' ) . '/v1/notifications/verify-webhook-signature';
-
-			$body = (object) array(
-				'auth_algo'         => $serverVariables['HTTP_PAYPAL_AUTH_ALGO'],
-				'cert_url'          => $serverVariables['HTTP_PAYPAL_CERT_URL'],
-				'transmission_id'   => $serverVariables['HTTP_PAYPAL_TRANSMISSION_ID'],
-				'transmission_sig'  => $serverVariables['HTTP_PAYPAL_TRANSMISSION_SIG'],
-				'transmission_time' => $serverVariables['HTTP_PAYPAL_TRANSMISSION_TIME'],
-				'webhook_id'        => $this->config->get( 'webhook_id' ),
-				'webhook_event'     => $paymentData,
-			);
-
-			$requestData = (object) array(
-				'method'  => 'post',
-				'url'     => $webhookVerifyUrl,
-				'options' => array(
-					'headers' => $this->headers,
-					'body'    => json_encode( $body ),
-				),
-			);
-
-			$responseData = $this->sendHttpRequest( $requestData );
-
-			return $responseData->verification_status === 'SUCCESS' ? true : false;
-		} catch ( RequestException $error ) {
-			$errorMessage = $this->handleErrorResponse( $error ) ?? $error->getMessage();
+			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
 	}
@@ -609,7 +463,7 @@ class Paypal extends BasePayment {
 			return $returnData;
 
 		} catch ( RequestException $error ) {
-			$errorMessage = $this->handleErrorResponse( $error ) ?? $error->getMessage();
+			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
 			throw new ErrorException( esc_html( $errorMessage ) );
 		}
 	}
