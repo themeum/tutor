@@ -583,8 +583,8 @@ class Lesson extends Tutor_Base {
 		$args['meta_query'] = array(
 			array(
 				'key'     => 'comment_type',
-				'value'   => 'lesson_note',
-				'compare' => '!=', // Exclude 'lesson_note'.
+				'value'   => 'comment',
+				'compare' => '=',
 			),
 		);
 
