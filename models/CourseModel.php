@@ -1273,7 +1273,7 @@ class CourseModel {
 	 * @since 3.4.0 $filters replaced with $args to override the defaults.
 	 *
 	 * @param integer $user_id user id.
-	 * @param string  $post_status post status.
+	 * @param mixed   $post_status post status.
 	 * @param integer $offset offset.
 	 * @param integer $posts_per_page post per page.
 	 * @param array   $args Args to override the defaults.
