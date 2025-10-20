@@ -232,7 +232,7 @@ class Paypal extends BasePayment {
 	 * If an error message is provided, sets the order data with failure status and error details.
 	 * Otherwise, sets the order data with successful transaction details from the payload stream.
 	 *
-	 * @param  object      $payloadStream The payload stream object containing order and payment details.
+	 * @param  object $payloadStream The payload stream object containing order and payment details.
 	 * @return object                     The constructed order data object.
 	 * @since  3.0.0
 	 */
@@ -251,7 +251,7 @@ class Paypal extends BasePayment {
 		$returnData->transaction_id = $transactionInfo->id;
 		$returnData->fees           = $transactionInfo->seller_receivable_breakdown->paypal_fee->value ?? null;
 		$returnData->earnings       = $transactionInfo->seller_receivable_breakdown->net_amount->value ?? null;
-		
+
 		$returnData->payment_payload = addslashes( json_encode( $payloadStream ) );
 		$returnData->payment_method  = $this->config->get( 'name' );
 
@@ -291,7 +291,8 @@ class Paypal extends BasePayment {
 
 		$this->orderID    = $data->order_id;
 		$paymentPayload   = json_decode( stripslashes( $data->payment_payload ) );
-		$this->refundLink = Helper::getUrl( $paymentPayload->resource->links, 'refund' );
+		$links            = $paymentPayload->purchase_units[0]->payments->captures[0]->links ?? $paymentPayload->resource->links;
+		$this->refundLink = Helper::getUrl( $links, 'refund' );
 
 		return array(
 			'custom_id'     => (string) $data->order_id,
