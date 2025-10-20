@@ -250,4 +250,32 @@ final class Api {
 			throw $th;
 		}
 	}
+
+	/**
+	 * Retrieve PayPal vault details from a given URL.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param string $url The PayPal vault API URL to retrieve details.
+	 *
+	 * @return object|null The decoded API response object containing vault details, or null on failure.
+	 *
+	 * @throws ErrorException If the HTTP request fails or the response cannot be handled.
+	 */
+	public static function get_vault_details( $url ) {
+		try {
+
+			$request_data = (object) array(
+				'method'  => 'get',
+				'url'     => $url,
+				'options' => array( 'headers' => self::$headers ),
+			);
+
+			return System::sendHttpRequest( $request_data );
+
+		} catch ( RequestException $error ) {
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			throw new ErrorException( $error_message ); //phpcs:ignore
+		}
+	}
 }

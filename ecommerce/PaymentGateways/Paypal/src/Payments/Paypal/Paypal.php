@@ -140,7 +140,7 @@ class Paypal extends BasePayment {
 		} elseif ( 'recurring' === $type ) {
 
 			$this->previousPayload = json_decode( stripslashes( $data->previous_payload ) );
-			Helper::getPaymentSourceForRecurring( $returnData, $this->previousPayload->resource->links );
+			Helper::getPaymentSourceForRecurring( $returnData, $this->previousPayload );
 		}
 
 		if ( isset( $data->shipping_address ) && ! empty( $data->shipping_address ) ) {

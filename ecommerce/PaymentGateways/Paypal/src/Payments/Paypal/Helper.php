@@ -146,51 +146,24 @@ final class Helper {
 		}
 	}
 
+
 	/**
-	 * Configures the payment source for recurring payments.
+	 * Build and assign the PayPal payment source for a recurring payment.
 	 *
-	 * @param  array $returnData Reference to the data array to be modified with payment source details.
-	 * @param array $links The PayPal order links used to retrieve the order details.
+	 * @since 3.9.0
+	 *
+	 * @param array  $returnData       Reference to the data array that will be updated
+	 *                                 with the constructed payment source information.
+	 * @param object $previous_payload The previous PayPal payload.
+	 *
 	 * @return void
-	 * @since  3.0.0
 	 */
-	public static function getPaymentSourceForRecurring( &$returnData, $links ): void {
+	public static function getPaymentSourceForRecurring( &$returnData, $previous_payload ): void {
 
-		$order_details_url = self::getUrl( $links, 'up' );
-		$order_details     = Api::get_order_details( $order_details_url );
+		$payment_source = isset( $previous_payload->payment_source ) ? self::built_payment_source_from_vault( $previous_payload ) : self::built_payment_source_from_order_details( $previous_payload );
 
-		if ( $order_details && is_object( $order_details ) ) {
-
-			$paymentSource    = $order_details->payment_source->paypal;
-			$shipping_address = $order_details->purchase_units[0]->shipping->address;
-
-			$returnData['payment_source'] = array(
-				'paypal' => array(
-					'attributes'         => array(
-						'customer' => array(
-							'id' => $paymentSource->attributes->vault->customer->id,
-						),
-					),
-
-					'vault_id'           => $paymentSource->attributes->vault->id,
-					'email_address'      => $paymentSource->email_address,
-					'name'               => array(
-						'given_name' => $paymentSource->name->given_name,
-						'surname'    => $paymentSource->name->surname,
-					),
-					'experience_context' => array(
-						'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
-					),
-					'address'            => array(
-						'address_line_1' => $shipping_address->address_line_1,
-						'address_line_2' => $shipping_address->address_line_2,
-						'admin_area_1'   => empty( $shipping_address->admin_area_1 ) ? '' : $shipping_address->admin_area_1,
-						'admin_area_2'   => empty( $shipping_address->admin_area_2 ) ? '' : $shipping_address->admin_area_2,
-						'postal_code'    => $shipping_address->postal_code,
-						'country_code'   => $shipping_address->country_code,
-					),
-				),
-			);
+		if ( $payment_source ) {
+			$returnData['payment_source'] = $payment_source;
 		}
 	}
 
@@ -337,5 +310,112 @@ final class Helper {
 		&& isset( $server_variables['HTTP_PAYPAL_TRANSMISSION_ID'] )
 		&& isset( $server_variables['HTTP_PAYPAL_TRANSMISSION_SIG'] )
 		&& isset( $server_variables['HTTP_PAYPAL_TRANSMISSION_TIME'] );
+	}
+
+	/**
+	 * Build a PayPal payment source array using stored vault details.
+	 *
+	 * @since 3.9.0.
+	 *
+	 * @param object $previous_payload The previous PayPal payload containing
+	 *                                 a reference to the vault details link.
+	 *
+	 * @return array|null The formatted PayPal payment source array, or null if not found.
+	 */
+	private static function built_payment_source_from_vault( $previous_payload ): ?array {
+
+		$vault_url     = self::getUrl( $previous_payload->payment_source->paypal->attributes->vault->links, 'self' );
+		$vault_details = Api::get_vault_details( $vault_url );
+
+		if ( ! $vault_details ) {
+			return null;
+		}
+
+		$paypal_source    = $vault_details->payment_source->paypal;
+		$shipping_address = $paypal_source->shipping->address;
+
+		return array(
+			'paypal' => array(
+				'attributes'         => array(
+					'customer' => array(
+						'id' => $vault_details->customer->id,
+					),
+				),
+				'vault_id'           => $vault_details->id,
+				'email_address'      => $paypal_source->email_address,
+				'name'               => array(
+					'given_name' => $paypal_source->name->given_name,
+					'surname'    => $paypal_source->name->surname,
+				),
+				'experience_context' => array(
+					'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
+				),
+				'address'            => self::format_address( $shipping_address ),
+			),
+		);
+	}
+
+	/**
+	 * Format a shipping address object into an associative array.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param object $shipping_address The PayPal shipping address object.
+	 *
+	 * @return array The formatted address as an associative array.
+	 */
+	private static function format_address( $shipping_address ) {
+
+		return array(
+			'address_line_1' => $shipping_address->address_line_1,
+			'address_line_2' => $shipping_address->address_line_2,
+			'admin_area_1'   => $shipping_address->admin_area_1 ?? '',
+			'admin_area_2'   => $shipping_address->admin_area_2 ?? '',
+			'postal_code'    => $shipping_address->postal_code,
+			'country_code'   => $shipping_address->country_code,
+		);
+	}
+
+	/**
+	 * Build a PayPal payment source array using order details.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param object $previous_payload The previous PayPal payload containing
+	 *                                 a reference to the order details link.
+	 *
+	 * @return array|null The formatted PayPal payment source array, or null if not found.
+	 */
+	private static function built_payment_source_from_order_details( $previous_payload ): ?array {
+
+		$order_details_url = self::getUrl( $previous_payload->resource->links, 'up' );
+		$order_details     = Api::get_order_details( $order_details_url );
+
+		if ( ! $order_details ) {
+			return null;
+		}
+
+		$paypal_source    = $order_details->payment_source->paypal;
+		$shipping_address = $order_details->purchase_units[0]->shipping->address;
+
+		return array(
+			'paypal' => array(
+				'attributes'         => array(
+					'customer' => array(
+						'id' => $paypal_source->attributes->vault->customer->id,
+					),
+				),
+				'vault_id'           => $paypal_source->attributes->vault->id,
+				'email_address'      => $paypal_source->email_address,
+				'name'               => array(
+					'given_name' => $paypal_source->name->given_name,
+					'surname'    => $paypal_source->name->surname,
+				),
+				'experience_context' => array(
+					'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
+				),
+				'address'            => self::format_address( $shipping_address ),
+			),
+		);
 	}
 }
