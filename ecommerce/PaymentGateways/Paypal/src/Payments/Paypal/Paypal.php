@@ -18,14 +18,14 @@ class Paypal extends BasePayment {
 	 * The Paypal config Repository instance
 	 *
 	 * @var   RepositoryContract
-	 * @since 1.0.0
+	 * @since 3.0.0
 	 */
 	protected $config;
 
 	/**
 	 * @var string|null $orderID
 	 * This property stores the ID of the current order being processed.
-	 * @since 1.0.0
+	 * @since 3.0.0
 	 */
 	protected $orderID;
 
@@ -35,10 +35,14 @@ class Paypal extends BasePayment {
 	 */
 	protected $previousPayload;
 
+	/**
+	 * The API endpoint URL used to process PayPal refund requests.
+	 *
+	 * @var string|null
+	 */
 	protected $refundLink;
 
 	const CHECKOUT_ORDER_APPROVED   = 'CHECKOUT.ORDER.APPROVED';
-	const VERIFICATION_STATUS       = 'SUCCESS';
 	const PAYMENT_CAPTURE_COMPLETED = 'PAYMENT.CAPTURE.COMPLETED';
 	const PAYMENT_CAPTURE_REFUNDED  = 'PAYMENT.CAPTURE.REFUNDED';
 
@@ -49,10 +53,10 @@ class Paypal extends BasePayment {
 	 * and properly set up before proceeding with any operations that depend on them.
 	 *
 	 * @return bool Returns true if all required configuration keys are present and not empty, otherwise false.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public function check(): bool {
-		$configKeys = Arr::make( array( 'client_id', 'client_secret', 'merchant_email', 'success_url', 'cancel_url' ) );
+		$configKeys = Arr::make( array( 'client_id', 'client_secret', 'merchant_email', 'webhook_id' ) );
 
 		$isConfigOk = $configKeys->every(
 			function ( $key ) {
@@ -81,13 +85,13 @@ class Paypal extends BasePayment {
 	 *
 	 * @param  object $data The data to be set.
 	 * @throws Throwable        If an error occurs during data preparation, it is re-thrown.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public function setData( $data ): void {
 		try {
 			$type = $data->type ?? 'one-time';
 
-			if ( $type === 'refund' ) {
+			if ( 'refund' === $type ) {
 				parent::setData( $this->prepareDataForRefund( $data ) );
 			} else {
 				parent::setData( $this->prepareData( $data ) );
@@ -106,7 +110,7 @@ class Paypal extends BasePayment {
 	 *
 	 * @param  object $data The raw data to be processed.
 	 * @return array        The structured data for sending to `Paypal Server`.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public function prepareData( $data ) {
 		if ( empty( $data ) ) {
@@ -136,7 +140,7 @@ class Paypal extends BasePayment {
 		} elseif ( 'recurring' === $type ) {
 
 			$this->previousPayload = json_decode( stripslashes( $data->previous_payload ) );
-			Helper::getPaymentSourceForRecurring( $returnData, $this->previousPayload );
+			Helper::getPaymentSourceForRecurring( $returnData, $this->previousPayload->resource->links );
 		}
 
 		if ( isset( $data->shipping_address ) && ! empty( $data->shipping_address ) ) {
@@ -153,7 +157,7 @@ class Paypal extends BasePayment {
 	 * If an error occurs during these operations, it handles the error and throws an exception.
 	 *
 	 * @throws ErrorException If there is an error retrieving the checkout URL or handling the response.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public function createPayment() {
 		try {
@@ -183,7 +187,7 @@ class Paypal extends BasePayment {
 	 * @param  object $payload  The payload object containing the webhook data.
 	 * @return object           Returns the processed order data or an error response.
 	 * @throws RequestException If the request fails.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public function verifyAndCreateOrderData( object $payload ): object {
 		try {
@@ -213,7 +217,6 @@ class Paypal extends BasePayment {
 				default:
 					return new \stdClass();
 			}
-
 		} catch ( RequestException $error ) {
 
 			// Handle the error response.
@@ -232,7 +235,7 @@ class Paypal extends BasePayment {
 	 * @param  object      $payloadStream The payload stream object containing order and payment details.
 	 * @param  string|null $errorMessage  Optional. Error message to indicate payment failure reason.
 	 * @return object                     The constructed order data object.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	private function setReturnData( $payloadStream, $errorMessage = null ): object {
 		$returnData = System::defaultOrderData();
@@ -268,7 +271,7 @@ class Paypal extends BasePayment {
 	 * Creates a recurring payment by generating an order and handling the payment details.
 	 *
 	 * @throws ErrorException If there is an error during the payment process or request handling.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public function createRecurringPayment() {
 		try {
@@ -287,7 +290,7 @@ class Paypal extends BasePayment {
 	 * @return array        Returns an array containing refund-related data.
 	 * @throws NotFoundException Throws an exception if payment payload is missing.
 	 *
-	 * @since 1.0.0
+	 * @since 3.0.0
 	 */
 	private function prepareDataForRefund( $data ): array {
 		if ( ! $data->payment_payload ) {
@@ -314,7 +317,7 @@ class Paypal extends BasePayment {
 	 * @return void
 	 *
 	 * @throws ErrorException Throws an exception if an error occurs while making the HTTP request or processing the response.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public function createRefund() {
 

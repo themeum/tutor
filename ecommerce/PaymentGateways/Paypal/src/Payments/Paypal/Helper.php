@@ -2,18 +2,23 @@
 
 namespace Ollyo\PaymentHub\Payments\Paypal;
 
-use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Core\Support\Path;
 use Ollyo\PaymentHub\Core\Support\System;
+use GuzzleHttp\Exception\RequestException;
+use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 
-final class Helper{
 
-    /**
+/**
+ * Paypal Helper Class
+ */
+final class Helper {
+
+	/**
 	 * Retrieves and formats items from the provided data.
 	 *
 	 * @param  object $data The data object containing item details.
 	 * @return array        An array of formatted items.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public static function getItems( &$data ): array {
 		$currency       = $data->currency->code;
@@ -60,7 +65,7 @@ final class Helper{
 		return $items;
 	}
 
-    /**
+	/**
 	 * Creates the amount data array for a payment request.
 	 *
 	 * This method constructs and returns an array containing the currency code, total price, and item breakdown
@@ -68,7 +73,7 @@ final class Helper{
 	 *
 	 * @param  object $data   The input data containing the currency, total price, subtotal, and optional fields.
 	 * @return array            The formatted amount data including currency code, total price, and breakdown.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public static function createAmountData( $data ) {
 		$returnData = array(
@@ -99,12 +104,12 @@ final class Helper{
 		return $returnData;
 	}
 
-    /**
+	/**
 	 * Creates an amount array for recurring payments.
 	 *
 	 * @param  object $data    The data array containing currency and amount information.
 	 * @return array            Returns an array with currency code and amount value.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public static function createAmountForRecurring( $data ): array {
 		return array(
@@ -113,14 +118,15 @@ final class Helper{
 		);
 	}
 
-    /**
+	/**
 	 * Configures the payment source for one-time payments.
 	 *
-	 * @param  array $returnData Reference to the data array to be modified with payment source details.
+	 * @param  array              $returnData Reference to the data array to be modified with payment source details.
+	 * @param RepositoryContract $config Configuration repository instance providing URLs and payment settings.
 	 * @return void
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
-	public static function getPaymentSourceForOneTime( &$returnData, RepositoryContract $config): void {
+	public static function getPaymentSourceForOneTime( &$returnData, RepositoryContract $config ): void {
 		$returnData['payment_source']['paypal'] = array(
 
 			'experience_context' => array(
@@ -140,21 +146,22 @@ final class Helper{
 		}
 	}
 
-    /**
+	/**
 	 * Configures the payment source for recurring payments.
 	 *
 	 * @param  array $returnData Reference to the data array to be modified with payment source details.
+	 * @param array $links The PayPal order links used to retrieve the order details.
 	 * @return void
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
-	public static function getPaymentSourceForRecurring( &$returnData, $previousPayload ): void {
+	public static function getPaymentSourceForRecurring( &$returnData, $links ): void {
 
-		$order_details_url = self::getUrl( $previousPayload->resource->links, 'up' );
-		$order_details = Api::get_order_details( $order_details_url );
+		$order_details_url = self::getUrl( $links, 'up' );
+		$order_details     = Api::get_order_details( $order_details_url );
 
 		if ( $order_details && is_object( $order_details ) ) {
 
-			$paymentSource 	  = $order_details->payment_source->paypal;
+			$paymentSource    = $order_details->payment_source->paypal;
 			$shipping_address = $order_details->purchase_units[0]->shipping->address;
 
 			$returnData['payment_source'] = array(
@@ -187,7 +194,7 @@ final class Helper{
 		}
 	}
 
-    /**
+	/**
 	 * Handles the error response from an HTTP request and formats a user-friendly error message.
 	 *
 	 * This method extracts error details from the response body and constructs a comprehensive
@@ -196,7 +203,7 @@ final class Helper{
 	 *
 	 * @param  RequestException $errorResponse The error response from the HTTP request.
 	 * @return string                          The formatted error message.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public static function handleErrorResponse( $errorResponse ) {
 		$message = '';
@@ -227,7 +234,7 @@ final class Helper{
 		return null;
 	}
 
-    /**
+	/**
 	 * Processes a list of issues from an error response and formats them into a single message string.
 	 *
 	 * This method iterates over the provided issues, extracting relevant information such as
@@ -236,7 +243,7 @@ final class Helper{
 	 *
 	 * @param  array $issues The list of issues from the error response.
 	 * @return string         The formatted message string containing details of all issues.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	private static function processIssues( $issues ) {
 		$finalMessage = array_reduce(
@@ -267,15 +274,15 @@ final class Helper{
 		return $finalMessage;
 	}
 
-    /**
+	/**
 	 * Creates the shipping information array for a payment request.
 	 *
 	 * This method constructs and returns an array containing the shipping type, receiver's full name,
 	 * and address for a payment request.
 	 *
-	 * @param  object $data The input data containing the receiver's name and address.
+	 * @param  object $shipping The shipping data containing the receiver's name and address.
 	 * @return array        The formatted shipping information including type, name, and address.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public static function getShippingInfo( $shipping ) {
 		[$address1, $address2] = System::splitAddress( $shipping, 300 );
@@ -294,7 +301,7 @@ final class Helper{
 		);
 	}
 
-    /**
+	/**
 	 * Retrieves the URL from an array of links that matches a specified condition.
 	 *
 	 * This method filters the provided links array to find the link that matches the given
@@ -303,7 +310,7 @@ final class Helper{
 	 * @param  array  $links     The array of links to search through.
 	 * @param  string $condition The condition to match against the rel property of the links.
 	 * @return string|null             The URL if a matching link is found, otherwise null.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	public static function getUrl( $links, $condition ) {
 		$url = array_filter(
@@ -319,16 +326,16 @@ final class Helper{
 	/**
 	 * Checks if the required PayPal webhook variables are present in the server request.
 	 *
-	 * @param array $serverVariables The server variables containing PayPal headers
+	 * @param array $server_variables The server variables containing PayPal headers.
 	 *
 	 * @return bool Returns true if all required variables are present, false otherwise.
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
-	public static function checkWebhookVariables( $serverVariables ): bool {
-		return isset( $serverVariables['HTTP_PAYPAL_AUTH_ALGO'] )
-		&& isset( $serverVariables['HTTP_PAYPAL_CERT_URL'] )
-		&& isset( $serverVariables['HTTP_PAYPAL_TRANSMISSION_ID'] )
-		&& isset( $serverVariables['HTTP_PAYPAL_TRANSMISSION_SIG'] )
-		&& isset( $serverVariables['HTTP_PAYPAL_TRANSMISSION_TIME'] );
+	public static function checkWebhookVariables( $server_variables ): bool {
+		return isset( $server_variables['HTTP_PAYPAL_AUTH_ALGO'] )
+		&& isset( $server_variables['HTTP_PAYPAL_CERT_URL'] )
+		&& isset( $server_variables['HTTP_PAYPAL_TRANSMISSION_ID'] )
+		&& isset( $server_variables['HTTP_PAYPAL_TRANSMISSION_SIG'] )
+		&& isset( $server_variables['HTTP_PAYPAL_TRANSMISSION_TIME'] );
 	}
 }

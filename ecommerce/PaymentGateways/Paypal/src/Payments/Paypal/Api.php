@@ -7,6 +7,9 @@ use Ollyo\PaymentHub\Core\Support\System;
 use GuzzleHttp\Exception\RequestException;
 use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 
+/**
+ * Paypal Api Class
+ */
 final class Api {
 
 	/**
@@ -32,6 +35,13 @@ final class Api {
 	 */
 	protected $accessToken;
 
+	/**
+	 * Class constructor.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param RepositoryContract $config Configuration repository instance.
+	 */
 	public function __construct( RepositoryContract $config ) {
 		self::$config  = $config;
 		self::$headers = array(
@@ -48,7 +58,7 @@ final class Api {
 	 * "token_type access_token".
 	 *
 	 * @return string The access token in the format "token_type access_token".
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 */
 	private function getAccessToken(): string {
 		if ( empty( $this->accessToken ) ) {
@@ -76,7 +86,7 @@ final class Api {
 	/**
 	 * Creates a new PayPal order by sending a POST request to the PayPal API.
 	 *
-	 * @since  1.0.0
+	 * @since  3.0.0
 	 *
 	 * @param object $data The order data to be sent in the request body.
 	 * @param string $order_id A unique identifier for the order.
@@ -87,7 +97,7 @@ final class Api {
 
 		self::$headers['PayPal-Request-Id'] = "order-id-{$order_id}";
 
-		$requestData = (object) array(
+		$request_data = (object) array(
 			'method'  => 'post',
 			'url'     => self::$config->get( 'api_url' ) . '/v2/checkout/orders',
 			'options' => array(
@@ -96,20 +106,18 @@ final class Api {
 			),
 		);
 
-		return System::sendHttpRequest( $requestData );
+		return System::sendHttpRequest( $request_data );
 	}
 
-		/**
-		 * Captures a payment for an authorized PayPal order.
-		 *
-		 * This method constructs the capture payment URL and headers, including the access token,
-		 * PayPal request ID. It then sends a POST request to the capture payment URL using the specified headers.
-		 *
-		 * @param  object $payloadStream  The payload stream sent from Paypal Webhook Notification.
-		 * @return object                           The response object from the capture payment request.
-		 * @throws ErrorException                   If the payment capture is incomplete or the order status is not completed.
-		 * @since  1.0.0
-		 */
+
+	/**
+	 * Capture a PayPal payment based on the provided webhook payload.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $payloadStream The decoded webhook payload containing payment resource data.
+	 * @return void
+	 */
 	public static function capturePayment( $payloadStream ) {
 
 		$capturePaymentUrl = Helper::getUrl( $payloadStream->resource->links, 'capture' );
@@ -126,6 +134,15 @@ final class Api {
 		System::sendHttpRequest( $requestData );
 	}
 
+	/**
+	 * Validate the PayPal webhook signature to ensure the authenticity of the incoming event.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param object $payload The webhook payload containing stream and server headers.
+	 * @return bool True if the webhook signature is verified successfully, false otherwise.
+	 * @throws \ErrorException When the verification request fails or returns an error response.
+	 */
 	public static function webhook_signature_validation( $payload ) {
 
 		try {
@@ -140,28 +157,27 @@ final class Api {
 				'webhook_event'     => $payload_stream,
 			);
 
-			$requestData = (object) array(
+			$request_data = (object) array(
 				'method'  => 'post',
 				'url'     => self::$config->get( 'api_url' ) . '/v1/notifications/verify-webhook-signature',
 				'options' => array(
 					'headers' => self::$headers,
-					'body'    => json_encode( $data ),
+					'body'    => wp_json_encode( $data ),
 				),
 			);
 
-			$responseData = System::sendHttpRequest( $requestData );
+			$response_data = System::sendHttpRequest( $request_data );
 
-			return $responseData->verification_status === 'SUCCESS' ? true : false;
+			return 'SUCCESS' === $response_data->verification_status ? true : false;
 		} catch ( \Throwable $error ) {
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			throw $error;
 		}
 	}
 
 	/**
 	 * Send an immediate HTTP 200 OK response to acknowledge receipt of the event.
 	 *
-	 * @since 1.0.1
+	 * @since 3.9.0
 	 *
 	 * @return void
 	 */
@@ -175,23 +191,43 @@ final class Api {
 		}
 	}
 
+	/**
+	 * Retrieve PayPal order details using the provided API URL.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param string $url The PayPal API endpoint URL for fetching order details.
+	 * @return object|null The API response object containing order details.
+	 * @throws \ErrorException When the HTTP request fails or returns an error.
+	 */
 	public static function get_order_details( $url ) {
 		try {
 
-			$requestData = (object) array(
+			$request_data = (object) array(
 				'method'  => 'get',
 				'url'     => $url,
 				'options' => array( 'headers' => self::$headers ),
 			);
 
-			return System::sendHttpRequest( $requestData );
+			return System::sendHttpRequest( $request_data );
 
 		} catch ( RequestException $error ) {
-			$errorMessage = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
-			throw new ErrorException( esc_html( $errorMessage ) );
+			$error_message = Helper::handleErrorResponse( $error ) ?? $error->getMessage();
+			throw new ErrorException( esc_html( $error_message ) );
 		}
 	}
 
+	/**
+	 * Initiate a refund request for a PayPal order.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param string       $refund_url The PayPal API refund endpoint URL.
+	 * @param string|int   $order_id The associated order ID for the refund request.
+	 * @param array|object $data The refund request payload containing refund details.
+	 * @return void
+	 * @throws \Throwable If the refund process fails or an unexpected error occurs.
+	 */
 	public static function refund( $refund_url, $order_id, $data ) {
 
 		try {
@@ -205,7 +241,7 @@ final class Api {
 				'url'     => $refund_url,
 				'options' => array(
 					'headers' => self::$headers,
-					'body'    => json_encode( $data ),
+					'body'    => wp_json_encode( $data ),
 				),
 			);
 
