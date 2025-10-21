@@ -25,6 +25,12 @@ if ( ! $submitted_assignment ) {
 	tutor_utils()->tutor_empty_state( __( 'Assignments submission not found or not completed', 'tutor' ) );
 	return;
 }
+
+$course_id = $submitted_assignment->comment_parent;
+if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
+	tutor_utils()->tutor_empty_state( __( 'You do not have permission to review this assignment', 'tutor' ) );
+	return;
+}
 ?>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-assignment-review">
