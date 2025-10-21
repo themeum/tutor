@@ -17,6 +17,17 @@ $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $paged    = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset   = ( $per_page * $paged ) - $per_page;
 
+$post_type_query = Input::get( 'type', '' );
+
+$page_tabs = apply_filters(
+	'tutor_enrolled_courses_page_tabs',
+	array(
+		'enrolled-courses'                   => __( 'Enrolled Courses', 'tutor' ),
+		'enrolled-courses/active-courses'    => __( 'Active Courses', 'tutor' ),
+		'enrolled-courses/completed-courses' => __( 'Completed Courses', 'tutor' ),
+	),
+	$post_type_query
+);
 
 // Default tab set.
 ( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) ? $active_tab = 'enrolled-courses' : 0;
@@ -40,18 +51,7 @@ $full_courses_list_array = array(
 $courses_list           = $courses_list_array[ $active_tab ];
 $paginated_courses_list = $full_courses_list_array[ $active_tab ];
 
-$post_type_query = Input::get( 'type', '' );
-$post_type_args  = $post_type_query ? array( 'type' => $post_type_query ) : array();
-
-$page_tabs = apply_filters(
-	'tutor_enrolled_courses_page_tabs',
-	array(
-		'enrolled-courses'                   => __( 'Enrolled Courses', 'tutor' ),
-		'enrolled-courses/active-courses'    => __( 'Active Courses', 'tutor' ),
-		'enrolled-courses/completed-courses' => __( 'Completed Courses', 'tutor' ),
-	),
-	$post_type_query
-);
+$post_type_args = $post_type_query ? array( 'type' => $post_type_query ) : array();
 
 ?>
 
