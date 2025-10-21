@@ -17,24 +17,22 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist --no-scripts
 
-      - name: Run PHPStan on changed files
+      - name: Run PHPStan on Changed Files
         run: |
-          # Determine the base reference safely (works for both push and PR events)
-          BASE_BRANCH="${{ github.base_ref || 'main' }}"
+          # Get changed, added, or renamed files compared to the base branch (e.g., main)
+          CHANGED_FILES=$(git diff --name-only --diff-filter=MARC ${{ github.base_ref || 'dev' }} HEAD)
 
-          echo "Fetching base branch: $BASE_BRANCH"
-          git fetch origin $BASE_BRANCH --depth=1 || true
+          # Filter out vendor, .github, and other excluded folders, and only keep .php files
+          FILTERED_FILES=$(echo "$CHANGED_FILES" | grep -E '\.php$' | grep -vE '^(vendor|\.github)/')
 
-          # Compute changed PHP files between base branch and HEAD
-          CHANGED_FILES=$(git --no-pager diff --name-only --diff-filter=MARC origin/$BASE_BRANCH...HEAD \
-            | grep '\.php$' \
-            | grep -v '^vendor/' \
-            | grep -v '^\.github/' || true)
-
-          if [ -n "$CHANGED_FILES" ]; then
-            echo "Running PHPStan on changed files:"
-            echo "$CHANGED_FILES"
-            vendor/bin/phpstan analyse -c phpstan.neon -l 1 $CHANGED_FILES
-          else
-            echo "No PHP files changed, skipping PHPStan."
+          if [ -z "$FILTERED_FILES" ]; then
+            echo "No relevant PHP files changed. Skipping PHPStan analysis."
+            exit 0
           fi
+
+          # Run PHPStan on the filtered list of files
+          # Note: Use `xargs` to handle a large number of files
+          echo "$FILTERED_FILES" | xargs -r vendor/bin/phpstan analyse -l 8 -c phpstan.neon
+        env:
+          # Adjust the base branch name if it's not 'main' (e.g., 'master')
+          BASE_REF: 'dev'
