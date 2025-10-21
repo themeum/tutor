@@ -17,25 +17,22 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist --no-scripts
 
-      - name: Determine changed PHP files
-        id: changed_files
+      - name: Run PHPStan on changed files
         run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            BASE_REF="origin/${{ github.base_ref }}"
-            git fetch origin ${{ github.base_ref }} --depth=1
-            CHANGED_FILES=$(git diff --name-only $BASE_REF...HEAD | grep '\.php$' || true)
-          else
-            CHANGED_FILES=$(git diff --name-only HEAD~1 | grep '\.php$' || true)
-          fi
+          # Fetch the base branch to compare against (useful in PRs)
+          git fetch origin ${{ github.base_ref }} --depth=1 || true
+          
+          # Get list of changed PHP files, excluding vendor and .github directories
+          CHANGED_FILES=$(git --no-pager diff --name-only --diff-filter=MARC origin/${{ github.base_ref }}...HEAD \
+            | grep '\.php$' \
+            | grep -v '^vendor/' \
+            | grep -v '^\.github/' || true)
 
-          echo "Changed PHP files:"
-          echo "$CHANGED_FILES"
-          echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
-
-      - name: Run PHPStan
-        run: |
-          if [ -n "${{ steps.changed_files.outputs.files }}" ]; then
-            vendor/bin/phpstan analyse ${{ steps.changed_files.outputs.files }}
+          # If there are PHP files, analyze them
+          if [ -n "$CHANGED_FILES" ]; then
+            echo "Running PHPStan on changed files:"
+            echo "$CHANGED_FILES"
+            vendor/bin/phpstan analyse -c phpstan.neon -l 1 $CHANGED_FILES
           else
             echo "No PHP files changed, skipping PHPStan."
           fi
