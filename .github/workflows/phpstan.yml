@@ -19,16 +19,18 @@ jobs:
 
       - name: Run PHPStan on changed files
         run: |
-          # Fetch the base branch to compare against (useful in PRs)
-          git fetch origin ${{ github.base_ref }} --depth=1 || true
-          
-          # Get list of changed PHP files, excluding vendor and .github directories
-          CHANGED_FILES=$(git --no-pager diff --name-only --diff-filter=MARC origin/${{ github.base_ref }}...HEAD \
+          # Determine the base reference safely (works for both push and PR events)
+          BASE_BRANCH="${{ github.base_ref || 'main' }}"
+
+          echo "Fetching base branch: $BASE_BRANCH"
+          git fetch origin $BASE_BRANCH --depth=1 || true
+
+          # Compute changed PHP files between base branch and HEAD
+          CHANGED_FILES=$(git --no-pager diff --name-only --diff-filter=MARC origin/$BASE_BRANCH...HEAD \
             | grep '\.php$' \
             | grep -v '^vendor/' \
             | grep -v '^\.github/' || true)
 
-          # If there are PHP files, analyze them
           if [ -n "$CHANGED_FILES" ]; then
             echo "Running PHPStan on changed files:"
             echo "$CHANGED_FILES"
