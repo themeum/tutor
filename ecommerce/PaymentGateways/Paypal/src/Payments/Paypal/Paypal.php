@@ -192,9 +192,11 @@ class Paypal extends BasePayment {
 	public function verifyAndCreateOrderData( object $payload ): object {
 		try {
 
-			$is_verified = Api::webhook_signature_validation( $payload );
+			if ( ! Helper::checkWebhookVariables( $payload->server ) ) {
+				return new \stdClass();
+			}
 
-			if ( ! $is_verified || ! Helper::checkWebhookVariables( $payload->server ) ) {
+			if ( ! Api::webhook_signature_validation( $payload ) ) {
 				return new \stdClass();
 			}
 
