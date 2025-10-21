@@ -75,7 +75,7 @@ final class Helper {
 	 * @return array            The formatted amount data including currency code, total price, and breakdown.
 	 * @since  3.0.0
 	 */
-	public static function createAmountData( $data ) {
+	public static function createAmountData( $data ): array {
 		$returnData = array(
 			'currency_code' => $data->currency->code,
 			'value'         => number_format( $data->total_price, 2, '.', '' ),
@@ -175,10 +175,10 @@ final class Helper {
 	 * details, and general error messages, and combines them into a single message string.
 	 *
 	 * @param  RequestException $errorResponse The error response from the HTTP request.
-	 * @return string                          The formatted error message.
+	 * @return string|null                          The formatted error message.
 	 * @since  3.0.0
 	 */
-	public static function handleErrorResponse( $errorResponse ) {
+	public static function handleErrorResponse( $errorResponse ): ?string {
 		$message = '';
 
 		if ( ! is_null( $errorResponse->getResponse() ) ) {
@@ -218,8 +218,9 @@ final class Helper {
 	 * @return string         The formatted message string containing details of all issues.
 	 * @since  3.0.0
 	 */
-	private static function processIssues( $issues ) {
-		$finalMessage = array_reduce(
+	private static function processIssues( $issues ): string {
+
+		$final_message = array_reduce(
 			$issues,
 			function ( $message, $issue ) {
 
@@ -244,7 +245,7 @@ final class Helper {
 			''
 		);
 
-		return $finalMessage;
+		return $final_message;
 	}
 
 	/**
@@ -257,7 +258,7 @@ final class Helper {
 	 * @return array        The formatted shipping information including type, name, and address.
 	 * @since  3.0.0
 	 */
-	public static function getShippingInfo( $shipping ) {
+	public static function getShippingInfo( $shipping ): array {
 		[$address1, $address2] = System::splitAddress( $shipping, 300 );
 
 		return array(
@@ -285,7 +286,7 @@ final class Helper {
 	 * @return string|null             The URL if a matching link is found, otherwise null.
 	 * @since  3.0.0
 	 */
-	public static function getUrl( $links, $condition ) {
+	public static function getUrl( $links, $condition ): ?string {
 		$url = array_filter(
 			$links,
 			function ( $link ) use ( $condition ) {
@@ -364,7 +365,7 @@ final class Helper {
 	 *
 	 * @return array The formatted address as an associative array.
 	 */
-	private static function format_address( $shipping_address ) {
+	private static function format_address( $shipping_address ): array {
 
 		return array(
 			'address_line_1' => $shipping_address->address_line_1,

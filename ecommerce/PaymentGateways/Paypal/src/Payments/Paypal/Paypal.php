@@ -112,7 +112,7 @@ class Paypal extends BasePayment {
 	 * @return array        The structured data for sending to `Paypal Server`.
 	 * @since  3.0.0
 	 */
-	public function prepareData( $data ) {
+	public function prepareData( $data ): array {
 		if ( empty( $data ) ) {
 			return array();
 		}
@@ -317,7 +317,6 @@ class Paypal extends BasePayment {
 	public function createRefund() {
 
 		try {
-
 			Api::refund( $this->refundLink, $this->orderID, $this->getData() );
 
 		} catch ( RequestException $error ) {
@@ -330,11 +329,11 @@ class Paypal extends BasePayment {
 	 * Retrieves the refund status based on the provided links and type.
 	 *
 	 * @param array  $links An array of links provided by the PayPal API.
-	 * @param string $type The type of link to use.
+	 * @param string|null $type The type of link to use.
 	 *
 	 * @since 1.0.0
 	 */
-	private function getRefundStatus( $links, $type = 'self' ) {
+	private function getRefundStatus( $links, $type = 'self' ): ?string {
 		$url = $this->getUrl( $links, $type );
 
 		$requestData = (object) array(
@@ -356,7 +355,7 @@ class Paypal extends BasePayment {
 	 * @throws ErrorException Throws an exception if there's an issue with the HTTP request or if webhook information is not found.
 	 * @since  1.0.0
 	 */
-	public function createWebhook() {
+	public function createWebhook(): ?object {
 		try {
 
 			$webhookApiUrl = $this->config->get( 'api_url' ) . '/v1/notifications/webhooks';
@@ -440,7 +439,7 @@ class Paypal extends BasePayment {
 	 * @throws ErrorException Throws an exception if there is an error during the HTTP request or while processing the refund.
 	 * @since  1.0.0
 	 */
-	private function processRefund( $paymentData ) {
+	private function processRefund( $paymentData ): object {
 		$returnData = System::defaultOrderData( 'refund' );
 
 		try {

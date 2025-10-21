@@ -143,7 +143,7 @@ final class Api {
 	 * @return bool True if the webhook signature is verified successfully, false otherwise.
 	 * @throws \ErrorException When the verification request fails or returns an error response.
 	 */
-	public static function webhook_signature_validation( $payload ) {
+	public static function webhook_signature_validation( $payload ): bool {
 
 		try {
 			$payload_stream = json_decode( $payload->stream );
@@ -200,7 +200,7 @@ final class Api {
 	 * @return object|null The API response object containing order details.
 	 * @throws \ErrorException When the HTTP request fails or returns an error.
 	 */
-	public static function get_order_details( $url ) {
+	public static function get_order_details( $url ): ?object {
 		try {
 
 			$request_data = (object) array(
@@ -262,7 +262,7 @@ final class Api {
 	 *
 	 * @throws ErrorException If the HTTP request fails or the response cannot be handled.
 	 */
-	public static function get_vault_details( $url ) {
+	public static function get_vault_details( $url ): ?object {
 		try {
 
 			$request_data = (object) array(
