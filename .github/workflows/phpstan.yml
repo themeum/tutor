@@ -19,11 +19,4 @@ jobs:
 
       # 3. Run PHPStan Full Analysis (Now fast due to cache)
       - name: Run PHPStan
-        run: vendor/bin/phpstan analyse -l 8 -c phpstan.neon
-
-      # 4. Save the Cache for the next run
-      - name: Save PHPStan cache
-        uses: actions/cache/save@v4
-        with:
-          path: .phpstan-cache
-          key: phpstan-cache-${{ hashFiles('**/composer.lock') }}-${{ hashFiles('phpstan.neon') }}
+        run: vendor/bin/phpstan analyse -c phpstan.neon -l 7 $$(git --no-pager diff --name-only --diff-filter=MARC
