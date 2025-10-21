@@ -17,22 +17,13 @@ jobs:
       - name: Install dependencies
         run: composer install --no-progress --prefer-dist --no-scripts
 
-      - name: Run PHPStan on Changed Files
-        run: |
-          # Get changed, added, or renamed files compared to the base branch (e.g., main)
-          CHANGED_FILES=$(git diff --name-only --diff-filter=MARC ${{ github.base_ref || 'dev' }} HEAD)
+      # 3. Run PHPStan Full Analysis (Now fast due to cache)
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse -l 8 -c phpstan.neon
 
-          # Filter out vendor, .github, and other excluded folders, and only keep .php files
-          FILTERED_FILES=$(echo "$CHANGED_FILES" | grep -E '\.php$' | grep -vE '^(vendor|\.github)/')
-
-          if [ -z "$FILTERED_FILES" ]; then
-            echo "No relevant PHP files changed. Skipping PHPStan analysis."
-            exit 0
-          fi
-
-          # Run PHPStan on the filtered list of files
-          # Note: Use `xargs` to handle a large number of files
-          echo "$FILTERED_FILES" | xargs -r vendor/bin/phpstan analyse -l 8 -c phpstan.neon
-        env:
-          # Adjust the base branch name if it's not 'main' (e.g., 'master')
-          BASE_REF: 'dev'
+      # 4. Save the Cache for the next run
+      - name: Save PHPStan cache
+        uses: actions/cache/save@v4
+        with:
+          path: .phpstan-cache
+          key: phpstan-cache-${{ hashFiles('**/composer.lock') }}-${{ hashFiles('phpstan.neon') }}

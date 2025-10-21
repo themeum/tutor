@@ -318,7 +318,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.9.0 - Oct 21, 2025
+= 3.9.0 - Oct 22, 2025
 
 New: Introducing Lesson & Video Note-Taking.
 New: Certificate Support for Course Bundles.
