@@ -15,13 +15,27 @@ jobs:
           tools: composer
 
       - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
+        run: composer install --no-progress --prefer-dist --no-scripts
 
-      - name: Run PHPStan on changed files
+      - name: Determine changed PHP files
+        id: changed_files
         run: |
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.php$' || true)
-          if [ -n "$CHANGED_FILES" ]; then
-            vendor/bin/phpstan analyse $CHANGED_FILES
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE_REF="origin/${{ github.base_ref }}"
+            git fetch origin ${{ github.base_ref }} --depth=1
+            CHANGED_FILES=$(git diff --name-only $BASE_REF...HEAD | grep '\.php$' || true)
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 | grep '\.php$' || true)
+          fi
+
+          echo "Changed PHP files:"
+          echo "$CHANGED_FILES"
+          echo "files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+
+      - name: Run PHPStan
+        run: |
+          if [ -n "${{ steps.changed_files.outputs.files }}" ]; then
+            vendor/bin/phpstan analyse ${{ steps.changed_files.outputs.files }}
           else
             echo "No PHP files changed, skipping PHPStan."
           fi
