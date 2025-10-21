@@ -1186,7 +1186,7 @@ class CheckoutController {
 
 		// If payment method not selected then redirect to checkout page.
 		if ( empty( $selected_payment_method ) || ! $is_valid_payment_method ) {
-			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'checkout' ) . '?order_id=' . $order_data->id );
+			tutor_utils()->redirect_to( get_permalink( self::get_page_id() ) . '?order_id=' . $order_data->id );
 		}
 	}
 }
