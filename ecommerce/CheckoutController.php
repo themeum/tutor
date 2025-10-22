@@ -566,6 +566,8 @@ class CheckoutController {
 		$billing_model   = new BillingModel();
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
+		$order_id        = (int) Input::sanitize_request_data( 'order_id', 0 );
+		$existing_order  = false;
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
@@ -681,15 +683,26 @@ class CheckoutController {
 				}
 			}
 
-			$order_data = $this->order_ctrl->create_order(
-				$current_user_id,
-				$items,
-				OrderModel::PAYMENT_UNPAID,
-				$order_type,
-				$checkout_data->coupon_code,
-				$args,
-				false
-			);
+			// Check that an order ID is provided.
+			if ( ! empty( $order_id ) ) {
+				$order_details  = OrderModel::get_order( $order_id );
+				$existing_order = ! empty( $order_details )
+									&& OrderModel::ORDER_INCOMPLETE === $order_details->order_status
+									&& OrderModel::PAYMENT_UNPAID === $order_details->payment_status;
+				$order_data     = true === $existing_order ? (array) $order_details : null;
+			}
+
+			if ( ! $existing_order ) {
+				$order_data = $this->order_ctrl->create_order(
+					$current_user_id,
+					$items,
+					OrderModel::PAYMENT_UNPAID,
+					$order_type,
+					$checkout_data->coupon_code,
+					$args,
+					false
+				);
+			}
 
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {
@@ -1186,7 +1199,7 @@ class CheckoutController {
 
 		// If payment method not selected then redirect to checkout page.
 		if ( empty( $selected_payment_method ) || ! $is_valid_payment_method ) {
-			tutor_utils()->redirect_to( get_permalink( self::get_page_id() ) . '?order_id=' . $order_data->id );
+			tutor_utils()->redirect_to( add_query_arg( array( 'order_id' => $order_data->id ), get_permalink( self::get_page_id() ) ) );
 		}
 	}
 }

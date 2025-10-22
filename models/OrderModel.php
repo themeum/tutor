@@ -2045,4 +2045,33 @@ class OrderModel {
 
 		return QueryHelper::get_all( 'tutor_earnings', $where, 'order_id' );
 	}
+
+	/**
+	 * Retrieve an existing order if it is incomplete, unpaid, and belongs to the given user.
+	 *
+	 * @since 3.9.0
+	 * @param int $order_id The ID of the order.
+	 * @param int $user_id  The ID of the current user.
+	 *
+	 * @return object|null Returns the order data object if valid and accessible, otherwise null.
+	 */
+	public function get_valid_incomplete_order( int $order_id, int $user_id ): ?object {
+
+		if ( empty( $order_id ) || empty( $user_id ) ) {
+			return null;
+		}
+
+		$order_data  = $this->get_order_by_id( $order_id );
+		$valid_order = ! empty( $order_data )
+						&& self::ORDER_INCOMPLETE === $order_data->order_status
+						&& self::PAYMENT_UNPAID === $order_data->payment_status
+						&& $user_id === $order_data->student->id
+						&& $this->should_show_pay_btn( $order_data );
+
+		if ( $valid_order ) {
+			return $order_data;
+		}
+
+		return null;
+	}
 }
