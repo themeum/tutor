@@ -1191,4 +1191,131 @@ class CourseModel {
 			$result
 		);
 	}
+
+	/**
+	 * Return completed courses by user_id
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int   $user_id user id.
+	 * @param int   $offset offset.
+	 * @param int   $posts_per_page posts per page.
+	 * @param array $args Args to override the defaults.
+	 *
+	 * @return bool|\WP_Query
+	 */
+	public static function get_completed_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1, $args = array() ) {
+		$user_id    = tutor_utils()->get_user_id( $user_id );
+		$course_ids = tutor_utils()->get_completed_courses_ids_by_user( $user_id );
+
+		if ( count( $course_ids ) ) {
+			$course_post_type = tutor()->course_post_type;
+			$course_args      = array(
+				'post_type'      => $course_post_type,
+				'post_status'    => 'publish',
+				'post__in'       => $course_ids,
+				'posts_per_page' => $posts_per_page,
+				'offset'         => $offset,
+			);
+
+			$args        = apply_filters( 'tutor_get_completed_courses_by_user', $args, $user_id, $course_post_type );
+			$course_args = wp_parse_args( $args, $course_args );
+
+			return new \WP_Query( $course_args );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the active course by user
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param int   $user_id user id.
+	 * @param int   $offset offset.
+	 * @param int   $posts_per_page posts per page.
+	 * @param array $args Args to override the defaults.
+	 *
+	 * @return bool|\WP_Query
+	 */
+	public static function get_active_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1, $args = array() ) {
+		$user_id             = tutor_utils()->get_user_id( $user_id );
+		$course_ids          = tutor_utils()->get_completed_courses_ids_by_user( $user_id );
+		$enrolled_course_ids = tutor_utils()->get_enrolled_courses_ids_by_user( $user_id );
+		$active_courses      = array_diff( $enrolled_course_ids, $course_ids );
+
+		if ( count( $active_courses ) ) {
+			$course_post_type = tutor()->course_post_type;
+			$course_args      = array(
+				'post_type'      => apply_filters( 'tutor_active_courses_post_types', array( $course_post_type ) ),
+				'post_status'    => 'publish',
+				'post__in'       => $active_courses,
+				'posts_per_page' => $posts_per_page,
+				'offset'         => $offset,
+			);
+
+			$args        = apply_filters( 'tutor_get_active_courses_by_user', $args, $user_id, $course_post_type );
+			$course_args = wp_parse_args( $args, $course_args );
+
+			return new \WP_Query( $course_args );
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the enrolled courses by user
+	 *
+	 * @since 1.0.0
+	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
+	 *
+	 * @since 3.4.0 $filters replaced with $args to override the defaults.
+	 *
+	 * @param integer $user_id user id.
+	 * @param mixed   $post_status post status.
+	 * @param integer $offset offset.
+	 * @param integer $posts_per_page post per page.
+	 * @param array   $args Args to override the defaults.
+	 *
+	 * @return bool|\WP_Query
+	 */
+	public static function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $args = array() ) {
+		$user_id    = tutor_utils()->get_user_id( $user_id );
+		$course_ids = array_unique( tutor_utils()->get_enrolled_courses_ids_by_user( $user_id ) );
+
+		if ( count( $course_ids ) ) {
+			$course_post_type = tutor()->course_post_type;
+			$course_args      = array(
+				'post_type'      => $course_post_type,
+				'post_status'    => $post_status,
+				'post__in'       => $course_ids,
+				'offset'         => $offset,
+				'posts_per_page' => $posts_per_page,
+			);
+
+			$args        = apply_filters( 'tutor_get_enrolled_courses_by_user', $args, $user_id, $course_post_type );
+			$course_args = wp_parse_args( $args, $course_args );
+
+			$result = new \WP_Query( $course_args );
+
+			if ( is_object( $result ) && is_array( $result->posts ) ) {
+
+				// Sort courses according to the id list.
+				$new_array = array();
+
+				foreach ( $course_ids as $id ) {
+					foreach ( $result->posts as $post ) {
+						$post->ID == $id ? $new_array[] = $post : 0;
+					}
+				}
+
+				$result->posts = $new_array;
+			}
+
+			return $result;
+		}
+
+		return false;
+	}
 }

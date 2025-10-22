@@ -184,6 +184,15 @@ jQuery(document).ready(function($) {
 						});
 					}
 					that.sync_time(instance);
+
+					// Set player to window and dispatch custom event if lesson single page
+					if ($(that.player_DOM).closest('.tutor-course-topic-single-body .tutor-video-player-wrapper').length) {
+						const customEvent = new CustomEvent('tutorLessonPlayerReady', {
+							detail: { player: instance }
+						});
+						window.dispatchEvent(customEvent);
+						window.tutorLessonPlayer = player;
+					}
 				});
 				
 				player.on('play', (event) => {

@@ -15,13 +15,8 @@ jobs:
           tools: composer
 
       - name: Install dependencies
-        run: composer install --no-progress --prefer-dist
+        run: composer install --no-progress --prefer-dist --no-scripts
 
-      - name: Run PHPStan on changed files
-        run: |
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep '\.php$' || true)
-          if [ -n "$CHANGED_FILES" ]; then
-            vendor/bin/phpstan analyse $CHANGED_FILES
-          else
-            echo "No PHP files changed, skipping PHPStan."
-          fi
+      # 3. Run PHPStan Full Analysis (Now fast due to cache)
+      - name: Run PHPStan on Changed Files
+        run: vendor/bin/phpstan analyse -c phpstan.neon -l 1 $(git --no-pager diff --name-only --diff-filter=MARC | grep -E 'classes/|tests/|ecommerce/|helpers/|includes/|migrations/|models/|traits')

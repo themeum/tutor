@@ -489,14 +489,11 @@ class OrderModel {
 		}
 
 		$user_info = get_userdata( $order_data->user_id );
-		if ( ! is_a( $user_info, 'WP_User' ) ) {
-			return false;
-		}
 
 		$student                  = new \stdClass();
-		$student->id              = (int) $user_info->ID;
-		$student->name            = $user_info->data->display_name;
-		$student->email           = $user_info->data->user_email;
+		$student->id              = (int) $user_info->ID ?? 0;
+		$student->name            = $user_info->data->display_name ?? '';
+		$student->email           = $user_info->data->user_email ?? '';
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
 		$student->billing_address = $this->get_order_billing_address( $order_id, $order_data->user_id );
 		$student->image           = get_avatar_url( $order_data->user_id );
@@ -1783,8 +1780,8 @@ class OrderModel {
 	public static function should_show_pay_btn( object $order ) {
 		$order_items            = ( new self() )->get_order_items_by_id( $order->id );
 		$is_enrolled_any_course = false;
-		$is_incomplete_payment  = ! empty( $order->payment_method ) && self::ORDER_INCOMPLETE === $order->order_status;
-		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : true;
+		$is_incomplete_payment  = self::PAYMENT_UNPAID === $order->payment_status && self::ORDER_INCOMPLETE === $order->order_status;
+		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : false;
 
 		if ( $is_incomplete_payment && ! $is_manual_payment && $order_items ) {
 			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
