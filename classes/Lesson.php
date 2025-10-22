@@ -580,15 +580,8 @@ class Lesson extends Tutor_Base {
 	 * @return mixed  based on arguments
 	 */
 	public static function get_comments( array $args ) {
-		$args['meta_query'] = array(
-			array(
-				'key'     => 'comment_type',
-				'value'   => 'comment',
-				'compare' => '=',
-			),
-		);
-
-		$comments = get_comments( $args );
+		$args['type'] = 'comment';
+		$comments     = get_comments( $args );
 		return $comments;
 	}
 
