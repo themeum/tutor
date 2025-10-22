@@ -17,6 +17,7 @@ import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShar
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import {
+  BILLING_CYCLE_CUSTOM_PRESETS,
   convertFormDataToSubscription,
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
@@ -78,41 +79,54 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
     background: isDragging ? colorTokens.stroke.hover : undefined,
   };
 
+  const recurringLimit = useMemo(() => {
+    let recurringLimitText: string | JSX.Element = `${subscription.recurring_limit.toString().padStart(2, '0')} ${__(
+      'Billing Cycles',
+      'tutor',
+    )}`;
+
+    if (subscription.recurring_limit === BILLING_CYCLE_CUSTOM_PRESETS.untilCancelled) {
+      recurringLimitText = __('Until Cancellation', 'tutor');
+    }
+
+    if (subscription.recurring_limit === BILLING_CYCLE_CUSTOM_PRESETS.noRenewal) {
+      recurringLimitText = __('No Renewal', 'tutor');
+    }
+
+    return (
+      <>
+        <span>•</span>
+        <span>{recurringLimitText}</span>
+      </>
+    );
+  }, [subscription.recurring_limit]);
+
   const marqueeText = useMemo(
     () => (
       <>
         <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
           <span>
-            {sprintf(
-              __('Renew every %1$s %2$s', 'tutor'),
-              subscription.recurring_value.toString().padStart(2, '0'),
-              formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
-            )}
+            <Show
+              when={subscription.recurring_limit !== BILLING_CYCLE_CUSTOM_PRESETS.noRenewal}
+              fallback={`${subscription.recurring_value.toString().padStart(2, '0')} ${formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}`}
+            >
+              {sprintf(
+                __('Renew every %1$s %2$s', 'tutor'),
+                subscription.recurring_value.toString().padStart(2, '0'),
+                formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
+              )}
+            </Show>
           </span>
         </Show>
-        <Show when={subscription.payment_type !== 'onetime'}>
-          <Show
-            when={subscription.recurring_limit === __('Until cancelled', 'tutor')}
-            fallback={
-              <>
-                <span>•</span>
-                <span>
-                  {subscription.recurring_limit.toString().padStart(2, '0')} {__('Billing Cycles', 'tutor')}
-                </span>
-              </>
-            }
-          >
-            <span>•</span>
-            <span>{__('Until Cancellation', 'tutor')}</span>
-          </Show>
-        </Show>
+        <Show when={subscription.payment_type !== 'onetime'}>{recurringLimit}</Show>
       </>
     ),
     [
       subscription.payment_type,
-      subscription.recurring_value,
-      subscription.recurring_interval,
       subscription.recurring_limit,
+      subscription.recurring_interval,
+      subscription.recurring_value,
+      recurringLimit,
     ],
   );
 
