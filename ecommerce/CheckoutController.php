@@ -1066,9 +1066,6 @@ class CheckoutController {
 			if ( $order_data ) {
 				try {
 
-					// Validate the selected payment method.
-					$this->validate_payment_method_or_redirect( $payment_method, $order_data );
-
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
