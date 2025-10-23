@@ -2115,7 +2115,6 @@ class OrderModel {
 			}
 
 			$wpdb->query( 'COMMIT' );
-			return $order_id;
 
 		} catch ( \Throwable $th ) {
 			$wpdb->query( 'ROLLBACK' );

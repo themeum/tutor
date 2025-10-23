@@ -129,9 +129,9 @@ class OrderController {
 			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
 
 			add_filter( 'tutor_calculate_order_tax_amount', array( $this, 'filter_calculate_single_order_tax_amount' ), 10, 5 );
-
-			add_action( 'tutor_before_manual_pay_now_order_update', array( $this, 'manual_pay_now_order_update' ), 10, 2 );
 		}
+
+
 	}
 
 	/**
@@ -1222,55 +1222,5 @@ class OrderController {
 		);
 
 		return (object) $refund_data;
-	}
-
-	public function manual_pay_now_order_update( object $order_data, object $checkout_data ) {
-
-		$subtotal_price = 0;
-		$total_price    = 0;
-		$user_id        = $order_data->student->id;
-		$prices         = $this->model::TYPE_SINGLE_ORDER === $order_data->order_type ? $this->model::calculate_order_price( $order_data->items ) : apply_filters( 'tutor_create_order_prices_for_subscription', null, $order_data->items, $order_data->order_type, $user_id );
-
-		$subtotal_price = $prices->subtotal ?? $prices->subtotal_price ?? 0;
-		$total_price    = $prices->total ?? $prices->total_price ?? 0;
-
-		$update_data = array(
-			'items'          => $order_data->items,
-			'coupon_code'    => $checkout_data->coupon_code,
-			'coupon_amount'  => $checkout_data->coupon_discount ?? null,
-			'subtotal_price' => $subtotal_price,
-			'pre_tax_price'  => $total_price,
-			'total_price'    => $total_price,
-			'net_payment'    => $total_price,
-			'updated_at_gmt' => current_time( 'mysql', true ),
-			'updated_by'     => get_current_user_id(),
-		);
-
-		if ( $checkout_data->sale_discount > 0 ) {
-			$update_data['discount_type']   = 'flat';
-			$update_data['discount_amount'] = floatval( $checkout_data->sale_discount );
-			$update_data['discount_reason'] = __( 'Sale discount', 'tutor' );
-		}
-
-		$calculate_tax = apply_filters( 'tutor_calculate_order_tax', Tax::should_calculate_tax() );
-		$tax_rate      = $calculate_tax ? Tax::get_user_tax_rate( $user_id ) : 0.0;
-
-		if ( $tax_rate ) {
-			$tax_amount = apply_filters( 'tutor_calculate_order_tax_amount', 0, $total_price, $tax_rate, $order_data->order_type, $order_data->items );
-
-			$update_data['tax_type']   = Tax::get_tax_type();
-			$update_data['tax_rate']   = $tax_rate;
-			$update_data['tax_amount'] = $tax_amount;
-
-			if ( ! Tax::is_tax_included_in_price() ) {
-				$total_price               += $tax_amount;
-				$update_data['total_price'] = $total_price;
-				$update_data['net_payment'] = $total_price;
-			} else {
-				$update_data['pre_tax_price'] = $total_price - $tax_amount;
-			}
-		}
-
-		$this->model->update_order_and_order_items( $order_data->id, $update_data );
 	}
 }

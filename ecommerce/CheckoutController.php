@@ -684,9 +684,7 @@ class CheckoutController {
 
 			// Check if an order ID is provided.
 			if ( ! empty( $order_id ) ) {
-				$order_data        = OrderModel::get_valid_incomplete_order( $order_id, $current_user_id );
-				$order_data->items = $items;
-				do_action( 'tutor_before_manual_pay_now_order_update', $order_data, $checkout_data );
+				$order_data = $this->get_order_data_for_manual_pay_now( $order_id, $items, $checkout_data );
 			}
 
 			if ( ! $order_data ) {
@@ -704,7 +702,7 @@ class CheckoutController {
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {
 					try {
-						$payment_data = self::prepare_payment_data( (array) $order_data );
+						$payment_data = self::prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
 					} catch ( \Throwable $th ) {
 						tutor_log( $th );
@@ -1197,5 +1195,23 @@ class CheckoutController {
 		if ( empty( $selected_payment_method ) || ! $is_valid_payment_method ) {
 			tutor_utils()->redirect_to( add_query_arg( array( 'order_id' => $order_data->id ), get_permalink( self::get_page_id() ) ) );
 		}
+	}
+
+	/**
+	 * Retrieve and prepare order data for the manual "Pay Now" process.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int    $order_id      The ID of the order to retrieve and process.
+	 * @param array  $items         The list of order items associated with the order.
+	 * @param object $checkout_data The checkout data object.
+	 *
+	 * @return array|null Filtered order data object, or null if no valid order found.
+	 */
+	private function get_order_data_for_manual_pay_now( int $order_id, array $items, object $checkout_data ): ?array{
+		$order_data        = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() );
+		$order_data->items = $items;
+
+		return apply_filters('tutor_before_manual_pay_now_order_update', $order_data, $checkout_data );
 	}
 }
