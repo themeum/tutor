@@ -327,7 +327,7 @@ class Utils {
 	 *
 	 * @return array|bool|mixed
 	 */
-	public function avalue_dot( $key = null, $data, $default = false ) {
+	public function avalue_dot( $key = null, $data = array(), $default = false ) {
 		$array = is_object( $data ) ? (array) $data : $data;
 
 		if ( '' === $key || null === $key || ! $this->count( $array ) ) {
