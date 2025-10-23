@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.8.3
+Stable tag: 3.9.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -62,6 +62,7 @@ Here are the most notable features of Tutor LMS:
 📌 Personalized dashboard for each role (admins, instructors, students)
 📽️ Video lessons
 📹 Multiple video sources (self-hosted, YouTube, Vimeo, embedded video, etc)
+✍️ Note taking for lessons and videos
 📅 Content drip
 👩‍🏫 Unlimited teacher profiles
 📝 Lesson management
@@ -76,7 +77,7 @@ Here are the most notable features of Tutor LMS:
 ⭐ Course review and rating system
 ❓ Q&A for students with the instructor
 🎥 Video thumbnail (trailer/teaser)
-🚀 Tracking course progress
+🚀 Tracking and resetting course progress
 🌟 Course difficulty level
 ⏳ Set course duration
 🌐 Course marketplace
@@ -152,7 +153,7 @@ The Tutor LMS AI Studio also supports feature image generation, helping you craf
 
 == 📚 COURSE BUNDLES ==
 
-With Tutor LMS, you can sell multiple courses in a [course bundle](https://tutorlms.com/course-bundles/). Bundles can be offered at a discounted price or structured as a guided learning path by encouraging students to explore complementary topics. This feature enhances course accessibility and creates curated learning journeys tailored to students’ needs.
+With Tutor LMS, you can sell multiple courses in a [course bundle](https://tutorlms.com/course-bundles/). Bundles can be offered at a discounted price or structured as a guided learning path by encouraging students to explore complementary topics. This feature enhances course accessibility and creates curated learning journeys tailored to students’ needs. You can also offer certificates for the bundle courses.
 
 == 🗂️ CONTENT BANK ==
 
@@ -317,6 +318,17 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.9.0 - Oct 22, 2025
+
+New: Introducing Lesson & Video Note-Taking. (Pro)
+New: Certificate Support for Course Bundles. (Pro)
+New: Allow Admins and Instructors to reset course progress for individual students. (Pro)
+Fix: Popover RTL issue.
+Fix: Assignment details not showing on start/update assignment page. (Pro)
+Fix: Dropdown issue on frontend scheduled courses fixed.
+Fix: Warning displayed after student attempts imported quiz.
+Fix: Security issues are fixed.
 
 = 3.8.3 - Sep 30, 2025
 

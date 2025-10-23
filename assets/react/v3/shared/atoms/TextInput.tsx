@@ -114,7 +114,7 @@ const TextInput = ({
 
         {isClearable && !!value && (
           <div css={styles.rightIconButton}>
-            <Button variant="text" onClick={() => onChange('')}>
+            <Button variant="text" size="small" onClick={() => onChange('')}>
               <SVGIcon name="cross" width={24} height={24} />
             </Button>
           </div>
@@ -122,7 +122,7 @@ const TextInput = ({
 
         {!!handleMediaIconClick && variant !== 'search' && !value && (
           <div css={styles.rightIconButton}>
-            <Button variant="text" onClick={handleMediaIconClick}>
+            <Button variant="text" size="small" onClick={handleMediaIconClick}>
               <SVGIcon name="upload" />
             </Button>
           </div>

@@ -1,4 +1,9 @@
 parameters:
-    level: 5
+    level: 8
     paths:
         - .
+    excludePaths:
+        # Exclude the Composer vendor directory
+        - vendor
+        # Exclude the GitHub Actions workflow directory
+        - .github

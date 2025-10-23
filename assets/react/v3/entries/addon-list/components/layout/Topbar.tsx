@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import TextInput from '@TutorShared/atoms/TextInput';
 import { Breakpoint, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@TutorShared/config/styles';
+import { __ } from '@wordpress/i18n';
 import { useAddonContext } from '../../contexts/addon-context';
 import Container from './Container';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { __ } from '@wordpress/i18n';
-import TextInput from '@TutorShared/atoms/TextInput';
 
 export const TOPBAR_HEIGHT = 80;
 
@@ -45,7 +45,6 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 100%;
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     padding: ${spacing[20]} 0px;
 

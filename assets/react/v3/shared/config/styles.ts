@@ -419,7 +419,7 @@ export const zIndex = {
   header: 10,
   footer: 10,
   modal: 25,
-  notebook: 30,
+  notebook: 100000,
   highest: 99999,
 } as const;
 

@@ -166,7 +166,6 @@ class Lesson extends Tutor_Base {
 		} else {
 			delete_post_meta( $post_ID, '_tutor_attachments' );
 		}
-
 	}
 
 	/**
@@ -581,7 +580,8 @@ class Lesson extends Tutor_Base {
 	 * @return mixed  based on arguments
 	 */
 	public static function get_comments( array $args ) {
-		$comments = get_comments( $args );
+		$args['type'] = 'comment';
+		$comments     = get_comments( $args );
 		return $comments;
 	}
 

@@ -555,12 +555,14 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_now() {
-		tutor_utils()->check_nonce();
+		$errors = array();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			array_push( $errors, tutor_utils()->error_message( 'nonce' ) );
+			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
+			return;
+		}
 		global $wpdb;
-
-		$errors     = array();
-		$order_data = null;
-
+		$order_data      = null;
 		$billing_model   = new BillingModel();
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
@@ -1050,11 +1052,6 @@ class CheckoutController {
 			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
-					// If payment method not selected then redirect to checkout page.
-					if ( empty( $payment_method ) && empty( $order_data->payment_method ) ) {
-
-						tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'checkout' ) . '?order_id=' . $order_id );
-					}
 
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );

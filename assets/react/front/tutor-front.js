@@ -307,8 +307,14 @@ jQuery(document).ready(function($) {
 			if (completedPercentage < required_percentage) {
 				const complete_lesson_btn = $('button[name="complete_lesson_btn"]');
 				complete_lesson_btn.attr('disabled', true);
-				/* translators: %s is the required watch percentage (e.g., 80) */
-				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>').after(`<span class="tooltip-txt tooltip-bottom">${ sprintf( __( 'Watch at least %s% to complete the lesson.', 'tutor' ), video_data.required_percentage ) }</span>`);
+				complete_lesson_btn.wrap('<div class="tooltip-wrap"></div>');
+				complete_lesson_btn.after(
+					/* translators: %s is the required watch percentage (e.g., 80) */
+					`<span class="tooltip-txt tooltip-bottom">${ sprintf(
+						__( 'Watch at least %s%% to complete the lesson.', 'tutor' ),
+						video_data.required_percentage
+					) }</span>`
+				);
 			}
 		},
 		getPercentage: function(value, total) {

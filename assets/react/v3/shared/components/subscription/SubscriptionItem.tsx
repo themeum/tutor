@@ -14,6 +14,7 @@ import { OfferSalePrice } from '@TutorShared/components/subscription/OfferSalePr
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
+import { BILLING_CYCLE_CUSTOM_PRESETS, BILLING_CYCLE_PRESETS } from '@TutorShared/services/subscription';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
 
@@ -38,17 +39,18 @@ export default function SubscriptionItem() {
   // @TODO: Will be added after confirmation
   // const enableTrial = form.watch(`subscriptions.${index}.enable_free_trial` as `subscriptions.0.enable_free_trial`);
 
-  const lifetimePresets = [3, 6, 9, 12];
-  const lifetimeOptions = [
-    ...lifetimePresets.map((preset) => ({
+  const billingCyclesCustomPresets = Object.values(BILLING_CYCLE_CUSTOM_PRESETS);
+
+  const billingCycles = [
+    ...BILLING_CYCLE_PRESETS.map((preset) => ({
       /* translators: %s is the number of times */
       label: sprintf(__('%s times', 'tutor'), preset.toString()),
       value: String(preset),
     })),
-    {
-      label: __('Until cancelled', 'tutor'),
-      value: __('Until cancelled', 'tutor'),
-    },
+    ...billingCyclesCustomPresets.map((value) => ({
+      label: value,
+      value: value,
+    })),
   ];
 
   return (
@@ -138,7 +140,7 @@ export default function SubscriptionItem() {
               rules={{
                 ...requiredRule(),
                 validate: (value) => {
-                  if (value === __('Until cancelled', 'tutor')) {
+                  if (billingCyclesCustomPresets.includes(value)) {
                     return true;
                   }
 
@@ -153,10 +155,10 @@ export default function SubscriptionItem() {
                   {...controllerProps}
                   label={__('Billing Cycles', 'tutor')}
                   placeholder={__('Select or type times to renewing the plan', 'tutor')}
-                  content={controllerProps.field.value !== __('Until cancelled', 'tutor') && __('Times', 'tutor')}
+                  content={!billingCyclesCustomPresets.includes(controllerProps.field.value) && __('Times', 'tutor')}
                   contentPosition="right"
                   type="number"
-                  presetOptions={lifetimeOptions}
+                  presetOptions={billingCycles}
                   selectOnFocus
                 />
               )}
