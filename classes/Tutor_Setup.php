@@ -575,7 +575,7 @@ class Tutor_Setup {
 											</p>
 											<p>
 												<?php esc_html_x( 'If you need further assistance, please don’t hesitate to contact us via our ', 'tutor-setup-assistance', 'tutor' ); ?>
-												<a target="_blank" href="https://www.themeum.com/contact-us/">
+												<a target="_blank" href="https://tutorlms.com/contact/">
 													<?php esc_html_x( 'contact form.', 'tutor-setup-assistance', 'tutor' ); ?>
 												</a>
 											</p>
