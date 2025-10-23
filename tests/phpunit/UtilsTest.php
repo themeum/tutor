@@ -105,4 +105,24 @@ class UtilsTest extends \WP_UnitTestCase {
 
 		$this->assertSame( $expected2, $actual2 );
 	}
+
+	/**
+	 * Test avalue_dot function
+	 *
+	 * @return void
+	 */
+	public function test_avalue_dot() {
+		$array = array(
+			'a' => 'apple',
+			'b' => 'banana',
+		);
+		$this->assertEquals( 'apple', tutor_utils()->avalue_dot( 'a', $array ) );
+		$this->assertEquals( 'banana', tutor_utils()->avalue_dot( 'b', $array ) );
+		$this->assertEquals( false, tutor_utils()->avalue_dot( 'c', $array ) );
+
+		$obj = (object) $array;
+		$this->assertEquals( 'apple', tutor_utils()->avalue_dot( 'a', $obj ) );
+		$this->assertEquals( 'banana', tutor_utils()->avalue_dot( 'b', $obj ) );
+		$this->assertEquals( false, tutor_utils()->avalue_dot( 'c', $obj ) );
+	}
 }

@@ -316,18 +316,20 @@ class Utils {
 	}
 
 	/**
-	 * Get array value by dot notation
+	 * Get value by dot notation from array or object
 	 *
 	 * @since 1.0.0
 	 * @since 1.4.1 default parameter added
 	 *
-	 * @param null  $key option key.
-	 * @param array $array array.
-	 * @param mixed $default default value.
+	 * @param null         $key option key.
+	 * @param array|object $data array or object.
+	 * @param mixed        $default default value.
 	 *
 	 * @return array|bool|mixed
 	 */
-	public function avalue_dot( $key = null, $array = array(), $default = false ) {
+	public function avalue_dot( $key = null, $data = array(), $default = false ) {
+		$array = is_object( $data ) ? (array) $data : $data;
+
 		if ( '' === $key || null === $key || ! $this->count( $array ) ) {
 			return $default;
 		}
