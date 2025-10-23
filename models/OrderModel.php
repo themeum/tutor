@@ -2049,7 +2049,7 @@ class OrderModel {
 	/**
 	 * Retrieve an existing order if it is incomplete, unpaid, and belongs to the given user.
 	 *
-	 * @since 3.9.0
+	 * @since 3.9.2
 	 * @param int $order_id The ID of the order.
 	 * @param int $user_id  The ID of the current user.
 	 *
@@ -2075,7 +2075,17 @@ class OrderModel {
 		return null;
 	}
 
-	public function update_order_items( $order_id, $order_items ) {
+	/**
+	 * Update all order items for a given order.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int   $order_id     The ID of the order whose items are being updated.
+	 * @param array $order_items  An array of order item data arrays or objects to update.
+	 *
+	 * @return bool True on success, false if any update fails.
+	 */
+	public function update_order_items( int $order_id, array $order_items ) {
 
 		foreach ( $order_items as $item ) {
 			try {
@@ -2094,6 +2104,19 @@ class OrderModel {
 		return true;
 	}
 
+
+	/**
+	 * Update an order and its associated order items.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int   $order_id     The ID of the order to update.
+	 * @param array $update_data  The associative array of order fields to update.
+	 *
+	 * @throws Exception If any update operation fails during the transaction.
+	 *
+	 * @return void
+	 */
 	public function update_order_and_order_items( int $order_id, array $update_data ) {
 
 		global $wpdb;
