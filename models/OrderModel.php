@@ -1780,8 +1780,8 @@ class OrderModel {
 	public static function should_show_pay_btn( object $order ) {
 		$order_items            = ( new self() )->get_order_items_by_id( $order->id );
 		$is_enrolled_any_course = false;
-		$is_incomplete_payment  = ! empty( $order->payment_method ) && self::ORDER_INCOMPLETE === $order->order_status;
-		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : true;
+		$is_incomplete_payment  = self::PAYMENT_UNPAID === $order->payment_status && self::ORDER_INCOMPLETE === $order->order_status;
+		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : false;
 
 		if ( $is_incomplete_payment && ! $is_manual_payment && $order_items ) {
 			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
@@ -2055,23 +2055,71 @@ class OrderModel {
 	 *
 	 * @return object|null Returns the order data object if valid and accessible, otherwise null.
 	 */
-	public function get_valid_incomplete_order( int $order_id, int $user_id ): ?object {
+	public static function get_valid_incomplete_order( int $order_id, int $user_id ): ?object {
 
 		if ( empty( $order_id ) || empty( $user_id ) ) {
 			return null;
 		}
 
-		$order_data  = $this->get_order_by_id( $order_id );
+		$order_data  = ( new self() )->get_order_by_id( $order_id );
 		$valid_order = ! empty( $order_data )
 						&& self::ORDER_INCOMPLETE === $order_data->order_status
 						&& self::PAYMENT_UNPAID === $order_data->payment_status
 						&& $user_id === $order_data->student->id
-						&& $this->should_show_pay_btn( $order_data );
+						&& self::should_show_pay_btn( $order_data );
 
 		if ( $valid_order ) {
 			return $order_data;
 		}
 
 		return null;
+	}
+
+	public function update_order_items( $order_id, $order_items ) {
+
+		foreach ( $order_items as $item ) {
+			try {
+				QueryHelper::update_where_in(
+					$this->order_item_table,
+					$item,
+					$order_id
+				);
+
+			} catch ( \Throwable $th ) {
+				tutor_log( "Failed to update order item for order ID {$order_id}: " . $th->getMessage() );
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public function update_order_and_order_items( int $order_id, array $update_data ) {
+
+		global $wpdb;
+
+		$order_items = $update_data['items'] ?? array();
+		unset( $update_data['items'] );
+
+		// Start transaction.
+		$wpdb->query( 'START TRANSACTION' );
+
+		try {
+
+			if ( ! $this->update_order( $order_id, $update_data ) ) {
+				throw new Exception( esc_html__( "Order Update Failed For Order ID: $order_id", 'tutor' ) ); //phpcs:ignore
+			}
+
+			if ( ! empty( $order_items ) && ! $this->update_order_items( $order_id, $order_items ) ) {
+				throw new Exception( esc_html__( "Order Update Failed For Order ID: $order_id", 'tutor' ) ); //phpcs:ignore
+			}
+
+			$wpdb->query( 'COMMIT' );
+			return $order_id;
+
+		} catch ( \Throwable $th ) {
+			$wpdb->query( 'ROLLBACK' );
+			throw new Exception( $th->getMessage() );
+		}
 	}
 }

@@ -22,12 +22,11 @@ use Tutor\Ecommerce\CheckoutController;
  */
 $user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
 
-$order_model         = new OrderModel();
 $coupon_model        = new CouponModel();
 $cart_controller     = new CartController( false );
 $checkout_controller = new CheckoutController( false );
 $order_id            = (int) Input::sanitize_request_data( 'order_id', 0 );
-$order_data          = $order_id ? $order_model->get_valid_incomplete_order( $order_id, (int) $user_id ) : null;
+$order_data          = $order_id ? OrderModel::get_valid_incomplete_order( $order_id, (int) $user_id ) : null;
 $get_cart            = ! empty( $order_data ) ? $checkout_controller->get_courses_data_by_order_items( $order_data->items ) : $cart_controller->get_cart_items();
 $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];

@@ -10,16 +10,16 @@
 
 namespace Tutor\Ecommerce;
 
-use TUTOR\Course;
-use Tutor\Models\OrderActivitiesModel;
-use TUTOR\Earnings;
-use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
+use TUTOR\Course;
+use TUTOR\Earnings;
 use Tutor\Models\CartModel;
-use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderModel;
-use TutorPro\CourseBundle\CustomPosts\CourseBundle;
+use Tutor\Helpers\QueryHelper;
+use Tutor\Models\OrderMetaModel;
+use Tutor\Models\OrderActivitiesModel;
 use TutorPro\CourseBundle\Models\BundleModel;
+use TutorPro\CourseBundle\CustomPosts\CourseBundle;
 
 /**
  * Handle custom hooks
@@ -217,7 +217,6 @@ class HooksHandler {
 				do_action( 'tutor_order_payment_status_changed', $order_id, $prev_payment_status, $new_payment_status );
 			}
 		}
-
 	}
 
 	/**
@@ -466,7 +465,7 @@ class HooksHandler {
 			$user_id  = $order_data['user_id'];
 			$items    = $order_data['items'];
 			foreach ( $items as $item ) {
-				add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
+				add_filter( 'tutor_enroll_data', fn( $enroll_data ) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 				$enrolled_id = tutor_utils()->do_enroll( $item['item_id'], $order_data['id'], $user_id );
 				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
@@ -492,7 +491,7 @@ class HooksHandler {
 	 *
 	 * @return string
 	 */
-	public function redirect_to_the_course( string $url, string $status, int $order_id ):string {
+	public function redirect_to_the_course( string $url, string $status, int $order_id ): string {
 		$user_id = get_current_user_id();
 		if ( OrderModel::ORDER_PLACEMENT_SUCCESS === $status ) {
 			$order = $this->order_model->get_order_by_id( $order_id );
@@ -557,4 +556,3 @@ class HooksHandler {
 		);
 	}
 }
-

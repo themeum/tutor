@@ -567,7 +567,6 @@ class CheckoutController {
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$order_id        = (int) Input::sanitize_request_data( 'order_id', 0 );
-		$existing_order  = false;
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
@@ -683,16 +682,14 @@ class CheckoutController {
 				}
 			}
 
-			// Check that an order ID is provided.
+			// Check if an order ID is provided.
 			if ( ! empty( $order_id ) ) {
-				$order_details  = OrderModel::get_order( $order_id );
-				$existing_order = ! empty( $order_details )
-									&& OrderModel::ORDER_INCOMPLETE === $order_details->order_status
-									&& OrderModel::PAYMENT_UNPAID === $order_details->payment_status;
-				$order_data     = true === $existing_order ? (array) $order_details : null;
+				$order_data        = OrderModel::get_valid_incomplete_order( $order_id, $current_user_id );
+				$order_data->items = $items;
+				do_action( 'tutor_before_manual_pay_now_order_update', $order_data, $checkout_data );
 			}
 
-			if ( ! $existing_order ) {
+			if ( ! $order_data ) {
 				$order_data = $this->order_ctrl->create_order(
 					$current_user_id,
 					$items,
@@ -707,7 +704,7 @@ class CheckoutController {
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {
 					try {
-						$payment_data = self::prepare_payment_data( $order_data );
+						$payment_data = self::prepare_payment_data( (array) $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
 					} catch ( \Throwable $th ) {
 						tutor_log( $th );
@@ -1065,6 +1062,8 @@ class CheckoutController {
 			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
+					// Validate the selected payment method.
+					$this->validate_payment_method_or_redirect( $payment_method, $order_data );
 
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
@@ -1183,7 +1182,7 @@ class CheckoutController {
 	/**
 	 * Validate the selected payment method and redirect to checkout if invalid.
 	 *
-	 * @since 3.9.0
+	 * @since 3.9.2
 	 *
 	 * @param string|null $payment_method  The selected payment method.
 	 * @param object      $order_data      The current order data.
