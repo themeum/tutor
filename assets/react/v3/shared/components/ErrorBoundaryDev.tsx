@@ -318,6 +318,7 @@ const styles = {
   `,
   sourceLine: (isErrorLine: boolean) => css`
     white-space: pre-wrap;
+    font-family: 'Fire Code', monospace;
 
     ${isErrorLine &&
     css`

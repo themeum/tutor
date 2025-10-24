@@ -115,7 +115,7 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
   return (
     <div css={styles.outer}>
       <Show when={subscriptionFields.length > 0}>
-        <div css={styles.header}>{__('Subscriptions', 'tutor')}</div>
+        <div css={styles.header}>{__('Subscriptions', __TUTOR_TEXT_DOMAIN__)}</div>
       </Show>
 
       <div
@@ -200,7 +200,7 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
               showModal({
                 component: SubscriptionModal,
                 props: {
-                  title: __('Manage Subscription Plans', 'tutor'),
+                  title: __('Manage Subscription Plans', __TUTOR_TEXT_DOMAIN__),
                   icon: <SVGIcon name="dollarRecurring" width={24} height={24} />,
                   subscription: {
                     ...defaultSubscriptionFormData,
@@ -213,7 +213,7 @@ const SubscriptionPreview = ({ courseId, isBundle = false }: SubscriptionPreview
               });
             }}
           >
-            {__('Add Subscription', 'tutor')}
+            {__('Add Subscription', __TUTOR_TEXT_DOMAIN__)}
           </Button>
         </div>
       </div>

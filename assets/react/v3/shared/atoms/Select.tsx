@@ -198,7 +198,7 @@ const Select = <T,>({
                 setIsOpen(false);
               }}
             >
-              {__('Clear', 'tutor')}
+              {__('Clear', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </div>
         )}

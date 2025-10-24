@@ -148,7 +148,7 @@ const FormQuestionTitle = ({
           <div
             role="button"
             css={[styles.container({ isEdit, isDisabled: disabled || false, size }), wrapperCss]}
-            aria-label={__('Question title field', 'tutor')}
+            aria-label={__('Question title field', __TUTOR_TEXT_DOMAIN__)}
           >
             <Show when={!isEdit}>
               <div
@@ -224,7 +224,7 @@ const FormQuestionTitle = ({
                     variant="text"
                     size="small"
                     onClick={() => handleToggleEdit(true)}
-                    aria-label={__('Edit question title', 'tutor')}
+                    aria-label={__('Edit question title', __TUTOR_TEXT_DOMAIN__)}
                     data-question-title-edit-button
                   >
                     <SVGIcon name="edit" height={24} width={24} />
@@ -239,7 +239,7 @@ const FormQuestionTitle = ({
                       size="small"
                       onClick={handleSave}
                       disabled={field.value === previousValue}
-                      aria-label={__('Save question title', 'tutor')}
+                      aria-label={__('Save question title', __TUTOR_TEXT_DOMAIN__)}
                     >
                       <SVGIcon name="checkMark" height={24} width={24} />
                     </Button>
@@ -250,7 +250,7 @@ const FormQuestionTitle = ({
                       variant="text"
                       size="small"
                       onClick={handleCancel}
-                      aria-label={__('Cancel question title', 'tutor')}
+                      aria-label={__('Cancel question title', __TUTOR_TEXT_DOMAIN__)}
                     >
                       <SVGIcon name="lineCross" height={24} width={24} />
                     </Button>

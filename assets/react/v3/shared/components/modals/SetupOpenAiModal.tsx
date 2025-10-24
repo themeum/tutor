@@ -65,7 +65,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
   return (
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      title={isCurrentUserAdmin ? __('Set OpenAI API key', 'tutor') : undefined}
+      title={isCurrentUserAdmin ? __('Set OpenAI API key', __TUTOR_TEXT_DOMAIN__) : undefined}
       entireHeader={isCurrentUserAdmin ? undefined : <>&nbsp;</>}
       maxWidth={560}
     >
@@ -82,13 +82,13 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
                 css={styles.image}
                 src={image}
                 srcSet={image2x ? `${image} 1x, ${image2x} 2x` : `${image} 1x`}
-                alt={__('Connect API KEY', 'tutor')}
+                alt={__('Connect API KEY', __TUTOR_TEXT_DOMAIN__)}
               />
 
               <div>
-                <div css={styles.message}>{__('API is not connected', 'tutor')}</div>
+                <div css={styles.message}>{__('API is not connected', __TUTOR_TEXT_DOMAIN__)}</div>
                 <div css={styles.title}>
-                  {__('Please, ask your Admin to connect the API with Tutor LMS Pro.', 'tutor')}
+                  {__('Please, ask your Admin to connect the API with Tutor LMS Pro.', __TUTOR_TEXT_DOMAIN__)}
                 </div>
               </div>
             </>
@@ -103,7 +103,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
                     __html: sprintf(
                       __(
                         'Find your Secret API key in your %1$sOpenAI User settings%2$s and paste it here to connect OpenAI with your Tutor LMS website.',
-                        'tutor',
+                        __TUTOR_TEXT_DOMAIN__,
                       ),
                       `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noopener noreferrer">`,
                       '</a>',
@@ -112,7 +112,10 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
                 ></div>
 
                 <Alert type="info" icon="warning">
-                  {__('The page will reload after submission. Make sure to save the course information.', 'tutor')}
+                  {__(
+                    'The page will reload after submission. Make sure to save the course information.',
+                    __TUTOR_TEXT_DOMAIN__,
+                  )}
                 </Alert>
               </div>
 
@@ -125,8 +128,8 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
                     {...controllerProps}
                     type="password"
                     isPassword
-                    label={__('OpenAI API key', 'tutor')}
-                    placeholder={__('Enter your OpenAI API key', 'tutor')}
+                    label={__('OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
+                    placeholder={__('Enter your OpenAI API key', __TUTOR_TEXT_DOMAIN__)}
                   />
                 )}
               />
@@ -134,7 +137,9 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
               <Controller
                 name="enable_open_ai"
                 control={form.control}
-                render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Enable OpenAI', 'tutor')} />}
+                render={(controllerProps) => (
+                  <FormSwitch {...controllerProps} label={__('Enable OpenAI', __TUTOR_TEXT_DOMAIN__)} />
+                )}
               />
             </form>
             <div css={styles.formFooter}>
@@ -147,14 +152,14 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
                 variant="text"
                 size="small"
               >
-                {__('Cancel', 'tutor')}
+                {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
               </Button>
               <Button
                 size="small"
                 onClick={form.handleSubmit(handleSubmit)}
                 loading={saveOpenAiSettingsMutation.isPending}
               >
-                {__('Save', 'tutor')}
+                {__('Save', __TUTOR_TEXT_DOMAIN__)}
               </Button>
             </div>
           </>
