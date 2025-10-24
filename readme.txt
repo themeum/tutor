@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.9.0
+Stable tag: 3.9.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,12 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.9.1 - Oct 23, 2025
+
+Fix: Resolved BunnyNet video not loading issue.
+Fix: Resolved Quiz attempt access denied issue.
+Fix: Resolved Assignment search is not working. (Pro)
 
 = 3.9.0 - Oct 22, 2025
 
