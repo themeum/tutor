@@ -1208,10 +1208,10 @@ class CheckoutController {
 	 *
 	 * @return array|null Filtered order data object, or null if no valid order found.
 	 */
-	private function get_order_data_for_manual_pay_now( int $order_id, array $items, object $checkout_data ): ?array{
+	private function get_order_data_for_manual_pay_now( int $order_id, array $items, object $checkout_data ): ?array {
 		$order_data        = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() );
 		$order_data->items = $items;
 
-		return apply_filters('tutor_before_manual_pay_now_order_update', $order_data, $checkout_data );
+		return apply_filters( 'tutor_before_manual_pay_now_order_update', $order_data, $checkout_data );
 	}
 }

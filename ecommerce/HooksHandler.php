@@ -95,11 +95,10 @@ class HooksHandler {
 
 		/**
 		 * Updates the order data before processing manual `Pay Now`.
-		 * 
+		 *
 		 * @since 3.9.2
 		 */
 		add_filter( 'tutor_before_manual_pay_now_order_update', array( $this, 'manual_pay_now_order_update' ), 10, 2 );
-
 	}
 
 	/**
@@ -580,8 +579,8 @@ class HooksHandler {
 		$subtotal_price = 0;
 		$total_price    = 0;
 		$user_id        = $order_data->student->id;
-		$prices         = $this->order_model::TYPE_SINGLE_ORDER === $order_data->order_type 
-							? $this->order_model::calculate_order_price( $order_data->items ) 
+		$prices         = $this->order_model::TYPE_SINGLE_ORDER === $order_data->order_type
+							? $this->order_model::calculate_order_price( $order_data->items )
 							: apply_filters( 'tutor_create_order_prices_for_subscription', null, $order_data->items, $order_data->order_type, $user_id );
 
 		$subtotal_price = $prices->subtotal ?? $prices->subtotal_price ?? 0;
