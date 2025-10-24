@@ -42,7 +42,9 @@ $object_ids = array();
 $item_ids   = $has_plan_info ? array( $plan_info->id ) : array_column( $course_list, 'ID' );
 $order_type = $has_plan_info ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-$coupon_code            = apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
+// Check for applicable coupon in the existing order data.
+$has_applicable_coupon  = ! empty( $order_data ) && $coupon_model->order_has_applicable_coupon( $order_data );
+$coupon_code            = $has_applicable_coupon ? $order_data->coupon_code : apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
 $has_manual_coupon_code = ! empty( $coupon_code );
 
 $should_calculate_tax     = Tax::should_calculate_tax();

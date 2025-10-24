@@ -1242,4 +1242,36 @@ class CouponModel {
 
 		return $error_messages[ $key ] ?? '';
 	}
+
+
+	/**
+	 * Determine whether an order has a valid and applicable coupon.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param object $order_data Order data object containing coupon and item details.
+	 *
+	 * @return bool|null Returns true if a valid and applicable coupon exists for the order,
+	 *                   otherwise null if no valid coupon or applicability not found.
+	 */
+	public function order_has_applicable_coupon( object $order_data ): ?bool {
+
+		if ( empty( $order_data->coupon_code ) ) {
+			return null;
+		}
+
+		$coupon = $this->get_coupon_by_code( $order_data->coupon_code );
+
+		if ( ! $coupon || ! $this->is_coupon_valid( $coupon ) ) {
+			return null;
+		}
+
+		foreach ( $order_data->items as $item ) {
+			if ( $this->is_coupon_applicable( $coupon, $item->id, $order_data->order_type ) ) {
+				return true;
+			}
+		}
+
+		return null;
+	}
 }
