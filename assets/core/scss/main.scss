@@ -1,0 +1,73 @@
+// Tutor Design System - Main Entry Point
+// Single CSS file with all themes and RTL support
+
+@use 'sass:map';
+
+// Import design tokens
+@use 'tokens/colors' as *;
+@use 'tokens/typography' as *;
+@use 'tokens/spacing' as *;
+@use 'tokens/radius' as *;
+@use 'tokens/breakpoints' as *;
+
+// Import themes
+@use 'themes/light' as *;
+@use 'themes/dark' as *;
+
+// Import mixins
+@use 'mixins/buttons' as *;
+@use 'mixins/cards' as *;
+@use 'mixins/forms' as *;
+@use 'mixins/layout' as *;
+@use 'mixins/utilities' as *;
+@use 'mixins/rtl' as *;
+
+// Import base components
+@use 'components/button';
+@use 'components/card';
+@use 'components/form';
+@use 'components/navigation';
+@use 'components/progress';
+@use 'components/dropdown';
+@use 'components/modal';
+@use 'components/popover';
+@use 'components/tabs';
+@use 'components/accordion';
+@use 'components/toast';
+@use 'components/sidebar';
+@use 'components/tooltip';
+
+// Import utilities
+@use 'utilities/rtl';
+@use 'utilities/colors';
+@use 'utilities/layout';
+@use 'utilities/spacing';
+@use 'utilities/typography';
+@use 'utilities/sizing';
+@use 'utilities/rtl-testing';
+
+// Base styles
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+body {
+  margin: 0;
+  font-family: inherit;
+  line-height: inherit;
+  background-color: var(--tutor-surface-base);
+  color: var(--tutor-text-primary);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}

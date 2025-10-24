@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Design System - Alpine.js Components</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <style>
+        .demo-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+        }
+        .demo-title {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--tutor-text-primary);
+        }
+        
+        /* Component Styles */
+        .tutor-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tutor-dropdown__menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 200px;
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            margin-top: 4px;
+        }
+        
+        .tutor-dropdown__item {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            color: var(--tutor-text-primary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .tutor-dropdown__item:hover {
+            background-color: var(--tutor-surface-l2);
+        }
+        
+        .tutor-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .tutor-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .tutor-modal__content {
+            position: relative;
+            background: var(--tutor-surface-l1);
+            border-radius: 8px;
+            padding: 24px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .tutor-tabs__nav {
+            display: flex;
+            border-bottom: 1px solid var(--tutor-border-idle);
+            margin-bottom: 16px;
+        }
+        
+        .tutor-tab {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 12px 16px;
+            color: var(--tutor-text-secondary);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .tutor-tab:hover {
+            color: var(--tutor-text-primary);
+            background-color: var(--tutor-surface-l2);
+        }
+        
+        .tutor-tab.active {
+            color: var(--tutor-text-brand);
+            border-bottom-color: var(--tutor-border-brand);
+        }
+        
+        .tutor-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            margin-bottom: 8px;
+        }
+        
+        .tutor-toast--success {
+            border-color: var(--tutor-success);
+            background: #f0f9ff;
+        }
+        
+        .tutor-toast--error {
+            border-color: var(--tutor-error);
+            background: #fef2f2;
+        }
+        
+        .tutor-accordion__item {
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .tutor-accordion__trigger {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--tutor-surface-l1);
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tutor-accordion__content {
+            padding: 0 16px 16px;
+            background: var(--tutor-surface-l1);
+        }
+    </style>
+</head>
+<body>
+    <div class="tutor-container">
+        <header style="text-align: center; margin: 2rem 0;">
+            <h1 class="tutor-h1">Alpine.js Components</h1>
+            <p class="tutor-p1 tutor-text-secondary">Interactive component examples</p>
+        </header>
+
+        <!-- Dropdown Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">Dropdown</h2>
+            <div x-data="TutorCore.dropdown({ placement: 'bottom-start' })" class="tutor-dropdown">
+                <button @click="toggle()" class="tutor-btn tutor-btn--primary">
+                    Options ▼
+                </button>
+                <div x-show="open" 
+                     @click.outside="close()" 
+                     x-transition
+                     class="tutor-dropdown__menu">
+                    <a href="#" class="tutor-dropdown__item">Profile</a>
+                    <a href="#" class="tutor-dropdown__item">Settings</a>
+                    <a href="#" class="tutor-dropdown__item">Help</a>
+                    <div style="height: 1px; background: var(--tutor-border-idle); margin: 4px 0;"></div>
+                    <a href="#" class="tutor-dropdown__item">Logout</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">Modal</h2>
+            <div x-data="TutorCore.modal({ closable: true, backdrop: true })">
+                <button @click="show()" class="tutor-btn tutor-btn--primary">Open Modal</button>
+                
+                <div x-show="open" 
+                     @keydown.escape="hide()"
+                     x-transition
+                     class="tutor-modal">
+                    <div class="tutor-modal__backdrop" @click="hide()"></div>
+                    <div class="tutor-modal__content">
+                        <h3 style="margin-top: 0;">Modal Title</h3>
+                        <p>This is a modal dialog. You can close it by clicking the backdrop, pressing Escape, or clicking the close button.</p>
+                        <div class="tutor-flex" style="gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                            <button @click="hide()" class="tutor-btn tutor-btn--secondary">Cancel</button>
+                            <button @click="hide()" class="tutor-btn tutor-btn--primary">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tabs Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">Tabs</h2>
+            <div x-data="TutorCore.tabs(0)" class="tutor-tabs">
+                <div class="tutor-tabs__nav">
+                    <button @click="setTab(0)" :class="{'active': isActive(0)}" class="tutor-tab">Overview</button>
+                    <button @click="setTab(1)" :class="{'active': isActive(1)}" class="tutor-tab">Curriculum</button>
+                    <button @click="setTab(2)" :class="{'active': isActive(2)}" class="tutor-tab">Reviews</button>
+                </div>
+                <div class="tutor-tabs__content">
+                    <div x-show="isActive(0)" class="tutor-tab-panel">
+                        <h3>Course Overview</h3>
+                        <p>This tab contains the course overview information, including description, objectives, and prerequisites.</p>
+                    </div>
+                    <div x-show="isActive(1)" class="tutor-tab-panel">
+                        <h3>Course Curriculum</h3>
+                        <p>Here you'll find the detailed curriculum with lessons, quizzes, and assignments.</p>
+                    </div>
+                    <div x-show="isActive(2)" class="tutor-tab-panel">
+                        <h3>Student Reviews</h3>
+                        <p>Read what other students have to say about this course.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Toast Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">Toast Notifications</h2>
+            <div x-data="TutorCore.toast()">
+                <div class="tutor-flex" style="gap: 1rem; flex-wrap: wrap;">
+                    <button @click="success('Success! Operation completed.')" class="tutor-btn tutor-btn--primary">
+                        Success Toast
+                    </button>
+                    <button @click="error('Error! Something went wrong.')" class="tutor-btn tutor-btn--primary">
+                        Error Toast
+                    </button>
+                    <button @click="show('Info message', { type: 'info' })" class="tutor-btn tutor-btn--primary">
+                        Info Toast
+                    </button>
+                    <button @click="clear()" class="tutor-btn tutor-btn--secondary">
+                        Clear All
+                    </button>
+                </div>
+                
+                <template x-for="toast in toasts" :key="toast.id">
+                    <div class="tutor-toast" 
+                         :class="`tutor-toast--${toast.type}`" 
+                         x-text="toast.message"
+                         x-transition></div>
+                </template>
+            </div>
+        </section>
+
+        <!-- Accordion Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">Accordion</h2>
+            <div x-data="TutorCore.accordion({ multiple: true })">
+                <div class="tutor-accordion__item">
+                    <button @click="toggle(0)" class="tutor-accordion__trigger">
+                        <span>What is Tutor LMS?</span>
+                        <span x-text="isOpen(0) ? '−' : '+'"></span>
+                    </button>
+                    <div x-show="isOpen(0)" x-transition class="tutor-accordion__content">
+                        <p>Tutor LMS is a complete learning management system for WordPress that allows you to create and sell courses online.</p>
+                    </div>
+                </div>
+                
+                <div class="tutor-accordion__item">
+                    <button @click="toggle(1)" class="tutor-accordion__trigger">
+                        <span>How do I create a course?</span>
+                        <span x-text="isOpen(1) ? '−' : '+'"></span>
+                    </button>
+                    <div x-show="isOpen(1)" x-transition class="tutor-accordion__content">
+                        <p>You can create a course by going to the Tutor LMS dashboard and clicking on "Add New Course".</p>
+                    </div>
+                </div>
+                
+                <div class="tutor-accordion__item">
+                    <button @click="toggle(2)" class="tutor-accordion__trigger">
+                        <span>Is there a mobile app?</span>
+                        <span x-text="isOpen(2) ? '−' : '+'"></span>
+                    </button>
+                    <div x-show="isOpen(2)" x-transition class="tutor-accordion__content">
+                        <p>Yes, Tutor LMS offers mobile apps for both iOS and Android platforms.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Combined Example -->
+        <section class="demo-section">
+            <h2 class="demo-title">Combined Example</h2>
+            <p class="tutor-text-secondary">A real-world example combining multiple components:</p>
+            
+            <div class="tutor-card">
+                <div class="tutor-card__header">
+                    <h3 class="tutor-card__title">Course Settings</h3>
+                </div>
+                <div class="tutor-card__body">
+                    <div x-data="{ 
+                        ...TutorCore.tabs(0),
+                        ...TutorCore.toast(),
+                        saveSettings() {
+                            this.success('Settings saved successfully!');
+                        }
+                    }">
+                        <div class="tutor-tabs__nav">
+                            <button @click="setTab(0)" :class="{'active': isActive(0)}" class="tutor-tab">General</button>
+                            <button @click="setTab(1)" :class="{'active': isActive(1)}" class="tutor-tab">Advanced</button>
+                        </div>
+                        
+                        <div class="tutor-tabs__content">
+                            <div x-show="isActive(0)">
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Course Title</label>
+                                    <input type="text" class="tutor-input" value="Introduction to Web Development">
+                                </div>
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Course Description</label>
+                                    <textarea class="tutor-textarea" rows="3">Learn the basics of web development...</textarea>
+                                </div>
+                            </div>
+                            
+                            <div x-show="isActive(1)">
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Course Duration (hours)</label>
+                                    <input type="number" class="tutor-input" value="40">
+                                </div>
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Difficulty Level</label>
+                                    <select class="tutor-select">
+                                        <option>Beginner</option>
+                                        <option>Intermediate</option>
+                                        <option>Advanced</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="tutor-flex" style="gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+                            <button class="tutor-btn tutor-btn--secondary">Cancel</button>
+                            <button @click="saveSettings()" class="tutor-btn tutor-btn--primary">Save Settings</button>
+                        </div>
+                        
+                        <template x-for="toast in toasts" :key="toast.id">
+                            <div class="tutor-toast" 
+                                 :class="`tutor-toast--${toast.type}`" 
+                                 x-text="toast.message"
+                                 x-transition></div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../../js/tutor-core.js"></script>
+</body>
+</html>

@@ -1,0 +1,581 @@
+// RTL (Right-to-Left) Utility Classes
+// Provides utility classes for RTL language support
+
+@use '../tokens/spacing' as *;
+@use '../tokens/radius' as *;
+@use '../tokens/breakpoints' as *;
+
+// Text alignment utilities
+.tutor-text-start {
+  [dir="ltr"] & {
+    text-align: left;
+  }
+  [dir="rtl"] & {
+    text-align: right;
+  }
+}
+
+.tutor-text-end {
+  [dir="ltr"] & {
+    text-align: right;
+  }
+  [dir="rtl"] & {
+    text-align: left;
+  }
+}
+
+// Float utilities
+.tutor-float-start {
+  [dir="ltr"] & {
+    float: left;
+  }
+  [dir="rtl"] & {
+    float: right;
+  }
+}
+
+.tutor-float-end {
+  [dir="ltr"] & {
+    float: right;
+  }
+  [dir="rtl"] & {
+    float: left;
+  }
+}
+
+// Margin utilities
+@each $key, $value in $tutor-spacing {
+  .tutor-ms-#{$key} {
+    [dir="ltr"] & {
+      margin-left: $value;
+    }
+    [dir="rtl"] & {
+      margin-right: $value;
+    }
+  }
+  
+  .tutor-me-#{$key} {
+    [dir="ltr"] & {
+      margin-right: $value;
+    }
+    [dir="rtl"] & {
+      margin-left: $value;
+    }
+  }
+}
+
+// Padding utilities
+@each $key, $value in $tutor-spacing {
+  .tutor-ps-#{$key} {
+    [dir="ltr"] & {
+      padding-left: $value;
+    }
+    [dir="rtl"] & {
+      padding-right: $value;
+    }
+  }
+  
+  .tutor-pe-#{$key} {
+    [dir="ltr"] & {
+      padding-right: $value;
+    }
+    [dir="rtl"] & {
+      padding-left: $value;
+    }
+  }
+}
+
+// Border utilities
+.tutor-border-start {
+  [dir="ltr"] & {
+    border-left: 1px solid var(--tutor-border-idle);
+  }
+  [dir="rtl"] & {
+    border-right: 1px solid var(--tutor-border-idle);
+  }
+}
+
+.tutor-border-end {
+  [dir="ltr"] & {
+    border-right: 1px solid var(--tutor-border-idle);
+  }
+  [dir="rtl"] & {
+    border-left: 1px solid var(--tutor-border-idle);
+  }
+}
+
+// Border radius utilities
+@each $key, $value in $tutor-radius {
+  .tutor-rounded-s-#{$key} {
+    [dir="ltr"] & {
+      border-top-left-radius: $value;
+      border-bottom-left-radius: $value;
+    }
+    [dir="rtl"] & {
+      border-top-right-radius: $value;
+      border-bottom-right-radius: $value;
+    }
+  }
+  
+  .tutor-rounded-e-#{$key} {
+    [dir="ltr"] & {
+      border-top-right-radius: $value;
+      border-bottom-right-radius: $value;
+    }
+    [dir="rtl"] & {
+      border-top-left-radius: $value;
+      border-bottom-left-radius: $value;
+    }
+  }
+  
+  .tutor-rounded-ts-#{$key} {
+    [dir="ltr"] & {
+      border-top-left-radius: $value;
+    }
+    [dir="rtl"] & {
+      border-top-right-radius: $value;
+    }
+  }
+  
+  .tutor-rounded-te-#{$key} {
+    [dir="ltr"] & {
+      border-top-right-radius: $value;
+    }
+    [dir="rtl"] & {
+      border-top-left-radius: $value;
+    }
+  }
+  
+  .tutor-rounded-bs-#{$key} {
+    [dir="ltr"] & {
+      border-bottom-left-radius: $value;
+    }
+    [dir="rtl"] & {
+      border-bottom-right-radius: $value;
+    }
+  }
+  
+  .tutor-rounded-be-#{$key} {
+    [dir="ltr"] & {
+      border-bottom-right-radius: $value;
+    }
+    [dir="rtl"] & {
+      border-bottom-left-radius: $value;
+    }
+  }
+}
+
+// Positioning utilities
+.tutor-start-0 {
+  [dir="ltr"] & {
+    left: 0;
+  }
+  [dir="rtl"] & {
+    right: 0;
+  }
+}
+
+.tutor-end-0 {
+  [dir="ltr"] & {
+    right: 0;
+  }
+  [dir="rtl"] & {
+    left: 0;
+  }
+}
+
+// Flexbox utilities
+.tutor-flex-row {
+  [dir="ltr"] & {
+    flex-direction: row;
+  }
+  [dir="rtl"] & {
+    flex-direction: row-reverse;
+  }
+}
+
+.tutor-flex-row-reverse {
+  [dir="ltr"] & {
+    flex-direction: row-reverse;
+  }
+  [dir="rtl"] & {
+    flex-direction: row;
+  }
+}
+
+// Transform utilities
+.tutor-translate-x-full {
+  [dir="ltr"] & {
+    transform: translateX(100%);
+  }
+  [dir="rtl"] & {
+    transform: translateX(-100%);
+  }
+}
+
+.tutor-translate-x-0 {
+  transform: translateX(0);
+}
+
+.-tutor-translate-x-full {
+  [dir="ltr"] & {
+    transform: translateX(-100%);
+  }
+  [dir="rtl"] & {
+    transform: translateX(100%);
+  }
+}
+
+// Icon utilities for RTL
+.tutor-icon-start {
+  [dir="ltr"] & {
+    margin-right: var(--tutor-spacing-2, 4px);
+    margin-left: 0;
+  }
+  [dir="rtl"] & {
+    margin-left: var(--tutor-spacing-2, 4px);
+    margin-right: 0;
+  }
+}
+
+.tutor-icon-end {
+  [dir="ltr"] & {
+    margin-left: var(--tutor-spacing-2, 4px);
+    margin-right: 0;
+  }
+  [dir="rtl"] & {
+    margin-right: var(--tutor-spacing-2, 4px);
+    margin-left: 0;
+  }
+}
+
+// RTL-specific component utilities
+.tutor-dropdown-start {
+  [dir="ltr"] & {
+    left: 0;
+    right: auto;
+  }
+  [dir="rtl"] & {
+    right: 0;
+    left: auto;
+  }
+}
+
+.tutor-dropdown-end {
+  [dir="ltr"] & {
+    right: 0;
+    left: auto;
+  }
+  [dir="rtl"] & {
+    left: 0;
+    right: auto;
+  }
+}
+
+// Sidebar positioning
+.tutor-sidebar-start {
+  [dir="ltr"] & {
+    left: 0;
+    right: auto;
+  }
+  [dir="rtl"] & {
+    right: 0;
+    left: auto;
+  }
+}
+
+.tutor-sidebar-end {
+  [dir="ltr"] & {
+    right: 0;
+    left: auto;
+  }
+  [dir="rtl"] & {
+    left: 0;
+    right: auto;
+  }
+}
+
+// Toast positioning
+.tutor-toast-start {
+  [dir="ltr"] & {
+    left: 1rem;
+    right: auto;
+  }
+  [dir="rtl"] & {
+    right: 1rem;
+    left: auto;
+  }
+}
+
+.tutor-toast-end {
+  [dir="ltr"] & {
+    right: 1rem;
+    left: auto;
+  }
+  [dir="rtl"] & {
+    left: 1rem;
+    right: auto;
+  }
+}
+
+// Debug utilities for RTL development
+.tutor-rtl-debug {
+  [dir="rtl"] & {
+    outline: 2px solid red;
+    outline-offset: -2px;
+    
+    &::before {
+      content: "RTL";
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: red;
+      color: white;
+      font-size: 10px;
+      padding: 2px 4px;
+      z-index: 9999;
+    }
+  }
+}
+
+.tutor-ltr-debug {
+  [dir="ltr"] & {
+    outline: 2px solid blue;
+    outline-offset: -2px;
+    
+    &::before {
+      content: "LTR";
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: blue;
+      color: white;
+      font-size: 10px;
+      padding: 2px 4px;
+      z-index: 9999;
+    }
+  }
+}
+
+// Enhanced debug utilities
+.tutor-debug-direction {
+  position: relative;
+  
+  &::after {
+    content: attr(dir);
+    position: absolute;
+    top: -20px;
+    left: 0;
+    background: var(--tutor-gray-900);
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    z-index: 9999;
+    font-family: monospace;
+    text-transform: uppercase;
+  }
+  
+  [dir="rtl"] &::after {
+    background: #e53e3e;
+    left: auto;
+    right: 0;
+  }
+}
+
+.tutor-debug-spacing {
+  [dir="ltr"] & {
+    background: linear-gradient(90deg, rgba(0, 123, 255, 0.1) 0%, rgba(0, 123, 255, 0.1) 100%);
+  }
+  
+  [dir="rtl"] & {
+    background: linear-gradient(-90deg, rgba(220, 53, 69, 0.1) 0%, rgba(220, 53, 69, 0.1) 100%);
+  }
+}
+
+// Visual indicators for RTL testing
+.tutor-rtl-indicator {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: var(--tutor-error);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10000;
+  display: none;
+  
+  [dir="rtl"] & {
+    display: block;
+  }
+}
+
+.tutor-ltr-indicator {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background: var(--tutor-brand-600);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 10000;
+  display: none;
+  
+  [dir="ltr"] & {
+    display: block;
+  }
+}
+
+// RTL-specific component overrides for better testing
+.tutor-rtl-test-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  
+  .tutor-rtl-test-item {
+    padding: 1rem;
+    border: 1px solid var(--tutor-border-idle);
+    border-radius: var(--tutor-radius-md);
+    
+    &::before {
+      content: "LTR: " attr(data-test);
+      display: block;
+      font-size: 12px;
+      color: var(--tutor-text-secondary);
+      margin-bottom: 0.5rem;
+      
+      [dir="rtl"] & {
+        content: "RTL: " attr(data-test);
+      }
+    }
+  }
+}
+
+// Automatic RTL detection classes (for JavaScript integration)
+.tutor-auto-rtl {
+  // These classes will be applied automatically by JavaScript
+  &.is-rtl {
+    direction: rtl;
+  }
+  
+  &.is-ltr {
+    direction: ltr;
+  }
+}
+
+// Language-specific RTL support
+.tutor-lang-ar,
+.tutor-lang-he,
+.tutor-lang-fa,
+.tutor-lang-ur {
+  direction: rtl;
+  text-align: right;
+}
+
+.tutor-lang-en,
+.tutor-lang-es,
+.tutor-lang-fr,
+.tutor-lang-de {
+  direction: ltr;
+  text-align: left;
+}
+
+// Enhanced component overrides for RTL
+.tutor-dropdown[dir="rtl"],
+[dir="rtl"] .tutor-dropdown {
+  .tutor-dropdown__menu {
+    left: auto;
+    right: 0;
+    
+    &--end {
+      right: auto;
+      left: 0;
+    }
+  }
+}
+
+.tutor-modal[dir="rtl"],
+[dir="rtl"] .tutor-modal {
+  .tutor-modal__header {
+    flex-direction: row-reverse;
+  }
+  
+  .tutor-modal__footer {
+    justify-content: flex-start;
+    flex-direction: row-reverse;
+  }
+}
+
+.tutor-tabs[dir="rtl"],
+[dir="rtl"] .tutor-tabs {
+  .tutor-tabs__nav {
+    flex-direction: row-reverse;
+  }
+}
+
+.tutor-form[dir="rtl"],
+[dir="rtl"] .tutor-form {
+  .tutor-select {
+    background-position: left var(--tutor-spacing-3) center;
+    padding-left: var(--tutor-spacing-10);
+    padding-right: var(--tutor-spacing-4);
+  }
+  
+  .tutor-input-group {
+    .tutor-input-icon--start {
+      left: auto;
+      right: var(--tutor-spacing-3);
+    }
+    
+    .tutor-input-icon--end {
+      right: auto;
+      left: var(--tutor-spacing-3);
+    }
+    
+    .tutor-input--with-icon-start {
+      padding-left: var(--tutor-spacing-4);
+      padding-right: var(--tutor-spacing-10);
+    }
+    
+    .tutor-input--with-icon-end {
+      padding-right: var(--tutor-spacing-4);
+      padding-left: var(--tutor-spacing-10);
+    }
+  }
+}
+
+// Responsive RTL utilities
+@each $breakpoint, $value in $tutor-breakpoints {
+  @if $value > 0 {
+    @media (min-width: $value) {
+      .tutor-#{$breakpoint}\:rtl\:text-right {
+        [dir="rtl"] & {
+          text-align: right;
+        }
+      }
+      
+      .tutor-#{$breakpoint}\:rtl\:text-left {
+        [dir="rtl"] & {
+          text-align: left;
+        }
+      }
+      
+      .tutor-#{$breakpoint}\:ltr\:text-left {
+        [dir="ltr"] & {
+          text-align: left;
+        }
+      }
+      
+      .tutor-#{$breakpoint}\:ltr\:text-right {
+        [dir="ltr"] & {
+          text-align: right;
+        }
+      }
+    }
+  }
+}

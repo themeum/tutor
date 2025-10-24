@@ -1,0 +1,60 @@
+// Design Tokens - Typography
+// Based on Figma font sizes and line heights
+
+// Font Sizes (H1-H5, P1-P3)
+$tutor-font-size-h1: 40px;
+$tutor-font-size-h2: 32px;
+$tutor-font-size-h3: 24px;
+$tutor-font-size-h4: 20px;
+$tutor-font-size-h5: 18px;
+$tutor-font-size-p1: 16px;
+$tutor-font-size-p2: 14px;
+$tutor-font-size-p3: 12px;
+
+// Line Heights
+$tutor-line-height-h1: 48px;
+$tutor-line-height-h2: 40px;
+$tutor-line-height-h3: 32px;
+$tutor-line-height-h4: 28px;
+$tutor-line-height-h5: 26px;
+$tutor-line-height-p1: 22px;
+$tutor-line-height-p2: 18px;
+$tutor-line-height-p3: 18px;
+
+// Font Weights
+$tutor-font-weight-light: 300;
+$tutor-font-weight-normal: 400;
+$tutor-font-weight-medium: 500;
+$tutor-font-weight-semibold: 600;
+$tutor-font-weight-bold: 700;
+
+// Typography Maps for easier iteration
+$tutor-font-sizes: (
+  h1: $tutor-font-size-h1,
+  h2: $tutor-font-size-h2,
+  h3: $tutor-font-size-h3,
+  h4: $tutor-font-size-h4,
+  h5: $tutor-font-size-h5,
+  p1: $tutor-font-size-p1,
+  p2: $tutor-font-size-p2,
+  p3: $tutor-font-size-p3
+);
+
+$tutor-line-heights: (
+  h1: $tutor-line-height-h1,
+  h2: $tutor-line-height-h2,
+  h3: $tutor-line-height-h3,
+  h4: $tutor-line-height-h4,
+  h5: $tutor-line-height-h5,
+  p1: $tutor-line-height-p1,
+  p2: $tutor-line-height-p2,
+  p3: $tutor-line-height-p3
+);
+
+$tutor-font-weights: (
+  light: $tutor-font-weight-light,
+  normal: $tutor-font-weight-normal,
+  medium: $tutor-font-weight-medium,
+  semibold: $tutor-font-weight-semibold,
+  bold: $tutor-font-weight-bold
+);

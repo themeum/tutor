@@ -1,0 +1,443 @@
+// Color Utilities
+// Background, border, and text color utilities with theme awareness
+
+@use '../tokens/colors' as *;
+@use '../tokens/radius' as *;
+@use '../tokens/breakpoints' as *;
+@use '../mixins/utilities' as *;
+
+// Background colors
+.tutor-bg-transparent {
+  background-color: transparent;
+}
+
+.tutor-bg-current {
+  background-color: currentColor;
+}
+
+.tutor-bg-surface-base {
+  background-color: var(--tutor-surface-base);
+}
+
+.tutor-bg-surface-l1 {
+  background-color: var(--tutor-surface-l1);
+}
+
+.tutor-bg-surface-l2 {
+  background-color: var(--tutor-surface-l2);
+}
+
+.tutor-bg-surface-elevated {
+  background-color: var(--tutor-surface-elevated);
+}
+
+.tutor-bg-primary {
+  background-color: var(--tutor-button-primary);
+}
+
+.tutor-bg-secondary {
+  background-color: var(--tutor-button-secondary);
+}
+
+.tutor-bg-success {
+  background-color: var(--tutor-success);
+}
+
+.tutor-bg-success-light {
+  background-color: var(--tutor-success-light);
+}
+
+.tutor-bg-warning {
+  background-color: var(--tutor-warning);
+}
+
+.tutor-bg-warning-light {
+  background-color: var(--tutor-warning-light);
+}
+
+.tutor-bg-error {
+  background-color: var(--tutor-error);
+}
+
+.tutor-bg-error-light {
+  background-color: var(--tutor-error-light);
+}
+
+// Brand background colors
+@each $key, $value in $tutor-brand-colors {
+  .tutor-bg-brand-#{$key} {
+    background-color: $value;
+  }
+}
+
+// Gray background colors
+@each $key, $value in $tutor-gray-colors {
+  .tutor-bg-gray-#{$key} {
+    background-color: $value;
+  }
+}
+
+// Basic text colors (from main.scss)
+.tutor-text-primary { 
+  color: var(--tutor-text-primary); 
+}
+
+.tutor-text-secondary { 
+  color: var(--tutor-text-secondary); 
+}
+
+.tutor-text-disabled { 
+  color: var(--tutor-text-disabled); 
+}
+
+.tutor-text-brand { 
+  color: var(--tutor-text-brand); 
+}
+
+.tutor-text-success { 
+  color: var(--tutor-success); 
+}
+
+.tutor-text-warning { 
+  color: var(--tutor-warning); 
+}
+
+.tutor-text-error { 
+  color: var(--tutor-error); 
+}
+
+// Basic background colors (from main.scss)
+.tutor-bg-surface-base { 
+  background-color: var(--tutor-surface-base); 
+}
+
+.tutor-bg-surface-l1 { 
+  background-color: var(--tutor-surface-l1); 
+}
+
+.tutor-bg-surface-l2 { 
+  background-color: var(--tutor-surface-l2); 
+}
+
+// Border colors
+.tutor-border-transparent {
+  border-color: transparent;
+}
+
+.tutor-border-current {
+  border-color: currentColor;
+}
+
+.tutor-border-idle {
+  border-color: var(--tutor-border-idle);
+}
+
+.tutor-border-hover {
+  border-color: var(--tutor-border-hover);
+}
+
+.tutor-border-focus {
+  border-color: var(--tutor-border-focus);
+}
+
+.tutor-border-brand {
+  border-color: var(--tutor-border-brand);
+}
+
+.tutor-border-success {
+  border-color: var(--tutor-success);
+}
+
+.tutor-border-warning {
+  border-color: var(--tutor-warning);
+}
+
+.tutor-border-error {
+  border-color: var(--tutor-error);
+}
+
+// Brand border colors
+@each $key, $value in $tutor-brand-colors {
+  .tutor-border-brand-#{$key} {
+    border-color: $value;
+  }
+}
+
+// Gray border colors
+@each $key, $value in $tutor-gray-colors {
+  .tutor-border-gray-#{$key} {
+    border-color: $value;
+  }
+}
+
+// Border width
+.tutor-border-0 {
+  border-width: 0;
+}
+
+.tutor-border {
+  border-width: 1px;
+}
+
+.tutor-border-2 {
+  border-width: 2px;
+}
+
+.tutor-border-4 {
+  border-width: 4px;
+}
+
+.tutor-border-8 {
+  border-width: 8px;
+}
+
+.tutor-border-t-0 {
+  border-top-width: 0;
+}
+
+.tutor-border-t {
+  border-top-width: 1px;
+}
+
+.tutor-border-t-2 {
+  border-top-width: 2px;
+}
+
+.tutor-border-t-4 {
+  border-top-width: 4px;
+}
+
+.tutor-border-r-0 {
+  border-right-width: 0;
+}
+
+.tutor-border-r {
+  border-right-width: 1px;
+}
+
+.tutor-border-r-2 {
+  border-right-width: 2px;
+}
+
+.tutor-border-r-4 {
+  border-right-width: 4px;
+}
+
+.tutor-border-b-0 {
+  border-bottom-width: 0;
+}
+
+.tutor-border-b {
+  border-bottom-width: 1px;
+}
+
+.tutor-border-b-2 {
+  border-bottom-width: 2px;
+}
+
+.tutor-border-b-4 {
+  border-bottom-width: 4px;
+}
+
+.tutor-border-l-0 {
+  border-left-width: 0;
+}
+
+.tutor-border-l {
+  border-left-width: 1px;
+}
+
+.tutor-border-l-2 {
+  border-left-width: 2px;
+}
+
+.tutor-border-l-4 {
+  border-left-width: 4px;
+}
+
+// Border style
+.tutor-border-solid {
+  border-style: solid;
+}
+
+.tutor-border-dashed {
+  border-style: dashed;
+}
+
+.tutor-border-dotted {
+  border-style: dotted;
+}
+
+.tutor-border-double {
+  border-style: double;
+}
+
+.tutor-border-none {
+  border-style: none;
+}
+
+// Border radius
+@each $key, $value in $tutor-radius {
+  .tutor-rounded-#{$key} {
+    border-radius: $value;
+  }
+
+  .tutor-rounded-t-#{$key} {
+    border-top-left-radius: $value;
+    border-top-right-radius: $value;
+  }
+
+  .tutor-rounded-r-#{$key} {
+    border-top-right-radius: $value;
+    border-bottom-right-radius: $value;
+  }
+
+  .tutor-rounded-b-#{$key} {
+    border-bottom-right-radius: $value;
+    border-bottom-left-radius: $value;
+  }
+
+  .tutor-rounded-l-#{$key} {
+    border-top-left-radius: $value;
+    border-bottom-left-radius: $value;
+  }
+
+  .tutor-rounded-tl-#{$key} {
+    border-top-left-radius: $value;
+  }
+
+  .tutor-rounded-tr-#{$key} {
+    border-top-right-radius: $value;
+  }
+
+  .tutor-rounded-br-#{$key} {
+    border-bottom-right-radius: $value;
+  }
+
+  .tutor-rounded-bl-#{$key} {
+    border-bottom-left-radius: $value;
+  }
+}
+
+// Shadow utilities
+.tutor-shadow-none {
+  box-shadow: none;
+}
+
+.tutor-shadow-sm {
+  box-shadow: var(--tutor-shadow-sm);
+}
+
+.tutor-shadow {
+  box-shadow: var(--tutor-shadow-md);
+}
+
+.tutor-shadow-md {
+  box-shadow: var(--tutor-shadow-md);
+}
+
+.tutor-shadow-lg {
+  box-shadow: var(--tutor-shadow-lg);
+}
+
+.tutor-shadow-xl {
+  box-shadow: var(--tutor-shadow-xl);
+}
+
+// Opacity utilities
+.tutor-opacity-0 {
+  opacity: 0;
+}
+
+.tutor-opacity-25 {
+  opacity: 0.25;
+}
+
+.tutor-opacity-50 {
+  opacity: 0.5;
+}
+
+.tutor-opacity-75 {
+  opacity: 0.75;
+}
+
+.tutor-opacity-100 {
+  opacity: 1;
+}
+
+// Hover state utilities
+.tutor-hover\:bg-primary:hover {
+  background-color: var(--tutor-button-primary);
+}
+
+.tutor-hover\:bg-secondary:hover {
+  background-color: var(--tutor-button-secondary);
+}
+
+.tutor-hover\:bg-surface-l2:hover {
+  background-color: var(--tutor-surface-l2);
+}
+
+.tutor-hover\:text-primary:hover {
+  color: var(--tutor-text-primary);
+}
+
+.tutor-hover\:text-brand:hover {
+  color: var(--tutor-text-brand);
+}
+
+.tutor-hover\:border-brand:hover {
+  border-color: var(--tutor-border-brand);
+}
+
+.tutor-hover\:shadow-md:hover {
+  box-shadow: var(--tutor-shadow-md);
+}
+
+.tutor-hover\:shadow-lg:hover {
+  box-shadow: var(--tutor-shadow-lg);
+}
+
+// Focus state utilities
+.tutor-focus\:border-brand:focus {
+  border-color: var(--tutor-border-brand);
+}
+
+.tutor-focus\:ring:focus {
+  @include tutor-focus-ring;
+}
+
+.tutor-focus\:outline-none:focus {
+  outline: none;
+}
+
+// Responsive color utilities
+@each $breakpoint, $value in $tutor-breakpoints {
+  @if $value > 0 {
+    @media (min-width: $value) {
+      .tutor-#{$breakpoint}\:bg-surface-base {
+        background-color: var(--tutor-surface-base);
+      }
+
+      .tutor-#{$breakpoint}\:bg-surface-l1 {
+        background-color: var(--tutor-surface-l1);
+      }
+
+      .tutor-#{$breakpoint}\:bg-primary {
+        background-color: var(--tutor-button-primary);
+      }
+
+      .tutor-#{$breakpoint}\:text-primary {
+        color: var(--tutor-text-primary);
+      }
+
+      .tutor-#{$breakpoint}\:text-secondary {
+        color: var(--tutor-text-secondary);
+      }
+
+      .tutor-#{$breakpoint}\:border-brand {
+        border-color: var(--tutor-border-brand);
+      }
+    }
+  }
+}

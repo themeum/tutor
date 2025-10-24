@@ -1,0 +1,101 @@
+// Light Theme
+// Based on Figma light mode specifications
+
+@use '../tokens/colors' as *;
+
+:root,
+[data-theme="light"] {
+  // Surface Colors
+  --tutor-surface-base: #{$tutor-gray-25};
+  --tutor-surface-l1: #{$tutor-gray-1};
+  --tutor-surface-l2: #{$tutor-gray-200};
+  --tutor-surface-elevated: #{$tutor-gray-1};
+  --tutor-surface-overlay: rgba(0, 0, 0, 0.1);
+  
+  // Text Colors
+  --tutor-text-primary: #{$tutor-gray-950};
+  --tutor-text-secondary: #{$tutor-gray-700};
+  --tutor-text-tertiary: #{$tutor-gray-600};
+  --tutor-text-disabled: #{$tutor-gray-500};
+  --tutor-text-brand: #{$tutor-brand-600};
+  --tutor-text-inverse: #{$tutor-gray-1};
+  
+  // Button Colors
+  --tutor-button-primary: #{$tutor-brand-600};
+  --tutor-button-primary-hover: #{$tutor-brand-700};
+  --tutor-button-primary-active: #{$tutor-brand-800};
+  --tutor-button-primary-text: #{$tutor-gray-1};
+  
+  --tutor-button-secondary: #{$tutor-gray-200};
+  --tutor-button-secondary-hover: #{$tutor-gray-300};
+  --tutor-button-secondary-active: #{$tutor-gray-400};
+  --tutor-button-secondary-text: #{$tutor-gray-950};
+  
+  --tutor-button-outline: transparent;
+  --tutor-button-outline-hover: #{$tutor-gray-50};
+  --tutor-button-outline-border: #{$tutor-gray-300};
+  --tutor-button-outline-text: #{$tutor-gray-700};
+  
+  --tutor-button-ghost: transparent;
+  --tutor-button-ghost-hover: #{$tutor-gray-100};
+  --tutor-button-ghost-text: #{$tutor-gray-700};
+  
+  // Border Colors
+  --tutor-border-idle: #{$tutor-gray-200};
+  --tutor-border-hover: #{$tutor-gray-300};
+  --tutor-border-focus: #{$tutor-brand-600};
+  --tutor-border-brand: #{$tutor-brand-600};
+  --tutor-border-error: #{$tutor-error};
+  --tutor-border-success: #{$tutor-success};
+  --tutor-border-warning: #{$tutor-warning};
+  
+  // Icon Colors
+  --tutor-icon-idle: #{$tutor-gray-600};
+  --tutor-icon-hover: #{$tutor-gray-950};
+  --tutor-icon-brand: #{$tutor-brand-600};
+  --tutor-icon-inverse: #{$tutor-gray-1};
+  
+  // Semantic Colors
+  --tutor-success: #{$tutor-success};
+  --tutor-success-light: #{$tutor-success-light};
+  --tutor-success-dark: #{$tutor-success-dark};
+  
+  --tutor-warning: #{$tutor-warning};
+  --tutor-warning-light: #{$tutor-warning-light};
+  --tutor-warning-dark: #{$tutor-warning-dark};
+  
+  --tutor-error: #{$tutor-error};
+  --tutor-error-light: #{$tutor-error-light};
+  --tutor-error-dark: #{$tutor-error-dark};
+  
+  // Form Colors
+  --tutor-input-background: #{$tutor-gray-1};
+  --tutor-input-border: #{$tutor-gray-300};
+  --tutor-input-border-hover: #{$tutor-gray-400};
+  --tutor-input-border-focus: #{$tutor-brand-600};
+  --tutor-input-text: #{$tutor-gray-950};
+  --tutor-input-placeholder: #{$tutor-gray-500};
+  
+  // Shadow Colors
+  --tutor-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --tutor-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --tutor-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --tutor-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+// RTL (Right-to-Left) Language Support
+[dir="rtl"] {
+  // Directional properties for RTL languages
+  --tutor-text-align-start: right;
+  --tutor-text-align-end: left;
+  --tutor-float-start: right;
+  --tutor-float-end: left;
+}
+
+[dir="ltr"] {
+  // Directional properties for LTR languages (default)
+  --tutor-text-align-start: left;
+  --tutor-text-align-end: right;
+  --tutor-float-start: left;
+  --tutor-float-end: right;
+}

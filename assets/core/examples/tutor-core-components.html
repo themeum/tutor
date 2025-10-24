@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TutorCore Components Example</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 2rem;
+            background: var(--tutor-surface-base);
+            color: var(--tutor-text-primary);
+        }
+        .example-section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: var(--tutor-radius-lg);
+        }
+        .example-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--tutor-text-primary);
+        }
+    </style>
+</head>
+<body>
+    <h1>TutorCore Components Example</h1>
+    
+    <!-- Theme Switcher -->
+    <div class="example-section">
+        <h2 class="example-title">Theme Switching</h2>
+        <button onclick="document.documentElement.setAttribute('data-theme', 'light')" 
+                class="tutor-btn tutor-btn--secondary">
+            Light Theme
+        </button>
+        <button onclick="document.documentElement.setAttribute('data-theme', 'dark')" 
+                class="tutor-btn tutor-btn--secondary">
+            Dark Theme
+        </button>
+    </div>
+
+    <!-- Dropdown Example -->
+    <div class="example-section">
+        <h2 class="example-title">Dropdown Component</h2>
+        <div x-data="TutorCore.dropdown({ placement: 'bottom-start', closeOnClickOutside: true })" 
+             class="tutor-dropdown">
+            <button @click="toggle()" 
+                    @keydown="handleKeydown($event)"
+                    class="tutor-btn tutor-btn--primary">
+                Options <span x-show="!open">▼</span><span x-show="open">▲</span>
+            </button>
+            <div x-show="open" 
+                 @click.outside="handleClickOutside()"
+                 x-transition
+                 class="tutor-dropdown__menu">
+                <a href="#" class="tutor-dropdown__item">Profile</a>
+                <a href="#" class="tutor-dropdown__item">Settings</a>
+                <a href="#" class="tutor-dropdown__item">Logout</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Example -->
+    <div class="example-section">
+        <h2 class="example-title">Modal Component</h2>
+        <div x-data="TutorCore.modal({ closable: true, backdrop: true, keyboard: true })">
+            <button @click="show()" class="tutor-btn tutor-btn--primary">Open Modal</button>
+            
+            <div x-show="open" 
+                 @keydown="handleKeydown($event)"
+                 class="tutor-modal" 
+                 x-transition>
+                <div class="tutor-modal__backdrop" @click="handleBackdropClick()"></div>
+                <div class="tutor-modal__content">
+                    <h3>Modal Title</h3>
+                    <p>This is a modal dialog with focus management and keyboard navigation.</p>
+                    <div style="margin-top: 1rem;">
+                        <button @click="hide()" class="tutor-btn tutor-btn--primary">Close</button>
+                        <button class="tutor-btn tutor-btn--secondary">Another Action</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs Example -->
+    <div class="example-section">
+        <h2 class="example-title">Tabs Component</h2>
+        <div x-data="TutorCore.tabs({ defaultTab: 0, keyboard: true })" class="tutor-tabs">
+            <div class="tutor-tabs__nav" role="tablist">
+                <button @click="setTab(0)" 
+                        @keydown="handleKeydown($event, 0)"
+                        :class="{'tutor-tab--active': isActive(0)}" 
+                        class="tutor-tab"
+                        role="tab">
+                    Overview
+                </button>
+                <button @click="setTab(1)" 
+                        @keydown="handleKeydown($event, 1)"
+                        :class="{'tutor-tab--active': isActive(1)}" 
+                        class="tutor-tab"
+                        role="tab">
+                    Curriculum
+                </button>
+                <button @click="setTab(2)" 
+                        @keydown="handleKeydown($event, 2)"
+                        :class="{'tutor-tab--active': isActive(2)}" 
+                        class="tutor-tab"
+                        role="tab">
+                    Reviews
+                </button>
+            </div>
+            <div class="tutor-tabs__content">
+                <div x-show="isActive(0)" class="tutor-tab-panel" role="tabpanel">
+                    <h4>Course Overview</h4>
+                    <p>This tab contains the course overview information.</p>
+                </div>
+                <div x-show="isActive(1)" class="tutor-tab-panel" role="tabpanel">
+                    <h4>Course Curriculum</h4>
+                    <p>This tab contains the course curriculum and lessons.</p>
+                </div>
+                <div x-show="isActive(2)" class="tutor-tab-panel" role="tabpanel">
+                    <h4>Course Reviews</h4>
+                    <p>This tab contains student reviews and ratings.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Accordion Example -->
+    <div class="example-section">
+        <h2 class="example-title">Accordion Component</h2>
+        <div x-data="TutorCore.accordion({ multiple: true })" class="tutor-accordion">
+            <div class="tutor-accordion__item">
+                <button @click="toggle(0)" 
+                        @keydown="handleKeydown($event, 0)"
+                        class="tutor-accordion__trigger">
+                    <span>Section 1: Getting Started</span>
+                    <span x-show="!isOpen(0)">+</span>
+                    <span x-show="isOpen(0)">-</span>
+                </button>
+                <div x-show="isOpen(0)" x-transition class="tutor-accordion__content">
+                    <p>Content for the first section about getting started with the course.</p>
+                </div>
+            </div>
+            
+            <div class="tutor-accordion__item">
+                <button @click="toggle(1)" 
+                        @keydown="handleKeydown($event, 1)"
+                        class="tutor-accordion__trigger">
+                    <span>Section 2: Advanced Topics</span>
+                    <span x-show="!isOpen(1)">+</span>
+                    <span x-show="isOpen(1)">-</span>
+                </button>
+                <div x-show="isOpen(1)" x-transition class="tutor-accordion__content">
+                    <p>Content for the second section covering advanced topics.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Example -->
+    <div class="example-section">
+        <h2 class="example-title">Toast Notifications</h2>
+        <div x-data="TutorCore.toast()">
+            <div style="margin-bottom: 1rem;">
+                <button @click="success('Success message!', 3000)" 
+                        class="tutor-btn tutor-btn--success">
+                    Show Success
+                </button>
+                <button @click="error('Error message!', 5000)" 
+                        class="tutor-btn tutor-btn--error">
+                    Show Error
+                </button>
+                <button @click="warning('Warning message!')" 
+                        class="tutor-btn tutor-btn--warning">
+                    Show Warning
+                </button>
+                <button @click="info('Info message!')" 
+                        class="tutor-btn tutor-btn--secondary">
+                    Show Info
+                </button>
+            </div>
+            
+            <!-- Toast Container -->
+            <div class="tutor-toast-container" style="position: fixed; top: 1rem; right: 1rem; z-index: 1000;">
+                <template x-for="toast in toasts" :key="toast.id">
+                    <div class="tutor-toast" 
+                         :class="`tutor-toast--${toast.type}`"
+                         x-transition:enter="transition ease-out duration-300"
+                         x-transition:enter-start="opacity-0 transform translate-x-full"
+                         x-transition:enter-end="opacity-100 transform translate-x-0"
+                         x-transition:leave="transition ease-in duration-200"
+                         x-transition:leave-start="opacity-100 transform translate-x-0"
+                         x-transition:leave-end="opacity-0 transform translate-x-full">
+                        <span x-text="toast.message"></span>
+                        <button @click="remove(toast.id)" class="tutor-toast__close">×</button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Validation Example -->
+    <div class="example-section">
+        <h2 class="example-title">Form Validation</h2>
+        <form x-data="TutorCore.formValidation({
+            rules: {
+                email: [
+                    { type: 'required', message: 'Email is required' },
+                    { type: 'email', message: 'Please enter a valid email' }
+                ],
+                password: [
+                    { type: 'required', message: 'Password is required' },
+                    { type: 'minLength', value: 6, message: 'Password must be at least 6 characters' }
+                ]
+            },
+            validateOnBlur: true
+        })" @submit="handleSubmit($event)">
+            <div class="tutor-form-group">
+                <label for="email">Email:</label>
+                <input type="email" 
+                       name="email" 
+                       id="email"
+                       @blur="handleBlur('email', $event.target.value)"
+                       @input="handleInput('email', $event.target.value)"
+                       :class="{'tutor-input--error': shouldShowError('email')}"
+                       class="tutor-input">
+                <div x-show="shouldShowError('email')" 
+                     x-text="getError('email')" 
+                     class="tutor-error-message"></div>
+            </div>
+            
+            <div class="tutor-form-group">
+                <label for="password">Password:</label>
+                <input type="password" 
+                       name="password" 
+                       id="password"
+                       @blur="handleBlur('password', $event.target.value)"
+                       @input="handleInput('password', $event.target.value)"
+                       :class="{'tutor-input--error': shouldShowError('password')}"
+                       class="tutor-input">
+                <div x-show="shouldShowError('password')" 
+                     x-text="getError('password')" 
+                     class="tutor-error-message"></div>
+            </div>
+            
+            <button type="submit" class="tutor-btn tutor-btn--primary">Submit</button>
+        </form>
+    </div>
+
+    <!-- RTL Example -->
+    <div class="example-section">
+        <h2 class="example-title">RTL Support</h2>
+        <p>Current direction: <span x-text="TutorCore.utils.getDirection()"></span></p>
+        <button onclick="document.documentElement.dir = 'rtl'; location.reload();" 
+                class="tutor-btn tutor-btn--secondary">
+            Switch to RTL
+        </button>
+        <button onclick="document.documentElement.dir = 'ltr'; location.reload();" 
+                class="tutor-btn tutor-btn--secondary">
+            Switch to LTR
+        </button>
+    </div>
+
+    <!-- Include Alpine.js and TutorCore -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../../js/tutor-core.js"></script>
+</body>
+</html>

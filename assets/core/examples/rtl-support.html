@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام التصميم - دعم اللغة العربية</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <style>
+        .demo-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+        }
+        .demo-title {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--tutor-text-primary);
+        }
+        .direction-switcher {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1000;
+        }
+        
+        /* RTL-specific component styles */
+        .tutor-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .tutor-dropdown__menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            min-width: 200px;
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            margin-top: 4px;
+        }
+        
+        [dir="ltr"] .tutor-dropdown__menu {
+            right: auto;
+            left: 0;
+        }
+        
+        .tutor-dropdown__item {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            color: var(--tutor-text-primary);
+            text-decoration: none;
+            border: none;
+            background: none;
+            text-align: right;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        [dir="ltr"] .tutor-dropdown__item {
+            text-align: left;
+        }
+        
+        .tutor-dropdown__item:hover {
+            background-color: var(--tutor-surface-l2);
+        }
+    </style>
+</head>
+<body>
+    <div class="tutor-container">
+        <!-- Direction Switcher -->
+        <div class="direction-switcher">
+            <button onclick="toggleDirection()" class="tutor-btn tutor-btn--secondary tutor-btn--small">
+                🔄 تبديل الاتجاه
+            </button>
+        </div>
+
+        <header style="text-align: center; margin: 2rem 0;">
+            <h1 class="tutor-h1">نظام التصميم التعليمي</h1>
+            <p class="tutor-p1 tutor-text-secondary">دعم اللغة العربية والكتابة من اليمين إلى اليسار</p>
+        </header>
+
+        <!-- Buttons Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">الأزرار</h2>
+            <div class="tutor-flex" style="gap: 1rem; flex-wrap: wrap;">
+                <button class="tutor-btn tutor-btn--primary">زر أساسي</button>
+                <button class="tutor-btn tutor-btn--secondary">زر ثانوي</button>
+                <button class="tutor-btn tutor-btn--outline">زر محدد</button>
+                <button class="tutor-btn tutor-btn--ghost">زر شفاف</button>
+            </div>
+        </section>
+
+        <!-- Forms Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">النماذج</h2>
+            <form style="max-width: 400px;">
+                <div class="tutor-form-group">
+                    <label class="tutor-label" for="name-ar">الاسم الكامل</label>
+                    <input type="text" id="name-ar" class="tutor-input" placeholder="أدخل اسمك الكامل">
+                    <p class="tutor-help-text">هذا الحقل مطلوب</p>
+                </div>
+
+                <div class="tutor-form-group">
+                    <label class="tutor-label" for="email-ar">البريد الإلكتروني</label>
+                    <input type="email" id="email-ar" class="tutor-input" placeholder="أدخل بريدك الإلكتروني">
+                </div>
+
+                <div class="tutor-form-group">
+                    <label class="tutor-label" for="message-ar">الرسالة</label>
+                    <textarea id="message-ar" class="tutor-textarea" placeholder="أدخل رسالتك" rows="4"></textarea>
+                </div>
+
+                <div class="tutor-flex" style="gap: 1rem;">
+                    <button type="submit" class="tutor-btn tutor-btn--primary">إرسال</button>
+                    <button type="reset" class="tutor-btn tutor-btn--secondary">إعادة تعيين</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Cards Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">البطاقات</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                <div class="tutor-card">
+                    <div class="tutor-card__header">
+                        <h3 class="tutor-card__title">دورة تطوير الويب</h3>
+                        <p class="tutor-card__subtitle">للمبتدئين</p>
+                    </div>
+                    <div class="tutor-card__body">
+                        <p>تعلم أساسيات تطوير الويب باستخدام HTML و CSS و JavaScript. دورة شاملة للمبتدئين.</p>
+                    </div>
+                    <div class="tutor-card__footer">
+                        <button class="tutor-btn tutor-btn--primary tutor-btn--small">التسجيل</button>
+                        <button class="tutor-btn tutor-btn--ghost tutor-btn--small">معاينة</button>
+                    </div>
+                </div>
+
+                <div class="tutor-card tutor-card--elevated">
+                    <div class="tutor-card__body">
+                        <h3 style="margin-top: 0;">دورة متقدمة</h3>
+                        <p>دورة متقدمة في تطوير التطبيقات باستخدام React و Node.js.</p>
+                        <div style="margin-top: 1rem;">
+                            <span style="background: var(--tutor-success); color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                جديد
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alpine.js Components -->
+        <section class="demo-section">
+            <h2 class="demo-title">المكونات التفاعلية</h2>
+            
+            <h3>القائمة المنسدلة</h3>
+            <div x-data="TutorCore.dropdown({ placement: 'bottom-start' })" class="tutor-dropdown" style="margin-bottom: 2rem;">
+                <button @click="toggle()" class="tutor-btn tutor-btn--primary">
+                    الخيارات ▼
+                </button>
+                <div x-show="open" 
+                     @click.outside="close()" 
+                     x-transition
+                     class="tutor-dropdown__menu">
+                    <a href="#" class="tutor-dropdown__item">الملف الشخصي</a>
+                    <a href="#" class="tutor-dropdown__item">الإعدادات</a>
+                    <a href="#" class="tutor-dropdown__item">المساعدة</a>
+                    <div style="height: 1px; background: var(--tutor-border-idle); margin: 4px 0;"></div>
+                    <a href="#" class="tutor-dropdown__item">تسجيل الخروج</a>
+                </div>
+            </div>
+
+            <h3>التبويبات</h3>
+            <div x-data="TutorCore.tabs(0)" class="tutor-tabs">
+                <div style="display: flex; border-bottom: 1px solid var(--tutor-border-idle); margin-bottom: 16px;">
+                    <button @click="setTab(0)" 
+                            :class="{'active': isActive(0)}" 
+                            style="background: transparent; border: none; padding: 12px 16px; color: var(--tutor-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer;"
+                            :style="isActive(0) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-border-brand);' : ''">
+                        نظرة عامة
+                    </button>
+                    <button @click="setTab(1)" 
+                            :class="{'active': isActive(1)}" 
+                            style="background: transparent; border: none; padding: 12px 16px; color: var(--tutor-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer;"
+                            :style="isActive(1) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-border-brand);' : ''">
+                        المنهج
+                    </button>
+                    <button @click="setTab(2)" 
+                            :class="{'active': isActive(2)}" 
+                            style="background: transparent; border: none; padding: 12px 16px; color: var(--tutor-text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer;"
+                            :style="isActive(2) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-border-brand);' : ''">
+                        التقييمات
+                    </button>
+                </div>
+                <div>
+                    <div x-show="isActive(0)">
+                        <h4>نظرة عامة على الدورة</h4>
+                        <p>تحتوي هذه الدورة على مقدمة شاملة لتطوير الويب، بما في ذلك الأهداف والمتطلبات المسبقة.</p>
+                    </div>
+                    <div x-show="isActive(1)">
+                        <h4>منهج الدورة</h4>
+                        <p>ستجد هنا المنهج التفصيلي مع الدروس والاختبارات والواجبات.</p>
+                    </div>
+                    <div x-show="isActive(2)">
+                        <h4>تقييمات الطلاب</h4>
+                        <p>اقرأ ما يقوله الطلاب الآخرون عن هذه الدورة.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography Section -->
+        <section class="demo-section">
+            <h2 class="demo-title">الطباعة</h2>
+            <h1 class="tutor-h1">عنوان رئيسي 1 (40px)</h1>
+            <h2 class="tutor-h2">عنوان رئيسي 2 (32px)</h2>
+            <h3 class="tutor-h3">عنوان رئيسي 3 (24px)</h3>
+            <h4 class="tutor-h4">عنوان رئيسي 4 (20px)</h4>
+            <h5 class="tutor-h5">عنوان رئيسي 5 (18px)</h5>
+            <p class="tutor-p1">فقرة 1 (16px) - هذا هو الحجم الافتراضي للنص الأساسي في المحتوى.</p>
+            <p class="tutor-p2">فقرة 2 (14px) - هذا نص أصغر للمحتوى الثانوي.</p>
+            <p class="tutor-p3">فقرة 3 (12px) - هذا أصغر حجم نص للتسميات والتوضيحات.</p>
+        </section>
+
+        <!-- Layout Examples -->
+        <section class="demo-section">
+            <h2 class="demo-title">أمثلة على التخطيط</h2>
+            
+            <h3>تخطيط بين العناصر</h3>
+            <div class="tutor-flex" style="justify-content: space-between; background: var(--tutor-surface-l2); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <span>العنصر الأيمن</span>
+                <span>العنصر الأيسر</span>
+            </div>
+            
+            <h3>شبكة العناصر</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                <div style="background: var(--tutor-surface-l2); padding: 1rem; border-radius: 8px; text-align: center;">
+                    عنصر 1
+                </div>
+                <div style="background: var(--tutor-surface-l2); padding: 1rem; border-radius: 8px; text-align: center;">
+                    عنصر 2
+                </div>
+                <div style="background: var(--tutor-surface-l2); padding: 1rem; border-radius: 8px; text-align: center;">
+                    عنصر 3
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function toggleDirection() {
+            const html = document.documentElement;
+            const currentDir = html.getAttribute('dir');
+            const newDir = currentDir === 'rtl' ? 'ltr' : 'rtl';
+            const newLang = newDir === 'rtl' ? 'ar' : 'en';
+            
+            html.setAttribute('dir', newDir);
+            html.setAttribute('lang', newLang);
+            
+            // Update button text
+            const button = document.querySelector('.direction-switcher button');
+            button.textContent = newDir === 'rtl' ? '🔄 تبديل الاتجاه' : '🔄 Toggle Direction';
+        }
+    </script>
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../../js/tutor-core.js"></script>
+</body>
+</html>

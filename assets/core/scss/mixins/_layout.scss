@@ -1,0 +1,181 @@
+// Layout Mixins
+// Reusable layout utilities for flexbox, grid, and positioning
+
+@use 'sass:map';
+@use '../tokens/breakpoints' as *;
+@use '../tokens/spacing' as *;
+
+@mixin tutor-flex($direction: row, $align: stretch, $justify: flex-start, $wrap: nowrap) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: $align;
+  justify-content: $justify;
+  flex-wrap: $wrap;
+}
+
+@mixin tutor-flex-center {
+  @include tutor-flex(row, center, center);
+}
+
+@mixin tutor-flex-between {
+  @include tutor-flex(row, center, space-between);
+}
+
+@mixin tutor-flex-column {
+  @include tutor-flex(column, stretch, flex-start);
+}
+
+@mixin tutor-grid($columns: 1, $gap: $tutor-spacing-6) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+
+@mixin tutor-container($max-width: 1200px) {
+  width: 100%;
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 $tutor-spacing-6;
+}
+
+@mixin tutor-visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@mixin tutor-clearfix {
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+// Responsive breakpoint mixin
+@mixin tutor-respond-to($breakpoint) {
+  @if map.has-key($tutor-breakpoints, $breakpoint) {
+    $value: map.get($tutor-breakpoints, $breakpoint);
+    @if $value > 0 {
+      @media (min-width: $value) {
+        @content;
+      }
+    } @else {
+      @content;
+    }
+  } @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+// Advanced grid mixins
+@mixin tutor-grid-auto-fit($min-width: 250px, $gap: $tutor-spacing-6) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min-width, 1fr));
+  gap: $gap;
+}
+
+@mixin tutor-grid-auto-fill($min-width: 250px, $gap: $tutor-spacing-6) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax($min-width, 1fr));
+  gap: $gap;
+}
+
+@mixin tutor-grid-area($row-start, $col-start, $row-end: null, $col-end: null) {
+  @if $row-end and $col-end {
+    grid-area: $row-start / $col-start / $row-end / $col-end;
+  } @else {
+    grid-column-start: $col-start;
+    grid-row-start: $row-start;
+  }
+}
+
+// Positioning mixins
+@mixin tutor-absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@mixin tutor-absolute-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@mixin tutor-sticky-top($offset: 0) {
+  position: sticky;
+  top: $offset;
+  z-index: 10;
+}
+
+// Flexbox gap fallback for older browsers
+@mixin tutor-flex-gap($gap) {
+  gap: $gap;
+  
+  // Fallback for browsers without gap support
+  @supports not (gap: 1px) {
+    margin: -#{$gap / 2};
+    
+    > * {
+      margin: #{$gap / 2};
+    }
+  }
+}
+
+// Stack layout (vertical spacing)
+@mixin tutor-stack($spacing: $tutor-spacing-4) {
+  > * + * {
+    margin-top: $spacing;
+  }
+}
+
+// Cluster layout (horizontal spacing with wrapping)
+@mixin tutor-cluster($spacing: $tutor-spacing-4, $align: flex-start) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: $align;
+  margin: -#{$spacing / 2};
+  
+  > * {
+    margin: #{$spacing / 2};
+  }
+}
+
+// Sidebar layout
+@mixin tutor-sidebar($sidebar-width: 250px, $gap: $tutor-spacing-6, $side: start) {
+  display: flex;
+  gap: $gap;
+  
+  @if $side == start {
+    flex-direction: row;
+    
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
+  } @else {
+    flex-direction: row-reverse;
+    
+    [dir="rtl"] & {
+      flex-direction: row;
+    }
+  }
+  
+  .tutor-sidebar {
+    flex: 0 0 $sidebar-width;
+  }
+  
+  .tutor-main {
+    flex: 1;
+    min-width: 0; // Prevent flex item from overflowing
+  }
+}

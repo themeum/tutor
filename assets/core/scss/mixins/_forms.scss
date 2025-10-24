@@ -1,0 +1,228 @@
+// Form Mixins
+// Reusable form element styles
+
+@use '../tokens/spacing' as *;
+@use '../tokens/typography' as *;
+@use '../tokens/radius' as *;
+@use 'rtl' as *;
+@use 'utilities' as *;
+@use 'buttons' as *;
+
+@mixin tutor-input-base {
+  width: 100%;
+  padding: $tutor-spacing-3 $tutor-spacing-4;
+  border: 1px solid var(--tutor-border-idle);
+  border-radius: $tutor-radius-md;
+  background-color: var(--tutor-surface-l1);
+  color: var(--tutor-text-primary);
+  font-size: $tutor-font-size-p1;
+  line-height: $tutor-line-height-p1;
+  transition: all 0.2s ease;
+  
+  &::placeholder {
+    color: var(--tutor-text-disabled);
+  }
+  
+  &:focus {
+    outline: none;
+    border-color: var(--tutor-border-brand);
+    box-shadow: 0 0 0 3px rgba(62, 100, 222, 0.1);
+  }
+  
+  &:disabled {
+    background-color: var(--tutor-surface-base);
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+@mixin tutor-input-validation($state) {
+  @if $state == error {
+    border-color: var(--tutor-error);
+    
+    &:focus {
+      border-color: var(--tutor-error);
+      box-shadow: 0 0 0 3px rgba(240, 68, 56, 0.1);
+    }
+  } @else if $state == success {
+    border-color: var(--tutor-success);
+    
+    &:focus {
+      border-color: var(--tutor-success);
+      box-shadow: 0 0 0 3px rgba(102, 198, 28, 0.1);
+    }
+  } @else if $state == warning {
+    border-color: var(--tutor-warning);
+    
+    &:focus {
+      border-color: var(--tutor-warning);
+      box-shadow: 0 0 0 3px rgba(247, 144, 9, 0.1);
+    }
+  }
+}
+
+@mixin tutor-label {
+  display: block;
+  margin-bottom: $tutor-spacing-2;
+  font-size: $tutor-font-size-p2;
+  font-weight: $tutor-font-weight-medium;
+  color: var(--tutor-text-primary);
+}
+
+@mixin tutor-form-group {
+  margin-bottom: $tutor-spacing-6;
+}
+
+@mixin tutor-help-text {
+  margin-top: $tutor-spacing-2;
+  font-size: $tutor-font-size-p3;
+  color: var(--tutor-text-secondary);
+}
+
+@mixin tutor-error-text {
+  margin-top: $tutor-spacing-2;
+  font-size: $tutor-font-size-p3;
+  color: var(--tutor-error);
+}
+
+// Select dropdown mixin
+@mixin tutor-select {
+  @include tutor-input-base;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right $tutor-spacing-3 center;
+  background-repeat: no-repeat;
+  background-size: 16px 12px;
+  
+  [dir="rtl"] & {
+    background-position: left $tutor-spacing-3 center;
+  }
+}
+
+// Textarea mixin
+@mixin tutor-textarea($min-height: 100px) {
+  @include tutor-input-base;
+  min-height: $min-height;
+  resize: vertical;
+}
+
+// Checkbox and radio mixins
+@mixin tutor-checkbox {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--tutor-border-idle);
+  border-radius: $tutor-radius-sm;
+  background-color: var(--tutor-surface-l1);
+  cursor: pointer;
+  position: relative;
+  
+  &:checked {
+    background-color: var(--tutor-button-primary);
+    border-color: var(--tutor-button-primary);
+    
+    &::after {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 4px;
+      width: 6px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
+  
+  &:focus {
+    @include tutor-focus-ring;
+  }
+}
+
+@mixin tutor-radio {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--tutor-border-idle);
+  border-radius: 50%;
+  background-color: var(--tutor-surface-l1);
+  cursor: pointer;
+  position: relative;
+  
+  &:checked {
+    background-color: var(--tutor-button-primary);
+    border-color: var(--tutor-button-primary);
+    
+    &::after {
+      content: "";
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: white;
+    }
+  }
+  
+  &:focus {
+    @include tutor-focus-ring;
+  }
+}
+
+// Input group mixin (for input with icons or buttons)
+@mixin tutor-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  
+  .tutor-input {
+    flex: 1;
+  }
+  
+  .tutor-input-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--tutor-icon-idle);
+    pointer-events: none;
+    
+    &.tutor-input-icon--start {
+      @include left($tutor-spacing-3);
+    }
+    
+    &.tutor-input-icon--end {
+      @include right($tutor-spacing-3);
+    }
+  }
+  
+  .tutor-input--with-icon-start {
+    @include padding-start($tutor-spacing-10);
+  }
+  
+  .tutor-input--with-icon-end {
+    @include padding-end($tutor-spacing-10);
+  }
+}
+
+// File input mixin
+@mixin tutor-file-input {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  
+  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+  .tutor-file-input__label {
+    @include tutor-button-base;
+    @include tutor-button-variant(outline);
+    @include tutor-button-size(medium);
+    display: inline-flex;
+  }
+}

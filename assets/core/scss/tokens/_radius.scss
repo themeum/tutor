@@ -1,0 +1,27 @@
+// Design Tokens - Border Radius
+// Based on Figma border radius scale (none to full: 0px to 1000px)
+
+$tutor-radius-none: 0px;
+$tutor-radius-xs: 2px;
+$tutor-radius-sm: 4px;
+$tutor-radius-md: 6px;
+$tutor-radius-lg: 8px;
+$tutor-radius-2xl: 12px;
+$tutor-radius-3xl: 16px;
+$tutor-radius-4xl: 20px;
+$tutor-radius-5xl: 24px;
+$tutor-radius-full: 1000px;
+
+// Radius Map for easier iteration
+$tutor-radius: (
+  none: $tutor-radius-none,
+  xs: $tutor-radius-xs,
+  sm: $tutor-radius-sm,
+  md: $tutor-radius-md,
+  lg: $tutor-radius-lg,
+  2xl: $tutor-radius-2xl,
+  3xl: $tutor-radius-3xl,
+  4xl: $tutor-radius-4xl,
+  5xl: $tutor-radius-5xl,
+  full: $tutor-radius-full
+);

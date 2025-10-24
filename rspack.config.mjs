@@ -223,6 +223,7 @@ const createConfig = (env, options) => {
           'assets/react/',
           'assets/scss/',
           'assets/json/',
+          'assets/core/',
         ];
         return keepDirectories.some((dir) => assetPath.includes(dir));
       },
@@ -253,6 +254,7 @@ const jsEntries = {
   'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
   'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
   'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
+  'tutor-core': './assets/core/ts/index.ts',
 };
 
 const scssEntries = {
@@ -264,6 +266,7 @@ const scssEntries = {
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
   'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
   'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
+  'tutor-core-scss': './assets/core/scss/main.scss',
 };
 
 const resolveAliases = {
