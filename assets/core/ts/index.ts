@@ -52,6 +52,9 @@ export class TutorCore {
     isMobile(): boolean;
     isTablet(): boolean;
     isDesktop(): boolean;
+    setFontScale(percentage: 80 | 90 | 100 | 110 | 120): void;
+    getFontScale(): number;
+    resetFontScale(): void;
   } = {
     /**
      * Check if the current document direction is RTL
@@ -160,6 +163,50 @@ export class TutorCore {
     isDesktop(): boolean {
       return window.innerWidth >= 1024;
     },
+
+    /**
+     * Set font scale percentage for accessibility
+     * Applies the corresponding CSS class to the html element
+     * @param percentage - Font scale percentage (80, 90, 100, 110, or 120)
+     */
+    setFontScale(percentage: 80 | 90 | 100 | 110 | 120): void {
+      // Remove existing font scale classes
+      const htmlElement = document.documentElement;
+      const existingClasses = Array.from(htmlElement.classList).filter((className) =>
+        className.startsWith('tutor-font-scale-'),
+      );
+      existingClasses.forEach((className) => htmlElement.classList.remove(className));
+
+      // Add new font scale class (except for 100% which is default)
+      if (percentage !== 100) {
+        htmlElement.classList.add(`tutor-font-scale-${percentage}`);
+      }
+    },
+
+    /**
+     * Get current font scale percentage
+     * @returns Current font scale percentage (80, 90, 100, 110, or 120)
+     */
+    getFontScale(): number {
+      const htmlElement = document.documentElement;
+      const fontScaleClass = Array.from(htmlElement.classList).find((className) =>
+        className.startsWith('tutor-font-scale-'),
+      );
+
+      if (fontScaleClass) {
+        const percentage = fontScaleClass.replace('tutor-font-scale-', '');
+        return parseInt(percentage, 10);
+      }
+
+      return 100; // Default scale
+    },
+
+    /**
+     * Reset font scale to default (100%)
+     */
+    resetFontScale(): void {
+      this.setFontScale(100);
+    },
   };
 
   /**
@@ -239,15 +286,15 @@ export class TutorCore {
 document.addEventListener('alpine:init', () => {
   if (window.Alpine) {
     // Register all component data functions
-    window.Alpine.data('tutorDropdown', TutorCore.dropdown);
-    window.Alpine.data('tutorModal', TutorCore.modal);
-    window.Alpine.data('tutorToast', TutorCore.toast);
-    window.Alpine.data('tutorTabs', TutorCore.tabs);
-    window.Alpine.data('tutorAccordion', TutorCore.accordion);
-    window.Alpine.data('tutorPopover', TutorCore.popover);
-    window.Alpine.data('tutorTooltip', TutorCore.tooltip);
-    window.Alpine.data('tutorSidebar', TutorCore.sidebar);
-    window.Alpine.data('tutorFormValidation', TutorCore.formValidation);
+    window.Alpine.data('tutorDropdown', TutorCore.dropdown as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorModal', TutorCore.modal as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorToast', TutorCore.toast as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorTabs', TutorCore.tabs as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorAccordion', TutorCore.accordion as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorPopover', TutorCore.popover as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorTooltip', TutorCore.tooltip as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorSidebar', TutorCore.sidebar as (...args: unknown[]) => unknown);
+    window.Alpine.data('tutorFormValidation', TutorCore.formValidation as (...args: unknown[]) => unknown);
   }
 });
 

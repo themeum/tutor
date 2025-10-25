@@ -1,5 +1,5 @@
 // Typography Utilities
-// Font sizes, weights, colors, and alignment utilities
+// Font sizes, weights, colors, and alignment utilities from Figma
 
 @use 'sass:map';
 @use '../tokens/typography' as *;
@@ -8,36 +8,41 @@
 @use '../tokens/breakpoints' as *;
 @use '../mixins/utilities' as *;
 
-// Typography component classes
+// Typography component classes (from Figma Typography tokens)
 .tutor-h1 {
+  font-family: $tutor-font-family-heading;
   font-size: $tutor-font-size-h1;
   line-height: $tutor-line-height-h1;
-  font-weight: $tutor-font-weight-bold;
+  font-weight: $tutor-font-weight-strong;
   margin: 0 0 $tutor-spacing-6;
 }
 
 .tutor-h2 {
+  font-family: $tutor-font-family-heading;
   font-size: $tutor-font-size-h2;
   line-height: $tutor-line-height-h2;
-  font-weight: $tutor-font-weight-bold;
+  font-weight: $tutor-font-weight-strong;
   margin: 0 0 $tutor-spacing-5;
 }
 
 .tutor-h3 {
+  font-family: $tutor-font-family-heading;
   font-size: $tutor-font-size-h3;
   line-height: $tutor-line-height-h3;
-  font-weight: $tutor-font-weight-semibold;
+  font-weight: $tutor-font-weight-semi-strong;
   margin: 0 0 $tutor-spacing-4;
 }
 
 .tutor-h4 {
+  font-family: $tutor-font-family-heading;
   font-size: $tutor-font-size-h4;
   line-height: $tutor-line-height-h4;
-  font-weight: $tutor-font-weight-semibold;
+  font-weight: $tutor-font-weight-semi-strong;
   margin: 0 0 $tutor-spacing-4;
 }
 
 .tutor-h5 {
+  font-family: $tutor-font-family-heading;
   font-size: $tutor-font-size-h5;
   line-height: $tutor-line-height-h5;
   font-weight: $tutor-font-weight-medium;
@@ -45,6 +50,7 @@
 }
 
 .tutor-p1 {
+  font-family: $tutor-font-family-body;
   font-size: $tutor-font-size-p1;
   line-height: $tutor-line-height-p1;
   margin: 0 0 $tutor-spacing-4;
@@ -77,9 +83,14 @@
   }
 }
 
-// Text alignment
+// Text alignment (RTL-aware)
 .tutor-text-left {
-  text-align: left;
+  [dir="ltr"] & {
+    text-align: left;
+  }
+  [dir="rtl"] & {
+    text-align: right;
+  }
 }
 
 .tutor-text-center {
@@ -87,7 +98,12 @@
 }
 
 .tutor-text-right {
-  text-align: right;
+  [dir="ltr"] & {
+    text-align: right;
+  }
+  [dir="rtl"] & {
+    text-align: left;
+  }
 }
 
 .tutor-text-justify {
@@ -298,6 +314,28 @@
   line-height: 2;
 }
 
+// Font scaling utilities (sets root font size for rem-based scaling)
+// These classes should be applied to the html element
+html.tutor-font-scale-80 {
+  font-size: 80%; // 12.8px base (16px × 0.8)
+}
+
+html.tutor-font-scale-90 {
+  font-size: 90%; // 14.4px base (16px × 0.9)
+}
+
+html.tutor-font-scale-100 {
+  font-size: 100%; // 16px base (default)
+}
+
+html.tutor-font-scale-110 {
+  font-size: 110%; // 17.6px base (16px × 1.1)
+}
+
+html.tutor-font-scale-120 {
+  font-size: 120%; // 19.2px base (16px × 1.2)
+}
+
 // List styles
 .tutor-list-none {
   list-style-type: none;
@@ -331,7 +369,12 @@
       }
       
       .tutor-#{$breakpoint}\:text-left {
-        text-align: left;
+        [dir="ltr"] & {
+          text-align: left;
+        }
+        [dir="rtl"] & {
+          text-align: right;
+        }
       }
       
       .tutor-#{$breakpoint}\:text-center {
@@ -339,7 +382,12 @@
       }
       
       .tutor-#{$breakpoint}\:text-right {
-        text-align: right;
+        [dir="ltr"] & {
+          text-align: right;
+        }
+        [dir="rtl"] & {
+          text-align: left;
+        }
       }
       
       @each $weight-key, $weight-value in $tutor-font-weights {

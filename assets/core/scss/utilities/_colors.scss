@@ -77,46 +77,116 @@
   }
 }
 
+// Success background colors
+@each $key, $value in $tutor-success-colors {
+  .tutor-bg-success-#{$key} {
+    background-color: $value;
+  }
+}
+
+// Warning background colors
+@each $key, $value in $tutor-warning-colors {
+  .tutor-bg-warning-#{$key} {
+    background-color: $value;
+  }
+}
+
+// Error background colors
+@each $key, $value in $tutor-error-colors {
+  .tutor-bg-error-#{$key} {
+    background-color: $value;
+  }
+}
+
+// Exception background colors
+@each $key, $value in $tutor-exception-colors {
+  .tutor-bg-exception-#{$key} {
+    background-color: $value;
+  }
+}
+
 // Basic text colors (from main.scss)
-.tutor-text-primary { 
-  color: var(--tutor-text-primary); 
+.tutor-text-primary {
+  color: var(--tutor-text-primary);
 }
 
-.tutor-text-secondary { 
-  color: var(--tutor-text-secondary); 
+.tutor-text-secondary {
+  color: var(--tutor-text-secondary);
 }
 
-.tutor-text-disabled { 
-  color: var(--tutor-text-disabled); 
+.tutor-text-disabled {
+  color: var(--tutor-text-disabled);
 }
 
-.tutor-text-brand { 
-  color: var(--tutor-text-brand); 
+.tutor-text-brand {
+  color: var(--tutor-text-brand);
 }
 
-.tutor-text-success { 
-  color: var(--tutor-success); 
+.tutor-text-success {
+  color: var(--tutor-success);
 }
 
-.tutor-text-warning { 
-  color: var(--tutor-warning); 
+.tutor-text-warning {
+  color: var(--tutor-warning);
 }
 
-.tutor-text-error { 
-  color: var(--tutor-error); 
+.tutor-text-error {
+  color: var(--tutor-error);
+}
+
+// Brand text colors (full scale)
+@each $key, $value in $tutor-brand-colors {
+  .tutor-text-brand-#{$key} {
+    color: $value;
+  }
+}
+
+// Gray text colors (full scale)
+@each $key, $value in $tutor-gray-colors {
+  .tutor-text-gray-#{$key} {
+    color: $value;
+  }
+}
+
+// Success text colors (full scale)
+@each $key, $value in $tutor-success-colors {
+  .tutor-text-success-#{$key} {
+    color: $value;
+  }
+}
+
+// Warning text colors (full scale)
+@each $key, $value in $tutor-warning-colors {
+  .tutor-text-warning-#{$key} {
+    color: $value;
+  }
+}
+
+// Error text colors (full scale)
+@each $key, $value in $tutor-error-colors {
+  .tutor-text-error-#{$key} {
+    color: $value;
+  }
+}
+
+// Exception text colors
+@each $key, $value in $tutor-exception-colors {
+  .tutor-text-exception-#{$key} {
+    color: $value;
+  }
 }
 
 // Basic background colors (from main.scss)
-.tutor-bg-surface-base { 
-  background-color: var(--tutor-surface-base); 
+.tutor-bg-surface-base {
+  background-color: var(--tutor-surface-base);
 }
 
-.tutor-bg-surface-l1 { 
-  background-color: var(--tutor-surface-l1); 
+.tutor-bg-surface-l1 {
+  background-color: var(--tutor-surface-l1);
 }
 
-.tutor-bg-surface-l2 { 
-  background-color: var(--tutor-surface-l2); 
+.tutor-bg-surface-l2 {
+  background-color: var(--tutor-surface-l2);
 }
 
 // Border colors
@@ -170,152 +240,31 @@
   }
 }
 
-// Border width
-.tutor-border-0 {
-  border-width: 0;
-}
-
-.tutor-border {
-  border-width: 1px;
-}
-
-.tutor-border-2 {
-  border-width: 2px;
-}
-
-.tutor-border-4 {
-  border-width: 4px;
-}
-
-.tutor-border-8 {
-  border-width: 8px;
-}
-
-.tutor-border-t-0 {
-  border-top-width: 0;
-}
-
-.tutor-border-t {
-  border-top-width: 1px;
-}
-
-.tutor-border-t-2 {
-  border-top-width: 2px;
-}
-
-.tutor-border-t-4 {
-  border-top-width: 4px;
-}
-
-.tutor-border-r-0 {
-  border-right-width: 0;
-}
-
-.tutor-border-r {
-  border-right-width: 1px;
-}
-
-.tutor-border-r-2 {
-  border-right-width: 2px;
-}
-
-.tutor-border-r-4 {
-  border-right-width: 4px;
-}
-
-.tutor-border-b-0 {
-  border-bottom-width: 0;
-}
-
-.tutor-border-b {
-  border-bottom-width: 1px;
-}
-
-.tutor-border-b-2 {
-  border-bottom-width: 2px;
-}
-
-.tutor-border-b-4 {
-  border-bottom-width: 4px;
-}
-
-.tutor-border-l-0 {
-  border-left-width: 0;
-}
-
-.tutor-border-l {
-  border-left-width: 1px;
-}
-
-.tutor-border-l-2 {
-  border-left-width: 2px;
-}
-
-.tutor-border-l-4 {
-  border-left-width: 4px;
-}
-
-// Border style
-.tutor-border-solid {
-  border-style: solid;
-}
-
-.tutor-border-dashed {
-  border-style: dashed;
-}
-
-.tutor-border-dotted {
-  border-style: dotted;
-}
-
-.tutor-border-double {
-  border-style: double;
-}
-
-.tutor-border-none {
-  border-style: none;
-}
-
-// Border radius
-@each $key, $value in $tutor-radius {
-  .tutor-rounded-#{$key} {
-    border-radius: $value;
+// Success border colors
+@each $key, $value in $tutor-success-colors {
+  .tutor-border-success-#{$key} {
+    border-color: $value;
   }
+}
 
-  .tutor-rounded-t-#{$key} {
-    border-top-left-radius: $value;
-    border-top-right-radius: $value;
+// Warning border colors
+@each $key, $value in $tutor-warning-colors {
+  .tutor-border-warning-#{$key} {
+    border-color: $value;
   }
+}
 
-  .tutor-rounded-r-#{$key} {
-    border-top-right-radius: $value;
-    border-bottom-right-radius: $value;
+// Error border colors
+@each $key, $value in $tutor-error-colors {
+  .tutor-border-error-#{$key} {
+    border-color: $value;
   }
+}
 
-  .tutor-rounded-b-#{$key} {
-    border-bottom-right-radius: $value;
-    border-bottom-left-radius: $value;
-  }
-
-  .tutor-rounded-l-#{$key} {
-    border-top-left-radius: $value;
-    border-bottom-left-radius: $value;
-  }
-
-  .tutor-rounded-tl-#{$key} {
-    border-top-left-radius: $value;
-  }
-
-  .tutor-rounded-tr-#{$key} {
-    border-top-right-radius: $value;
-  }
-
-  .tutor-rounded-br-#{$key} {
-    border-bottom-right-radius: $value;
-  }
-
-  .tutor-rounded-bl-#{$key} {
-    border-bottom-left-radius: $value;
+// Exception border colors
+@each $key, $value in $tutor-exception-colors {
+  .tutor-border-exception-#{$key} {
+    border-color: $value;
   }
 }
 

@@ -1,7 +1,11 @@
 // Design Tokens - Spacing
-// Based on Figma spacing scale (0-21: 0px to 200px)
+// Consistent spacing scale for margins, padding, and gaps
 
-$tutor-spacing-0: 0px;
+// =============================================================================
+// SPACING SCALE
+// =============================================================================
+
+$tutor-spacing-none: 0px;
 $tutor-spacing-1: 2px;
 $tutor-spacing-2: 4px;
 $tutor-spacing-3: 6px;
@@ -24,9 +28,12 @@ $tutor-spacing-19: 112px;
 $tutor-spacing-20: 120px;
 $tutor-spacing-21: 200px;
 
-// Spacing Map for easier iteration
+// =============================================================================
+// SPACING MAP (for utility generation)
+// =============================================================================
+
 $tutor-spacing: (
-  0: $tutor-spacing-0,
+  none: $tutor-spacing-none,
   1: $tutor-spacing-1,
   2: $tutor-spacing-2,
   3: $tutor-spacing-3,

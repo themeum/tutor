@@ -1,42 +1,71 @@
 // Design Tokens - Typography
-// Based on Figma font sizes and line heights
+// Font families, weights, sizes, and line heights
 
-// Font Sizes (H1-H5, P1-P3)
-$tutor-font-size-h1: 40px;
-$tutor-font-size-h2: 32px;
-$tutor-font-size-h3: 24px;
-$tutor-font-size-h4: 20px;
-$tutor-font-size-h5: 18px;
-$tutor-font-size-p1: 16px;
-$tutor-font-size-p2: 14px;
-$tutor-font-size-p3: 12px;
+// =============================================================================
+// FONT FAMILIES
+// =============================================================================
 
-// Line Heights
-$tutor-line-height-h1: 48px;
-$tutor-line-height-h2: 40px;
-$tutor-line-height-h3: 32px;
-$tutor-line-height-h4: 28px;
-$tutor-line-height-h5: 26px;
-$tutor-line-height-p1: 22px;
-$tutor-line-height-p2: 18px;
-$tutor-line-height-p3: 18px;
+$tutor-font-family-heading: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$tutor-font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
-// Font Weights
-$tutor-font-weight-light: 300;
-$tutor-font-weight-normal: 400;
-$tutor-font-weight-medium: 500;
-$tutor-font-weight-semibold: 600;
-$tutor-font-weight-bold: 700;
+// =============================================================================
+// FONT WEIGHTS
+// =============================================================================
 
-// Typography Maps for easier iteration
+$tutor-font-weight-weak: 400;      // Regular
+$tutor-font-weight-medium: 500;    // Medium
+$tutor-font-weight-semi-strong: 600; // Semi Bold
+$tutor-font-weight-strong: 700;    // Bold
+
+// =============================================================================
+// FONT SIZES (converted to rem for font scaling support)
+// Base: 16px = 1rem
+// =============================================================================
+
+$tutor-font-size-h1: 2.5rem;    // 40px ÷ 16 = 2.5rem
+$tutor-font-size-h2: 2rem;      // 32px ÷ 16 = 2rem
+$tutor-font-size-h3: 1.5rem;    // 24px ÷ 16 = 1.5rem
+$tutor-font-size-h4: 1.25rem;   // 20px ÷ 16 = 1.25rem
+$tutor-font-size-h5: 1.125rem;  // 18px ÷ 16 = 1.125rem
+$tutor-font-size-medium: 1rem;  // 16px ÷ 16 = 1rem
+$tutor-font-size-p1: 1rem;      // 16px ÷ 16 = 1rem
+$tutor-font-size-small: 0.875rem; // 14px ÷ 16 = 0.875rem
+$tutor-font-size-p2: 0.875rem;  // 14px ÷ 16 = 0.875rem
+$tutor-font-size-tiny: 0.75rem; // 12px ÷ 16 = 0.75rem
+$tutor-font-size-p3: 0.75rem;   // 12px ÷ 16 = 0.75rem
+
+// =============================================================================
+// LINE HEIGHTS (converted to rem for proportional scaling with fonts)
+// Base: 16px = 1rem
+// =============================================================================
+
+$tutor-line-height-h1: 3rem;      // 48px ÷ 16 = 3rem
+$tutor-line-height-h2: 2.5rem;    // 40px ÷ 16 = 2.5rem
+$tutor-line-height-h3: 2rem;      // 32px ÷ 16 = 2rem
+$tutor-line-height-h4: 1.75rem;   // 28px ÷ 16 = 1.75rem
+$tutor-line-height-h5: 1.625rem;  // 26px ÷ 16 = 1.625rem
+$tutor-line-height-medium: 1.5rem; // 24px ÷ 16 = 1.5rem
+$tutor-line-height-p1: 1.375rem;  // 22px ÷ 16 = 1.375rem
+$tutor-line-height-small: 1.375rem; // 22px ÷ 16 = 1.375rem
+$tutor-line-height-p2: 1.125rem;  // 18px ÷ 16 = 1.125rem
+$tutor-line-height-tiny: 1.25rem; // 20px ÷ 16 = 1.25rem
+$tutor-line-height-p3: 1.125rem;  // 18px ÷ 16 = 1.125rem
+
+// =============================================================================
+// TYPOGRAPHY MAPS (for utility generation)
+// =============================================================================
+
 $tutor-font-sizes: (
   h1: $tutor-font-size-h1,
   h2: $tutor-font-size-h2,
   h3: $tutor-font-size-h3,
   h4: $tutor-font-size-h4,
   h5: $tutor-font-size-h5,
+  medium: $tutor-font-size-medium,
   p1: $tutor-font-size-p1,
+  small: $tutor-font-size-small,
   p2: $tutor-font-size-p2,
+  tiny: $tutor-font-size-tiny,
   p3: $tutor-font-size-p3
 );
 
@@ -46,15 +75,17 @@ $tutor-line-heights: (
   h3: $tutor-line-height-h3,
   h4: $tutor-line-height-h4,
   h5: $tutor-line-height-h5,
+  medium: $tutor-line-height-medium,
   p1: $tutor-line-height-p1,
+  small: $tutor-line-height-small,
   p2: $tutor-line-height-p2,
+  tiny: $tutor-line-height-tiny,
   p3: $tutor-line-height-p3
 );
 
 $tutor-font-weights: (
-  light: $tutor-font-weight-light,
-  normal: $tutor-font-weight-normal,
+  weak: $tutor-font-weight-weak,
   medium: $tutor-font-weight-medium,
-  semibold: $tutor-font-weight-semibold,
-  bold: $tutor-font-weight-bold
+  semi-strong: $tutor-font-weight-semi-strong,
+  strong: $tutor-font-weight-strong
 );

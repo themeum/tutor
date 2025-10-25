@@ -4,12 +4,45 @@ A standalone design system library providing consistent UI components, themes, a
 
 ## Features
 
-- 🎨 **Multi-theme Support**: Light and dark themes with CSS custom properties
-- 🌍 **RTL Language Support**: Built-in right-to-left language support
-- 🧩 **Component Library**: Pre-built components with Alpine.js integration
-- 📱 **Responsive Design**: Mobile-first responsive utilities
+- 🎨 **Multi-theme Support**: Light and dark themes with CSS custom properties based on Figma design tokens
+- 🌍 **RTL Language Support**: Built-in right-to-left language support with automatic adaptation
+- 🧩 **Component Library**: Pre-built components with Alpine.js integration and TypeScript support
+- 📱 **Responsive Design**: Mobile-first responsive utilities with smart defaults
 - ⚡ **Performance Optimized**: Single CSS and JS files for easy distribution
-- 🔧 **TypeScript Support**: Full TypeScript definitions included
+- 🔧 **TypeScript Support**: Full TypeScript definitions with proper type safety (no `any` types)
+- 🎯 **Figma Integration**: Design tokens directly mapped from Figma specifications
+- 🔄 **RTL-Aware Utilities**: All utility classes automatically adapt to RTL layouts
+- 🎨 **Complete Color System**: Brand, Gray, Success, Warning, Error, Yellow, and Exception color scales
+- 📏 **Precise Spacing**: 22-step spacing scale (0-21) matching Figma specifications exactly
+
+## Design Token System
+
+This design system is built on a comprehensive token system that maps directly to Figma design specifications:
+
+### Color Tokens
+
+- **Brand Colors**: 10-step scale (100-950) for primary brand colors
+- **Gray Colors**: 10-step scale (25-950) for neutral colors and surfaces
+- **Semantic Colors**: Success, Warning, Error with 10-step scales each
+- **Exception Colors**: Special colors for unique use cases (kids theme, highlights)
+- **Yellow Colors**: 10-step scale for attention and highlight colors
+
+### Typography Tokens
+
+- **Headings**: H1 (40px) to H5 (16px) with corresponding line heights
+- **Paragraphs**: P1 (16px), P2 (14px), P3 (12px) with optimal line heights
+- **Font Weights**: Light (300) to Bold (700) with semantic naming
+
+### Spacing Tokens
+
+- **Scale**: 22 steps (0-21) from 0px to 200px
+- **Semantic Names**: Based on usage patterns and visual hierarchy
+- **RTL Support**: All spacing automatically adapts to text direction
+
+### Border Radius Tokens
+
+- **Scale**: From none (0px) to full (1000px)
+- **Semantic Names**: Small, medium, large, and contextual variants
 
 ## Quick Start
 
@@ -22,14 +55,14 @@ Include the compiled CSS and JavaScript files in your HTML:
 <html lang="en" dir="ltr" data-theme="light">
   <head>
     <!-- Include the design system CSS -->
-    <link rel="stylesheet" href="tutor-core.min.css" />
+    <link rel="stylesheet" href="tutor-design-system.min.css" />
   </head>
   <body>
     <!-- Your content here -->
 
     <!-- Include Alpine.js and the design system JS -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="tutor-core.min.js"></script>
+    <script src="tutor-design-system.min.js"></script>
   </body>
 </html>
 ```
@@ -45,6 +78,39 @@ document.documentElement.setAttribute('data-theme', 'dark');
 // Switch to light theme
 document.documentElement.setAttribute('data-theme', 'light');
 ```
+
+### Font Scaling
+
+The design system supports font scaling for accessibility. All typography uses `rem` units and scales proportionally:
+
+```javascript
+// Set font scale to 120% (larger text for better accessibility)
+TutorCore.utils.setFontScale(120);
+
+// Set font scale to 80% (smaller text)
+TutorCore.utils.setFontScale(80);
+
+// Reset to default size (100%)
+TutorCore.utils.resetFontScale();
+
+// Get current font scale percentage
+const currentScale = TutorCore.utils.getFontScale(); // Returns 80, 90, 100, 110, or 120
+```
+
+You can also use CSS classes directly:
+
+```html
+<!-- Apply 120% font scaling to entire page -->
+<html class="tutor-font-scale-120">
+  <!-- Apply 80% font scaling to a specific section -->
+  <div class="tutor-font-scale-80">
+    <h2>This heading will be smaller</h2>
+    <p>This paragraph will also be smaller</p>
+  </div>
+</html>
+```
+
+**Available font scales:** 80%, 90%, 100% (default), 110%, 120%
 
 ### RTL Support
 
@@ -420,6 +486,16 @@ The TutorCore class provides factory methods for creating Alpine.js component da
 <div class="tutor-bg-surface-base">Base surface</div>
 <div class="tutor-bg-surface-l1">Level 1 surface</div>
 <div class="tutor-bg-surface-l2">Level 2 surface</div>
+
+<!-- Brand colors (100-950 scale) -->
+<div class="tutor-bg-brand-100">Brand 100</div>
+<div class="tutor-bg-brand-600">Brand 600</div>
+<div class="tutor-bg-brand-950">Brand 950</div>
+
+<!-- Semantic colors -->
+<div class="tutor-bg-success-100">Success light</div>
+<div class="tutor-bg-warning-500">Warning medium</div>
+<div class="tutor-bg-error-600">Error primary</div>
 ```
 
 ## CSS Classes Reference
@@ -550,23 +626,26 @@ The TutorCore class provides factory methods for creating Alpine.js component da
 ### Spacing Classes
 
 ```css
-/* Margin classes (0-10) */
+/* Margin classes (0-21 based on Figma tokens) */
 .tutor-m-{size}    /* All sides */
 .tutor-mt-{size}   /* Top */
-.tutor-mr-{size}   /* Right */
+.tutor-me-{size}   /* End (RTL-aware right/left) */
 .tutor-mb-{size}   /* Bottom */
-.tutor-ml-{size}   /* Left */
+.tutor-ms-{size}   /* Start (RTL-aware left/right) */
 .tutor-mx-{size}   /* Horizontal */
 .tutor-my-{size}   /* Vertical */
 
-/* Padding classes (0-10) */
+/* Padding classes (0-21 based on Figma tokens) */
 .tutor-p-{size}    /* All sides */
 .tutor-pt-{size}   /* Top */
-.tutor-pr-{size}   /* Right */
+.tutor-pe-{size}   /* End (RTL-aware right/left) */
 .tutor-pb-{size}   /* Bottom */
-.tutor-pl-{size}   /* Left */
+.tutor-ps-{size}   /* Start (RTL-aware left/right) */
 .tutor-px-{size}   /* Horizontal */
 .tutor-py-{size}   /* Vertical */
+
+/* Available sizes: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 */
+/* Corresponding to: 0px, 2px, 4px, 6px, 8px, 12px, 16px, 20px, 24px, 28px, 32px, 36px, 40px, 44px, 48px, 56px, 64px, 80px, 96px, 112px, 128px, 200px */
 ```
 
 ### Layout Classes
@@ -632,12 +711,12 @@ The TutorCore class provides factory methods for creating Alpine.js component da
 
 ## SASS Mixins
 
-If you're using SASS, you can use the provided mixins for custom components:
+If you're using SASS, you can use the provided mixins for custom components. All mixins are RTL-aware and use design tokens:
 
 ### Button Mixins
 
 ```scss
-@import 'tutor-core/scss/main';
+@import 'tutor-design-system/scss/main';
 
 .my-button {
   @include tutor-button-base;
@@ -651,6 +730,16 @@ If you're using SASS, you can use the provided mixins for custom components:
 
 .loading-button {
   @include tutor-button-loading;
+}
+
+// RTL-aware button with icon
+.icon-button {
+  @include tutor-button-base;
+  @include tutor-button-variant(primary);
+
+  .icon {
+    @include margin-end(8px); // Automatically adapts to RTL
+  }
 }
 ```
 
@@ -714,28 +803,38 @@ If you're using SASS, you can use the provided mixins for custom components:
 
 ```scss
 .my-component {
-  // Directional margins
+  // Directional margins (automatically adapts to RTL)
   @include margin-start(16px);
   @include margin-end(8px);
 
-  // Directional padding
+  // Directional padding (automatically adapts to RTL)
   @include padding-start(12px);
   @include padding-end(12px);
 
-  // Directional borders
-  @include border-start(1px solid #ccc);
+  // Directional borders (automatically adapts to RTL)
+  @include border-start(1px solid var(--tutor-color-border-primary));
   @include border-radius-start(8px);
 
-  // Text alignment
+  // Text alignment (automatically adapts to RTL)
   @include text-align-start;
 
-  // Positioning
-  @include left(0);
+  // Positioning (automatically adapts to RTL)
+  @include inset-inline-start(0);
 
-  // Icon positioning
+  // Transform for RTL
+  @include rtl-transform(translateX(-100%));
+
+  // Icon positioning (automatically adapts to RTL)
   .icon {
     @include icon-start(8px);
   }
+}
+
+// RTL-aware utility mixins
+.rtl-aware-component {
+  @include rtl-property(margin-left, margin-right, 16px);
+  @include rtl-value(text-align, left, right);
+  @include rtl-flip-horizontal; // Flips component horizontally in RTL
 }
 ```
 
@@ -933,7 +1032,7 @@ Check if current viewport is desktop.
 The library includes full TypeScript definitions:
 
 ```typescript
-import { TutorCore } from 'tutor-core';
+import { TutorCore } from 'tutor-design-system';
 
 // Use component methods with type safety
 const dropdownData = TutorCore.dropdown({
@@ -970,7 +1069,7 @@ The library includes several example HTML files demonstrating different features
 - **`examples/basic-usage.html`** - Basic setup and component usage
 - **`examples/alpine-components.html`** - All Alpine.js components with examples
 - **`examples/rtl-support.html`** - RTL language support demonstration
-- **`examples/tutor-core-components.html`** - Complete TutorCore API examples
+- **`examples/tutor-design-system-components.html`** - Complete TutorCore API examples
 
 To view the examples:
 
@@ -1005,75 +1104,77 @@ node build.js
 ```
 assets/core/
 ├── scss/
-│   ├── tokens/          # Design tokens (colors, typography, spacing, etc.)
-│   │   ├── _colors.scss
-│   │   ├── _typography.scss
-│   │   ├── _spacing.scss
-│   │   ├── _radius.scss
-│   │   └── _breakpoints.scss
-│   ├── themes/          # Theme variants
-│   │   ├── _light.scss
-│   │   └── _dark.scss
-│   ├── mixins/          # SASS mixins
-│   │   ├── _buttons.scss
-│   │   ├── _cards.scss
-│   │   ├── _forms.scss
-│   │   ├── _layout.scss
-│   │   ├── _utilities.scss
-│   │   └── _rtl.scss
-│   ├── components/      # Component styles
-│   │   ├── _button.scss
-│   │   ├── _card.scss
-│   │   ├── _form.scss
-│   │   ├── _navigation.scss
-│   │   ├── _dropdown.scss
-│   │   ├── _modal.scss
-│   │   ├── _tabs.scss
-│   │   ├── _accordion.scss
-│   │   ├── _toast.scss
-│   │   ├── _tooltip.scss
-│   │   ├── _popover.scss
-│   │   └── _sidebar.scss
-│   ├── utilities/       # Utility classes
-│   │   ├── _colors.scss
-│   │   ├── _layout.scss
-│   │   ├── _spacing.scss
-│   │   ├── _typography.scss
-│   │   ├── _sizing.scss
-│   │   └── _rtl.scss
+│   ├── tokens/          # Design tokens based on Figma specifications
+│   │   ├── _colors.scss      # Complete color scales (Brand, Gray, Success, Warning, Error, Yellow, Exception)
+│   │   ├── _typography.scss  # Typography scale (H1-H5, P1-P3) with line heights
+│   │   ├── _spacing.scss     # Spacing scale (0-21: 0px to 200px)
+│   │   ├── _radius.scss      # Border radius scale (none to full)
+│   │   └── _breakpoints.scss # Responsive breakpoints
+│   ├── themes/          # Theme variants with semantic token mappings
+│   │   ├── _light.scss       # Light theme with Figma surface and text colors
+│   │   └── _dark.scss        # Dark theme with proper contrast ratios
+│   ├── mixins/          # SASS mixins with RTL support
+│   │   ├── _buttons.scss     # Button variants and states
+│   │   ├── _cards.scss       # Card layouts and elevation
+│   │   ├── _forms.scss       # Form elements and validation
+│   │   ├── _layout.scss      # Flexbox, grid, and positioning
+│   │   ├── _utilities.scss   # Common utility patterns
+│   │   └── _rtl.scss         # RTL-aware directional mixins
+│   ├── components/      # Component styles with RTL support
+│   │   ├── _button.scss      # All button variants and sizes
+│   │   ├── _card.scss        # Flexible card layouts
+│   │   ├── _form.scss        # Form styling and validation states
+│   │   ├── _navigation.scss  # Tabs, breadcrumbs, pagination
+│   │   ├── _progress.scss    # Progress bars and indicators
+│   │   ├── _dropdown.scss    # Dropdown with RTL positioning
+│   │   ├── _modal.scss       # Modal with backdrop and responsive layouts
+│   │   ├── _tabs.scss        # Tab component with transitions
+│   │   ├── _accordion.scss   # Accordion with animations
+│   │   ├── _toast.scss       # Toast notifications with stacking
+│   │   ├── _tooltip.scss     # Tooltip with RTL positioning
+│   │   ├── _popover.scss     # Popover with arrow positioning
+│   │   └── _sidebar.scss     # Sidebar with collapse states
+│   ├── utilities/       # RTL-aware utility classes
+│   │   ├── _colors.scss      # Color utilities for all themes
+│   │   ├── _layout.scss      # Flexbox, grid, display utilities
+│   │   ├── _spacing.scss     # RTL-aware margin and padding
+│   │   ├── _typography.scss  # Typography and text utilities
+│   │   ├── _borders.scss     # Border utilities with smart defaults
+│   │   └── _sizing.scss      # Width, height, and sizing utilities
 │   └── main.scss        # Main entry point
 ├── ts/
-│   ├── types/           # TypeScript definitions
-│   │   ├── components.ts
-│   │   └── alpine.ts
-│   ├── components/      # Component logic
-│   │   ├── dropdown.ts
-│   │   ├── modal.ts
-│   │   ├── tabs.ts
-│   │   ├── accordion.ts
-│   │   ├── toast.ts
-│   │   ├── tooltip.ts
-│   │   ├── popover.ts
-│   │   ├── sidebar.ts
-│   │   └── form-validation.ts
+│   ├── types/           # TypeScript definitions (no 'any' types)
+│   │   ├── components.ts     # Component interfaces and types
+│   │   └── alpine.ts         # Alpine.js integration types
+│   ├── components/      # Component logic with proper typing
+│   │   ├── dropdown.ts       # Dropdown with RTL positioning
+│   │   ├── modal.ts          # Modal with focus management
+│   │   ├── tabs.ts           # Tabs with keyboard navigation
+│   │   ├── accordion.ts      # Accordion with animation support
+│   │   ├── toast.ts          # Toast system with stacking
+│   │   ├── tooltip.ts        # Tooltip with RTL positioning
+│   │   ├── popover.ts        # Popover with collision detection
+│   │   ├── sidebar.ts        # Sidebar with responsive behavior
+│   │   └── form-validation.ts # Form validation with custom rules
 │   ├── utils/           # Utility functions
-│   │   └── rtl-detection.ts
-│   └── index.ts         # Main entry point
+│   │   └── rtl-detection.ts  # RTL detection and utilities
+│   └── index.ts         # Main TutorCore class export
 ├── examples/            # Example HTML files
 │   ├── basic-usage.html
 │   ├── alpine-components.html
 │   ├── rtl-support.html
-│   └── tutor-core-components.html
-├── dist/                # Compiled files (now built to Tutor's assets)
-│   ├── tutor-core.css
-│   ├── tutor-core.min.css
-│   ├── tutor-core.js
-│   ├── tutor-core.min.js
-│   └── index.d.ts       # TypeScript declarations
+│   └── tutor-design-system-components.html
+├── dist/                # Compiled files
+│   ├── tutor-design-system.css     # Single CSS file with all themes
+│   ├── tutor-design-system.min.css # Minified CSS
+│   ├── tutor-design-system.js      # Single JS file with TutorCore
+│   ├── tutor-design-system.min.js  # Minified JS
+│   └── tutor-design-system.d.ts    # TypeScript declarations
 ├── package.json
 ├── tsconfig.json
 ├── rollup.config.js
 ├── build.js
+├── CONTRIBUTING.md      # Development guidelines
 └── README.md
 ```
 
@@ -1119,8 +1220,13 @@ assets/core/
 - Use the `preload` link relation for faster resource loading:
 
 ```html
-<link rel="preload" href="tutor-core.min.css" as="style" /> <link rel="preload" href="tutor-core.min.js" as="script" />
+<link rel="preload" href="tutor-design-system.min.css" as="style" />
+<link rel="preload" href="tutor-design-system.min.js" as="script" />
 ```
+
+- The design system uses CSS custom properties for theme switching, which is more performant than class-based theming
+- All utility classes are RTL-aware by default, eliminating the need for separate RTL stylesheets
+- Single file distribution reduces HTTP requests and improves loading performance
 
 ### Browser Compatibility
 

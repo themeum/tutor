@@ -1,5 +1,5 @@
 // Spacing Utilities
-// Margin and padding utilities using design token scale
+// Margin and padding utilities using Figma design token scale
 
 @use '../tokens/spacing' as *;
 @use '../tokens/breakpoints' as *;
@@ -9,28 +9,44 @@
   .tutor-m-#{$key} {
     margin: $value;
   }
-  
+
   .tutor-mt-#{$key} {
     margin-top: $value;
   }
-  
+
   .tutor-mr-#{$key} {
-    margin-right: $value;
+    [dir='ltr'] & {
+      margin-right: $value;
+    }
+    [dir='rtl'] & {
+      margin-left: $value;
+    }
   }
-  
+
   .tutor-mb-#{$key} {
     margin-bottom: $value;
   }
-  
+
   .tutor-ml-#{$key} {
-    margin-left: $value;
+    [dir='ltr'] & {
+      margin-left: $value;
+    }
+    [dir='rtl'] & {
+      margin-right: $value;
+    }
   }
-  
+
   .tutor-mx-#{$key} {
-    margin-left: $value;
-    margin-right: $value;
+    [dir='ltr'] & {
+      margin-left: $value;
+      margin-right: $value;
+    }
+    [dir='rtl'] & {
+      margin-left: $value;
+      margin-right: $value;
+    }
   }
-  
+
   .tutor-my-#{$key} {
     margin-top: $value;
     margin-bottom: $value;
@@ -42,28 +58,44 @@
   .tutor-p-#{$key} {
     padding: $value;
   }
-  
+
   .tutor-pt-#{$key} {
     padding-top: $value;
   }
-  
+
   .tutor-pr-#{$key} {
-    padding-right: $value;
+    [dir='ltr'] & {
+      padding-right: $value;
+    }
+    [dir='rtl'] & {
+      padding-left: $value;
+    }
   }
-  
+
   .tutor-pb-#{$key} {
     padding-bottom: $value;
   }
-  
+
   .tutor-pl-#{$key} {
-    padding-left: $value;
+    [dir='ltr'] & {
+      padding-left: $value;
+    }
+    [dir='rtl'] & {
+      padding-right: $value;
+    }
   }
-  
+
   .tutor-px-#{$key} {
-    padding-left: $value;
-    padding-right: $value;
+    [dir='ltr'] & {
+      padding-left: $value;
+      padding-right: $value;
+    }
+    [dir='rtl'] & {
+      padding-left: $value;
+      padding-right: $value;
+    }
   }
-  
+
   .tutor-py-#{$key} {
     padding-top: $value;
     padding-bottom: $value;
@@ -76,28 +108,38 @@
     .-tutor-m-#{$key} {
       margin: -$value;
     }
-    
+
     .-tutor-mt-#{$key} {
       margin-top: -$value;
     }
-    
+
     .-tutor-mr-#{$key} {
-      margin-right: -$value;
+      [dir='ltr'] & {
+        margin-right: -$value;
+      }
+      [dir='rtl'] & {
+        margin-left: -$value;
+      }
     }
-    
+
     .-tutor-mb-#{$key} {
       margin-bottom: -$value;
     }
-    
+
     .-tutor-ml-#{$key} {
-      margin-left: -$value;
+      [dir='ltr'] & {
+        margin-left: -$value;
+      }
+      [dir='rtl'] & {
+        margin-right: -$value;
+      }
     }
-    
+
     .-tutor-mx-#{$key} {
       margin-left: -$value;
       margin-right: -$value;
     }
-    
+
     .-tutor-my-#{$key} {
       margin-top: -$value;
       margin-bottom: -$value;
@@ -115,7 +157,12 @@
 }
 
 .tutor-mr-auto {
-  margin-right: auto;
+  [dir='ltr'] & {
+    margin-right: auto;
+  }
+  [dir='rtl'] & {
+    margin-left: auto;
+  }
 }
 
 .tutor-mb-auto {
@@ -123,7 +170,12 @@
 }
 
 .tutor-ml-auto {
-  margin-left: auto;
+  [dir='ltr'] & {
+    margin-left: auto;
+  }
+  [dir='rtl'] & {
+    margin-right: auto;
+  }
 }
 
 .tutor-mx-auto {
@@ -144,58 +196,58 @@
         .tutor-#{$breakpoint}\:m-#{$space-key} {
           margin: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:mt-#{$space-key} {
           margin-top: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:mr-#{$space-key} {
           margin-right: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:mb-#{$space-key} {
           margin-bottom: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:ml-#{$space-key} {
           margin-left: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:mx-#{$space-key} {
           margin-left: $space-value;
           margin-right: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:my-#{$space-key} {
           margin-top: $space-value;
           margin-bottom: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:p-#{$space-key} {
           padding: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:pt-#{$space-key} {
           padding-top: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:pr-#{$space-key} {
           padding-right: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:pb-#{$space-key} {
           padding-bottom: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:pl-#{$space-key} {
           padding-left: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:px-#{$space-key} {
           padding-left: $space-value;
           padding-right: $space-value;
         }
-        
+
         .tutor-#{$breakpoint}\:py-#{$space-key} {
           padding-top: $space-value;
           padding-bottom: $space-value;

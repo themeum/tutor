@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Scaling Demo - Tutor Design System</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <style>
+        .demo-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+        }
+
+        .scale-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--tutor-surface-l1);
+            border-radius: 8px;
+        }
+
+        .current-scale {
+            font-weight: 600;
+            color: var(--tutor-text-brand);
+            margin-left: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tutor-container tutor-p-6">
+        <header class="tutor-mb-8">
+            <h1 class="tutor-h1">Font Scaling Demo</h1>
+            <p class="tutor-p1 tutor-text-secondary">
+                This demo shows how the Tutor Design System supports font scaling for accessibility.
+                All typography scales proportionally while maintaining proper line heights and spacing.
+            </p>
+        </header>
+
+        <!-- Font Scale Controls -->
+        <div class="scale-controls">
+            <strong>Font Scale:</strong>
+            <button onclick="setFontScale(80)" class="tutor-btn tutor-btn--outline tutor-btn--small">80%</button>
+            <button onclick="setFontScale(90)" class="tutor-btn tutor-btn--outline tutor-btn--small">90%</button>
+            <button onclick="setFontScale(100)" class="tutor-btn tutor-btn--primary tutor-btn--small">100%</button>
+            <button onclick="setFontScale(110)" class="tutor-btn tutor-btn--outline tutor-btn--small">110%</button>
+            <button onclick="setFontScale(120)" class="tutor-btn tutor-btn--outline tutor-btn--small">120%</button>
+            <span class="current-scale" id="currentScale">Current: 100%</span>
+        </div>
+
+        <!-- Typography Samples -->
+        <div class="demo-section">
+            <h2 class="tutor-h2">Typography Hierarchy</h2>
+            <p class="tutor-p2 tutor-text-secondary tutor-mb-4">
+                All headings and paragraphs scale proportionally with the font scale setting.
+            </p>
+
+            <h1 class="tutor-h1">Heading 1 (2.5rem base)</h1>
+            <h2 class="tutor-h2">Heading 2 (2rem base)</h2>
+            <h3 class="tutor-h3">Heading 3 (1.5rem base)</h3>
+            <h4 class="tutor-h4">Heading 4 (1.25rem base)</h4>
+            <h5 class="tutor-h5">Heading 5 (1.125rem base)</h5>
+
+            <p class="tutor-p1">
+                <strong>Paragraph 1 (1rem base):</strong> This is the main paragraph style used for body text.
+                It has optimal line height and spacing for readability.
+            </p>
+
+            <p class="tutor-p2">
+                <strong>Paragraph 2 (0.875rem base):</strong> This is a smaller paragraph style used for
+                secondary information and captions.
+            </p>
+
+            <p class="tutor-p3">
+                <strong>Paragraph 3 (0.75rem base):</strong> This is the smallest paragraph style used for
+                fine print and metadata.
+            </p>
+        </div>
+
+        <!-- Card Component Example -->
+        <div class="demo-section">
+            <h2 class="tutor-h2">Component Example</h2>
+            <p class="tutor-p2 tutor-text-secondary tutor-mb-4">
+                Components also scale with the font size setting, maintaining proper proportions.
+            </p>
+
+            <div class="tutor-card">
+                <div class="tutor-card__header">
+                    <h3 class="tutor-card__title">Course Title</h3>
+                    <p class="tutor-card__subtitle">Learn web development fundamentals</p>
+                </div>
+                <div class="tutor-card__body">
+                    <p class="tutor-p1">
+                        This course covers HTML, CSS, and JavaScript basics. Perfect for beginners
+                        who want to start their web development journey.
+                    </p>
+                    <ul class="tutor-list-disc tutor-list-inside tutor-mt-3">
+                        <li>HTML structure and semantics</li>
+                        <li>CSS styling and layout</li>
+                        <li>JavaScript fundamentals</li>
+                        <li>Responsive design principles</li>
+                    </ul>
+                </div>
+                <div class="tutor-card__footer">
+                    <button class="tutor-btn tutor-btn--primary">Enroll Now</button>
+                    <button class="tutor-btn tutor-btn--outline">Learn More</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Example -->
+        <div class="demo-section">
+            <h2 class="tutor-h2">Form Elements</h2>
+            <p class="tutor-p2 tutor-text-secondary tutor-mb-4">
+                Form elements also scale appropriately with font size changes.
+            </p>
+
+            <form class="tutor-max-w-md">
+                <div class="tutor-form-group">
+                    <label class="tutor-label" for="name">Full Name</label>
+                    <input type="text" id="name" class="tutor-input" placeholder="Enter your name" />
+                </div>
+
+                <div class="tutor-form-group">
+                    <label class="tutor-label" for="email">Email Address</label>
+                    <input type="email" id="email" class="tutor-input" placeholder="Enter your email" />
+                    <p class="tutor-help-text">We'll never share your email with anyone else.</p>
+                </div>
+
+                <div class="tutor-form-group">
+                    <label class="tutor-label" for="message">Message</label>
+                    <textarea id="message" class="tutor-textarea" rows="4" placeholder="Enter your message"></textarea>
+                </div>
+
+                <button type="submit" class="tutor-btn tutor-btn--primary">Submit</button>
+            </form>
+        </div>
+
+        <!-- Theme Switching -->
+        <div class="demo-section">
+            <h2 class="tutor-h2">Theme Integration</h2>
+            <p class="tutor-p2 tutor-text-secondary tutor-mb-4">
+                Font scaling works seamlessly with theme switching.
+            </p>
+
+            <div class="tutor-flex tutor-gap-2">
+                <button onclick="setTheme('light')" class="tutor-btn tutor-btn--outline">Light Theme</button>
+                <button onclick="setTheme('dark')" class="tutor-btn tutor-btn--outline">Dark Theme</button>
+            </div>
+        </div>
+    </div>
+
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../../js/tutor-core.js"></script>
+
+    <script>
+        // Font scaling functions
+        function setFontScale(percentage) {
+            TutorCore.utils.setFontScale(percentage);
+            updateCurrentScale();
+        }
+
+        function updateCurrentScale() {
+            const scale = TutorCore.utils.getFontScale();
+            document.getElementById('currentScale').textContent = `Current: ${scale}%`;
+        }
+
+        // Theme switching functions
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            updateCurrentScale();
+        });
+    </script>
+</body>
+
+</html>
