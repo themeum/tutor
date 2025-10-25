@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SASS Development Guide - Tutor Design System</title>
+  <link rel="stylesheet" href="../../css/tutor-core.min.css" />
+  <style>
+    .demo-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      border: 1px solid var(--tutor-border-idle);
+      border-radius: 12px;
+      background: var(--tutor-surface-l1);
+    }
+
+    .code-example {
+      background: var(--tutor-surface-l2);
+      border: 1px solid var(--tutor-border-idle);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.875rem;
+      overflow-x: auto;
+    }
+
+    .result-example {
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 2px dashed var(--tutor-border-brand);
+      border-radius: 8px;
+      background: var(--tutor-surface-base);
+    }
+
+    .theme-switcher {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      z-index: 1000;
+    }
+
+    /* Custom component examples using design system mixins */
+    .custom-alert {
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid;
+      margin: 1rem 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      font-size: 0.875rem;
+      line-height: 1.375rem;
+    }
+
+    .custom-alert--success {
+      background-color: var(--tutor-actions-success-tertiary);
+      border-color: var(--tutor-actions-success-primary);
+      color: var(--tutor-text-success);
+    }
+
+    .custom-alert--warning {
+      background-color: var(--tutor-actions-warning);
+      border-color: var(--tutor-text-warning);
+      color: var(--tutor-text-warning);
+    }
+
+    .custom-alert--error {
+      background-color: var(--tutor-actions-critical-secondary);
+      border-color: var(--tutor-actions-critical-primary);
+      color: var(--tutor-text-critical);
+    }
+
+    .custom-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1000px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      line-height: 1.25rem;
+    }
+
+    .custom-badge--primary {
+      background-color: var(--tutor-actions-brand-tertiary);
+      color: var(--tutor-text-brand);
+    }
+
+    .custom-badge--success {
+      background-color: var(--tutor-actions-success-tertiary);
+      color: var(--tutor-text-success);
+    }
+
+    .custom-progress-bar {
+      width: 100%;
+      height: 8px;
+      background-color: var(--tutor-surface-l2);
+      border-radius: 1000px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .custom-progress-bar__fill {
+      height: 100%;
+      background-color: var(--tutor-actions-brand-primary);
+      border-radius: 1000px;
+      transition: width 0.3s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="tutor-container tutor-p-6">
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+      <button onclick="toggleTheme()" class="tutor-btn tutor-btn--secondary tutor-btn--small">
+        🌓 Toggle Theme
+      </button>
+    </div>
+
+    <header class="tutor-mb-8">
+      <h1 class="tutor-h1">SASS Development Guide</h1>
+      <p class="tutor-p1 tutor-text-secondary">
+        Learn how to build custom components using Tutor Design System SASS mixins and tokens.
+      </p>
+    </header>
+
+    <!-- Design Token Usage -->
+    <div class="demo-section">
+      <h2 class="tutor-h2">Design Token Usage</h2>
+      <p class="tutor-p1 tutor-mb-4">
+        Understanding when to use SASS variables vs CSS custom properties is crucial for proper design system usage.
+      </p>
+
+      <h3 class="tutor-h3">SASS Variables (Static Values)</h3>
+      <p class="tutor-p2 tutor-text-secondary tutor-mb-3">
+        Use SASS variables for values that don't change between themes:
+      </p>
+
+      <div class="code-example">
+        <pre>// ✅ Good - Static values
+.my-component {
+  font-family: $tutor-font-family-body;
+  font-size: $tutor-font-size-p1;
+  line-height: $tutor-line-height-p1;
+  font-weight: $tutor-font-weight-medium;
+  padding: $tutor-spacing-4;
+  border-radius: $tutor-radius-md;
+}</pre>
+      </div>
+
+      <h3 class="tutor-h3">CSS Custom Properties (Dynamic Values)</h3>
+      <p class="tutor-p2 tutor-text-secondary tutor-mb-3">
+        Use CSS custom properties for values that change between themes:
+      </p>
+
+      <div class="code-example">
+        <pre>// ✅ Good - Theme-dependent values
+.my-component {
+  color: var(--tutor-text-primary);
+  background-color: var(--tutor-surface-l1);
+  border-color: var(--tutor-border-idle);
+}</pre>
+      </div>
+
+      <h3 class="tutor-h3">Mixed Approach (Recommended)</h3>
+      <div class="code-example">
+        <pre>// ✅ Best Practice - Combine both approaches
+.custom-alert {
+  // Static values - SASS variables
+  font-family: $tutor-font-family-body;
+  font-size: $tutor-font-size-p2;
+  line-height: $tutor-line-height-p2;
+  padding: $tutor-spacing-4 $tutor-spacing-6;
+  border-radius: $tutor-radius-md;
+  
+  // Dynamic values - CSS custom properties
+  color: var(--tutor-text-primary);
+  background-color: var(--tutor-surface-l1);
+  border: 1px solid var(--tutor-border-idle);
+}</pre>
+      </div>
+    </div>
+
+    <!-- RTL-Aware Development -->
+    <div class="demo-section">
+      <h2 class="tutor-h2">RTL-Aware Component Development</h2>
+      <p class="tutor-p1 tutor-mb-4">
+        Use RTL mixins for directional properties to ensure your components work in both LTR and RTL layouts.
+      </p>
+
+      <div class="code-example">
+        <pre>// ✅ RTL-Aware Component
+.custom-notification {
+  @include padding-start($tutor-spacing-4);
+  @include padding-end($tutor-spacing-6);
+  @include margin-start($tutor-spacing-2);
+  @include border-start(4px solid var(--tutor-border-brand));
+  @include text-align-start();
+  
+  .icon {
+    @include icon-start($tutor-spacing-2);
+  }
+}</pre>
+      </div>
+
+      <div class="result-example">
+        <div
+          style="padding-left: 1rem; padding-right: 1.5rem; margin-left: 0.5rem; border-left: 4px solid var(--tutor-border-brand); text-align: left;">
+          <span style="margin-right: 0.5rem;">📢</span>
+          This notification adapts to RTL automatically
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Component Examples -->
+    <div class="demo-section">
+      <h2 class="tutor-h2">Custom Component Examples</h2>
+      <p class="tutor-p1 tutor-mb-4">
+        Examples of custom components built using design system tokens and following design system patterns.
+      </p>
+
+      <h3 class="tutor-h3">Custom Alert Component</h3>
+      <div class="code-example">
+        <pre>// Custom Alert using design system tokens
+.custom-alert {
+  // Static properties
+  padding: $tutor-spacing-4 $tutor-spacing-6;
+  border-radius: $tutor-radius-md;
+  font-family: $tutor-font-family-body;
+  font-size: $tutor-font-size-p2;
+  line-height: $tutor-line-height-p2;
+  
+  // RTL-aware border
+  @include border-start(4px solid);
+  
+  // Theme variants
+  &--success {
+    background-color: var(--tutor-actions-success-tertiary);
+    border-color: var(--tutor-actions-success-primary);
+    color: var(--tutor-text-success);
+  }
+  
+  &--warning {
+    background-color: var(--tutor-actions-warning);
+    border-color: var(--tutor-text-warning);
+    color: var(--tutor-text-warning);
+  }
+  
+  &--error {
+    background-color: var(--tutor-actions-critical-secondary);
+    border-color: var(--tutor-actions-critical-primary);
+    color: var(--tutor-text-critical);
+  }
+}</pre>
+      </div>
+
+      <div class="result-example">
+        <div class="custom-alert custom-alert--success">
+          ✅ Success: Your changes have been saved successfully.
+        </div>
+        <div class="custom-alert custom-alert--warning">
+          ⚠️ Warning: Please review your input before proceeding.
+        </div>
+        <div class="custom-alert custom-alert--error">
+          ❌ Error: Something went wrong. Please try again.
+        </div>
+      </div>
+
+      <h3 class="tutor-h3">Custom Badge Component</h3>
+      <div class="code-example">
+        <pre>// Custom Badge using design system tokens
+.custom-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: $tutor-spacing-1 $tutor-spacing-3;
+  border-radius: $tutor-radius-full;
+  font-size: $tutor-font-size-p3;
+  font-weight: $tutor-font-weight-medium;
+  line-height: $tutor-line-height-p3;
+  
+  &--primary {
+    background-color: var(--tutor-actions-brand-tertiary);
+    color: var(--tutor-text-brand);
+  }
+  
+  &--success {
+    background-color: var(--tutor-actions-success-tertiary);
+    color: var(--tutor-text-success);
+  }
+}</pre>
+      </div>
+
+      <div class="result-example">
+        <span class="custom-badge custom-badge--primary">New</span>
+        <span class="custom-badge custom-badge--success">Completed</span>
+      </div>
+
+      <h3 class="tutor-h3">Custom Progress Bar</h3>
+      <div class="code-example">
+        <pre>// Custom Progress Bar using design system tokens
+.custom-progress-bar {
+  width: 100%;
+  height: $tutor-spacing-2;
+  background-color: var(--tutor-surface-l2);
+  border-radius: $tutor-radius-full;
+  overflow: hidden;
+  margin: $tutor-spacing-4 0;
+  
+  &__fill {
+    height: 100%;
+    background-color: var(--tutor-actions-brand-primary);
+    border-radius: $tutor-radius-full;
+    transition: width 0.3s ease;
+  }
+}</pre>
+      </div>
+
+      <div class="result-example">
+        <div class="custom-progress-bar">
+          <div class="custom-progress-bar__fill" style="width: 65%;"></div>
+        </div>
+        <p class="tutor-p3 tutor-text-secondary">Progress: 65% complete</p>
+      </div>
+    </div>
+
+    <!-- Utility Class Patterns -->
+    <div class="demo-section">
+      <h2 class="tutor-h2">Utility Class Patterns</h2>
+      <p class="tutor-p1 tutor-mb-4">
+        Learn how to combine utility classes effectively for common styling needs.
+      </p>
+
+      <h3 class="tutor-h3">Typography Combinations</h3>
+      <div class="code-example">
+        <pre>// Individual utility classes (recommended for custom styling)
+&lt;span class="tutor-text-small tutor-font-medium tutor-text-primary"&gt;
+  Small text with medium weight and primary color
+&lt;/span&gt;
+
+// Alternative using typography class with font weight
+&lt;p class="tutor-p2 tutor-font-medium"&gt;
+  Paragraph 2 with medium font weight
+&lt;/p&gt;
+
+// Font size utilities
+&lt;span class="tutor-text-h3"&gt;Large text using H3 size&lt;/span&gt;
+&lt;span class="tutor-text-p2"&gt;Small text using P2 size&lt;/span&gt;</pre>
+      </div>
+
+      <div class="result-example">
+        <div class="tutor-mb-3">
+          <span class="tutor-text-small tutor-font-medium tutor-text-primary">
+            Small text with medium weight and primary color
+          </span>
+        </div>
+        <div class="tutor-mb-3">
+          <p class="tutor-p2 tutor-font-medium">
+            Paragraph 2 with medium font weight
+          </p>
+        </div>
+        <div class="tutor-mb-3">
+          <span class="tutor-text-h3">Large text using H3 size</span>
+        </div>
+        <div class="tutor-mb-3">
+          <span class="tutor-text-p2">Small text using P2 size</span>
+        </div>
+      </div>
+
+      <h3 class="tutor-h3">Common Utility Combinations</h3>
+      <div class="code-example">
+        <pre>// Button-like styling with utilities
+&lt;span class="tutor-text-p2 tutor-font-medium tutor-text-brand tutor-bg-brand-tertiary tutor-px-3 tutor-py-1"&gt;
+  Badge
+&lt;/span&gt;
+
+// Card header styling
+&lt;h3 class="tutor-text-h4 tutor-font-semi-strong tutor-text-primary tutor-mb-2"&gt;
+  Card Title
+&lt;/h3&gt;
+
+// Muted text styling
+&lt;p class="tutor-text-p3 tutor-font-weak tutor-text-secondary"&gt;
+  Helper text or metadata
+&lt;/p&gt;</pre>
+      </div>
+
+      <div class="result-example">
+        <div class="tutor-mb-3">
+          <span class="tutor-text-p2 tutor-font-medium tutor-text-brand"
+            style="background: var(--tutor-actions-brand-tertiary); padding: 0.25rem 0.75rem; border-radius: 4px;">
+            Badge
+          </span>
+        </div>
+        <div class="tutor-mb-3">
+          <h3 class="tutor-text-h4 tutor-font-semi-strong tutor-text-primary tutor-mb-2">
+            Card Title
+          </h3>
+        </div>
+        <div class="tutor-mb-3">
+          <p class="tutor-text-p3 tutor-font-weak tutor-text-secondary">
+            Helper text or metadata
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Best Practices -->
+    <div class="demo-section">
+      <h2 class="tutor-h2">Development Best Practices</h2>
+
+      <h3 class="tutor-h3">✅ Do's</h3>
+      <ul class="tutor-list-disc tutor-list-inside tutor-mb-4">
+        <li>Use SASS variables for static values (typography, spacing, radius)</li>
+        <li>Use CSS custom properties for theme-dependent values (colors)</li>
+        <li>Use RTL mixins for directional properties</li>
+        <li>Follow BEM naming convention for custom components</li>
+        <li>Prefix custom components with your namespace</li>
+        <li>Use design system tokens instead of hardcoded values</li>
+        <li>Test components in both light and dark themes</li>
+        <li>Test components in both LTR and RTL directions</li>
+      </ul>
+
+      <h3 class="tutor-h3">❌ Don'ts</h3>
+      <ul class="tutor-list-disc tutor-list-inside">
+        <li>Don't use hardcoded colors, sizes, or spacing values</li>
+        <li>Don't use left/right properties directly (use RTL mixins instead)</li>
+        <li>Don't override design system component styles directly</li>
+        <li>Don't use CSS custom properties for static values</li>
+        <li>Don't use SASS variables for theme-dependent colors</li>
+        <li>Don't forget to test RTL layouts</li>
+        <li>Don't ignore font scaling compatibility</li>
+      </ul>
+    </div>
+
+    <!-- Available Mixins Reference -->
+    <div class="demo-section">
+      <h2 class="tutor-h2">Available SASS Mixins Quick Reference</h2>
+
+      <h3 class="tutor-h3">RTL Mixins</h3>
+      <div class="code-example">
+        <pre>// Directional spacing
+@include margin-start($value);
+@include margin-end($value);
+@include padding-start($value);
+@include padding-end($value);
+
+// Directional borders
+@include border-start($value);
+@include border-end($value);
+@include border-radius-start($value);
+@include border-radius-end($value);
+
+// Text alignment
+@include text-align-start();
+@include text-align-end();
+
+// Positioning
+@include left($value);
+@include right($value);
+
+// Icon spacing
+@include icon-start($spacing);
+@include icon-end($spacing);</pre>
+      </div>
+
+      <h3 class="tutor-h3">Component Mixins</h3>
+      <div class="code-example">
+        <pre>// Button mixins
+@include tutor-button-base;
+@include tutor-button-variant(primary);
+@include tutor-button-size(large);
+
+// Card mixins
+@include tutor-card-base;
+@include tutor-card-elevation(2);
+
+// Form mixins
+@include tutor-input-base;
+@include tutor-input-validation(error);
+
+// Layout mixins
+@include tutor-flex;
+@include tutor-container;</pre>
+      </div>
+    </div>
+  </div>
+
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <script src="../../js/tutor-core.min.js"></script>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      html.setAttribute('data-theme', newTheme);
+    }
+  </script>
+</body>
+
+</html>

@@ -55,14 +55,14 @@ Include the compiled CSS and JavaScript files in your HTML:
 <html lang="en" dir="ltr" data-theme="light">
   <head>
     <!-- Include the design system CSS -->
-    <link rel="stylesheet" href="tutor-design-system.min.css" />
+    <link rel="stylesheet" href="assets/css/tutor-core.min.css" />
   </head>
   <body>
     <!-- Your content here -->
 
     <!-- Include Alpine.js and the design system JS -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    <script src="tutor-design-system.min.js"></script>
+    <script src="assets/js/tutor-core.min.js"></script>
   </body>
 </html>
 ```
@@ -464,10 +464,29 @@ The TutorCore class provides factory methods for creating Alpine.js component da
 ### Typography
 
 ```html
+<!-- Typography component classes -->
 <h1 class="tutor-h1">Heading 1</h1>
 <h2 class="tutor-h2">Heading 2</h2>
 <p class="tutor-p1">Paragraph 1</p>
 <p class="tutor-p2">Paragraph 2</p>
+
+<!-- Individual utility classes (recommended for custom styling) -->
+<span class="tutor-text-small tutor-font-medium tutor-text-primary">
+  Small text with medium weight and primary color
+</span>
+
+<!-- Alternative using typography class with font weight -->
+<p class="tutor-p2 tutor-font-medium">Paragraph 2 with medium font weight</p>
+
+<!-- Font size utilities -->
+<span class="tutor-text-h3">Large text using H3 size</span>
+<span class="tutor-text-p2">Small text using P2 size</span>
+
+<!-- Font weight utilities -->
+<span class="tutor-font-weak">Regular weight (400)</span>
+<span class="tutor-font-medium">Medium weight (500)</span>
+<span class="tutor-font-semi-strong">Semi bold weight (600)</span>
+<span class="tutor-font-strong">Bold weight (700)</span>
 ```
 
 ### Colors
@@ -1062,13 +1081,206 @@ document.addEventListener('alpine:init', () => {
 - Safari 14+
 - Edge 90+
 
+## For Developers
+
+### Architecture Overview
+
+The Tutor Design System follows a hybrid approach combining the best of both SASS variables and CSS custom properties:
+
+- **SASS Variables**: Used for static values that don't change between themes (typography, spacing, radius)
+- **CSS Custom Properties**: Used for dynamic values that change between themes (colors, surfaces)
+- **RTL Mixins**: Provide directional-aware styling for international support
+- **Component Patterns**: Follow BEM naming convention with design system integration
+
+### When to Use SASS Variables vs CSS Custom Properties
+
+**✅ Use SASS Variables for:**
+
+```scss
+// Static values that don't change between themes
+font-family: $tutor-font-family-body;
+font-size: $tutor-font-size-p1;
+line-height: $tutor-line-height-p1;
+font-weight: $tutor-font-weight-medium;
+padding: $tutor-spacing-4;
+border-radius: $tutor-radius-md;
+```
+
+**✅ Use CSS Custom Properties for:**
+
+```scss
+// Dynamic values that change between themes
+color: var(--tutor-text-primary);
+background-color: var(--tutor-surface-l1);
+border-color: var(--tutor-border-idle);
+```
+
+**✅ Best Practice - Mixed Approach:**
+
+```scss
+.my-component {
+  // Static properties - SASS variables
+  font-family: $tutor-font-family-body;
+  font-size: $tutor-font-size-p1;
+  padding: $tutor-spacing-4;
+  border-radius: $tutor-radius-md;
+
+  // Dynamic properties - CSS custom properties
+  color: var(--tutor-text-primary);
+  background: var(--tutor-surface-l1);
+  border: 1px solid var(--tutor-border-idle);
+}
+```
+
+### Building Custom Components
+
+Follow these patterns when creating custom components:
+
+#### 1. Component Structure Template
+
+```scss
+.my-component {
+  // Layout & Structure (SASS variables)
+  display: flex;
+  padding: $tutor-spacing-4;
+  border-radius: $tutor-radius-lg;
+  font-family: $tutor-font-family-body;
+  font-size: $tutor-font-size-p1;
+
+  // Appearance (CSS custom properties)
+  background: var(--tutor-surface-l1);
+  border: 1px solid var(--tutor-border-idle);
+  color: var(--tutor-text-primary);
+
+  // RTL Support
+  @include text-align-start();
+
+  // States
+  &:hover {
+    border-color: var(--tutor-border-brand);
+  }
+
+  // Variants
+  &--primary {
+    background: var(--tutor-actions-brand-primary);
+    color: var(--tutor-text-primary-inverse);
+  }
+
+  // Elements
+  &__header {
+    @include margin-end($tutor-spacing-4);
+  }
+}
+```
+
+#### 2. RTL-Aware Development
+
+Always use RTL mixins for directional properties:
+
+```scss
+.my-component {
+  // ✅ Good - RTL aware
+  @include margin-start($tutor-spacing-4);
+  @include padding-end($tutor-spacing-2);
+  @include border-start(2px solid var(--tutor-border-brand));
+  @include text-align-start();
+
+  // ❌ Bad - Not RTL aware
+  margin-left: $tutor-spacing-4;
+  padding-right: $tutor-spacing-2;
+  border-left: 2px solid var(--tutor-border-brand);
+  text-align: left;
+}
+```
+
+#### 3. Component Development Best Practices
+
+**✅ Do's:**
+
+- Use BEM naming convention
+- Prefix components with your namespace
+- Mix SASS variables and CSS custom properties appropriately
+- Use RTL mixins for directional properties
+- Test in both light and dark themes
+- Test in both LTR and RTL directions
+- Use design system tokens instead of hardcoded values
+- Include proper accessibility attributes
+
+**❌ Don'ts:**
+
+- Don't use hardcoded colors, sizes, or spacing
+- Don't use left/right properties directly
+- Don't override design system components directly
+- Don't use CSS custom properties for static values
+- Don't use SASS variables for theme-dependent colors
+- Don't forget RTL testing
+
+### Common Patterns
+
+#### Alert Component Pattern
+
+```scss
+.custom-alert {
+  padding: $tutor-spacing-4 $tutor-spacing-6;
+  border-radius: $tutor-radius-md;
+  font-size: $tutor-font-size-p2;
+  @include border-start(4px solid);
+
+  &--success {
+    background: var(--tutor-actions-success-tertiary);
+    border-color: var(--tutor-actions-success-primary);
+    color: var(--tutor-text-success);
+  }
+
+  &--error {
+    background: var(--tutor-actions-critical-secondary);
+    border-color: var(--tutor-actions-critical-primary);
+    color: var(--tutor-text-critical);
+  }
+}
+```
+
+#### Card Component Pattern
+
+```scss
+.custom-card {
+  background: var(--tutor-surface-l1);
+  border: 1px solid var(--tutor-border-idle);
+  border-radius: $tutor-radius-xl;
+  padding: $tutor-spacing-6;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--tutor-border-brand);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  &__header {
+    margin-bottom: $tutor-spacing-4;
+    @include padding-bottom($tutor-spacing-4);
+    border-bottom: 1px solid var(--tutor-border-idle);
+  }
+
+  &__title {
+    font-size: $tutor-font-size-h4;
+    font-weight: $tutor-font-weight-semi-strong;
+    color: var(--tutor-text-primary);
+    margin: 0;
+  }
+}
+```
+
 ## Examples
 
-The library includes several example HTML files demonstrating different features:
+The library includes comprehensive example files for developers:
 
 - **`examples/basic-usage.html`** - Basic setup and component usage
 - **`examples/alpine-components.html`** - All Alpine.js components with examples
 - **`examples/rtl-support.html`** - RTL language support demonstration
+- **`examples/font-scaling.html`** - Font scaling and accessibility features
+- **`examples/sass-development.html`** - SASS development guide with mixins and tokens
+- **`examples/design-tokens.html`** - Visual guide to all design tokens
+- **`examples/custom-components.html`** - Building custom components following design system patterns
 - **`examples/tutor-design-system-components.html`** - Complete TutorCore API examples
 
 To view the examples:
