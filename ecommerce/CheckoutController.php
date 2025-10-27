@@ -566,7 +566,7 @@ class CheckoutController {
 		$billing_model   = new BillingModel();
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
-		$order_id        = (int) Input::sanitize_request_data( 'order_id', 0 );
+		$order_id        = Input::get( 'order_id', 0, Input::TYPE_INT );
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
@@ -683,8 +683,18 @@ class CheckoutController {
 			}
 
 			// Check if an order ID is provided.
-			if ( ! empty( $order_id ) ) {
-				$order_data = $this->get_order_data_for_manual_pay_now( $order_id, $items, $checkout_data );
+			if ( ! empty( $order_id ) && OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() ) ) {
+
+				$order_data = $this->order_ctrl->update_order(
+					$order_id,
+					$current_user_id,
+					$items,
+					OrderModel::PAYMENT_UNPAID,
+					$order_type,
+					$checkout_data->coupon_code,
+					$args,
+					true
+				);
 			}
 
 			if ( ! $order_data ) {
@@ -1195,23 +1205,5 @@ class CheckoutController {
 		if ( empty( $selected_payment_method ) || ! $is_valid_payment_method ) {
 			tutor_utils()->redirect_to( add_query_arg( array( 'order_id' => $order_data->id ), get_permalink( self::get_page_id() ) ) );
 		}
-	}
-
-	/**
-	 * Retrieve and prepare order data for the manual "Pay Now" process.
-	 *
-	 * @since 3.9.2
-	 *
-	 * @param int    $order_id      The ID of the order to retrieve and process.
-	 * @param array  $items         The list of order items associated with the order.
-	 * @param object $checkout_data The checkout data object.
-	 *
-	 * @return array|null Filtered order data object, or null if no valid order found.
-	 */
-	private function get_order_data_for_manual_pay_now( int $order_id, array $items, object $checkout_data ): ?array {
-		$order_data        = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() );
-		$order_data->items = $items;
-
-		return apply_filters( 'tutor_before_manual_pay_now_order_update', $order_data, $checkout_data );
 	}
 }

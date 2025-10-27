@@ -787,21 +787,32 @@ class OrderModel {
 	 * Update an order
 	 *
 	 * @since 3.0.0
+	 * 
+	 * @since 3.9.2 added `$add_order_items` parameter
 	 *
 	 * @param int|array $order_id Integer or array of ids sql escaped.
 	 * @param array     $data Data to update, escape data.
+	 * @param bool $add_order_items Optional. Whether to update the associated order items.
 	 *
 	 * @return bool
 	 */
-	public function update_order( $order_id, array $data ) {
+	public function update_order( $order_id, array $data, $add_order_items = false ) {
 		$order_id = is_array( $order_id ) ? $order_id : array( $order_id );
 		$order_id = QueryHelper::prepare_in_clause( $order_id );
+		$order_items = $data['items'] ?? array();
+
+		unset( $data['items'] );
+
 		try {
 			QueryHelper::update_where_in(
 				$this->table_name,
 				$data,
 				$order_id
 			);
+
+			if ( ! empty( $order_items ) && $add_order_items ) {
+				$this->update_order_items( $order_id, $order_items );
+			}
 			return true;
 		} catch ( \Throwable $th ) {
 			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
@@ -2050,29 +2061,38 @@ class OrderModel {
 	 * Retrieve an existing order if it is incomplete, unpaid, and belongs to the given user.
 	 *
 	 * @since 3.9.2
+	 * 
 	 * @param int $order_id The ID of the order.
 	 * @param int $user_id  The ID of the current user.
+	 * @param bool $return_order_data Optional. Whether to return the order data instead of a boolean.
 	 *
-	 * @return object|null Returns the order data object if valid and accessible, otherwise null.
+	 * @return bool|object Returns:
+	 *                         - The order object if valid and $return_order_data is true.
+	 *                         - True if valid and $return_order_data is false.
+	 *                         - false if the order is invalid or not found.
 	 */
-	public static function get_valid_incomplete_order( int $order_id, int $user_id ): ?object {
+	public static function get_valid_incomplete_order( int $order_id, int $user_id, $return_order_data = false ) {
 
 		if ( empty( $order_id ) || empty( $user_id ) ) {
 			return null;
 		}
 
 		$order_data  = ( new self() )->get_order_by_id( $order_id );
-		$valid_order = ! empty( $order_data )
-						&& self::ORDER_INCOMPLETE === $order_data->order_status
+
+		if ( empty( $order_data ) ) {
+			return false;
+		}
+
+		$is_valid = self::ORDER_INCOMPLETE === $order_data->order_status
 						&& self::PAYMENT_UNPAID === $order_data->payment_status
 						&& $user_id === $order_data->student->id
 						&& self::should_show_pay_btn( $order_data );
 
-		if ( $valid_order ) {
+		if ( $is_valid && $return_order_data ) {
 			return $order_data;
 		}
 
-		return null;
+		return $is_valid;
 	}
 
 	/**
@@ -2102,46 +2122,5 @@ class OrderModel {
 		}
 
 		return true;
-	}
-
-
-	/**
-	 * Update an order and its associated order items.
-	 *
-	 * @since 3.9.2
-	 *
-	 * @param int   $order_id     The ID of the order to update.
-	 * @param array $update_data  The associative array of order fields to update.
-	 *
-	 * @throws Exception If any update operation fails during the transaction.
-	 *
-	 * @return void
-	 */
-	public function update_order_and_order_items( int $order_id, array $update_data ) {
-
-		global $wpdb;
-
-		$order_items = $update_data['items'] ?? array();
-		unset( $update_data['items'] );
-
-		// Start transaction.
-		$wpdb->query( 'START TRANSACTION' );
-
-		try {
-
-			if ( ! $this->update_order( $order_id, $update_data ) ) {
-				throw new Exception( esc_html__( "Order Update Failed For Order ID: $order_id", 'tutor' ) ); //phpcs:ignore
-			}
-
-			if ( ! empty( $order_items ) && ! $this->update_order_items( $order_id, $order_items ) ) {
-				throw new Exception( esc_html__( "Order Update Failed For Order ID: $order_id", 'tutor' ) ); //phpcs:ignore
-			}
-
-			$wpdb->query( 'COMMIT' );
-
-		} catch ( \Throwable $th ) {
-			$wpdb->query( 'ROLLBACK' );
-			throw new Exception( $th->getMessage() );
-		}
 	}
 }
