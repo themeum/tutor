@@ -1,0 +1,21 @@
+$tutor-z-index-negative: -1;
+$tutor-z-index-positive: 1;
+$tutor-z-index-dropdown: 2;
+$tutor-z-index-level: 0;
+$tutor-z-index-sidebar: 9;
+$tutor-z-index-header: 10;
+$tutor-z-index-footer: 10;
+$tutor-z-index-modal: 25;
+$tutor-z-index-highest: 99999;
+
+$tutor-zIndex: (
+  negative: $tutor-z-index-negative,
+  positive: $tutor-z-index-positive,
+  dropdown: $tutor-z-index-dropdown,
+  level: $tutor-z-index-level,
+  sidebar: $tutor-z-index-sidebar,
+  header: $tutor-z-index-header,
+  footer: $tutor-z-index-footer,
+  modal: $tutor-z-index-modal,
+  highest: $tutor-z-index-highest,
+);
