@@ -1,6 +1,6 @@
 @use '../tokens/zIndex' as *;
 
-@each $key, $value in $tutor-zIndex {
+@each $key, $value in $tutor-z-index {
   .tutor-z-index-#{$key} {
     z-index: $value;
   }
