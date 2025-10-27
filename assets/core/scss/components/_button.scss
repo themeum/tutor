@@ -26,42 +26,42 @@
 }
 
 // Button variants
-.tutor-btn--primary {
+.tutor-btn-primary {
   @include tutor-button-variant(primary);
 }
 
-.tutor-btn--secondary {
+.tutor-btn-secondary {
   @include tutor-button-variant(secondary);
 }
 
-.tutor-btn--outline {
+.tutor-btn-outline {
   @include tutor-button-variant(outline);
 }
 
-.tutor-btn--ghost {
+.tutor-btn-ghost {
   @include tutor-button-variant(ghost);
 }
 
 // Button sizes
-.tutor-btn--small {
+.tutor-btn-small {
   @include tutor-button-size(small);
 }
 
-.tutor-btn--medium {
+.tutor-btn-medium {
   @include tutor-button-size(medium);
 }
 
-.tutor-btn--large {
+.tutor-btn-large {
   @include tutor-button-size(large);
 }
 
 // Button states
-.tutor-btn--loading {
+.tutor-btn-loading {
   @include tutor-button-loading;
 }
 
 // Button with full width
-.tutor-btn--block {
+.tutor-btn-block {
   width: 100%;
   justify-content: center;
 }
@@ -70,44 +70,21 @@
 .tutor-btn-group {
   @include tutor-button-group(horizontal);
   
-  &.tutor-btn-group--vertical {
+  &.tutor-btn-group-vertical {
     @include tutor-button-group(vertical);
   }
 }
 
 // Icon-only button
-.tutor-btn--icon {
+.tutor-btn-icon {
   padding: $tutor-spacing-3;
   min-width: auto;
   
-  &.tutor-btn--small {
+  &.tutor-btn-small {
     padding: $tutor-spacing-2;
   }
   
-  &.tutor-btn--large {
+  &.tutor-btn-large {
     padding: $tutor-spacing-4;
-  }
-}
-
-// Floating action button
-.tutor-btn--fab {
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  padding: 0;
-  @include tutor-card-elevation(2);
-  
-  &:hover {
-    @include tutor-card-elevation(3);
-  }
-  
-  &.tutor-btn--fab-small {
-    width: 40px;
-    height: 40px;
-  }
-  
-  &.tutor-btn--fab-large {
-    width: 72px;
-    height: 72px;
   }
 }
