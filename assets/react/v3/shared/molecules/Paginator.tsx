@@ -33,7 +33,7 @@ const Paginator = ({ currentPage, onPageChange, totalItems, itemsPerPage }: Pagi
   return (
     <div css={styles.wrapper}>
       <div css={styles.pageStatus}>
-        {__('Page', 'tutor')}
+        {__('Page', __TUTOR_TEXT_DOMAIN__)}
         <span>
           <input
             type="text"
@@ -53,7 +53,7 @@ const Paginator = ({ currentPage, onPageChange, totalItems, itemsPerPage }: Pagi
             autoComplete="off"
           />
         </span>
-        {__('of', 'tutor')} <span>{totalPage}</span>
+        {__('of', __TUTOR_TEXT_DOMAIN__)} <span>{totalPage}</span>
       </div>
 
       <div css={styles.pageController}>

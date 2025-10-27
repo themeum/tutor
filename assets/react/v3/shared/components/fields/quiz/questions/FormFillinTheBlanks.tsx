@@ -74,11 +74,11 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
     <div css={styles.option}>
       <div css={styles.optionLabel({ isEditing })}>
         <div css={styles.optionHeader}>
-          <div css={styles.optionTitle}>{__('Fill in the blanks', 'tutor')}</div>
+          <div css={styles.optionTitle}>{__('Fill in the blanks', __TUTOR_TEXT_DOMAIN__)}</div>
 
           <Show when={inputValue.is_saved && !isEditing}>
             <div css={styles.optionActions}>
-              <Tooltip content={__('Edit', 'tutor')}>
+              <Tooltip content={__('Edit', __TUTOR_TEXT_DOMAIN__)}>
                 <button
                   type="button"
                   css={styleUtils.actionButton}
@@ -103,7 +103,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                 <div css={styles.optionPlaceholder({ isTitle: !!inputValue.answer_title })}>
                   {inputValue.answer_title
                     ? inputValue.answer_title.replace(/{dash}/g, '_____')
-                    : __('Question title...', 'tutor')}
+                    : __('Question title...', __TUTOR_TEXT_DOMAIN__)}
                 </div>
                 <div css={styles.optionPlaceholder({ isCorrectAnswer: fillInTheBlanksCorrectAnswer?.length })}>
                   {fillInTheBlanksCorrectAnswer && fillInTheBlanksCorrectAnswer.length > 0 ? (
@@ -120,7 +120,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                       )}
                     </For>
                   ) : (
-                    __('Correct Answer(s)...', 'tutor')
+                    __('Correct Answer(s)...', __TUTOR_TEXT_DOMAIN__)
                   )}
                 </div>
               </div>
@@ -132,7 +132,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                   {...field}
                   ref={inputRef}
                   type="text"
-                  placeholder={__('Question title...', 'tutor')}
+                  placeholder={__('Question title...', __TUTOR_TEXT_DOMAIN__)}
                   value={inputValue.answer_title}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -171,7 +171,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                   <p>
                     {
                       // prettier-ignore
-                      __('Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.', 'tutor')
+                      __('Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.', __TUTOR_TEXT_DOMAIN__)
                     }
                   </p>
                 </div>
@@ -180,7 +180,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                 <input
                   {...field}
                   type="text"
-                  placeholder={__('Correct Answer(s)...', 'tutor')}
+                  placeholder={__('Correct Answer(s)...', __TUTOR_TEXT_DOMAIN__)}
                   value={fillInTheBlanksCorrectAnswer?.join('|')}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -221,7 +221,12 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                 <Show when={hasError}>
                   <div css={styles.errorMessage}>
                     <SVGIcon name="info" height={20} width={20} />
-                    <p>{__('Match the number of answers to the number of blanks {dash} in your question.', 'tutor')}</p>
+                    <p>
+                      {__(
+                        'Match the number of answers to the number of blanks {dash} in your question.',
+                        __TUTOR_TEXT_DOMAIN__,
+                      )}
+                    </p>
                   </div>
                 </Show>
                 <div css={styles.inputHints}>
@@ -229,7 +234,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                   <p>
                     {
                       // prettier-ignore
-                      __( 'Separate multiple answers by a vertical bar |. 1 answer per {dash} variable is defined in the question. Example: Apple | Banana | Orange', 'tutor')
+                      __( 'Separate multiple answers by a vertical bar |. 1 answer per {dash} variable is defined in the question. Example: Apple | Banana | Orange', __TUTOR_TEXT_DOMAIN__)
                     }
                   </p>
                 </div>
@@ -245,7 +250,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                       field.onChange(previousValue);
                     }}
                   >
-                    {__('Cancel', 'tutor')}
+                    {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
                   </Button>
                 </Show>
                 <Button
@@ -287,7 +292,7 @@ const FormFillInTheBlanks = ({ field, questionId, validationError, setValidation
                   }}
                   disabled={!inputValue.answer_title || !inputValue.answer_two_gap_match || hasError}
                 >
-                  {__('Ok', 'tutor')}
+                  {__('Ok', __TUTOR_TEXT_DOMAIN__)}
                 </Button>
               </div>
             </div>

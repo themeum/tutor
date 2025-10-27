@@ -16,8 +16,8 @@ type PaymentType = 'onetime' | 'recurring';
 
 export const BILLING_CYCLE_PRESETS = [3, 6, 9, 12];
 export const BILLING_CYCLE_CUSTOM_PRESETS = {
-  untilCancelled: __('Until cancelled', 'tutor'),
-  noRenewal: __('No Renewal', 'tutor'),
+  untilCancelled: __('Until cancelled', __TUTOR_TEXT_DOMAIN__),
+  noRenewal: __('No Renewal', __TUTOR_TEXT_DOMAIN__),
 };
 
 export type Subscription = {
@@ -77,7 +77,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   sale_price_from_time: '',
   sale_price_to_date: '',
   sale_price_to_time: '',
-  recurring_limit: __('Until cancelled', 'tutor'),
+  recurring_limit: __('Until cancelled', __TUTOR_TEXT_DOMAIN__),
   do_not_provide_certificate: false,
   enrollment_fee: '0',
   trial_value: '1',

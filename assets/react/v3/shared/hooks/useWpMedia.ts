@@ -159,7 +159,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
         if (mediaOptions.maxFileSize && file.filesizeInBytes > mediaOptions.maxFileSize) {
           showToast({
             // translators: %s is the file title
-            message: sprintf(__('%s size exceeds the maximum allowed size', 'tutor'), file.title),
+            message: sprintf(__('%s size exceeds the maximum allowed size', __TUTOR_TEXT_DOMAIN__), file.title),
             type: 'danger',
           });
           return files;
@@ -184,7 +184,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
       if (mediaOptions.maxFiles && updatedFiles.length > mediaOptions.maxFiles) {
         showToast({
           // translators: %d is the maximum number of files allowed
-          message: sprintf(__('Cannot select more than %d files', 'tutor'), mediaOptions.maxFiles),
+          message: sprintf(__('Cannot select more than %d files', __TUTOR_TEXT_DOMAIN__), mediaOptions.maxFiles),
           type: 'warning',
         });
         return;

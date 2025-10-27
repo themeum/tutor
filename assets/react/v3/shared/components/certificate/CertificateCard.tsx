@@ -47,7 +47,7 @@ const CertificateCard = ({
         fallback={
           <div css={styles.emptyCard}>
             <SVGIcon name="outlineNone" width={49} height={49} />
-            <span>{__('None', 'tutor')}</span>
+            <span>{__('None', __TUTOR_TEXT_DOMAIN__)}</span>
           </div>
         }
       >
@@ -59,12 +59,12 @@ const CertificateCard = ({
         <div data-footer-actions css={styles.footerWrapper}>
           <Show when={data.preview_src}>
             <Button variant="secondary" isOutlined size="small" onClick={() => onPreviewCertificate(data)}>
-              {__('Preview', 'tutor')}
+              {__('Preview', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </Show>
           <Show when={data.key !== selectedCertificate}>
             <Button variant="primary" size="small" onClick={() => onSelectCertificate(data.key)}>
-              {__('Select', 'tutor')}
+              {__('Select', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </Show>
         </div>
