@@ -1,0 +1,102 @@
+# TutorCore Design System
+
+<img src="https://via.placeholder.com/800x200/4979e8/ffffff?text=TutorCore+Design+System" alt="TutorCore Design System" style="width: 100%; border-radius: 8px; margin-bottom: 2rem;" />
+
+## Overview
+
+TutorCore is a comprehensive design system library providing consistent UI components, themes, and utilities for modern web applications. Built with SCSS and TypeScript, it offers multi-theme support, RTL language compatibility, and Alpine.js integration.
+
+## Key Features
+
+- 🎨 **Multi-theme Support**: Light and dark themes with CSS custom properties
+- 🌍 **RTL Language Support**: Built-in right-to-left language support
+- 🧩 **Component Library**: Pre-built components with Alpine.js integration
+- 📱 **Responsive Design**: Mobile-first responsive utilities
+- ⚡ **Performance Optimized**: Single CSS and JS files
+- 🔧 **TypeScript Support**: Full TypeScript definitions
+- 🎯 **Figma Integration**: Design tokens mapped from Figma specifications
+
+## Design Token System
+
+TutorCore is built on a comprehensive token system that maps directly to Figma design specifications:
+
+### Color Tokens
+- **Brand Colors**: 10-step scale (100-950) for primary brand colors
+- **Gray Colors**: 15-step scale (1-950) for neutral colors and surfaces
+- **Semantic Colors**: Success, Warning, Error with 10-step scales each
+- **Exception Colors**: Special colors for unique use cases
+- **Yellow Colors**: 10-step scale for attention and highlight colors
+
+### Typography Tokens
+- **Headings**: H1 (40px) to H5 (16px) with corresponding line heights
+- **Paragraphs**: P1 (16px), P2 (14px), P3 (12px) with optimal line heights
+- **Font Weights**: Light (300) to Bold (700) with semantic naming
+
+### Spacing Tokens
+- **Scale**: 22 steps (0-21) from 0px to 200px
+- **Semantic Names**: Based on usage patterns and visual hierarchy
+- **RTL Support**: All spacing automatically adapts to text direction
+
+## Quick Start
+
+### Installation
+
+Include the compiled CSS and JavaScript files in your HTML:
+
+```html
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+  <head>
+    <link rel="stylesheet" href="assets/css/tutor-core.min.css" />
+  </head>
+  <body>
+    <!-- Your content here -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="assets/js/tutor-core.min.js"></script>
+  </body>
+</html>
+```
+
+### Theme Switching
+
+```javascript
+// Switch to dark theme
+document.documentElement.setAttribute('data-theme', 'dark');
+
+// Switch to light theme
+document.documentElement.setAttribute('data-theme', 'light');
+```
+
+### RTL Support
+
+```html
+<html lang="ar" dir="rtl" data-theme="light"></html>
+```
+
+## Component Categories
+
+### Design Tokens
+Explore the foundational design tokens that power the entire system.
+
+### Components
+Interactive UI components with multiple variants and states.
+
+### Utilities
+Helper classes for layout, spacing, typography, and more.
+
+### Themes
+Light and dark theme variations with RTL support.
+
+### Alpine.js Integration
+Interactive components powered by Alpine.js with TypeScript support.
+
+## Browser Support
+
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+
+## Getting Help
+
+For detailed documentation, examples, and API references, explore the sections in the sidebar. Each component includes interactive examples, code snippets, and usage guidelines.
