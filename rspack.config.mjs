@@ -242,6 +242,7 @@ const createConfig = (env, options) => {
 
 const jsEntries = {
   tutor: './assets/react/v2/common.js',
+  'tutor-core': './assets/core/ts/index.ts',
   'tutor-front': './assets/react/front/tutor-front.js',
   'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
@@ -254,7 +255,6 @@ const jsEntries = {
   'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
   'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
   'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
-  'tutor-core': './assets/core/ts/index.ts',
 };
 
 const scssEntries = {
@@ -270,6 +270,7 @@ const scssEntries = {
 };
 
 const resolveAliases = {
+  '@Core': path.resolve(__dirname, './assets/core/ts'),
   '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
   '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
   '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
