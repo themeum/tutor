@@ -612,20 +612,27 @@ class Assets {
 	 * registered functions
 	 *
 	 * @since 1.9.0
+	 * @since 3.9.2 Refactored to dynamically detect scripts instead of hardcoded list.
+	 *
 	 * @return void
 	 */
 	public function tutor_script_text_domain() {
-		wp_set_script_translations( 'tutor-script', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-gutenberg', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-payment-settings', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-addon-list', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-import-export', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-template-import-js', 'tutor', tutor()->path . 'languages/' );
+		global $wp_scripts;
+
+		if ( empty( $wp_scripts->registered ) ) {
+			return;
+		}
+
+		foreach ( $wp_scripts->registered as $handle => $data ) {
+			$src           = $data->src ?? '';
+			$is_from_tutor = str_contains( $src, 'tutor/' ) && str_contains( $src, '/assets/js' ) && ! str_contains( $src, 'tutor-pro' );
+
+			if ( ! $is_from_tutor ) {
+				continue;
+			}
+
+			wp_set_script_translations( $handle, 'tutor', tutor()->path . 'languages/' );
+		}
 	}
 
 	/**
