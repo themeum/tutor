@@ -395,87 +395,87 @@
 @each $breakpoint, $value in $tutor-breakpoints {
   @if $value > 0 {
     @media (min-width: $value) {
-      .tutor-#{$breakpoint}\:w-auto {
+      .tutor-#{$breakpoint}-w-auto {
         width: auto;
       }
       
-      .tutor-#{$breakpoint}\:w-full {
+      .tutor-#{$breakpoint}-w-full {
         width: 100%;
       }
       
-      .tutor-#{$breakpoint}\:w-1\/2 {
+      .tutor-#{$breakpoint}-w-1\/2 {
         width: 50%;
       }
       
-      .tutor-#{$breakpoint}\:w-1\/3 {
+      .tutor-#{$breakpoint}-w-1\/3 {
         width: 33.333333%;
       }
       
-      .tutor-#{$breakpoint}\:w-2\/3 {
+      .tutor-#{$breakpoint}-w-2\/3 {
         width: 66.666667%;
       }
       
-      .tutor-#{$breakpoint}\:w-1\/4 {
+      .tutor-#{$breakpoint}-w-1\/4 {
         width: 25%;
       }
       
-      .tutor-#{$breakpoint}\:w-3\/4 {
+      .tutor-#{$breakpoint}-w-3\/4 {
         width: 75%;
       }
       
-      .tutor-#{$breakpoint}\:h-auto {
+      .tutor-#{$breakpoint}-h-auto {
         height: auto;
       }
       
-      .tutor-#{$breakpoint}\:h-full {
+      .tutor-#{$breakpoint}-h-full {
         height: 100%;
       }
       
-      .tutor-#{$breakpoint}\:h-screen {
+      .tutor-#{$breakpoint}-h-screen {
         height: 100vh;
       }
       
-      .tutor-#{$breakpoint}\:max-w-none {
+      .tutor-#{$breakpoint}-max-w-none {
         max-width: none;
       }
       
-      .tutor-#{$breakpoint}\:max-w-sm {
+      .tutor-#{$breakpoint}-max-w-sm {
         max-width: 384px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-md {
+      .tutor-#{$breakpoint}-max-w-md {
         max-width: 448px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-lg {
+      .tutor-#{$breakpoint}-max-w-lg {
         max-width: 512px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-xl {
+      .tutor-#{$breakpoint}-max-w-xl {
         max-width: 576px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-2xl {
+      .tutor-#{$breakpoint}-max-w-2xl {
         max-width: 672px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-3xl {
+      .tutor-#{$breakpoint}-max-w-3xl {
         max-width: 768px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-4xl {
+      .tutor-#{$breakpoint}-max-w-4xl {
         max-width: 896px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-5xl {
+      .tutor-#{$breakpoint}-max-w-5xl {
         max-width: 1024px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-6xl {
+      .tutor-#{$breakpoint}-max-w-6xl {
         max-width: 1152px;
       }
       
-      .tutor-#{$breakpoint}\:max-w-7xl {
+      .tutor-#{$breakpoint}-max-w-7xl {
         max-width: 1280px;
       }
     }

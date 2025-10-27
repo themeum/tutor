@@ -315,48 +315,48 @@
 }
 
 // Hover state utilities
-.tutor-hover\:bg-primary:hover {
+.tutor-hover-bg-primary:hover {
   background-color: var(--tutor-button-primary);
 }
 
-.tutor-hover\:bg-secondary:hover {
+.tutor-hover-bg-secondary:hover {
   background-color: var(--tutor-button-secondary);
 }
 
-.tutor-hover\:bg-surface-l2:hover {
+.tutor-hover-bg-surface-l2:hover {
   background-color: var(--tutor-surface-l2);
 }
 
-.tutor-hover\:text-primary:hover {
+.tutor-hover-text-primary:hover {
   color: var(--tutor-text-primary);
 }
 
-.tutor-hover\:text-brand:hover {
+.tutor-hover-text-brand:hover {
   color: var(--tutor-text-brand);
 }
 
-.tutor-hover\:border-brand:hover {
+.tutor-hover-border-brand:hover {
   border-color: var(--tutor-border-brand);
 }
 
-.tutor-hover\:shadow-md:hover {
+.tutor-hover-shadow-md:hover {
   box-shadow: var(--tutor-shadow-md);
 }
 
-.tutor-hover\:shadow-lg:hover {
+.tutor-hover-shadow-lg:hover {
   box-shadow: var(--tutor-shadow-lg);
 }
 
 // Focus state utilities
-.tutor-focus\:border-brand:focus {
+.tutor-focus-border-brand:focus {
   border-color: var(--tutor-border-brand);
 }
 
-.tutor-focus\:ring:focus {
+.tutor-focus-ring:focus {
   @include tutor-focus-ring;
 }
 
-.tutor-focus\:outline-none:focus {
+.tutor-focus-outline-none:focus {
   outline: none;
 }
 
@@ -364,27 +364,27 @@
 @each $breakpoint, $value in $tutor-breakpoints {
   @if $value > 0 {
     @media (min-width: $value) {
-      .tutor-#{$breakpoint}\:bg-surface-base {
+      .tutor-#{$breakpoint}-bg-surface-base {
         background-color: var(--tutor-surface-base);
       }
 
-      .tutor-#{$breakpoint}\:bg-surface-l1 {
+      .tutor-#{$breakpoint}-bg-surface-l1 {
         background-color: var(--tutor-surface-l1);
       }
 
-      .tutor-#{$breakpoint}\:bg-primary {
+      .tutor-#{$breakpoint}-bg-primary {
         background-color: var(--tutor-button-primary);
       }
 
-      .tutor-#{$breakpoint}\:text-primary {
+      .tutor-#{$breakpoint}-text-primary {
         color: var(--tutor-text-primary);
       }
 
-      .tutor-#{$breakpoint}\:text-secondary {
+      .tutor-#{$breakpoint}-text-secondary {
         color: var(--tutor-text-secondary);
       }
 
-      .tutor-#{$breakpoint}\:border-brand {
+      .tutor-#{$breakpoint}-border-brand {
         border-color: var(--tutor-border-brand);
       }
     }

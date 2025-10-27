@@ -362,13 +362,13 @@ html.tutor-font-scale-120 {
   @if $value > 0 {
     @media (min-width: $value) {
       @each $size-key, $size-value in $tutor-font-sizes {
-        .tutor-#{$breakpoint}\:text-#{$size-key} {
+        .tutor-#{$breakpoint}-text-#{$size-key} {
           font-size: $size-value;
           line-height: map.get($tutor-line-heights, $size-key);
         }
       }
       
-      .tutor-#{$breakpoint}\:text-left {
+      .tutor-#{$breakpoint}-text-left {
         [dir="ltr"] & {
           text-align: left;
         }
@@ -377,11 +377,11 @@ html.tutor-font-scale-120 {
         }
       }
       
-      .tutor-#{$breakpoint}\:text-center {
+      .tutor-#{$breakpoint}-text-center {
         text-align: center;
       }
       
-      .tutor-#{$breakpoint}\:text-right {
+      .tutor-#{$breakpoint}-text-right {
         [dir="ltr"] & {
           text-align: right;
         }
@@ -391,7 +391,7 @@ html.tutor-font-scale-120 {
       }
       
       @each $weight-key, $weight-value in $tutor-font-weights {
-        .tutor-#{$breakpoint}\:font-#{$weight-key} {
+        .tutor-#{$breakpoint}-font-#{$weight-key} {
           font-weight: $weight-value;
         }
       }

@@ -193,29 +193,6 @@
   }
 }
 
-// =============================================================================
-// FLEXBOX AND TRANSFORM UTILITIES
-// =============================================================================
-
-// Flexbox utilities (RTL-aware versions)
-.tutor-flex-row {
-  [dir="ltr"] & {
-    flex-direction: row;
-  }
-  [dir="rtl"] & {
-    flex-direction: row-reverse;
-  }
-}
-
-.tutor-flex-row-reverse {
-  [dir="ltr"] & {
-    flex-direction: row-reverse;
-  }
-  [dir="rtl"] & {
-    flex-direction: row;
-  }
-}
-
 // Transform utilities
 .tutor-translate-x-full {
   [dir="ltr"] & {

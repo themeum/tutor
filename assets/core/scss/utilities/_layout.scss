@@ -69,11 +69,21 @@
 
 // Flexbox utilities
 .tutor-flex-row {
-  flex-direction: row;
+  [dir='ltr'] & {
+    flex-direction: row;
+  }
+  [dir='rtl'] & {
+    flex-direction: row-reverse;
+  }
 }
 
 .tutor-flex-row-reverse {
-  flex-direction: row-reverse;
+  [dir='ltr'] & {
+    flex-direction: row-reverse;
+  }
+  [dir='rtl'] & {
+    flex-direction: row;
+  }
 }
 
 .tutor-flex-col {
@@ -131,19 +141,19 @@
 
 // Justify content
 .tutor-justify-start {
-  [dir="ltr"] & {
+  [dir='ltr'] & {
     justify-content: flex-start;
   }
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     justify-content: flex-end;
   }
 }
 
 .tutor-justify-end {
-  [dir="ltr"] & {
+  [dir='ltr'] & {
     justify-content: flex-end;
   }
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     justify-content: flex-start;
   }
 }
@@ -240,11 +250,11 @@
   .tutor-gap-#{$key} {
     gap: $value;
   }
-  
+
   .tutor-gap-x-#{$key} {
     column-gap: $value;
   }
-  
+
   .tutor-gap-y-#{$key} {
     row-gap: $value;
   }
@@ -357,10 +367,10 @@
 }
 
 .tutor-right-0 {
-  [dir="ltr"] & {
+  [dir='ltr'] & {
     right: 0;
   }
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     left: 0;
   }
 }
@@ -370,10 +380,10 @@
 }
 
 .tutor-left-0 {
-  [dir="ltr"] & {
+  [dir='ltr'] & {
     left: 0;
   }
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     right: 0;
   }
 }
@@ -383,10 +393,10 @@
 }
 
 .tutor-right-auto {
-  [dir="ltr"] & {
+  [dir='ltr'] & {
     right: auto;
   }
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     left: auto;
   }
 }
@@ -396,10 +406,10 @@
 }
 
 .tutor-left-auto {
-  [dir="ltr"] & {
+  [dir='ltr'] & {
     left: auto;
   }
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     right: auto;
   }
 }
@@ -486,87 +496,105 @@
 @each $breakpoint, $value in $tutor-breakpoints {
   @if $value > 0 {
     @media (min-width: $value) {
-      .tutor-#{$breakpoint}\:block {
+      .tutor-#{$breakpoint}-block {
         display: block;
       }
-      
-      .tutor-#{$breakpoint}\:inline-block {
+
+      .tutor-#{$breakpoint}-inline-block {
         display: inline-block;
       }
-      
-      .tutor-#{$breakpoint}\:inline {
+
+      .tutor-#{$breakpoint}-inline {
         display: inline;
       }
-      
-      .tutor-#{$breakpoint}\:flex {
+
+      .tutor-#{$breakpoint}-flex {
         display: flex;
       }
-      
-      .tutor-#{$breakpoint}\:inline-flex {
+
+      .tutor-#{$breakpoint}-inline-flex {
         display: inline-flex;
       }
-      
-      .tutor-#{$breakpoint}\:grid {
+
+      .tutor-#{$breakpoint}-grid {
         display: grid;
       }
-      
-      .tutor-#{$breakpoint}\:hidden {
+
+      .tutor-#{$breakpoint}-hidden {
         display: none;
       }
-      
-      .tutor-#{$breakpoint}\:flex-row {
-        flex-direction: row;
+
+      .tutor-#{$breakpoint}-flex-row {
+        [dir='ltr'] & {
+          flex-direction: row;
+        }
+        [dir='rtl'] & {
+          flex-direction: row-reverse;
+        }
       }
-      
-      .tutor-#{$breakpoint}\:flex-col {
+
+      .tutor-#{$breakpoint}-flex-row-reverse {
+        [dir='ltr'] & {
+          flex-direction: row-reverse;
+        }
+        [dir='rtl'] & {
+          flex-direction: row;
+        }
+      }
+
+      .tutor-#{$breakpoint}-flex-col {
         flex-direction: column;
       }
-      
-      .tutor-#{$breakpoint}\:justify-start {
+
+      .tutor-#{$breakpoint}-flex-col-reverse {
+        flex-direction: column-reverse;
+      }
+
+      .tutor-#{$breakpoint}-justify-start {
         justify-content: flex-start;
       }
-      
-      .tutor-#{$breakpoint}\:justify-center {
+
+      .tutor-#{$breakpoint}-justify-center {
         justify-content: center;
       }
-      
-      .tutor-#{$breakpoint}\:justify-between {
+
+      .tutor-#{$breakpoint}-justify-between {
         justify-content: space-between;
       }
-      
-      .tutor-#{$breakpoint}\:items-start {
+
+      .tutor-#{$breakpoint}-items-start {
         align-items: flex-start;
       }
-      
-      .tutor-#{$breakpoint}\:items-center {
+
+      .tutor-#{$breakpoint}-items-center {
         align-items: center;
       }
-      
-      .tutor-#{$breakpoint}\:items-end {
+
+      .tutor-#{$breakpoint}-items-end {
         align-items: flex-end;
       }
-      
-      .tutor-#{$breakpoint}\:grid-cols-1 {
+
+      .tutor-#{$breakpoint}-grid-cols-1 {
         grid-template-columns: repeat(1, minmax(0, 1fr));
       }
-      
-      .tutor-#{$breakpoint}\:grid-cols-2 {
+
+      .tutor-#{$breakpoint}-grid-cols-2 {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
-      
-      .tutor-#{$breakpoint}\:grid-cols-3 {
+
+      .tutor-#{$breakpoint}-grid-cols-3 {
         grid-template-columns: repeat(3, minmax(0, 1fr));
       }
-      
-      .tutor-#{$breakpoint}\:grid-cols-4 {
+
+      .tutor-#{$breakpoint}-grid-cols-4 {
         grid-template-columns: repeat(4, minmax(0, 1fr));
       }
-      
-      .tutor-#{$breakpoint}\:grid-cols-6 {
+
+      .tutor-#{$breakpoint}-grid-cols-6 {
         grid-template-columns: repeat(6, minmax(0, 1fr));
       }
-      
-      .tutor-#{$breakpoint}\:grid-cols-12 {
+
+      .tutor-#{$breakpoint}-grid-cols-12 {
         grid-template-columns: repeat(12, minmax(0, 1fr));
       }
     }
@@ -575,13 +603,25 @@
 
 // Additional responsive utilities from main.scss
 @include tutor-respond-to(md) {
-  .tutor-md-flex { @include tutor-flex; }
-  .tutor-md-grid { @include tutor-grid; }
-  .tutor-md-hidden { display: none; }
+  .tutor-md-flex {
+    @include tutor-flex;
+  }
+  .tutor-md-grid {
+    @include tutor-grid;
+  }
+  .tutor-md-hidden {
+    display: none;
+  }
 }
 
 @include tutor-respond-to(lg) {
-  .tutor-lg-flex { @include tutor-flex; }
-  .tutor-lg-grid { @include tutor-grid; }
-  .tutor-lg-hidden { display: none; }
+  .tutor-lg-flex {
+    @include tutor-flex;
+  }
+  .tutor-lg-grid {
+    @include tutor-grid;
+  }
+  .tutor-lg-hidden {
+    display: none;
+  }
 }

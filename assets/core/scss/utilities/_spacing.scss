@@ -193,62 +193,62 @@
   @if $value > 0 {
     @media (min-width: $value) {
       @each $space-key, $space-value in $tutor-spacing {
-        .tutor-#{$breakpoint}\:m-#{$space-key} {
+        .tutor-#{$breakpoint}-m-#{$space-key} {
           margin: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:mt-#{$space-key} {
+        .tutor-#{$breakpoint}-mt-#{$space-key} {
           margin-top: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:mr-#{$space-key} {
+        .tutor-#{$breakpoint}-mr-#{$space-key} {
           margin-right: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:mb-#{$space-key} {
+        .tutor-#{$breakpoint}-mb-#{$space-key} {
           margin-bottom: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:ml-#{$space-key} {
+        .tutor-#{$breakpoint}-ml-#{$space-key} {
           margin-left: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:mx-#{$space-key} {
+        .tutor-#{$breakpoint}-mx-#{$space-key} {
           margin-left: $space-value;
           margin-right: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:my-#{$space-key} {
+        .tutor-#{$breakpoint}-my-#{$space-key} {
           margin-top: $space-value;
           margin-bottom: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:p-#{$space-key} {
+        .tutor-#{$breakpoint}-p-#{$space-key} {
           padding: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:pt-#{$space-key} {
+        .tutor-#{$breakpoint}-pt-#{$space-key} {
           padding-top: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:pr-#{$space-key} {
+        .tutor-#{$breakpoint}-pr-#{$space-key} {
           padding-right: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:pb-#{$space-key} {
+        .tutor-#{$breakpoint}-pb-#{$space-key} {
           padding-bottom: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:pl-#{$space-key} {
+        .tutor-#{$breakpoint}-pl-#{$space-key} {
           padding-left: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:px-#{$space-key} {
+        .tutor-#{$breakpoint}-px-#{$space-key} {
           padding-left: $space-value;
           padding-right: $space-value;
         }
 
-        .tutor-#{$breakpoint}\:py-#{$space-key} {
+        .tutor-#{$breakpoint}-py-#{$space-key} {
           padding-top: $space-value;
           padding-bottom: $space-value;
         }

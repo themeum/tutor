@@ -290,19 +290,19 @@
 @each $breakpoint, $value in $tutor-breakpoints {
   @if $value > 0 {
     @media (min-width: $value) {
-      .tutor-#{$breakpoint}\:border {
+      .tutor-#{$breakpoint}-border {
         border: 1px solid var(--tutor-border-idle);
       }
       
-      .tutor-#{$breakpoint}\:border-0 {
+      .tutor-#{$breakpoint}-border-0 {
         border: none;
       }
       
-      .tutor-#{$breakpoint}\:border-t {
+      .tutor-#{$breakpoint}-border-t {
         border-top: 1px solid var(--tutor-border-idle);
       }
       
-      .tutor-#{$breakpoint}\:border-r {
+      .tutor-#{$breakpoint}-border-r {
         [dir="ltr"] & {
           border-right: 1px solid var(--tutor-border-idle);
         }
@@ -311,11 +311,11 @@
         }
       }
       
-      .tutor-#{$breakpoint}\:border-b {
+      .tutor-#{$breakpoint}-border-b {
         border-bottom: 1px solid var(--tutor-border-idle);
       }
       
-      .tutor-#{$breakpoint}\:border-l {
+      .tutor-#{$breakpoint}-border-l {
         [dir="ltr"] & {
           border-left: 1px solid var(--tutor-border-idle);
         }
