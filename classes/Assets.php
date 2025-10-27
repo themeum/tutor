@@ -325,6 +325,7 @@ class Assets {
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-frontend-script', tutor()->url . 'assets/js/tutor-core.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
 
 		/**
 		 * Load frontend dashboard style
