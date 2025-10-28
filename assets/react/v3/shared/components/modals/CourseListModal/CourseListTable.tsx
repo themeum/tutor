@@ -103,9 +103,9 @@ const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
           <Checkbox
             onChange={handleToggleSelection}
             checked={!(courseListQuery.isLoading || courseListQuery.isRefetching) && areAllItemsSelected}
-            label={__('Name', 'tutor')}
+            label={__('Name', __TUTOR_TEXT_DOMAIN__)}
             labelCss={styles.checkboxLabel}
-            aria-label={__('Select all items', 'tutor')}
+            aria-label={__('Select all items', __TUTOR_TEXT_DOMAIN__)}
           />
         ) : (
           '#'
@@ -115,13 +115,13 @@ const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
             <Checkbox
               onChange={() => handleItemToggle(item)}
               checked={selectedItemIds.includes(item.id)}
-              aria-label={`${__('Select', 'tutor')} ${item.title}`}
+              aria-label={`${__('Select', __TUTOR_TEXT_DOMAIN__)} ${item.title}`}
             />
             <div css={styles.courseItemWrapper}>
               <img
                 src={item.image || coursePlaceholder}
                 css={styles.thumbnail}
-                alt={item.title || __('Course item', 'tutor')}
+                alt={item.title || __('Course item', __TUTOR_TEXT_DOMAIN__)}
               />
               <div css={styles.title}>
                 <div>{item.title}</div>
@@ -129,7 +129,7 @@ const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
                   <div>
                     {
                       /* translators: %d is the total number of courses */
-                      sprintf(__('Total Courses: %d', 'tutor'), item.total_courses || 0)
+                      sprintf(__('Total Courses: %d', __TUTOR_TEXT_DOMAIN__), item.total_courses || 0)
                     }
                   </div>
                 </Show>
@@ -152,13 +152,13 @@ const CourseListTable = ({ form, type = 'courses' }: CourseListTableProps) => {
   );
 
   if (courseListQuery.isLoading || bundleListQuery.isLoading) {
-    return <LoadingSection aria-label={__('Loading', 'tutor')} />;
+    return <LoadingSection aria-label={__('Loading', __TUTOR_TEXT_DOMAIN__)} />;
   }
 
   if (!courseListQuery.data && !bundleListQuery.data) {
     return (
       <div css={styles.errorMessage} role="alert" aria-live="assertive">
-        {__('Something went wrong', 'tutor')}
+        {__('Something went wrong', __TUTOR_TEXT_DOMAIN__)}
       </div>
     );
   }

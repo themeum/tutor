@@ -185,7 +185,7 @@ class Assets {
 			'tutor_currency'               => $tutor_currency,
 			'local'                        => get_locale(),
 			'settings'                     => $tutor_settings,
-			'max_upload_size'              => size_format( wp_max_upload_size() ),
+			'max_upload_size'              => wp_max_upload_size(),
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 		);
 	}

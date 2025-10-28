@@ -171,9 +171,9 @@ const FormCoursePrerequisites = ({
                     size="small"
                     emptyStateImage={notFound}
                     emptyStateImage2x={notFound2x}
-                    imageAltText={__('Illustration of a no course selected', 'tutor')}
-                    title={__('No course selected', 'tutor')}
-                    description={__('Select a course to add as a prerequisite.', 'tutor')}
+                    imageAltText={__('Illustration of a no course selected', __TUTOR_TEXT_DOMAIN__)}
+                    title={__('No course selected', __TUTOR_TEXT_DOMAIN__)}
+                    description={__('Select a course to add as a prerequisite.', __TUTOR_TEXT_DOMAIN__)}
                   />
                 </Show>
               }
@@ -223,7 +223,7 @@ const FormCoursePrerequisites = ({
                   when={filteredOption.length > 0}
                   fallback={
                     <li css={styles.emptyOption}>
-                      <p>{__('No courses found', 'tutor')}</p>
+                      <p>{__('No courses found', __TUTOR_TEXT_DOMAIN__)}</p>
                     </li>
                   }
                 >

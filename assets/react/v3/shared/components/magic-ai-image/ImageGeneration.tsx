@@ -40,62 +40,62 @@ import { magicAIStyles } from './styles';
 
 const styleOptions: OptionWithImage<StyleType>[] = [
   {
-    label: __('None', 'tutor'),
+    label: __('None', __TUTOR_TEXT_DOMAIN__),
     value: 'none',
     image: none,
   },
   {
-    label: __('Photo', 'tutor'),
+    label: __('Photo', __TUTOR_TEXT_DOMAIN__),
     value: 'photo',
     image: photo,
   },
   {
-    label: __('Neon', 'tutor'),
+    label: __('Neon', __TUTOR_TEXT_DOMAIN__),
     value: 'neon',
     image: neon,
   },
   {
-    label: __('3D', 'tutor'),
+    label: __('3D', __TUTOR_TEXT_DOMAIN__),
     value: '3d',
     image: threeD,
   },
   {
-    label: __('Painting', 'tutor'),
+    label: __('Painting', __TUTOR_TEXT_DOMAIN__),
     value: 'painting',
     image: painting,
   },
   {
-    label: __('Sketch', 'tutor'),
+    label: __('Sketch', __TUTOR_TEXT_DOMAIN__),
     value: 'sketch',
     image: sketch,
   },
   {
-    label: __('Concept', 'tutor'),
+    label: __('Concept', __TUTOR_TEXT_DOMAIN__),
     value: 'concept_art',
     image: concept,
   },
   {
-    label: __('Illustration', 'tutor'),
+    label: __('Illustration', __TUTOR_TEXT_DOMAIN__),
     value: 'illustration',
     image: illustration,
   },
   {
-    label: __('Dreamy', 'tutor'),
+    label: __('Dreamy', __TUTOR_TEXT_DOMAIN__),
     value: 'dreamy',
     image: dreamy,
   },
   {
-    label: __('Filmic', 'tutor'),
+    label: __('Filmic', __TUTOR_TEXT_DOMAIN__),
     value: 'filmic',
     image: filmic,
   },
   {
-    label: __('Retro', 'tutor'),
+    label: __('Retro', __TUTOR_TEXT_DOMAIN__),
     value: 'retrowave',
     image: retro,
   },
   {
-    label: __('Black & White', 'tutor'),
+    label: __('Black & White', __TUTOR_TEXT_DOMAIN__),
     value: 'black-and-white',
     image: blackAndWhite,
   },
@@ -195,8 +195,8 @@ export const ImageGeneration = () => {
               render={(props) => (
                 <FormTextareaInput
                   {...props}
-                  label={__('Visualize Your Course', 'tutor')}
-                  placeholder={__('Describe the image you want for your course thumbnail', 'tutor')}
+                  label={__('Visualize Your Course', __TUTOR_TEXT_DOMAIN__)}
+                  placeholder={__('Describe the image you want for your course thumbnail', __TUTOR_TEXT_DOMAIN__)}
                   rows={4}
                   isMagicAi
                   disabled={magicImageGenerationMutation.isPending}
@@ -215,7 +215,7 @@ export const ImageGeneration = () => {
               disabled={magicImageGenerationMutation.isPending}
             >
               <SVGIcon name="bulbLine" />
-              {__('Inspire Me', 'tutor')}
+              {__('Inspire Me', __TUTOR_TEXT_DOMAIN__)}
             </button>
           </div>
 
@@ -225,7 +225,7 @@ export const ImageGeneration = () => {
             render={(props) => (
               <FormImageRadioGroup
                 {...props}
-                label={__('Styles', 'tutor')}
+                label={__('Styles', __TUTOR_TEXT_DOMAIN__)}
                 options={styleOptions}
                 disabled={magicImageGenerationMutation.isPending}
               />
@@ -236,7 +236,9 @@ export const ImageGeneration = () => {
         <div css={magicAIStyles.rightFooter}>
           <MagicButton type="submit" disabled={magicImageGenerationMutation.isPending || isDisabledButton}>
             <SVGIcon name={hasGeneratedImage ? 'reload' : 'magicAi'} width={24} height={24} />
-            {hasGeneratedImage ? __('Generate Again', 'tutor') : __('Generate Now', 'tutor')}
+            {hasGeneratedImage
+              ? __('Generate Again', __TUTOR_TEXT_DOMAIN__)
+              : __('Generate Now', __TUTOR_TEXT_DOMAIN__)}
           </MagicButton>
         </div>
       </div>

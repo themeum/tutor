@@ -40,17 +40,17 @@ const MARQUEE_SPEED_PX_PER_SEC = 60;
 export const formatRepeatUnit = (unit: Omit<DurationUnit, 'hour'>, value: number) => {
   switch (unit) {
     case 'hour':
-      return value > 1 ? __('Hours', 'tutor') : __('Hour', 'tutor');
+      return value > 1 ? __('Hours', __TUTOR_TEXT_DOMAIN__) : __('Hour', __TUTOR_TEXT_DOMAIN__);
     case 'day':
-      return value > 1 ? __('Days', 'tutor') : __('Day', 'tutor');
+      return value > 1 ? __('Days', __TUTOR_TEXT_DOMAIN__) : __('Day', __TUTOR_TEXT_DOMAIN__);
     case 'week':
-      return value > 1 ? __('Weeks', 'tutor') : __('Week', 'tutor');
+      return value > 1 ? __('Weeks', __TUTOR_TEXT_DOMAIN__) : __('Week', __TUTOR_TEXT_DOMAIN__);
     case 'month':
-      return value > 1 ? __('Months', 'tutor') : __('Month', 'tutor');
+      return value > 1 ? __('Months', __TUTOR_TEXT_DOMAIN__) : __('Month', __TUTOR_TEXT_DOMAIN__);
     case 'year':
-      return value > 1 ? __('Years', 'tutor') : __('Year', 'tutor');
+      return value > 1 ? __('Years', __TUTOR_TEXT_DOMAIN__) : __('Year', __TUTOR_TEXT_DOMAIN__);
     case 'until_cancellation':
-      return __('Until Cancellation', 'tutor');
+      return __('Until Cancellation', __TUTOR_TEXT_DOMAIN__);
   }
 };
 
@@ -80,17 +80,15 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
   };
 
   const recurringLimit = useMemo(() => {
-    let recurringLimitText: string | JSX.Element = `${subscription.recurring_limit.toString().padStart(2, '0')} ${__(
-      'Billing Cycles',
-      'tutor',
-    )}`;
+    let recurringLimitText: string | JSX.Element =
+      `${subscription.recurring_limit.toString().padStart(2, '0')} ${__('Billing Cycles', __TUTOR_TEXT_DOMAIN__)}`;
 
     if (subscription.recurring_limit === BILLING_CYCLE_CUSTOM_PRESETS.untilCancelled) {
-      recurringLimitText = __('Until Cancellation', 'tutor');
+      recurringLimitText = __('Until Cancellation', __TUTOR_TEXT_DOMAIN__);
     }
 
     if (subscription.recurring_limit === BILLING_CYCLE_CUSTOM_PRESETS.noRenewal) {
-      recurringLimitText = __('No Renewal', 'tutor');
+      recurringLimitText = __('No Renewal', __TUTOR_TEXT_DOMAIN__);
     }
 
     return (
@@ -104,14 +102,18 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
   const marqueeText = useMemo(
     () => (
       <>
-        <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
+        <Show
+          when={subscription.payment_type === 'recurring'}
+          fallback={<span>{__('Lifetime', __TUTOR_TEXT_DOMAIN__)}</span>}
+        >
           <span>
             <Show
               when={subscription.recurring_limit !== BILLING_CYCLE_CUSTOM_PRESETS.noRenewal}
               fallback={`${subscription.recurring_value.toString().padStart(2, '0')} ${formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}`}
             >
               {sprintf(
-                __('Renew every %1$s %2$s', 'tutor'),
+                // translators: %1$s - recurring value, %2$s - recurring unit
+                __('Renew every %1$s %2$s', __TUTOR_TEXT_DOMAIN__),
                 subscription.recurring_value.toString().padStart(2, '0'),
                 formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
               )}
@@ -193,8 +195,12 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
       id: 'subscription-delete-modal',
       component: ConfirmationModal,
       props: {
-        title: sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name),
-        description: __('Are you sure you want to delete this plan? This cannot be undone.', 'tutor'),
+        title: sprintf(
+          // translators: %s is the title of the item to be deleted
+          __('Delete "%s"', __TUTOR_TEXT_DOMAIN__),
+          subscription.plan_name,
+        ),
+        description: __('Are you sure you want to delete this plan? This cannot be undone.', __TUTOR_TEXT_DOMAIN__),
         onConfirm: handleDeleteSubscription,
         confirmButtonVariant: 'danger' as const,
       },
@@ -235,7 +241,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
       })}
       style={sortableStyle}
       ref={setNodeRef}
-      aria-label={__('Subscription plan item', 'tutor')}
+      aria-label={__('Subscription plan item', __TUTOR_TEXT_DOMAIN__)}
     >
       <SVGIcon {...listeners} {...attributes} data-grabber name="threeDotsVerticalDouble" width={20} height={20} />
 
@@ -246,7 +252,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
             onClick={handleEditSubscription}
             onKeyDown={handleKeyDown}
             tabIndex={0}
-            aria-label={__('Edit subscription plan', 'tutor')}
+            aria-label={__('Edit subscription plan', __TUTOR_TEXT_DOMAIN__)}
           >
             <span data-plan-name title={subscription.plan_name}>
               {subscription.plan_name}
@@ -255,8 +261,8 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
               <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
             </Show>
             <Show when={!subscription.is_enabled}>
-              <TutorBadge css={styles.badge} variant="secondary" title={__('Inactive', 'tutor')}>
-                {__('Inactive', 'tutor')}
+              <TutorBadge css={styles.badge} variant="secondary" title={__('Inactive', __TUTOR_TEXT_DOMAIN__)}>
+                {__('Inactive', __TUTOR_TEXT_DOMAIN__)}
               </TutorBadge>
             </Show>
           </p>
@@ -279,7 +285,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
             >
               <ThreeDots.Option
                 icon={<SVGIcon name="edit" width={16} height={16} />}
-                text={__('Edit', 'tutor')}
+                text={__('Edit', __TUTOR_TEXT_DOMAIN__)}
                 data-cy="edit-subscription"
                 onClick={handleEditSubscription}
               />
@@ -291,12 +297,12 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
                     <SVGIcon name="duplicate" width={16} height={16} />
                   )
                 }
-                text={__('Duplicate', 'tutor')}
+                text={__('Duplicate', __TUTOR_TEXT_DOMAIN__)}
                 onClick={handleDuplicateSubscription}
               />
               <ThreeDots.Option
                 icon={<SVGIcon name="delete" width={16} height={16} />}
-                text={__('Delete', 'tutor')}
+                text={__('Delete', __TUTOR_TEXT_DOMAIN__)}
                 isTrash
                 onClick={handleDeleteClick}
               />
@@ -306,7 +312,7 @@ export const PreviewItem = ({ subscription, courseId, isBundle, isOverlay }: Pre
         <p
           css={styles.information}
           ref={marqueeContainerRef}
-          aria-label={__('Subscription plan details', 'tutor')}
+          aria-label={__('Subscription plan details', __TUTOR_TEXT_DOMAIN__)}
           title={marqueeContainerRef.current?.textContent}
         >
           <span css={styles.marqueeSlide} ref={marqueeContentRef} data-marquee-content>

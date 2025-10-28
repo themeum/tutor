@@ -696,7 +696,7 @@ class Admin {
 			);
 			$plugin_meta[] = sprintf(
 				'<a href="%s"><strong style="color: #03bd24">%s</strong></a>',
-				esc_url( 'https://www.themeum.com/contact-us/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
+				esc_url( 'https://tutorlms.com/support/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
 				esc_html__( 'Get Support', 'tutor' )
 			);
 		}
