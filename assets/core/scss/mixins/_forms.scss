@@ -38,10 +38,10 @@
 
 @mixin tutor-input-validation($state) {
   @if $state == error {
-    border-color: var(--tutor-error);
+    border-color: var(--tutor-text-critical);
     
     &:focus {
-      border-color: var(--tutor-error);
+      border-color: var(--tutor-text-critical);
       box-shadow: 0 0 0 3px rgba(240, 68, 56, 0.1);
     }
   } @else if $state == success {
@@ -82,7 +82,7 @@
 @mixin tutor-error-text {
   margin-top: $tutor-spacing-2;
   font-size: $tutor-font-size-p3;
-  color: var(--tutor-error);
+  color: var(--tutor-text-critical);
 }
 
 // Select dropdown mixin
