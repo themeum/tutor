@@ -787,18 +787,18 @@ class OrderModel {
 	 * Update an order
 	 *
 	 * @since 3.0.0
-	 * 
+	 *
 	 * @since 3.9.2 added `$add_order_items` parameter
 	 *
 	 * @param int|array $order_id Integer or array of ids sql escaped.
 	 * @param array     $data Data to update, escape data.
-	 * @param bool $add_order_items Optional. Whether to update the associated order items.
+	 * @param bool      $add_order_items Optional. Whether to update the associated order items.
 	 *
 	 * @return bool
 	 */
 	public function update_order( $order_id, array $data, $add_order_items = false ) {
-		$order_id = is_array( $order_id ) ? $order_id : array( $order_id );
-		$order_id = QueryHelper::prepare_in_clause( $order_id );
+		$order_id    = is_array( $order_id ) ? $order_id : array( $order_id );
+		$order_id    = QueryHelper::prepare_in_clause( $order_id );
 		$order_items = $data['items'] ?? array();
 
 		unset( $data['items'] );
@@ -2061,9 +2061,9 @@ class OrderModel {
 	 * Retrieve an existing order if it is incomplete, unpaid, and belongs to the given user.
 	 *
 	 * @since 3.9.2
-	 * 
-	 * @param int $order_id The ID of the order.
-	 * @param int $user_id  The ID of the current user.
+	 *
+	 * @param int  $order_id The ID of the order.
+	 * @param int  $user_id  The ID of the current user.
 	 * @param bool $return_order_data Optional. Whether to return the order data instead of a boolean.
 	 *
 	 * @return bool|object Returns:
@@ -2074,10 +2074,10 @@ class OrderModel {
 	public static function get_valid_incomplete_order( int $order_id, int $user_id, $return_order_data = false ) {
 
 		if ( empty( $order_id ) || empty( $user_id ) ) {
-			return null;
+			return false;
 		}
 
-		$order_data  = ( new self() )->get_order_by_id( $order_id );
+		$order_data = ( new self() )->get_order_by_id( $order_id );
 
 		if ( empty( $order_data ) ) {
 			return false;

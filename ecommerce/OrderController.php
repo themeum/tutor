@@ -130,8 +130,6 @@ class OrderController {
 
 			add_filter( 'tutor_calculate_order_tax_amount', array( $this, 'filter_calculate_single_order_tax_amount' ), 10, 5 );
 		}
-
-
 	}
 
 	/**
@@ -209,7 +207,7 @@ class OrderController {
 	 * used without validation.
 	 *
 	 * @since 3.0.0
-	 * 
+	 *
 	 * @since 3.9.2 `prepare_order_data` method added.
 	 *
 	 * @param int    $user_id Typically student.
@@ -226,7 +224,7 @@ class OrderController {
 	 * @return mixed order id or order data.
 	 */
 	public function create_order( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array(), $return_id = true ) {
-		
+
 		$order_data = $this->prepare_order_data( $user_id, $items, $payment_status, $order_type, $coupon_code, $args );
 
 		// Update data with arguments.
@@ -1272,8 +1270,7 @@ class OrderController {
 
 		unset( $update_data['created_at_gmt'], $update_data['created_by'] );
 
-		
-		if ( $this->model->update_order($order_id, $update_data, true ) ) {
+		if ( $this->model->update_order( $order_id, $update_data, true ) ) {
 			return $return_data ? $update_data : true;
 		}
 

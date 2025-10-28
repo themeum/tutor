@@ -32,7 +32,7 @@ $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
 $course_id           = (int) Input::sanitize_request_data( 'course_id', 0 );
 $course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
-$coupon_code 		 = Input::sanitize_request_data( 'coupon_code', '' );
+$coupon_code         = Input::sanitize_request_data( 'coupon_code', '' );
 
 $plan_id       = (int) Input::sanitize_request_data( 'plan' );
 $plan_info     = apply_filters( 'tutor_get_plan_info', null, $plan_id );
