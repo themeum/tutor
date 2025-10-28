@@ -625,7 +625,7 @@ class Assets {
 
 		foreach ( $wp_scripts->registered as $handle => $data ) {
 			$src           = $data->src ?? '';
-			$is_from_tutor = str_contains( $src, 'tutor/' ) && str_contains( $src, '/assets/js' ) && ! str_contains( $src, 'tutor-pro' );
+			$is_from_tutor = str_contains( $src, 'tutor/' ) && ( str_contains( $src, '/assets/js' ) || str_contains( $src, '/assets/lib' ) ) && ! str_contains( $src, 'tutor-pro' );
 
 			if ( ! $is_from_tutor ) {
 				continue;
