@@ -1270,7 +1270,7 @@ class OrderController {
 
 		unset( $update_data['created_at_gmt'], $update_data['created_by'] );
 
-		if ( $this->model->update_order( $order_id, $update_data, true ) ) {
+		if ( $this->model->update_order( $order_id, $update_data ) ) {
 			return $return_data ? $update_data : true;
 		}
 

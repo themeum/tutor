@@ -17,6 +17,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\BillingController;
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\OrderActivitiesController;
 
 /**
@@ -788,15 +789,12 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @since 3.9.2 added `$add_order_items` parameter
-	 *
 	 * @param int|array $order_id Integer or array of ids sql escaped.
 	 * @param array     $data Data to update, escape data.
-	 * @param bool      $add_order_items Optional. Whether to update the associated order items.
 	 *
 	 * @return bool
 	 */
-	public function update_order( $order_id, array $data, $add_order_items = false ) {
+	public function update_order( $order_id, array $data ) {
 		$order_id    = is_array( $order_id ) ? $order_id : array( $order_id );
 		$order_id    = QueryHelper::prepare_in_clause( $order_id );
 		$order_items = $data['items'] ?? array();
@@ -810,7 +808,7 @@ class OrderModel {
 				$order_id
 			);
 
-			if ( ! empty( $order_items ) && $add_order_items ) {
+			if ( ! empty( $order_items ) ) {
 				$this->update_order_items( $order_id, $order_items );
 			}
 			return true;
@@ -1863,12 +1861,19 @@ class OrderModel {
 			</div>
 			<?php
 		elseif ( $show_pay_button ) :
+
+			$action_url = ( new self() )->validate_payment_method_or_redirect( $order );
+
 			ob_start();
 			?>
 
-			<form method="post">
+			<form method="post" action="<?php echo $action_url; ?>">
 				<?php tutor_nonce_field(); ?>
-				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+
+				<?php if ( ! $action_url) { ?>
+					<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+				<?php } ?>
+
 				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
 
 				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
@@ -2122,5 +2127,26 @@ class OrderModel {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Validate the selected payment method and redirect to checkout if invalid.
+	 *
+	 * @since 3.9.2
+	 * 
+	 * @param object $order_data      The current order data.
+	 * 
+	 * @return string|null
+	 */
+	private function validate_payment_method_or_redirect( $order_data ) {
+
+		$selected_payment_method = $order_data->payment_method ?? null;
+		$is_valid_payment_method = $selected_payment_method ? in_array( $selected_payment_method, array_column( tutor_get_all_active_payment_gateways(), 'name' ), true ) : false;
+
+		// If payment method not selected then redirect to checkout page.
+		if ( empty( $selected_payment_method ) || ! $is_valid_payment_method ) {
+			$page_id = (int) tutor_utils()->get_option( CheckoutController::PAGE_ID_OPTION_NAME );
+			return add_query_arg( array( 'order_id' => $order_data->id ), get_permalink( $page_id ) );
+		}
 	}
 }
