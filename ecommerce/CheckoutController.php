@@ -568,6 +568,10 @@ class CheckoutController {
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$order_id        = Input::get( 'order_id', 0, Input::TYPE_INT );
 
+		if ( $order_id  && ! OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() ) ) {
+			array_push( $errors, __( 'Invalid order', 'tutor' ) );
+		}
+
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
 		$order_payment_fields = array(
@@ -683,7 +687,7 @@ class CheckoutController {
 			}
 
 			// Check if an order ID is provided.
-			if ( ! empty( $order_id ) && OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() ) ) {
+			if ( ! empty( $order_id ) ) {
 
 				$order_data = $this->order_ctrl->update_order(
 					$order_id,

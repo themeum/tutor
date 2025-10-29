@@ -794,12 +794,9 @@ class OrderModel {
 	 *
 	 * @return bool
 	 */
-	public function update_order( $order_id, array $data ) {
+	public function update_order( $order_id, array $data, array $order_items = array() ) {
 		$order_id    = is_array( $order_id ) ? $order_id : array( $order_id );
 		$order_id    = QueryHelper::prepare_in_clause( $order_id );
-		$order_items = $data['items'] ?? array();
-
-		unset( $data['items'] );
 
 		try {
 			QueryHelper::update_where_in(
@@ -1846,8 +1843,10 @@ class OrderModel {
 	 */
 	public static function render_pay_button( $order ) {
 
+		$self = new self();
+
 		if ( is_numeric( $order ) ) {
-			$order = ( new self() )->get_order_by_id( $order );
+			$order = $self->get_order_by_id( $order );
 		}
 
 		$show_pay_button = self::should_show_pay_btn( $order );
@@ -1859,29 +1858,24 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-			<?php
-		elseif ( $show_pay_button ) :
+		<?php elseif ( $show_pay_button ) :
 
-			$action_url = ( new self() )->validate_payment_method_or_redirect( $order );
-
-			ob_start();
+			if ( $self->validate_payment_method( $order ) ) :
+				echo $self->link_button( $order->id );
+			else : 
+				ob_start();				
 			?>
+				<form method="post">
+					<?php tutor_nonce_field(); ?>
 
-			<form method="post" action="<?php echo $action_url; ?>">
-				<?php tutor_nonce_field(); ?>
-
-				<?php if ( ! $action_url) { ?>
 					<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
-				<?php } ?>
+					<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
 
-				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
-
-				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
-					<?php esc_html_e( 'Pay', 'tutor' ); ?>
-				</button>				
-			</form>
-
-			<?php
+					<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+						<?php esc_html_e( 'Pay', 'tutor' ); ?>
+					</button>				
+				</form>
+			<?php endif;
 			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
 		endif;
 	}
@@ -2136,17 +2130,37 @@ class OrderModel {
 	 * 
 	 * @param object $order_data      The current order data.
 	 * 
-	 * @return string|null
+	 * @return bool
 	 */
-	private function validate_payment_method_or_redirect( $order_data ) {
+	private function validate_payment_method( $order_data ): bool {
 
 		$selected_payment_method = $order_data->payment_method ?? null;
 		$is_valid_payment_method = $selected_payment_method ? in_array( $selected_payment_method, array_column( tutor_get_all_active_payment_gateways(), 'name' ), true ) : false;
 
-		// If payment method not selected then redirect to checkout page.
-		if ( empty( $selected_payment_method ) || ! $is_valid_payment_method ) {
-			$page_id = (int) tutor_utils()->get_option( CheckoutController::PAGE_ID_OPTION_NAME );
-			return add_query_arg( array( 'order_id' => $order_data->id ), get_permalink( $page_id ) );
-		}
+		// If payment method is not selected  od it's not a valid payment.
+		return ( empty( $selected_payment_method ) || ! $is_valid_payment_method );
+	}
+
+	/**
+	 * Generate the payment link button HTML for a given order.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int $order_id The unique ID of the order.
+	 *
+	 * @return string The HTML markup for the payment link button.
+	 */
+	private function link_button( $order_id ): string {
+
+		$page_id = (int) tutor_utils()->get_option( CheckoutController::PAGE_ID_OPTION_NAME );
+		$checkout_url = add_query_arg( array( 'order_id' => $order_id ), get_permalink( $page_id ) );
+
+		return sprintf(
+			'<a href="%s" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+				%s
+			</a>',
+			esc_url( $checkout_url ),
+			esc_html__( 'Pay', 'tutor' )
+		);
 	}
 }

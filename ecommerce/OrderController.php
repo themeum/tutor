@@ -1267,10 +1267,11 @@ class OrderController {
 	public function update_order( int $order_id, int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array(), $return_data = false ) {
 
 		$update_data = $this->prepare_order_data( $user_id, $items, $payment_status, $order_type, $coupon_code, $args );
+		$order_items = $update_data['items'];
 
-		unset( $update_data['created_at_gmt'], $update_data['created_by'] );
+		unset( $update_data['items'], $update_data['created_at_gmt'], $update_data['created_by'] );
 
-		if ( $this->model->update_order( $order_id, $update_data ) ) {
+		if ( $this->model->update_order( $order_id, $update_data, $order_items ) ) {
 			return $return_data ? $update_data : true;
 		}
 
