@@ -51,6 +51,28 @@ $tutor-line-height-p2: 1.125rem;  // 18px ÷ 16 = 1.125rem
 $tutor-line-height-tiny: 1.25rem; // 20px ÷ 16 = 1.25rem
 $tutor-line-height-p3: 1.125rem;  // 18px ÷ 16 = 1.125rem
 
+
+// =============================================================================
+// TEXT COLORS
+// =============================================================================
+
+$tutor-text-primary: var(--tutor-text-primary);
+$tutor-text-primary-inverse: var(--tutor-text-primary-inverse);
+$tutor-text-secondary: var(--tutor-text-secondary);
+$tutor-text-disabled: var(--tutor-text-disabled);
+$tutor-text-brand: var(--tutor-text-brand);
+$tutor-text-brand-secondary: var(--tutor-text-brand-secondary);
+$tutor-text-light: var(--tutor-text-light);
+$tutor-text-success: var(--tutor-text-success);
+$tutor-text-critical: var(--tutor-text-critical);
+$tutor-text-warning: var(--tutor-text-warning);
+$tutor-text-caution: var(--tutor-text-caution);
+$tutor-text-exception1: var(--tutor-text-exception1);
+$tutor-text-exception2: var(--tutor-text-exception2);
+$tutor-text-exception4: var(--tutor-text-exception4);
+$tutor-text-exception5: var(--tutor-text-exception5);
+$tutor-text-highlighted-hover: var(--tutor-text-highlighted-hover);
+
 // =============================================================================
 // TYPOGRAPHY MAPS (for utility generation)
 // =============================================================================
@@ -91,20 +113,20 @@ $tutor-font-weights: (
 );
 
 $tutor-text-colors: (
-  primary: var(--tutor-text-primary),
-  primary-inverse: var(--tutor-text-primary-inverse),
-  secondary: var(--tutor-text-secondary),
-  disabled: var(--tutor-text-disabled),
-  brand: var(--tutor-text-brand),
-  brand-secondary: var(--tutor-text-brand-secondary),
-  light: var(--tutor-text-light),
-  success: var(--tutor-text-success),
-  critical: var(--tutor-text-critical),
-  warning: var(--tutor-text-warning),
-  caution: var(--tutor-text-caution),
-  exception1: var(--tutor-text-exception1),
-  exception2: var(--tutor-text-exception2),
-  exception4: var(--tutor-text-exception4),
-  exception5: var(--tutor-text-exception5),
-  highlighted-hover: var(--tutor-text-highlighted-hover)
-)
+  primary: $tutor-text-primary,
+  primary-inverse: $tutor-text-primary-inverse,
+  secondary: $tutor-text-secondary,
+  disabled: $tutor-text-disabled,
+  brand: $tutor-text-brand,
+  brand-secondary: $tutor-text-brand-secondary,
+  light: $tutor-text-light,
+  success: $tutor-text-success,
+  critical: $tutor-text-critical,
+  warning: $tutor-text-warning,
+  caution: $tutor-text-caution,
+  exception1: $tutor-text-exception1,
+  exception2: $tutor-text-exception2,
+  exception4: $tutor-text-exception4,
+  exception5: $tutor-text-exception5,
+  highlighted-hover: $tutor-text-highlighted-hover
+);
