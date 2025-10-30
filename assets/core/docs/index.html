@@ -874,11 +874,60 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                             Four button variants for different use cases and visual hierarchy.
                         </p>
                         <div class="docs-example__demo">
-                            <div class="tutor-flex tutor-gap-3" style="flex-wrap: wrap;">
-                                <button class="tutor-btn tutor-btn--primary">Primary</button>
-                                <button class="tutor-btn tutor-btn--secondary">Secondary</button>
-                                <button class="tutor-btn tutor-btn--outline">Outline</button>
-                                <button class="tutor-btn tutor-btn--ghost">Ghost</button>
+                            <div class="tutor-flex tutor-gap-3 tutor-flex-wrap">
+                                <button class="tutor-btn tutor-btn-primary">Primary</button>
+                                <button class="tutor-btn tutor-btn-primary-soft">Primary Soft</button>
+                                <button class="tutor-btn tutor-btn-destructive">Destructive</button>
+                                <button class="tutor-btn tutor-btn-destructive-soft">Destructive Soft</button>
+                                <button class="tutor-btn tutor-btn-secondary">Secondary</button>
+                                <button class="tutor-btn tutor-btn-outline">Outline</button>
+                                <button class="tutor-btn tutor-btn-ghost">Ghost</button>
+                                <button class="tutor-btn tutor-btn-link">Link</button>
+                            </div>
+                            <div class="tutor-flex tutor-gap-3 tutor-flex-wrap tutor-mt-5">
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary-soft"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-secondary"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-outline"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-ghost"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-link"><svg width="20" height="20" viewBox="0 0 20 20"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                         <div class="docs-code-block">
@@ -886,10 +935,10 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                                 <span class="docs-code-block__title">HTML</span>
                                 <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
                             </div>
-                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn--primary"&gt;Primary&lt;/button&gt;
-&lt;button class="tutor-btn tutor-btn--secondary"&gt;Secondary&lt;/button&gt;
-&lt;button class="tutor-btn tutor-btn--outline"&gt;Outline&lt;/button&gt;
-&lt;button class="tutor-btn tutor-btn--ghost"&gt;Ghost&lt;/button&gt;</code></pre>
+                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-outline"&gt;Outline&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-ghost"&gt;Ghost&lt;/button&gt;</code></pre>
                         </div>
                     </div>
 
@@ -899,10 +948,45 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                             Three button sizes to fit different contexts and layouts.
                         </p>
                         <div class="docs-example__demo">
-                            <div class="tutor-flex tutor-gap-3 tutor-items-center" style="flex-wrap: wrap;">
-                                <button class="tutor-btn tutor-btn--primary tutor-btn--small">Small</button>
-                                <button class="tutor-btn tutor-btn--primary tutor-btn--medium">Medium</button>
-                                <button class="tutor-btn tutor-btn--primary tutor-btn--large">Large</button>
+                            <div class="tutor-flex tutor-gap-3 tutor-items-center totor-flex-wrap">
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-x-small">X-Small Button</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-small">Small Button</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-medium">Medium Button</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-large">Large Button</button>
+                            </div>
+                            <div class="tutor-flex tutor-gap-3 tutor-items-center totor-flex-wrap tutor-mt-5">
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-small tutor-btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-medium tutor-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-large tutor-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
                             </div>
                         </div>
                         <div class="docs-code-block">
@@ -910,9 +994,9 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                                 <span class="docs-code-block__title">HTML</span>
                                 <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
                             </div>
-                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn--primary tutor-btn--small"&gt;Small&lt;/button&gt;
-&lt;button class="tutor-btn tutor-btn--primary tutor-btn--medium"&gt;Medium&lt;/button&gt;
-&lt;button class="tutor-btn tutor-btn--primary tutor-btn--large"&gt;Large&lt;/button&gt;</code></pre>
+                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn-primary tutor-btn-small"&gt;Small&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary tutor-btn-medium"&gt;Medium&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary tutor-btn-large"&gt;Large&lt;/button&gt;</code></pre>
                         </div>
                     </div>
 
@@ -923,9 +1007,9 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                         </p>
                         <div class="docs-example__demo">
                             <div class="tutor-flex tutor-gap-3" style="flex-wrap: wrap;">
-                                <button class="tutor-btn tutor-btn--primary">Normal</button>
-                                <button class="tutor-btn tutor-btn--primary" disabled>Disabled</button>
-                                <button class="tutor-btn tutor-btn--primary tutor-btn--loading">Loading</button>
+                                <button class="tutor-btn tutor-btn-primary">Normal</button>
+                                <button class="tutor-btn tutor-btn-primary" disabled>Disabled</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-loading">Loading</button>
                             </div>
                         </div>
                         <div class="docs-code-block">
@@ -933,9 +1017,9 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                                 <span class="docs-code-block__title">HTML</span>
                                 <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
                             </div>
-                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn--primary"&gt;Normal&lt;/button&gt;
-&lt;button class="tutor-btn tutor-btn--primary" disabled&gt;Disabled&lt;/button&gt;
-&lt;button class="tutor-btn tutor-btn--primary tutor-btn--loading"&gt;Loading&lt;/button&gt;</code></pre>
+                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn-primary"&gt;Normal&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary" disabled&gt;Disabled&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary tutor-btn-loading"&gt;Loading&lt;/button&gt;</code></pre>
                         </div>
                     </div>
                 </section>
@@ -1129,7 +1213,8 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                     <div class="docs-example">
                         <h2 class="docs-example__title">Interactive Components</h2>
                         <p class="docs-example__description">
-                            Advanced components powered by Alpine.js for rich user interactions with built-in RTL support and accessibility features.
+                            Advanced components powered by Alpine.js for rich user interactions with built-in RTL
+                            support and accessibility features.
                         </p>
                     </div>
 
@@ -1137,26 +1222,27 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                     <div class="docs-example">
                         <h2 class="docs-example__title">Dropdown</h2>
                         <p class="docs-example__description">
-                            Interactive dropdown with RTL-aware positioning, keyboard navigation, and click-outside-to-close functionality.
+                            Interactive dropdown with RTL-aware positioning, keyboard navigation, and
+                            click-outside-to-close functionality.
                         </p>
                         <div class="docs-example__demo">
-                            <div x-data="TutorCore.dropdown({ placement: 'bottom-start', offset: 8 })" class="tutor-dropdown">
+                            <div x-data="TutorCore.dropdown({ placement: 'bottom-start', offset: 8 })"
+                                class="tutor-dropdown">
                                 <button @click="toggle()" class="tutor-btn tutor-btn--primary">
                                     Options <span x-text="open ? '▲' : '▼'"></span>
                                 </button>
-                                <div x-show="open" 
-                                     x-transition:enter="transition ease-out duration-100"
-                                     x-transition:enter-start="transform opacity-0 scale-95"
-                                     x-transition:enter-end="transform opacity-100 scale-100"
-                                     x-transition:leave="transition ease-in duration-75"
-                                     x-transition:leave-start="transform opacity-100 scale-100"
-                                     x-transition:leave-end="transform opacity-0 scale-95"
-                                     @click.outside="close()" 
-                                     class="tutor-dropdown__menu">
+                                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="transform opacity-0 scale-95"
+                                    x-transition:enter-end="transform opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="transform opacity-100 scale-100"
+                                    x-transition:leave-end="transform opacity-0 scale-95" @click.outside="close()"
+                                    class="tutor-dropdown__menu">
                                     <a href="#" @click.prevent="close()" class="tutor-dropdown__item">Profile</a>
                                     <a href="#" @click.prevent="close()" class="tutor-dropdown__item">Settings</a>
                                     <hr class="tutor-my-2">
-                                    <a href="#" @click.prevent="close()" class="tutor-dropdown__item tutor-text-error">Logout</a>
+                                    <a href="#" @click.prevent="close()"
+                                        class="tutor-dropdown__item tutor-text-error">Logout</a>
                                 </div>
                             </div>
                         </div>
@@ -1183,20 +1269,18 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                     <div class="docs-example">
                         <h2 class="docs-example__title">Modal</h2>
                         <p class="docs-example__description">
-                            Modal dialog with focus management, backdrop click to close, ESC key support, and accessibility features.
+                            Modal dialog with focus management, backdrop click to close, ESC key support, and
+                            accessibility features.
                         </p>
                         <div class="docs-example__demo">
                             <div x-data="TutorCore.modal({ closable: true, backdrop: true, keyboard: true })">
                                 <button @click="show()" class="tutor-btn tutor-btn--secondary">Open Modal</button>
 
-                                <div x-show="open" 
-                                     x-transition:enter="transition ease-out duration-300"
-                                     x-transition:enter-start="opacity-0"
-                                     x-transition:enter-end="opacity-100"
-                                     x-transition:leave="transition ease-in duration-200"
-                                     x-transition:leave-start="opacity-100"
-                                     x-transition:leave-end="opacity-0"
-                                     class="tutor-modal">
+                                <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                    x-transition:leave="transition ease-in duration-200"
+                                    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                    class="tutor-modal">
                                     <div class="tutor-modal__backdrop" @click="hide()"></div>
                                     <div class="tutor-modal__content" @keydown.escape="hide()">
                                         <div class="tutor-modal__header">
@@ -1204,11 +1288,14 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                                             <button @click="hide()" class="tutor-modal__close">&times;</button>
                                         </div>
                                         <div class="tutor-modal__body">
-                                            <p class="tutor-p1">This is a modal dialog. You can close it by clicking the X button, pressing Escape, or clicking outside.</p>
+                                            <p class="tutor-p1">This is a modal dialog. You can close it by clicking the
+                                                X button, pressing Escape, or clicking outside.</p>
                                         </div>
                                         <div class="tutor-modal__footer">
-                                            <button @click="hide()" class="tutor-btn tutor-btn--secondary">Cancel</button>
-                                            <button @click="hide()" class="tutor-btn tutor-btn--primary">Confirm</button>
+                                            <button @click="hide()"
+                                                class="tutor-btn tutor-btn--secondary">Cancel</button>
+                                            <button @click="hide()"
+                                                class="tutor-btn tutor-btn--primary">Confirm</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1251,34 +1338,38 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                         <div class="docs-example__demo">
                             <div x-data="TutorCore.tabs({ defaultTab: 0 })" class="tutor-tabs">
                                 <div class="tutor-tabs__nav">
-                                    <button @click="setTab(0)" :class="{'active': isActive(0)}" class="tutor-tab">Overview</button>
-                                    <button @click="setTab(1)" :class="{'active': isActive(1)}" class="tutor-tab">Details</button>
-                                    <button @click="setTab(2)" :class="{'active': isActive(2)}" class="tutor-tab">Reviews</button>
+                                    <button @click="setTab(0)" :class="{'active': isActive(0)}"
+                                        class="tutor-tab">Overview</button>
+                                    <button @click="setTab(1)" :class="{'active': isActive(1)}"
+                                        class="tutor-tab">Details</button>
+                                    <button @click="setTab(2)" :class="{'active': isActive(2)}"
+                                        class="tutor-tab">Reviews</button>
                                 </div>
                                 <div class="tutor-tabs__content">
-                                    <div x-show="isActive(0)" 
-                                         x-transition:enter="transition ease-out duration-200"
-                                         x-transition:enter-start="opacity-0 transform translate-x-4"
-                                         x-transition:enter-end="opacity-100 transform translate-x-0"
-                                         class="tutor-tab-panel">
+                                    <div x-show="isActive(0)" x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform translate-x-4"
+                                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                                        class="tutor-tab-panel">
                                         <h4 class="tutor-h4">Overview</h4>
-                                        <p class="tutor-p1">This is the overview content. It provides a general introduction to the topic with key highlights and important information.</p>
+                                        <p class="tutor-p1">This is the overview content. It provides a general
+                                            introduction to the topic with key highlights and important information.</p>
                                     </div>
-                                    <div x-show="isActive(1)" 
-                                         x-transition:enter="transition ease-out duration-200"
-                                         x-transition:enter-start="opacity-0 transform translate-x-4"
-                                         x-transition:enter-end="opacity-100 transform translate-x-0"
-                                         class="tutor-tab-panel">
+                                    <div x-show="isActive(1)" x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform translate-x-4"
+                                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                                        class="tutor-tab-panel">
                                         <h4 class="tutor-h4">Details</h4>
-                                        <p class="tutor-p1">Here are the detailed specifications and technical information. This section contains comprehensive documentation and usage guidelines.</p>
+                                        <p class="tutor-p1">Here are the detailed specifications and technical
+                                            information. This section contains comprehensive documentation and usage
+                                            guidelines.</p>
                                     </div>
-                                    <div x-show="isActive(2)" 
-                                         x-transition:enter="transition ease-out duration-200"
-                                         x-transition:enter-start="opacity-0 transform translate-x-4"
-                                         x-transition:enter-end="opacity-100 transform translate-x-0"
-                                         class="tutor-tab-panel">
+                                    <div x-show="isActive(2)" x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform translate-x-4"
+                                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                                        class="tutor-tab-panel">
                                         <h4 class="tutor-h4">Reviews</h4>
-                                        <p class="tutor-p1">Customer reviews and feedback will be displayed here. This includes ratings, comments, and user testimonials.</p>
+                                        <p class="tutor-p1">Customer reviews and feedback will be displayed here. This
+                                            includes ratings, comments, and user testimonials.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1316,29 +1407,34 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                     <div class="docs-example">
                         <h2 class="docs-example__title">Toast Notifications</h2>
                         <p class="docs-example__description">
-                            Toast notification system with multiple types, stacking support, auto-dismiss, and smooth animations.
+                            Toast notification system with multiple types, stacking support, auto-dismiss, and smooth
+                            animations.
                         </p>
                         <div class="docs-example__demo">
                             <div x-data="TutorCore.toast()">
                                 <div class="tutor-flex tutor-gap-2 tutor-flex-wrap">
-                                    <button @click="success('Operation completed successfully!')" class="tutor-btn tutor-btn--primary tutor-btn--small">Success Toast</button>
-                                    <button @click="error('Something went wrong!')" class="tutor-btn tutor-btn--secondary tutor-btn--small">Error Toast</button>
-                                    <button @click="warning('Please check your input!')" class="tutor-btn tutor-btn--outline tutor-btn--small">Warning Toast</button>
-                                    <button @click="info('Here is some information.')" class="tutor-btn tutor-btn--ghost tutor-btn--small">Info Toast</button>
+                                    <button @click="success('Operation completed successfully!')"
+                                        class="tutor-btn tutor-btn--primary tutor-btn--small">Success Toast</button>
+                                    <button @click="error('Something went wrong!')"
+                                        class="tutor-btn tutor-btn--secondary tutor-btn--small">Error Toast</button>
+                                    <button @click="warning('Please check your input!')"
+                                        class="tutor-btn tutor-btn--outline tutor-btn--small">Warning Toast</button>
+                                    <button @click="info('Here is some information.')"
+                                        class="tutor-btn tutor-btn--ghost tutor-btn--small">Info Toast</button>
                                 </div>
 
                                 <div class="tutor-toast-container">
                                     <template x-for="toast in toasts" :key="toast.id">
-                                        <div class="tutor-toast" 
-                                             :class="`tutor-toast--${toast.type}`"
-                                             x-transition:enter="transition ease-out duration-300"
-                                             x-transition:enter-start="opacity-0 transform translate-x-full"
-                                             x-transition:enter-end="opacity-100 transform translate-x-0"
-                                             x-transition:leave="transition ease-in duration-200"
-                                             x-transition:leave-start="opacity-100 transform translate-x-0"
-                                             x-transition:leave-end="opacity-0 transform translate-x-full">
+                                        <div class="tutor-toast" :class="`tutor-toast--${toast.type}`"
+                                            x-transition:enter="transition ease-out duration-300"
+                                            x-transition:enter-start="opacity-0 transform translate-x-full"
+                                            x-transition:enter-end="opacity-100 transform translate-x-0"
+                                            x-transition:leave="transition ease-in duration-200"
+                                            x-transition:leave-start="opacity-100 transform translate-x-0"
+                                            x-transition:leave-end="opacity-0 transform translate-x-full">
                                             <span x-text="toast.message"></span>
-                                            <button @click="remove(toast.id)" class="tutor-toast__close">&times;</button>
+                                            <button @click="remove(toast.id)"
+                                                class="tutor-toast__close">&times;</button>
                                         </div>
                                     </template>
                                 </div>
@@ -1379,35 +1475,44 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                     <div class="docs-example">
                         <h2 class="docs-example__title">Accordion</h2>
                         <p class="docs-example__description">
-                            Accordion component with single or multiple panel support, smooth collapse animations, and configurable default states.
+                            Accordion component with single or multiple panel support, smooth collapse animations, and
+                            configurable default states.
                         </p>
                         <div class="docs-example__demo">
-                            <div x-data="TutorCore.accordion({ multiple: false, defaultOpen: [0] })" class="tutor-accordion">
+                            <div x-data="TutorCore.accordion({ multiple: false, defaultOpen: [0] })"
+                                class="tutor-accordion">
                                 <div class="tutor-accordion__item">
                                     <button @click="toggle(0)" class="tutor-accordion__trigger">
                                         <span class="tutor-font-medium">Getting Started</span>
-                                        <span :class="{ 'tutor-rotate-180': isOpen(0) }" class="tutor-transition-transform">▼</span>
+                                        <span :class="{ 'tutor-rotate-180': isOpen(0) }"
+                                            class="tutor-transition-transform">▼</span>
                                     </button>
                                     <div x-show="isOpen(0)" x-collapse class="tutor-accordion__content">
-                                        <p class="tutor-p1">This panel contains information about getting started with the design system. It includes setup instructions and basic usage examples.</p>
+                                        <p class="tutor-p1">This panel contains information about getting started with
+                                            the design system. It includes setup instructions and basic usage examples.
+                                        </p>
                                     </div>
                                 </div>
                                 <div class="tutor-accordion__item">
                                     <button @click="toggle(1)" class="tutor-accordion__trigger">
                                         <span class="tutor-font-medium">Advanced Features</span>
-                                        <span :class="{ 'tutor-rotate-180': isOpen(1) }" class="tutor-transition-transform">▼</span>
+                                        <span :class="{ 'tutor-rotate-180': isOpen(1) }"
+                                            class="tutor-transition-transform">▼</span>
                                     </button>
                                     <div x-show="isOpen(1)" x-collapse class="tutor-accordion__content">
-                                        <p class="tutor-p1">This panel covers advanced features like theming, RTL support, and custom component development.</p>
+                                        <p class="tutor-p1">This panel covers advanced features like theming, RTL
+                                            support, and custom component development.</p>
                                     </div>
                                 </div>
                                 <div class="tutor-accordion__item">
                                     <button @click="toggle(2)" class="tutor-accordion__trigger">
                                         <span class="tutor-font-medium">Best Practices</span>
-                                        <span :class="{ 'tutor-rotate-180': isOpen(2) }" class="tutor-transition-transform">▼</span>
+                                        <span :class="{ 'tutor-rotate-180': isOpen(2) }"
+                                            class="tutor-transition-transform">▼</span>
                                     </button>
                                     <div x-show="isOpen(2)" x-collapse class="tutor-accordion__content">
-                                        <p class="tutor-p1">Learn about best practices for using the design system effectively in your projects.</p>
+                                        <p class="tutor-p1">Learn about best practices for using the design system
+                                            effectively in your projects.</p>
                                     </div>
                                 </div>
                             </div>
@@ -1444,7 +1549,8 @@ TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
                     <div class="docs-example">
                         <h2 class="docs-example__title">More Examples</h2>
                         <p class="docs-example__description">
-                            For more comprehensive examples and advanced usage patterns, visit the dedicated components page.
+                            For more comprehensive examples and advanced usage patterns, visit the dedicated components
+                            page.
                         </p>
                         <div style="text-align: center; margin: 2rem 0;">
                             <a href="components.html" class="tutor-btn tutor-btn--primary tutor-btn--large">
@@ -1855,7 +1961,6 @@ document.documentElement.setAttribute('data-theme', theme);</code></pre>
     </div>
 
     <!-- Scripts -->
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="../../js/tutor-core.js"></script>
     <script src="./assets/docs.js"></script>
 </body>
