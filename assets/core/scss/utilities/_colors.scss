@@ -1,10 +1,8 @@
 // Color Utilities
 // Background, border, and text color utilities with theme awareness
 
-@use '../tokens/colors' as *;
-@use '../tokens/radius' as *;
-@use '../tokens/breakpoints' as *;
-@use '../mixins/utilities' as *;
+@use '../tokens' as *;
+@use '../mixins' as *;
 
 // Background colors
 .tutor-bg-transparent {

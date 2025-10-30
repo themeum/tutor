@@ -2,9 +2,7 @@
 // Logical direction utilities and RTL-specific components
 // Note: Core utilities (ml, mr, pl, pr, text-left, etc.) are now RTL-aware by default
 
-@use '../tokens/spacing' as *;
-@use '../tokens/radius' as *;
-@use '../tokens/breakpoints' as *;
+@use '../tokens' as *;
 
 // =============================================================================
 // LOGICAL DIRECTION UTILITIES (Semantic alternatives to physical directions)

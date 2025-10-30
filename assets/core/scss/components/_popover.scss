@@ -1,7 +1,7 @@
 // Popover Component
 // RTL-aware popover positioning and styling with collision detection
 
-@use '../mixins/layout' as *;
+@use '../mixins' as *;
 @use '../mixins/rtl' as rtl;
 
 .tutor-popover {

@@ -1,8 +1,7 @@
 // Card Mixins
 // Reusable card styles with elevation and variants
 
-@use '../tokens/spacing' as *;
-@use '../tokens/radius' as *;
+@use '../tokens/' as *;
 @use 'layout' as *;
 
 @mixin tutor-card-base {

@@ -1,12 +1,8 @@
 // Form Components
 // Base form styles using mixins
 
-@use '../tokens/spacing' as *;
-@use '../tokens/typography' as *;
-@use '../tokens/radius' as *;
-@use '../mixins/forms' as *;
-@use '../mixins/rtl' as *;
-@use '../mixins/utilities' as *;
+@use '../tokens' as *;
+@use '../mixins' as *;
 
 .tutor-form-group {
   @include tutor-form-group;

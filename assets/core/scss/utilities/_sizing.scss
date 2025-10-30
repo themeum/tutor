@@ -1,8 +1,7 @@
 // Sizing Utilities
 // Width, height, and sizing utilities
 
-@use '../tokens/spacing' as *;
-@use '../tokens/breakpoints' as *;
+@use '../tokens' as *;
 
 // Width utilities
 .tutor-w-0 {

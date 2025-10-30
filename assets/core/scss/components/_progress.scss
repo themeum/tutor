@@ -1,10 +1,8 @@
 // Progress Components
 // Progress bars, loading indicators, and completion tracking
 
-@use '../tokens/spacing' as *;
-@use '../tokens/typography' as *;
-@use '../tokens/radius' as *;
-@use '../mixins/layout' as *;
+@use '../tokens' as *;
+@use '../mixins' as *;
 
 // Progress bar
 .tutor-progress {

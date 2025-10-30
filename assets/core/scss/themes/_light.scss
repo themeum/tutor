@@ -1,8 +1,7 @@
 // Light Theme
 // Default theme with light color palette
 
-@use '../tokens/colors' as *;
-@use '../tokens/typography' as *;
+@use '../tokens' as *;
 
 :root,
 [data-theme="light"] {
@@ -142,7 +141,7 @@
   // TYPOGRAPHY TOKENS
   // =============================================================================
   
-  --tutor-font-weight-weak: #{$tutor-font-weight-weak};
+  --tutor-font-weight-regular: #{$tutor-font-weight-regular};
   --tutor-font-weight-medium: #{$tutor-font-weight-medium};
   --tutor-font-weight-semibold: #{$tutor-font-weight-semi-strong};
   --tutor-font-weight-semi-strong: #{$tutor-font-weight-semi-strong};

@@ -2,8 +2,7 @@
 // Reusable layout utilities for flexbox, grid, and positioning
 
 @use 'sass:map';
-@use '../tokens/breakpoints' as *;
-@use '../tokens/spacing' as *;
+@use '../tokens' as *;
 
 @mixin tutor-flex($direction: row, $align: stretch, $justify: flex-start, $wrap: nowrap) {
   display: flex;

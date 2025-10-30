@@ -1,9 +1,7 @@
 // Form Mixins
 // Reusable form element styles
 
-@use '../tokens/spacing' as *;
-@use '../tokens/typography' as *;
-@use '../tokens/radius' as *;
+@use '../tokens' as *;
 @use 'rtl' as *;
 @use 'utilities' as *;
 @use 'buttons' as *;

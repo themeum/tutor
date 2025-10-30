@@ -1,24 +1,25 @@
 // Button Component
 // Base button styles using mixins with RTL support
 
-@use '../tokens/spacing' as *;
-@use '../mixins/buttons' as *;
-@use '../mixins/cards' as *;
+@use '../tokens' as *;
+@use '../mixins' as *;
 @use '../mixins/rtl' as rtl;
 
 .tutor-btn {
   @include tutor-button-base;
   @include tutor-button-variant(primary);
   @include tutor-button-size(medium);
-  
+
   // RTL-aware icon spacing
   .tutor-icon {
     &:first-child {
       @include rtl.icon-start();
     }
+
     &:last-child {
       @include rtl.icon-end();
     }
+
     &:only-child {
       margin: 0;
     }
@@ -69,7 +70,7 @@
 // Button group
 .tutor-btn-group {
   @include tutor-button-group(horizontal);
-  
+
   &.tutor-btn-group-vertical {
     @include tutor-button-group(vertical);
   }
@@ -79,11 +80,11 @@
 .tutor-btn-icon {
   padding: $tutor-spacing-3;
   min-width: auto;
-  
+
   &.tutor-btn-small {
     padding: $tutor-spacing-2;
   }
-  
+
   &.tutor-btn-large {
     padding: $tutor-spacing-4;
   }
