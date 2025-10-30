@@ -795,8 +795,8 @@ class OrderModel {
 	 * @return bool
 	 */
 	public function update_order( $order_id, array $data, array $order_items = array() ) {
-		$order_id    = is_array( $order_id ) ? $order_id : array( $order_id );
-		$order_id    = QueryHelper::prepare_in_clause( $order_id );
+		$order_id = is_array( $order_id ) ? $order_id : array( $order_id );
+		$order_id = QueryHelper::prepare_in_clause( $order_id );
 
 		try {
 			QueryHelper::update_where_in(
@@ -1858,13 +1858,14 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		<?php elseif ( $show_pay_button ) :
+			<?php
+		elseif ( $show_pay_button ) :
 
 			if ( $self->validate_payment_method( $order ) ) :
 				echo $self->link_button( $order->id );
-			else : 
-				ob_start();				
-			?>
+			else :
+				ob_start();
+				?>
 				<form method="post">
 					<?php tutor_nonce_field(); ?>
 
@@ -1875,7 +1876,8 @@ class OrderModel {
 						<?php esc_html_e( 'Pay', 'tutor' ); ?>
 					</button>				
 				</form>
-			<?php endif;
+				<?php
+			endif;
 			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
 		endif;
 	}
@@ -2127,9 +2129,9 @@ class OrderModel {
 	 * Validate the selected payment method and redirect to checkout if invalid.
 	 *
 	 * @since 3.9.2
-	 * 
+	 *
 	 * @param object $order_data      The current order data.
-	 * 
+	 *
 	 * @return bool
 	 */
 	private function validate_payment_method( $order_data ): bool {
@@ -2152,7 +2154,7 @@ class OrderModel {
 	 */
 	private function link_button( $order_id ): string {
 
-		$page_id = (int) tutor_utils()->get_option( CheckoutController::PAGE_ID_OPTION_NAME );
+		$page_id      = (int) tutor_utils()->get_option( CheckoutController::PAGE_ID_OPTION_NAME );
 		$checkout_url = add_query_arg( array( 'order_id' => $order_id ), get_permalink( $page_id ) );
 
 		return sprintf(

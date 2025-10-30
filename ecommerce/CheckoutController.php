@@ -568,7 +568,7 @@ class CheckoutController {
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 		$order_id        = Input::get( 'order_id', 0, Input::TYPE_INT );
 
-		if ( $order_id  && ! OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() ) ) {
+		if ( $order_id && ! OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id() ) ) {
 			array_push( $errors, __( 'Invalid order', 'tutor' ) );
 		}
 
