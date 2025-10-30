@@ -1,0 +1,106 @@
+// Button Component
+// Base button styles using mixins with RTL support
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+@use '../mixins/rtl' as rtl;
+
+.tutor-btn {
+  @include tutor-button-base;
+  @include tutor-button-size(medium);
+}
+
+// Button variants
+.tutor-btn-primary {
+  @include tutor-button-variant(primary);
+}
+
+.tutor-btn-primary-soft {
+  @include tutor-button-variant(primary-soft);
+}
+
+.tutor-btn-destructive {
+  @include tutor-button-variant(destructive);
+}
+
+.tutor-btn-destructive-soft {
+  @include tutor-button-variant(destructive-soft);
+}
+
+.tutor-btn-secondary {
+  @include tutor-button-variant(secondary);
+}
+
+.tutor-btn-outline {
+  @include tutor-button-variant(outline);
+}
+
+.tutor-btn-ghost {
+  @include tutor-button-variant(ghost);
+}
+
+.tutor-btn-link {
+  @include tutor-button-variant(link);
+}
+
+// Button sizes
+.tutor-btn-x-small {
+  @include tutor-button-size(x-small);
+}
+
+.tutor-btn-small {
+  @include tutor-button-size(small);
+}
+
+.tutor-btn-medium {
+  @include tutor-button-size(medium);
+}
+
+.tutor-btn-large {
+  @include tutor-button-size(large);
+}
+
+// Button states
+.tutor-btn-loading {
+  @include tutor-button-loading;
+}
+
+// Button with full width
+.tutor-btn-block {
+  width: 100%;
+  justify-content: center;
+}
+
+// Button group
+.tutor-btn-group {
+  @include tutor-button-group(horizontal);
+
+  &.tutor-btn-group-vertical {
+    @include tutor-button-group(vertical);
+  }
+}
+
+// Icon-only button
+.tutor-btn-icon {
+  padding: 10px;
+  min-width: 40px;
+  min-height: 40px;
+
+  &.tutor-btn-x-small {
+    padding: $tutor-spacing-4;
+    min-width: 32px;
+    min-height: 32px;
+  }
+
+  &.tutor-btn-small {
+    padding: $tutor-spacing-4;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  &.tutor-btn-large {
+    padding: 14px;
+    min-width: 48px;
+    min-height: 48px;
+  }
+}

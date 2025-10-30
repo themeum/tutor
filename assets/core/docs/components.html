@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components - Tutor Design System</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <link rel="stylesheet" href="./assets/docs.css">
+    <style>
+        .component-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .component-demo {
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .component-demo__header {
+            padding: 1rem 1.5rem;
+            background: var(--tutor-surface-l2);
+            border-bottom: 1px solid var(--tutor-border-idle);
+        }
+
+        .component-demo__title {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--tutor-text-primary);
+        }
+
+        .component-demo__body {
+            padding: 1.5rem;
+        }
+
+        .component-demo__example {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--tutor-surface-base);
+            border: 1px dashed var(--tutor-border-brand);
+            border-radius: 8px;
+        }
+
+        .interactive-demo {
+            margin: 2rem 0;
+            padding: 2rem;
+            background: var(--tutor-surface-l1);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 12px;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-output {
+            padding: 1.5rem;
+            background: var(--tutor-surface-base);
+            border: 1px solid var(--tutor-border-idle);
+            border-radius: 8px;
+            min-height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="tutor-container" x-data="componentShowcase()">
+        <!-- Header -->
+        <header style="text-align: center; margin: 2rem 0;">
+            <h1 class="tutor-h1">Component Showcase</h1>
+            <p class="tutor-p1 tutor-text-secondary">Interactive examples of all Tutor Design System components</p>
+
+            <div class="tutor-flex tutor-gap-3 tutor-justify-center tutor-mt-4">
+                <button onclick="toggleTheme()" class="tutor-btn tutor-btn--outline tutor-btn--small">
+                    🌓 Toggle Theme
+                </button>
+                <button onclick="toggleRTL()" class="tutor-btn tutor-btn--outline tutor-btn--small">
+                    🔄 Toggle RTL
+                </button>
+                <a href="index.html" class="tutor-btn tutor-btn--ghost tutor-btn--small">
+                    ← Back to Docs
+                </a>
+            </div>
+        </header>
+
+        <!-- Button Components -->
+        <section class="tutor-mb-8">
+            <h2 class="tutor-h2">Buttons</h2>
+
+            <div class="component-showcase">
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Button Variants</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-flex tutor-gap-3 tutor-flex-wrap">
+                                <button class="tutor-btn tutor-btn-primary">Primary</button>
+                                <button class="tutor-btn tutor-btn-secondary">Secondary</button>
+                                <button class="tutor-btn tutor-btn-outline">Outline</button>
+                                <button class="tutor-btn tutor-btn-ghost">Ghost</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Button Sizes</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-small">Small</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-medium">Medium</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-large">Large</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Button States</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-flex tutor-gap-3" style="flex-wrap: wrap;">
+                                <button class="tutor-btn tutor-btn-primary">Normal</button>
+                                <button class="tutor-btn tutor-btn-primary" disabled>Disabled</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-loading">Loading</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Card Components -->
+        <section class="tutor-mb-8">
+            <h2 class="tutor-h2">Cards</h2>
+
+            <div class="component-showcase">
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Basic Card</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-card">
+                                <div class="tutor-card__header">
+                                    <h4 class="tutor-card__title">Card Title</h4>
+                                    <p class="tutor-card__subtitle">This is a subtitle</p>
+                                </div>
+                                <div class="tutor-card__body">
+                                    <p class="tutor-p2">This is the card content. It can contain any HTML elements.</p>
+                                </div>
+                                <div class="tutor-card__footer">
+                                    <button class="tutor-btn tutor-btn--primary tutor-btn--small">Action</button>
+                                    <button class="tutor-btn tutor-btn--ghost tutor-btn--small">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Elevated Card</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-card tutor-card--elevated">
+                                <div class="tutor-card__body">
+                                    <h4 style="margin-top: 0;">Elevated Card</h4>
+                                    <p class="tutor-p2">This card has more elevation for emphasis.</p>
+                                    <button class="tutor-btn tutor-btn--outline tutor-btn--small">Learn More</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Interactive Card</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-card tutor-card--interactive" style="cursor: pointer;">
+                                <div class="tutor-card__body">
+                                    <h4 style="margin-top: 0;">Interactive Card</h4>
+                                    <p class="tutor-p2">This card responds to hover and click interactions.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Form Components -->
+        <section class="tutor-mb-8">
+            <h2 class="tutor-h2">Form Elements</h2>
+
+            <div class="component-showcase">
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Input Fields</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-form-group">
+                                <label class="tutor-label" for="demo-name">Full Name</label>
+                                <input type="text" id="demo-name" class="tutor-input" placeholder="Enter your name">
+                                <p class="tutor-help-text">This field is required</p>
+                            </div>
+
+                            <div class="tutor-form-group">
+                                <label class="tutor-label" for="demo-email">Email Address</label>
+                                <input type="email" id="demo-email" class="tutor-input" placeholder="Enter your email">
+                            </div>
+
+                            <div class="tutor-form-group">
+                                <label class="tutor-label" for="demo-message">Message</label>
+                                <textarea id="demo-message" class="tutor-textarea" placeholder="Enter your message"
+                                    rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Form States</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-form-group">
+                                <label class="tutor-label">Normal State</label>
+                                <input type="text" class="tutor-input" placeholder="Normal input">
+                            </div>
+
+                            <div class="tutor-form-group">
+                                <label class="tutor-label">Error State</label>
+                                <input type="text" class="tutor-input tutor-input--error" placeholder="Error input">
+                                <p class="tutor-error-text">This field has an error</p>
+                            </div>
+
+                            <div class="tutor-form-group">
+                                <label class="tutor-label">Success State</label>
+                                <input type="text" class="tutor-input tutor-input--success" placeholder="Success input">
+                                <p class="tutor-success-text">This field is valid</p>
+                            </div>
+
+                            <div class="tutor-form-group">
+                                <label class="tutor-label">Disabled State</label>
+                                <input type="text" class="tutor-input" placeholder="Disabled input" disabled>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alpine.js Components -->
+        <section class="tutor-mb-8">
+            <h2 class="tutor-h2">Alpine.js Components</h2>
+
+            <!-- Dropdown Demo -->
+            <div class="interactive-demo">
+                <h3 class="tutor-h3">Dropdown Component</h3>
+                <p class="tutor-p2 tutor-text-secondary">Interactive dropdown with RTL support and keyboard navigation.
+                </p>
+
+                <div class="demo-output">
+                    <div x-data="TutorCore.dropdown({ placement: 'bottom-start', offset: 8 })" class="tutor-dropdown">
+                        <button @click="toggle()" class="tutor-btn tutor-btn--primary">
+                            Options <span x-text="open ? '▲' : '▼'"></span>
+                        </button>
+                        <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="transform opacity-0 scale-95"
+                            x-transition:enter-end="transform opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="transform opacity-100 scale-100"
+                            x-transition:leave-end="transform opacity-0 scale-95" @click.outside="close()"
+                            class="tutor-dropdown__menu"
+                            style="position: absolute; top: 100%; left: 0; margin-top: 8px; background: var(--tutor-surface-l1); border: 1px solid var(--tutor-border-idle); border-radius: 8px; padding: 0.5rem 0; min-width: 200px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); z-index: 50;">
+                            <a href="#" @click.prevent="close()" class="tutor-dropdown__item"
+                                style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-primary); text-decoration: none; transition: background 0.2s;">Profile</a>
+                            <a href="#" @click.prevent="close()" class="tutor-dropdown__item"
+                                style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-primary); text-decoration: none; transition: background 0.2s;">Settings</a>
+                            <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid var(--tutor-border-idle);">
+                            <a href="#" @click.prevent="close()" class="tutor-dropdown__item"
+                                style="display: block; padding: 0.5rem 1rem; color: var(--tutor-text-critical); text-decoration: none; transition: background 0.2s;">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Demo -->
+            <div class="interactive-demo">
+                <h3 class="tutor-h3">Modal Component</h3>
+                <p class="tutor-p2 tutor-text-secondary">Modal with focus management and accessibility features.</p>
+
+                <div class="demo-output">
+                    <div x-data="TutorCore.modal({ closable: true, backdrop: true, keyboard: true })">
+                        <button @click="show()" class="tutor-btn tutor-btn--primary">Open Modal</button>
+
+                        <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0" class="tutor-modal"
+                            style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;">
+                            <div class="tutor-modal__backdrop" @click="hide()"
+                                style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5);">
+                            </div>
+                            <div class="tutor-modal__content" @keydown.escape="hide()"
+                                style="position: relative; background: var(--tutor-surface-l1); border-radius: 12px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);">
+                                <div class="tutor-modal__header"
+                                    style="padding: 1.5rem; border-bottom: 1px solid var(--tutor-border-idle); display: flex; align-items: center; justify-content: space-between;">
+                                    <h3 style="margin: 0; color: var(--tutor-text-primary);">Modal Title</h3>
+                                    <button @click="hide()" class="tutor-modal__close"
+                                        style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--tutor-text-secondary);">&times;</button>
+                                </div>
+                                <div class="tutor-modal__body" style="padding: 1.5rem;">
+                                    <p style="margin: 0; color: var(--tutor-text-primary);">This is a modal dialog. You
+                                        can close it by clicking the X button, pressing Escape, or clicking outside.</p>
+                                </div>
+                                <div class="tutor-modal__footer"
+                                    style="padding: 1.5rem; border-top: 1px solid var(--tutor-border-idle); display: flex; gap: 1rem; justify-content: flex-end;">
+                                    <button @click="hide()" class="tutor-btn tutor-btn--secondary">Cancel</button>
+                                    <button @click="hide()" class="tutor-btn tutor-btn--primary">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Demo -->
+            <div class="interactive-demo">
+                <h3 class="tutor-h3">Tabs Component</h3>
+                <p class="tutor-p2 tutor-text-secondary">Tab component with keyboard navigation and ARIA support.</p>
+
+                <div class="demo-output">
+                    <div x-data="TutorCore.tabs({ defaultTab: 0 })" class="tutor-tabs">
+                        <div class="tutor-tabs__nav"
+                            style="display: flex; border-bottom: 1px solid var(--tutor-border-idle); margin-bottom: 1rem;">
+                            <button @click="setTab(0)" :class="{'active': isActive(0)}" class="tutor-tab"
+                                style="padding: 0.75rem 1.5rem; border: none; background: none; color: var(--tutor-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;"
+                                :style="isActive(0) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-actions-brand-primary);' : ''">
+                                Overview
+                            </button>
+                            <button @click="setTab(1)" :class="{'active': isActive(1)}" class="tutor-tab"
+                                style="padding: 0.75rem 1.5rem; border: none; background: none; color: var(--tutor-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;"
+                                :style="isActive(1) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-actions-brand-primary);' : ''">
+                                Details
+                            </button>
+                            <button @click="setTab(2)" :class="{'active': isActive(2)}" class="tutor-tab"
+                                style="padding: 0.75rem 1.5rem; border: none; background: none; color: var(--tutor-text-secondary); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;"
+                                :style="isActive(2) ? 'color: var(--tutor-text-brand); border-bottom-color: var(--tutor-actions-brand-primary);' : ''">
+                                Reviews
+                            </button>
+                        </div>
+                        <div class="tutor-tabs__content">
+                            <div x-show="isActive(0)" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform translate-x-4"
+                                x-transition:enter-end="opacity-100 transform translate-x-0" class="tutor-tab-panel">
+                                <h4 style="margin-top: 0;">Overview</h4>
+                                <p>This is the overview content. It provides a general introduction to the topic.</p>
+                            </div>
+                            <div x-show="isActive(1)" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform translate-x-4"
+                                x-transition:enter-end="opacity-100 transform translate-x-0" class="tutor-tab-panel">
+                                <h4 style="margin-top: 0;">Details</h4>
+                                <p>Here are the detailed specifications and technical information.</p>
+                            </div>
+                            <div x-show="isActive(2)" x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 transform translate-x-4"
+                                x-transition:enter-end="opacity-100 transform translate-x-0" class="tutor-tab-panel">
+                                <h4 style="margin-top: 0;">Reviews</h4>
+                                <p>Customer reviews and feedback will be displayed here.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toast Demo -->
+            <div class="interactive-demo">
+                <h3 class="tutor-h3">Toast Notifications</h3>
+                <p class="tutor-p2 tutor-text-secondary">Toast notification system with stacking and auto-dismiss.</p>
+
+                <div class="demo-output">
+                    <div x-data="TutorCore.toast()">
+                        <div class="tutor-flex tutor-gap-2" style="flex-wrap: wrap;">
+                            <button @click="success('Operation completed successfully!')"
+                                class="tutor-btn tutor-btn--primary tutor-btn--small">
+                                Success Toast
+                            </button>
+                            <button @click="error('Something went wrong!')"
+                                class="tutor-btn tutor-btn--secondary tutor-btn--small">
+                                Error Toast
+                            </button>
+                            <button @click="warning('Please check your input!')"
+                                class="tutor-btn tutor-btn--outline tutor-btn--small">
+                                Warning Toast
+                            </button>
+                            <button @click="info('Here is some information.')"
+                                class="tutor-btn tutor-btn--ghost tutor-btn--small">
+                                Info Toast
+                            </button>
+                        </div>
+
+                        <div class="tutor-toast-container"
+                            style="position: fixed; top: 1rem; right: 1rem; z-index: 1080; pointer-events: none;">
+                            <template x-for="toast in toasts" :key="toast.id">
+                                <div class="tutor-toast" :class="`tutor-toast--${toast.type}`"
+                                    x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0 transform translate-x-full"
+                                    x-transition:enter-end="opacity-100 transform translate-x-0"
+                                    x-transition:leave="transition ease-in duration-200"
+                                    x-transition:leave-start="opacity-100 transform translate-x-0"
+                                    x-transition:leave-end="opacity-0 transform translate-x-full"
+                                    style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 1rem; margin-bottom: 0.5rem; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); pointer-events: auto; min-width: 300px;"
+                                    :style="getToastStyles(toast.type)">
+                                    <span x-text="toast.message" style="flex: 1;"></span>
+                                    <button @click="remove(toast.id)" class="tutor-toast__close"
+                                        style="background: none; border: none; font-size: 1.25rem; cursor: pointer; margin-left: 0.5rem; opacity: 0.7;">&times;</button>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography Showcase -->
+        <section class="tutor-mb-8">
+            <h2 class="tutor-h2">Typography</h2>
+
+            <div class="interactive-demo">
+                <h3 class="tutor-h3">Typography Scale</h3>
+                <p class="tutor-p2 tutor-text-secondary">Complete typography system with consistent spacing and line
+                    heights.</p>
+
+                <div class="demo-output">
+                    <h1 class="tutor-h1">Heading 1 (40px)</h1>
+                    <h2 class="tutor-h2">Heading 2 (32px)</h2>
+                    <h3 class="tutor-h3">Heading 3 (24px)</h3>
+                    <h4 class="tutor-h4">Heading 4 (20px)</h4>
+                    <h5 class="tutor-h5">Heading 5 (18px)</h5>
+                    <p class="tutor-p1">Paragraph 1 (16px) - This is the default paragraph size for body text with
+                        optimal line height for readability.</p>
+                    <p class="tutor-p2">Paragraph 2 (14px) - This is smaller text for secondary content and supporting
+                        information.</p>
+                    <p class="tutor-p3">Paragraph 3 (12px) - This is the smallest text size for captions, labels, and
+                        fine print.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Utility Classes -->
+        <section class="tutor-mb-8">
+            <h2 class="tutor-h2">Utility Classes</h2>
+
+            <div class="component-showcase">
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Spacing Utilities</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div style="background: var(--tutor-surface-l2); padding: 1rem;">
+                                <div class="tutor-p-4"
+                                    style="background: var(--tutor-surface-l1); margin-bottom: 0.5rem;">Padding 4 (8px)
+                                </div>
+                                <div class="tutor-p-6"
+                                    style="background: var(--tutor-surface-l1); margin-bottom: 0.5rem;">Padding 6 (16px)
+                                </div>
+                                <div class="tutor-p-8" style="background: var(--tutor-surface-l1);">Padding 8 (24px)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Color Utilities</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <p class="tutor-text-primary">Primary Text</p>
+                            <p class="tutor-text-secondary">Secondary Text</p>
+                            <p class="tutor-text-brand">Brand Text</p>
+                            <p class="tutor-text-success">Success Text</p>
+                            <p class="tutor-text-warning">Warning Text</p>
+                            <p class="tutor-text-error">Error Text</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="component-demo">
+                    <div class="component-demo__header">
+                        <h3 class="component-demo__title">Layout Utilities</h3>
+                    </div>
+                    <div class="component-demo__body">
+                        <div class="component-demo__example">
+                            <div class="tutor-flex tutor-flex-between tutor-mb-3"
+                                style="background: var(--tutor-surface-l2); padding: 1rem;">
+                                <span>Left</span>
+                                <span>Right</span>
+                            </div>
+                            <div class="tutor-flex tutor-flex-center tutor-mb-3"
+                                style="background: var(--tutor-surface-l2); padding: 1rem;">
+                                <span>Centered</span>
+                            </div>
+                            <div class="tutor-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div style="background: var(--tutor-surface-l2); padding: 1rem; text-align: center;">
+                                    Grid 1</div>
+                                <div style="background: var(--tutor-surface-l2); padding: 1rem; text-align: center;">
+                                    Grid 2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Scripts -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="../../js/tutor-core.js"></script>
+    <script>
+        function componentShowcase() {
+            return {
+                getToastStyles(type) {
+                    const styles = {
+                        success: 'background: var(--tutor-actions-success-secondary); color: var(--tutor-text-success); border: 1px solid var(--tutor-actions-success-primary);',
+                        error: 'background: var(--tutor-actions-critical-secondary); color: var(--tutor-text-critical); border: 1px solid var(--tutor-actions-critical-primary);',
+                        warning: 'background: var(--tutor-actions-warning-secondary); color: var(--tutor-text-warning); border: 1px solid var(--tutor-actions-warning-primary);',
+                        info: 'background: var(--tutor-actions-brand-tertiary); color: var(--tutor-text-brand); border: 1px solid var(--tutor-actions-brand-primary);'
+                    };
+                    return styles[type] || styles.info;
+                }
+            };
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+        }
+
+        function toggleRTL() {
+            const html = document.documentElement;
+            const currentDir = html.getAttribute('dir');
+            const newDir = currentDir === 'ltr' ? 'rtl' : 'ltr';
+            html.setAttribute('dir', newDir);
+        }
+    </script>
+</body>
+
+</html>

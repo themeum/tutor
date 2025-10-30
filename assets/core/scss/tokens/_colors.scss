@@ -1,0 +1,205 @@
+// Design Tokens - Colors
+// Primitive color palette and semantic color maps
+
+// =============================================================================
+// PRIMITIVE COLORS
+// =============================================================================
+
+// Brand Colors
+$tutor-brand-100: #f6f8fe;
+$tutor-brand-200: #e4ebfc;
+$tutor-brand-300: #dbe4fa;
+$tutor-brand-400: #a4bcf4;
+$tutor-brand-500: #4979e8;
+$tutor-brand-600: #3e64de;
+$tutor-brand-700: #2b49ca;
+$tutor-brand-800: #293da4;
+$tutor-brand-900: #263782;
+$tutor-brand-950: #1c234f;
+
+// Gray Colors
+$tutor-gray-1: #ffffff;
+$tutor-gray-10: #fcfcfc;
+$tutor-gray-25: #fafafa;
+$tutor-gray-50: #f5f5f6;
+$tutor-gray-100: #f0f1f1;
+$tutor-gray-200: #ececed;
+$tutor-gray-300: #cecfd2;
+$tutor-gray-400: #94969c;
+$tutor-gray-500: #85888e;
+$tutor-gray-600: #61646c;
+$tutor-gray-700: #333741;
+$tutor-gray-750: #2d3039;
+$tutor-gray-800: #1f242f;
+$tutor-gray-900: #161b26;
+$tutor-gray-950: #0c111d;
+
+// Success Colors
+$tutor-success-25: #fafef5;
+$tutor-success-50: #f3fee7;
+$tutor-success-100: #e3fbcc;
+$tutor-success-200: #d0f8ab;
+$tutor-success-300: #a6ef67;
+$tutor-success-400: #85e13a;
+$tutor-success-500: #66c61c;
+$tutor-success-600: #4ca30d;
+$tutor-success-700: #3b7c0f;
+$tutor-success-800: #326212;
+$tutor-success-900: #2b5314;
+$tutor-success-950: #15290a;
+
+// Warning Colors
+$tutor-warning-25: #fffcf5;
+$tutor-warning-50: #fffaeb;
+$tutor-warning-100: #fef0c7;
+$tutor-warning-200: #fedf89;
+$tutor-warning-300: #fec84b;
+$tutor-warning-400: #fdb022;
+$tutor-warning-500: #f79009;
+$tutor-warning-600: #dc6803;
+$tutor-warning-700: #b54708;
+$tutor-warning-800: #93370d;
+$tutor-warning-900: #7a2e0e;
+$tutor-warning-950: #4e1d09;
+
+// Error Colors
+$tutor-error-25: #fffbfa;
+$tutor-error-50: #fef3f2;
+$tutor-error-100: #fee4e2;
+$tutor-error-200: #fecdca;
+$tutor-error-300: #fda29b;
+$tutor-error-400: #f97066;
+$tutor-error-500: #f04438;
+$tutor-error-600: #d92d20;
+$tutor-error-700: #b42318;
+$tutor-error-800: #912018;
+$tutor-error-900: #7a271a;
+$tutor-error-950: #55160c;
+
+// Yellow Colors
+$tutor-yellow-25: #fefdf0;
+$tutor-yellow-50: #fefbe8;
+$tutor-yellow-100: #fef7c3;
+$tutor-yellow-200: #feee95;
+$tutor-yellow-300: #fde272;
+$tutor-yellow-400: #fac515;
+$tutor-yellow-500: #eaaa08;
+$tutor-yellow-600: #ca8504;
+$tutor-yellow-700: #a15c07;
+$tutor-yellow-800: #854a0e;
+$tutor-yellow-900: #713b12;
+$tutor-yellow-950: #542c0d;
+
+// Exception Colors
+$tutor-exception-1: #00acc2;
+$tutor-exception-2: #ee0097;
+$tutor-exception-2-secondary: #fff0f9;
+$tutor-exception-2-tertiary: #330020;
+$tutor-exception-3: #cbfd78;
+$tutor-exception-5: #9747ff;
+$tutor-exception-6: #f2e8ff;
+
+// =============================================================================
+// COLOR MAPS (for utility generation)
+// =============================================================================
+
+$tutor-brand-colors: (
+  100: $tutor-brand-100,
+  200: $tutor-brand-200,
+  300: $tutor-brand-300,
+  400: $tutor-brand-400,
+  500: $tutor-brand-500,
+  600: $tutor-brand-600,
+  700: $tutor-brand-700,
+  800: $tutor-brand-800,
+  900: $tutor-brand-900,
+  950: $tutor-brand-950
+);
+
+$tutor-gray-colors: (
+  1: $tutor-gray-1,
+  10: $tutor-gray-10,
+  25: $tutor-gray-25,
+  50: $tutor-gray-50,
+  100: $tutor-gray-100,
+  200: $tutor-gray-200,
+  300: $tutor-gray-300,
+  400: $tutor-gray-400,
+  500: $tutor-gray-500,
+  600: $tutor-gray-600,
+  700: $tutor-gray-700,
+  750: $tutor-gray-750,
+  800: $tutor-gray-800,
+  900: $tutor-gray-900,
+  950: $tutor-gray-950
+);
+
+$tutor-success-colors: (
+  25: $tutor-success-25,
+  50: $tutor-success-50,
+  100: $tutor-success-100,
+  200: $tutor-success-200,
+  300: $tutor-success-300,
+  400: $tutor-success-400,
+  500: $tutor-success-500,
+  600: $tutor-success-600,
+  700: $tutor-success-700,
+  800: $tutor-success-800,
+  900: $tutor-success-900,
+  950: $tutor-success-950
+);
+
+$tutor-warning-colors: (
+  25: $tutor-warning-25,
+  50: $tutor-warning-50,
+  100: $tutor-warning-100,
+  200: $tutor-warning-200,
+  300: $tutor-warning-300,
+  400: $tutor-warning-400,
+  500: $tutor-warning-500,
+  600: $tutor-warning-600,
+  700: $tutor-warning-700,
+  800: $tutor-warning-800,
+  900: $tutor-warning-900,
+  950: $tutor-warning-950
+);
+
+$tutor-error-colors: (
+  25: $tutor-error-25,
+  50: $tutor-error-50,
+  100: $tutor-error-100,
+  200: $tutor-error-200,
+  300: $tutor-error-300,
+  400: $tutor-error-400,
+  500: $tutor-error-500,
+  600: $tutor-error-600,
+  700: $tutor-error-700,
+  800: $tutor-error-800,
+  900: $tutor-error-900,
+  950: $tutor-error-950
+);
+
+$tutor-yellow-colors: (
+  25: $tutor-yellow-25,
+  50: $tutor-yellow-50,
+  100: $tutor-yellow-100,
+  200: $tutor-yellow-200,
+  300: $tutor-yellow-300,
+  400: $tutor-yellow-400,
+  500: $tutor-yellow-500,
+  600: $tutor-yellow-600,
+  700: $tutor-yellow-700,
+  800: $tutor-yellow-800,
+  900: $tutor-yellow-900,
+  950: $tutor-yellow-950
+);
+
+$tutor-exception-colors: (
+  1: $tutor-exception-1,
+  2: $tutor-exception-2,
+  2-secondary: $tutor-exception-2-secondary,
+  2-tertiary: $tutor-exception-2-tertiary,
+  3: $tutor-exception-3,
+  5: $tutor-exception-5,
+  6: $tutor-exception-6
+);

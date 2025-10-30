@@ -1,0 +1,47 @@
+// Tutor Design System - Main Entry Point
+// Single CSS file with all themes and RTL support
+
+// Import design tokens
+@use 'tokens';
+
+// Import themes
+@use 'themes';
+
+// Import mixins
+@use 'mixins';
+
+// Import base components
+@use 'components';
+
+// Import utilities
+@use 'utilities';
+
+// Base styles
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
+body {
+  margin: 0;
+  font-family: inherit;
+  line-height: inherit;
+  background-color: var(--tutor-surface-base);
+  color: var(--tutor-text-primary);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+[x-cloak] {
+  display: none !important;
+}

@@ -1,0 +1,229 @@
+// Modal Component
+// RTL-aware modal styling
+
+@use '../mixins/rtl' as rtl;
+
+.tutor-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--tutor-spacing-4, 8px);
+
+  &__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--tutor-surface-overlay);
+    backdrop-filter: blur(2px);
+  }
+
+  &__content {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    background-color: var(--tutor-surface-l1);
+    border-radius: var(--tutor-radius-lg, 8px);
+    box-shadow: var(--tutor-shadow-xl);
+    overflow: hidden;
+    
+    // RTL-aware text alignment
+    [dir="ltr"] & {
+      text-align: left;
+    }
+    [dir="rtl"] & {
+      text-align: right;
+    }
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--tutor-spacing-6, 16px);
+    border-bottom: 1px solid var(--tutor-border-idle);
+    
+    [dir="rtl"] & {
+      flex-direction: row-reverse;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--tutor-font-size-h4, 20px);
+    font-weight: var(--tutor-font-weight-semibold, 600);
+    color: var(--tutor-text-primary);
+    line-height: var(--tutor-line-height-h4, 28px);
+  }
+
+  &__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    background: none;
+    border-radius: var(--tutor-radius-sm, 4px);
+    color: var(--tutor-icon-idle);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    @include rtl.margin-start(var(--tutor-spacing-4, 8px));
+    
+    &:hover,
+    &:focus {
+      background-color: var(--tutor-surface-l2);
+      color: var(--tutor-icon-hover);
+      outline: none;
+    }
+    
+    .tutor-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  &__body {
+    padding: var(--tutor-spacing-6, 16px);
+    max-height: 60vh;
+    overflow-y: auto;
+    
+    p:first-child {
+      margin-top: 0;
+    }
+    
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--tutor-spacing-3, 6px);
+    padding: var(--tutor-spacing-6, 16px);
+    border-top: 1px solid var(--tutor-border-idle);
+    
+    [dir="ltr"] & {
+      justify-content: flex-end;
+    }
+    [dir="rtl"] & {
+      justify-content: flex-start;
+      flex-direction: row-reverse;
+    }
+  }
+
+  // Size variants
+  &--sm {
+    .tutor-modal__content {
+      max-width: 400px;
+    }
+  }
+
+  &--lg {
+    .tutor-modal__content {
+      max-width: 700px;
+    }
+  }
+
+  &--xl {
+    .tutor-modal__content {
+      max-width: 900px;
+    }
+  }
+
+  &--fullscreen {
+    padding: 0;
+    
+    .tutor-modal__content {
+      width: 100vw;
+      height: 100vh;
+      max-width: none;
+      max-height: none;
+      border-radius: 0;
+    }
+  }
+}
+
+// Animation classes for Alpine.js
+.tutor-modal {
+  &[x-cloak] {
+    display: none !important;
+  }
+  
+  // Fade animation for backdrop
+  &.tutor-modal-enter {
+    .tutor-modal__backdrop {
+      opacity: 0;
+    }
+    
+    .tutor-modal__content {
+      opacity: 0;
+      transform: scale(0.95) translateY(-20px);
+    }
+  }
+  
+  &.tutor-modal-enter-active {
+    .tutor-modal__backdrop {
+      opacity: 1;
+      transition: opacity 0.2s ease;
+    }
+    
+    .tutor-modal__content {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+  }
+  
+  &.tutor-modal-leave {
+    .tutor-modal__backdrop {
+      opacity: 1;
+    }
+    
+    .tutor-modal__content {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+  
+  &.tutor-modal-leave-active {
+    .tutor-modal__backdrop {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    
+    .tutor-modal__content {
+      opacity: 0;
+      transform: scale(0.95) translateY(-20px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .tutor-modal {
+    padding: var(--tutor-spacing-2, 4px);
+    
+    &__content {
+      max-height: 95vh;
+    }
+    
+    &__header,
+    &__body,
+    &__footer {
+      padding: var(--tutor-spacing-4, 8px);
+    }
+  }
+}

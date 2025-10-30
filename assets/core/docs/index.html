@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutor Design System - Developer Documentation</title>
+    <link rel="stylesheet" href="../../css/tutor-core.min.css">
+    <link rel="stylesheet" href="./assets/docs.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="docs-layout" x-data="docsApp()">
+        <!-- Mobile Menu Overlay -->
+        <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-200"
+            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0" @click="mobileMenuOpen = false" class="docs-mobile-overlay"></div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="docs-sidebar" :class="{ 'docs-sidebar--open': mobileMenuOpen }" x-show="mobileMenuOpen || !isMobile"
+            x-transition:enter="transition ease-out duration-200 transform" x-transition:enter-start="-translate-x-full"
+            x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-150 transform"
+            x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full">
+
+            <div class="docs-sidebar__header">
+                <div class="docs-logo">
+                    <h2 class="tutor-h4">Tutor Design System</h2>
+                    <span class="docs-version">v2.0</span>
+                </div>
+                <button @click="mobileMenuOpen = false"
+                    class="docs-mobile-close tutor-btn tutor-btn--ghost tutor-btn--small">
+                    ✕
+                </button>
+            </div>
+
+            <!-- Search -->
+            <div class="docs-search">
+                <input type="text" x-model="searchQuery" @input="filterNavigation" placeholder="Search documentation..."
+                    class="docs-search__input">
+            </div>
+
+            <!-- Navigation Menu -->
+            <div class="docs-nav">
+                <template x-for="section in filteredNavigation" :key="section.id">
+                    <div class="docs-nav__section">
+                        <h3 class="docs-nav__title" x-text="section.title"></h3>
+                        <ul class="docs-nav__list">
+                            <template x-for="item in section.items" :key="item.id">
+                                <li class="docs-nav__item">
+                                    <a href="#" @click.prevent="setActiveSection(item.id)"
+                                        :class="{ 'docs-nav__link--active': activeSection === item.id }"
+                                        class="docs-nav__link" x-text="item.title"></a>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="docs-main">
+            <!-- Header -->
+            <header class="docs-header">
+                <div class="docs-header__left">
+                    <button @click="mobileMenuOpen = true"
+                        class="docs-mobile-menu tutor-btn tutor-btn--ghost tutor-btn--small">
+                        ☰
+                    </button>
+                    <div class="docs-breadcrumb">
+                        <span x-text="getCurrentSection()?.title || 'Documentation'"></span>
+                    </div>
+                </div>
+
+                <div class="docs-header__right">
+                    <div class="docs-controls">
+                        <!-- Font Scale -->
+                        <div class="docs-control">
+                            <label class="docs-control__label">Font Scale:</label>
+                            <select x-model="fontScale" @change="setFontScale($event.target.value)"
+                                class="docs-control__select">
+                                <option value="80">80%</option>
+                                <option value="90">90%</option>
+                                <option value="100">100%</option>
+                                <option value="110">110%</option>
+                                <option value="120">120%</option>
+                            </select>
+                        </div>
+
+                        <!-- Theme Toggle -->
+                        <button @click="toggleTheme()"
+                            class="docs-control__btn tutor-btn tutor-btn--outline tutor-btn--small">
+                            <span x-show="theme === 'light'">🌙</span>
+                            <span x-show="theme === 'dark'">☀️</span>
+                            <span x-text="theme === 'light' ? 'Dark' : 'Light'"></span>
+                        </button>
+
+                        <!-- RTL Toggle -->
+                        <button @click="toggleRTL()"
+                            class="docs-control__btn tutor-btn tutor-btn--outline tutor-btn--small">
+                            🔄 <span x-text="isRTL ? 'LTR' : 'RTL'"></span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="docs-content">
+                <!-- Overview Section -->
+                <section x-show="activeSection === 'overview'" class="docs-section">
+                    <div class="docs-hero">
+                        <h1 class="docs-hero__title">Tutor Design System</h1>
+                        <p class="docs-hero__subtitle">
+                            A comprehensive design system providing consistent UI components, themes, and utilities for
+                            modern web applications.
+                        </p>
+                        <div class="docs-hero__actions">
+                            <button @click="setActiveSection('installation')"
+                                class="tutor-btn tutor-btn--primary tutor-btn--large">
+                                Get Started
+                            </button>
+                            <button @click="setActiveSection('components')"
+                                class="tutor-btn tutor-btn--outline tutor-btn--large">
+                                View Components
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="docs-features">
+                        <div class="docs-feature-grid">
+                            <div class="docs-feature-card">
+                                <div class="docs-feature-card__icon">🎨</div>
+                                <h3 class="docs-feature-card__title">Multi-theme Support</h3>
+                                <p class="docs-feature-card__description">
+                                    Light and dark themes with CSS custom properties based on Figma design tokens.
+                                </p>
+                            </div>
+                            <div class="docs-feature-card">
+                                <div class="docs-feature-card__icon">🌍</div>
+                                <h3 class="docs-feature-card__title">RTL Language Support</h3>
+                                <p class="docs-feature-card__description">
+                                    Built-in right-to-left language support with automatic adaptation.
+                                </p>
+                            </div>
+                            <div class="docs-feature-card">
+                                <div class="docs-feature-card__icon">🧩</div>
+                                <h3 class="docs-feature-card__title">Component Library</h3>
+                                <p class="docs-feature-card__description">
+                                    Pre-built components with Alpine.js integration and TypeScript support.
+                                </p>
+                            </div>
+                            <div class="docs-feature-card">
+                                <div class="docs-feature-card__icon">📱</div>
+                                <h3 class="docs-feature-card__title">Responsive Design</h3>
+                                <p class="docs-feature-card__description">
+                                    Mobile-first responsive utilities with smart defaults.
+                                </p>
+                            </div>
+                            <div class="docs-feature-card">
+                                <div class="docs-feature-card__icon">⚡</div>
+                                <h3 class="docs-feature-card__title">Performance Optimized</h3>
+                                <p class="docs-feature-card__description">
+                                    Single CSS and JS files for easy distribution and fast loading.
+                                </p>
+                            </div>
+                            <div class="docs-feature-card">
+                                <div class="docs-feature-card__icon">🔧</div>
+                                <h3 class="docs-feature-card__title">TypeScript Support</h3>
+                                <p class="docs-feature-card__description">
+                                    Full TypeScript definitions with proper type safety (no any types).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Installation Section -->
+                <section x-show="activeSection === 'installation'" class="docs-section">
+                    <h1 class="docs-section__title">Installation & Setup</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Quick Start</h2>
+                        <p class="docs-example__description">
+                            Include the compiled CSS and JavaScript files in your HTML:
+                        </p>
+
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en" dir="ltr" data-theme="light"&gt;
+&lt;head&gt;
+    &lt;!-- Include the design system CSS --&gt;
+    &lt;link rel="stylesheet" href="assets/css/tutor-core.min.css" /&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- Your content here --&gt;
+
+    &lt;!-- Include Alpine.js and the design system JS --&gt;
+    &lt;script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"&gt;&lt;/script&gt;
+    &lt;script src="assets/js/tutor-core.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Theme Configuration</h2>
+                        <p class="docs-example__description">
+                            Set the theme and direction attributes on the HTML element:
+                        </p>
+
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;!-- Light theme, left-to-right --&gt;
+&lt;html lang="en" dir="ltr" data-theme="light"&gt;
+
+&lt;!-- Dark theme, right-to-left --&gt;
+&lt;html lang="ar" dir="rtl" data-theme="dark"&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">JavaScript Theme Switching</h2>
+                        <p class="docs-example__description">
+                            Programmatically switch themes and directions:
+                        </p>
+
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">JavaScript</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>// Switch to dark theme
+document.documentElement.setAttribute('data-theme', 'dark');
+
+// Switch to light theme
+document.documentElement.setAttribute('data-theme', 'light');
+
+// Toggle RTL direction
+document.documentElement.setAttribute('dir', 'rtl');
+
+// Set font scale for accessibility
+TutorCore.utils.setFontScale(120); // 120% scaling</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Design Tokens Section -->
+                <section x-show="activeSection === 'design-tokens'" class="docs-section">
+                    <h1 class="docs-section__title">Design Tokens</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Token Architecture</h2>
+                        <p class="docs-example__description">
+                            The design system uses a hybrid approach combining SASS variables and CSS custom properties:
+                        </p>
+
+                        <div class="docs-token-architecture">
+                            <div class="docs-token-type">
+                                <h3 class="docs-token-type__title">SASS Variables</h3>
+                                <p class="docs-token-type__description">For static values that don't change between
+                                    themes</p>
+                                <ul class="docs-token-type__list">
+                                    <li>Typography (font sizes, line heights)</li>
+                                    <li>Spacing (margins, padding)</li>
+                                    <li>Border radius</li>
+                                    <li>Breakpoints</li>
+                                </ul>
+                            </div>
+                            <div class="docs-token-type">
+                                <h3 class="docs-token-type__title">CSS Custom Properties</h3>
+                                <p class="docs-token-type__description">For dynamic values that change between themes
+                                </p>
+                                <ul class="docs-token-type__list">
+                                    <li>Colors (text, background, borders)</li>
+                                    <li>Theme-dependent surfaces</li>
+                                    <li>Semantic color mappings</li>
+                                    <li>User customizable values</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color Tokens -->
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Color System</h2>
+                        <p class="docs-example__description">
+                            Complete color scales based on Figma specifications with semantic mappings.
+                        </p>
+
+                        <div class="docs-color-system" x-data="{ activeColorScale: 'brand' }">
+                            <div class="docs-color-tabs">
+                                <button @click="activeColorScale = 'brand'"
+                                    :class="{ 'active': activeColorScale === 'brand' }"
+                                    class="docs-color-tab">Brand</button>
+                                <button @click="activeColorScale = 'gray'"
+                                    :class="{ 'active': activeColorScale === 'gray' }"
+                                    class="docs-color-tab">Gray</button>
+                                <button @click="activeColorScale = 'success'"
+                                    :class="{ 'active': activeColorScale === 'success' }"
+                                    class="docs-color-tab">Success</button>
+                                <button @click="activeColorScale = 'warning'"
+                                    :class="{ 'active': activeColorScale === 'warning' }"
+                                    class="docs-color-tab">Warning</button>
+                                <button @click="activeColorScale = 'error'"
+                                    :class="{ 'active': activeColorScale === 'error' }"
+                                    class="docs-color-tab">Error</button>
+                            </div>
+
+                            <!-- Brand Colors -->
+                            <div class="docs-color-grid" x-show="activeColorScale === 'brand'">
+                                <div class="docs-color-swatch" @click="copyToClipboard('#f6f8fe')">
+                                    <div class="docs-color-swatch__color" style="background-color: #f6f8fe;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 100</div>
+                                        <div class="docs-color-swatch__value">#f6f8fe</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-100</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #e4ebfc;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 200</div>
+                                        <div class="docs-color-swatch__value">#e4ebfc</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-200</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #dbe4fa;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 300</div>
+                                        <div class="docs-color-swatch__value">#dbe4fa</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-300</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #a4bcf4;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 400</div>
+                                        <div class="docs-color-swatch__value">#a4bcf4</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-400</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #4979e8;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 500</div>
+                                        <div class="docs-color-swatch__value">#4979e8</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-500</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #3e64de;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 600</div>
+                                        <div class="docs-color-swatch__value">#3e64de</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-600</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #2b49ca;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 700</div>
+                                        <div class="docs-color-swatch__value">#2b49ca</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-700</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #293da4;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 800</div>
+                                        <div class="docs-color-swatch__value">#293da4</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-800</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #263782;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 900</div>
+                                        <div class="docs-color-swatch__value">#263782</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-900</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #1c234f;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Brand 950</div>
+                                        <div class="docs-color-swatch__value">#1c234f</div>
+                                        <div class="docs-color-swatch__token">$tutor-brand-950</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Gray Colors -->
+                            <div class="docs-color-grid" x-show="activeColorScale === 'gray'">
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fcfcfd;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 25</div>
+                                        <div class="docs-color-swatch__value">#fcfcfd</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-25</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #f9fafb;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 50</div>
+                                        <div class="docs-color-swatch__value">#f9fafb</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-50</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #f2f4f7;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 100</div>
+                                        <div class="docs-color-swatch__value">#f2f4f7</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-100</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #eaecf0;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 200</div>
+                                        <div class="docs-color-swatch__value">#eaecf0</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-200</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #d0d5dd;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 300</div>
+                                        <div class="docs-color-swatch__value">#d0d5dd</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-300</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #98a2b3;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 400</div>
+                                        <div class="docs-color-swatch__value">#98a2b3</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-400</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #667085;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 500</div>
+                                        <div class="docs-color-swatch__value">#667085</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-500</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #475467;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 600</div>
+                                        <div class="docs-color-swatch__value">#475467</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-600</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #344054;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 700</div>
+                                        <div class="docs-color-swatch__value">#344054</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-700</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #1d2939;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 800</div>
+                                        <div class="docs-color-swatch__value">#1d2939</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-800</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #101828;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 900</div>
+                                        <div class="docs-color-swatch__value">#101828</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-900</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #0c111d;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Gray 950</div>
+                                        <div class="docs-color-swatch__value">#0c111d</div>
+                                        <div class="docs-color-swatch__token">$tutor-gray-950</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Success Colors -->
+                            <div class="docs-color-grid" x-show="activeColorScale === 'success'">
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fafef5;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 25</div>
+                                        <div class="docs-color-swatch__value">#fafef5</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-25</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #f3fee7;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 50</div>
+                                        <div class="docs-color-swatch__value">#f3fee7</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-50</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #e3fbcc;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 100</div>
+                                        <div class="docs-color-swatch__value">#e3fbcc</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-100</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #d0f8ab;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 200</div>
+                                        <div class="docs-color-swatch__value">#d0f8ab</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-200</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #a6ef67;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 300</div>
+                                        <div class="docs-color-swatch__value">#a6ef67</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-300</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #85e13a;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 400</div>
+                                        <div class="docs-color-swatch__value">#85e13a</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-400</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #66c61c;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 500</div>
+                                        <div class="docs-color-swatch__value">#66c61c</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-500</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #4ca30d;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 600</div>
+                                        <div class="docs-color-swatch__value">#4ca30d</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-600</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #3b7c0f;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 700</div>
+                                        <div class="docs-color-swatch__value">#3b7c0f</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-700</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #326212;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 800</div>
+                                        <div class="docs-color-swatch__value">#326212</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-800</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #2b5314;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 900</div>
+                                        <div class="docs-color-swatch__value">#2b5314</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-900</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #15290a;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Success 950</div>
+                                        <div class="docs-color-swatch__value">#15290a</div>
+                                        <div class="docs-color-swatch__token">$tutor-success-950</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Warning Colors -->
+                            <div class="docs-color-grid" x-show="activeColorScale === 'warning'">
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fffcf5;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 25</div>
+                                        <div class="docs-color-swatch__value">#fffcf5</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-25</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fffaeb;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 50</div>
+                                        <div class="docs-color-swatch__value">#fffaeb</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-50</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fef0c7;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 100</div>
+                                        <div class="docs-color-swatch__value">#fef0c7</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-100</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fedf89;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 200</div>
+                                        <div class="docs-color-swatch__value">#fedf89</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-200</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fec84b;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 300</div>
+                                        <div class="docs-color-swatch__value">#fec84b</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-300</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fdb022;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 400</div>
+                                        <div class="docs-color-swatch__value">#fdb022</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-400</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #f79009;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 500</div>
+                                        <div class="docs-color-swatch__value">#f79009</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-500</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #dc6803;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 600</div>
+                                        <div class="docs-color-swatch__value">#dc6803</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-600</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #b54708;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 700</div>
+                                        <div class="docs-color-swatch__value">#b54708</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-700</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #93370d;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 800</div>
+                                        <div class="docs-color-swatch__value">#93370d</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-800</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #7a2e0e;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 900</div>
+                                        <div class="docs-color-swatch__value">#7a2e0e</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-900</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #4e1d09;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Warning 950</div>
+                                        <div class="docs-color-swatch__value">#4e1d09</div>
+                                        <div class="docs-color-swatch__token">$tutor-warning-950</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Error Colors -->
+                            <div class="docs-color-grid" x-show="activeColorScale === 'error'">
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fffbfa;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 25</div>
+                                        <div class="docs-color-swatch__value">#fffbfa</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-25</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fef3f2;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 50</div>
+                                        <div class="docs-color-swatch__value">#fef3f2</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-50</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fee4e2;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 100</div>
+                                        <div class="docs-color-swatch__value">#fee4e2</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-100</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fecdca;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 200</div>
+                                        <div class="docs-color-swatch__value">#fecdca</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-200</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #fda29b;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 300</div>
+                                        <div class="docs-color-swatch__value">#fda29b</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-300</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #f97066;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 400</div>
+                                        <div class="docs-color-swatch__value">#f97066</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-400</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #f04438;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 500</div>
+                                        <div class="docs-color-swatch__value">#f04438</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-500</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #d92d20;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 600</div>
+                                        <div class="docs-color-swatch__value">#d92d20</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-600</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #b42318;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 700</div>
+                                        <div class="docs-color-swatch__value">#b42318</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-700</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #912018;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 800</div>
+                                        <div class="docs-color-swatch__value">#912018</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-800</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #7a271a;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 900</div>
+                                        <div class="docs-color-swatch__value">#7a271a</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-900</div>
+                                    </div>
+                                </div>
+                                <div class="docs-color-swatch">
+                                    <div class="docs-color-swatch__color" style="background-color: #55160c;"></div>
+                                    <div class="docs-color-swatch__info">
+                                        <div class="docs-color-swatch__name">Error 950</div>
+                                        <div class="docs-color-swatch__value">#55160c</div>
+                                        <div class="docs-color-swatch__token">$tutor-error-950</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Components Overview Section -->
+                <section x-show="activeSection === 'components'" class="docs-section">
+                    <h1 class="docs-section__title">Components Overview</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Available Components</h2>
+                        <p class="docs-example__description">
+                            The design system includes a comprehensive set of components for building modern web
+                            applications. Click on any component below to view detailed documentation and examples.
+                        </p>
+
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; padding: 0 2rem;">
+                            <div @click="setActiveSection('buttons')" class="docs-feature-card"
+                                style="cursor: pointer;">
+                                <div class="docs-feature-card__icon">🔘</div>
+                                <h3 class="docs-feature-card__title">Buttons</h3>
+                                <p class="docs-feature-card__description">
+                                    Primary, secondary, outline, and ghost button variants with multiple sizes and
+                                    states.
+                                </p>
+                            </div>
+
+                            <div @click="setActiveSection('cards')" class="docs-feature-card" style="cursor: pointer;">
+                                <div class="docs-feature-card__icon">🃏</div>
+                                <h3 class="docs-feature-card__title">Cards</h3>
+                                <p class="docs-feature-card__description">
+                                    Flexible card components with headers, bodies, footers, and elevation options.
+                                </p>
+                            </div>
+
+                            <div @click="setActiveSection('forms')" class="docs-feature-card" style="cursor: pointer;">
+                                <div class="docs-feature-card__icon">📝</div>
+                                <h3 class="docs-feature-card__title">Forms</h3>
+                                <p class="docs-feature-card__description">
+                                    Input fields, textareas, selects, and validation states for comprehensive form
+                                    building.
+                                </p>
+                            </div>
+
+                            <div @click="setActiveSection('alpine-components')" class="docs-feature-card"
+                                style="cursor: pointer;">
+                                <div class="docs-feature-card__icon">⚡</div>
+                                <h3 class="docs-feature-card__title">Alpine.js Components</h3>
+                                <p class="docs-feature-card__description">
+                                    Interactive components like dropdowns, modals, tabs, and toast notifications.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin: 2rem 0;">
+                            <a href="components.html" class="tutor-btn tutor-btn--primary tutor-btn--large">
+                                View All Components with Examples
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Buttons Section -->
+                <section x-show="activeSection === 'buttons'" class="docs-section">
+                    <h1 class="docs-section__title">Buttons</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Button Variants</h2>
+                        <p class="docs-example__description">
+                            Four button variants for different use cases and visual hierarchy.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div class="tutor-flex tutor-gap-3 tutor-flex-wrap">
+                                <button class="tutor-btn tutor-btn-primary">Primary</button>
+                                <button class="tutor-btn tutor-btn-primary-soft">Primary Soft</button>
+                                <button class="tutor-btn tutor-btn-destructive">Destructive</button>
+                                <button class="tutor-btn tutor-btn-destructive-soft">Destructive Soft</button>
+                                <button class="tutor-btn tutor-btn-secondary">Secondary</button>
+                                <button class="tutor-btn tutor-btn-outline">Outline</button>
+                                <button class="tutor-btn tutor-btn-ghost">Ghost</button>
+                                <button class="tutor-btn tutor-btn-link">Link</button>
+                            </div>
+                            <div class="tutor-flex tutor-gap-3 tutor-flex-wrap tutor-mt-5">
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary-soft"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-secondary"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-outline"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-ghost"><svg width="20" height="20"
+                                        viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-link"><svg width="20" height="20" viewBox="0 0 20 20"
+                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-secondary"&gt;Secondary&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-outline"&gt;Outline&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-ghost"&gt;Ghost&lt;/button&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Button Sizes</h2>
+                        <p class="docs-example__description">
+                            Three button sizes to fit different contexts and layouts.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div class="tutor-flex tutor-gap-3 tutor-items-center totor-flex-wrap">
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-x-small">X-Small Button</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-small">Small Button</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-medium">Medium Button</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-large">Large Button</button>
+                            </div>
+                            <div class="tutor-flex tutor-gap-3 tutor-items-center totor-flex-wrap tutor-mt-5">
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-small tutor-btn-icon">
+                                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-medium tutor-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-large tutor-btn-icon">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z"
+                                            fill="currentColor" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn-primary tutor-btn-small"&gt;Small&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary tutor-btn-medium"&gt;Medium&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary tutor-btn-large"&gt;Large&lt;/button&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Button States</h2>
+                        <p class="docs-example__description">
+                            Different button states for various interaction scenarios.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div class="tutor-flex tutor-gap-3" style="flex-wrap: wrap;">
+                                <button class="tutor-btn tutor-btn-primary">Normal</button>
+                                <button class="tutor-btn tutor-btn-primary" disabled>Disabled</button>
+                                <button class="tutor-btn tutor-btn-primary tutor-btn-loading">Loading</button>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;button class="tutor-btn tutor-btn-primary"&gt;Normal&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary" disabled&gt;Disabled&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn-primary tutor-btn-loading"&gt;Loading&lt;/button&gt;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Cards Section -->
+                <section x-show="activeSection === 'cards'" class="docs-section">
+                    <h1 class="docs-section__title">Cards</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Basic Card</h2>
+                        <p class="docs-example__description">
+                            Standard card component with header, body, and footer sections.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div class="tutor-card" style="max-width: 400px;">
+                                <div class="tutor-card__header">
+                                    <h4 class="tutor-card__title">Card Title</h4>
+                                    <p class="tutor-card__subtitle">This is a subtitle</p>
+                                </div>
+                                <div class="tutor-card__body">
+                                    <p>This is the card content. It can contain any HTML elements including text,
+                                        images, or other components.</p>
+                                </div>
+                                <div class="tutor-card__footer">
+                                    <button class="tutor-btn tutor-btn--primary tutor-btn--small">Action</button>
+                                    <button class="tutor-btn tutor-btn--ghost tutor-btn--small">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div class="tutor-card"&gt;
+  &lt;div class="tutor-card__header"&gt;
+    &lt;h4 class="tutor-card__title"&gt;Card Title&lt;/h4&gt;
+    &lt;p class="tutor-card__subtitle"&gt;This is a subtitle&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="tutor-card__body"&gt;
+    &lt;p&gt;Card content goes here...&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="tutor-card__footer"&gt;
+    &lt;button class="tutor-btn tutor-btn--primary"&gt;Action&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Card Variants</h2>
+                        <p class="docs-example__description">
+                            Different card styles for various use cases and visual emphasis.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div
+                                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                <div class="tutor-card">
+                                    <div class="tutor-card__body">
+                                        <h5 style="margin-top: 0;">Default Card</h5>
+                                        <p style="margin-bottom: 0;">Standard card with subtle border.</p>
+                                    </div>
+                                </div>
+                                <div class="tutor-card tutor-card--elevated">
+                                    <div class="tutor-card__body">
+                                        <h5 style="margin-top: 0;">Elevated Card</h5>
+                                        <p style="margin-bottom: 0;">Card with shadow for emphasis.</p>
+                                    </div>
+                                </div>
+                                <div class="tutor-card tutor-card--interactive" style="cursor: pointer;">
+                                    <div class="tutor-card__body">
+                                        <h5 style="margin-top: 0;">Interactive Card</h5>
+                                        <p style="margin-bottom: 0;">Clickable card with hover effects.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div class="tutor-card"&gt;Default Card&lt;/div&gt;
+&lt;div class="tutor-card tutor-card--elevated"&gt;Elevated Card&lt;/div&gt;
+&lt;div class="tutor-card tutor-card--interactive"&gt;Interactive Card&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Forms Section -->
+                <section x-show="activeSection === 'forms'" class="docs-section">
+                    <h1 class="docs-section__title">Forms</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Form Elements</h2>
+                        <p class="docs-example__description">
+                            Complete set of form elements with consistent styling and validation states.
+                        </p>
+                        <div class="docs-example__demo">
+                            <form style="max-width: 400px;">
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label" for="demo-name">Full Name</label>
+                                    <input type="text" id="demo-name" class="tutor-input" placeholder="Enter your name">
+                                    <p class="tutor-help-text">This field is required</p>
+                                </div>
+
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label" for="demo-email">Email Address</label>
+                                    <input type="email" id="demo-email" class="tutor-input"
+                                        placeholder="Enter your email">
+                                </div>
+
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label" for="demo-message">Message</label>
+                                    <textarea id="demo-message" class="tutor-textarea" placeholder="Enter your message"
+                                        rows="3"></textarea>
+                                </div>
+
+                                <div class="tutor-flex tutor-gap-3">
+                                    <button type="submit" class="tutor-btn tutor-btn--primary">Submit</button>
+                                    <button type="reset" class="tutor-btn tutor-btn--secondary">Reset</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div class="tutor-form-group"&gt;
+  &lt;label class="tutor-label" for="name"&gt;Full Name&lt;/label&gt;
+  &lt;input type="text" id="name" class="tutor-input" placeholder="Enter your name"&gt;
+  &lt;p class="tutor-help-text"&gt;This field is required&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;div class="tutor-form-group"&gt;
+  &lt;label class="tutor-label" for="message"&gt;Message&lt;/label&gt;
+  &lt;textarea id="message" class="tutor-textarea" placeholder="Enter your message"&gt;&lt;/textarea&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Form States</h2>
+                        <p class="docs-example__description">
+                            Different form states for validation feedback and user guidance.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="max-width: 400px; display: grid; gap: 1rem;">
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Normal State</label>
+                                    <input type="text" class="tutor-input" placeholder="Normal input">
+                                </div>
+
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Error State</label>
+                                    <input type="text" class="tutor-input tutor-input--error" placeholder="Error input">
+                                    <p class="tutor-error-text">This field has an error</p>
+                                </div>
+
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Success State</label>
+                                    <input type="text" class="tutor-input tutor-input--success"
+                                        placeholder="Success input">
+                                    <p class="tutor-success-text">This field is valid</p>
+                                </div>
+
+                                <div class="tutor-form-group">
+                                    <label class="tutor-label">Disabled State</label>
+                                    <input type="text" class="tutor-input" placeholder="Disabled input" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;input type="text" class="tutor-input" placeholder="Normal"&gt;
+&lt;input type="text" class="tutor-input tutor-input--error" placeholder="Error"&gt;
+&lt;input type="text" class="tutor-input tutor-input--success" placeholder="Success"&gt;
+&lt;input type="text" class="tutor-input" placeholder="Disabled" disabled&gt;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Alpine.js Components Section -->
+                <section x-show="activeSection === 'alpine-components'" class="docs-section">
+                    <h1 class="docs-section__title">Alpine.js Components</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Interactive Components</h2>
+                        <p class="docs-example__description">
+                            Advanced components powered by Alpine.js for rich user interactions with built-in RTL
+                            support and accessibility features.
+                        </p>
+                    </div>
+
+                    <!-- Dropdown Component -->
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Dropdown</h2>
+                        <p class="docs-example__description">
+                            Interactive dropdown with RTL-aware positioning, keyboard navigation, and
+                            click-outside-to-close functionality.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div x-data="TutorCore.dropdown({ placement: 'bottom-start', offset: 8 })"
+                                class="tutor-dropdown">
+                                <button @click="toggle()" class="tutor-btn tutor-btn--primary">
+                                    Options <span x-text="open ? '▲' : '▼'"></span>
+                                </button>
+                                <div x-show="open" x-transition:enter="transition ease-out duration-100"
+                                    x-transition:enter-start="transform opacity-0 scale-95"
+                                    x-transition:enter-end="transform opacity-100 scale-100"
+                                    x-transition:leave="transition ease-in duration-75"
+                                    x-transition:leave-start="transform opacity-100 scale-100"
+                                    x-transition:leave-end="transform opacity-0 scale-95" @click.outside="close()"
+                                    class="tutor-dropdown__menu">
+                                    <a href="#" @click.prevent="close()" class="tutor-dropdown__item">Profile</a>
+                                    <a href="#" @click.prevent="close()" class="tutor-dropdown__item">Settings</a>
+                                    <hr class="tutor-my-2">
+                                    <a href="#" @click.prevent="close()"
+                                        class="tutor-dropdown__item tutor-text-error">Logout</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div x-data="TutorCore.dropdown({ placement: 'bottom-start', offset: 8 })" class="tutor-dropdown"&gt;
+  &lt;button @click="toggle()" class="tutor-btn tutor-btn--primary"&gt;
+    Options &lt;span x-text="open ? '▲' : '▼'"&gt;&lt;/span&gt;
+  &lt;/button&gt;
+  &lt;div x-show="open" @click.outside="close()" class="tutor-dropdown__menu"&gt;
+    &lt;a href="#" class="tutor-dropdown__item"&gt;Profile&lt;/a&gt;
+    &lt;a href="#" class="tutor-dropdown__item"&gt;Settings&lt;/a&gt;
+    &lt;hr class="tutor-my-2"&gt;
+    &lt;a href="#" class="tutor-dropdown__item tutor-text-error"&gt;Logout&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Modal Component -->
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Modal</h2>
+                        <p class="docs-example__description">
+                            Modal dialog with focus management, backdrop click to close, ESC key support, and
+                            accessibility features.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div x-data="TutorCore.modal({ closable: true, backdrop: true, keyboard: true })">
+                                <button @click="show()" class="tutor-btn tutor-btn--secondary">Open Modal</button>
+
+                                <div x-show="open" x-transition:enter="transition ease-out duration-300"
+                                    x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                    x-transition:leave="transition ease-in duration-200"
+                                    x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                    class="tutor-modal">
+                                    <div class="tutor-modal__backdrop" @click="hide()"></div>
+                                    <div class="tutor-modal__content" @keydown.escape="hide()">
+                                        <div class="tutor-modal__header">
+                                            <h3 class="tutor-h4">Modal Title</h3>
+                                            <button @click="hide()" class="tutor-modal__close">&times;</button>
+                                        </div>
+                                        <div class="tutor-modal__body">
+                                            <p class="tutor-p1">This is a modal dialog. You can close it by clicking the
+                                                X button, pressing Escape, or clicking outside.</p>
+                                        </div>
+                                        <div class="tutor-modal__footer">
+                                            <button @click="hide()"
+                                                class="tutor-btn tutor-btn--secondary">Cancel</button>
+                                            <button @click="hide()"
+                                                class="tutor-btn tutor-btn--primary">Confirm</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div x-data="TutorCore.modal({ closable: true, backdrop: true, keyboard: true })"&gt;
+  &lt;button @click="show()" class="tutor-btn tutor-btn--secondary"&gt;Open Modal&lt;/button&gt;
+
+  &lt;div x-show="open" class="tutor-modal" x-transition&gt;
+    &lt;div class="tutor-modal__backdrop" @click="hide()"&gt;&lt;/div&gt;
+    &lt;div class="tutor-modal__content" @keydown.escape="hide()"&gt;
+      &lt;div class="tutor-modal__header"&gt;
+        &lt;h3 class="tutor-h4"&gt;Modal Title&lt;/h3&gt;
+        &lt;button @click="hide()" class="tutor-modal__close"&gt;&times;&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;div class="tutor-modal__body"&gt;
+        &lt;p class="tutor-p1"&gt;Modal content goes here...&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class="tutor-modal__footer"&gt;
+        &lt;button @click="hide()" class="tutor-btn tutor-btn--secondary"&gt;Cancel&lt;/button&gt;
+        &lt;button @click="hide()" class="tutor-btn tutor-btn--primary"&gt;Confirm&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Tabs Component -->
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Tabs</h2>
+                        <p class="docs-example__description">
+                            Tab component with keyboard navigation, ARIA support, and smooth content transitions.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div x-data="TutorCore.tabs({ defaultTab: 0 })" class="tutor-tabs">
+                                <div class="tutor-tabs__nav">
+                                    <button @click="setTab(0)" :class="{'active': isActive(0)}"
+                                        class="tutor-tab">Overview</button>
+                                    <button @click="setTab(1)" :class="{'active': isActive(1)}"
+                                        class="tutor-tab">Details</button>
+                                    <button @click="setTab(2)" :class="{'active': isActive(2)}"
+                                        class="tutor-tab">Reviews</button>
+                                </div>
+                                <div class="tutor-tabs__content">
+                                    <div x-show="isActive(0)" x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform translate-x-4"
+                                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                                        class="tutor-tab-panel">
+                                        <h4 class="tutor-h4">Overview</h4>
+                                        <p class="tutor-p1">This is the overview content. It provides a general
+                                            introduction to the topic with key highlights and important information.</p>
+                                    </div>
+                                    <div x-show="isActive(1)" x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform translate-x-4"
+                                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                                        class="tutor-tab-panel">
+                                        <h4 class="tutor-h4">Details</h4>
+                                        <p class="tutor-p1">Here are the detailed specifications and technical
+                                            information. This section contains comprehensive documentation and usage
+                                            guidelines.</p>
+                                    </div>
+                                    <div x-show="isActive(2)" x-transition:enter="transition ease-out duration-200"
+                                        x-transition:enter-start="opacity-0 transform translate-x-4"
+                                        x-transition:enter-end="opacity-100 transform translate-x-0"
+                                        class="tutor-tab-panel">
+                                        <h4 class="tutor-h4">Reviews</h4>
+                                        <p class="tutor-p1">Customer reviews and feedback will be displayed here. This
+                                            includes ratings, comments, and user testimonials.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div x-data="TutorCore.tabs({ defaultTab: 0 })" class="tutor-tabs"&gt;
+  &lt;div class="tutor-tabs__nav"&gt;
+    &lt;button @click="setTab(0)" :class="{'active': isActive(0)}" class="tutor-tab"&gt;Overview&lt;/button&gt;
+    &lt;button @click="setTab(1)" :class="{'active': isActive(1)}" class="tutor-tab"&gt;Details&lt;/button&gt;
+    &lt;button @click="setTab(2)" :class="{'active': isActive(2)}" class="tutor-tab"&gt;Reviews&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;div class="tutor-tabs__content"&gt;
+    &lt;div x-show="isActive(0)" x-transition class="tutor-tab-panel"&gt;
+      &lt;h4 class="tutor-h4"&gt;Overview&lt;/h4&gt;
+      &lt;p class="tutor-p1"&gt;Overview content...&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div x-show="isActive(1)" x-transition class="tutor-tab-panel"&gt;
+      &lt;h4 class="tutor-h4"&gt;Details&lt;/h4&gt;
+      &lt;p class="tutor-p1"&gt;Details content...&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div x-show="isActive(2)" x-transition class="tutor-tab-panel"&gt;
+      &lt;h4 class="tutor-h4"&gt;Reviews&lt;/h4&gt;
+      &lt;p class="tutor-p1"&gt;Reviews content...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Toast Notifications -->
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Toast Notifications</h2>
+                        <p class="docs-example__description">
+                            Toast notification system with multiple types, stacking support, auto-dismiss, and smooth
+                            animations.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div x-data="TutorCore.toast()">
+                                <div class="tutor-flex tutor-gap-2 tutor-flex-wrap">
+                                    <button @click="success('Operation completed successfully!')"
+                                        class="tutor-btn tutor-btn--primary tutor-btn--small">Success Toast</button>
+                                    <button @click="error('Something went wrong!')"
+                                        class="tutor-btn tutor-btn--secondary tutor-btn--small">Error Toast</button>
+                                    <button @click="warning('Please check your input!')"
+                                        class="tutor-btn tutor-btn--outline tutor-btn--small">Warning Toast</button>
+                                    <button @click="info('Here is some information.')"
+                                        class="tutor-btn tutor-btn--ghost tutor-btn--small">Info Toast</button>
+                                </div>
+
+                                <div class="tutor-toast-container">
+                                    <template x-for="toast in toasts" :key="toast.id">
+                                        <div class="tutor-toast" :class="`tutor-toast--${toast.type}`"
+                                            x-transition:enter="transition ease-out duration-300"
+                                            x-transition:enter-start="opacity-0 transform translate-x-full"
+                                            x-transition:enter-end="opacity-100 transform translate-x-0"
+                                            x-transition:leave="transition ease-in duration-200"
+                                            x-transition:leave-start="opacity-100 transform translate-x-0"
+                                            x-transition:leave-end="opacity-0 transform translate-x-full">
+                                            <span x-text="toast.message"></span>
+                                            <button @click="remove(toast.id)"
+                                                class="tutor-toast__close">&times;</button>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div x-data="TutorCore.toast()"&gt;
+  &lt;button @click="success('Success message!')" class="tutor-btn tutor-btn--primary"&gt;
+    Success Toast
+  &lt;/button&gt;
+  &lt;button @click="error('Error message!')" class="tutor-btn tutor-btn--secondary"&gt;
+    Error Toast
+  &lt;/button&gt;
+  &lt;button @click="warning('Warning message!')" class="tutor-btn tutor-btn--outline"&gt;
+    Warning Toast
+  &lt;/button&gt;
+  &lt;button @click="info('Info message!')" class="tutor-btn tutor-btn--ghost"&gt;
+    Info Toast
+  &lt;/button&gt;
+
+  &lt;div class="tutor-toast-container"&gt;
+    &lt;template x-for="toast in toasts" :key="toast.id"&gt;
+      &lt;div class="tutor-toast" :class="`tutor-toast--${toast.type}`" x-transition&gt;
+        &lt;span x-text="toast.message"&gt;&lt;/span&gt;
+        &lt;button @click="remove(toast.id)" class="tutor-toast__close"&gt;&times;&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/template&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Component -->
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Accordion</h2>
+                        <p class="docs-example__description">
+                            Accordion component with single or multiple panel support, smooth collapse animations, and
+                            configurable default states.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div x-data="TutorCore.accordion({ multiple: false, defaultOpen: [0] })"
+                                class="tutor-accordion">
+                                <div class="tutor-accordion__item">
+                                    <button @click="toggle(0)" class="tutor-accordion__trigger">
+                                        <span class="tutor-font-medium">Getting Started</span>
+                                        <span :class="{ 'tutor-rotate-180': isOpen(0) }"
+                                            class="tutor-transition-transform">▼</span>
+                                    </button>
+                                    <div x-show="isOpen(0)" x-collapse class="tutor-accordion__content">
+                                        <p class="tutor-p1">This panel contains information about getting started with
+                                            the design system. It includes setup instructions and basic usage examples.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="tutor-accordion__item">
+                                    <button @click="toggle(1)" class="tutor-accordion__trigger">
+                                        <span class="tutor-font-medium">Advanced Features</span>
+                                        <span :class="{ 'tutor-rotate-180': isOpen(1) }"
+                                            class="tutor-transition-transform">▼</span>
+                                    </button>
+                                    <div x-show="isOpen(1)" x-collapse class="tutor-accordion__content">
+                                        <p class="tutor-p1">This panel covers advanced features like theming, RTL
+                                            support, and custom component development.</p>
+                                    </div>
+                                </div>
+                                <div class="tutor-accordion__item">
+                                    <button @click="toggle(2)" class="tutor-accordion__trigger">
+                                        <span class="tutor-font-medium">Best Practices</span>
+                                        <span :class="{ 'tutor-rotate-180': isOpen(2) }"
+                                            class="tutor-transition-transform">▼</span>
+                                    </button>
+                                    <div x-show="isOpen(2)" x-collapse class="tutor-accordion__content">
+                                        <p class="tutor-p1">Learn about best practices for using the design system
+                                            effectively in your projects.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;div x-data="TutorCore.accordion({ multiple: false, defaultOpen: [0] })" class="tutor-accordion"&gt;
+  &lt;div class="tutor-accordion__item"&gt;
+    &lt;button @click="toggle(0)" class="tutor-accordion__trigger"&gt;
+      &lt;span class="tutor-font-medium"&gt;Panel 1&lt;/span&gt;
+      &lt;span :class="{ 'tutor-rotate-180': isOpen(0) }" class="tutor-transition-transform"&gt;▼&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div x-show="isOpen(0)" x-collapse class="tutor-accordion__content"&gt;
+      &lt;p class="tutor-p1"&gt;Panel 1 content...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="tutor-accordion__item"&gt;
+    &lt;button @click="toggle(1)" class="tutor-accordion__trigger"&gt;
+      &lt;span class="tutor-font-medium"&gt;Panel 2&lt;/span&gt;
+      &lt;span :class="{ 'tutor-rotate-180': isOpen(1) }" class="tutor-transition-transform"&gt;▼&lt;/span&gt;
+    &lt;/button&gt;
+    &lt;div x-show="isOpen(1)" x-collapse class="tutor-accordion__content"&gt;
+      &lt;p class="tutor-p1"&gt;Panel 2 content...&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Additional Resources -->
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">More Examples</h2>
+                        <p class="docs-example__description">
+                            For more comprehensive examples and advanced usage patterns, visit the dedicated components
+                            page.
+                        </p>
+                        <div style="text-align: center; margin: 2rem 0;">
+                            <a href="components.html" class="tutor-btn tutor-btn--primary tutor-btn--large">
+                                View Complete Component Examples
+                            </a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Basic Usage Section -->
+                <section x-show="activeSection === 'basic-usage'" class="docs-section">
+                    <h1 class="docs-section__title">Basic Usage</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Typography</h2>
+                        <p class="docs-example__description">
+                            The design system provides a complete typography scale with consistent spacing and line
+                            heights.
+                        </p>
+                        <div class="docs-example__demo">
+                            <h1 class="tutor-h1">Heading 1 (40px)</h1>
+                            <h2 class="tutor-h2">Heading 2 (32px)</h2>
+                            <h3 class="tutor-h3">Heading 3 (24px)</h3>
+                            <h4 class="tutor-h4">Heading 4 (20px)</h4>
+                            <h5 class="tutor-h5">Heading 5 (18px)</h5>
+                            <p class="tutor-p1">Paragraph 1 (16px) - This is the default paragraph size for body text.
+                            </p>
+                            <p class="tutor-p2">Paragraph 2 (14px) - This is smaller text for secondary content.</p>
+                            <p class="tutor-p3">Paragraph 3 (12px) - This is the smallest text size for captions and
+                                labels.</p>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Quick Component Examples</h2>
+                        <p class="docs-example__description">
+                            Get started quickly with these common component patterns.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="display: grid; gap: 2rem;">
+                                <!-- Buttons -->
+                                <div>
+                                    <h4>Buttons</h4>
+                                    <div class="tutor-flex tutor-gap-3" style="flex-wrap: wrap;">
+                                        <button class="tutor-btn tutor-btn--primary">Primary</button>
+                                        <button class="tutor-btn tutor-btn--secondary">Secondary</button>
+                                        <button class="tutor-btn tutor-btn--outline">Outline</button>
+                                    </div>
+                                </div>
+
+                                <!-- Card -->
+                                <div>
+                                    <h4>Card</h4>
+                                    <div class="tutor-card" style="max-width: 400px;">
+                                        <div class="tutor-card__body">
+                                            <h5 style="margin-top: 0;">Simple Card</h5>
+                                            <p>This is a basic card example with minimal content.</p>
+                                            <button class="tutor-btn tutor-btn--primary tutor-btn--small">Learn
+                                                More</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;!-- Buttons --&gt;
+&lt;button class="tutor-btn tutor-btn--primary"&gt;Primary&lt;/button&gt;
+&lt;button class="tutor-btn tutor-btn--secondary"&gt;Secondary&lt;/button&gt;
+
+&lt;!-- Simple Card --&gt;
+&lt;div class="tutor-card"&gt;
+  &lt;div class="tutor-card__body"&gt;
+    &lt;h5&gt;Card Title&lt;/h5&gt;
+    &lt;p&gt;Card content goes here...&lt;/p&gt;
+    &lt;button class="tutor-btn tutor-btn--primary"&gt;Action&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Typography Section -->
+                <section x-show="activeSection === 'typography'" class="docs-section">
+                    <h1 class="docs-section__title">Typography</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Typography Scale</h2>
+                        <p class="docs-example__description">
+                            Complete typography system with consistent font sizes, line heights, and weights optimized
+                            for readability.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="display: grid; gap: 1rem;">
+                                <div
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <h1 class="tutor-h1" style="margin: 0;">Heading 1</h1>
+                                    <div class="tutor-p3 tutor-text-secondary">40px / 48px line-height / 700 weight
+                                    </div>
+                                </div>
+                                <div
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <h2 class="tutor-h2" style="margin: 0;">Heading 2</h2>
+                                    <div class="tutor-p3 tutor-text-secondary">32px / 40px line-height / 600 weight
+                                    </div>
+                                </div>
+                                <div
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <h3 class="tutor-h3" style="margin: 0;">Heading 3</h3>
+                                    <div class="tutor-p3 tutor-text-secondary">24px / 32px line-height / 600 weight
+                                    </div>
+                                </div>
+                                <div
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <p class="tutor-p1" style="margin: 0;">Paragraph 1 - Primary body text</p>
+                                    <div class="tutor-p3 tutor-text-secondary">16px / 24px line-height / 400 weight
+                                    </div>
+                                </div>
+                                <div
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <p class="tutor-p2" style="margin: 0;">Paragraph 2 - Secondary text</p>
+                                    <div class="tutor-p3 tutor-text-secondary">14px / 20px line-height / 400 weight
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Colors Section -->
+                <section x-show="activeSection === 'colors'" class="docs-section">
+                    <h1 class="docs-section__title">Colors</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Text Colors</h2>
+                        <p class="docs-example__description">
+                            Semantic text colors that automatically adapt to light and dark themes.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="display: grid; gap: 0.75rem;">
+                                <p class="tutor-text-primary">Primary text color - tutor-text-primary</p>
+                                <p class="tutor-text-secondary">Secondary text color - tutor-text-secondary</p>
+                                <p class="tutor-text-disabled">Disabled text color - tutor-text-disabled</p>
+                                <p class="tutor-text-brand">Brand text color - tutor-text-brand</p>
+                                <p class="tutor-text-success">Success text color - tutor-text-success</p>
+                                <p class="tutor-text-warning">Warning text color - tutor-text-warning</p>
+                                <p class="tutor-text-error">Error text color - tutor-text-error</p>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;p class="tutor-text-primary"&gt;Primary text&lt;/p&gt;
+&lt;p class="tutor-text-secondary"&gt;Secondary text&lt;/p&gt;
+&lt;p class="tutor-text-brand"&gt;Brand text&lt;/p&gt;
+&lt;p class="tutor-text-success"&gt;Success text&lt;/p&gt;
+&lt;p class="tutor-text-warning"&gt;Warning text&lt;/p&gt;
+&lt;p class="tutor-text-error"&gt;Error text&lt;/p&gt;</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Background Colors</h2>
+                        <p class="docs-example__description">
+                            Surface and background colors for creating visual hierarchy and depth.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="display: grid; gap: 1rem;">
+                                <div class="tutor-bg-surface-base"
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <strong>Base Surface</strong> - tutor-bg-surface-base
+                                </div>
+                                <div class="tutor-bg-surface-l1"
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <strong>Level 1 Surface</strong> - tutor-bg-surface-l1
+                                </div>
+                                <div class="tutor-bg-surface-l2"
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <strong>Level 2 Surface</strong> - tutor-bg-surface-l2
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Spacing Section -->
+                <section x-show="activeSection === 'spacing'" class="docs-section">
+                    <h1 class="docs-section__title">Spacing</h1>
+
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Spacing Scale</h2>
+                        <p class="docs-example__description">
+                            22-step spacing scale (0-21) from 0px to 200px, matching Figma specifications exactly.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="display: grid; gap: 1rem;">
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 60px; font-size: 0.875rem;">Step 0</div>
+                                    <div
+                                        style="width: 0px; height: 20px; background: var(--tutor-actions-brand-primary);">
+                                    </div>
+                                    <span style="font-size: 0.875rem; color: var(--tutor-text-secondary);">0px</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 60px; font-size: 0.875rem;">Step 4</div>
+                                    <div
+                                        style="width: 8px; height: 20px; background: var(--tutor-actions-brand-primary);">
+                                    </div>
+                                    <span style="font-size: 0.875rem; color: var(--tutor-text-secondary);">8px</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 60px; font-size: 0.875rem;">Step 6</div>
+                                    <div
+                                        style="width: 16px; height: 20px; background: var(--tutor-actions-brand-primary);">
+                                    </div>
+                                    <span style="font-size: 0.875rem; color: var(--tutor-text-secondary);">16px</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 60px; font-size: 0.875rem;">Step 8</div>
+                                    <div
+                                        style="width: 24px; height: 20px; background: var(--tutor-actions-brand-primary);">
+                                    </div>
+                                    <span style="font-size: 0.875rem; color: var(--tutor-text-secondary);">24px</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 1rem;">
+                                    <div style="width: 60px; font-size: 0.875rem;">Step 12</div>
+                                    <div
+                                        style="width: 40px; height: 20px; background: var(--tutor-actions-brand-primary);">
+                                    </div>
+                                    <span style="font-size: 0.875rem; color: var(--tutor-text-secondary);">40px</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;!-- Margin utilities --&gt;
+&lt;div class="tutor-m-4"&gt;Margin on all sides (8px)&lt;/div&gt;
+&lt;div class="tutor-mt-6"&gt;Margin top (16px)&lt;/div&gt;
+&lt;div class="tutor-mx-8"&gt;Horizontal margin (24px)&lt;/div&gt;
+
+&lt;!-- Padding utilities --&gt;
+&lt;div class="tutor-p-4"&gt;Padding on all sides (8px)&lt;/div&gt;
+&lt;div class="tutor-pt-6"&gt;Padding top (16px)&lt;/div&gt;
+&lt;div class="tutor-px-8"&gt;Horizontal padding (24px)&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Additional sections for navigation items -->
+                <section x-show="activeSection === 'sass-development'" class="docs-section">
+                    <h1 class="docs-section__title">SASS Development</h1>
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Coming Soon</h2>
+                        <p class="docs-example__description">
+                            SASS development guide with mixins and custom component creation will be available soon.
+                        </p>
+                        <div style="text-align: center; margin: 2rem 0;">
+                            <a href="components.html" class="tutor-btn tutor-btn--primary">View Components Instead</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section x-show="activeSection === 'custom-components'" class="docs-section">
+                    <h1 class="docs-section__title">Custom Components</h1>
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Coming Soon</h2>
+                        <p class="docs-example__description">
+                            Guide for creating custom components using the design system will be available soon.
+                        </p>
+                        <div style="text-align: center; margin: 2rem 0;">
+                            <a href="design-tokens.html" class="tutor-btn tutor-btn--primary">View Design Tokens</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section x-show="activeSection === 'utility-classes'" class="docs-section">
+                    <h1 class="docs-section__title">Utility Classes</h1>
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Coming Soon</h2>
+                        <p class="docs-example__description">
+                            Complete utility class reference will be available soon.
+                        </p>
+                        <div style="text-align: center; margin: 2rem 0;">
+                            <a href="components.html" class="tutor-btn tutor-btn--primary">View Components</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section x-show="activeSection === 'font-scaling'" class="docs-section">
+                    <h1 class="docs-section__title">Font Scaling</h1>
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Accessibility Font Scaling</h2>
+                        <p class="docs-example__description">
+                            The design system supports font scaling from 80% to 120% for accessibility. Try the font
+                            scale control in the header to see it in action.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="display: grid; gap: 1rem;">
+                                <div
+                                    style="padding: 1rem; border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <h3 style="margin: 0 0 0.5rem 0;">Sample Text</h3>
+                                    <p style="margin: 0;">This text will scale when you change the font scale setting in
+                                        the header controls.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">JavaScript</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>// Set font scale programmatically
+TutorCore.utils.setFontScale(120); // 120% scaling
+
+// Or add CSS class directly
+document.documentElement.classList.add('tutor-font-scale-120');</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section x-show="activeSection === 'rtl-support'" class="docs-section">
+                    <h1 class="docs-section__title">RTL Support</h1>
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Right-to-Left Language Support</h2>
+                        <p class="docs-example__description">
+                            The design system automatically adapts to RTL layouts. Try the RTL toggle in the header to
+                            see the layout change.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div class="tutor-card" style="max-width: 400px;">
+                                <div class="tutor-card__body">
+                                    <h4 style="margin-top: 0;">RTL Example</h4>
+                                    <p>This card will automatically flip its layout when RTL mode is enabled. Notice how
+                                        the text alignment and spacing adapt.</p>
+                                    <button class="tutor-btn tutor-btn--primary">Action Button</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">HTML</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>&lt;!-- Enable RTL --&gt;
+&lt;html dir="rtl" data-theme="light"&gt;
+
+&lt;!-- All components automatically adapt --&gt;
+&lt;div class="tutor-card"&gt;
+  &lt;div class="tutor-card__body"&gt;
+    &lt;p&gt;This content will be right-aligned in RTL mode&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section x-show="activeSection === 'theming'" class="docs-section">
+                    <h1 class="docs-section__title">Theming</h1>
+                    <div class="docs-example">
+                        <h2 class="docs-example__title">Light and Dark Themes</h2>
+                        <p class="docs-example__description">
+                            The design system includes built-in light and dark themes. Try the theme toggle in the
+                            header to switch between them.
+                        </p>
+                        <div class="docs-example__demo">
+                            <div style="display: grid; gap: 1rem;">
+                                <div
+                                    style="padding: 1rem; background: var(--tutor-surface-l1); border: 1px solid var(--tutor-border-idle); border-radius: 8px;">
+                                    <h4 style="margin: 0 0 0.5rem 0; color: var(--tutor-text-primary);">Theme-Aware
+                                        Content</h4>
+                                    <p style="margin: 0; color: var(--tutor-text-secondary);">This content automatically
+                                        adapts to the current theme using CSS custom properties.</p>
+                                </div>
+                                <div class="tutor-flex tutor-gap-3">
+                                    <button class="tutor-btn tutor-btn--primary">Primary Button</button>
+                                    <button class="tutor-btn tutor-btn--secondary">Secondary Button</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="docs-code-block">
+                            <div class="docs-code-block__header">
+                                <span class="docs-code-block__title">JavaScript</span>
+                                <button @click="copyToClipboard($event)" class="docs-code-block__copy">Copy</button>
+                            </div>
+                            <pre class="docs-code-block__content"><code>// Switch to dark theme
+document.documentElement.setAttribute('data-theme', 'dark');
+
+// Switch to light theme
+document.documentElement.setAttribute('data-theme', 'light');
+
+// Detect user's preferred theme
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+const theme = prefersDark ? 'dark' : 'light';
+document.documentElement.setAttribute('data-theme', theme);</code></pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../../js/tutor-core.js"></script>
+    <script src="./assets/docs.js"></script>
+</body>
+
+</html>
