@@ -260,7 +260,7 @@ if ( ! function_exists( '_generate_categories_dropdown_option' ) ) {
 			$output .= '<option value="' . $category->term_id . '" ' . selected( $has_in_term, true, false ) . '>  ' . $depth_seperator . ' ' . $category->name . '</option>';
 
 			if ( tutor_utils()->count( $childrens ) ) {
-				$depth++;
+				++$depth;
 				$output .= _generate_categories_dropdown_option( $post_ID, $childrens, $args, $depth );
 			}
 		}
@@ -399,7 +399,6 @@ if ( ! function_exists( '__tutor_generate_categories_checkbox' ) ) {
 		}
 
 		return $output;
-
 	}
 }
 /**
@@ -773,10 +772,8 @@ if ( ! function_exists( 'tutor_maintenance_mode' ) ) {
 			if ( ! file_exists( $file ) ) {
 				file_put_contents( $file, $maintenance_string );
 			}
-		} else {
-			if ( file_exists( $file ) ) {
+		} elseif ( file_exists( $file ) ) {
 				unlink( $file );
-			}
 		}
 	}
 }
@@ -924,7 +921,6 @@ if ( ! function_exists( 'get_request' ) ) {
 	 */
 	function get_request( $var ) {
 		return isset( $_REQUEST[ $var ] ) ? sanitize_text_field( $_REQUEST[ $var ] ) : false;
-
 	}
 }
 
@@ -1082,7 +1078,7 @@ if ( ! function_exists( 'tutor_meta_box_wrapper' ) ) {
 			$post_type = tutor()->course_post_type;
 			add_filter(
 				"postbox_classes_{$post_type}_{$id}",
-				function( $classes ) use ( $custom_class ) {
+				function ( $classes ) use ( $custom_class ) {
 					if ( ! in_array( $custom_class, $classes ) ) {
 						$classes[] = $custom_class;
 					}
@@ -1654,7 +1650,7 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
 			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
 		} elseif ( 'wc' === $monetize_by ) {
-			$price = wc_price( $price );
+			$price = html_entity_decode( wc_price( $price, array( 'in_span' => false ) ) );
 		} elseif ( 'edd' === $monetize_by ) {
 			$price = edd_currency_filter( edd_format_amount( $price ) );
 		}
