@@ -1,0 +1,7 @@
+@use '../tokens' as *;
+
+@each $key, $value in $tutor-z {
+  .tutor-z-#{$key} {
+    z-index: $value;
+  }
+}

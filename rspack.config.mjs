@@ -224,6 +224,7 @@ const createConfig = (env, options) => {
           'assets/react/',
           'assets/scss/',
           'assets/json/',
+          'assets/core/',
         ];
         return keepDirectories.some((dir) => assetPath.includes(dir));
       },
@@ -242,6 +243,7 @@ const createConfig = (env, options) => {
 
 const jsEntries = {
   tutor: './assets/react/v2/common.js',
+  'tutor-core': './assets/core/ts/index.ts',
   'tutor-front': './assets/react/front/tutor-front.js',
   'tutor-admin': './assets/react/admin-dashboard/tutor-admin.js',
   'tutor-setup': './assets/react/admin-dashboard/tutor-setup.js',
@@ -265,9 +267,11 @@ const scssEntries = {
   'tutor-icon-scss': './v2-library/tutor-icon/tutor-icon.scss',
   'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
   'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
+  'tutor-core-scss': './assets/core/scss/main.scss',
 };
 
 const resolveAliases = {
+  '@Core': path.resolve(__dirname, './assets/core/ts'),
   '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
   '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
   '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),

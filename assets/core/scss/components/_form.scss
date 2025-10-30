@@ -1,0 +1,173 @@
+// Form Components
+// Base form styles using mixins
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-form-group {
+  @include tutor-form-group;
+}
+
+.tutor-label {
+  @include tutor-label;
+}
+
+.tutor-input {
+  @include tutor-input-base;
+}
+
+.tutor-textarea {
+  @include tutor-textarea(120px);
+}
+
+.tutor-select {
+  @include tutor-select;
+}
+
+// Validation states
+.tutor-input--error,
+.tutor-textarea--error,
+.tutor-select--error {
+  @include tutor-input-validation(error);
+}
+
+.tutor-input--success,
+.tutor-textarea--success,
+.tutor-select--success {
+  @include tutor-input-validation(success);
+}
+
+.tutor-input--warning,
+.tutor-textarea--warning,
+.tutor-select--warning {
+  @include tutor-input-validation(warning);
+}
+
+// Help and error text
+.tutor-help-text {
+  @include tutor-help-text;
+}
+
+.tutor-error-text {
+  @include tutor-error-text;
+}
+
+// Checkbox and radio
+.tutor-checkbox {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  
+  input {
+    @include tutor-checkbox;
+  }
+  
+  .tutor-checkbox__label {
+    @include margin-start($tutor-spacing-3);
+    font-size: $tutor-font-size-p1;
+    color: var(--tutor-text-primary);
+  }
+}
+
+.tutor-radio {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  
+  input {
+    @include tutor-radio;
+  }
+  
+  .tutor-radio__label {
+    @include margin-start($tutor-spacing-3);
+    font-size: $tutor-font-size-p1;
+    color: var(--tutor-text-primary);
+  }
+}
+
+// Input group
+.tutor-input-group {
+  @include tutor-input-group;
+}
+
+// File input
+.tutor-file-input {
+  @include tutor-file-input;
+}
+
+// Form validation messages
+.tutor-form-feedback {
+  margin-top: $tutor-spacing-2;
+  font-size: $tutor-font-size-p3;
+  
+  &.tutor-form-feedback--success {
+    color: var(--tutor-success);
+  }
+  
+  &.tutor-form-feedback--warning {
+    color: var(--tutor-warning);
+  }
+  
+  &.tutor-form-feedback--error {
+    color: var(--tutor-error);
+  }
+}
+
+// Switch component
+.tutor-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  
+  input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .tutor-switch__track {
+    width: 44px;
+    height: 24px;
+    background-color: var(--tutor-surface-l2);
+    border-radius: $tutor-radius-full;
+    border: 1px solid var(--tutor-border-idle);
+    transition: all 0.2s ease;
+    position: relative;
+    
+    &::after {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 18px;
+      height: 18px;
+      background-color: white;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  input:checked + .tutor-switch__track {
+    background-color: var(--tutor-button-primary);
+    border-color: var(--tutor-button-primary);
+    
+    &::after {
+      transform: translateX(20px);
+    }
+  }
+  
+  input:focus + .tutor-switch__track {
+    @include tutor-focus-ring;
+  }
+  
+  .tutor-switch__label {
+    @include margin-start($tutor-spacing-3);
+    font-size: $tutor-font-size-p1;
+    color: var(--tutor-text-primary);
+  }
+}

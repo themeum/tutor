@@ -1,0 +1,276 @@
+// Accordion Component
+// RTL-aware accordion with expand/collapse animations
+
+@use '../mixins/layout' as *;
+@use '../mixins/rtl' as rtl;
+
+.tutor-accordion {
+  border: 1px solid var(--tutor-border-idle);
+  border-radius: var(--tutor-radius-lg, 8px);
+  overflow: hidden;
+  
+  &__item {
+    border-bottom: 1px solid var(--tutor-border-idle);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  
+  &__header {
+    width: 100%;
+    padding: var(--tutor-spacing-4, 8px) var(--tutor-spacing-6, 16px);
+    background: none;
+    border: none;
+    @include tutor-flex(row, center, space-between);
+    @include rtl.text-align-start();
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    
+    &:hover {
+      background-color: var(--tutor-surface-l2);
+    }
+    
+    &:focus {
+      outline: none;
+      background-color: var(--tutor-surface-l2);
+    }
+    
+    &[aria-expanded="true"] {
+      background-color: var(--tutor-surface-l2);
+      border-bottom: 1px solid var(--tutor-border-idle);
+    }
+  }
+  
+  &__title {
+    margin: 0;
+    font-size: var(--tutor-font-size-p1, 16px);
+    font-weight: var(--tutor-font-weight-medium, 500);
+    color: var(--tutor-text-primary);
+    line-height: var(--tutor-line-height-p1, 22px);
+    flex: 1;
+    
+    @include rtl.text-align-start();
+  }
+  
+  &__icon {
+    @include rtl.margin-start(var(--tutor-spacing-3, 6px));
+    color: var(--tutor-icon-idle);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+    
+    .tutor-accordion__header[aria-expanded="true"] & {
+      transform: rotate(180deg);
+    }
+    
+    // RTL support for icon rotation
+    [dir="rtl"] .tutor-accordion__header[aria-expanded="true"] & {
+      transform: rotate(180deg) scaleX(-1);
+    }
+  }
+  
+  &__content {
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    max-height: 0;
+    padding: 0 var(--tutor-spacing-6, 16px);
+    
+    &--expanded {
+      max-height: 1000px; // Large enough value for content
+      padding: var(--tutor-spacing-4, 8px) var(--tutor-spacing-6, 16px);
+    }
+  }
+  
+  &__body {
+    color: var(--tutor-text-primary);
+    font-size: var(--tutor-font-size-p1, 16px);
+    line-height: var(--tutor-line-height-p1, 22px);
+    
+    @include rtl.text-align-start();
+    
+    p:first-child {
+      margin-top: 0;
+    }
+    
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  // Variants
+  &--flush {
+    border: none;
+    border-radius: 0;
+    
+    .tutor-accordion__item {
+      border: none;
+      border-bottom: 1px solid var(--tutor-border-idle);
+      
+      &:last-child {
+        border-bottom: 1px solid var(--tutor-border-idle);
+      }
+    }
+    
+    .tutor-accordion__header {
+      padding-left: 0;
+      padding-right: 0;
+      
+      &:hover,
+      &:focus,
+      &[aria-expanded="true"] {
+        background-color: transparent;
+      }
+    }
+    
+    .tutor-accordion__content {
+      padding-left: 0;
+      padding-right: 0;
+      
+      &--expanded {
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+  }
+  
+  &--separated {
+    border: none;
+    
+    .tutor-accordion__item {
+      border: 1px solid var(--tutor-border-idle);
+      border-radius: var(--tutor-radius-lg, 8px);
+      margin-bottom: var(--tutor-spacing-3, 6px);
+      overflow: hidden;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  &--ghost {
+    border: none;
+    
+    .tutor-accordion__item {
+      border: none;
+      border-bottom: 1px solid var(--tutor-border-idle);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+    
+    .tutor-accordion__header {
+      &:hover,
+      &:focus {
+        background-color: var(--tutor-surface-l2);
+      }
+      
+      &[aria-expanded="true"] {
+        background-color: transparent;
+        border-bottom: none;
+      }
+    }
+  }
+  
+  // Size variants
+  &--sm {
+    .tutor-accordion__header {
+      padding: var(--tutor-spacing-3, 6px) var(--tutor-spacing-4, 8px);
+    }
+    
+    .tutor-accordion__title {
+      font-size: var(--tutor-font-size-p2, 14px);
+    }
+    
+    .tutor-accordion__content {
+      padding: 0 var(--tutor-spacing-4, 8px);
+      
+      &--expanded {
+        padding: var(--tutor-spacing-3, 6px) var(--tutor-spacing-4, 8px);
+      }
+    }
+    
+    .tutor-accordion__body {
+      font-size: var(--tutor-font-size-p2, 14px);
+    }
+  }
+  
+  &--lg {
+    .tutor-accordion__header {
+      padding: var(--tutor-spacing-6, 16px) var(--tutor-spacing-8, 24px);
+    }
+    
+    .tutor-accordion__title {
+      font-size: var(--tutor-font-size-h5, 18px);
+      font-weight: var(--tutor-font-weight-semibold, 600);
+    }
+    
+    .tutor-accordion__content {
+      padding: 0 var(--tutor-spacing-8, 24px);
+      
+      &--expanded {
+        padding: var(--tutor-spacing-6, 16px) var(--tutor-spacing-8, 24px);
+      }
+    }
+  }
+}
+
+// Animation classes for Alpine.js
+.tutor-accordion__content {
+  &[x-cloak] {
+    display: none !important;
+  }
+  
+  // Slide down animation
+  &.tutor-accordion-enter {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  
+  &.tutor-accordion-enter-active {
+    max-height: 1000px;
+    padding-top: var(--tutor-spacing-4, 8px);
+    padding-bottom: var(--tutor-spacing-4, 8px);
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  
+  &.tutor-accordion-leave {
+    max-height: 1000px;
+    padding-top: var(--tutor-spacing-4, 8px);
+    padding-bottom: var(--tutor-spacing-4, 8px);
+  }
+  
+  &.tutor-accordion-leave-active {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: max-height 0.25s ease, padding 0.25s ease;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 576px) {
+  .tutor-accordion {
+    &__header {
+      padding: var(--tutor-spacing-3, 6px) var(--tutor-spacing-4, 8px);
+    }
+    
+    &__title {
+      font-size: var(--tutor-font-size-p2, 14px);
+    }
+    
+    &__content {
+      padding: 0 var(--tutor-spacing-4, 8px);
+      
+      &--expanded {
+        padding: var(--tutor-spacing-3, 6px) var(--tutor-spacing-4, 8px);
+      }
+    }
+    
+    &__body {
+      font-size: var(--tutor-font-size-p2, 14px);
+    }
+  }
+}

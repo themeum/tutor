@@ -1,0 +1,120 @@
+// Card Mixins
+// Reusable card styles with elevation and variants
+
+@use '../tokens/' as *;
+@use 'layout' as *;
+
+@mixin tutor-card-base {
+  background-color: var(--tutor-surface-l1);
+  border-radius: $tutor-radius-lg;
+  overflow: hidden;
+}
+
+@mixin tutor-card-elevation($level: 1) {
+  @if $level == 0 {
+    box-shadow: none;
+    border: 1px solid var(--tutor-border-idle);
+  } @else if $level == 1 {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  } @else if $level == 2 {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.06);
+  } @else if $level == 3 {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1), 0 4px 6px rgba(0, 0, 0, 0.05);
+  }
+}
+
+@mixin tutor-card-padding($size: medium) {
+  @if $size == small {
+    padding: $tutor-spacing-4;
+  } @else if $size == large {
+    padding: $tutor-spacing-8;
+  } @else {
+    padding: $tutor-spacing-6;
+  }
+}
+
+@mixin tutor-card-interactive {
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    @include tutor-card-elevation(2);
+  }
+}
+
+// Card header mixin
+@mixin tutor-card-header {
+  padding: $tutor-spacing-6 $tutor-spacing-6 0;
+  border-bottom: 1px solid var(--tutor-border-idle);
+  margin-bottom: $tutor-spacing-6;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Card body mixin
+@mixin tutor-card-body {
+  padding: $tutor-spacing-6;
+}
+
+// Card footer mixin
+@mixin tutor-card-footer {
+  padding: 0 $tutor-spacing-6 $tutor-spacing-6;
+  border-top: 1px solid var(--tutor-border-idle);
+  margin-top: $tutor-spacing-6;
+  
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+// Card variants
+@mixin tutor-card-variant($variant: default) {
+  @if $variant == outlined {
+    border: 1px solid var(--tutor-border-idle);
+    box-shadow: none;
+  } @else if $variant == filled {
+    background-color: var(--tutor-surface-l2);
+    border: none;
+  } @else if $variant == brand {
+    border: 1px solid var(--tutor-border-brand);
+    background-color: var(--tutor-brand-100);
+  } @else if $variant == success {
+    border: 1px solid var(--tutor-success);
+    background-color: var(--tutor-success-light);
+  } @else if $variant == warning {
+    border: 1px solid var(--tutor-warning);
+    background-color: var(--tutor-warning-light);
+  } @else if $variant == error {
+    border: 1px solid var(--tutor-error);
+    background-color: var(--tutor-error-light);
+  }
+}
+
+// Card image mixin
+@mixin tutor-card-image {
+  width: 100%;
+  height: auto;
+  display: block;
+  
+  &.tutor-card-image--top {
+    border-radius: $tutor-radius-lg $tutor-radius-lg 0 0;
+  }
+  
+  &.tutor-card-image--bottom {
+    border-radius: 0 0 $tutor-radius-lg $tutor-radius-lg;
+  }
+}
+
+// Card grid layout
+@mixin tutor-card-grid($columns: 3, $gap: $tutor-spacing-6) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: $gap;
+  
+  @include tutor-respond-to(lg) {
+    grid-template-columns: repeat($columns, 1fr);
+  }
+}
