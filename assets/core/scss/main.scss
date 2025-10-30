@@ -1,51 +1,20 @@
 // Tutor Design System - Main Entry Point
 // Single CSS file with all themes and RTL support
 
-@use 'sass:map';
-
 // Import design tokens
-@use 'tokens/colors' as *;
-@use 'tokens/typography' as *;
-@use 'tokens/spacing' as *;
-@use 'tokens/radius' as *;
-@use 'tokens/breakpoints' as *;
+@use 'tokens';
 
 // Import themes
-@use 'themes/light' as *;
-@use 'themes/dark' as *;
+@use 'themes';
 
 // Import mixins
-@use 'mixins/buttons' as *;
-@use 'mixins/cards' as *;
-@use 'mixins/forms' as *;
-@use 'mixins/layout' as *;
-@use 'mixins/utilities' as *;
-@use 'mixins/rtl' as *;
+@use 'mixins';
 
 // Import base components
-@use 'components/button';
-@use 'components/card';
-@use 'components/form';
-@use 'components/navigation';
-@use 'components/progress';
-@use 'components/dropdown';
-@use 'components/modal';
-@use 'components/popover';
-@use 'components/tabs';
-@use 'components/accordion';
-@use 'components/toast';
-@use 'components/sidebar';
-@use 'components/tooltip';
+@use 'components';
 
 // Import utilities
-@use 'utilities/rtl';
-@use 'utilities/colors';
-@use 'utilities/borders';
-@use 'utilities/layout';
-@use 'utilities/spacing';
-@use 'utilities/typography';
-@use 'utilities/sizing';
-@use 'utilities/zIndex';
+@use 'utilities';
 
 // Base styles
 *,
@@ -71,4 +40,8 @@ body {
   transition:
     background-color 0.2s ease,
     color 0.2s ease;
+}
+
+[x-cloak] {
+  display: none !important;
 }

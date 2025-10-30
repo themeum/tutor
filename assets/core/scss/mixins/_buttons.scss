@@ -1,9 +1,7 @@
 // Button Mixins
 // Reusable button styles with variants and sizes
 
-@use '../tokens/spacing' as *;
-@use '../tokens/typography' as *;
-@use '../tokens/radius' as *;
+@use '../tokens' as *;
 @use 'rtl' as *;
 
 @mixin tutor-button-base {

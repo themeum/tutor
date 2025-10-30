@@ -1,12 +1,8 @@
 // Navigation Components
 // Tabs, breadcrumbs, pagination, and menu components
 
-@use '../tokens/spacing' as *;
-@use '../tokens/typography' as *;
-@use '../tokens/radius' as *;
-@use '../mixins/layout' as *;
-@use '../mixins/buttons' as *;
-@use '../mixins/rtl' as *;
+@use '../tokens' as *;
+@use '../mixins' as *;
 
 // Tabs
 .tutor-tabs {

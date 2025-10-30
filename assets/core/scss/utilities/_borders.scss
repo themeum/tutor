@@ -1,8 +1,7 @@
 // Border Utilities
 // Border width, style, and radius utilities with smart defaults
 
-@use '../tokens/radius' as *;
-@use '../tokens/breakpoints' as *;
+@use '../tokens' as *;
 
 // =============================================================================
 // SMART BORDER UTILITIES (with defaults)

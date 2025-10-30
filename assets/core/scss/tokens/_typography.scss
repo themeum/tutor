@@ -12,7 +12,7 @@ $tutor-font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
 // FONT WEIGHTS
 // =============================================================================
 
-$tutor-font-weight-weak: 400;      // Regular
+$tutor-font-weight-regular: 400;      // Regular
 $tutor-font-weight-medium: 500;    // Medium
 $tutor-font-weight-semi-strong: 600; // Semi Bold
 $tutor-font-weight-strong: 700;    // Bold
@@ -84,8 +84,27 @@ $tutor-line-heights: (
 );
 
 $tutor-font-weights: (
-  weak: $tutor-font-weight-weak,
+  regular: $tutor-font-weight-regular,
   medium: $tutor-font-weight-medium,
   semi-strong: $tutor-font-weight-semi-strong,
   strong: $tutor-font-weight-strong
 );
+
+$tutor-text-colors: (
+  primary: var(--tutor-text-primary),
+  primary-inverse: var(--tutor-text-primary-inverse),
+  secondary: var(--tutor-text-secondary),
+  disabled: var(--tutor-text-disabled),
+  brand: var(--tutor-text-brand),
+  brand-secondary: var(--tutor-text-brand-secondary),
+  light: var(--tutor-text-light),
+  success: var(--tutor-text-success),
+  critical: var(--tutor-text-critical),
+  warning: var(--tutor-text-warning),
+  caution: var(--tutor-text-caution),
+  exception1: var(--tutor-text-exception1),
+  exception2: var(--tutor-text-exception2),
+  exception4: var(--tutor-text-exception4),
+  exception5: var(--tutor-text-exception5),
+  highlighted-hover: var(--tutor-text-highlighted-hover)
+)

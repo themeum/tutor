@@ -2,11 +2,8 @@
 // Font sizes, weights, colors, and alignment utilities from Figma
 
 @use 'sass:map';
-@use '../tokens/typography' as *;
-@use '../tokens/colors' as *;
-@use '../tokens/spacing' as *;
-@use '../tokens/breakpoints' as *;
-@use '../mixins/utilities' as *;
+@use '../tokens' as *;
+@use '../mixins' as *;
 
 // Typography component classes (from Figma Typography tokens)
 .tutor-h1 {
@@ -88,6 +85,7 @@
   [dir="ltr"] & {
     text-align: left;
   }
+
   [dir="rtl"] & {
     text-align: right;
   }
@@ -101,6 +99,7 @@
   [dir="ltr"] & {
     text-align: right;
   }
+
   [dir="rtl"] & {
     text-align: left;
   }
@@ -359,7 +358,7 @@ html.tutor-font-scale-120 {
 
 // Responsive typography utilities
 @each $breakpoint, $value in $tutor-breakpoints {
-  @if $value > 0 {
+  @if $value >0 {
     @media (min-width: $value) {
       @each $size-key, $size-value in $tutor-font-sizes {
         .tutor-#{$breakpoint}-text-#{$size-key} {
@@ -367,29 +366,31 @@ html.tutor-font-scale-120 {
           line-height: map.get($tutor-line-heights, $size-key);
         }
       }
-      
+
       .tutor-#{$breakpoint}-text-left {
         [dir="ltr"] & {
           text-align: left;
         }
+
         [dir="rtl"] & {
           text-align: right;
         }
       }
-      
+
       .tutor-#{$breakpoint}-text-center {
         text-align: center;
       }
-      
+
       .tutor-#{$breakpoint}-text-right {
         [dir="ltr"] & {
           text-align: right;
         }
+
         [dir="rtl"] & {
           text-align: left;
         }
       }
-      
+
       @each $weight-key, $weight-value in $tutor-font-weights {
         .tutor-#{$breakpoint}-font-#{$weight-key} {
           font-weight: $weight-value;

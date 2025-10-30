@@ -1,10 +1,10 @@
-@use '../tokens/typography' as *;
 @use 'sass:map';
+@use '../tokens' as *;
 
-@mixin tutor-typography($size: 'medium', $typeface: 'regular', $context: 'body', $color: 'primary') {
-  $font-weight: if(map.has-key($tutor-font-weights, $typeface), map.get($tutor-font-weights, $typeface), map.get($tutor-font-weights, 'regular'));
+@mixin tutor-typography($size: 'medium', $typeface: 'regular', $color: 'primary', $context: 'body') {
   $font-size: if(map.has-key($tutor-font-sizes, $size), map.get($tutor-font-sizes, $size), map.get($tutor-font-sizes, 'medium'));
   $line-height: if(map.has-key($tutor-line-heights, $size), map.get($tutor-line-heights, $size), map.get($tutor-line-heights, 'medium'));
+  $font-weight: if(map.has-key($tutor-font-weights, $typeface), map.get($tutor-font-weights, $typeface), map.get($tutor-font-weights, 'regular'));
   $color: if(map.has-key($tutor-text-colors, $color), map.get($tutor-text-colors, $color), map.get($tutor-text-colors, 'primary'));
 
   font-family: if($context =='heading', $tutor-font-family-heading, $tutor-font-family-body);

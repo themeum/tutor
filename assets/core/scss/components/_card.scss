@@ -1,9 +1,8 @@
 // Card Component
 // Base card styles using mixins
 
-@use '../tokens/spacing' as *;
-@use '../tokens/typography' as *;
-@use '../mixins/cards' as *;
+@use '../tokens' as *;
+@use '../mixins' as *;
 
 .tutor-card {
   @include tutor-card-base;
