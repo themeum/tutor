@@ -2,7 +2,6 @@
 // Reusable button styles with variants and sizes
 
 @use '../tokens' as *;
-@use 'rtl' as *;
 
 @mixin tutor-button-base {
   display: inline-flex;
@@ -163,7 +162,6 @@
   }
 }
 
-// Button group mixin
 @mixin tutor-button-group($direction: horizontal) {
   display: flex;
 
@@ -172,12 +170,13 @@
 
     .tutor-btn {
       &:not(:first-child) {
-        @include border-radius-start(0);
-        @include border-start-width(0);
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
       }
 
       &:not(:last-child) {
-        @include border-radius-end(0);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
       }
     }
   } @else {
@@ -187,7 +186,6 @@
       &:not(:first-child) {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
-        border-top-width: 0;
       }
 
       &:not(:last-child) {
@@ -198,22 +196,52 @@
   }
 }
 
-// Loading state mixin
+@mixin tutor-button-block() {
+  width: 100%;
+  justify-content: center;
+}
+
+@mixin tutor-button-icon-size($size) {
+  @if $size == x-small {
+    padding: $tutor-spacing-4;
+    min-width: 32px;
+    min-height: 32px;
+  } @else if $size == small {
+    padding: $tutor-spacing-4;
+    min-width: 36px;
+    min-height: 36px;
+  } @else if $size == medium {
+    padding: 10px;
+    min-width: 40px;
+    min-height: 40px;
+  } @else if $size == large {
+    padding: 14px;
+    min-width: 48px;
+    min-height: 48px;
+  }
+}
+
 @mixin tutor-button-loading {
   position: relative;
-  color: transparent !important;
+  pointer-events: none;
+  gap: $tutor-spacing-3;
 
-  &::after {
+  &::before {
     content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
     width: 16px;
     height: 16px;
-    margin: -8px 0 0 -8px;
     border: 2px solid currentColor;
     border-radius: 50%;
     border-top-color: transparent;
     animation: tutor-spin 1s linear infinite;
+  }
+}
+
+@keyframes tutor-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
