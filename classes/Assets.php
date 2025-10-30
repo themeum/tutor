@@ -201,20 +201,6 @@ class Assets {
 	 * @return void
 	 */
 	public function admin_scripts( $slug ) {
-		if ( 'tutor-lms-pro_page_playground' === $slug ) {
-			// Enqueue core component scripts.
-			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
-			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
-
-			$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
-			$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
-
-			wp_enqueue_style( 'tutor-core', $core_css_url, array(), filemtime( $core_css_path ), 'all' );
-			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
-
-			return;
-		}
-
 		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
 		/**
@@ -266,6 +252,18 @@ class Assets {
 		if ( 'tutor-themes' === $page ) {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
 			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
+		}
+
+		if ( 'tutor-lms-pro_page_playground' === $slug ) {
+			// Enqueue core component scripts.
+			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
+			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
+
+			$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
+			$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
+
+			wp_enqueue_style( 'tutor-core', $core_css_url, array(), filemtime( $core_css_path ), 'all' );
+			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
 		}
 	}
 
@@ -428,10 +426,6 @@ class Assets {
 	 * @return void
 	 */
 	public function common_scripts( $slug ) {
-		if ( 'tutor-lms-pro_page_playground' === $slug ) {
-			return;
-		}
-
 		/**
 		 * Load TinyMCE for tutor settings page if tutor pro is not available.
 		 *
@@ -447,10 +441,12 @@ class Assets {
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
 
 		// Common css library.
-		if ( is_rtl() ) {
-			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
-		} else {
-			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
+		if ( 'tutor-lms-pro_page_playground' !== $slug ) {
+			if ( is_rtl() ) {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
+			} else {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
+			}
 		}
 
 		/**
