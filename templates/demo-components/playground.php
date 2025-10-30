@@ -35,7 +35,7 @@
 	</h1>
 	<nav>
 		<?php if ( $subpage ) : ?>
-			<a href="<?php echo esc_url( $current_url ); ?>">⬅ Back</a>
+			<a href="<?php echo esc_url( $current_url ); ?>">🛝 Playground</a>
 		<?php endif; ?>
 
 		<?php foreach ( $subpages as $slug => $title ) : ?>
