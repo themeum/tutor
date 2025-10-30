@@ -125,7 +125,7 @@ const MagicFill = () => {
               <button type="button" css={styles.backButton} onClick={() => onDropdownMenuChange('generation')}>
                 <SVGIcon name="arrowLeft" />
               </button>
-              {__('Magic Fill', 'tutor')}
+              {__('Magic Fill', __TUTOR_TEXT_DOMAIN__)}
             </div>
             <div css={styles.actions}>
               <MagicButton
@@ -137,7 +137,7 @@ const MagicFill = () => {
                   setPointer(1);
                 }}
               >
-                {__('Revert to Original', 'tutor')}
+                {__('Revert to Original', __TUTOR_TEXT_DOMAIN__)}
               </MagicButton>
               <Separator
                 variant="vertical"
@@ -240,8 +240,8 @@ const MagicFill = () => {
             render={(props) => (
               <FormTextareaInput
                 {...props}
-                label={__('Describe the Fill', 'tutor')}
-                placeholder={__('Write 5 words to describe...', 'tutor')}
+                label={__('Describe the Fill', __TUTOR_TEXT_DOMAIN__)}
+                placeholder={__('Write 5 words to describe...', __TUTOR_TEXT_DOMAIN__)}
                 rows={4}
                 isMagicAi
               />
@@ -259,7 +259,7 @@ const MagicFill = () => {
           <div css={styles.footerButtons}>
             <MagicButton type="submit" disabled={magicFillImageMutation.isPending || !form.watch('prompt')}>
               <SVGIcon name="magicWand" width={24} height={24} />
-              {__('Generative Erase', 'tutor')}
+              {__('Generative Erase', __TUTOR_TEXT_DOMAIN__)}
             </MagicButton>
             <MagicButton
               variant="primary_outline"
@@ -276,7 +276,7 @@ const MagicFill = () => {
                 }
               }}
             >
-              {__('Use Image', 'tutor')}
+              {__('Use Image', __TUTOR_TEXT_DOMAIN__)}
             </MagicButton>
           </div>
         </div>

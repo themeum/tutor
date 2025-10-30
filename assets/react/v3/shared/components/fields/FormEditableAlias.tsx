@@ -86,7 +86,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL, onChange }:
                         onChange?.(convertToSlug(editValue.replace(baseURL, '')));
                       }}
                     >
-                      {__('Save', 'tutor')}
+                      {__('Save', __TUTOR_TEXT_DOMAIN__)}
                     </Button>
                     <Button
                       buttonContentCss={styles.cancelButton}
@@ -97,7 +97,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL, onChange }:
                         setEditValue(value);
                       }}
                     >
-                      {__('Cancel', 'tutor')}
+                      {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
                     </Button>
                   </div>
                 </>

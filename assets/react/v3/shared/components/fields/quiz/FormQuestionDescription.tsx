@@ -130,10 +130,10 @@ const FormQuestionDescription = ({
         <Show when={isEdit}>
           <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
             <Button variant="text" size="small" onClick={handleCancelClick}>
-              {__('Cancel', 'tutor')}
+              {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
             </Button>
             <Button variant="secondary" size="small" onClick={handleOkClick} disabled={inputValue === previousValue}>
-              {__('Ok', 'tutor')}
+              {__('Ok', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </div>
         </Show>
@@ -145,7 +145,9 @@ const FormQuestionDescription = ({
             data-overlay
             tabIndex={0}
             role="button"
-            aria-label={inputValue ? __('Edit description', 'tutor') : __('Add description', 'tutor')}
+            aria-label={
+              inputValue ? __('Edit description', __TUTOR_TEXT_DOMAIN__) : __('Add description', __TUTOR_TEXT_DOMAIN__)
+            }
           />
         </Show>
       </div>

@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $video_info = tutor_utils()->get_video_info();
+$video_info = $video_info ? (array) $video_info : array();
 $poster     = tutor_utils()->avalue_dot( 'poster', $video_info );
 $poster_url = $poster ? wp_get_attachment_url( $poster ) : '';
 

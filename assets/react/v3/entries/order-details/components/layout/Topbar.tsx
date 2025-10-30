@@ -141,6 +141,7 @@ const styles = {
     gap: ${spacing[16]};
   `,
   headerTitle: css`
+    margin: 0;
     ${typography.heading5('medium')};
 
     ${Breakpoint.smallMobile} {
@@ -155,5 +156,6 @@ const styles = {
   updateMessage: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
+    margin: 0;
   `,
 };

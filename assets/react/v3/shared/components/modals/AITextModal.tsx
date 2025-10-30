@@ -62,16 +62,16 @@ export interface GenerateTextFieldProps {
 }
 
 const inspirationPrompts = [
-  __('Mastering Digital Marketing: A Complete Guide', 'tutor'),
-  __('The Ultimate Photoshop Course for Beginners', 'tutor'),
-  __('Python Programming: From Zero to Hero', 'tutor'),
-  __('Creative Writing Essentials: Unlock Your Storytelling Potential', 'tutor'),
-  __('The Complete Guide to Web Development with React', 'tutor'),
-  __('Master Public Speaking: Deliver Powerful Presentations', 'tutor'),
-  __('Excel for Business: From Basics to Advanced Analytics', 'tutor'),
-  __('Fitness Fundamentals: Build Strength and Confidence', 'tutor'),
-  __('Photography Made Simple: Capture Stunning Shots', 'tutor'),
-  __('Financial Freedom: Learn the Basics of Investing', 'tutor'),
+  __('Mastering Digital Marketing: A Complete Guide', __TUTOR_TEXT_DOMAIN__),
+  __('The Ultimate Photoshop Course for Beginners', __TUTOR_TEXT_DOMAIN__),
+  __('Python Programming: From Zero to Hero', __TUTOR_TEXT_DOMAIN__),
+  __('Creative Writing Essentials: Unlock Your Storytelling Potential', __TUTOR_TEXT_DOMAIN__),
+  __('The Complete Guide to Web Development with React', __TUTOR_TEXT_DOMAIN__),
+  __('Master Public Speaking: Deliver Powerful Presentations', __TUTOR_TEXT_DOMAIN__),
+  __('Excel for Business: From Basics to Advanced Analytics', __TUTOR_TEXT_DOMAIN__),
+  __('Fitness Fundamentals: Build Strength and Confidence', __TUTOR_TEXT_DOMAIN__),
+  __('Photography Made Simple: Capture Stunning Shots', __TUTOR_TEXT_DOMAIN__),
+  __('Financial Freedom: Learn the Basics of Investing', __TUTOR_TEXT_DOMAIN__),
 ];
 
 const AITextModal = <T extends FieldValues>({
@@ -187,10 +187,13 @@ const AITextModal = <T extends FieldValues>({
               render={(props) => (
                 <FormTextareaInput
                   {...props}
-                  label={fieldLabel || __('Craft Your Course Description', 'tutor')}
+                  label={fieldLabel || __('Craft Your Course Description', __TUTOR_TEXT_DOMAIN__)}
                   placeholder={
                     fieldPlaceholder ||
-                    __('Provide a brief overview of your course topic, target audience, and key takeaways', 'tutor')
+                    __(
+                      'Provide a brief overview of your course topic, target audience, and key takeaways',
+                      __TUTOR_TEXT_DOMAIN__,
+                    )
                   }
                   rows={4}
                   isMagicAi
@@ -207,7 +210,7 @@ const AITextModal = <T extends FieldValues>({
               }}
             >
               <SVGIcon name="bulbLine" />
-              {__('Inspire Me', 'tutor')}
+              {__('Inspire Me', __TUTOR_TEXT_DOMAIN__)}
             </button>
           </div>
           <Show
@@ -274,17 +277,17 @@ const AITextModal = <T extends FieldValues>({
                   roundedFull={false}
                   onClick={() => handleContentModification('rephrase')}
                 >
-                  {__('Rephrase', 'tutor')}
+                  {__('Rephrase', __TUTOR_TEXT_DOMAIN__)}
                 </MagicButton>
                 <MagicButton
                   variant="outline"
                   roundedFull={false}
                   onClick={() => handleContentModification('make_shorter')}
                 >
-                  {__('Make Shorter', 'tutor')}
+                  {__('Make Shorter', __TUTOR_TEXT_DOMAIN__)}
                 </MagicButton>
                 <MagicButton variant="outline" roundedFull={false} ref={toneRef} onClick={() => setPopover('tone')}>
-                  {__('Change Tone', 'tutor')}
+                  {__('Change Tone', __TUTOR_TEXT_DOMAIN__)}
                   <SVGIcon name="chevronDown" width={16} height={16} />
                 </MagicButton>
                 <MagicButton
@@ -293,7 +296,7 @@ const AITextModal = <T extends FieldValues>({
                   ref={translateRef}
                   onClick={() => setPopover('translate')}
                 >
-                  {__('Translate to', 'tutor')}
+                  {__('Translate to', __TUTOR_TEXT_DOMAIN__)}
                   <SVGIcon name="chevronDown" width={16} height={16} />
                 </MagicButton>
                 <MagicButton
@@ -301,21 +304,21 @@ const AITextModal = <T extends FieldValues>({
                   roundedFull={false}
                   onClick={() => handleContentModification('write_as_bullets')}
                 >
-                  {__('Write as Bullets', 'tutor')}
+                  {__('Write as Bullets', __TUTOR_TEXT_DOMAIN__)}
                 </MagicButton>
                 <MagicButton
                   variant="outline"
                   roundedFull={false}
                   onClick={() => handleContentModification('make_longer')}
                 >
-                  {__('Make Longer', 'tutor')}
+                  {__('Make Longer', __TUTOR_TEXT_DOMAIN__)}
                 </MagicButton>
                 <MagicButton
                   variant="outline"
                   roundedFull={false}
                   onClick={() => handleContentModification('simplify_language')}
                 >
-                  {__('Simplify Language', 'tutor')}
+                  {__('Simplify Language', __TUTOR_TEXT_DOMAIN__)}
                 </MagicButton>
               </div>
             </Show>
@@ -361,7 +364,7 @@ const AITextModal = <T extends FieldValues>({
                 disabled={magicTextGenerationMutation.isPending || !prompt || modifyContentMutation.isPending}
               >
                 <SVGIcon name="magicWand" width={24} height={24} />
-                {__('Generate Now', 'tutor')}
+                {__('Generate Now', __TUTOR_TEXT_DOMAIN__)}
               </MagicButton>
             }
           >
@@ -370,7 +373,7 @@ const AITextModal = <T extends FieldValues>({
               type="submit"
               disabled={magicTextGenerationMutation.isPending || !prompt || modifyContentMutation.isPending}
             >
-              {__('Generate Again', 'tutor')}
+              {__('Generate Again', __TUTOR_TEXT_DOMAIN__)}
             </MagicButton>
             <MagicButton
               variant="primary"
@@ -382,7 +385,7 @@ const AITextModal = <T extends FieldValues>({
                 closeModal();
               }}
             >
-              {__('Use This', 'tutor')}
+              {__('Use This', __TUTOR_TEXT_DOMAIN__)}
             </MagicButton>
           </Show>
         </div>

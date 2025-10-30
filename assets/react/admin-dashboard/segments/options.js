@@ -212,14 +212,17 @@ document.addEventListener('DOMContentLoaded', function () {
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
-							tutor_toast(__('Success!', 'tutor'), message, 'success');
+							tutor_toast(__('Success!', 'tutor'), data.message || message, 'success');
 							window.dispatchEvent(new CustomEvent('tutor_option_saved', { detail: data }));
 							if (reload_required) {
 								window.location.reload(true);
 							}
 						} else {
-							tutor_toast(__('Warning!', 'tutor'), message, 'warning');
+							tutor_toast(__('Error!', 'tutor'), data.message || message, 'error');
 						}
+					},
+					error: function () {
+						tutor_toast(__('Error!', 'tutor'), __('Something went wrong!', 'tutor'), 'error');
 					},
 					complete: function () {
 						button.removeClass('is-loading');

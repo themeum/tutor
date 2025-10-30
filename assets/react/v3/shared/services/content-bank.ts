@@ -78,7 +78,7 @@ export const useGetContentBankContents = (params: ContentBankContentsParams) => 
 };
 
 export const CONTENT_BANK_POST_TYPE_MAP = {
-  'cb-lesson': __('Lesson', 'tutor'),
-  'cb-assignment': __('Assignment', 'tutor'),
-  'cb-question': __('Question', 'tutor'),
+  'cb-lesson': __('Lesson', __TUTOR_TEXT_DOMAIN__),
+  'cb-assignment': __('Assignment', __TUTOR_TEXT_DOMAIN__),
+  'cb-question': __('Question', __TUTOR_TEXT_DOMAIN__),
 } as const;
