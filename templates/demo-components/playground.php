@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tutor Playground</title>
+	<style>
+		nav {
+			margin-bottom: 30px;
+		}
+		nav a {
+			padding-right: 10px;
+		}
+		nav a.active {
+			color: blue;
+		}
+		section {
+			margin-bottom: 30px;
+		}
+	</style>
+</head>
+<body>
+<?php
+	$current_url = admin_url( 'admin.php?page=playground' );
+
+	$subpages = array(
+		'dashboard'     => 'Dashboard',
+		'learning-area' => 'Learning Area',
+	);
+
+	$subpage = $_GET['subpage'] ?? '';
+	?>
+	<h1>
+		Tutor LMS 4.wow 🔥
+	</h1>
+	<nav>
+		<?php if ( $subpage ) : ?>
+			<a href="<?php echo esc_url( $current_url ); ?>">⬅ Back</a>
+		<?php endif; ?>
+
+		<?php foreach ( $subpages as $slug => $title ) : ?>
+			<a href="<?php echo esc_url( add_query_arg( 'subpage', $slug, $current_url ) ); ?>"  class="<?php echo esc_attr( $subpage === $slug ? 'active' : '' ); ?>">
+				<?php echo esc_html( $title ); ?>
+			</a>
+		<?php endforeach; ?>
+	</nav>
+	<?php if ( $subpage ) : ?>
+		<?php include $subpage . '.php'; ?>
+		<?php else : ?>
+		<section>
+			<?php require 'button.php'; ?>
+		</section>
+	<?php endif ?>
+
+</body>
+</html>
