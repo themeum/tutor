@@ -49,6 +49,7 @@
 		<?php else : ?>
 		<section>
 			<?php require 'button.php'; ?>
+			<?php require 'accordion.php'; ?>
 		</section>
 	<?php endif ?>
 
