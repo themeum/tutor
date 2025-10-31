@@ -1,56 +1,49 @@
-@use '../mixins/layout' as *;
-@use '../mixins/rtl' as rtl;
-@use '../tokens/spacing' as spacing;
-@use '../tokens/radius' as radius;
-@use '../tokens/typography' as typography;
+@use '../mixins' as *;
+@use '../tokens' as tokens;
 
 .tutor-accordion {
-  border: 1px solid var(--tutor-border-idle);
-  border-radius: radius.$tutor-radius-lg;
-  overflow: hidden;
-  background-color: var(--tutor-surface-l1);
+  overflow: visible;
+  background-color: transparent;
+  @include tutor-flex(column, stretch, start);
+  gap: tokens.$tutor-spacing-6;
 
   &-item {
-    border-bottom: 1px solid var(--tutor-border-idle);
-
-    &:last-child {
-      border-bottom: none;
-    }
+    background-color: var(--tutor-surface-l1);
+    border: 1px solid var(--tutor-border-idle);
+    border-radius: tokens.$tutor-radius-lg;
+    overflow: hidden;
   }
 
   &-header {
     width: 100%;
-    padding: spacing.$tutor-spacing-5 spacing.$tutor-spacing-6;
+    padding: tokens.$tutor-spacing-5 tokens.$tutor-spacing-6;
     background: none;
     border: none;
     @include tutor-flex(row, start, space-between);
     text-align: left;
-    @include rtl.text-align-start();
+    @include text-align-start();
     cursor: pointer;
     transition: background-color 0.2s ease;
 
     &:hover {
       background-color: var(--tutor-surface-l2);
     }
-
-    &[aria-expanded='true'] {
-      border-bottom: 1px solid var(--tutor-border-idle);
-    }
   }
 
   &-title {
     margin: 0;
-    font-size: typography.$tutor-font-size-p1;
-    font-family: typography.$tutor-font-family-heading;
-    font-weight: typography.$tutor-font-weight-medium;
+    font-size: tokens.$tutor-font-size-p1;
+    font-family: tokens.$tutor-font-family-heading;
+    font-weight: tokens.$tutor-font-weight-medium;
     color: var(--tutor-text-primary);
-    line-height: typography.$tutor-line-height-medium;
-    @include rtl.text-align-start();
+    line-height: tokens.$tutor-line-height-medium;
+    @include text-align-start();
   }
 
   &-icon {
-    @include rtl.margin-start(spacing.$tutor-spacing-3);
+    @include margin-start(tokens.$tutor-spacing-3);
     color: var(--tutor-icon-idle);
+
     // TODO: Need to change it later
     transition:
       transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
@@ -70,28 +63,31 @@
 
   &-content {
     overflow: hidden;
+
     // TODO: Need to change it later
     transition:
       height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       padding 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       opacity 0.25s ease-in-out;
     height: 0;
-    padding: 0 spacing.$tutor-spacing-6;
+    padding: 0 tokens.$tutor-spacing-6;
     --content-height: 0px;
     opacity: 0;
 
     &--expanded {
       height: var(--content-height);
-      padding: spacing.$tutor-spacing-5 spacing.$tutor-spacing-6;
+      padding: tokens.$tutor-spacing-2 tokens.$tutor-spacing-6 tokens.$tutor-spacing-5;
       opacity: 1;
+
       // Need to change it later
       transition-delay: 0s, 0s, 0.1s;
     }
 
     &--collapsed {
       height: 0;
-      padding: 0 spacing.$tutor-spacing-6;
+      padding: 0 tokens.$tutor-spacing-6;
       opacity: 0;
+
       // Need to change it later
       transition-delay: 0s, 0s, 0s;
     }
