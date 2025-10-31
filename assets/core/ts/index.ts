@@ -3,9 +3,10 @@ import Alpine from 'alpinejs';
 import { TutorComponentRegistry } from '@Core/ComponentRegistry';
 
 import { buttonMeta } from '@Core/components/button';
+import { fileUploaderMeta } from '@Core/components/file-uploader';
 
 const initializePlugin = () => {
-  TutorComponentRegistry.registerAll([buttonMeta]);
+  TutorComponentRegistry.registerAll([buttonMeta, fileUploaderMeta]);
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 
