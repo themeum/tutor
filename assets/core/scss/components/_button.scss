@@ -1,9 +1,6 @@
 // Button Component
-// Base button styles using mixins with RTL support
-
 @use '../tokens' as *;
 @use '../mixins' as *;
-@use '../mixins/rtl' as rtl;
 
 .tutor-btn {
   @include tutor-button-base;
@@ -67,40 +64,32 @@
 
 // Button with full width
 .tutor-btn-block {
-  width: 100%;
-  justify-content: center;
+  @include tutor-button-block();
 }
 
 // Button group
 .tutor-btn-group {
   @include tutor-button-group(horizontal);
+}
 
-  &.tutor-btn-group-vertical {
-    @include tutor-button-group(vertical);
-  }
+// Button group vertical
+.tutor-btn-group-vertical {
+  @include tutor-button-group(vertical);
 }
 
 // Icon-only button
 .tutor-btn-icon {
-  padding: 10px;
-  min-width: 40px;
-  min-height: 40px;
+  @include tutor-button-icon-size(medium);
 
   &.tutor-btn-x-small {
-    padding: $tutor-spacing-4;
-    min-width: 32px;
-    min-height: 32px;
+    @include tutor-button-icon-size(x-small);
   }
 
   &.tutor-btn-small {
-    padding: $tutor-spacing-4;
-    min-width: 36px;
-    min-height: 36px;
+    @include tutor-button-icon-size(small);
   }
 
   &.tutor-btn-large {
-    padding: 14px;
-    min-width: 48px;
-    min-height: 48px;
+    @include tutor-button-icon-size(large);
   }
 }
