@@ -3,309 +3,141 @@
 // Note: Core utilities (ml, mr, pl, pr, text-left, etc.) are now RTL-aware by default
 
 @use '../tokens' as *;
-
 // =============================================================================
 // LOGICAL DIRECTION UTILITIES (Semantic alternatives to physical directions)
 // =============================================================================
 
-// Text alignment utilities (semantic)
+// Text alignment utilities
 .tutor-text-start {
-  [dir="ltr"] & {
-    text-align: left;
-  }
-  [dir="rtl"] & {
-    text-align: right;
-  }
+  text-align: start;
 }
-
 .tutor-text-end {
-  [dir="ltr"] & {
-    text-align: right;
-  }
-  [dir="rtl"] & {
-    text-align: left;
-  }
+  text-align: end;
 }
 
-// Float utilities (semantic)
+// Float utilities
 .tutor-float-start {
-  [dir="ltr"] & {
-    float: left;
-  }
-  [dir="rtl"] & {
-    float: right;
-  }
+  float: inline-start;
 }
-
 .tutor-float-end {
-  [dir="ltr"] & {
-    float: right;
-  }
-  [dir="rtl"] & {
-    float: left;
-  }
+  float: inline-end;
 }
 
-// Logical margin utilities (semantic alternatives)
+// Logical margin utilities
 @each $key, $value in $tutor-spacing {
   .tutor-ms-#{$key} {
-    [dir="ltr"] & {
-      margin-left: $value;
-    }
-    [dir="rtl"] & {
-      margin-right: $value;
-    }
+    margin-inline-start: $value;
   }
-  
   .tutor-me-#{$key} {
-    [dir="ltr"] & {
-      margin-right: $value;
-    }
-    [dir="rtl"] & {
-      margin-left: $value;
-    }
+    margin-inline-end: $value;
   }
 }
 
-// Logical padding utilities (semantic alternatives)
+// Logical padding utilities
 @each $key, $value in $tutor-spacing {
   .tutor-ps-#{$key} {
-    [dir="ltr"] & {
-      padding-left: $value;
-    }
-    [dir="rtl"] & {
-      padding-right: $value;
-    }
+    padding-inline-start: $value;
   }
-  
   .tutor-pe-#{$key} {
-    [dir="ltr"] & {
-      padding-right: $value;
-    }
-    [dir="rtl"] & {
-      padding-left: $value;
-    }
+    padding-inline-end: $value;
   }
 }
 
 // Logical positioning utilities
 .tutor-start-0 {
-  [dir="ltr"] & {
-    left: 0;
-  }
-  [dir="rtl"] & {
-    right: 0;
-  }
+  inset-inline-start: 0;
 }
-
 .tutor-end-0 {
-  [dir="ltr"] & {
-    right: 0;
-  }
-  [dir="rtl"] & {
-    left: 0;
-  }
+  inset-inline-end: 0;
 }
 
 // =============================================================================
-// BORDER AND RADIUS UTILITIES (Not covered by core utilities)
+// BORDER AND RADIUS UTILITIES
 // =============================================================================
 
 // Border utilities
 .tutor-border-start {
-  [dir="ltr"] & {
-    border-left: 1px solid var(--tutor-border-idle);
-  }
-  [dir="rtl"] & {
-    border-right: 1px solid var(--tutor-border-idle);
-  }
+  border-inline-start: 1px solid var(--tutor-border-idle);
 }
-
 .tutor-border-end {
-  [dir="ltr"] & {
-    border-right: 1px solid var(--tutor-border-idle);
-  }
-  [dir="rtl"] & {
-    border-left: 1px solid var(--tutor-border-idle);
-  }
+  border-inline-end: 1px solid var(--tutor-border-idle);
 }
 
 // Border radius utilities
 @each $key, $value in $tutor-radius {
   .tutor-rounded-s-#{$key} {
-    [dir="ltr"] & {
-      border-top-left-radius: $value;
-      border-bottom-left-radius: $value;
-    }
-    [dir="rtl"] & {
-      border-top-right-radius: $value;
-      border-bottom-right-radius: $value;
-    }
+    border-start-start-radius: $value;
+    border-end-start-radius: $value;
   }
-  
   .tutor-rounded-e-#{$key} {
-    [dir="ltr"] & {
-      border-top-right-radius: $value;
-      border-bottom-right-radius: $value;
-    }
-    [dir="rtl"] & {
-      border-top-left-radius: $value;
-      border-bottom-left-radius: $value;
-    }
+    border-start-end-radius: $value;
+    border-end-end-radius: $value;
   }
-  
   .tutor-rounded-ts-#{$key} {
-    [dir="ltr"] & {
-      border-top-left-radius: $value;
-    }
-    [dir="rtl"] & {
-      border-top-right-radius: $value;
-    }
+    border-start-start-radius: $value;
   }
-  
   .tutor-rounded-te-#{$key} {
-    [dir="ltr"] & {
-      border-top-right-radius: $value;
-    }
-    [dir="rtl"] & {
-      border-top-left-radius: $value;
-    }
+    border-start-end-radius: $value;
   }
-  
   .tutor-rounded-bs-#{$key} {
-    [dir="ltr"] & {
-      border-bottom-left-radius: $value;
-    }
-    [dir="rtl"] & {
-      border-bottom-right-radius: $value;
-    }
+    border-end-start-radius: $value;
   }
-  
   .tutor-rounded-be-#{$key} {
-    [dir="ltr"] & {
-      border-bottom-right-radius: $value;
-    }
-    [dir="rtl"] & {
-      border-bottom-left-radius: $value;
-    }
+    border-end-end-radius: $value;
   }
 }
 
 // Transform utilities
 .tutor-translate-x-full {
-  [dir="ltr"] & {
-    transform: translateX(100%);
-  }
-  [dir="rtl"] & {
-    transform: translateX(-100%);
-  }
+  transform: translateX(100%);
 }
-
 .tutor-translate-x-0 {
   transform: translateX(0);
 }
-
 .-tutor-translate-x-full {
-  [dir="ltr"] & {
-    transform: translateX(-100%);
-  }
-  [dir="rtl"] & {
-    transform: translateX(100%);
-  }
+  transform: translateX(-100%);
 }
 
 // =============================================================================
 // COMPONENT-SPECIFIC UTILITIES
 // =============================================================================
 
-// Icon utilities for RTL
+// Icon utilities
 .tutor-icon-start {
-  [dir="ltr"] & {
-    margin-right: var(--tutor-spacing-2, 4px);
-    margin-left: 0;
-  }
-  [dir="rtl"] & {
-    margin-left: var(--tutor-spacing-2, 4px);
-    margin-right: 0;
-  }
+  margin-inline-end: var(--tutor-spacing-2, 4px);
+  margin-inline-start: 0;
 }
-
 .tutor-icon-end {
-  [dir="ltr"] & {
-    margin-left: var(--tutor-spacing-2, 4px);
-    margin-right: 0;
-  }
-  [dir="rtl"] & {
-    margin-right: var(--tutor-spacing-2, 4px);
-    margin-left: 0;
-  }
+  margin-inline-start: var(--tutor-spacing-2, 4px);
+  margin-inline-end: 0;
 }
 
 // Component positioning utilities
 .tutor-dropdown-start {
-  [dir="ltr"] & {
-    left: 0;
-    right: auto;
-  }
-  [dir="rtl"] & {
-    right: 0;
-    left: auto;
-  }
+  inset-inline-start: 0;
+  inset-inline-end: auto;
 }
-
 .tutor-dropdown-end {
-  [dir="ltr"] & {
-    right: 0;
-    left: auto;
-  }
-  [dir="rtl"] & {
-    left: 0;
-    right: auto;
-  }
+  inset-inline-end: 0;
+  inset-inline-start: auto;
 }
 
 .tutor-sidebar-start {
-  [dir="ltr"] & {
-    left: 0;
-    right: auto;
-  }
-  [dir="rtl"] & {
-    right: 0;
-    left: auto;
-  }
+  inset-inline-start: 0;
+  inset-inline-end: auto;
 }
-
 .tutor-sidebar-end {
-  [dir="ltr"] & {
-    right: 0;
-    left: auto;
-  }
-  [dir="rtl"] & {
-    left: 0;
-    right: auto;
-  }
+  inset-inline-end: 0;
+  inset-inline-start: auto;
 }
 
 .tutor-toast-start {
-  [dir="ltr"] & {
-    left: 1rem;
-    right: auto;
-  }
-  [dir="rtl"] & {
-    right: 1rem;
-    left: auto;
-  }
+  inset-inline-start: 1rem;
+  inset-inline-end: auto;
 }
-
 .tutor-toast-end {
-  [dir="ltr"] & {
-    right: 1rem;
-    left: auto;
-  }
-  [dir="rtl"] & {
-    left: 1rem;
-    right: auto;
-  }
+  inset-inline-end: 1rem;
+  inset-inline-start: auto;
 }
 
 // =============================================================================
@@ -333,7 +165,7 @@
   &.is-rtl {
     direction: rtl;
   }
-  
+
   &.is-ltr {
     direction: ltr;
   }

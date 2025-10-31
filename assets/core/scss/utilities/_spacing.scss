@@ -1,6 +1,4 @@
 // Spacing Utilities
-// Margin and padding utilities using Figma design token scale
-
 @use '../tokens' as *;
 
 // Margin utilities
@@ -14,13 +12,7 @@
   }
 
   .tutor-mr-#{$key} {
-    [dir='ltr'] & {
-      margin-right: $value;
-    }
-
-    [dir='rtl'] & {
-      margin-left: $value;
-    }
+    margin-inline-end: $value;
   }
 
   .tutor-mb-#{$key} {
@@ -28,25 +20,11 @@
   }
 
   .tutor-ml-#{$key} {
-    [dir='ltr'] & {
-      margin-left: $value;
-    }
-
-    [dir='rtl'] & {
-      margin-right: $value;
-    }
+    margin-inline-start: $value;
   }
 
   .tutor-mx-#{$key} {
-    [dir='ltr'] & {
-      margin-left: $value;
-      margin-right: $value;
-    }
-
-    [dir='rtl'] & {
-      margin-left: $value;
-      margin-right: $value;
-    }
+    margin-inline: $value;
   }
 
   .tutor-my-#{$key} {
@@ -66,13 +44,7 @@
   }
 
   .tutor-pr-#{$key} {
-    [dir='ltr'] & {
-      padding-right: $value;
-    }
-
-    [dir='rtl'] & {
-      padding-left: $value;
-    }
+    padding-inline-end: $value;
   }
 
   .tutor-pb-#{$key} {
@@ -80,25 +52,12 @@
   }
 
   .tutor-pl-#{$key} {
-    [dir='ltr'] & {
-      padding-left: $value;
-    }
-
-    [dir='rtl'] & {
-      padding-right: $value;
-    }
+    padding-inline-start: $value;
   }
 
   .tutor-px-#{$key} {
-    [dir='ltr'] & {
-      padding-left: $value;
-      padding-right: $value;
-    }
-
-    [dir='rtl'] & {
-      padding-left: $value;
-      padding-right: $value;
-    }
+    padding-left: $value;
+    padding-right: $value;
   }
 
   .tutor-py-#{$key} {
@@ -119,13 +78,7 @@
     }
 
     .-tutor-mr-#{$key} {
-      [dir='ltr'] & {
-        margin-right: -$value;
-      }
-
-      [dir='rtl'] & {
-        margin-left: -$value;
-      }
+      margin-inline-end: -$value;
     }
 
     .-tutor-mb-#{$key} {
@@ -133,13 +86,7 @@
     }
 
     .-tutor-ml-#{$key} {
-      [dir='ltr'] & {
-        margin-left: -$value;
-      }
-
-      [dir='rtl'] & {
-        margin-right: -$value;
-      }
+      margin-inline-start: -$value;
     }
 
     .-tutor-mx-#{$key} {
@@ -164,13 +111,7 @@
 }
 
 .tutor-mr-auto {
-  [dir='ltr'] & {
-    margin-right: auto;
-  }
-
-  [dir='rtl'] & {
-    margin-left: auto;
-  }
+  margin-inline-end: auto;
 }
 
 .tutor-mb-auto {
@@ -178,13 +119,7 @@
 }
 
 .tutor-ml-auto {
-  [dir='ltr'] & {
-    margin-left: auto;
-  }
-
-  [dir='rtl'] & {
-    margin-right: auto;
-  }
+  margin-inline-start: auto;
 }
 
 .tutor-mx-auto {
