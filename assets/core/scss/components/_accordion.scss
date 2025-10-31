@@ -41,6 +41,7 @@
   &-title {
     margin: 0;
     font-size: typography.$tutor-font-size-p1;
+    font-family: typography.$tutor-font-family-heading;
     font-weight: typography.$tutor-font-weight-medium;
     color: var(--tutor-text-primary);
     line-height: typography.$tutor-line-height-medium;
@@ -81,7 +82,7 @@
 
     &--expanded {
       height: var(--content-height);
-      padding: spacing.$tutor-spacing-4 spacing.$tutor-spacing-6;
+      padding: spacing.$tutor-spacing-5 spacing.$tutor-spacing-6;
       opacity: 1;
       // Need to change it later
       transition-delay: 0s, 0s, 0.1s;

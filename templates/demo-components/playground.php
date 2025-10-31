@@ -48,10 +48,17 @@
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
 		<section>
-			<?php require 'button.php'; ?>
-			<?php require 'accordion.php'; ?>
+			<p class="tutor-h4 tutor-mb-3">Buttons</p>
+			<div class="tutor-mb-8">
+				<?php require 'button.php'; ?>
+			</div>
+
+			<p class="tutor-h4 tutor-mb-3">Accordion</p>
+			<div class="tutor-mb-8">
+				<?php require 'accordion.php'; ?>
+			</div>
 		</section>
-	<?php endif ?>
+		<?php endif ?>
 
 </body>
 </html>
