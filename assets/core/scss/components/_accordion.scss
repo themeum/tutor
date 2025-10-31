@@ -1,22 +1,22 @@
 @use '../mixins' as *;
-@use '../tokens' as tokens;
+@use '../tokens' as *;
 
 .tutor-accordion {
   overflow: visible;
   background-color: transparent;
   @include tutor-flex(column, stretch, start);
-  gap: tokens.$tutor-spacing-6;
+  gap: $tutor-spacing-6;
 
   &-item {
     background-color: var(--tutor-surface-l1);
     border: 1px solid var(--tutor-border-idle);
-    border-radius: tokens.$tutor-radius-lg;
+    border-radius: $tutor-radius-lg;
     overflow: hidden;
   }
 
   &-header {
     width: 100%;
-    padding: tokens.$tutor-spacing-5 tokens.$tutor-spacing-6;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
     background: none;
     border: none;
     @include tutor-flex(row, start, space-between);
@@ -32,16 +32,16 @@
 
   &-title {
     margin: 0;
-    font-size: tokens.$tutor-font-size-p1;
-    font-family: tokens.$tutor-font-family-heading;
-    font-weight: tokens.$tutor-font-weight-medium;
+    font-size: $tutor-font-size-p1;
+    font-family: $tutor-font-family-heading;
+    font-weight: $tutor-font-weight-medium;
     color: var(--tutor-text-primary);
-    line-height: tokens.$tutor-line-height-medium;
+    line-height: $tutor-line-height-medium;
     @include text-align-start();
   }
 
   &-icon {
-    @include margin-start(tokens.$tutor-spacing-3);
+    @include margin-start($tutor-spacing-3);
     color: var(--tutor-icon-idle);
 
     // TODO: Need to change it later
@@ -70,13 +70,13 @@
       padding 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
       opacity 0.25s ease-in-out;
     height: 0;
-    padding: 0 tokens.$tutor-spacing-6;
+    padding: 0 $tutor-spacing-6;
     --content-height: 0px;
     opacity: 0;
 
     &--expanded {
       height: var(--content-height);
-      padding: tokens.$tutor-spacing-2 tokens.$tutor-spacing-6 tokens.$tutor-spacing-5;
+      padding: $tutor-spacing-2 $tutor-spacing-6 $tutor-spacing-5;
       opacity: 1;
 
       // Need to change it later
@@ -85,7 +85,7 @@
 
     &--collapsed {
       height: 0;
-      padding: 0 tokens.$tutor-spacing-6;
+      padding: 0 $tutor-spacing-6;
       opacity: 0;
 
       // Need to change it later
