@@ -22,9 +22,9 @@
   }
 
   &-tab {
-    background: transparent;
     @include tutor-flex(row, center, flex-start);
     @include tutor-typography('small', 'regular');
+    background: transparent;
     border: none;
     border-radius: $tutor-radius-lg;
     padding: $tutor-spacing-5 $tutor-spacing-6;
@@ -36,11 +36,21 @@
     font-weight: $tutor-font-weight-medium;
     height: 44px;
 
-    svg {
-      flex-shrink: 0;
+    &-active {
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
+
+      svg {
+        color: $tutor-text-brand;
+      }
+
+      &:hover {
+        background-color: $tutor-tab-l3-active-hover;
+        color: $tutor-text-primary;
+      }
     }
 
-    &:hover:not(:disabled):not(.tutor-tabs__tab--active) {
+    &:hover:not(:disabled):not(.tutor-tabs-tab-active) {
       color: $tutor-text-primary;
       background-color: $tutor-tab-l3-active-hover;
 
@@ -49,20 +59,6 @@
       }
     }
 
-    &-active {
-      anchor-name: --active-tab;
-      color: $tutor-text-brand;
-      background-color: $tutor-tab-l3-active;
-
-      &:hover {
-        background-color: $tutor-tab-l3-active-hover;
-        color: $tutor-text-primary;
-
-        svg {
-          color: $tutor-text-brand;
-        }
-      }
-    }
 
     &:disabled {
       color: $tutor-text-disabled;
@@ -109,7 +105,6 @@
 
       .tutor-tabs-nav {
         flex-direction: row;
-        border-right: none;
         overflow-x: auto;
       }
     }
