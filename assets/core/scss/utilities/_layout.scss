@@ -68,9 +68,7 @@
 
 // Flexbox utilities
 .tutor-flex-row {
-  [dir='ltr'] & {
-    flex-direction: row;
-  }
+  flex-direction: row;
 
   [dir='rtl'] & {
     flex-direction: row-reverse;
@@ -78,9 +76,7 @@
 }
 
 .tutor-flex-row-reverse {
-  [dir='ltr'] & {
-    flex-direction: row-reverse;
-  }
+  flex-direction: row-reverse;
 
   [dir='rtl'] & {
     flex-direction: row;
@@ -142,9 +138,7 @@
 
 // Justify content
 .tutor-justify-start {
-  [dir='ltr'] & {
-    justify-content: flex-start;
-  }
+  justify-content: flex-start;
 
   [dir='rtl'] & {
     justify-content: flex-end;
@@ -152,9 +146,7 @@
 }
 
 .tutor-justify-end {
-  [dir='ltr'] & {
-    justify-content: flex-end;
-  }
+  justify-content: flex-end;
 
   [dir='rtl'] & {
     justify-content: flex-start;
@@ -370,13 +362,7 @@
 }
 
 .tutor-right-0 {
-  [dir='ltr'] & {
-    right: 0;
-  }
-
-  [dir='rtl'] & {
-    left: 0;
-  }
+  inset-inline-end: 0;
 }
 
 .tutor-bottom-0 {
@@ -384,13 +370,7 @@
 }
 
 .tutor-left-0 {
-  [dir='ltr'] & {
-    left: 0;
-  }
-
-  [dir='rtl'] & {
-    right: 0;
-  }
+  inset-inline-start: 0;
 }
 
 .tutor-top-auto {
@@ -398,13 +378,7 @@
 }
 
 .tutor-right-auto {
-  [dir='ltr'] & {
-    right: auto;
-  }
-
-  [dir='rtl'] & {
-    left: auto;
-  }
+  inset-inline-end: auto;
 }
 
 .tutor-bottom-auto {
@@ -412,13 +386,7 @@
 }
 
 .tutor-left-auto {
-  [dir='ltr'] & {
-    left: auto;
-  }
-
-  [dir='rtl'] & {
-    right: auto;
-  }
+  inset-inline-start: auto;
 }
 
 // Overflow
@@ -508,9 +476,7 @@
       }
 
       .tutor-#{$breakpoint}-flex-row {
-        [dir='ltr'] & {
-          flex-direction: row;
-        }
+        flex-direction: row;
 
         [dir='rtl'] & {
           flex-direction: row-reverse;
@@ -518,9 +484,7 @@
       }
 
       .tutor-#{$breakpoint}-flex-row-reverse {
-        [dir='ltr'] & {
-          flex-direction: row-reverse;
-        }
+        flex-direction: row-reverse;
 
         [dir='rtl'] & {
           flex-direction: row;

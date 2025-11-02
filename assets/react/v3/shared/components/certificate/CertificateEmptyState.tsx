@@ -25,33 +25,36 @@ const CertificateEmptyState = () => {
         css={styles.placeholderImage}
         src={certificate}
         srcSet={`${certificate} 1x, ${certificate2x} 2x`}
-        alt={__('Pro Placeholder', 'tutor')}
+        alt={__('Pro Placeholder', __TUTOR_TEXT_DOMAIN__)}
       />
 
       <div css={styles.featureAndActionWrapper}>
-        <h5 css={styles.title}>{__('Award Students with Custom Certificates', 'tutor')}</h5>
+        <h5 css={styles.title}>{__('Award Students with Custom Certificates', __TUTOR_TEXT_DOMAIN__)}</h5>
         <div css={styles.featuresWithTitle}>
           <div>
-            {
-              // prettier-ignore
-              __( 'Celebrate success with personalized certificates. Recognize student achievements with unique designs that inspire and motivate students.', 'tutor')
-            }
+            {__(
+              'Celebrate success with personalized certificates. Recognize student achievements with unique designs that inspire and motivate students.',
+              __TUTOR_TEXT_DOMAIN__,
+            )}
           </div>
 
           <div css={styles.features}>
             <div css={styles.feature}>
               <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
               <span>
-                {
-                  // prettier-ignore
-                  __('Design personalized certificates that highlight their accomplishments and boost their confidence.', 'tutor')
-                }
+                {__(
+                  'Design personalized certificates that highlight their accomplishments and boost their confidence.',
+                  __TUTOR_TEXT_DOMAIN__,
+                )}
               </span>
             </div>
             <div css={styles.feature}>
               <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
               <span>
-                {__('Inspire them with a touch of credibility and recognition tailored just for them.', 'tutor')}
+                {__(
+                  'Inspire them with a touch of credibility and recognition tailored just for them.',
+                  __TUTOR_TEXT_DOMAIN__,
+                )}
               </span>
             </div>
           </div>
@@ -60,13 +63,14 @@ const CertificateEmptyState = () => {
 
       <div css={styles.actionsButton}>
         <Button
+          as="a"
           variant={'primary'}
           icon={<SVGIcon name={'crown'} width={24} height={24} />}
-          onClick={() => {
-            window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-          }}
+          href={config.TUTOR_PRICING_PAGE}
+          target="_blank"
+          rel="noreferrer"
         >
-          {__('Get Tutor LMS Pro', 'tutor')}
+          {__('Get Tutor LMS Pro', __TUTOR_TEXT_DOMAIN__)}
         </Button>
       </div>
     </div>

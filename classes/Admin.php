@@ -310,6 +310,9 @@ class Admin {
 				add_submenu_page( 'tutor', '', '<span class="tutor-admin-menu-separator"></span>', 'manage_tutor_instructor', '#' );
 			}
 		}
+
+		// Add playground menu to preview components.
+		$this->add_playground_menu();
 	}
 
 	/**
@@ -852,5 +855,23 @@ class Admin {
 		}
 
 		return $admin_bar;
+	}
+
+	/**
+	 * Add playground page
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return void
+	 */
+	private function add_playground_menu() {
+		add_submenu_page(
+			'tutor',
+			'Playground',
+			'Playground',
+			'manage_options',
+			'playground',
+			fn () => include tutor()->path . 'templates/demo-components/playground.php',
+		);
 	}
 }

@@ -19,13 +19,13 @@ interface ImportErrorListModalProps extends ModalProps {
 
 const ImportErrorListModal = ({ errors, closeModal }: ImportErrorListModalProps) => {
   const errorTypeTextMap = {
-    topics: __('Topic', 'tutor'),
-    lesson: __('Lesson', 'tutor'),
-    tutor_quiz: __('Quiz', 'tutor'),
-    tutor_assignments: __('Assignment', 'tutor'),
-    'cb-question': __('Content Bank Question', 'tutor'),
-    'cb-lesson': __('Content Bank Lesson', 'tutor'),
-    'cb-assignment': __('Content Bank Assignment', 'tutor'),
+    topics: __('Topic', __TUTOR_TEXT_DOMAIN__),
+    lesson: __('Lesson', __TUTOR_TEXT_DOMAIN__),
+    tutor_quiz: __('Quiz', __TUTOR_TEXT_DOMAIN__),
+    tutor_assignments: __('Assignment', __TUTOR_TEXT_DOMAIN__),
+    'cb-question': __('Content Bank Question', __TUTOR_TEXT_DOMAIN__),
+    'cb-lesson': __('Content Bank Lesson', __TUTOR_TEXT_DOMAIN__),
+    'cb-assignment': __('Content Bank Assignment', __TUTOR_TEXT_DOMAIN__),
   };
 
   const columns: Column<string>[] = [
@@ -35,7 +35,7 @@ const ImportErrorListModal = ({ errors, closeModal }: ImportErrorListModalProps)
       width: '50px',
     },
     {
-      Header: __('Title', 'tutor'),
+      Header: __('Title', __TUTOR_TEXT_DOMAIN__),
       Cell: (error) => <span>{error}</span>,
     },
   ];
@@ -53,8 +53,8 @@ const ImportErrorListModal = ({ errors, closeModal }: ImportErrorListModalProps)
 
   return (
     <BasicModalWrapper
-      title={__('Import Errors', 'tutor')}
-      subtitle={__('Error occurred in the following items', 'tutor')}
+      title={__('Import Errors', __TUTOR_TEXT_DOMAIN__)}
+      subtitle={__('Error occurred in the following items', __TUTOR_TEXT_DOMAIN__)}
       onClose={closeModal}
       icon={<SVGIcon name="warning" height={24} width={24} />}
       maxWidth={700}

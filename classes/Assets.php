@@ -185,7 +185,7 @@ class Assets {
 			'tutor_currency'               => $tutor_currency,
 			'local'                        => get_locale(),
 			'settings'                     => $tutor_settings,
-			'max_upload_size'              => size_format( wp_max_upload_size() ),
+			'max_upload_size'              => wp_max_upload_size(),
 			'monetize_by'                  => tutor_utils()->get_option( 'monetize_by' ),
 		);
 	}
@@ -196,9 +196,11 @@ class Assets {
 	 * @since 1.0.0
 	 * @since 3.0.0 Order details & coupon scripts added.
 	 *
+	 * @param string $slug The page slug.
+	 *
 	 * @return void
 	 */
-	public function admin_scripts() {
+	public function admin_scripts( $slug ) {
 		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
 		/**
@@ -250,6 +252,18 @@ class Assets {
 		if ( 'tutor-themes' === $page ) {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
 			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
+		}
+
+		if ( 'tutor-lms-pro_page_playground' === $slug ) {
+			// Enqueue core component scripts.
+			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
+			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
+
+			$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
+			$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
+
+			wp_enqueue_style( 'tutor-core', $core_css_url, array(), filemtime( $core_css_path ), 'all' );
+			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
 		}
 	}
 
@@ -325,7 +339,6 @@ class Assets {
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-frontend-script', tutor()->url . 'assets/js/tutor-core.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
 
 		/**
 		 * Load frontend dashboard style
@@ -407,10 +420,12 @@ class Assets {
 	 * Load common scripts for frontend and backend
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $slug The page slug.
+	 *
 	 * @return void
 	 */
-	public function common_scripts() {
-
+	public function common_scripts( $slug ) {
 		/**
 		 * Load TinyMCE for tutor settings page if tutor pro is not available.
 		 *
@@ -426,10 +441,12 @@ class Assets {
 		wp_enqueue_style( 'tutor-icon', tutor()->url . 'assets/css/tutor-icon.min.css', array(), TUTOR_VERSION );
 
 		// Common css library.
-		if ( is_rtl() ) {
-			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
-		} else {
-			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
+		if ( 'tutor-lms-pro_page_playground' !== $slug ) {
+			if ( is_rtl() ) {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor-rtl.min.css', array(), TUTOR_VERSION );
+			} else {
+				wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
+			}
 		}
 
 		/**
@@ -613,20 +630,27 @@ class Assets {
 	 * registered functions
 	 *
 	 * @since 1.9.0
+	 * @since 3.9.2 Refactored to dynamically detect scripts instead of hardcoded list.
+	 *
 	 * @return void
 	 */
 	public function tutor_script_text_domain() {
-		wp_set_script_translations( 'tutor-script', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-gutenberg', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-payment-settings', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-addon-list', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-import-export', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-template-import-js', 'tutor', tutor()->path . 'languages/' );
+		global $wp_scripts;
+
+		if ( empty( $wp_scripts->registered ) ) {
+			return;
+		}
+
+		foreach ( $wp_scripts->registered as $handle => $data ) {
+			$src           = $data->src ?? '';
+			$is_from_tutor = str_contains( $src, 'tutor/assets/js' );
+
+			if ( ! $is_from_tutor ) {
+				continue;
+			}
+
+			wp_set_script_translations( $handle, 'tutor', tutor()->path . 'languages/' );
+		}
 	}
 
 	/**

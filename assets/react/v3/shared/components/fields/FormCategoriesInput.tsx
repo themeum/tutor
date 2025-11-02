@@ -134,7 +134,7 @@ const FormMultiLevelInput = ({
                         </div>
                         <input
                           type="text"
-                          placeholder={__('Search', 'tutor')}
+                          placeholder={__('Search', __TUTOR_TEXT_DOMAIN__)}
                           value={searchValue}
                           disabled={disabled || loading}
                           onChange={(e) => {
@@ -149,7 +149,7 @@ const FormMultiLevelInput = ({
                 <Show when={!categoryListQuery.isLoading && !loading} fallback={<LoadingSection />}>
                   <Show
                     when={treeOptions.length > 0}
-                    fallback={<span css={styles.notFound}>{__('No categories found.', 'tutor')}</span>}
+                    fallback={<span css={styles.notFound}>{__('No categories found.', __TUTOR_TEXT_DOMAIN__)}</span>}
                   >
                     {treeOptions.map((option, index) => (
                       <Branch
@@ -188,7 +188,7 @@ const FormMultiLevelInput = ({
                     css={styles.addNewButton}
                     onClick={() => setIsOpen(true)}
                   >
-                    <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
+                    <SVGIcon width={24} height={24} name="plus" /> {__('Add', __TUTOR_TEXT_DOMAIN__)}
                   </button>
                 </div>
               </Show>
@@ -207,10 +207,14 @@ const FormMultiLevelInput = ({
                   name="name"
                   control={form.control}
                   rules={{
-                    required: __('Category name is required', 'tutor'),
+                    required: __('Category name is required', __TUTOR_TEXT_DOMAIN__),
                   }}
                   render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder={__('Category name', 'tutor')} selectOnFocus />
+                    <FormInput
+                      {...controllerProps}
+                      placeholder={__('Category name', __TUTOR_TEXT_DOMAIN__)}
+                      selectOnFocus
+                    />
                   )}
                 />
 
@@ -220,7 +224,7 @@ const FormMultiLevelInput = ({
                   render={(controllerProps) => (
                     <FormMultiLevelSelect
                       {...controllerProps}
-                      placeholder={__('Select parent', 'tutor')}
+                      placeholder={__('Select parent', __TUTOR_TEXT_DOMAIN__)}
                       clearable={!!controllerProps.field.value}
                     />
                   )}
@@ -228,7 +232,7 @@ const FormMultiLevelInput = ({
 
                 <div css={styles.categoryFormButtons}>
                   <Button variant="text" size="small" onClick={handlePortalClose}>
-                    {__('Cancel', 'tutor')}
+                    {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
                   </Button>
                   <Button
                     variant="secondary"
@@ -236,7 +240,7 @@ const FormMultiLevelInput = ({
                     loading={createCategoryMutation.isPending}
                     onClick={form.handleSubmit(handleCreateCategory)}
                   >
-                    {__('Ok', 'tutor')}
+                    {__('Ok', __TUTOR_TEXT_DOMAIN__)}
                   </Button>
                 </div>
               </div>

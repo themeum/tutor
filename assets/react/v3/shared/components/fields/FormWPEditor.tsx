@@ -96,16 +96,16 @@ const CustomEditorOverlay = ({
             const { action } = await showModal({
               component: ConfirmationModal,
               props: {
-                title: __('Back to WordPress Editor', 'tutor'),
+                title: __('Back to WordPress Editor', __TUTOR_TEXT_DOMAIN__),
                 description: (
                   <Alert type="warning" icon="warning">
                     {
                       // prettier-ignore
-                      __( 'Warning: Switching to the WordPress default editor may cause issues with your current layout, design, and content.', 'tutor')
+                      __( 'Warning: Switching to the WordPress default editor may cause issues with your current layout, design, and content.', __TUTOR_TEXT_DOMAIN__)
                     }
                   </Alert>
                 ),
-                confirmButtonText: __('Confirm', 'tutor'),
+                confirmButtonText: __('Confirm', __TUTOR_TEXT_DOMAIN__),
                 confirmButtonVariant: 'primary',
               },
               depthIndex: zIndex.highest,
@@ -120,7 +120,7 @@ const CustomEditorOverlay = ({
             }
           }}
         >
-          {__('Back to WordPress Editor', 'tutor')}
+          {__('Back to WordPress Editor', __TUTOR_TEXT_DOMAIN__)}
         </Button>
       </Show>
       <Button
@@ -145,7 +145,7 @@ const CustomEditorOverlay = ({
       >
         {
           /* translators: %s is the editor name */
-          sprintf(__('Edit with %s', 'tutor'), editorUsed?.label)
+          sprintf(__('Edit with %s', __TUTOR_TEXT_DOMAIN__), editorUsed?.label)
         }
       </Button>
     </div>
@@ -216,7 +216,7 @@ const FormWPEditor = ({
         component: AITextModal,
         isMagicAi: true,
         props: {
-          title: __('AI Studio', 'tutor'),
+          title: __('AI Studio', __TUTOR_TEXT_DOMAIN__),
           icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
           characters: 1000,
           field,
@@ -239,7 +239,7 @@ const FormWPEditor = ({
         </Show>
       </span>
       <div css={styles.editorsButtonWrapper}>
-        <span>{__('Edit with', 'tutor')}</span>
+        <span>{__('Edit with', __TUTOR_TEXT_DOMAIN__)}</span>
         <div css={styles.customEditorButtons}>
           <For each={filteredEditors}>
             {(editor) => (

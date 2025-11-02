@@ -34,7 +34,7 @@ const SearchField = ({ onFilterItems }: SearchFieldProps) => {
         <FormInputWithContent
           {...controllerProps}
           content={<SVGIcon name="search" width={24} height={24} />}
-          placeholder={__('Search...', 'tutor')}
+          placeholder={__('Search...', __TUTOR_TEXT_DOMAIN__)}
           showVerticalBar={false}
         />
       )}

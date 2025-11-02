@@ -149,10 +149,12 @@ const Certificate = ({
 
   const certificateTabs: CertificateTabItem[] = [
     ...(defaultTemplates.length
-      ? ([{ label: __('Templates', 'tutor'), value: 'templates' }] as CertificateTabItem[])
+      ? ([{ label: __('Templates', __TUTOR_TEXT_DOMAIN__), value: 'templates' }] as CertificateTabItem[])
       : []),
     {
-      label: CURRENT_VIEWPORT.isAboveSmallMobile ? __('Custom Certificates', 'tutor') : __('Certificates', 'tutor'),
+      label: CURRENT_VIEWPORT.isAboveSmallMobile
+        ? __('Custom Certificates', __TUTOR_TEXT_DOMAIN__)
+        : __('Certificates', __TUTOR_TEXT_DOMAIN__),
       value: 'custom_certificates',
     },
   ];
@@ -169,7 +171,7 @@ const Certificate = ({
           />
           <div css={styles.orientation}>
             <Show when={landScapeCertificates && portraitCertificates}>
-              <Tooltip delay={200} content={__('Landscape', 'tutor')}>
+              <Tooltip delay={200} content={__('Landscape', __TUTOR_TEXT_DOMAIN__)}>
                 <button
                   type="button"
                   css={[
@@ -187,7 +189,7 @@ const Certificate = ({
                   />
                 </button>
               </Tooltip>
-              <Tooltip delay={200} content={__('Portrait', 'tutor')}>
+              <Tooltip delay={200} content={__('Portrait', __TUTOR_TEXT_DOMAIN__)}>
                 <button
                   type="button"
                   css={[
@@ -224,7 +226,7 @@ const Certificate = ({
               onPreviewCertificate={(data) => handlePreviewCertificate(data)}
               data={{
                 key: 'none',
-                name: __('None', 'tutor'),
+                name: __('None', __TUTOR_TEXT_DOMAIN__),
                 preview_src: '',
                 background_src: '',
                 orientation: 'landscape',
@@ -243,7 +245,7 @@ const Certificate = ({
                   })}
                   src={notFound}
                   srcSet={`${notFound} 1x, ${notFound2x} 2x`}
-                  alt={__('Not Found', 'tutor')}
+                  alt={__('Not Found', __TUTOR_TEXT_DOMAIN__)}
                 />
 
                 <div css={styles.featureAndActionWrapper}>
@@ -253,7 +255,7 @@ const Certificate = ({
                       color: ${colorTokens.text.subdued};
                     `}
                   >
-                    {__('You didn’t create any certificate yet!', 'tutor')}
+                    {__('You didn’t create any certificate yet!', __TUTOR_TEXT_DOMAIN__)}
                   </p>
                 </div>
               </div>

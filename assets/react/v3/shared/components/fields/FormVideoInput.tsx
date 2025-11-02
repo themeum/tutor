@@ -88,11 +88,11 @@ const videoSources = videoSourceOptions.map((item) => item.value);
 const thumbnailGeneratorSources = ['vimeo', 'youtube', 'html5'];
 
 const placeholderMap = {
-  youtube: __('Paste YouTube Video URL', 'tutor'),
-  vimeo: __('Paste Vimeo Video URL', 'tutor'),
-  external_url: __('Paste External Video URL', 'tutor'),
-  shortcode: __('Paste Video Shortcode', 'tutor'),
-  embedded: __('Paste Embedded Video Code', 'tutor'),
+  youtube: __('Paste YouTube Video URL', __TUTOR_TEXT_DOMAIN__),
+  vimeo: __('Paste Vimeo Video URL', __TUTOR_TEXT_DOMAIN__),
+  external_url: __('Paste External Video URL', __TUTOR_TEXT_DOMAIN__),
+  shortcode: __('Paste Video Shortcode', __TUTOR_TEXT_DOMAIN__),
+  embedded: __('Paste Embedded Video Code', __TUTOR_TEXT_DOMAIN__),
 };
 
 const videoIconMap = {
@@ -175,7 +175,7 @@ const FormVideoInput = ({
   fieldState,
   label,
   helpText,
-  buttonText = __('Upload Media', 'tutor'),
+  buttonText = __('Upload Media', __TUTOR_TEXT_DOMAIN__),
   infoText,
   onChange,
   supportedFormats,
@@ -369,7 +369,7 @@ const FormVideoInput = ({
         >
           <p css={styles.warningText}>
             <SVGIcon name="info" height={20} width={20} />
-            {__('No video source selected', 'tutor')}
+            {__('No video source selected', __TUTOR_TEXT_DOMAIN__)}
           </p>
 
           <Button
@@ -381,7 +381,7 @@ const FormVideoInput = ({
               window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
             }}
           >
-            {__('Select from settings', 'tutor')}
+            {__('Select from settings', __TUTOR_TEXT_DOMAIN__)}
           </Button>
         </div>
       </div>
@@ -467,19 +467,19 @@ const FormVideoInput = ({
     if (videoSource === 'embedded') return true;
 
     if (videoSource === 'shortcode') {
-      return videoValidation.shortcode(videoUrl) ? true : __('Invalid Shortcode', 'tutor');
+      return videoValidation.shortcode(videoUrl) ? true : __('Invalid Shortcode', __TUTOR_TEXT_DOMAIN__);
     }
 
     if (!videoValidation.url(videoUrl)) {
-      return __('Invalid URL', 'tutor');
+      return __('Invalid URL', __TUTOR_TEXT_DOMAIN__);
     }
 
     if (videoSource === 'youtube' && !videoValidation.youtube(videoUrl)) {
-      return __('Invalid YouTube URL', 'tutor');
+      return __('Invalid YouTube URL', __TUTOR_TEXT_DOMAIN__);
     }
 
     if (videoSource === 'vimeo' && !videoValidation.vimeo(videoUrl)) {
-      return __('Invalid Vimeo URL', 'tutor');
+      return __('Invalid Vimeo URL', __TUTOR_TEXT_DOMAIN__);
     }
 
     return true;
@@ -532,7 +532,7 @@ const FormVideoInput = ({
                                 setIsOpen((previousState) => !previousState);
                               }}
                             >
-                              {__('Add from URL', 'tutor')}
+                              {__('Add from URL', __TUTOR_TEXT_DOMAIN__)}
                             </button>
                           }
                         >
@@ -545,7 +545,7 @@ const FormVideoInput = ({
                               setIsOpen((previousState) => !previousState);
                             }}
                           >
-                            {__('Add from URL', 'tutor')}
+                            {__('Add from URL', __TUTOR_TEXT_DOMAIN__)}
                           </Button>
                         </Show>
                       </Show>
@@ -629,12 +629,12 @@ const FormVideoInput = ({
                               disabled={['vimeo', 'youtube'].includes(fieldValue?.source || '')}
                               uploadHandler={() => handleUpload('poster')}
                               clearHandler={() => handleClear('poster')}
-                              buttonText={__('Upload Thumbnail', 'tutor')}
-                              infoText={__('Upload a thumbnail image for your video', 'tutor')}
+                              buttonText={__('Upload Thumbnail', __TUTOR_TEXT_DOMAIN__)}
+                              infoText={__('Upload a thumbnail image for your video', __TUTOR_TEXT_DOMAIN__)}
                               emptyImageCss={styles.thumbImage}
                               previewImageCss={styles.thumbImage}
                               overlayCss={styles.thumbImage}
-                              replaceButtonText={__('Replace Thumbnail', 'tutor')}
+                              replaceButtonText={__('Replace Thumbnail', __TUTOR_TEXT_DOMAIN__)}
                             />
 
                             <Show when={duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0}>
@@ -676,7 +676,7 @@ const FormVideoInput = ({
                   {...controllerProps}
                   options={videoSourcesSelectOptions}
                   disabled={videoSourceOptions.length <= 1}
-                  placeholder={__('Select source', 'tutor')}
+                  placeholder={__('Select source', __TUTOR_TEXT_DOMAIN__)}
                   hideCaret={videoSourceOptions.length <= 1}
                 />
               );
@@ -697,7 +697,10 @@ const FormVideoInput = ({
                     border-style: dashed;
                   `}
                   rows={2}
-                  placeholder={placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')}
+                  placeholder={
+                    placeholderMap[videoSource as keyof typeof placeholderMap] ||
+                    __('Paste Here', __TUTOR_TEXT_DOMAIN__)
+                  }
                 />
               );
             }}
@@ -711,7 +714,7 @@ const FormVideoInput = ({
                 setIsOpen(false);
               }}
             >
-              {__('Cancel', 'tutor')}
+              {__('Cancel', __TUTOR_TEXT_DOMAIN__)}
             </Button>
             <Button
               data-cy="submit-url"
@@ -719,7 +722,7 @@ const FormVideoInput = ({
               size="small"
               onClick={form.handleSubmit(handleDataFromUrl)}
             >
-              {__('Ok', 'tutor')}
+              {__('Ok', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </div>
         </div>
