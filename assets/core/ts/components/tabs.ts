@@ -22,11 +22,14 @@ export const tabs = (config: TabsConfig) => ({
   orientation: config.orientation || 'horizontal',
 
   async init() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const $el = (this as any).$el as HTMLElement;
     const url = new URL(window.location.href);
     const tabId = url.searchParams.get('page_tab');
 
     const initialTab = tabId || this.activeTab;
     this.selectTab(initialTab);
+    $el.classList.add('tutor-tabs-' + this.orientation);
   },
 
   selectTab(tabId: string) {

@@ -81,7 +81,6 @@
   // Vertical variant
   &-vertical {
     @include tutor-flex(row, flex-start, flex-start);
-    gap: $tutor-spacing-6;
 
     [dir="rtl"] & {
       flex-direction: row-reverse;
