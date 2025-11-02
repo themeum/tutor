@@ -81,7 +81,7 @@ export const statics = (config: StaticsProps) => ({
   },
 
   renderProgressCircle() {
-    const labelText = this.showLabel ? (this.displayValue === 0 ? '0' : `${this.displayValue}%`) : '';
+    const labelText = this.showLabel ? `${this.displayValue}%` : '';
     const labelClass =
       'tutor-statics-progress-label ' + (config.size === 'large' ? 'tutor-statics-progress-label-large' : '');
 
