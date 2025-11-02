@@ -11,6 +11,7 @@ $tutor-surface-sidebar-l1: var(--tutor-surface-sidebar-l1);
 $tutor-surface-exception2-secondary: var(--tutor-surface-exception2-secondary);
 $tutor-surface-dark: var(--tutor-surface-dark);
 $tutor-surface-exception7: var(--tutor-surface-exception7);
+
 $tutor-tab-sidebar-l2: var(--tutor-tab-sidebar-l2);
 $tutor-tab-sidebar-l2-hover: var(--tutor-tab-sidebar-l2-hover);
 $tutor-tab-sidebar-l2-active: var(--tutor-tab-sidebar-l2-active);
@@ -18,6 +19,12 @@ $tutor-tab-l3-active: var(--tutor-tab-l3-active);
 $tutor-tab-l3-active-hover: var(--tutor-tab-l3-active-hover);
 $tutor-tab-l3: var(--tutor-tab-l3);
 $tutor-tab-l3-hover: var(--tutor-tab-l3-hover);
+
+$tutor-actions-success-primary: var(--tutor-actions-success-primary);
+$tutor-actions-success-secondary: var(--tutor-actions-success-secondary);
+$tutor-actions-gray-secondary: var(--tutor-actions-gray-secondary);
+$tutor-actions-brand-primary: var(--tutor-actions-brand-primary);
+$tutor-actions-gray-empty: var(--tutor-actions-gray-empty);
 
 $tutor-backgrounds: (
   surface-base: $tutor-surface-base,
@@ -40,4 +47,9 @@ $tutor-backgrounds: (
   tab-l3-active-hover: $tutor-tab-l3-active-hover,
   tab-l3: $tutor-tab-l3,
   tab-l3-hover: $tutor-tab-l3-hover,
+  actions-success-primary: $tutor-actions-success-primary,
+  actions-success-secondary: $tutor-actions-success-secondary,
+  actions-gray-secondary: $tutor-actions-gray-secondary,
+  actions-brand-primary: $tutor-actions-brand-primary,
+  actions-gray-empty: $tutor-actions-gray-empty,
 );
