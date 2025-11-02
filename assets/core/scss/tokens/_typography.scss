@@ -73,6 +73,24 @@ $tutor-text-exception4: var(--tutor-text-exception4);
 $tutor-text-exception5: var(--tutor-text-exception5);
 $tutor-text-highlighted-hover: var(--tutor-text-highlighted-hover);
 
+
+// =============================================================================
+// ICON COLORS
+// =============================================================================
+$tutor-icon-idle: var(--tutor-icon-idle);
+$tutor-icon-idle-inverse: var(--tutor-icon-idle-inverse);
+$tutor-icon-hover: var(--tutor-icon-hover);
+$tutor-icon-secondary: var(--tutor-icon-secondary);
+$tutor-icon-disabled: var(--tutor-icon-disabled);
+$tutor-icon-brand: var(--tutor-icon-brand);
+$tutor-icon-exception1: var(--tutor-icon-exception1);
+$tutor-icon-exception2: var(--tutor-icon-exception2);
+$tutor-icon-success-primary: var(--tutor-icon-success-primary);
+$tutor-icon-exception4: var(--tutor-icon-exception4);
+$tutor-icon-caution: var(--tutor-icon-caution);
+$tutor-icon-critical: var(--tutor-icon-critical);
+$tutor-icon-warning: var(--tutor-icon-warning);
+
 // =============================================================================
 // TYPOGRAPHY MAPS (for utility generation)
 // =============================================================================
@@ -130,3 +148,19 @@ $tutor-text-colors: (
   exception5: $tutor-text-exception5,
   highlighted-hover: $tutor-text-highlighted-hover
 );
+
+$tutor-icon-colors: (
+  idle: $tutor-icon-idle,
+  idle-inverse: $tutor-icon-idle-inverse,
+  hover: $tutor-icon-hover,
+  secondary: $tutor-icon-secondary,
+  disabled: $tutor-icon-disabled,
+  brand: $tutor-icon-brand,
+  exception1: $tutor-icon-exception1,
+  exception2: $tutor-icon-exception2,
+  success-primary: $tutor-icon-success-primary,
+  exception4: $tutor-icon-exception4,
+  caution: $tutor-icon-caution,
+  critical: $tutor-icon-critical, 
+  warning: $tutor-icon-warning
+)
