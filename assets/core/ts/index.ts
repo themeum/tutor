@@ -5,9 +5,10 @@ import { TutorComponentRegistry } from '@Core/ComponentRegistry';
 import { buttonMeta } from '@Core/components/button';
 import { iconMeta } from '@Core/components/icon';
 import { tabsMeta } from '@Core/components/tabs';
+import { staticsMeta } from '@Core/components/statics';
 
 const initializePlugin = () => {
-  TutorComponentRegistry.registerAll([buttonMeta, tabsMeta, iconMeta]);
+  TutorComponentRegistry.registerAll([buttonMeta, tabsMeta, iconMeta, staticsMeta]);
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 
