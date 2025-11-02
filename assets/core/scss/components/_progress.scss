@@ -1,278 +1,58 @@
-// Progress Components
-// Progress bars, loading indicators, and completion tracking
-
 @use '../tokens' as *;
 @use '../mixins' as *;
 
-// Progress bar
-.tutor-progress {
+.tutor-progress-bar {
   width: 100%;
-  height: 8px;
-  background-color: var(--tutor-surface-l2);
+  height: $tutor-spacing-4;
+  background-color: $tutor-actions-gray-secondary;
+  box-shadow: inset 0 0 1.75px rgba(0, 0, 0, 0.16);
   border-radius: $tutor-radius-full;
   overflow: hidden;
   position: relative;
-  
-  &.tutor-progress--small {
-    height: 4px;
-  }
-  
-  &.tutor-progress--medium {
-    height: 8px;
-  }
-  
-  &.tutor-progress--large {
-    height: 12px;
-  }
-}
 
-.tutor-progress__bar {
-  height: 100%;
-  background-color: var(--tutor-button-primary);
-  border-radius: $tutor-radius-full;
-  transition: width 0.3s ease;
-  position: relative;
-  
-  // Animated progress bar
-  &.tutor-progress__bar--animated {
-    background-image: linear-gradient(
-      45deg,
-      rgba(255, 255, 255, 0.15) 25%,
-      transparent 25%,
-      transparent 50%,
-      rgba(255, 255, 255, 0.15) 50%,
-      rgba(255, 255, 255, 0.15) 75%,
-      transparent 75%,
-      transparent
-    );
-    background-size: 20px 20px;
-    animation: tutor-progress-stripes 1s linear infinite;
-  }
-}
-
-// Progress variants
-.tutor-progress--success .tutor-progress__bar {
-  background-color: var(--tutor-success);
-}
-
-.tutor-progress--warning .tutor-progress__bar {
-  background-color: var(--tutor-warning);
-}
-
-.tutor-progress--error .tutor-progress__bar {
-  background-color: var(--tutor-error);
-}
-
-// Circular progress
-.tutor-progress-circle {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  
-  &.tutor-progress-circle--small {
-    width: 32px;
-    height: 32px;
-  }
-  
-  &.tutor-progress-circle--medium {
-    width: 48px;
-    height: 48px;
-  }
-  
-  &.tutor-progress-circle--large {
-    width: 64px;
-    height: 64px;
-  }
-  
-  svg {
-    width: 100%;
+  &-fill {
+    --tutor-progress-width: 0%;
     height: 100%;
-    transform: rotate(-90deg);
-  }
-  
-  .tutor-progress-circle__track {
-    fill: none;
-    stroke: var(--tutor-surface-l2);
-    stroke-width: 4;
-  }
-  
-  .tutor-progress-circle__bar {
-    fill: none;
-    stroke: var(--tutor-button-primary);
-    stroke-width: 4;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 0.3s ease;
-  }
-  
-  .tutor-progress-circle__text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: $tutor-font-size-p3;
-    font-weight: $tutor-font-weight-medium;
-    color: var(--tutor-text-primary);
-  }
-}
-
-// Loading spinner
-.tutor-spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--tutor-surface-l2);
-  border-radius: 50%;
-  border-top-color: var(--tutor-button-primary);
-  animation: tutor-spin 1s linear infinite;
-  
-  &.tutor-spinner--small {
-    width: 16px;
-    height: 16px;
-    border-width: 2px;
-  }
-  
-  &.tutor-spinner--medium {
-    width: 20px;
-    height: 20px;
-    border-width: 2px;
-  }
-  
-  &.tutor-spinner--large {
-    width: 32px;
-    height: 32px;
-    border-width: 3px;
-  }
-}
-
-// Dots loading indicator
-.tutor-loading-dots {
-  display: inline-flex;
-  align-items: center;
-  gap: $tutor-spacing-1;
-  
-  .tutor-loading-dots__dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background-color: var(--tutor-button-primary);
-    animation: tutor-loading-dots 1.4s infinite ease-in-out both;
-    
-    &:nth-child(1) {
-      animation-delay: -0.32s;
-    }
-    
-    &:nth-child(2) {
-      animation-delay: -0.16s;
-    }
-  }
-}
-
-// Progress with label
-.tutor-progress-labeled {
-  .tutor-progress-labeled__header {
-    @include tutor-flex-between;
-    margin-bottom: $tutor-spacing-2;
-    
-    .tutor-progress-labeled__label {
-      font-size: $tutor-font-size-p2;
-      font-weight: $tutor-font-weight-medium;
-      color: var(--tutor-text-primary);
-    }
-    
-    .tutor-progress-labeled__value {
-      font-size: $tutor-font-size-p2;
-      color: var(--tutor-text-secondary);
-    }
-  }
-}
-
-// Step progress indicator
-.tutor-steps {
-  @include tutor-flex(row, center, space-between);
-  position: relative;
-  
-  &::before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background-color: var(--tutor-surface-l2);
-    z-index: 1;
-  }
-  
-  .tutor-step {
+    width: var(--tutor-progress-width);
+    background-color: $tutor-actions-success-primary;
+    border-radius: inherit;
+    transition: width 0.3s ease;
     position: relative;
-    z-index: 2;
-    @include tutor-flex-column;
-    align-items: center;
-    text-align: center;
-    
-    .tutor-step__indicator {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      background-color: var(--tutor-surface-l2);
-      color: var(--tutor-text-disabled);
-      @include tutor-flex-center;
-      font-size: $tutor-font-size-p2;
-      font-weight: $tutor-font-weight-medium;
-      margin-bottom: $tutor-spacing-2;
-      transition: all 0.2s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: $tutor-spacing-1;
+      right: $tutor-spacing-2;
+      height: 1.5px;
+      width: 8.16px;
+      background-color: $tutor-actions-success-secondary;
+      border-radius: inherit;
     }
-    
-    .tutor-step__label {
-      font-size: $tutor-font-size-p3;
-      color: var(--tutor-text-secondary);
-      max-width: 80px;
-    }
-    
-    &.tutor-step--active {
-      .tutor-step__indicator {
-        background-color: var(--tutor-button-primary);
-        color: white;
-      }
-      
-      .tutor-step__label {
-        color: var(--tutor-text-primary);
-        font-weight: $tutor-font-weight-medium;
+  }
+
+  &.tutor-progress-bar-brand {
+    background-color: $tutor-actions-gray-empty;
+
+    .tutor-progress-bar-fill {
+      background-color: $tutor-actions-brand-primary;
+
+      &::before {
+        background-color: transparent;
       }
     }
-    
-    &.tutor-step--completed {
-      .tutor-step__indicator {
-        background-color: var(--tutor-success);
-        color: white;
-        
-        &::after {
-          content: "✓";
-        }
-      }
-      
-      .tutor-step__label {
-        color: var(--tutor-text-primary);
-      }
-    }
+  }
+
+  &[data-tutor-animated] .tutor-progress-bar-fill {
+    animation: tutor-progress-fill-animate 1s ease-out forwards;
   }
 }
 
-// Keyframe animations
-@keyframes tutor-progress-stripes {
-  0% {
-    background-position: 0 0;
+@keyframes tutor-progress-fill-animate {
+  from {
+    width: 0;
   }
-  100% {
-    background-position: 20px 0;
-  }
-}
-
-@keyframes tutor-loading-dots {
-  0%, 80%, 100% {
-    transform: scale(0);
-  }
-  40% {
-    transform: scale(1);
+  to {
+    width: var(--tutor-progress-width);
   }
 }
