@@ -1,3 +1,5 @@
+import { type AlpineComponentMeta } from '@Core/types';
+
 export interface StaticsProps {
   value?: number;
   type?: 'progress' | 'complete' | 'locked';
@@ -81,7 +83,7 @@ export const statics = (config: StaticsProps) => ({
   },
 
   renderProgressCircle() {
-    const labelText = this.showLabel ? `${this.displayValue}%` : '';
+    const labelText = this.showLabel ? (this.displayValue === 0 ? '0' : `${this.displayValue}%`) : '';
     const labelClass =
       'tutor-statics-progress-label ' + (config.size === 'large' ? 'tutor-statics-progress-label-large' : '');
 
@@ -161,7 +163,7 @@ export const statics = (config: StaticsProps) => ({
   },
 });
 
-export const staticsMeta = {
+export const staticsMeta: AlpineComponentMeta<StaticsProps> = {
   name: 'statics',
   component: statics,
 };
