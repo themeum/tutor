@@ -14,8 +14,8 @@ $tutor-font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
 
 $tutor-font-weight-regular: 400;      // Regular
 $tutor-font-weight-medium: 500;    // Medium
-$tutor-font-weight-semi-strong: 600; // Semi Bold
-$tutor-font-weight-strong: 700;    // Bold
+$tutor-font-weight-semibold: 600; // Semi Bold
+$tutor-font-weight-bold: 700;    // Bold
 
 // =============================================================================
 // FONT SIZES (converted to rem for font scaling support)
@@ -108,8 +108,8 @@ $tutor-line-heights: (
 $tutor-font-weights: (
   regular: $tutor-font-weight-regular,
   medium: $tutor-font-weight-medium,
-  semi-strong: $tutor-font-weight-semi-strong,
-  strong: $tutor-font-weight-strong
+  semibold: $tutor-font-weight-semibold,
+  bold: $tutor-font-weight-bold
 );
 
 $tutor-text-colors: (
