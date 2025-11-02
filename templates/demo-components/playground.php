@@ -56,6 +56,9 @@
 		<section>
 			<?php require 'progress.php'; ?>
 		</section>
+		<section>
+			<?php require 'statics.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
