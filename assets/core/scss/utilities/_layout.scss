@@ -470,6 +470,11 @@
   overflow-y: scroll;
 }
 
+.tutor-icon {
+  @include tutor-flex(row, center, center);
+  flex-shrink: 0;
+}
+
 // Responsive layout utilities
 @each $breakpoint, $value in $tutor-breakpoints {
   @if $value >0 {
@@ -582,7 +587,7 @@
 }
 
 // Additional responsive utilities from main.scss
-@include tutor-respond-to(md) {
+@include tutor-breakpoint-down(md) {
   .tutor-md-flex {
     @include tutor-flex;
   }
@@ -596,7 +601,7 @@
   }
 }
 
-@include tutor-respond-to(lg) {
+@include tutor-breakpoint-down(lg) {
   .tutor-lg-flex {
     @include tutor-flex;
   }
