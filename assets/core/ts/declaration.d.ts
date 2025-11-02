@@ -10,3 +10,5 @@ declare global {
     TutorCore: TutorCore;
   }
 }
+
+declare const __TUTOR_TEXT_DOMAIN__: string;
