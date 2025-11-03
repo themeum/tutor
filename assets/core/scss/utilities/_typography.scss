@@ -82,9 +82,7 @@
 
 // Text alignment (RTL-aware)
 .tutor-text-left {
-  [dir="ltr"] & {
-    text-align: left;
-  }
+  text-align: left;
 
   [dir="rtl"] & {
     text-align: right;
@@ -96,9 +94,7 @@
 }
 
 .tutor-text-right {
-  [dir="ltr"] & {
-    text-align: right;
-  }
+  text-align: right;
 
   [dir="rtl"] & {
     text-align: left;
@@ -122,8 +118,8 @@
   color: var(--tutor-text-tertiary);
 }
 
-.tutor-text-disabled {
-  color: var(--tutor-text-disabled);
+.--tutor-text-subdued {
+  color: var(----tutor-text-subdued);
 }
 
 .tutor-text-brand {
@@ -368,9 +364,7 @@ html.tutor-font-scale-120 {
       }
 
       .tutor-#{$breakpoint}-text-left {
-        [dir="ltr"] & {
-          text-align: left;
-        }
+        text-align: left;
 
         [dir="rtl"] & {
           text-align: right;
@@ -382,9 +376,7 @@ html.tutor-font-scale-120 {
       }
 
       .tutor-#{$breakpoint}-text-right {
-        [dir="ltr"] & {
-          text-align: right;
-        }
+        text-align: right;
 
         [dir="rtl"] & {
           text-align: left;
