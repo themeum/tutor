@@ -122,5 +122,4 @@ export const fileUploader = (props: FileUploaderProps = {}) => ({
 export const fileUploaderMeta: AlpineComponentMeta<FileUploaderProps> = {
   name: 'fileUploader',
   component: fileUploader,
-  global: true,
 };
