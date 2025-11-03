@@ -71,6 +71,9 @@ $tutor-text-exception1: var(--tutor-text-exception1);
 $tutor-text-exception2: var(--tutor-text-exception2);
 $tutor-text-exception4: var(--tutor-text-exception4);
 $tutor-text-exception5: var(--tutor-text-exception5);
+$tutor-text-exception5: var(--tutor-text-exception5);
+$tutor-text-exception5: var(--tutor-text-exception5);
+$tutor-actions-brand-primary: var(--tutor-actions-brand-primary);
 $tutor-text-highlighted-hover: var(--tutor-text-highlighted-hover);
 
 // =============================================================================
@@ -128,5 +131,6 @@ $tutor-text-colors: (
   exception2: $tutor-text-exception2,
   exception4: $tutor-text-exception4,
   exception5: $tutor-text-exception5,
-  highlighted-hover: $tutor-text-highlighted-hover
+  highlighted-hover: $tutor-text-highlighted-hover,
+  actions-brand-primary: $tutor-actions-brand-primary
 );

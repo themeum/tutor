@@ -22,11 +22,11 @@ $tutor-gray-1: #ffffff;
 $tutor-gray-10: #fcfcfc;
 $tutor-gray-25: #fafafa;
 $tutor-gray-50: #f5f5f6;
-$tutor-gray-100: #f0f1f1;
+$tutor-gray-100: #f0f1f1; // Color/Actions/actions-gray-secondary
 $tutor-gray-200: #ececed;
 $tutor-gray-300: #cecfd2;
 $tutor-gray-400: #94969c;
-$tutor-gray-500: #85888e;
+$tutor-gray-500: #85888e; // Color/text/text-subdued
 $tutor-gray-600: #61646c;
 $tutor-gray-700: #333741;
 $tutor-gray-750: #2d3039;
@@ -44,6 +44,7 @@ $tutor-success-400: #85e13a;
 $tutor-success-500: #66c61c;
 $tutor-success-600: #4ca30d;
 $tutor-success-700: #3b7c0f;
+$tutor-success-750: #1C7330;
 $tutor-success-800: #326212;
 $tutor-success-900: #2b5314;
 $tutor-success-950: #15290a;
@@ -65,12 +66,12 @@ $tutor-warning-950: #4e1d09;
 // Error Colors
 $tutor-error-25: #fffbfa;
 $tutor-error-50: #fef3f2;
-$tutor-error-100: #fee4e2;
+$tutor-error-100: #fee4e2; // Color/Actions/actions-critical-secondary
 $tutor-error-200: #fecdca;
 $tutor-error-300: #fda29b;
 $tutor-error-400: #f97066;
 $tutor-error-500: #f04438;
-$tutor-error-600: #d92d20;
+$tutor-error-600: #d92d20; // Color/text/text-critical
 $tutor-error-700: #b42318;
 $tutor-error-800: #912018;
 $tutor-error-900: #7a271a;

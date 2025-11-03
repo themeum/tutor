@@ -1,0 +1,46 @@
+// Badge Mixins
+// Reusable Badge styles with variants and sizes
+
+@use "../tokens" as *;
+
+@mixin tutor-badge-base {
+	width: max-content;
+	border-radius: $tutor-radius-sm;
+	padding: 2px 8px;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+
+	background-color: $tutor-actions-gray-secondary;
+	color: $tutor-text-secondary;
+
+	font-size: $tutor-font-size-tiny;
+	font-weight: $tutor-font-weight-medium;
+	line-height: $tutor-line-height-tiny;
+	&.tutor-badge-circle {
+		border-radius: $tutor-radius-full;
+	}
+}
+
+@mixin tutor-badge-variant($variant: primary) {
+	@if $variant == primary {
+		background-color: $tutor-action-brand-tertiary;
+		// background-color: $tutor-actions-backgrounds-brand-tertiary;
+		color: $tutor-actions-brand-primary;
+	} @else if $variant == pending {
+		background-color: $tutor-actions-warning-secondary;
+		color: $tutor-text-warning;
+	} @else if $variant == completed {
+		background-color: $tutor-actions-success-tertiary;
+		color: $tutor-text-success;
+	} @else if $variant == cancelled {
+		background-color: $tutor-actions-critical-secondary;
+		color: $tutor-text-critical;
+	} @else if $variant == secondary {
+		background-color: $tutor-actions-gray-secondary;
+		color: $tutor-text-secondary;
+	} @else if $variant == exception {
+		background-color: $tutor-surface-exception2-secondary;
+		color: $tutor-text-exception2;
+	}
+}
