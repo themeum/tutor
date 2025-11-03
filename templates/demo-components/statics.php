@@ -69,7 +69,7 @@
 		<div x-data="tutorStatics({ value: 0, size: 'large', type: 'progress', showLabel: false })">
 			<div x-html="render()" ></div>
 		</div>
-		<div x-data="tutorStatics({ value: 75, size: 'large', type: 'progress', animated: false })">
+		<div x-data="tutorStatics({ value: 75, size: 'large', type: 'progress', animated: true })">
 			<div x-html="render()" ></div>
 		</div>
 	</div>

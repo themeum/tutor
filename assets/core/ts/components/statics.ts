@@ -25,7 +25,7 @@ const DEFAULT_CONFIG = {
   size: 'small' as StaticsSize,
   showLabel: true,
   label: '',
-  animated: true,
+  animated: false,
   duration: 1000,
 } as const;
 
