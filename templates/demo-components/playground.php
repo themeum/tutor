@@ -53,6 +53,9 @@
 		<section>
 			<?php require 'tabs.php'; ?>
 		</section>
+		<section>
+			<?php require 'badge.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
