@@ -46,7 +46,7 @@
     &:not(:last-child)::after {
       content: "/";
       margin: 0 $tutor-spacing-2;
-      color: var(----tutor-text-subdued);
+      color: var(--tutor-text-subdued);
       
       [dir="rtl"] & {
         content: "\\";

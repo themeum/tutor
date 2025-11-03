@@ -105,57 +105,6 @@
   text-align: justify;
 }
 
-// Text colors
-.tutor-text-primary {
-  color: var(--tutor-text-primary);
-}
-
-.tutor-text-secondary {
-  color: var(--tutor-text-secondary);
-}
-
-.tutor-text-tertiary {
-  color: var(--tutor-text-tertiary);
-}
-
-.--tutor-text-subdued {
-  color: var(----tutor-text-subdued);
-}
-
-.tutor-text-brand {
-  color: var(--tutor-text-brand);
-}
-
-.tutor-text-inverse {
-  color: var(--tutor-text-inverse);
-}
-
-.tutor-text-success {
-  color: var(--tutor-success);
-}
-
-.tutor-text-warning {
-  color: var(--tutor-warning);
-}
-
-.tutor-text-error {
-  color: var(--tutor-error);
-}
-
-// Brand color variations
-@each $key, $value in $tutor-brand-colors {
-  .tutor-text-brand-#{$key} {
-    color: $value;
-  }
-}
-
-// Gray color variations
-@each $key, $value in $tutor-gray-colors {
-  .tutor-text-gray-#{$key} {
-    color: $value;
-  }
-}
-
 // Text decoration
 .tutor-underline {
   text-decoration: underline;
