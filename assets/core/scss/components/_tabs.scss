@@ -61,7 +61,7 @@
 
 
     &:disabled {
-      // color: $tutor-text-disabled;
+      color: $tutor-text-subdued;
       cursor: not-allowed;
 
       &:hover {
