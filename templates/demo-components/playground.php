@@ -53,6 +53,9 @@
 		<section>
 			<?php require 'tabs.php'; ?>
 		</section>
+		<section>
+			<?php require 'skeleton.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
