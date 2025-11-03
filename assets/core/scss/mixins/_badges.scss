@@ -6,10 +6,10 @@
 @mixin tutor-badge-base {
 	width: max-content;
 	border-radius: $tutor-radius-sm;
-	padding: 2px 8px;
+	padding: $tutor-spacing-1 $tutor-spacing-4;
 	display: flex;
 	align-items: center;
-	gap: 6px;
+	gap: $tutor-spacing-3;
 
 	background-color: $tutor-actions-gray-secondary;
 	color: $tutor-text-secondary;
@@ -25,7 +25,6 @@
 @mixin tutor-badge-variant($variant: primary) {
 	@if $variant == primary {
 		background-color: $tutor-action-brand-tertiary;
-		// background-color: $tutor-actions-backgrounds-brand-tertiary;
 		color: $tutor-actions-brand-primary;
 	} @else if $variant == pending {
 		background-color: $tutor-actions-warning-secondary;
