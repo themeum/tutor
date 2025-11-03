@@ -29,38 +29,6 @@
   background-color: var(--tutor-surface-elevated);
 }
 
-.tutor-bg-primary {
-  background-color: var(--tutor-button-primary);
-}
-
-.tutor-bg-secondary {
-  background-color: var(--tutor-button-secondary);
-}
-
-.tutor-bg-success {
-  background-color: var(--tutor-success);
-}
-
-.tutor-bg-success-light {
-  background-color: var(--tutor-success-light);
-}
-
-.tutor-bg-warning {
-  background-color: var(--tutor-warning);
-}
-
-.tutor-bg-warning-light {
-  background-color: var(--tutor-warning-light);
-}
-
-.tutor-bg-error {
-  background-color: var(--tutor-error);
-}
-
-.tutor-bg-error-light {
-  background-color: var(--tutor-error-light);
-}
-
 // Brand background colors
 @each $key, $value in $tutor-brand-colors {
   .tutor-bg-brand-#{$key} {
@@ -121,15 +89,15 @@
 }
 
 .tutor-text-success {
-  color: var(--tutor-success);
+  color: var(--tutor-text-success);
 }
 
 .tutor-text-warning {
-  color: var(--tutor-warning);
+  color: var(--tutor-text-warning);
 }
 
 .tutor-text-error {
-  color: var(--tutor-error);
+  color: var(--tutor-text-error);
 }
 
 // Brand text colors (full scale)
@@ -213,15 +181,15 @@
 }
 
 .tutor-border-success {
-  border-color: var(--tutor-success);
+  border-color: var(--tutor-border-success);
 }
 
 .tutor-border-warning {
-  border-color: var(--tutor-warning);
+  border-color: var(--tutor-border-warning);
 }
 
 .tutor-border-error {
-  border-color: var(--tutor-error);
+  border-color: var(--tutor-border-error);
 }
 
 // Brand border colors
