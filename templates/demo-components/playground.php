@@ -51,6 +51,9 @@
 			<?php require 'button.php'; ?>
 			<?php require 'file-uploader.php'; ?>
 		</section>
+		<section>
+			<?php require 'tabs.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>

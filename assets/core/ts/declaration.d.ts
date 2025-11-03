@@ -1,7 +1,7 @@
 import { type Alpine as AlpineType } from 'alpinejs';
 
-import { type TutorCore } from '@Core/@types';
 import { type TutorComponentRegistry } from '@Core/ComponentRegistry';
+import { type TutorCore } from '@Core/types';
 
 declare global {
   interface Window {
@@ -10,3 +10,5 @@ declare global {
     TutorCore: TutorCore;
   }
 }
+
+declare const __TUTOR_TEXT_DOMAIN__: string;

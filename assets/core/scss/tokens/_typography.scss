@@ -59,7 +59,7 @@ $tutor-line-height-p3: 1.125rem;  // 18px ÷ 16 = 1.125rem
 $tutor-text-primary: var(--tutor-text-primary);
 $tutor-text-primary-inverse: var(--tutor-text-primary-inverse);
 $tutor-text-secondary: var(--tutor-text-secondary);
-$tutor-text-disabled: var(--tutor-text-disabled);
+$tutor-text-subdued: var(--tutor-text-subdued);
 $tutor-text-brand: var(--tutor-text-brand);
 $tutor-text-brand-secondary: var(--tutor-text-brand-secondary);
 $tutor-text-light: var(--tutor-text-light);
@@ -116,7 +116,7 @@ $tutor-text-colors: (
   primary: $tutor-text-primary,
   primary-inverse: $tutor-text-primary-inverse,
   secondary: $tutor-text-secondary,
-  disabled: $tutor-text-disabled,
+  disabled: $tutor-text-subdued,
   brand: $tutor-text-brand,
   brand-secondary: $tutor-text-brand-secondary,
   light: $tutor-text-light,

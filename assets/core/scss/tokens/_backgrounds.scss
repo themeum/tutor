@@ -1,0 +1,43 @@
+$tutor-surface-base: var(--tutor-surface-base);
+$tutor-surface-l1: var(--tutor-surface-l1);
+$tutor-surface-l1-hover: var(--tutor-surface-l1-hover);
+$tutor-surface-l2: var(--tutor-surface-l2);
+$tutor-surface-l2-hover: var(--tutor-surface-l2-hover);
+$tutor-surface-brand-dark: var(--tutor-surface-brand-dark);
+$tutor-surface-brand-primary: var(--tutor-surface-brand-primary);
+$tutor-surface-brand-secondary: var(--tutor-surface-brand-secondary);
+$tutor-surface-brand-tertiary: var(--tutor-surface-brand-tertiary);
+$tutor-surface-sidebar-l1: var(--tutor-surface-sidebar-l1);
+$tutor-surface-exception2-secondary: var(--tutor-surface-exception2-secondary);
+$tutor-surface-dark: var(--tutor-surface-dark);
+$tutor-surface-exception7: var(--tutor-surface-exception7);
+$tutor-tab-sidebar-l2: var(--tutor-tab-sidebar-l2);
+$tutor-tab-sidebar-l2-hover: var(--tutor-tab-sidebar-l2-hover);
+$tutor-tab-sidebar-l2-active: var(--tutor-tab-sidebar-l2-active);
+$tutor-tab-l3-active: var(--tutor-tab-l3-active);
+$tutor-tab-l3-active-hover: var(--tutor-tab-l3-active-hover);
+$tutor-tab-l3: var(--tutor-tab-l3);
+$tutor-tab-l3-hover: var(--tutor-tab-l3-hover);
+
+$tutor-backgrounds: (
+  surface-base: $tutor-surface-base,
+  surface-l1: $tutor-surface-l1,
+  surface-l1-hover: $tutor-surface-l1-hover,
+  surface-l2: $tutor-surface-l2,
+  surface-l2-hover: $tutor-surface-l2-hover,
+  surface-brand-dark: $tutor-surface-brand-dark,
+  surface-brand-primary: $tutor-surface-brand-primary,
+  surface-brand-secondary: $tutor-surface-brand-secondary,
+  surface-brand-tertiary: $tutor-surface-brand-tertiary,
+  surface-sidebar-l1: $tutor-surface-sidebar-l1,
+  surface-exception2-secondary: $tutor-surface-exception2-secondary,
+  surface-dark: $tutor-surface-dark,
+  surface-exception7: $tutor-surface-exception7,
+  tab-sidebar-l2: $tutor-tab-sidebar-l2,
+  tab-sidebar-l2-hover: $tutor-tab-sidebar-l2-hover,
+  tab-sidebar-l2-active: $tutor-tab-sidebar-l2-active,
+  tab-l3-active: $tutor-tab-l3-active,
+  tab-l3-active-hover: $tutor-tab-l3-active-hover,
+  tab-l3: $tutor-tab-l3,
+  tab-l3-hover: $tutor-tab-l3-hover,
+);

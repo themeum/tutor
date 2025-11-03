@@ -1,0 +1,67 @@
+// Design Tokens - Border
+// Consistent border
+
+// =============================================================================
+// BORDER COLORS
+// =============================================================================
+
+$tutor-border-idle: var(--tutor-border-idle);
+$tutor-border-hover: var(--tutor-border-hover);
+$tutor-border-inverse: var(--tutor-border-inverse);
+$tutor-border-brand: var(--tutor-border-brand);
+$tutor-border-brand-secondary: var(--tutor-border-brand-secondary);
+$tutor-border-brand-tertiary: var(--tutor-border-brand-tertiary);
+$tutor-border-dark: var(--tutor-border-dark);
+$tutor-border-success: var(--tutor-border-success);
+$tutor-border-warning: var(--tutor-border-warning);
+$tutor-border-error: var(--tutor-border-error);
+
+// =============================================================================
+// RADIUS SCALE
+// =============================================================================
+
+$tutor-radius-none: 0px;
+$tutor-radius-xs: 2px;
+$tutor-radius-sm: 4px;
+$tutor-radius-md: 6px;
+$tutor-radius-lg: 8px;
+$tutor-radius-2xl: 12px;
+$tutor-radius-3xl: 16px;
+$tutor-radius-4xl: 20px;
+$tutor-radius-5xl: 24px;
+$tutor-radius-full: 1000px;
+
+
+// =============================================================================
+// BORDER COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-border-colors: (
+  idle: $tutor-border-idle,
+  hover: $tutor-border-hover,
+  inverse: $tutor-border-inverse,
+  brand: $tutor-border-brand,
+  brand-secondary: $tutor-border-brand-secondary,
+  brand-tertiary: $tutor-border-brand-tertiary,
+  dark: $tutor-border-dark,
+  success: $tutor-border-success,
+  warning: $tutor-border-warning,
+  error: $tutor-border-error
+);
+
+// =============================================================================
+// RADIUS MAP (for utility generation)
+// =============================================================================
+
+$tutor-radius: (
+  none: $tutor-radius-none,
+  xs: $tutor-radius-xs,
+  sm: $tutor-radius-sm,
+  md: $tutor-radius-md,
+  lg: $tutor-radius-lg,
+  2xl: $tutor-radius-2xl,
+  3xl: $tutor-radius-3xl,
+  4xl: $tutor-radius-4xl,
+  5xl: $tutor-radius-5xl,
+  full: $tutor-radius-full
+);
