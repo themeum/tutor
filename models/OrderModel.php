@@ -1861,9 +1861,7 @@ class OrderModel {
 			<?php
 		elseif ( $show_pay_button ) :
 
-			if ( $self->validate_payment_method( $order ) ) :
-				echo $self->link_button( $order->id );
-			else :
+			if ( $self->is_tutor_payment_method( $order ) ) :
 				ob_start();
 				?>
 				<form method="post">
@@ -1877,6 +1875,8 @@ class OrderModel {
 					</button>				
 				</form>
 				<?php
+			else :
+				$self->pay_now_link( $order->id );
 			endif;
 			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
 		endif;
@@ -2134,7 +2134,7 @@ class OrderModel {
 	 *
 	 * @return bool
 	 */
-	private function validate_payment_method( $order_data ): bool {
+	private function is_tutor_payment_method( $order_data ): bool {
 
 		$selected_payment_method = $order_data->payment_method ?? null;
 		$is_valid_payment_method = $selected_payment_method ? in_array( $selected_payment_method, array_column( tutor_get_all_active_payment_gateways(), 'name' ), true ) : false;
@@ -2148,21 +2148,36 @@ class OrderModel {
 	 *
 	 * @since 3.9.2
 	 *
-	 * @param int $order_id The unique ID of the order.
+	 * @param int  $order_id The unique ID of the order.
+	 * @param bool $display    Optional. Whether to echo the link (true) or return it (false). Default true.
 	 *
 	 * @return string The HTML markup for the payment link button.
 	 */
-	private function link_button( $order_id ): string {
+	public static function pay_now_link( $order_id, $display = true ): string {
 
-		$page_id      = (int) tutor_utils()->get_option( CheckoutController::PAGE_ID_OPTION_NAME );
-		$checkout_url = add_query_arg( array( 'order_id' => $order_id ), get_permalink( $page_id ) );
+		$checkout_url = add_query_arg( array( 'order_id' => $order_id ), CheckoutController::get_page_url() );
 
-		return sprintf(
-			'<a href="%s" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+		$link =
+			sprintf(
+				'<a href="%s" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
 				%s
 			</a>',
-			esc_url( $checkout_url ),
-			esc_html__( 'Pay', 'tutor' )
-		);
+				esc_url( $checkout_url ),
+				esc_html__( 'Pay', 'tutor' )
+			);
+
+		if ( $display ) {
+			echo wp_kses(
+				$link,
+				array(
+					'a' => array(
+						'href'  => true,
+						'class' => true,
+					),
+				)
+			);
+		} else {
+			return $link;
+		}
 	}
 }
