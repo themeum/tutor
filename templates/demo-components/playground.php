@@ -49,6 +49,7 @@
 		<?php else : ?>
 		<section>
 			<?php require 'button.php'; ?>
+			<?php require 'card.php'; ?>
 		</section>
 	<?php endif ?>
 
