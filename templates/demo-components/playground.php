@@ -49,7 +49,7 @@
 		<?php else : ?>
 		<section>
 			<?php require 'button.php'; ?>
-			<?php require 'section-seperator.php'; ?>
+			<?php require 'section-separator.php'; ?>
 		</section>
 	<?php endif ?>
 
