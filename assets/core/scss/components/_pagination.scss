@@ -1,0 +1,23 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-pagination {
+	@include tutor-pagination-base;
+}
+
+.tutor-pagination-item {
+	@include tutor-pagination-item;
+}
+
+.tutor-pagination-item-active {
+	@include tutor-pagination-item-variant(active);
+}
+
+.tutor-pagination-item-prev,
+.tutor-pagination-item-next {
+	@include tutor-pagination-item-variant(prev-next);
+}
+
+.tutor-pagination-ellipsis {
+	@include tutor-pagination-ellipsis;
+}
