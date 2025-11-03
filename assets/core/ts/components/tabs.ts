@@ -1,79 +1,97 @@
-// Tabs Component
-// Alpine.js tabs with keyboard navigation and ARIA support
-import { type AlpineTabsData } from '../types/components';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/constant';
 
-export function createTabs(defaultTab: number = 0): AlpineTabsData {
-  return {
-    activeTab: defaultTab,
-    $el: undefined as HTMLElement | undefined,
+export interface TabItem {
+  id: string;
+  label: string;
+  icon?: string;
+  disabled?: boolean;
+  href?: string;
+}
 
-    init() {
-      this.setupAccessibility();
-    },
-
-    setTab(index: number): void {
-      this.activeTab = index;
-      this.updateAccessibility();
-    },
-
-    isActive(index: number): boolean {
-      return this.activeTab === index;
-    },
-
-    handleKeydown(event: KeyboardEvent, index: number): void {
-      const tabs = this.$el?.querySelectorAll('.tutor-tab');
-      if (!tabs) return;
-
-      let newIndex = index;
-
-      switch (event.key) {
-        case 'ArrowLeft':
-          newIndex = index > 0 ? index - 1 : tabs.length - 1;
-          break;
-        case 'ArrowRight':
-          newIndex = index < tabs.length - 1 ? index + 1 : 0;
-          break;
-        case 'Home':
-          newIndex = 0;
-          break;
-        case 'End':
-          newIndex = tabs.length - 1;
-          break;
-        default:
-          return;
-      }
-
-      event.preventDefault();
-      this.setTab(newIndex);
-      (tabs[newIndex] as HTMLElement).focus();
-    },
-
-    setupAccessibility(): void {
-      const tabs = this.$el?.querySelectorAll('.tutor-tab');
-      const panels = this.$el?.querySelectorAll('.tutor-tab-panel');
-
-      tabs.forEach((tab: Element, index: number) => {
-        tab.setAttribute('role', 'tab');
-        tab.setAttribute('aria-selected', index === this.activeTab ? 'true' : 'false');
-        tab.setAttribute('aria-controls', `panel-${index}`);
-        tab.setAttribute('id', `tab-${index}`);
-        tab.setAttribute('tabindex', index === this.activeTab ? '0' : '-1');
-      });
-
-      panels.forEach((panel: Element, index: number) => {
-        panel.setAttribute('role', 'tabpanel');
-        panel.setAttribute('aria-labelledby', `tab-${index}`);
-        panel.setAttribute('id', `panel-${index}`);
-      });
-    },
-
-    updateAccessibility(): void {
-      const tabs = this.$el?.querySelectorAll('.tutor-tab');
-
-      tabs?.forEach((tab: Element, index: number) => {
-        tab.setAttribute('aria-selected', index === this.activeTab ? 'true' : 'false');
-        tab.setAttribute('tabindex', index === this.activeTab ? '0' : '-1');
-      });
-    },
+export interface TabsConfig {
+  tabs: TabItem[];
+  defaultTab?: string;
+  orientation?: 'horizontal' | 'vertical';
+  fullWidth?: boolean;
+  onChange?: (tabId: string) => void;
+  urlParams?: {
+    enabled?: boolean;
+    paramName?: string;
   };
 }
+
+export const tabs = (config: TabsConfig) => ({
+  tabs: config.tabs,
+  activeTab: config.defaultTab || config.tabs[0]?.id || '',
+  orientation: config.orientation || 'horizontal',
+  urlParamsConfig: {
+    enabled: config.urlParams?.enabled ?? true,
+    paramName: config.urlParams?.paramName || 'page_tab',
+  },
+
+  async init() {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const $el = (this as any).$el as HTMLElement;
+
+    let initialTab = this.activeTab;
+
+    // Only read from URL if URL params are enabled
+    if (this.urlParamsConfig.enabled) {
+      const url = new URL(window.location.href);
+      const tabId = url.searchParams.get(this.urlParamsConfig.paramName);
+      if (tabId) {
+        initialTab = tabId;
+      }
+    }
+
+    this.selectTab(initialTab);
+    $el.classList.add('tutor-tabs-' + this.orientation);
+  },
+
+  selectTab(tabId: string) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const $dispatch = (this as any).$dispatch;
+    const tab = this.tabs.find((t) => t.id === tabId);
+
+    if (!tab || tab.disabled) {
+      return;
+    }
+
+    if (tab.href) {
+      window.location.href = tab.href;
+      return;
+    }
+
+    this.activeTab = tabId;
+
+    if (this.urlParamsConfig.enabled) {
+      const url = new URL(window.location.href);
+      url.searchParams.set(this.urlParamsConfig.paramName, tabId);
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    if (config.onChange) {
+      config.onChange(tabId);
+    }
+
+    // Dispatch custom event
+    $dispatch(TUTOR_CUSTOM_EVENTS.TAB_CHANGE, { tabId, tab });
+  },
+
+  isActive(tabId: string): boolean {
+    return this.activeTab === tabId;
+  },
+
+  getTabClass(tab: TabItem) {
+    const classes = ['tutor-tabs-tab'];
+    if (this.isActive(tab.id)) {
+      classes.push('tutor-tabs-tab-active');
+    }
+    return classes.join(' ');
+  },
+});
+
+export const tabsMeta = {
+  name: 'tabs',
+  component: tabs,
+};

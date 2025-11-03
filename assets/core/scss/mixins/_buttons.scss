@@ -51,7 +51,7 @@
 
     &:disabled {
       background-color: var(--tutor-button-disabled);
-      color: var(----tutor-text-subdued);
+      color: var(--tutor-text-subdued);
     }
   } @else if $variant == destructive {
     background-color: var(--tutor-button-destructive);
@@ -82,7 +82,7 @@
 
     &:disabled {
       background-color: var(--tutor-button-disabled);
-      color: var(----tutor-text-subdued);
+      color: var(--tutor-text-subdued);
     }
   } @else if $variant == secondary {
     background-color: var(--tutor-button-secondary);
@@ -98,7 +98,7 @@
 
     &:disabled {
       background-color: var(--tutor-button-disabled);
-      color: var(----tutor-text-subdued);
+      color: var(--tutor-text-subdued);
     }
   } @else if $variant == outline {
     background-color: var(--tutor-button-outline-inverse);
@@ -115,7 +115,7 @@
 
     &:disabled {
       background-color: var(--tutor-button-disabled);
-      color: var(----tutor-text-subdued);
+      color: var(--tutor-text-subdued);
     }
   } @else if $variant == ghost {
     background-color: transparent;
@@ -126,14 +126,14 @@
     }
 
     &:disabled {
-      color: var(----tutor-text-subdued);
+      color: var(--tutor-text-subdued);
     }
   } @else if $variant == link {
     background-color: transparent;
     color: var(--tutor-text-primary);
 
     &:disabled {
-      color: var(----tutor-text-subdued);
+      color: var(--tutor-text-subdued);
     }
   }
 }

@@ -50,6 +50,9 @@
 		<section>
 			<?php require 'button.php'; ?>
 		</section>
+		<section>
+			<?php require 'tabs.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
