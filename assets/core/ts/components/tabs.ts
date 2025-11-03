@@ -14,20 +14,36 @@ export interface TabsConfig {
   orientation?: 'horizontal' | 'vertical';
   fullWidth?: boolean;
   onChange?: (tabId: string) => void;
+  urlParams?: {
+    enabled?: boolean;
+    paramName?: string;
+  };
 }
 
 export const tabs = (config: TabsConfig) => ({
   tabs: config.tabs,
   activeTab: config.defaultTab || config.tabs[0]?.id || '',
   orientation: config.orientation || 'horizontal',
+  urlParamsConfig: {
+    enabled: config.urlParams?.enabled ?? true,
+    paramName: config.urlParams?.paramName || 'page_tab',
+  },
 
   async init() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const $el = (this as any).$el as HTMLElement;
-    const url = new URL(window.location.href);
-    const tabId = url.searchParams.get('page_tab');
 
-    const initialTab = tabId || this.activeTab;
+    let initialTab = this.activeTab;
+
+    // Only read from URL if URL params are enabled
+    if (this.urlParamsConfig.enabled) {
+      const url = new URL(window.location.href);
+      const tabId = url.searchParams.get(this.urlParamsConfig.paramName);
+      if (tabId) {
+        initialTab = tabId;
+      }
+    }
+
     this.selectTab(initialTab);
     $el.classList.add('tutor-tabs-' + this.orientation);
   },
@@ -48,9 +64,11 @@ export const tabs = (config: TabsConfig) => ({
 
     this.activeTab = tabId;
 
-    const url = new URL(window.location.href);
-    url.searchParams.set('page_tab', tabId);
-    window.history.replaceState({}, '', url.toString());
+    if (this.urlParamsConfig.enabled) {
+      const url = new URL(window.location.href);
+      url.searchParams.set(this.urlParamsConfig.paramName, tabId);
+      window.history.replaceState({}, '', url.toString());
+    }
 
     if (config.onChange) {
       config.onChange(tabId);

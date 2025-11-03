@@ -42,6 +42,9 @@ $tabs_data = array(
 		<div x-data='tutorTabs({
 				tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
 				defaultTab: "lesson",
+				urlParams: {
+					paramName: "tab",
+				}
 			})'
 		>
 			<div x-ref="tablist" class="tutor-tabs-nav" role="tablist" aria-orientation="horizontal">
@@ -81,6 +84,10 @@ $tabs_data = array(
 				tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
 				orientation: "vertical",
 				defaultTab: "lesson",
+				urlParams: {
+					enabled: false,
+					paramName: "tab",
+				}
 			})'
 		>
 			<div x-ref="tablist" class="tutor-tabs-nav" role="tablist" aria-orientation="horizontal">
