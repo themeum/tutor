@@ -114,7 +114,7 @@
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: $gap;
   
-  @include tutor-respond-to(lg) {
+  @include tutor-breakpoint-down(lg) {
     grid-template-columns: repeat($columns, 1fr);
   }
 }
