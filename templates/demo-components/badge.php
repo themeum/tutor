@@ -27,8 +27,8 @@ use TUTOR\Icon;
 		<span class="tutor-badge tutor-badge-secondary">
 			Secondary
 		</span> 
-		<span class="tutor-badge tutor-badge-secondary tutor-badge-circle">
-			<span class="tutor-text-success">Points:</span> 20
+		<span class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-text-secondary">
+			<span class="tutor-text-subdued">Points:</span> 20
 		</span>
 		<span class="tutor-badge tutor-badge-exception tutor-badge-circle">
 			Bundle

@@ -1,0 +1,46 @@
+// Design Tokens - Text Colors
+// CSS variables for theme-aware text colors
+
+// =============================================================================
+// CSS VARIABLE REFERENCES (theme-aware)
+// =============================================================================
+
+$tutor-text-primary: var(--tutor-text-primary);
+$tutor-text-primary-inverse: var(--tutor-text-primary-inverse);
+$tutor-text-secondary: var(--tutor-text-secondary);
+$tutor-text-subdued: var(--tutor-text-subdued);
+$tutor-text-brand: var(--tutor-text-brand);
+$tutor-text-brand-secondary: var(--tutor-text-brand-secondary);
+$tutor-text-light: var(--tutor-text-light);
+$tutor-text-success: var(--tutor-text-success);
+$tutor-text-critical: var(--tutor-text-critical);
+$tutor-text-warning: var(--tutor-text-warning);
+$tutor-text-caution: var(--tutor-text-caution);
+$tutor-text-exception1: var(--tutor-text-exception1);
+$tutor-text-exception2: var(--tutor-text-exception2);
+$tutor-text-exception4: var(--tutor-text-exception4);
+$tutor-text-exception5: var(--tutor-text-exception5);
+$tutor-text-highlighted-hover: var(--tutor-text-highlighted-hover);
+
+// =============================================================================
+// TEXT COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-text-colors: (
+  primary: $tutor-text-primary,
+  primary-inverse: $tutor-text-primary-inverse,
+  secondary: $tutor-text-secondary,
+  subdued: $tutor-text-subdued,
+  brand: $tutor-text-brand,
+  brand-secondary: $tutor-text-brand-secondary,
+  light: $tutor-text-light,
+  success: $tutor-text-success,
+  critical: $tutor-text-critical,
+  warning: $tutor-text-warning,
+  caution: $tutor-text-caution,
+  exception1: $tutor-text-exception1,
+  exception2: $tutor-text-exception2,
+  exception4: $tutor-text-exception4,
+  exception5: $tutor-text-exception5,
+  highlighted-hover: $tutor-text-highlighted-hover
+);
