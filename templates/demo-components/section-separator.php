@@ -13,10 +13,6 @@
 	<h1 class="tutor-text-2xl tutor-font-bold tutor-mb-6">Section Separator</h1>
 
 	<div class="tutor-mb-8">
-		<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-3">Basic Separator</h2>
-		<p class="tutor-text-gray-600 tutor-mb-4">
-			A simple horizontal line for visual separation between sections.
-		</p>
 		<div class="tutor-p-6 tutor-bg-gray-50 tutor-rounded-md">
 			<div>
 				<p class="tutor-mb-4">Content above the separator</p>
