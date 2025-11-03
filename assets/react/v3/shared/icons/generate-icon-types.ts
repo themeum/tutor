@@ -14,7 +14,7 @@ const iconNames = readdirSync(ICONS_DIR)
 // TypeScript Output
 // ------------------------
 const tsNames = iconNames
-  .map((name) => name.replace(/-([a-z])/g, (_, char) => char.toUpperCase()))
+  .map((name) => name.replace(/-([a-z])/g, (_, char) => char.toUpperCase()).replace(/-(\d)/g, '$1'))
   .map((name) => `  '${name}'`)
   .sort()
   .join(',\n');

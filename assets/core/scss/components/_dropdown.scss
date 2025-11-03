@@ -80,13 +80,13 @@
     }
     
     &--disabled {
-      color: var(--tutor-text-disabled);
+      color: var(--tutor-text-subdued);
       cursor: not-allowed;
       
       &:hover,
       &:focus {
         background-color: transparent;
-        color: var(--tutor-text-disabled);
+        color: var(--tutor-text-subdued);
       }
     }
     
