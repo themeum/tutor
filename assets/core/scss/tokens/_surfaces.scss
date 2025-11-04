@@ -1,0 +1,40 @@
+// Design Tokens - Surface Colors
+// CSS variables for theme-aware surface colors
+
+// =============================================================================
+// CSS VARIABLE REFERENCES (theme-aware)
+// =============================================================================
+
+$tutor-surface-base: var(--tutor-surface-base);
+$tutor-surface-l1: var(--tutor-surface-l1);
+$tutor-surface-l1-hover: var(--tutor-surface-l1-hover);
+$tutor-surface-l2: var(--tutor-surface-l2);
+$tutor-surface-l2-hover: var(--tutor-surface-l2-hover);
+$tutor-surface-brand-dark: var(--tutor-surface-brand-dark);
+$tutor-surface-brand-primary: var(--tutor-surface-brand-primary);
+$tutor-surface-brand-secondary: var(--tutor-surface-brand-secondary);
+$tutor-surface-brand-tertiary: var(--tutor-surface-brand-tertiary);
+$tutor-surface-sidebar-l1: var(--tutor-surface-sidebar-l1);
+$tutor-surface-exception2-secondary: var(--tutor-surface-exception2-secondary);
+$tutor-surface-dark: var(--tutor-surface-dark);
+$tutor-surface-exception7: var(--tutor-surface-exception7);
+
+// =============================================================================
+// SURFACE COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-surfaces: (
+  base: $tutor-surface-base,
+  l1: $tutor-surface-l1,
+  l1-hover: $tutor-surface-l1-hover,
+  l2: $tutor-surface-l2,
+  l2-hover: $tutor-surface-l2-hover,
+  brand-dark: $tutor-surface-brand-dark,
+  brand-primary: $tutor-surface-brand-primary,
+  brand-secondary: $tutor-surface-brand-secondary,
+  brand-tertiary: $tutor-surface-brand-tertiary,
+  sidebar-l1: $tutor-surface-sidebar-l1,
+  exception2-secondary: $tutor-surface-exception2-secondary,
+  dark: $tutor-surface-dark,
+  exception7: $tutor-surface-exception7
+);
