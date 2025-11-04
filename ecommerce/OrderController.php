@@ -1272,6 +1272,8 @@ class OrderController {
 		unset( $update_data['items'], $update_data['created_at_gmt'], $update_data['created_by'] );
 
 		if ( $this->model->update_order( $order_id, $update_data, $order_items ) ) {
+			$update_data['id']    = $order_id;
+			$update_data['items'] = $order_items;
 			return $return_data ? $update_data : true;
 		}
 
