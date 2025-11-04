@@ -81,10 +81,6 @@ defined( 'ABSPATH' ) || exit;
 			</ul>
 		</div>
 	</div>
-
-	<p class="tutor-text-sm tutor-text-muted">
-		<?php echo esc_html__( 'Use Arrow keys to navigate, Enter to select, and Escape to close. The dropdown automatically positions itself based on available viewport space.', 'tutor' ); ?>
-	</p>
 </div>
 
 
