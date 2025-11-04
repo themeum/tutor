@@ -256,6 +256,8 @@ const jsEntries = {
   'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
   'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
   'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
+  'tutor-dashboard-js': './assets/react/frontend/dashboard/index.ts',
+  'tutor-learning-area-js': './assets/react/frontend/learning-area/index.ts',
 };
 
 const scssEntries = {
@@ -286,6 +288,11 @@ const resolveAliases = {
   '@CouponDetails': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/'),
   '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
+  // Frontend aliases
+  '@FrontendServices': path.resolve(__dirname, './assets/react/frontend/services'),
+  '@FrontendTypes': path.resolve(__dirname, './assets/react/frontend/types'),
+  '@DashboardServices': path.resolve(__dirname, './assets/react/frontend/dashboard/services'),
+  '@LearningServices': path.resolve(__dirname, './assets/react/frontend/learning-area/services'),
 };
 
 const isScssEntry = (entry) => {
