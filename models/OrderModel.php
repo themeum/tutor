@@ -1860,24 +1860,8 @@ class OrderModel {
 			</div>
 			<?php
 		elseif ( $show_pay_button ) :
-
-			if ( $self->is_tutor_payment_method( $order ) ) :
-				ob_start();
-				?>
-				<form method="post">
-					<?php tutor_nonce_field(); ?>
-
-					<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
-					<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
-
-					<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
-						<?php esc_html_e( 'Pay', 'tutor' ); ?>
-					</button>				
-				</form>
-				<?php
-			else :
-				$self->pay_now_link( $order->id );
-			endif;
+			ob_start();
+			$self->pay_now_link( $order->id );
 			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
 		endif;
 	}
@@ -2123,24 +2107,6 @@ class OrderModel {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Validate the selected payment method and redirect to checkout if invalid.
-	 *
-	 * @since 3.9.2
-	 *
-	 * @param object $order_data      The current order data.
-	 *
-	 * @return bool
-	 */
-	private function is_tutor_payment_method( $order_data ): bool {
-
-		$selected_payment_method = $order_data->payment_method ?? null;
-		$is_valid_payment_method = $selected_payment_method ? in_array( $selected_payment_method, array_column( tutor_get_all_active_payment_gateways(), 'name' ), true ) : false;
-
-		// If payment method is not selected  od it's not a valid payment.
-		return ( empty( $selected_payment_method ) || ! $is_valid_payment_method );
 	}
 
 	/**
