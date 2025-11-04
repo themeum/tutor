@@ -2115,12 +2115,12 @@ class OrderModel {
 	 *
 	 * @since 3.9.2
 	 *
-	 * @param int  $order_id The unique ID of the order.
+	 * @param int  $order_id   The unique ID of the order.
 	 * @param bool $display    Optional. Whether to echo the link (true) or return it (false). Default true.
 	 *
-	 * @return string The HTML markup for the payment link button.
+	 * @return string|void
 	 */
-	public static function pay_now_link( $order_id, $display = true ): string {
+	public static function pay_now_link( $order_id, $display = true ) {
 
 		$checkout_url = add_query_arg( array( 'order_id' => $order_id ), CheckoutController::get_page_url() );
 
