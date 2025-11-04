@@ -25,6 +25,7 @@
 
 	$subpages = array(
 		'dashboard'     => 'Dashboard',
+		'nur'           => 'Nur',
 		'learning-area' => 'Learning Area',
 	);
 

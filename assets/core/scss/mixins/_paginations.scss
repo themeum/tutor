@@ -50,7 +50,8 @@
 	line-height: $tutor-line-height-tiny;
 	transition: all 0.2s ease;
 	cursor: pointer;
-	min-height: 30px;
+	min-width: 32px;
+	min-height: 32px;
 
 	// Default state
 	background-color: transparent;
@@ -92,8 +93,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 40px;
-	height: 40px;
+	min-width: 32px;
+	min-height: 32px;
 	color: $tutor-text-secondary;
 	font-size: $tutor-font-size-small;
 	cursor: default;
