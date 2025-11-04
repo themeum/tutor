@@ -570,7 +570,6 @@ class CheckoutController {
 
 		if ( $order_id ) {
 			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
-
 			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
 				array_push( $errors, __( 'Invalid order', 'tutor' ) );
 			}
