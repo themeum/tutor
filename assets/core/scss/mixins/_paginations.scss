@@ -50,6 +50,7 @@
 	line-height: $tutor-line-height-tiny;
 	transition: all 0.2s ease;
 	cursor: pointer;
+	min-height: 30px;
 
 	// Default state
 	background-color: transparent;
