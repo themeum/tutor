@@ -689,9 +689,7 @@ class CheckoutController {
 				}
 			}
 
-			// Check if an order ID is provided.
 			if ( ! empty( $order_data ) ) {
-
 				$order_data = $this->order_ctrl->update_order(
 					$order_id,
 					$current_user_id,
