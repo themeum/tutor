@@ -1,0 +1,14 @@
+// Section Separator Component
+// Simple horizontal line for visual separation between sections
+
+@use '../tokens' as *;
+
+.tutor-section-separator {
+  width: 100%;
+  height: 1px;
+  background-color: var(--tutor-border-idle);
+  border: none;
+  margin: 0;
+  padding: 0;
+  flex-shrink: 0;
+}

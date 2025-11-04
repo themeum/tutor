@@ -54,6 +54,12 @@
 		<section>
 			<?php require 'tabs.php'; ?>
 		</section>
+		<section>
+			<?php require 'card.php'; ?>
+		</section>
+		<section>
+			<?php require 'section-separator.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
