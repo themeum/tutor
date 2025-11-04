@@ -53,6 +53,9 @@
 		<section>
 			<?php require 'tabs.php'; ?>
 		</section>
+		<section>
+			<?php require 'select-dropdown.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>

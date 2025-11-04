@@ -1,0 +1,107 @@
+.tutor-select-dropdown {
+	position: relative;
+	min-width: 200px;
+
+	&.tutor-is-disabled {
+		opacity: 0.6;
+		pointer-events: none;
+	}
+
+	&-control {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+		width: 100%;
+		padding: 8px 12px;
+		background: var(--tutor-surface, #fff);
+		border-radius: 6px;
+		cursor: pointer;
+
+		&:focus {
+			outline: 2px solid var(--tutor-primary-50, #dbeafe);
+			outline-offset: 2px;
+		}
+	}
+
+	&-value {
+		color: var(--tutor-foreground, #111827);
+		flex: 1;
+		min-width: 0;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	&-placeholder {
+		color: var(--tutor-muted-foreground, #6b7280);
+	}
+
+	&-arrow {
+		margin-left: auto;
+		color: var(--tutor-muted-foreground, #6b7280);
+		transition: transform 0.2s ease;
+	}
+
+	// Rotate arrow when dropdown is expanded
+	&-control[aria-expanded="true"] .tutor-select-dropdown-arrow {
+		transform: rotate(180deg);
+	}
+
+	&-menu {
+		position: absolute !important;
+		left: 0;
+		right: 0;
+		z-index: 9999;
+		background: var(--tutor-surface, #fff);
+		border-radius: 6px;
+		box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+		max-height: 280px;
+		overflow: auto;
+		width: 100%;
+
+		// Default positioning (bottom)
+		&--bottom {
+			top: calc(100% + 4px) !important;
+			bottom: auto !important;
+		}
+
+		// Top positioning
+		&--top {
+			bottom: calc(100% + 4px) !important;
+			top: auto !important;
+		}
+
+		// Fallback for when no position class is applied yet
+		&:not(.tutor-select-dropdown-menu--top):not(.tutor-select-dropdown-menu--bottom) {
+			top: calc(100% + 4px);
+			bottom: auto;
+		}
+	}
+
+	&-option {
+		padding: 8px 12px;
+		cursor: pointer;
+		color: var(--tutor-foreground, #111827);
+
+		&:hover {
+			background: var(--tutor-muted, #f3f4f6);
+		}
+
+		&.tutor-is-selected {
+			background: var(--tutor-primary-50, #dbeafe);
+			color: var(--tutor-primary-700, #1d4ed8);
+		}
+
+		&.tutor-is-disabled {
+			color: var(--tutor-muted-foreground, #9ca3af);
+			cursor: not-allowed;
+		}
+
+		&.tutor-is-highlighted {
+			background: var(--tutor-muted, #f3f4f6);
+		}
+	}
+}
+
+
