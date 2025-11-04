@@ -25,15 +25,11 @@ use TUTOR\Icon;
 				</li>
 
 				<li><a class="tutor-pagination__item">1</a></li>
-
 				<li>
 					<a class="tutor-pagination__item tutor-pagination__item--active" aria-current="page">2</a>
 				</li>
-
 				<li><a class="tutor-pagination__item">3</a></li>
-
 				<li><span class="tutor-pagination__ellipsis" aria-hidden="true">…</span></li>
-
 				<li><a class="tutor-pagination__item">6</a></li>
 				<li><a class="tutor-pagination__item">7</a></li>
 

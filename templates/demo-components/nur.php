@@ -8,7 +8,7 @@
 
 ?>
 <section>
-	<h2>Nur Component</h2>
+	<h2>Nur Components</h2>
 	<?php require 'nur/badge.php'; ?>
 	<?php require 'nur/pagination.php'; ?>
 </section>
