@@ -12,44 +12,44 @@ $tutor-font-family-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
 // FONT WEIGHTS
 // =============================================================================
 
-$tutor-font-weight-regular: 400;      // Regular
-$tutor-font-weight-medium: 500;    // Medium
-$tutor-font-weight-semi-strong: 600; // Semi Bold
-$tutor-font-weight-strong: 700;    // Bold
+$tutor-font-weight-regular: 400; // Regular
+$tutor-font-weight-medium: 500; // Medium
+$tutor-font-weight-semibold: 600; // Semi Bold
+$tutor-font-weight-bold: 700; // Bold
 
 // =============================================================================
 // FONT SIZES (converted to rem for font scaling support)
 // Base: 16px = 1rem
 // =============================================================================
 
-$tutor-font-size-h1: 2.5rem;    // 40px ÷ 16 = 2.5rem
-$tutor-font-size-h2: 2rem;      // 32px ÷ 16 = 2rem
-$tutor-font-size-h3: 1.5rem;    // 24px ÷ 16 = 1.5rem
-$tutor-font-size-h4: 1.25rem;   // 20px ÷ 16 = 1.25rem
-$tutor-font-size-h5: 1.125rem;  // 18px ÷ 16 = 1.125rem
-$tutor-font-size-medium: 1rem;  // 16px ÷ 16 = 1rem
-$tutor-font-size-p1: 1rem;      // 16px ÷ 16 = 1rem
+$tutor-font-size-h1: 2.5rem; // 40px ÷ 16 = 2.5rem
+$tutor-font-size-h2: 2rem; // 32px ÷ 16 = 2rem
+$tutor-font-size-h3: 1.5rem; // 24px ÷ 16 = 1.5rem
+$tutor-font-size-h4: 1.25rem; // 20px ÷ 16 = 1.25rem
+$tutor-font-size-h5: 1.125rem; // 18px ÷ 16 = 1.125rem
+$tutor-font-size-medium: 1rem; // 16px ÷ 16 = 1rem
+$tutor-font-size-p1: 1rem; // 16px ÷ 16 = 1rem
 $tutor-font-size-small: 0.875rem; // 14px ÷ 16 = 0.875rem
-$tutor-font-size-p2: 0.875rem;  // 14px ÷ 16 = 0.875rem
+$tutor-font-size-p2: 0.875rem; // 14px ÷ 16 = 0.875rem
 $tutor-font-size-tiny: 0.75rem; // 12px ÷ 16 = 0.75rem
-$tutor-font-size-p3: 0.75rem;   // 12px ÷ 16 = 0.75rem
+$tutor-font-size-p3: 0.75rem; // 12px ÷ 16 = 0.75rem
 
 // =============================================================================
 // LINE HEIGHTS (converted to rem for proportional scaling with fonts)
 // Base: 16px = 1rem
 // =============================================================================
 
-$tutor-line-height-h1: 3rem;      // 48px ÷ 16 = 3rem
-$tutor-line-height-h2: 2.5rem;    // 40px ÷ 16 = 2.5rem
-$tutor-line-height-h3: 2rem;      // 32px ÷ 16 = 2rem
-$tutor-line-height-h4: 1.75rem;   // 28px ÷ 16 = 1.75rem
-$tutor-line-height-h5: 1.625rem;  // 26px ÷ 16 = 1.625rem
+$tutor-line-height-h1: 3rem; // 48px ÷ 16 = 3rem
+$tutor-line-height-h2: 2.5rem; // 40px ÷ 16 = 2.5rem
+$tutor-line-height-h3: 2rem; // 32px ÷ 16 = 2rem
+$tutor-line-height-h4: 1.75rem; // 28px ÷ 16 = 1.75rem
+$tutor-line-height-h5: 1.625rem; // 26px ÷ 16 = 1.625rem
 $tutor-line-height-medium: 1.5rem; // 24px ÷ 16 = 1.5rem
-$tutor-line-height-p1: 1.375rem;  // 22px ÷ 16 = 1.375rem
+$tutor-line-height-p1: 1.375rem; // 22px ÷ 16 = 1.375rem
 $tutor-line-height-small: 1.375rem; // 22px ÷ 16 = 1.375rem
-$tutor-line-height-p2: 1.125rem;  // 18px ÷ 16 = 1.125rem
+$tutor-line-height-p2: 1.125rem; // 18px ÷ 16 = 1.125rem
 $tutor-line-height-tiny: 1.25rem; // 20px ÷ 16 = 1.25rem
-$tutor-line-height-p3: 1.125rem;  // 18px ÷ 16 = 1.125rem
+$tutor-line-height-p3: 1.125rem; // 18px ÷ 16 = 1.125rem
 
 // =============================================================================
 // TYPOGRAPHY MAPS (for utility generation)
@@ -86,6 +86,6 @@ $tutor-line-heights: (
 $tutor-font-weights: (
   regular: $tutor-font-weight-regular,
   medium: $tutor-font-weight-medium,
-  semi-strong: $tutor-font-weight-semi-strong,
-  strong: $tutor-font-weight-strong
+  semibold: $tutor-font-weight-semibold,
+  bold: $tutor-font-weight-bold
 );
