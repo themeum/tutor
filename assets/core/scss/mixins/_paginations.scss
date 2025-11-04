@@ -2,6 +2,7 @@
 // Reusable Pagination styles with variants and sizes
 
 @use "../tokens" as *;
+@use "typography" as *;
 
 @mixin tutor-pagination-base {
 	display: flex;
@@ -24,17 +25,12 @@
 }
 
 @mixin tutor-pagination__info {
-	font-size: $tutor-font-size-small;
-	font-weight: $tutor-font-weight-regular;
-	color: $tutor-text-secondary;
+	@include tutor-typography('small', 'regular', 'secondary');
 	margin: 0;
-	.tutor-pagination__current {
-		font-weight: $tutor-font-weight-medium;
-		color: $tutor-text-primary;
-	}
+	.tutor-pagination__current, 
 	.tutor-pagination__total {
 		font-weight: $tutor-font-weight-medium;
-		color: $tutor-text-primary
+		color: $tutor-text-primary;
 	}
 }
 
@@ -45,9 +41,7 @@
 	padding: $tutor-spacing-3 $tutor-spacing-5;
 	border-radius: $tutor-radius-md;
 	text-decoration: none;
-	font-size: $tutor-font-size-small;
-	font-weight: $tutor-font-weight-medium;
-	line-height: $tutor-line-height-tiny;
+	@include tutor-typography('tiny', 'medium');
 	transition: all 0.2s ease;
 	cursor: pointer;
 	min-width: 32px;
@@ -65,8 +59,6 @@
 		background-color: $tutor-button-primary-soft-focused;
 		color: $tutor-text-brand;
 	}
-
-	&:focus {}
 
 	&.disabled {
 		opacity: 0.5;
