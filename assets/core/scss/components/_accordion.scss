@@ -21,7 +21,6 @@
     border: none;
     @include tutor-flex(row, start, space-between);
     text-align: left;
-    @include text-align-start();
     cursor: pointer;
     transition: background-color 0.2s ease;
 
@@ -32,12 +31,7 @@
 
   &-title {
     margin: 0;
-    font-size: $tutor-font-size-p1;
-    font-family: $tutor-font-family-heading;
-    font-weight: $tutor-font-weight-medium;
-    color: var(--tutor-text-primary);
-    line-height: $tutor-line-height-medium;
-    @include text-align-start();
+    @include tutor-typography('medium', 'medium', 'primary', 'heading');
   }
 
   &-icon {
@@ -74,7 +68,7 @@
     --content-height: 0px;
     opacity: 0;
 
-    &--expanded {
+    &-expanded {
       height: var(--content-height);
       padding: $tutor-spacing-2 $tutor-spacing-6 $tutor-spacing-5;
       opacity: 1;
@@ -83,7 +77,7 @@
       transition-delay: 0s, 0s, 0.1s;
     }
 
-    &--collapsed {
+    &-collapsed {
       height: 0;
       padding: 0 $tutor-spacing-6;
       opacity: 0;
@@ -102,9 +96,4 @@
       margin-bottom: 0;
     }
   }
-}
-
-// Responsive adjustments
-@include tutor-respond-to(sm) {
-  // TODO: Need to add responsive adjustments here
 }

@@ -1,9 +1,8 @@
 // Accordion Component
 // Alpine.js accordion with multiple/single expand modes
 
-// Local types to avoid missing import issues in docs context
 export interface AccordionConfig {
-  multiple?: boolean; // kept for API compatibility; behavior is always multi
+  multiple?: boolean;
   defaultOpen?: number[];
 }
 export interface AlpineAccordionData {
@@ -56,8 +55,8 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
 
       if (this.isOpen(index)) {
         // Expand: apply class and explicit height to force visual update
-        content.classList.add('tutor-accordion-content--expanded');
-        content.classList.remove('tutor-accordion-content--collapsed');
+        content.classList.add('tutor-accordion-content-expanded');
+        content.classList.remove('tutor-accordion-content-collapsed');
 
         const previousTransition = content.style.transition;
         content.style.transition = 'none';
@@ -69,8 +68,8 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
         content.style.height = `${naturalHeight}px`;
       } else {
         // Collapse: class plus inline height 0
-        content.classList.add('tutor-accordion-content--collapsed');
-        content.classList.remove('tutor-accordion-content--expanded');
+        content.classList.add('tutor-accordion-content-collapsed');
+        content.classList.remove('tutor-accordion-content-expanded');
         content.style.height = '0px';
       }
     },
@@ -86,11 +85,11 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
           const htmlContent = content as HTMLElement;
 
           if (this.isOpen(index)) {
-            htmlContent.classList.add('tutor-accordion-content--expanded');
-            htmlContent.classList.remove('tutor-accordion-content--collapsed');
+            htmlContent.classList.add('tutor-accordion-content-expanded');
+            htmlContent.classList.remove('tutor-accordion-content-collapsed');
           } else {
-            htmlContent.classList.add('tutor-accordion-content--collapsed');
-            htmlContent.classList.remove('tutor-accordion-content--expanded');
+            htmlContent.classList.add('tutor-accordion-content-collapsed');
+            htmlContent.classList.remove('tutor-accordion-content-expanded');
           }
         });
       }, 50); // Increased delay slightly
@@ -106,8 +105,8 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
         // Measure natural height
         const originalTransition = htmlContent.style.transition;
         htmlContent.style.transition = 'none';
-        htmlContent.classList.add('tutor-accordion-content--expanded');
-        htmlContent.classList.remove('tutor-accordion-content--collapsed');
+        htmlContent.classList.add('tutor-accordion-content-expanded');
+        htmlContent.classList.remove('tutor-accordion-content-collapsed');
         htmlContent.style.height = 'auto';
         const naturalHeight = htmlContent.scrollHeight;
         htmlContent.style.transition = originalTransition;
@@ -116,8 +115,8 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
 
         // Restore collapsed state if needed
         if (!this.isOpen(Array.from(contents).indexOf(content))) {
-          htmlContent.classList.add('tutor-accordion-content--collapsed');
-          htmlContent.classList.remove('tutor-accordion-content--expanded');
+          htmlContent.classList.add('tutor-accordion-content-collapsed');
+          htmlContent.classList.remove('tutor-accordion-content-expanded');
           htmlContent.style.height = '0px';
         } else {
           htmlContent.style.height = `${naturalHeight}px`;
@@ -190,5 +189,4 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
 export const accordionMeta: AlpineComponentMeta<AccordionConfig> = {
   name: 'accordion',
   component: createAccordion,
-  global: true,
 };
