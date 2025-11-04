@@ -55,6 +55,7 @@
 		</section>
 		<section>
 			<?php require 'badge.php'; ?>
+			<?php require 'card.php'; ?>
 		</section>
 	<?php endif ?>
 
