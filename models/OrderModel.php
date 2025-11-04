@@ -791,6 +791,7 @@ class OrderModel {
 	 *
 	 * @param int|array $order_id Integer or array of ids sql escaped.
 	 * @param array     $data Data to update, escape data.
+	 * @param array     $order_items order items (optional).
 	 *
 	 * @return bool
 	 */
