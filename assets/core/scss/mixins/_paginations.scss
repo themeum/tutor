@@ -6,41 +6,65 @@
 @mixin tutor-pagination-base {
 	display: flex;
 	align-items: center;
-	gap: $tutor-spacing-2;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: $tutor-spacing-4;
+	margin: $tutor-spacing-none;
+	padding: $tutor-spacing-none;
+}
+
+@mixin tutor-pagination__list {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: $tutor-spacing-1;
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-@mixin tutor-pagination-item {
+@mixin tutor-pagination__info {
+	font-size: $tutor-font-size-small;
+	font-weight: $tutor-font-weight-regular;
+	color: $tutor-text-secondary;
+	margin: 0;
+	.tutor-pagination__current {
+		font-weight: $tutor-font-weight-medium;
+		color: $tutor-text-primary;
+	}
+	.tutor-pagination__total {
+		font-weight: $tutor-font-weight-medium;
+		color: $tutor-text-primary
+	}
+}
+
+@mixin tutor-pagination__item {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 40px;
-	height: 40px;
-	padding: $tutor-spacing-2 $tutor-spacing-3;
-	border-radius: $tutor-radius-sm;
+	padding: $tutor-spacing-3 $tutor-spacing-5;
+	border-radius: $tutor-radius-md;
 	text-decoration: none;
-	font-size: $tutor-font-size-sm;
+	font-size: $tutor-font-size-small;
 	font-weight: $tutor-font-weight-medium;
-	line-height: $tutor-line-height-sm;
+	line-height: $tutor-line-height-tiny;
 	transition: all 0.2s ease;
 	cursor: pointer;
-	border: 1px solid transparent;
 
 	// Default state
 	background-color: transparent;
-	color: $tutor-text-secondary;
+	color: $tutor-text-primary;
+
+	&.active {
+		background-color: $tutor-button-primary-soft-focused;
+	}
 
 	&:hover {
-		background-color: $tutor-actions-gray-secondary;
-		color: $tutor-text-primary;
+		background-color: $tutor-button-primary-soft-focused;
+		color: $tutor-text-brand;
 	}
 
-	&:focus {
-		outline: 2px solid $tutor-actions-brand-primary;
-		outline-offset: 2px;
-	}
+	&:focus {}
 
 	&.disabled {
 		opacity: 0.5;
@@ -51,17 +75,10 @@
 
 @mixin tutor-pagination-item-variant($variant: default) {
 	@if $variant == active {
-		background-color: $tutor-actions-brand-primary;
-		color: $tutor-white;
-		border-color: $tutor-actions-brand-primary;
-
-		&:hover {
-			background-color: $tutor-actions-brand-primary;
-			color: $tutor-white;
-		}
+		background-color: $tutor-button-primary-soft-focused;
+		color: $tutor-text-brand;
 	} @else if $variant == prev-next {
-		background-color: $tutor-actions-gray-secondary;
-		color: $tutor-text-secondary;
+		color: $tutor-icon-idle;
 		
 		&:hover {
 			background-color: $tutor-actions-brand-tertiary;
@@ -77,6 +94,6 @@
 	min-width: 40px;
 	height: 40px;
 	color: $tutor-text-secondary;
-	font-size: $tutor-font-size-sm;
+	font-size: $tutor-font-size-small;
 	cursor: default;
 }
