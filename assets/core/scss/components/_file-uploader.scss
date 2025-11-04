@@ -23,7 +23,7 @@
 
   &-icon {
     @include tutor-flex(row, center, center);
-    color: var(--tutor-icon-hover);
+    color: $tutor-icon-hover;
     margin-bottom: $tutor-spacing-6;
   }
 
