@@ -1,10 +1,11 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/constant';
+import { type ServiceMeta } from '@Core/types';
 
 /**
- * ModalService: single programmatic API for opening/closing/updating modals.
+ * ModalService: programmatic API for opening/closing/updating modals.
  * Emits DOM CustomEvents consumed by Alpine modal instances.
  */
-export class ModalService {
+class ModalService {
   showModal(id?: string | null): void {
     document.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.MODAL_OPEN, { detail: { id } }));
   }
@@ -14,3 +15,8 @@ export class ModalService {
     document.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, { detail: { id } }));
   }
 }
+
+export const modalServiceMeta: ServiceMeta = {
+  name: 'modal',
+  instance: new ModalService(),
+};
