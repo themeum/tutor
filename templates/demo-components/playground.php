@@ -49,15 +49,23 @@
 		<?php else : ?>
 		<section>
 			<?php require 'button.php'; ?>
-		</section>
-		<section>
-			<?php require 'modal.php'; ?>
+			<?php require 'file-uploader.php'; ?>
 		</section>
 		<section>
 			<?php require 'tabs.php'; ?>
 		</section>
 		<section>
-			<?php require 'skeleton.php'; ?>
+			<?php require 'badge.php'; ?>
+			<?php require 'card.php'; ?>
+		</section>
+		<section>
+			<?php require 'section-separator.php'; ?>
+		</section>
+		<section>
+				<?php require 'accordion.php'; ?>
+		</section>
+		<section>
+			<?php require 'modal.php'; ?>
 		</section>
 	<?php endif ?>
 

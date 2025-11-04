@@ -1,0 +1,17 @@
+// Dashboard styles index
+// Import all dashboard-related styles
+
+// Layout components
+@forward "layout/header";
+@forward "layout/sidebar";
+@forward "layout/layout";
+
+// Page components
+@forward "overview";
+@forward "my-courses";
+@forward "assignments";
+@forward "quiz-attempts";
+@forward "certificates";
+@forward "settings";
+@forward "profile";
+@forward "enrollment-history";

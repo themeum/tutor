@@ -4,15 +4,17 @@ import Alpine from 'alpinejs';
 import { TutorComponentRegistry } from '@Core/ComponentRegistry';
 
 import { buttonMeta } from '@Core/components/button';
+import { fileUploaderMeta } from '@Core/components/file-uploader';
 import { iconMeta } from '@Core/components/icon';
 import { modalMeta } from '@Core/components/modal';
 import { tabsMeta } from '@Core/components/tabs';
 import { ModalService } from '@Core/services/Modal';
 
 Alpine.plugin(focus);
+import { accordionMeta } from '@Core/components/accordion';
 
 const initializePlugin = () => {
-  TutorComponentRegistry.registerAll([buttonMeta, tabsMeta, iconMeta, modalMeta]);
+  TutorComponentRegistry.registerAll([buttonMeta, fileUploaderMeta, tabsMeta, iconMeta, modalMeta, accordionMeta]);
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 
