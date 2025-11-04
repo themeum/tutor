@@ -11,26 +11,23 @@ const DEFAULT_CONFIG: ModalConfig = {
   isCloseable: true,
 };
 
-export const modal = (config: ModalConfig = DEFAULT_CONFIG) => ({
+export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   open: false,
   isCloseable: config.isCloseable ?? DEFAULT_CONFIG.isCloseable,
-  __id: undefined as string | undefined,
-  __cleanup: undefined as (() => void) | undefined,
+  id: config.id,
+  cleanup: undefined as (() => void) | undefined,
 
   init(): void {
-    const cfgId = config.id;
-    this.__id = cfgId;
-
     const onOpen = (event: CustomEvent) => {
       const targetId = event?.detail?.id as string | undefined;
-      if (!this.__id || !targetId || targetId === this.__id) {
+      if (!targetId || targetId === this.id) {
         this.show();
       }
     };
 
     const onClose = (event: CustomEvent) => {
       const targetId = event?.detail?.id as string | undefined;
-      if (!this.__id || !targetId || targetId === this.__id) {
+      if (!targetId || targetId === this.id) {
         this.close();
       }
     };
@@ -38,10 +35,14 @@ export const modal = (config: ModalConfig = DEFAULT_CONFIG) => ({
     document.addEventListener(TUTOR_CUSTOM_EVENTS.MODAL_OPEN, onOpen as EventListener);
     document.addEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, onClose as EventListener);
 
-    this.__cleanup = () => {
+    this.cleanup = () => {
       document.removeEventListener(TUTOR_CUSTOM_EVENTS.MODAL_OPEN, onOpen as EventListener);
       document.removeEventListener(TUTOR_CUSTOM_EVENTS.MODAL_CLOSE, onClose as EventListener);
     };
+  },
+
+  destroy(): void {
+    this.cleanup?.();
   },
 
   show(): void {
@@ -76,6 +77,8 @@ export const modal = (config: ModalConfig = DEFAULT_CONFIG) => ({
     return {
       'x-show': 'open',
       '@keydown.escape.window': this.isCloseable ? 'close()' : '',
+      role: 'dialog',
+      'aria-modal': 'true',
     };
   },
 
@@ -97,7 +100,7 @@ export const modal = (config: ModalConfig = DEFAULT_CONFIG) => ({
     };
   },
 
-  async setCloseButtonAttributes() {
+  setCloseButtonAttributes() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const closeButton = (this as any).$el;
     closeButton.classList.add('tutor-modal-close');
