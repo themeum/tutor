@@ -44,6 +44,19 @@ $is_checkout_page = true;
 	}
 	?>
 
+	<!-- Alert if nonce failed -->
+	<?php
+	$nonce_alert = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert' );
+	if ( $nonce_alert ) {
+		?>
+		<div class="tutor-alert tutor-danger">
+			<div class="tutor-color-danger"><?php echo esc_html( $nonce_alert[0] ); ?></div>
+		</div>
+		<?php
+		delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert' );
+	}
+	?>
+
 	<form method="post" id="tutor-checkout-form">
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
@@ -64,14 +77,14 @@ $is_checkout_page = true;
 						$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null ) ? '' : wp_login_url( tutor()->current_url );
 						?>
 							<div class="tutor-mb-32 tutor-d-flex tutor-align-center tutor-justify-between tutor-border tutor-radius-6 tutor-p-12">
-								<p class="tutor-mb-0"><?php esc_html_e( 'Already have an account?', 'tutor' ); ?></p>
+								<p class="tutor-m-0"><?php esc_html_e( 'Already have an account?', 'tutor' ); ?></p>
 								<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-open-login-modal" data-login_url="<?php echo esc_url( $login_url ); ?>">
 								<?php esc_html_e( 'Login', 'tutor' ); ?>
 								</button>
 							</div>
 					<?php } ?>
 
-						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
+						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12 tutor-mt-0">
 							<?php
 							$address_title = __( 'Billing Address', 'tutor' );
 							if ( ! is_user_logged_in() ) {

@@ -1,45 +1,31 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { useModal } from '@TutorShared/components/modals/Modal';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import CertificatePreviewModal from '@CourseBuilderComponents/modals/CertificatePreviewModal';
 
 import Show from '@TutorShared/controls/Show';
-import type { Certificate, CourseDetailsResponse } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type Certificate } from '@TutorShared/utils/types';
 
 interface CertificateCardProps {
   selectedCertificate: string;
   orientation: 'landscape' | 'portrait';
   data: Certificate;
   onSelectCertificate: (key: string) => void;
+  onPreviewCertificate: (data: Certificate) => void;
 }
-const courseId = getCourseId();
 
 const CertificateCard = ({
   selectedCertificate = '',
   data,
   orientation,
   onSelectCertificate,
+  onPreviewCertificate,
 }: CertificateCardProps) => {
-  const { showModal } = useModal();
-  const queryClient = useQueryClient();
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
-
-  const certificatesData =
-    (courseDetails?.course_certificates_templates ?? []).filter(
-      (certificate) =>
-        certificate.orientation === orientation &&
-        (data.is_default ? certificate.is_default === true : certificate.is_default === false),
-    ) ?? [];
-
   return (
     <div
       css={styles.wrapper({
@@ -61,7 +47,7 @@ const CertificateCard = ({
         fallback={
           <div css={styles.emptyCard}>
             <SVGIcon name="outlineNone" width={49} height={49} />
-            <span>{__('None', 'tutor')}</span>
+            <span>{__('None', __TUTOR_TEXT_DOMAIN__)}</span>
           </div>
         }
       >
@@ -72,30 +58,13 @@ const CertificateCard = ({
       <Show when={data.preview_src || data.key !== selectedCertificate}>
         <div data-footer-actions css={styles.footerWrapper}>
           <Show when={data.preview_src}>
-            <Button
-              variant="secondary"
-              isOutlined
-              size="small"
-              onClick={() => {
-                showModal({
-                  component: CertificatePreviewModal,
-                  props: {
-                    certificates: certificatesData,
-                    currentCertificate: data,
-                    selectedCertificate: selectedCertificate,
-                    onSelectCertificate: (certificate: Certificate): void => {
-                      onSelectCertificate(certificate.key);
-                    },
-                  },
-                });
-              }}
-            >
-              {__('Preview', 'tutor')}
+            <Button variant="secondary" isOutlined size="small" onClick={() => onPreviewCertificate(data)}>
+              {__('Preview', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </Show>
           <Show when={data.key !== selectedCertificate}>
             <Button variant="primary" size="small" onClick={() => onSelectCertificate(data.key)}>
-              {__('Select', 'tutor')}
+              {__('Select', __TUTOR_TEXT_DOMAIN__)}
             </Button>
           </Show>
         </div>

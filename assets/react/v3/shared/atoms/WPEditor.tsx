@@ -46,7 +46,7 @@ function editorConfig(
   propsToolbar2?: string,
 ) {
   let toolbar1 =
-    propsToolbar1 ||
+    propsToolbar1 ??
     (isMinimal
       ? `bold italic underline | image | ${isTutorPro ? 'codesample' : ''}`
       : `formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | wp_more ${
@@ -54,7 +54,7 @@ function editorConfig(
         } | wp_adv`);
 
   const toolbar2 =
-    propsToolbar2 ||
+    propsToolbar2 ??
     'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown';
 
   toolbar1 = isAboveMobile ? toolbar1 : toolbar1.replaceAll(' | ', ' ');
@@ -113,50 +113,50 @@ function editorConfig(
 
         if (!isMinimal) {
           editor.addButton('tutor_button', {
-            text: __('Tutor ShortCode', 'tutor'),
+            text: __('Tutor ShortCode', __TUTOR_TEXT_DOMAIN__),
             icon: false,
             type: 'menubutton',
             menu: [
               {
-                text: __('Student Registration Form', 'tutor'),
+                text: __('Student Registration Form', __TUTOR_TEXT_DOMAIN__),
                 onclick: () => {
                   editor.insertContent('[tutor_student_registration_form]');
                 },
               },
               {
-                text: __('Instructor Registration Form', 'tutor'),
+                text: __('Instructor Registration Form', __TUTOR_TEXT_DOMAIN__),
                 onclick: () => {
                   editor.insertContent('[tutor_instructor_registration_form]');
                 },
               },
               {
-                text: __('Courses', 'tutor'),
+                text: __('Courses', __TUTOR_TEXT_DOMAIN__),
                 onclick: () => {
                   editor.windowManager.open({
-                    title: __('Courses Shortcode', 'tutor'),
+                    title: __('Courses Shortcode', __TUTOR_TEXT_DOMAIN__),
                     body: [
                       {
                         type: 'textbox',
                         name: 'id',
-                        label: __('Course id, separate by (,) comma', 'tutor'),
+                        label: __('Course id, separate by (,) comma', __TUTOR_TEXT_DOMAIN__),
                         value: '',
                       },
                       {
                         type: 'textbox',
                         name: 'exclude_ids',
-                        label: __('Exclude Course IDS', 'tutor'),
+                        label: __('Exclude Course IDS', __TUTOR_TEXT_DOMAIN__),
                         value: '',
                       },
                       {
                         type: 'textbox',
                         name: 'category',
-                        label: __('Category IDS', 'tutor'),
+                        label: __('Category IDS', __TUTOR_TEXT_DOMAIN__),
                         value: '',
                       },
                       {
                         type: 'listbox',
                         name: 'orderby',
-                        label: __('Order By', 'tutor'),
+                        label: __('Order By', __TUTOR_TEXT_DOMAIN__),
                         onselect: () => {},
                         values: [
                           { text: 'ID', value: 'ID' },
@@ -170,7 +170,7 @@ function editorConfig(
                       {
                         type: 'listbox',
                         name: 'order',
-                        label: __('Order', 'tutor'),
+                        label: __('Order', __TUTOR_TEXT_DOMAIN__),
                         onselect: () => {},
                         values: [
                           { text: 'DESC', value: 'DESC' },
@@ -180,7 +180,7 @@ function editorConfig(
                       {
                         type: 'textbox',
                         name: 'count',
-                        label: __('Count', 'tutor'),
+                        label: __('Count', __TUTOR_TEXT_DOMAIN__),
                         value: '6',
                       },
                     ],

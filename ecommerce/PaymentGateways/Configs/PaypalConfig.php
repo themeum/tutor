@@ -2,10 +2,9 @@
 
 namespace Tutor\PaymentGateways\Configs;
 
-use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
-use Ollyo\PaymentHub\Payments\Paypal\Config;
-use phpDocumentor\Reflection\Types\Self_;
 use Tutor\Ecommerce\Settings;
+use Ollyo\PaymentHub\Core\Payment\BaseConfig;
+use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
 
 /**
  * PaypalConfig class.
@@ -15,7 +14,7 @@ use Tutor\Ecommerce\Settings;
  *
  * @since 3.0.0
  */
-class PaypalConfig extends Config implements ConfigContract {
+class PaypalConfig extends BaseConfig implements ConfigContract {
 
 	use PaymentUrlsTrait;
 
@@ -70,6 +69,14 @@ class PaypalConfig extends Config implements ConfigContract {
 	private $webhook_id;
 
 	/**
+	 * PayPal webhook URL.
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	private $webhook_url;
+
+	/**
 	 * The name of the payment gateway.
 	 *
 	 * @since 3.0.0
@@ -89,40 +96,24 @@ class PaypalConfig extends Config implements ConfigContract {
 		}
 	}
 
-	public function getMode(): string {
-		return 'test';
-	}
-
 	public function getClientSecret(): string {
 		return $this->secret_id;
-	}
-
-	public function getWebhookID(): string {
-		return $this->webhook_id;
-	}
-
-	public function getAdditionalInformation(): string {
-		return '';
-	}
-
-	public function getTitle(): string {
-		return '';
 	}
 
 	public function getName(): string {
 		return $this->name;
 	}
 
-	public function getClientID() : string {
+	public function getClientID(): string {
 		return $this->client_id;
 	}
 
-	public function getMerchantEmail() : string {
+	public function getMerchantEmail(): string {
 		return $this->merchant_email;
 	}
 
 	public function getApiURL() {
-		return $this->environment === 'test' ? static::API_URL_TEST : static::API_URL_LIVE;
+		return 'test' === $this->environment ? static::API_URL_TEST : static::API_URL_LIVE;
 	}
 
 	/**
@@ -139,11 +130,12 @@ class PaypalConfig extends Config implements ConfigContract {
 		parent::createConfig();
 
 		$config = array(
-			'webhook_id'     => $this->getWebhookID(),
-			'client_id'      => $this->getClientID(),
-			'merchant_email' => $this->getMerchantEmail(),
-			'api_url'        => $this->getApiURL(),
-			'client_secret'  => $this->getClientSecret(),
+			'client_id'           => $this->getClientID(),
+			'merchant_email'      => $this->getMerchantEmail(),
+			'api_url'             => $this->getApiURL(),
+			'client_secret'       => $this->getClientSecret(),
+			'save_payment_method' => true,
+			'webhook_id'          => $this->webhook_id
 		);
 
 		$this->updateConfig( $config );

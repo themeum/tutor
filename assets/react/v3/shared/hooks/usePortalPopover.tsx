@@ -4,8 +4,10 @@ import { createPortal } from 'react-dom';
 
 import FocusTrap from '@TutorShared/components/FocusTrap';
 import { useModal } from '@TutorShared/components/modals/Modal';
+import { isRTL } from '@TutorShared/config/constants';
 import { zIndex } from '@TutorShared/config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
+import { useScrollLock } from '@TutorShared/hooks/useScrollLock';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
@@ -68,6 +70,34 @@ interface PortalProps {
   onEscape?: () => void;
   animationType?: AnimationType;
 }
+
+export const getMirroredPlacement = (placement: PopoverPlacement): PopoverPlacement => {
+  const mirrorMap: Record<PopoverPlacement, PopoverPlacement> = {
+    [POPOVER_PLACEMENTS.TOP]: POPOVER_PLACEMENTS.TOP,
+    [POPOVER_PLACEMENTS.TOP_LEFT]: POPOVER_PLACEMENTS.TOP_RIGHT,
+    [POPOVER_PLACEMENTS.TOP_RIGHT]: POPOVER_PLACEMENTS.TOP_LEFT,
+    [POPOVER_PLACEMENTS.RIGHT]: POPOVER_PLACEMENTS.LEFT,
+    [POPOVER_PLACEMENTS.RIGHT_TOP]: POPOVER_PLACEMENTS.LEFT_TOP,
+    [POPOVER_PLACEMENTS.RIGHT_BOTTOM]: POPOVER_PLACEMENTS.LEFT_BOTTOM,
+    [POPOVER_PLACEMENTS.BOTTOM]: POPOVER_PLACEMENTS.BOTTOM,
+    [POPOVER_PLACEMENTS.BOTTOM_LEFT]: POPOVER_PLACEMENTS.BOTTOM_RIGHT,
+    [POPOVER_PLACEMENTS.BOTTOM_RIGHT]: POPOVER_PLACEMENTS.BOTTOM_LEFT,
+    [POPOVER_PLACEMENTS.LEFT]: POPOVER_PLACEMENTS.RIGHT,
+    [POPOVER_PLACEMENTS.LEFT_TOP]: POPOVER_PLACEMENTS.RIGHT_TOP,
+    [POPOVER_PLACEMENTS.LEFT_BOTTOM]: POPOVER_PLACEMENTS.RIGHT_BOTTOM,
+    [POPOVER_PLACEMENTS.MIDDLE]: POPOVER_PLACEMENTS.MIDDLE,
+    [POPOVER_PLACEMENTS.ABSOLUTE_CENTER]: POPOVER_PLACEMENTS.ABSOLUTE_CENTER,
+  };
+
+  return mirrorMap[placement] || placement;
+};
+
+const getMirroredModifier = (modifier: { top: number; left: number }): { top: number; left: number } => {
+  return {
+    top: modifier.top,
+    left: -modifier.left,
+  };
+};
 
 const checkOverflow = (
   position: { top: number; left: number },
@@ -247,11 +277,16 @@ const calculateArrowPosition = (
 
   if (isVertical) {
     const triggerCenter = triggerRect.left + triggerRect.width / 2;
-    const arrowLeft =
+    let arrowLeft =
       Math.max(
         ARROW_CONFIG.SAFE_MARGIN,
         Math.min(width - ARROW_CONFIG.MAX_OFFSET_VERTICAL, triggerCenter - popoverPosition.left),
       ) - ARROW_CONFIG.CENTER_OFFSET;
+
+    if (isRTL) {
+      arrowLeft = width - arrowLeft - ARROW_CONFIG.CENTER_OFFSET * 2;
+    }
+
     return { arrowLeft };
   }
 
@@ -300,6 +335,14 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     placement: POPOVER_PLACEMENTS.BOTTOM,
   });
 
+  const effectivePlacement = useMemo(() => {
+    return isRTL ? getMirroredPlacement(placement) : placement;
+  }, [placement]);
+
+  const effectiveModifier = useMemo(() => {
+    return isRTL ? getMirroredModifier(positionModifier) : positionModifier;
+  }, [positionModifier]);
+
   useEffect(() => {
     if (!triggerRef.current) return;
     setTriggerWidth(triggerRef.current.getBoundingClientRect().width);
@@ -315,17 +358,23 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
       height: popoverRect.height,
     };
 
-    let calculatedPosition = calculatePositionForPlacement(placement, triggerRect, dimensions, gap, positionModifier);
-    let finalPlacement = placement;
+    let calculatedPosition = calculatePositionForPlacement(
+      effectivePlacement,
+      triggerRect,
+      dimensions,
+      gap,
+      effectiveModifier,
+    );
+    let finalPlacement = effectivePlacement;
 
     if (autoAdjustOverflow) {
       const adjusted = adjustPositionForOverflow(
         calculatedPosition,
-        placement,
+        effectivePlacement,
         dimensions,
         triggerRect,
         gap,
-        positionModifier,
+        effectiveModifier,
       );
       calculatedPosition = adjusted.position;
       finalPlacement = adjusted.placement;
@@ -342,13 +391,21 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
       placement: finalPlacement,
       ...arrowPosition,
     });
+  }, [
+    triggerRef,
+    popoverRef,
+    isOpen,
+    effectivePlacement,
+    effectiveModifier,
+    gap,
+    arrow,
+    autoAdjustOverflow,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [triggerRef, popoverRef, isOpen, placement, gap, arrow, autoAdjustOverflow, ...dependencies]);
+    ...dependencies,
+  ]);
 
   return { position, triggerWidth, triggerRef, popoverRef };
 };
-
-let portalCount = 0;
 
 export const Portal = ({
   isOpen,
@@ -358,6 +415,7 @@ export const Portal = ({
   animationType = AnimationType.slideDown,
 }: PortalProps) => {
   const { hasModalOnStack } = useModal();
+  useScrollLock(isOpen);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -368,15 +426,9 @@ export const Portal = ({
 
     if (!isOpen) return;
 
-    portalCount++;
-    document.body.style.overflow = 'hidden';
     document.addEventListener('keydown', handleKeyDown, true);
 
     return () => {
-      portalCount--;
-      if (!hasModalOnStack && portalCount === 0) {
-        document.body.style.overflow = 'initial';
-      }
       document.removeEventListener('keydown', handleKeyDown, true);
     };
   }, [isOpen, hasModalOnStack, onEscape]);

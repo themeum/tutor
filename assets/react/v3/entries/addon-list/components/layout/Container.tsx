@@ -12,10 +12,9 @@ export default Container;
 
 const styles = {
   wrapper: css`
+    width: 100%;
     max-width: ${CONTAINER_WIDTH}px;
     padding-inline: ${spacing[12]};
     margin: 0 auto;
-    height: 100%;
-    width: 100%;
   `,
 };

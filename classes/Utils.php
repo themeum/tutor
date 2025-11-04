@@ -10,15 +10,15 @@
 
 namespace TUTOR;
 
-use Tutor\Cache\TutorCache;
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
-use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Models\CourseModel;
+use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
+use Tutor\Helpers\HttpHelper;
+use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\DateTimeHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -316,33 +316,35 @@ class Utils {
 	}
 
 	/**
-	 * Get array value by dot notation
+	 * Get value by dot notation from array or object
 	 *
 	 * @since 1.0.0
 	 * @since 1.4.1 default parameter added
 	 *
-	 * @param null  $key option key.
-	 * @param array $array array.
-	 * @param mixed $default default value.
+	 * @param null         $key option key.
+	 * @param array|object $data array or object.
+	 * @param mixed        $default default value.
 	 *
 	 * @return array|bool|mixed
 	 */
-	public function avalue_dot( $key = null, $array = array(), $default = false ) {
-		$array = (array) $array;
-		if ( ! $key || ! count( $array ) ) {
+	public function avalue_dot( $key = null, $data = array(), $default = false ) {
+		$array = is_object( $data ) ? (array) $data : $data;
+
+		if ( '' === $key || null === $key || ! $this->count( $array ) ) {
 			return $default;
 		}
-		$option_key_array = explode( '.', $key );
 
+		$keys  = explode( '.', $key );
 		$value = $array;
 
-		foreach ( $option_key_array as $dot_key ) {
+		foreach ( $keys as $dot_key ) {
 			if ( isset( $value[ $dot_key ] ) ) {
 				$value = $value[ $dot_key ];
 			} else {
 				return $default;
 			}
 		}
+
 		return $value;
 	}
 
@@ -834,127 +836,114 @@ class Utils {
 	 * @return mixed
 	 */
 	public function get_course_completed_percent( $course_id = 0, $user_id = 0, $get_stats = false ) {
-		$course_id        = $this->get_post_id( $course_id );
-		$user_id          = $this->get_user_id( $user_id );
-		$completed_lesson = $this->get_completed_lesson_count_by_course( $course_id, $user_id );
-		$course_contents  = $this->get_course_contents_by_id( $course_id );
-		$total_contents   = $this->count( $course_contents );
-		$total_contents   = $total_contents ? $total_contents : 0;
-		$completed_count  = $completed_lesson;
+		$course_id = $this->get_post_id( $course_id );
+		$user_id   = $this->get_user_id( $user_id );
 
-		$quiz_ids       = array();
-		$assignment_ids = array();
+		$post_type = get_post_type( $course_id );
+		$result    = 0;
 
-		foreach ( $course_contents as $content ) {
-			if ( 'tutor_quiz' === $content->post_type ) {
-				$quiz_ids[] = (int) $content->ID;
+		if ( tutor()->course_post_type === $post_type ) {
+			$completed_lesson = $this->get_completed_lesson_count_by_course( $course_id, $user_id );
+			$course_contents  = $this->get_course_contents_by_id( $course_id );
+			$total_contents   = $this->count( $course_contents );
+			$total_contents   = $total_contents ? $total_contents : 0;
+			$completed_count  = $completed_lesson;
+
+			$quiz_ids       = array();
+			$assignment_ids = array();
+
+			foreach ( $course_contents as $content ) {
+				if ( 'tutor_quiz' === $content->post_type ) {
+					$quiz_ids[] = (int) $content->ID;
+				}
+				if ( 'tutor_assignments' === $content->post_type ) {
+					$assignment_ids[] = (int) $content->ID;
+				}
 			}
-			if ( 'tutor_assignments' === $content->post_type ) {
-				$assignment_ids[] = (int) $content->ID;
-			}
-		}
 
-		global $wpdb;
+			global $wpdb;
 
-		if ( count( $quiz_ids ) ) {
-			$quiz_ids_str = QueryHelper::prepare_in_clause( $quiz_ids );
+			if ( count( $quiz_ids ) ) {
+				$quiz_ids_str = QueryHelper::prepare_in_clause( $quiz_ids );
 
-			// Get data from cache.
-			$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
-			$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
-			$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
+				// Get data from cache.
+				$prepare_quiz_ids_str     = str_replace( ',', '_', $quiz_ids_str );
+				$quiz_completed_cache_key = "tutor_quiz_completed_{$user_id}_{$prepare_quiz_ids_str}";
+				$quiz_completed           = TutorCache::get( $quiz_completed_cache_key );
 
-			if ( false === $quiz_completed ) {
-				//phpcs:disable
-				$quiz_completed = (int) $wpdb->get_var(
+				if ( false === $quiz_completed ) {
+					//phpcs:disable
+					$quiz_completed = (int) $wpdb->get_var(
 					$wpdb->prepare(
 						"SELECT count(quiz_id) completed 
-						FROM (
-							SELECT  DISTINCT quiz_id 
-							FROM 	{$wpdb->tutor_quiz_attempts} 
-							WHERE 	quiz_id IN ({$quiz_ids_str}) 
-									AND user_id = % d 
-									AND attempt_status != %s
-						) a",
+							FROM (
+								SELECT  DISTINCT quiz_id 
+								FROM 	{$wpdb->tutor_quiz_attempts} 
+								WHERE 	quiz_id IN ({$quiz_ids_str}) 
+										AND user_id = % d 
+										AND attempt_status != %s
+							) a",
 						$user_id,
 						QuizModel::ATTEMPT_STARTED
 					)
-				);
-				//phpcs:enable
-				TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
+					);
+					//phpcs:enable
+					TutorCache::set( $quiz_completed_cache_key, $quiz_completed );
+				}
+				$completed_count += $quiz_completed;
 			}
-			$completed_count += $quiz_completed;
-		}
 
-		if ( count( $assignment_ids ) ) {
-			$assignment_ids_str = QueryHelper::prepare_in_clause( $assignment_ids );
+			if ( count( $assignment_ids ) ) {
 
-			// Get data from cache.
-			$prepare_assignment_ids_str     = str_replace( ',', '_', $assignment_ids_str );
-			$assignment_submitted_cache_key = "tutor_assignment_submitted{$user_id}_{$prepare_assignment_ids_str}";
-			$assignment_submitted           = TutorCache::get( $assignment_submitted_cache_key );
+				foreach ( $assignment_ids as $assignment_id ) {
+					$submitted_assignment = $this->is_assignment_submitted( $assignment_id, $user_id );
 
-			if ( false === $assignment_submitted ) {
-				$assignment_submitted = (int) $wpdb->get_var(
-					$wpdb->prepare(
-						"SELECT count(*) completed
-						FROM 	{$wpdb->comments}
-						WHERE 	comment_type = %s
-								AND comment_approved = %s
-								AND user_id = %d
-								AND comment_post_ID IN({$assignment_ids_str});
-						",
-						'tutor_assignment',
-						'submitted',
-						$user_id
-					)
-				);
-				TutorCache::set( $assignment_submitted_cache_key, $assignment_submitted );
-			}
-			$completed_count += $assignment_submitted;
-		}
-
-		if ( $this->count( $course_contents ) ) {
-			foreach ( $course_contents as $content ) {
-				if ( 'tutor_zoom_meeting' === $content->post_type ) {
-					/**
-					 * Count zoom lesson completion for course progress
-					 *
-					 * @since 2.0.0
-					 */
-					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
-					if ( $is_completed ) {
-						++$completed_count;
-					}
-				} elseif ( 'tutor-google-meet' === $content->post_type ) {
-					/**
-					 * Count zoom lesson completion for course progress
-					 *
-					 * @since 2.0.0
-					 */
-					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
-					if ( $is_completed ) {
+					if ( $submitted_assignment ) {
 						++$completed_count;
 					}
 				}
 			}
+
+			if ( $this->count( $course_contents ) ) {
+				foreach ( $course_contents as $content ) {
+					if ( 'tutor_zoom_meeting' === $content->post_type ) {
+						/**
+						 * Count zoom lesson completion for course progress
+						 *
+						 * @since 2.0.0
+						 */
+						$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
+						if ( $is_completed ) {
+							++$completed_count;
+						}
+					} elseif ( 'tutor-google-meet' === $content->post_type ) {
+						/**
+						 * Count zoom lesson completion for course progress
+						 *
+						 * @since 2.0.0
+						 */
+						$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
+						if ( $is_completed ) {
+							++$completed_count;
+						}
+					}
+				}
+			}
+
+			if ( $total_contents > 0 && $completed_count > 0 ) {
+				$result = number_format( ( $completed_count * 100 ) / $total_contents );
+			}
+
+			if ( $get_stats ) {
+				$result = array(
+					'completed_percent' => $result,
+					'completed_count'   => $completed_count,
+					'total_count'       => $total_contents,
+				);
+			}
 		}
 
-		$percent_complete = 0;
-
-		if ( $total_contents > 0 && $completed_count > 0 ) {
-			$percent_complete = number_format( ( $completed_count * 100 ) / $total_contents );
-		}
-
-		if ( $get_stats ) {
-			return array(
-				'completed_percent' => $percent_complete,
-				'completed_count'   => $completed_count,
-				'total_count'       => $total_contents,
-			);
-		}
-
-		return $percent_complete;
+		return apply_filters( 'tutor_course_completed_percent', $result, $course_id, $user_id, $get_stats );
 	}
 
 	/**
@@ -1285,10 +1274,10 @@ class Utils {
 		$tax_rate   = 0;
 
 		if ( $should_calculate_tax
-			&& $show_price_with_tax
-			&& $tax_collection
-			&& is_numeric( $display_price )
-			&& ! Tax::is_tax_included_in_price()
+		&& $show_price_with_tax
+		&& $tax_collection
+		&& is_numeric( $display_price )
+		&& ! Tax::is_tax_included_in_price()
 		) {
 
 			$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
@@ -2057,12 +2046,12 @@ class Utils {
 			if ( $video && $this->array_get( 'source', $video ) !== '-1' ) {
 
 				$not_empty = ! empty( $video['source_video_id'] ) ||
-					! empty( $video['source_external_url'] ) ||
-					! empty( $video['source_youtube'] ) ||
-					! empty( $video['source_vimeo'] ) ||
-					! empty( $video['source_embedded'] ) ||
-					! empty( $video['source_shortcode'] ) ||
-					( isset( $video['source_bunnynet'] ) && ! empty( $video['source_bunnynet'] ) );
+				! empty( $video['source_external_url'] ) ||
+				! empty( $video['source_youtube'] ) ||
+				! empty( $video['source_vimeo'] ) ||
+				! empty( $video['source_embedded'] ) ||
+				! empty( $video['source_shortcode'] ) ||
+				( isset( $video['source_bunnynet'] ) && ! empty( $video['source_bunnynet'] ) );
 
 				return $not_empty ? $video : false;
 			}
@@ -2234,70 +2223,6 @@ class Utils {
 	}
 
 	/**
-	 * Return completed courses by user_id
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $posts_per_page posts per page.
-	 *
-	 * @return bool|\WP_Query
-	 */
-	public function get_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
-		$user_id    = $this->get_user_id( $user_id );
-		$course_ids = $this->get_completed_courses_ids_by_user( $user_id );
-
-		if ( count( $course_ids ) ) {
-			$course_post_type = tutor()->course_post_type;
-			$course_args      = array(
-				'post_type'      => $course_post_type,
-				'post_status'    => 'publish',
-				'post__in'       => $course_ids,
-				'posts_per_page' => $posts_per_page,
-				'offset'         => $offset,
-			);
-
-			return new \WP_Query( $course_args );
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get the active course by user
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param int $user_id user id.
-	 * @param int $offset offset.
-	 * @param int $posts_per_page posts per page.
-	 *
-	 * @return bool|\WP_Query
-	 */
-	public function get_active_courses_by_user( $user_id = 0, $offset = 0, $posts_per_page = -1 ) {
-		$user_id             = $this->get_user_id( $user_id );
-		$course_ids          = $this->get_completed_courses_ids_by_user( $user_id );
-		$enrolled_course_ids = $this->get_enrolled_courses_ids_by_user( $user_id );
-		$active_courses      = array_diff( $enrolled_course_ids, $course_ids );
-
-		if ( count( $active_courses ) ) {
-			$course_post_type = tutor()->course_post_type;
-			$course_args      = array(
-				'post_type'      => $course_post_type,
-				'post_status'    => 'publish',
-				'post__in'       => $active_courses,
-				'posts_per_page' => $posts_per_page,
-				'offset'         => $offset,
-			);
-
-			return new \WP_Query( $course_args );
-		}
-
-		return false;
-	}
-
-	/**
 	 * Get enrolled course ids by a user
 	 *
 	 * @since 1.0.0
@@ -2420,60 +2345,6 @@ class Utils {
 		}
 
 		return (int) $course_ids;
-	}
-
-	/**
-	 * Get the enrolled courses by user
-	 *
-	 * @since 1.0.0
-	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
-	 *
-	 * @since 3.4.0 $filters replaced with $args to override the defaults.
-	 *
-	 * @param integer $user_id user id.
-	 * @param string  $post_status post status.
-	 * @param integer $offset offset.
-	 * @param integer $posts_per_page post per page.
-	 * @param array   $args Args to override the defaults.
-	 *
-	 * @return bool|\WP_Query
-	 */
-	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $args = array() ) {
-		$user_id    = $this->get_user_id( $user_id );
-		$course_ids = array_unique( $this->get_enrolled_courses_ids_by_user( $user_id ) );
-
-		if ( count( $course_ids ) ) {
-			$course_post_type = tutor()->course_post_type;
-			$course_args      = array(
-				'post_type'      => $course_post_type,
-				'post_status'    => $post_status,
-				'post__in'       => $course_ids,
-				'offset'         => $offset,
-				'posts_per_page' => $posts_per_page,
-			);
-
-			$course_args = wp_parse_args( $args, $course_args );
-
-			$result = new \WP_Query( $course_args );
-
-			if ( is_object( $result ) && is_array( $result->posts ) ) {
-
-				// Sort courses according to the id list.
-				$new_array = array();
-
-				foreach ( $course_ids as $id ) {
-					foreach ( $result->posts as $post ) {
-						$post->ID == $id ? $new_array[] = $post : 0;
-					}
-				}
-
-				$result->posts = $new_array;
-			}
-
-			return $result;
-		}
-
-		return false;
 	}
 
 	/**
@@ -3348,7 +3219,7 @@ class Utils {
 		if ( count( $cat_ids ) ) {
 
 			$category_join =
-				"INNER JOIN {$wpdb->posts} course
+			"INNER JOIN {$wpdb->posts} course
 					ON course.post_author = user.ID
 			INNER JOIN {$wpdb->prefix}term_relationships term_rel
 					ON term_rel.object_id = course.ID
@@ -3391,8 +3262,8 @@ class Utils {
 
 		$limit_offset = $count_only ? '' : " LIMIT {$start}, {$limit} ";
 		$select_col   = $count_only ?
-						' COUNT(DISTINCT user.ID) ' :
-						' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
+					' COUNT(DISTINCT user.ID) ' :
+					' DISTINCT user.*, user_meta.meta_value AS instructor_from_date, IFNULL(Avg(cmeta.meta_value), 0) AS rating, inst_status.meta_value AS status ';
 
 		$query = $wpdb->prepare(
 			"SELECT {$select_col}
@@ -3746,7 +3617,7 @@ class Utils {
 		$student_id = sanitize_text_field( $student_id );
 		$count      = $wpdb->get_var(
 			$wpdb->prepare(
-				"SELECT COUNT(ID) FROM {$wpdb->posts}
+				"SELECT COUNT( DISTINCT ID ) FROM {$wpdb->posts}
 				INNER JOIN {$wpdb->comments} c ON c.comment_post_ID = ID  AND c.user_id = %d AND c.comment_approved = %s
 				WHERE post_parent IN (SELECT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_parent = %d AND post_status = %s)
 					AND post_type =%s
@@ -3842,7 +3713,7 @@ class Utils {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<i class="tutor-icon-star-bold" data-rating-value="' . $i . '"></i>';
 			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
-					$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
+				$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
 			} else {
 				$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
 			}
@@ -3878,18 +3749,18 @@ class Utils {
 		?>
 		<div class="tutor-ratings<?php echo esc_attr( $css_class ); ?>">
 			<div class="tutor-ratings-stars">
-				<?php
-				for ( $i = 1; $i <= 5; $i++ ) {
-					$class = 'tutor-icon-star-line';
+			<?php
+			for ( $i = 1; $i <= 5; $i++ ) {
+				$class = 'tutor-icon-star-line';
 
-					if ( $i <= round( $current_rating ) ) {
-						$class = 'tutor-icon-star-bold';
-					}
-
-					// Todo: Add half start later. tutor-icon-star-half-bold.
-					echo '<span class="' . $class . '"></span>';
+				if ( $i <= round( $current_rating ) ) {
+					$class = 'tutor-icon-star-bold';
 				}
-				?>
+
+				// Todo: Add half start later. tutor-icon-star-half-bold.
+				echo '<span class="' . $class . '"></span>';
+			}
+			?>
 			</div>
 			<?php if ( $show_avg_rate && $total_count > 0 ) : ?>
 				<div class="tutor-ratings-average">
@@ -3900,7 +3771,7 @@ class Utils {
 				</div>
 			<?php endif; ?>
 		</div>
-		<?php
+			<?php
 	}
 
 	/**
@@ -3919,7 +3790,7 @@ class Utils {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<span class="tutor-icon-star-bold" data-rating-value="' . $i . '"></span>';
 			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
-					$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
+				$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
 			} else {
 				$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
 			}
@@ -4107,7 +3978,7 @@ class Utils {
 		$include_user_id = implode( ',', $include_user_id );
 
 		$select_columns = $count_only ? ' COUNT(DISTINCT _reviews.comment_ID) ' :
-			'_reviews.comment_ID,
+		'_reviews.comment_ID,
 			_reviews.comment_post_ID,
 			_reviews.comment_author,
 			_reviews.comment_author_email,
@@ -4752,7 +4623,7 @@ class Utils {
 		}
 
 		$columns_select = $count_only ? 'COUNT(DISTINCT _question.comment_ID)' :
-			"DISTINCT _question.comment_ID,
+		"DISTINCT _question.comment_ID,
 					_question.comment_post_ID,
 					_question.comment_author,
 					_question.comment_date,
@@ -5820,8 +5691,8 @@ class Utils {
 		}
 
 		$addon_field = ( strpos( $addon_field, 'tutor-pro/addons/' ) === 0 )
-						? $addon_field
-						: "tutor-pro/addons/{$addon_field}/{$addon_field}.php";
+					? $addon_field
+					: "tutor-pro/addons/{$addon_field}/{$addon_field}.php";
 
 		$addons_config = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
@@ -6196,7 +6067,7 @@ class Utils {
 						continue;
 					}
 
-					$del_rows[] = $earning->earning_id;
+						$del_rows[] = $earning->earning_id;
 				}
 			}
 
@@ -6608,36 +6479,48 @@ class Utils {
 	 * Determine if any assignment submitted by user to a assignment.
 	 *
 	 * @since 1.3.3
+	 * @since 3.8.2 param $attempt_id added.
 	 *
 	 * @param int $assignment_id assignment id.
 	 * @param int $user_id user id.
+	 * @param int $attempt_id the attempt id.
 	 *
 	 * @return array|null|object
 	 */
-	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0 ) {
-		global $wpdb;
+	public function is_assignment_submitted( $assignment_id = 0, $user_id = 0, $attempt_id = 0 ) {
 
 		$assignment_id = $this->get_post_id( $assignment_id );
 		$user_id       = $this->get_user_id( $user_id );
 
-		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}";
+		$cache_key     = "tutor_is_assignment_submitted_{$user_id}_{$assignment_id}_{$attempt_id}";
 		$has_submitted = TutorCache::get( $cache_key );
 
 		if ( false === $has_submitted ) {
-			$has_submitted = $wpdb->get_row(
-				$wpdb->prepare(
-					"SELECT *
-				FROM 	{$wpdb->comments}
-				WHERE 	comment_type = %s
-						AND comment_approved = %s
-						AND user_id = %d
-						AND comment_post_ID = %d;
-				",
-					'tutor_assignment',
-					'submitted',
-					$user_id,
-					$assignment_id
-				)
+
+			$has_submitted = QueryHelper::get_all(
+				'comments',
+				array(
+					'comment_type'     => 'tutor_assignment',
+					'comment_approved' => 'submitted',
+					'user_id'          => $user_id,
+					'comment_post_ID'  => $assignment_id,
+				),
+				'comment_ID'
+			);
+			TutorCache::set( $cache_key, $has_submitted );
+		}
+
+		if ( $attempt_id ) {
+			$has_submitted = QueryHelper::get_row(
+				'comments',
+				array(
+					'comment_ID'       => $attempt_id,
+					'comment_type'     => 'tutor_assignment',
+					'comment_approved' => 'submitted',
+					'user_id'          => $user_id,
+					'comment_post_ID'  => $assignment_id,
+				),
+				'comment_ID'
 			);
 			TutorCache::set( $cache_key, $has_submitted );
 		}
@@ -7659,16 +7542,16 @@ class Utils {
 
 			//phpcs:disable
 			$instructor = $wpdb->get_col(
-				$wpdb->prepare(
-					"SELECT umeta_id
+			$wpdb->prepare(
+				"SELECT umeta_id
 				FROM   {$wpdb->usermeta}
 				WHERE  user_id = %d
 					AND meta_key = '_tutor_instructor_course_id'
 					AND meta_value = %d
 				",
-					$instructor_id,
-					$course_id
-				)
+				$instructor_id,
+				$course_id
+			)
 			);
 			//phpcs:enable
 
@@ -8189,7 +8072,7 @@ class Utils {
 		$user_id   = $this->get_user_id( $user_id );
 		$object_id = $this->get_post_id( $object_id );
 
-		$course_id = Input::get('course', 0, Input::TYPE_INT );
+		$course_id = Input::get( 'course', 0, Input::TYPE_INT );
 		if ( ! $course_id ) {
 			$course_id = $this->get_course_id_by( $content, $object_id );
 		}
@@ -8611,7 +8494,7 @@ class Utils {
 				case 'tutor_assignments':
 					switch ( $ancestor_type ) {
 
-							// Get lesson, quiz, assignment IDs by course ID.
+						// Get lesson, quiz, assignment IDs by course ID.
 						case tutor()->course_post_type:
 							$content_ids = $wpdb->get_col(
 								$wpdb->prepare(
@@ -8667,12 +8550,12 @@ class Utils {
 		! is_array( $ancestor_ids ) ? $ancestor_ids = array( $ancestor_ids ) : 0;
 		$ancestor_ids                               = implode( ',', $ancestor_ids );
 		switch ( $content_type ) {
-				// Get lesson, quiz, assignment IDs.
+			// Get lesson, quiz, assignment IDs.
 			case tutor()->lesson_post_type:
 			case 'tutor_quiz':
 			case 'tutor_assignments':
 				switch ( $ancestor_type ) {
-						// Get lesson, quiz, assignment IDs by course ID.
+					// Get lesson, quiz, assignment IDs by course ID.
 					case tutor()->course_post_type:
 						$content_ids = $wpdb->get_results(
 							$wpdb->prepare(
@@ -8698,6 +8581,9 @@ class Utils {
 	 * Sanitize array key abd values recursively
 	 *
 	 * @since 2.0.0
+	 * @deprecated This function will be removed soon.
+	 *             It is discouraged to use in new implementations.
+	 *             Use Input::sanitize_array() instead.
 	 *
 	 * @param array $array array.
 	 * @param array $skip skip.
@@ -8732,7 +8618,7 @@ class Utils {
 	 */
 	public function course_with_materials(): array {
 		$user_id          = get_current_user_id();
-		$enrolled_courses = $this->get_enrolled_courses_by_user( $user_id );
+		$enrolled_courses = CourseModel::get_enrolled_courses_by_user( $user_id );
 
 		if ( false === $enrolled_courses ) {
 			return array();
@@ -8792,8 +8678,8 @@ class Utils {
 		}
 
 		return $durationHours . $texts['h'] . ' ' .
-			$durationMinutes . $texts['m'] . ' ' .
-			$durationSeconds . $texts['s'];
+		$durationMinutes . $texts['m'] . ' ' .
+		$durationSeconds . $texts['s'];
 	}
 
 	/**
@@ -8923,7 +8809,7 @@ class Utils {
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
 			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php echo esc_attr( $title ); ?>" width="85%" />
 			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
-				<?php echo esc_html( $title, 'tutor' ); ?>
+			<?php echo esc_html( $title, 'tutor' ); ?>
 			</div>
 		</div>
 		<?php
@@ -9034,8 +8920,8 @@ class Utils {
 
 		if ( $add_badge && isset( $key_value[ $key ] ) ) {
 			return '<' . $badge_tag . ' class="tutor-badge-label label-' . $key_value[ $key ]['badge'] . '">' .
-				$key_value[ $key ]['text'] .
-				'</' . $badge_tag . '>';
+			$key_value[ $key ]['text'] .
+			'</' . $badge_tag . '>';
 		}
 
 		// Revert to linear textual array.
@@ -9551,10 +9437,6 @@ class Utils {
 				'title' => __( 'Enrolled Courses', 'tutor' ),
 				'icon'  => 'tutor-icon-mortarboard-o',
 			),
-			'wishlist'         => array(
-				'title' => __( 'Wishlist', 'tutor' ),
-				'icon'  => 'tutor-icon-bookmark-bold',
-			),
 			'reviews'          => array(
 				'title' => __( 'Reviews', 'tutor' ),
 				'icon'  => 'tutor-icon-star-bold',
@@ -9564,6 +9446,15 @@ class Utils {
 				'icon'  => 'tutor-icon-quiz-attempt',
 			),
 		);
+
+		$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
+
+		if ( $is_enabled_wishlist ) {
+			$items['wishlist'] = array(
+				'title' => __( 'Wishlist', 'tutor' ),
+				'icon'  => 'tutor-icon-bookmark-bold',
+			);
+		}
 
 		$items['purchase_history'] = array(
 			'title' => __( 'Order History', 'tutor' ),
@@ -9718,15 +9609,15 @@ class Utils {
 				<html <?php language_attributes(); ?>>
 				<head>
 					<meta charset="<?php bloginfo( 'charset' ); ?>">
-					<?php wp_head(); ?>
+				<?php wp_head(); ?>
 				</head>
 				<body <?php body_class(); ?>>
-				<?php wp_body_open(); ?>
+			<?php wp_body_open(); ?>
 					<div class="wp-site-blocks">
-					<?php
-						$theme      = wp_get_theme();
-						$theme_slug = $theme->get( 'TextDomain' );
-						echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
+				<?php
+					$theme      = wp_get_theme();
+					$theme_slug = $theme->get( 'TextDomain' );
+					echo do_blocks( '<!-- wp:template-part {"slug":"header","theme":"' . $theme_slug . '","tagName":"header","className":"site-header","layout":{"inherit":true}} /-->' );
 		} else {
 			get_header();
 		}
@@ -10641,7 +10532,7 @@ class Utils {
 	 *
 	 * @return bool
 	 */
-	public function delete_enrollment_record( int $student_id, int $course_id ):bool {
+	public function delete_enrollment_record( int $student_id, int $course_id ): bool {
 		global $wpdb;
 		return QueryHelper::delete(
 			$wpdb->posts,
@@ -10700,7 +10591,7 @@ class Utils {
 
 		while ( get_user_by( 'login', $username ) ) {
 			$username = $original_username . '_' . $counter;
-			$counter++;
+			++$counter;
 		}
 
 		return $username;
@@ -10771,7 +10662,7 @@ class Utils {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		echo sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 
 	/**
@@ -10786,12 +10677,12 @@ class Utils {
 	public function get_svg_icon_url( $name ) {
 		return tutor()->url . 'assets/icons/' . $name . '.svg';
 	}
-	
+
 	/**
 	 * Get script locale data for dynamic scripts
 	 *
 	 * @since 3.7.0
-	 * 
+	 *
 	 * @param string $filename Filename
 	 * @param string $locale Locale
 	 *
@@ -10800,7 +10691,7 @@ class Utils {
 	public function get_script_locale_data( string $filename, string $locale = 'en_US' ) {
 		$hash      = md5( "assets/js/lazy-chunks/{$filename}.js" );
 		$json_path = WP_CONTENT_DIR . "/languages/plugins/tutor-{$locale}-{$hash}.json";
-		
+
 		if ( file_exists( $json_path ) ) {
 			$contents = file_get_contents( $json_path );
 			$data     = json_decode( $contents, true );

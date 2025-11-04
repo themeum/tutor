@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 $video_info = tutor_utils()->get_video_info();
+$video_info = $video_info ? (array) $video_info : array();
 
 do_action( 'tutor_lesson/single/before/video/embedded' );
 ?>

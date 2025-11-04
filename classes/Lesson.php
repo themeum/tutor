@@ -166,7 +166,6 @@ class Lesson extends Tutor_Base {
 		} else {
 			delete_post_meta( $post_ID, '_tutor_attachments' );
 		}
-
 	}
 
 	/**
@@ -581,7 +580,8 @@ class Lesson extends Tutor_Base {
 	 * @return mixed  based on arguments
 	 */
 	public static function get_comments( array $args ) {
-		$comments = get_comments( $args );
+		$args['type'] = 'comment';
+		$comments     = get_comments( $args );
 		return $comments;
 	}
 
@@ -609,4 +609,146 @@ class Lesson extends Tutor_Base {
 		return wp_insert_comment( $comment_data );
 	}
 
+	/**
+	 * Check if lesson has content
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return bool True if lesson has content, false otherwise.
+	 */
+	public static function has_lesson_content( $lesson_id ) {
+		/**
+		 * If lesson has no content, lesson tab will be hidden.
+		 * To enable elementor and SCORM, only admin can see lesson tab.
+		 *
+		 * @since 2.2.2
+		 */
+		return apply_filters(
+			'tutor_has_lesson_content',
+			User::is_admin() || ! in_array( trim( get_the_content() ), array( null, '', '&nbsp;' ), true ),
+			$lesson_id
+		);
+	}
+
+	/**
+	 * Check if lesson has attachments
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return bool True if lesson has attachments, false otherwise.
+	 */
+	public static function has_lesson_attachment( $lesson_id ) {
+		return count( tutor_utils()->get_attachments( $lesson_id ) ) > 0;
+	}
+
+	/**
+	 * Check if comments are enabled for lessons
+	 *
+	 * @since 3.9.0
+	 *
+	 * @return bool True if comments are enabled, false otherwise.
+	 */
+	public static function is_comment_enabled() {
+		return tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
+	}
+
+	/**
+	 * Check if lesson has comments
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return int Number of comments for the lesson.
+	 */
+	public static function has_lesson_comment( $lesson_id ) {
+		return (int) get_comments_number( $lesson_id );
+	}
+
+	/**
+	 * Get navigation items for lesson single page
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return array navigation items array
+	 */
+	public static function get_nav_items( $lesson_id ) {
+		$nav_items = array();
+
+		if ( self::has_lesson_content( $lesson_id ) ) {
+			$nav_items['overview'] = array(
+				'label' => __( 'Overview', 'tutor' ),
+				'value' => 'overview',
+				'icon'  => 'document-text',
+			);
+		}
+
+		if ( self::has_lesson_attachment( $lesson_id ) ) {
+			$nav_items['files'] = array(
+				'label' => __( 'Exercise Files', 'tutor' ),
+				'value' => 'files',
+				'icon'  => 'paperclip',
+			);
+		}
+
+		if ( self::is_comment_enabled() ) {
+			$nav_items['comments'] = array(
+				'label' => __( 'Comments', 'tutor' ),
+				'value' => 'comments',
+				'icon'  => 'comment',
+			);
+		}
+
+		$nav_items = apply_filters( 'tutor_lesson_single_nav_items', $nav_items );
+		$nav_items = array_values( $nav_items );
+
+		return $nav_items;
+	}
+
+	/**
+	 * Get navigation contents for lesson single page
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param int $lesson_id Lesson ID.
+	 *
+	 * @return array navigation contents array
+	 */
+	public static function get_nav_contents( $lesson_id ) {
+		$nav_contents = array();
+
+		if ( self::has_lesson_content( $lesson_id ) ) {
+			$nav_contents['overview'] = array(
+				'label'         => __( 'Overview', 'tutor' ),
+				'value'         => 'overview',
+				'template_path' => 'single.lesson.parts.overview',
+			);
+		}
+
+		if ( self::has_lesson_attachment( $lesson_id ) ) {
+			$nav_contents['files'] = array(
+				'label'         => __( 'Files', 'tutor' ),
+				'value'         => 'files',
+				'template_path' => 'single.lesson.parts.files',
+			);
+		}
+
+		if ( self::is_comment_enabled() ) {
+			$nav_contents['comments'] = array(
+				'label'         => __( 'Comments', 'tutor' ),
+				'value'         => 'comments',
+				'template_path' => 'single.lesson.parts.comments',
+			);
+		}
+
+		$nav_contents = apply_filters( 'tutor_lesson_single_nav_contents', $nav_contents );
+
+		return $nav_contents;
+	}
 }

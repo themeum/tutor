@@ -10,15 +10,15 @@
 
 namespace Tutor\Ecommerce;
 
-use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
-use Tutor\Models\BillingModel;
-use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
+use Tutor\Models\OrderModel;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
-use Tutor\Models\OrderModel;
+use Tutor\Helpers\QueryHelper;
+use Tutor\Models\BillingModel;
+use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\ValidationHelper;
 use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -555,12 +555,14 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_now() {
-		tutor_utils()->check_nonce();
+		$errors = array();
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			array_push( $errors, tutor_utils()->error_message( 'nonce' ) );
+			set_transient( self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . 'pay_now_nonce_alert', $errors );
+			return;
+		}
 		global $wpdb;
-
-		$errors     = array();
-		$order_data = null;
-
+		$order_data      = null;
 		$billing_model   = new BillingModel();
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
@@ -982,8 +984,9 @@ class CheckoutController {
 		$has_cart_item = $cart_model->has_item_in_cart( $user_id );
 		$buy_now       = Settings::is_buy_now_enabled();
 		$plan_id       = Input::get( 'plan', 0, Input::TYPE_INT );
+		$order_id      = Input::get( 'order_id', 0, Input::TYPE_INT );
 
-		if ( ! $has_cart_item && ! $buy_now && ! $plan_id ) {
+		if ( ! $has_cart_item && ! $buy_now && ! $plan_id && ! $order_id ) {
 			wp_safe_redirect( $cart_page_url );
 			exit;
 		}
@@ -1049,6 +1052,7 @@ class CheckoutController {
 			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
+
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
@@ -1127,5 +1131,39 @@ class CheckoutController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
+	 * Retrieve course data for a given set of order items.
+	 *
+	 * @since 3.9.0
+	 *
+	 * @param array $order_items Array of order item objects.
+	 * @return array{
+	 *     courses: array{
+	 *         total_count: int,
+	 *         results: \WP_Post[]
+	 *     }
+	 * }
+	 */
+	public function get_courses_data_by_order_items( $order_items ): array {
+
+		$results = array();
+
+		foreach ( $order_items as $item ) {
+
+			$course = get_post( $item->id );
+
+			if ( $course instanceof \WP_Post ) {
+				$results[] = $course;
+			}
+		}
+
+		return array(
+			'courses' => array(
+				'total_count' => count( $results ),
+				'results'     => $results,
+			),
+		);
 	}
 }

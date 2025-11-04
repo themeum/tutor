@@ -6,7 +6,6 @@ import ContentGenerationContextProvider, {
 import { css } from '@emotion/react';
 import FocusTrap from '@TutorShared/components/FocusTrap';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
-import { useEffect } from 'react';
 
 type AICourseBuilderModalProps = ModalProps;
 
@@ -20,14 +19,6 @@ const Component = ({ closeModal }: { closeModal: () => void }) => {
 };
 
 const AICourseBuilderModal = ({ closeModal }: AICourseBuilderModalProps) => {
-  useEffect(() => {
-    document.body.style.overflow = 'hidden';
-
-    return () => {
-      document.body.style.overflow = 'initial';
-    };
-  }, []);
-
   return (
     <ContentGenerationContextProvider>
       <FocusTrap>

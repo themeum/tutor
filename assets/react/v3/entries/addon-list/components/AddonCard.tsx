@@ -80,7 +80,7 @@ function AddonCard({ addon }: { addon: Addon }) {
 
   return (
     <div
-      css={styles.wrapper}
+      css={styles.wrapper(isTutorPro)}
       onMouseEnter={() => hasToolTip && setIsTooltipVisible(true)}
       onMouseLeave={() => hasToolTip && setIsTooltipVisible(false)}
     >
@@ -90,7 +90,7 @@ function AddonCard({ addon }: { addon: Addon }) {
           <div css={styles.thumb}>
             <img src={addon.thumb_url || addon.url} alt={addon.name} />
           </div>
-          <div css={styles.addonAction}>
+          <div css={styles.addonAction(isTutorPro)} data-addon-action>
             <Show
               when={isTutorPro}
               fallback={
@@ -153,10 +153,17 @@ function AddonCard({ addon }: { addon: Addon }) {
 export default AddonCard;
 
 const styles = {
-  wrapper: css`
+  wrapper: (isTutorPro: boolean) => css`
     background-color: ${colorTokens.background.white};
-
     border-radius: ${borderRadius[6]};
+
+    ${isTutorPro &&
+    css`
+      &:hover [data-addon-action] {
+        visibility: visible;
+        opacity: 1;
+      }
+    `}
   `,
   wrapperInner: css`
     padding: ${spacing[16]};
@@ -175,10 +182,16 @@ const styles = {
 
     img {
       max-width: 100%;
-      border-radius: ${borderRadius.circle};
     }
   `,
-  addonAction: css`
+  addonAction: (isTutorPro: boolean) => css`
+    ${isTutorPro &&
+    css`
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+    `}
+
     svg {
       color: ${colorTokens.icon.default};
     }

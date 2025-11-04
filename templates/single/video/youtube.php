@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $disable_default_player_youtube = tutor_utils()->get_option( 'disable_default_player_youtube' );
 $video_info                     = tutor_utils()->get_video_info();
+$video_info                     = $video_info ? (array) $video_info : array();
 $youtube_video_id               = tutor_utils()->get_youtube_video_id( tutor_utils()->avalue_dot( 'source_youtube', $video_info ) );
 
 do_action( 'tutor_lesson/single/before/video/youtube' );
