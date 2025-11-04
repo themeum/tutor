@@ -80,10 +80,10 @@ export const selectDropdown = (props: SelectDropdownProps) => {
         return;
       }
 
-      menuElement.classList.remove('tutor-select-dropdown-menu--top', 'tutor-select-dropdown-menu--bottom');
+      menuElement.classList.remove('tutor-select-dropdown-menu-top', 'tutor-select-dropdown-menu-bottom');
 
       const newClass =
-        this.dropdownPosition === 'top' ? 'tutor-select-dropdown-menu--top' : 'tutor-select-dropdown-menu--bottom';
+        this.dropdownPosition === 'top' ? 'tutor-select-dropdown-menu-top' : 'tutor-select-dropdown-menu-bottom';
       menuElement.classList.add(newClass);
     },
 
@@ -109,6 +109,14 @@ export const selectDropdown = (props: SelectDropdownProps) => {
 
       const selectedIndex = this.options.findIndex((o) => o.value === this.value && !o.disabled);
       this.highlightedIndex = selectedIndex >= 0 ? selectedIndex : this.nextEnabledIndex(0);
+
+      // Use $nextTick to ensure DOM is ready
+      const $nextTick = (this as unknown as { $nextTick?: (callback: () => void) => void }).$nextTick;
+      if ($nextTick) {
+        $nextTick(() => {
+          this.scrollToHighlighted();
+        });
+      }
     },
 
     close() {
@@ -176,11 +184,15 @@ export const selectDropdown = (props: SelectDropdownProps) => {
           break;
         case 'Home':
           event.preventDefault();
+          if (!this.isOpen) this.open();
           this.highlightedIndex = this.nextEnabledIndex(0);
+          this.scrollToHighlighted();
           break;
         case 'End':
           event.preventDefault();
+          if (!this.isOpen) this.open();
           this.highlightedIndex = this.prevEnabledIndex(this.options.length - 1);
+          this.scrollToHighlighted();
           break;
       }
     },
@@ -197,6 +209,25 @@ export const selectDropdown = (props: SelectDropdownProps) => {
 
       if (index >= 0 && index < this.options.length) {
         this.highlightedIndex = index;
+        this.scrollToHighlighted();
+      }
+    },
+
+    scrollToHighlighted() {
+      const $el = (this as unknown as { $el: HTMLElement }).$el;
+      const $nextTick = (this as unknown as { $nextTick?: (callback: () => void) => void }).$nextTick;
+
+      if ($nextTick) {
+        $nextTick(() => {
+          const menu = $el.querySelector('.tutor-select-dropdown-menu') as HTMLElement;
+          const options = menu?.querySelectorAll('.tutor-select-dropdown-option');
+          if (options && this.highlightedIndex >= 0 && this.highlightedIndex < options.length) {
+            const highlightedOption = options[this.highlightedIndex] as HTMLElement;
+            if (highlightedOption) {
+              highlightedOption.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+          }
+        });
       }
     },
 
@@ -219,5 +250,4 @@ export const selectDropdown = (props: SelectDropdownProps) => {
 export const selectDropdownMeta: AlpineComponentMeta<SelectDropdownProps> = {
   name: 'selectDropdown',
   component: selectDropdown,
-  global: true,
 };

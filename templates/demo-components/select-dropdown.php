@@ -19,10 +19,10 @@ defined( 'ABSPATH' ) || exit;
 	<div
 		x-data='tutorSelectDropdown({
 			options: [
-				{ label: "<?php echo esc_js( __( 'Option One', 'tutor' ) ); ?>", value: "one" },
-				{ label: "<?php echo esc_js( __( 'Option Two', 'tutor' ) ); ?>", value: "two" },
+				{ label: "<?php echo esc_js( __( 'Option One', 'tutor' ) ); ?>", value: "one", icon: "<?php echo esc_js( Icon::BOOK ); ?>" },
+				{ label: "<?php echo esc_js( __( 'Option Two', 'tutor' ) ); ?>", value: "two", icon: "<?php echo esc_js( Icon::CALENDAR ); ?>" },
 				{ label: "<?php echo esc_js( __( 'Disabled Option', 'tutor' ) ); ?>", value: "disabled", disabled: true },
-				{ label: "<?php echo esc_js( __( 'Option Three', 'tutor' ) ); ?>", value: "three" },
+				{ label: "<?php echo esc_js( __( 'Option Three', 'tutor' ) ); ?>", value: "three", icon: "<?php echo esc_js( Icon::CERTIFICATE ); ?>" },
 				{ label: "<?php echo esc_js( __( 'Option Four', 'tutor' ) ); ?>", value: "four" },
 				{ label: "<?php echo esc_js( __( 'Option Five', 'tutor' ) ); ?>", value: "five" },
 				{ label: "<?php echo esc_js( __( 'Option Six', 'tutor' ) ); ?>", value: "six" },
@@ -43,7 +43,12 @@ defined( 'ABSPATH' ) || exit;
 			:aria-expanded="isOpen.toString()"
 			:aria-disabled="disabled.toString()"
 		>
-			<span class="tutor-select-dropdown-value" :class="{ 'tutor-select-dropdown-placeholder': !value }" x-text="selectedLabel"></span>
+			<span class="tutor-select-dropdown-value" :class="{ 'tutor-select-dropdown-placeholder': !value }">
+				<template x-if="selectedOption && selectedOption.icon">
+					<span class="tutor-select-dropdown-value-icon" x-data="tutorIcon({ name: selectedOption.icon })"></span>
+				</template>
+				<span x-text="selectedLabel"></span>
+			</span>
 			<span class="tutor-select-dropdown-arrow" aria-hidden="true"><?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 16, 16 ); ?></span>
 		</button>
 
@@ -66,8 +71,12 @@ defined( 'ABSPATH' ) || exit;
 						:aria-selected="isSelected(opt).toString()"
 						@click.prevent="selectOption(opt)"
 						@mousemove="highlightedIndex = idx"
-						x-text="opt.label"
-					></li>
+					>
+						<template x-if="opt.icon">
+							<span class="tutor-select-dropdown-option-icon" x-data="tutorIcon({ name: opt.icon })"></span>
+						</template>
+						<span class="tutor-select-dropdown-option-label" x-text="opt.label"></span>
+					</li>
 				</template>
 			</ul>
 		</div>
