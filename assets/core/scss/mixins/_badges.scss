@@ -17,6 +17,9 @@
 	font-size: $tutor-font-size-tiny;
 	font-weight: $tutor-font-weight-medium;
 	line-height: $tutor-line-height-tiny;
+
+	// @include tutor-typography('tiny', 'medium', '', 'body' );
+
 	&.tutor-badge-circle {
 		border-radius: $tutor-radius-full;
 	}
@@ -24,23 +27,22 @@
 
 @mixin tutor-badge-variant($variant: primary) {
 	@if $variant == primary {
-		background-color: map-get($tutor-actions, brand-tertiary);
+		background-color: $tutor-actions-brand-tertiary;
 		color: $tutor-actions-brand-primary;
 	} @else if $variant == pending {
-		background-color: map-get($tutor-actions, warning-secondary);
+		background-color: $tutor-actions-warning-secondary;
 		color: $tutor-text-warning;
 	} @else if $variant == completed {
-		background-color: map-get($tutor-actions, success-tertiary);
+		background-color: $tutor-actions-success-tertiary;
 		color: $tutor-text-success;
 	} @else if $variant == cancelled {
-		background-color: map-get($tutor-actions, critical-secondary);
+		background-color: $tutor-actions-critical-secondary;
 		color: $tutor-text-critical;
 	} @else if $variant == secondary {
-		background-color: map-get($tutor-actions, gray-secondary);
 		background-color: $tutor-actions-gray-secondary;
 		color: $tutor-gray-500;
 	} @else if $variant == exception {
-		background-color: map-get($tutor-surfaces, exception2-secondary);
+		background-color: $tutor-surface-exception2-secondary;
 		color: $tutor-text-exception2;
 	}
 }
