@@ -3,10 +3,12 @@ import Alpine from 'alpinejs';
 import { TutorComponentRegistry } from '@Core/ComponentRegistry';
 
 import { buttonMeta } from '@Core/components/button';
+import { iconMeta } from '@Core/components/icon';
+import { tabsMeta } from '@Core/components/tabs';
 import { accordionMeta } from '@Core/components/accordion';
 
 const initializePlugin = () => {
-  TutorComponentRegistry.registerAll([buttonMeta, accordionMeta]);
+  TutorComponentRegistry.registerAll([buttonMeta, tabsMeta, iconMeta, accordionMeta]);
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 

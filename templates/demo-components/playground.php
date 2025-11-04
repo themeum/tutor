@@ -58,7 +58,10 @@
 				<?php require 'accordion.php'; ?>
 			</div>
 		</section>
-		<?php endif ?>
+		<section>
+			<?php require 'tabs.php'; ?>
+		</section>
+	<?php endif ?>
 
 </body>
 </html>

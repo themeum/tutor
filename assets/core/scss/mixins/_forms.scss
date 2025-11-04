@@ -18,7 +18,7 @@
   transition: all 0.2s ease;
   
   &::placeholder {
-    color: var(--tutor-text-disabled);
+    color: var(--tutor-text-subdued);
   }
   
   &:focus {
