@@ -58,18 +58,51 @@
 }
 
 // Responsive breakpoint mixin
-@mixin tutor-respond-to($breakpoint) {
+@mixin tutor-breakpoint-up($breakpoint) {
   @if map.has-key($tutor-breakpoints, $breakpoint) {
     $value: map.get($tutor-breakpoints, $breakpoint);
-    @if $value > 0 {
+
+    @if $value >0 {
       @media (min-width: $value) {
         @content;
       }
-    } @else {
+    }
+
+    @else {
       @content;
     }
-  } @else {
+  }
+
+  @else {
     @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+@mixin tutor-breakpoint-down($breakpoint) {
+  @if map.has-key($tutor-breakpoints, $breakpoint) {
+    $value: map.get($tutor-breakpoints, $breakpoint);
+
+    @if $value >0 {
+      @media (max-width: $value) {
+        @content;
+      }
+    }
+
+    @else {
+      @content;
+    }
+  }
+
+  @else {
+    @warn "Unknown breakpoint: #{$breakpoint}";
+  }
+}
+
+@mixin tutor-breakpoint-between($breakpoint-1, $breakpoint-2) {
+  @include tutor-breakpoint-down($breakpoint-1) {
+    @include tutor-breakpoint-up($breakpoint-2) {
+      @content;
+    }
   }
 }
 
@@ -89,7 +122,9 @@
 @mixin tutor-grid-area($row-start, $col-start, $row-end: null, $col-end: null) {
   @if $row-end and $col-end {
     grid-area: $row-start / $col-start / $row-end / $col-end;
-  } @else {
+  }
+
+  @else {
     grid-column-start: $col-start;
     grid-row-start: $row-start;
   }
@@ -120,12 +155,12 @@
 // Flexbox gap fallback for older browsers
 @mixin tutor-flex-gap($gap) {
   gap: $gap;
-  
+
   // Fallback for browsers without gap support
   @supports not (gap: 1px) {
     margin: -#{$gap / 2};
-    
-    > * {
+
+    >* {
       margin: #{$gap / 2};
     }
   }
@@ -133,7 +168,7 @@
 
 // Stack layout (vertical spacing)
 @mixin tutor-stack($spacing: $tutor-spacing-4) {
-  > * + * {
+  >*+* {
     margin-top: $spacing;
   }
 }
@@ -144,8 +179,8 @@
   flex-wrap: wrap;
   align-items: $align;
   margin: -#{$spacing / 2};
-  
-  > * {
+
+  >* {
     margin: #{$spacing / 2};
   }
 }
@@ -154,25 +189,27 @@
 @mixin tutor-sidebar($sidebar-width: 250px, $gap: $tutor-spacing-6, $side: start) {
   display: flex;
   gap: $gap;
-  
-  @if $side == start {
+
+  @if $side ==start {
     flex-direction: row;
-    
+
     [dir="rtl"] & {
       flex-direction: row-reverse;
     }
-  } @else {
+  }
+
+  @else {
     flex-direction: row-reverse;
-    
+
     [dir="rtl"] & {
       flex-direction: row;
     }
   }
-  
+
   .tutor-sidebar {
     flex: 0 0 $sidebar-width;
   }
-  
+
   .tutor-main {
     flex: 1;
     min-width: 0; // Prevent flex item from overflowing

@@ -1,349 +1,112 @@
-// Tabs Component
-// RTL-aware tabs with active states, transitions, and accessibility
-
-@use '../mixins/layout' as *;
-@use '../mixins/buttons' as *;
+@use '../mixins' as *;
+@use '../tokens' as *;
 @use '../mixins/rtl' as rtl;
 
 .tutor-tabs {
-  &__nav {
+  &-nav {
     @include tutor-flex(row, center, flex-start);
-    border-bottom: 1px solid var(--tutor-border-idle);
-    margin-bottom: var(--tutor-spacing-6, 16px);
+    gap: $tutor-spacing-2;
     overflow-x: auto;
     overflow-y: hidden;
-    
-    // Hide scrollbar but keep functionality
+
     scrollbar-width: none;
     -ms-overflow-style: none;
-    
+
     &::-webkit-scrollbar {
       display: none;
     }
-    
-    // RTL support
+
     [dir="rtl"] & {
       flex-direction: row-reverse;
     }
   }
-  
-  &__tab {
-    @include tutor-button-base;
+
+  &-tab {
+    @include tutor-flex(row, center, flex-start);
+    @include tutor-typography('small', 'regular');
     background: transparent;
     border: none;
-    border-radius: 0;
-    padding: var(--tutor-spacing-4, 8px) var(--tutor-spacing-6, 16px);
-    color: var(--tutor-text-secondary);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
+    border-radius: $tutor-radius-lg;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    gap: $tutor-spacing-4;
     white-space: nowrap;
-    font-size: var(--tutor-font-size-p1, 16px);
-    font-weight: var(--tutor-font-weight-medium, 500);
-    transition: all 0.2s ease;
-    position: relative;
-    
-    &:hover:not(:disabled):not(.tutor-tabs__tab--active) {
-      color: var(--tutor-text-primary);
-      background-color: var(--tutor-surface-l2);
-    }
-    
-    &:focus {
-      outline: none;
-      background-color: var(--tutor-surface-l2);
-    }
-    
-    &--active {
-      color: var(--tutor-text-brand);
-      border-bottom-color: var(--tutor-border-brand);
-      background-color: transparent;
-      
-      &::after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        left: 0;
-        right: 0;
-        height: 2px;
-        background-color: var(--tutor-border-brand);
-        border-radius: 1px 1px 0 0;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+    color: $tutor-text-primary;
+    font-weight: $tutor-font-weight-medium;
+    height: 44px;
+
+    &-active {
+      color: $tutor-text-brand;
+      background-color: $tutor-tab-l3-active;
+
+      svg {
+        color: $tutor-text-brand;
+      }
+
+      &:hover {
+        background-color: $tutor-tab-l3-active-hover;
+        color: $tutor-text-primary;
       }
     }
-    
+
+    &:hover:not(:disabled):not(.tutor-tabs-tab-active) {
+      color: $tutor-text-primary;
+      background-color: $tutor-tab-l3-active-hover;
+
+      svg {
+        color: $tutor-text-primary;
+      }
+    }
+
+
     &:disabled {
-      color: var(--tutor-text-disabled);
+      color: $tutor-text-subdued;
       cursor: not-allowed;
-      
+
       &:hover {
         background-color: transparent;
       }
     }
-    
-    .tutor-icon {
-      @include rtl.icon-start(var(--tutor-spacing-2, 4px));
-      color: currentColor;
-    }
-    
-    .tutor-badge {
-      @include rtl.margin-start(var(--tutor-spacing-2, 4px));
-      font-size: var(--tutor-font-size-p3, 12px);
-      background-color: var(--tutor-surface-l2);
-      color: var(--tutor-text-secondary);
-      padding: 2px 6px;
-      border-radius: var(--tutor-radius-full, 1000px);
-      min-width: 18px;
-      text-align: center;
-    }
-    
-    &--active .tutor-badge {
-      background-color: var(--tutor-brand-100);
-      color: var(--tutor-text-brand);
-    }
   }
-  
-  &__content {
-    position: relative;
+
+  &-content {
     min-height: 200px;
   }
-  
-  &__panel {
-    display: none;
-    animation: tutor-fade-in 0.2s ease-out;
-    
-    &--active {
-      display: block;
-    }
-    
-    &[x-show] {
-      display: block;
-    }
-  }
-  
-  // Vertical tabs variant
-  &--vertical {
+
+  // Vertical variant
+  &-vertical {
     @include tutor-flex(row, flex-start, flex-start);
-    gap: var(--tutor-spacing-6, 16px);
-    
+
     [dir="rtl"] & {
       flex-direction: row-reverse;
     }
-    
-    .tutor-tabs__nav {
+
+    .tutor-tabs-nav {
       @include tutor-flex-column;
       align-items: stretch;
-      border-bottom: none;
-      border-right: 1px solid var(--tutor-border-idle);
-      margin-bottom: 0;
-      margin-right: var(--tutor-spacing-6, 16px);
       min-width: 200px;
-      
-      [dir="rtl"] & {
-        border-right: none;
-        border-left: 1px solid var(--tutor-border-idle);
-        margin-right: 0;
-        margin-left: var(--tutor-spacing-6, 16px);
-      }
     }
-    
-    .tutor-tabs__tab {
-      @include rtl.text-align-start();
-      border-bottom: none;
-      border-right: 2px solid transparent;
-      margin-bottom: 0;
-      margin-right: -1px;
-      
-      [dir="rtl"] & {
-        border-right: none;
-        border-left: 2px solid transparent;
-        margin-right: 0;
-        margin-left: -1px;
-      }
-      
-      &--active {
-        border-bottom-color: transparent;
-        border-right-color: var(--tutor-border-brand);
-        
-        [dir="rtl"] & {
-          border-right-color: transparent;
-          border-left-color: var(--tutor-border-brand);
-        }
-        
-        &::after {
-          display: none;
-        }
-      }
-    }
-    
-    .tutor-tabs__content {
+
+    .tutor-tabs-content {
       flex: 1;
       min-width: 0;
     }
   }
-  
-  // Pills variant
-  &--pills {
-    .tutor-tabs__nav {
-      border-bottom: none;
-      gap: var(--tutor-spacing-2, 4px);
-      padding: var(--tutor-spacing-2, 4px);
-      background-color: var(--tutor-surface-l2);
-      border-radius: var(--tutor-radius-lg, 8px);
-    }
-    
-    .tutor-tabs__tab {
-      border-radius: var(--tutor-radius-md, 6px);
-      border-bottom: none;
-      margin-bottom: 0;
-      
-      &--active {
-        background-color: var(--tutor-surface-l1);
-        color: var(--tutor-text-primary);
-        border-bottom-color: transparent;
-        box-shadow: var(--tutor-shadow-sm);
-        
-        &::after {
-          display: none;
-        }
-      }
-    }
-  }
-  
-  // Underlined variant (default enhanced)
-  &--underlined {
-    .tutor-tabs__nav {
-      border-bottom: 2px solid var(--tutor-surface-l2);
-    }
-    
-    .tutor-tabs__tab {
-      border-bottom-width: 3px;
-      margin-bottom: -2px;
-      
-      &--active {
-        border-bottom-width: 3px;
-      }
-    }
-  }
-  
-  // Boxed variant
-  &--boxed {
-    .tutor-tabs__nav {
-      border: 1px solid var(--tutor-border-idle);
-      border-radius: var(--tutor-radius-lg, 8px) var(--tutor-radius-lg, 8px) 0 0;
-      background-color: var(--tutor-surface-l2);
-      padding: var(--tutor-spacing-1, 2px);
-      margin-bottom: 0;
-    }
-    
-    .tutor-tabs__tab {
-      border-radius: var(--tutor-radius-md, 6px);
-      border-bottom: none;
-      margin-bottom: 0;
-      
-      &--active {
-        background-color: var(--tutor-surface-l1);
-        border-bottom-color: transparent;
-        
-        &::after {
-          display: none;
-        }
-      }
-    }
-    
-    .tutor-tabs__content {
-      border: 1px solid var(--tutor-border-idle);
-      border-top: none;
-      border-radius: 0 0 var(--tutor-radius-lg, 8px) var(--tutor-radius-lg, 8px);
-      padding: var(--tutor-spacing-6, 16px);
-      background-color: var(--tutor-surface-l1);
-    }
-  }
 }
 
-// Animation classes for Alpine.js
-.tutor-tabs__panel {
-  &[x-cloak] {
-    display: none !important;
-  }
-  
-  // Slide animation
-  &.tutor-tab-enter {
-    opacity: 0;
-    transform: translateX(10px);
-  }
-  
-  &.tutor-tab-enter-active {
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  
-  &.tutor-tab-leave {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  
-  &.tutor-tab-leave-active {
-    opacity: 0;
-    transform: translateX(-10px);
-    transition: opacity 0.15s ease, transform 0.15s ease;
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
+@include tutor-breakpoint-down(md) {
   .tutor-tabs {
-    &--vertical {
+    &-vertical {
+      display: unset;
       flex-direction: column;
-      
-      .tutor-tabs__nav {
+      overflow-x: auto;
+      overflow-y: hidden;
+
+      .tutor-tabs-nav {
         flex-direction: row;
-        border-right: none;
-        border-bottom: 1px solid var(--tutor-border-idle);
-        margin-right: 0;
-        margin-bottom: var(--tutor-spacing-4, 8px);
-        min-width: auto;
         overflow-x: auto;
-        
-        [dir="rtl"] & {
-          border-left: none;
-          margin-left: 0;
-        }
       }
-      
-      .tutor-tabs__tab {
-        border-right: none;
-        border-bottom: 2px solid transparent;
-        margin-right: 0;
-        margin-bottom: -1px;
-        white-space: nowrap;
-        
-        [dir="rtl"] & {
-          border-left: none;
-          margin-left: 0;
-        }
-        
-        &--active {
-          border-right-color: transparent;
-          border-bottom-color: var(--tutor-border-brand);
-          
-          [dir="rtl"] & {
-            border-left-color: transparent;
-          }
-          
-          &::after {
-            display: block;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            width: auto;
-          }
-        }
-      }
-    }
-    
-    .tutor-tabs__tab {
-      padding: var(--tutor-spacing-3, 6px) var(--tutor-spacing-4, 8px);
-      font-size: var(--tutor-font-size-p2, 14px);
     }
   }
 }

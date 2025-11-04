@@ -1,0 +1,40 @@
+// Design Tokens - Icon Colors
+// CSS variables for theme-aware icon colors
+
+// =============================================================================
+// CSS VARIABLE REFERENCES (theme-aware)
+// =============================================================================
+
+$tutor-icon-idle: var(--tutor-icon-idle);
+$tutor-icon-idle-inverse: var(--tutor-icon-idle-inverse);
+$tutor-icon-hover: var(--tutor-icon-hover);
+$tutor-icon-secondary: var(--tutor-icon-secondary);
+$tutor-icon-subdued: var(--tutor-icon-subdued);
+$tutor-icon-brand: var(--tutor-icon-brand);
+$tutor-icon-success-primary: var(--tutor-icon-success-primary);
+$tutor-icon-critical: var(--tutor-icon-critical);
+$tutor-icon-warning: var(--tutor-icon-warning);
+$tutor-icon-caution: var(--tutor-icon-caution);
+$tutor-icon-exception1: var(--tutor-icon-exception1);
+$tutor-icon-exception2: var(--tutor-icon-exception2);
+$tutor-icon-exception4: var(--tutor-icon-exception4);
+
+// =============================================================================
+// ICON COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-icons: (
+  idle: $tutor-icon-idle,
+  idle-inverse: $tutor-icon-idle-inverse,
+  hover: $tutor-icon-hover,
+  secondary: $tutor-icon-secondary,
+  subdued: $tutor-icon-subdued,
+  brand: $tutor-icon-brand,
+  success-primary: $tutor-icon-success-primary,
+  critical: $tutor-icon-critical,
+  warning: $tutor-icon-warning,
+  caution: $tutor-icon-caution,
+  exception1: $tutor-icon-exception1,
+  exception2: $tutor-icon-exception2,
+  exception4: $tutor-icon-exception4
+);
