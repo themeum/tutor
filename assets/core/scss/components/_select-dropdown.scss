@@ -1,0 +1,128 @@
+@use '../tokens' as *;
+@use '../mixins/typography' as *;
+
+
+.tutor-select-dropdown {
+	position: relative;
+	@include tutor-typography('small', 'regular', 'primary', 'body');
+	letter-spacing: 0;
+
+	&.tutor-is-disabled {
+		pointer-events: none;
+	}
+
+	&-control {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: $tutor-spacing-4;
+		width: 100%;
+		padding: $tutor-spacing-4 $tutor-spacing-5;
+		background: var(--tutor-surface-l1);
+		border: 1px solid var(--tutor-border-idle);
+		border-radius: $tutor-radius-md;
+		cursor: pointer;
+
+		&:focus {
+			outline: 2px solid var(--tutor-border-brand-tertiary);
+		}
+	}
+
+	&-value {
+		display: flex;
+		align-items: center;
+		gap: $tutor-spacing-2;
+		flex: 1;
+		min-width: 0;
+
+		&-icon {
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			color: var(--tutor-icon-secondary);
+		}
+	}
+
+	&-arrow {
+		margin-left: auto;
+		color: var(--tutor-icon-secondary);
+		transition: transform 0.2s ease;
+	}
+
+	// Rotate arrow when dropdown is expanded
+	&-control[aria-expanded="true"] .tutor-select-dropdown-arrow {
+		transform: rotate(180deg);
+	}
+
+	&-menu {
+		position: absolute;
+		left: 0;
+		right: 0;
+		z-index: $tutor-z-dropdown;
+		background: var(--tutor-surface-l1);
+		border-radius: $tutor-radius-md;
+		max-height: 280px;
+		overflow: auto;
+		width: 100%;
+
+		// Default positioning (bottom)
+		&-bottom {
+			top: calc(100% + 4px);
+			bottom: auto;
+		}
+
+		// Top positioning
+		&-top {
+			bottom: calc(100% + 4px);
+			top: auto;
+		}
+
+		// Fallback for when no position class is applied yet
+		&:not(.tutor-select-dropdown-menu-top):not(.tutor-select-dropdown-menu-bottom) {
+			top: calc(100% + 4px);
+			bottom: auto;
+		}
+	}
+
+	&-option {
+		display: flex;
+		align-items: center;
+		gap: $tutor-spacing-5;
+		padding: $tutor-spacing-4 $tutor-spacing-5;
+		cursor: pointer;
+
+		&-icon {
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			color: var(--tutor-icon-secondary);
+			width: 16px;
+			height: 16px;
+		}
+
+		&-label {
+			flex: 1;
+			min-width: 0;
+		}
+
+		&.tutor-is-highlighted {
+			background: var(--tutor-tab-l3-active-hover);
+		}
+
+		&:hover:not(.tutor-is-disabled):not(.tutor-is-selected):not(.tutor-is-highlighted) {
+			background: var(--tutor-tab-l3-active-hover);
+		}
+
+		&.tutor-is-disabled {
+			color: var(--tutor-muted-foreground);
+			cursor: not-allowed;
+
+			&:hover,
+			&.tutor-is-highlighted {
+				background: transparent;
+			}
+		}
+	}
+}
+
+

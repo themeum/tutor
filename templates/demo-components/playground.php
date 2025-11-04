@@ -61,7 +61,10 @@
 			<?php require 'section-separator.php'; ?>
 		</section>
 		<section>
-				<?php require 'accordion.php'; ?>
+			<?php require 'accordion.php'; ?>
+		</section>
+		<section>
+			<?php require 'select-dropdown.php'; ?>
 		</section>
 	<?php endif ?>
 

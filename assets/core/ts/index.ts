@@ -7,9 +7,17 @@ import { fileUploaderMeta } from '@Core/components/file-uploader';
 import { iconMeta } from '@Core/components/icon';
 import { tabsMeta } from '@Core/components/tabs';
 import { accordionMeta } from '@Core/components/accordion';
+import { selectDropdownMeta } from './components/select-dropdown';
 
 const initializePlugin = () => {
-  TutorComponentRegistry.registerAll([buttonMeta, fileUploaderMeta, tabsMeta, iconMeta, accordionMeta]);
+  TutorComponentRegistry.registerAll([
+    buttonMeta,
+    fileUploaderMeta,
+    tabsMeta,
+    iconMeta,
+    accordionMeta,
+    selectDropdownMeta,
+  ]);
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 
