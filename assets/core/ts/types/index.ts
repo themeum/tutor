@@ -12,6 +12,11 @@ export interface AlpineComponentMeta<TProps = any> {
   global?: boolean;
 }
 
+export interface ServiceMeta<T = unknown> {
+  name: string;
+  instance: T;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ExtractComponent<T extends AlpineComponentMeta<any>> = T['component'];
 
