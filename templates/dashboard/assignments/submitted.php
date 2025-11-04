@@ -17,10 +17,17 @@ use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use TUTOR_ASSIGNMENTS\Assignments_List;
 
-$order_filter          = Input::get( 'order', 'desc' );
-$assignment_id         = Input::get( 'assignment' );
-$format                = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-$assignment_info       = tutor_utils()->get_assignment_option( $assignment_id );
+$order_filter    = Input::get( 'order', 'desc' );
+$assignment_id   = Input::get( 'assignment', 0, Input::TYPE_INT );
+$format          = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+$course_id       = tutor_utils()->get_course_id_by( 'assignment', $assignment_id );
+$assignment_info = tutor_utils()->get_assignment_option( $assignment_id );
+
+if ( ! $assignment_info || ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
+	tutor_utils()->tutor_empty_state();
+	return;
+}
+
 $submission_time       = $assignment_info['time_duration']['value'] > 1 ? $assignment_info['time_duration']['time'] : str_replace( 's', '', $assignment_info['time_duration']['time'] );
 $submission_period     = ! $assignment_info['time_duration']['value'] ? __( 'No Limit', 'tutor' ) : $assignment_info['time_duration']['value'] . ' ' . $submission_time;
 $assignments_submitted = Assignments_List::get_submitted_assignments( $assignment_id, $order_filter );

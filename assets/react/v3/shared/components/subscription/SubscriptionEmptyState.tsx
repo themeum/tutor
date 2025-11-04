@@ -17,16 +17,16 @@ export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubsc
         <img
           src={emptyStateImage}
           srcSet={`${emptyStateImage} ${emptyStateImage2x} 2x`}
-          alt={__('Empty state banner', 'tutor')}
+          alt={__('Empty state banner', __TUTOR_TEXT_DOMAIN__)}
         />
       </div>
 
       <div css={styles.content}>
-        <h5>{__('Boost Revenue with Subscriptions', 'tutor')}</h5>
+        <h5>{__('Boost Revenue with Subscriptions', __TUTOR_TEXT_DOMAIN__)}</h5>
         <p>
           {
             // prettier-ignore
-            __('Offer flexible subscription plans to maximize your earnings and provide students with affordable access to your courses.', 'tutor')
+            __('Offer flexible subscription plans to maximize your earnings and provide students with affordable access to your courses.', __TUTOR_TEXT_DOMAIN__)
           }
         </p>
       </div>
@@ -37,7 +37,7 @@ export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubsc
           icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
           onClick={onCreateSubscription}
         >
-          {__('Add Subscription', 'tutor')}
+          {__('Add Subscription', __TUTOR_TEXT_DOMAIN__)}
         </Button>
       </div>
     </div>

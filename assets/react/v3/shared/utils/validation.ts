@@ -4,20 +4,20 @@ import { isValid } from 'date-fns';
 import type { ProductDiscount } from './types';
 
 export const requiredRule = (): object => ({
-  required: { value: true, message: __('This field is required', 'tutor') },
+  required: { value: true, message: __('This field is required', __TUTOR_TEXT_DOMAIN__) },
 });
 
 export const maxValueRule = ({ maxValue, message }: { maxValue: number; message?: string }): object => ({
   maxLength: {
     value: maxValue,
-    message: message || __(`Max. value should be ${maxValue}`, 'tutor'),
+    message: message || __(`Max. value should be ${maxValue}`, __TUTOR_TEXT_DOMAIN__),
   },
 });
 
 export const discountRule = (): object => ({
   validate: (value?: ProductDiscount) => {
     if (value?.amount === undefined) {
-      return __('The field is required', 'tutor');
+      return __('The field is required', __TUTOR_TEXT_DOMAIN__);
     }
     return undefined;
   },
@@ -25,7 +25,7 @@ export const discountRule = (): object => ({
 
 export const invalidDateRule = (value?: string): string | undefined => {
   if (!isValid(new Date(value || ''))) {
-    return __('Invalid date entered!', 'tutor');
+    return __('Invalid date entered!', __TUTOR_TEXT_DOMAIN__);
   }
 
   return undefined;
@@ -34,7 +34,7 @@ export const invalidDateRule = (value?: string): string | undefined => {
 export const maxLimitRule = (maxLimit: number): object => ({
   validate: (value?: string) => {
     if (value && maxLimit < value.length) {
-      return __(`Maximum ${maxLimit} character supported`, 'tutor');
+      return __(`Maximum ${maxLimit} character supported`, __TUTOR_TEXT_DOMAIN__);
     }
     return undefined;
   },
@@ -45,7 +45,7 @@ export const invalidTimeRule = (value?: string): string | undefined => {
     return undefined;
   }
 
-  const message = __('Invalid time entered!', 'tutor');
+  const message = __('Invalid time entered!', __TUTOR_TEXT_DOMAIN__);
 
   const [hours, minutesAndMeridian] = value.split(':');
 

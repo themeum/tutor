@@ -16,9 +16,9 @@
 
 	&.tutor-toast-left {
 		position: fixed;
-		bottom: 40px;
-		left: calc(0% + 200px);
-		z-index: 999;
+		bottom: 25px;
+		left: 25px;
+		right: auto;
 	}
 
 	.tutor-is-success{

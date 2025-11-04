@@ -278,7 +278,7 @@ const FormSelectInput = <T,>({
                 {!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
                 <Show
                   when={selections.length > 0}
-                  fallback={<li css={styles.emptyState}>{__('No options available', 'tutor')}</li>}
+                  fallback={<li css={styles.emptyState}>{__('No options available', __TUTOR_TEXT_DOMAIN__)}</li>}
                 >
                   {selections.map((option, index) => (
                     <li
@@ -334,7 +334,7 @@ const FormSelectInput = <T,>({
                         setIsOpen(false);
                       }}
                     >
-                      {__('Clear', 'tutor')}
+                      {__('Clear', __TUTOR_TEXT_DOMAIN__)}
                     </Button>
                   </div>
                 )}

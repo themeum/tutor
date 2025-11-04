@@ -141,14 +141,14 @@ const FormTagsInput = ({
                   <li>
                     <button type="button" css={styles.addTag} onClick={handleAddTag}>
                       <SVGIcon name="plus" width={24} height={24} />
-                      <strong>{__('Add', 'tutor')}</strong> {searchText}
+                      <strong>{__('Add', __TUTOR_TEXT_DOMAIN__)}</strong> {searchText}
                     </button>
                   </li>
                 )}
 
                 <Show
                   when={tags.length > 0}
-                  fallback={<div css={styles.notTag}>{__('No tag created yet.', 'tutor')}</div>}
+                  fallback={<div css={styles.notTag}>{__('No tag created yet.', __TUTOR_TEXT_DOMAIN__)}</div>}
                 >
                   {tags.map((tag) => (
                     <li key={String(tag.id)} css={styles.optionItem}>

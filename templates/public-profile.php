@@ -138,7 +138,7 @@ do_action( 'tutor_profile/' . $user_type . '/before/wrap' );
 							</span>
 						<?php
 					} else {
-						$enrolled_course = tutor_utils()->get_enrolled_courses_by_user( $user_id );
+						$enrolled_course = CourseModel::get_enrolled_courses_by_user( $user_id );
 						$enrol_count     = is_object( $enrolled_course ) ? $enrolled_course->found_posts : 0;
 
 						$complete_count = tutor_utils()->get_completed_courses_ids_by_user( $user_id );

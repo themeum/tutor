@@ -21,6 +21,7 @@ import { parseNumberOnly } from '@TutorShared/utils/util';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -125,15 +126,15 @@ const FormInput = ({
         component: AITextModal,
         isMagicAi: true,
         props: {
-          title: __('AI Studio', 'tutor'),
+          title: __('AI Studio', __TUTOR_TEXT_DOMAIN__),
           icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
           characters: 120,
           field,
           fieldState,
           format: 'title',
           is_html: false,
-          fieldLabel: __('Create a Compelling Title', 'tutor'),
-          fieldPlaceholder: __('Describe the main focus of your course in a few words', 'tutor'),
+          fieldLabel: __('Create a Compelling Title', __TUTOR_TEXT_DOMAIN__),
+          fieldPlaceholder: __('Describe the main focus of your course in a few words', __TUTOR_TEXT_DOMAIN__),
         },
       });
       onClickAiButton?.();
@@ -203,29 +204,26 @@ const FormInput = ({
                 }}
               />
               <Show when={isPassword}>
-                <div css={styles.actionButton}>
-                  <Button
-                    isIconOnly
-                    variant="text"
-                    size="small"
-                    onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
-                    icon={<SVGIcon name="eye" width={24} height={24} />}
-                    aria-label={__('Show/Hide Password', 'tutor')}
-                    buttonCss={styles.eyeButton({ type: fieldType })}
-                  />
-                </div>
+                <Button
+                  isIconOnly
+                  variant="text"
+                  size="small"
+                  onClick={() => setFieldType((prev) => (prev === 'password' ? 'text' : 'password'))}
+                  icon={<SVGIcon name="eye" width={24} height={24} />}
+                  aria-label={__('Show/Hide Password', __TUTOR_TEXT_DOMAIN__)}
+                  buttonCss={styles.eyeButton({ type: fieldType })}
+                />
               </Show>
               <Show when={isClearable && !!field.value && fieldType !== 'password'}>
-                <div css={styles.actionButton}>
-                  <Button
-                    isIconOnly
-                    variant="text"
-                    size="small"
-                    onClick={() => field.onChange('')}
-                    icon={<SVGIcon name="cross" width={24} height={24} />}
-                    aria-label={__('Clear', 'tutor')}
-                  />
-                </div>
+                <Button
+                  isIconOnly
+                  variant="text"
+                  size="small"
+                  onClick={() => field.onChange('')}
+                  buttonCss={styleUtils.inputClearButton}
+                  icon={<SVGIcon name="cross" width={24} height={24} />}
+                  aria-label={__('Clear', __TUTOR_TEXT_DOMAIN__)}
+                />
               </Show>
             </div>
           </>
@@ -248,24 +246,13 @@ const styles = {
       }
     }
   `,
-  actionButton: css`
-    position: absolute;
-    top: 50%;
-    right: ${spacing[4]};
-    transform: translateY(-50%);
-    background: transparent;
-  `,
-
   eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
+    ${styleUtils.inputClearButton};
     ${type !== 'password' &&
     css`
-      color: ${colorTokens.icon.brand};
+      svg {
+        color: ${colorTokens.icon.brand};
+      }
     `}
-
-    &:focus,
-    &:active,
-    &:hover {
-      color: ${colorTokens.icon.default};
-    }
   `,
 };

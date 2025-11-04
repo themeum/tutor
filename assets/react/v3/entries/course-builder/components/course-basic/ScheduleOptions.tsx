@@ -25,7 +25,7 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { noop } from '@TutorShared/utils/util';
+import { formatBytes, noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -230,7 +230,10 @@ const ScheduleOptions = () => {
                     buttonText={__('Upload Thumbnail', 'tutor')}
                     infoText={
                       /* translators: %s is the maximum allowed upload file size (e.g., "2MB") */
-                      sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)
+                      sprintf(
+                        __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                        formatBytes(Number(tutorConfig?.max_upload_size || 0)),
+                      )
                     }
                   />
                 )}

@@ -6,11 +6,11 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import type { Certificate } from '@CourseBuilderServices/course';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type Certificate } from '@TutorShared/utils/types';
 
 export interface CertificatePreviewModalProps {
   certificates: Certificate[];
@@ -89,7 +89,7 @@ const CertificatePreviewModal = ({
             <img css={styles.certificate} src={currentCertificate.preview_src} alt={currentCertificate.name} />
 
             <div css={styles.actionsWrapper}>
-              <Tooltip placement="right" content={__('Close', 'tutor')}>
+              <Tooltip placement="right" content={__('Close', __TUTOR_TEXT_DOMAIN__)}>
                 <button
                   ref={closeButtonRef}
                   type="button"
@@ -103,7 +103,7 @@ const CertificatePreviewModal = ({
               </Tooltip>
               <Show when={currentCertificate.edit_url}>
                 {(editUrl) => (
-                  <Tooltip placement="right" content={__('Edit in Certificate Builder', 'tutor')}>
+                  <Tooltip placement="right" content={__('Edit in Certificate Builder', __TUTOR_TEXT_DOMAIN__)}>
                     <button
                       type="button"
                       css={[styles.actionButton, styles.editButton]}
@@ -139,7 +139,9 @@ const CertificatePreviewModal = ({
             }}
             disabled={selectedCertificate === currentCertificate.key}
           >
-            {selectedCertificate === currentCertificate.key ? __('Selected', 'tutor') : __('Select', 'tutor')}
+            {selectedCertificate === currentCertificate.key
+              ? __('Selected', __TUTOR_TEXT_DOMAIN__)
+              : __('Select', __TUTOR_TEXT_DOMAIN__)}
           </Button>
           <button
             type="button"

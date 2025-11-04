@@ -113,7 +113,7 @@ const FormMultiSelectInput = ({
               <ul css={[styles.options(removeOptionsMinWidth)]}>
                 <Show
                   when={filteredOptions.length > 0}
-                  fallback={<div css={styles.notTag}>{__('No option available.', 'tutor')}</div>}
+                  fallback={<div css={styles.notTag}>{__('No option available.', __TUTOR_TEXT_DOMAIN__)}</div>}
                 >
                   <For each={filteredOptions}>
                     {(option) => (

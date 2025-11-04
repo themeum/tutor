@@ -91,19 +91,19 @@ const languageOptions: Option<ChatLanguage>[] = [
 ];
 
 const toneOptions: Option<ChatTone>[] = [
-  { label: __('Formal', 'tutor'), value: 'formal' },
-  { label: __('Casual', 'tutor'), value: 'casual' },
-  { label: __('Professional', 'tutor'), value: 'professional' },
-  { label: __('Enthusiastic', 'tutor'), value: 'enthusiastic' },
-  { label: __('Informational', 'tutor'), value: 'informational' },
-  { label: __('Funny', 'tutor'), value: 'funny' },
+  { label: __('Formal', __TUTOR_TEXT_DOMAIN__), value: 'formal' },
+  { label: __('Casual', __TUTOR_TEXT_DOMAIN__), value: 'casual' },
+  { label: __('Professional', __TUTOR_TEXT_DOMAIN__), value: 'professional' },
+  { label: __('Enthusiastic', __TUTOR_TEXT_DOMAIN__), value: 'enthusiastic' },
+  { label: __('Informational', __TUTOR_TEXT_DOMAIN__), value: 'informational' },
+  { label: __('Funny', __TUTOR_TEXT_DOMAIN__), value: 'funny' },
 ];
 
 const formatOptions: Option<ChatFormat>[] = [
-  { label: __('Title', 'tutor'), value: 'title' },
-  { label: __('Essay', 'tutor'), value: 'essay' },
-  { label: __('Paragraph', 'tutor'), value: 'paragraph' },
-  { label: __('Outline', 'tutor'), value: 'outline' },
+  { label: __('Title', __TUTOR_TEXT_DOMAIN__), value: 'title' },
+  { label: __('Essay', __TUTOR_TEXT_DOMAIN__), value: 'essay' },
+  { label: __('Paragraph', __TUTOR_TEXT_DOMAIN__), value: 'paragraph' },
+  { label: __('Outline', __TUTOR_TEXT_DOMAIN__), value: 'outline' },
 ];
 
 export { formatOptions, languageOptions, toneOptions };
