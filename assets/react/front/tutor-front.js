@@ -1,5 +1,6 @@
 import '../admin-dashboard/segments/filter';
 import '../admin-dashboard/segments/lib';
+import { isMobileDevice } from '../helper/utils';
 import './_select_dd_search';
 import './course/index';
 import './dashboard';
@@ -169,6 +170,24 @@ jQuery(document).ready(function($) {
 				player.on('ready', function(event) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
+
+					/**
+					 * Fix: Mobile Vimeo autoplay sound issue
+					 * Always start muted on mobile to comply with autoplay policy.
+					 * 
+					 * @since 3.9.2
+					 */
+					if (player.provider === 'vimeo' && isMobileDevice()) {
+						try {
+							player.muted = true;
+							if (typeof player.mute === 'function') {
+								player.mute();
+							}
+						} catch (err) {
+							console.warn('Vimeo mute init failed:', err);
+						}
+					}
+
 					if (_tutorobject.tutor_pro_url && best_watch_time > 0) {
 						var previous_duration = Math.floor(best_watch_time);
 						var previousTimeSetter = setTimeout(function(){
@@ -197,6 +216,23 @@ jQuery(document).ready(function($) {
 				
 				player.on('play', (event) => {
 					that.played_once = true;
+
+					/**
+					 * Unmute automatically after first user interaction
+					 * Mobile browsers allow audio only after gesture.
+					 * 
+					 * @since 3.9.2
+					 */
+					if (player.provider === 'vimeo' && isMobileDevice()) {
+						try {
+							player.muted = false;
+							if (typeof player.unmute === 'function') {
+								player.unmute();
+							}
+						} catch (err) {
+							console.warn('Vimeo unmute on play failed:', err);
+						}
+					}
 
 					// Send to tutor backend about video playing time in this interval
 					const intervalSeconds = 10;
