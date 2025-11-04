@@ -51,6 +51,12 @@
 			<?php require 'button.php'; ?>
 			<?php require 'section-separator.php'; ?>
 		</section>
+		<section>
+			<?php require 'tabs.php'; ?>
+		</section>
+		<section>
+			<?php require 'card.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>

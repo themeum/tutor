@@ -1,0 +1,28 @@
+// Design Tokens - Tab Colors
+// CSS variables for theme-aware tab colors
+
+// =============================================================================
+// CSS VARIABLE REFERENCES (theme-aware)
+// =============================================================================
+
+$tutor-tab-sidebar-l2: var(--tutor-tab-sidebar-l2);
+$tutor-tab-sidebar-l2-hover: var(--tutor-tab-sidebar-l2-hover);
+$tutor-tab-sidebar-l2-active: var(--tutor-tab-sidebar-l2-active);
+$tutor-tab-l3: var(--tutor-tab-l3);
+$tutor-tab-l3-hover: var(--tutor-tab-l3-hover);
+$tutor-tab-l3-active: var(--tutor-tab-l3-active);
+$tutor-tab-l3-active-hover: var(--tutor-tab-l3-active-hover);
+
+// =============================================================================
+// TAB COLOR MAP (for utility generation)
+// =============================================================================
+
+$tutor-tabs: (
+  sidebar-l2: $tutor-tab-sidebar-l2,
+  sidebar-l2-hover: $tutor-tab-sidebar-l2-hover,
+  sidebar-l2-active: $tutor-tab-sidebar-l2-active,
+  l3: $tutor-tab-l3,
+  l3-hover: $tutor-tab-l3-hover,
+  l3-active: $tutor-tab-l3-active,
+  l3-active-hover: $tutor-tab-l3-active-hover
+);

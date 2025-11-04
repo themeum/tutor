@@ -1,5 +1,4 @@
-// Utility Mixins
-// Common utility patterns and helpers
+@use '../tokens' as *;
 
 @mixin tutor-text-truncate {
   overflow: hidden;
@@ -14,7 +13,7 @@
   overflow: hidden;
 }
 
-@mixin tutor-focus-ring($color: var(--tutor-border-brand)) {
+@mixin tutor-focus-ring($color: $tutor-border-brand) {
   outline: none;
   box-shadow: 0 0 0 3px rgba(62, 100, 222, 0.2);
 }
@@ -25,14 +24,14 @@
 
 @mixin tutor-hover-lift {
   transition: transform 0.2s ease;
-  
+
   &:hover {
     transform: translateY(-2px);
   }
 }
 
 @mixin tutor-loading-skeleton {
-  background: linear-gradient(90deg, var(--tutor-surface-l2) 25%, var(--tutor-surface-l1) 50%, var(--tutor-surface-l2) 75%);
+  background: linear-gradient(90deg, tutor-surface-l2 25%, tutor-surface-l1 50%, tutor-surface-l2 75%);
   background-size: 200% 100%;
   animation: tutor-skeleton-loading 1.5s infinite;
 }
@@ -41,6 +40,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -48,18 +48,18 @@
 
 @mixin tutor-aspect-ratio($ratio: 16/9) {
   aspect-ratio: $ratio;
-  
+
   // Fallback for older browsers
   @supports not (aspect-ratio: 1) {
     position: relative;
-    
+
     &::before {
       content: "";
       display: block;
       padding-top: percentage(1 / $ratio);
     }
-    
-    > * {
+
+    >* {
       position: absolute;
       top: 0;
       left: 0;
@@ -180,12 +180,15 @@
     transform: scale(0.3);
     opacity: 0;
   }
+
   50% {
     opacity: 1;
   }
+
   70% {
     transform: scale(1.05);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -193,9 +196,12 @@
 }
 
 @keyframes tutor-pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -205,19 +211,31 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
 @keyframes tutor-shake {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(0);
   }
-  10%, 30%, 50%, 70%, 90% {
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     transform: translateX(-10px);
   }
-  20%, 40%, 60%, 80% {
+
+  20%,
+  40%,
+  60%,
+  80% {
     transform: translateX(10px);
   }
 }
