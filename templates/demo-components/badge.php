@@ -11,10 +11,6 @@ use TUTOR\Icon;
 <div class="tutor-bg-white tutor-py-6 tutor-px-8">
 	<h2>Badges</h2>
 	<div class="tutor-rounded-lg tutor-shadow-sm" style="display: flex; gap:10px;">
-		<span class="tutor-badge">
-			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
-			Primary
-		</span>
 		<span class="tutor-badge tutor-badge-primary">
 			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 			Primary
