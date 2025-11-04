@@ -255,6 +255,8 @@ class Assets {
 		}
 
 		if ( 'tutor-lms-pro_page_playground' === $slug ) {
+			$subpage = Input::get( 'subpage' );
+
 			// Enqueue core component scripts.
 			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
 			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
@@ -264,6 +266,22 @@ class Assets {
 
 			wp_enqueue_style( 'tutor-core', $core_css_url, array(), filemtime( $core_css_path ), 'all' );
 			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
+
+			// Enqueue dashboard styles.
+			if ('dashboard' === $subpage) {
+				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
+				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
+				
+				wp_enqueue_style('tutor-dashboard', $dashboard_css_url, array(), filemtime( $dashboard_css_path ), 'all');
+			}
+
+			// Enqueue learning area styles.
+			if ('learning-area' === $subpage) {
+				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
+				$learning_area_css_url  = tutor()->url . 'assets/css/tutor-learning-area.min.css';
+
+				wp_enqueue_style('tutor-learning-area', $learning_area_css_url, array(), filemtime( $learning_area_css_path ), 'all');
+			}
 		}
 	}
 

@@ -49,6 +49,7 @@
 		<?php else : ?>
 		<section>
 			<?php require 'button.php'; ?>
+			<?php require 'file-uploader.php'; ?>
 		</section>
 		<section>
 			<?php require 'tabs.php'; ?>
@@ -58,6 +59,16 @@
 		</section>
 		<section>
 			<?php require 'statics.php'; ?>
+		</section>
+		<section>
+			<?php require 'badge.php'; ?>
+			<?php require 'card.php'; ?>
+		</section>
+		<section>
+			<?php require 'section-separator.php'; ?>
+		</section>
+		<section>
+				<?php require 'accordion.php'; ?>
 		</section>
 	<?php endif ?>
 

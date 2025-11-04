@@ -6,112 +6,32 @@
 
 .tutor-card {
   @include tutor-card-base;
-  @include tutor-card-elevation(1);
   @include tutor-card-padding(medium);
+  @include tutor-card-radius(lg);
 }
 
-// Card variants
-.tutor-card--flat {
-  @include tutor-card-elevation(0);
-}
-
-.tutor-card--elevated {
-  @include tutor-card-elevation(2);
-}
-
-.tutor-card--floating {
-  @include tutor-card-elevation(3);
-}
-
-// Card sizes
-.tutor-card--small {
+// Padding modifiers
+.tutor-card--padding-small {
   @include tutor-card-padding(small);
 }
 
-.tutor-card--large {
+.tutor-card--padding-medium {
+  @include tutor-card-padding(medium);
+}
+
+.tutor-card--padding-large {
   @include tutor-card-padding(large);
 }
 
-// Interactive card
-.tutor-card--interactive {
-  @include tutor-card-interactive;
+// Border radius modifiers
+.tutor-card--rounded-md {
+  @include tutor-card-radius(md);
 }
 
-// Card variants using mixins
-.tutor-card--outlined {
-  @include tutor-card-variant(outlined);
+.tutor-card--rounded-lg {
+  @include tutor-card-radius(lg);
 }
 
-.tutor-card--filled {
-  @include tutor-card-variant(filled);
-}
-
-.tutor-card--brand {
-  @include tutor-card-variant(brand);
-}
-
-.tutor-card--success {
-  @include tutor-card-variant(success);
-}
-
-.tutor-card--warning {
-  @include tutor-card-variant(warning);
-}
-
-.tutor-card--error {
-  @include tutor-card-variant(error);
-}
-
-// Card components
-.tutor-card__header {
-  @include tutor-card-header;
-}
-
-.tutor-card__body {
-  @include tutor-card-body;
-  color: var(--tutor-text-primary);
-}
-
-.tutor-card__footer {
-  @include tutor-card-footer;
-}
-
-.tutor-card__title {
-  margin: 0;
-  font-size: $tutor-font-size-h4;
-  line-height: $tutor-line-height-h4;
-  font-weight: $tutor-font-weight-semibold;
-  color: var(--tutor-text-primary);
-}
-
-.tutor-card__subtitle {
-  margin: $tutor-spacing-2 0 0;
-  font-size: $tutor-font-size-p2;
-  line-height: $tutor-line-height-p2;
-  color: var(--tutor-text-secondary);
-}
-
-.tutor-card__image {
-  @include tutor-card-image;
-  
-  &.tutor-card__image--top {
-    @extend .tutor-card-image--top;
-  }
-  
-  &.tutor-card__image--bottom {
-    @extend .tutor-card-image--bottom;
-  }
-}
-
-// Card grid layout
-.tutor-card-grid {
-  @include tutor-card-grid(3, $tutor-spacing-6);
-  
-  &.tutor-card-grid--2-cols {
-    @include tutor-card-grid(2, $tutor-spacing-6);
-  }
-  
-  &.tutor-card-grid--4-cols {
-    @include tutor-card-grid(4, $tutor-spacing-6);
-  }
+.tutor-card--rounded-2xl {
+  @include tutor-card-radius(2xl);
 }
