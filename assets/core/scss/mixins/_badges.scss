@@ -18,8 +18,6 @@
 	font-weight: $tutor-font-weight-medium;
 	line-height: $tutor-line-height-tiny;
 
-	// @include tutor-typography('tiny', 'medium', '', 'body' );
-
 	&.tutor-badge-circle {
 		border-radius: $tutor-radius-full;
 	}
