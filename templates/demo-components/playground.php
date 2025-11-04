@@ -47,20 +47,15 @@
 	<?php if ( $subpage ) : ?>
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
-		<section>
-			<p class="tutor-h4 tutor-mb-3">Buttons</p>
-			<div class="tutor-mb-8">
+			<section>
 				<?php require 'button.php'; ?>
-			</div>
-
-			<p class="tutor-h4 tutor-mb-3">Accordion</p>
-			<div class="tutor-mb-8">
+			</section>
+			<section>
+				<?php require 'tabs.php'; ?>
+			</section>
+			<section>
 				<?php require 'accordion.php'; ?>
-			</div>
-		</section>
-		<section>
-			<?php require 'tabs.php'; ?>
-		</section>
+			</section>
 	<?php endif ?>
 
 </body>
