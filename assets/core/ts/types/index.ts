@@ -1,5 +1,6 @@
 import { type buttonMeta } from '@Core/components/button';
 import { type iconMeta } from '@Core/components/icon';
+import { type popoverMeta } from '@Core/components/popover';
 import { type tabsMeta } from '@Core/components/tabs';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,6 +18,7 @@ export interface TutorCore {
   button: ExtractComponent<typeof buttonMeta>;
   tabs: ExtractComponent<typeof tabsMeta>;
   icon: ExtractComponent<typeof iconMeta>;
+  popover: ExtractComponent<typeof popoverMeta>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }

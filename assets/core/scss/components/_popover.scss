@@ -1,245 +1,59 @@
 // Popover Component
 // RTL-aware popover positioning and styling with collision detection
 
+@use '../tokens' as *;
 @use '../mixins' as *;
-@use '../mixins/rtl' as rtl;
 
 .tutor-popover {
-  position: absolute;
-  z-index: 1060;
+  position: fixed;
+  z-index: $tutor-z-dropdown;
   max-width: 276px;
-  background-color: var(--tutor-surface-l1);
-  border: 1px solid var(--tutor-border-idle);
-  border-radius: var(--tutor-radius-lg, 8px);
-  box-shadow: var(--tutor-shadow-lg);
-  
-  // Arrow base styles
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    border: solid transparent;
-  }
-  
-  &::before {
-    border-width: 9px;
-  }
-  
-  &::after {
-    border-width: 8px;
-  }
+  background-color: $tutor-surface-l1;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-lg;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
-  // Top positioning
-  &--top {
-    margin-bottom: 8px;
-    
-    &::before {
-      top: 100%;
-      border-top-color: var(--tutor-border-idle);
-      border-bottom: none;
-      @include rtl.arrow-start(16px);
-    }
-    
-    &::after {
-      top: 100%;
-      margin-top: -1px;
-      border-top-color: var(--tutor-surface-l1);
-      border-bottom: none;
-      @include rtl.arrow-start(17px);
-    }
-    
-    &.tutor-popover--center {
-      &::before {
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-      }
-      
-      &::after {
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-      }
-    }
-    
-    &.tutor-popover--end {
-      &::before {
-        @include rtl.arrow-end(16px);
-      }
-      
-      &::after {
-        @include rtl.arrow-end(17px);
-      }
-    }
-  }
+  &-header {
+    padding: $tutor-spacing-4 $tutor-spacing-4 0;
 
-  // Bottom positioning
-  &--bottom {
-    margin-top: 8px;
-    
-    &::before {
-      bottom: 100%;
-      border-bottom-color: var(--tutor-border-idle);
-      border-top: none;
-      @include rtl.arrow-start(16px);
-    }
-    
-    &::after {
-      bottom: 100%;
-      margin-bottom: -1px;
-      border-bottom-color: var(--tutor-surface-l1);
-      border-top: none;
-      @include rtl.arrow-start(17px);
-    }
-    
-    &.tutor-popover--center {
-      &::before {
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-      }
-      
-      &::after {
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-      }
-    }
-    
-    &.tutor-popover--end {
-      &::before {
-        @include rtl.arrow-end(16px);
-      }
-      
-      &::after {
-        @include rtl.arrow-end(17px);
-      }
-    }
-  }
-
-  // Start positioning (left in LTR, right in RTL)
-  &--start {
-    [dir="ltr"] & {
-      margin-right: 8px;
-    }
-    [dir="rtl"] & {
-      margin-left: 8px;
-    }
-    
-    &::before {
-      top: 50%;
-      transform: translateY(-50%);
-      
-      [dir="ltr"] & {
-        left: 100%;
-        border-left-color: var(--tutor-border-idle);
-        border-right: none;
-      }
-      [dir="rtl"] & {
-        right: 100%;
-        border-right-color: var(--tutor-border-idle);
-        border-left: none;
-      }
-    }
-    
-    &::after {
-      top: 50%;
-      transform: translateY(-50%);
-      
-      [dir="ltr"] & {
-        left: 100%;
-        margin-left: -1px;
-        border-left-color: var(--tutor-surface-l1);
-        border-right: none;
-      }
-      [dir="rtl"] & {
-        right: 100%;
-        margin-right: -1px;
-        border-right-color: var(--tutor-surface-l1);
-        border-left: none;
-      }
-    }
-  }
-
-  // End positioning (right in LTR, left in RTL)
-  &--end {
-    [dir="ltr"] & {
-      margin-left: 8px;
-    }
-    [dir="rtl"] & {
-      margin-right: 8px;
-    }
-    
-    &::before {
-      top: 50%;
-      transform: translateY(-50%);
-      
-      [dir="ltr"] & {
-        right: 100%;
-        border-right-color: var(--tutor-border-idle);
-        border-left: none;
-      }
-      [dir="rtl"] & {
-        left: 100%;
-        border-left-color: var(--tutor-border-idle);
-        border-right: none;
-      }
-    }
-    
-    &::after {
-      top: 50%;
-      transform: translateY(-50%);
-      
-      [dir="ltr"] & {
-        right: 100%;
-        margin-right: -1px;
-        border-right-color: var(--tutor-surface-l1);
-        border-left: none;
-      }
-      [dir="rtl"] & {
-        left: 100%;
-        margin-left: -1px;
-        border-left-color: var(--tutor-surface-l1);
-        border-right: none;
-      }
-    }
-  }
-
-  &__header {
-    padding: var(--tutor-spacing-4, 8px) var(--tutor-spacing-4, 8px) 0;
-    
-    .tutor-popover__title {
+    .tutor-popover-title {
       margin: 0;
-      font-size: var(--tutor-font-size-p1, 16px);
-      font-weight: var(--tutor-font-weight-semibold, 600);
-      color: var(--tutor-text-primary);
-      line-height: var(--tutor-line-height-p1, 22px);
+      font-size: $tutor-font-size-p1;
+      font-weight: $tutor-font-weight-semi-strong;
+      color: $tutor-text-primary;
+      line-height: $tutor-line-height-p1;
     }
-    
-    .tutor-popover__close {
+
+    .tutor-popover-close {
       position: absolute;
-      top: var(--tutor-spacing-2, 4px);
+      top: $tutor-spacing-2;
+      right: $tutor-spacing-2;
       width: 24px;
       height: 24px;
       padding: 0;
       border: none;
       background: none;
-      border-radius: var(--tutor-radius-sm, 4px);
-      color: var(--tutor-icon-idle);
+      border-radius: $tutor-radius-5xl;
+      color: $tutor-icon-idle;
       cursor: pointer;
       transition: all 0.2s ease;
-      
-      @include rtl.right(var(--tutor-spacing-2, 4px));
-      
+
+      @include tutor-flex-center();
+
+      [dir='rtl'] & {
+        right: auto;
+        left: $tutor-spacing-2;
+      }
+
       &:hover,
       &:focus {
-        background-color: var(--tutor-surface-l2);
-        color: var(--tutor-icon-hover);
+        background-color: $tutor-surface-l2;
+        color: $tutor-icon-hover;
         outline: none;
       }
-      
+
       .tutor-icon {
         width: 14px;
         height: 14px;
@@ -247,79 +61,61 @@
     }
   }
 
-  &__body {
-    padding: var(--tutor-spacing-4, 8px);
-    color: var(--tutor-text-primary);
-    font-size: var(--tutor-font-size-p2, 14px);
-    line-height: var(--tutor-line-height-p2, 18px);
-    
-    @include rtl.text-align-start();
-    
-    p:first-child {
-      margin-top: 0;
-    }
-    
-    p:last-child {
-      margin-bottom: 0;
-    }
+  &-body {
+    padding: $tutor-spacing-4;
+    color: $tutor-text-primary;
+    font-size: $tutor-font-size-p2;
+    line-height: $tutor-line-height-p2;
   }
 
-  &__footer {
-    padding: 0 var(--tutor-spacing-4, 8px) var(--tutor-spacing-4, 8px);
-    border-top: 1px solid var(--tutor-border-idle);
-    margin-top: var(--tutor-spacing-4, 8px);
-    
+  &-footer {
+    padding: $tutor-spacing-4;
+    border-top: 1px solid $tutor-border-idle;
+    margin-top: $tutor-spacing-4;
+
     @include tutor-flex(row, center, flex-end);
-    gap: var(--tutor-spacing-2, 4px);
-    
-    [dir="rtl"] & {
+    gap: $tutor-spacing-2;
+
+    [dir='rtl'] & {
       justify-content: flex-start;
       flex-direction: row-reverse;
     }
   }
 
-  // Size variants
-  &--sm {
-    max-width: 200px;
-    font-size: var(--tutor-font-size-p3, 12px);
+  &-menu {
+    min-width: 170px;
+    padding: $tutor-spacing-3 0;
+
+    &-item {
+      width: 100%;
+      @include tutor-button-reset();
+      @include tutor-flex();
+      gap: $tutor-spacing-4;
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+
+      &:hover {
+        background-color: $tutor-surface-l1-hover;
+      }
+    }
   }
 
-  &--lg {
+  // Size variants
+  &-sm {
+    max-width: 200px;
+    font-size: $tutor-font-size-p3;
+  }
+
+  &-lg {
     max-width: 400px;
   }
 
-  &--xl {
+  &-xl {
     max-width: 500px;
   }
-}
 
-// Animation classes for Alpine.js
-.tutor-popover {
+  // Hidden by default
   &[x-cloak] {
     display: none !important;
-  }
-  
-  // Fade and scale animation
-  &.tutor-popover-enter {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  
-  &.tutor-popover-enter-active {
-    opacity: 1;
-    transform: scale(1);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  
-  &.tutor-popover-leave {
-    opacity: 1;
-    transform: scale(1);
-  }
-  
-  &.tutor-popover-leave-active {
-    opacity: 0;
-    transform: scale(0.95);
-    transition: opacity 0.15s ease, transform 0.15s ease;
   }
 }
 
@@ -327,12 +123,12 @@
 @media (max-width: 576px) {
   .tutor-popover {
     max-width: calc(100vw - 32px);
-    
-    &__header,
-    &__body,
-    &__footer {
-      padding-left: var(--tutor-spacing-3, 6px);
-      padding-right: var(--tutor-spacing-3, 6px);
+
+    &-header,
+    &-body,
+    &-footer {
+      padding-left: $tutor-spacing-3;
+      padding-right: $tutor-spacing-3;
     }
   }
 }
