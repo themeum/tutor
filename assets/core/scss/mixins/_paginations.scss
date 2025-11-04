@@ -3,6 +3,7 @@
 
 @use "../tokens" as *;
 @use "typography" as *;
+@use "layout" as *;
 
 @mixin tutor-pagination-base {
 	display: flex;
@@ -20,12 +21,16 @@
 	flex-wrap: wrap;
 	gap: $tutor-spacing-1;
 	list-style: none;
-	margin: 0;
-	padding: 0;
+	margin: $tutor-spacing-none;;
+	padding: $tutor-spacing-none;;
+	li {
+		margin: $tutor-spacing-none;
+		padding: $tutor-spacing-none;
+	}
 }
 
 @mixin tutor-pagination__info {
-	@include tutor-typography('small', 'regular', 'secondary');
+	@include tutor-typography('small', 'regular');
 	margin: 0;
 	.tutor-pagination__current, 
 	.tutor-pagination__total {
@@ -35,9 +40,7 @@
 }
 
 @mixin tutor-pagination__item {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	@include tutor-flex-center;
 	padding: $tutor-spacing-3 $tutor-spacing-5;
 	border-radius: $tutor-radius-md;
 	text-decoration: none;
@@ -49,10 +52,11 @@
 
 	// Default state
 	background-color: transparent;
-	color: $tutor-text-primary;
 
-	&.active {
+	&.active, 
+	&:active {
 		background-color: $tutor-button-primary-soft-focused;
+		color: $tutor-text-brand;
 	}
 
 	&:hover {
@@ -82,12 +86,9 @@
 }
 
 @mixin tutor-pagination-ellipsis {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	@include tutor-flex-center;
 	min-width: 32px;
 	min-height: 32px;
-	color: $tutor-text-secondary;
-	font-size: $tutor-font-size-small;
+	@include tutor-typography('tiny', 'medium');
 	cursor: default;
 }

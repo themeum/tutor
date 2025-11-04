@@ -13,14 +13,14 @@ use TUTOR\Icon;
 	<h2>Pagination</h2>
 	<div class="tutor-rounded-lg tutor-shadow-sm">
 		<nav class="tutor-pagination" role="navigation" aria-label="Pagination Navigation">
-			<p class="tutor-pagination__info" aria-live="polite">
+			<span class="tutor-pagination__info" aria-live="polite">
 				Page <span class="tutor-pagination__current">3</span> of <span class="tutor-pagination__total">12</span>
-			</p>
+			</span>
 
 			<ul class="tutor-pagination__list">
 				<li>
 					<a class="tutor-pagination__item tutor-pagination__item--prev" aria-label="Previous page" aria-disabled="true">
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_LEFT ); ?>
+						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_LEFT, 14, 14 ); ?>
 					</a>
 				</li>
 
@@ -39,7 +39,7 @@ use TUTOR\Icon;
 
 				<li>
 					<a class="tutor-pagination__item tutor-pagination__item--next" aria-label="Next page">
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT ); ?>
+						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT, 14, 14 ); ?>
 					</a>
 				</li>
 			</ul>
