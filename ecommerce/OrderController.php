@@ -1274,6 +1274,7 @@ class OrderController {
 		if ( $this->model->update_order( $order_id, $update_data, $order_items ) ) {
 			$update_data['id']    = $order_id;
 			$update_data['items'] = $order_items;
+			do_action( 'tutor_order_updated', $update_data );
 			return $return_data ? $update_data : true;
 		}
 

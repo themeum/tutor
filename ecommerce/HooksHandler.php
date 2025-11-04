@@ -92,6 +92,7 @@ class HooksHandler {
 		 * @since 3.5.0
 		 */
 		add_action( 'tutor_order_placed', array( $this, 'store_billing_address_for_order' ) );
+		add_action( 'tutor_order_updated', array( $this, 'store_billing_address_for_order' ) );
 	}
 
 	/**
