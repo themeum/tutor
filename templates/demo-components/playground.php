@@ -55,6 +55,12 @@
 			<?php require 'tabs.php'; ?>
 		</section>
 		<section>
+			<?php require 'progress.php'; ?>
+		</section>
+		<section>
+			<?php require 'statics.php'; ?>
+		</section>
+		<section>
 			<?php require 'badge.php'; ?>
 			<?php require 'card.php'; ?>
 		</section>

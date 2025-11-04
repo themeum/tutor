@@ -8,6 +8,7 @@ export interface IconProps {
   name: string; // Use PHP Icon::<name> to get the name.
   width?: number;
   height?: number;
+  from: 'php' | 'ts';
 }
 
 const createSvg = ({
@@ -23,12 +24,13 @@ const createSvg = ({
 }) =>
   `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox || '0 0 ' + width + ' ' + height}">${content}</svg>`;
 
-async function fetchSVG(name: string, width: number, height: number): Promise<string> {
+async function fetchSVG(name: string, width: number, height: number, from: 'php' | 'ts' = 'ts') {
   if (iconCache.has(name)) {
     return iconCache.get(name)!;
   }
 
-  const url = `${baseUrl}assets/icons/${name}.svg`;
+  const fileName = from === 'php' ? name : name.trim().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+  const url = `${baseUrl}assets/icons/${fileName}.svg`;
   const defaultViewBox = `0 0 ${width} ${height}`;
 
   try {
@@ -43,11 +45,11 @@ async function fetchSVG(name: string, width: number, height: number): Promise<st
 
     const svgMarkup = createSvg({ width, height, viewBox, content });
 
-    iconCache.set(name, svgMarkup);
+    iconCache.set(fileName, svgMarkup);
     return svgMarkup;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error(`Failed to load icon: ${name}`, error);
+    console.error(`Failed to load icon: ${fileName}`, error);
     return createSvg({ width, height });
   }
 }
@@ -56,6 +58,7 @@ export const icon = (props: IconProps) => ({
   name: props.name,
   width: props.width || 16,
   height: props.height || 16,
+  from: props.from || 'php',
 
   async init() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
