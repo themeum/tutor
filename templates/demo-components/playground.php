@@ -47,15 +47,22 @@
 	<?php if ( $subpage ) : ?>
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
-			<section>
-				<?php require 'button.php'; ?>
-			</section>
-			<section>
-				<?php require 'tabs.php'; ?>
-			</section>
-			<section>
+		<section>
+			<?php require 'button.php'; ?>
+			<?php require 'file-uploader.php'; ?>
+		</section>
+		<section>
+			<?php require 'tabs.php'; ?>
+		</section>
+		<section>
+			<?php require 'card.php'; ?>
+		</section>
+		<section>
+			<?php require 'section-separator.php'; ?>
+		</section>
+		<section>
 				<?php require 'accordion.php'; ?>
-			</section>
+		</section>
 	<?php endif ?>
 
 </body>
