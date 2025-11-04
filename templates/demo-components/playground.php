@@ -60,6 +60,9 @@
 		<section>
 			<?php require 'section-separator.php'; ?>
 		</section>
+		<section>
+				<?php require 'accordion.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
