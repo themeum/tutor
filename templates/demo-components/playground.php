@@ -49,6 +49,7 @@
 		<?php else : ?>
 		<section>
 			<?php require 'button.php'; ?>
+			<?php require 'popover.php'; ?>
 			<?php require 'file-uploader.php'; ?>
 		</section>
 		<section>
@@ -75,6 +76,9 @@
 		</section>
 		<section>
 			<?php require 'accordion.php'; ?>
+		</section>
+		<section>
+			<?php require 'modal.php'; ?>
 		</section>
 	<?php endif ?>
 

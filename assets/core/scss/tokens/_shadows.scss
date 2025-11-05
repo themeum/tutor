@@ -1,0 +1,20 @@
+$tutor-shadow-modal: 0px 4px 104.9px 0px #00000040;
+$tutor-shadow-xs: 0px 1px 2px 0px #1018280D;
+$tutor-shadow-sm: 0px 1px 2px 0px #1018280F, 0px 1px 3px 0px #1018281A;
+$tutor-shadow-md: 0px 2px 4px -2px #1018280F, 0px 4px 8px -2px #1018281A;
+$tutor-shadow-lg: 0px 4px 6px -2px #10182808, 0px 12px 16px -4px #10182814;
+$tutor-shadow-xl: 0px 8px 8px -4px #10182808, 0px 20px 24px -4px #10182814;
+$tutor-shadow-2xl: 0px 24px 48px -12px #1018282E;
+$tutor-shadow-3xl: 0px 32px 64px -12px #10182824;
+
+$tutor-shadows: (
+  'none': none,
+  'modal': $tutor-shadow-modal,
+  'xs': $tutor-shadow-xs,
+  'sm': $tutor-shadow-sm,
+  'md': $tutor-shadow-md,
+  'lg': $tutor-shadow-lg,
+  'xl': $tutor-shadow-xl,
+  '2xl': $tutor-shadow-2xl,
+  '3xl': $tutor-shadow-3xl,
+  )
