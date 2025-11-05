@@ -49,6 +49,7 @@
 		<?php else : ?>
 		<section>
 			<?php require 'button.php'; ?>
+			<?php require 'popover.php'; ?>
 			<?php require 'file-uploader.php'; ?>
 		</section>
 		<section>
