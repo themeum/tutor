@@ -15,7 +15,6 @@ $placeholder = isset( $placeholder ) ? $placeholder : __( 'Select an option...',
 $value       = isset( $value ) ? $value : '';
 $disabled    = isset( $disabled ) ? $disabled : false;
 
-// Prepare options for Alpine.js.
 $options_json = array();
 foreach ( $options as $option ) {
 	$option_data = array(
