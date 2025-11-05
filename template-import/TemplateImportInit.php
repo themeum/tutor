@@ -1,11 +1,11 @@
 <?php
 /**
- * Init class
+ * Init TemplateImportInit class
  *
  * @package Tutor\TemplateImporter
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 3.6.0
+ * @since 3.9.2
  */
 
 namespace Tutor\TemplateImport;
@@ -18,7 +18,7 @@ final class TemplateImportInit {
 	/**
 	 * Register hooks
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 */
 	public function __construct() {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
@@ -27,7 +27,7 @@ final class TemplateImportInit {
 	/**
 	 * Init packages
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 *
 	 * @return void
 	 */

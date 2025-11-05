@@ -14,7 +14,7 @@
  * - Keep DOM selectors and event handlers idempotent because the admin UI may be re-rendered.
  *
  * @file template-import-script.js
- * @since v3.9.0
+ * @since v3.9.2
  */
 
 document.addEventListener('DOMContentLoaded', function () {
