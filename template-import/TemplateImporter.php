@@ -5,7 +5,7 @@
  * @package Tutor\TemplateImporter
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 3.6.0
+ * @since 3.9.2
  */
 
 namespace Tutor\TemplateImport;
@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Template import handler class
  *
- * @since 3.6.0
+ * @since 3.9.2
  */
 class TemplateImporter {
 	use JsonResponse;
@@ -56,7 +56,7 @@ class TemplateImporter {
 	/**
 	 * AJAX callback to install a plugin.
 	 *
-	 *  @since 3.6.0
+	 *  @since 3.9.2
 	 *
 	 * @return array response array
 	 */
@@ -82,7 +82,7 @@ class TemplateImporter {
 	/**
 	 * Template Dependency
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 *
 	 * @return array
 	 */
@@ -115,7 +115,7 @@ class TemplateImporter {
 	 *
 	 * @param array $plugin_info installed plugin details.
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 *
 	 * @return array
 	 */
@@ -171,7 +171,7 @@ class TemplateImporter {
 	/**
 	 * Add comment or reply
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 *
 	 * @return Array
 	 */
@@ -200,7 +200,7 @@ class TemplateImporter {
 	/**
 	 * Process_droip_template description
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 *
 	 * @return  array  description
 	 */
@@ -215,7 +215,7 @@ class TemplateImporter {
 	 *
 	 * @param   string $plugin_path plugin-slug.
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 *
 	 * @return  bool
 	 */
@@ -232,7 +232,7 @@ class TemplateImporter {
 	/**
 	 * Get Template list.
 	 *
-	 * @since 3.6.0
+	 * @since 3.9.2
 	 */
 	public function tutor_template_import_list() {
 		ob_start();
