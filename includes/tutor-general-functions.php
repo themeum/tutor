@@ -1840,3 +1840,39 @@ if ( ! function_exists( 'get_tutor_post_types' ) ) {
 		return $valid_post_types;
 	}
 }
+
+if ( ! function_exists( 'tutor_decode_unicode_sequences' ) ) {
+	/**
+	 * Decode Unicode escape sequences in a string to their corresponding UTF-8 characters.
+	 *
+	 * Example:
+	 *   decode_unicode_escapes('Hello\\u0020World')  => 'Hello World'
+	 *   decode_unicode_escapes('\\u{1F600}')       => '😀'
+	 *
+	 * Notes:
+	 * - Input and output are expected to be UTF-8 encoded.
+	 * - Behavior for malformed sequences is to preserve the original bytes rather than throw.
+	 *
+	 * @param string $str The input string possibly containing Unicode escape sequences.
+	 * @return string The string with Unicode escape sequences decoded into UTF-8 characters.
+	 */
+	function tutor_decode_unicode_sequences( $str ) {
+		if ( empty( $str ) ) {
+			return '';
+		}
+
+		// Step 1: Decode \uXXXX or uXXXX sequences.
+		$str = preg_replace_callback(
+			'/\\\\?u([0-9a-fA-F]{4})/',
+			function ( $m ) {
+				return mb_convert_encoding( pack( 'H*', $m[1] ), 'UTF-8', 'UCS-2BE' );
+			},
+			$str
+		);
+
+		// Step 2: Decode HTML entities like &lt;, &nbsp;.
+		$str = html_entity_decode( $str, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+
+		return $str;
+	}
+}
