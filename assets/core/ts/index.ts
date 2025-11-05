@@ -8,15 +8,16 @@ import { buttonMeta } from '@Core/components/button';
 import { fileUploaderMeta } from '@Core/components/file-uploader';
 import { iconMeta } from '@Core/components/icon';
 import { modalMeta } from '@Core/components/modal';
-import { tabsMeta } from '@Core/components/tabs';
+import { popoverMeta } from '@Core/components/popover';
 import { staticsMeta } from '@Core/components/statics';
+import { tabsMeta } from '@Core/components/tabs';
 import { modalServiceMeta } from '@Core/services/Modal';
 
 Alpine.plugin(focus);
 
 const initializePlugin = () => {
   TutorComponentRegistry.registerAll({
-    components: [buttonMeta, fileUploaderMeta, tabsMeta, iconMeta, modalMeta, staticsMeta, accordionMeta],
+    components: [buttonMeta, fileUploaderMeta, tabsMeta, iconMeta, modalMeta, popoverMeta, staticsMeta, accordionMeta],
     services: [modalServiceMeta],
   });
 
