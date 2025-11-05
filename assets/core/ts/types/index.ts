@@ -4,6 +4,7 @@ import { type fileUploaderMeta } from '@Core/components/file-uploader';
 import { type iconMeta } from '@Core/components/icon';
 import { type tabsMeta } from '@Core/components/tabs';
 import { type selectDropdownMeta } from '@Core/components/select-dropdown';
+import { type stepperDropdownMeta } from '@Core/components/stepper-dropdown';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {
@@ -23,6 +24,7 @@ export interface TutorCore {
   icon: ExtractComponent<typeof iconMeta>;
   accordion: ExtractComponent<typeof accordionMeta>;
   selectDropdown: ExtractComponent<typeof selectDropdownMeta>;
+  stepperDropdown: ExtractComponent<typeof stepperDropdownMeta>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }

@@ -8,6 +8,7 @@ import { iconMeta } from '@Core/components/icon';
 import { tabsMeta } from '@Core/components/tabs';
 import { accordionMeta } from '@Core/components/accordion';
 import { selectDropdownMeta } from './components/select-dropdown';
+import { stepperDropdownMeta } from './components/stepper-dropdown';
 
 const initializePlugin = () => {
   TutorComponentRegistry.registerAll([
@@ -17,6 +18,7 @@ const initializePlugin = () => {
     iconMeta,
     accordionMeta,
     selectDropdownMeta,
+    stepperDropdownMeta,
   ]);
 
   TutorComponentRegistry.initWithAlpine(Alpine);

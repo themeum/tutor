@@ -66,6 +66,9 @@
 		<section>
 			<?php require 'select-dropdown.php'; ?>
 		</section>
+		<section>
+			<?php require 'stepper-dropdown.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
