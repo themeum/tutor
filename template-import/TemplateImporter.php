@@ -10,6 +10,7 @@
 
 namespace Tutor\TemplateImport;
 
+use AllowDynamicProperties;
 use Droip\ExportImport\TemplateImport;
 use Tutor\Helpers\TemplateImportHelper;
 use TUTOR\Input;
@@ -22,15 +23,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 3.9.2
  */
+#[AllowDynamicProperties]
 class TemplateImporter {
-	use JsonResponse;
 
-	/**
-	 * Instance of template import helper.
-	 *
-	 * @var TemplateImportHelper
-	 */
-	public $template_helper_cls;
+	use JsonResponse;
 
 	/**
 	 * Template dependency endpoint
@@ -38,7 +34,6 @@ class TemplateImporter {
 	 * @var string
 	 */
 	public $template_import_dependency_api;
-
 
 	/**
 	 * Register default hooks and actions for WordPress
