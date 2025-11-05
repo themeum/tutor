@@ -1,8 +1,21 @@
 import { type AlpineComponentMeta } from '@Core/types';
 import { isRTL } from '@TutorShared/config/constants';
 
+const VIEWPORT_PADDING = 8;
+
+const PLACEMENTS = {
+  TOP: 'top',
+  TOP_START: 'top-start',
+  TOP_END: 'top-end',
+  BOTTOM: 'bottom',
+  BOTTOM_START: 'bottom-start',
+  BOTTOM_END: 'bottom-end',
+  LEFT: 'left',
+  RIGHT: 'right',
+} as const;
+
 export interface PopoverProps {
-  placement?: 'top' | 'bottom' | 'left' | 'right' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end';
+  placement?: (typeof PLACEMENTS)[keyof typeof PLACEMENTS];
   offset?: number;
   onShow?: () => void;
   onHide?: () => void;
@@ -10,7 +23,7 @@ export interface PopoverProps {
 
 export const popover = (props: PopoverProps = {}) => ({
   open: false,
-  placement: props.placement || 'bottom-start',
+  placement: props.placement || PLACEMENTS.BOTTOM_START,
   offset: props.offset || 4,
   actualPlacement: '',
   $el: undefined as HTMLElement | undefined,
@@ -62,12 +75,12 @@ export const popover = (props: PopoverProps = {}) => ({
     if (!isRTL) return this.placement;
 
     const rtlAdaptations: Record<string, string> = {
-      left: 'right',
-      right: 'left',
-      'top-start': 'top-end',
-      'top-end': 'top-start',
-      'bottom-start': 'bottom-end',
-      'bottom-end': 'bottom-start',
+      [PLACEMENTS.LEFT]: PLACEMENTS.RIGHT,
+      [PLACEMENTS.RIGHT]: PLACEMENTS.LEFT,
+      [PLACEMENTS.TOP_START]: PLACEMENTS.TOP_END,
+      [PLACEMENTS.TOP_END]: PLACEMENTS.TOP_START,
+      [PLACEMENTS.BOTTOM_START]: PLACEMENTS.BOTTOM_END,
+      [PLACEMENTS.BOTTOM_END]: PLACEMENTS.BOTTOM_START,
     };
 
     return rtlAdaptations[this.placement] || this.placement;
@@ -168,9 +181,8 @@ export const popover = (props: PopoverProps = {}) => ({
     }
 
     // Final boundary adjustments
-    const padding = 8;
-    top = Math.max(padding, Math.min(top, viewport.height - contentRect.height - padding));
-    left = Math.max(padding, Math.min(left, viewport.width - contentRect.width - padding));
+    top = Math.max(VIEWPORT_PADDING, Math.min(top, viewport.height - contentRect.height - VIEWPORT_PADDING));
+    left = Math.max(VIEWPORT_PADDING, Math.min(left, viewport.width - contentRect.width - VIEWPORT_PADDING));
 
     // Apply positioning
     content.style.position = 'fixed';
@@ -187,35 +199,35 @@ export const popover = (props: PopoverProps = {}) => ({
     let left = 0;
 
     switch (placement) {
-      case 'top':
+      case PLACEMENTS.TOP:
         top = triggerRect.top - contentRect.height - this.offset;
         left = triggerRect.left + (triggerRect.width - contentRect.width) / 2;
         break;
-      case 'top-start':
+      case PLACEMENTS.TOP_START:
         top = triggerRect.top - contentRect.height - this.offset;
         left = triggerRect.left;
         break;
-      case 'top-end':
+      case PLACEMENTS.TOP_END:
         top = triggerRect.top - contentRect.height - this.offset;
         left = triggerRect.right - contentRect.width;
         break;
-      case 'bottom':
+      case PLACEMENTS.BOTTOM:
         top = triggerRect.bottom + this.offset;
         left = triggerRect.left + (triggerRect.width - contentRect.width) / 2;
         break;
-      case 'bottom-start':
+      case PLACEMENTS.BOTTOM_START:
         top = triggerRect.bottom + this.offset;
         left = triggerRect.left;
         break;
-      case 'bottom-end':
+      case PLACEMENTS.BOTTOM_END:
         top = triggerRect.bottom + this.offset;
         left = triggerRect.right - contentRect.width;
         break;
-      case 'left':
+      case PLACEMENTS.LEFT:
         top = triggerRect.top + (triggerRect.height - contentRect.height) / 2;
         left = triggerRect.left - contentRect.width - this.offset;
         break;
-      case 'right':
+      case PLACEMENTS.RIGHT:
         top = triggerRect.top + (triggerRect.height - contentRect.height) / 2;
         left = triggerRect.right + this.offset;
         break;
@@ -225,12 +237,11 @@ export const popover = (props: PopoverProps = {}) => ({
   },
 
   detectCollisions(top: number, left: number, contentRect: DOMRect, viewport: { width: number; height: number }) {
-    const padding = 8;
     return {
-      top: top < padding,
-      bottom: top + contentRect.height > viewport.height - padding,
-      left: left < padding,
-      right: left + contentRect.width > viewport.width - padding,
+      top: top < VIEWPORT_PADDING,
+      bottom: top + contentRect.height > viewport.height - VIEWPORT_PADDING,
+      left: left < VIEWPORT_PADDING,
+      right: left + contentRect.width > viewport.width - VIEWPORT_PADDING,
     };
   },
 
@@ -240,27 +251,27 @@ export const popover = (props: PopoverProps = {}) => ({
 
   getFlippedPlacement(placement: string, collisions: { top: boolean; bottom: boolean; left: boolean; right: boolean }) {
     const flips: Record<string, string> = {
-      top: 'bottom',
-      bottom: 'top',
-      left: 'right',
-      right: 'left',
-      'top-start': 'bottom-start',
-      'top-end': 'bottom-end',
-      'bottom-start': 'top-start',
-      'bottom-end': 'top-end',
+      [PLACEMENTS.TOP]: PLACEMENTS.BOTTOM,
+      [PLACEMENTS.BOTTOM]: PLACEMENTS.TOP,
+      [PLACEMENTS.LEFT]: PLACEMENTS.RIGHT,
+      [PLACEMENTS.RIGHT]: PLACEMENTS.LEFT,
+      [PLACEMENTS.TOP_START]: PLACEMENTS.BOTTOM_START,
+      [PLACEMENTS.TOP_END]: PLACEMENTS.BOTTOM_END,
+      [PLACEMENTS.BOTTOM_START]: PLACEMENTS.TOP_START,
+      [PLACEMENTS.BOTTOM_END]: PLACEMENTS.TOP_END,
     };
 
-    if (collisions.top && placement.startsWith('top')) {
-      return flips[placement] || 'bottom';
+    if (collisions.top && placement.startsWith(PLACEMENTS.TOP)) {
+      return flips[placement] || PLACEMENTS.BOTTOM;
     }
-    if (collisions.bottom && placement.startsWith('bottom')) {
-      return flips[placement] || 'top';
+    if (collisions.bottom && placement.startsWith(PLACEMENTS.BOTTOM)) {
+      return flips[placement] || PLACEMENTS.TOP;
     }
-    if (collisions.left && placement === 'left') {
-      return 'right';
+    if (collisions.left && placement === PLACEMENTS.LEFT) {
+      return PLACEMENTS.RIGHT;
     }
-    if (collisions.right && placement === 'right') {
-      return 'left';
+    if (collisions.right && placement === PLACEMENTS.RIGHT) {
+      return PLACEMENTS.LEFT;
     }
 
     return placement;
