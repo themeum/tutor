@@ -60,12 +60,12 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
 
     return {
       'x-show': 'open',
-      'x-transition:enter': 'tutor-fade-enter',
-      'x-transition:enter-start': 'tutor-fade-enter-start',
-      'x-transition:enter-end': 'tutor-fade-enter-end',
-      'x-transition:leave': 'tutor-fade-leave',
-      'x-transition:leave-start': 'tutor-fade-leave-start',
-      'x-transition:leave-end': 'tutor-fade-leave-end',
+      'x-transition:enter': 'tutor-modal-backdrop-enter',
+      'x-transition:enter-start': 'tutor-modal-backdrop-transition',
+      'x-transition:enter-end': 'tutor-modal-backdrop-transition-reset',
+      'x-transition:leave': 'tutor-modal-backdrop-leave',
+      'x-transition:leave-start': 'tutor-modal-backdrop-transition-reset',
+      'x-transition:leave-end': 'tutor-modal-backdrop-transition',
     };
   },
 
@@ -91,12 +91,12 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
       'x-trap.noscroll.inert.noautofocus': 'open',
       '@click.outside': this.isCloseable ? 'close()' : '',
       'x-show': 'open',
-      'x-transition:enter': 'tutor-enter',
-      'x-transition:enter-start': 'tutor-enter-start',
-      'x-transition:enter-end': 'tutor-enter-end',
-      'x-transition:leave': 'tutor-leave',
-      'x-transition:leave-start': 'tutor-leave-start',
-      'x-transition:leave-end': 'tutor-leave-end',
+      'x-transition:enter': 'tutor-modal-content-enter',
+      'x-transition:enter-start': 'tutor-modal-content-transition',
+      'x-transition:enter-end': 'tutor-modal-content-transition-reset',
+      'x-transition:leave': 'tutor-modal-content-leave',
+      'x-transition:leave-start': 'tutor-modal-content-transition-reset',
+      'x-transition:leave-end': 'tutor-modal-content-transition',
     };
   },
 
