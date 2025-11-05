@@ -1,14 +1,14 @@
 import Alpine from 'alpinejs';
 
-import { TutorComponentRegistry } from '@Core/ComponentRegistry';
+import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 
-import { accordionMeta } from '@Core/components/accordion';
-import { buttonMeta } from '@Core/components/button';
-import { fileUploaderMeta } from '@Core/components/file-uploader';
-import { iconMeta } from '@Core/components/icon';
-import { popoverMeta } from '@Core/components/popover';
-import { staticsMeta } from '@Core/components/statics';
-import { tabsMeta } from '@Core/components/tabs';
+import { accordionMeta } from '@Core/ts/components/accordion';
+import { buttonMeta } from '@Core/ts/components/button';
+import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
+import { iconMeta } from '@Core/ts/components/icon';
+import { popoverMeta } from '@Core/ts/components/popover';
+import { staticsMeta } from '@Core/ts/components/statics';
+import { tabsMeta } from '@Core/ts/components/tabs';
 
 const initializePlugin = () => {
   TutorComponentRegistry.registerAll([

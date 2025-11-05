@@ -1,6 +1,6 @@
 import { type Alpine } from 'alpinejs';
 
-import { type AlpineComponentMeta, type TutorCore } from '@Core/types';
+import { type AlpineComponentMeta, type TutorCore } from '@Core/ts/types';
 import { makeFirstCharacterUpperCase } from '@TutorShared/utils/util';
 
 class Registry {
