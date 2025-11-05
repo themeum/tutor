@@ -1,0 +1,185 @@
+// Table Mixins
+// Reusable Table styles with variants and sizes
+
+@use "../tokens" as *;
+@use "typography" as *;
+@use "layout" as *;
+
+@mixin tutor-table-base {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	background-color: var(--tutor-surface-l2);
+	border-radius: $tutor-radius-lg;
+	overflow: hidden;
+	// box-shadow: $tutor-shadow-sm;
+	border: 1px solid var(--tutor-border-idle);
+}
+
+@mixin tutor-table-head {
+	// background-color: $tutor-surface-secondary;
+	border-bottom: 1px solid var(--tutor-border-idle);
+}
+
+@mixin tutor-table-body {
+	background-color: var(--tutor-surface-l2);
+}
+
+@mixin tutor-table-row {
+	border-bottom: 1px solid var(--tutor-border-idle);
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: $tutor-surface-brand-tertiary;
+	}
+
+	&:last-child {
+		border-bottom: none;
+	}
+
+	&.selected {
+		background-color: $tutor-button-primary-soft-focused;
+	}
+}
+
+@mixin tutor-table-header {
+	@include tutor-typography('small', 'medium');
+	color: $tutor-text-secondary;
+	text-align: left;
+	padding: $tutor-spacing-4 $tutor-spacing-6;
+	white-space: nowrap;
+	vertical-align: middle;
+
+	&.sortable {
+		cursor: pointer;
+		user-select: none;
+		position: relative;
+		
+		&:hover {
+			color: $tutor-text-primary;
+		}
+
+		svg {
+			margin-left: $tutor-spacing-2;
+			opacity: 0.6;
+			transition: opacity 0.2s ease;
+		}
+
+		&:hover svg {
+			opacity: 1;
+		}
+	}
+}
+
+@mixin tutor-table-cell {
+	@include tutor-typography('small', 'regular');
+	color: $tutor-text-primary;
+	padding: $tutor-spacing-4 $tutor-spacing-6;
+	vertical-align: middle;
+	border-bottom: inherit;
+}
+
+@mixin tutor-table-checkbox {
+	width: 16px;
+	height: 16px;
+	border-radius: $tutor-radius-sm;
+	border: 1px solid var(--tutor-border-idle);
+	cursor: pointer;
+	
+	&:checked {
+		background-color: $tutor-actions-brand-primary;
+		border-color: $tutor-actions-brand-primary;
+	}
+}
+
+@mixin tutor-table-user {
+	display: flex;
+	align-items: center;
+	gap: $tutor-spacing-3;
+}
+
+@mixin tutor-table-avatar {
+	@include tutor-flex-center;
+	width: 32px;
+	height: 32px;
+	border-radius: $tutor-radius-full;
+	background-color: $tutor-actions-brand-primary;
+	color: var(--tutor-surface-l2);
+	@include tutor-typography('tiny', 'medium');
+	flex-shrink: 0;
+}
+
+@mixin tutor-table-name {
+	@include tutor-typography('small', 'medium');
+	color: $tutor-text-primary;
+}
+
+@mixin tutor-table-actions {
+	display: flex;
+	align-items: center;
+	gap: $tutor-spacing-2;
+}
+
+@mixin tutor-table-action {
+	@include tutor-flex-center;
+	width: 32px;
+	height: 32px;
+	border: none;
+	background: transparent;
+	border-radius: $tutor-radius-sm;
+	cursor: pointer;
+	color: $tutor-icon-idle;
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: $tutor-surface-brand-tertiary;
+		color: $tutor-text-primary;
+	}
+
+	&:focus {
+		outline: 2px solid $tutor-actions-brand-primary;
+		outline-offset: 2px;
+	}
+}
+
+// Table variants
+@mixin tutor-table-variant($variant: default) {
+	@if $variant == striped {
+		.tutor-table-row:nth-child(even) {
+			background-color: $tutor-surface-brand-tertiary
+		}
+	} @else if $variant == bordered {
+		border: 1px solid var(--tutor-border-idle);
+		
+		.tutor-table-cell,
+		.tutor-table-header {
+			border-right: 1px solid var(--tutor-border-idle);
+			
+			&:last-child {
+				border-right: none;
+			}
+		}
+	} @else if $variant == compact {
+		.tutor-table-cell,
+		.tutor-table-header {
+			padding: $tutor-spacing-2 $tutor-spacing-4;
+		}
+	}
+}
+
+// Table sizes
+@mixin tutor-table-size($size: medium) {
+	@if $size == small {
+		.tutor-table-cell,
+		.tutor-table-header {
+			padding: $tutor-spacing-2 $tutor-spacing-4;
+			@include tutor-typography('tiny', 'regular');
+		}
+	} @else if $size == large {
+		.tutor-table-cell,
+		.tutor-table-header {
+			padding: $tutor-spacing-6 $tutor-spacing-8;
+			@include tutor-typography('base', 'regular');
+		}
+	}
+}
