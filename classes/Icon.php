@@ -67,11 +67,13 @@ final class Icon {
 	const CHECK_MARK                 = 'check-mark';
 	const CHECK_SQUARE               = 'check-square';
 	const CHECK_SQUARE_FILLED        = 'check-square-filled';
+	const CHECK_STROKE               = 'check-stroke';
 	const CHEVRON_DOWN               = 'chevron-down';
 	const CHEVRON_LEFT               = 'chevron-left';
 	const CHEVRON_RIGHT              = 'chevron-right';
 	const CHEVRON_UP                 = 'chevron-up';
 	const CIRCLED_PLUS               = 'circled-plus';
+	const CIRCUM_LOCK                = 'circum-lock';
 	const CLOCK                      = 'clock';
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';

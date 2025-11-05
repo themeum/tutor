@@ -1,0 +1,37 @@
+@use '../tokens' as *;
+
+.tutor-skeleton {
+  display: block;
+  width: 100%;
+  height: $tutor-spacing-6;
+  border-radius: $tutor-radius-md;
+  background-color: rgba(0, 0, 0, 0.11);
+  position: relative;
+  mask-image: radial-gradient(white, black);
+  -webkit-mask-image: -webkit-radial-gradient(center, white, black);
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &::after {
+    content: '';
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+    position: absolute;
+    transform: translateX(-100%);
+    inset: 0;
+    animation: var(--tutor-animation-duration, 1.6s) linear 0.5s infinite normal none running wave;
+  }
+
+  &-round {
+    border-radius: $tutor-radius-full;
+  }
+}
+
+@keyframes wave {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
+}

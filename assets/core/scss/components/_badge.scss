@@ -1,0 +1,30 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-badge {
+	@include tutor-badge-base;
+}
+
+.tutor-badge-primary {
+	@include tutor-badge-variant(primary);
+}
+
+.tutor-badge-pending {
+	@include tutor-badge-variant(pending);
+}
+
+.tutor-badge-completed {
+	@include tutor-badge-variant(completed);
+}
+
+.tutor-badge-cancelled {
+	@include tutor-badge-variant(cancelled);
+}
+
+.tutor-badge-secondary {
+	@include tutor-badge-variant(secondary);
+}
+
+.tutor-badge-exception {
+	@include tutor-badge-variant(exception);
+}
