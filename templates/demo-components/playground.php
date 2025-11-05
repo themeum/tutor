@@ -25,7 +25,6 @@
 
 	$subpages = array(
 		'dashboard'     => 'Dashboard',
-		'nur'           => 'Nur',
 		'learning-area' => 'Learning Area',
 	);
 
@@ -48,6 +47,10 @@
 	<?php if ( $subpage ) : ?>
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
+		<section>
+			<?php require 'badge.php'; ?>
+			<?php require 'pagination.php'; ?>
+		</section>
 		<section>
 			<?php require 'button.php'; ?>
 			<?php require 'file-uploader.php'; ?>
