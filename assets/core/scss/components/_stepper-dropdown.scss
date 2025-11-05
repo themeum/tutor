@@ -15,13 +15,13 @@
 		display: flex;
 		align-items: stretch;
 		width: 100%;
-		background: var(--tutor-surface-l1);
-		border: 1px solid var(--tutor-border-idle);
+		background: $tutor-surface-l1;
+		border: 1px solid $tutor-border-idle;
 		border-radius: $tutor-radius-md;
 		overflow: hidden;
 
 		&:focus-within {
-			outline: 2px solid var(--tutor-border-brand-tertiary);
+			outline: 2px solid $tutor-border-brand-tertiary;
 			outline-offset: -2px;
 		}
 	}
@@ -39,7 +39,7 @@
 		background: transparent;
 		border: none;
 		cursor: pointer;
-		color: var(--tutor-icon-secondary);
+		color: $tutor-icon-secondary;
 		transition: background-color 0.2s ease, color 0.2s ease;
 		flex: 1;
 
@@ -54,12 +54,12 @@
 		}
 
 		&:hover:not(.tutor-is-disabled):not(:disabled) {
-			background: var(--tutor-tab-l3-active-hover);
-			color: var(--tutor-icon-primary);
+			background: $tutor-tab-l3-active-hover;
+			color: $tutor-icon-hover;
 		}
 
 		&:active:not(.tutor-is-disabled):not(:disabled) {
-			background: var(--tutor-tab-l3-active);
+			background: $tutor-tab-l3-active;
 		}
 
 		&.tutor-is-disabled,
@@ -98,12 +98,12 @@
 			flex-shrink: 0;
 			display: flex;
 			align-items: center;
-			color: var(--tutor-icon-secondary);
+			color: $tutor-icon-secondary;
 		}
 	}
 
 	&-placeholder {
-		color: var(--tutor-muted-foreground);
+		color: $tutor-text-subdued;
 	}
 
 	&-menu {
@@ -111,7 +111,7 @@
 		left: 0;
 		right: 0;
 		z-index: $tutor-z-dropdown;
-		background: var(--tutor-surface-l1);
+		background: $tutor-surface-l1;
 		border-radius: $tutor-radius-md;
 		max-height: 280px;
 		overflow: auto;
@@ -147,7 +147,7 @@
 			flex-shrink: 0;
 			display: flex;
 			align-items: center;
-			color: var(--tutor-icon-secondary);
+			color: $tutor-icon-secondary;
 			width: 16px;
 			height: 16px;
 		}
@@ -158,15 +158,15 @@
 		}
 
 		&.tutor-is-highlighted {
-			background: var(--tutor-tab-l3-active-hover);
+			background: $tutor-tab-l3-active-hover;
 		}
 
 		&:hover:not(.tutor-is-disabled):not(.tutor-is-selected):not(.tutor-is-highlighted) {
-			background: var(--tutor-tab-l3-active-hover);
+			background: $tutor-tab-l3-active-hover;
 		}
 
 		&.tutor-is-disabled {
-			color: var(--tutor-muted-foreground);
+			color: $tutor-text-subdued;
 			cursor: not-allowed;
 
 			&:hover,
