@@ -1,6 +1,6 @@
 <?php
 /**
- * Init TemplateImportInit class
+ * Initialize template importer
  *
  * @package Tutor\TemplateImporter
  * @author Themeum <support@themeum.com>
