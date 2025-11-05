@@ -66,6 +66,44 @@
 		overflow: auto;
 		width: 100%;
 
+		// Search box inside menu
+		.tutor-select-dropdown-search {
+			position: relative;
+			padding: $tutor-spacing-3 $tutor-spacing-4;
+			border-bottom: 1px solid $tutor-border-idle;
+
+			&-icon {
+				position: absolute;
+				top: 50%;
+				left: $tutor-spacing-6;
+				transform: translateY(-50%);
+				color: $tutor-icon-secondary;
+				pointer-events: none;
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			&-input {
+				width: 100%;
+				padding: $tutor-spacing-3 $tutor-spacing-4;
+				padding-left: calc(#{$tutor-spacing-4} + 18px);
+				border: 1px solid $tutor-border-idle;
+				border-radius: $tutor-radius-sm;
+				background: $tutor-surface-l1;
+				color: $tutor-text-primary;
+				line-height: $tutor-line-height-medium;
+
+				&:focus {
+					outline: 2px solid $tutor-border-brand-tertiary;
+				}
+
+				&::placeholder {
+					color: $tutor-text-subdued;
+				}
+			}
+		}
+
 		// Default positioning (bottom)
 		&-bottom {
 			top: calc(100% + 4px);
