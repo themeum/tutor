@@ -15,7 +15,7 @@
 	padding: $tutor-spacing-none;
 }
 
-@mixin tutor-pagination__list {
+@mixin tutor-pagination-list {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
@@ -29,17 +29,17 @@
 	}
 }
 
-@mixin tutor-pagination__info {
+@mixin tutor-pagination-info {
 	@include tutor-typography('small', 'regular');
 	margin: 0;
-	.tutor-pagination__current, 
-	.tutor-pagination__total {
+	.tutor-pagination-current, 
+	.tutor-pagination-total {
 		font-weight: $tutor-font-weight-medium;
 		color: $tutor-text-primary;
 	}
 }
 
-@mixin tutor-pagination__item {
+@mixin tutor-pagination-item {
 	@include tutor-flex-center;
 	padding: $tutor-spacing-3 $tutor-spacing-5;
 	border-radius: $tutor-radius-md;

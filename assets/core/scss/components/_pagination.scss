@@ -7,27 +7,27 @@
 	@include tutor-pagination-base;
 }
 
-.tutor-pagination__info {
-	@include tutor-pagination__info;
+.tutor-pagination-info {
+	@include tutor-pagination-info;
 }
 
-.tutor-pagination__list {
-	@include tutor-pagination__list;
+.tutor-pagination-list {
+	@include tutor-pagination-list;
 }
 
-.tutor-pagination__item {
-	@include tutor-pagination__item;
+.tutor-pagination-item {
+	@include tutor-pagination-item;
 
-	&--active {
+	&-active {
 		@include tutor-pagination-item-variant(active);
 	}
 
-	&--prev,
-	&--next {
+	&-prev,
+	&-next {
 		@include tutor-pagination-item-variant(prev-next);
 	}
 }
 
-.tutor-pagination__ellipsis {
+.tutor-pagination-ellipsis {
 	@include tutor-pagination-ellipsis;
 }
