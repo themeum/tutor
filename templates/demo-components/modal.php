@@ -24,10 +24,10 @@
 
 	<div x-data="tutorModal({ id: 'full-modal' })" x-cloak>
 		<template x-teleport="body">
-			<div x-bind="setModalAttributes()">
-				<div x-bind="setBackdropAttributes()"></div>
-				<div x-bind="setModalContentAttributes()">
-					<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="setCloseButtonAttributes()"></button>
+			<div x-bind="getModalBindings()">
+				<div x-bind="getBackdropBindings()"></div>
+				<div x-bind="getModalContentBindings()">
+					<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
 					<div class="tutor-modal-header">
 						<div class="tutor-modal-title">Confirm Submission</div>
 						<div class="tutor-modal-subtitle">Are you sure you want to submit this assignment? You won't be able to make changes after submission.</div>
@@ -50,9 +50,9 @@
 
 	<div x-data="tutorModal({ id: 'headless-modal', isCloseable: false })" x-cloak>
 		<template x-teleport="body">
-			<div x-bind="setModalAttributes()">
-				<div x-bind="setBackdropAttributes()"></div>
-				<div x-bind="setModalContentAttributes()" style="width: 354px;">
+			<div x-bind="getModalBindings()">
+				<div x-bind="getBackdropBindings()"></div>
+				<div x-bind="getModalContentBindings()" style="width: 354px;">
 					<div class="tutor-modal-body tutor-flex tutor-flex-column tutor-gap-6 tutor-text-center">
 						<h3>Fantastic, @blind!</h3>
 						<p>You've dedicated over

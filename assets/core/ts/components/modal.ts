@@ -53,7 +53,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
     this.open = false;
   },
 
-  setBackdropAttributes() {
+  getBackdropBindings() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const backdrop = (this as any).$el;
     backdrop.classList.add('tutor-modal-backdrop');
@@ -69,7 +69,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
     };
   },
 
-  setModalAttributes() {
+  getModalBindings() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const modal = (this as any).$el;
     modal.classList.add('tutor-modal');
@@ -82,7 +82,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
     };
   },
 
-  setModalContentAttributes() {
+  getModalContentBindings() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const modal = (this as any).$el;
     modal.classList.add('tutor-modal-content');
@@ -100,7 +100,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
     };
   },
 
-  setCloseButtonAttributes() {
+  getCloseButtonBindings() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const closeButton = (this as any).$el;
     closeButton.classList.add('tutor-modal-close');
