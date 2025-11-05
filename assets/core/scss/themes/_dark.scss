@@ -132,9 +132,9 @@
   --tutor-actions-critical-primary: #{$tutor-error-500};
   --tutor-actions-critical-secondary: #{$tutor-error-950};
   --tutor-actions-exception3-highlight: #{$tutor-exception-3};
-  --tutor-actions-caution: #ffffff;
-  --tutor-actions-inverse: #ffffff;
-  --tutor-actions-exception6: #ffffff;
+  --tutor-actions-caution: #{$tutor-gray-1};
+  --tutor-actions-inverse: #{$tutor-gray-1};
+  --tutor-actions-exception6: #{$tutor-gray-1};
 
   // =============================================================================
   // TYPOGRAPHY TOKENS
@@ -142,7 +142,6 @@
 
   --tutor-font-weight-regular: #{$tutor-font-weight-regular};
   --tutor-font-weight-medium: #{$tutor-font-weight-medium};
-  --tutor-font-weight-semibold: #{$tutor-font-weight-semi-strong};
-  --tutor-font-weight-semi-strong: #{$tutor-font-weight-semi-strong};
-  --tutor-font-weight-strong: #{$tutor-font-weight-strong};
+  --tutor-font-weight-semibold: #{$tutor-font-weight-semibold};
+  --tutor-font-weight-bold: #{$tutor-font-weight-bold};
 }
