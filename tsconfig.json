@@ -34,7 +34,11 @@
       "@OrderDetails/*": ["assets/react/v3/entries/order-details/*"],
       "@CouponDetails/*": ["assets/react/v3/entries/coupon-details/*"],
       "@AddonList/*": ["assets/react/v3/entries/addon-list/*"],
-      "@ImportExport/*": ["assets/react/v3/entries/import-export/*"]
+      "@ImportExport/*": ["assets/react/v3/entries/import-export/*"],
+      "@FrontendTypes/*": ["assets/react/frontend/types/*"],
+      "@FrontendServices/*": ["assets/react/frontend/services/*"],
+      "@FrontendDashboard/*": ["assets/react/frontend/dashboard/*"],
+      "@LearningArea/*": ["assets/react/frontend/learning-area/*"],
     }
   },
   "include": [
