@@ -19,11 +19,8 @@
     padding: $tutor-spacing-4 $tutor-spacing-4 0;
 
     .tutor-popover-title {
+      @include tutor-typography(p1, semibold, primary);
       margin: 0;
-      font-size: $tutor-font-size-p1;
-      font-weight: $tutor-font-weight-semi-strong;
-      color: $tutor-text-primary;
-      line-height: $tutor-line-height-p1;
     }
 
     .tutor-popover-close {
@@ -53,19 +50,12 @@
         color: $tutor-icon-hover;
         outline: none;
       }
-
-      .tutor-icon {
-        width: 14px;
-        height: 14px;
-      }
     }
   }
 
   &-body {
+    @include tutor-typography(p2, regular, primary);
     padding: $tutor-spacing-4;
-    color: $tutor-text-primary;
-    font-size: $tutor-font-size-p2;
-    line-height: $tutor-line-height-p2;
   }
 
   &-footer {

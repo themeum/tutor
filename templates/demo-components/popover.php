@@ -35,7 +35,6 @@ use TUTOR\Icon;
 				x-show="open"
 				x-cloak
 				@click.outside="handleClickOutside()"
-				@keydown.escape="handleKeydown($event)"
 				class="tutor-popover tutor-popover-top"
 			>
 				<div class="tutor-popover-header">
@@ -240,7 +239,6 @@ use TUTOR\Icon;
 		x-show="open"
 		x-cloak
 		@click.outside="handleClickOutside()"
-		@keydown.escape="handleKeydown($event)"
 		class="tutor-popover tutor-popover-top"
 	&gt;
 		&lt;div class="tutor-popover-body"&gt;

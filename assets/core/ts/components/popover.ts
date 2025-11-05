@@ -1,4 +1,5 @@
 import { type AlpineComponentMeta } from '@Core/types';
+import { isRTL } from '@TutorShared/config/constants';
 
 export interface PopoverProps {
   placement?: 'top' | 'bottom' | 'left' | 'right' | 'top-start' | 'top-end' | 'bottom-start' | 'bottom-end';
@@ -23,12 +24,12 @@ export const popover = (props: PopoverProps = {}) => ({
     this.setupEventListeners();
 
     // Add global escape key listener
-    document.addEventListener('keydown', (e) => this.handleGlobalKeydown(e));
+    document.addEventListener('keydown', (e) => this.handleEscapeKeydown(e));
   },
 
   destroy() {
     this.removeEventListeners();
-    document.removeEventListener('keydown', (e) => this.handleGlobalKeydown(e));
+    document.removeEventListener('keydown', (e) => this.handleEscapeKeydown(e));
   },
 
   setupEventListeners() {
@@ -58,11 +59,6 @@ export const popover = (props: PopoverProps = {}) => ({
   },
 
   getActualPlacement() {
-    const isRTL =
-      document.dir === 'rtl' ||
-      document.documentElement.dir === 'rtl' ||
-      getComputedStyle(document.documentElement).direction === 'rtl';
-
     if (!isRTL) return this.placement;
 
     const rtlAdaptations: Record<string, string> = {
@@ -118,15 +114,7 @@ export const popover = (props: PopoverProps = {}) => ({
     }
   },
 
-  handleKeydown(event: KeyboardEvent): void {
-    if (event.key === 'Escape' && this.open) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.hide();
-    }
-  },
-
-  handleGlobalKeydown(event: KeyboardEvent): void {
+  handleEscapeKeydown(event: KeyboardEvent): void {
     if (event.key === 'Escape' && this.open) {
       event.preventDefault();
       event.stopPropagation();
