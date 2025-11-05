@@ -10,12 +10,13 @@ use TUTOR\Icon;
 defined( 'ABSPATH' ) || exit;
 
 // Default values.
-$options     = isset( $options ) ? $options : array();
-$placeholder = isset( $placeholder ) ? $placeholder : __( 'Select an option...', 'tutor' );
-$value       = isset( $value ) ? $value : '';
-$disabled    = isset( $disabled ) ? $disabled : false;
+$options            = isset( $options ) ? $options : array();
+$placeholder        = isset( $placeholder ) ? $placeholder : __( 'Select an option...', 'tutor' );
+$value              = isset( $value ) ? $value : '';
+$disabled           = isset( $disabled ) ? $disabled : false;
+$searchable         = isset( $searchable ) ? (bool) $searchable : false;
+$search_placeholder = isset( $search_placeholder ) ? $search_placeholder : __( 'Search...', 'tutor' );
 
-// Prepare options for Alpine.js.
 $options_json = array();
 foreach ( $options as $option ) {
 	$option_data = array(
@@ -38,7 +39,8 @@ foreach ( $options as $option ) {
 		options: <?php echo wp_json_encode( $options_json ); ?>,
 		placeholder: <?php echo wp_json_encode( $placeholder ); ?>,
 		value: <?php echo wp_json_encode( $value ); ?>,
-		disabled: <?php echo $disabled ? 'true' : 'false'; ?>
+		disabled: <?php echo $disabled ? 'true' : 'false'; ?>,
+		searchable: <?php echo $searchable ? 'true' : 'false'; ?>
 	})'
 	class="tutor-select-dropdown"
 >
@@ -67,8 +69,23 @@ foreach ( $options as $option ) {
 		@click.outside="close()" 
 		x-transition
 	>
+		<template x-if="searchable">
+			<div class="tutor-select-dropdown-search">
+				<span class="tutor-select-dropdown-search-icon" aria-hidden="true"><?php tutor_utils()->render_svg_icon( Icon::SEARCH, 16, 16 ); ?></span>
+				<input
+					type="text"
+					class="tutor-select-dropdown-search-input"
+					placeholder="<?php echo esc_attr( $search_placeholder ); ?>"
+					x-model="searchText"
+					@keydown.stop
+					@keydown.arrow-down.prevent="moveHighlight(1)"
+					@keydown.arrow-up.prevent="moveHighlight(-1)"
+					@keydown.enter.prevent="highlightedIndex >= 0 && selectByIndex(highlightedIndex)"
+				/>
+			</div>
+		</template>
 		<ul role="listbox">
-			<template x-for="(opt, idx) in options" :key="opt.value">
+			<template x-for="(opt, idx) in filteredOptions" :key="opt.value">
 				<li
 					role="option"
 					class="tutor-select-dropdown-option"

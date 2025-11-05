@@ -53,19 +53,38 @@ $dropdown_options = array(
 	),
 );
 
-$component_vars = array(
+$component_vars_searchable = array(
+	'options'            => $dropdown_options,
+	'placeholder'        => __( 'Select an option...', 'tutor' ),
+	'searchable'         => true,
+	'search_placeholder' => __( 'Search...', 'tutor' ),
+);
+
+$component_vars_basic = array(
 	'options'     => $dropdown_options,
 	'placeholder' => __( 'Select an option...', 'tutor' ),
 );
 
 ?>
 
-<div class="tutor-p-6 tutor-space-y-4">
+<div class="tutor-p-6 tutor-space-y-6">
 	<h3 class="tutor-text-xl tutor-font-medium">
 		<?php echo esc_html__( 'Select Dropdown Demo', 'tutor' ); ?>
 	</h3>
 
-	<?php tutor_load_template( 'components.select-dropdown', $component_vars ); ?>
+	<div class="tutor-space-y-3">
+		<h4 class="tutor-text-base tutor-font-medium">
+			<?php echo esc_html__( 'With Search', 'tutor' ); ?>
+		</h4>
+		<?php tutor_load_template( 'components.select-dropdown', $component_vars_searchable ); ?>
+	</div>
+
+	<div class="tutor-space-y-3">
+		<h4 class="tutor-text-base tutor-font-medium">
+			<?php echo esc_html__( 'Without Search', 'tutor' ); ?>
+		</h4>
+		<?php tutor_load_template( 'components.select-dropdown', $component_vars_basic ); ?>
+	</div>
 </div>
 
 

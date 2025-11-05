@@ -12,6 +12,7 @@ export interface SelectDropdownProps {
   value?: string;
   placeholder?: string;
   disabled?: boolean;
+  searchable?: boolean;
   onChange?: (value: string) => void;
 }
 
@@ -23,6 +24,8 @@ export const selectDropdown = (props: SelectDropdownProps) => {
     value: props.value ?? '',
     placeholder: props.placeholder || '',
     disabled: props.disabled || false,
+    searchable: props.searchable || false,
+    searchText: '',
     dropdownPosition: 'bottom' as 'top' | 'bottom',
 
     init() {
@@ -49,7 +52,8 @@ export const selectDropdown = (props: SelectDropdownProps) => {
       const spaceBelow = viewportHeight - rect.bottom;
       const spaceAbove = rect.top;
 
-      const estimatedDropdownHeight = Math.min(280, this.options.length * 44) + 20; // ~44px per option + buffer
+      const optionCount = this.filteredOptions.length;
+      const estimatedDropdownHeight = Math.min(280, optionCount * 44) + (this.searchable ? 56 : 20); // include search box height buffer
 
       if (spaceBelow < estimatedDropdownHeight && spaceAbove >= estimatedDropdownHeight) {
         return 'top';
@@ -107,13 +111,21 @@ export const selectDropdown = (props: SelectDropdownProps) => {
         this.updateDropdownClasses();
       }, 50);
 
-      const selectedIndex = this.options.findIndex((o) => o.value === this.value && !o.disabled);
+      const selectedIndex = this.filteredOptions.findIndex((o) => o.value === this.value && !o.disabled);
       this.highlightedIndex = selectedIndex >= 0 ? selectedIndex : this.nextEnabledIndex(0);
 
       // Use $nextTick to ensure DOM is ready
       const $nextTick = (this as unknown as { $nextTick?: (callback: () => void) => void }).$nextTick;
       if ($nextTick) {
         $nextTick(() => {
+          if (this.searchable) {
+            const $el = (this as unknown as { $el: HTMLElement }).$el;
+            const input = $el.querySelector('.tutor-select-dropdown-search-input') as HTMLInputElement | null;
+            if (input) {
+              input.focus();
+              input.select();
+            }
+          }
           this.scrollToHighlighted();
         });
       }
@@ -137,9 +149,17 @@ export const selectDropdown = (props: SelectDropdownProps) => {
       return match || null;
     },
 
+    get filteredOptions(): SelectOption[] {
+      if (!this.searchable || !this.searchText.trim()) {
+        return this.options;
+      }
+      const query = this.searchText.toLowerCase();
+      return this.options.filter((opt) => opt.label.toLowerCase().includes(query));
+    },
+
     selectByIndex(index: number) {
-      if (index < 0 || index >= this.options.length) return;
-      const option = this.options[index];
+      if (index < 0 || index >= this.filteredOptions.length) return;
+      const option = this.filteredOptions[index];
       if (!option || option.disabled) return;
       this.value = option.value;
       if (props.onChange) {
@@ -191,23 +211,28 @@ export const selectDropdown = (props: SelectDropdownProps) => {
         case 'End':
           event.preventDefault();
           if (!this.isOpen) this.open();
-          this.highlightedIndex = this.prevEnabledIndex(this.options.length - 1);
+          this.highlightedIndex = this.prevEnabledIndex(this.filteredOptions.length - 1);
           this.scrollToHighlighted();
           break;
       }
     },
 
     moveHighlight(direction: 1 | -1) {
-      if (this.options.length === 0) return;
+      if (this.filteredOptions.length === 0) return;
       let index = this.highlightedIndex;
       if (index === -1) {
-        index = direction === 1 ? -1 : this.options.length;
+        index = direction === 1 ? -1 : this.filteredOptions.length;
       }
       do {
         index += direction;
-      } while (index >= 0 && index < this.options.length && this.options[index] && this.options[index].disabled);
+      } while (
+        index >= 0 &&
+        index < this.filteredOptions.length &&
+        this.filteredOptions[index] &&
+        this.filteredOptions[index].disabled
+      );
 
-      if (index >= 0 && index < this.options.length) {
+      if (index >= 0 && index < this.filteredOptions.length) {
         this.highlightedIndex = index;
         this.scrollToHighlighted();
       }
@@ -232,15 +257,15 @@ export const selectDropdown = (props: SelectDropdownProps) => {
     },
 
     nextEnabledIndex(start: number): number {
-      for (let i = start; i < this.options.length; i++) {
-        if (!this.options[i]?.disabled) return i;
+      for (let i = start; i < this.filteredOptions.length; i++) {
+        if (!this.filteredOptions[i]?.disabled) return i;
       }
       return -1;
     },
 
     prevEnabledIndex(start: number): number {
       for (let i = start; i >= 0; i--) {
-        if (!this.options[i]?.disabled) return i;
+        if (!this.filteredOptions[i]?.disabled) return i;
       }
       return -1;
     },
