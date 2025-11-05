@@ -42,9 +42,13 @@ class TemplateImporter {
 
 	/**
 	 * Register default hooks and actions for WordPress
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param TemplateImportHelper $helper Template helper.
 	 */
-	public function __construct() {
-		$this->template_helper_cls            = new TemplateImportHelper();
+	public function __construct( TemplateImportHelper $helper ) {
+		$this->template_helper_cls            = $helper;
 		$this->template_import_dependency_api = $this->template_helper_cls->make_url( 'template-import-dependencies' );
 
 		add_action( 'wp_ajax_tutor_template_required_plugin_install', array( $this, 'tutor_template_required_plugin_install' ) );

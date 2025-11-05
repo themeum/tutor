@@ -10,6 +10,8 @@
 
 namespace Tutor\TemplateImport;
 
+use TUTOR\Container;
+
 /**
  * Class TemplateImportInit
  */
@@ -32,6 +34,6 @@ final class TemplateImportInit {
 	 * @return void
 	 */
 	public function init() {
-		new TemplateImporter();
+		Container::make( TemplateImporter::class );
 	}
 }
