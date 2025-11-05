@@ -268,6 +268,8 @@ const scssEntries = {
   'tutor-frontend-dashboard-scss': './assets/scss/frontend-dashboard/index.scss',
   'tutor-template-import-scss': './assets/scss/admin-dashboard/template-import.scss',
   'tutor-core-scss': './assets/core/scss/main.scss',
+  'tutor-dashboard-scss': './assets/scss/frontend/main/dashboard.scss',
+  'tutor-learning-area-scss': './assets/scss/frontend/main/learning-area.scss',
 };
 
 const resolveAliases = {
