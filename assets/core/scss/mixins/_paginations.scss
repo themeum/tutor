@@ -1,0 +1,94 @@
+// Pagination Mixins
+// Reusable Pagination styles with variants and sizes
+
+@use "../tokens" as *;
+@use "typography" as *;
+@use "layout" as *;
+
+@mixin tutor-pagination-base {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: $tutor-spacing-4;
+	margin: $tutor-spacing-none;
+	padding: $tutor-spacing-none;
+}
+
+@mixin tutor-pagination-list {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: $tutor-spacing-1;
+	list-style: none;
+	margin: $tutor-spacing-none;
+	padding: $tutor-spacing-none;
+	li {
+		margin: $tutor-spacing-none;
+		padding: $tutor-spacing-none;
+	}
+}
+
+@mixin tutor-pagination-info {
+	@include tutor-typography('small', 'regular');
+	margin: 0;
+	.tutor-pagination-current, 
+	.tutor-pagination-total {
+		font-weight: $tutor-font-weight-medium;
+		color: $tutor-text-primary;
+	}
+}
+
+@mixin tutor-pagination-item {
+	@include tutor-flex-center;
+	padding: $tutor-spacing-3 $tutor-spacing-5;
+	border-radius: $tutor-radius-md;
+	text-decoration: none;
+	@include tutor-typography('tiny', 'medium');
+	transition: all 0.2s ease;
+	cursor: pointer;
+	min-width: 32px;
+	min-height: 32px;
+
+	// Default state
+	background-color: transparent;
+
+	&.active, 
+	&:active {
+		background-color: $tutor-button-primary-soft-focused;
+		color: $tutor-text-brand;
+	}
+
+	&:hover {
+		background-color: $tutor-button-primary-soft-focused;
+		color: $tutor-text-brand;
+	}
+
+	&.disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+}
+
+@mixin tutor-pagination-item-variant($variant: default) {
+	@if $variant == active {
+		background-color: $tutor-button-primary-soft-focused;
+		color: $tutor-text-brand;
+	} @else if $variant == prev-next {
+		color: $tutor-icon-idle;
+		
+		&:hover {
+			background-color: $tutor-actions-brand-tertiary;
+			color: $tutor-actions-brand-primary;
+		}
+	}
+}
+
+@mixin tutor-pagination-ellipsis {
+	@include tutor-flex-center;
+	min-width: 32px;
+	min-height: 32px;
+	@include tutor-typography('tiny', 'medium');
+	cursor: default;
+}
