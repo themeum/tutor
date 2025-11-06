@@ -13,6 +13,7 @@ export interface SelectDropdownProps {
   placeholder?: string;
   disabled?: boolean;
   searchable?: boolean;
+  name?: string; // Form field name for the hidden input
   onChange?: (value: string) => void;
 }
 
@@ -27,10 +28,12 @@ export const selectDropdown = (props: SelectDropdownProps) => {
     searchable: props.searchable || false,
     searchText: '',
     dropdownPosition: 'bottom' as 'top' | 'bottom',
+    name: props.name || '',
 
     init() {
       const $el = (this as unknown as { $el: HTMLElement }).$el;
       $el.classList.add('tutor-select-dropdown');
+      this.syncHiddenInput();
     },
 
     calculateDropdownPosition() {
@@ -157,11 +160,27 @@ export const selectDropdown = (props: SelectDropdownProps) => {
       return this.options.filter((opt) => opt.label.toLowerCase().includes(query));
     },
 
+    syncHiddenInput() {
+      if (!this.name) return;
+      const $el = (this as unknown as { $el: HTMLElement }).$el;
+      let hiddenInput = $el.querySelector(`input[type="hidden"][name="${this.name}"]`) as HTMLInputElement | null;
+
+      if (!hiddenInput) {
+        hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = this.name;
+        $el.appendChild(hiddenInput);
+      }
+
+      hiddenInput.value = this.value;
+    },
+
     selectByIndex(index: number) {
       if (index < 0 || index >= this.filteredOptions.length) return;
       const option = this.filteredOptions[index];
       if (!option || option.disabled) return;
       this.value = option.value;
+      this.syncHiddenInput();
       if (props.onChange) {
         props.onChange(option.value);
       }
@@ -171,6 +190,7 @@ export const selectDropdown = (props: SelectDropdownProps) => {
     selectOption(option: SelectOption) {
       if (option.disabled) return;
       this.value = option.value;
+      this.syncHiddenInput();
       if (props.onChange) {
         props.onChange(option.value);
       }

@@ -16,6 +16,7 @@ $value              = isset( $value ) ? $value : '';
 $disabled           = isset( $disabled ) ? $disabled : false;
 $searchable         = isset( $searchable ) ? (bool) $searchable : false;
 $search_placeholder = isset( $search_placeholder ) ? $search_placeholder : __( 'Search...', 'tutor' );
+$name               = isset( $name ) ? $name : ''; // Form field name for the hidden input.
 
 $options_json = array();
 foreach ( $options as $option ) {
@@ -40,7 +41,8 @@ foreach ( $options as $option ) {
 		placeholder: <?php echo wp_json_encode( $placeholder ); ?>,
 		value: <?php echo wp_json_encode( $value ); ?>,
 		disabled: <?php echo $disabled ? 'true' : 'false'; ?>,
-		searchable: <?php echo $searchable ? 'true' : 'false'; ?>
+		searchable: <?php echo $searchable ? 'true' : 'false'; ?>,
+		name: <?php echo wp_json_encode( $name ); ?>
 	})'
 	class="tutor-select-dropdown"
 >

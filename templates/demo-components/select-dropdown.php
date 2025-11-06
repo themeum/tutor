@@ -53,6 +53,12 @@ $dropdown_options = array(
 	),
 );
 
+$component_vars_form = array(
+	'options'     => $dropdown_options,
+	'placeholder' => __( 'Select an option...', 'tutor' ),
+	'name'        => 'selected_option',
+);
+
 $component_vars_searchable = array(
 	'options'            => $dropdown_options,
 	'placeholder'        => __( 'Select an option...', 'tutor' ),
@@ -74,6 +80,39 @@ $component_vars_basic = array(
 
 	<div class="tutor-space-y-3">
 		<h4 class="tutor-text-base tutor-font-medium">
+			<?php echo esc_html__( 'Form Demo', 'tutor' ); ?>
+		</h4>
+		<div
+			x-data="{ submittedValue: '' }"
+			class="tutor-space-y-4"
+		>
+			<form
+				@submit.prevent="submittedValue = $event.target.querySelector('input[name=\'selected_option\']')?.value || ''"
+				class="tutor-space-y-4"
+			>
+				<?php tutor_load_template( 'components.select-dropdown', $component_vars_form ); ?>
+				<button
+					type="submit"
+					class="tutor-btn tutor-btn-primary tutor-mt-3"
+				>
+					<?php echo esc_html__( 'Submit', 'tutor' ); ?>
+				</button>
+			</form>
+			<div
+				x-show="submittedValue"
+				x-transition
+				class="tutor-p-4 tutor-bg-gray-100 tutor-rounded tutor-border tutor-border-gray-300"
+			>
+				<p class="tutor-text-sm tutor-text-gray-600 tutor-mb-1">
+					<?php echo esc_html__( 'Submitted Value:', 'tutor' ); ?>
+				</p>
+				<p class="tutor-text-base tutor-font-medium tutor-text-gray-900" x-text="submittedValue"></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="tutor-space-y-3">
+		<h4 class="tutor-text-base tutor-font-medium">
 			<?php echo esc_html__( 'With Search', 'tutor' ); ?>
 		</h4>
 		<?php tutor_load_template( 'components.select-dropdown', $component_vars_searchable ); ?>
@@ -86,5 +125,4 @@ $component_vars_basic = array(
 		<?php tutor_load_template( 'components.select-dropdown', $component_vars_basic ); ?>
 	</div>
 </div>
-
 
