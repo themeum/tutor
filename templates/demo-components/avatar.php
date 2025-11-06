@@ -15,6 +15,11 @@ use TUTOR\Icon;
 	<div class="tutor-mb-6">
 		<h3 class="tutor-mb-4">Avatar Sizes</h3>
 		<div class="tutor-rounded-lg tutor-shadow-sm tutor-p-6" style="display: flex; align-items: center; gap: 20px;">
+
+			<div class="tutor-avatar">
+				<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
+			</div>
+
 			<!-- Extra Small -->
 			<div class="tutor-avatar tutor-avatar-xs">
 				<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User Avatar" class="tutor-avatar-image">
@@ -85,7 +90,7 @@ use TUTOR\Icon;
 				<?php tutor_utils()->render_svg_icon( Icon::USER, 24, 24 ); ?>
 			</div>
 			
-			<div class="tutor-avatar tutor-avatar-icon  tutor-avatar-md">
+			<div class="tutor-avatar tutor-avatar-icon tutor-avatar-md">
 				<?php tutor_utils()->render_svg_icon( Icon::USER, 24, 24 ); ?>
 			</div>
 			
@@ -107,7 +112,7 @@ use TUTOR\Icon;
 				<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User Avatar" class="tutor-avatar-image">
 			</div>
 			
-			<div class="tutor-avatar tutor-avatar-square  tutor-avatar-md">
+			<div class="tutor-avatar tutor-avatar-square tutor-avatar-md">
 				<span class="tutor-avatar-initials">JS</span>
 			</div>
 			

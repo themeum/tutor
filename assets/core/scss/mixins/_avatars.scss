@@ -1,6 +1,4 @@
 // Avatar Mixins
-// Reusable Avatar styles with variants and sizes
-
 @use "../tokens" as *;
 @use "typography" as *;
 @use "layout" as *;
@@ -20,7 +18,6 @@
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	border-radius: inherit;
 }
 
 @mixin tutor-avatar-initials {
@@ -39,7 +36,7 @@
 		.tutor-avatar-initials {
 			@include tutor-typography('tiny', 'medium');
 		}
-		
+
 		svg {
 			width: 12px;
 			height: 12px;
@@ -63,7 +60,6 @@
 		.tutor-avatar-initials {
 			@include tutor-typography('small', 'medium');
 		}
-		
 		svg {
 			width: 24px;
 			height: 24px;
@@ -114,6 +110,7 @@
 	@if $variant == square {
 		border-radius: $tutor-radius-md;
 		
+		svg,
 		.tutor-avatar-image {
 			border-radius: $tutor-radius-md;
 		}
