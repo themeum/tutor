@@ -12,6 +12,7 @@ export interface StepperDropdownProps {
   value?: string;
   placeholder?: string;
   disabled?: boolean;
+  name?: string; // Form field name for the hidden input
   onChange?: (value: string) => void;
 }
 
@@ -24,10 +25,12 @@ export const stepperDropdown = (props: StepperDropdownProps) => {
     placeholder: props.placeholder || '',
     disabled: props.disabled || false,
     dropdownPosition: 'bottom' as 'top' | 'bottom',
+    name: props.name || '',
 
     init() {
       const $el = (this as unknown as { $el: HTMLElement }).$el;
       $el.classList.add('tutor-stepper-dropdown');
+      this.syncHiddenInput();
 
       // Watch for isOpen changes and recalculate position
       const $watch = (this as unknown as { $watch?: (key: string, callback: (value: unknown) => void) => void }).$watch;
@@ -163,6 +166,21 @@ export const stepperDropdown = (props: StepperDropdownProps) => {
       return match || null;
     },
 
+    syncHiddenInput() {
+      if (!this.name) return;
+      const $el = (this as unknown as { $el: HTMLElement }).$el;
+      let hiddenInput = $el.querySelector(`input[type="hidden"][name="${this.name}"]`) as HTMLInputElement | null;
+
+      if (!hiddenInput) {
+        hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = this.name;
+        $el.appendChild(hiddenInput);
+      }
+
+      hiddenInput.value = this.value;
+    },
+
     get currentIndex(): number {
       return this.options.findIndex((o) => o.value === this.value && !o.disabled);
     },
@@ -197,6 +215,7 @@ export const stepperDropdown = (props: StepperDropdownProps) => {
         const option = this.options[nextIdx];
         if (option && !option.disabled) {
           this.value = option.value;
+          this.syncHiddenInput();
           if (props.onChange) {
             props.onChange(option.value);
           }
@@ -217,6 +236,7 @@ export const stepperDropdown = (props: StepperDropdownProps) => {
         const option = this.options[prevIdx];
         if (option && !option.disabled) {
           this.value = option.value;
+          this.syncHiddenInput();
           if (props.onChange) {
             props.onChange(option.value);
           }
@@ -229,6 +249,7 @@ export const stepperDropdown = (props: StepperDropdownProps) => {
       const option = this.options[index];
       if (!option || option.disabled) return;
       this.value = option.value;
+      this.syncHiddenInput();
       if (props.onChange) {
         props.onChange(option.value);
       }
@@ -238,6 +259,7 @@ export const stepperDropdown = (props: StepperDropdownProps) => {
     selectOption(option: StepperOption) {
       if (option.disabled) return;
       this.value = option.value;
+      this.syncHiddenInput();
       if (props.onChange) {
         props.onChange(option.value);
       }

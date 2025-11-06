@@ -58,13 +58,59 @@ $component_vars = array(
 	'placeholder' => __( 'Select an option...', 'tutor' ),
 );
 
+$component_vars_form = array(
+	'options'     => $dropdown_options,
+	'placeholder' => __( 'Select an option...', 'tutor' ),
+	'name'        => 'selected_option',
+);
+
 ?>
 
+<section class="tutor-bg-white tutor-py-6 tutor-px-8 tutor-rounded-lg tutor-shadow-sm">
 <div class="tutor-p-6 tutor-space-y-4">
 	<h3 class="tutor-text-xl tutor-font-medium">
 		<?php echo esc_html__( 'Stepper Dropdown Demo', 'tutor' ); ?>
 	</h3>
 
-	<?php tutor_load_template( 'core-components.stepper-dropdown', $component_vars ); ?>
+	<div class="tutor-space-y-3">
+		<h4 class="tutor-text-base tutor-font-medium">
+			<?php echo esc_html__( 'Form Demo', 'tutor' ); ?>
+		</h4>
+		<div
+			x-data="{ submittedValue: '' }"
+			class="tutor-space-y-4"
+		>
+			<form
+				@submit.prevent="submittedValue = $event.target.querySelector('input[name=\'selected_option\']')?.value || ''"
+				class="tutor-space-y-4"
+			>
+				<?php tutor_load_template( 'core-components.stepper-dropdown', $component_vars_form ); ?>
+				<button
+					type="submit"
+					class="tutor-btn tutor-btn-primary tutor-mt-3"
+				>
+					<?php echo esc_html__( 'Submit', 'tutor' ); ?>
+				</button>
+			</form>
+			<div
+				x-show="submittedValue"
+				x-transition
+				class="tutor-p-4 tutor-mt-3 tutor-bg-gray-100 tutor-rounded tutor-border tutor-border-gray-300"
+			>
+				<p class="tutor-text-sm tutor-text-gray-600 tutor-mb-1">
+					<?php echo esc_html__( 'Submitted Value:', 'tutor' ); ?>
+				</p>
+				<p class="tutor-text-base tutor-font-medium tutor-text-gray-900" x-text="submittedValue"></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="tutor-space-y-3">
+		<h4 class="tutor-text-base tutor-font-medium">
+			<?php echo esc_html__( 'Basic Demo', 'tutor' ); ?>
+		</h4>
+		<?php tutor_load_template( 'core-components.stepper-dropdown', $component_vars ); ?>
+	</div>
 </div>
+</section>
 

@@ -116,6 +116,7 @@
 		max-height: 280px;
 		overflow: auto;
 		width: 100%;
+		border: 1px solid $tutor-border-idle;
 
 		// Default positioning (bottom)
 		&-bottom {
@@ -143,13 +144,27 @@
 		padding: $tutor-spacing-4 $tutor-spacing-5;
 		cursor: pointer;
 
+		&-check {
+			flex-shrink: 0;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: $tutor-icon-brand;
+			text-align: center;
+
+			&-icon {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				width: 100%;
+			}
+		}
+
 		&-icon {
 			flex-shrink: 0;
 			display: flex;
 			align-items: center;
 			color: $tutor-icon-secondary;
-			width: 16px;
-			height: 16px;
 		}
 
 		&-label {

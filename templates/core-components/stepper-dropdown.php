@@ -14,6 +14,7 @@ $options     = isset( $options ) ? $options : array();
 $placeholder = isset( $placeholder ) ? $placeholder : __( 'Select an option...', 'tutor' );
 $value       = isset( $value ) ? $value : '';
 $disabled    = isset( $disabled ) ? $disabled : false;
+$name        = isset( $name ) ? $name : '';
 
 $options_json = array();
 foreach ( $options as $option ) {
@@ -37,7 +38,8 @@ foreach ( $options as $option ) {
 		options: <?php echo wp_json_encode( $options_json ); ?>,
 		placeholder: <?php echo wp_json_encode( $placeholder ); ?>,
 		value: <?php echo wp_json_encode( $value ); ?>,
-		disabled: <?php echo $disabled ? 'true' : 'false'; ?>
+		disabled: <?php echo $disabled ? 'true' : 'false'; ?>,
+		name: <?php echo wp_json_encode( $name ); ?>
 	})'
 	class="tutor-stepper-dropdown"
 >
@@ -94,7 +96,7 @@ foreach ( $options as $option ) {
 			<template x-for="(opt, idx) in options" :key="opt.value">
 				<li
 					role="option"
-					class="tutor-stepper-dropdown-option"
+					class="tutor-stepper-dropdown-option tutor-d-flex tutor-align-center tutor-gap-2"
 					:class="{
 						'tutor-is-selected': isSelected(opt),
 						'tutor-is-disabled': opt.disabled,
@@ -104,6 +106,11 @@ foreach ( $options as $option ) {
 					@click.prevent="selectOption(opt)"
 					@mousemove="highlightedIndex = idx"
 				>
+					<span class="tutor-stepper-dropdown-option-check">
+						<span class="tutor-stepper-dropdown-option-check-icon" x-show="isSelected(opt)">
+							<?php tutor_utils()->render_svg_icon( Icon::TICK_MARK, 16, 16 ); ?>
+						</span>
+					</span>
 					<template x-if="opt.icon">
 						<span class="tutor-stepper-dropdown-option-icon" x-data="tutorIcon({ name: opt.icon })"></span>
 					</template>
