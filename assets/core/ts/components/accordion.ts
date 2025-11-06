@@ -19,7 +19,7 @@ export interface AlpineAccordionData {
   focusFirst: () => void;
   focusLast: () => void;
 }
-import { type AlpineComponentMeta } from '@Core/types';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 export function createAccordion(config: AccordionConfig = {}): AlpineAccordionData {
   return {
