@@ -235,28 +235,10 @@
 }
 
 // Shadow utilities
-.tutor-shadow-none {
-  box-shadow: none;
-}
-
-.tutor-shadow-sm {
-  box-shadow: var(--tutor-shadow-sm);
-}
-
-.tutor-shadow {
-  box-shadow: var(--tutor-shadow-md);
-}
-
-.tutor-shadow-md {
-  box-shadow: var(--tutor-shadow-md);
-}
-
-.tutor-shadow-lg {
-  box-shadow: var(--tutor-shadow-lg);
-}
-
-.tutor-shadow-xl {
-  box-shadow: var(--tutor-shadow-xl);
+@each $key, $value in $tutor-shadows {
+  .tutor-shadow-#{$key} {
+    box-shadow: $value;
+  }
 }
 
 // Opacity utilities
@@ -328,7 +310,7 @@
 
 // Responsive color utilities
 @each $breakpoint, $value in $tutor-breakpoints {
-  @if $value > 0 {
+  @if $value >0 {
     @media (min-width: $value) {
       .tutor-#{$breakpoint}-bg-surface-base {
         background-color: var(--tutor-surface-base);

@@ -10652,7 +10652,7 @@ class Utils {
 		list( $svg_tag, $view_box, $inner_svg ) = $matches;
 
 		$attr_string = sprintf(
-			'width="%d" height="%d" viewBox="%s" role="presentation" aria-hidden="true"',
+			'width="%d" height="%d" viewBox="%s" fill="none" role="presentation" aria-hidden="true"',
 			esc_attr( $width ),
 			esc_attr( $height ),
 			esc_attr( $view_box ),

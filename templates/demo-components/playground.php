@@ -52,6 +52,7 @@
 		</section>
 		<section>
 			<?php require 'button.php'; ?>
+			<?php require 'popover.php'; ?>
 			<?php require 'file-uploader.php'; ?>
 		</section>
 		<section>
@@ -74,7 +75,13 @@
 			<?php require 'section-separator.php'; ?>
 		</section>
 		<section>
-				<?php require 'accordion.php'; ?>
+			<?php require 'select-dropdown.php'; ?>
+		</section>
+		<section>
+			<?php require 'accordion.php'; ?>
+		</section>
+		<section>
+			<?php require 'modal.php'; ?>
 		</section>
 	<?php endif ?>
 
