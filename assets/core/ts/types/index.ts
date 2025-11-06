@@ -1,11 +1,11 @@
-import { type accordionMeta } from '@Core/components/accordion';
-import { type buttonMeta } from '@Core/components/button';
-import { type fileUploaderMeta } from '@Core/components/file-uploader';
-import { type iconMeta } from '@Core/components/icon';
-import { type popoverMeta } from '@Core/components/popover';
-import { type tabsMeta } from '@Core/components/tabs';
-import { type selectDropdownMeta } from '@Core/components/select-dropdown';
-import { type stepperDropdownMeta } from '@Core/components/stepper-dropdown';
+import { type accordionMeta } from '@Core/ts/components/accordion';
+import { type buttonMeta } from '@Core/ts/components/button';
+import { type fileUploaderMeta } from '@Core/ts/components/file-uploader';
+import { type iconMeta } from '@Core/ts/components/icon';
+import { type popoverMeta } from '@Core/ts/components/popover';
+import { type tabsMeta } from '@Core/ts/components/tabs';
+import { type selectDropdownMeta } from '@Core/ts/components/select-dropdown';
+import { type stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {

@@ -1,4 +1,4 @@
-import { type AlpineComponentMeta } from '@Core/types';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 type StaticsType = 'progress' | 'complete' | 'locked';
 type StaticsSize = 'small' | 'medium' | 'large';

@@ -1,4 +1,4 @@
-import { type AlpineComponentMeta } from '@Core/types';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 import { isRTL } from '@TutorShared/config/constants';
 
 const VIEWPORT_PADDING = 8;

@@ -65,6 +65,6 @@ $component_vars = array(
 		<?php echo esc_html__( 'Stepper Dropdown Demo', 'tutor' ); ?>
 	</h3>
 
-	<?php tutor_load_template( 'components.stepper-dropdown', $component_vars ); ?>
+	<?php tutor_load_template( 'core-components.stepper-dropdown', $component_vars ); ?>
 </div>
 

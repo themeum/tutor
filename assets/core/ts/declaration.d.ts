@@ -1,7 +1,7 @@
 import { type Alpine as AlpineType } from 'alpinejs';
 
-import { type TutorComponentRegistry } from '@Core/ComponentRegistry';
-import { type TutorCore } from '@Core/types';
+import { type TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
+import { type TutorCore } from '@Core/ts/types';
 
 declare global {
   interface Window {
