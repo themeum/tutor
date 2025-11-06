@@ -40,7 +40,7 @@ $component_vars_basic = array(
 
 		<div class="tutor-space-y-3">
 			<h4 class="tutor-text-base tutor-font-medium">
-				<?php echo esc_html__( 'Basic Accordion (Multiple Open)', 'tutor' ); ?>
+				<?php echo esc_html__( 'Basic Accordion', 'tutor' ); ?>
 			</h4>
 			<?php tutor_load_template( 'core-components.accordion', $component_vars_basic ); ?>
 		</div>
