@@ -73,6 +73,7 @@ $component_vars_basic = array(
 
 ?>
 
+<section class="tutor-bg-white tutor-py-6 tutor-px-8 tutor-rounded-lg tutor-shadow-sm">
 <div class="tutor-p-6 tutor-space-y-6">
 	<h3 class="tutor-text-xl tutor-font-medium">
 		<?php echo esc_html__( 'Select Dropdown Demo', 'tutor' ); ?>
@@ -101,7 +102,7 @@ $component_vars_basic = array(
 			<div
 				x-show="submittedValue"
 				x-transition
-				class="tutor-p-4 tutor-bg-gray-100 tutor-rounded tutor-border tutor-border-gray-300"
+				class="tutor-p-4 tutor-mt-3 tutor-bg-gray-100 tutor-rounded tutor-border tutor-border-gray-300"
 			>
 				<p class="tutor-text-sm tutor-text-gray-600 tutor-mb-1">
 					<?php echo esc_html__( 'Submitted Value:', 'tutor' ); ?>
@@ -125,4 +126,5 @@ $component_vars_basic = array(
 		<?php tutor_load_template( 'components.select-dropdown', $component_vars_basic ); ?>
 	</div>
 </div>
+</section>
 
