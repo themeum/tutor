@@ -1,7 +1,6 @@
-import { type Alpine } from 'alpinejs';
-
-import { type AlpineComponentMeta, type ServiceMeta, type TutorCore } from '@Core/types';
+import { type AlpineComponentMeta, type ServiceMeta, type TutorCore } from '@Core/ts/types';
 import { makeFirstCharacterUpperCase } from '@TutorShared/utils/util';
+import { type Alpine } from 'alpinejs';
 
 interface RegisterAllOptions {
   components?: AlpineComponentMeta[];

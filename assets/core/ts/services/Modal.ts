@@ -1,5 +1,5 @@
-import { TUTOR_CUSTOM_EVENTS } from '@Core/constant';
-import { type ServiceMeta } from '@Core/types';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
+import { type ServiceMeta } from '@Core/ts/types';
 
 /**
  * ModalService: programmatic API for opening/closing/updating modals.

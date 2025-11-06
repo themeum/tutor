@@ -256,6 +256,8 @@ const jsEntries = {
   'tutor-payment-settings': './assets/react/v3/entries/payment-settings/index.tsx',
   'tutor-addon-list': './assets/react/v3/entries/addon-list/index.tsx',
   'tutor-import-export': './assets/react/v3/entries/import-export/index.tsx',
+  'tutor-dashboard': './assets/react/frontend/dashboard/index.ts',
+  'tutor-learning-area': './assets/react/frontend/learning-area/index.ts',
 };
 
 const scssEntries = {
@@ -273,7 +275,7 @@ const scssEntries = {
 };
 
 const resolveAliases = {
-  '@Core': path.resolve(__dirname, './assets/core/ts'),
+  '@Core': path.resolve(__dirname, './assets/core'),
   '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
   '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
   '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
@@ -286,6 +288,10 @@ const resolveAliases = {
   '@CouponDetails': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/'),
   '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
   '@ImportExport': path.resolve(__dirname, './assets/react/v3/entries/import-export/'),
+  '@FrontendTypes': path.resolve(__dirname, './assets/react/frontend/types'),
+  '@FrontendServices': path.resolve(__dirname, './assets/react/frontend/services'),
+  '@FrontendDashboard': path.resolve(__dirname, './assets/react/frontend/dashboard'),
+  '@LearningArea': path.resolve(__dirname, './assets/react/frontend/learning-area'),
 };
 
 const isScssEntry = (entry) => {

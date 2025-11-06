@@ -91,7 +91,7 @@ $component_vars_basic = array(
 				@submit.prevent="submittedValue = $event.target.querySelector('input[name=\'selected_option\']')?.value || ''"
 				class="tutor-space-y-4"
 			>
-				<?php tutor_load_template( 'components.select-dropdown', $component_vars_form ); ?>
+				<?php tutor_load_template( 'core-components.select-dropdown', $component_vars_form ); ?>
 				<button
 					type="submit"
 					class="tutor-btn tutor-btn-primary tutor-mt-3"
@@ -116,14 +116,14 @@ $component_vars_basic = array(
 		<h4 class="tutor-text-base tutor-font-medium">
 			<?php echo esc_html__( 'With Search', 'tutor' ); ?>
 		</h4>
-		<?php tutor_load_template( 'components.select-dropdown', $component_vars_searchable ); ?>
+		<?php tutor_load_template( 'core-components.select-dropdown', $component_vars_searchable ); ?>
 	</div>
 
 	<div class="tutor-space-y-3">
 		<h4 class="tutor-text-base tutor-font-medium">
 			<?php echo esc_html__( 'Without Search', 'tutor' ); ?>
 		</h4>
-		<?php tutor_load_template( 'components.select-dropdown', $component_vars_basic ); ?>
+		<?php tutor_load_template( 'core-components.select-dropdown', $component_vars_basic ); ?>
 	</div>
 </div>
 </section>
