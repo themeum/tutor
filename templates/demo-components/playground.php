@@ -74,6 +74,9 @@
 		<section>
 				<?php require 'accordion.php'; ?>
 		</section>
+		<section>
+			<?php require 'modal.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
