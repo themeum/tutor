@@ -16,10 +16,6 @@ use TUTOR\Icon;
 		<h3 class="tutor-mb-4">Avatar Sizes</h3>
 		<div class="tutor-rounded-lg tutor-shadow-sm tutor-p-6" style="display: flex; align-items: center; gap: 20px;">
 
-			<div class="tutor-avatar">
-				<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-			</div>
-
 			<!-- Extra Small -->
 			<div class="tutor-avatar tutor-avatar-xs">
 				<img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User Avatar" class="tutor-avatar-image">
