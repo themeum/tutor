@@ -6,40 +6,44 @@
  */
 
 use TUTOR\Icon;
+use TUTOR\Input;
 
-$menu_items  = array(
+$current_url = admin_url( 'admin.php?page=playground&subpage=dashboard' );
+
+$menu_items = array(
 	'dashboard'   => array(
-		'title'       => esc_html__( 'Dashboard', 'tutor' ),
+		'title'       => esc_html__( 'Home', 'tutor' ),
 		'icon'        => Icon::HOME,
 		'active_icon' => Icon::HOME_FILL,
-		'url'         => home_url( '/dashboard/' ),
+		'url'         => esc_url( add_query_arg( 'dashboard-page', 'home', $current_url ) ),
 	),
 	'courses'     => array(
 		'title'       => esc_html__( 'Courses', 'tutor' ),
 		'icon'        => Icon::COURSES,
 		'active_icon' => Icon::COURSES_FILL,
-		'url'         => home_url( '/dashboard/courses/' ),
+		'url'         => esc_url( add_query_arg( 'dashboard-page', 'courses', $current_url ) ),
 	),
 	'notes'       => array(
 		'title'       => esc_html__( 'Notes', 'tutor' ),
 		'icon'        => Icon::NOTES,
 		'active_icon' => Icon::NOTES_FILL,
-		'url'         => home_url( '/dashboard/notes/' ),
+		'url'         => esc_url( add_query_arg( 'dashboard-page', 'notes', $current_url ) ),
 	),
 	'discussions' => array(
 		'title'       => esc_html__( 'Discussions', 'tutor' ),
 		'icon'        => Icon::QA,
 		'active_icon' => Icon::QA_FILL,
-		'url'         => home_url( '/dashboard/discussions/' ),
+		'url'         => esc_url( add_query_arg( 'dashboard-page', 'discussions', $current_url ) ),
 	),
 	'calendar'    => array(
 		'title'       => esc_html__( 'Calendar', 'tutor' ),
 		'icon'        => Icon::CALENDAR_2,
 		'active_icon' => Icon::CALENDAR_2_FILL,
-		'url'         => home_url( '/dashboard/calendar/' ),
+		'url'         => esc_url( add_query_arg( 'dashboard-page', 'calendar', $current_url ) ),
 	),
 );
-$active_menu = 'dashboard';
+
+$active_menu = Input::get( 'dashboard-page', 'dashboard' );
 
 ?>
 <div class="tutor-dashboard-sidebar">
