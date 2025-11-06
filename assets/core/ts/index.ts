@@ -12,12 +12,23 @@ import { popoverMeta } from '@Core/ts/components/popover';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { tabsMeta } from '@Core/ts/components/tabs';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
+import { selectDropdownMeta } from './components/select-dropdown';
 
 Alpine.plugin(focus);
 
 const initializePlugin = () => {
   TutorComponentRegistry.registerAll({
-    components: [buttonMeta, fileUploaderMeta, tabsMeta, iconMeta, modalMeta, popoverMeta, staticsMeta, accordionMeta],
+    components: [
+      buttonMeta,
+      fileUploaderMeta,
+      tabsMeta,
+      iconMeta,
+      modalMeta,
+      popoverMeta,
+      staticsMeta,
+      accordionMeta,
+      selectDropdownMeta,
+    ],
     services: [modalServiceMeta],
   });
 

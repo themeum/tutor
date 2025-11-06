@@ -1,5 +1,5 @@
-import { TUTOR_CUSTOM_EVENTS } from '@Core/constant';
-import { type AlpineComponentMeta } from '@Core/types';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 export interface ModalConfig {
   id: string;
