@@ -8,6 +8,10 @@
   background-color: $tutor-surface-sidebar-l1;
   border-inline-end: 1px solid $tutor-border-idle;
 
+  @include tutor-breakpoint-down(md) {
+    display: none;
+  }
+
   &-logo {
     height: 80px;
     @include tutor-flex(row, center);

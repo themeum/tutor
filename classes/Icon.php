@@ -136,6 +136,8 @@ final class Icon {
 	const ERASER                     = 'eraser';
 	const EXE                        = 'exe';
 	const EXPAND                     = 'expand';
+	const EXPLORE                    = 'explore';
+	const EXPLORE_FILL               = 'explore-fill';
 	const EXPORT                     = 'export';
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
@@ -241,6 +243,8 @@ final class Icon {
 	const PRIME_CHECK_CIRCLE         = 'prime-check-circle';
 	const PRINTER                    = 'printer';
 	const PROFILE                    = 'profile';
+	const PROFILE_CIRCLE             = 'profile-circle';
+	const PROFILE_CIRCLE_FILL        = 'profile-circle-fill';
 	const PSD                        = 'psd';
 	const QA                         = 'qa';
 	const QA_FILL                    = 'qa-fill';

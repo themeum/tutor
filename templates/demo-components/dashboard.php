@@ -16,4 +16,5 @@
 			</div>
 		</div>
 	</div>
+	<?php tutor_load_template( 'demo-components.dashboard.components.nav-mobile' ); ?>
 </div>

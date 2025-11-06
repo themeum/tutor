@@ -2,9 +2,10 @@
 // Import all dashboard-related styles
 
 // Layout components
-@forward 'layout/header';
-@forward 'layout/sidebar';
 @forward 'layout/layout';
+@forward 'layout/sidebar';
+@forward 'layout/header';
+@forward 'layout/nav-mobile';
 
 // Page components
 @forward 'overview';
