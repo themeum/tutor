@@ -44,7 +44,9 @@
   }
 
   &-more-popover {
-    min-width: 220px;
+    min-width: 170px;
+    padding: $tutor-spacing-2 0;
+    border: 1px solid $tutor-border-idle;
 
     ul {
       list-style: none;
@@ -55,21 +57,16 @@
         margin: 0;
         padding: 0;
 
-        &:not(:last-child) {
-          border-bottom: 1px solid $tutor-border-idle;
-        }
-
         a {
           @include tutor-typography(tiny, regular);
           @include tutor-flex(row, center);
-          gap: $tutor-spacing-3;
-          padding: $tutor-spacing-5 $tutor-spacing-6;
+          gap: $tutor-spacing-4;
+          padding: $tutor-spacing-4 $tutor-spacing-5;
           text-decoration: none;
           outline: none;
           box-shadow: none;
 
           &.active {
-            background-color: $tutor-tab-sidebar-l2-active;
             color: $tutor-text-brand;
           }
         }
