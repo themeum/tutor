@@ -48,6 +48,9 @@
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
 		<section>
+			<?php require 'pagination.php'; ?>
+		</section>
+		<section>
 			<?php require 'button.php'; ?>
 			<?php require 'popover.php'; ?>
 			<?php require 'file-uploader.php'; ?>
