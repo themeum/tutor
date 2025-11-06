@@ -10,13 +10,13 @@ use TUTOR\Icon;
 defined( 'ABSPATH' ) || exit;
 
 // Default values.
-$items        = isset( $items ) ? $items : [];
+$items        = isset( $items ) ? $items : array();
 $multiple     = isset( $multiple ) ? (bool) $multiple : true;
-$default_open = isset( $default_open ) ? $default_open : [];
+$default_open = isset( $default_open ) ? $default_open : array();
 
 // Ensure default_open is an array.
 if ( ! is_array( $default_open ) ) {
-	$default_open = [];
+	$default_open = array();
 }
 
 ?>
