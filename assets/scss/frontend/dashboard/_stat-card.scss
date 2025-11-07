@@ -1,0 +1,80 @@
+// Stat Card Component
+// Dashboard statistics card with variations
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-stat-card {
+	padding: $tutor-spacing-6;
+	height: 146px;
+	@include tutor-flex(column, stretch, space-between);
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+
+	&-header {
+		@include tutor-flex(row, center, space-between);
+	}
+
+	&-title {
+		@include tutor-typography('small', 'regular', 'primary', 'body');
+		font-style: normal;
+		letter-spacing: 0;
+        margin: 0;
+	}
+
+	&-value {
+		@include tutor-typography('h2', 'bold', 'primary', 'heading');
+		font-style: normal;
+		letter-spacing: 0;
+		margin: 0;
+	}
+
+	&-change {
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		font-style: normal;
+		letter-spacing: 0;
+		margin: 0;
+	}
+
+	// Color variations
+	&-enrolled {
+        .tutor-stat-card-icon {
+            color: $tutor-brand-600;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-brand-600;
+		}
+	}
+
+	&-active {
+		.tutor-stat-card-icon {
+			color: $tutor-exception-1;
+		}
+        
+		.tutor-stat-card-value {
+			color: $tutor-exception-1;
+		}
+	}
+
+	&-completed {
+		.tutor-stat-card-icon {
+			color: $tutor-success-700;
+		}
+        
+		.tutor-stat-card-value {
+			color: $tutor-success-700;
+		}
+	}
+
+	&-time-spent {
+		.tutor-stat-card-icon {
+			color: $tutor-warning-400;
+		}
+        
+		.tutor-stat-card-value {
+			color: $tutor-warning-400;
+		}
+	}
+}
+
