@@ -1,6 +1,3 @@
-// Accordion Component
-// Alpine.js accordion with multiple/single expand modes
-
 export interface AccordionConfig {
   multiple?: boolean;
   defaultOpen?: number[];
@@ -19,7 +16,7 @@ export interface AlpineAccordionData {
   focusFirst: () => void;
   focusLast: () => void;
 }
-import { type AlpineComponentMeta } from '@Core/types';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 export function createAccordion(config: AccordionConfig = {}): AlpineAccordionData {
   return {
@@ -27,7 +24,6 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
     $el: undefined as HTMLElement | undefined,
 
     toggle(index: number): void {
-      // Multi-expand behavior only
       if (this.openItems.includes(index)) {
         this.openItems = this.openItems.filter((i: number) => i !== index);
       } else {
@@ -39,7 +35,6 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
     updateContentClasses(index: number): void {
       if (!this.$el) return;
 
-      // Try multiple selection methods
       let content = this.$el.querySelector(`#tutor-acc-panel-${index}`) as HTMLElement;
 
       if (!content) {
@@ -54,20 +49,72 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
       if (!content) return;
 
       if (this.isOpen(index)) {
-        // Expand: apply class and explicit height to force visual update
-        content.classList.add('tutor-accordion-content-expanded');
-        content.classList.remove('tutor-accordion-content-collapsed');
+        content.classList.remove('tutor-accordion-content-expanded');
+        content.classList.add('tutor-accordion-content-collapsed');
+        content.style.height = '0px';
 
-        const previousTransition = content.style.transition;
-        content.style.transition = 'none';
-        content.style.height = 'auto';
-        const naturalHeight = content.scrollHeight;
-        content.style.transition = previousTransition;
+        const bodyElement = content.querySelector('.tutor-accordion-body') as HTMLElement;
 
+        let naturalHeight = 0;
+
+        if (bodyElement) {
+          const bodyHeight = bodyElement.scrollHeight;
+
+          const previousTransition = content.style.transition;
+          const previousTransform = content.style.transform;
+          const previousPointerEvents = content.style.pointerEvents;
+
+          content.style.transition = 'none';
+          content.style.transform = 'scaleY(0)';
+          content.style.transformOrigin = 'top';
+          content.style.pointerEvents = 'none';
+          content.classList.remove('tutor-accordion-content-collapsed');
+          content.classList.add('tutor-accordion-content-expanded');
+          content.style.height = 'auto';
+          void content.offsetHeight;
+
+          const computedStyle = window.getComputedStyle(content);
+          const paddingTop = parseFloat(computedStyle.paddingTop) || 0;
+          const paddingBottom = parseFloat(computedStyle.paddingBottom) || 0;
+
+          naturalHeight = bodyHeight + paddingTop + paddingBottom;
+          content.style.transition = previousTransition;
+          content.style.transform = previousTransform;
+          content.style.transformOrigin = '';
+          content.style.pointerEvents = previousPointerEvents;
+          content.classList.remove('tutor-accordion-content-expanded');
+          content.classList.add('tutor-accordion-content-collapsed');
+          content.style.height = '0px';
+        } else {
+          const previousTransition = content.style.transition;
+          const previousTransform = content.style.transform;
+          const previousPointerEvents = content.style.pointerEvents;
+
+          content.style.transition = 'none';
+          content.style.transform = 'scaleY(0)';
+          content.style.transformOrigin = 'top';
+          content.style.pointerEvents = 'none';
+          content.classList.remove('tutor-accordion-content-collapsed');
+          content.classList.add('tutor-accordion-content-expanded');
+          content.style.height = 'auto';
+          naturalHeight = content.scrollHeight;
+          content.classList.remove('tutor-accordion-content-expanded');
+          content.classList.add('tutor-accordion-content-collapsed');
+          content.style.height = '0px';
+          content.style.transition = previousTransition;
+          content.style.transform = previousTransform;
+          content.style.transformOrigin = '';
+          content.style.pointerEvents = previousPointerEvents;
+        }
         content.style.setProperty('--content-height', `${naturalHeight}px`);
-        content.style.height = `${naturalHeight}px`;
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            content.classList.remove('tutor-accordion-content-collapsed');
+            content.classList.add('tutor-accordion-content-expanded');
+            content.style.height = '';
+          });
+        });
       } else {
-        // Collapse: class plus inline height 0
         content.classList.add('tutor-accordion-content-collapsed');
         content.classList.remove('tutor-accordion-content-expanded');
         content.style.height = '0px';
@@ -76,8 +123,6 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
 
     initializeClasses(): void {
       if (!this.$el) return;
-
-      // Small delay to ensure DOM is fully rendered
       setTimeout(() => {
         this.recalculateHeights();
         const contents = this.$el!.querySelectorAll('.tutor-accordion-content');
@@ -97,12 +142,9 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
 
     recalculateHeights(): void {
       if (!this.$el) return;
-
       const contents = this.$el.querySelectorAll('.tutor-accordion-content');
       contents.forEach((content) => {
         const htmlContent = content as HTMLElement;
-
-        // Measure natural height
         const originalTransition = htmlContent.style.transition;
         htmlContent.style.transition = 'none';
         htmlContent.classList.add('tutor-accordion-content-expanded');
@@ -110,10 +152,7 @@ export function createAccordion(config: AccordionConfig = {}): AlpineAccordionDa
         htmlContent.style.height = 'auto';
         const naturalHeight = htmlContent.scrollHeight;
         htmlContent.style.transition = originalTransition;
-
         htmlContent.style.setProperty('--content-height', `${naturalHeight}px`);
-
-        // Restore collapsed state if needed
         if (!this.isOpen(Array.from(contents).indexOf(content))) {
           htmlContent.classList.add('tutor-accordion-content-collapsed');
           htmlContent.classList.remove('tutor-accordion-content-expanded');

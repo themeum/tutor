@@ -18,7 +18,7 @@
 			Button variants for different use cases and visual hierarchy.
 		</p>
 		<div class="tutor-p-6 tutor-bg-gray-50 tutor-rounded-md">
-			<div class="tutor-flex tutor-gap-3 tutor-flex-wrap">
+			<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-flex-wrap">
 				<button class="tutor-btn tutor-btn-primary">Primary</button>
 				<button class="tutor-btn tutor-btn-primary-soft">Primary Soft</button>
 				<button class="tutor-btn tutor-btn-destructive">Destructive</button>

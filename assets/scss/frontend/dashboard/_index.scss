@@ -2,16 +2,17 @@
 // Import all dashboard-related styles
 
 // Layout components
-@forward "layout/header";
-@forward "layout/sidebar";
-@forward "layout/layout";
+@forward 'layout/layout';
+@forward 'layout/sidebar';
+@forward 'layout/header';
+@forward 'layout/nav-mobile';
 
 // Page components
-@forward "overview";
-@forward "my-courses";
-@forward "assignments";
-@forward "quiz-attempts";
-@forward "certificates";
-@forward "settings";
-@forward "profile";
-@forward "enrollment-history";
+@forward 'overview';
+@forward 'my-courses';
+@forward 'assignments';
+@forward 'quiz-attempts';
+@forward 'certificates';
+@forward 'settings';
+@forward 'profile';
+@forward 'enrollment-history';

@@ -1,4 +1,4 @@
-import { type AlpineComponentMeta } from '@Core/types';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 const iconCache = new Map<string, string>();
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

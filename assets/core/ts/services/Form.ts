@@ -1,4 +1,4 @@
-import { type ServiceMeta } from '@Core/types';
+import { type ServiceMeta } from '@Core/ts/types';
 
 // Re-export the interface so consumers don't need to import from form.ts
 export interface FormControlMethods {

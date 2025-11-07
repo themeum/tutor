@@ -1,13 +1,13 @@
-import { type accordionMeta } from '@Core/components/accordion';
-import { type buttonMeta } from '@Core/components/button';
-import { type fileUploaderMeta } from '@Core/components/file-uploader';
-import { type iconMeta } from '@Core/components/icon';
-import { type popoverMeta } from '@Core/components/popover';
-import { type tabsMeta } from '@Core/components/tabs';
+import { type accordionMeta } from '@Core/ts/components/accordion';
+import { type buttonMeta } from '@Core/ts/components/button';
+import { type fileUploaderMeta } from '@Core/ts/components/file-uploader';
+import { type iconMeta } from '@Core/ts/components/icon';
+import { type popoverMeta } from '@Core/ts/components/popover';
+import { type tabsMeta } from '@Core/ts/components/tabs';
 
-// Export form component types
-export * from './components';
-export * from './form-components';
+import { type selectDropdownMeta } from '@Core/ts/components/select-dropdown';
+import { type stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
+import { type formMeta } from '../components/form';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {
@@ -30,11 +30,11 @@ export interface TutorCore {
   fileUploader: ExtractComponent<typeof fileUploaderMeta>;
   tabs: ExtractComponent<typeof tabsMeta>;
   icon: ExtractComponent<typeof iconMeta>;
+  selectDropdown: ExtractComponent<typeof selectDropdownMeta>;
   popover: ExtractComponent<typeof popoverMeta>;
   accordion: ExtractComponent<typeof accordionMeta>;
-  // Form components
-  form: FormControlFactory;
-  inputField: InputFieldFactory;
+  form: ExtractComponent<typeof formMeta>;
+  stepperDropdown: ExtractComponent<typeof stepperDropdownMeta>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }

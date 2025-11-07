@@ -46,7 +46,6 @@ use Tutor\Icon;
 						type="text"
 						id="name"
 						placeholder="Enter your full name"
-						disabled
 						class="tutor-input tutor-input-content-clear"
 						x-bind="register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })"
 					>

@@ -1,5 +1,5 @@
-import { formServiceMeta } from '@Core/services/Form';
-import { type AlpineComponentMeta } from '@Core/types';
+import { formServiceMeta } from '@Core/ts/services/Form';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 interface FormControlConfig {
   mode?: 'onChange' | 'onBlur' | 'onSubmit';
