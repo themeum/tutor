@@ -5,6 +5,10 @@ import { type iconMeta } from '@Core/components/icon';
 import { type popoverMeta } from '@Core/components/popover';
 import { type tabsMeta } from '@Core/components/tabs';
 
+// Export form component types
+export * from './components';
+export * from './form-components';
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {
   name: string;
@@ -28,6 +32,9 @@ export interface TutorCore {
   icon: ExtractComponent<typeof iconMeta>;
   popover: ExtractComponent<typeof popoverMeta>;
   accordion: ExtractComponent<typeof accordionMeta>;
+  // Form components
+  form: FormControlFactory;
+  inputField: InputFieldFactory;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
