@@ -17,6 +17,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\BillingController;
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\OrderActivitiesController;
 
 /**
@@ -790,18 +791,24 @@ class OrderModel {
 	 *
 	 * @param int|array $order_id Integer or array of ids sql escaped.
 	 * @param array     $data Data to update, escape data.
+	 * @param array     $order_items order items (optional).
 	 *
 	 * @return bool
 	 */
-	public function update_order( $order_id, array $data ) {
+	public function update_order( $order_id, array $data, array $order_items = array() ) {
 		$order_id = is_array( $order_id ) ? $order_id : array( $order_id );
 		$order_id = QueryHelper::prepare_in_clause( $order_id );
+
 		try {
 			QueryHelper::update_where_in(
 				$this->table_name,
 				$data,
 				$order_id
 			);
+
+			if ( ! empty( $order_items ) ) {
+				$this->update_order_items( $order_id, $order_items );
+			}
 			return true;
 		} catch ( \Throwable $th ) {
 			error_log( $th->getMessage() . ' in ' . $th->getFile() . ' at line ' . $th->getLine() );
@@ -1780,8 +1787,8 @@ class OrderModel {
 	public static function should_show_pay_btn( object $order ) {
 		$order_items            = ( new self() )->get_order_items_by_id( $order->id );
 		$is_enrolled_any_course = false;
-		$is_incomplete_payment  = ! empty( $order->payment_method ) && self::ORDER_INCOMPLETE === $order->order_status;
-		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : true;
+		$is_incomplete_payment  = self::PAYMENT_UNPAID === $order->payment_status && self::ORDER_INCOMPLETE === $order->order_status;
+		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : false;
 
 		if ( $is_incomplete_payment && ! $is_manual_payment && $order_items ) {
 			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
@@ -1837,8 +1844,10 @@ class OrderModel {
 	 */
 	public static function render_pay_button( $order ) {
 
+		$self = new self();
+
 		if ( is_numeric( $order ) ) {
-			$order = ( new self() )->get_order_by_id( $order );
+			$order = $self->get_order_by_id( $order );
 		}
 
 		$show_pay_button = self::should_show_pay_btn( $order );
@@ -1853,19 +1862,7 @@ class OrderModel {
 			<?php
 		elseif ( $show_pay_button ) :
 			ob_start();
-			?>
-
-			<form method="post">
-				<?php tutor_nonce_field(); ?>
-				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
-				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
-
-				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
-					<?php esc_html_e( 'Pay', 'tutor' ); ?>
-				</button>				
-			</form>
-
-			<?php
+			$self->pay_now_link( $order->id );
 			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
 		endif;
 	}
@@ -2044,5 +2041,110 @@ class OrderModel {
 		}
 
 		return QueryHelper::get_all( 'tutor_earnings', $where, 'order_id' );
+	}
+
+	/**
+	 * Retrieve an existing order if it is incomplete, unpaid, and belongs to the given user.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int  $order_id The ID of the order.
+	 * @param int  $user_id  The ID of the current user.
+	 * @param bool $return_order_data Optional. Whether to return the order data instead of a boolean.
+	 *
+	 * @return bool|object Returns:
+	 *                         - The order object if valid and $return_order_data is true.
+	 *                         - True if valid and $return_order_data is false.
+	 *                         - false if the order is invalid or not found.
+	 */
+	public static function get_valid_incomplete_order( int $order_id, int $user_id, $return_order_data = false ) {
+
+		if ( empty( $order_id ) || empty( $user_id ) ) {
+			return false;
+		}
+
+		$order_data = ( new self() )->get_order_by_id( $order_id );
+
+		if ( empty( $order_data ) ) {
+			return false;
+		}
+
+		$is_valid = self::ORDER_INCOMPLETE === $order_data->order_status
+						&& self::PAYMENT_UNPAID === $order_data->payment_status
+						&& $user_id === $order_data->student->id
+						&& self::should_show_pay_btn( $order_data );
+
+		if ( $is_valid && $return_order_data ) {
+			return $order_data;
+		}
+
+		return $is_valid;
+	}
+
+	/**
+	 * Update all order items for a given order.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int   $order_id     The ID of the order whose items are being updated.
+	 * @param array $order_items  An array of order item data arrays or objects to update.
+	 *
+	 * @return bool True on success, false if any update fails.
+	 */
+	public function update_order_items( int $order_id, array $order_items ) {
+
+		foreach ( $order_items as $item ) {
+			try {
+				QueryHelper::update_where_in(
+					$this->order_item_table,
+					$item,
+					$order_id
+				);
+
+			} catch ( \Throwable $th ) {
+				tutor_log( "Failed to update order item for order ID {$order_id}: " . $th->getMessage() );
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Generate the payment link button HTML for a given order.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int  $order_id   The unique ID of the order.
+	 * @param bool $display    Optional. Whether to echo the link (true) or return it (false). Default true.
+	 *
+	 * @return string|void
+	 */
+	public static function pay_now_link( $order_id, $display = true ) {
+
+		$checkout_url = add_query_arg( array( 'order_id' => $order_id ), CheckoutController::get_page_url() );
+
+		$link =
+			sprintf(
+				'<a href="%s" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+				%s
+			</a>',
+				esc_url( $checkout_url ),
+				esc_html__( 'Pay', 'tutor' )
+			);
+
+		if ( $display ) {
+			echo wp_kses(
+				$link,
+				array(
+					'a' => array(
+						'href'  => true,
+						'class' => true,
+					),
+				)
+			);
+		} else {
+			return $link;
+		}
 	}
 }
