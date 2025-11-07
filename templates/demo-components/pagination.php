@@ -9,9 +9,9 @@
 use TUTOR\Icon;
 ?>
 
-<div class="tutor-bg-white tutor-py-6 tutor-px-8">
+<section class="tutor-bg-white tutor-py-6 tutor-px-8">
 	<h2>Pagination</h2>
-	<div class="tutor-rounded-lg tutor-shadow-sm">
+	<div class="tutor-rounded-lg">
 		<nav class="tutor-pagination" role="navigation" aria-label="Pagination Navigation">
 			<span class="tutor-pagination-info" aria-live="polite">
 				Page <span class="tutor-pagination-current">3</span> of <span class="tutor-pagination-total">12</span>
@@ -41,4 +41,4 @@ use TUTOR\Icon;
 			</ul>
 		</nav>
 	</div>
-</div>
+</section>

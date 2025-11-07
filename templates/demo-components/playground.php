@@ -48,6 +48,7 @@
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
 		<section>
+			<?php require 'avatar.php'; ?>
 			<?php require 'pagination.php'; ?>
 		</section>
 		<section>
