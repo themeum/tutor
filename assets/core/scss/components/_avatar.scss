@@ -48,3 +48,7 @@
 .tutor-avatar-icon {
 	@include tutor-avatar-variant(icon);
 }
+
+.tutor-avatar-border {
+	@include tutor-avatar-variant(border);
+}

@@ -122,5 +122,11 @@
 			background-color: $tutor-actions-brand-tertiary;
 			color: $tutor-actions-brand-primary;
 		}
+	} @else if $variant == border {
+		border: 2px solid $tutor-surface-l2;
+		svg,
+		.tutor-avatar-image {
+			border-radius: 0px;
+		}
 	}
 }
