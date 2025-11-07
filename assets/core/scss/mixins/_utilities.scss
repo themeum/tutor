@@ -13,9 +13,20 @@
   overflow: hidden;
 }
 
-@mixin tutor-focus-ring($color: $tutor-border-brand) {
+@mixin tutor-focus-ring($color: 'brand') {
+  $shadow: none;
+
+  @if $color =='brand' {
+    $shadow: $tutor-ring-brand-shadow-xs;
+  }
+
+  @if $color =='error' {
+    $shadow: $tutor-error-shadow-xs;
+  }
+
   outline: none;
-  box-shadow: 0 0 0 3px rgba(62, 100, 222, 0.2);
+  box-shadow: $shadow;
+
 }
 
 @mixin tutor-transition($properties: all, $duration: 0.2s, $timing: ease) {
