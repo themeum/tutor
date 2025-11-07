@@ -1,0 +1,60 @@
+// Dashboard Page Nav Styles
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-page-nav {
+  border-bottom: 1px solid $tutor-border-idle;
+  padding: $tutor-spacing-6;
+
+  &-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+
+    li {
+      margin: 0;
+      padding: 0;
+
+      a,
+      button {
+        width: 100%;
+        @include tutor-button-reset();
+        @include tutor-typography(small, medium, secondary);
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-5 $tutor-spacing-6;
+        border-radius: $tutor-radius-md;
+        color: $tutor-text-primary;
+        transition: background-color 0.25 ease-in-out;
+
+        &:hover {
+          background-color: $tutor-tab-sidebar-l2-hover;
+        }
+
+        &.active {
+          background-color: $tutor-tab-sidebar-l2-active;
+          color: $tutor-text-brand;
+        }
+
+        svg {
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
+
+  .tutor-dashboard-page-nav-dropdown {
+    min-width: 170px;
+    padding: $tutor-spacing-2 0px;
+
+    li {
+      a,
+      button {
+        padding: $tutor-spacing-4 $tutor-spacing-5;
+      }
+    }
+  }
+}

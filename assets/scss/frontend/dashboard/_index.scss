@@ -7,6 +7,9 @@
 @forward 'layout/header';
 @forward 'layout/nav-mobile';
 
+// Dashboard components
+@forward 'components/page_nav';
+
 // Page components
 @forward 'overview';
 @forward 'my-courses';
