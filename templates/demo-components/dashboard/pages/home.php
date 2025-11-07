@@ -62,4 +62,47 @@ $stat_cards = array(
 			</div>
 		<?php endforeach; ?>
 	</div>
+
+	<?php
+	// Sample progress cards data.
+	$progress_cards = array(
+		array(
+			'image_url'         => 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop',
+			'category'          => esc_html__( 'Preschool', 'tutor' ),
+			'course_title'      => esc_html__( 'Drawing for Beginners Level -2', 'tutor' ),
+			'lessons_completed' => 5,
+			'lessons_total'     => 9,
+			'progress_percent'  => 60,
+		),
+		array(
+			'image_url'         => 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop',
+			'category'          => esc_html__( 'Elementary', 'tutor' ),
+			'course_title'      => esc_html__( 'Advanced Mathematics', 'tutor' ),
+			'lessons_completed' => 8,
+			'lessons_total'     => 12,
+			'progress_percent'  => 67,
+		),
+	);
+	?>
+
+	<div class="tutor-mt-8">
+		<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'My Progress', 'tutor' ); ?></h2>
+		<div class="tutor-flex tutor-flex-col tutor-gap-4">
+			<?php foreach ( $progress_cards as $card ) : ?>
+				<?php
+				tutor_load_template(
+					'demo-components.dashboard.components.progress-card',
+					array(
+						'image_url'         => isset( $card['image_url'] ) ? $card['image_url'] : '',
+						'category'          => isset( $card['category'] ) ? $card['category'] : '',
+						'course_title'      => isset( $card['course_title'] ) ? $card['course_title'] : '',
+						'lessons_completed' => isset( $card['lessons_completed'] ) ? $card['lessons_completed'] : 0,
+						'lessons_total'     => isset( $card['lessons_total'] ) ? $card['lessons_total'] : 0,
+						'progress_percent'  => isset( $card['progress_percent'] ) ? $card['progress_percent'] : 0,
+					)
+				);
+				?>
+			<?php endforeach; ?>
+		</div>
+	</div>
 </div>
