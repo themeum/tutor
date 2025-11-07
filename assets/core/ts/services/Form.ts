@@ -1,31 +1,5 @@
+import { type FormControlMethods } from '@Core/ts/components/form';
 import { type ServiceMeta } from '@Core/ts/types';
-
-// Re-export the interface so consumers don't need to import from form.ts
-export interface FormControlMethods {
-  register(name: string, rules?: unknown): Record<string, unknown>;
-  watch(name?: string): unknown;
-  setValue(name: string, value: unknown, options?: unknown): void;
-  getValue(name: string): unknown;
-  setFocus(name: string, options?: unknown): void;
-  trigger(name?: string | string[]): Promise<boolean>;
-  clearErrors(name?: string | string[]): void;
-  setError(name: string, error: { type: string; message: string }): void;
-  reset(values?: Record<string, unknown>): void;
-  handleSubmit(
-    onValid: (data: Record<string, unknown>) => void,
-    onInvalid?: (errors: Record<string, unknown>) => void,
-  ): (event: Event) => void;
-  getFormState(): {
-    values: Record<string, unknown>;
-    errors: Record<string, { type: string; message: string }>;
-    touchedFields: Record<string, boolean>;
-    dirtyFields: Record<string, boolean>;
-    isValid: boolean;
-    isSubmitting: boolean;
-    isValidating: boolean;
-  };
-  isFieldVisible(element: HTMLElement): boolean;
-}
 
 /**
  * FormService: programmatic API for interacting with form instances.
