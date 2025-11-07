@@ -13,6 +13,7 @@ import { staticsMeta } from '@Core/ts/components/statics';
 import { tabsMeta } from '@Core/ts/components/tabs';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { selectDropdownMeta } from './components/select-dropdown';
+import { stepperDropdownMeta } from './components/stepper-dropdown';
 
 Alpine.plugin(focus);
 
@@ -28,6 +29,7 @@ const initializePlugin = () => {
       staticsMeta,
       accordionMeta,
       selectDropdownMeta,
+      stepperDropdownMeta,
     ],
     services: [modalServiceMeta],
   });

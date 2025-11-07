@@ -1,0 +1,182 @@
+@use '../tokens' as *;
+@use '../mixins/typography' as *;
+@use '../mixins/layout' as *;
+
+.tutor-stepper-dropdown {
+  position: relative;
+  @include tutor-typography('small', 'regular', 'primary', 'body');
+  letter-spacing: 0;
+
+  &.tutor-is-disabled {
+    pointer-events: none;
+  }
+
+  &-control {
+    @include tutor-flex(row, stretch);
+    width: 100%;
+    background: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-md;
+    overflow: hidden;
+
+    &:focus-within {
+      outline: 2px solid $tutor-border-brand-tertiary;
+      outline-offset: -2px;
+    }
+  }
+
+  &-stepper-container {
+    @include tutor-flex-column;
+    flex-shrink: 0;
+  }
+
+  &-stepper-btn {
+    @include tutor-flex-center;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: $tutor-icon-secondary;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+    flex: 1;
+
+    &-up {
+      padding-top: $tutor-spacing-3;
+      padding-right: $tutor-spacing-5;
+    }
+
+    &-down {
+      padding-bottom: $tutor-spacing-3;
+      padding-right: $tutor-spacing-5;
+    }
+
+    &:hover:not(.tutor-is-disabled):not(:disabled) {
+      background: $tutor-tab-l3-active-hover;
+      color: $tutor-icon-hover;
+    }
+
+    &:active:not(.tutor-is-disabled):not(:disabled) {
+      background: $tutor-tab-l3-active;
+    }
+
+    &.tutor-is-disabled,
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+  }
+
+  &-value-wrapper {
+    @include tutor-flex-between;
+    gap: $tutor-spacing-4;
+    flex: 1;
+    padding: $tutor-spacing-4 $tutor-spacing-5;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    min-width: 0;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  &-value {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+    flex: 1;
+    min-width: 0;
+
+    &-icon {
+      flex-shrink: 0;
+      @include tutor-flex(row, center);
+      color: $tutor-icon-secondary;
+    }
+  }
+
+  &-placeholder {
+    color: $tutor-text-subdued;
+  }
+
+  &-menu {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: $tutor-z-dropdown;
+    background: $tutor-surface-l1;
+    border-radius: $tutor-radius-md;
+    max-height: 280px;
+    overflow: auto;
+    width: 100%;
+    border: 1px solid $tutor-border-idle;
+
+    // Default positioning (bottom)
+    &-bottom {
+      top: calc(100% + 4px);
+      bottom: auto;
+    }
+
+    // Top positioning
+    &-top {
+      bottom: calc(100% + 4px);
+      top: auto;
+    }
+
+    // Fallback for when no position class is applied yet
+    &:not(.tutor-stepper-dropdown-menu-top):not(.tutor-stepper-dropdown-menu-bottom) {
+      top: calc(100% + 4px);
+      bottom: auto;
+    }
+  }
+
+  &-option {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-4 $tutor-spacing-5;
+    cursor: pointer;
+
+    &-check {
+      flex-shrink: 0;
+      @include tutor-flex-center;
+      width: $tutor-spacing-6;
+      color: $tutor-icon-brand;
+      text-align: center;
+
+      &-icon {
+        @include tutor-flex-center;
+        width: 100%;
+      }
+    }
+
+    &-icon {
+      flex-shrink: 0;
+      @include tutor-flex(row, center);
+      color: $tutor-icon-secondary;
+    }
+
+    &-label {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &.tutor-is-highlighted {
+      background: $tutor-tab-l3-active-hover;
+    }
+
+    &:hover:not(.tutor-is-disabled):not(.tutor-is-selected):not(.tutor-is-highlighted) {
+      background: $tutor-tab-l3-active-hover;
+    }
+
+    &.tutor-is-disabled {
+      color: $tutor-text-subdued;
+      cursor: not-allowed;
+
+      &:hover,
+      &.tutor-is-highlighted {
+        background: transparent;
+      }
+    }
+  }
+}
