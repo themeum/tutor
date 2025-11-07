@@ -65,7 +65,6 @@ export interface FormControlMethods {
     onInvalid?: (errors: Record<string, FieldError>) => void,
   ): (event: Event) => void;
 
-  // Internal state access
   getFormState(): FormState;
   isFieldVisible(element: HTMLElement): boolean;
 }
@@ -143,9 +142,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.dirtyFields = {};
     },
 
-    // React-hook-form compatible API
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
-      // Store field configuration
       this.fields[name] = {
         name,
         rules,
@@ -153,12 +150,10 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         ref: (this as unknown as { $el: HTMLInputElement }).$el,
       };
 
-      // Initialize field value if not exists
       if (!(name in this.values)) {
         this.values[name] = this.fields[name].defaultValue;
       }
 
-      // Return Alpine.js bindings object
       return {
         name,
         'x-model': `values.${name}`,
@@ -174,19 +169,15 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       };
     },
 
-    // Helper methods for Alpine.js event handling
     handleFieldInput(name: string, value: unknown): void {
-      // Update value
       this.values[name] = value;
       this.dirtyFields[name] = true;
 
-      // Store element reference (cached)
       const element = (this as unknown as { $refs: Record<string, HTMLElement> }).$refs[name] as HTMLInputElement;
       if (element && !this.fields[name].ref) {
         this.fields[name].ref = element;
       }
 
-      // Debounced validation for onChange mode to improve performance
       if (this.config.mode === 'onChange' || (this.config.reValidateMode === 'onChange' && this.touchedFields[name])) {
         this.validateField(name, value);
       }
@@ -216,10 +207,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     setValue(name: string, value: unknown, options: SetValueOptions = {}): void {
       const { shouldValidate = false, shouldTouch = false, shouldDirty = true } = options;
 
-      // Update value
       this.values[name] = value;
 
-      // Update state flags
       if (shouldTouch) {
         this.touchedFields[name] = true;
       }
@@ -232,7 +221,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         formElement.value = String(value || '');
       }
 
-      // Validate if requested
       if (shouldValidate) {
         this.validateField(name, value);
       }
@@ -259,28 +247,25 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
     },
 
-    // Validation methods
     async trigger(name?: string | string[]): Promise<boolean> {
       this.isValidating = true;
       let isValid = true;
 
       try {
         if (typeof name === 'string') {
-          // Validate single field and mark as touched
           this.touchedFields[name] = true;
           const value = this.values[name];
           isValid = await this.validateField(name, value);
         } else if (Array.isArray(name)) {
-          // Validate specific fields and mark as touched
           for (const fieldName of name) {
             this.touchedFields[fieldName] = true;
             const value = this.values[fieldName];
             const fieldValid = await this.validateField(fieldName, value);
-            if (!fieldValid) isValid = false;
-            // foc
+            if (!fieldValid) {
+              isValid = false;
+            }
           }
         } else {
-          // Validate all fields and mark as touched
           for (const fieldName of Object.keys(this.fields)) {
             this.touchedFields[fieldName] = true;
           }
@@ -318,11 +303,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     reset(values?: Record<string, unknown>): void {
-      // 1️⃣ Reset to default values or provided values
       if (values) {
         this.values = { ...values };
       } else {
-        // Reset to each field's default value
         this.values = Object.keys(this.fields).reduce(
           (acc, name) => {
             acc[name] = this.fields[name].defaultValue;
@@ -332,16 +315,13 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         );
       }
 
-      // 2️⃣ Update DOM input values (reflect reset visually)
       for (const [name, value] of Object.entries(this.values)) {
         const fieldRef = this.fields[name]?.ref as HTMLInputElement | undefined;
         if (!fieldRef) continue;
 
-        // Fallback: direct DOM value update
         fieldRef.value = String(value ?? '');
       }
 
-      // 3️⃣ Clear validation and state flags
       this.errors = {};
       this.touchedFields = {};
       this.dirtyFields = {};
@@ -360,14 +340,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         this.isSubmitting = true;
 
         try {
-          // Validate all fields
           const isValid = await this.validateAllFields();
 
           if (isValid) {
-            // Form is valid, call success handler
             onValid({ ...this.values });
           } else {
-            // Form has errors, call error handler and focus first error
             if (onInvalid) {
               onInvalid({ ...this.errors });
             }
@@ -382,7 +359,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       };
     },
 
-    // Internal state access
     getFormState(): FormState {
       this.validateAllFields();
 
@@ -421,23 +397,19 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
     },
 
-    // Internal helper methods
     async validateField(name: string, value: unknown): Promise<boolean> {
       const fieldConfig = this.fields[name];
       if (!fieldConfig?.rules) {
-        // No rules, field is valid
         delete this.errors[name];
         this.updateAriaInvalidState(name);
         this.updateFormValidState();
         return true;
       }
 
-      // Clear previous error
       delete this.errors[name];
 
       const rules = fieldConfig.rules;
 
-      // Validate required
       if (rules.required) {
         const message = typeof rules.required === 'string' ? rules.required : `${name} is required`;
         if (!value || (typeof value === 'string' && value.trim() === '')) {
@@ -451,7 +423,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const stringValue = String(value || '');
       const numericValue = typeof value === 'number' ? value : parseFloat(stringValue);
 
-      // Validate minLength
       if (rules.minLength && stringValue) {
         const minLength = typeof rules.minLength === 'number' ? rules.minLength : rules.minLength.value;
         const message =
@@ -465,7 +436,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         }
       }
 
-      // Validate maxLength
       if (rules.maxLength && stringValue) {
         const maxLength = typeof rules.maxLength === 'number' ? rules.maxLength : rules.maxLength.value;
         const message =
@@ -479,7 +449,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         }
       }
 
-      // Validate min
       if (rules.min && !isNaN(numericValue)) {
         const min = typeof rules.min === 'number' ? rules.min : rules.min.value;
         const message = typeof rules.min === 'object' ? rules.min.message : `Minimum value is ${min}`;
@@ -492,7 +461,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         }
       }
 
-      // Validate max
       if (rules.max && !isNaN(numericValue)) {
         const max = typeof rules.max === 'number' ? rules.max : rules.max.value;
         const message = typeof rules.max === 'object' ? rules.max.message : `Maximum value is ${max}`;
@@ -505,7 +473,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         }
       }
 
-      // Validate pattern
       if (rules.pattern && stringValue) {
         const pattern = rules.pattern instanceof RegExp ? rules.pattern : rules.pattern.value;
         const message =
@@ -519,7 +486,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         }
       }
 
-      // Validate custom function
       if (rules.validate) {
         try {
           const result = await rules.validate(value);
@@ -549,10 +515,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const formElement = (this as unknown as { $el: HTMLElement }).$el;
 
       for (const [name] of Object.entries(this.fields)) {
-        // Check if field is visible
         const fieldElement = formElement?.querySelector(`[name="${name}"]`) as HTMLElement;
         if (fieldElement && !this.isFieldVisible(fieldElement)) {
-          continue; // Skip hidden fields
+          continue;
         }
 
         const value = this.values[name];
@@ -715,7 +680,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       };
     },
 
-    // Helper method for flattening objects
     flattenObject(obj: Record<string, unknown>, base = ''): Record<string, unknown> {
       return Object.keys(obj).reduce<Record<string, unknown>>((acc, key) => {
         const value = obj[key];
