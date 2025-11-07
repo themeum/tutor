@@ -24,19 +24,12 @@ const initializePlugin = () => {
   TutorComponentRegistry.registerAll({
     components: [
       buttonMeta,
-
       fileUploaderMeta,
-
       tabsMeta,
-
       iconMeta,
-
       modalMeta,
-
       popoverMeta,
-
       staticsMeta,
-
       accordionMeta,
       formMeta,
       selectDropdownMeta,
