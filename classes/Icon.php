@@ -53,6 +53,7 @@ final class Icon {
 	const BUY_GET_TYPE               = 'buy-get-type';
 	const CALENDAR                   = 'calendar';
 	const CALENDAR_2                 = 'calendar-2';
+	const CALENDAR_2_FILL            = 'calendar-2-fill';
 	const CALENDAR_LINE              = 'calendar-line';
 	const CALENDAR_LINES             = 'calendar-lines';
 	const CART                       = 'cart';
@@ -94,6 +95,7 @@ final class Icon {
 	const COUPON                     = 'coupon';
 	const COURSE                     = 'course';
 	const COURSES                    = 'courses';
+	const COURSES_FILL               = 'courses-fill';
 	const CROSS                      = 'cross';
 	const CROSS_CIRCLE               = 'cross-circle';
 	const CROWN                      = 'crown';
@@ -134,6 +136,8 @@ final class Icon {
 	const ERASER                     = 'eraser';
 	const EXE                        = 'exe';
 	const EXPAND                     = 'expand';
+	const EXPLORE                    = 'explore';
+	const EXPLORE_FILL               = 'explore-fill';
 	const EXPORT                     = 'export';
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
@@ -155,6 +159,8 @@ final class Icon {
 	const HEART                      = 'heart';
 	const HIGHLIGHTER                = 'highlighter';
 	const HISTORY                    = 'history';
+	const HOME                       = 'home';
+	const HOME_FILL                  = 'home-fill';
 	const HTML                       = 'html';
 	const IMAGE                      = 'image';
 	const IMAGE_PLUS                 = 'image-plus';
@@ -209,6 +215,7 @@ final class Icon {
 	const NOTE                       = 'note';
 	const NOTEBOOK                   = 'notebook';
 	const NOTES                      = 'notes';
+	const NOTES_FILL                 = 'notes-fill';
 	const NOTIFICATION               = 'notification';
 	const NOTIFICATION_2             = 'notification-2';
 	const OPEN                       = 'open';
@@ -236,13 +243,17 @@ final class Icon {
 	const PRIME_CHECK_CIRCLE         = 'prime-check-circle';
 	const PRINTER                    = 'printer';
 	const PROFILE                    = 'profile';
+	const PROFILE_CIRCLE             = 'profile-circle';
+	const PROFILE_CIRCLE_FILL        = 'profile-circle-fill';
 	const PSD                        = 'psd';
 	const QA                         = 'qa';
+	const QA_FILL                    = 'qa-fill';
 	const QUESTION                   = 'question';
 	const QUESTION_CIRCLE            = 'question-circle';
 	const QUILL                      = 'quill';
 	const QUIZ                       = 'quiz';
 	const QUIZ_2                     = 'quiz-2';
+	const QUIZ_2_FILL                = 'quiz-2-fill';
 	const QUIZ_ESSAY                 = 'quiz-essay';
 	const QUIZ_FILL_IN_THE_BLANKS    = 'quiz-fill-in-the-blanks';
 	const QUIZ_H5P                   = 'quiz-h5p';

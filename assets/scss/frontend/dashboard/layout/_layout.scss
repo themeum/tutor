@@ -1,7 +1,13 @@
 // Dashboard Layout Styles
 // Overall dashboard grid/flex layout structure
 
-.tutor-dashboard-layout {
-  // Dashboard layout styles will go here
-  // Grid/flex container, responsive breakpoints, content areas
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-wrapper {
+  display: grid;
+  grid-template-columns: 274px 1fr;
+
+  @include tutor-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
 }

@@ -8,8 +8,8 @@
   gap: $tutor-spacing-6;
 
   &-item {
-    background-color: var(--tutor-surface-l1);
-    border: 1px solid var(--tutor-border-idle);
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-lg;
     overflow: hidden;
   }
@@ -25,7 +25,7 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: var(--tutor-surface-l2);
+      background-color: $tutor-surface-l2;
     }
   }
 
@@ -36,7 +36,7 @@
 
   &-icon {
     @include margin-start($tutor-spacing-3);
-    color: var(--tutor-icon-idle);
+    color: $tutor-icon-idle;
 
     // TODO: Need to change it later
     transition:
@@ -46,7 +46,7 @@
 
     .tutor-accordion-header[aria-expanded='true'] & {
       transform: rotate(180deg);
-      color: var(--tutor-text-primary);
+      color: $tutor-text-primary;
     }
 
     // RTL support for icon rotation
