@@ -1,0 +1,151 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-input-field {
+  position: relative;
+  width: 100%;
+  margin-bottom: $tutor-spacing-4;
+
+  .tutor-input-wrapper {
+    position: relative;
+    @include tutor-flex(row, center, flex-start);
+    gap: $tutor-spacing-3;
+
+    .tutor-label {
+      margin: 0;
+    }
+
+    .tutor-checkbox,
+    .tutor-radio,
+    .tutor-switch {
+      margin: 0;
+    }
+  }
+
+  .tutor-input {
+    @include tutor-input-base;
+
+    &.tutor-input-content {
+      &-left {
+        padding-left: $tutor-spacing-10;
+      }
+
+      &-right {
+        padding-right: $tutor-spacing-10;
+      }
+
+      &-clear {
+        padding-right: 36px;
+      }
+
+    }
+
+  }
+
+  .tutor-text-area {
+    @include tutor-textarea;
+  }
+
+  .tutor-checkbox {
+    @include tutor-checkbox;
+
+    &-md {
+      @include tutor-checkbox(md);
+    }
+
+    &-intermediate {
+      @include tutor-checkbox(md, true);
+    }
+  }
+
+  .tutor-radio {
+    @include tutor-radio;
+
+    &-md {
+      @include tutor-radio(md);
+    }
+  }
+
+  .tutor-switch {
+    @include tutor-switch;
+
+    &-md {
+      @include tutor-switch(md);
+    }
+  }
+
+  .tutor-label {
+    @include tutor-typography('small', 'medium');
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-3;
+    margin-bottom: $tutor-spacing-3;
+
+    &-required {
+      &::after {
+        content: '*';
+        color: $tutor-text-critical;
+        margin-left: $tutor-spacing-1;
+      }
+    }
+  }
+
+  .tutor-input-help-icon {
+    @include tutor-button-reset;
+    @include tutor-flex(row, center, center);
+    color: $tutor-icon-subdued;
+    cursor: help;
+  }
+
+  .tutor-input-clear-button {
+    @include tutor-flex(row, center, center);
+    @include tutor-button-base;
+    @include tutor-button-variant('ghost');
+    padding: 0;
+    flex-shrink: 0;
+    position: absolute;
+    right: $tutor-spacing-5;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $tutor-icon-idle;
+  }
+
+  .tutor-input-content {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    @include tutor-flex(row, center, center);
+    color: $tutor-icon-secondary;
+    pointer-events: none;
+    z-index: 1;
+
+    &.tutor-input-content-left {
+      left: $tutor-spacing-5;
+    }
+
+    &.tutor-input-content-right {
+      right: $tutor-spacing-5;
+    }
+  }
+
+  .tutor-error-text {
+    @include tutor-typography('small', 'regular', 'critical');
+    margin-top: $tutor-spacing-3;
+  }
+
+  .tutor-help-text {
+    @include tutor-typography('small', 'regular', 'subdued');
+    margin-top: $tutor-spacing-3;
+  }
+
+  &-error {
+    .tutor-input {
+      border: 1px solid $tutor-border-error;
+      box-shadow: $tutor-shadow-xs;
+
+      &:focus {
+        @include tutor-focus-ring('error');
+        border-color: $tutor-border-error;
+      }
+    }
+  }
+}
