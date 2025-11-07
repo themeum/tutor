@@ -195,6 +195,7 @@ class HooksHandler {
 			$order_data = array(
 				'order_status'     => $order_details->order_status,
 				'payment_status'   => $new_payment_status,
+				'payment_method'   => $res->payment_method,
 				'payment_payloads' => $res->payment_payload,
 				'transaction_id'   => $transaction_id,
 				'earnings'         => $res->earnings,
