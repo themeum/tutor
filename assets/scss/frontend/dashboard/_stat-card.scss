@@ -1,0 +1,95 @@
+// Stat Card Component
+// Dashboard statistics card with variations
+
+@use '../../core/scss/tokens' as *;
+
+.tutor-stat-card {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	padding: $tutor-spacing-8;
+
+	&-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: $tutor-spacing-6;
+	}
+
+	&-title {
+		font-size: $tutor-font-size-p2;
+		font-weight: $tutor-font-weight-regular;
+		color: var(--tutor-text-primary);
+		line-height: $tutor-line-height-p2;
+		margin: 0;
+	}
+
+	&-icon {
+		width: 24px;
+		height: 24px;
+		flex-shrink: 0;
+
+		svg {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	&-value {
+		font-size: 2rem; // 32px
+		font-weight: $tutor-font-weight-bold;
+		line-height: 1.2;
+		margin: 0 0 $tutor-spacing-4 0;
+	}
+
+	&-change {
+		font-size: $tutor-font-size-p3;
+		font-weight: $tutor-font-weight-regular;
+		color: var(--tutor-text-secondary);
+		line-height: $tutor-line-height-p3;
+		margin: 0;
+		text-align: center;
+	}
+
+	// Color variations
+	&-enrolled {
+		.tutor-stat-card-icon {
+			color: $tutor-brand-500;
+		}
+
+		.tutor-stat-card-value {
+			color: $tutor-brand-500;
+		}
+	}
+
+	&-active {
+		.tutor-stat-card-icon {
+			color: $tutor-exception-1; // Teal/light blue
+		}
+
+		.tutor-stat-card-value {
+			color: $tutor-exception-1;
+		}
+	}
+
+	&-completed {
+		.tutor-stat-card-icon {
+			color: $tutor-success-500;
+		}
+
+		.tutor-stat-card-value {
+			color: $tutor-success-500;
+		}
+	}
+
+	&-time-spent {
+		.tutor-stat-card-icon {
+			color: $tutor-warning-500;
+		}
+
+		.tutor-stat-card-value {
+			color: $tutor-warning-500;
+		}
+	}
+}
+
