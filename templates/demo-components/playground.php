@@ -24,8 +24,9 @@
 	$current_url = admin_url( 'admin.php?page=playground' );
 
 	$subpages = array(
-		'dashboard'     => 'Dashboard',
-		'learning-area' => 'Learning Area',
+		'dashboard'            => 'Dashboard',
+		'learning-area'        => 'Learning Area',
+		'form-validation-demo' => 'Form Validation',
 	);
 
 	$subpage = $_GET['subpage'] ?? '';
@@ -76,6 +77,12 @@
 		</section>
 		<section>
 			<?php require 'modal.php'; ?>
+		</section>
+		<section>
+			<?php require 'input.php'; ?>
+		</section>
+		<section>
+			<?php require 'form.php'; ?>
 		</section>
 	<?php endif ?>
 
