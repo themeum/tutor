@@ -87,27 +87,36 @@ export const popover = (props: PopoverProps = {}) => ({
   },
 
   show(): void {
+    const content = this.$refs.content;
+    if (content) {
+      content.style.visibility = 'hidden';
+    }
+
     this.open = true;
+
+    const afterShow = () => {
+      this.updatePosition();
+      if (content) {
+        content.style.visibility = 'visible';
+      }
+      if (props.onShow) {
+        props.onShow();
+      }
+    };
+
     if (this.$nextTick) {
-      this.$nextTick(() => {
-        this.updatePosition();
-        if (props.onShow) {
-          props.onShow();
-        }
-      });
+      this.$nextTick(afterShow);
     } else {
-      // Fallback for when $nextTick is not available
-      setTimeout(() => {
-        this.updatePosition();
-        if (props.onShow) {
-          props.onShow();
-        }
-      }, 0);
+      requestAnimationFrame(afterShow);
     }
   },
 
   hide(): void {
     this.open = false;
+    const content = this.$refs.content;
+    if (content) {
+      content.style.visibility = 'hidden';
+    }
     if (props.onHide) {
       props.onHide();
     }
