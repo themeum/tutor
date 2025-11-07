@@ -24,7 +24,7 @@
 @mixin tutor-button-variant($variant: primary) {
   @if $variant == primary {
     background-color: var(--tutor-button-primary);
-    color: white;
+    color: var(--tutor-text-primary-inverse);
 
     &:hover:not(:disabled) {
       background-color: var(--tutor-button-primary-hover);
@@ -103,7 +103,7 @@
   } @else if $variant == outline {
     background-color: var(--tutor-button-outline-inverse);
     color: var(--tutor-text-primary);
-    border: 1px solid var(--tutor-border-idle);
+    box-shadow: inset 0 0 0 1px var(--tutor-border-idle);
 
     &:hover:not(:disabled) {
       background-color: var(--tutor-button-outline-hover);
@@ -256,6 +256,7 @@
   text-decoration: none;
   cursor: pointer;
   outline: none;
+  box-shadow: none;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
