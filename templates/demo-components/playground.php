@@ -76,10 +76,13 @@
 			<?php require 'section-separator.php'; ?>
 		</section>
 		<section>
+			<?php require 'accordion.php'; ?>
+		</section>
+		<section>
 			<?php require 'select-dropdown.php'; ?>
 		</section>
 		<section>
-			<?php require 'accordion.php'; ?>
+			<?php require 'stepper-dropdown.php'; ?>
 		</section>
 		<section>
 			<?php require 'modal.php'; ?>

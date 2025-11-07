@@ -1,7 +1,59 @@
 // Dashboard Sidebar Styles
 // Navigation menu for dashboard sections
 
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
 .tutor-dashboard-sidebar {
-  // Dashboard sidebar styles will go here
-  // Navigation menu, active states, icons, collapsible sections
+  background-color: $tutor-surface-sidebar-l1;
+  border-inline-end: 1px solid $tutor-border-idle;
+
+  @include tutor-breakpoint-down(md) {
+    display: none;
+  }
+
+  &-logo {
+    height: 80px;
+    @include tutor-flex(row, center);
+    padding: $tutor-spacing-8 $tutor-spacing-10;
+    border-bottom: 1px solid $tutor-border-idle;
+
+    img {
+      max-width: 110px;
+    }
+  }
+
+  &-nav {
+    padding: $tutor-spacing-8 $tutor-spacing-6;
+
+    ul {
+      @include tutor-flex-column();
+      gap: $tutor-spacing-2;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+
+      li {
+        a {
+          @include tutor-typography(small, medium);
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-5;
+          border-radius: $tutor-radius-md;
+          padding: $tutor-spacing-4 $tutor-spacing-8;
+          text-decoration: none;
+          outline: none;
+          box-shadow: none;
+
+          &:hover {
+            background-color: $tutor-tab-sidebar-l2-hover;
+          }
+
+          &.active {
+            background-color: $tutor-tab-sidebar-l2-active;
+            color: $tutor-text-brand;
+          }
+        }
+      }
+    }
+  }
 }
