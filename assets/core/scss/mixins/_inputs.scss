@@ -1,0 +1,231 @@
+// Form Mixins
+// Reusable form element styles
+
+@use '../tokens' as *;
+@use 'typography' as *;
+@use 'rtl' as *;
+@use 'utilities' as *;
+@use 'buttons' as *;
+
+@mixin tutor-input-base {
+  width: 100%;
+  padding: $tutor-spacing-4 $tutor-spacing-5;
+  margin: 0;
+  min-height: auto;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-md;
+  background-color: $tutor-surface-l1;
+  @include tutor-typography('small', 'regular');
+  transition: all 0.2s ease;
+
+  &:placeholder-shown:not(:focus):not(:disabled) {
+    background-color: $tutor-surface-base;
+  }
+
+  &::placeholder {
+    color: $tutor-text-subdued;
+  }
+
+  &:focus {
+    @include tutor-focus-ring();
+    border-color: $tutor-border-brand-tertiary;
+  }
+
+  &:disabled {
+    background-color: $tutor-surface-l1-hover;
+    cursor: not-allowed;
+  }
+}
+
+@mixin tutor-textarea($min-height: 144px) {
+  @include tutor-input-base;
+  min-height: $min-height;
+  resize: vertical;
+}
+
+@mixin tutor-checkbox($size: sm, $intermediate: false) {
+  $checkbox-size: if($size ==md, 20px, 16px);
+  $svg-size: if($size ==md, 12px, 10px);
+
+  appearance: none;
+  width: $checkbox-size;
+  height: $checkbox-size;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-sm;
+  background-color: $tutor-surface-l1;
+  cursor: pointer;
+  position: relative;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    color 0.2s ease;
+
+  color: $tutor-icon-idle;
+
+  &::before {
+    display: none !important;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: $svg-size;
+    height: $svg-size;
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E") center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E") center / contain no-repeat;
+  }
+
+  &:checked {
+    background-color: $tutor-surface-brand-primary;
+    border-color: transparent;
+    color: $tutor-icon-idle-inverse;
+
+    &::after {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  &:disabled {
+    background-color: $tutor-surface-l1-hover;
+    color: $tutor-icon-disabled;
+    cursor: not-allowed;
+    border-color: $tutor-border-idle;
+  }
+
+  &:focus {
+    @include tutor-focus-ring;
+
+    &:not(:checked) {
+      box-shadow: $tutor-ring-gray-shadow-sm;
+    }
+  }
+
+  @if $intermediate ==true {
+    &::after {
+      mask: none;
+      -webkit-mask: none;
+      width: 7px;
+      height: 2.5px;
+      border-radius: $tutor-radius-full;
+      background-color: currentColor;
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    background-color: $tutor-surface-brand-primary;
+    border-color: transparent;
+    color: $tutor-icon-idle-inverse;
+  }
+}
+
+
+@mixin tutor-radio($size: sm) {
+  $radio-size: if($size ==md, 20px, 16px);
+  $inner-circle: if($size ==md, 8px, 6px);
+
+  appearance: none;
+  width: $radio-size;
+  height: $radio-size;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-full;
+  background-color: $tutor-surface-l1;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+  &:checked {
+    background-color: $tutor-surface-brand-primary;
+    border-color: transparent;
+
+    &::before {
+      display: none !important;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: $inner-circle;
+      height: $inner-circle;
+      transform: translate(-50%, -50%);
+      border-radius: $tutor-radius-full;
+      background-color: $tutor-surface-l1;
+    }
+  }
+
+  &:disabled {
+    background-color: $tutor-surface-l2;
+    cursor: not-allowed;
+    border-color: $tutor-border-idle;
+  }
+
+  &:focus {
+    @include tutor-focus-ring;
+
+    &:not(:checked) {
+      box-shadow: $tutor-ring-gray-shadow-sm;
+    }
+  }
+}
+
+@mixin tutor-switch($size: medium, $intermediate: false) {
+  $width: if($size ==small, 36px, 44px);
+  $height: if($size ==small, 20px, 24px);
+  $thumb: if($size ==small, 16px, 20px);
+  $gap: 2px;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: $width;
+  height: $height;
+  background-color: $tutor-surface-l2;
+  border: none;
+  outline: none;
+  border-radius: $height;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+
+  &::before {
+    display: none !important;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: $gap;
+    left: $gap;
+    width: $thumb;
+    height: $thumb;
+    border-radius: 50%;
+    background-color: $tutor-surface-l1;
+    transition: transform 0.25s ease, background-color 0.25s ease;
+    box-shadow: $tutor-shadow-sm;
+  }
+
+  &:checked {
+    background-color: $tutor-button-primary;
+
+    &::after {
+      transform: translateX(calc(#{$width} - #{$thumb} - #{$gap * 2}));
+    }
+  }
+
+  &:disabled {
+    background-color: $tutor-surface-l1-hover;
+
+    &::after {
+      background-color: $tutor-surface-base;
+    }
+  }
+}
