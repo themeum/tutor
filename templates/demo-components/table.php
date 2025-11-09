@@ -9,108 +9,72 @@
 use TUTOR\Icon;
 ?>
 
-<div class="tutor-bg-white tutor-py-6 tutor-px-8">
+<section class="tutor-bg-white tutor-py-6 tutor-px-8">
 	<h2>Table</h2>
-	<div class="tutor-rounded-lg tutor-shadow-sm">
+	
+	<div class="tutor-table-wrapper-bordered">
 		<table class="tutor-table">
-			<thead class="tutor-table-head">
-				<tr class="tutor-table-row">
-					<th class="tutor-table-header">
-						<input type="checkbox" class="tutor-table-checkbox" aria-label="Select all">
-					</th>
-					<th class="tutor-table-header tutor-table-header-sortable" aria-sort="none">
-						Name
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 14, 14 ); ?>
-					</th>
-					<th class="tutor-table-header">Email</th>
-					<th class="tutor-table-header tutor-table-header-sortable" aria-sort="ascending">
-						Status
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP, 14, 14 ); ?>
-					</th>
-					<th class="tutor-table-header">Role</th>
-					<th class="tutor-table-header">Actions</th>
+			<thead>
+				<tr>
+					<th class="">Quiz info</th>
+					<th>Marks</th>
+					<th>Time</th>
+					<th>Result</th>
 				</tr>
 			</thead>
-			<tbody class="tutor-table-body">
-				<tr class="tutor-table-row">
-					<td class="tutor-table-cell">
-						<input type="checkbox" class="tutor-table-checkbox" aria-label="Select row">
-					</td>
-					<td class="tutor-table-cell">
-						<div class="tutor-table-user">
-							<div class="tutor-table-avatar">JD</div>
-							<span class="tutor-table-name">John Doe</span>
+			<tbody>
+				<tr>
+					<td>
+						<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							<?php tutor_utils()->render_svg_icon( Icon::QUESTION_CIRCLE ); ?>
+							Questions
 						</div>
 					</td>
-					<td class="tutor-table-cell">john.doe@example.com</td>
-					<td class="tutor-table-cell">
-						<span class="tutor-badge tutor-badge-success">Active</span>
+					<td>20</td>
+					<td>
+						<span class="tutor-text-secondary">1:15</span>
 					</td>
-					<td class="tutor-table-cell">Administrator</td>
-					<td class="tutor-table-cell">
-						<div class="tutor-table-actions">
-							<button class="tutor-table-action" aria-label="Edit user">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT, 16, 16 ); ?>
-							</button>
-							<button class="tutor-table-action" aria-label="Delete user">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE, 16, 16 ); ?>
-							</button>
-						</div>
+					<td>
+						<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+							Passed
+						</span>
 					</td>
 				</tr>
-				<tr class="tutor-table-row tutor-table-row-selected">
-					<td class="tutor-table-cell">
-						<input type="checkbox" class="tutor-table-checkbox" checked aria-label="Select row">
-					</td>
-					<td class="tutor-table-cell">
-						<div class="tutor-table-user">
-							<div class="tutor-table-avatar">JS</div>
-							<span class="tutor-table-name">Jane Smith</span>
+				<tr>
+					<td>
+						<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							<?php tutor_utils()->render_svg_icon( Icon::CLOCK ); ?>
+							Quiz time
 						</div>
 					</td>
-					<td class="tutor-table-cell">jane.smith@example.com</td>
-					<td class="tutor-table-cell">
-						<span class="tutor-badge tutor-badge-warning">Pending</span>
+					<td>20 Minutes</td>
+					<td>
+						<span class="tutor-text-secondary">2:15</span>
 					</td>
-					<td class="tutor-table-cell">Editor</td>
-					<td class="tutor-table-cell">
-						<div class="tutor-table-actions">
-							<button class="tutor-table-action" aria-label="Edit user">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT, 16, 16 ); ?>
-							</button>
-							<button class="tutor-table-action" aria-label="Delete user">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE, 16, 16 ); ?>
-							</button>
-						</div>
+					<td>
+						<span class="tutor-badge tutor-badge-exception tutor-badge-circle">
+							Bundle
+						</span>
 					</td>
 				</tr>
-				<tr class="tutor-table-row">
-					<td class="tutor-table-cell">
-						<input type="checkbox" class="tutor-table-checkbox" aria-label="Select row">
-					</td>
-					<td class="tutor-table-cell">
-						<div class="tutor-table-user">
-							<div class="tutor-table-avatar">MB</div>
-							<span class="tutor-table-name">Mike Brown</span>
+				<tr>
+					<td>
+						<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							<?php tutor_utils()->render_svg_icon( Icon::CERTIFICATE ); ?>
+							Passing Grade
 						</div>
 					</td>
-					<td class="tutor-table-cell">mike.brown@example.com</td>
-					<td class="tutor-table-cell">
-						<span class="tutor-badge tutor-badge-danger">Inactive</span>
+					<td>80%</td>
+					<td>
+						<span class="tutor-text-secondary">1:15</span>
 					</td>
-					<td class="tutor-table-cell">Subscriber</td>
-					<td class="tutor-table-cell">
-						<div class="tutor-table-actions">
-							<button class="tutor-table-action" aria-label="Edit user">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT, 16, 16 ); ?>
-							</button>
-							<button class="tutor-table-action" aria-label="Delete user">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE, 16, 16 ); ?>
-							</button>
-						</div>
+					<td>
+						<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+							Passed
+						</span>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
-</div>
+</section>

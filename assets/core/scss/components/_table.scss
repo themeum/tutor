@@ -3,99 +3,14 @@
 @use '../tokens' as *;
 @use '../mixins' as *;
 
+.tutor-table-wrapper {
+	@include tutor-table-wrapper;
+}
+
+.tutor-table-wrapper-bordered {
+	@include tutor-table-wrapper-bordered;
+}
+
 .tutor-table {
 	@include tutor-table-base;
-}
-
-.tutor-table-head {
-	@include tutor-table-head;
-}
-
-.tutor-table-body {
-	@include tutor-table-body;
-}
-
-.tutor-table-row {
-	@include tutor-table-row;
-
-	&-selected {
-		background-color: $tutor-button-primary-soft-focused;
-		
-		&:hover {
-			background-color: $tutor-button-primary-soft-focused;
-		}
-	}
-}
-
-.tutor-table-header {
-	@include tutor-table-header;
-
-	&-sortable {
-		cursor: pointer;
-		user-select: none;
-		
-		&:hover {
-			color: $tutor-text-primary;
-		}
-
-		svg {
-			margin-left: $tutor-spacing-2;
-			opacity: 0.6;
-			transition: opacity 0.2s ease;
-		}
-
-		&:hover svg {
-			opacity: 1;
-		}
-	}
-}
-
-.tutor-table-cell {
-	@include tutor-table-cell;
-}
-
-.tutor-table-checkbox {
-	@include tutor-table-checkbox;
-}
-
-.tutor-table-user {
-	@include tutor-table-user;
-}
-
-.tutor-table-avatar {
-	@include tutor-table-avatar;
-}
-
-.tutor-table-name {
-	@include tutor-table-name;
-}
-
-.tutor-table-actions {
-	@include tutor-table-actions;
-}
-
-.tutor-table-action {
-	@include tutor-table-action;
-}
-
-// Table variants
-.tutor-table-striped {
-	@include tutor-table-variant(striped);
-}
-
-.tutor-table-bordered {
-	@include tutor-table-variant(bordered);
-}
-
-.tutor-table-compact {
-	@include tutor-table-variant(compact);
-}
-
-// Table sizes
-.tutor-table-small {
-	@include tutor-table-size(small);
-}
-
-.tutor-table-large {
-	@include tutor-table-size(large);
 }
