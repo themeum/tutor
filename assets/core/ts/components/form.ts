@@ -24,6 +24,7 @@ interface ValidationRules {
   pattern?: RegExp | { value: RegExp; message: string };
   validate?: (value: unknown) => boolean | string | Promise<boolean | string>;
 }
+
 interface FieldError {
   type: string;
   message: string;
@@ -34,6 +35,7 @@ interface SetValueOptions {
   shouldTouch?: boolean;
   shouldDirty?: boolean;
 }
+
 interface FocusOptions {
   shouldSelect?: boolean;
 }
@@ -54,20 +56,231 @@ export interface FormControlMethods {
   setValue(name: string, value: unknown, options?: SetValueOptions): void;
   getValue(name: string): unknown;
   setFocus(name: string, options?: FocusOptions): void;
-
   trigger(name?: string | string[]): Promise<boolean>;
   clearErrors(name?: string | string[]): void;
   setError(name: string, error: FieldError): void;
-
   reset(values?: Record<string, unknown>): void;
   handleSubmit(
     onValid: (data: Record<string, unknown>) => void,
     onInvalid?: (errors: Record<string, FieldError>) => void,
   ): (event: Event) => void;
-
   getFormState(): FormState;
   isFieldVisible(element: HTMLElement): boolean;
 }
+
+const ValidationHelpers = {
+  validateRequired(name: string, value: unknown, rule?: boolean | string): FieldError | null {
+    if (!rule) return null;
+
+    const message = typeof rule === 'string' ? rule : `${name} is required`;
+    const isEmpty = !value || (typeof value === 'string' && value.trim() === '');
+
+    return isEmpty ? { type: 'required', message } : null;
+  },
+
+  validateMinLength(value: string, rule: number | { value: number; message: string }): FieldError | null {
+    if (!value) return null;
+
+    const minLength = typeof rule === 'number' ? rule : rule.value;
+    const message = typeof rule === 'object' ? rule.message : `Minimum length is ${minLength}`;
+
+    return value.length < minLength ? { type: 'minLength', message } : null;
+  },
+
+  validateMaxLength(value: string, rule: number | { value: number; message: string }): FieldError | null {
+    if (!value) return null;
+
+    const maxLength = typeof rule === 'number' ? rule : rule.value;
+    const message = typeof rule === 'object' ? rule.message : `Maximum length is ${maxLength}`;
+
+    return value.length > maxLength ? { type: 'maxLength', message } : null;
+  },
+
+  validateMin(value: number, rule: number | { value: number; message: string }): FieldError | null {
+    const min = typeof rule === 'number' ? rule : rule.value;
+    const message = typeof rule === 'object' ? rule.message : `Minimum value is ${min}`;
+
+    return value < min ? { type: 'min', message } : null;
+  },
+
+  validateMax(value: number, rule: number | { value: number; message: string }): FieldError | null {
+    const max = typeof rule === 'number' ? rule : rule.value;
+    const message = typeof rule === 'object' ? rule.message : `Maximum value is ${max}`;
+
+    return value > max ? { type: 'max', message } : null;
+  },
+
+  validatePattern(value: string, rule: RegExp | { value: RegExp; message: string }): FieldError | null {
+    const pattern = rule instanceof RegExp ? rule : rule.value;
+    const message = typeof rule === 'object' && 'message' in rule ? rule.message : 'Invalid format';
+
+    return !pattern.test(value) ? { type: 'pattern', message } : null;
+  },
+
+  async validateCustom(
+    value: unknown,
+    validate: (value: unknown) => boolean | string | Promise<boolean | string>,
+  ): Promise<FieldError | null> {
+    try {
+      const result = await validate(value);
+      if (result === true) return null;
+
+      const message = typeof result === 'string' ? result : 'Validation failed';
+      return { type: 'validate', message };
+    } catch {
+      return { type: 'validate', message: 'Validation error' };
+    }
+  },
+};
+
+async function validateFieldValue(name: string, value: unknown, rules?: ValidationRules): Promise<FieldError | null> {
+  if (!rules) return null;
+
+  // Required validation
+  const requiredError = ValidationHelpers.validateRequired(name, value, rules.required);
+  if (requiredError) return requiredError;
+
+  const stringValue = String(value || '');
+  const numericValue = typeof value === 'number' ? value : parseFloat(stringValue);
+
+  // String length validations
+  if (rules.minLength) {
+    const error = ValidationHelpers.validateMinLength(stringValue, rules.minLength);
+    if (error) return error;
+  }
+
+  if (rules.maxLength) {
+    const error = ValidationHelpers.validateMaxLength(stringValue, rules.maxLength);
+    if (error) return error;
+  }
+
+  // Numeric validations
+  if (rules.min && !isNaN(numericValue)) {
+    const error = ValidationHelpers.validateMin(numericValue, rules.min);
+    if (error) return error;
+  }
+
+  if (rules.max && !isNaN(numericValue)) {
+    const error = ValidationHelpers.validateMax(numericValue, rules.max);
+    if (error) return error;
+  }
+
+  // Pattern validation
+  if (rules.pattern && stringValue) {
+    const error = ValidationHelpers.validatePattern(stringValue, rules.pattern);
+    if (error) return error;
+  }
+
+  // Custom validation
+  if (rules.validate) {
+    const error = await ValidationHelpers.validateCustom(value, rules.validate);
+    if (error) return error;
+  }
+
+  return null;
+}
+
+const DOMUtils = {
+  isElementVisible(element: HTMLElement): boolean {
+    const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
+
+    return (
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      parseFloat(style.opacity) > 0 &&
+      rect.width > 0 &&
+      rect.height > 0
+    );
+  },
+
+  focusElement(element: HTMLElement, options: { shouldSelect?: boolean; shouldScroll?: boolean }): void {
+    const { shouldSelect = false, shouldScroll = true } = options;
+
+    if (!this.isElementVisible(element)) return;
+
+    element.focus();
+
+    if (shouldSelect && element instanceof HTMLInputElement && element.select) {
+      element.select();
+    }
+
+    if (shouldScroll) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  },
+
+  updateElementValue(element: HTMLElement, value: unknown): void {
+    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+      element.value = String(value ?? '');
+    }
+  },
+
+  setAriaInvalid(element: HTMLElement, isInvalid: boolean): void {
+    if (isInvalid) {
+      element.setAttribute('aria-invalid', 'true');
+    } else {
+      element.removeAttribute('aria-invalid');
+    }
+  },
+
+  getFieldElement(form: HTMLElement, fieldName: string): HTMLElement | null {
+    return form.querySelector(`[name="${fieldName}"]`);
+  },
+};
+
+const FormDataUtils = {
+  convertToFormData(values: Record<string, unknown>, method: string = 'POST'): FormData {
+    const formData = new FormData();
+
+    Object.entries(values).forEach(([key, value]) => {
+      if (Array.isArray(value)) {
+        this.appendArrayToFormData(formData, key, value);
+      } else {
+        this.appendValueToFormData(formData, key, value);
+      }
+    });
+
+    formData.append('_method', method.toUpperCase());
+    return formData;
+  },
+
+  serializeParams(params: Record<string, unknown>): Record<string, unknown> {
+    return Object.entries(params).reduce(
+      (acc, [key, value]) => ({
+        ...acc,
+        [key]: this.serializeValue(value),
+      }),
+      {},
+    );
+  },
+
+  appendArrayToFormData(formData: FormData, key: string, array: unknown[]): void {
+    array.forEach((item, index) => {
+      const value = this.convertToFormDataValue(item);
+      formData.append(`${key}[${index}]`, value);
+    });
+  },
+
+  appendValueToFormData(formData: FormData, key: string, value: unknown): void {
+    const formDataValue = this.convertToFormDataValue(value);
+    formData.append(key, formDataValue);
+  },
+
+  convertToFormDataValue(value: unknown): string | Blob {
+    if (value instanceof File || value instanceof Blob) return value;
+    if (typeof value === 'string') return value;
+    if (typeof value === 'boolean' || typeof value === 'number') return String(value);
+    if (typeof value === 'object' && value !== null) return JSON.stringify(value);
+    return String(value);
+  },
+
+  serializeValue(value: unknown): string | unknown {
+    if (value === null || value === undefined) return 'null';
+    if (typeof value === 'boolean') return value ? 'true' : 'false';
+    return value;
+  },
+};
 
 const DEFAULT_CONFIG: FormControlConfig = {
   mode: 'onBlur',
@@ -104,42 +317,12 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         (formServiceMeta.instance as any).register(this.formId, this);
       }
 
-      const formElement = (this as unknown as { $el: HTMLElement }).$el;
-      if (formElement) {
-        const handleFormSubmit = (event: Event) => {
-          event.preventDefault();
-          // Form submission will be handled by handleSubmit method
-        };
-
-        formElement.addEventListener('submit', handleFormSubmit);
-
-        this.cleanup = () => {
-          formElement.removeEventListener('submit', handleFormSubmit);
-          // Unregister from global registry
-          if (this.formId) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (formServiceMeta.instance as any).unregister(this.formId);
-          }
-        };
-      } else {
-        this.cleanup = () => {
-          if (this.formId) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (formServiceMeta.instance as any).unregister(this.formId);
-          }
-        };
-      }
+      this.setupFormListeners();
     },
 
     destroy(): void {
       this.cleanup?.();
-
-      // Clear all state
-      this.fields = {};
-      this.values = {};
-      this.errors = {};
-      this.touchedFields = {};
-      this.dirtyFields = {};
+      this.clearAllState();
     },
 
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
@@ -172,36 +355,30 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     handleFieldInput(name: string, value: unknown): void {
       this.values[name] = value;
       this.dirtyFields[name] = true;
+      this.updateFieldRef(name);
 
-      const element = (this as unknown as { $refs: Record<string, HTMLElement> }).$refs[name] as HTMLInputElement;
-      if (element && !this.fields[name].ref) {
-        this.fields[name].ref = element;
-      }
+      const shouldValidate =
+        this.config.mode === 'onChange' || (this.config.reValidateMode === 'onChange' && this.touchedFields[name]);
 
-      if (this.config.mode === 'onChange' || (this.config.reValidateMode === 'onChange' && this.touchedFields[name])) {
+      if (shouldValidate) {
         this.validateField(name, value);
       }
     },
 
     handleFieldBlur(name: string, value: unknown): void {
       this.touchedFields[name] = true;
+      this.updateFieldRef(name);
 
-      const element = (this as unknown as { $refs: Record<string, HTMLElement> }).$refs[name] as HTMLInputElement;
-      if (element && !this.fields[name].ref) {
-        this.fields[name].ref = element;
-      }
+      const shouldValidate =
+        this.config.mode === 'onBlur' || (this.config.reValidateMode === 'onBlur' && this.touchedFields[name]);
 
-      // Validate based on mode
-      if (this.config.mode === 'onBlur' || (this.config.reValidateMode === 'onBlur' && this.touchedFields[name])) {
+      if (shouldValidate) {
         this.validateField(name, value);
       }
     },
 
     watch(name?: string): unknown {
-      if (name) {
-        return this.values[name];
-      }
-      return { ...this.values };
+      return name ? this.values[name] : { ...this.values };
     },
 
     setValue(name: string, value: unknown, options: SetValueOptions = {}): void {
@@ -209,16 +386,12 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       this.values[name] = value;
 
-      if (shouldTouch) {
-        this.touchedFields[name] = true;
-      }
-      if (shouldDirty) {
-        this.dirtyFields[name] = true;
-      }
+      if (shouldTouch) this.touchedFields[name] = true;
+      if (shouldDirty) this.dirtyFields[name] = true;
 
-      const formElement = this.fields[name]?.ref as HTMLInputElement | undefined;
-      if (formElement) {
-        formElement.value = String(value || '');
+      const fieldElement = this.fields[name]?.ref;
+      if (fieldElement) {
+        DOMUtils.updateElementValue(fieldElement, value);
       }
 
       if (shouldValidate) {
@@ -231,48 +404,84 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     setFocus(name: string, options: FocusOptions = {}): void {
-      const { shouldSelect = false } = options;
       const field = this.fields[name];
-      const fieldElement = field?.ref as HTMLInputElement | undefined;
+      const fieldElement = field?.ref;
 
-      if (fieldElement && this.isFieldVisible(fieldElement)) {
-        fieldElement.focus();
-        if (shouldSelect && fieldElement.select) {
-          fieldElement.select();
-        }
-
-        if (this.config.shouldScrollToError) {
-          fieldElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
+      if (fieldElement && DOMUtils.isElementVisible(fieldElement)) {
+        DOMUtils.focusElement(fieldElement, {
+          shouldSelect: options.shouldSelect,
+          shouldScroll: this.config.shouldScrollToError,
+        });
       }
     },
 
     async trigger(name?: string | string[]): Promise<boolean> {
       this.isValidating = true;
-      let isValid = true;
 
       try {
         if (typeof name === 'string') {
-          this.touchedFields[name] = true;
-          const value = this.values[name];
-          isValid = await this.validateField(name, value);
-        } else if (Array.isArray(name)) {
-          for (const fieldName of name) {
-            this.touchedFields[fieldName] = true;
-            const value = this.values[fieldName];
-            const fieldValid = await this.validateField(fieldName, value);
-            if (!fieldValid) {
-              isValid = false;
-            }
-          }
-        } else {
-          for (const fieldName of Object.keys(this.fields)) {
-            this.touchedFields[fieldName] = true;
-          }
-          isValid = await this.validateAllFields();
+          return await this.validateSingleField(name);
         }
+
+        if (Array.isArray(name)) {
+          return await this.validateMultipleFields(name);
+        }
+
+        return await this.validateAllFields();
       } finally {
         this.isValidating = false;
+      }
+    },
+
+    async validateField(name: string, value: unknown): Promise<boolean> {
+      const fieldConfig = this.fields[name];
+      const error = await validateFieldValue(name, value, fieldConfig?.rules);
+
+      if (error) {
+        this.errors[name] = error;
+      } else {
+        delete this.errors[name];
+      }
+
+      this.updateAriaInvalidState(name);
+      this.updateFormValidState();
+
+      return !error;
+    },
+
+    async validateSingleField(name: string): Promise<boolean> {
+      this.touchedFields[name] = true;
+      const value = this.values[name];
+      return await this.validateField(name, value);
+    },
+
+    async validateMultipleFields(names: string[]): Promise<boolean> {
+      let isValid = true;
+
+      for (const fieldName of names) {
+        this.touchedFields[fieldName] = true;
+        const value = this.values[fieldName];
+        const fieldValid = await this.validateField(fieldName, value);
+        if (!fieldValid) isValid = false;
+      }
+
+      return isValid;
+    },
+
+    async validateAllFields(): Promise<boolean> {
+      let isValid = true;
+      const formElement = (this as unknown as { $el: HTMLElement }).$el;
+
+      for (const name of Object.keys(this.fields)) {
+        const fieldElement = DOMUtils.getFieldElement(formElement, name);
+
+        if (fieldElement && !DOMUtils.isElementVisible(fieldElement)) {
+          continue;
+        }
+
+        const value = this.values[name];
+        const fieldValid = await this.validateField(name, value);
+        if (!fieldValid) isValid = false;
       }
 
       return isValid;
@@ -280,18 +489,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
     clearErrors(name?: string | string[]): void {
       if (typeof name === 'string') {
-        delete this.errors[name];
-        this.updateAriaInvalidState(name);
+        this.clearSingleError(name);
       } else if (Array.isArray(name)) {
-        name.forEach((fieldName) => {
-          delete this.errors[fieldName];
-          this.updateAriaInvalidState(fieldName);
-        });
+        name.forEach((fieldName) => this.clearSingleError(fieldName));
       } else {
-        Object.keys(this.fields).forEach((fieldName) => {
-          delete this.errors[fieldName];
-          this.updateAriaInvalidState(fieldName);
-        });
+        Object.keys(this.fields).forEach((fieldName) => this.clearSingleError(fieldName));
       }
 
       this.updateFormValidState();
@@ -299,6 +501,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
     setError(name: string, error: FieldError): void {
       this.errors[name] = error;
+      this.updateAriaInvalidState(name);
       this.updateFormValidState();
     },
 
@@ -315,13 +518,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         );
       }
 
-      for (const [name, value] of Object.entries(this.values)) {
-        const fieldRef = this.fields[name]?.ref as HTMLInputElement | undefined;
-        if (!fieldRef) continue;
-
-        fieldRef.value = String(value ?? '');
-      }
-
+      this.syncDOMWithState();
       this.errors = {};
       this.touchedFields = {};
       this.dirtyFields = {};
@@ -336,7 +533,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     ): (event: Event) => void {
       return async (event: Event) => {
         event.preventDefault();
-
         this.isSubmitting = true;
 
         try {
@@ -345,9 +541,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           if (isValid) {
             onValid({ ...this.values });
           } else {
-            if (onInvalid) {
-              onInvalid({ ...this.errors });
-            }
+            onInvalid?.({ ...this.errors });
 
             if (this.config.shouldFocusError) {
               this.focusFirstError();
@@ -374,160 +568,65 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     isFieldVisible(element: HTMLElement): boolean {
-      const style = getComputedStyle(element);
-      const rect = element.getBoundingClientRect();
+      return DOMUtils.isElementVisible(element);
+    },
 
-      return (
-        style.display !== 'none' &&
-        style.visibility !== 'hidden' &&
-        parseFloat(style.opacity) > 0 &&
-        rect.width > 0 &&
-        rect.height > 0
-      );
+    getFormBindings() {
+      return {
+        novalidate: true,
+      };
+    },
+
+    convertToFormData: FormDataUtils.convertToFormData.bind(FormDataUtils),
+    serializeParams: FormDataUtils.serializeParams.bind(FormDataUtils),
+
+    setupFormListeners(): void {
+      const formElement = (this as unknown as { $el: HTMLElement }).$el;
+
+      if (!formElement) {
+        this.cleanup = () => {
+          if (this.formId) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (formServiceMeta.instance as any).unregister(this.formId);
+          }
+        };
+        return;
+      }
+
+      const handleFormSubmit = (event: Event) => {
+        event.preventDefault();
+      };
+
+      formElement.addEventListener('submit', handleFormSubmit);
+
+      this.cleanup = () => {
+        formElement.removeEventListener('submit', handleFormSubmit);
+        if (this.formId) {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (formServiceMeta.instance as any).unregister(this.formId);
+        }
+      };
+    },
+
+    updateFieldRef(name: string): void {
+      const element = (this as unknown as { $refs: Record<string, HTMLElement> }).$refs[name] as HTMLInputElement;
+      const field = this.fields[name];
+
+      if (element && field && !field.ref) {
+        field.ref = element;
+      }
+    },
+
+    clearSingleError(name: string): void {
+      delete this.errors[name];
+      this.updateAriaInvalidState(name);
     },
 
     updateAriaInvalidState(name: string): void {
-      const fieldRef = this.fields[name]?.ref as HTMLInputElement | undefined;
+      const fieldRef = this.fields[name]?.ref;
       if (!fieldRef) return;
 
-      if (this.errors[name]) {
-        fieldRef.setAttribute('aria-invalid', 'true');
-      } else {
-        fieldRef.removeAttribute('aria-invalid');
-      }
-    },
-
-    async validateField(name: string, value: unknown): Promise<boolean> {
-      const fieldConfig = this.fields[name];
-      if (!fieldConfig?.rules) {
-        delete this.errors[name];
-        this.updateAriaInvalidState(name);
-        this.updateFormValidState();
-        return true;
-      }
-
-      delete this.errors[name];
-
-      const rules = fieldConfig.rules;
-
-      if (rules.required) {
-        const message = typeof rules.required === 'string' ? rules.required : `${name} is required`;
-        if (!value || (typeof value === 'string' && value.trim() === '')) {
-          this.errors[name] = { type: 'required', message };
-          this.updateAriaInvalidState(name);
-          this.updateFormValidState();
-          return false;
-        }
-      }
-
-      const stringValue = String(value || '');
-      const numericValue = typeof value === 'number' ? value : parseFloat(stringValue);
-
-      if (rules.minLength && stringValue) {
-        const minLength = typeof rules.minLength === 'number' ? rules.minLength : rules.minLength.value;
-        const message =
-          typeof rules.minLength === 'object' ? rules.minLength.message : `Minimum length is ${minLength}`;
-
-        if (stringValue.length < minLength) {
-          this.errors[name] = { type: 'minLength', message };
-          this.updateAriaInvalidState(name);
-          this.updateFormValidState();
-          return false;
-        }
-      }
-
-      if (rules.maxLength && stringValue) {
-        const maxLength = typeof rules.maxLength === 'number' ? rules.maxLength : rules.maxLength.value;
-        const message =
-          typeof rules.maxLength === 'object' ? rules.maxLength.message : `Maximum length is ${maxLength}`;
-
-        if (stringValue.length > maxLength) {
-          this.errors[name] = { type: 'maxLength', message };
-          this.updateAriaInvalidState(name);
-          this.updateFormValidState();
-          return false;
-        }
-      }
-
-      if (rules.min && !isNaN(numericValue)) {
-        const min = typeof rules.min === 'number' ? rules.min : rules.min.value;
-        const message = typeof rules.min === 'object' ? rules.min.message : `Minimum value is ${min}`;
-
-        if (numericValue < min) {
-          this.errors[name] = { type: 'min', message };
-          this.updateAriaInvalidState(name);
-          this.updateFormValidState();
-          return false;
-        }
-      }
-
-      if (rules.max && !isNaN(numericValue)) {
-        const max = typeof rules.max === 'number' ? rules.max : rules.max.value;
-        const message = typeof rules.max === 'object' ? rules.max.message : `Maximum value is ${max}`;
-
-        if (numericValue > max) {
-          this.errors[name] = { type: 'max', message };
-          this.updateAriaInvalidState(name);
-          this.updateFormValidState();
-          return false;
-        }
-      }
-
-      if (rules.pattern && stringValue) {
-        const pattern = rules.pattern instanceof RegExp ? rules.pattern : rules.pattern.value;
-        const message =
-          typeof rules.pattern === 'object' && 'message' in rules.pattern ? rules.pattern.message : 'Invalid format';
-
-        if (!pattern.test(stringValue)) {
-          this.errors[name] = { type: 'pattern', message };
-          this.updateAriaInvalidState(name);
-          this.updateFormValidState();
-          return false;
-        }
-      }
-
-      if (rules.validate) {
-        try {
-          const result = await rules.validate(value);
-          if (result !== true) {
-            const message = typeof result === 'string' ? result : 'Validation failed';
-            this.errors[name] = { type: 'validate', message };
-            this.updateAriaInvalidState(name);
-            this.updateFormValidState();
-            return false;
-          }
-        } catch {
-          this.errors[name] = { type: 'validate', message: 'Validation error' };
-          this.updateAriaInvalidState(name);
-          this.updateFormValidState();
-          return false;
-        }
-      }
-
-      this.updateAriaInvalidState(name);
-      this.updateFormValidState();
-
-      return true;
-    },
-
-    async validateAllFields(): Promise<boolean> {
-      let isValid = true;
-      const formElement = (this as unknown as { $el: HTMLElement }).$el;
-
-      for (const [name] of Object.entries(this.fields)) {
-        const fieldElement = formElement?.querySelector(`[name="${name}"]`) as HTMLElement;
-        if (fieldElement && !this.isFieldVisible(fieldElement)) {
-          continue;
-        }
-
-        const value = this.values[name];
-        const fieldValid = await this.validateField(name, value);
-        if (!fieldValid) {
-          isValid = false;
-        }
-      }
-
-      return isValid;
+      DOMUtils.setAriaInvalid(fieldRef, !!this.errors[name]);
     },
 
     updateFormValidState(): void {
@@ -541,161 +640,21 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
     },
 
-    getFormBindings() {
-      return {
-        novalidate: true, // Disable HTML validation to use custom validation
-      };
-    },
-
-    handleFormErrors(
-      response: { status: number; data: Record<string, unknown> },
-      values: Record<string, unknown>,
-    ): { fieldErrors?: Record<string, string[]>; nonFieldErrors?: string[] } {
-      if (response.status === 404 || response.status === 403 || response.status === 500) {
-        return {
-          nonFieldErrors: ['Unexpected error!'],
-        };
-      }
-
-      const flatValues = this.flattenObject(values);
-      const flatData = this.flattenObject(response.data);
-
-      const { non_field_errors, ...responseWithoutNonFieldErrors } = flatData;
-      const nonFieldErrors: string[] = Array.isArray(non_field_errors) ? non_field_errors : [];
-
-      for (const objectKey of Object.keys(responseWithoutNonFieldErrors)) {
-        if (!(objectKey in flatValues)) {
-          const value = flatData[objectKey];
-          if (Array.isArray(value)) {
-            nonFieldErrors.push(...value);
-          }
-        }
-      }
-
-      return {
-        nonFieldErrors,
-        fieldErrors: Object.keys(flatData)
-          .filter((objectKey) => objectKey in flatValues)
-          .reduce((acc, field) => {
-            const errors = flatData[field];
-            if (Array.isArray(errors)) {
-              return { ...acc, [field]: errors };
-            }
-            return acc;
-          }, {}),
-      };
-    },
-
-    mapErrorResponseToForm(
-      err: { response?: { status: number; data: Record<string, unknown> } },
-      values: Record<string, unknown>,
-    ): void {
-      if (!err.response) {
-        return;
-      }
-
-      const { fieldErrors, nonFieldErrors } = this.handleFormErrors(err.response, values);
-
-      if (nonFieldErrors?.length) {
-        // Set global form error - could be displayed in UI
-        // Note: In production, this should be handled by the UI layer
-        // For now, we'll store it in a way that can be accessed by the UI
-        // You could emit an event or set a global error state here
-      }
-
-      if (fieldErrors) {
-        for (const fieldName of Object.keys(fieldErrors)) {
-          const fieldError = fieldErrors[fieldName];
-          if (fieldError.length > 0) {
-            this.setError(fieldName, { type: 'server', message: fieldError[0] });
-          }
+    syncDOMWithState(): void {
+      for (const [name, value] of Object.entries(this.values)) {
+        const fieldRef = this.fields[name]?.ref;
+        if (fieldRef) {
+          DOMUtils.updateElementValue(fieldRef, value);
         }
       }
     },
 
-    convertToFormData(values: Record<string, unknown>, method: string = 'POST'): FormData {
-      const formData = new FormData();
-
-      for (const key of Object.keys(values)) {
-        const value = values[key];
-
-        if (Array.isArray(value)) {
-          value.forEach((item, index) => {
-            if (item instanceof File || item instanceof Blob || typeof item === 'string') {
-              formData.append(`${key}[${index}]`, item);
-            } else if (typeof item === 'boolean' || typeof item === 'number') {
-              formData.append(`${key}[${index}]`, item.toString());
-            } else if (typeof item === 'object' && item !== null) {
-              formData.append(`${key}[${index}]`, JSON.stringify(item));
-            } else {
-              formData.append(`${key}[${index}]`, String(item));
-            }
-          });
-        } else {
-          if (value instanceof File || value instanceof Blob || typeof value === 'string') {
-            formData.append(key, value);
-          } else if (typeof value === 'boolean') {
-            formData.append(key, value.toString());
-          } else if (typeof value === 'number') {
-            formData.append(key, String(value));
-          } else if (typeof value === 'object' && value !== null) {
-            formData.append(key, JSON.stringify(value));
-          } else {
-            formData.append(key, String(value));
-          }
-        }
-      }
-
-      formData.append('_method', method.toUpperCase());
-      return formData;
-    },
-
-    serializeParams(params: Record<string, unknown>): Record<string, unknown> {
-      const serialized: Record<string, unknown> = {};
-
-      for (const key in params) {
-        const value = params[key];
-
-        if (value === null || value === undefined) {
-          serialized[key] = 'null';
-        } else if (typeof value === 'boolean') {
-          serialized[key] = value === true ? 'true' : 'false';
-        } else {
-          serialized[key] = value;
-        }
-      }
-
-      return serialized;
-    },
-
-    submitHandler(
-      submitFn: (values: Record<string, unknown>) => Promise<unknown>,
-    ): (values: Record<string, unknown>) => Promise<void> {
-      return async (values: Record<string, unknown>) => {
-        try {
-          await submitFn(values);
-        } catch (err) {
-          this.mapErrorResponseToForm(err as { response?: { status: number; data: Record<string, unknown> } }, values);
-        }
-      };
-    },
-
-    flattenObject(obj: Record<string, unknown>, base = ''): Record<string, unknown> {
-      return Object.keys(obj).reduce<Record<string, unknown>>((acc, key) => {
-        const value = obj[key];
-
-        if (
-          typeof value === 'object' &&
-          value !== null &&
-          !Array.isArray(value) &&
-          !(value instanceof File) &&
-          !(value instanceof Blob)
-        ) {
-          return { ...acc, ...this.flattenObject(value as Record<string, unknown>, `${base}${key}.`) };
-        }
-
-        return { ...acc, [`${base}${key}`]: value };
-      }, {});
+    clearAllState(): void {
+      this.fields = {};
+      this.values = {};
+      this.errors = {};
+      this.touchedFields = {};
+      this.dirtyFields = {};
     },
   };
 
