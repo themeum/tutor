@@ -234,7 +234,7 @@ use TUTOR\Icon;
 							checked
 							class="tutor-checkbox tutor-checkbox-md tutor-checkbox-intermediate"
 						>
-						<label for="name" class="tutor-label tutor-label-required">Are you disabled(md)?</label>
+						<label for="name" class="tutor-label tutor-label-required">Are you intermediate(md)?</label>
 					</div>
 					<div class="tutor-help-text">This is a regular checkbox.</div>
 				</div>
@@ -303,7 +303,7 @@ use TUTOR\Icon;
 							name="radio-2"
 							class="tutor-radio tutor-radio-md"
 						>
-						<label for="name" class="tutor-label tutor-label-required">Are you regular(md)?</label>
+						<label for="name" class="tutor-label tutor-label-required">Are you disabled(md)?</label>
 					</div>
 					<div class="tutor-help-text">This is a regular disabled radio.</div>
 				</div>
@@ -319,7 +319,7 @@ use TUTOR\Icon;
 		type="checkbox"
 		id="switch-sm"
 		name="switch"
-		class="tutor-switch tutor-switch-sm"
+		class="tutor-switch"
 		>
 		<label for="switch-sm" class="tutor-label tutor-label-required">Enable small switch?</label>
 	</div>
