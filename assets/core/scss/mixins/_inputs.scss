@@ -175,10 +175,10 @@
   }
 }
 
-@mixin tutor-switch($size: medium, $intermediate: false) {
-  $width: if($size ==small, 36px, 44px);
-  $height: if($size ==small, 20px, 24px);
-  $thumb: if($size ==small, 16px, 20px);
+@mixin tutor-switch($size: sm, $intermediate: false) {
+  $width: if($size ==sm, 36px, 44px);
+  $height: if($size ==sm, 20px, 24px);
+  $thumb: if($size ==sm, 16px, 20px);
   $gap: 2px;
 
   position: relative;
