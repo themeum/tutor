@@ -23,117 +23,118 @@
 
 @mixin tutor-button-variant($variant: primary) {
   @if $variant == primary {
-    background-color: var(--tutor-button-primary);
-    color: white;
+    background-color: $tutor-button-primary;
+    color: $tutor-text-primary-inverse;
 
     &:hover:not(:disabled) {
-      background-color: var(--tutor-button-primary-hover);
+      background-color: $tutor-button-primary-hover;
     }
 
     &:focus:not(:disabled) {
-      background-color: var(--tutor-button-primary-focused);
+      background-color: $tutor-button-primary-focused;
     }
 
     &:disabled {
-      background-color: var(--tutor-button-primary-disabled);
+      background-color: $tutor-button-primary-disabled;
     }
   } @else if $variant == primary-soft {
-    background-color: var(--tutor-button-primary-soft);
-    color: var(--tutor-text-brand);
+    background-color: $tutor-button-primary-soft;
+    color: $tutor-text-brand;
 
     &:hover:not(:disabled) {
-      background-color: var(--tutor-button-primary-soft-hover);
+      background-color: $tutor-button-primary-soft-hover;
     }
 
     &:focus:not(:disabled) {
-      background-color: var(--tutor-button-primary-soft-focused);
+      background-color: $tutor-button-primary-soft-focused;
     }
 
     &:disabled {
-      background-color: var(--tutor-button-disabled);
-      color: var(--tutor-text-subdued);
+      background-color: $tutor-button-disabled;
+      color: $tutor-text-subdued;
     }
   } @else if $variant == destructive {
-    background-color: var(--tutor-button-destructive);
-    color: white;
+    background-color: $tutor-button-destructive;
+    color: $tutor-text-primary-inverse;
 
     &:hover:not(:disabled) {
-      background-color: var(--tutor-button-destructive-hover);
+      background-color: $tutor-button-destructive-hover;
     }
 
     &:focus:not(:disabled) {
-      background-color: var(--tutor-button-destructive-focused);
+      background-color: $tutor-button-destructive-focused;
     }
 
     &:disabled {
-      background-color: var(--tutor-button-destructive-disabled);
+      background-color: $tutor-button-disabled;
+      color: $tutor-text-subdued;
     }
   } @else if $variant == destructive-soft {
-    background-color: var(--tutor-button-destructive-soft);
-    color: var(--tutor-text-critical);
+    background-color: $tutor-button-destructive-soft;
+    color: $tutor-text-critical;
 
     &:hover:not(:disabled) {
-      background-color: var(--tutor-button-destructive-soft-hover);
+      background-color: $tutor-button-destructive-soft-hover;
     }
 
     &:focus:not(:disabled) {
-      background-color: var(--tutor-button-destructive-soft-focused);
+      background-color: $tutor-button-destructive-soft-focused;
     }
 
     &:disabled {
-      background-color: var(--tutor-button-disabled);
-      color: var(--tutor-text-subdued);
+      background-color: $tutor-button-disabled;
+      color: $tutor-text-subdued;
     }
   } @else if $variant == secondary {
-    background-color: var(--tutor-button-secondary);
-    color: var(--tutor-text-primary);
+    background-color: $tutor-button-secondary;
+    color: $tutor-text-primary;
 
     &:hover:not(:disabled) {
-      background-color: var(--tutor-button-secondary-hover);
+      background-color: $tutor-button-secondary-hover;
     }
 
     &:focus:not(:disabled) {
-      background-color: var(--tutor-button-secondary-focused);
+      background-color: $tutor-button-secondary-focused;
     }
 
     &:disabled {
-      background-color: var(--tutor-button-disabled);
-      color: var(--tutor-text-subdued);
+      background-color: $tutor-button-disabled;
+      color: $tutor-text-subdued;
     }
   } @else if $variant == outline {
-    background-color: var(--tutor-button-outline-inverse);
-    color: var(--tutor-text-primary);
-    border: 1px solid var(--tutor-border-idle);
+    background-color: $tutor-button-outline-inverse;
+    color: $tutor-text-primary;
+    box-shadow: inset 0 0 0 1px $tutor-border-idle;
 
     &:hover:not(:disabled) {
-      background-color: var(--tutor-button-outline-hover);
+      background-color: $tutor-button-outline-hover;
     }
 
     &:focus:not(:disabled) {
-      background-color: var(--tutor-button-outline-focused-inverse);
+      background-color: $tutor-button-outline-focused-inverse;
     }
 
     &:disabled {
-      background-color: var(--tutor-button-disabled);
-      color: var(--tutor-text-subdued);
+      background-color: $tutor-button-disabled;
+      color: $tutor-text-subdued;
     }
   } @else if $variant == ghost {
     background-color: transparent;
-    color: var(--tutor-text-primary);
+    color: $tutor-text-primary;
 
     &:hover:not(:disabled) {
-      background-color: var(--tutor-button-ghost-hover);
+      background-color: $tutor-button-ghost-hover;
     }
 
     &:disabled {
-      color: var(--tutor-text-subdued);
+      color: $tutor-text-subdued;
     }
   } @else if $variant == link {
     background-color: transparent;
-    color: var(--tutor-text-primary);
+    color: $tutor-text-primary;
 
     &:disabled {
-      color: var(--tutor-text-subdued);
+      color: $tutor-text-subdued;
     }
   }
 }
@@ -243,5 +244,25 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@mixin tutor-button-reset {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  &:focus {
+    outline: none;
   }
 }

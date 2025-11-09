@@ -1,12 +1,47 @@
 <?php
 /**
- * Template for displaying dashboard demo components
+ * Tutor dashboard.
  *
- * @package Tutor
- * @since 1.0.0
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.0.0
  */
 
-use TUTOR\Icon;
+use TUTOR\Input;
 
 ?>
-<h2>Dashboard</h2>
+<div class="tutor-dashboard-wrapper">
+	<?php tutor_load_template( 'demo-components.dashboard.components.sidebar' ); ?>
+	<div class="tutor-dashboard-content">
+		<?php tutor_load_template( 'demo-components.dashboard.components.header' ); ?>
+		<div class="tutor-dashboard-content-inner">
+			<?php
+			// Get requested page from query string and sanitize.
+			$dashboard_page = Input::get( 'dashboard-page', 'home' );
+
+			// Whitelist allowed pages to avoid arbitrary file inclusion.
+			$allowed_pages = array(
+				'home',
+				'courses',
+				'notes',
+				'discussions',
+				'calendar',
+			);
+
+			$allowed_pages = (array) apply_filters( 'tutor_demo_dashboard_allowed_pages', $allowed_pages );
+
+			if ( $dashboard_page && in_array( $dashboard_page, $allowed_pages, true ) ) {
+				tutor_load_template( 'demo-components.dashboard.pages.' . $dashboard_page );
+			} else {
+				?>
+				<div class="tutor-text-h3 tutor-color-black tutor-p-8">
+					<?php esc_html_e( 'Welcome to TutorLMS Dashboard', 'tutor' ); ?>
+				</div>
+				<?php
+			}
+			?>
+		</div>
+	</div>
+	<?php tutor_load_template( 'demo-components.dashboard.components.nav-mobile' ); ?>
+</div>

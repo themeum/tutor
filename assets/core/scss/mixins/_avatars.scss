@@ -1,0 +1,132 @@
+// Avatar Mixins
+@use "../tokens" as *;
+@use "typography" as *;
+@use "layout" as *;
+
+@mixin tutor-avatar-base {
+	@include tutor-flex-center;
+	position: relative;
+	border-radius: $tutor-radius-full;
+	overflow: hidden;
+	background-color: $tutor-button-primary-soft;
+	color: $tutor-text-primary;
+	flex-shrink: 0;
+	user-select: none;
+}
+
+@mixin tutor-avatar-image {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+@mixin tutor-avatar-initials {
+	@include tutor-typography('small', 'medium');
+	color: inherit;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+// Avatar sizes
+@mixin tutor-avatar-size($size: md) {
+	@if $size == xs {
+		width: 20px;
+		height: 20px;
+		
+		.tutor-avatar-initials {
+			@include tutor-typography('tiny', 'medium');
+		}
+
+		svg {
+			width: 12px;
+			height: 12px;
+		}
+	} @else if $size == sm {
+		width: 32px;
+		height: 32px;
+		
+		.tutor-avatar-initials {
+			@include tutor-typography('tiny', 'medium');
+		}
+		
+		svg {
+			width: 16px;
+			height: 16px;
+		}
+	} @else if $size == md {
+		width: 48px;
+		height: 48px;
+		
+		.tutor-avatar-initials {
+			@include tutor-typography('small', 'medium');
+		}
+		svg {
+			width: 24px;
+			height: 24px;
+		}
+	} @else if $size == lg {
+		width: 64px;
+		height: 64px;
+		
+		.tutor-avatar-initials {
+			@include tutor-typography('medium', 'medium');
+		}
+		
+		svg {
+			width: 32px;
+			height: 32px;
+		}
+	} @else if $size == xl {
+		width: 80px;
+		height: 80px;
+		
+		.tutor-avatar-initials {
+			font-size: $tutor-font-size-h4;
+			font-weight: $tutor-font-weight-medium;
+		}
+		
+		svg {
+			width: 40px;
+			height: 40px;
+		}
+	} @else if $size == xxl {
+		width: 104px;
+		height: 104px;
+		
+		.tutor-avatar-initials {
+			font-size: $tutor-font-size-h3;
+			font-weight: $tutor-font-weight-medium;
+		}
+		
+		svg {
+			width: 48px;
+			height: 48px;
+		}
+	}
+}
+
+// Avatar variants
+@mixin tutor-avatar-variant($variant: default) {
+	@if $variant == square {
+		border-radius: $tutor-radius-md;
+		
+		svg,
+		.tutor-avatar-image {
+			border-radius: $tutor-radius-md;
+		}
+	} @else if $variant == icon {
+		background-color: $tutor-surface-brand-tertiary;
+		color: $tutor-text-secondary;
+		
+		&:hover {
+			background-color: $tutor-actions-brand-tertiary;
+			color: $tutor-actions-brand-primary;
+		}
+	} @else if $variant == border {
+		border: 2px solid $tutor-surface-l2;
+		svg,
+		.tutor-avatar-image {
+			border-radius: 0px;
+		}
+	}
+}

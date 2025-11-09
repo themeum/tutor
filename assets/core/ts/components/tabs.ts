@@ -1,4 +1,4 @@
-import { TUTOR_CUSTOM_EVENTS } from '@Core/constant';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 
 export interface TabItem {
   id: string;

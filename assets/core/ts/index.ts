@@ -1,16 +1,38 @@
+import focus from '@alpinejs/focus';
 import Alpine from 'alpinejs';
 
-import { TutorComponentRegistry } from '@Core/ComponentRegistry';
+import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 
-import { buttonMeta } from '@Core/components/button';
-import { fileUploaderMeta } from '@Core/components/file-uploader';
-import { iconMeta } from '@Core/components/icon';
-import { tabsMeta } from '@Core/components/tabs';
-import { staticsMeta } from '@Core/components/statics';
-import { accordionMeta } from '@Core/components/accordion';
+import { accordionMeta } from '@Core/ts/components/accordion';
+import { buttonMeta } from '@Core/ts/components/button';
+import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
+import { iconMeta } from '@Core/ts/components/icon';
+import { modalMeta } from '@Core/ts/components/modal';
+import { popoverMeta } from '@Core/ts/components/popover';
+import { staticsMeta } from '@Core/ts/components/statics';
+import { tabsMeta } from '@Core/ts/components/tabs';
+import { modalServiceMeta } from '@Core/ts/services/Modal';
+import { selectDropdownMeta } from './components/select-dropdown';
+import { stepperDropdownMeta } from './components/stepper-dropdown';
+
+Alpine.plugin(focus);
 
 const initializePlugin = () => {
-  TutorComponentRegistry.registerAll([buttonMeta, fileUploaderMeta, tabsMeta, iconMeta, staticsMeta, accordionMeta]);
+  TutorComponentRegistry.registerAll({
+    components: [
+      buttonMeta,
+      fileUploaderMeta,
+      tabsMeta,
+      iconMeta,
+      modalMeta,
+      popoverMeta,
+      staticsMeta,
+      accordionMeta,
+      selectDropdownMeta,
+      stepperDropdownMeta,
+    ],
+    services: [modalServiceMeta],
+  });
 
   TutorComponentRegistry.initWithAlpine(Alpine);
 

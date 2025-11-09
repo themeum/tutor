@@ -49,10 +49,12 @@
 		<?php else : ?>
 		<section>
 			<?php require 'table.php'; ?>
+			<?php require 'avatar.php'; ?>
 			<?php require 'pagination.php'; ?>
 		</section>
 		<section>
 			<?php require 'button.php'; ?>
+			<?php require 'popover.php'; ?>
 			<?php require 'file-uploader.php'; ?>
 		</section>
 		<section>
@@ -75,7 +77,16 @@
 			<?php require 'section-separator.php'; ?>
 		</section>
 		<section>
-				<?php require 'accordion.php'; ?>
+			<?php require 'accordion.php'; ?>
+		</section>
+		<section>
+			<?php require 'select-dropdown.php'; ?>
+		</section>
+		<section>
+			<?php require 'stepper-dropdown.php'; ?>
+		</section>
+		<section>
+			<?php require 'modal.php'; ?>
 		</section>
 	<?php endif ?>
 

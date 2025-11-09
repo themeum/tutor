@@ -144,4 +144,16 @@
   --tutor-font-weight-medium: #{$tutor-font-weight-medium};
   --tutor-font-weight-semibold: #{$tutor-font-weight-semibold};
   --tutor-font-weight-bold: #{$tutor-font-weight-bold};
+
+  // =============================================================================
+  // SHADOW TOKENS
+  // =============================================================================
+
+  --tutor-shadow-xs: #{$tutor-shadow-xs};
+  --tutor-shadow-sm: #{$tutor-shadow-sm};
+  --tutor-shadow-md: #{$tutor-shadow-md};
+  --tutor-shadow-lg: #{$tutor-shadow-lg};
+  --tutor-shadow-xl: #{$tutor-shadow-xl};
+  --tutor-shadow-2xl: #{$tutor-shadow-2xl};
+  --tutor-shadow-3xl: #{$tutor-shadow-3xl};
 }
