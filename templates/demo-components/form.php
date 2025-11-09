@@ -272,7 +272,7 @@ use Tutor\Icon;
 		
 		<div>
 			<div x-data="tutorForm({ id: 'api-demo-form', mode: 'onBlur' })">
-				<div class="tutor-grid tutor-grid-cols-1 md:tutor-grid-cols-2 tutor-gap-6">
+				<div class="tutor-max-w-md">
 					<!-- Form Fields -->
 					<div>
 						<div class="tutor-input-field tutor-mb-4" :class="{
@@ -356,12 +356,6 @@ use Tutor\Icon;
 								class="tutor-btn"
 							>
 								setFocus('demo_name')
-							</button>
-							<button 
-								@click="trigger()"
-								class="tutor-btn"
-							>
-								trigger() - Validate All
 							</button>
 							<button 
 								@click="trigger()"
