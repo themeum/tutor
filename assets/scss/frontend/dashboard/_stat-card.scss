@@ -17,22 +17,16 @@
 
 	&-title {
 		@include tutor-typography('small');
-		font-style: normal;
-		letter-spacing: 0;
         margin: 0;
 	}
 
 	&-value {
 		@include tutor-typography('h2', 'bold', 'primary', 'heading');
-		font-style: normal;
-		letter-spacing: 0;
 		margin: 0;
 	}
 
 	&-change {
 		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
-		font-style: normal;
-		letter-spacing: 0;
 		margin: 0;
 	}
 
