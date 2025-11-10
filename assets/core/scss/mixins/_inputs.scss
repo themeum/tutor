@@ -187,7 +187,7 @@
   $width: if($size ==sm, 36px, 44px);
   $height: if($size ==sm, 20px, 24px);
   $thumb: if($size ==sm, 16px, 20px);
-  $gap: 2px;
+  $gap: $tutor-spacing-1;
 
   position: relative;
   display: inline-flex;

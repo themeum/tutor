@@ -27,15 +27,15 @@
 
     &.tutor-input-content {
       &-left {
-        padding-left: $tutor-spacing-10;
+        @include padding-start($tutor-spacing-10);
       }
 
       &-right {
-        padding-right: $tutor-spacing-10;
+        @include padding-end($tutor-spacing-10);
       }
 
       &-clear {
-        padding-right: 36px;
+        @include padding-end(36px);
       }
 
     }
@@ -103,7 +103,7 @@
     padding: 0;
     flex-shrink: 0;
     position: absolute;
-    right: $tutor-spacing-5;
+    @include right($tutor-spacing-5);
     top: 50%;
     transform: translateY(-50%);
     color: $tutor-icon-idle;
@@ -119,11 +119,11 @@
     z-index: 1;
 
     &.tutor-input-content-left {
-      left: $tutor-spacing-5;
+      @include left($tutor-spacing-5);
     }
 
     &.tutor-input-content-right {
-      right: $tutor-spacing-5;
+      @include right($tutor-spacing-5);
     }
   }
 
