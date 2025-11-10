@@ -1,0 +1,24 @@
+// Event Badge Component
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-event-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: $tutor-spacing-1;
+	width: fit-content;
+	padding: $tutor-spacing-1 $tutor-spacing-2;
+	background-color: $tutor-tab-l3;
+	border-radius: $tutor-radius-sm;
+
+	&-icon {
+		@include tutor-flex-center;
+	}
+
+	&-text {
+		@include tutor-typography('tiny');
+		white-space: nowrap;
+	}
+}
+

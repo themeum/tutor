@@ -88,6 +88,12 @@
 		<section>
 			<?php require 'modal.php'; ?>
 		</section>
+		<section>
+			<?php require 'input.php'; ?>
+		</section>
+		<section>
+			<?php require 'form.php'; ?>
+		</section>
 	<?php endif ?>
 
 </body>
