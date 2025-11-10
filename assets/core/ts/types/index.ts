@@ -4,8 +4,10 @@ import { type fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { type iconMeta } from '@Core/ts/components/icon';
 import { type popoverMeta } from '@Core/ts/components/popover';
 import { type tabsMeta } from '@Core/ts/components/tabs';
+
 import { type selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { type stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
+import { type formMeta } from '../components/form';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {
@@ -31,6 +33,7 @@ export interface TutorCore {
   selectDropdown: ExtractComponent<typeof selectDropdownMeta>;
   popover: ExtractComponent<typeof popoverMeta>;
   accordion: ExtractComponent<typeof accordionMeta>;
+  form: ExtractComponent<typeof formMeta>;
   stepperDropdown: ExtractComponent<typeof stepperDropdownMeta>;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;

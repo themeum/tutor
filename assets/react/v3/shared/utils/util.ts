@@ -245,12 +245,11 @@ export const formatReadAbleBytesToBytes = (readableBytes: string): number => {
   return byteValue * 1024 ** index;
 };
 
-export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
-  return value
-    .replace(allowNegative ? /[^0-9.-]/g : /[^0-9.]/g, '')
+export const parseNumberOnly = (v: string, allowNegative = false, whole = false) =>
+  v
+    .replace(whole ? (allowNegative ? /[^0-9-]/g : /[^0-9]/g) : allowNegative ? /[^0-9.-]/g : /[^0-9.]/g, '')
     .replace(/(?!^)-/g, '')
-    .replace(/(\..*)\./g, '$1');
-};
+    .replace(whole ? /\./g : /(\..*)\./g, '$1');
 
 export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: number) => {
   let inThrottle = false;
