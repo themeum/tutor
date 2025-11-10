@@ -15,6 +15,6 @@
 	</div>
 	
 	<div class="tutor-mb-4">
-		<?php tutor_load_template( 'core-components.live-session-card' ); ?>
+		<?php tutor_load_template( 'core-components.event-badge' ); ?>
 	</div>
 </div>
