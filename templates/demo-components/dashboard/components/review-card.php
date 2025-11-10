@@ -60,14 +60,14 @@ $review = array(
 		<?php endif; ?>
 
 		<!-- Course Title -->
-		<h6 class="tutor-p1 tutor-font-medium tutor-mt-1">
+		<div class="tutor-p1 tutor-font-medium tutor-mt-1">
 			<?php echo esc_html( $review['title'] ?? '' ); ?>
-		</h6>
+		</div>
 
 		<!-- Review Date -->
-		<p class="tutor-p3 tutor-text-subdued">
+		<div class="tutor-p3 tutor-text-subdued">
 			Reviewed on: <?php echo esc_html( $review['reviewed_date'] ?? '' ); ?>
-		</p>
+		</div>
 	</div>
 
 	<!-- Divider -->
