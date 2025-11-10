@@ -330,6 +330,7 @@ Fix: Fixed PHP error on sites that have never used WooCommerce for monetization.
 Fix: Resolved issue showing raw HTML code in WooCommerce manual enrolment. (Pro)
 Fix: Corrected display issue where courses with multiple purchase options showed Add to Cart instead of View Details. (Pro)
 Fix: Fixed quiz import issue. (Pro)
+Fix: Resolved the WPML 404 redirection issue in certain scenarios. (Pro)
 
 = 3.9.1 - Oct 23, 2025
 
