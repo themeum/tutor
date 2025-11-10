@@ -16,6 +16,7 @@
   transition: all 0.2s ease;
 
   -moz-appearance: textfield;
+
   &::-webkit-outer-spin-button,
   &::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -215,6 +216,11 @@
     background-color: $tutor-surface-l1;
     transition: transform 0.25s ease, background-color 0.25s ease;
     box-shadow: $tutor-shadow-sm;
+  }
+
+  &:focus {
+    @include tutor-focus-ring();
+    border-color: $tutor-border-brand-tertiary;
   }
 
   &:checked {
