@@ -74,12 +74,20 @@ class Button {
 	protected $attributes = array();
 
 	/**
-	 * Icon class name.
+	 * The SVG icon markup.
 	 *
 	 * @since 4.0.0
-	 * @var string|null
+	 * @var string
 	 */
-	protected $icon = null;
+	protected $icon = '';
+
+	/**
+	 * The icon position relative to label. Accepts 'left' or 'right'.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected $icon_position = 'left';
 
 	/**
 	 * Whether button is disabled.
@@ -156,15 +164,17 @@ class Button {
 	}
 
 	/**
-	 * Add an icon before the button label.
+	 * Set the SVG icon for the button.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $icon_class Icon class name.
-	 * @return $this
+	 * @param string $svg SVG markup (already escaped and sanitized).
+	 * @param string $position Optional. Icon position: 'left' or 'right'.
+	 * @return self
 	 */
-	public function icon( $icon_class ) {
-		$this->icon = sanitize_html_class( $icon_class );
+	public function icon( string $svg, string $position = 'left' ): self {
+		$this->icon          = $svg;
+		$this->icon_position = in_array( $position, array( 'left', 'right' ), true ) ? $position : 'left';
 		return $this;
 	}
 
@@ -220,7 +230,7 @@ class Button {
 	 *
 	 * @return string HTML output.
 	 */
-	public function render() {
+	public function back_render() {
 		$classes = sprintf(
 			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
 			esc_attr( $this->color ),
@@ -246,4 +256,50 @@ class Button {
 			$this->label
 		);
 	}
+
+	/**
+	 * Render the final button HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string HTML output.
+	 */
+	public function render() {
+		$classes = sprintf(
+			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
+			esc_attr( $this->color ),
+			esc_attr( $this->size )
+		);
+
+		if ( $this->disabled ) {
+			$this->attributes['disabled'] = 'disabled';
+			$classes                     .= ' is-disabled';
+		}
+
+		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
+
+		$attributes = $this->build_attributes();
+
+		// Prepare icon HTML if exists.
+		$icon_html = '';
+		if ( ! empty( $this->icon ) ) {
+			$icon_html = sprintf(
+				'%1$s',
+				$this->icon // SVG is expected to be escaped markup.
+			);
+		}
+
+		// Build button inner HTML depending on icon position.
+		$content = 'right' === ( $this->icon_position ?? 'left' )
+			? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
+			: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
+
+		return sprintf(
+			'<%1$s %2$s>%3$s</%1$s>',
+			esc_attr( $this->tag ),
+			$attributes,
+			$content
+		);
+	}
+
 }
