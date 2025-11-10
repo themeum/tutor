@@ -1,0 +1,114 @@
+// Popup Progress Card Component
+// Dashboard popup progress card with variations
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-popup-progress-card {
+	padding: $tutor-spacing-3;
+	background: $tutor-gray-1;
+	border-radius: $tutor-radius-2xl;
+	text-align: center;
+
+	&-icon {
+		margin-bottom: $tutor-spacing-6;
+		color: $tutor-exception-2;
+	}
+
+	&-header {
+		margin-bottom: $tutor-spacing-6;
+	}
+
+    &-title {
+        margin-bottom: $tutor-spacing-2;
+
+        &-text {
+            @include tutor-typography('h3', 'regular', 'secondary', 'heading');
+            margin: 0;
+            text-align: center;
+        }
+
+        &-name {
+            @include tutor-typography('h3', 'semibold', 'secondary', 'heading');
+            margin: 0;
+            text-align: center;
+        }
+    }
+
+	&-subtitle {
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		margin: 0;
+		text-align: center;
+	}
+
+	&-content {
+		margin-bottom: $tutor-spacing-7;
+		width: 100%;
+	}
+
+	&-value {
+		border-radius: $tutor-radius-lg;
+		padding: $tutor-spacing-6 0;
+		margin-bottom: $tutor-spacing-6;
+	}
+
+	&-value-text {
+		@include tutor-typography('h2', 'bold', 'primary', 'heading');
+	}
+
+	&-breakdown {
+		@include tutor-typography('p2', 'regular', 'secondary', 'body');
+		margin: 0;
+		color: $tutor-text-secondary;
+
+		strong {
+			@include tutor-typography('p2', 'medium', 'primary', 'body');
+		}
+	}
+
+	&-footer {
+		width: 100%;
+	}
+
+	// Color variations - matching stat-card variations
+	&-enrolled {
+		.tutor-popup-progress-card-value {
+			background: $tutor-brand-100;
+
+			.tutor-popup-progress-card-value-text {
+				color: $tutor-text-brand;
+			}
+		}
+	}
+
+	&-active {
+		.tutor-popup-progress-card-value {
+			background: rgba(#00acc2, 0.1);
+
+			.tutor-popup-progress-card-value-text {
+				color: $tutor-exception-1;
+			}
+		}
+	}
+
+	&-completed {
+		.tutor-popup-progress-card-value {
+			background: $tutor-success-50;
+
+			.tutor-popup-progress-card-value-text {
+				color: $tutor-text-success;
+			}
+		}
+	}
+
+	&-time-spent {
+		.tutor-popup-progress-card-value {
+			background: $tutor-warning-50;
+
+			.tutor-popup-progress-card-value-text {
+				color: $tutor-text-exception4;
+			}
+		}
+	}
+}
+
