@@ -12,6 +12,7 @@ import { popoverMeta } from '@Core/ts/components/popover';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { tabsMeta } from '@Core/ts/components/tabs';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
+import { previewTriggerMeta } from './components/preview-trigger';
 import { selectDropdownMeta } from './components/select-dropdown';
 import { stepperDropdownMeta } from './components/stepper-dropdown';
 
@@ -30,6 +31,7 @@ const initializePlugin = () => {
       accordionMeta,
       selectDropdownMeta,
       stepperDropdownMeta,
+      previewTriggerMeta,
     ],
     services: [modalServiceMeta],
   });

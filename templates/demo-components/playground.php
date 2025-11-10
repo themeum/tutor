@@ -54,6 +54,7 @@
 			<?php require 'button.php'; ?>
 			<?php require 'popover.php'; ?>
 			<?php require 'file-uploader.php'; ?>
+			<?php require 'preview-trigger.php'; ?>
 		</section>
 		<section>
 			<?php require 'tabs.php'; ?>
