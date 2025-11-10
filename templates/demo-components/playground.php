@@ -24,9 +24,8 @@
 	$current_url = admin_url( 'admin.php?page=playground' );
 
 	$subpages = array(
-		'dashboard'            => 'Dashboard',
-		'learning-area'        => 'Learning Area',
-		'form-validation-demo' => 'Form Validation',
+		'dashboard'     => 'Dashboard',
+		'learning-area' => 'Learning Area',
 	);
 
 	$subpage = $_GET['subpage'] ?? '';
