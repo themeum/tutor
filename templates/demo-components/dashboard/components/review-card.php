@@ -34,50 +34,25 @@ $reviews = array(
  * Render star rating
  *
  * @param float $rating Rating value (0-5).
- * @return void
+ * @return string
  */
-function render_star_rating( $rating ) {
-	$full_stars  = floor( $rating );
-	$half_star   = ( $rating - $full_stars ) >= 0.5;
-	$empty_stars = 5 - $full_stars - ( $half_star ? 1 : 0 );
-	?>
-	<div class="tutor-flex tutor-items-center tutor-gap-1">
-		<?php
-		// Full stars.
-		for ( $i = 0; $i < $full_stars; $i++ ) :
-			?>
-			<svg class="tutor-w-5 tutor-h-5 tutor-text-warning-500" fill="currentColor" viewBox="0 0 20 20">
-				<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-			</svg>
-			<?php
-		endfor;
+function render_star_rating( $rating = 0.00 ) {
 
-		// Half star.
-		if ( $half_star ) :
-			?>
-			<svg class="tutor-w-5 tutor-h-5 tutor-text-warning-500" fill="currentColor" viewBox="0 0 20 20">
-				<defs>
-					<linearGradient id="half-star">
-						<stop offset="50%" stop-color="currentColor" />
-						<stop offset="50%" stop-color="#D1D5DB" stop-opacity="1" />
-					</linearGradient>
-				</defs>
-				<path fill="url(#half-star)" d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-			</svg>
-			<?php
-		endif;
+	$output = '<div class="tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2" data-rating-value="' . $rating . '">';
 
-		// Empty stars.
-		for ( $i = 0; $i < $empty_stars; $i++ ) :
-			?>
-			<svg class="tutor-w-5 tutor-h-5 tutor-text-gray-300" fill="currentColor" viewBox="0 0 20 20">
-				<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-			</svg>
-			<?php
-		endfor;
-		?>
-	</div>
-	<?php
+	for ( $i = 1; $i <= 5; $i++ ) {
+		if ( (int) $rating >= $i ) {
+			$output .= '<i class="tutor-icon-star-bold tutor-icon-exception4" data-rating-value="' . $i . '"></i>';
+		} elseif ( ( $rating - $i ) >= -0.5 ) {
+			$output .= '<i class="tutor-icon-star-half-bold tutor-icon-exception4" data-rating-value="' . $i . '"></i>';
+		} else {
+			$output .= '<i class="tutor-icon-star-line tutor-icon-exception4" data-rating-value="' . $i . '"></i>';
+		}
+	}
+
+	$output .= '</div>';
+
+	return $output;
 }
 ?>
 
@@ -119,8 +94,8 @@ function render_star_rating( $rating ) {
 				<!-- Review -->
 				<div class="tutor-flex tutor-flex-column tutor-p-6 tutor-gap-5">
 					<!-- Rating Section -->
-					<div class="tutor-p1 tutor-icon-exception4 tutor-flex tutor-items-center" style="height: 32px;">
-						<?php tutor_utils()->star_rating_generator( $review['rating'] ); ?>
+					<div class="tutor-icon-exception4 tutor-p1 tutor-flex tutor-items-center" style="height: 32px;">
+						<?php echo render_star_rating( $review['rating'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 					</div>
 
 					<!-- Review Text -->
