@@ -182,38 +182,6 @@ use Tutor\Icon;
 				</div>
 			</div>
 
-			<!-- Quantity Field -->
-			<div class="tutor-input-field" :class="{
-				'tutor-input-field-error': errors.quantity,
-			}">
-				<label for="quantity" class="tutor-label tutor-label-required">Quantity</label>
-				<div class="tutor-input-wrapper">
-					<input 
-						type="text"
-						id="quantity"
-						placeholder="0"
-						class="tutor-input tutor-input-content-clear"
-						x-bind="register('quantity', { 
-							required: 'Quantity is required',
-							numberOnly: true,
-							min: { value: 1, message: 'Quantity must be at least 1' }
-						})"
-					>
-					<button 
-						type="button"
-						class="tutor-input-clear-button"
-						x-show="values.quantity && String(values.quantity).length > 0"
-						x-cloak
-						@click="setValue('quantity', '')"
-						aria-label="Clear input"
-					>
-						<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
-					</button>
-				</div>
-				<div class="tutor-error-text" x-cloak x-show="errors.quantity" x-text="errors?.quantity?.message" role="alert" aria-live="polite"></div>
-				<div class="tutor-help-text" x-show="!errors?.quantity?.message">Only whole numbers allowed</div>
-			</div>
-
 			<!-- Age Field (Optional) -->
 			<div class="tutor-input-field" :class="{
 				'tutor-input-field-error': errors.age,
