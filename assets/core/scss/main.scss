@@ -17,16 +17,21 @@
 @use 'utilities';
 
 // Base styles
+// CSS Reset
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -moz-tab-size: 4;
   tab-size: 4;
 }
@@ -35,6 +40,7 @@ body {
   margin: 0;
   font-family: inherit;
   line-height: inherit;
+  min-height: 100vh;
   background-color: var(--tutor-surface-base);
   color: var(--tutor-text-primary);
   transition:
@@ -42,6 +48,106 @@ body {
     color 0.2s ease;
 }
 
+// Remove default margin in all browsers
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+// Remove list styles on ul, ol elements
+ul,
+ol {
+  list-style: none;
+}
+
+// Set core root defaults
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+// A elements that don't have a class get default styles
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+// Make images easier to work with
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+// Inherit fonts for inputs and buttons
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+// Remove button default styles
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+// Remove input default styles
+input,
+textarea,
+select {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+// Table reset
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+// Remove default fieldset styles
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+// Remove default legend styles
+legend {
+  padding: 0;
+}
+
+// Remove default quote styles
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
+  content: '';
+  content: none;
+}
+
+// Alpine.js cloak utility
 [x-cloak] {
   display: none !important;
 }
