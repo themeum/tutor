@@ -10,9 +10,10 @@ import { initializeSettings } from './pages/settings';
 
 const initializeDashboard = () => {
   const currentPage = document.body.dataset.page;
-  
+
+  // eslint-disable-next-line no-console
   console.log('Initializing dashboard page:', currentPage);
-  
+
   // Initialize page-specific functionality
   switch (currentPage) {
     case 'dashboard-overview':
@@ -34,10 +35,11 @@ const initializeDashboard = () => {
       initializeCertificates();
       break;
     default:
+      // eslint-disable-next-line no-console
       console.warn('Unknown dashboard page:', currentPage);
       initializeOverview(); // Fallback
   }
-  
+
   // TODO: Initialize common dashboard features
   // - Sidebar navigation
   // - Global search
