@@ -1,9 +1,9 @@
-// Live Session Card Component
+// Event Badge Component
 
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-.tutor-live-session-card {
+.tutor-event-badge {
 	display: inline-flex;
 	align-items: center;
 	gap: $tutor-spacing-1;
@@ -17,8 +17,7 @@
 	}
 
 	&-text {
-		@include tutor-typography('tiny', 'regular', 'primary', 'body');
-		letter-spacing: 0;
+		@include tutor-typography('tiny');
 		white-space: nowrap;
 	}
 }

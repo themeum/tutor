@@ -8,9 +8,10 @@ import { initializeQuizInterface } from './pages/quiz-interface';
 
 const initializeLearningArea = () => {
   const currentPage = document.body.dataset.page;
-  
+
+  // eslint-disable-next-line no-console
   console.log('Initializing learning area page:', currentPage);
-  
+
   // Initialize page-specific functionality
   switch (currentPage) {
     case 'course-player':
@@ -26,10 +27,11 @@ const initializeLearningArea = () => {
       initializeAssignmentView();
       break;
     default:
+      // eslint-disable-next-line no-console
       console.warn('Unknown learning area page:', currentPage);
       initializeCoursePlayer(); // Fallback
   }
-  
+
   // TODO: Initialize common learning area features
   // - Course navigation
   // - Progress tracking
