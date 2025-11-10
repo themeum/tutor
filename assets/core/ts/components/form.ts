@@ -22,7 +22,7 @@ interface ValidationRules {
   min?: number | { value: number; message: string };
   max?: number | { value: number; message: string };
   pattern?: RegExp | { value: RegExp; message: string };
-  numberOnly: boolean | { allowNegative: boolean };
+  numberOnly: boolean | { allowNegative?: boolean; whole?: boolean };
   validate?: (value: unknown) => boolean | string | Promise<boolean | string>;
 }
 
@@ -355,7 +355,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     handleFieldInput(name: string, value: unknown): void {
       const isNumber = this.fields[name].rules?.numberOnly;
       const allowNegative = typeof isNumber === 'object' && isNumber.allowNegative;
-      const parsedValue = parseNumberOnly(value as string, allowNegative);
+      const whole = typeof isNumber === 'object' && isNumber.whole;
+      const parsedValue = parseNumberOnly(value as string, allowNegative, whole);
       this.values[name] = isNumber ? parsedValue : value;
       this.dirtyFields[name] = true;
       this.updateFieldRef(name);
