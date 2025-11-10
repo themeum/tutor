@@ -95,15 +95,17 @@
 							<div id="droip-color-modes">
 							</div>
 						</div>
-						<div class="tutor-include-demo-courses-toggle tutor-d-flex">
-							<input id="include-demo-courses" class="tutor-form-check-input" type="checkbox" checked>
-							<input type="hidden" id="tutor_template_course_data_url">
-							<label for="include-demo-courses"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
-						</div>
+						<?php if ( tutor()->has_pro ) { ?>
+							<div class="tutor-include-demo-courses-toggle tutor-d-flex">
+								<input id="include-demo-courses" class="tutor-form-check-input" type="checkbox" checked>
+								<input type="hidden" id="tutor_template_course_data_url">
+								<label for="include-demo-courses"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
+							</div>
+						<?php } ?>
 						<div class="tutor-template-import-btn-wrapper">
 							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-import-btn tutor-justify-center">
 								<i class="tutor-icon-import tutor-mr-8"></i>
-								<?php esc_html_e( 'Import', 'tutor' ); ?>
+							<?php esc_html_e( 'Import', 'tutor' ); ?>
 							</button>
 						</div>
 					</div>

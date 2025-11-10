@@ -39,7 +39,9 @@ document.addEventListener('DOMContentLoaded', function () {
 				iframeParent.classList.remove('tutor-divider');
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
-				tutorTemplateCourseDataUrl.value = event.target.dataset.template_course_data_url;
+				if ( tutorTemplateCourseDataUrl ) {
+					tutorTemplateCourseDataUrl.value = event.target.dataset.template_course_data_url;
+				}
 				iframe.src = event.target.dataset.template_url;
 				importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);
 			}
@@ -228,9 +230,11 @@ document.addEventListener('DOMContentLoaded', function () {
 							processImportedTemplate();
 						}, 10);
 					} else if (data.status === 'done') {
-						const isChecked = includeDemoCourses.checked;
-						if (isChecked) {
-							await importTutorCourseData();
+						if (includeDemoCourses) {
+							const isChecked = includeDemoCourses.checked;
+							if (isChecked) {
+								await importTutorCourseData();
+							}
 						}
 						setImportBtnToViewTemplateBtn();
 						tutor_toast(__('Success', 'tutor-pro'), __('Template imported successfully.', 'tutor-pro'), 'success');
@@ -313,6 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 (function () {
 	const iframe = document.querySelector("#tutor-template-preview-iframe");
+	let colorPresetBlock = document.getElementById("droip-color-presets");
 	document.addEventListener("DOMContentLoaded", () => {
 		// Wait for the iframe to load before interacting with it
 		iframe.addEventListener("load", () => {
