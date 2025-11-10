@@ -12,7 +12,7 @@ use TUTOR\Icon;
 <section class="tutor-bg-white tutor-py-6 tutor-px-8">
 	<h2>Table</h2>
 	
-	<div class="tutor-table-wrapper-bordered">
+	<div class="tutor-table-wrapper tutor-table-column-borders">
 		<table class="tutor-table">
 			<thead>
 				<tr>

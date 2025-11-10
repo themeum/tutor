@@ -3,14 +3,15 @@
 @use '../tokens' as *;
 @use '../mixins' as *;
 
+
+.tutor-table {
+	@include tutor-table-base;
+}
+
 .tutor-table-wrapper {
 	@include tutor-table-wrapper;
 }
 
-.tutor-table-wrapper-bordered {
-	@include tutor-table-wrapper-bordered;
-}
-
-.tutor-table {
-	@include tutor-table-base;
+.tutor-table-column-borders {
+	@include tutor-table-column-borders;
 }
