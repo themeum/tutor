@@ -39,7 +39,7 @@ use TUTOR\Icon;
 					'pattern'     => '^https?:\/\/(www\.|m\.|web\.|mobile\.)?facebook\.com\/([A-Za-z0-9._-]+)\/?$',
 				),
 				'xcom'     => array(
-					'label'       => __( 'X.com (Twitter)', 'tutor' ),
+					'label'       => __( 'X.com', 'tutor' ),
 					'placeholder' => __( 'Enter your X.com profile URL', 'tutor' ),
 					'icon'        => 'x',
 					'pattern'     => '^https?:\/\/(www\.)?(x\.com|twitter\.com)\/([A-Za-z0-9_]+)\/?$',
