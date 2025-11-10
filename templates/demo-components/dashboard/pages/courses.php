@@ -10,6 +10,8 @@
 
 use TUTOR\Icon;
 
+$current_url = admin_url( 'admin.php?page=playground&subpage=dashboard' );
+
 $page_nav_items = array(
 	array(
 		'type'    => 'dropdown',
@@ -19,19 +21,19 @@ $page_nav_items = array(
 			array(
 				'label'  => __( 'Active', 'tutor' ),
 				'icon'   => Icon::PLAY_LINE,
-				'url'    => '#',
+				'url'    => esc_url( add_query_arg( 'dashboard-page', 'courses', $current_url ) ),
 				'active' => false,
 			),
 			array(
 				'label'  => __( 'Enrolled', 'tutor' ),
 				'icon'   => Icon::ENROLLED,
-				'url'    => '#',
+				'url'    => esc_url( add_query_arg( 'dashboard-page', 'courses', $current_url ) ),
 				'active' => true,
 			),
 			array(
 				'label'  => __( 'Complete', 'tutor' ),
 				'icon'   => Icon::COMPLETED_CIRCLE,
-				'url'    => '#',
+				'url'    => esc_url( add_query_arg( 'dashboard-page', 'courses', $current_url ) ),
 				'active' => false,
 			),
 		),
@@ -40,14 +42,14 @@ $page_nav_items = array(
 		'type'   => 'link',
 		'label'  => __( 'Wishlist', 'tutor' ),
 		'icon'   => Icon::WISHLIST,
-		'url'    => '#',
+		'url'    => esc_url( add_query_arg( 'dashboard-page', 'wishlist', $current_url ) ),
 		'active' => false,
 	),
 	array(
 		'type'   => 'link',
 		'label'  => __( 'Quiz Attempts', 'tutor' ),
 		'icon'   => Icon::QUIZ_2,
-		'url'    => '#',
+		'url'    => esc_url( add_query_arg( 'dashboard-page', 'quiz-attempts', $current_url ) ),
 		'active' => false,
 	),
 );

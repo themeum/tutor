@@ -1,4 +1,4 @@
-import { type AlpineComponentMeta } from '@Core/types';
+import { type AlpineComponentMeta } from '@Core/ts/types';
 
 export interface StepperOption {
   label: string;
