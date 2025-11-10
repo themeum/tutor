@@ -1,0 +1,76 @@
+// Upcoming Lesson Card Component
+// Card component for displaying upcoming lesson information
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-upcoming-lesson-card {
+	padding: $tutor-spacing-6;
+	border: 1px solid $tutor-border-idle;
+	border-radius: $tutor-radius-2xl;
+
+	&-header {
+		@include tutor-flex(row, center, space-between);
+		margin-bottom: $tutor-spacing-3;
+	}
+
+	&-meta {
+		@include tutor-flex(row, center, flex-start);
+		gap: $tutor-spacing-2;
+		align-items: center;
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		letter-spacing: 0;
+	}
+
+	&-icon {
+		@include tutor-flex-center;
+		color: $tutor-text-secondary;
+	}
+
+	&-date {
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		letter-spacing: 0;
+	}
+
+	&-separator {
+		color: $tutor-text-secondary;
+		font-size: 8px;
+		line-height: 1;
+	}
+
+	&-time {
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		letter-spacing: 0;
+	}
+
+	&-live-tag {
+		flex-shrink: 0;
+	}
+
+	&-title {
+		@include tutor-typography('base', 'semibold', 'primary', 'body');
+		letter-spacing: 0;
+		margin: 0 0 $tutor-spacing-3 0;
+		line-height: 1.5;
+	}
+
+	&-course {
+		@include tutor-flex(row, baseline, flex-start);
+		gap: $tutor-spacing-1;
+	}
+
+	&-course-label {
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		letter-spacing: 0;
+	}
+
+	&-course-name {
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		font-style: italic;
+		text-decoration: underline;
+		text-decoration-style: dashed;
+		text-underline-offset: 2px;
+		letter-spacing: 0;
+	}
+}
+
