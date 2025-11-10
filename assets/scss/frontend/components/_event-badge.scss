@@ -18,7 +18,6 @@
 
 	&-text {
 		@include tutor-typography('tiny');
-		letter-spacing: 0;
 		white-space: nowrap;
 	}
 }
