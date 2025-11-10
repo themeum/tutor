@@ -1,9 +1,9 @@
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { parseNumberOnly } from '@TutorShared/utils/util';
 
 interface FormControlConfig {
   mode?: 'onChange' | 'onBlur' | 'onSubmit';
-  reValidateMode?: 'onChange' | 'onBlur' | 'onSubmit';
   shouldFocusError?: boolean;
   shouldScrollToError?: boolean;
 }
@@ -22,6 +22,7 @@ interface ValidationRules {
   min?: number | { value: number; message: string };
   max?: number | { value: number; message: string };
   pattern?: RegExp | { value: RegExp; message: string };
+  numberOnly: boolean | { allowNegative: boolean };
   validate?: (value: unknown) => boolean | string | Promise<boolean | string>;
 }
 
@@ -284,7 +285,6 @@ const FormDataUtils = {
 
 const DEFAULT_CONFIG: FormControlConfig = {
   mode: 'onBlur',
-  reValidateMode: 'onChange',
   shouldFocusError: true,
   shouldScrollToError: true,
 };
@@ -353,12 +353,19 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     handleFieldInput(name: string, value: unknown): void {
-      this.values[name] = value;
+      const isNumber = this.fields[name].rules?.numberOnly;
+      const allowNegative = typeof isNumber === 'object' && isNumber.allowNegative;
+      const parsedValue = parseNumberOnly(value as string, allowNegative);
+      this.values[name] = isNumber ? parsedValue : value;
       this.dirtyFields[name] = true;
       this.updateFieldRef(name);
 
-      const shouldValidate =
-        this.config.mode === 'onChange' || (this.config.reValidateMode === 'onChange' && this.touchedFields[name]);
+      if (isNumber) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (this as any).$refs.div._x_model.set(parsedValue);
+      }
+
+      const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
 
       if (shouldValidate) {
         this.validateField(name, value);
@@ -369,8 +376,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.touchedFields[name] = true;
       this.updateFieldRef(name);
 
-      const shouldValidate =
-        this.config.mode === 'onBlur' || (this.config.reValidateMode === 'onBlur' && this.touchedFields[name]);
+      const shouldValidate = this.config.mode === 'onBlur' || this.touchedFields[name];
 
       if (shouldValidate) {
         this.validateField(name, value);
