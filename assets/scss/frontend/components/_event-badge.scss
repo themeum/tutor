@@ -17,7 +17,7 @@
 	}
 
 	&-text {
-		@include tutor-typography('tiny', 'regular', 'primary', 'body');
+		@include tutor-typography('tiny');
 		letter-spacing: 0;
 		white-space: nowrap;
 	}
