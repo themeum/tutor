@@ -136,7 +136,7 @@ use Tutor\Icon;
 	<div class="tutor-mb-12">
 		<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-3">Number Only Input</h2>
 		<p class="tutor-text-gray-600 tutor-mb-4">
-			The <code class="tutor-bg-gray-200 tutor-px-2 tutor-py-1 tutor-rounded">numberOnly</code> validation rule prevents users from typing or pasting letters, or special characters. Only numbers and decimals are allowed.
+			The <code class="tutor-bg-gray-200 tutor-px-2 tutor-py-1 tutor-rounded">numberOnly</code> validation rule prevents users from typing or pasting letters, or special characters. Only numbers and decimals are allowed by default. You can also allow negative numbers and allow whole numbers.
 		</p>
 		
 		<form 
@@ -180,6 +180,38 @@ use Tutor\Icon;
 				<div class="tutor-help-text" x-show="!errors?.price?.message">
 					Try typing letters, negative signs, or special characters - they will be blocked!
 				</div>
+			</div>
+
+			<!-- Quantity Field -->
+			<div class="tutor-input-field" :class="{
+				'tutor-input-field-error': errors.quantity,
+			}">
+				<label for="quantity" class="tutor-label tutor-label-required">Quantity</label>
+				<div class="tutor-input-wrapper">
+					<input 
+						type="text"
+						id="quantity"
+						placeholder="0"
+						class="tutor-input tutor-input-content-clear"
+						x-bind="register('quantity', { 
+							required: 'Quantity is required',
+							numberOnly: { whole: true },
+							min: { value: 1, message: 'Quantity must be at least 1' }
+						})"
+					>
+					<button 
+						type="button"
+						class="tutor-input-clear-button"
+						x-show="values.quantity && String(values.quantity).length > 0"
+						x-cloak
+						@click="setValue('quantity', '')"
+						aria-label="Clear input"
+					>
+						<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
+					</button>
+				</div>
+				<div class="tutor-error-text" x-cloak x-show="errors.quantity" x-text="errors?.quantity?.message" role="alert" aria-live="polite"></div>
+				<div class="tutor-help-text" x-show="!errors?.quantity?.message">Only whole numbers allowed</div>
 			</div>
 
 			<!-- Age Field (Optional) -->
@@ -620,7 +652,7 @@ use Tutor\Icon;
 						<tr>
 							<td class="tutor-px-4 tutor-py-2"><code>numberOnly</code></td>
 							<td class="tutor-px-4 tutor-py-2">boolean | object</td>
-							<td class="tutor-px-4 tutor-py-2"><code>numberOnly: true</code><br><code>numberOnly: { allowNegative: true }</code></td>
+							<td class="tutor-px-4 tutor-py-2"><code>numberOnly: true</code><br><code>numberOnly: { allowNegative: true; whole: true }</code></td>
 							<td class="tutor-px-4 tutor-py-2">Blocks typing/pasting non-numeric chars.</td>
 						</tr>
 						<tr>
