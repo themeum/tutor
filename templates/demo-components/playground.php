@@ -21,6 +21,7 @@
 </head>
 <body>
 <?php
+
 	$current_url = admin_url( 'admin.php?page=playground' );
 
 	$subpages = array(
@@ -29,6 +30,7 @@
 	);
 
 	$subpage = $_GET['subpage'] ?? '';
+
 	?>
 	<h1>
 		Tutor LMS 4.wow 🔥
