@@ -321,16 +321,15 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.9.2 - Nov 10, 2025
 
-New: Pay option for manual enrolment for native 
-Update: Strict mode should prevent course completion if any failed assignments exist. 
-Fix: Conflict Between "Limit Active Login Sessions" and WooCommerce Guest Checkout
-Fix: Tutor video player issue on mobile device
-Fix: Course completion email to wrong user
-Fix: PHP Error on sites who do never used WooCommerce as their monetization
-Fix: Showing HTML Code in WooCommerce Manual Enrollment
-Fix: Course bundle escaping issue
-Fix: Course with multiple(all) purchase options shows "Add to Cart" instead of "View Details"
-Fix: Quiz Import Issue
+New: Added payment option support for manual enrolment for native monetization. (Pro)
+Update: Enhanced Strict Mode — course completion is now blocked if any assignment is failed. (Pro)
+Fix: Resolved conflict between Limit Active Login Sessions and WooCommerce Guest Checkout. (Pro)
+Fix: Fixed video player issue on mobile devices.
+Fix: Corrected issue where course completion emails were sent to the wrong user. (Pro)
+Fix: Fixed PHP error on sites that have never used WooCommerce for monetization.
+Fix: Resolved issue showing raw HTML code in WooCommerce manual enrolment. (Pro)
+Fix: Corrected display issue where courses with multiple purchase options showed Add to Cart instead of View Details. (Pro)
+Fix: Fixed quiz import issue. (Pro)
 
 = 3.9.1 - Oct 23, 2025
 
