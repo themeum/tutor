@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const importBtn = document.querySelector('.tutor-template-import-btn');
 	const tutorTemplateCourseDataUrl = document.getElementById("tutor_template_course_data_url");
 	let colorPresetBlock = document.getElementById("droip-color-presets");
+	const presetHeading = document.querySelector('.tutor-droip-color-presets-heading');
 
 	if (templateDemoImportRoot) {
 		// Open live preview modal
@@ -85,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			iframe.style.width = "1400px";
 			iframe.style.transformOrigin = "left top";
 			colorPresetBlock.style.display = "none";
+			presetHeading.style.display = 'none';
 		}
 
 		// Remove active class from device list
@@ -311,7 +313,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			icon.classList.add('tutor-icon-circle-mark');
 			tutorTemplateDemoImportBtn.innerHTML = `${icon.outerHTML} View Template`;
 		}
-
 	}
 });
 
