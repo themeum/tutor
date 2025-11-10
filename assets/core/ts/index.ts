@@ -1,3 +1,4 @@
+import collapse from '@alpinejs/collapse';
 import focus from '@alpinejs/focus';
 import Alpine from 'alpinejs';
 
@@ -17,6 +18,7 @@ import { selectDropdownMeta } from './components/select-dropdown';
 import { stepperDropdownMeta } from './components/stepper-dropdown';
 
 Alpine.plugin(focus);
+Alpine.plugin(collapse);
 
 const initializePlugin = () => {
   TutorComponentRegistry.registerAll({

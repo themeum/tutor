@@ -85,21 +85,19 @@ $quiz_attempts = array(
 	</div>
 	<div class="tutor-quiz-attempts-list">
 		<?php
-		foreach ( $quiz_attempts as $quiz_attempt ) {
+		foreach ( $quiz_attempts as $quiz_index => $quiz_attempt ) {
 			$attempts       = $quiz_attempt['attempts'];
 			$attempts_count = count( $attempts );
-			foreach ( $attempts as $index => $attempt ) {
-				tutor_load_template(
-					'demo-components.dashboard.components.quiz-attempts-list-item',
-					array(
-						'quiz_title'      => $quiz_attempt['quiz_title'],
-						'course_title'    => $quiz_attempt['course_title'],
-						'attempts_count'  => $attempts_count,
-						'attempt_index'   => $index,
-						'attempt_details' => $attempt,
-					)
-				);
-			}
+
+			tutor_load_template(
+				'demo-components.dashboard.components.quiz-attempts-list-item',
+				array(
+					'quiz_id'      => 'quiz-' . $quiz_index,
+					'quiz_title'   => $quiz_attempt['quiz_title'],
+					'course_title' => $quiz_attempt['course_title'],
+					'attempts'     => $attempts,
+				)
+			);
 		}
 		?>
 	</div>

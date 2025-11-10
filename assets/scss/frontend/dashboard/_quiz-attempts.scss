@@ -29,15 +29,30 @@
     color: $tutor-text-secondary;
   }
 
-  &-list {
-    &-item {
+  .tutor-quiz-attempts-item-wrapper {
+    padding: $tutor-spacing-6;
+    transition: background-color 0.25 ease-in-out;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+
+    &:hover,
+    &.tutor-quiz-previous-attempts {
+      background-color: $tutor-surface-l1-hover;
+    }
+
+    .tutor-quiz-attempts-item {
       display: grid;
       grid-template-columns: 340px 180px 1.5fr 1fr;
+      gap: $tutor-spacing-4;
       align-items: center;
-      padding: $tutor-spacing-6;
 
-      &:not(:last-child) {
-        border-bottom: 1px solid $tutor-border-idle;
+      .tutor-quiz-attempts-expand-btn {
+        @include tutor-button-reset();
+        @include tutor-typography(small, medium, brand);
+        cursor: pointer;
+        white-space: nowrap;
       }
 
       .tutor-quiz-item-marks {
@@ -107,6 +122,21 @@
     .tutor-quiz-previous-attempts {
       background-color: $tutor-surface-l1;
       border-radius: $tutor-radius-sm;
+      margin-top: $tutor-spacing-6;
+
+      .tutor-quiz-attempts-item {
+        grid-template-columns: 324px 180px 1.5fr 1fr;
+        padding: $tutor-spacing-6;
+        transition: background-color 0.25 ease-in-out;
+
+        &:hover {
+          background-color: $tutor-surface-base;
+        }
+
+        &:not(:last-child) {
+          border-bottom: 1px solid $tutor-border-idle;
+        }
+      }
     }
   }
 }
