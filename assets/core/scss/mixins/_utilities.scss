@@ -1,5 +1,15 @@
 @use '../tokens' as *;
 
+@mixin tutor-reset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+  box-sizing: border-box;
+}
+
 @mixin tutor-text-truncate {
   overflow: hidden;
   text-overflow: ellipsis;
