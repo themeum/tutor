@@ -16,34 +16,28 @@
 	}
 
 	&-title {
-		@include tutor-typography('small', 'regular', 'primary', 'body');
-		font-style: normal;
-		letter-spacing: 0;
+		@include tutor-typography('small');
         margin: 0;
 	}
 
 	&-value {
 		@include tutor-typography('h2', 'bold', 'primary', 'heading');
-		font-style: normal;
-		letter-spacing: 0;
 		margin: 0;
 	}
 
 	&-change {
 		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
-		font-style: normal;
-		letter-spacing: 0;
 		margin: 0;
 	}
 
 	// Color variations
 	&-enrolled {
         .tutor-stat-card-icon {
-            color: $tutor-brand-600;
+            color: $tutor-text-brand;
         }
 
 		.tutor-stat-card-value {
-			color: $tutor-brand-600;
+			color: $tutor-text-brand;
 		}
 	}
 
@@ -59,21 +53,21 @@
 
 	&-completed {
 		.tutor-stat-card-icon {
-			color: $tutor-success-700;
+			color: $tutor-text-success;
 		}
         
 		.tutor-stat-card-value {
-			color: $tutor-success-700;
+			color: $tutor-text-success;
 		}
 	}
 
 	&-time-spent {
 		.tutor-stat-card-icon {
-			color: $tutor-warning-400;
+			color: $tutor-text-exception4;
 		}
         
 		.tutor-stat-card-value {
-			color: $tutor-warning-400;
+			color: $tutor-text-exception4;
 		}
 	}
 }
