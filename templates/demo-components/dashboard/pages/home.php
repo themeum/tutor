@@ -44,6 +44,12 @@ $stat_cards = array(
 
 ?>
 <div class="tutor-p-8">
+	<div class="tutor-text-h3 tutor-color-black tutor-mb-6">
+		<?php esc_html_e( 'Welcome to TutorLMS Home', 'tutor' ); ?>
+	</div>
+	
+	<div class="tutor-mb-4">
+		<?php tutor_load_template( 'core-components.event-badge' ); ?>
 	<div class="tutor-flex tutor-gap-4">
 		<?php foreach ( $stat_cards as $card ) : ?>
 			<div class="tutor-flex-1">
