@@ -25,6 +25,7 @@ use TUTOR\Input;
 				$allowed_pages = array(
 					'home',
 					'courses',
+					'quiz-attempts',
 					'notes',
 					'discussions',
 					'calendar',
