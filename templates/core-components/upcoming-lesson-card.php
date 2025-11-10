@@ -9,12 +9,10 @@ use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
 
-// Default values.
-$date_text     = isset( $date_text ) ? $date_text : __( 'Today', 'tutor' );
-$time_text     = isset( $time_text ) ? $time_text : '';
-$lesson_title  = isset( $lesson_title ) ? $lesson_title : '';
-$course_name   = isset( $course_name ) ? $course_name : '';
-$show_live_tag = isset( $show_live_tag ) ? $show_live_tag : true;
+// Optional props with defaults.
+$show_live_tag  = isset( $show_live_tag ) ? $show_live_tag : true;
+$event_tag_text = isset( $event_tag_text ) ? $event_tag_text : __( 'Live Session', 'tutor' );
+$event_tag_icon = isset( $event_tag_icon ) ? $event_tag_icon : Icon::ZOOM_COLORIZE;
 
 ?>
 <div class="tutor-card tutor-upcoming-lesson-card">
@@ -31,7 +29,15 @@ $show_live_tag = isset( $show_live_tag ) ? $show_live_tag : true;
 		</div>
 		<?php if ( $show_live_tag ) : ?>
 			<div class="tutor-upcoming-lesson-card-live-tag">
-				<?php tutor_load_template( 'core-components.live-session-card' ); ?>
+				<?php
+				tutor_load_template(
+					'core-components.event-badge',
+					array(
+						'text' => $event_tag_text,
+						'icon' => $event_tag_icon,
+					)
+				);
+				?>
 			</div>
 		<?php endif; ?>
 	</div>

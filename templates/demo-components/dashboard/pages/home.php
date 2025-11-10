@@ -42,14 +42,44 @@ $stat_cards = array(
 	),
 );
 
+// Sample progress cards data.
+$progress_cards = array(
+	array(
+		'image_url'         => 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop',
+		'category'          => esc_html__( 'Preschool', 'tutor' ),
+		'course_title'      => esc_html__( 'Drawing for Beginners Level -2', 'tutor' ),
+		'lessons_completed' => 5,
+		'lessons_total'     => 9,
+		'progress_percent'  => 60,
+	),
+	array(
+		'image_url'         => 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop',
+		'category'          => esc_html__( 'Elementary', 'tutor' ),
+		'course_title'      => esc_html__( 'Advanced Mathematics', 'tutor' ),
+		'lessons_completed' => 8,
+		'lessons_total'     => 12,
+		'progress_percent'  => 67,
+	),
+);
+
+// Sample upcoming lesson card data.
+$upcoming_lessons = array(
+	array(
+		'date_text'     => esc_html__( 'Today', 'tutor' ),
+		'time_text'     => '2:00 PM',
+		'lesson_title'  => esc_html__( 'This is the lesson title', 'tutor' ),
+		'course_name'   => esc_html__( 'Camera Skills & Photo Theory', 'tutor' ),
+		'show_live_tag' => true,
+	),
+);
+
 ?>
 <div class="tutor-p-8">
 	<div class="tutor-text-h3 tutor-color-black tutor-mb-6">
 		<?php esc_html_e( 'Welcome to TutorLMS Home', 'tutor' ); ?>
 	</div>
 	
-	<div class="tutor-mb-4">
-		<?php tutor_load_template( 'core-components.event-badge' ); ?>
+	
 	<div class="tutor-flex tutor-gap-4">
 		<?php foreach ( $stat_cards as $card ) : ?>
 			<div class="tutor-flex-1">
@@ -68,28 +98,6 @@ $stat_cards = array(
 			</div>
 		<?php endforeach; ?>
 	</div>
-
-	<?php
-	// Sample progress cards data.
-	$progress_cards = array(
-		array(
-			'image_url'         => 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=400&fit=crop',
-			'category'          => esc_html__( 'Preschool', 'tutor' ),
-			'course_title'      => esc_html__( 'Drawing for Beginners Level -2', 'tutor' ),
-			'lessons_completed' => 5,
-			'lessons_total'     => 9,
-			'progress_percent'  => 60,
-		),
-		array(
-			'image_url'         => 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&h=400&fit=crop',
-			'category'          => esc_html__( 'Elementary', 'tutor' ),
-			'course_title'      => esc_html__( 'Advanced Mathematics', 'tutor' ),
-			'lessons_completed' => 8,
-			'lessons_total'     => 12,
-			'progress_percent'  => 67,
-		),
-	);
-	?>
 
 	<div class="tutor-mt-8">
 		<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'My Progress', 'tutor' ); ?></h2>
@@ -116,17 +124,6 @@ $stat_cards = array(
 		<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'Upcoming Lessons', 'tutor' ); ?></h2>
 		<div class="tutor-flex tutor-flex-col tutor-gap-4">
 			<?php
-			// Sample upcoming lesson card data.
-			$upcoming_lessons = array(
-				array(
-					'date_text'     => esc_html__( 'Today', 'tutor' ),
-					'time_text'     => '2:00 PM',
-					'lesson_title'  => esc_html__( 'This is the lesson title', 'tutor' ),
-					'course_name'   => esc_html__( 'Camera Skills & Photo Theory', 'tutor' ),
-					'show_live_tag' => true,
-				),
-			);
-
 			foreach ( $upcoming_lessons as $lesson ) :
 				tutor_load_template(
 					'core-components.upcoming-lesson-card',
