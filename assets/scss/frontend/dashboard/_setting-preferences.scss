@@ -33,16 +33,5 @@
         }
       }
     }
-
-    .tutor-preferences-setting-control {
-      cursor: pointer;
-      .tutor-select-dropdown {
-        min-width: 140px;
-
-        @include tutor-breakpoint-down(sm) {
-          min-width: 120px;
-        }
-      }
-    }
   }
 }

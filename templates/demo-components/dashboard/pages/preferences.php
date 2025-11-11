@@ -58,7 +58,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Auto-play next lecture', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -80,7 +80,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Download over Wi-Fi only', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -105,7 +105,7 @@ $theme_options = array(
 				<span class="tutor-preferences-setting-subtitle"><?php esc_html_e( 'Manage all of your offline content', 'tutor' ); ?></span>
 			</div>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT, 20, 20 ); ?>
 		</div>
 	</div>
@@ -117,7 +117,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Video Quality', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<?php
 			tutor_load_template(
 				'core-components.stepper-dropdown',
@@ -143,7 +143,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Sound effects', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -165,7 +165,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Animations', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -191,7 +191,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Theme', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<?php
 			tutor_load_template(
 				'core-components.stepper-dropdown',
@@ -217,7 +217,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'High Contrast Mode', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -239,7 +239,7 @@ $theme_options = array(
 			</div>
 			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Font size', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-preferences-setting-control tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
