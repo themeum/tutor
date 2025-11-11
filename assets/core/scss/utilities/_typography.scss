@@ -1,60 +1,37 @@
-// Typography Utilities
-// Font sizes, weights, colors, and alignment utilities from Figma
-
 @use 'sass:map';
 @use '../tokens' as *;
 @use '../mixins' as *;
 
-// Typography component classes (from Figma Typography tokens)
 .tutor-h1 {
-  font-family: $tutor-font-family-heading;
-  font-size: $tutor-font-size-h1;
-  line-height: $tutor-line-height-h1;
-  font-weight: $tutor-font-weight-bold;
+  @include tutor-typography('h1', 'bold', 'primary', 'heading');
 }
 
 .tutor-h2 {
-  font-family: $tutor-font-family-heading;
-  font-size: $tutor-font-size-h2;
-  line-height: $tutor-line-height-h2;
-  font-weight: $tutor-font-weight-bold;
+  @include tutor-typography('h2', 'bold', 'primary', 'heading');
 }
 
 .tutor-h3 {
-  font-family: $tutor-font-family-heading;
-  font-size: $tutor-font-size-h3;
-  line-height: $tutor-line-height-h3;
-  font-weight: $tutor-font-weight-semibold;
+  @include tutor-typography('h3', 'semibold', 'primary', 'heading');
 }
 
 .tutor-h4 {
-  font-family: $tutor-font-family-heading;
-  font-size: $tutor-font-size-h4;
-  line-height: $tutor-line-height-h4;
-  font-weight: $tutor-font-weight-semibold;
+  @include tutor-typography('h4', 'semibold', 'primary', 'heading');
 }
 
 .tutor-h5 {
-  font-family: $tutor-font-family-heading;
-  font-size: $tutor-font-size-h5;
-  line-height: $tutor-line-height-h5;
-  font-weight: $tutor-font-weight-medium;
+  @include tutor-typography('h5', 'medium', 'primary', 'heading');
 }
 
 .tutor-p1 {
-  font-family: $tutor-font-family-body;
-  font-size: $tutor-font-size-p1;
-  line-height: $tutor-line-height-p1;
+  @include tutor-typography('p1');
 }
 
 .tutor-p2 {
-  font-size: $tutor-font-size-p2;
-  line-height: $tutor-line-height-p2;
+  @include tutor-typography('p2');
 }
 
 .tutor-p3 {
-  font-size: $tutor-font-size-p3;
-  line-height: $tutor-line-height-p3;
+  @include tutor-typography('p3');
 }
 
 // Font size utilities
