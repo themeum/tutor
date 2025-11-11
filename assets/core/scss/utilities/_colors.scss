@@ -55,6 +55,55 @@
   }
 }
 
+// Text color utilities
+@each $key, $value in $tutor-text-colors {
+  .tutor-text-#{$key} {
+    color: $value;
+  }
+}
+
+// Brand text colors (full scale)
+@each $key, $value in $tutor-brand-colors {
+  .tutor-text-brand-#{$key} {
+    color: $value;
+  }
+}
+
+// Gray text colors (full scale)
+@each $key, $value in $tutor-gray-colors {
+  .tutor-text-gray-#{$key} {
+    color: $value;
+  }
+}
+
+// Success text colors (full scale)
+@each $key, $value in $tutor-success-colors {
+  .tutor-text-success-#{$key} {
+    color: $value;
+  }
+}
+
+// Warning text colors (full scale)
+@each $key, $value in $tutor-warning-colors {
+  .tutor-text-warning-#{$key} {
+    color: $value;
+  }
+}
+
+// Error text colors (full scale)
+@each $key, $value in $tutor-error-colors {
+  .tutor-text-error-#{$key} {
+    color: $value;
+  }
+}
+
+// Exception text colors
+@each $key, $value in $tutor-exception-colors {
+  .tutor-text-exception-#{$key} {
+    color: $value;
+  }
+}
+
 @each $key, $value in $tutor-icons {
   .tutor-icon-#{$key} {
     color: $value;
