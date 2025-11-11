@@ -9,6 +9,8 @@
 
 // Dashboard components
 @forward 'components/page_nav';
+@forward "stat-card";
+@forward "progress-card";
 
 // Page components
 @forward 'overview';

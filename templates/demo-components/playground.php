@@ -48,6 +48,7 @@
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
 		<section>
+			<?php require 'avatar.php'; ?>
 			<?php require 'pagination.php'; ?>
 		</section>
 		<section>
@@ -86,6 +87,12 @@
 		</section>
 		<section>
 			<?php require 'modal.php'; ?>
+		</section>
+		<section>
+			<?php require 'input.php'; ?>
+		</section>
+		<section>
+			<?php require 'form.php'; ?>
 		</section>
 	<?php endif ?>
 
