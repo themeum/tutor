@@ -8,7 +8,7 @@
 	overflow-x: auto;
 	-webkit-overflow-scrolling: touch;
 	border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-lg;
+  border-radius: $tutor-radius-lg;
 	table {
 		min-width: 600px;
 	}
@@ -21,7 +21,6 @@
 	border-spacing: 0;
 	thead {
 		background-color: $tutor-surface-base;
-		
 		th {
 			@include tutor-typography('small', 'medium', 'primary');
 			text-align: left;
@@ -32,16 +31,13 @@
 	tbody {
 		tr {
 			border-bottom: 1px solid $tutor-border-idle;
-
 			&:last-child {
 				border-bottom: none;
 			}
-
 			&:hover {
 				background-color: $tutor-surface-l1-hover;
 			}
 		}
-
 		td {
 			padding: $tutor-spacing-5;
 			vertical-align: middle;
@@ -53,7 +49,6 @@
 .tutor-table-column-borders {
 	th , td {
 		border-right: 1px solid $tutor-border-idle;
-		
 		&:last-child {
 			border-right: none;
 		}
