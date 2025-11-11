@@ -1,7 +1,34 @@
 // Settings Page Styles
 // Student account settings and preferences
 
-.tutor-settings {
-  // Settings page styles will go here
-  // Form layouts, preference toggles, account management
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-account-settings-section {
+	background: $tutor-surface-base;
+	display: flex;
+	flex-direction: column;
+	gap: 32px;
+	margin: 0 auto;
+	padding-bottom: $tutor-spacing-15;
+}
+.tutor-account-settings-container {
+	width: 100%;
+	max-width: 696px;
+	margin: 0 auto;
+}
+.tutor-account-settings-header {
+	border-bottom: 1px solid $tutor-border-idle;
+	padding: $tutor-spacing-5;
+	.tutor-account-settings-back-btn {
+		padding: 6px 6px;
+	}
+}
+.tutor-account-settings-tab {
+	max-width: 200px;
+	padding: $tutor-spacing-3;
+	border: 1px solid $tutor-border-idle;
+	padding: $tutor-spacing-5;
+	border-radius: $tutor-radius-2xl;
+	background-color: $tutor-gray-1;
 }
