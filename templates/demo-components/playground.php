@@ -48,7 +48,6 @@
 		<?php include $subpage . '.php'; ?>
 		<?php else : ?>
 		<section>
-			<?php require 'account-settings.php'; ?>
 			<?php require 'table.php'; ?>
 			<?php require 'avatar.php'; ?>
 			<?php require 'pagination.php'; ?>

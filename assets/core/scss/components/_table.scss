@@ -3,15 +3,59 @@
 @use '../tokens' as *;
 @use '../mixins' as *;
 
-
-.tutor-table {
-	@include tutor-table-base;
+.tutor-table-wrapper {
+	display: block;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+	border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+	table {
+		min-width: 600px;
+	}
 }
 
-.tutor-table-wrapper {
-	@include tutor-table-wrapper;
+.tutor-table {
+	@include tutor-typography('small', 'regular', 'secondary');
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	thead {
+		background-color: $tutor-surface-base;
+		
+		th {
+			@include tutor-typography('small', 'medium', 'primary');
+			text-align: left;
+			padding: $tutor-spacing-5;
+			border-bottom: 1px solid $tutor-border-idle;
+		}
+	}
+	tbody {
+		tr {
+			border-bottom: 1px solid $tutor-border-idle;
+
+			&:last-child {
+				border-bottom: none;
+			}
+
+			&:hover {
+				background-color: $tutor-surface-l1-hover;
+			}
+		}
+
+		td {
+			padding: $tutor-spacing-5;
+			vertical-align: middle;
+			min-width: 180px;
+		}
+	}
 }
 
 .tutor-table-column-borders {
-	@include tutor-table-column-borders;
+	th , td {
+		border-right: 1px solid $tutor-border-idle;
+		
+		&:last-child {
+			border-right: none;
+		}
+	}
 }
