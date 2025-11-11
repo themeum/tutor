@@ -29,6 +29,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 abstract class BaseComponent implements ComponentInterface {
 
 	/**
+	 * Create a new Button instance.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return ComponentInterface
+	 */
+	public static function make(): ComponentInterface {
+		return new static();
+	}
+
+	/**
 	 * HTML attributes for the component.
 	 *
 	 * Example:

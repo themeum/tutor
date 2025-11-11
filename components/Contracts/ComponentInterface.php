@@ -32,7 +32,7 @@ interface ComponentInterface {
 	 *
 	 * @return ComponentInterface
 	 */
-	public function make(): ComponentInterface;
+	public static function make(): ComponentInterface;
 
 	/**
 	 * Render the component output.

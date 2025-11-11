@@ -33,7 +33,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 4.0.0
  */
-class Button {
+class Button extends BaseComponent {
 
 	/**
 	 * Button label text.
@@ -98,16 +98,6 @@ class Button {
 	 * @var bool
 	 */
 	protected $disabled = false;
-
-	/**
-	 * Create a new Button instance.
-	 *
-	 * @since 4.0.0
-	 * @return static
-	 */
-	public static function make() {
-		return new static();
-	}
 
 	/**
 	 * Set button label text.
@@ -232,41 +222,7 @@ class Button {
 	 *
 	 * @return string HTML output.
 	 */
-	public function back_render() {
-		$classes = sprintf(
-			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
-			esc_attr( $this->variant ),
-			esc_attr( $this->size )
-		);
-
-		if ( $this->disabled ) {
-			$this->attributes['disabled'] = 'disabled';
-			$classes                     .= ' is-disabled';
-		}
-
-		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
-
-		$attributes = $this->build_attributes();
-
-		$icon_html = $this->icon ? sprintf( '<i class="%s"></i> ', esc_attr( $this->icon ) ) : '';
-
-		return sprintf(
-			'<%1$s %2$s>%3$s%4$s</%1$s>',
-			esc_attr( $this->tag ),
-			$attributes,
-			$icon_html,
-			$this->label
-		);
-	}
-
-	/**
-	 * Render the final button HTML.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return string HTML output.
-	 */
-	public function render() {
+	public function render(): string {
 		$classes = sprintf(
 			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
 			esc_attr( $this->variant ),
