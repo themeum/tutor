@@ -3,7 +3,7 @@
  * Tutor Component: Button
  *
  * Provides a fluent builder for rendering buttons with
- * different sizes, colors, and styles.
+ * different sizes, variants, and styles.
  *
  * @package Tutor\Components
  * @since 4.0.0
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * echo Button::make()
  *     ->label( 'Enroll Now' )
  *     ->size( 'large' )
- *     ->color( 'primary' )
+ *     ->variant( 'primary' )
  *     ->icon( 'tutor-icon-play' )
  *     ->attr( 'data-id', 101 )
  *     ->render();
@@ -50,12 +50,12 @@ class Button {
 	protected $size = 'medium';
 
 	/**
-	 * Button color style (primary|secondary|success|danger|link).
+	 * Button variant style (primary|secondary|success|danger|link).
 	 *
 	 * @since 4.0.0
 	 * @var string
 	 */
-	protected $color = 'primary';
+	protected $variant = 'primary';
 
 	/**
 	 * Button HTML tag (button|a).
@@ -137,15 +137,15 @@ class Button {
 	}
 
 	/**
-	 * Set button color style.
+	 * Set button variant style.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $color Button color (primary|secondary|success|danger|link).
+	 * @param string $variant Button variant (primary|secondary|success|danger|link).
 	 * @return $this
 	 */
-	public function color( $color ) {
-		$this->color = sanitize_html_class( $color );
+	public function variant( $variant ) {
+		$this->variant = sanitize_html_class( $variant );
 		return $this;
 	}
 
@@ -233,7 +233,7 @@ class Button {
 	public function back_render() {
 		$classes = sprintf(
 			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
-			esc_attr( $this->color ),
+			esc_attr( $this->variant ),
 			esc_attr( $this->size )
 		);
 
@@ -267,7 +267,7 @@ class Button {
 	public function render() {
 		$classes = sprintf(
 			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
-			esc_attr( $this->color ),
+			esc_attr( $this->variant ),
 			esc_attr( $this->size )
 		);
 
