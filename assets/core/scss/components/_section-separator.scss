@@ -6,9 +6,20 @@
 .tutor-section-separator {
   width: 100%;
   height: 1px;
-  background-color: var(--tutor-border-idle);
+  background-color: $tutor-border-idle;
   border: none;
   margin: 0;
   padding: 0;
   flex-shrink: 0;
+}
+
+.tutor-section-separator-vertical {
+  width: 1px;
+  height: 1.25rem;
+  background-color: $tutor-border-idle;
+  border: none;
+  margin: auto 0;
+  padding: 0;
+  flex-shrink: 0;
+  align-self: stretch;
 }
