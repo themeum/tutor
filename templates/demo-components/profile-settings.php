@@ -17,27 +17,27 @@ $tabs_data = array(
 	array(
 		'id'    => 'security',
 		'label' => 'Security',
-		'icon'  => Icon::QUIZ,
+		'icon'  => Icon::SECURITY,
 	),
 	array(
 		'id'    => 'social-accounts',
 		'label' => 'Social Accounts',
-		'icon'  => Icon::LESSON,
+		'icon'  => Icon::SECURITY,
 	),
 	array(
 		'id'    => 'billing-address',
 		'label' => 'Billing Address',
-		'icon'  => Icon::QUIZ,
+		'icon'  => Icon::NOTIFICATION,
 	),
 	array(
 		'id'    => 'notifications',
 		'label' => 'Notifications',
-		'icon'  => Icon::QUIZ,
+		'icon'  => Icon::NOTIFICATION,
 	),
 	array(
 		'id'    => 'preferences',
 		'label' => 'Preferences',
-		'icon'  => Icon::QUIZ,
+		'icon'  => Icon::PREFERENCE,
 	)
 );
 
@@ -86,7 +86,8 @@ $tabs_data = array(
 				:disabled="tab.disabled ? true : false"
 				@click="selectTab(tab.id)"
 				>
-					<span x-data="tutorIcon({ name: tab.icon, width: 24, height: 24})"></span>
+					<!-- <span x-data="tutorIcon({ name: tab.icon, width: 24, height: 24})"></span> -->
+					<span><?php tutor_utils()->render_svg_icon( Icon::SECURITY, 24, 24 ); ?></span>
 					<span x-text="tab.label"></span>
 				</button>
 			</template>
@@ -97,10 +98,10 @@ $tabs_data = array(
 				<?php tutor_load_template( 'demo-components.dashboard.components.settings.accounts' ); ?>
 			</div>
 			<div x-show="activeTab === 'security'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
-					<?php tutor_load_template( 'demo-components.dashboard.components.settings.social-accounts' ); ?>
-				</div>
 				<?php tutor_load_template( 'demo-components.dashboard.components.settings.security' ); ?>
+			</div>
+			<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
+				<?php tutor_load_template( 'demo-components.dashboard.components.settings.social-accounts' ); ?>
 			</div>
 			<div x-show="activeTab === 'notifications'" x-cloak class="tutor-tab-panel" role="tabpanel">
 				<?php tutor_load_template( 'demo-components.dashboard.components.settings.notifications' ); ?>
