@@ -24,7 +24,7 @@ $attempts_count  = $attempts_count ?? 0;
 <div class="tutor-quiz-attempts-item">
 	<div class="tutor-quiz-item-info">
 		<?php if ( $show_quiz_title && ! empty( $quiz_title ) ) : ?>
-			<div class="tutor-flex tutor-items-start tutor-justify-between tutor-gap-4">
+			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
 				<div class="tutor-quiz-item-info-title"><?php echo esc_html( $quiz_title ); ?></div>
 				<?php if ( $attempts_count > 1 ) : ?>
 					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
