@@ -5,6 +5,7 @@
 @use "typography" as *;
 
 @mixin tutor-badge-base {
+	@include tutor-typography('tiny', 'medium');
 	width: max-content;
 	border-radius: $tutor-radius-sm;
 	padding: $tutor-spacing-1 $tutor-spacing-4;
@@ -14,7 +15,6 @@
 
 	background-color: $tutor-actions-gray-secondary;
 
-	@include tutor-typography('tiny', 'medium');
 
 	&.tutor-badge-circle {
 		border-radius: $tutor-radius-full;
