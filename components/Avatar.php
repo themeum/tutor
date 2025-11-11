@@ -195,7 +195,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 
 		$this->attributes['class'] = trim( implode( ' ', $classes ) . ' ' . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->renderAttributes();
+		$attributes = $this->render_attributes();
 
 		if ( 'image' === $this->type && $this->src ) {
 			$content = sprintf(

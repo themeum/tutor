@@ -82,7 +82,7 @@ abstract class BaseComponent implements ComponentInterface {
 	 *
 	 * @return string Escaped and concatenated attributes.
 	 */
-	protected function renderAttributes(): string {
+	protected function render_attributes(): string {
 		$compiled = array();
 
 		foreach ( $this->attributes as $key => $value ) {

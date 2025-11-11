@@ -201,21 +201,6 @@ class Button extends BaseComponent {
 	}
 
 	/**
-	 * Generate HTML attributes string.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return string
-	 */
-	protected function build_attributes() {
-		$attrs = array();
-		foreach ( $this->attributes as $key => $value ) {
-			$attrs[] = sprintf( '%s="%s"', esc_attr( $key ), esc_attr( $value ) );
-		}
-		return implode( ' ', $attrs );
-	}
-
-	/**
 	 * Render the final button HTML.
 	 *
 	 * @since 4.0.0
@@ -236,7 +221,7 @@ class Button extends BaseComponent {
 
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->build_attributes();
+		$attributes = $this->render_attributes();
 
 		// Prepare icon HTML if exists.
 		$icon_html = '';
