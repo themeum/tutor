@@ -71,9 +71,10 @@
 	}
 
 	// Color variations - matching stat-card variations
+    //TODO: BG color needs to be updated when the design is updated
 	&-enrolled {
 		.tutor-popup-progress-card-value {
-			background: $tutor-brand-100;
+			background: $tutor-tab-l3;
 
 			.tutor-popup-progress-card-value-text {
 				color: $tutor-text-brand;
@@ -83,7 +84,7 @@
 
 	&-active {
 		.tutor-popup-progress-card-value {
-			background: rgba(#00acc2, 0.1);
+			background: $tutor-tab-l3;
 
 			.tutor-popup-progress-card-value-text {
 				color: $tutor-exception-1;
