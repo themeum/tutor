@@ -109,35 +109,21 @@ use Tutor\Components\Progress;
 	</code></pre>
 	<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 	<?php
-		echo Progress::make()
-	->type( 'bar' )
-	->value( 75 )
-	->render();
+	echo Progress::make()->type( 'bar' )->value( 75 )->render();
 
 	// Animated progress bar
-	echo Progress::make()
-	->type( 'bar' )
-	->value( 75 )
-	->animated()
-	->render();
-
-	// Progress circle with value
-	echo Progress::make()
-	->type( 'circle' )
-	->value( 75 )
-	->render();
+	echo Progress::make()->type( 'bar' )->value( 75 )->animated()->render();
 
 	// With custom attributes
-	echo Progress::make()
-	->type( 'bar' )
-	->value( 50 )
+	echo Progress::make()->type( 'bar' )->value( 50 )
 	->attrs(
 		array(
 			'id'             => 'my-progress',
 			'data-course-id' => '123',
 		)
-	)
-	->render();
+	)->render();
+
+    echo Progress::make()->type( 'circle' )->value( 75 )->render();
 	?>
 	</div>
 </div>

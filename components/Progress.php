@@ -35,17 +35,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *     ->value( 75 )
  *     ->render();
  *
- * Complete circle
- * echo Progress::make()
- *     ->type( 'circle' )
- *     ->state( 'complete' )
- *     ->render();
- *
- * Locked circle
- * echo Progress::make()
- *     ->type( 'circle' )
- *     ->state(  )
- *     ->render();
  * ```
  *
  * @since 4.0.0
@@ -124,22 +113,6 @@ class Progress extends BaseComponent {
 	 */
 	public function animated( $animated = true ) {
 		$this->animated = (bool) $animated;
-		return $this;
-	}
-
-	/**
-	 * Set progress circle state.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $state Circle state (progress|complete).
-	 * @return $this
-	 */
-	public function state( $state ) {
-		$allowed = array( 'progress', 'complete' );
-		if ( in_array( $state, $allowed, true ) ) {
-			$this->state = $state;
-		}
 		return $this;
 	}
 
