@@ -38,7 +38,7 @@ $tabs_data = array(
 		'id'    => 'preferences',
 		'label' => 'Preferences',
 		'icon'  => Icon::QUIZ,
-	),
+	)
 );
 
 ?>
@@ -94,13 +94,22 @@ $tabs_data = array(
 
 		<div class="tutor-tabs-content">
 			<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				Account
+				<?php tutor_load_template( 'demo-components.dashboard.components.settings.accounts' ); ?>
 			</div>
 			<div x-show="activeTab === 'security'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				Security
+				<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php tutor_load_template( 'demo-components.dashboard.components.settings.social-accounts' ); ?>
+				</div>
+				<?php tutor_load_template( 'demo-components.dashboard.components.settings.security' ); ?>
 			</div>
-			<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				Social accounts
+			<div x-show="activeTab === 'notifications'" x-cloak class="tutor-tab-panel" role="tabpanel">
+				<?php tutor_load_template( 'demo-components.dashboard.components.settings.notifications' ); ?>
+			</div>
+			<div x-show="activeTab === 'preferences'" x-cloak class="tutor-tab-panel" role="tabpanel">
+				<?php tutor_load_template( 'demo-components.dashboard.components.settings.preferences' ); ?>
+			</div>
+			<div x-show="activeTab === 'billing-address'" x-cloak class="tutor-tab-panel" role="tabpanel">
+				<?php tutor_load_template( 'demo-components.dashboard.components.settings.billing-address' ); ?>
 			</div>
 		</div>
 	</div>

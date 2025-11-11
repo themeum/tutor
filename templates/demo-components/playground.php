@@ -25,7 +25,7 @@
 
 	$subpages = array(
 		'dashboard'        => 'Dashboard',
-		'account-settings' => 'Account Settings',
+		'profile-settings' => 'Account Settings',
 		'learning-area'    => 'Learning Area',
 	);
 
