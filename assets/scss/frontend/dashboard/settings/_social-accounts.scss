@@ -1,0 +1,28 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-social {
+  &-accounts {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-4;
+  }
+
+  &-form {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-5;
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+  }
+
+  &-field {
+    @include tutor-flex();
+    gap: $tutor-spacing-3;
+  }
+
+  &-icon {
+    position: relative;
+    top: 32px;
+  }
+}
