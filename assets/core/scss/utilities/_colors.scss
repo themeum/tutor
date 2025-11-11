@@ -13,22 +13,6 @@
   background-color: currentColor;
 }
 
-.tutor-bg-surface-base {
-  background-color: var(--tutor-surface-base);
-}
-
-.tutor-bg-surface-l1 {
-  background-color: var(--tutor-surface-l1);
-}
-
-.tutor-bg-surface-l2 {
-  background-color: var(--tutor-surface-l2);
-}
-
-.tutor-bg-surface-elevated {
-  background-color: var(--tutor-surface-elevated);
-}
-
 // Brand background colors
 @each $key, $value in $tutor-brand-colors {
   .tutor-bg-brand-#{$key} {
@@ -98,6 +82,13 @@
 
 .tutor-text-error {
   color: var(--tutor-text-error);
+}
+
+// Icon colors
+@each $key, $value in $tutor-icons {
+  .tutor-icon-#{$key} {
+    color: $value;
+  }
 }
 
 // Brand text colors (full scale)

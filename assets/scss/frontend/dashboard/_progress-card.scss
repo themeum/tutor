@@ -1,0 +1,62 @@
+// Progress Card Component
+// Dashboard progress card with image thumbnail and course progress
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-progress-card {
+	padding: $tutor-spacing-4;
+	@include tutor-flex(row, stretch, flex-start);
+	gap: $tutor-spacing-5;
+	border: 1px solid $tutor-border-idle;
+	border-radius: $tutor-radius-2xl;
+	height: 128px;
+
+	&-thumbnail {
+		flex: 0 0 auto;
+		max-width: 220px;
+		aspect-ratio: 220 / 112;
+		border-radius: $tutor-radius-lg;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center;
+		}
+	}
+
+	&-content {
+		flex: 1 1 auto;
+		@include tutor-flex(column, stretch, space-between);
+	}
+
+	&-header {
+		@include tutor-flex(column, stretch, flex-start);
+		gap: $tutor-spacing-1;
+	}
+
+	&-category {
+		@include tutor-typography('tiny', 'regular', 'secondary');
+		margin-bottom: $tutor-spacing-1;
+	}
+
+	&-title {
+		@include tutor-typography('small', 'medium', 'primary');
+		margin: 0;
+	}
+
+	&-details {
+		@include tutor-typography('tiny', 'regular', 'secondary');
+		display: flex;
+		align-items: center;
+		gap: $tutor-spacing-2;
+		margin-bottom: $tutor-spacing-2;
+	}
+
+	&-separator {
+		color: $tutor-text-secondary;
+	}
+}
+

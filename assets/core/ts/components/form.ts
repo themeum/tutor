@@ -1,3 +1,5 @@
+import { __, sprintf } from '@wordpress/i18n';
+
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { parseNumberOnly } from '@TutorShared/utils/util';
@@ -73,7 +75,7 @@ const ValidationHelpers = {
   validateRequired(name: string, value: unknown, rule?: boolean | string): FieldError | null {
     if (!rule) return null;
 
-    const message = typeof rule === 'string' ? rule : `${name} is required`;
+    const message = typeof rule === 'string' ? rule : __('This field is required', 'tutor');
     const isEmpty = !value || (typeof value === 'string' && value.trim() === '');
 
     return isEmpty ? { type: 'required', message } : null;
@@ -83,7 +85,7 @@ const ValidationHelpers = {
     if (!value) return null;
 
     const minLength = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : `Minimum length is ${minLength}`;
+    const message = typeof rule === 'object' ? rule.message : sprintf(__('Minimum length is %s', 'tutor'), minLength);
 
     return value.length < minLength ? { type: 'minLength', message } : null;
   },
@@ -92,28 +94,28 @@ const ValidationHelpers = {
     if (!value) return null;
 
     const maxLength = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : `Maximum length is ${maxLength}`;
+    const message = typeof rule === 'object' ? rule.message : sprintf(__('Maximum length is %s', 'tutor'), maxLength);
 
     return value.length > maxLength ? { type: 'maxLength', message } : null;
   },
 
   validateMin(value: number, rule: number | { value: number; message: string }): FieldError | null {
     const min = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : `Minimum value is ${min}`;
+    const message = typeof rule === 'object' ? rule.message : sprintf(__('Minimum value is %s', 'tutor'), min);
 
     return value < min ? { type: 'min', message } : null;
   },
 
   validateMax(value: number, rule: number | { value: number; message: string }): FieldError | null {
     const max = typeof rule === 'number' ? rule : rule.value;
-    const message = typeof rule === 'object' ? rule.message : `Maximum value is ${max}`;
+    const message = typeof rule === 'object' ? rule.message : sprintf(__('Maximum value is %s', 'tutor'), max);
 
     return value > max ? { type: 'max', message } : null;
   },
 
   validatePattern(value: string, rule: RegExp | { value: RegExp; message: string }): FieldError | null {
     const pattern = rule instanceof RegExp ? rule : rule.value;
-    const message = typeof rule === 'object' && 'message' in rule ? rule.message : 'Invalid format';
+    const message = typeof rule === 'object' && 'message' in rule ? rule.message : __('Invalid format', 'tutor');
 
     return !pattern.test(value) ? { type: 'pattern', message } : null;
   },
@@ -126,10 +128,10 @@ const ValidationHelpers = {
       const result = await validate(value);
       if (result === true) return null;
 
-      const message = typeof result === 'string' ? result : 'Validation failed';
+      const message = typeof result === 'string' ? result : __('Validation failed', 'tutor');
       return { type: 'validate', message };
     } catch {
-      return { type: 'validate', message: 'Validation error' };
+      return { type: 'validate', message: __('Validation error', 'tutor') };
     }
   },
 };

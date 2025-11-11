@@ -7,6 +7,46 @@
 
 use TUTOR\Icon;
 
+$profile_menu_items = array(
+	'profile'      => array(
+		'title'       => esc_html__( 'Profile', 'tutor' ),
+		'icon'        => Icon::PROFILE_CIRCLE,
+		'icon_active' => Icon::PROFILE_CIRCLE_FILL,
+		'url'         => tutor_utils()->get_profile_url(),
+	),
+	'certificates' => array(
+		'title'       => esc_html__( 'Certificates', 'tutor' ),
+		'icon'        => Icon::CERTIFICATE_2,
+		'icon_active' => Icon::CERTIFICATE_2,
+		'url'         => tutor_utils()->get_certificates_url(),
+	),
+	'reviews'      => array(
+		'title'       => esc_html__( 'Reviews', 'tutor' ),
+		'icon'        => Icon::RATINGS,
+		'icon_active' => Icon::RATINGS,
+		'url'         => tutor_utils()->get_reviews_url(),
+	),
+	'billing'      => array(
+		'title'       => esc_html__( 'Billing', 'tutor' ),
+		'icon'        => Icon::BILLING,
+		'icon_active' => Icon::BILLING,
+		'url'         => tutor_utils()->get_billing_url(),
+	),
+	'settings'     => array(
+		'title'       => esc_html__( 'Settings', 'tutor' ),
+		'icon'        => Icon::SETTING,
+		'icon_active' => Icon::SETTING,
+		'url'         => tutor_utils()->get_settings_url(),
+	),
+	'logout'       => array(
+		'title' => esc_html__( 'Logout', 'tutor' ),
+		'icon'  => Icon::LOGOUT,
+		'url'   => wp_logout_url( home_url() ),
+	),
+);
+
+$active_nav = 'profile';
+
 ?>
 
 <div class="tutor-dashboard-header">
@@ -37,9 +77,57 @@ use TUTOR\Icon;
 			<button class="tutor-btn tutor-btn-outline tutor-btn-x-small">
 				<?php tutor_utils()->render_svg_icon( Icon::NOTIFICATION ); ?>
 			</button>
-			<div class="tutor-dashboard-header-user">
-				<div class="tutor-dashboard-header-user-avatar">
+			<div 
+				x-data="tutorPopover({
+					placement: 'bottom-end',
+					offset: 4,
+				})"
+				class="tutor-dashboard-header-user"
+			>
+				<button
+					class="tutor-dashboard-header-user-avatar"
+					x-ref="trigger"
+					@click="toggle()"
+					:class="{ 'active': open }"
+				>
 					<?php echo get_avatar( get_current_user_id(), 32 ); ?>
+				</button>
+
+				<div 
+					x-ref="content"
+					x-show="open"
+					x-cloak
+					@click.outside="handleClickOutside()"
+					class="tutor-popover tutor-dashboard-header-user-popover"
+				>
+					<div class="tutor-dashboard-header-user-popover-profile">
+						<div class="tutor-dashboard-header-user-popover-avatar">
+							<?php echo get_avatar( get_current_user_id(), 48 ); ?>
+						</div>
+						<div class="tutor-flex tutor-flex-col tutor-items-center tutor-gap-1">
+							<div class="tutor-text-medium tutor-text-primary tutor-font-semibold">
+								<?php echo esc_html( wp_get_current_user()->display_name ); ?>
+							</div>
+							<div class="tutor-text-tiny tutor-text-secondary">
+								<?php echo esc_html( wp_get_current_user()->user_email ); ?>
+							</div>
+						</div>
+					</div>
+					<ul class="tutor-dashboard-header-user-popover-menu">
+						<?php
+						foreach ( $profile_menu_items as $key => $item ) {
+							$icon = ( $key === $active_nav && isset( $item['icon_active'] ) ) ? $item['icon_active'] : $item['icon'];
+							?>
+							<li>
+								<a href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" class="<?php echo ( $key === $active_nav ) ? 'active' : ''; ?>">
+									<?php tutor_utils()->render_svg_icon( $icon, 20, 20 ); ?>
+									<span><?php echo esc_html( $item['title'] ); ?></span>
+								</a>
+							</li>
+							<?php
+						}
+						?>
+					</ul>
 				</div>
 			</div>
 		</div>
