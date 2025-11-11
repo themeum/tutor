@@ -1,0 +1,74 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-reviews {
+  @include tutor-flex(column);
+  gap: $tutor-spacing-5;
+}
+
+.tutor-review {
+  &-card {
+    @include tutor-flex(column);
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+    transition-property: background-color, border-color, opacity;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
+
+    &:hover {
+      background-color: $tutor-surface-l1-hover;
+
+      .tutor-review-actions {
+        opacity: 1;
+      }
+    }
+  }
+
+  &-header {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-2;
+    padding: $tutor-spacing-6;
+  }
+
+  &-title {
+    @include tutor-typography('medium', 'medium');
+    margin-top: $tutor-spacing-1;
+  }
+
+  &-date {
+    @include tutor-typography('tiny', 'regular', 'subdued');
+  }
+
+  &-content {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-6;
+  }
+
+  &-rating-wrapper {
+    @include tutor-flex(row, center, space-between);
+  }
+
+  &-rating {
+    @include tutor-flex(row, center);
+    @include tutor-typography('p1');
+    height: 32px;
+  }
+
+  &-actions {
+    @include tutor-flex(row);
+    gap: $tutor-spacing-4;
+    opacity: 0;
+
+    &-button {
+      @include tutor-button-base;
+      @include tutor-button-variant(secondary);
+      @include tutor-button-size(x-small);
+    }
+  }
+
+  &-text {
+    @include tutor-typography('p1', 'regular', 'secondary');
+  }
+}
