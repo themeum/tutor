@@ -37,9 +37,16 @@
       border-bottom: 1px solid $tutor-border-idle;
     }
 
-    &:hover,
+    &:hover {
+      background-color: $tutor-surface-l1-hover;
+    }
+
     &.tutor-quiz-previous-attempts {
       background-color: $tutor-surface-l1-hover;
+
+      .tutor-quiz-attempts-expand-icon {
+        transform: rotate(180deg);
+      }
     }
 
     .tutor-quiz-attempts-item {
@@ -50,9 +57,16 @@
 
       .tutor-quiz-attempts-expand-btn {
         @include tutor-button-reset();
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-2;
         @include tutor-typography(small, medium, brand);
         cursor: pointer;
         white-space: nowrap;
+      }
+
+      .tutor-quiz-attempts-expand-icon {
+        display: flex;
+        transition: transform 0.3s ease;
       }
 
       .tutor-quiz-item-marks {

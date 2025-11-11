@@ -23,7 +23,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 <div x-data="{ expanded: false }" class="tutor-quiz-attempts-item-wrapper" :class="{ 'tutor-quiz-previous-attempts': expanded }">
 	<div class="tutor-quiz-attempts-item">
 		<div class="tutor-quiz-item-info">
-			<div class="tutor-flex tutor-items-start tutor-gap-4">
+			<div class="tutor-flex tutor-items-start tutor-justify-between tutor-gap-4">
 				<div class="tutor-text-medium tutor-text-semibold"><?php echo esc_html( $quiz_title ); ?></div>
 				<?php if ( $attempts_count > 1 ) : ?>
 					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
@@ -34,6 +34,9 @@ $remaining_attempts = array_slice( $attempts, 1 );
 							esc_attr( $attempts_count )
 						);
 						?>
+						<span class="tutor-quiz-attempts-expand-icon">
+							<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 18, 18 ); ?>
+						</span>
 					</button>
 				<?php endif; ?>
 			</div>
