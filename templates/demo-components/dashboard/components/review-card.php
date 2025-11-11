@@ -10,6 +10,7 @@
 
 use TUTOR\Icon;
 
+// @TODO: Need to move this to utils file.
 /**
  * Render star rating.
  *
@@ -39,13 +40,14 @@ $review = array(
 	'title'         => 'Course Title',
 	'reviewed_date' => '2022-01-01',
 	'rating'        => 4.5,
+	'is_bundle'     => false,
 	'review_text'   => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl eget ultrices ultricies, orci ipsum tincidunt nisi, sit amet ultricies nisi nisl eu nisl. Donec euismod, nisl eget ultrices ultricies, orci ipsum tincidunt nisi, sit amet ultricies nisi nisl eu nisl.',
 );
 ?>
 
-<div class="tutor-surface-l1 tutor-rounded-lg tutor-border tutor-flex tutor-flex-column">
+<div class="tutor-review-card">
 	<!-- Header Section -->
-	<div class="tutor-flex tutor-flex-column tutor-gap-2 tutor-p-6">
+	<div class="tutor-review-header">
 		<!-- Type Badge with Icon -->
 		<?php if ( ! empty( $review['is_bundle'] ) ) : ?>
 			<div class="tutor-badge tutor-badge-exception tutor-badge-circle">
@@ -60,12 +62,12 @@ $review = array(
 		<?php endif; ?>
 
 		<!-- Course Title -->
-		<div class="tutor-p1 tutor-font-medium tutor-mt-1">
+		<div class="tutor-review-title">
 			<?php echo esc_html( $review['title'] ?? '' ); ?>
 		</div>
 
 		<!-- Review Date -->
-		<div class="tutor-p3 tutor-text-subdued">
+		<div class="tutor-review-date">
 			Reviewed on: <?php echo esc_html( $review['reviewed_date'] ?? '' ); ?>
 		</div>
 	</div>
@@ -74,14 +76,27 @@ $review = array(
 	<hr class="tutor-section-separator" />
 
 	<!-- Review Content -->
-	<div class="tutor-flex tutor-flex-column tutor-p-6 tutor-gap-5">
-		<!-- Rating -->
-		<div class="tutor-icon-exception4 tutor-p1 tutor-flex tutor-items-center" style="height: 32px;">
-			<?php echo render_star_rating( $review['rating'] ?? 0 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+	<div class="tutor-review-content">
+		<!-- Actions and Rating -->
+		<div class="tutor-review-rating-wrapper">
+			<!-- Rating -->
+			<div class="tutor-review-rating">
+				<?php echo render_star_rating( $review['rating'] ?? 0 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+			</div>
+
+			<!-- Actions -->
+			<div class="tutor-review-actions">
+				<a href="#" class="tutor-review-actions-button">
+					<?php tutor_utils()->render_svg_icon( Icon::EDIT, 16, 16 ); ?>
+				</a>
+				<a href="#" class="tutor-review-actions-button">
+					<?php tutor_utils()->render_svg_icon( Icon::DELETE, 16, 16 ); ?>
+				</a>
+			</div>
 		</div>
 
 		<!-- Review Text -->
-		<div class="tutor-p1 tutor-text-secondary">
+		<div class="tutor-review-text">
 			<?php echo wp_kses_post( nl2br( $review['review_text'] ?? '' ) ); ?>
 		</div>
 	</div>
