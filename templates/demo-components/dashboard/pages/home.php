@@ -71,6 +71,27 @@ $upcoming_lessons = array(
 		'course_name'   => esc_html__( 'Camera Skills & Photo Theory', 'tutor' ),
 		'show_live_tag' => true,
 	),
+	array(
+		'date_text'     => esc_html__( 'Tomorrow', 'tutor' ),
+		'time_text'     => '10:00 AM',
+		'lesson_title'  => esc_html__( 'Advanced Photography Techniques', 'tutor' ),
+		'course_name'   => esc_html__( 'Camera Skills & Photo Theory', 'tutor' ),
+		'show_live_tag' => true,
+	),
+	array(
+		'date_text'     => esc_html__( 'Dec 15', 'tutor' ),
+		'time_text'     => '3:30 PM',
+		'lesson_title'  => esc_html__( 'Introduction to Video Editing', 'tutor' ),
+		'course_name'   => esc_html__( 'Digital Media Production', 'tutor' ),
+		'show_live_tag' => true,
+	),
+	array(
+		'date_text'     => esc_html__( 'Dec 16', 'tutor' ),
+		'time_text'     => '11:00 AM',
+		'lesson_title'  => esc_html__( 'Color Grading Fundamentals', 'tutor' ),
+		'course_name'   => esc_html__( 'Digital Media Production', 'tutor' ),
+		'show_live_tag' => true,
+	),
 );
 
 ?>
@@ -122,7 +143,7 @@ $upcoming_lessons = array(
 
 	<div class="tutor-mt-8">
 		<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'Upcoming Lessons', 'tutor' ); ?></h2>
-		<div class="tutor-flex tutor-flex-col tutor-gap-4">
+		<div class="tutor-grid tutor-grid-cols-2 tutor-gap-4">
 			<?php
 			foreach ( $upcoming_lessons as $lesson ) :
 				tutor_load_template(
