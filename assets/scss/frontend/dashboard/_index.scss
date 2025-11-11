@@ -7,7 +7,8 @@
 @forward 'layout/header';
 @forward 'layout/nav-mobile';
 
-// Components
+// Dashboard components
+@forward 'components/page_nav';
 @forward "stat-card";
 @forward "progress-card";
 
