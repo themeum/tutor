@@ -3,11 +3,11 @@
 
 .tutor-preferences {
   &-section-header {
-    @include tutor-typography('medium', 'semibold', 'primary', 'heading');
-    margin: $tutor-spacing-none $tutor-spacing-none $tutor-spacing-3 $tutor-spacing-none;
+    @include tutor-typography('h5', 'semibold', 'primary', 'heading');
+    margin: $tutor-spacing-none $tutor-spacing-none $tutor-spacing-4 $tutor-spacing-none;
 
-    @include tutor-breakpoint-up(md) {
-      @include tutor-typography('h5', 'semibold', 'primary', 'heading');
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography('medium', 'semibold', 'primary', 'heading');
     }
   }
 
@@ -21,11 +21,11 @@
 
     .tutor-preferences-setting-content {
       @include tutor-flex(row, center, flex-start);
-      gap: $tutor-spacing-3;
+      gap: $tutor-spacing-4;
       flex: 1;
 
-      @include tutor-breakpoint-up(md) {
-        gap: $tutor-spacing-4;
+      @include tutor-breakpoint-down(sm) {
+        gap: $tutor-spacing-3;
       }
 
       .tutor-preferences-setting-icon {
@@ -50,17 +50,17 @@
     .tutor-preferences-setting-control {
       @include tutor-flex(row, center, flex-end);
       flex-shrink: 0;
-      margin-left: $tutor-spacing-4;
+      margin-left: $tutor-spacing-6;
 
-      @include tutor-breakpoint-up(md) {
-        margin-left: $tutor-spacing-6;
+      @include tutor-breakpoint-down(sm) {
+        margin-left: $tutor-spacing-4;
       }
 
       .tutor-select-dropdown {
-        min-width: 120px;
+        min-width: 140px;
 
-        @include tutor-breakpoint-up(md) {
-          min-width: 140px;
+        @include tutor-breakpoint-down(sm) {
+          min-width: 120px;
         }
       }
     }
