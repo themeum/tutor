@@ -19,6 +19,15 @@ use TUTOR\Input;
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Tutor Playground</title>
 	<style>
+		nav {
+			margin-bottom: 30px;
+		}
+		nav a {
+			padding-right: 10px;
+		}
+		nav a.active {
+			color: blue;
+		}
 		section {
 			margin-bottom: 30px;
 		}
@@ -35,9 +44,7 @@ use TUTOR\Input;
 
 	$subpage = Input::get( 'subpage', '' );
 	?>
-	<h1>
-		Tutor LMS 4.wow 🔥
-	</h1>
+	<h1>Tutor LMS 4.wow 🔥</h1>
 	<nav>
 		<?php if ( $subpage ) : ?>
 			<a href="<?php echo esc_url( $current_url ); ?>">🛝 Playground</a>
