@@ -19,6 +19,17 @@ if ( empty( $attempts ) ) {
 $first_attempt      = $attempts[0];
 $remaining_attempts = array_slice( $attempts, 1 );
 
+$course_data = array(
+	'type'       => 'course',
+	'title'      => 'Sample Course Title',
+	'excerpt'    => 'This is mock preview content used for testing.',
+	'thumbnail'  => 'https://workademy.tutorlms.io/wp-content/uploads/2025/09/Cloud-It-Ops_-Cloud-Fundamentals-for-Enterprise-Teams.webp',
+	'instructor' => 'John Doe',
+	'students'   => 1234,
+	'rating'     => 4.8,
+	'url'        => '#',
+);
+
 ?>
 <div x-data="{ expanded: false }" class="tutor-quiz-attempts-item-wrapper" :class="{ 'tutor-quiz-previous-attempts': expanded }">
 	<div class="tutor-quiz-attempts-item">
@@ -43,12 +54,10 @@ $remaining_attempts = array_slice( $attempts, 1 );
 			<div class="tutor-quiz-item-info-course">
 				<?php esc_html_e( 'Course:', 'tutor' ); ?> 
 				<span 
-					x-data="tutorPreviewTrigger()"
+					x-data="tutorPreviewTrigger({ data: <?php echo esc_attr( wp_json_encode( $course_data ) ); ?> })"
 					x-ref="trigger"
 					class="tutor-preview-trigger"
-					data-tutor-preview="course"
-					data-tutor-preview-id="123"
-					>
+				>
 					<?php echo esc_html( $course_title ); ?>
 					<div 
 						x-ref="content"
@@ -57,7 +66,6 @@ $remaining_attempts = array_slice( $attempts, 1 );
 						@click.outside="handleClickOutside()"
 						class="tutor-popover tutor-preview-card"
 					>
-						<div class="tutor-preview-card-loading" x-show="isLoading">Loading...</div>
 					</div>
 				</span>
 			</div>

@@ -8,22 +8,51 @@
  * @since 4.0.0
  */
 
+// Sample preview data
+$course_preview_data = array(
+	'type'       => 'course',
+	'title'      => 'Camera Skills & Photo Theory',
+	'excerpt'    => 'Learn the fundamentals of photography including composition, lighting, and camera settings.',
+	'thumbnail'  => 'https://workademy.tutorlms.io/wp-content/uploads/2025/09/Cloud-It-Ops_-Cloud-Fundamentals-for-Enterprise-Teams.webp',
+	'instructor' => 'John Doe',
+	'students'   => 1234,
+	'rating'     => 4.8,
+	'url'        => '#',
+);
+
+$lesson_preview_data = array(
+	'type'       => 'lesson',
+	'title'      => 'Understanding Aperture',
+	'excerpt'    => 'Master the concept of aperture and how it affects depth of field in your photos.',
+	'duration'   => '12 mins',
+	'lessonType' => 'Video',
+	'url'        => '#',
+);
+
+$design_course_data = array(
+	'type'       => 'course',
+	'title'      => 'Graphic Design Fundamentals',
+	'excerpt'    => 'Master the principles of design, typography, and color theory.',
+	'thumbnail'  => 'https://workademy.tutorlms.io/wp-content/uploads/2025/09/Cloud-It-Ops_-Cloud-Fundamentals-for-Enterprise-Teams.webp',
+	'instructor' => 'Jane Smith',
+	'students'   => 856,
+	'rating'     => 4.6,
+	'url'        => '#',
+);
+
 ?>
 
 <div class="tutor-container">
-	<h2>Preview Trigger Examples</h2>
+	<h2>Preview Trigger Examples (Props-based)</h2>
 
 	<div style="padding: 40px; line-height: 2;">
 		<h3>Course Preview</h3>
 		<p>
 			I recently completed 
 			<span 
-				x-data="tutorPreviewTrigger()"
+				x-data="tutorPreviewTrigger({ data: <?php echo esc_attr( wp_json_encode( $course_preview_data ) ); ?> })"
 				x-ref="trigger"
-				class="tutor-preview-trigger" 
-				data-tutor-preview="course" 
-				data-tutor-preview-id="123"
-				data-tutor-preview-delay="300"
+				class="tutor-preview-trigger"
 			>
 				Camera Skills & Photo Theory
 				<div 
@@ -32,9 +61,7 @@
 					x-cloak
 					@click.outside="handleClickOutside()"
 					class="tutor-popover tutor-preview-card"
-				>
-					<div class="tutor-preview-card-loading" x-show="isLoading">Loading...</div>
-				</div>
+				></div>
 			</span>
 			and it was amazing!
 		</p>
@@ -43,11 +70,9 @@
 		<p>
 			The lesson on 
 			<span 
-				x-data="tutorPreviewTrigger()"
+				x-data="tutorPreviewTrigger({ data: <?php echo esc_attr( wp_json_encode( $lesson_preview_data ) ); ?> })"
 				x-ref="trigger"
-				class="tutor-preview-trigger" 
-				data-tutor-preview="lesson" 
-				data-tutor-preview-id="456"
+				class="tutor-preview-trigger"
 			>
 				Understanding Aperture
 				<div 
@@ -56,71 +81,110 @@
 					x-cloak
 					@click.outside="handleClickOutside()"
 					class="tutor-popover tutor-preview-card"
-				>
-					<div class="tutor-preview-card-loading" x-show="isLoading">Loading...</div>
-				</div>
+				></div>
 			</span>
 			was very helpful.
 		</p>
 
-		<h3>Multiple Previews</h3>
+		<h3>Data Attribute Method</h3>
 		<p>
-			Check out these courses: 
-			<span x-data="tutorPreviewTrigger()" x-ref="trigger" class="tutor-preview-trigger" data-tutor-preview="course" data-tutor-preview-id="1">
-				Web Development
-				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-preview-card">
-					<div class="tutor-preview-card-loading" x-show="isLoading">Loading...</div>
-				</div>
-			</span>,
-			<span x-data="tutorPreviewTrigger()" x-ref="trigger" class="tutor-preview-trigger" data-tutor-preview="course" data-tutor-preview-id="2">
-				Graphic Design
-				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-preview-card">
-					<div class="tutor-preview-card-loading" x-show="isLoading">Loading...</div>
-				</div>
-			</span>, and
-			<span x-data="tutorPreviewTrigger()" x-ref="trigger" class="tutor-preview-trigger" data-tutor-preview="course" data-tutor-preview-id="3">
-				Digital Marketing
-				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-preview-card">
-					<div class="tutor-preview-card-loading" x-show="isLoading">Loading...</div>
-				</div>
-			</span>.
+			You can also use 
+			<span 
+				x-data="tutorPreviewTrigger()"
+				x-ref="trigger"
+				class="tutor-preview-trigger"
+				data-tutor-preview-data='<?php echo esc_attr( wp_json_encode( $design_course_data ) ); ?>'
+			>
+				data attributes
+				<div 
+					x-ref="content"
+					x-show="open"
+					x-cloak
+					@click.outside="handleClickOutside()"
+					class="tutor-popover tutor-preview-card"
+				></div>
+			</span>
+			for simpler usage.
 		</p>
 	</div>
 
 	<div style="background: #f5f5f5; padding: 20px; margin-top: 40px; border-radius: 8px;">
 		<h3>Usage Instructions</h3>
 		
-		<h4>HTML Structure:</h4>
-		<pre><code>&lt;span 
-  x-data="tutorPreviewTrigger()"        <!-- Initialize component -->
-  x-ref="trigger"                       <!-- Mark as trigger element -->
-  class="tutor-preview-trigger" 
-  data-tutor-preview="course"           <!-- Type: 'course' or 'lesson' -->
-  data-tutor-preview-id="123"           <!-- ID of the course/lesson -->
-  data-tutor-preview-delay="300"        <!-- Optional: Hover delay in ms (default: 300) -->
+		<h4>Method 1: Props-based (Recommended)</h4>
+		<pre><code>&lt;?php
+$preview_data = array(
+  'type'       => 'course',
+  'title'      => 'Course Title',
+  'excerpt'    => 'Course description...',
+  'thumbnail'  => 'https://example.com/image.jpg',
+  'instructor' => 'John Doe',
+  'students'   => 1234,
+  'rating'     => 4.8,
+  'url'        => '#',
+);
+?&gt;
+
+&lt;span 
+  x-data="tutorPreviewTrigger({ data: &lt;?php echo esc_attr( wp_json_encode( $preview_data ) ); ?&gt; })"
+  x-ref="trigger"
+  class="tutor-preview-trigger"
 &gt;
   Course Title
   &lt;div 
-    x-ref="content"                     <!-- Mark as content element -->
-    x-show="open"                       <!-- Show when open -->
-    x-cloak                             <!-- Hide until Alpine loads -->
-    @click.outside="handleClickOutside()" <!-- Close on outside click -->
+    x-ref="content"
+    x-show="open"
+    x-cloak
+    @click.outside="handleClickOutside()"
     class="tutor-popover tutor-preview-card"
-  &gt;
-    &lt;div class="tutor-preview-card-loading" x-show="isLoading"&gt;Loading...&lt;/div&gt;
-  &lt;/div&gt;
+  &gt;&lt;/div&gt;
 &lt;/span&gt;</code></pre>
 
-		<h4>Required Attributes:</h4>
-		<ul>
-			<li><code>class="tutor-preview-trigger"</code> - Identifies the element as a preview trigger</li>
-			<li><code>data-tutor-preview</code> - Type of content: "course" or "lesson"</li>
-			<li><code>data-tutor-preview-id</code> - The ID of the course or lesson</li>
-		</ul>
+		<h4>Method 2: Data Attribute</h4>
+		<pre><code>&lt;span 
+  x-data="tutorPreviewTrigger()"
+  x-ref="trigger"
+  class="tutor-preview-trigger"
+  data-tutor-preview-data='&lt;?php echo esc_attr( wp_json_encode( $preview_data ) ); ?&gt;'
+&gt;
+  Course Title
+  &lt;div 
+    x-ref="content"
+    x-show="open"
+    x-cloak
+    @click.outside="handleClickOutside()"
+    class="tutor-popover tutor-preview-card"
+  &gt;&lt;/div&gt;
+&lt;/span&gt;</code></pre>
 
-		<h4>Optional Attributes:</h4>
+		<h4>Preview Data Structure:</h4>
+		<p><strong>For Courses:</strong></p>
+		<pre><code>{
+  "type": "course",
+  "title": "Course Title",
+  "excerpt": "Course description",
+  "thumbnail": "https://example.com/image.jpg",
+  "instructor": "Instructor Name",
+  "students": 1234,
+  "rating": 4.8,
+  "url": "https://example.com/course/123"
+}</code></pre>
+
+		<p><strong>For Lessons:</strong></p>
+		<pre><code>{
+  "type": "lesson",
+  "title": "Lesson Title",
+  "excerpt": "Lesson description",
+  "duration": "12 mins",
+  "lessonType": "Video",
+  "url": "https://example.com/lesson/456"
+}</code></pre>
+
+		<h4>Optional Props:</h4>
 		<ul>
-			<li><code>data-tutor-preview-delay</code> - Hover delay in milliseconds (default: 300ms)</li>
+			<li><code>delay</code> - Hover delay in milliseconds (default: 300)</li>
+			<li><code>placement</code> - Popover placement (default: 'bottom-start')</li>
+			<li><code>offset</code> - Offset from trigger (default: 8)</li>
 		</ul>
 
 		<h4>Behavior:</h4>
@@ -129,21 +193,5 @@
 			<li><strong>Mobile:</strong> Tap to toggle preview, tap outside to close</li>
 			<li><strong>Keyboard:</strong> Press Escape to close preview</li>
 		</ul>
-
-		<h4>API Endpoint Required:</h4>
-		<p>The component expects a REST API endpoint at:</p>
-		<pre><code>/wp-json/tutor/v1/preview/{type}/{id}</code></pre>
-		
-		<p>Example response format:</p>
-		<pre><code>{
-  "type": "course",
-  "title": "Camera Skills & Photo Theory",
-  "excerpt": "Learn the fundamentals of photography...",
-  "thumbnail": "https://example.com/image.jpg",
-  "instructor": "John Doe",
-  "students": 1234,
-  "rating": 4.8,
-  "url": "https://example.com/course/123"
-}</code></pre>
 	</div>
 </div>

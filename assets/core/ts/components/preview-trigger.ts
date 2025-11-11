@@ -1,13 +1,25 @@
 // Preview Trigger Component
 // Shows course/lesson preview card on hover (desktop) or tap (mobile)
-// Uses the popover component for positioning and display
+// Uses props-based data instead of API fetching
 
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { popover, type PopoverProps } from './popover';
 
+export interface PreviewData {
+  type: 'course' | 'lesson';
+  title: string;
+  excerpt?: string;
+  thumbnail?: string;
+  instructor?: string;
+  students?: number;
+  rating?: number;
+  duration?: string;
+  lessonType?: string;
+  url?: string;
+}
+
 export interface PreviewTriggerProps extends PopoverProps {
-  type?: 'course' | 'lesson';
-  id?: number;
+  data?: PreviewData;
   delay?: number;
 }
 
@@ -21,13 +33,10 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
 
   return {
     ...popoverInstance,
-    isLoading: false,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    previewData: null as any,
+    previewData: props.data || (null as any),
     isTouchDevice: false,
     hoverTimeout: null as number | null,
-    previewType: props.type,
-    previewId: props.id,
     hoverDelay: props.delay || 300,
 
     init() {
@@ -40,13 +49,20 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
       const trigger = this.$refs.trigger;
       if (!trigger) return;
 
-      // Get type and ID from data attributes if not provided in props
-      if (!this.previewType) {
-        this.previewType = trigger.getAttribute('data-tutor-preview') as 'course' | 'lesson';
+      // Get preview data from data attribute if not provided in props
+      if (!this.previewData && trigger.hasAttribute('data-tutor-preview-data')) {
+        try {
+          const dataAttr = trigger.getAttribute('data-tutor-preview-data');
+          if (dataAttr) {
+            this.previewData = JSON.parse(dataAttr);
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('Failed to parse preview data:', error);
+        }
       }
-      if (!this.previewId) {
-        this.previewId = parseInt(trigger.getAttribute('data-tutor-preview-id') || '0', 10);
-      }
+
+      // Get hover delay from data attribute
       if (trigger.hasAttribute('data-tutor-preview-delay')) {
         this.hoverDelay = parseInt(trigger.getAttribute('data-tutor-preview-delay') || '300', 10);
       }
@@ -106,69 +122,26 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
       }, 100);
     },
 
-    async showPreview() {
-      if (!this.previewType || !this.previewId) return;
+    showPreview() {
+      if (!this.previewData) return;
 
-      this.isLoading = true;
-
-      // Show popover with loading state
+      // Show popover
       this.show();
 
-      try {
-        // Fetch preview data
-        this.previewData = await this.fetchPreviewData(this.previewType, this.previewId);
-        this.isLoading = false;
+      // Render content
+      this.renderPreview();
 
-        // Update content after data is loaded
-        this.renderPreview();
-
-        // Reposition after content changes
+      // Reposition after content is rendered
+      this.$nextTick(() => {
         this.updatePosition();
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Failed to fetch preview data:', error);
-        this.isLoading = false;
-        this.hide();
-      }
-    },
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async fetchPreviewData(type: 'course' | 'lesson', id: number): Promise<any> {
-      // TODO: Replace with actual API endpoint
-      const response = {
-        ok: true,
-        json: async () => ({
-          type,
-          id,
-          title: type === 'course' ? 'Sample Course Title (mock)' : 'Sample Lesson Title (mock)',
-          excerpt: 'This is mock preview content used for testing.',
-          thumbnail:
-            type === 'course'
-              ? 'https://workademy.tutorlms.io/wp-content/uploads/2025/09/Cloud-It-Ops_-Cloud-Fundamentals-for-Enterprise-Teams.webp'
-              : undefined,
-          instructor: type === 'course' ? 'Mock Instructor' : undefined,
-          students: type === 'course' ? 42 : undefined,
-          rating: type === 'course' ? 4.2 : undefined,
-          duration: type === 'lesson' ? '12m' : undefined,
-          url: '#',
-        }),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } as { ok: boolean; json: () => Promise<any> };
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch preview data');
-      }
-
-      // Simulate network latency for preview fetch
-      await new Promise<void>((resolve) => setTimeout(resolve, 800));
-      return response.json();
+      });
     },
 
     renderPreview() {
       const content = this.$refs.content;
       if (!content || !this.previewData) return;
 
-      const type = this.previewData.type || this.previewType;
+      const type = this.previewData.type;
 
       if (type === 'course') {
         this.renderCoursePreview(content);
@@ -184,16 +157,16 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
 
       content.innerHTML = `
         <div class="tutor-preview-card-content">
-          ${data.thumbnail ? `<img src="${data.thumbnail}" alt="${data.title}" class="tutor-preview-card-thumbnail" />` : ''}
+          ${data.thumbnail ? `<img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" />` : ''}
           <div class="tutor-preview-card-body">
-            <h4 class="tutor-preview-card-title">${data.title}</h4>
-            ${data.excerpt ? `<p class="tutor-preview-card-excerpt">${data.excerpt}</p>` : ''}
+            <h4 class="tutor-preview-card-title">${this.escapeHtml(data.title)}</h4>
+            ${data.excerpt ? `<p class="tutor-preview-card-excerpt">${this.escapeHtml(data.excerpt)}</p>` : ''}
             <div class="tutor-preview-card-meta">
-              ${data.instructor ? `<span class="tutor-preview-card-instructor">${data.instructor}</span>` : ''}
+              ${data.instructor ? `<span class="tutor-preview-card-instructor">${this.escapeHtml(data.instructor)}</span>` : ''}
               ${data.students ? `<span class="tutor-preview-card-students">${data.students} students</span>` : ''}
               ${data.rating ? `<span class="tutor-preview-card-rating">★ ${data.rating}</span>` : ''}
             </div>
-            ${data.url ? `<a href="${data.url}" class="tutor-preview-card-link">View Course →</a>` : ''}
+            ${data.url ? `<a href="${this.escapeHtml(data.url)}" class="tutor-preview-card-link">View Course →</a>` : ''}
           </div>
         </div>
       `;
@@ -207,16 +180,22 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
       content.innerHTML = `
         <div class="tutor-preview-card-content">
           <div class="tutor-preview-card-body">
-            <h4 class="tutor-preview-card-title">${data.title}</h4>
-            ${data.excerpt ? `<p class="tutor-preview-card-excerpt">${data.excerpt}</p>` : ''}
+            <h4 class="tutor-preview-card-title">${this.escapeHtml(data.title)}</h4>
+            ${data.excerpt ? `<p class="tutor-preview-card-excerpt">${this.escapeHtml(data.excerpt)}</p>` : ''}
             <div class="tutor-preview-card-meta">
-              ${data.duration ? `<span class="tutor-preview-card-duration">${data.duration}</span>` : ''}
-              ${data.type ? `<span class="tutor-preview-card-type">${data.type}</span>` : ''}
+              ${data.duration ? `<span class="tutor-preview-card-duration">${this.escapeHtml(data.duration)}</span>` : ''}
+              ${data.lessonType ? `<span class="tutor-preview-card-type">${this.escapeHtml(data.lessonType)}</span>` : ''}
             </div>
-            ${data.url ? `<a href="${data.url}" class="tutor-preview-card-link">View Lesson →</a>` : ''}
+            ${data.url ? `<a href="${this.escapeHtml(data.url)}" class="tutor-preview-card-link">View Lesson →</a>` : ''}
           </div>
         </div>
       `;
+    },
+
+    escapeHtml(text: string): string {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     },
 
     destroy() {

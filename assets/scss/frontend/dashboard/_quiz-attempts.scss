@@ -21,6 +21,7 @@
   &-header {
     display: grid;
     grid-template-columns: 340px 180px 1.5fr 1fr;
+    gap: $tutor-spacing-4;
     background-color: $tutor-surface-base;
     border-bottom: 1px solid $tutor-border-idle;
     padding: $tutor-spacing-5 $tutor-spacing-6;
