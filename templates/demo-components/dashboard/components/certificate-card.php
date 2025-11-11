@@ -20,43 +20,43 @@ $certificate = array(
 );
 ?>
 
-<div class="tutor-surface-l1 tutor-rounded-lg tutor-border tutor-px-5 tutor-py-4 tutor-flex tutor-items-center tutor-gap-4">
+<div class="tutor-certificate-card">
 	<!-- Certificate Icon -->
-	<div class="tutor-flex-shrink-0 tutor-surface-l2 tutor-rounded-sm tutor-flex-center tutor-gap-4 tutor-icon-idle" style="width: 40px; height: 40px;">
+	<div class="tutor-certificate-icon">
 		<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CERTIFICATE_2, 24, 24 ) ); ?>
 	</div>
 
 	<!-- Certificate Info -->
-	<div class="tutor-flex-1 tutor-flex tutor-flex-column tutor-gap-1 tutor-min-w-0">
+	<div class="tutor-certificate-info">
 		<!-- Type Badge -->
 		<?php if ( $certificate['is_bundle'] ) : ?>
-			<div class="tutor-p3 tutor-text-exception2">
+			<div class="tutor-certificate-type tutor-certificate-type-bundle">
 				<?php echo esc_html__( 'Bundle', 'tutor' ); ?>
 			</div>
 		<?php else : ?>
-			<div class="tutor-p3 tutor-text-secondary">
+			<div class="tutor-certificate-type">
 				<?php echo esc_html__( 'Course', 'tutor' ); ?>
 			</div>
 		<?php endif; ?>
 
 		<!-- Title -->
-		<div class="tutor-p1 tutor-font-medium tutor-truncate">
+		<div class="tutor-certificate-title">
 			<?php echo esc_html( $certificate['title'] ); ?>
 		</div>
 	</div>
 
 	<!-- Action Links -->
-	<div class="tutor-flex-shrink-0 tutor-flex tutor-items-center">
+	<div class="tutor-certificate-actions">
 		<a 
 			href="<?php echo esc_url( $certificate['course_url'] ); ?>" 
-			class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-text-brand"
+			class="tutor-certificate-actions-button"
 		>
 			<?php echo esc_html__( 'Course', 'tutor' ); ?>
 		</a>
 		<hr class="tutor-section-separator-vertical" />
 		<a 
 			href="<?php echo esc_url( $certificate['certificate_url'] ); ?>" 
-			class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-text-brand"
+			class="tutor-certificate-actions-button"
 		>
 			<?php echo esc_html__( 'View Certificate', 'tutor' ); ?>
 		</a>
