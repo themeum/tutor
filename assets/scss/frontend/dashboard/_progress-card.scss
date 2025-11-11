@@ -38,22 +38,17 @@
 	}
 
 	&-category {
-		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
-		letter-spacing: 0;
+		@include tutor-typography('tiny', 'regular', 'secondary');
 		margin-bottom: $tutor-spacing-1;
 	}
 
 	&-title {
-		@include tutor-typography('small', 'medium', 'primary', 'body');
-		font-style: normal;
-		letter-spacing: 0;
+		@include tutor-typography('small', 'medium', 'primary');
 		margin: 0;
 	}
 
 	&-details {
-		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
-		font-style: normal;
-		letter-spacing: 0;
+		@include tutor-typography('tiny', 'regular', 'secondary');
 		display: flex;
 		align-items: center;
 		gap: $tutor-spacing-2;
