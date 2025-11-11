@@ -1,5 +1,4 @@
 @use 'sass:map';
-@use 'utilities' as *;
 @use '../tokens' as *;
 
 @mixin tutor-typography($size: 'medium', $typeface: 'regular', $color: 'primary', $context: 'body') {
