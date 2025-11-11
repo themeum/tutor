@@ -70,7 +70,7 @@ foreach ( $options as $option ) {
 				:disabled="!canDecrement() || disabled"
 				aria-label="<?php echo esc_attr__( 'Decrease value', 'tutor' ); ?>"
 			>
-				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP, 16, 16 ); ?>
+				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP, 8, 8 ); ?>
 			</button>
 
 			<button
@@ -81,7 +81,7 @@ foreach ( $options as $option ) {
 				:disabled="!canIncrement() || disabled"
 				aria-label="<?php echo esc_attr__( 'Increase value', 'tutor' ); ?>"
 			>
-				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 16, 16 ); ?>
+				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 8, 8 ); ?>
 			</button>
 		</div>
 	</div>
