@@ -10,11 +10,17 @@
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
 
-    &-item {
-      @include tutor-flex(row, center, flex-start);
+    &-button {
+      @include tutor-button-reset();
+      @include tutor-flex(row, center);
       gap: $tutor-spacing-2;
-      @include tutor-typography(small);
-      color: $tutor-text-secondary;
+      @include tutor-typography(small, regular, secondary);
+      cursor: pointer;
+      white-space: nowrap;
+
+      @include tutor-breakpoint-down(sm) {
+        font-size: $tutor-font-size-tiny;
+      }
     }
   }
 

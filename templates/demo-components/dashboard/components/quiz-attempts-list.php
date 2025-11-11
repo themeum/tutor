@@ -72,10 +72,66 @@ $quiz_attempts = array(
 );
 
 ?>
-<div class="tutor-quiz-attempts" x-data="tutorPreviewTrigger()">
+<div class="tutor-quiz-attempts">
 	<div class="tutor-quiz-attempts-filter">
-		<div class="tutor-quiz-attempts-filter-item">All Attempts (37) <?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN ); ?></div>
-		<div class="tutor-quiz-attempts-filter-item">Newest First <?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN ); ?></div>
+		<!-- Filter by Status -->
+		<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })" class="tutor-quiz-attempts-filter-item">
+			<button x-ref="trigger" @click="toggle()" class="tutor-quiz-attempts-filter-button">
+				<?php esc_html_e( 'All Attempts', 'tutor' ); ?> <span class="tutor-font-medium">(37)</span>
+				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 16, 16 ); ?>
+			</button>
+
+			<div 
+				x-ref="content"
+				x-show="open"
+				x-cloak
+				@click.outside="handleClickOutside()"
+				class="tutor-popover"
+			>
+				<div class="tutor-popover-menu" style="min-width: 180px;">
+					<button class="tutor-popover-menu-item tutor-popover-menu-item-active">
+						<?php esc_html_e( 'All Attempts', 'tutor' ); ?> <span class="tutor-font-medium">(37)</span>
+					</button>
+					<button class="tutor-popover-menu-item">
+						<?php esc_html_e( 'Passed', 'tutor' ); ?> <span class="tutor-font-medium">(28)</span>
+					</button>
+					<button class="tutor-popover-menu-item">
+						<?php esc_html_e( 'Failed', 'tutor' ); ?> <span class="tutor-font-medium">(9)</span>
+					</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Sort Order -->
+		<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-quiz-attempts-filter-item">
+			<button x-ref="trigger" @click="toggle()" class="tutor-quiz-attempts-filter-button">
+				<?php esc_html_e( 'Newest First', 'tutor' ); ?>
+				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 16, 16 ); ?>
+			</button>
+
+			<div 
+				x-ref="content"
+				x-show="open"
+				x-cloak
+				@click.outside="handleClickOutside()"
+				class="tutor-popover"
+			>
+				<div class="tutor-popover-menu" style="min-width: 160px;">
+					<button class="tutor-popover-menu-item tutor-popover-menu-item-active">
+						<?php esc_html_e( 'Newest First', 'tutor' ); ?>
+					</button>
+					<button class="tutor-popover-menu-item">
+						<?php esc_html_e( 'Oldest First', 'tutor' ); ?>
+					</button>
+					<button class="tutor-popover-menu-item">
+						<?php esc_html_e( 'Highest Score', 'tutor' ); ?>
+					</button>
+					<button class="tutor-popover-menu-item">
+						<?php esc_html_e( 'Lowest Score', 'tutor' ); ?>
+					</button>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="tutor-quiz-attempts-header">
 		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
