@@ -90,7 +90,7 @@ $quiz_attempts = array(
 			$attempts_count = count( $attempts );
 
 			tutor_load_template(
-				'demo-components.dashboard.components.quiz-attempts-list-item',
+				'demo-components.dashboard.components.quiz-attempts-group',
 				array(
 					'quiz_id'      => 'quiz-' . $quiz_index,
 					'quiz_title'   => $quiz_attempt['quiz_title'],
