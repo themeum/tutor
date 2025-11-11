@@ -4,7 +4,9 @@
  *
  * Defines the interface for all UI components.
  *
- * @package Tutor\Components\Contracts
+ * @package Tutor\Components
+ * @author Themeum
+ * @link https://themeum.com
  * @since 4.0.0
  */
 

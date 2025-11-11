@@ -6,6 +6,8 @@
  * Handles attribute management and basic HTML escaping.
  *
  * @package Tutor\Components
+ * @author Themeum
+ * @link https://themeum.com
  * @since 4.0.0
  */
 

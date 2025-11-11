@@ -6,6 +6,8 @@
  * different sizes, variants, and styles.
  *
  * @package Tutor\Components
+ * @author Themeum
+ * @link https://themeum.com
  * @since 4.0.0
  */
 
