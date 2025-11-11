@@ -446,7 +446,7 @@
 // Responsive layout utilities
 @each $breakpoint, $value in $tutor-breakpoints {
   @if $value >0 {
-    @media (min-width: $value) {
+    @include tutor-breakpoint-down($breakpoint) {
       .tutor-#{$breakpoint}-block {
         display: block;
       }
