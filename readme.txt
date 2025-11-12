@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.9.1
+Stable tag: 3.9.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,19 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.9.2 - Nov 10, 2025
+
+New: Added payment option support for manual enrolment for native monetization. (Pro)
+Update: Enhanced Strict Mode — course completion is now blocked if any assignment is failed. (Pro)
+Fix: Resolved conflict between Limit Active Login Sessions and WooCommerce Guest Checkout. (Pro)
+Fix: Fixed video player issue on mobile devices.
+Fix: Corrected issue where course completion emails were sent to the wrong user. (Pro)
+Fix: Fixed PHP error on sites that have never used WooCommerce for monetization.
+Fix: Resolved issue showing raw HTML code in WooCommerce manual enrolment. (Pro)
+Fix: Corrected display issue where courses with multiple purchase options showed Add to Cart instead of View Details. (Pro)
+Fix: Fixed quiz import issue. (Pro)
+Fix: Resolved the WPML 404 redirection issue in certain scenarios. (Pro)
 
 = 3.9.1 - Oct 23, 2025
 

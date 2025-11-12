@@ -89,7 +89,7 @@ const CertificatePreviewModal = ({
             <img css={styles.certificate} src={currentCertificate.preview_src} alt={currentCertificate.name} />
 
             <div css={styles.actionsWrapper}>
-              <Tooltip placement="right" content={__('Close', 'tutor')}>
+              <Tooltip placement="right" content={__('Close', __TUTOR_TEXT_DOMAIN__)}>
                 <button
                   ref={closeButtonRef}
                   type="button"
@@ -103,7 +103,7 @@ const CertificatePreviewModal = ({
               </Tooltip>
               <Show when={currentCertificate.edit_url}>
                 {(editUrl) => (
-                  <Tooltip placement="right" content={__('Edit in Certificate Builder', 'tutor')}>
+                  <Tooltip placement="right" content={__('Edit in Certificate Builder', __TUTOR_TEXT_DOMAIN__)}>
                     <button
                       type="button"
                       css={[styles.actionButton, styles.editButton]}
@@ -139,7 +139,9 @@ const CertificatePreviewModal = ({
             }}
             disabled={selectedCertificate === currentCertificate.key}
           >
-            {selectedCertificate === currentCertificate.key ? __('Selected', 'tutor') : __('Select', 'tutor')}
+            {selectedCertificate === currentCertificate.key
+              ? __('Selected', __TUTOR_TEXT_DOMAIN__)
+              : __('Select', __TUTOR_TEXT_DOMAIN__)}
           </Button>
           <button
             type="button"

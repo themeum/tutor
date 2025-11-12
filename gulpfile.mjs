@@ -49,6 +49,7 @@ function copy() {
         '!./*.js',
         '!./*.mjs',
         '!./*.json',
+        '!./**/*.ignore',
         '!yarn-error.log',
         '!bin/**',
         '!tests/**',

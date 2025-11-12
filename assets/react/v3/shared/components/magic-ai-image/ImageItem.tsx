@@ -20,23 +20,23 @@ import { type DropdownState, useMagicImageGeneration } from './ImageContext';
 
 const options: Option<DropdownState>[] = [
   {
-    label: __('Magic Fill', 'tutor'),
+    label: __('Magic Fill', __TUTOR_TEXT_DOMAIN__),
     value: 'magic-fill',
     icon: <SVGIcon name="magicWand" width={24} height={24} />,
   },
   // @TODO: will be implemented in the future
   // {
-  //   label: __('Object eraser', 'tutor'),
+  //   label: __('Object eraser', __TUTOR_TEXT_DOMAIN__),
   //   value: 'magic-erase',
   //   icon: <SVGIcon name="eraser" width={24} height={24} />,
   // },
   // {
-  //   label: __('Variations', 'tutor'),
+  //   label: __('Variations', __TUTOR_TEXT_DOMAIN__),
   //   value: 'variations',
   //   icon: <SVGIcon name="reload" width={24} height={24} />,
   // },
   {
-    label: __('Download', 'tutor'),
+    label: __('Download', __TUTOR_TEXT_DOMAIN__),
     value: 'download',
     icon: <SVGIcon name="download" width={24} height={24} />,
   },
@@ -59,7 +59,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
           isActive: storeAIGeneratedImageMutation.isPending,
         })}
       >
-        <img src={src} alt={__('Generated Image', 'tutor')} />
+        <img src={src} alt={__('Generated Image', __TUTOR_TEXT_DOMAIN__)} />
         <div data-actions>
           <div css={styles.useButton}>
             <MagicButton
@@ -79,7 +79,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
               loading={storeAIGeneratedImageMutation.isPending}
             >
               <SVGIcon name="download" width={24} height={24} />
-              {__('Use This', 'tutor')}
+              {__('Use This', __TUTOR_TEXT_DOMAIN__)}
             </MagicButton>
           </div>
           <MagicButton variant="primary" size="icon" css={styles.threeDots} ref={ref} onClick={() => setIsOpen(true)}>

@@ -13,6 +13,7 @@ namespace TUTOR;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Migrations\Migration;
+use Tutor\TemplateImport\TemplateImportInit;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -508,6 +509,9 @@ final class Tutor extends Singleton {
 		$this->course_filter         = new Course_Filter();
 		$this->permalink             = new Permalink();
 
+		// Template import.
+		new TemplateImportInit();
+
 		// Integrations.
 		$this->woocommerce = new WooCommerce();
 		$this->edd         = new TutorEDD();
@@ -601,7 +605,10 @@ final class Tutor extends Singleton {
 		if ( ( ! get_option( 'tutor_wizard' ) ) && version_compare( TUTOR_VERSION, '1.5.6', '>' ) ) {
 			if ( ! wp_doing_ajax() ) {
 				update_option( 'tutor_wizard', 'active' );
-				wp_safe_redirect( admin_url( 'admin.php?page=tutor-setup' ) );
+				$is_wp_cli = defined( 'WP_CLI' ) && WP_CLI;
+				if ( ! $is_wp_cli ) {
+					wp_safe_redirect( admin_url( 'admin.php?page=tutor-setup' ) );
+				}
 				exit;
 			}
 		}

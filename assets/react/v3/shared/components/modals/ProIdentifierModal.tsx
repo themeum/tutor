@@ -28,24 +28,27 @@ interface ProIdentifierModalProps
 const defaults = {
   title: (
     <>
-      {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-      <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')}</span>
+      {__('Upgrade to Tutor LMS Pro today and experience the power of ', __TUTOR_TEXT_DOMAIN__)}
+      <span css={styleUtils.aiGradientText}>{__('AI Studio', __TUTOR_TEXT_DOMAIN__)}</span>
     </>
   ),
-  message: __('Upgrade your plan to access the AI feature', 'tutor'),
-  featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
+  message: __('Upgrade your plan to access the AI feature', __TUTOR_TEXT_DOMAIN__),
+  featuresTitle: __('Don’t miss out on this game-changing feature!', __TUTOR_TEXT_DOMAIN__),
   features: [
-    __('Generate a complete course outline in seconds!', 'tutor'),
-    __('Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.', 'tutor'),
-    __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
-    __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
+    __('Generate a complete course outline in seconds!', __TUTOR_TEXT_DOMAIN__),
+    __(
+      'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+      __TUTOR_TEXT_DOMAIN__,
+    ),
+    __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', __TUTOR_TEXT_DOMAIN__),
+    __('Say goodbye to typos and grammar errors with AI-powered copy editing.', __TUTOR_TEXT_DOMAIN__),
   ],
   footer: (
     <Button
       onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
       icon={<SVGIcon name="crown" width={24} height={24} />}
     >
-      {__('Get Tutor LMS Pro', 'tutor')}
+      {__('Get Tutor LMS Pro', __TUTOR_TEXT_DOMAIN__)}
     </Button>
   ),
 };
@@ -71,7 +74,7 @@ const ProIdentifierModal = ({
           <img
             css={styles.image}
             src={image}
-            alt={typeof title === 'string' ? title : __('Illustration', 'tutor')}
+            alt={typeof title === 'string' ? title : __('Illustration', __TUTOR_TEXT_DOMAIN__)}
             srcSet={image2x ? `${image} ${image2x} 2x` : undefined}
           />
         </Show>

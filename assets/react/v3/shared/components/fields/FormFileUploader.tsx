@@ -85,7 +85,7 @@ const FormFileUploader = ({
   fieldState,
   label,
   helpText,
-  buttonText = __('Upload Media', 'tutor'),
+  buttonText = __('Upload Media', __TUTOR_TEXT_DOMAIN__),
   selectMultiple = false,
   onChange,
   maxFileSize,
@@ -163,7 +163,7 @@ const FormFileUploader = ({
                             </div>
 
                             <div css={styles.attachmentCardSubtitle}>
-                              <span>{`${__('Size', 'tutor')}: ${file.size}`}</span>
+                              <span>{`${__('Size', __TUTOR_TEXT_DOMAIN__)}: ${file.size}`}</span>
                             </div>
                           </div>
                         </div>

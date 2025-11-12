@@ -566,6 +566,14 @@ class CheckoutController {
 		$billing_model   = new BillingModel();
 		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
+		$order_id        = Input::get( 'order_id', 0, Input::TYPE_INT );
+
+		if ( $order_id ) {
+			$order_data = OrderModel::get_valid_incomplete_order( $order_id, get_current_user_id(), true );
+			if ( ! $order_data || OrderModel::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
+				array_push( $errors, __( 'Invalid order', 'tutor' ) );
+			}
+		}
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
@@ -681,15 +689,28 @@ class CheckoutController {
 				}
 			}
 
-			$order_data = $this->order_ctrl->create_order(
-				$current_user_id,
-				$items,
-				OrderModel::PAYMENT_UNPAID,
-				$order_type,
-				$checkout_data->coupon_code,
-				$args,
-				false
-			);
+			if ( ! empty( $order_data ) ) {
+				$order_data = $this->order_ctrl->update_order(
+					$order_id,
+					$current_user_id,
+					$items,
+					OrderModel::PAYMENT_UNPAID,
+					$order_type,
+					$checkout_data->coupon_code,
+					$args,
+					true
+				);
+			} else {
+				$order_data = $this->order_ctrl->create_order(
+					$current_user_id,
+					$items,
+					OrderModel::PAYMENT_UNPAID,
+					$order_type,
+					$checkout_data->coupon_code,
+					$args,
+					false
+				);
+			}
 
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {

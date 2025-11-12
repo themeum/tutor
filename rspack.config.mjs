@@ -150,6 +150,7 @@ const createConfig = (env, options) => {
       new rspack.DefinePlugin({
         'process.env.MAKE_POT': JSON.stringify(!!isMakePot),
         'process.env.NODE_ENV': JSON.stringify(mode),
+        __TUTOR_TEXT_DOMAIN__: JSON.stringify(process.env.TEXT_DOMAIN || 'tutor'),
       }),
       process.env.RSDOCTOR && new RsdoctorRspackPlugin({}),
     ].filter(Boolean),
@@ -158,7 +159,7 @@ const createConfig = (env, options) => {
       'react-dom': 'ReactDOM',
       '@wordpress/i18n': 'wp.i18n',
     },
-    devtool: isDevelopment ? 'eval-source-map' : false,
+    devtool: isDevelopment ? 'source-map' : false,
     stats: {
       preset: 'errors-warnings',
       colors: true,
@@ -288,14 +289,14 @@ const isScssEntry = (entry) => {
 const createOutputFileName = (pathData) => {
   const entryName = pathData.chunk.name;
   if (isScssEntry(entryName)) {
-    return '';
+    return 'css/ignore/[name].css.ignore';
   }
   return `js/[name].js`;
 };
 
 const createChunkFilename = (entryPath) => {
   if (isScssEntry(entryPath)) {
-    return '';
+    return `css/ignore/[name].css.ignore?ver=${version}`;
   }
   return `js/lazy-chunks/[name].js?ver=${version}`;
 };

@@ -67,11 +67,13 @@ export default function SubscriptionModal({
         title={
           isFormDirty
             ? CURRENT_VIEWPORT.isAboveMobile
-              ? __('Unsaved Changes', 'tutor')
+              ? __('Unsaved Changes', __TUTOR_TEXT_DOMAIN__)
               : ''
-            : __('Subscription Plan', 'tutor')
+            : __('Subscription Plan', __TUTOR_TEXT_DOMAIN__)
         }
-        subtitle={subscription.isSaved ? __('Update plan', 'tutor') : __('Create plan', 'tutor')}
+        subtitle={
+          subscription.isSaved ? __('Update plan', __TUTOR_TEXT_DOMAIN__) : __('Create plan', __TUTOR_TEXT_DOMAIN__)
+        }
         maxWidth={1218}
         actions={
           isFormDirty && (
@@ -81,7 +83,7 @@ export default function SubscriptionModal({
                 size="small"
                 onClick={() => (isSaved ? form.reset() : closeModal({ action: 'CLOSE' }))}
               >
-                {isSaved ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+                {isSaved ? __('Discard Changes', __TUTOR_TEXT_DOMAIN__) : __('Cancel', __TUTOR_TEXT_DOMAIN__)}
               </Button>
               <Button
                 data-cy="save-subscription"
@@ -90,7 +92,7 @@ export default function SubscriptionModal({
                 size="small"
                 onClick={form.handleSubmit(handleSaveSubscription)}
               >
-                {isSaved ? __('Update', 'tutor') : __('Save', 'tutor')}
+                {isSaved ? __('Update', __TUTOR_TEXT_DOMAIN__) : __('Save', __TUTOR_TEXT_DOMAIN__)}
               </Button>
             </>
           )
