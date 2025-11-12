@@ -79,7 +79,7 @@
     &-item {
       width: 100%;
       @include tutor-button-reset();
-      @include tutor-flex();
+      @include tutor-flex(row, center, flex-start);
       gap: $tutor-spacing-4;
       padding: $tutor-spacing-4 $tutor-spacing-5;
 

@@ -1,3 +1,4 @@
+import collapse from '@alpinejs/collapse';
 import focus from '@alpinejs/focus';
 import Alpine from 'alpinejs';
 
@@ -10,6 +11,7 @@ import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
 import { popoverMeta } from '@Core/ts/components/popover';
+import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
@@ -21,6 +23,7 @@ import collapse from '@alpinejs/collapse';
 
 Alpine.plugin(collapse);
 Alpine.plugin(focus);
+Alpine.plugin(collapse);
 
 const initializePlugin = () => {
   TutorComponentRegistry.registerAll({
@@ -36,6 +39,7 @@ const initializePlugin = () => {
       formMeta,
       selectDropdownMeta,
       stepperDropdownMeta,
+      previewTriggerMeta,
     ],
     services: [formServiceMeta, modalServiceMeta],
   });
