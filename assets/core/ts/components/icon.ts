@@ -15,14 +15,16 @@ const createSvg = ({
   width,
   height,
   viewBox,
+  fill,
   content = '',
 }: {
   width: number;
   height: number;
   viewBox?: string;
+  fill?: string;
   content?: string;
 }) =>
-  `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox || '0 0 ' + width + ' ' + height}">${content}</svg>`;
+  `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox || '0 0 ' + width + ' ' + height}" fill="${fill}">${content}</svg>`;
 
 async function fetchSVG(name: string, width: number, height: number, from: 'php' | 'ts' = 'ts') {
   if (iconCache.has(name)) {
@@ -41,9 +43,10 @@ async function fetchSVG(name: string, width: number, height: number, from: 'php'
     const doc = parser.parseFromString(svgText, 'image/svg+xml');
     const svgEl = doc.querySelector('svg');
     const viewBox = svgEl?.getAttribute('viewBox') || defaultViewBox;
+    const fill = svgEl?.getAttribute('fill') || 'none';
     const content = svgEl?.innerHTML || '';
 
-    const svgMarkup = createSvg({ width, height, viewBox, content });
+    const svgMarkup = createSvg({ width, height, viewBox, fill, content });
 
     iconCache.set(fileName, svgMarkup);
     return svgMarkup;
