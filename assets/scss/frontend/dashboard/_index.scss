@@ -11,6 +11,8 @@
 @forward 'components/page_nav';
 @forward "stat-card";
 @forward "progress-card";
+@forward "wishlist-card";
+@forward "star-rating";
 
 // Page components
 @forward 'overview';
@@ -22,3 +24,4 @@
 @forward 'settings';
 @forward 'profile';
 @forward 'enrollment-history';
+@forward 'wishlist';

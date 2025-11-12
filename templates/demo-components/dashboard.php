@@ -29,6 +29,7 @@ use TUTOR\Input;
 					'notes',
 					'discussions',
 					'calendar',
+					'wishlist',
 				);
 
 				$allowed_pages = (array) apply_filters( 'tutor_demo_dashboard_allowed_pages', $allowed_pages );
