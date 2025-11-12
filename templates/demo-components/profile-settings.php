@@ -65,7 +65,7 @@ $tabs_data = array(
 		x-data='tutorTabs({
 			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
 			orientation: "vertical",
-			defaultTab: "account",
+			defaultTab: "notifications",
 			urlParams: {
 				enabled: false,
 				paramName: "tab",
