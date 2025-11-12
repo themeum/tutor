@@ -29,7 +29,7 @@ async function fetchSVG(name: string, width: number, height: number, from: 'php'
     return iconCache.get(name)!;
   }
 
-  const fileName = from === 'php' ? name : name.trim().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+  const fileName = from === 'php' ? name : name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
   const url = `${baseUrl}assets/icons/${fileName}.svg`;
   const defaultViewBox = `0 0 ${width} ${height}`;
 
