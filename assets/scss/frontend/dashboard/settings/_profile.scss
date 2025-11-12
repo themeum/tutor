@@ -4,7 +4,7 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-.tutor-account-settings-section {
+.tutor-profile-settings-section {
 	background: $tutor-surface-base;
 	display: flex;
 	flex-direction: column;
@@ -12,23 +12,67 @@
 	margin: 0 auto;
 	padding-bottom: $tutor-spacing-15;
 }
-.tutor-account-settings-container {
+
+.tutor-profile-settings-container {
 	width: 100%;
 	max-width: 696px;
 	margin: 0 auto;
 }
-.tutor-account-settings-header {
+
+.tutor-profile-settings-header {
 	border-bottom: 1px solid $tutor-border-idle;
 	padding: $tutor-spacing-5;
-	.tutor-account-settings-back-btn {
-		padding: 6px 6px;
+	.tutor-profile-settings-back-btn {
+		padding: $tutor-spacing-3 $tutor-spacing-3;
 	}
 }
-.tutor-account-settings-tab {
-	// max-width: 200px;
+
+.tutor-profile-settings-tab {
+	min-width: 188px !important;
 	padding: $tutor-spacing-3;
 	border: 1px solid $tutor-border-idle;
 	padding: $tutor-spacing-5;
 	border-radius: $tutor-radius-2xl;
 	background-color: $tutor-gray-1;
+	button {
+		font-weight: $tutor-font-weight-regular;
+		height: unset;
+		padding: $tutor-spacing-4 $tutor-spacing-7;
+	}
+}
+
+
+// profile notification section
+.tutor-profile-notification {
+	.tutor-profile-notification-card {
+		background-color: var(--tutor-surface-l1);
+		border: 1px solid var(--tutor-border-idle);
+		overflow: hidden;
+	}
+
+	.tutor-profile-notification-content {
+		border-top: 1px solid $tutor-border-idle;
+		.tutor-input-field {
+			width: max-content;
+		}
+	}
+
+	.tutor-profile-notification-toggle {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		svg {
+			path {
+				transform: translate(0px, 2px);
+			}
+		}
+	}
+
+	.tutor-input-field {
+		margin-bottom: 0px;
+	}
+
+	.tutor-profile-notification-content {
+		border-top: 1px solid $tutor-border-idle;
+	}
 }

@@ -17,7 +17,9 @@ import { tabsMeta } from '@Core/ts/components/tabs';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
+import collapse from '@alpinejs/collapse';
 
+Alpine.plugin(collapse);
 Alpine.plugin(focus);
 
 const initializePlugin = () => {

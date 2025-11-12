@@ -10,20 +10,86 @@
 
 use TUTOR\Icon;
 ?>
-<div>
-	<h3 class="tutor-mb-4">Notifications</h3>
-	<div class="tutor-input-field">
-		<div class="tutor-input-wrapper">
-			<input type="checkbox" id="name" placeholder="Enter your full name" class="tutor-checkbox">
-			<label for="name" class="tutor-label tutor-label-required">Are you small(sm)?</label>
+<div class="tutor-profile-notification">
+	<h3 class="tutor-mb-4 tutor-mt-4 tutor-md-mt-1">Notifications</h3>
+	<div class="tutor-profile-notification-card tutor-card--rounded-2xl tutor-mt-5" x-data="{ expanded: false }">
+		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-gap-8 tutor-p-6">
+			<div class="tutor-flex tutor-items-center tutor-gap-5">
+				<?php tutor_utils()->render_svg_icon( Icon::NOTIFICATION_2, 20, 20 ); ?>
+				<div>
+					<div class="tutor-text-small tutor-font-medium tutor-text-primary">Email Notifications</div>
+					<div class="tutor-text-small tutor-text-secondary">Configure custom notifications settings for Email.</div>
+				</div>
+			</div>
+			<div class="tutor-flex tutor-gap-4">
+				<div class="tutor-profile-notification-toggle tutor-text-subdued" @click="expanded = ! expanded">
+					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP, 20, 20 ); ?>
+				</div>
+				<div class="tutor-input-field">
+					<input 
+						type="checkbox"
+						id="switch-sm"
+						name="switch"
+						class="tutor-switch"
+						checked
+					>
+				</div>
+			</div>
+		</div>
+		<div class="tutor-profile-notification-content tutor-p-6" x-show="expanded" x-collapse.duration.200ms>
+			<span class="tutor-text-small tutor-text-subdued">General</span>
+			<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-pt-4">
+				<div class="tutor-input-field">
+					<input type="checkbox" id="name" placeholder="Enter your full name" class="tutor-checkbox">
+				</div>
+				<span class="tutor-text-small tutor-text-primary">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</span>
+			</div>
+			<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-pt-4">
+				<div class="tutor-input-field">
+					<input type="checkbox" id="name" placeholder="Enter your full name" class="tutor-checkbox">
+				</div>
+				<span class="tutor-text-small tutor-text-primary">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</span>
+			</div>
 		</div>
 	</div>
-	<div class="tutor-card tutor-card--rounded-2xl">
-		<h4 class="tutor-mt-0 tutor-mb-4">Rounded 2XL</h4>
-		<p class="tutor-mb-0 tutor-text-small">Extra large radius</p>
-	</div>
-	<div class="tutor-card tutor-card--rounded-2xl tutor-mt-5">
-		<h4 class="tutor-mt-0 tutor-mb-4">Rounded 2XL</h4>
-		<p class="tutor-mb-0 tutor-text-small">Extra large radius</p>
+	<div class="tutor-profile-notification-card tutor-card--rounded-2xl tutor-mt-5" x-data="{ expanded: false }">
+		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-gap-8 tutor-p-6">
+			<div class="tutor-flex tutor-items-center tutor-gap-5">
+				<?php tutor_utils()->render_svg_icon( Icon::NOTIFICATION_2, 20, 20 ); ?>
+				<div>
+					<div class="tutor-text-small tutor-font-medium tutor-text-primary">Email Notifications</div>
+					<div class="tutor-text-small tutor-text-secondary">Configure custom notifications settings for Email.</div>
+				</div>
+			</div>
+			<div class="tutor-flex tutor-gap-4">
+				<div class="tutor-profile-notification-toggle tutor-text-subdued" @click="expanded = ! expanded">
+					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP, 20, 20 ); ?>
+				</div>
+				<div class="tutor-input-field">
+					<input 
+						type="checkbox"
+						id="switch-sm"
+						name="switch"
+						class="tutor-switch"
+						checked
+					>
+				</div>
+			</div>
+		</div>
+		<div class="tutor-profile-notification-content tutor-p-6" x-show="expanded" x-collapse.duration.200ms>
+			<span class="tutor-text-small tutor-text-subdued">General</span>
+			<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-pt-4">
+				<div class="tutor-input-field">
+					<input type="checkbox" id="name" placeholder="Enter your full name" class="tutor-checkbox">
+				</div>
+				<span class="tutor-text-small tutor-text-primary">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</span>
+			</div>
+			<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-pt-4">
+				<div class="tutor-input-field">
+					<input type="checkbox" id="name" placeholder="Enter your full name" class="tutor-checkbox">
+				</div>
+				<span class="tutor-text-small tutor-text-primary">Lorem, ipsum dolor sit amet consectetur adipisicing elit.</span>
+			</div>
+		</div>
 	</div>
 </div>

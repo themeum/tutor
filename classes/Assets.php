@@ -270,12 +270,12 @@ class Assets {
 			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
 
 			// Enqueue dashboard styles.
-			if ( 'dashboard' === $subpage || 'profile-settings' === $subpage ) {
+			// if ( 'dashboard' === $subpage || 'profile-settings' === $subpage ) {
 				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
 				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
 
 				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), filemtime( $dashboard_css_path ), 'all' );
-			}
+			// }
 
 			// Enqueue learning area styles.
 			if ( 'learning-area' === $subpage ) {
