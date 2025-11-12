@@ -39,6 +39,7 @@ use TUTOR\Input;
 
 	$subpages = array(
 		'dashboard'     => 'Dashboard',
+		'user-profile'  => 'User Profile',
 		'learning-area' => 'Learning Area',
 	);
 

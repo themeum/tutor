@@ -270,7 +270,7 @@ class Assets {
 			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
 
 			// Enqueue dashboard styles.
-			if ( 'dashboard' === $subpage ) {
+			if ( 'dashboard' === $subpage || 'user-profile' === $subpage ) {
 				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
 				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
 
