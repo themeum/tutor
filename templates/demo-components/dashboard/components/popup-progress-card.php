@@ -12,8 +12,7 @@
 use TUTOR\Icon;
 
 // Default values.
-$variation   = isset( $variation ) ? $variation : 'enrolled';
-$card_title  = isset( $card_title ) ? $card_title : esc_html__( 'Fantastic!', 'tutor' );
+$card_title  = isset( $card_title ) ? $card_title : esc_html__( 'Amazing!', 'tutor' );
 $user_name   = isset( $user_name ) ? $user_name : '';
 $subtitle    = isset( $subtitle ) ? $subtitle : '';
 $value       = isset( $value ) ? $value : '';
@@ -21,7 +20,7 @@ $button_text = isset( $button_text ) ? $button_text : esc_html__( "I'm Happy", '
 $breakdown   = isset( $breakdown ) ? $breakdown : '';
 
 ?>
-<div class="tutor-popup-progress-card tutor-popup-progress-card-<?php echo esc_attr( $variation ); ?>">
+<div class="tutor-popup-progress-card">
 	<div class="tutor-popup-progress-card-icon">
 		<?php tutor_utils()->render_svg_icon( Icon::CONFETTI, 32, 32 ); ?>
 	</div>

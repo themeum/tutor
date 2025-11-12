@@ -50,10 +50,12 @@
 		border-radius: $tutor-radius-lg;
 		padding: $tutor-spacing-6 0;
 		margin-bottom: $tutor-spacing-6;
+		background: $tutor-warning-50;
 	}
 
 	&-value-text {
 		@include tutor-typography('h2', 'bold', 'primary', 'heading');
+		color: $tutor-text-exception4;
 	}
 
 	&-breakdown {
@@ -68,48 +70,6 @@
 
 	&-footer {
 		width: 100%;
-	}
-
-	// Color variations - matching stat-card variations
-    //TODO: BG color needs to be updated when the design is updated
-	&-enrolled {
-		.tutor-popup-progress-card-value {
-			background: $tutor-tab-l3;
-
-			.tutor-popup-progress-card-value-text {
-				color: $tutor-text-brand;
-			}
-		}
-	}
-
-	&-active {
-		.tutor-popup-progress-card-value {
-			background: $tutor-tab-l3;
-
-			.tutor-popup-progress-card-value-text {
-				color: $tutor-exception-1;
-			}
-		}
-	}
-
-	&-completed {
-		.tutor-popup-progress-card-value {
-			background: $tutor-success-50;
-
-			.tutor-popup-progress-card-value-text {
-				color: $tutor-text-success;
-			}
-		}
-	}
-
-	&-time-spent {
-		.tutor-popup-progress-card-value {
-			background: $tutor-warning-50;
-
-			.tutor-popup-progress-card-value-text {
-				color: $tutor-text-exception4;
-			}
-		}
 	}
 }
 
