@@ -303,6 +303,7 @@ final class Icon {
 	const SETTINGS_TAX               = 'settings-tax';
 	const SHARE                      = 'share';
 	const SHORTCODE                  = 'shortcode';
+	const SIGNATURE_UPLOAD           = 'signature-upload';
 	const SORT                       = 'sort';
 	const SORT_A_S_C                 = 'sort-a-s-c';
 	const SORT_BY                    = 'sort-by';

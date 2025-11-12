@@ -287,6 +287,7 @@ export const icons = [
   'settingsTax',
   'share',
   'shortcode',
+  'signatureUpload',
   'sort',
   'sortASC',
   'sortBy',
