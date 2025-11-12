@@ -83,7 +83,7 @@ $tabs_data = array(
 		<div x-data='tutorTabs({
 				tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
 				orientation: "vertical",
-				defaultTab: "lesson",
+				defaultTab: "quizzes",
 				urlParams: {
 					enabled: false,
 					paramName: "tab",

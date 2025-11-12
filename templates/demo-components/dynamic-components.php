@@ -13,6 +13,7 @@ use Tutor\Components\Avatar;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Progress;
+use Tutor\Components\Tabs;
 
 ?>
 <!-- button component  -->
@@ -123,7 +124,73 @@ use Tutor\Components\Progress;
 		)
 	)->render();
 
-    echo Progress::make()->type( 'circle' )->value( 75 )->render();
+	echo Progress::make()->type( 'circle' )->value( 75 )->render();
+	?>
+	</div>
+</div>
+<div class="tabs-wrapper tutor-mb-12">
+	<h2>Tabs</h2>
+	<pre><code>
+	&lt;?php
+	$tabs_data = array(
+		array(
+			'id'      => 'lesson',
+			'label'   => 'Lessons',
+			'icon'    => 'book',
+			'content' => '<p>This is lesson content</p>',
+		),
+		array(
+			'id'      => 'assignments',
+			'label'   => 'Assignments',
+			'icon'    => 'file',
+			'content' => '<p>This is assignments content</p>',
+		),
+		array(
+			'id'      => 'quizzes',
+			'label'   => 'Quizzes',
+			'icon'    => 'check',
+			'content' => '<p>This is quizzes content</p>',
+		),
+	);
+
+	echo Tabs::make()
+	->tabs( $tabs_data )
+	->default_tab( 'quizzes' )
+	->orientation( 'horizontal' )
+	->url_params( array( 'enabled' => true ) )
+	->render();
+	?&gt;
+	</code></pre>
+	<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
+	<?php
+	$tabs_data = array(
+		array(
+			'id'      => 'lesson',
+			'label'   => 'Lessons',
+			'icon'    => 'book',
+			'content' => '<p>This is lesson content</p>',
+		),
+		array(
+			'id'      => 'assignments',
+			'label'   => 'Assignments',
+			'icon'    => 'file',
+			'content' => '<p>This is assignments content</p>',
+		),
+		array(
+			'id'      => 'quizzes',
+			'label'   => 'Quizzes',
+			'icon'    => 'check',
+			'content' => '<p>This is quizzes content</p>',
+		),
+	);
+
+	echo Tabs::make()
+	->tabs( $tabs_data )
+	->default_tab( 'quizzes' )
+	->orientation( 'horizontal' )
+	->url_params( array( 'enabled' => true ) )
+	->render();
+
 	?>
 	</div>
 </div>
