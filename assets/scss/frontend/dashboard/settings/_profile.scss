@@ -67,6 +67,7 @@
 			}
 		}
 		&.is-expanded svg {
+			color: $tutor-text-primary;
 			transform: rotate(90deg);
 		}
 	}
