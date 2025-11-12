@@ -98,7 +98,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 *
 	 * @param string $size Avatar size (xs, sm, md, lg, xl).
 	 *
-	 * @return self
+	 * @return $this
 	 */
 	public function size( string $size ): self {
 		$this->size = sanitize_html_class( $size );
@@ -112,7 +112,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 *
 	 * @param string $type Avatar type.
 	 *
-	 * @return self
+	 * @return $this
 	 */
 	public function type( string $type ): self {
 		$this->type = in_array( $type, array( 'image', 'initials' ), true ) ? $type : 'image';
@@ -126,7 +126,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 *
 	 * @param string $shape Avatar shape.
 	 *
-	 * @return self
+	 * @return $this
 	 */
 	public function shape( string $shape = '' ): self {
 		$this->shape = $shape;
@@ -139,7 +139,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 * @since 4.0.0
 	 *
 	 * @param string $src Image URL.
-	 * @return self
+	 * @return $this
 	 */
 	public function src( string $src ): self {
 		$this->src = esc_url_raw( $src );
@@ -152,7 +152,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 * @since 4.0.0
 	 *
 	 * @param string $initials User initials.
-	 * @return self
+	 * @return $this
 	 */
 	public function initials( string $initials ): self {
 		$this->initials = strtoupper( sanitize_text_field( $initials ) );
@@ -165,7 +165,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 * @since 4.0.0
 	 *
 	 * @param bool $bordered Whether avatar has border.
-	 * @return self
+	 * @return $this
 	 */
 	public function bordered( bool $bordered = true ): self {
 		$this->bordered = $bordered;

@@ -39,6 +39,7 @@ class Button extends BaseComponent {
 	 * Button label text.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $label = '';
@@ -47,6 +48,7 @@ class Button extends BaseComponent {
 	 * Button size (small|medium|large).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $size = 'medium';
@@ -55,6 +57,7 @@ class Button extends BaseComponent {
 	 * Button variant style (primary|secondary|success|danger|link).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $variant = 'primary';
@@ -63,6 +66,7 @@ class Button extends BaseComponent {
 	 * Button HTML tag (button|a).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $tag = 'button';
@@ -71,6 +75,7 @@ class Button extends BaseComponent {
 	 * Button attributes.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var array
 	 */
 	protected $attributes = array();
@@ -79,6 +84,7 @@ class Button extends BaseComponent {
 	 * The SVG icon markup.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $icon = '';
@@ -87,6 +93,7 @@ class Button extends BaseComponent {
 	 * The icon position relative to label. Accepts 'left' or 'right'.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $icon_position = 'left';
@@ -95,6 +102,7 @@ class Button extends BaseComponent {
 	 * Whether button is disabled.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var bool
 	 */
 	protected $disabled = false;
@@ -105,6 +113,7 @@ class Button extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $label Button label text.
+	 *
 	 * @return $this
 	 */
 	public function label( $label ) {
@@ -118,6 +127,7 @@ class Button extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $size Button size (small|medium|large).
+	 *
 	 * @return $this
 	 */
 	public function size( $size ) {
@@ -134,6 +144,7 @@ class Button extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $variant Button variant (primary|secondary|success|danger|link).
+	 *
 	 * @return $this
 	 */
 	public function variant( $variant ) {
@@ -148,6 +159,7 @@ class Button extends BaseComponent {
 	 *
 	 * @param string $key   Attribute name.
 	 * @param string $value Attribute value.
+	 *
 	 * @return $this
 	 */
 	public function attr( $key, $value ) {
@@ -162,7 +174,8 @@ class Button extends BaseComponent {
 	 *
 	 * @param string $svg SVG markup (already escaped and sanitized).
 	 * @param string $position Optional. Icon position: 'left' or 'right'.
-	 * @return self
+	 *
+	 * @return $this
 	 */
 	public function icon( string $svg, string $position = 'left' ): self {
 		$this->icon          = $svg;

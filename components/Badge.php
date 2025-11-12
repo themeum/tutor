@@ -43,6 +43,7 @@ class Badge extends BaseComponent {
 	 * Badge label text.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $label = '';
@@ -51,6 +52,7 @@ class Badge extends BaseComponent {
 	 * Badge variant style (primary|pending|completed|cancelled|secondary|exception).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $variant = 'primary';
@@ -59,6 +61,7 @@ class Badge extends BaseComponent {
 	 * Whether badge has circle style.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var bool
 	 */
 	protected $circle = false;
@@ -75,6 +78,7 @@ class Badge extends BaseComponent {
 	 * The SVG icon markup.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $icon = '';
@@ -83,6 +87,7 @@ class Badge extends BaseComponent {
 	 * Prefix content (e.g., subdued text before label).
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $prefix = '';
@@ -91,6 +96,7 @@ class Badge extends BaseComponent {
 	 * Additional CSS classes.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var array
 	 */
 	protected $extra_classes = array();
@@ -101,6 +107,7 @@ class Badge extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $label Badge label text.
+	 *
 	 * @return $this
 	 */
 	public function label( $label ) {
@@ -114,6 +121,7 @@ class Badge extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $variant Badge variant (primary|pending|completed|cancelled|secondary|exception).
+	 *
 	 * @return $this
 	 */
 	public function variant( $variant ) {
@@ -140,6 +148,7 @@ class Badge extends BaseComponent {
 	 *
 	 * @param string $key   Attribute name.
 	 * @param string $value Attribute value.
+	 *
 	 * @return $this
 	 */
 	public function attr( $key, $value ) {
@@ -153,6 +162,7 @@ class Badge extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $svg SVG markup (already escaped and sanitized).
+	 *
 	 * @return $this
 	 */
 	public function icon( $svg ) {
@@ -191,17 +201,10 @@ class Badge extends BaseComponent {
 			);
 		}
 
-		// Build prefix HTML if exists.
-		$prefix_html = '';
-		if ( ! empty( $this->prefix ) ) {
-			$prefix_html = $this->prefix . ' ';
-		}
-
 		// Build content.
 		$content = sprintf(
-			'%s%s%s',
+			'%s%s',
 			$icon_html,
-			$prefix_html,
 			esc_html( $this->label )
 		);
 
