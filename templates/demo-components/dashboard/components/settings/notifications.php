@@ -22,7 +22,7 @@ use TUTOR\Icon;
 				</div>
 			</div>
 			<div class="tutor-flex tutor-gap-4">
-				<div class="tutor-profile-notification-toggle tutor-text-subdued" @click="expanded = ! expanded">
+				<div class="tutor-profile-notification-toggle tutor-text-subdued" :class="{ 'is-expanded': expanded }" @click="expanded = ! expanded">
 					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP, 20, 20 ); ?>
 				</div>
 				<div class="tutor-input-field">
@@ -62,7 +62,7 @@ use TUTOR\Icon;
 				</div>
 			</div>
 			<div class="tutor-flex tutor-gap-4">
-				<div class="tutor-profile-notification-toggle tutor-text-subdued" @click="expanded = ! expanded">
+				<div class="tutor-profile-notification-toggle tutor-text-subdued" :class="{ 'is-expanded': expanded }" @click="expanded = ! expanded">
 					<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP, 20, 20 ); ?>
 				</div>
 				<div class="tutor-input-field">

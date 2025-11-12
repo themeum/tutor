@@ -2,14 +2,12 @@
 // Student account settings and preferences
 
 @use '@Core/scss/tokens' as *;
-@use '@Core/scss/mixins' as *;
 
 .tutor-profile-settings-section {
 	background: $tutor-surface-base;
 	display: flex;
 	flex-direction: column;
-	gap: 32px;
-	margin: 0 auto;
+	gap: $tutor-spacing-9;
 	padding-bottom: $tutor-spacing-15;
 }
 
@@ -40,12 +38,11 @@
 	}
 }
 
-
 // profile notification section
 .tutor-profile-notification {
 	.tutor-profile-notification-card {
-		background-color: var(--tutor-surface-l1);
-		border: 1px solid var(--tutor-border-idle);
+		background-color: $tutor-surface-l1;
+		border: 1px solid $tutor-border-idle;
 		overflow: hidden;
 	}
 
@@ -64,9 +61,13 @@
 			color: $tutor-text-primary;
 		}
 		svg {
+			transition: transform 0.2s ease;
 			path {
 				transform: translate(0px, 2px);
 			}
+		}
+		&.is-expanded svg {
+			transform: rotate(90deg);
 		}
 	}
 
