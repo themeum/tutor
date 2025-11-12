@@ -35,19 +35,19 @@ const createSwcLoaderOptions = (isDevelopment) => ({
         importSource: '@emotion/react',
       },
     },
-    // experimental: {
-    //   plugins: [
-    //     [
-    //       '@swc/plugin-emotion',
-    //       {
-    //         sourceMap: isDevelopment,
-    //         autoLabel: 'dev-only',
-    //         labelFormat: '[local]',
-    //         cssPropOptimization: true,
-    //       },
-    //     ],
-    //   ],
-    // },
+    experimental: {
+      plugins: [
+        [
+          '@swc/plugin-emotion',
+          {
+            sourceMap: isDevelopment,
+            autoLabel: 'dev-only',
+            labelFormat: '[local]',
+            cssPropOptimization: true,
+          },
+        ],
+      ],
+    },
   },
   env: {
     targets: 'Chrome >= 58, Firefox >= 54, Safari >= 10.1, Edge >= 16',

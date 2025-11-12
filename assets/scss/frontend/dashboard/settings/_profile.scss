@@ -26,7 +26,6 @@
 }
 
 .tutor-profile-settings-tab {
-	padding: $tutor-spacing-3;
 	border: 1px solid $tutor-border-idle;
 	padding: $tutor-spacing-5;
 	border-radius: $tutor-radius-2xl;
@@ -48,9 +47,6 @@
 
 	.tutor-profile-notification-content {
 		border-top: 1px solid $tutor-border-idle;
-		.tutor-input-field {
-			width: max-content;
-		}
 	}
 
 	.tutor-profile-notification-toggle {
