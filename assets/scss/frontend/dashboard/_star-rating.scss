@@ -1,0 +1,7 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-ratings-average{
+    @include tutor-typography('tiny', 'medium', 'heading');
+    color: $tutor-warning-400;
+}
