@@ -12,6 +12,7 @@
   }
 
   &-setting-item {
+    @include tutor-flex-between;
     margin-bottom: $tutor-spacing-6;
 
     &:last-child {
@@ -19,19 +20,31 @@
     }
 
     .tutor-preferences-setting-content {
+      @include tutor-flex(row, center, flex-start);
       gap: $tutor-spacing-4;
+
+      .tutor-preferences-setting-icon {
+        @include tutor-flex-center;
+      }
 
       .tutor-preferences-setting-title {
         @include tutor-typography('small', 'medium', 'primary');
+        flex: 1 1 0%;
       }
 
       .tutor-preferences-setting-text {
+        @include tutor-flex-column;
         gap: $tutor-spacing-1;
 
         .tutor-preferences-setting-subtitle {
           @include tutor-typography('small', 'regular', 'subdued');
         }
       }
+    }
+
+    .tutor-preferences-setting-action {
+      @include tutor-flex(row, center, flex-end);
+      flex-shrink: 0;
     }
   }
 }

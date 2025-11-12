@@ -51,14 +51,14 @@ $theme_options = array(
 <!-- Course Content Section -->
 <h5 class="tutor-preferences-section-header tutor-color-black"><?php esc_html_e( 'Course Content', 'tutor' ); ?></h5>
 <div class="tutor-card tutor-card--rounded-2xl tutor-mb-7">
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::PLAY_LINE, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Auto-play next lecture', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Auto-play next lecture', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -73,14 +73,14 @@ $theme_options = array(
 		</div>
 	</div>
 
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::WIFI, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Download over Wi-Fi only', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Download over Wi-Fi only', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -95,29 +95,29 @@ $theme_options = array(
 		</div>
 	</div>
 
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2, 20, 20 ); ?>
 			</div>
-			<div class="tutor-preferences-setting-text tutor-flex tutor-flex-col">
+			<div class="tutor-preferences-setting-text">
 				<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Downloads', 'tutor' ); ?></span>
 				<span class="tutor-preferences-setting-subtitle"><?php esc_html_e( 'Manage all of your offline content', 'tutor' ); ?></span>
 			</div>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT, 20, 20 ); ?>
 		</div>
 	</div>
 
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::VIDEO_QUALITY, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Video Quality', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Video Quality', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<?php
 			tutor_load_template(
 				'core-components.stepper-dropdown',
@@ -136,14 +136,14 @@ $theme_options = array(
 <!-- Lesson Experience Section -->
 <h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Lesson experience', 'tutor' ); ?></h5>
 <div class="tutor-card tutor-card--rounded-2xl tutor-mb-6">
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::MUSIC, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Sound effects', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Sound effects', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -158,14 +158,14 @@ $theme_options = array(
 		</div>
 	</div>
 
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::ANIMATION, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Animations', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Animations', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -184,14 +184,14 @@ $theme_options = array(
 <!-- Appearance Section -->
 <h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Appearance', 'tutor' ); ?></h5>
 <div class="tutor-card tutor-card--rounded-2xl tutor-mb-6">
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::LIGHT, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Theme', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Theme', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<?php
 			tutor_load_template(
 				'core-components.stepper-dropdown',
@@ -210,14 +210,14 @@ $theme_options = array(
 <!-- Accessibility Section -->
 <h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Accessibility', 'tutor' ); ?></h5>
 <div class="tutor-card tutor-card--rounded-2xl tutor-mb-6">
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::CONTRAST, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'High Contrast Mode', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'High Contrast Mode', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
@@ -232,14 +232,14 @@ $theme_options = array(
 		</div>
 	</div>
 
-	<div class="tutor-preferences-setting-item tutor-flex tutor-flex-between">
-		<div class="tutor-preferences-setting-content tutor-flex tutor-flex-row tutor-items-center tutor-justify-start">
-			<div class="tutor-preferences-setting-icon tutor-flex-center">
+	<div class="tutor-preferences-setting-item">
+		<div class="tutor-preferences-setting-content">
+			<div class="tutor-preferences-setting-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::FONT, 20, 20 ); ?>
 			</div>
-			<span class="tutor-preferences-setting-title tutor-flex-1"><?php esc_html_e( 'Font size', 'tutor' ); ?></span>
+			<span class="tutor-preferences-setting-title"><?php esc_html_e( 'Font size', 'tutor' ); ?></span>
 		</div>
-		<div class="tutor-flex tutor-flex-row tutor-items-center tutor-justify-end tutor-shrink-0">
+		<div class="tutor-preferences-setting-action">
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<input 
