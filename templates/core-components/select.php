@@ -226,7 +226,7 @@ $props_json = htmlspecialchars( wp_json_encode( $component_props ), ENT_QUOTES, 
 		<template x-if="searchable">
 			<div class="tutor-select-search">
 				<span class="tutor-select-search-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::SEARCH_2, 16, 16 ); ?>
+					<?php tutor_utils()->render_svg_icon( Icon::SEARCH_2, 20, 20 ); ?>
 				</span>
 				<input
 					type="text"

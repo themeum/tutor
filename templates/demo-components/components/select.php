@@ -58,25 +58,25 @@ $categories = array(
 	array(
 		'label'       => 'Development',
 		'value'       => 'dev',
-		'icon'        => Icon::ALARM,
+		'icon'        => Icon::DELETE_2,
 		'description' => 'Web & Mobile Development',
 	),
 	array(
 		'label'       => 'Design',
 		'value'       => 'design',
-		'icon'        => Icon::DOC,
+		'icon'        => Icon::BOOK_2,
 		'description' => 'UI/UX & Graphic Design',
 	),
 	array(
 		'label'       => 'Marketing',
 		'value'       => 'marketing',
-		'icon'        => Icon::DELETE,
+		'icon'        => Icon::DELETE_2,
 		'description' => 'Digital Marketing',
 	),
 	array(
 		'label'       => 'Business',
 		'value'       => 'business',
-		'icon'        => Icon::DOCUMENT,
+		'icon'        => Icon::NOTIFICATION_2,
 		'description' => 'Business & Management',
 	),
 );
@@ -129,7 +129,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 ?>
 
 <section class="tutor-bg-white tutor-py-6 tutor-px-8 tutor-rounded-lg tutor-shadow-sm">
-	<div class="tutor-p-6 tutor-space-y-8">
+	<div class="tutor-p-6 tutor-flex tutor-flex-column tutor-gap-8">
 		<div>
 			<h1 class="tutor-text-2xl tutor-font-bold tutor-mb-2">
 				<?php esc_html_e( 'Advanced Select Component', 'tutor' ); ?>
@@ -140,7 +140,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- Basic Example -->
-		<div class="tutor-space-y-3">
+		<div>
 			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'Basic Select', 'tutor' ); ?></h2>
 			<div class="tutor-max-w-md">
 				<?php
@@ -157,7 +157,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- Searchable -->
-		<div class="tutor-space-y-3">
+		<div>
 			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'Searchable Select', 'tutor' ); ?></h2>
 			<div class="tutor-max-w-md">
 				<?php
@@ -175,7 +175,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- With Icons & Descriptions -->
-		<div class="tutor-space-y-3">
+		<div>
 			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'With Icons & Descriptions', 'tutor' ); ?></h2>
 			<div class="tutor-max-w-md">
 				<?php
@@ -193,7 +193,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- Multi-Select -->
-		<div class="tutor-space-y-3">
+		<div>
 			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'Multi-Select', 'tutor' ); ?></h2>
 			<div class="tutor-max-w-md">
 				<?php
@@ -213,7 +213,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- Grouped Options -->
-		<div class="tutor-space-y-3">
+		<div>
 			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'Grouped Options', 'tutor' ); ?></h2>
 			<div class="tutor-max-w-md">
 				<?php
@@ -231,7 +231,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- Form Integration Example -->
-		<div class="tutor-space-y-3">
+		<div>
 			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'Form Integration', 'tutor' ); ?></h2>
 			<p class="tutor-text-gray-600 tutor-mb-4">
 				<?php esc_html_e( 'Select automatically integrates with form validation. Try submitting without selecting.', 'tutor' ); ?>
@@ -318,9 +318,9 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- Size Variants -->
-		<div class="tutor-space-y-3">
-			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'Size Variants', 'tutor' ); ?></h2>
-			<div class="tutor-space-y-4">
+		<div>
+			<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'Size Variants', 'tutor' ); ?></h2>
+			<div class="tutor-flex tutor-flex-column tutor-gap-6">
 				<div>
 					<p class="tutor-text-sm tutor-text-gray-600 tutor-mb-2"><?php esc_html_e( 'Small', 'tutor' ); ?></p>
 					<div class="tutor-max-w-md">
@@ -369,9 +369,9 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		</div>
 
 		<!-- States -->
-		<div class="tutor-space-y-3">
-			<h2 class="tutor-text-xl tutor-font-semibold"><?php esc_html_e( 'States', 'tutor' ); ?></h2>
-			<div class="tutor-grid tutor-grid-cols-1 md:tutor-grid-cols-2 tutor-gap-4">
+		<div>
+			<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'States', 'tutor' ); ?></h2>
+			<div class="tutor-flex tutor-flex-column tutor-gap-6">
 				<div>
 					<p class="tutor-text-sm tutor-text-gray-600 tutor-mb-2"><?php esc_html_e( 'Disabled', 'tutor' ); ?></p>
 					<?php
