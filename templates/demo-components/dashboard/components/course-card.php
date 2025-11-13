@@ -44,7 +44,7 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 		<?php endif; ?>
 	</a>
 
-	<div class="tutor-card-body tutor-course-card-body">
+	<div class="tutor-card-body">
 		<?php if ( $rating_avg > 0 ) : ?>
 			<div class="tutor-course-card-rating">
 				<div class="tutor-ratings">
@@ -106,7 +106,7 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 	</div>
 
 	<?php if ( ! empty( $price ) ) : ?>
-		<div class="tutor-card-footer tutor-course-card-footer">
+		<div class="tutor-course-card-footer">
 			<span class="tutor-course-card-price">
 				<?php echo esc_html( $price ); ?>
 			</span>
