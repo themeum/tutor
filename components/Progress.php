@@ -22,14 +22,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Example usage:
  * ```
- * Progress bar
+ * // Progress bar
  * echo Progress::make()
  *     ->type( 'bar' )
  *     ->value( 75 )
  *     ->animated()
  *     ->render();
  *
- * Progress circle
+ * // Progress circle
  * echo Progress::make()
  *     ->type( 'circle' )
  *     ->value( 75 )

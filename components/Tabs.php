@@ -173,7 +173,7 @@ class Tabs extends BaseComponent {
 		$default     = esc_js( $this->default_tab );
 		$orientation = esc_attr( $this->orientation );
 		$url_params  = wp_json_encode( $this->url_params );
-        
+
 		ob_start();
 		?>
 		<div 
