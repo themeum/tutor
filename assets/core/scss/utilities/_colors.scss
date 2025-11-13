@@ -13,6 +13,13 @@
   background-color: currentColor;
 }
 
+// Action background colors
+@each $key, $value in $tutor-actions {
+  .tutor-bg-actions-#{$key} {
+    background-color: $value;
+  }
+}
+
 // Brand background colors
 @each $key, $value in $tutor-brand-colors {
   .tutor-bg-brand-#{$key} {

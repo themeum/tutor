@@ -150,6 +150,9 @@ const endpoints = {
   MOVE_CONTENT_BANK_CONTENT: 'tutor_content_bank_content_move',
   DUPLICATE_CONTENT_BANK_COLLECTION: 'tutor_content_bank_collection_duplicate',
   IMPORT_FROM_COURSES: 'tutor_content_bank_content_synchronize',
+
+  // Calendar
+  GET_CALENDAR_EVENTS: 'get_calendar_materials',
 } as const;
 
 export default endpoints;

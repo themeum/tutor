@@ -141,6 +141,7 @@ final class Icon {
 	const EXPORT                     = 'export';
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
+	const FACEBOOK                   = 'facebook';
 	const FEATHER                    = 'feather';
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
@@ -150,6 +151,7 @@ final class Icon {
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
 	const GIFT                       = 'gift';
 	const GIFT_CARD                  = 'gift-card';
+	const GITHUB                     = 'github';
 	const GLOBE                      = 'globe';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
@@ -186,6 +188,7 @@ final class Icon {
 	const LIGHT                      = 'light';
 	const LINE_CROSS                 = 'line-cross';
 	const LINK                       = 'link';
+	const LINKEDIN                   = 'linkedin';
 	const LINK_EXTERNAL              = 'link-external';
 	const LIST                       = 'list';
 	const LIST_OPTION                = 'list-option';
@@ -345,6 +348,7 @@ final class Icon {
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
 	const WISHLIST                   = 'wishlist';
+	const X                          = 'x';
 	const XLS                        = 'xls';
 	const XML                        = 'xml';
 	const YOUTUBE                    = 'youtube';
