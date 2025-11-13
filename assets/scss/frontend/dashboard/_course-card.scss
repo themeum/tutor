@@ -1,11 +1,10 @@
-// Wishlist Card Component
-// Dashboard wishlist card with image, rating, title, meta, and pricing
+// Course Card Component
+// Dashboard course card with image, rating, title, meta, and pricing
 
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-.tutor-wishlist-card {
-  @include tutor-flex(column, stretch, flex-start);
+.tutor-course-card {
   height: 100%;
   transition: background-color 0.2s ease;
   display: block;
@@ -48,7 +47,7 @@
       gap: $tutor-spacing-2;
     }
 
-    .tutor-wishlist-card-ratings-stars {
+    .tutor-course-card-ratings-stars {
       @include tutor-flex(row, center, flex-start);
       gap: $tutor-spacing-2;
 
@@ -91,3 +90,4 @@
     color: $tutor-text-subdued;
   }
 }
+

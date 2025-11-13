@@ -1,7 +1,7 @@
 <?php
 /**
- * Wishlist Card Component
- * Reusable wishlist card component for dashboard
+ * Course Card Component
+ * Reusable course card component for dashboard
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
@@ -28,8 +28,8 @@ $original_price  = isset( $original_price ) ? $original_price : '';
 $permalink       = isset( $permalink ) ? $permalink : '#';
 
 ?>
-<a href="<?php echo esc_url( $permalink ); ?>" class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-wishlist-card">
-	<div class="tutor-wishlist-card-thumbnail">
+<a href="<?php echo esc_url( $permalink ); ?>" class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
+	<div class="tutor-course-card-thumbnail">
 		<div class="tutor-ratio tutor-ratio-16x9">
 			<img 
 				src="<?php echo esc_url( $image_url ); ?>" 
@@ -38,22 +38,22 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 			/>
 		</div>
 		<?php if ( $show_bestseller ) : ?>
-			<span class="tutor-badge tutor-badge-primary tutor-wishlist-card-badge">
+			<span class="tutor-badge tutor-badge-primary tutor-course-card-badge">
 				<?php esc_html_e( 'Bestseller', 'tutor' ); ?>
 			</span>
 		<?php endif; ?>
 	</div>
 
-	<div class="tutor-card-body tutor-wishlist-card-body">
+	<div class="tutor-card-body tutor-course-card-body">
 		<?php if ( $rating_avg > 0 ) : ?>
-			<div class="tutor-wishlist-card-rating">
+			<div class="tutor-course-card-rating">
 				<div class="tutor-ratings">
 					<?php
 					tutor_load_template(
 						'demo-components.dashboard.components.star-rating',
 						array(
 							'rating'              => $rating_avg,
-							'wrapper_class'       => 'tutor-wishlist-card-ratings-stars',
+							'wrapper_class'       => 'tutor-course-card-ratings-stars',
 							'icon_class'          => '',
 							'show_rating_average' => true,
 						)
@@ -68,11 +68,11 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 			</div>
 		<?php endif; ?>
 
-		<h3 class="tutor-wishlist-card-title">
+		<h3 class="tutor-course-card-title">
 			<?php echo esc_html( $course_title ); ?>
 		</h3>
 
-		<div class="tutor-wishlist-card-meta">
+		<div class="tutor-course-card-meta">
 			<?php if ( $learners > 0 ) : ?>
 				<span>
 					<?php
@@ -83,15 +83,15 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 			<?php endif; ?>
 			<?php if ( ! empty( $instructor ) ) : ?>
 				<?php if ( $learners > 0 ) : ?>
-					<span class="tutor-wishlist-card-separator">•</span>
+					<span class="tutor-course-card-separator">•</span>
 				<?php endif; ?>
-				<span class="tutor-wishlist-card-instructor">
+				<span class="tutor-course-card-instructor">
 					<?php echo esc_html( $instructor ); ?>
 				</span>
 			<?php endif; ?>
 			<?php if ( ! empty( $provider ) ) : ?>
 				<?php if ( $learners > 0 || ! empty( $instructor ) ) : ?>
-					<span class="tutor-wishlist-card-separator">•</span>
+					<span class="tutor-course-card-separator">•</span>
 				<?php endif; ?>
 				<span>
 					<?php
@@ -104,15 +104,16 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 	</div>
 
 	<?php if ( ! empty( $price ) ) : ?>
-		<div class="tutor-card-footer tutor-wishlist-card-footer">
-			<span class="tutor-wishlist-card-price">
+		<div class="tutor-card-footer tutor-course-card-footer">
+			<span class="tutor-course-card-price">
 				<?php echo esc_html( $price ); ?>
 			</span>
 			<?php if ( ! empty( $original_price ) ) : ?>
-				<del class="tutor-wishlist-card-price-original">
+				<del class="tutor-course-card-price-original">
 					<?php echo esc_html( $original_price ); ?>
 				</del>
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>
 </a>
+
