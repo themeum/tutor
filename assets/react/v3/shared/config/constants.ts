@@ -52,7 +52,6 @@ export enum LocalStorageKeys {
 }
 
 export enum DateFormats {
-  weekDay = 'iii',
   day = 'dd',
   month = 'MMM',
   year = 'yyyy',
