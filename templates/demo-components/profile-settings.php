@@ -88,23 +88,25 @@ $profile_tab_data = array(
 				</template>
 			</div>
 
-			<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php tutor_load_template( 'demo-components.dashboard.components.settings.accounts' ); ?>
-			</div>
-			<div x-show="activeTab === 'security'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php tutor_load_template( 'demo-components.dashboard.components.settings.security' ); ?>
-			</div>
-			<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php tutor_load_template( 'demo-components.dashboard.components.settings.social-accounts' ); ?>
-			</div>
-			<div x-show="activeTab === 'notifications'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php tutor_load_template( 'demo-components.dashboard.components.settings.notifications' ); ?>
-			</div>
-			<div x-show="activeTab === 'preferences'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php tutor_load_template( 'demo-components.dashboard.components.settings.preferences' ); ?>
-			</div>
-			<div x-show="activeTab === 'billing-address'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php tutor_load_template( 'demo-components.dashboard.components.settings.billing-address' ); ?>
+			<div class="tutor-w-full">
+				<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php tutor_load_template( 'demo-components.dashboard.components.settings.accounts' ); ?>
+				</div>
+				<div x-show="activeTab === 'security'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php tutor_load_template( 'demo-components.dashboard.components.settings.security' ); ?>
+				</div>
+				<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php tutor_load_template( 'demo-components.dashboard.components.settings.social-accounts' ); ?>
+				</div>
+				<div x-show="activeTab === 'notifications'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php tutor_load_template( 'demo-components.dashboard.components.settings.notifications' ); ?>
+				</div>
+				<div x-show="activeTab === 'preferences'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php tutor_load_template( 'demo-components.dashboard.components.settings.preferences' ); ?>
+				</div>
+				<div x-show="activeTab === 'billing-address'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php tutor_load_template( 'demo-components.dashboard.components.settings.billing-address' ); ?>
+				</div>
 			</div>
 		</div>
 	</div>

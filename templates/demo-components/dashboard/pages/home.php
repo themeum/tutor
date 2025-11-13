@@ -109,7 +109,6 @@ $upcoming_lessons = array(
 );
 
 ?>
-
 <?php tutor_load_template( 'demo-components.dashboard.components.announcement' ); ?>
 <div class="tutor-text-h3 tutor-color-black tutor-mb-6">
 	<?php esc_html_e( 'Welcome to TutorLMS Home', 'tutor' ); ?>
