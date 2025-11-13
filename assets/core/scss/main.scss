@@ -17,16 +17,21 @@
 @use 'utilities';
 
 // Base styles
+// CSS Reset
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.5;
   -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -moz-tab-size: 4;
   tab-size: 4;
 }
@@ -42,6 +47,28 @@ body {
     color 0.2s ease;
 }
 
+// Remove default margin in all browsers
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+// Remove list styles on ul, ol elements
+ul,
+ol {
+  list-style: none;
+}
+
+// Alpine.js cloak utility
 [x-cloak] {
   display: none !important;
 }

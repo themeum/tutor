@@ -1,0 +1,169 @@
+// Preview Trigger Component
+// Styles for course/lesson preview on hover
+
+// @TODO: Refactor and optimize styles
+
+@use '../tokens' as *;
+
+// Preview trigger element
+.tutor-preview-trigger {
+  cursor: pointer;
+  display: inline;
+  font-style: italic;
+  text-decoration: none;
+  color: $tutor-text-secondary;
+  border-bottom: 1px dashed $tutor-border-idle;
+  transition: color 0.2s ease;
+  position: relative;
+
+  &:hover {
+    color: $tutor-text-brand;
+  }
+}
+
+// Preview card container
+.tutor-preview-card {
+  background: $tutor-surface-l1;
+  border-radius: $tutor-radius-lg;
+  box-shadow: $tutor-shadow-xl;
+  width: 320px;
+  max-width: calc(100vw - 16px);
+  overflow: hidden;
+  animation: tutor-preview-fade-in 0.2s ease;
+
+  @media (max-width: 768px) {
+    width: 280px;
+  }
+}
+
+// Loading state
+.tutor-preview-card-loading {
+  padding: $tutor-spacing-8;
+  text-align: center;
+  color: $tutor-text-subdued;
+  font-size: $tutor-font-size-small;
+}
+
+// Preview card content
+.tutor-preview-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+// Thumbnail
+.tutor-preview-card-thumbnail {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+// Card body
+.tutor-preview-card-body {
+  padding: $tutor-spacing-5;
+  display: flex;
+  flex-direction: column;
+  gap: $tutor-spacing-3;
+}
+
+// Title
+.tutor-preview-card-title {
+  font-size: $tutor-font-size-medium;
+  font-weight: $tutor-font-weight-semibold;
+  color: $tutor-text-primary;
+  margin: 0;
+  line-height: $tutor-line-height-medium;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Excerpt
+.tutor-preview-card-excerpt {
+  font-size: $tutor-font-size-small;
+  color: $tutor-text-secondary;
+  margin: 0;
+  line-height: $tutor-line-height-small;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Meta information
+.tutor-preview-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $tutor-spacing-3;
+  font-size: $tutor-font-size-tiny;
+  color: $tutor-text-subdued;
+
+  > span {
+    display: flex;
+    align-items: center;
+    gap: $tutor-spacing-1;
+
+    &::after {
+      content: '•';
+      margin-left: $tutor-spacing-3;
+    }
+
+    &:last-child::after {
+      content: none;
+    }
+  }
+}
+
+.tutor-preview-card-instructor,
+.tutor-preview-card-students,
+.tutor-preview-card-duration,
+.tutor-preview-card-type {
+  white-space: nowrap;
+}
+
+.tutor-preview-card-rating {
+  color: $tutor-text-warning;
+  font-weight: $tutor-font-weight-medium;
+}
+
+// Link
+.tutor-preview-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: $tutor-spacing-2;
+  color: $tutor-text-brand;
+  font-size: $tutor-font-size-small;
+  font-weight: $tutor-font-weight-medium;
+  text-decoration: none;
+  margin-top: $tutor-spacing-2;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $tutor-text-brand-secondary;
+    text-decoration: underline;
+  }
+}
+
+// Animation
+@keyframes tutor-preview-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Mobile specific styles
+@media (max-width: 768px) {
+  .tutor-preview-card {
+    // On mobile, center the card if it's near edges
+    &[style*="left: 8px"] {
+      left: 50% !important;
+      transform: translateX(-50%);
+    }
+  }
+}

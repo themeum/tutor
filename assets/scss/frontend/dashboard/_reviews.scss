@@ -64,7 +64,7 @@
     &-button {
       @include tutor-button-base;
       @include tutor-button-variant(secondary);
-      @include tutor-button-size(x-small);
+      @include tutor-button-icon-size(x-small)
     }
   }
 

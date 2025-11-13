@@ -187,7 +187,6 @@ use TUTOR\Icon;
 		<div class="tutor-flex tutor-flex-column tutor-gap-3">
 			<div>
 				<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-3">Checkbox</h2>
-
 				<div class="tutor-input-field">
 					<div class="tutor-input-wrapper">
 						<input 
