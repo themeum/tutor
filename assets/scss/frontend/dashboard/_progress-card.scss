@@ -77,7 +77,7 @@
 		top: $tutor-spacing-4;
 		@include right($tutor-spacing-4);
 		@include tutor-flex(row, center, flex-end);
-		gap: $tutor-spacing-2;
+		gap: $tutor-spacing-3;
 		opacity: 0;
 		visibility: hidden;
 		z-index: $tutor-z-dropdown;

@@ -12,26 +12,30 @@
 
   &:hover {
     background-color: $tutor-surface-l1-hover;
-		.tutor-upcoming-lesson-card-live-tag-badge {
-			opacity: 0;
-			visibility: hidden;
-		}
-		.tutor-upcoming-lesson-card-action {
-			opacity: 1;
-			visibility: visible;
-			pointer-events: auto;
+		@include tutor-breakpoint-up(sm) {
+			.tutor-upcoming-lesson-card-live-tag-badge {
+				opacity: 0;
+				visibility: hidden;
+			}
+			.tutor-upcoming-lesson-card-action {
+				opacity: 1;
+				visibility: visible;
+				pointer-events: auto;
+			}
 		}
   }
 
   &:focus-within {
-		.tutor-upcoming-lesson-card-live-tag-badge {
-			opacity: 0;
-			visibility: hidden;
-		}
-		.tutor-upcoming-lesson-card-action {
-			opacity: 1;
-			visibility: visible;
-			pointer-events: auto;
+		@include tutor-breakpoint-up(sm) {
+			.tutor-upcoming-lesson-card-live-tag-badge {
+				opacity: 0;
+				visibility: hidden;
+			}
+			.tutor-upcoming-lesson-card-action {
+				opacity: 1;
+				visibility: visible;
+				pointer-events: auto;
+			}
 		}
   }
 
@@ -74,11 +78,19 @@
 		pointer-events: none;
 		transition: opacity 0.2s ease, visibility 0.2s ease;
 		z-index: $tutor-z-dropdown;
+
+		&:hover {
+			color: $tutor-text-primary-inverse;
+		}
 	}
 
   &-title {
     @include tutor-typography('small', 'medium', 'primary', 'body');
     margin: 0 0 $tutor-spacing-5 0;
+
+    @include tutor-breakpoint-down(sm) {
+			color: $tutor-text-brand;
+		}
   }
 
   &-course {
