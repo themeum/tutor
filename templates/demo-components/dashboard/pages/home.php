@@ -42,6 +42,20 @@ $stat_cards = array(
 	),
 );
 
+// Define popup progress card with sample data.
+$popup_progress_card = array(
+	'card_title'  => esc_html__( 'Amazing!', 'tutor' ),
+	'user_name'   => '',
+	'subtitle'    => esc_html__( "You've dedicated over", 'tutor' ),
+	'value'       => '375h+',
+	'button_text' => esc_html__( "I'm Happy", 'tutor' ),
+	'breakdown'   => sprintf(
+		/* translators: %1$s: streak days */
+		__( "Amazing dedication! You've maintained a <strong>%1\$s-day learning streak</strong> and reached a new milestone!", 'tutor' ),
+		'15'
+	),
+);
+
 // Sample progress cards data.
 $progress_cards = array(
 	array(
@@ -100,27 +114,32 @@ $upcoming_lessons = array(
 		<?php esc_html_e( 'Welcome to TutorLMS Home', 'tutor' ); ?>
 	</div>
 	
+	<div class="tutor-mb-4">
+		<?php tutor_load_template( 'core-components.event-badge' ); ?>
+	</div>
 	
-	<div class="tutor-flex tutor-gap-4">
-		<?php foreach ( $stat_cards as $card ) : ?>
-			<div class="tutor-flex-1">
-			<?php
-			tutor_load_template(
-				'demo-components.dashboard.components.stat-card',
-				array(
-					'variation'  => isset( $card['variation'] ) ? $card['variation'] : 'enrolled',
-					'card_title' => isset( $card['title'] ) ? $card['title'] : '',
-					'icon'       => isset( $card['icon'] ) ? $card['icon'] : '',
-					'value'      => isset( $card['value'] ) ? $card['value'] : '',
-					'change'     => isset( $card['change'] ) ? $card['change'] : '',
-				)
-			);
-			?>
-			</div>
-		<?php endforeach; ?>
+	<div class="tutor-mb-8">
+		<div class="tutor-flex tutor-gap-4">
+			<?php foreach ( $stat_cards as $card ) : ?>
+				<div class="tutor-flex-1">
+				<?php
+				tutor_load_template(
+					'demo-components.dashboard.components.stat-card',
+					array(
+						'variation'  => isset( $card['variation'] ) ? $card['variation'] : 'enrolled',
+						'card_title' => isset( $card['title'] ) ? $card['title'] : '',
+						'icon'       => isset( $card['icon'] ) ? $card['icon'] : '',
+						'value'      => isset( $card['value'] ) ? $card['value'] : '',
+						'change'     => isset( $card['change'] ) ? $card['change'] : '',
+					)
+				);
+				?>
+				</div>
+			<?php endforeach; ?>
+		</div>
 	</div>
 
-	<div class="tutor-mt-8">
+	<div class="tutor-mb-8">
 		<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'My Progress', 'tutor' ); ?></h2>
 		<div class="tutor-flex tutor-flex-col tutor-gap-4">
 			<?php foreach ( $progress_cards as $card ) : ?>
@@ -141,7 +160,7 @@ $upcoming_lessons = array(
 		</div>
 	</div>
 
-	<div class="tutor-mt-8">
+	<div class="tutor-mb-8">
 		<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'Upcoming Lessons', 'tutor' ); ?></h2>
 		<div class="tutor-grid tutor-grid-cols-2 tutor-gap-4">
 			<?php
@@ -158,6 +177,30 @@ $upcoming_lessons = array(
 				);
 			endforeach;
 			?>
+		</div>
+	</div>
+
+	<div class="tutor-mb-6">
+		<div class="tutor-text-h4 tutor-color-black tutor-mb-4">
+			<?php esc_html_e( 'Progress Card Demo', 'tutor' ); ?>
+		</div>
+		
+		<div class="tutor-grid tutor-grid-cols-1 tutor-grid-cols-md-2 tutor-gap-6">
+			<div>
+				<?php
+				tutor_load_template(
+					'demo-components.dashboard.components.popup-progress-card',
+					array(
+						'card_title'  => isset( $popup_progress_card['card_title'] ) ? $popup_progress_card['card_title'] : esc_html__( 'Amazing!', 'tutor' ),
+						'user_name'   => isset( $popup_progress_card['user_name'] ) ? $popup_progress_card['user_name'] : '',
+						'subtitle'    => isset( $popup_progress_card['subtitle'] ) ? $popup_progress_card['subtitle'] : '',
+						'value'       => isset( $popup_progress_card['value'] ) ? $popup_progress_card['value'] : '',
+						'button_text' => isset( $popup_progress_card['button_text'] ) ? $popup_progress_card['button_text'] : esc_html__( "I'm Happy", 'tutor' ),
+						'breakdown'   => isset( $popup_progress_card['breakdown'] ) ? $popup_progress_card['breakdown'] : '',
+					)
+				);
+				?>
+			</div>
 		</div>
 	</div>
 </div>

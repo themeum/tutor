@@ -27,9 +27,11 @@ use TUTOR\Input;
 				$allowed_pages = array(
 					'home',
 					'courses',
+					'quiz-attempts',
 					'notes',
 					'discussions',
 					'calendar',
+					'preferences',
 				);
 
 				$allowed_pages = (array) apply_filters( 'tutor_demo_dashboard_allowed_pages', $allowed_pages );
