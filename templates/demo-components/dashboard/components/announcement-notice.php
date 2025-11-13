@@ -1,6 +1,6 @@
 <?php
 /**
- * Announcement Components
+ * Announcement Notice
  *
  * @package Tutor
  * @since 1.0.0
@@ -9,7 +9,7 @@
 use TUTOR\Icon;
 ?>
 <!-- Announcement  -->
-<div class="tutor-announcement-banner tutor-mb-7">
+<div class="tutor-announcement-notice tutor-mb-7">
 	<div class="tutor-announcement-icon">
 		<svg width="112" height="112" viewBox="0 0 112 112" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<path d="M24.9588 80.7563C25.4806 81.6604 26.1489 82.6301 26.7792 83.486C27.9366 85.0602 29.9309 85.7077 31.8288 85.2358C39.9389 83.2087 62.9101 77.1895 81.9857 70.6657C81.9857 70.6657 79.6744 64.4553 72.8905 53.0799C66.1049 41.7045 62.2195 36.4258 62.2195 36.4258C47.0345 49.6853 30.3253 66.5581 24.5162 72.5705C23.1556 73.9758 22.7216 76.0287 23.5052 77.8181C23.9324 78.7912 24.437 79.8555 24.9588 80.758V80.7563Z" fill="#2C85F3"/>

@@ -1,9 +1,5 @@
 /**
- * Miscellaneous Styles
- *
- * Contains utility and miscellaneous styles for the Tutor LMS dashboard frontend.
- * This file includes various reusable section styles, edge cases, and supplementary CSS
- * that don't fit into other specific component files.
+ * Announcement-notice
  *
  */
 
@@ -11,9 +7,9 @@
 @use '@Core/scss/mixins' as *;
 
 // =============================================================================
-// Announcement card banner css
+// Announcement card notice css
 // =============================================================================
-.tutor-announcement-banner {
+.tutor-announcement-notice {
 	display: flex;
 	align-items: flex-start;
 	gap: $tutor-spacing-6;
