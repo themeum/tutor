@@ -10,6 +10,14 @@
 
 use TUTOR\Icon;
 
+$timezone_options = array();
+foreach ( tutor_global_timezone_lists() as $key => $value ) {
+	$timezone_options[] = array(
+		'label' => $value,
+		'value' => $key,
+	);
+}
+
 ?>
 <div class="tutor-account-page" style="max-width: 484px;">
 	<form
@@ -62,31 +70,31 @@ use TUTOR\Icon;
 					</div>
 				</div>
 				<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
-					<div class="tutor-input-field" :class="{'tutor-input-field-error': errors.firstName}">
-						<label for="firstName" class="tutor-label"><?php echo esc_html__( 'First Name', 'tutor' ); ?></label>
+					<div class="tutor-input-field" :class="{'tutor-input-field-error': errors.first_name}">
+						<label for="first_name" class="tutor-label"><?php echo esc_html__( 'First Name', 'tutor' ); ?></label>
 						<input 
 							type="text"
-							id="firstName"
+							id="first_name"
 							placeholder="<?php echo esc_html__( 'Enter your first name', 'tutor' ); ?>"
 							class="tutor-input"
-							x-bind="register('firstName', { 
+							x-bind="register('first_name', { 
 								required: true,
 							})"
 						>
-						<div class="tutor-error-text" x-cloak x-show="errors.firstName" x-text="errors?.firstName?.message" role="alert" aria-live="polite"></div>
+						<div class="tutor-error-text" x-cloak x-show="errors.first_name" x-text="errors?.first_name?.message" role="alert" aria-live="polite"></div>
 					</div>
-					<div class="tutor-input-field" :class="{'tutor-input-field-error': errors.lastName}">
-						<label for="lastName" class="tutor-label"><?php echo esc_html__( 'Last Name', 'tutor' ); ?></label>
+					<div class="tutor-input-field" :class="{'tutor-input-field-error': errors.last_name}">
+						<label for="last_name" class="tutor-label"><?php echo esc_html__( 'Last Name', 'tutor' ); ?></label>
 						<input 
 							type="text"
-							id="lastName"
+							id="last_name"
 							placeholder="<?php echo esc_html__( 'Enter your last name', 'tutor' ); ?>"
 							class="tutor-input"
-							x-bind="register('lastName', { 
+							x-bind="register('last_name', { 
 								required: true,
 							})"
 						>
-						<div class="tutor-error-text" x-cloak x-show="errors.lastName" x-text="errors?.lastName?.message" role="alert" aria-live="polite"></div>
+						<div class="tutor-error-text" x-cloak x-show="errors.last_name" x-text="errors?.last_name?.message" role="alert" aria-live="polite"></div>
 					</div>
 				</div>
 				<div class="tutor-input-field" :class="{'tutor-input-field-error': errors.username}">
@@ -122,19 +130,22 @@ use TUTOR\Icon;
 					>
 					<div class="tutor-error-text" x-cloak x-show="errors.occupation" x-text="errors?.occupation?.message" role="alert" aria-live="polite"></div>
 				</div>
-				<div class="tutor-input-field" :class="{'tutor-input-field-error': errors.timezone}">
-					<label for="timezone" class="tutor-label"><?php echo esc_html__( 'Timezone', 'tutor' ); ?></label>
-					<select 
-						id="timezone"
-						placeholder="<?php echo esc_html__( 'Timezone', 'tutor' ); ?>"
-						class="tutor-input"
-					>
-					<option value="dhaka">Dhaka</option>
-					<option value="new_york">New York</option>
-					<option value="tokyo">Tokyo</option>
-					</select>
-					<div class="tutor-error-text" x-cloak x-show="errors.timezone" x-text="errors?.timezone?.message" role="alert" aria-live="polite"></div>
-				</div>
+
+				<?php
+				tutor_load_template(
+					'core-components.form-select',
+					array(
+						'name'        => 'timezone',
+						'label'       => __( 'Timezone', 'tutor' ),
+						'placeholder' => __( 'Select timezone', 'tutor' ),
+						'options'     => $timezone_options,
+						'searchable'  => true,
+						'required'    => true,
+						'clearable'   => true,
+					)
+				);
+				?>
+
 				<div class="tutor-input-field" :class="{'tutor-input-field-error': errors.birthdate}">
 					<label for="birthdate" class="tutor-label"><?php echo esc_html__( 'Birthdate', 'tutor' ); ?></label>
 					<input 
@@ -147,6 +158,7 @@ use TUTOR\Icon;
 				</div>
 			</div>
 		</div>
+
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 			<h5 class="tutor-h5"><?php echo esc_html__( 'Public Profile', 'tutor' ); ?></h5>
 			<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5">
@@ -172,6 +184,7 @@ use TUTOR\Icon;
 				</div>
 			</div>
 		</div>
+
 		<!-- Certificate Signature will be served from certificate addon -->
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 			<h5 class="tutor-h5"><?php echo esc_html__( 'Certificate Signature', 'tutor' ); ?></h5>
