@@ -12,6 +12,7 @@
 use Tutor\Components\Avatar;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
+use Tutor\Components\FileUploader;
 use Tutor\Components\Modal;
 use Tutor\Components\Progress;
 use Tutor\Components\Tabs;
@@ -218,23 +219,24 @@ use Tutor\Components\Tabs;
 	  ->footer_alignment( 'center' )
 	  ->render();
 
-    $content = 'Hey I am headless 🤯! Footless 👣!';
-    $content .= Button::make()->label( 'Close me' )->attr( 'class', 'tutor-btn-block' )->attr( '@click', 'TutorCore.modal.closeModal("headless-modal")' )->render();
+	$content = 'Hey I am headless 🤯! Footless 👣!';
+	$content .= Button::make()->label( 'Close me' )->attr( 'class', 'tutor-btn-block' )->attr( '@click', 'TutorCore.modal.closeModal("headless-modal")' )->render();
 
 	echo Modal::make()
 	  ->id( 'headless-modal' )
-      ->closeable( false )
+	  ->closeable( false )
 	  ->body( $content )
 	  ->render();
 	?&gt;
 	</code></pre>
-    <div class="tutor-flex tutor-gap-6">
-        <?php
-            echo Button::make()->label( 'Open Modal' )->attr( 'onclick', 'TutorCore.modal.showModal("full-modal")' )->render();
-            echo Button::make()->label( 'Another Modal' )->variant( 'destructive' )->attr( 'onclick', 'TutorCore.modal.showModal("another-modal")' )->render();
-            echo Button::make()->label( 'Headless Modal' )->variant( 'primary-soft' )->attr( 'onclick', 'TutorCore.modal.showModal("headless-modal")' )->render();
-        ?>        
-    </div>
+	<div class="tutor-flex tutor-gap-6">
+		<?php
+			echo Button::make()->label( 'Open Modal' )->attr( 'onclick', 'TutorCore.modal.showModal("full-modal")' )->render();
+			echo Button::make()->label( 'Another Modal' )->variant( 'destructive' )->attr( 'onclick', 'TutorCore.modal.showModal("another-modal")' )->render();
+			echo Button::make()->label( 'Headless Modal' )->variant( 'primary-soft' )->attr( 'onclick', 'TutorCore.modal.showModal("headless-modal")' )->render();
+		?>
+				
+	</div>
 	<?php
 	echo Modal::make()
 	  ->id( 'full-modal' )
@@ -255,12 +257,12 @@ use Tutor\Components\Tabs;
 	  ->footer_alignment( 'center' )
 	  ->render();
 
-    $content = 'Hey I am headless 🤯! Footless 👣!';
-    $content .= Button::make()->label( 'Close me' )->attr( 'class', 'tutor-btn-block' )->attr( '@click', 'TutorCore.modal.closeModal("headless-modal")' )->render();
+	$content  = 'Hey I am headless 🤯! Footless 👣!';
+	$content .= Button::make()->label( 'Close me' )->attr( 'class', 'tutor-btn-block' )->attr( '@click', 'TutorCore.modal.closeModal("headless-modal")' )->render();
 
 	echo Modal::make()
 	  ->id( 'headless-modal' )
-      ->closeable( false )
+	  ->closeable( false )
 	  ->body( $content )
 	  ->render();
 	?>
