@@ -28,8 +28,8 @@ $original_price  = isset( $original_price ) ? $original_price : '';
 $permalink       = isset( $permalink ) ? $permalink : '#';
 
 ?>
-<a href="<?php echo esc_url( $permalink ); ?>" class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
-	<div class="tutor-course-card-thumbnail">
+<div class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
+	<a href="<?php echo esc_url( $permalink ); ?>" class="tutor-course-card-thumbnail">
 		<div class="tutor-ratio tutor-ratio-16x9">
 			<img 
 				src="<?php echo esc_url( $image_url ); ?>" 
@@ -42,7 +42,7 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 				<?php esc_html_e( 'Bestseller', 'tutor' ); ?>
 			</span>
 		<?php endif; ?>
-	</div>
+	</a>
 
 	<div class="tutor-card-body tutor-course-card-body">
 		<?php if ( $rating_avg > 0 ) : ?>
@@ -69,7 +69,9 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 		<?php endif; ?>
 
 		<h3 class="tutor-course-card-title">
-			<?php echo esc_html( $course_title ); ?>
+			<a href="<?php echo esc_url( $permalink ); ?>">
+				<?php echo esc_html( $course_title ); ?>
+			</a>
 		</h3>
 
 		<div class="tutor-course-card-meta">
@@ -115,5 +117,5 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 			<?php endif; ?>
 		</div>
 	<?php endif; ?>
-</a>
+</div>
 
