@@ -21,7 +21,6 @@ $tutor-text-exception2: var(--tutor-text-exception2);
 $tutor-text-exception4: var(--tutor-text-exception4);
 $tutor-text-exception5: var(--tutor-text-exception5);
 $tutor-text-highlighted-hover: var(--tutor-text-highlighted-hover);
-$tutor-text-white: var(--tutor-surface-l1);
 
 // =============================================================================
 // TEXT COLOR MAP (for utility generation)
@@ -32,7 +31,6 @@ $tutor-text-colors: (
   primary-inverse: $tutor-text-primary-inverse,
   secondary: $tutor-text-secondary,
   subdued: $tutor-text-subdued,
-  white: $tutor-text-white,
   brand: $tutor-text-brand,
   brand-secondary: $tutor-text-brand-secondary,
   light: $tutor-text-light,
