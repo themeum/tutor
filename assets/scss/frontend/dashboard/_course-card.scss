@@ -58,8 +58,7 @@
     }
 
     .tutor-ratings-count {
-      @include tutor-typography('tiny', 'regular', 'secondary');
-      color: $tutor-text-subdued;
+      @include tutor-typography('tiny', 'regular', 'subdued');
     }
   }
 
@@ -86,8 +85,7 @@
   }
 
   &-price-original {
-    @include tutor-typography('tiny', 'regular', 'secondary');
-    color: $tutor-text-subdued;
+    @include tutor-typography('tiny', 'regular', 'subdued');
   }
 }
 
