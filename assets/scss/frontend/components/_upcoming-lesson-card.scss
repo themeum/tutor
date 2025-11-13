@@ -8,6 +8,32 @@
   padding: $tutor-spacing-6;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $tutor-surface-l1-hover;
+		.tutor-upcoming-lesson-card-live-tag-badge {
+			opacity: 0;
+			visibility: hidden;
+		}
+		.tutor-upcoming-lesson-card-action {
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+		}
+  }
+
+  &:focus-within {
+		.tutor-upcoming-lesson-card-live-tag-badge {
+			opacity: 0;
+			visibility: hidden;
+		}
+		.tutor-upcoming-lesson-card-action {
+			opacity: 1;
+			visibility: visible;
+			pointer-events: auto;
+		}
+  }
 
   &-header {
     @include tutor-flex(row, center, space-between);
@@ -24,6 +50,31 @@
   &-icon {
     @include tutor-flex-center;
   }
+
+	&-live-tag {
+		position: relative;
+		
+
+		&-badge {
+			@include tutor-flex(row, center, center);
+			transition: opacity 0.2s ease, visibility 0.2s ease;
+			opacity: 1;
+			visibility: visible;
+			z-index: $tutor-z-positive;
+		}
+	}
+
+	&-action {
+		@include tutor-flex(row, center, center);
+		position: absolute;
+		top: 0;
+		right: 0;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		transition: opacity 0.2s ease, visibility 0.2s ease;
+		z-index: $tutor-z-dropdown;
+	}
 
   &-title {
     @include tutor-typography('small', 'medium', 'primary', 'body');
