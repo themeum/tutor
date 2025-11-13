@@ -17,6 +17,7 @@ import { tabsMeta } from '@Core/ts/components/tabs';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
+import { selectMeta } from './components/select';
 
 Alpine.plugin(focus);
 
@@ -34,6 +35,7 @@ const initializePlugin = () => {
       formMeta,
       selectDropdownMeta,
       stepperDropdownMeta,
+      selectMeta,
     ],
     services: [formServiceMeta, modalServiceMeta],
   });
