@@ -38,8 +38,9 @@ use TUTOR\Input;
 	$current_url = admin_url( 'admin.php?page=playground' );
 
 	$subpages = array(
-		'dashboard'     => 'Dashboard',
-		'learning-area' => 'Learning Area',
+		'dashboard'        => 'Dashboard',
+		'profile-settings' => 'Account Settings',
+		'learning-area'    => 'Learning Area',
 	);
 
 	$subpage = Input::get( 'subpage', '' );
