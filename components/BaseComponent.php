@@ -99,10 +99,12 @@ abstract class BaseComponent implements ComponentInterface {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param mixed $value Value to escape.
+	 * @param mixed    $value Value to escape.
+	 * @param callable $esc_fn Callable esc func.
+	 *
 	 * @return string Escaped string.
 	 */
-	protected function esc( $value ): string {
-		return esc_html( $value );
+	protected function esc( $value, $esc_fn = 'esc_html' ): string {
+		return call_user_func( $esc_fn, $value );
 	}
 }
