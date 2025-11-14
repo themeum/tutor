@@ -35,22 +35,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *     ->title( 'Course Details' )
  *     ->template( 'path/to/template.php' )
  *     ->render();
- *
- * // Multiple accordions with group
- * echo AccordionGroup::make()
- *     ->add_item(
- *         Accordion::make()
- *             ->id( 'item-1' )
- *             ->title( 'First Item' )
- *             ->content( 'Content 1' )
- *     )
- *     ->add_item(
- *         Accordion::make()
- *             ->id( 'item-2' )
- *             ->title( 'Second Item' )
- *             ->content( 'Content 2' )
- *     )
- *     ->render();
  * ```
  *
  * @since 4.0.0
@@ -101,15 +85,6 @@ class Accordion extends BaseComponent {
 	 * @var bool
 	 */
 	protected $is_open = false;
-
-	/**
-	 * Accordion index in group.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var int
-	 */
-	protected $index = 0;
 
 	/**
 	 * Custom icon SVG.
@@ -193,20 +168,6 @@ class Accordion extends BaseComponent {
 	}
 
 	/**
-	 * Set accordion index.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int $index Accordion index in group.
-	 *
-	 * @return $this
-	 */
-	public function index( $index ) {
-		$this->index = absint( $index );
-		return $this;
-	}
-
-	/**
 	 * Set custom icon.
 	 *
 	 * @since 4.0.0
@@ -267,15 +228,17 @@ class Accordion extends BaseComponent {
 			return '';
 		}
 
-		$trigger_id = sprintf( 'tutor-acc-trigger-%s', esc_attr( $this->id ) );
-		$panel_id   = sprintf( 'tutor-acc-panel-%s', esc_attr( $this->id ) );
+		$accordion_id = esc_attr( $this->id );
+		$trigger_id   = sprintf( 'tutor-acc-trigger-%s', $accordion_id );
+		$panel_id     = sprintf( 'tutor-acc-panel-%s', $accordion_id );
 
 		$icon_html = ! empty( $this->icon ) ? $this->icon : $this->render_default_icon();
 		$content   = $this->render_content();
 
-		$aria_expanded    = $this->is_open ? 'true' : 'false';
-		$content_class    = $this->is_open ? 'tutor-accordion-content' : 'tutor-accordion-content tutor-accordion-content-collapsed';
-		$content_height   = $this->is_open ? 'auto' : '0px';
+		$aria_expanded = $this->is_open ? 'true' : 'false';
+		$content_class = $this->is_open ? 'tutor-accordion-content tutor-accordion-content-expanded' : 'tutor-accordion-content tutor-accordion-content-collapsed';
+
+		$content_style = $this->is_open ? 'height: auto;' : 'height: 0px;';
 
 		// Merge custom classes.
 		$item_classes = 'tutor-accordion-item';
@@ -284,14 +247,22 @@ class Accordion extends BaseComponent {
 			unset( $this->attributes['class'] );
 		}
 
+		// Build Alpine.js x-data using tutorAccordion component.
+		$alpine_config = array(
+			'id'     => $this->id,
+			'isOpen' => $this->is_open,
+		);
+		$alpine_json = wp_json_encode( $alpine_config );
+
+		$this->attributes['x-data'] = sprintf( 'tutorAccordion(%s)', $alpine_json );
+
 		$item_attrs = $this->render_attributes();
 
 		return sprintf(
-			'<div class="%s"%s>
+			'<div class="%s" %s>
 				<button 
-					@click="toggle(%d)" 
-					@keydown="handleKeydown($event, %d)" 
-					:aria-expanded="isOpen(%d)" 
+					@click="toggle(\'%s\')" 
+					:aria-expanded="isOpen(\'%s\')" 
 					class="tutor-accordion-header tutor-accordion-trigger" 
 					aria-controls="%s" 
 					id="%s" 
@@ -306,8 +277,8 @@ class Accordion extends BaseComponent {
 					id="%s" 
 					role="region" 
 					aria-labelledby="%s" 
-					class="%s" 
-					style="height: %s;"
+					class="%s"
+					style="%s"
 				>
 					<div class="tutor-accordion-body">
 						%s
@@ -315,10 +286,9 @@ class Accordion extends BaseComponent {
 				</div>
 			</div>',
 			esc_attr( $item_classes ),
-			$item_attrs ? ' ' . $item_attrs : '',
-			$this->index,
-			$this->index,
-			$this->index,
+			$item_attrs,
+			$accordion_id,
+			$accordion_id,
 			esc_attr( $panel_id ),
 			esc_attr( $trigger_id ),
 			esc_attr( $aria_expanded ),
@@ -327,7 +297,7 @@ class Accordion extends BaseComponent {
 			esc_attr( $panel_id ),
 			esc_attr( $trigger_id ),
 			esc_attr( $content_class ),
-			esc_attr( $content_height ),
+			esc_attr( $content_style ),
 			$content
 		);
 	}

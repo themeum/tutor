@@ -275,7 +275,13 @@ use Tutor\Components\Tabs;
   echo Accordion::make()
 	  ->id( 'about-course' )
 	  ->title( 'About this Course' )
-	  ->content( '<p>Course description here...</p>' )
+	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
+	  ->open()
+	  ->render();
+  echo Accordion::make()
+	  ->id( 'about-test' )
+	  ->title( 'About this Course' )
+	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
 	  ->open()
 	  ->render();
 	?&gt;
@@ -284,7 +290,13 @@ use Tutor\Components\Tabs;
 	echo Accordion::make()
 	  ->id( 'about-course' )
 	  ->title( 'About this Course' )
-	  ->content( '<p id="about-course">Course description here...</p>' )
+	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
+	  ->render();
+	  echo "<br/>";
+	echo Accordion::make()
+	  ->id( 'about-test' )
+	  ->title( 'About this Course' )
+	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
 	  ->open()
 	  ->render();
 	?>
