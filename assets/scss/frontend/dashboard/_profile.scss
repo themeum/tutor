@@ -1,7 +1,227 @@
-// Profile Page Styles
-// Student profile management and public profile view
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
 
-.tutor-profile {
-  // Profile page styles will go here
-  // Profile forms, avatar upload, bio editing
+.tutor-user-profile {
+  .tutor-profile-header {
+    background-color: $tutor-surface-base;
+    border-bottom: 1px solid $tutor-border-idle;
+    padding-block: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(sm) {
+      display: none;
+    }
+  }
+
+  .tutor-profile-container {
+    max-width: 728px;
+    margin: 0 auto;
+    padding-inline: $tutor-spacing-6;
+  }
+
+  .tutor-profile-page-title {
+    @include tutor-typography(h4, semibold, primary, heading);
+
+    @include tutor-breakpoint-up(sm) {
+      display: none;
+    }
+  }
+
+  .tutor-profile-card {
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+    margin-top: $tutor-spacing-9;
+
+    @include tutor-breakpoint-down(sm) {
+      margin-top: $tutor-spacing-5;
+    }
+  }
+
+  .tutor-profile-card-header {
+    @include tutor-flex(row, center, center);
+    background-color: $tutor-surface-brand-tertiary;
+    border-radius: $tutor-radius-lg;
+    margin-bottom: $tutor-spacing-7;
+    position: relative;
+    height: 184px;
+
+    .tutor-edit-profile-btn {
+      @include tutor-button-base();
+      @include tutor-button-variant(outline);
+      @include tutor-button-size(x-small);
+      outline: none;
+      gap: $tutor-spacing-2;
+      position: absolute;
+      top: $tutor-spacing-5;
+      right: $tutor-spacing-5;
+
+      @include tutor-breakpoint-down(sm) {
+        padding: 0;
+        height: 40px;
+        width: 40px;
+
+        svg {
+          height: 20px;
+          width: 20px;
+        }
+
+        span {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .tutor-profile-card-body {
+    @include tutor-grid(2);
+    gap: $tutor-spacing-6;
+    position: relative;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-grid(1);
+    }
+
+    .tutor-user-profile-title {
+      @include tutor-typography(h3, semibold, primary, heading);
+      margin-bottom: $tutor-spacing-2;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography(h4, semibold, primary, heading);
+      }
+    }
+
+    .tutor-user-profile-designation {
+      @include tutor-typography(small, regular, subdued);
+      margin-bottom: $tutor-spacing-6;
+    }
+
+    .tutor-user-profile-social {
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-6;
+
+      a {
+        height: 16px;
+        width: 16px;
+        outline: none;
+        box-shadow: none;
+      }
+    }
+
+    .tutor-user-profile-bio {
+      @include tutor-typography(p2, regular, secondary);
+      margin-bottom: $tutor-spacing-9;
+
+      @include tutor-breakpoint-down(sm) {
+        margin-bottom: $tutor-spacing-6;
+      }
+    }
+
+    .tutor-user-profile-details {
+      @include tutor-flex(column, flex-start);
+      gap: $tutor-spacing-2;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(row, flex-start, flex-start, wrap);
+      }
+
+      li {
+        @include tutor-typography(tiny, regular, subdued);
+        background-color: $tutor-surface-brand-tertiary;
+        padding: 0 $tutor-spacing-4;
+        border-radius: $tutor-radius-sm;
+        white-space: nowrap;
+        margin: 0;
+
+        span {
+          @include tutor-typography(tiny, medium, primary);
+        }
+      }
+    }
+
+    &-right {
+      @include tutor-flex(column, flex-start, space-between);
+
+      @include tutor-breakpoint-up(sm) {
+        max-width: 240px;
+        margin-left: auto;
+      }
+    }
+
+    .tutor-profile-member-since {
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-2;
+      @include tutor-typography(tiny, regular, subdued);
+
+      @include tutor-breakpoint-up(sm) {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+      }
+    }
+  }
+
+  .tutor-user-profile-statistics {
+    margin-top: $tutor-spacing-8;
+
+    .tutor-statistic-title {
+      @include tutor-typography(h5, semibold, primary, heading);
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    .tutor-statistic-cards {
+      @include tutor-grid(2, $tutor-spacing-5);
+    }
+
+    .tutor-statistic-card {
+      @include tutor-flex(row, flex-start);
+      gap: $tutor-spacing-5;
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-6;
+
+      @include tutor-breakpoint-down(sm) {
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-5;
+      }
+
+      &-icon {
+        padding-top: $tutor-spacing-2;
+
+        @include tutor-breakpoint-down(sm) {
+          padding-top: $tutor-spacing-1;
+
+          svg {
+            height: 20px;
+            width: 20px;
+          }
+        }
+      }
+
+      &-content {
+        @include tutor-flex(column);
+        gap: $tutor-spacing-1;
+      }
+
+      &-value {
+        @include tutor-typography(h3, semibold, primary, heading);
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-typography(h5, semibold, primary, heading);
+        }
+      }
+
+      &-label {
+        @include tutor-typography(medium, regular, secondary);
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-typography(small, regular, secondary);
+        }
+      }
+    }
+  }
 }

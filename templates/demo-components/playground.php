@@ -39,8 +39,9 @@ use TUTOR\Input;
 
 	$subpages = array(
 		'dashboard'        => 'Dashboard',
-		'profile-settings' => 'Account Settings',
+		'user-profile'     => 'User Profile',
 		'learning-area'    => 'Learning Area',
+		'profile-settings' => 'Account Settings',
 	);
 
 	$subpage = Input::get( 'subpage', '' );
