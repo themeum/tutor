@@ -10,7 +10,7 @@
 	width: fit-content;
 	padding: $tutor-spacing-1 $tutor-spacing-2;
 	background-color: $tutor-tab-l3;
-	border-radius: $tutor-radius-sm;
+	border-radius: $tutor-radius-full;
 
 	&-icon {
 		@include tutor-flex-center;
