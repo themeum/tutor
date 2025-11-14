@@ -19,7 +19,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 }
 
 ?>
-<div class="tutor-account-page" style="max-width: 484px;">
+<div class="tutor-account-page">
 	<form
 		x-data="tutorForm({ id: 'account-settings-form', mode: 'onBlur', shouldFocusError: true })"
 		x-bind="getFormBindings()"

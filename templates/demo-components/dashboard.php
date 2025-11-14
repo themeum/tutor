@@ -11,8 +11,6 @@
 use TUTOR\Input;
 
 ?>
-<?php require 'dashboard/components/settings/account.php'; ?>
-
 <div class="tutor-dashboard-layout">
 	<?php tutor_load_template( 'demo-components.dashboard.components.sidebar' ); ?>
 	<div class="tutor-dashboard-main">
