@@ -2,7 +2,7 @@
 
 @use '@Core/scss/tokens' as *;
 
-.tutor-profile-settings-header {
+.tutor-profile-header {
 	border-bottom: 1px solid $tutor-border-idle;
 	padding: $tutor-spacing-5;
 	.tutor-profile-settings-back-btn {
