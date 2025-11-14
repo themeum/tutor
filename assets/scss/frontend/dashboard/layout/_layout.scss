@@ -4,6 +4,13 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+.tutor-dashboard-container {
+	width: 100%;
+	max-width: 728px;
+  padding-inline: 16px;
+	margin: 0 auto;
+}
+
 .tutor-dashboard-layout {
   background-color: $tutor-surface-base;
   display: grid;

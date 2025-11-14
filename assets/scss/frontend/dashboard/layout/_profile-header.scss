@@ -1,0 +1,11 @@
+// Dashboard Profile header
+
+@use '@Core/scss/tokens' as *;
+
+.tutor-profile-settings-header {
+	border-bottom: 1px solid $tutor-border-idle;
+	padding: $tutor-spacing-5;
+	.tutor-profile-settings-back-btn {
+		padding: $tutor-spacing-3 $tutor-spacing-3;
+	}
+}

@@ -11,20 +11,6 @@
 	padding-bottom: $tutor-spacing-15;
 }
 
-.tutor-profile-settings-container {
-	width: 100%;
-	max-width: 696px;
-	margin: 0 auto;
-}
-
-.tutor-profile-settings-header {
-	border-bottom: 1px solid $tutor-border-idle;
-	padding: $tutor-spacing-5;
-	.tutor-profile-settings-back-btn {
-		padding: $tutor-spacing-3 $tutor-spacing-3;
-	}
-}
-
 .tutor-profile-settings-tab {
 	border: 1px solid $tutor-border-idle;
 	padding: $tutor-spacing-5;
