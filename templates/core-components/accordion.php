@@ -26,7 +26,6 @@ if ( ! is_array( $default_open ) ) {
 		multiple: <?php echo $multiple ? 'true' : 'false'; ?>,
 		defaultOpen: <?php echo wp_json_encode( $default_open ); ?>
 	})'
-	x-init="initializeClasses()"
 	class="tutor-accordion"
 >
 	<?php foreach ( $items as $index => $item ) : ?>
@@ -56,6 +55,8 @@ if ( ! is_array( $default_open ) ) {
 				role="region"
 				aria-labelledby="<?php echo esc_attr( $trigger_id ); ?>"
 				class="tutor-accordion-content"
+				x-show="isOpen(<?php echo esc_attr( $index ); ?>)"
+				x-collapse.duration.350ms
 			>
 				<div class="tutor-accordion-body">
 					<?php echo wp_kses_post( $item_content ); ?>

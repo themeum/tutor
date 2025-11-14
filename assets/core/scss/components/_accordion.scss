@@ -57,37 +57,11 @@
 
   &-content {
     overflow: hidden;
-
-    // TODO: Need to change it later
-    transition:
-      height 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      padding 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      opacity 0.25s ease-in-out;
-    height: 0;
-    padding: 0 $tutor-spacing-6;
-    --content-height: 0px;
-    opacity: 0;
-
-    &-expanded {
-      height: var(--content-height);
-      padding: $tutor-spacing-2 $tutor-spacing-6 $tutor-spacing-5;
-      opacity: 1;
-
-      // Need to change it later
-      transition-delay: 0s, 0s, 0.1s;
-    }
-
-    &-collapsed {
-      height: 0;
-      padding: 0 $tutor-spacing-6;
-      opacity: 0;
-
-      // Need to change it later
-      transition-delay: 0s, 0s, 0s;
-    }
   }
 
   &-body {
+    padding: $tutor-spacing-2 $tutor-spacing-6 $tutor-spacing-5;
+
     p:first-child {
       margin-top: 0;
     }
