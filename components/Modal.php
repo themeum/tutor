@@ -75,7 +75,7 @@ class Modal extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $title_esc_fn = 'esc_html';
+	protected $title_esc_cb = 'esc_html';
 
 	/**
 	 * Modal subtitle.
@@ -93,7 +93,7 @@ class Modal extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $subtitle_esc_fn = 'esc_html';
+	protected $subtitle_esc_cb = 'esc_html';
 
 	/**
 	 * Modal body content or template path.
@@ -103,6 +103,15 @@ class Modal extends BaseComponent {
 	 * @var string
 	 */
 	protected $body = '';
+
+	/**
+	 * Modal body content esc callback.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $body_esc_cb = 'wp_kses_post';
 
 	/**
 	 * Whether body is a template path.
@@ -169,13 +178,13 @@ class Modal extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string   $title Modal title.
-	 * @param callable $esc_fn Callable escaping function.
+	 * @param callable $esc_cb Callable escaping function.
 	 *
 	 * @return $this
 	 */
-	public function title( string $title, $esc_fn = 'esc_html' ) {
+	public function title( string $title, $esc_cb = 'esc_html' ) {
 		$this->title        = $title;
-		$this->title_esc_fn = $esc_fn;
+		$this->title_esc_cb = $esc_cb;
 		return $this;
 	}
 
@@ -185,13 +194,13 @@ class Modal extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string   $subtitle Modal subtitle.
-	 * @param callable $esc_fn Callable escaping function.
+	 * @param callable $esc_cb Callable escaping function.
 	 *
 	 * @return $this
 	 */
-	public function subtitle( string $subtitle, $esc_fn = 'esc_html' ) {
+	public function subtitle( string $subtitle, $esc_cb = 'esc_html' ) {
 		$this->subtitle        = $subtitle;
-		$this->subtitle_esc_fn = $esc_fn;
+		$this->subtitle_esc_cb = $esc_cb;
 		return $this;
 	}
 
@@ -200,12 +209,14 @@ class Modal extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $body Body content HTML.
+	 * @param string   $body Body content HTML.
+	 * @param callback $esc_cb Body content HTML.
 	 *
 	 * @return $this
 	 */
-	public function body( $body ) {
+	public function body( $body, $esc_cb = 'wp_kses_post' ) {
 		$this->body        = $body;
+		$this->body_esc_cb = $esc_cb;
 		$this->is_template = false;
 		return $this;
 	}
@@ -297,11 +308,11 @@ class Modal extends BaseComponent {
 		}
 
 		$title_html = $this->title
-			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_fn ) )
+			? sprintf( '<div class="tutor-modal-title">%s</div>', $this->esc( $this->title, $this->title_esc_cb ) )
 			: '';
 
 		$subtitle_html = $this->subtitle
-			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_fn ) )
+			? sprintf( '<div class="tutor-modal-subtitle">%s</div>', $this->esc( $this->subtitle, $this->subtitle_esc_cb ) )
 			: '';
 
 		return sprintf(
@@ -330,9 +341,10 @@ class Modal extends BaseComponent {
 				ob_start();
 				include $this->body;
 				$content = ob_get_clean();
+				return $content;
 			}
 		} else {
-			$content = $this->body;
+			$content = $this->esc( $this->body, $this->body_esc_cb );
 		}
 
 		return sprintf( '<div class="tutor-modal-body">%s</div>', $content );

@@ -250,7 +250,7 @@ use Tutor\Components\Tabs;
 	echo Modal::make()
 	  ->id( 'another-modal' )
 	  ->title( 'Components' )
-	  ->template( tutor()->path . 'templates/demo-components/avatar.php' )
+	  ->template( tutor()->path . 'templates/demo-components/components/avatar.php' )
 		->footer_buttons(
 			Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("another-modal")' )->render()
 		)
@@ -268,7 +268,7 @@ use Tutor\Components\Tabs;
 	?>
 	</div>
 </div>
-<div class="modal-wrapper tutor-mb-12">
+<div class="accordion-wrapper tutor-mb-12">
 	<h2>Accordion</h2>
 	<pre><code>
 	&lt;?php
