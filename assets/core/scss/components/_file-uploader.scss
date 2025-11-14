@@ -40,7 +40,7 @@
   }
 
   &-subtitle {
-    @include tutor-typography(tiny, regular, disabled);
+    @include tutor-typography(tiny, regular, subdued);
     margin: 0;
   }
 
