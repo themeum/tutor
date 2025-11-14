@@ -1,6 +1,6 @@
 <?php
 /**
- * Tutor dashboard courses.
+ * Tutor dashboard quiz attempts.
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
@@ -16,7 +16,7 @@ $page_nav_items = array(
 	array(
 		'type'    => 'dropdown',
 		'icon'    => Icon::ENROLLED,
-		'active'  => true,
+		'active'  => false,
 		'options' => array(
 			array(
 				'label'  => __( 'Active', 'tutor' ),
@@ -28,7 +28,7 @@ $page_nav_items = array(
 				'label'  => __( 'Enrolled', 'tutor' ),
 				'icon'   => Icon::ENROLLED,
 				'url'    => esc_url( add_query_arg( 'dashboard-page', 'courses', $current_url ) ),
-				'active' => true,
+				'active' => false,
 			),
 			array(
 				'label'  => __( 'Complete', 'tutor' ),
@@ -50,7 +50,7 @@ $page_nav_items = array(
 		'label'  => __( 'Quiz Attempts', 'tutor' ),
 		'icon'   => Icon::QUIZ_2,
 		'url'    => esc_url( add_query_arg( 'dashboard-page', 'quiz-attempts', $current_url ) ),
-		'active' => false,
+		'active' => true,
 	),
 );
 
@@ -63,8 +63,6 @@ $page_nav_items = array(
 	);
 	?>
 	<div class="tutor-dashboard-page-card-body">
-		<p class="tutor-text-center tutor-py-16 tutor-text-muted">
-			<?php esc_html_e( 'You have not enrolled in any courses yet.', 'tutor' ); ?>
-		</p>
+		<?php tutor_load_template( 'demo-components.dashboard.components.quiz-attempts-list' ); ?>
 	</div>
 </div>

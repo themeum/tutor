@@ -24,4 +24,9 @@
   background-color: $tutor-surface-l1;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
+
+  @include tutor-breakpoint-down(sm) {
+    background-color: transparent;
+    border: none;
+  }
 }
