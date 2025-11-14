@@ -55,12 +55,12 @@ $attempts_count  = $attempts_count ?? 0;
 		<?php if ( $show_course && ! empty( $course_title ) && ! empty( $course_data ) ) : ?>
 			<div class="tutor-quiz-item-info-course">
 				<?php esc_html_e( 'Course:', 'tutor' ); ?> 
-				<span 
+				<div 
 					x-data="tutorPreviewTrigger({ data: <?php echo esc_attr( wp_json_encode( $course_data ) ); ?> })"
 					x-ref="trigger"
 					class="tutor-preview-trigger"
 				>
-					<?php echo esc_html( $course_title ); ?>
+					<span class="tutor-preview-trigger-text"><?php echo esc_html( $course_title ); ?></span>
 					<div 
 						x-ref="content"
 						x-show="open"
@@ -69,7 +69,7 @@ $attempts_count  = $attempts_count ?? 0;
 						class="tutor-popover tutor-preview-card"
 					>
 					</div>
-				</span>
+				</div>
 			</div>
 		<?php endif; ?>
 
