@@ -479,15 +479,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
     async validateAllFields(): Promise<boolean> {
       let isValid = true;
-      const formElement = (this as unknown as { $el: HTMLElement }).$el;
 
       for (const name of Object.keys(this.fields)) {
-        const fieldElement = DOMUtils.getFieldElement(formElement, name);
-
-        if (fieldElement && !DOMUtils.isElementVisible(fieldElement)) {
-          continue;
-        }
-
         const value = this.values[name];
         const fieldValid = await this.validateField(name, value);
         if (!fieldValid) isValid = false;
