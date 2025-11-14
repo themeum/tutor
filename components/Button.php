@@ -13,9 +13,7 @@
 
 namespace Tutor\Components;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Button Component Class.

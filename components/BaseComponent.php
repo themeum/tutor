@@ -15,9 +15,7 @@ namespace Tutor\Components;
 
 use Tutor\Components\Contracts\ComponentInterface;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Abstract Base Component class.
