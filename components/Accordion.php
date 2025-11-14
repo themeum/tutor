@@ -60,6 +60,15 @@ class Accordion extends BaseComponent {
 	protected $title = '';
 
 	/**
+	 * Accordion title esc fn.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var callback
+	 */
+	protected $title_esc_cb = 'esc_html';
+
+	/**
 	 * Accordion content or template path.
 	 *
 	 * @since 4.0.0
@@ -67,6 +76,15 @@ class Accordion extends BaseComponent {
 	 * @var string
 	 */
 	protected $content = '';
+
+	/**
+	 * Accordion content esc fn.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var callback
+	 */
+	protected $content_esc_cb = 'esc_html';
 
 	/**
 	 * Whether content is a template path.
@@ -114,12 +132,14 @@ class Accordion extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $title Accordion title text.
+	 * @param string   $title Accordion title text.
+	 * @param callback $title_esc_cb Title esc callback.
 	 *
 	 * @return $this
 	 */
-	public function title( $title ) {
-		$this->title = $title;
+	public function title( $title, $title_esc_cb = 'esc_html' ) {
+		$this->title        = $title;
+		$this->title_esc_cb = $title_esc_cb;
 		return $this;
 	}
 
@@ -128,13 +148,15 @@ class Accordion extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $content Content HTML.
+	 * @param string   $content Content HTML.
+	 * @param callback $content_esc_cb Callback for esc content.
 	 *
 	 * @return $this
 	 */
-	public function content( $content ) {
-		$this->content     = $content;
-		$this->is_template = false;
+	public function content( $content, $content_esc_cb = 'esc_html' ) {
+		$this->content        = $content;
+		$this->content_esc_cb = $content_esc_cb;
+		$this->is_template    = false;
 		return $this;
 	}
 
@@ -202,7 +224,7 @@ class Accordion extends BaseComponent {
 			return '';
 		}
 
-		return $this->content;
+		return $this->esc( $this->content, $this->content_esc_cb );
 	}
 
 	/**
@@ -252,7 +274,7 @@ class Accordion extends BaseComponent {
 			'id'     => $this->id,
 			'isOpen' => $this->is_open,
 		);
-		$alpine_json = wp_json_encode( $alpine_config );
+		$alpine_json   = wp_json_encode( $alpine_config );
 
 		$this->attributes['x-data'] = sprintf( 'tutorAccordion(%s)', $alpine_json );
 
@@ -292,7 +314,7 @@ class Accordion extends BaseComponent {
 			esc_attr( $panel_id ),
 			esc_attr( $trigger_id ),
 			esc_attr( $aria_expanded ),
-			$this->esc( $this->title ),
+			$this->esc( $this->title, $this->title_esc_cb ),
 			$icon_html,
 			esc_attr( $panel_id ),
 			esc_attr( $trigger_id ),

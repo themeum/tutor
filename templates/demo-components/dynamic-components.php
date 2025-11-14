@@ -290,13 +290,13 @@ use Tutor\Components\Tabs;
 	echo Accordion::make()
 	  ->id( 'about-course' )
 	  ->title( 'About this Course' )
-	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
+	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>', 'wp_kses_post' )
 	  ->render();
 	  echo "<br/>";
 	echo Accordion::make()
 	  ->id( 'about-test' )
 	  ->title( 'About this Course' )
-	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
+	  ->content( '<h3>HTML Content</h3>', 'wp_kses_post' )
 	  ->open()
 	  ->render();
 	?>
