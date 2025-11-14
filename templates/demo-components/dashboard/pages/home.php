@@ -114,6 +114,27 @@ $upcoming_lessons = array(
 	<?php esc_html_e( 'Welcome to TutorLMS Home', 'tutor' ); ?>
 </div>
 
+<div class="tutor-mb-8">
+	<div class="tutor-flex tutor-gap-4">
+		<?php foreach ( $stat_cards as $card ) : ?>
+			<div class="tutor-flex-1">
+			<?php
+			tutor_load_template(
+				'demo-components.dashboard.components.stat-card',
+				array(
+					'variation'  => isset( $card['variation'] ) ? $card['variation'] : 'enrolled',
+					'card_title' => isset( $card['title'] ) ? $card['title'] : '',
+					'icon'       => isset( $card['icon'] ) ? $card['icon'] : '',
+					'value'      => isset( $card['value'] ) ? $card['value'] : '',
+					'change'     => isset( $card['change'] ) ? $card['change'] : '',
+				)
+			);
+			?>
+			</div>
+		<?php endforeach; ?>
+	</div>
+</div>
+
 <div class="tutor-mb-4">
 	<?php tutor_load_template( 'core-components.event-badge' ); ?>
 </div>
