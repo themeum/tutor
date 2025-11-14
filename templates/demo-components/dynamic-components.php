@@ -13,6 +13,7 @@ use Tutor\Components\Accordion;
 use Tutor\Components\Avatar;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
+use Tutor\Components\InputField;
 use Tutor\Components\Modal;
 use Tutor\Components\Progress;
 use Tutor\Components\Tabs;
@@ -300,6 +301,212 @@ use Tutor\Components\Tabs;
 	  ->open()
 	  ->render();
 	?>
+	</div>
+</div>
+<div class="input-field-wrapper tutor-mb-12">
+	<h2>Input Fields</h2>
+	<pre><code>
+	&lt;?php
+	?&gt;
+	</code></pre>
+	<?php
+	// Text input with clear button
+echo InputField::make()
+    ->type('text')
+    ->name('full_name')
+    ->label('Full Name')
+    ->placeholder('Enter your full name')
+    ->required()
+    ->clearable()
+    ->help_text('This is a helper text.')
+    ->render();
+
+// Text input with left icon
+// echo InputField::make()
+//     ->type('email')
+//     ->name('email')
+//     ->label('Email')
+//     ->placeholder('Enter your email')
+//     ->left_icon('<svg>...</svg>')
+//     ->clearable()
+//     ->help_text('We will never share your email.')
+//     ->render();
+
+// // Disabled input
+// echo InputField::make()
+//     ->type('text')
+//     ->name('username')
+//     ->label('Username')
+//     ->placeholder('Enter username')
+//     ->disabled()
+//     ->help_text('This field is disabled.')
+//     ->render();
+
+// // Input with error
+// echo InputField::make()
+//     ->type('text')
+//     ->name('username')
+//     ->label('Username')
+//     ->placeholder('Enter username')
+//     ->required()
+//     ->error('This field is required.')
+//     ->render();
+
+// // Textarea
+// echo InputField::make()
+//     ->type('textarea')
+//     ->name('bio')
+//     ->label('Bio')
+//     ->placeholder('Tell us about yourself')
+//     ->required()
+//     ->clearable()
+//     ->help_text('Maximum 500 characters.')
+//     ->render();
+
+// // Small checkbox
+// echo InputField::make()
+//     ->type('checkbox')
+//     ->name('agree')
+//     ->label('I agree to terms')
+//     ->required()
+//     ->help_text('You must agree to continue.')
+//     ->render();
+
+// // Medium checkbox (checked)
+// echo InputField::make()
+//     ->type('checkbox')
+//     ->name('subscribe')
+//     ->label('Subscribe to newsletter')
+//     ->size('md')
+//     ->checked()
+//     ->help_text('Get weekly updates.')
+//     ->render();
+
+// // Intermediate checkbox
+// echo InputField::make()
+//     ->type('checkbox')
+//     ->name('select_all')
+//     ->label('Select All')
+//     ->size('md')
+//     ->checked()
+//     ->intermediate()
+//     ->render();
+
+// // Disabled checkbox
+// echo InputField::make()
+//     ->type('checkbox')
+//     ->name('locked')
+//     ->label('This is locked')
+//     ->size('md')
+//     ->disabled()
+//     ->checked()
+//     ->render();
+
+// // Small radio
+// echo InputField::make()
+//     ->type('radio')
+//     ->name('gender')
+//     ->value('male')
+//     ->label('Male')
+//     ->help_text('Select your gender.')
+//     ->render();
+
+// // Medium radio
+// echo InputField::make()
+//     ->type('radio')
+//     ->name('gender')
+//     ->value('female')
+//     ->label('Female')
+//     ->size('md')
+//     ->render();
+
+// // Disabled radio (checked)
+// echo InputField::make()
+//     ->type('radio')
+//     ->name('status')
+//     ->value('active')
+//     ->label('Active')
+//     ->size('md')
+//     ->checked()
+//     ->disabled()
+//     ->render();
+
+// // Small switch
+// echo InputField::make()
+//     ->type('switch')
+//     ->name('notifications')
+//     ->label('Enable notifications?')
+//     ->help_text('Get real-time alerts.')
+//     ->render();
+
+// // Medium switch
+// echo InputField::make()
+//     ->type('switch')
+//     ->name('dark_mode')
+//     ->label('Enable dark mode?')
+//     ->size('md')
+//     ->checked()
+//     ->help_text('Switch to dark theme.')
+//     ->render();
+
+// // Intermediate switch
+// echo InputField::make()
+//     ->type('switch')
+//     ->name('auto_save')
+//     ->label('Auto-save enabled?')
+//     ->size('md')
+//     ->intermediate()
+//     ->help_text('Partial save mode.')
+//     ->render();
+
+// // Disabled switch (checked)
+// echo InputField::make()
+//     ->type('switch')
+//     ->name('premium')
+//     ->label('Premium features')
+//     ->size('md')
+//     ->checked()
+//     ->disabled()
+//     ->help_text('Upgrade to access.')
+//     ->render();
+	?>
+		<form 
+			x-data="tutorForm({ id: 'basic-form', mode: 'onBlur', shouldFocusError: true })"
+			x-bind="getFormBindings()"
+			@submit="handleSubmit(
+				(data) => { 
+					alert('Form submitted successfully!\\n' + JSON.stringify(data, null, 2)); 
+				},
+				(errors) => { 
+					console.log('Form errors:', errors); 
+				}
+			)($event)"
+			class="tutor-max-w-md"
+		>
+
+		<?php
+			echo InputField::make()
+				->type('text')
+				->name('full_name')
+				->label('Full Name')
+				->placeholder('Enter your full name')
+				->required()
+				->clearable()
+				->help_text('This is a helper text.')
+				->attr( 'x-bind', "register('full_name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
+				->render();
+		?>
+
+				<button 
+					type="submit" 
+					class="tutor-btn tutor-btn-primary"
+					:disabled="isSubmitting"
+					:class="{ 'tutor-btn-loading': isSubmitting }"
+				>
+					<span>Submit Form</span>
+				</button>
+	
+	</form>
 	</div>
 </div>
 
