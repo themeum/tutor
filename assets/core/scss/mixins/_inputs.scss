@@ -5,6 +5,7 @@
 @use 'buttons' as *;
 
 @mixin tutor-input-base {
+  @include tutor-typography('small', 'regular');
   width: 100%;
   padding: $tutor-spacing-4 $tutor-spacing-5;
   margin: 0;
@@ -12,7 +13,6 @@
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-md;
   background-color: $tutor-surface-l1;
-  @include tutor-typography('small', 'regular');
   transition: all 0.2s ease;
 
   -moz-appearance: textfield;

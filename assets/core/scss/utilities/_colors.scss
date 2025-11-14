@@ -13,22 +13,6 @@
   background-color: currentColor;
 }
 
-.tutor-bg-surface-base {
-  background-color: var(--tutor-surface-base);
-}
-
-.tutor-bg-surface-l1 {
-  background-color: var(--tutor-surface-l1);
-}
-
-.tutor-bg-surface-l2 {
-  background-color: var(--tutor-surface-l2);
-}
-
-.tutor-bg-surface-elevated {
-  background-color: var(--tutor-surface-elevated);
-}
-
 // Brand background colors
 @each $key, $value in $tutor-brand-colors {
   .tutor-bg-brand-#{$key} {
@@ -71,33 +55,25 @@
   }
 }
 
-// Basic text colors (from main.scss)
-.tutor-text-primary {
-  color: var(--tutor-text-primary);
+// Text color utilities
+@each $key, $value in $tutor-text-colors {
+  .tutor-text-#{$key} {
+    color: $value;
+  }
 }
 
-.tutor-text-secondary {
-  color: var(--tutor-text-secondary);
+// Icon colors
+@each $key, $value in $tutor-icons {
+  .tutor-icon-#{$key} {
+    color: $value;
+  }
 }
 
-.tutor-text-subdued {
-  color: var(--tutor-text-subdued);
-}
-
-.tutor-text-brand {
-  color: var(--tutor-text-brand);
-}
-
-.tutor-text-success {
-  color: var(--tutor-text-success);
-}
-
-.tutor-text-warning {
-  color: var(--tutor-text-warning);
-}
-
-.tutor-text-error {
-  color: var(--tutor-text-error);
+// Actions colors
+@each $key, $value in $tutor-actions {
+  .tutor-actions-#{$key} {
+    color: $value;
+  }
 }
 
 // Brand text colors (full scale)
@@ -153,85 +129,6 @@
 
 .tutor-bg-surface-l2 {
   background-color: var(--tutor-surface-l2);
-}
-
-// Border colors
-.tutor-border-transparent {
-  border-color: transparent;
-}
-
-.tutor-border-current {
-  border-color: currentColor;
-}
-
-.tutor-border-idle {
-  border-color: var(--tutor-border-idle);
-}
-
-.tutor-border-hover {
-  border-color: var(--tutor-border-hover);
-}
-
-.tutor-border-focus {
-  border-color: var(--tutor-border-focus);
-}
-
-.tutor-border-brand {
-  border-color: var(--tutor-border-brand);
-}
-
-.tutor-border-success {
-  border-color: var(--tutor-border-success);
-}
-
-.tutor-border-warning {
-  border-color: var(--tutor-border-warning);
-}
-
-.tutor-border-error {
-  border-color: var(--tutor-border-error);
-}
-
-// Brand border colors
-@each $key, $value in $tutor-brand-colors {
-  .tutor-border-brand-#{$key} {
-    border-color: $value;
-  }
-}
-
-// Gray border colors
-@each $key, $value in $tutor-gray-colors {
-  .tutor-border-gray-#{$key} {
-    border-color: $value;
-  }
-}
-
-// Success border colors
-@each $key, $value in $tutor-success-colors {
-  .tutor-border-success-#{$key} {
-    border-color: $value;
-  }
-}
-
-// Warning border colors
-@each $key, $value in $tutor-warning-colors {
-  .tutor-border-warning-#{$key} {
-    border-color: $value;
-  }
-}
-
-// Error border colors
-@each $key, $value in $tutor-error-colors {
-  .tutor-border-error-#{$key} {
-    border-color: $value;
-  }
-}
-
-// Exception border colors
-@each $key, $value in $tutor-exception-colors {
-  .tutor-border-exception-#{$key} {
-    border-color: $value;
-  }
 }
 
 // Shadow utilities

@@ -41,6 +41,12 @@ $menu_items = array(
 		'active_icon' => Icon::CALENDAR_2_FILL,
 		'url'         => esc_url( add_query_arg( 'dashboard-page', 'calendar', $current_url ) ),
 	),
+	'preferences' => array(
+		'title'       => esc_html__( 'Preferences', 'tutor' ),
+		'icon'        => Icon::PREFERENCE,
+		'active_icon' => Icon::PREFERENCE,
+		'url'         => esc_url( add_query_arg( 'dashboard-page', 'preferences', $current_url ) ),
+	),
 );
 
 $active_menu = Input::get( 'dashboard-page', 'dashboard' );

@@ -9,10 +9,10 @@
 	
 <?php
 
+use Tutor\Components\Accordion;
 use Tutor\Components\Avatar;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
-use Tutor\Components\FileUploader;
 use Tutor\Components\Modal;
 use Tutor\Components\Progress;
 use Tutor\Components\Tabs;
@@ -196,7 +196,7 @@ use Tutor\Components\Tabs;
 	?>
 	</div>
 </div>
-<div class="tabs-wrapper tutor-mb-12">
+<div class="modal-wrapper tutor-mb-12">
 	<h2>Modal</h2>
 	<pre><code>
 	&lt;?php
@@ -264,6 +264,28 @@ use Tutor\Components\Tabs;
 	  ->id( 'headless-modal' )
 	  ->closeable( false )
 	  ->body( $content )
+	  ->render();
+	?>
+	</div>
+</div>
+<div class="modal-wrapper tutor-mb-12">
+	<h2>Accordion</h2>
+	<pre><code>
+	&lt;?php
+  echo Accordion::make()
+	  ->id( 'about-course' )
+	  ->title( 'About this Course' )
+	  ->content( '<p>Course description here...</p>' )
+	  ->open()
+	  ->render();
+	?&gt;
+	</code></pre>
+	<?php
+	echo Accordion::make()
+	  ->id( 'about-course' )
+	  ->title( 'About this Course' )
+	  ->content( '<p id="about-course">Course description here...</p>' )
+	  ->open()
 	  ->render();
 	?>
 	</div>

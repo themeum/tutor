@@ -7,8 +7,12 @@
 @forward 'layout/header';
 @forward 'layout/nav-mobile';
 
-// Components
+// Dashboard components
+@forward 'components/page_nav';
 @forward "stat-card";
+@forward "popup-progress-card";
+@forward "progress-card";
+@forward "upcoming-lesson-card";
 
 // Page components
 @forward 'overview';
@@ -16,6 +20,8 @@
 @forward 'assignments';
 @forward 'quiz-attempts';
 @forward 'certificates';
+@forward 'reviews';
 @forward 'settings';
+@forward 'setting-preferences';
 @forward 'profile';
 @forward 'enrollment-history';
