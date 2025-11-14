@@ -7,7 +7,6 @@
 @mixin tutor-card-base {
   background-color: var(--tutor-surface-l1);
   border: 1px solid var(--tutor-border-idle);
-  overflow: hidden;
 }
 
 @mixin tutor-card-padding($size: medium) {

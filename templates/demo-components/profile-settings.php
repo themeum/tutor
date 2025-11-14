@@ -89,7 +89,7 @@ $profile_tab_data = array(
 			</div>
 
 			<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<?php tutor_load_template( 'demo-components.dashboard.components.settings.accounts' ); ?>
+				<?php tutor_load_template( 'demo-components.dashboard.components.settings.account' ); ?>
 			</div>
 			<div x-show="activeTab === 'security'" x-cloak class="tutor-tab-panel" role="tabpanel">
 				<?php tutor_load_template( 'demo-components.dashboard.components.settings.security' ); ?>

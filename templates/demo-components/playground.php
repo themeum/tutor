@@ -82,6 +82,7 @@ use TUTOR\Input;
 			<?php require 'components/modal.php'; ?>
 			<?php require 'components/input.php'; ?>
 			<?php require 'components/form.php'; ?>
+			<?php require 'components/select.php'; ?>
 		</section>
 	<?php endif ?>
 </body>
