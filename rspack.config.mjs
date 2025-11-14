@@ -37,15 +37,15 @@ const createSwcLoaderOptions = (isDevelopment) => ({
     },
     experimental: {
       plugins: [
-        [
-          '@swc/plugin-emotion',
-          {
-            sourceMap: isDevelopment,
-            autoLabel: 'dev-only',
-            labelFormat: '[local]',
-            cssPropOptimization: true,
-          },
-        ],
+        // [
+        //   '@swc/plugin-emotion',
+        //   {
+        //     sourceMap: isDevelopment,
+        //     autoLabel: 'dev-only',
+        //     labelFormat: '[local]',
+        //     cssPropOptimization: true,
+        //   },
+        // ],
       ],
     },
   },

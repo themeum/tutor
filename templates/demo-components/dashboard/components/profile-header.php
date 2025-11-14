@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Icon;
+
 ?>
 <div class="tutor-profile-header">
 	<div class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">

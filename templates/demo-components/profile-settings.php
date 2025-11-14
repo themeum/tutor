@@ -13,31 +13,31 @@ $profile_tab_data = array(
 		'id'    => 'account',
 		'label' => 'Account',
 		'icon'  => Icon::USER_CIRCLE,
-	),
-	array(
-		'id'    => 'security',
-		'label' => 'Security',
-		'icon'  => Icon::SECURITY,
+		'text'  => 'Name, email, phone number, profiles',
 	),
 	array(
 		'id'    => 'social-accounts',
 		'label' => 'Social Accounts',
 		'icon'  => Icon::GLOBE,
+		'text'  => 'Name, email, phone number, profiles',
 	),
 	array(
 		'id'    => 'billing-address',
 		'label' => 'Billing Address',
 		'icon'  => Icon::BILLING,
+		'text'  => 'Name, email, phone number, profiles',
 	),
 	array(
 		'id'    => 'notifications',
 		'label' => 'Notifications',
 		'icon'  => Icon::NOTIFICATION,
+		'text'  => 'Name, email, phone number, profiles',
 	),
 	array(
 		'id'    => 'preferences',
 		'label' => 'Preferences',
 		'icon'  => Icon::PREFERENCE,
+		'text'  => 'Name, email, phone number, profiles',
 	),
 );
 ?>
@@ -51,7 +51,7 @@ $profile_tab_data = array(
 			x-data='tutorTabs({
 				tabs: <?php echo wp_json_encode( $profile_tab_data ); ?>,
 				orientation: "vertical",
-				defaultTab: "notifications",
+				defaultTab: "account",
 				urlParams: {
 					enabled: false,
 					paramName: "tab",
@@ -70,12 +70,15 @@ $profile_tab_data = array(
 						@click="selectTab(tab.id)"
 					>
 						<span x-data="tutorIcon({ name: tab.icon, width: 20, height: 20})"></span>
-						<span x-text="tab.label" class="tutor-text-small"></span>
+						<div class="tutor-flex tutor-flex-column tutor-items-start">
+							<span x-text="tab.label" class="tutor-text-small"></span>
+							<span x-text="tab.text" class="tutor-text-tiny tutor-hidden tutor-sm-block tutor-text-subdued"></span>
+						</div>
 					</button>
 				</template>
 			</div>
 
-			<div class="tutor-w-full">
+			<div class="tutor-profile-settings-tab-content tutor-w-full tutor-mt-7 tutor-md-mt-1">
 				<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
 					<?php tutor_load_template( 'demo-components.dashboard.components.settings.account' ); ?>
 				</div>

@@ -7,8 +7,7 @@
 	background: $tutor-surface-base;
 	display: flex;
 	flex-direction: column;
-	gap: $tutor-spacing-9;
-	padding-bottom: $tutor-spacing-15;
+	position: relative;
 }
 
 .tutor-profile-settings-tab {
