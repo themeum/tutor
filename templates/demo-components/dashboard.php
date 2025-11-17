@@ -29,6 +29,7 @@ use TUTOR\Input;
 					'notes',
 					'discussions',
 					'calendar',
+					'wishlist',
 					'preferences',
 				);
 

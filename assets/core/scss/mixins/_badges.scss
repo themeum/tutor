@@ -23,6 +23,11 @@
 
 @mixin tutor-badge-variant($variant: primary) {
 	@if $variant ==primary {
+		background-color: $tutor-actions-brand-primary;
+		color: $tutor-text-primary-inverse;
+	}
+
+	@else if $variant ==primary-soft {
 		background-color: $tutor-actions-brand-tertiary;
 		color: $tutor-actions-brand-primary;
 	}
