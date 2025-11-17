@@ -4,7 +4,9 @@
 @use '../tokens' as *;
 @use '../mixins' as *;
 
-// Background colors
+// ------------------------------------------------------------
+// Transparent / Current Color Utilities
+// ------------------------------------------------------------
 .tutor-bg-transparent {
   background-color: transparent;
 }
@@ -13,126 +15,126 @@
   background-color: currentColor;
 }
 
-// Brand background colors
+// ------------------------------------------------------------
+// Brand Colors (Background & Text)
+// ------------------------------------------------------------
 @each $key, $value in $tutor-brand-colors {
   .tutor-bg-brand-#{$key} {
     background-color: $value;
   }
-}
-
-// Brand text colors (full scale)
-@each $key, $value in $tutor-brand-colors {
   .tutor-text-brand-#{$key} {
     color: $value;
   }
 }
 
-// Gray background colors
+// ------------------------------------------------------------
+// Gray Colors (Background & Text)
+// ------------------------------------------------------------
 @each $key, $value in $tutor-gray-colors {
   .tutor-bg-gray-#{$key} {
     background-color: $value;
   }
-}
-
-// Gray text colors (full scale)
-@each $key, $value in $tutor-gray-colors {
   .tutor-text-gray-#{$key} {
     color: $value;
   }
 }
 
-// Success background colors
+// ------------------------------------------------------------
+// Success Colors (Background & Text)
+// ------------------------------------------------------------
 @each $key, $value in $tutor-success-colors {
   .tutor-bg-success-#{$key} {
     background-color: $value;
   }
-}
-
-// Success text colors (full scale)
-@each $key, $value in $tutor-success-colors {
   .tutor-text-success-#{$key} {
     color: $value;
   }
 }
 
-// Warning background colors
+// ------------------------------------------------------------
+// Warning Colors (Background & Text)
+// ------------------------------------------------------------
 @each $key, $value in $tutor-warning-colors {
   .tutor-bg-warning-#{$key} {
     background-color: $value;
   }
-}
-
-// Warning text colors (full scale)
-@each $key, $value in $tutor-warning-colors {
   .tutor-text-warning-#{$key} {
     color: $value;
   }
 }
 
-// Error background colors
+// ------------------------------------------------------------
+// Error Colors (Background & Text)
+// ------------------------------------------------------------
 @each $key, $value in $tutor-error-colors {
   .tutor-bg-error-#{$key} {
     background-color: $value;
   }
-}
-
-// Error text colors (full scale)
-@each $key, $value in $tutor-error-colors {
   .tutor-text-error-#{$key} {
     color: $value;
   }
 }
 
-// Exception background colors
+// ------------------------------------------------------------
+// Exception Colors (Background & Text)
+// ------------------------------------------------------------
 @each $key, $value in $tutor-exception-colors {
   .tutor-bg-exception-#{$key} {
     background-color: $value;
   }
-}
-
-// Exception text colors
-@each $key, $value in $tutor-exception-colors {
   .tutor-text-exception-#{$key} {
     color: $value;
   }
 }
 
-// Surface color utilities
+// ------------------------------------------------------------
+// Surface Colors
+// ------------------------------------------------------------
 @each $key, $value in $tutor-surfaces {
   .tutor-surface-#{$key} {
     background-color: $value;
   }
 }
 
-// Text color utilities
+// ------------------------------------------------------------
+// Text Colors
+// ------------------------------------------------------------
 @each $key, $value in $tutor-text-colors {
   .tutor-text-#{$key} {
     color: $value;
   }
 }
 
-// Icon colors
+// ------------------------------------------------------------
+// Icon Colors
+// ------------------------------------------------------------
 @each $key, $value in $tutor-icons {
   .tutor-icon-#{$key} {
     color: $value;
   }
 }
 
-// Actions colors
+// ------------------------------------------------------------
+// Actions Colors
+// ------------------------------------------------------------
 @each $key, $value in $tutor-actions {
   .tutor-actions-#{$key} {
     color: $value;
   }
 }
 
-// Shadow utilities
+// ------------------------------------------------------------
+// Shadow Utilities
+// ------------------------------------------------------------
 @each $key, $value in $tutor-shadows {
   .tutor-shadow-#{$key} {
     box-shadow: $value;
   }
 }
 
-// Opacity utilities
+// ------------------------------------------------------------
+// Opacity Utilities
+// ------------------------------------------------------------
 .tutor-opacity-0 {
   opacity: 0;
 }
@@ -153,7 +155,9 @@
   opacity: 1;
 }
 
-// Hover state utilities
+// ------------------------------------------------------------
+// Hover State Utilities
+// ------------------------------------------------------------
 .tutor-hover-surface-l1:hover {
   background-color: $tutor-surface-l1-hover;
 }
@@ -182,7 +186,9 @@
   box-shadow: $tutor-shadow-lg;
 }
 
-// Focus state utilities
+// ------------------------------------------------------------
+// Focus State Utilities
+// ------------------------------------------------------------
 .tutor-focus-border-brand:focus {
   border-color: $tutor-border-brand;
 }
@@ -195,7 +201,9 @@
   outline: none;
 }
 
-// Responsive color utilities
+// ------------------------------------------------------------
+// Responsive Color Utilities
+// ------------------------------------------------------------
 @each $breakpoint, $min-width in $tutor-breakpoints {
   @if $min-width > 0 {
     @media (min-width: $min-width) {
