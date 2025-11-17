@@ -20,10 +20,24 @@
   }
 }
 
+// Brand text colors (full scale)
+@each $key, $value in $tutor-brand-colors {
+  .tutor-text-brand-#{$key} {
+    color: $value;
+  }
+}
+
 // Gray background colors
 @each $key, $value in $tutor-gray-colors {
   .tutor-bg-gray-#{$key} {
     background-color: $value;
+  }
+}
+
+// Gray text colors (full scale)
+@each $key, $value in $tutor-gray-colors {
+  .tutor-text-gray-#{$key} {
+    color: $value;
   }
 }
 
@@ -34,10 +48,24 @@
   }
 }
 
+// Success text colors (full scale)
+@each $key, $value in $tutor-success-colors {
+  .tutor-text-success-#{$key} {
+    color: $value;
+  }
+}
+
 // Warning background colors
 @each $key, $value in $tutor-warning-colors {
   .tutor-bg-warning-#{$key} {
     background-color: $value;
+  }
+}
+
+// Warning text colors (full scale)
+@each $key, $value in $tutor-warning-colors {
+  .tutor-text-warning-#{$key} {
+    color: $value;
   }
 }
 
@@ -48,9 +76,30 @@
   }
 }
 
+// Error text colors (full scale)
+@each $key, $value in $tutor-error-colors {
+  .tutor-text-error-#{$key} {
+    color: $value;
+  }
+}
+
 // Exception background colors
 @each $key, $value in $tutor-exception-colors {
   .tutor-bg-exception-#{$key} {
+    background-color: $value;
+  }
+}
+
+// Exception text colors
+@each $key, $value in $tutor-exception-colors {
+  .tutor-text-exception-#{$key} {
+    color: $value;
+  }
+}
+
+// Surface color utilities
+@each $key, $value in $tutor-surfaces {
+  .tutor-surface-#{$key} {
     background-color: $value;
   }
 }
@@ -74,61 +123,6 @@
   .tutor-actions-#{$key} {
     color: $value;
   }
-}
-
-// Brand text colors (full scale)
-@each $key, $value in $tutor-brand-colors {
-  .tutor-text-brand-#{$key} {
-    color: $value;
-  }
-}
-
-// Gray text colors (full scale)
-@each $key, $value in $tutor-gray-colors {
-  .tutor-text-gray-#{$key} {
-    color: $value;
-  }
-}
-
-// Success text colors (full scale)
-@each $key, $value in $tutor-success-colors {
-  .tutor-text-success-#{$key} {
-    color: $value;
-  }
-}
-
-// Warning text colors (full scale)
-@each $key, $value in $tutor-warning-colors {
-  .tutor-text-warning-#{$key} {
-    color: $value;
-  }
-}
-
-// Error text colors (full scale)
-@each $key, $value in $tutor-error-colors {
-  .tutor-text-error-#{$key} {
-    color: $value;
-  }
-}
-
-// Exception text colors
-@each $key, $value in $tutor-exception-colors {
-  .tutor-text-exception-#{$key} {
-    color: $value;
-  }
-}
-
-// Basic background colors (from main.scss)
-.tutor-bg-surface-base {
-  background-color: var(--tutor-surface-base);
-}
-
-.tutor-bg-surface-l1 {
-  background-color: var(--tutor-surface-l1);
-}
-
-.tutor-bg-surface-l2 {
-  background-color: var(--tutor-surface-l2);
 }
 
 // Shadow utilities
@@ -160,16 +154,12 @@
 }
 
 // Hover state utilities
-.tutor-hover-bg-primary:hover {
-  background-color: var(--tutor-button-primary);
+.tutor-hover-surface-l1:hover {
+  background-color: $tutor-surface-l1-hover;
 }
 
-.tutor-hover-bg-secondary:hover {
-  background-color: var(--tutor-button-secondary);
-}
-
-.tutor-hover-bg-surface-l2:hover {
-  background-color: var(--tutor-surface-l2);
+.tutor-hover-surface-l2:hover {
+  background-color: $tutor-surface-l2-hover;
 }
 
 .tutor-hover-text-primary:hover {
@@ -209,28 +199,32 @@
 @each $breakpoint, $value in $tutor-breakpoints {
   @if $value >0 {
     @media (min-width: $value) {
-      .tutor-#{$breakpoint}-bg-surface-base {
-        background-color: var(--tutor-surface-base);
+      // Surface color utilities
+      @each $key, $value in $tutor-surfaces {
+        .tutor-#{$breakpoint}-surface-#{$key} {
+          background-color: $value;
+        }
       }
 
-      .tutor-#{$breakpoint}-bg-surface-l1 {
-        background-color: var(--tutor-surface-l1);
+      // Text color utilities
+      @each $key, $value in $tutor-text-colors {
+        .tutor-#{$breakpoint}-text-#{$key} {
+          color: $value;
+        }
       }
 
-      .tutor-#{$breakpoint}-bg-primary {
-        background-color: var(--tutor-button-primary);
+      // Icon colors
+      @each $key, $value in $tutor-icons {
+        .tutor-#{$breakpoint}-icon-#{$key} {
+          color: $value;
+        }
       }
 
-      .tutor-#{$breakpoint}-text-primary {
-        color: var(--tutor-text-primary);
-      }
-
-      .tutor-#{$breakpoint}-text-secondary {
-        color: var(--tutor-text-secondary);
-      }
-
-      .tutor-#{$breakpoint}-border-brand {
-        border-color: var(--tutor-border-brand);
+      // Actions colors
+      @each $key, $value in $tutor-actions {
+        .tutor-#{$breakpoint}-actions-#{$key} {
+          color: $value;
+        }
       }
     }
   }
