@@ -163,28 +163,28 @@
 }
 
 .tutor-hover-text-primary:hover {
-  color: var(--tutor-text-primary);
+  color: $tutor-text-primary;
 }
 
 .tutor-hover-text-brand:hover {
-  color: var(--tutor-text-brand);
+  color: $tutor-text-brand;
 }
 
 .tutor-hover-border-brand:hover {
-  border-color: var(--tutor-border-brand);
+  border-color: $tutor-border-brand;
 }
 
 .tutor-hover-shadow-md:hover {
-  box-shadow: var(--tutor-shadow-md);
+  box-shadow: $tutor-shadow-md;
 }
 
 .tutor-hover-shadow-lg:hover {
-  box-shadow: var(--tutor-shadow-lg);
+  box-shadow: $tutor-shadow-lg;
 }
 
 // Focus state utilities
 .tutor-focus-border-brand:focus {
-  border-color: var(--tutor-border-brand);
+  border-color: $tutor-border-brand;
 }
 
 .tutor-focus-ring:focus {
@@ -196,34 +196,30 @@
 }
 
 // Responsive color utilities
-@each $breakpoint, $value in $tutor-breakpoints {
-  @if $value >0 {
-    @media (min-width: $value) {
-      // Surface color utilities
-      @each $key, $value in $tutor-surfaces {
+@each $breakpoint, $min-width in $tutor-breakpoints {
+  @if $min-width > 0 {
+    @media (min-width: $min-width) {
+      @each $key, $surface-color in $tutor-surfaces {
         .tutor-#{$breakpoint}-surface-#{$key} {
-          background-color: $value;
+          background-color: $surface-color;
         }
       }
 
-      // Text color utilities
-      @each $key, $value in $tutor-text-colors {
+      @each $key, $text-color in $tutor-text-colors {
         .tutor-#{$breakpoint}-text-#{$key} {
-          color: $value;
+          color: $text-color;
         }
       }
 
-      // Icon colors
-      @each $key, $value in $tutor-icons {
+      @each $key, $icon-color in $tutor-icons {
         .tutor-#{$breakpoint}-icon-#{$key} {
-          color: $value;
+          color: $icon-color;
         }
       }
 
-      // Actions colors
-      @each $key, $value in $tutor-actions {
+      @each $key, $action-color in $tutor-actions {
         .tutor-#{$breakpoint}-actions-#{$key} {
-          color: $value;
+          color: $action-color;
         }
       }
     }

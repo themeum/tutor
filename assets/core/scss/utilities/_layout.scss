@@ -9,10 +9,6 @@
   @include tutor-container;
 }
 
-.tutor-flex {
-  @include tutor-flex;
-}
-
 .tutor-flex-center {
   @include tutor-flex-center;
 }
@@ -23,10 +19,6 @@
 
 .tutor-flex-column {
   @include tutor-flex-column;
-}
-
-.tutor-grid {
-  @include tutor-grid;
 }
 
 .tutor-visually-hidden {
@@ -441,6 +433,27 @@
 .tutor-icon {
   @include tutor-flex(row, center, center);
   flex-shrink: 0;
+}
+
+// Float utilities
+.tutor-float-start {
+  float: inline-start;
+}
+
+.tutor-float-end {
+  float: inline-end;
+}
+
+.tutor-float-left {
+  float: left;
+}
+
+.tutor-float-right {
+  float: right;
+}
+
+.tutor-float-none {
+  float: none;
 }
 
 // Responsive layout utilities

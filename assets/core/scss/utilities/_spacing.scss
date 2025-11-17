@@ -56,8 +56,7 @@
   }
 
   .tutor-px-#{$key} {
-    padding-left: $value;
-    padding-right: $value;
+    padding-inline: $value;
   }
 
   .tutor-py-#{$key} {
@@ -90,8 +89,7 @@
     }
 
     .-tutor-mx-#{$key} {
-      margin-left: -$value;
-      margin-right: -$value;
+      margin-inline: -$value;
     }
 
     .-tutor-my-#{$key} {
@@ -123,8 +121,7 @@
 }
 
 .tutor-mx-auto {
-  margin-left: auto;
-  margin-right: auto;
+  margin-inline: auto;
 }
 
 .tutor-my-auto {
@@ -134,7 +131,7 @@
 
 // Responsive spacing utilities
 @each $breakpoint, $value in $tutor-breakpoints {
-  @if $value >0 {
+  @if $value > 0 {
     @media (min-width: $value) {
       @each $space-key, $space-value in $tutor-spacing {
         .tutor-#{$breakpoint}-m-#{$space-key} {
@@ -146,7 +143,7 @@
         }
 
         .tutor-#{$breakpoint}-mr-#{$space-key} {
-          margin-right: $space-value;
+          margin-inline-end: $space-value;
         }
 
         .tutor-#{$breakpoint}-mb-#{$space-key} {
@@ -154,12 +151,11 @@
         }
 
         .tutor-#{$breakpoint}-ml-#{$space-key} {
-          margin-left: $space-value;
+          margin-inline-start: $space-value;
         }
 
         .tutor-#{$breakpoint}-mx-#{$space-key} {
-          margin-left: $space-value;
-          margin-right: $space-value;
+          margin-inline: $space-value;
         }
 
         .tutor-#{$breakpoint}-my-#{$space-key} {
@@ -176,7 +172,7 @@
         }
 
         .tutor-#{$breakpoint}-pr-#{$space-key} {
-          padding-right: $space-value;
+          padding-inline-end: $space-value;
         }
 
         .tutor-#{$breakpoint}-pb-#{$space-key} {
@@ -184,12 +180,11 @@
         }
 
         .tutor-#{$breakpoint}-pl-#{$space-key} {
-          padding-left: $space-value;
+          padding-inline-start: $space-value;
         }
 
         .tutor-#{$breakpoint}-px-#{$space-key} {
-          padding-left: $space-value;
-          padding-right: $space-value;
+          padding-inline: $space-value;
         }
 
         .tutor-#{$breakpoint}-py-#{$space-key} {
