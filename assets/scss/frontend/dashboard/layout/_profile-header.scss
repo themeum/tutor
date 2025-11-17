@@ -34,6 +34,7 @@
 			h4 {
 				width: 100%;
 				text-align: center;
+				text-transform: capitalize;
 			}
 
 			button:first-child {
@@ -99,7 +100,7 @@
 	.tutor-profile-settings-tab-content {
 		background: $tutor-surface-base;
 		position: absolute;
-		top: 30px;
+		top: 60px;
 		height: 100vh;
 		display: none;
 		&.tutor-profile-tab-activated {

@@ -48,16 +48,29 @@ $profile_tab_data = array(
 			x-data='tutorTabs({
 				tabs: <?php echo wp_json_encode( $profile_tab_data ); ?>,
 				orientation: "vertical",
-				defaultTab: window.innerWidth >= 480 ? "account" : "none",
+				defaultTab: window.innerWidth >= 576 ? "account" : "none",
 				urlParams: {
 					enabled: false,
 					paramName: "tab",
 				}
 			})'
+			x-init="$watch('$store.windowWidth', () => {
+				if (window.innerWidth >= 576 && activeTab === 'none') {
+					selectTab('account');
+				} else if (window.innerWidth < 576 && activeTab !== 'none') {
+					selectTab('none');
+				}
+			})"
+			@resize.window="
+				if (window.innerWidth >= 576 && activeTab === 'none') {
+					selectTab('account');
+				} else if (window.innerWidth < 576 && activeTab !== 'none') {
+					selectTab('none');
+				}
+			"
 			x-cloak
 			class="tutor-gap-8" x-bind:data-josh="activeTab">
 			<?php tutor_load_template( 'demo-components.dashboard.components.profile-header' ); ?>
-			<!-- <div class="tutor-flex tutor-gap-8"> -->
 			<div class="tutor-flex tutor-gap-8">
 				<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab">
 					<template x-for="tab in tabs" :key="tab.id">
@@ -78,7 +91,7 @@ $profile_tab_data = array(
 					</template>
 				</div>
 
-				<div :class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" class="tutor-profile-settings-tab-content tutor-w-full tutor-mt-7 tutor-md-mt-1">
+				<div :class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" class="tutor-profile-settings-tab-content tutor-w-full">
 					<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
 						<?php tutor_load_template( 'demo-components.dashboard.components.settings.account' ); ?>
 					</div>
