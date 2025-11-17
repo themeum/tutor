@@ -46,7 +46,7 @@ $social_fields = array(
 ?>
 
 <section class="tutor-social-accounts">
-	<div class="tutor-h5"><?php echo esc_html__( 'Social Profile Link', 'tutor' ); ?></div>
+	<div class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Social Profile Link', 'tutor' ); ?></div>
 
 	<form
 		x-data="tutorForm({ id: 'social-profile-form', mode: 'onChange', shouldFocusError: true })"
