@@ -1,0 +1,348 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-select {
+  position: relative;
+  width: 100%;
+  @include tutor-typography(small);
+
+  // Trigger button
+  &-trigger {
+    @include tutor-flex(row, center, space-between);
+    width: 100%;
+    min-height: 40px;
+    gap: $tutor-spacing-3;
+    padding: $tutor-spacing-4 $tutor-spacing-5;
+    background-color: $tutor-surface-base;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-md;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    &:focus {
+      @include tutor-focus-ring();
+      border-color: $tutor-border-brand-tertiary;
+      background-color: $tutor-surface-l1;
+    }
+
+    &[disabled] {
+      background-color: $tutor-surface-l1-hover;
+      cursor: not-allowed;
+    }
+
+    .tutor-input-field-error & {
+      border: 1px solid $tutor-border-error;
+      box-shadow: $tutor-shadow-xs;
+
+      &:focus {
+        @include tutor-focus-ring('error');
+        border-color: $tutor-border-error;
+      }
+    }
+  }
+
+  // Trigger content
+  &-value {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+
+    &-text {
+      @include tutor-typography(small);
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &-placeholder {
+      color: $tutor-text-subdued;
+    }
+
+    &-icon {
+      flex-shrink: 0;
+      @include tutor-flex(row, center, center);
+      color: $tutor-icon-secondary;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  // Multiple selected items
+  &-tags {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &-tag {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+    padding: $tutor-spacing-1 $tutor-spacing-2;
+    background: $tutor-surface-l2;
+    border-radius: $tutor-radius-sm;
+    font-size: 12px;
+    line-height: 1.4;
+    max-width: 150px;
+
+    &-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &-remove {
+      @include tutor-button-reset;
+      @include tutor-flex(row, center, center);
+      padding: 0;
+      color: $tutor-icon-secondary;
+      cursor: pointer;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $tutor-icon-critical;
+      }
+    }
+  }
+
+  // Actions (clear, arrow)
+  &-actions {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+    flex-shrink: 0;
+  }
+
+  &-clear {
+    @include tutor-button-base;
+    @include tutor-button-variant('ghost');
+    @include tutor-flex(row, center, center);
+    padding: 0;
+    color: $tutor-icon-secondary;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    @include margin-end($tutor-spacing-2);
+  }
+
+  &-arrow {
+    @include tutor-flex(row, center, center);
+    color: $tutor-icon-secondary;
+    transition: transform 0.2s ease;
+
+    &[data-open='true'] {
+      transform: rotate(180deg);
+    }
+
+    // RTL: Mirror the arrow direction
+    [dir='rtl'] & {
+      transform: scaleX(-1);
+
+      &[data-open='true'] {
+        transform: scaleX(-1) rotate(180deg);
+      }
+    }
+  }
+
+  // Dropdown menu
+  &-menu {
+    position: absolute;
+    @include left(0);
+    @include right(0);
+    z-index: $tutor-z-dropdown;
+    background: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-md;
+    box-shadow: $tutor-shadow-lg;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+
+    &[data-position='bottom'] {
+      top: calc(100% + 4px);
+    }
+
+    &[data-position='top'] {
+      bottom: calc(100% + 4px);
+    }
+  }
+
+  // Search input
+  &-search {
+    position: relative;
+    padding: $tutor-spacing-4 $tutor-spacing-5;
+    border-bottom: 1px solid $tutor-border-idle;
+    flex-shrink: 0;
+
+    &-icon {
+      position: absolute;
+      top: 50%;
+      @include left($tutor-spacing-7);
+      transform: translateY(-50%);
+      color: $tutor-icon-secondary;
+      pointer-events: none;
+      @include tutor-flex(row, center, center);
+    }
+
+    .tutor-select-search-input {
+      @include tutor-input-base();
+      @include padding-start($tutor-spacing-9);
+    }
+  }
+
+  // Options list
+  &-options {
+    overflow-y: auto;
+    max-height: 280px;
+    padding: $tutor-spacing-3 0;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: $tutor-border-idle;
+      border-radius: $tutor-radius-full;
+
+      &:hover {
+        background: $tutor-icon-secondary;
+      }
+    }
+  }
+
+  // Option group
+  &-group {
+    &-label {
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+      @include tutor-typography(tiny, semibold, subdued);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    &-options {
+      padding-bottom: $tutor-spacing-2;
+    }
+  }
+
+  // Single option
+  &-option {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-3;
+    padding: $tutor-spacing-4 $tutor-spacing-5;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    position: relative;
+
+    &-icon {
+      flex-shrink: 0;
+      @include tutor-flex(row, center, center);
+      color: $tutor-icon-secondary;
+      width: 16px;
+      height: 16px;
+    }
+
+    &-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &-label {
+      @include tutor-typography(small);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    &-description {
+      @include tutor-typography(tiny, regular, subdued);
+      margin-top: $tutor-spacing-1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    // States
+    &:hover:not([data-disabled='true']) {
+      background: $tutor-surface-l2;
+    }
+
+    &[data-highlighted='true']:not([data-disabled='true']) {
+      background: $tutor-surface-l2;
+    }
+
+    &[data-disabled='true'] {
+      color: $tutor-text-subdued;
+      cursor: not-allowed;
+      opacity: 0.5;
+
+      &:hover {
+        background: transparent;
+      }
+    }
+  }
+
+  // Empty state
+  &-empty {
+    @include tutor-typography(small, regular, subdued);
+    padding: $tutor-spacing-6 $tutor-spacing-5;
+    text-align: center;
+  }
+
+  // Loading state
+  &-loading {
+    @include tutor-typography(small, regular, subdued);
+    @include tutor-flex(row, center, center);
+    gap: $tutor-spacing-3;
+    padding: $tutor-spacing-6 $tutor-spacing-5;
+
+    &-spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid $tutor-border-idle;
+      border-top-color: $tutor-border-brand-secondary;
+      border-radius: $tutor-radius-full;
+      animation: tutor-select-spin 0.6s linear infinite;
+    }
+  }
+}
+
+// Animations
+@keyframes tutor-select-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Size variants
+.tutor-select-sm {
+  .tutor-select-trigger {
+    min-height: 32px;
+    padding: $tutor-spacing-2 $tutor-spacing-3;
+    @include tutor-typography(tiny);
+  }
+
+  .tutor-select-option {
+    padding: $tutor-spacing-2 $tutor-spacing-4;
+    @include tutor-typography(tiny);
+  }
+}
+
+.tutor-select-lg {
+  .tutor-select-trigger {
+    min-height: 48px;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    @include tutor-typography(medium);
+  }
+
+  .tutor-select-option {
+    padding: $tutor-spacing-4 $tutor-spacing-6;
+    @include tutor-typography(medium);
+  }
+}
