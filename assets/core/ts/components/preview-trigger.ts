@@ -1,21 +1,16 @@
 // Preview Trigger Component
-// Shows course/lesson preview card on hover (desktop) or tap (mobile)
-// Uses props-based data instead of API fetching
+// Shows course/lesson preview card on hover
 
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { __, sprintf } from '@wordpress/i18n';
 import { popover, type PopoverProps } from './popover';
 
 export interface PreviewData {
-  type: 'course' | 'lesson';
   title: string;
-  excerpt?: string;
-  thumbnail?: string;
-  instructor?: string;
-  students?: number;
-  rating?: number;
-  duration?: string;
-  lessonType?: string;
-  url?: string;
+  url: string;
+  thumbnail: string;
+  instructor: string;
+  instructor_url: string;
 }
 
 export interface PreviewTriggerProps extends PopoverProps {
@@ -33,11 +28,11 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
 
   return {
     ...popoverInstance,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    previewData: props.data || (null as any),
+    previewData: props.data || null,
     isTouchDevice: false,
     hoverTimeout: null as number | null,
     hoverDelay: props.delay || 300,
+    $nextTick: undefined as ((callback: () => void) => void) | undefined,
 
     init() {
       popoverInstance.init.call(this);
@@ -48,19 +43,6 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
     setupPreviewTriggers() {
       const trigger = this.$refs.trigger;
       if (!trigger) return;
-
-      // Get preview data from data attribute if not provided in props
-      if (!this.previewData && trigger.hasAttribute('data-tutor-preview-data')) {
-        try {
-          const dataAttr = trigger.getAttribute('data-tutor-preview-data');
-          if (dataAttr) {
-            this.previewData = JSON.parse(dataAttr);
-          }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.error('Failed to parse preview data:', error);
-        }
-      }
 
       // Get hover delay from data attribute
       if (trigger.hasAttribute('data-tutor-preview-delay')) {
@@ -132,22 +114,18 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
       this.renderPreview();
 
       // Reposition after content is rendered
-      this.$nextTick(() => {
+      if (this.$nextTick) {
         this.updatePosition();
-      });
+      } else {
+        this.updatePosition();
+      }
     },
 
     renderPreview() {
       const content = this.$refs.content;
       if (!content || !this.previewData) return;
 
-      const type = this.previewData.type;
-
-      if (type === 'course') {
-        this.renderCoursePreview(content);
-      } else {
-        this.renderLessonPreview(content);
-      }
+      this.renderCoursePreview(content);
     },
 
     renderCoursePreview(content: HTMLElement) {
@@ -157,36 +135,10 @@ export const previewTrigger = (props: PreviewTriggerProps = {}) => {
 
       content.innerHTML = `
         <div class="tutor-preview-card-content">
-          ${data.thumbnail ? `<img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" />` : ''}
+          ${data.thumbnail ? `<a href="${data.url}"><img src="${data.thumbnail}" alt="${this.escapeHtml(data.title)}" class="tutor-preview-card-thumbnail" /></a>` : ''}
           <div class="tutor-preview-card-body">
-            <h4 class="tutor-preview-card-title">${this.escapeHtml(data.title)}</h4>
-            ${data.excerpt ? `<p class="tutor-preview-card-excerpt">${this.escapeHtml(data.excerpt)}</p>` : ''}
-            <div class="tutor-preview-card-meta">
-              ${data.instructor ? `<span class="tutor-preview-card-instructor">${this.escapeHtml(data.instructor)}</span>` : ''}
-              ${data.students ? `<span class="tutor-preview-card-students">${data.students} students</span>` : ''}
-              ${data.rating ? `<span class="tutor-preview-card-rating">★ ${data.rating}</span>` : ''}
-            </div>
-            ${data.url ? `<a href="${this.escapeHtml(data.url)}" class="tutor-preview-card-link">View Course →</a>` : ''}
-          </div>
-        </div>
-      `;
-    },
-
-    renderLessonPreview(content: HTMLElement) {
-      if (!this.previewData) return;
-
-      const data = this.previewData;
-
-      content.innerHTML = `
-        <div class="tutor-preview-card-content">
-          <div class="tutor-preview-card-body">
-            <h4 class="tutor-preview-card-title">${this.escapeHtml(data.title)}</h4>
-            ${data.excerpt ? `<p class="tutor-preview-card-excerpt">${this.escapeHtml(data.excerpt)}</p>` : ''}
-            <div class="tutor-preview-card-meta">
-              ${data.duration ? `<span class="tutor-preview-card-duration">${this.escapeHtml(data.duration)}</span>` : ''}
-              ${data.lessonType ? `<span class="tutor-preview-card-type">${this.escapeHtml(data.lessonType)}</span>` : ''}
-            </div>
-            ${data.url ? `<a href="${this.escapeHtml(data.url)}" class="tutor-preview-card-link">View Lesson →</a>` : ''}
+            <h4 class="tutor-preview-card-title"><a href="#">${this.escapeHtml(data.title)}</a></h4>
+            ${data.instructor ? `<div class="tutor-preview-card-instructor">${sprintf(__(`by <a href="${data.instructor_url}">%s</a>`, 'tutor'), this.escapeHtml(data.instructor))}</div>` : ''}
           </div>
         </div>
       `;
