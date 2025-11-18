@@ -15,15 +15,15 @@ use TUTOR\Icon;
 	<div class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
 		<div class="tutor-profile-header-left tutor-flex tutor-items-center"
 			x-data="{ windowWidth: window.innerWidth }"
-			@resize.window="windowWidthtutor-profile-header-left = window.innerWidth"
+			@resize.window="windowWidth = window.innerWidth"
 		>
-			<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
+			<button @click="window.history.back()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::LEFT ); ?>
 			</button>
-			<h4 class="tutor-text-h4 tutor-font-semibold tutor-ml-4"
+			<h4 
+				class="tutor-text-h4 tutor-font-semibold tutor-ml-4"
 				x-text="windowWidth <= 576 ? (activeTab === 'none' ? 'Settings' : activeTab) : 'Settings'"
-			>
-			</h4>
+			></h4>
 			<span class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-ml-5 tutor-sm-hidden">Unsaved changes</span>
 		</div>
 		<div class="tutor-profile-header-right tutor-flex tutor-gap-4">

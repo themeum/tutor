@@ -10,7 +10,7 @@
 
 use TUTOR\Icon;
 ?>
-<div class="tutor-profile-notification">
+<section class="tutor-profile-notification">
 	<h5 class="tutor-mb-4 tutor-mt-4 tutor-md-mt-1 tutor-h5 tutor-sm-hidden">Notifications</h5>
 	<div class="tutor-profile-notification-card tutor-card--rounded-2xl tutor-mt-5" x-data="{ expanded: false }">
 		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-gap-8 tutor-p-6">
@@ -92,4 +92,4 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</div>
-</div>
+</section>

@@ -48,7 +48,7 @@ $theme_options = array(
 
 ?>
 
-<section class="">
+<section class="tutor-preferences-section">
 	<!-- Course Content Section -->
 	<h5 class="tutor-preferences-section-header tutor-color-black tutor-h5 tutor-sm-hidden"><?php esc_html_e( 'Course Content', 'tutor' ); ?></h5>
 	<div class="tutor-card tutor-card--rounded-2xl tutor-mb-7">

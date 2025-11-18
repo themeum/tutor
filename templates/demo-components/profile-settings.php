@@ -69,7 +69,7 @@ $profile_tab_data = array(
 				}
 			"
 			x-cloak
-			class="tutor-gap-8" x-bind:data-josh="activeTab">
+			class="tutor-gap-8">
 			<?php tutor_load_template( 'demo-components.dashboard.components.profile-header' ); ?>
 			<div class="tutor-flex tutor-gap-8">
 				<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab">
