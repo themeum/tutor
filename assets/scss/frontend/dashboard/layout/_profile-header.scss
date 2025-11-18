@@ -9,7 +9,6 @@
 	margin-bottom: $tutor-spacing-9;
 }
 
-
 @include tutor-breakpoint-down(sm) {
 	.tutor-profile-header {
 		border:  unset;
@@ -38,12 +37,6 @@
 			right: 0;
 			top: 0;
 			width: max-content;
-		}
-
-		&-close {
-			svg {
-				transform: translate(0px, -2px);
-			}
 		}
 	}
 }

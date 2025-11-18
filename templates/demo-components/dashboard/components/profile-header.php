@@ -22,7 +22,7 @@ use TUTOR\Icon;
 			</button>
 			<h4 
 				class="tutor-text-h4 tutor-font-semibold tutor-ml-4"
-				x-text="windowWidth <= 576 ? (activeTab === 'none' ? 'Settings' : activeTab) : 'Settings'"
+				x-text="windowWidth <= 576 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab =>tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
 			></h4>
 			<span class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-ml-5 tutor-sm-hidden">Unsaved changes</span>
 		</div>
