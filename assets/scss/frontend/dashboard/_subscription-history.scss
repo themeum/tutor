@@ -1,0 +1,97 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-subscription {
+  &-history {
+    .tutor-billing-card {
+      &:hover {
+        .tutor-billing-card-title-access {
+          color: $tutor-text-brand;
+        }
+      }
+
+      &-title-access {
+        color: $tutor-text-subdued;
+      }
+
+      &-amount {
+        span {
+          color: $tutor-text-subdued;
+        }
+      }
+
+      &-action-btn {
+        @include tutor-button-base;
+        @include tutor-button-variant('link');
+        @include tutor-button-size('small');
+        padding: 0;
+        min-height: unset;
+        gap: $tutor-spacing-2;
+        color: $tutor-text-brand;
+        position: relative;
+        margin-right: -$tutor-spacing-7;
+
+        svg {
+          opacity: 0;
+        }
+
+        &:hover {
+          margin-right: 0;
+
+          svg {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+  }
+
+  &-details {
+    @include tutor-flex(column, flex-start, center);
+  }
+
+  &-overview {
+    @include tutor-flex(column, flex-start, center);
+    width: 100%;
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-6;
+    border-block: 1px solid $tutor-border-idle;
+
+    &-card {
+      @include tutor-flex(column, flex-start, center);
+      width: 100%;
+      gap: $tutor-spacing-2;
+      background-color: $tutor-surface-l1-hover;
+      padding: $tutor-spacing-5;
+      border-radius: $tutor-radius-sm;
+    }
+  }
+
+  &-payments {
+    @extend .tutor-subscription-overview;
+    border: none;
+
+    &-list {
+      @include tutor-flex(column, flex-start, center);
+      width: 100%;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-lg;
+    }
+
+    &-item {
+      @include tutor-flex(row, flex-start, space-between);
+      width: 100%;
+      border-bottom: 1px solid $tutor-border-idle;
+      padding: $tutor-spacing-6;
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: $tutor-surface-l1-hover;
+      }
+    }
+  }
+}
