@@ -12,25 +12,12 @@ use TUTOR\Icon;
 
 ?>
 <div class="tutor-user-profile">
-	<div class="tutor-profile-header">
-		<div class="tutor-profile-container">
-			<div class="tutor-flex tutor-justify-between">
-				<div class="tutor-flex tutor-items-center tutor-gap-4">
-					<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::LEFT ); ?>
-					</button>
-					<span class="tutor-h4">
-						<?php esc_html_e( 'Profile', 'tutor' ); ?>
-					</span>
-				</div>
-				<div>
-					<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS ); ?>
-					</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<?php
+	tutor_load_template(
+		'demo-components.dashboard.components.profile-pages-header',
+		array( 'page_title' => __( 'Profile', 'tutor' ) )
+	);
+	?>
 	<div class="tutor-profile-container">
 		<h4 class="tutor-profile-page-title"><?php esc_html_e( 'Profile', 'tutor' ); ?></h4>
 		<div class="tutor-profile-card">
