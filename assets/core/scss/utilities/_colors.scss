@@ -200,30 +200,32 @@ $opacities: (
 // Responsive Color Utilities
 // ------------------------------------------------------------
 @each $breakpoint, $min-width in $tutor-breakpoints {
-  @if $min-width > 0 {
-    @media (min-width: $min-width) {
-      @each $key, $surface-color in $tutor-surfaces {
-        .tutor-#{$breakpoint}-surface-#{$key} {
-          background-color: $surface-color;
-        }
+  @include tutor-breakpoint-down($breakpoint) {
+    // Surface Colors
+    @each $key, $surface-color in $tutor-surfaces {
+      .tutor-#{$breakpoint}-surface-#{$key} {
+        background-color: $surface-color;
       }
+    }
 
-      @each $key, $text-color in $tutor-text-colors {
-        .tutor-#{$breakpoint}-text-#{$key} {
-          color: $text-color;
-        }
+    // Text Colors
+    @each $key, $text-color in $tutor-text-colors {
+      .tutor-#{$breakpoint}-text-#{$key} {
+        color: $text-color;
       }
+    }
 
-      @each $key, $icon-color in $tutor-icons {
-        .tutor-#{$breakpoint}-icon-#{$key} {
-          color: $icon-color;
-        }
+    // Icon Colors
+    @each $key, $icon-color in $tutor-icons {
+      .tutor-#{$breakpoint}-icon-#{$key} {
+        color: $icon-color;
       }
+    }
 
-      @each $key, $action-color in $tutor-actions {
-        .tutor-#{$breakpoint}-actions-#{$key} {
-          color: $action-color;
-        }
+    // Actions Colors
+    @each $key, $action-color in $tutor-actions {
+      .tutor-#{$breakpoint}-actions-#{$key} {
+        color: $action-color;
       }
     }
   }

@@ -190,26 +190,24 @@ $text-align-utils: (
 }
 
 // Responsive typography utilities
-@each $breakpoint, $value in $tutor-breakpoints {
-  @if $value >0 {
-    @media (min-width: $value) {
-      @each $size-key, $size-value in $tutor-font-sizes {
-        .tutor-#{$breakpoint}-text-#{$size-key} {
-          font-size: $size-value;
-          line-height: map.get($tutor-line-heights, $size-key);
-        }
+@each $breakpoint, $min-width in $tutor-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    @each $size-key, $size-value in $tutor-font-sizes {
+      .tutor-#{$breakpoint}-text-#{$size-key} {
+        font-size: $size-value;
+        line-height: map.get($tutor-line-heights, $size-key);
       }
+    }
 
-      @each $weight-key, $weight-value in $tutor-font-weights {
-        .tutor-#{$breakpoint}-font-#{$weight-key} {
-          font-weight: $weight-value;
-        }
+    @each $weight-key, $weight-value in $tutor-font-weights {
+      .tutor-#{$breakpoint}-font-#{$weight-key} {
+        font-weight: $weight-value;
       }
+    }
 
-      @each $name, $value in $text-align-utils {
-        .tutor-#{$breakpoint}-text-#{$name} {
-          text-align: $value;
-        }
+    @each $name, $align-value in $text-align-utils {
+      .tutor-#{$breakpoint}-text-#{$name} {
+        text-align: $align-value;
       }
     }
   }

@@ -2,6 +2,7 @@
 // Width, height, and sizing utilities
 
 @use '../tokens' as *;
+@use '../mixins' as *;
 
 // ------------------------
 // Width Utilities
@@ -170,27 +171,25 @@ $responsive-widths: map-merge($fixed-widths, $fractional-widths);
 $responsive-heights: $fixed-heights;
 
 @each $breakpoint, $min-width in $tutor-breakpoints {
-  @if $min-width > 0 {
-    @media (min-width: $min-width) {
-      // Width
-      @each $key, $value in $responsive-widths {
-        .tutor-#{$breakpoint}-w-#{$key} {
-          width: $value;
-        }
+  @include tutor-breakpoint-down($breakpoint) {
+    // Width
+    @each $key, $value in $responsive-widths {
+      .tutor-#{$breakpoint}-w-#{$key} {
+        width: $value;
       }
+    }
 
-      // Height
-      @each $key, $value in $responsive-heights {
-        .tutor-#{$breakpoint}-h-#{$key} {
-          height: $value;
-        }
+    // Height
+    @each $key, $value in $responsive-heights {
+      .tutor-#{$breakpoint}-h-#{$key} {
+        height: $value;
       }
+    }
 
-      // Max-width
-      @each $key, $value in $max-widths {
-        .tutor-#{$breakpoint}-max-w-#{$key} {
-          max-width: $value;
-        }
+    // Max-width
+    @each $key, $value in $max-widths {
+      .tutor-#{$breakpoint}-max-w-#{$key} {
+        max-width: $value;
       }
     }
   }

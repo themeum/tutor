@@ -287,41 +287,39 @@ $overflow-types: auto, hidden, visible, scroll;
 // ------------------------
 
 @each $breakpoint, $min-width in $tutor-breakpoints {
-  @if $min-width > 0 {
-    @media (min-width: $min-width) {
-      // Display utilities
-      @each $name, $value in $display-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          display: $value;
-        }
+  @include tutor-breakpoint-down($breakpoint) {
+    // Display utilities
+    @each $name, $value in $display-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        display: $value;
       }
+    }
 
-      // Flex direction utilities
-      @each $name, $dir in $flex-direction-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          flex-direction: $dir;
-        }
+    // Flex direction utilities
+    @each $name, $dir in $flex-direction-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        flex-direction: $dir;
       }
+    }
 
-      // Justify content utilities
-      @each $name, $value in $justify-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          justify-content: $value;
-        }
+    // Justify content utilities
+    @each $name, $value in $justify-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        justify-content: $value;
       }
+    }
 
-      // Align items utilities
-      @each $name, $value in $align-items-utils {
-        .tutor-#{$breakpoint}-#{$name} {
-          align-items: $value;
-        }
+    // Align items utilities
+    @each $name, $value in $align-items-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        align-items: $value;
       }
+    }
 
-      // Grid column utilities
-      @each $count in $grid-cols {
-        .tutor-#{$breakpoint}-grid-cols-#{$count} {
-          grid-template-columns: repeat($count, minmax(0, 1fr));
-        }
+    // Grid column utilities
+    @each $count in $grid-cols {
+      .tutor-#{$breakpoint}-grid-cols-#{$count} {
+        grid-template-columns: repeat($count, minmax(0, 1fr));
       }
     }
   }

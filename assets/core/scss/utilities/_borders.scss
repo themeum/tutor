@@ -2,6 +2,7 @@
 // DRY, RTL-aware, width, style, color, radius, responsive
 
 @use '../tokens' as *;
+@use '../mixins' as *;
 
 // =============================================================================
 // VARIABLES
@@ -146,21 +147,19 @@ $border-styles: (solid, dashed, dotted, double, none);
 // RESPONSIVE BORDER UTILITIES
 // =============================================================================
 @each $breakpoint, $min-width in $tutor-breakpoints {
-  @if $min-width > 0 {
-    @media (min-width: $min-width) {
-      // Border widths & directional borders
-      @each $dir, $property in $border-directions {
-        .tutor-#{$breakpoint}-#{$dir} {
-          #{$property}: 1px solid $tutor-border-idle;
-        }
-        .tutor-#{$breakpoint}-#{$dir}-0 {
-          #{$property}: none;
-        }
+  @include tutor-breakpoint-down($breakpoint) {
+    // Border widths & directional borders
+    @each $dir, $property in $border-directions {
+      .tutor-#{$breakpoint}-#{$dir} {
+        #{$property}: 1px solid $tutor-border-idle;
+      }
+      .tutor-#{$breakpoint}-#{$dir}-0 {
+        #{$property}: none;
+      }
 
-        @each $width-key, $width-value in $border-widths {
-          .tutor-#{$breakpoint}-#{$dir}-#{$width-key} {
-            #{$property}: #{$width-value} solid $tutor-border-idle;
-          }
+      @each $width-key, $width-value in $border-widths {
+        .tutor-#{$breakpoint}-#{$dir}-#{$width-key} {
+          #{$property}: #{$width-value} solid $tutor-border-idle;
         }
       }
     }
