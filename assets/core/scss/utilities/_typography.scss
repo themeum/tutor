@@ -2,6 +2,15 @@
 @use '../tokens' as *;
 @use '../mixins' as *;
 
+$text-align-utils: (
+  left: start,
+  right: end,
+  start: start,
+  end: end,
+  center: center,
+  justify: justify,
+);
+
 .tutor-h1 {
   @include tutor-typography('h1', 'bold', 'primary', 'heading');
 }
@@ -50,28 +59,10 @@
 }
 
 // Text alignment (RTL-aware)
-.tutor-text-left {
-  text-align: left;
-
-  [dir="rtl"] & {
-    text-align: right;
+@each $name, $value in $text-align-utils {
+  .tutor-text-#{$name} {
+    text-align: $value;
   }
-}
-
-.tutor-text-center {
-  text-align: center;
-}
-
-.tutor-text-right {
-  text-align: right;
-
-  [dir="rtl"] & {
-    text-align: left;
-  }
-}
-
-.tutor-text-justify {
-  text-align: justify;
 }
 
 // Text decoration
@@ -177,78 +168,6 @@
   word-break: break-all;
 }
 
-// Letter spacing
-.tutor-tracking-tighter {
-  letter-spacing: -0.05em;
-}
-
-.tutor-tracking-tight {
-  letter-spacing: -0.025em;
-}
-
-.tutor-tracking-normal {
-  letter-spacing: 0em;
-}
-
-.tutor-tracking-wide {
-  letter-spacing: 0.025em;
-}
-
-.tutor-tracking-wider {
-  letter-spacing: 0.05em;
-}
-
-.tutor-tracking-widest {
-  letter-spacing: 0.1em;
-}
-
-// Line height
-.tutor-leading-none {
-  line-height: 1;
-}
-
-.tutor-leading-tight {
-  line-height: 1.25;
-}
-
-.tutor-leading-snug {
-  line-height: 1.375;
-}
-
-.tutor-leading-normal {
-  line-height: 1.5;
-}
-
-.tutor-leading-relaxed {
-  line-height: 1.625;
-}
-
-.tutor-leading-loose {
-  line-height: 2;
-}
-
-// Font scaling utilities (sets root font size for rem-based scaling)
-// These classes should be applied to the html element
-html.tutor-font-scale-80 {
-  font-size: 80%; // 12.8px base (16px × 0.8)
-}
-
-html.tutor-font-scale-90 {
-  font-size: 90%; // 14.4px base (16px × 0.9)
-}
-
-html.tutor-font-scale-100 {
-  font-size: 100%; // 16px base (default)
-}
-
-html.tutor-font-scale-110 {
-  font-size: 110%; // 17.6px base (16px × 1.1)
-}
-
-html.tutor-font-scale-120 {
-  font-size: 120%; // 19.2px base (16px × 1.2)
-}
-
 // List styles
 .tutor-list-none {
   list-style-type: none;
@@ -271,40 +190,24 @@ html.tutor-font-scale-120 {
 }
 
 // Responsive typography utilities
-@each $breakpoint, $value in $tutor-breakpoints {
-  @if $value >0 {
-    @media (min-width: $value) {
-      @each $size-key, $size-value in $tutor-font-sizes {
-        .tutor-#{$breakpoint}-text-#{$size-key} {
-          font-size: $size-value;
-          line-height: map.get($tutor-line-heights, $size-key);
-        }
+@each $breakpoint, $min-width in $tutor-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    @each $size-key, $size-value in $tutor-font-sizes {
+      .tutor-#{$breakpoint}-text-#{$size-key} {
+        font-size: $size-value;
+        line-height: map.get($tutor-line-heights, $size-key);
       }
+    }
 
-      .tutor-#{$breakpoint}-text-left {
-        text-align: left;
-
-        [dir="rtl"] & {
-          text-align: right;
-        }
+    @each $weight-key, $weight-value in $tutor-font-weights {
+      .tutor-#{$breakpoint}-font-#{$weight-key} {
+        font-weight: $weight-value;
       }
+    }
 
-      .tutor-#{$breakpoint}-text-center {
-        text-align: center;
-      }
-
-      .tutor-#{$breakpoint}-text-right {
-        text-align: right;
-
-        [dir="rtl"] & {
-          text-align: left;
-        }
-      }
-
-      @each $weight-key, $weight-value in $tutor-font-weights {
-        .tutor-#{$breakpoint}-font-#{$weight-key} {
-          font-weight: $weight-value;
-        }
+    @each $name, $align-value in $text-align-utils {
+      .tutor-#{$breakpoint}-text-#{$name} {
+        text-align: $align-value;
       }
     }
   }

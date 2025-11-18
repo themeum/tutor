@@ -140,27 +140,6 @@ $upcoming_lessons = array(
 </div>
 
 <div class="tutor-mb-8">
-	<div class="tutor-flex tutor-gap-4">
-		<?php foreach ( $stat_cards as $card ) : ?>
-			<div class="tutor-flex-1">
-			<?php
-			tutor_load_template(
-				'demo-components.dashboard.components.stat-card',
-				array(
-					'variation'  => isset( $card['variation'] ) ? $card['variation'] : 'enrolled',
-					'card_title' => isset( $card['title'] ) ? $card['title'] : '',
-					'icon'       => isset( $card['icon'] ) ? $card['icon'] : '',
-					'value'      => isset( $card['value'] ) ? $card['value'] : '',
-					'change'     => isset( $card['change'] ) ? $card['change'] : '',
-				)
-			);
-			?>
-			</div>
-		<?php endforeach; ?>
-	</div>
-</div>
-
-<div class="tutor-mb-8">
 	<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'My Progress', 'tutor' ); ?></h2>
 	<div class="tutor-flex tutor-flex-col tutor-gap-4">
 		<?php foreach ( $progress_cards as $card ) : ?>
@@ -202,12 +181,9 @@ $upcoming_lessons = array(
 </div>
 
 <div class="tutor-mb-6">
-	<div class="tutor-text-h4 tutor-color-black tutor-mb-4">
-		<?php esc_html_e( 'Progress Card Demo', 'tutor' ); ?>
-	</div>
-	
-	<div class="tutor-grid tutor-grid-cols-1 tutor-grid-cols-md-2 tutor-gap-6">
-		<div>
+	<div class="tutor-mb-8">
+		<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'Upcoming Lessons', 'tutor' ); ?></h2>
+		<div class="tutor-grid tutor-grid-cols-2 tutor-gap-4">
 			<?php
 			tutor_load_template(
 				'demo-components.dashboard.components.popup-progress-card',
