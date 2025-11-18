@@ -19,7 +19,6 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -996,7 +995,7 @@ class CheckoutController {
 
 		$cart_page_url = CartController::get_page_url();
 
-		if ( ! is_user_logged_in() && ! GuestCheckout::is_enable() ) {
+		if ( ! is_user_logged_in() && ! apply_filters( 'tutor_is_guest_checkout_enabled', false ) ) {
 			wp_safe_redirect( $cart_page_url );
 			exit;
 		}
