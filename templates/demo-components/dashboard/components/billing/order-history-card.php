@@ -11,6 +11,32 @@
 use TUTOR\Icon;
 use Tutor\Ecommerce\Ecommerce;
 
+$render_status_badge = function ( $status ) {
+	$badge_class = 'secondary';
+
+	if ( 'completed' === $status ) {
+		return '';
+	}
+
+	// @TODO: Need to recheck the status.
+	switch ( $status ) {
+		case 'processing':
+		case 'pending':
+		case 'on-hold':
+			$badge_class = 'pending';
+			break;
+		case 'refunded':
+		case 'cancelled':
+			$badge_class = 'cancelled';
+			break;
+		case 'incomplete':
+			$badge_class = 'secondary';
+			break;
+	}
+
+	return '<span class="tutor-capitalize tutor-badge tutor-badge-small tutor-badge-circle tutor-py-none tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
+}
+
 ?>
 
 <div class="tutor-billing-card">
@@ -23,6 +49,7 @@ use Tutor\Ecommerce\Ecommerce;
 					</li>
 				<?php endforeach; ?>
 			</ul>
+			<?php echo wp_kses_post( $render_status_badge( $order_status ) ); ?>
 		</div>
 		<div class="tutor-billing-card-details">
 			<div class="tutor-billing-card-id">
@@ -35,13 +62,10 @@ use Tutor\Ecommerce\Ecommerce;
 
 			<span class="tutor-section-separator-vertical"></span>
 
-			<div class="tutor-inline-flex tutor-items-center tutor-gap-4">
-				<?php esc_html_e( 'Paid with', 'tutor' ); ?>
-				<span class="tutor-billing-card-payment-method">
-					<!-- @TODO: Need to map svg icon to payment method -->
-					<?php tutor_utils()->render_svg_icon( Icon::LESSON ); ?>
-					<?php echo esc_html( Ecommerce::get_payment_method_label( $payment_method ?? '' ) ); ?>
-				</span>
+			<div class="tutor-billing-card-payment-method">
+				<!-- @TODO: Need to map svg icon or image to payment method -->
+				<?php tutor_utils()->render_svg_icon( Icon::LESSON, 12, 12 ); ?>
+				<?php echo esc_html( Ecommerce::get_payment_method_label( $payment_method ?? '' ) ); ?>
 			</div>
 		</div>
 	</div>
@@ -51,9 +75,9 @@ use Tutor\Ecommerce\Ecommerce;
 			<?php echo esc_html( tutor_get_formatted_price( $total_price ) ); ?>
 		</div>
 
-		<a class="tutor-billing-card-action-btn" href="#">
+		<a class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit" href="#">
+			<!-- @TODO: Need to render pay button here when payment has not been processed yet. -->
 			<?php esc_html_e( 'Receipt', 'tutor' ); ?>
-			<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2 ); ?>
 		</a>
 	</div>
 </div>
