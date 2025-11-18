@@ -1,0 +1,127 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-billing {
+  &-header {
+    background-color: $tutor-surface-base;
+    border-bottom: 1px solid $tutor-border-idle;
+    padding-block: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(sm) {
+      display: none;
+    }
+  }
+
+  &-container {
+    max-width: 728px;
+    margin: 0 auto;
+    padding-inline: $tutor-spacing-6;
+  }
+
+  &-body {
+    @include tutor-card-base;
+    @include tutor-card-radius(lg)
+  }
+
+  &-tabs {
+    padding: $tutor-spacing-6;
+  }
+
+  &-filters {
+    @include tutor-flex(row, center, space-between);
+    gap: $tutor-spacing-4;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    border-block: 1px solid $tutor-border-idle;
+  }
+
+  &-tab-content {
+    // padding: $tutor-spacing-6;
+  }
+
+  &-card {
+    @include tutor-flex(row, center, space-between);
+    border-bottom: 1px solid $tutor-border-idle;
+    padding: $tutor-spacing-6;
+    gap: $tutor-spacing-4;
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+
+    &-left {
+      @include tutor-flex(column, flex-start, center);
+      gap: $tutor-spacing-3;
+    }
+
+    &-right {
+      @include tutor-flex(column, flex-end, center);
+      gap: $tutor-spacing-2;
+    }
+
+    &-title {
+      @include tutor-typography('small', 'medium');
+
+      ul {
+        list-style: disc;
+        list-style-position: inside;
+
+        li {
+          padding-left: $tutor-spacing-2;
+          margin-bottom: 0;
+
+          span {
+            margin-left: -$tutor-spacing-2;
+          }
+        }
+      }
+    }
+
+    &-details {
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-4;
+      color: $tutor-text-secondary;
+    }
+
+    &-id {
+      @include tutor-badge-base;
+      padding: $tutor-spacing-1 $tutor-spacing-2;
+      background-color: $tutor-surface-l2;
+      border-radius: $tutor-radius-xs;
+      color: $tutor-text-secondary;
+      font-weight: $tutor-font-weight-regular;
+    }
+
+    &-payment-method {
+      @extend .tutor-billing-card-id;
+      gap: $tutor-spacing-2;
+      border-radius: $tutor-radius-sm;
+    }
+
+    &-amount {
+      @include tutor-typography('small', 'semibold');
+    }
+
+    &-action-btn {
+      @include tutor-button-base;
+      @include tutor-button-variant('link');
+      @include tutor-button-size('small');
+      padding: 0;
+      min-height: unset;
+      gap: $tutor-spacing-2;
+      color: $tutor-text-brand;
+      position: relative;
+      margin-right: -$tutor-spacing-7;
+
+      svg {
+        opacity: 0;
+      }
+
+      &:hover {
+        margin-right: 0;
+        svg {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}
