@@ -34,15 +34,22 @@
     border-block: 1px solid $tutor-border-idle;
   }
 
-  &-tab-content {
-    // padding: $tutor-spacing-6;
-  }
-
   &-card {
     @include tutor-flex(row, center, space-between);
     border-bottom: 1px solid $tutor-border-idle;
     padding: $tutor-spacing-6;
     gap: $tutor-spacing-4;
+    transition-property: background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease;
+
+    &:hover {
+      background-color: $tutor-surface-l1-hover;
+
+      .tutor-billing-card-title-access {
+        color: $tutor-text-brand;
+      }
+    }
 
     &:last-of-type {
       border-bottom: none;
@@ -51,6 +58,11 @@
     &-left {
       @include tutor-flex(column, flex-start, center);
       gap: $tutor-spacing-3;
+
+      .tutor-section-separator-vertical {
+        background-color: $tutor-surface-l2-hover;
+        height: 12px;
+      }
     }
 
     &-right {
@@ -60,6 +72,8 @@
 
     &-title {
       @include tutor-typography('small', 'medium');
+      @include tutor-flex(row, start, center);
+      gap: $tutor-spacing-2;
 
       ul {
         list-style: disc;
@@ -83,45 +97,24 @@
     }
 
     &-id {
-      @include tutor-badge-base;
-      padding: $tutor-spacing-1 $tutor-spacing-2;
+      @include tutor-flex(row, center, center);
+      @include tutor-typography('tiny');
+      padding: 0 $tutor-spacing-2;
       background-color: $tutor-surface-l2;
       border-radius: $tutor-radius-xs;
       color: $tutor-text-secondary;
-      font-weight: $tutor-font-weight-regular;
     }
 
     &-payment-method {
       @extend .tutor-billing-card-id;
+      @include tutor-typography('tiny-2');
       gap: $tutor-spacing-2;
       border-radius: $tutor-radius-sm;
+      color: $tutor-text-secondary;
     }
 
     &-amount {
       @include tutor-typography('small', 'semibold');
-    }
-
-    &-action-btn {
-      @include tutor-button-base;
-      @include tutor-button-variant('link');
-      @include tutor-button-size('small');
-      padding: 0;
-      min-height: unset;
-      gap: $tutor-spacing-2;
-      color: $tutor-text-brand;
-      position: relative;
-      margin-right: -$tutor-spacing-7;
-
-      svg {
-        opacity: 0;
-      }
-
-      &:hover {
-        margin-right: 0;
-        svg {
-          opacity: 1;
-        }
-      }
     }
   }
 }
