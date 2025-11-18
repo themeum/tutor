@@ -114,10 +114,6 @@ $upcoming_lessons = array(
 		<?php esc_html_e( 'Welcome to TutorLMS Home', 'tutor' ); ?>
 	</div>
 	
-	<div class="tutor-mb-4">
-		<?php tutor_load_template( 'core-components.event-badge' ); ?>
-	</div>
-	
 	<div class="tutor-mb-8">
 		<div class="tutor-flex tutor-gap-4">
 			<?php foreach ( $stat_cards as $card ) : ?>

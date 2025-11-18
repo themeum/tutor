@@ -146,6 +146,8 @@ final class Icon {
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
 	const FILTER                     = 'filter';
+	const FIRE                       = 'fire';
+	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
 	const FONT                       = 'font';
 	const FREE_SHIPPING_TYPE         = 'free-shipping-type';
@@ -182,6 +184,7 @@ final class Icon {
 	const JSON_FILE                  = 'json-file';
 	const LANDSCAPE                  = 'landscape';
 	const LANDSCAPE_FILLED           = 'landscape-filled';
+	const LEAGUE                     = 'league';
 	const LEFT                       = 'left';
 	const LESSON                     = 'lesson';
 	const LEVEL                      = 'level';
@@ -205,10 +208,12 @@ final class Icon {
 	const MAGIC_ERASER               = 'magic-eraser';
 	const MAGIC_VARIATION            = 'magic-variation';
 	const MAGIC_WAND                 = 'magic-wand';
+	const MARKER_TICK                = 'marker-tick';
 	const MARKS_TOTAL                = 'marks-total';
 	const MARK_CIRCLE                = 'mark-circle';
 	const MATERIAL                   = 'material';
 	const MATERIAL_CHECK             = 'material-check';
+	const MEMBER                     = 'member';
 	const MINUS                      = 'minus';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
@@ -298,6 +303,7 @@ final class Icon {
 	const SETTINGS_TAX               = 'settings-tax';
 	const SHARE                      = 'share';
 	const SHORTCODE                  = 'shortcode';
+	const SIGNATURE_UPLOAD           = 'signature-upload';
 	const SORT                       = 'sort';
 	const SORT_A_S_C                 = 'sort-a-s-c';
 	const SORT_BY                    = 'sort-by';

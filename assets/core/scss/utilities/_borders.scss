@@ -129,6 +129,14 @@
 // BORDER COLORS (modifiers)
 // =============================================================================
 
+.tutor-border-transparent {
+  border-color: transparent;
+}
+
+.tutor-border-current {
+  border-color: currentColor;
+}
+
 @each $key, $value in $tutor-border-colors {
   .tutor-border-#{$key} {
     border-color: $value;

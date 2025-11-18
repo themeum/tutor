@@ -39,8 +39,9 @@ use TUTOR\Input;
 
 	$subpages = array(
 		'dashboard'        => 'Dashboard',
-		'profile-settings' => 'Account Settings',
+		'user-profile'     => 'User Profile',
 		'learning-area'    => 'Learning Area',
+		'profile-settings' => 'Account Settings',
 	);
 
 	$subpage = Input::get( 'subpage', '' );
@@ -80,6 +81,7 @@ use TUTOR\Input;
 			<?php require 'components/modal.php'; ?>
 			<?php require 'components/input.php'; ?>
 			<?php require 'components/form.php'; ?>
+			<?php require 'components/select.php'; ?>
 		</section>
 	<?php endif ?>
 </body>

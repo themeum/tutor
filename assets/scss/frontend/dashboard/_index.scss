@@ -12,6 +12,9 @@
 @forward "stat-card";
 @forward "popup-progress-card";
 @forward "progress-card";
+@forward "course-card";
+@forward "star-rating";
+@forward "upcoming-lesson-card";
 
 // Page components
 @forward 'overview';
@@ -24,3 +27,4 @@
 @forward 'setting-preferences';
 @forward 'profile';
 @forward 'enrollment-history';
+@forward 'wishlist';

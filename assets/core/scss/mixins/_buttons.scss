@@ -108,10 +108,12 @@
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-outline-hover;
+      color: $tutor-text-primary;
     }
 
     &:focus:not(:disabled) {
       background-color: $tutor-button-outline-focused-inverse;
+      color: $tutor-text-primary;
     }
 
     &:disabled {

@@ -68,6 +68,16 @@ ol {
   list-style: none;
 }
 
+a{
+  text-decoration: none;
+  color: inherit;
+  
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}
+
 // Alpine.js cloak utility
 [x-cloak] {
   display: none !important;

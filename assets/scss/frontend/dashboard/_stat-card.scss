@@ -10,6 +10,12 @@
 	@include tutor-flex(column, stretch, space-between);
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-2xl;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+
+	&:hover {
+		background-color: $tutor-surface-l1-hover;
+	}
 
 	&-header {
 		@include tutor-flex(row, center, space-between);
