@@ -1,0 +1,35 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-account-page {
+  .tutor-account-avatar-wrapper {
+    @include tutor-flex(row, center, center);
+    background-color: $tutor-surface-brand-tertiary;
+    border-radius: $tutor-radius-lg;
+    padding: $tutor-spacing-10;
+
+    .tutor-account-avatar {
+      @include tutor-avatar-base();
+      width: 104px;
+      height: 104px;
+      border: 2px solid $tutor-border-brand-secondary;
+      position: relative;
+
+      .tutor-account-avatar-edit {
+        @include tutor-button-reset();
+        position: absolute;
+        inset: 0;
+        background-color: rgba($color: #000000, $alpha: 0.5);
+        color: $tutor-icon-idle-inverse;
+        display: none;
+      }
+
+      &.active,
+      &:hover {
+        .tutor-account-avatar-edit {
+          display: block;
+        }
+      }
+    }
+  }
+}
