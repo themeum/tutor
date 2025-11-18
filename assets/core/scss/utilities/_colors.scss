@@ -135,24 +135,19 @@
 // ------------------------------------------------------------
 // Opacity Utilities
 // ------------------------------------------------------------
-.tutor-opacity-0 {
-  opacity: 0;
-}
+$opacities: (
+  0: 0,
+  25: 0.25,
+  50: 0.5,
+  75: 0.75,
+  100: 1,
+);
 
-.tutor-opacity-25 {
-  opacity: 0.25;
-}
-
-.tutor-opacity-50 {
-  opacity: 0.5;
-}
-
-.tutor-opacity-75 {
-  opacity: 0.75;
-}
-
-.tutor-opacity-100 {
-  opacity: 1;
+// Generate classes
+@each $key, $value in $opacities {
+  .tutor-opacity-#{$key} {
+    opacity: $value;
+  }
 }
 
 // ------------------------------------------------------------
