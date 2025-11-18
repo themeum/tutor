@@ -21,7 +21,7 @@
 		.tutor-dashboard-container {
 			.tutor-tabs-vertical .tutor-tabs-nav {
 				flex-direction: column;
-				gap: 16px;
+				gap: $tutor-spacing-6;
 				background: transparent;
 				border: 0px;
 				padding: 0px;
@@ -29,14 +29,14 @@
 			}
 	
 			.tutor-tabs-tab {
-				gap: 15px;
+				gap: $tutor-spacing-6;
 				&:hover:not(:disabled):not(.tutor-tabs-tab-active) {
 					background: transparent;
 				}
 			}
 	
 			.tutor-profile-settings-tab { 
-				background: #FAFAFA;
+				background: $tutor-surface-base;
 			}
 	
 			.tutor-profile-settings-tab button {
@@ -44,7 +44,7 @@
 			}
 	
 			.tutor-icon {
-				background: white;
+				background: $tutor-surface-l1;
 				color: $tutor-text-secondary;
 				width: 48px;
 				height: 48px;
@@ -53,7 +53,7 @@
 			}
 	
 			.tutor-tabs-tab-active {
-				color: var(--tutor-text-brand);
+				color: $tutor-text-brand;
 				background-color: transparent;
 			}
 		}
@@ -89,6 +89,11 @@
 		background-color: $tutor-surface-l1;
 		border: 1px solid $tutor-border-idle;
 		overflow: hidden;
+		&:hover {
+			.tutor-profile-notification-toggle {
+				visibility: visible;
+			}
+		}
 	}
 
 	.tutor-profile-notification-content {
@@ -99,6 +104,7 @@
 		display: flex;
 		align-items: center;
 		cursor: pointer;
+		visibility: hidden;
 		&:hover {
 			color: $tutor-text-primary;
 		}
@@ -108,9 +114,12 @@
 				transform: translate(0px, 2px);
 			}
 		}
-		&.is-expanded svg {
-			color: $tutor-text-primary;
-			transform: rotate(90deg);
+		&.is-expanded {
+			visibility: visible;
+			svg {
+				color: $tutor-text-primary;
+				transform: rotate(90deg);
+			}
 		}
 	}
 
