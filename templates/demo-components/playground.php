@@ -42,6 +42,7 @@ use TUTOR\Input;
 		'user-profile'     => 'User Profile',
 		'learning-area'    => 'Learning Area',
 		'profile-settings' => 'Account Settings',
+		'billing'          => 'Billing',
 	);
 
 	$subpage = Input::get( 'subpage', '' );
