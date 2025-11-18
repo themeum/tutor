@@ -989,7 +989,8 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function restrict_checkout_page() {
-		if ( ! is_page( self::get_page_id() ) ) {
+		$page_id = self::get_page_id();
+		if ( ! $page_id || ! is_page( $page_id ) ) {
 			return;
 		}
 
