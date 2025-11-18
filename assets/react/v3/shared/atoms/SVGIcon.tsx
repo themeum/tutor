@@ -13,6 +13,7 @@ interface SVGIconProps {
 
 interface Icon {
   viewBox: string;
+  fill: string;
   icon: string;
 }
 
@@ -57,6 +58,7 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ..
   };
 
   const viewBox = icon ? icon.viewBox : `0 0 ${width} ${height}`;
+  const fill = icon ? icon.fill : 'none';
 
   if (!icon && !isLoading) {
     return (
@@ -71,6 +73,7 @@ const SVGIcon = ({ name, width = 16, height = 16, style, isColorIcon = false, ..
       css={[style, { width, height }, styles.svg({ isColorIcon })]}
       xmlns="http://www.w3.org/2000/svg"
       viewBox={viewBox}
+      fill={fill}
       {...additionalAttributes}
       role="presentation"
       aria-hidden={true}
@@ -90,7 +93,7 @@ function fetchIcon(name: string, width: number, height: number): Promise<Icon> {
     return iconCache[name]!.promise!;
   }
 
-  const fileName = name.trim().replace(/[A-Z]/g, (m) => '-' + m.toLowerCase());
+  const fileName = name.trim().replace(/[A-Z0-9]/g, (m) => '-' + m.toLowerCase());
   const url = `${tutorConfig.tutor_url}/assets/icons/${fileName}.svg`;
 
   const promise = fetch(url)
@@ -105,9 +108,10 @@ function fetchIcon(name: string, width: number, height: number): Promise<Icon> {
       const doc = parser.parseFromString(svgText, 'image/svg+xml');
       const svgEl = doc.querySelector('svg');
       const viewBox = svgEl?.getAttribute('viewBox') || `0 0 ${width} ${height}`;
+      const fill = svgEl?.getAttribute('fill') || 'none';
       const innerHTML = svgEl?.innerHTML || '';
 
-      const loadedIcon = { viewBox, icon: innerHTML };
+      const loadedIcon = { viewBox, fill, icon: innerHTML };
       iconCache[name] = { icon: loadedIcon };
       return loadedIcon;
     })
