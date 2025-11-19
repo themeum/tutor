@@ -7,9 +7,10 @@
 @forward 'layout/header';
 @forward 'layout/nav-mobile';
 @forward 'layout/profile-header';
+@forward 'layout/profile-pages';
 
 // Dashboard components
-@forward 'components/page_nav';
+@forward 'components/page-nav';
 @forward "stat-card";
 @forward "popup-progress-card";
 @forward "progress-card";
