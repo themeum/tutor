@@ -68,7 +68,6 @@ use TUTOR\Input;
 			<?php require 'components/button.php'; ?>
 			<?php require 'components/popover.php'; ?>
 			<?php require 'components/file-uploader.php'; ?>
-			<?php require 'components/attachment-card.php'; ?>
 			<?php require 'components/tabs.php'; ?>
 			<?php require 'components/skeleton.php'; ?>
 			<?php require 'components/progress.php'; ?>
@@ -83,6 +82,7 @@ use TUTOR\Input;
 			<?php require 'components/input.php'; ?>
 			<?php require 'components/form.php'; ?>
 			<?php require 'components/select.php'; ?>
+			<?php require 'components/attachment-card.php'; ?>
 		</section>
 	<?php endif ?>
 </body>
