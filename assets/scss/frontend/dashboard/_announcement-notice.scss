@@ -43,8 +43,7 @@
 	}
 	
 	.tutor-announcement-author {
-		display: flex;
-		align-items: center;
+		@include tutor-flex(row, center, flex-start);
 		flex-wrap: wrap;
 		gap: $tutor-spacing-4;
 	}
