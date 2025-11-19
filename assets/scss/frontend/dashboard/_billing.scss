@@ -121,6 +121,7 @@
     &-right {
       @include tutor-flex(column, flex-end, center);
       gap: $tutor-spacing-2;
+      text-align: right
     }
 
     &-title {
