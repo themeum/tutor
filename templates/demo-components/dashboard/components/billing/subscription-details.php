@@ -13,10 +13,11 @@ use Tutor\Ecommerce\Ecommerce;
 
 $render_status_badge = function ( $status, $price ) {
 	$badge_class = 'secondary';
+	$receipt_url = add_query_arg( 'invoice', '223', get_permalink( get_page_by_path( 'invoice' ) ) );
 
 	if ( 'completed' === $status ) {
 		$formatted_price = esc_html( tutor_get_formatted_price( $price ) );
-		return '<div class="tutor-text-secondary tutor-text-small tutor-font-semibold">' . $formatted_price . '</div><a class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit" href="#">' . esc_html__( 'Receipt', 'tutor' ) . '</a>';
+		return '<div class="tutor-text-secondary tutor-text-small tutor-font-semibold">' . $formatted_price . '</div><a class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit" href="' . esc_url( $receipt_url ) . '">' . esc_html__( 'Receipt', 'tutor' ) . '</a>';
 
 	}
 
@@ -63,7 +64,7 @@ $payments = array(
 		'trial_end_date_gmt'    => '2025-11-17 09:34:14',
 		'start_date_gmt'        => '2025-11-17 09:34:14',
 		'end_date_gmt'          => '2025-11-17 09:34:14',
-		'next_payment_date_gmt' => '2025-11-17 09:34:14',
+		'next_payment_date_gmt' => '2026-11-17 09:34:14',
 		'note'                  => 'Auto renew failed',
 		'plan_name'             => 'Auto Renew',
 		'plan_type'             => 'category',
@@ -93,7 +94,7 @@ $payments = array(
 		'trial_end_date_gmt'    => '',
 		'start_date_gmt'        => '2025-09-30 07:41:47',
 		'end_date_gmt'          => '2025-10-30 07:41:47',
-		'next_payment_date_gmt' => '',
+		'next_payment_date_gmt' => '2026-11-30 07:41:47',
 		'note'                  => 'Subscription expired',
 		'plan_name'             => 'Neuro Explorer',
 		'plan_type'             => 'course',
@@ -123,7 +124,7 @@ $payments = array(
 		'trial_end_date_gmt'    => '',
 		'start_date_gmt'        => '2025-09-30 07:41:47',
 		'end_date_gmt'          => '2025-10-30 07:41:47',
-		'next_payment_date_gmt' => '',
+		'next_payment_date_gmt' => '2026-11-30 07:41:47',
 		'note'                  => 'Subscription expired',
 		'plan_name'             => 'Neuro Explorer',
 		'plan_type'             => 'course',
@@ -177,6 +178,7 @@ $payments = array(
 					<?php esc_html_e( 'Amount', 'tutor' ); ?>
 				</div>
 				<div class="tutor-subscription-overview-card-title">
+					<!-- @TODO: Need to render plan price/period here -->
 					$10.00
 					<span>/month</span>
 				</div>
@@ -188,6 +190,7 @@ $payments = array(
 					<?php esc_html_e( 'Payment', 'tutor' ); ?>
 				</div>
 				<div class="tutor-subscription-overview-card-title">
+					<!-- @TODO: Need to map svg icon or image to payment method -->
 					<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2 ); ?>
 					Recurring
 				</div>
@@ -199,8 +202,9 @@ $payments = array(
 					<?php esc_html_e( 'Active Payment Method', 'tutor' ); ?>
 				</div>
 				<div class="tutor-subscription-overview-card-title">
+					<!-- @TODO: Need to map svg icon or image to payment method -->
 					<?php tutor_utils()->render_svg_icon( Icon::LESSON ); ?>
-					<?php esc_html_e( 'PayPal', 'tutor' ); ?>
+					<?php echo esc_html( Ecommerce::get_payment_method_label( 'paypal' ) ); ?>
 				</div>
 			</div>
 		</div>
@@ -213,7 +217,7 @@ $payments = array(
 					<?php esc_html_e( 'Active Since', 'tutor' ); ?>
 				</span>
 				<span class="tutor-text-secondary">
-					<?php esc_html_e( 'January 1, 2022', 'tutor' ); ?>
+					<?php echo esc_html( date_i18n( 'D, ' . get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $created_at_gmt ?? '' ) ) ); ?>
 				</span>
 			</div>
 
@@ -223,7 +227,7 @@ $payments = array(
 					<?php esc_html_e( 'Next Payment', 'tutor' ); ?>
 				</span>
 				<span class="tutor-text-success">
-					<?php esc_html_e( 'February 1, 2022', 'tutor' ); ?>
+					<?php echo esc_html( date_i18n( 'D, ' . get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $next_payment_date_gmt ?? '' ) ) ); ?>
 				</span>
 			</div>
 		</div>

@@ -75,7 +75,7 @@ $render_status_badge = function ( $status ) {
 			<?php echo esc_html( tutor_get_formatted_price( $total_price ) ); ?>
 		</div>
 
-		<a class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit" href="#">
+		<a class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit" href="<?php echo esc_url( add_query_arg( 'invoice', $id, get_permalink( get_page_by_path( 'invoice' ) ) ) ); ?>">
 			<!-- @TODO: Need to render pay button here when payment has not been processed yet. -->
 			<?php esc_html_e( 'Receipt', 'tutor' ); ?>
 		</a>
