@@ -270,7 +270,8 @@ class Assets {
 			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
 
 			// Enqueue dashboard styles.
-			if ( 'dashboard' === $subpage || 'profile-settings' === $subpage || 'user-profile' === $subpage || 'billing' === $subpage ) {
+			$supported_pages = array( 'dashboard', 'profile-settings', 'user-profile', 'certificates', 'reviews', 'billing' );
+			if ( in_array( $subpage, $supported_pages, true ) ) {
 				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
 				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
 

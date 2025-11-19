@@ -39,8 +39,10 @@ use TUTOR\Input;
 
 	$subpages = array(
 		'dashboard'        => 'Dashboard',
-		'user-profile'     => 'User Profile',
 		'learning-area'    => 'Learning Area',
+		'user-profile'     => 'User Profile',
+		'certificates'     => 'Certificates',
+		'reviews'          => 'Reviews',
 		'profile-settings' => 'Account Settings',
 		'billing'          => 'Billing',
 	);
@@ -69,7 +71,6 @@ use TUTOR\Input;
 			<?php require 'components/button.php'; ?>
 			<?php require 'components/popover.php'; ?>
 			<?php require 'components/file-uploader.php'; ?>
-			<?php require 'components/preview-trigger.php'; ?>
 			<?php require 'components/tabs.php'; ?>
 			<?php require 'components/skeleton.php'; ?>
 			<?php require 'components/progress.php'; ?>

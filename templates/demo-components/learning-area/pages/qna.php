@@ -1,13 +1,9 @@
 <?php
 /**
- * Tutor dashboard calendar.
+ * Tutor learning area Q&A.
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 4.0.0
  */
-
-?>
-
-<div id="tutor-calendar-root"></div>
