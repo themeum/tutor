@@ -48,6 +48,39 @@ $billing_tabs = array(
 	),
 );
 
+$filters = array(
+	array(
+		'id'    => 'all',
+		'label' => __( 'All', 'tutor' ),
+		'count' => 33,
+	),
+	array(
+		'id'    => 'pending',
+		'label' => __( 'Pending', 'tutor' ),
+		'count' => 22,
+	),
+	array(
+		'id'    => 'active',
+		'label' => __( 'Active', 'tutor' ),
+		'count' => 11,
+	),
+	array(
+		'id'    => 'on-hold',
+		'label' => __( 'On Hold', 'tutor' ),
+		'count' => 5,
+	),
+	array(
+		'id'    => 'expired',
+		'label' => __( 'Expired', 'tutor' ),
+		'count' => 1,
+	),
+	array(
+		'id'    => 'cancelled',
+		'label' => __( 'Cancelled', 'tutor' ),
+		'count' => 1,
+	),
+);
+
 ?>
 
 <div class="tutor-billing">
@@ -101,50 +134,7 @@ $billing_tabs = array(
 					</div>
 
 					<!-- Filters -->
-					<div class="tutor-billing-filters">
-						<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })">
-							<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-p-none tutor-gap-2">
-								<?php esc_html_e( 'All', 'tutor' ); ?>
-								<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN ); ?>
-							</button>
-
-							<div x-ref="content" x-cloak x-show="open" @click.outside="handleClickOutside()" class="tutor-popover tutor-py-4" style="width: 120px;">
-								<ul>
-									<li class="tutor-m-none">
-										<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-											<?php esc_html_e( 'All', 'tutor' ); ?>
-										</a>
-									</li>
-									<li class="tutor-m-none">
-										<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-											<?php esc_html_e( 'Pending', 'tutor' ); ?>
-										</a>
-									</li>
-									<li class="tutor-m-none">
-										<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-											<?php esc_html_e( 'Active', 'tutor' ); ?>
-										</a>
-									</li>
-									<li class="tutor-m-none">
-										<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-											<?php esc_html_e( 'On Hold', 'tutor' ); ?>
-										</a>
-									</li>
-									<li class="tutor-m-none">
-										<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-											<?php esc_html_e( 'Expired', 'tutor' ); ?>
-										</a>
-									</li>
-									<li class="tutor-m-none">
-										<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-											<?php esc_html_e( 'Cancelled', 'tutor' ); ?>
-										</a>
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div>Newest first</div>
-					</div>
+					<?php tutor_load_template( 'demo-components.dashboard.components.billing.filters' ); ?>
 
 					<!-- Tabs Content -->
 					<div class="tutor-billing-tab-content tutor-tabs-content">
