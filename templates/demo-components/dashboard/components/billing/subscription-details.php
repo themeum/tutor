@@ -281,7 +281,7 @@ $payments = array(
 
 					<div class="tutor-flex tutor-gap-3 tutor-justify-end tutor-items-center tutor-flex-wrap">
 						<!-- Amount -->
-						<?php echo wp_kses_post( $render_status_badge( $payment['status'], $payment['amount'] ) ); ?>
+						<?php echo wp_kses_post( $render_status_badge( $payment['status'], $payment['regular_price'] ) ); ?>
 					</div>
 				</div>
 			<?php endforeach; ?>

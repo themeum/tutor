@@ -23,8 +23,6 @@ $render_status_badge = function ( $status ) {
 	// @TODO: Need to recheck the status.
 	switch ( $status ) {
 		case 'processing':
-			$badge_class = 'warning';
-			break;
 		case 'pending':
 		case 'on-hold':
 			$badge_class = 'warning';
@@ -46,11 +44,16 @@ $render_status_badge = function ( $status ) {
 <div class="tutor-billing-card">
 	<div class="tutor-billing-card-left">
 		<div class="tutor-billing-card-title">
+			<div class="tutor-hidden tutor-sm-block">
+				<?php echo wp_kses_post( $render_status_badge( $status ) ); ?>
+			</div>
 			<?php echo esc_html( $plan_name ); ?>:
 			<a class="tutor-billing-card-title-access" href="#">
 				<?php echo esc_html( $plan_access ); ?>
 			</a>
-			<?php echo wp_kses_post( $render_status_badge( $status ) ); ?>
+			<div class="tutor-sm-hidden">
+				<?php echo wp_kses_post( $render_status_badge( $status ) ); ?>
+			</div>
 		</div>
 		<div class="tutor-billing-card-details">
 			<div class="tutor-billing-card-id">
@@ -69,12 +72,14 @@ $render_status_badge = function ( $status ) {
 					<?php echo esc_html( date_i18n( 'D, ' . get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $created_at_gmt ?? '' ) ) ); ?>
 				</span>
 
-				<span class="tutor-section-separator-vertical"></span>
+				<span class="tutor-section-separator-vertical tutor-sm-hidden"></span>
 
 				<div class="tutor-billing-card-payment-method">
 					<!-- @TODO: Need to map svg icon or image to payment method -->
 					<?php tutor_utils()->render_svg_icon( Icon::LESSON, 12, 12 ); ?>
-					<?php echo esc_html( Ecommerce::get_payment_method_label( $payment_method ?? '' ) ); ?>
+					<div class="tutor-sm-hidden">
+						<?php echo esc_html( Ecommerce::get_payment_method_label( $payment_method ?? '' ) ); ?>
+					</div>
 				</div>
 			<?php endif; ?>
 		</div>

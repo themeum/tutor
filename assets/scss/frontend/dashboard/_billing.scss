@@ -196,6 +196,7 @@
     }
 
     &-content {
+      @include tutor-flex-center;
       width: 100%;
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-2xl;
