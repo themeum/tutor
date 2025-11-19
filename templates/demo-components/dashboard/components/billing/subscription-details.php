@@ -138,7 +138,7 @@ $payments = array(
 		<!-- Overview -->
 		<div class="tutor-flex tutor-justify-between tutor-w-full">
 			<div class="tutor-flex tutor-flex-column">
-				<div class="tutor-text-secondary tutor-text-tiny">
+				<div class="tutor-subscription-overview-subtitle">
 					<?php
 					printf(
 						// translators: Subscription ID.
@@ -147,11 +147,11 @@ $payments = array(
 					);
 					?>
 				</div>
-				<div class="tutor-medium tutor-font-medium tutor-mt-1">
+				<div class="tutor-subscription-overview-title">
 					<!-- @TODO: This will be dynamic once we have the subscription name. -->
 					Subscription Name
 				</div>
-				<div class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-mt-2">
+				<div class="tutor-subscription-overview-badge">
 					<?php tutor_utils()->render_svg_icon( Icon::CHECK_2 ); ?>
 					<!-- @TODO: This will be dynamic once we have the subscription type. -->
 					Full Site Access
@@ -159,7 +159,7 @@ $payments = array(
 			</div>
 			<div class="tutor-flex tutor-items-start tutor-gap-4">
 				<!-- @TODO: This will be dynamic once we have the subscription status. -->
-				<div class="tutor-badge tutor-badge-completed tutor-badge-circle tutor-mt-2 tutor-bg-actions-success-primary">
+				<div class="tutor-subscription-overview-status">
 					<?php tutor_utils()->render_svg_icon( Icon::ACTIVE ); ?>
 					Active
 				</div>
@@ -176,9 +176,9 @@ $payments = array(
 				<div class="tutor-text-tiny tutor-text-secondary">
 					<?php esc_html_e( 'Amount', 'tutor' ); ?>
 				</div>
-				<div class="tutor-medium tutor-font-semibold tutor-flex tutor-items-center tutor-gap-3">
+				<div class="tutor-subscription-overview-card-title">
 					$10.00
-					<span class="tutor-text-tiny tutor-text-subdued tutor-font-regular">/month</span>
+					<span>/month</span>
 				</div>
 			</div>
 
@@ -187,7 +187,7 @@ $payments = array(
 				<div class="tutor-text-tiny tutor-text-secondary">
 					<?php esc_html_e( 'Payment', 'tutor' ); ?>
 				</div>
-				<div class="tutor-medium tutor-font-semibold tutor-flex tutor-items-center tutor-gap-3">
+				<div class="tutor-subscription-overview-card-title">
 					<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2 ); ?>
 					Recurring
 				</div>
@@ -198,7 +198,7 @@ $payments = array(
 				<div class="tutor-text-tiny tutor-text-secondary">
 					<?php esc_html_e( 'Active Payment Method', 'tutor' ); ?>
 				</div>
-				<div class="tutor-medium tutor-font-semibold tutor-flex tutor-items-center tutor-gap-3">
+				<div class="tutor-subscription-overview-card-title">
 					<?php tutor_utils()->render_svg_icon( Icon::LESSON ); ?>
 					<?php esc_html_e( 'PayPal', 'tutor' ); ?>
 				</div>
@@ -231,12 +231,12 @@ $payments = array(
 
 	<!-- Payment History -->
 	<div class="tutor-subscription-payments">
-		<div class="tutor-flex tutor-justify-between tutor-w-full tutor-items-center">
-			<div class="tutor-medium tutor-font-medium tutor-flex tutor-items-center tutor-gap-1">
+		<div class="tutor-subscription-payments-header">
+			<div class="tutor-subscription-payments-title">
 				<?php tutor_utils()->render_svg_icon( Icon::BILLING, 20, 20 ); ?>
 				<?php esc_html_e( 'Payment History', 'tutor' ); ?>
 			</div>
-			<div class="tutor-badge tutor-badge-secondary tutor-badge-circle">
+			<div class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-py-none">
 				<?php
 				printf(
 					// translators: %s is either 'On' or 'Off'.

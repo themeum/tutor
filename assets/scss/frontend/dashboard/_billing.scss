@@ -32,6 +32,12 @@
     gap: $tutor-spacing-4;
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-block: 1px solid $tutor-border-idle;
+
+    li {
+      &:hover {
+        background-color: $tutor-surface-l1-hover;
+      }
+    }
   }
 
   &-card {

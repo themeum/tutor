@@ -58,6 +58,33 @@
     padding: $tutor-spacing-6;
     border-block: 1px solid $tutor-border-idle;
 
+    &-subtitle {
+      @include tutor-typography('tiny', 'regular', 'secondary');
+    }
+
+    &-title {
+      @include tutor-typography('medium', 'medium');
+      margin-top: $tutor-spacing-1;
+    }
+
+    &-badge {
+      @include tutor-badge-base;
+      @include tutor-badge-variant('secondary');
+      border-radius: $tutor-radius-full;
+      margin-top: $tutor-spacing-2;
+      padding-block: $tutor-spacing-2;
+    }
+
+    &-status {
+      @include tutor-badge-base;
+      border-radius: $tutor-radius-full;
+      margin-top: $tutor-spacing-2;
+      background-color: $tutor-actions-success-primary;
+      color: $tutor-text-primary-inverse;
+      padding: 0 $tutor-spacing-4 0 $tutor-spacing-2;
+      text-transform: uppercase;
+    }
+
     &-card {
       @include tutor-flex(column, flex-start, center);
       width: 100%;
@@ -65,12 +92,33 @@
       background-color: $tutor-surface-l1-hover;
       padding: $tutor-spacing-5;
       border-radius: $tutor-radius-sm;
+
+      &-title {
+        @include tutor-flex(row, center, flex-start);
+        @include tutor-typography('medium', 'semibold');
+        gap: $tutor-spacing-3;
+
+        span {
+          @include tutor-typography('tiny', 'regular', 'subdued');
+        }
+      }
     }
   }
 
   &-payments {
     @extend .tutor-subscription-overview;
     border: none;
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+      width: 100%;
+    }
+
+    &-title {
+      @include tutor-flex(row, center, flex-start);
+      @include tutor-typography('medium', 'medium');
+      gap: $tutor-spacing-1;
+    }
 
     &-list {
       @include tutor-flex(column, flex-start, center);
