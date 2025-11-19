@@ -1,7 +1,32 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+[data-subscription-details="1"] {
+  @include tutor-breakpoint-down(sm) {
+    .tutor-billing-header {
+      display: none;
+    }
+
+    .tutor-billing-body {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+    }
+
+    .tutor-billing-tabs {
+      padding: $tutor-spacing-5;
+      border: none;
+    }
+
+    .tutor-billing-card-details {
+      @include tutor-flex(column, flex-start, center);
+      gap: $tutor-spacing-2;
+    }
+  }
+}
+
 .tutor-subscription {
+
   &-history {
     .tutor-billing-card {
       &:hover {
@@ -85,13 +110,25 @@
       text-transform: uppercase;
     }
 
+    &-cards {
+      @include tutor-flex(row, stretch, center);
+      gap: $tutor-spacing-5;
+      width: 100%;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column, stretch, center);
+        gap: $tutor-spacing-3;
+        width: 100%;
+      }
+    }
+
     &-card {
       @include tutor-flex(column, flex-start, center);
       width: 100%;
       gap: $tutor-spacing-2;
       background-color: $tutor-surface-l1-hover;
       padding: $tutor-spacing-5;
-      border-radius: $tutor-radius-sm;
+      border-radius: $tutor-radius-md;
 
       &-title {
         @include tutor-flex(row, center, flex-start);
@@ -103,7 +140,19 @@
         }
       }
     }
+
+    &-info {
+      @include tutor-flex(row, center, space-between);
+      gap: $tutor-spacing-2;
+      width: 100%;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column, flex-start, center);
+        gap: $tutor-spacing-4;
+      }
+    }
   }
+
 
   &-payments {
     @extend .tutor-subscription-overview;

@@ -171,7 +171,7 @@ $payments = array(
 		</div>
 
 		<!-- Overview Cards -->
-		<div class="tutor-flex tutor-gap-5 tutor-w-full">
+		<div class="tutor-subscription-overview-cards">
 			<!-- Amount -->
 			<div class="tutor-subscription-overview-card">
 				<div class="tutor-text-tiny tutor-text-secondary">
@@ -210,7 +210,7 @@ $payments = array(
 		</div>
 
 		<!-- Info -->
-		<div class="tutor-flex tutor-justify-between tutor-w-full">
+		<div class="tutor-subscription-overview-info">
 			<!-- Active Since -->
 			<div class="tutor-text-tiny">
 				<span class="tutor-text-subdued">
@@ -256,24 +256,30 @@ $payments = array(
 			<?php foreach ( $payments as $payment ) : ?>
 				<div class="tutor-subscription-payments-item">
 					<div class="tutor-billing-card-details">
-						<div class="tutor-billing-card-id">
+						<div class="tutor-billing-card-id tutor-sm-hidden">
 							#<?php echo esc_html( $payment['id'] ); ?>
 						</div>
 
-						<span>
-							<?php echo esc_html( date_i18n( 'D, ' . get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $payment['created_at_gmt'] ?? '' ) ) ); ?>
-						</span>
+						<div class="tutor-flex tutor-gap-3">
+							<span>
+								<?php echo esc_html( date_i18n( 'D, ' . get_option( 'date_format' ) . ', ' . get_option( 'time_format' ), strtotime( $payment['created_at_gmt'] ?? '' ) ) ); ?>
+							</span>
 
-						<span class="tutor-section-separator-vertical"></span>
+							<span class="tutor-section-separator-vertical tutor-sm-hidden"></span>
 
-						<div class="tutor-billing-card-payment-method">
-							<!-- @TODO: Need to map svg icon or image to payment method -->
-							<?php tutor_utils()->render_svg_icon( Icon::LESSON, 12, 12 ); ?>
-							<?php echo esc_html( Ecommerce::get_payment_method_label( $payment['payment_method'] ?? '' ) ); ?>
+							<div>
+								<div class="tutor-billing-card-payment-method">
+								<!-- @TODO: Need to map svg icon or image to payment method -->
+									<?php tutor_utils()->render_svg_icon( Icon::LESSON, 12, 12 ); ?>
+									<div class="tutor-sm-hidden">
+										<?php echo esc_html( Ecommerce::get_payment_method_label( $payment['payment_method'] ?? '' ) ); ?>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 
-					<div class="tutor-flex tutor-gap-3 tutor-items-center">
+					<div class="tutor-flex tutor-gap-3 tutor-justify-end tutor-items-center tutor-flex-wrap">
 						<!-- Amount -->
 						<?php echo wp_kses_post( $render_status_badge( $payment['status'], $payment['amount'] ) ); ?>
 					</div>

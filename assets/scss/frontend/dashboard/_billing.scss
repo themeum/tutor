@@ -8,7 +8,7 @@
     padding-block: $tutor-spacing-5;
 
     @include tutor-breakpoint-down(sm) {
-      display: none;
+      border-bottom: none;
     }
   }
 
@@ -20,16 +20,59 @@
 
   &-body {
     @include tutor-card-base;
-    @include tutor-card-radius(lg)
+    @include tutor-card-radius(lg);
+    @include tutor-flex(column, flex-start, center);
+    margin-top: $tutor-spacing-9;
+
+    .tutor-tabs-horizontal {
+      width: 100%;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      background-color: transparent;
+      border: none;
+      border-radius: 0;
+      margin-top: $tutor-spacing-2;
+    }
   }
 
   &-tabs {
     padding: $tutor-spacing-6;
+
+    &-content {
+      width: 100%;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      border: 1px solid $tutor-border-idle;
+      background-color: $tutor-surface-l1;
+      padding: $tutor-spacing-2;
+      border-radius: $tutor-radius-2xl;
+      width: 100%;
+
+      .tutor-tabs-tab {
+        @include tutor-flex(row, center, center);
+        flex: 1;
+      }
+    }
+  }
+
+  &-content {
+    @include tutor-flex(column, flex-start, center);
+    width: 100%;
+
+    @include tutor-breakpoint-down(sm) {
+      margin-top: $tutor-spacing-4;
+      border: 1px solid $tutor-border-idle;
+      background-color: $tutor-surface-l1;
+      border-radius: $tutor-radius-2xl;
+    }
   }
 
   &-filters {
     @include tutor-flex(row, center, space-between);
     gap: $tutor-spacing-4;
+    width: 100%;
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-block: 1px solid $tutor-border-idle;
 
@@ -37,6 +80,10 @@
       &:hover {
         background-color: $tutor-surface-l1-hover;
       }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      border-top: none;
     }
   }
 
@@ -94,6 +141,10 @@
           }
         }
       }
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column, flex-start, center);
+      }
     }
 
     &-details {
@@ -117,6 +168,11 @@
       gap: $tutor-spacing-2;
       border-radius: $tutor-radius-sm;
       color: $tutor-text-secondary;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography('tiny');
+        padding: $tutor-spacing-2;
+      }
     }
 
     &-amount {

@@ -103,7 +103,7 @@ $filters = array(
 		</div>
 	</div>
 <?php else : ?>
-	<div class="tutor-billing">
+	<div class="tutor-billing" data-subscription-details="<?php echo esc_attr( is_subscription_details_page() ); ?>">
 		<div class="tutor-billing-header">
 			<div class="tutor-billing-container">
 				<div class="tutor-flex tutor-justify-between">
@@ -126,7 +126,7 @@ $filters = array(
 
 		<div class="tutor-billing-container">
 			<!-- Billing Card -->
-			<div class="tutor-billing-body tutor-mt-9 tutor-flex-tutor-flex-column">
+			<div class="tutor-billing-body">
 				<!-- Tabs -->
 				<div x-data='tutorTabs({
 						tabs: <?php echo wp_json_encode( $billing_tabs ); ?>,
@@ -153,21 +153,23 @@ $filters = array(
 							</template>
 						</div>
 
-						<!-- Filters -->
-						<?php tutor_load_template( 'demo-components.dashboard.components.billing.filters' ); ?>
+						<div class="tutor-billing-content">
+							<!-- Filters -->
+							<?php tutor_load_template( 'demo-components.dashboard.components.billing.filters' ); ?>
 
-						<!-- Tabs Content -->
-						<div class="tutor-billing-tab-content tutor-tabs-content">
-							<template x-if="activeTab === 'orders'">
-								<div class="tutor-tab-panel" role="tabpanel">
-									<?php tutor_load_template( 'demo-components.dashboard.components.order-history' ); ?>
-								</div>
-							</template>
-							<template x-if="activeTab === 'subscriptions'">
-								<div class="tutor-tab-panel" role="tabpanel">
-									<?php tutor_load_template( 'demo-components.dashboard.components.subscription-history' ); ?>
-								</div>
-							</template>
+							<!-- Tabs Content -->
+							<div class="tutor-billing-tabs-content tutor-tabs-content">
+								<template x-if="activeTab === 'orders'">
+									<div class="tutor-tab-panel" role="tabpanel">
+										<?php tutor_load_template( 'demo-components.dashboard.components.order-history' ); ?>
+									</div>
+								</template>
+								<template x-if="activeTab === 'subscriptions'">
+									<div class="tutor-tab-panel" role="tabpanel">
+										<?php tutor_load_template( 'demo-components.dashboard.components.subscription-history' ); ?>
+									</div>
+								</template>
+							</div>
 						</div>
 					<?php else : ?>
 						<div class="tutor-billing-tabs">
