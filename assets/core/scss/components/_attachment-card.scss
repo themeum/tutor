@@ -40,7 +40,6 @@
   }
 
   &-title {
-    margin: 0;
     @include tutor-typography('small', 'medium', 'primary');
     white-space: nowrap;
     overflow: hidden;
@@ -51,26 +50,10 @@
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');
   }
 
-  &-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: $tutor-spacing-1;
-    padding: $tutor-spacing-1 $tutor-spacing-3;
-    border-radius: $tutor-radius-full;
-    background-color: $tutor-surface-brand-tertiary;
-    @include tutor-typography('tiny', 'medium', 'brand');
-    text-transform: uppercase;
-  }
-
   &-actions {
     @include tutor-flex(row, center, flex-end);
     gap: $tutor-spacing-2;
     flex-shrink: 0;
-
-    .tutor-iconic-btn {
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
   }
 
   &:hover &-actions,
