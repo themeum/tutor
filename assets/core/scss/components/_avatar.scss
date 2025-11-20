@@ -24,6 +24,10 @@
 	@include tutor-avatar-size(sm);
 }
 
+.tutor-avatar-base {
+	@include tutor-avatar-size(base);
+}
+
 .tutor-avatar-md {
 	@include tutor-avatar-size(md);
 }

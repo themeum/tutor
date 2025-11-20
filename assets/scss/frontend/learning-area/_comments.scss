@@ -1,0 +1,316 @@
+// Comments Component
+// YouTube-style comments with nested replies and interactions
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-comment {
+	@include tutor-flex(row, flex-start, flex-start);
+	gap: $tutor-spacing-4;
+	width: 100%;
+	position: relative;
+
+	// Avatar column
+	&__avatar {
+		flex-shrink: 0;
+		position: relative;
+	}
+
+	// Connector line from avatar to replies toggle (L-shaped)
+	&__connector-line {
+		position: absolute;
+		top: 40px; // Will be adjusted dynamically
+		left: 20px; // Will be adjusted dynamically (avatar center)
+		pointer-events: none;
+		z-index: 0;
+		height: 0; // Will be set dynamically by Alpine.js
+		min-height: 0;
+		width: 0; // Will be set dynamically for horizontal part
+
+		// Vertical line part
+		&::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 1px;
+			height: var(--vertical-height, 0);
+			background-color: $tutor-border-idle;
+			transition: height 0.3s ease;
+		}
+
+		// Horizontal line part (L-shape)
+		&::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			width: var(--horizontal-width, 0);
+			height: 1px;
+
+			background-color: $tutor-border-idle;
+			transition: width 0.3s ease;
+		}
+	}
+
+	// Content column
+	&__content {
+		flex: 1;
+		min-width: 0;
+		@include tutor-flex(column, flex-start, flex-start);
+		gap: $tutor-spacing-2;
+		position: relative;
+		@include padding-end($tutor-spacing-6);
+	}
+
+	// Header with author and time
+	&__header {
+		@include tutor-flex(row, center, flex-start);
+		gap: $tutor-spacing-2;
+		flex-wrap: wrap;
+	}
+
+	&__author {
+		@include tutor-typography('small', 'regular', 'primary');
+	}
+
+	&__time {
+		@include tutor-typography('small', 'regular', 'subdued');
+	}
+
+	// Comment text
+	&__text {
+		@include tutor-typography('p2', 'regular', 'primary');
+        color: $tutor-gray-700;
+	}
+
+	// Action buttons row
+	&__actions {
+		@include tutor-flex(row, center, flex-start);
+		gap: $tutor-spacing-2;
+		margin-top: $tutor-spacing-5;
+	}
+
+	&__action-btn {
+		@include tutor-button-reset;
+		@include tutor-flex(row, center, center);
+		gap: $tutor-spacing-2;
+		@include tutor-typography('small', 'regular', 'subdued');
+		text-align: center;
+		vertical-align: middle;
+		background: transparent;
+		border-radius: $tutor-radius-md;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+		}
+
+		&:hover {
+			background: var(--tutor-bg-hover);
+			color: var(--tutor-text-primary);
+		}
+
+		&:active {
+			background: var(--tutor-bg-pressed);
+		}
+
+		&:focus {
+			outline: none;
+		}
+
+		// Active state (when liked/reply open)
+		&--active {
+			color: var(--tutor-color-primary);
+			background: var(--tutor-bg-primary-soft);
+
+			&:hover {
+				background: var(--tutor-bg-primary-soft-hover);
+			}
+
+			&:active {
+				background: var(--tutor-bg-primary-soft);
+			}
+		}
+
+		// Like button specific styling
+		
+
+		// Reply button spacing after like button (16px total, accounting for 4px gap)
+		&--like + &--reply {
+			margin-inline-start: $tutor-spacing-5;
+		}
+
+		// Menu button
+		&--menu {
+			padding: $tutor-spacing-2;
+			flex-shrink: 0;
+			position: absolute;
+			top: 20px;
+			right: 0;
+			z-index: 10;
+		}
+	}
+
+	// Reply form
+	&__reply-form {
+		margin-top: $tutor-spacing-4;
+		width: 100%;
+
+		.tutor-input-field {
+			width: 100%;
+
+			.tutor-input-wrapper {
+				width: 100%;
+
+				.tutor-text-area {
+					width: 100%;
+				}
+			}
+		}
+	}
+
+	&__reply-actions {
+		@include tutor-flex(row, center, space-between);
+		width: 100%;
+		gap: $tutor-spacing-3;
+		flex-wrap: wrap;
+	}
+
+	&__keyboard-hint {
+		@include tutor-typography('tiny', 'regular', 'subdued');
+		text-align: center;
+		flex-shrink: 0;
+	}
+
+	// Replies toggle button
+	&__replies-toggle {
+		@include tutor-button-reset;
+		@include tutor-flex(row, center, flex-start);
+		gap: $tutor-spacing-2;
+		margin-top: $tutor-spacing-3;
+		@include tutor-typography('tiny', 'medium', 'primary', 'body');
+        color: $tutor-text-brand;
+		text-align: center;
+		letter-spacing: 0;
+		background: transparent;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+			transition: transform 0.2s ease;
+		}
+
+		&:hover {
+			background: var(--tutor-bg-primary-soft);
+		}
+
+		&:active {
+			background: var(--tutor-bg-primary-soft-hover);
+		}
+	}
+
+	&__replies-count {
+		@include tutor-typography('tiny', 'medium', 'brand', 'body');
+	}
+
+	// Collapse button at bottom of replies
+	&__replies-collapse {
+		@include tutor-button-reset;
+		@include tutor-flex(row, center, flex-start);
+		gap: $tutor-spacing-2;
+		margin-top: $tutor-spacing-3;
+		@include tutor-typography('tiny', 'medium', 'primary', 'body');
+        color: $tutor-text-brand;
+		background: transparent;
+		border-radius: $tutor-radius-md;
+		cursor: pointer;
+		transition: all 0.2s ease;
+
+		svg {
+			width: 16px;
+			height: 16px;
+			flex-shrink: 0;
+		}
+
+		&:hover {
+			background: var(--tutor-bg-primary-soft);
+		}
+
+		&:active {
+			background: var(--tutor-bg-primary-soft-hover);
+		}
+	}
+
+	// Replies wrapper
+	&__replies-wrapper {
+		width: 100%;
+	}
+
+	// Nested replies container
+	&__replies {
+		@include tutor-flex(column, flex-start, flex-start);
+		gap: $tutor-spacing-6;
+		margin-top: $tutor-spacing-4;
+		width: 100%;
+	}
+
+	// Reply variant (nested comment)
+	&--reply {
+		@include padding-start($tutor-spacing-4);
+		@include margin-start($tutor-spacing-2);
+		@include border-start(2px solid var(--tutor-border-subdued));
+
+		&:first-child {
+			padding-top: 0;
+		}
+
+		&:last-child {
+			padding-bottom: 0;
+		}
+
+		// Ensure content takes full width in nested replies
+		.tutor-comment__content {
+			width: 100%;
+			min-width: 0;
+		}
+	}
+}
+
+// Responsive adjustments
+@include tutor-breakpoint-down(sm) {
+	.tutor-comment {
+		gap: $tutor-spacing-3;
+
+		&__avatar {
+			.tutor-avatar {
+				width: 32px;
+				height: 32px;
+			}
+		}
+
+		&__action-btn {
+			svg {
+				width: 14px;
+				height: 14px;
+			}
+		}
+
+		&__reply-actions {
+			justify-content: flex-end;
+		}
+
+		&--reply {
+			@include padding-start($tutor-spacing-3);
+			@include margin-start($tutor-spacing-1);
+		}
+	}
+}
+
+
+

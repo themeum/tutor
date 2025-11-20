@@ -53,6 +53,18 @@
 			width: 16px;
 			height: 16px;
 		}
+	} @else if $size == base {
+		width: 40px;
+		height: 40px;
+		
+		.tutor-avatar-initials {
+			@include tutor-typography('tiny', 'medium');
+		}
+		
+		svg {
+			width: 20px;
+			height: 20px;
+		}
 	} @else if $size == md {
 		width: 48px;
 		height: 48px;
