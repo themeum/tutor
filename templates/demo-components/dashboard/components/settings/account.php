@@ -19,7 +19,8 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 }
 
 ?>
-<div class="tutor-account-page">
+
+<div class="tutor-account-section">
 	<form
 		x-data="tutorForm({ id: 'account-settings-form', mode: 'onBlur', shouldFocusError: true })"
 		x-bind="getFormBindings()"
@@ -37,7 +38,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 	>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
-			<h5 class="tutor-h5"><?php echo esc_html__( 'Account', 'tutor' ); ?></h5>
+			<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Account', 'tutor' ); ?></h5>
 			<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5">
 				<div class="tutor-account-avatar-wrapper">
 					<div x-data="tutorPopover({
