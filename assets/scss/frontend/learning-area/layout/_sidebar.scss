@@ -9,15 +9,17 @@
   @include tutor-flex(column);
   gap: $tutor-spacing-6;
   padding: $tutor-spacing-4;
+  position: absolute;
   height: 100%;
+  width: 320px;
+  top: 0;
+  inset-inline-start: 0;
   overflow: hidden;
   transition:
     opacity 0.25s ease-in-out,
-    padding 0.25s ease-in-out,
     transform 0.25s ease-in-out;
 
   .is-fullscreen & {
-    padding: 0;
     opacity: 0;
     pointer-events: none;
     transform: translateX(-100%);
@@ -26,10 +28,10 @@
   // @TODO: Need to adjust later
   @include tutor-breakpoint-down(lg) {
     position: fixed;
-    top: 0;
-    right: 0;
+    inset-inline-start: auto;
+    inset-inline-end: 0;
     height: 100vh;
-    width: 300px;
+    width: 320px;
     background-color: $tutor-surface-l1;
     z-index: 100;
     transform: translateX(100%);

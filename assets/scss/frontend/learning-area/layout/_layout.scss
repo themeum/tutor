@@ -5,18 +5,17 @@
 
 .tutor-learning-area {
   &-body {
-    display: grid;
-    grid-template-columns: 320px 1fr;
-    transition: grid-template-columns 0.25s ease-in-out;
+    padding-inline-start: 320px;
+    transition: padding 0.25s ease-in-out;
     position: relative;
 
     @include tutor-breakpoint-down(lg) {
-      grid-template-columns: 1fr;
+      padding-inline-start: 0;
     }
   }
 
   &.is-fullscreen &-body {
-    grid-template-columns: 0 1fr;
+    padding-inline-start: 0;
   }
 
   .tutor-expand-btn {
@@ -32,7 +31,7 @@
 
   .tutor-learning-area-container {
     max-width: 780px;
-    padding-inline: $tutor-spacing-6;
-    margin: $tutor-spacing-9 auto;
+    padding: $tutor-spacing-9 $tutor-spacing-6;
+    margin: 0 auto;
   }
 }
