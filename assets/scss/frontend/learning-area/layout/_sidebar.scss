@@ -7,6 +7,16 @@
   @include tutor-flex(column);
   gap: $tutor-spacing-6;
   padding: $tutor-spacing-4;
+  height: 100%;
+  overflow: hidden;
+  transition: opacity 0.25s ease-in-out, padding 0.25s ease-in-out, transform 0.25s ease-in-out;
+
+  .is-fullscreen & {
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-100%);
+  }
 
   // @TODO: Need to adjust later
   @include tutor-breakpoint-down(lg) {
@@ -36,6 +46,8 @@
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-lg;
     padding: $tutor-spacing-4;
+    height: 100%;
+    position: relative;
   }
 
   .tutor-learning-progress {
@@ -187,6 +199,16 @@
         background-color: $tutor-tab-sidebar-l2-active;
         color: $tutor-text-brand;
       }
+    }
+  }
+
+  .tutor-expand-btn {
+    position: absolute;
+    left: $tutor-spacing-4;
+    bottom: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(lg) {
+      display: none;
     }
   }
 }

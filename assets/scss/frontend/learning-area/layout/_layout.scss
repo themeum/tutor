@@ -7,10 +7,15 @@
   &-body {
     display: grid;
     grid-template-columns: 320px 1fr;
+    transition: grid-template-columns 0.25s ease-in-out;
 
     @include tutor-breakpoint-down(lg) {
       grid-template-columns: 1fr;
     }
+  }
+
+  &.is-fullscreen &-body {
+    grid-template-columns: 0 1fr;
   }
 
   .tutor-learning-area-container {

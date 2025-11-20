@@ -29,7 +29,7 @@ $tabs_data = array(
 );
 
 ?>
-<div class="tutor-learning-area" x-data="{ sidebarOpen: false }">
+<div class="tutor-learning-area" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
 	<?php tutor_load_template( 'demo-components.learning-area.components.header' ); ?>
 	<div class="tutor-learning-area-body">
 		<?php tutor_load_template( 'demo-components.learning-area.components.sidebar' ); ?>
@@ -48,13 +48,13 @@ $tabs_data = array(
 					<div x-ref="tablist" class="tutor-tabs-nav tutor-p-6 tutor-border-b" role="tablist" aria-orientation="horizontal">
 						<template x-for="tab in tabs" :key="tab.id">
 							<button
-							type="button"
-							role="tab"
-							:class='getTabClass(tab)'
-							x-bind:aria-selected="isActive(tab.id)"
-							:disabled="tab.disabled ? true : false"
-							@click="selectTab(tab.id)"
-							>
+								type="button" 
+								role="tab" 
+								:class='getTabClass(tab)' 
+								x-bind:aria-selected="isActive(tab.id)" 
+								:disabled="tab.disabled ? true : false" 
+								@click="selectTab(tab.id)"
+								>
 								<span x-data="TutorCore.icon({ name: tab.icon, width: 24, height: 24})"></span>
 								<span x-text="tab.label"></span>
 							</button>
@@ -64,11 +64,41 @@ $tabs_data = array(
 					<div class="tutor-tabs-content tutor-p-6">
 						<div x-show="activeTab === 'overview'" x-cloak class="tutor-tab-panel" role="tabpanel">
 							<h4 class="tutor-heading-4 tutor-mb-4">Learning the way of water</h4>
-							<p class="tutor-mb-6">I do a something I call a “twenty application test” every quarter where I will send out my resume to 20 companies who are hiring designers to see if I can make the cut. </p>
-							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and resilience in both thought and action. Just as water carves through stone over time, those who follow its path learn to navigate obstacles with patience and quiet strength. It’s not about overpowering challenges, but moving with them—finding paths of least resistance, bending when necessary, and returning to form when pressure subsides. Like a stream that adapts to its landscape, learning the way of water teaches us to remain calm under pressure and persistent through change. In this way, water becomes not just a force of nature, but a quiet mentor in the art of living.</p>
-							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and resilience in both thought and action. Just as water carves through stone over time, those who follow its path learn to navigate obstacles with patience and quiet strength. It’s not about overpowering challenges, but moving with them—finding paths of least resistance, bending when necessary, and returning to form when pressure subsides. Like a stream that adapts to its landscape, learning the way of water teaches us to remain calm under pressure and persistent through change. In this way, water becomes not just a force of nature, but a quiet mentor in the art of living.</p>
-							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and resilience in both thought and action. Just as water carves through stone over time, those who follow its path learn to navigate obstacles with patience and quiet strength. It’s not about overpowering challenges, but moving with them—finding paths of least resistance, bending when necessary, and returning to form when pressure subsides. Like a stream that adapts to its landscape, learning the way of water teaches us to remain calm under pressure and persistent through change. In this way, water becomes not just a force of nature, but a quiet mentor in the art of living.</p>
-							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and resilience in both thought and action. Just as water carves through stone over time, those who follow its path learn to navigate obstacles with patience and quiet strength. It’s not about overpowering challenges, but moving with them—finding paths of least resistance, bending when necessary, and returning to form when pressure subsides. Like a stream that adapts to its landscape, learning the way of water teaches us to remain calm under pressure and persistent through change. In this way, water becomes not just a force of nature, but a quiet mentor in the art of living.</p>
+							<p class="tutor-mb-6">I do a something I call a “twenty application test” every quarter
+								where I will send out my resume to 20 companies who are hiring designers to see if I can
+								make the cut. </p>
+							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
+								resilience in both thought and action. Just as water carves through stone over time,
+								those who follow its path learn to navigate obstacles with patience and quiet strength.
+								It’s not about overpowering challenges, but moving with them—finding paths of least
+								resistance, bending when necessary, and returning to form when pressure subsides. Like a
+								stream that adapts to its landscape, learning the way of water teaches us to remain calm
+								under pressure and persistent through change. In this way, water becomes not just a
+								force of nature, but a quiet mentor in the art of living.</p>
+							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
+								resilience in both thought and action. Just as water carves through stone over time,
+								those who follow its path learn to navigate obstacles with patience and quiet strength.
+								It’s not about overpowering challenges, but moving with them—finding paths of least
+								resistance, bending when necessary, and returning to form when pressure subsides. Like a
+								stream that adapts to its landscape, learning the way of water teaches us to remain calm
+								under pressure and persistent through change. In this way, water becomes not just a
+								force of nature, but a quiet mentor in the art of living.</p>
+							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
+								resilience in both thought and action. Just as water carves through stone over time,
+								those who follow its path learn to navigate obstacles with patience and quiet strength.
+								It’s not about overpowering challenges, but moving with them—finding paths of least
+								resistance, bending when necessary, and returning to form when pressure subsides. Like a
+								stream that adapts to its landscape, learning the way of water teaches us to remain calm
+								under pressure and persistent through change. In this way, water becomes not just a
+								force of nature, but a quiet mentor in the art of living.</p>
+							<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
+								resilience in both thought and action. Just as water carves through stone over time,
+								those who follow its path learn to navigate obstacles with patience and quiet strength.
+								It’s not about overpowering challenges, but moving with them—finding paths of least
+								resistance, bending when necessary, and returning to form when pressure subsides. Like a
+								stream that adapts to its landscape, learning the way of water teaches us to remain calm
+								under pressure and persistent through change. In this way, water becomes not just a
+								force of nature, but a quiet mentor in the art of living.</p>
 						</div>
 						<div x-show="activeTab === 'notes'" x-cloak class="tutor-tab-panel" role="tabpanel">
 							Assignments Content
