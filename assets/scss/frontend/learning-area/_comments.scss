@@ -1,5 +1,3 @@
-// Comments Component
-// YouTube-style comments with nested replies and interactions
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
@@ -9,24 +7,21 @@
 	width: 100%;
 	position: relative;
 
-	// Avatar column
 	&__avatar {
 		flex-shrink: 0;
 		position: relative;
 	}
 
-	// Connector line from avatar to replies toggle (L-shaped)
 	&__connector-line {
 		position: absolute;
-		top: 40px; // Will be adjusted dynamically
-		left: 20px; // Will be adjusted dynamically (avatar center)
+		top: 40px;
+		left: 20px;
 		pointer-events: none;
 		z-index: 0;
-		height: 0; // Will be set dynamically by Alpine.js
+		height: 0;
 		min-height: 0;
-		width: 0; // Will be set dynamically for horizontal part
+		width: 0;
 
-		// Vertical line part
 		&::before {
 			content: '';
 			position: absolute;
@@ -38,7 +33,6 @@
 			transition: height 0.3s ease;
 		}
 
-		// Horizontal line part (L-shape)
 		&::after {
 			content: '';
 			position: absolute;
@@ -46,13 +40,11 @@
 			left: 0;
 			width: var(--horizontal-width, 0);
 			height: 1px;
-
 			background-color: $tutor-border-idle;
 			transition: width 0.3s ease;
 		}
 	}
 
-	// Content column
 	&__content {
 		flex: 1;
 		min-width: 0;
@@ -62,7 +54,6 @@
 		@include padding-end($tutor-spacing-6);
 	}
 
-	// Header with author and time
 	&__header {
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
@@ -77,13 +68,15 @@
 		@include tutor-typography('small', 'regular', 'subdued');
 	}
 
-	// Comment text
-	&__text {
-		@include tutor-typography('p2', 'regular', 'primary');
-        color: $tutor-gray-700;
+	&__separator {
+		color: $tutor-gray-500;
 	}
 
-	// Action buttons row
+	&__text {
+		@include tutor-typography('p2', 'regular', 'primary');
+		color: $tutor-gray-700;
+	}
+
 	&__actions {
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
@@ -95,8 +88,6 @@
 		@include tutor-flex(row, center, center);
 		gap: $tutor-spacing-2;
 		@include tutor-typography('small', 'regular', 'subdued');
-		text-align: center;
-		vertical-align: middle;
 		background: transparent;
 		border-radius: $tutor-radius-md;
 		cursor: pointer;
@@ -109,41 +100,35 @@
 		}
 
 		&:hover {
-			background: var(--tutor-bg-hover);
-			color: var(--tutor-text-primary);
+			background: $tutor-surface-l1-hover;
+			color: $tutor-text-primary;
 		}
 
 		&:active {
-			background: var(--tutor-bg-pressed);
+			background: $tutor-surface-l2;
 		}
 
 		&:focus {
 			outline: none;
 		}
 
-		// Active state (when liked/reply open)
 		&--active {
-			color: var(--tutor-color-primary);
-			background: var(--tutor-bg-primary-soft);
+			color: $tutor-text-brand;
+			background: $tutor-button-primary-soft;
 
 			&:hover {
-				background: var(--tutor-bg-primary-soft-hover);
+				background: $tutor-button-primary-soft-hover;
 			}
 
 			&:active {
-				background: var(--tutor-bg-primary-soft);
+				background: $tutor-button-primary-soft;
 			}
 		}
 
-		// Like button specific styling
-		
-
-		// Reply button spacing after like button (16px total, accounting for 4px gap)
 		&--like + &--reply {
 			margin-inline-start: $tutor-spacing-5;
 		}
 
-		// Menu button
 		&--menu {
 			padding: $tutor-spacing-2;
 			flex-shrink: 0;
@@ -154,47 +139,29 @@
 		}
 	}
 
-	// Reply form
 	&__reply-form {
 		margin-top: $tutor-spacing-4;
 		width: 100%;
-
-		.tutor-input-field {
-			width: 100%;
-
-			.tutor-input-wrapper {
-				width: 100%;
-
-				.tutor-text-area {
-					width: 100%;
-				}
-			}
-		}
 	}
 
 	&__reply-actions {
 		@include tutor-flex(row, center, space-between);
 		width: 100%;
 		gap: $tutor-spacing-3;
-		flex-wrap: wrap;
 	}
 
 	&__keyboard-hint {
 		@include tutor-typography('tiny', 'regular', 'subdued');
-		text-align: center;
 		flex-shrink: 0;
 	}
 
-	// Replies toggle button
 	&__replies-toggle {
 		@include tutor-button-reset;
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
 		margin-top: $tutor-spacing-3;
 		@include tutor-typography('tiny', 'medium', 'primary', 'body');
-        color: $tutor-text-brand;
-		text-align: center;
-		letter-spacing: 0;
+		color: $tutor-text-brand;
 		background: transparent;
 		cursor: pointer;
 		transition: all 0.2s ease;
@@ -207,11 +174,11 @@
 		}
 
 		&:hover {
-			background: var(--tutor-bg-primary-soft);
+			background: $tutor-button-primary-soft;
 		}
 
 		&:active {
-			background: var(--tutor-bg-primary-soft-hover);
+			background: $tutor-button-primary-soft-hover;
 		}
 	}
 
@@ -219,14 +186,13 @@
 		@include tutor-typography('tiny', 'medium', 'brand', 'body');
 	}
 
-	// Collapse button at bottom of replies
 	&__replies-collapse {
 		@include tutor-button-reset;
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
 		margin-top: $tutor-spacing-3;
 		@include tutor-typography('tiny', 'medium', 'primary', 'body');
-        color: $tutor-text-brand;
+		color: $tutor-text-brand;
 		background: transparent;
 		border-radius: $tutor-radius-md;
 		cursor: pointer;
@@ -239,20 +205,18 @@
 		}
 
 		&:hover {
-			background: var(--tutor-bg-primary-soft);
+			background: $tutor-button-primary-soft;
 		}
 
 		&:active {
-			background: var(--tutor-bg-primary-soft-hover);
+			background: $tutor-button-primary-soft-hover;
 		}
 	}
 
-	// Replies wrapper
 	&__replies-wrapper {
 		width: 100%;
 	}
 
-	// Nested replies container
 	&__replies {
 		@include tutor-flex(column, flex-start, flex-start);
 		gap: $tutor-spacing-6;
@@ -260,29 +224,16 @@
 		width: 100%;
 	}
 
-	// Reply variant (nested comment)
 	&--reply {
 		@include padding-start($tutor-spacing-4);
 		@include margin-start($tutor-spacing-2);
-		@include border-start(2px solid var(--tutor-border-subdued));
 
-		&:first-child {
-			padding-top: 0;
-		}
-
-		&:last-child {
-			padding-bottom: 0;
-		}
-
-		// Ensure content takes full width in nested replies
 		.tutor-comment__content {
-			width: 100%;
 			min-width: 0;
 		}
 	}
 }
 
-// Responsive adjustments
 @include tutor-breakpoint-down(sm) {
 	.tutor-comment {
 		gap: $tutor-spacing-3;
@@ -299,10 +250,6 @@
 				width: 14px;
 				height: 14px;
 			}
-		}
-
-		&__reply-actions {
-			justify-content: flex-end;
 		}
 
 		&--reply {

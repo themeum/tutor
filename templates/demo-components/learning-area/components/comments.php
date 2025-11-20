@@ -50,6 +50,7 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 	<div class="tutor-comment__content">
 		<div class="tutor-comment__header">
 			<span class="tutor-comment__author"><?php echo esc_html( $comment['author'] ); ?></span>
+			<span class="tutor-comment__separator">•</span>
 			<span class="tutor-comment__time"><?php echo esc_html( $comment['time'] ); ?></span>
 			<button class="tutor-comment__action-btn tutor-comment__action-btn--menu">
 				<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ); ?>

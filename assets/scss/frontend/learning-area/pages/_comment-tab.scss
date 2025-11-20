@@ -3,6 +3,16 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+// Comments header with full-width border
+.tutor-comments-header {
+	.tutor-comments-header__title {
+		flex: 1;
+        border-top: 1px solid $tutor-border-idle;
+		border-bottom: 1px solid $tutor-border-idle;
+		padding: $tutor-spacing-5 0;
+	}
+}
+
 // Add top and bottom borders to all tutor comment list items
 .tutor-comments-list {
 	.tutor-comment {

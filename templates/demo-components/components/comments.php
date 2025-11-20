@@ -96,12 +96,9 @@ $sample_comments_full_demo = array(
 		</div>
 	</div>
 
-	<!-- Separator -->
-	<hr class="tutor-border-gray-200 tutor-my-6">
-
 	<!-- Comments Header -->
-	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-4">
-		<h3 class="tutor-text-lg tutor-font-semibold">
+	<div class="tutor-comments-header tutor-flex tutor-items-center tutor-justify-between tutor-mb-4">
+		<h3 class="tutor-comments-header__title tutor-text-lg tutor-font-semibold">
 			<?php
 			/* translators: %d: number of comments */
 			printf( esc_html__( 'Comments (%d)', 'tutor' ), 37 );
