@@ -206,14 +206,4 @@
       }
     }
   }
-
-  .tutor-expand-btn {
-    position: absolute;
-    left: $tutor-spacing-4;
-    bottom: $tutor-spacing-5;
-
-    @include tutor-breakpoint-down(lg) {
-      display: none;
-    }
-  }
 }

@@ -8,6 +8,7 @@
     display: grid;
     grid-template-columns: 320px 1fr;
     transition: grid-template-columns 0.25s ease-in-out;
+    position: relative;
 
     @include tutor-breakpoint-down(lg) {
       grid-template-columns: 1fr;
@@ -16,6 +17,17 @@
 
   &.is-fullscreen &-body {
     grid-template-columns: 0 1fr;
+  }
+
+  .tutor-expand-btn {
+    position: absolute;
+    inset-inline-start: $tutor-spacing-6;
+    bottom: $tutor-spacing-6;
+    color: $tutor-icon-secondary;
+
+    @include tutor-breakpoint-down(lg) {
+      display: none;
+    }
   }
 
   .tutor-learning-area-container {

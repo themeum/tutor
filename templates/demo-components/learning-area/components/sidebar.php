@@ -147,12 +147,5 @@ use TUTOR\Icon;
 				<?php esc_html_e( 'Certificate', 'tutor' ); ?>
 			</a>
 		</div>
-
-		<button 
-			class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
-			@click="isFullScreen = !isFullScreen"
-		>
-			<?php tutor_utils()->render_svg_icon( Icon::EXPAND ); ?>
-		</button>
 	</div>
 </div>

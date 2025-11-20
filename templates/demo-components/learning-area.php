@@ -134,5 +134,17 @@ $tabs_data = array(
 				</div>
 			</div>
 		</div>
+		<button 
+			class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
+			@click="isFullScreen = !isFullScreen"
+		>
+			<template x-if="!isFullScreen">
+				<?php tutor_utils()->render_svg_icon( Icon::EXPAND ); ?>
+			</template>
+
+			<template x-if="isFullScreen">
+				<?php tutor_utils()->render_svg_icon( Icon::COLLAPSED ); ?>
+			</template>
+		</button>
 	</div>
 </div>
