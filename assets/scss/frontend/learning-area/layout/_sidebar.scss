@@ -3,13 +3,18 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
+// @TODO: The manual height change of curriculum section needs to implement.
+
 .tutor-learning-sidebar {
   @include tutor-flex(column);
   gap: $tutor-spacing-6;
   padding: $tutor-spacing-4;
   height: 100%;
   overflow: hidden;
-  transition: opacity 0.25s ease-in-out, padding 0.25s ease-in-out, transform 0.25s ease-in-out;
+  transition:
+    opacity 0.25s ease-in-out,
+    padding 0.25s ease-in-out,
+    transform 0.25s ease-in-out;
 
   .is-fullscreen & {
     padding: 0;
