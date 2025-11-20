@@ -72,7 +72,9 @@ final class Icon {
 	const CHEVRON_DOWN               = 'chevron-down';
 	const CHEVRON_DOWN_2             = 'chevron-down-2';
 	const CHEVRON_LEFT               = 'chevron-left';
+	const CHEVRON_LEFT_2             = 'chevron-left-2';
 	const CHEVRON_RIGHT              = 'chevron-right';
+	const CHEVRON_RIGHT_2            = 'chevron-right-2';
 	const CHEVRON_UP                 = 'chevron-up';
 	const CHEVRON_UP_2               = 'chevron-up-2';
 	const CIRCLED_PLUS               = 'circled-plus';
@@ -315,6 +317,7 @@ final class Icon {
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
 	const STAR                       = 'star';
+	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';

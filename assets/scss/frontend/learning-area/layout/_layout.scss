@@ -1,8 +1,21 @@
 // Learning Area Layout Styles
 
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
 .tutor-learning-area {
   &-body {
     display: grid;
     grid-template-columns: 320px 1fr;
+
+    @include tutor-breakpoint-down(lg) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .tutor-learning-area-container {
+    max-width: 780px;
+    padding-inline: $tutor-spacing-6;
+    margin: $tutor-spacing-9 auto;
   }
 }

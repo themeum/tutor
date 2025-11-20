@@ -9,7 +9,7 @@
   padding: $tutor-spacing-4;
 
   // @TODO: Need to adjust later
-  @include tutor-breakpoint-down(md) {
+  @include tutor-breakpoint-down(lg) {
     position: fixed;
     top: 0;
     right: 0;
