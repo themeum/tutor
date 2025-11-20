@@ -19,7 +19,6 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\ValidationHelper;
-use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -989,13 +988,14 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function restrict_checkout_page() {
-		if ( ! is_page( self::get_page_id() ) ) {
+		$page_id = self::get_page_id();
+		if ( ! $page_id || ! is_page( $page_id ) ) {
 			return;
 		}
 
 		$cart_page_url = CartController::get_page_url();
 
-		if ( ! is_user_logged_in() && ! GuestCheckout::is_enable() ) {
+		if ( ! is_user_logged_in() && ! apply_filters( 'tutor_is_guest_checkout_enabled', false ) ) {
 			wp_safe_redirect( $cart_page_url );
 			exit;
 		}
