@@ -8,8 +8,9 @@
 $tutor-actions-success-primary: var(--tutor-actions-success-primary);
 $tutor-actions-success-secondary: var(--tutor-actions-success-secondary);
 $tutor-actions-success-tertiary: var(--tutor-actions-success-tertiary);
-$tutor-actions-warning: var(--tutor-actions-warning);
+$tutor-actions-warning-primary: var(--tutor-actions-warning-primary);
 $tutor-actions-warning-secondary: var(--tutor-actions-warning-secondary);
+$tutor-actions-warning-tertiary: var(--tutor-actions-warning-tertiary);
 $tutor-actions-brand-primary: var(--tutor-actions-brand-primary);
 $tutor-actions-brand-secondary: var(--tutor-actions-brand-secondary);
 $tutor-actions-brand-tertiary: var(--tutor-actions-brand-tertiary);
@@ -30,8 +31,9 @@ $tutor-actions: (
   success-primary: $tutor-actions-success-primary,
   success-secondary: $tutor-actions-success-secondary,
   success-tertiary: $tutor-actions-success-tertiary,
-  warning: $tutor-actions-warning,
+  warning-primary: $tutor-actions-warning-primary,
   warning-secondary: $tutor-actions-warning-secondary,
+  warning-tertiary: $tutor-actions-warning-tertiary,
   brand-primary: $tutor-actions-brand-primary,
   brand-secondary: $tutor-actions-brand-secondary,
   brand-tertiary: $tutor-actions-brand-tertiary,
