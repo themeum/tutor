@@ -55,11 +55,11 @@
     height: 44px;
     width: 44px;
 
-    @include tutor-breakpoint-up(sm) {
+    @include tutor-breakpoint-up(md) {
       display: none;
     }
 
-    @include tutor-breakpoint-down(sm) {
+    @include tutor-breakpoint-down(md) {
       height: 40px;
       width: 40px;
     }

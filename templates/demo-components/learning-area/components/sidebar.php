@@ -11,7 +11,7 @@
 use TUTOR\Icon;
 
 ?>
-<div class="tutor-learning-sidebar">
+<div class="tutor-learning-sidebar" :class="{ 'is-open': sidebarOpen }" @click.outside="sidebarOpen = false">
 	<div class="tutor-learning-sidebar-curriculum">
 		<div class="tutor-learning-progress">
 			<div class="tutor-learning-progress-content">
@@ -34,9 +34,8 @@ use TUTOR\Icon;
 							type: 'progress',
 							showLabel: false,
 							background: 'var(--tutor-actions-gray-empty)',
-							strokeColor: 'var(--tutor-border-hover)' })"
-						>
-							<div x-html="render()" ></div>
+							strokeColor: 'var(--tutor-border-hover)' })">
+							<div x-html="render()"></div>
 						</div>
 						<!-- <div class="tutor-learning-nav-header-progress-inner"></div> -->
 					</div>
@@ -63,9 +62,8 @@ use TUTOR\Icon;
 									type: 'progress',
 									showLabel: false,
 									background: 'var(--tutor-actions-gray-empty)',
-									strokeColor: 'var(--tutor-border-hover)' })"
-								>
-									<div x-html="render()" ></div>
+									strokeColor: 'var(--tutor-border-hover)' })">
+									<div x-html="render()"></div>
 								</div>
 							</div>
 							<div>Introduction</div>
@@ -91,7 +89,7 @@ use TUTOR\Icon;
 					</div>
 				</div>
 			</div>
-			<div x-data="{ expanded: false }" class="tutor-learning-nav-topic active">
+			<div x-data="{ expanded: false }" class="tutor-learning-nav-topic">
 				<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
 					<div class="tutor-learning-nav-header-progress">
 						<div class="tutor-learning-nav-header-progress-inner"></div>

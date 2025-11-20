@@ -11,7 +11,7 @@
 use TUTOR\Icon;
 
 ?>
-<div class="tutor-learning-area">
+<div class="tutor-learning-area" x-data="{ sidebarOpen: false }">
 	<?php tutor_load_template( 'demo-components.learning-area.components.header' ); ?>
 	<div class="tutor-learning-area-body">
 		<?php tutor_load_template( 'demo-components.learning-area.components.sidebar' ); ?>

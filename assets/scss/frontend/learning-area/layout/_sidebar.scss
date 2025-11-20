@@ -8,6 +8,25 @@
   gap: $tutor-spacing-6;
   padding: $tutor-spacing-4;
 
+  // @TODO: Need to adjust later
+  @include tutor-breakpoint-down(md) {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 300px;
+    background-color: $tutor-surface-l1;
+    z-index: 100;
+    transform: translateX(100%);
+    transition: transform 0.3s ease-in-out;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+
   &-curriculum {
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-lg;
@@ -46,6 +65,8 @@
     @include tutor-flex(column);
     gap: $tutor-spacing-1;
     padding: $tutor-spacing-6 $tutor-spacing-4;
+    max-height: 440px;
+    overflow-y: auto;
 
     &-topic {
       @include tutor-flex(column);

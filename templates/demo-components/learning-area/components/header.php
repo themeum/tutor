@@ -20,7 +20,7 @@ use TUTOR\Icon;
 			Intimate Photography Portraits
 		</h5>
 		<div class="tutor-learning-header-mobile">
-			<button class="tutor-learning-header-toggle-mobile">
+			<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
 				<?php tutor_utils()->render_svg_icon( Icon::MENU, 20, 20 ); ?>
 			</button>
 		</div>
