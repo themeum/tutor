@@ -279,7 +279,8 @@ class Assets {
 			}
 
 			// Enqueue learning area styles.
-			if ( 'learning-area' === $subpage ) {
+			$supported_pages = array( 'learning-area', 'quiz' );
+			if ( in_array( $subpage, $supported_pages, true ) ) {
 				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
 				$learning_area_css_url  = tutor()->url . 'assets/css/tutor-learning-area.min.css';
 
