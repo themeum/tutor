@@ -174,21 +174,11 @@
 
 	&-replies-collapse {
 		@include tutor-button-reset;
-		@include tutor-flex(row, center, flex-start);
-		gap: $tutor-spacing-2;
 		margin-top: $tutor-spacing-3;
 		@include tutor-typography('tiny', 'medium', 'primary', 'body');
 		color: $tutor-text-brand;
-		background: transparent;
-		border-radius: $tutor-radius-md;
 		cursor: pointer;
 		transition: all 0.2s ease;
-
-		svg {
-			width: 16px;
-			height: 16px;
-			flex-shrink: 0;
-		}
 
 		&:hover {
 			background: $tutor-button-primary-soft;
