@@ -54,6 +54,8 @@ $sort_options = array(
 	),
 );
 
+$selected_sort = get_query_var( 'sort' );
+
 ?>
 
 <div class="tutor-billing-filters">
@@ -63,23 +65,27 @@ $sort_options = array(
 			<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
 		</button>
 
-		<div x-ref="content" x-cloak x-show="open" @click.outside="handleClickOutside()" class="tutor-popover tutor-py-4" style="width: 120px;">
-			<ul>
+		<div 
+			x-ref="content"
+			x-cloak 
+			x-show="open" 
+			@click.outside="handleClickOutside()" 
+			class="tutor-popover" 
+		>
+			<div class="tutor-popover-menu" style="width: 120px;">
 				<?php foreach ( $filter_options as $filter ) : ?>
-					<li class="tutor-m-none">
-						<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-							<?php
+					<a href="#" class="tutor-popover-menu-item tutor-popover-menu-item-active">
+						<?php
 							printf(
-								// translators: %d - Number of orders.
+								// translators: %1$s - Filter label, %2$d - Number of orders.
 								esc_html__( '%1$s (%2$d)', 'tutor' ),
 								esc_html( $filter['label'] ),
 								esc_html( $filter['count'] )
 							);
-							?>
-						</a>
-					</li>
+						?>
+					</a>
 				<?php endforeach; ?>
-			</ul>
+			</div>
 		</div>
 	</div>
 	
@@ -91,16 +97,24 @@ $sort_options = array(
 				<?php tutor_utils()->render_svg_icon( Icon::STEPPER ); ?>
 			</button>
 
-			<div x-ref="content" x-cloak x-show="open" @click.outside="handleClickOutside()" class="tutor-popover tutor-py-4" style="width: 140px;">
-				<ul>
+			<div 
+				x-ref="content"
+				x-cloak 
+				x-show="open" 
+				@click.outside="handleClickOutside()" 
+				class="tutor-popover"
+			>
+				<div class="tutor-popover-menu" style="width: 140px;">
 					<?php foreach ( $sort_options as $sort ) : ?>
-						<li class="tutor-m-none">
-							<a href="#" class="tutor-px-5 tutor-py-4 tutor-flex tutor-w-full">
-								<?php echo esc_html( $sort['label'] ); ?>
-							</a>
-						</li>
+						<a href="#" class="tutor-popover-menu-item tutor-popover-menu-item-active tutor-flex tutor-justify-between tutor-items-center">
+							<?php echo esc_html( $sort['label'] ); ?>
+
+							<?php if ( $selected_sort === $sort['id'] ) : ?>
+								<?php tutor_utils()->render_svg_icon( Icon::CHECK_2 ); ?>
+							<?php endif; ?>
+						</a>
 					<?php endforeach; ?>
-				</ul>
+					</div>
 			</div>
 		</div>
 
