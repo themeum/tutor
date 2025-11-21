@@ -13,7 +13,7 @@ use TUTOR\Icon;
 ?>
 
 <section class="tutor-flex tutor-flex-column tutor-gap-4">
-	<h5 class="tutor-h5"><?php echo esc_html__( 'Billing Address', 'tutor' ); ?></h5>
+	<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Billing Address', 'tutor' ); ?></h5>
 
 	<div class="tutor-surface-l1 tutor-rounded-2xl tutor-p-6 tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
 		<form 

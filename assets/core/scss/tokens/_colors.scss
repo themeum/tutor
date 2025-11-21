@@ -35,18 +35,18 @@ $tutor-gray-900: #161b26;
 $tutor-gray-950: #0c111d;
 
 // Success Colors
-$tutor-success-25: #fafef5;
-$tutor-success-50: #f3fee7;
-$tutor-success-100: #e3fbcc;
-$tutor-success-200: #d0f8ab;
-$tutor-success-300: #a6ef67;
-$tutor-success-400: #85e13a;
-$tutor-success-500: #66c61c;
-$tutor-success-600: #4ca30d;
-$tutor-success-700: #3b7c0f;
-$tutor-success-800: #326212;
-$tutor-success-900: #2b5314;
-$tutor-success-950: #15290a;
+$tutor-success-25: #f4faf5;
+$tutor-success-50: #eaf6ec;
+$tutor-success-100: #bce4c5;
+$tutor-success-200: #9cd7a9;
+$tutor-success-300: #6fc482;
+$tutor-success-400: #53b96a;
+$tutor-success-500: #28a745;
+$tutor-success-600: #24983f;
+$tutor-success-700: #1c7731;
+$tutor-success-800: #165c26;
+$tutor-success-900: #11461d;
+$tutor-success-950: #0c3114;
 
 // Warning Colors
 $tutor-warning-25: #fffcf5;
@@ -113,7 +113,7 @@ $tutor-brand-colors: (
   700: $tutor-brand-700,
   800: $tutor-brand-800,
   900: $tutor-brand-900,
-  950: $tutor-brand-950
+  950: $tutor-brand-950,
 );
 
 $tutor-gray-colors: (
@@ -131,7 +131,7 @@ $tutor-gray-colors: (
   750: $tutor-gray-750,
   800: $tutor-gray-800,
   900: $tutor-gray-900,
-  950: $tutor-gray-950
+  950: $tutor-gray-950,
 );
 
 $tutor-success-colors: (
@@ -146,7 +146,7 @@ $tutor-success-colors: (
   700: $tutor-success-700,
   800: $tutor-success-800,
   900: $tutor-success-900,
-  950: $tutor-success-950
+  950: $tutor-success-950,
 );
 
 $tutor-warning-colors: (
@@ -161,7 +161,7 @@ $tutor-warning-colors: (
   700: $tutor-warning-700,
   800: $tutor-warning-800,
   900: $tutor-warning-900,
-  950: $tutor-warning-950
+  950: $tutor-warning-950,
 );
 
 $tutor-error-colors: (
@@ -176,7 +176,7 @@ $tutor-error-colors: (
   700: $tutor-error-700,
   800: $tutor-error-800,
   900: $tutor-error-900,
-  950: $tutor-error-950
+  950: $tutor-error-950,
 );
 
 $tutor-yellow-colors: (
@@ -191,7 +191,7 @@ $tutor-yellow-colors: (
   700: $tutor-yellow-700,
   800: $tutor-yellow-800,
   900: $tutor-yellow-900,
-  950: $tutor-yellow-950
+  950: $tutor-yellow-950,
 );
 
 $tutor-exception-colors: (
@@ -201,5 +201,5 @@ $tutor-exception-colors: (
   2-tertiary: $tutor-exception-2-tertiary,
   3: $tutor-exception-3,
   5: $tutor-exception-5,
-  6: $tutor-exception-6
+  6: $tutor-exception-6,
 );
