@@ -17,12 +17,12 @@ use TUTOR\Icon;
 		<img src="http://localhost:10058/wp-content/uploads/2025/07/Course-Thumb-02.webp" alt="course thumb" />
 	</div>
 	<div class="tutor-course-intro">
-		<div class="tutor-course-intro-date">
+		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-3 tutor-tiny tutor-text-secondary">
 			<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2 ); ?>
 			August 28, 2025 Last Updated
 		</div>
-		<h3 class="tutor-course-intro-title">Intimate Photography Portraits</h3>
-		<div class="tutor-course-intro-author">by School of Rock</div>
+		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3">Intimate Photography Portraits</h3>
+		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4">by School of Rock</div>
 	</div>
 	<div class="tutor-course-description">
 		<div x-data="{ expanded: true }" class="tutor-course-description-item">

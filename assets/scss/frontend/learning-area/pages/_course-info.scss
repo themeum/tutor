@@ -17,32 +17,6 @@
   .tutor-course-intro {
     text-align: center;
     margin-top: $tutor-spacing-8;
-
-    &-date {
-      @include tutor-typography(tiny, regular, secondary);
-      @include tutor-flex(row, center, center);
-      gap: $tutor-spacing-3;
-    }
-
-    &-title {
-      @include tutor-typography(h3, semibold, primary, heading);
-      margin-top: $tutor-spacing-3;
-
-      @include tutor-breakpoint-down(sm) {
-        font-size: $tutor-font-size-h5;
-        line-height: $tutor-line-height-h5;
-      }
-    }
-
-    &-author {
-      @include tutor-typography(medium, regular, secondary);
-      margin-top: $tutor-spacing-4;
-
-      @include tutor-breakpoint-down(sm) {
-        font-size: $tutor-font-size-small;
-        line-height: $tutor-line-height-small;
-      }
-    }
   }
 
   .tutor-course-description {
