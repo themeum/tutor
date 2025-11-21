@@ -85,6 +85,7 @@ use TUTOR\Input;
 			<?php require 'components/input.php'; ?>
 			<?php require 'components/form.php'; ?>
 			<?php require 'components/select.php'; ?>
+			<?php require 'components/attachment-card.php'; ?>
 		</section>
 	<?php endif ?>
 </body>
