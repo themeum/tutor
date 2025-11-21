@@ -6,6 +6,7 @@ import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 
 import { accordionMeta } from '@Core/ts/components/accordion';
 import { buttonMeta } from '@Core/ts/components/button';
+import { commentMeta } from '@Core/ts/components/comments';
 import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
@@ -28,6 +29,7 @@ const initializePlugin = () => {
   TutorComponentRegistry.registerAll({
     components: [
       buttonMeta,
+      commentMeta,
       fileUploaderMeta,
       tabsMeta,
       iconMeta,
