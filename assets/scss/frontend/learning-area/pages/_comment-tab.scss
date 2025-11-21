@@ -1,11 +1,8 @@
-// Comment Tab Styles
-// Borders for tutor comment list items
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-// Comments header with full-width border
 .tutor-comments-header {
-	.tutor-comments-header-title {
+	&-title {
 		flex: 1;
         border-top: 1px solid $tutor-border-idle;
 		border-bottom: 1px solid $tutor-border-idle;
@@ -13,23 +10,19 @@
 	}
 }
 
-// Add top and bottom borders to all tutor comment list items
 .tutor-comments-list {
 	.tutor-comment {
-		// Add only bottom border to separate items (prevents double borders)
 		border-bottom: 1px solid $tutor-border-idle;
 		padding-top: $tutor-spacing-6;
 		padding-bottom: $tutor-spacing-6;
 		margin-bottom: 0;
 
-		// Remove bottom border from reply comments
 		&-reply {
 			border-bottom: none;
             padding-bottom: 0;
             padding-top: 0;
 		}
 
-		// Remove bottom border from last item
 		&:last-child {
 			border-bottom: none;
 		}
