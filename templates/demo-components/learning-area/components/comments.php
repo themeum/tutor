@@ -29,16 +29,14 @@ $replies_state  = $has_replies
 $is_reply       = isset( $is_reply ) && $is_reply;
 ?>
 <div class="tutor-comment <?php echo $is_reply ? 'tutor-comment-reply' : ''; ?>" x-data="<?php echo esc_attr( $replies_state ); ?>">
-	<div class="tutor-comment-avatar">
-		<div class="tutor-avatar <?php echo $is_reply ? 'tutor-avatar-sm' : 'tutor-avatar-base'; ?>">
-			<?php if ( ! empty( $comment['avatar'] ) ) : ?>
-				<img src="<?php echo esc_url( $comment['avatar'] ); ?>" alt="<?php echo esc_attr( $comment['author'] ); ?>" class="tutor-avatar-image">
-			<?php else : ?>
-				<span class="tutor-avatar-initials">
-					<?php echo esc_html( strtoupper( substr( $comment['author'], 0, 2 ) ) ); ?>
-				</span>
-			<?php endif; ?>
-		</div>
+	<div class="tutor-avatar <?php echo $is_reply ? 'tutor-avatar-sm' : 'tutor-avatar-base'; ?>">
+		<?php if ( ! empty( $comment['avatar'] ) ) : ?>
+			<img src="<?php echo esc_url( $comment['avatar'] ); ?>" alt="<?php echo esc_attr( $comment['author'] ); ?>" class="tutor-avatar-image">
+		<?php else : ?>
+			<span class="tutor-avatar-initials">
+				<?php echo esc_html( strtoupper( substr( $comment['author'], 0, 2 ) ) ); ?>
+			</span>
+		<?php endif; ?>
 	</div>
 	<?php if ( $has_replies && ! $is_reply ) : ?>
 		<div 
@@ -74,18 +72,14 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 
 		<!-- Reply Form -->
 		<div class="tutor-comment-reply-form" x-show="showReplyForm" x-collapse>
-			<div class="tutor-input-field">
-				<div class="tutor-input-wrapper">
-					<textarea 
-						type="text"
-						placeholder="<?php esc_attr_e( 'Write your reply', 'tutor' ); ?>"
-						class="tutor-text-area"
-						rows="3"
-						@keydown.meta.enter.prevent="handleSaveReply()"
-						@keydown.ctrl.enter.prevent="handleSaveReply()"
-					></textarea>
-				</div>
-			</div>
+			<textarea 
+				type="text"
+				placeholder="<?php esc_attr_e( 'Write your reply', 'tutor' ); ?>"
+				class="tutor-text-area"
+				rows="3"
+				@keydown.meta.enter.prevent="handleSaveReply()"
+				@keydown.ctrl.enter.prevent="handleSaveReply()"
+			></textarea>
 			<div class="tutor-comment-reply-actions">
 				<span class="tutor-comment-keyboard-hint">
 					<?php esc_html_e( '⌘ Cmd/Ctrl + ↵ Enter to Save', 'tutor' ); ?>
@@ -116,40 +110,38 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 			$replies_text  = sprintf( _n( '%d more reply', '%d more replies', $replies_count, 'tutor' ), $replies_count );
 			$collapse_text = __( 'Collapse all replies', 'tutor' );
 			?>
-			<div class="tutor-comment-replies-wrapper">
-				<!-- Replies Toggle -->
-				<button 
-					class="tutor-comment-replies-toggle"
-					@click="repliesExpanded = !repliesExpanded"
-					x-show="!repliesExpanded"
-					x-ref="repliesToggle"
-				>
-					<span class="tutor-comment-replies-count"><?php echo esc_html( $replies_text ); ?></span>
-				</button>
+			<!-- Replies Toggle -->
+			<button 
+				class="tutor-comment-replies-toggle"
+				@click="repliesExpanded = !repliesExpanded"
+				x-show="!repliesExpanded"
+				x-ref="repliesToggle"
+			>
+				<span class="tutor-comment-replies-count"><?php echo esc_html( $replies_text ); ?></span>
+			</button>
 
-				<!-- Nested Replies -->
-				<div class="tutor-comment-replies" x-show="repliesExpanded" x-collapse>
-					<?php foreach ( $replies as $tutor_reply ) : ?>
-						<?php
-						tutor_load_template(
-							'demo-components.learning-area.components.comments',
-							array(
-								'comment'  => $tutor_reply,
-								'is_reply' => true,
-							)
-						);
-						?>
-					<?php endforeach; ?>
-					
-					<!-- Collapse button at bottom -->
-					<button 
-						class="tutor-comment-replies-collapse"
-						@click="repliesExpanded = false"
-						x-ref="repliesCollapse"
-					>
-						<span><?php echo esc_html( $collapse_text ); ?></span>
-					</button>
-				</div>
+			<!-- Nested Replies -->
+			<div class="tutor-comment-replies" x-show="repliesExpanded" x-collapse>
+				<?php foreach ( $replies as $tutor_reply ) : ?>
+					<?php
+					tutor_load_template(
+						'demo-components.learning-area.components.comments',
+						array(
+							'comment'  => $tutor_reply,
+							'is_reply' => true,
+						)
+					);
+					?>
+				<?php endforeach; ?>
+				
+				<!-- Collapse button at bottom -->
+				<button 
+					class="tutor-comment-replies-collapse"
+					@click="repliesExpanded = false"
+					x-ref="repliesCollapse"
+				>
+					<?php echo esc_html( $collapse_text ); ?>
+				</button>
 			</div>
 		<?php endif; ?>
 	</div>

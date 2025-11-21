@@ -23,7 +23,7 @@ export const commentConnectorLine = (_props: CommentConnectorLineProps = {}) => 
     const commentEl = el.closest('.tutor-comment');
     if (!commentEl) return;
 
-    const avatar = commentEl.querySelector('.tutor-comment-avatar .tutor-avatar') as HTMLElement;
+    const avatar = commentEl.querySelector('.tutor-avatar') as HTMLElement;
     if (!avatar) return;
 
     const toggleBtn = commentEl.querySelector('.tutor-comment-replies-toggle') as HTMLElement | null;

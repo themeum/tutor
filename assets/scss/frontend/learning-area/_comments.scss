@@ -7,11 +7,6 @@
 	width: 100%;
 	position: relative;
 
-	&-avatar {
-		flex-shrink: 0;
-		position: relative;
-	}
-
 	&-connector-line {
 		position: absolute;
 		top: 40px;
@@ -128,6 +123,10 @@
 	&-reply-form {
 		margin-top: $tutor-spacing-4;
 		width: 100%;
+
+		.tutor-text-area {
+			@include tutor-textarea(142px);
+		}
 	}
 
 	&-reply-actions {
@@ -189,10 +188,6 @@
 		}
 	}
 
-	&-replies-wrapper {
-		width: 100%;
-	}
-
 	&-replies {
 		@include tutor-flex(column, flex-start, flex-start);
 		gap: $tutor-spacing-6;
@@ -233,11 +228,9 @@
 	.tutor-comment {
 		gap: $tutor-spacing-3;
 
-		&-avatar {
-			.tutor-avatar {
-				width: 32px;
-				height: 32px;
-			}
+		.tutor-avatar {
+			width: 32px;
+			height: 32px;
 		}
 
 		&-action-btn {
