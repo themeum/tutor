@@ -233,6 +233,7 @@ final class Icon {
 	const NOTIFICATION_2             = 'notification-2';
 	const OPEN                       = 'open';
 	const OUTLINE_NONE               = 'outline-none';
+	const PASSED                     = 'passed';
 	const PASSING                    = 'passing';
 	const PAUSE_CIRCLE               = 'pause-circle';
 	const PDF                        = 'pdf';

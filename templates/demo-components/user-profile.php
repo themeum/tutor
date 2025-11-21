@@ -22,7 +22,7 @@ use TUTOR\Icon;
 		<h4 class="tutor-profile-page-title"><?php esc_html_e( 'Profile', 'tutor' ); ?></h4>
 		<div class="tutor-profile-card">
 			<div class="tutor-profile-card-header">
-				<div class="tutor-avatar tutor-avatar-xxl tutor-border tutor-border-2 tutor-border-brand-secondary">
+				<div class="tutor-avatar tutor-avatar-104 tutor-border tutor-border-2 tutor-border-brand-secondary">
 					<img src="https://i.pravatar.cc/150?u=a04258a2462d826" alt="User Avatar" class="tutor-avatar-image">
 				</div>
 				<a href="#" class="tutor-edit-profile-btn">
