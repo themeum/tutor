@@ -44,6 +44,7 @@ use TUTOR\Input;
 		'certificates'     => 'Certificates',
 		'reviews'          => 'Reviews',
 		'profile-settings' => 'Account Settings',
+		'quiz'             => 'Quiz',
 	);
 
 	$subpage = Input::get( 'subpage', '' );
