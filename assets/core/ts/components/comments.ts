@@ -144,7 +144,7 @@ export const commentConnectorLine = (_props: CommentConnectorLineProps = {}) => 
   };
 };
 
-export const commentConnectorLineMeta: AlpineComponentMeta<CommentConnectorLineProps> = {
+export const commentMeta: AlpineComponentMeta<CommentConnectorLineProps> = {
   name: 'commentConnectorLine',
   component: commentConnectorLine,
 };
