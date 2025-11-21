@@ -30,7 +30,7 @@ $review = array(
 				<span class="tutor-text-sm tutor-font-medium">Bundle</span>
 			</div>
 		<?php else : ?>
-			<div class="tutor-badge tutor-badge-primary tutor-badge-circle">
+			<div class="tutor-badge tutor-badge-primary-soft tutor-badge-circle">
 				<?php tutor_utils()->render_svg_icon( Icon::COURSES, 16, 16 ); ?>
 				<span class="tutor-text-sm tutor-font-medium">Course</span>
 			</div>
@@ -71,10 +71,10 @@ $review = array(
 			<!-- Actions -->
 			<div class="tutor-review-actions">
 				<a href="#" class="tutor-review-actions-button">
-					<?php tutor_utils()->render_svg_icon( Icon::EDIT, 16, 16 ); ?>
+					<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 16, 16 ); ?>
 				</a>
 				<a href="#" class="tutor-review-actions-button">
-					<?php tutor_utils()->render_svg_icon( Icon::DELETE, 16, 16 ); ?>
+					<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 16, 16 ); ?>
 				</a>
 			</div>
 		</div>
