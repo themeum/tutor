@@ -17,7 +17,7 @@
 		top: 40px;
 		left: 20px;
 		pointer-events: none;
-		z-index: 0;
+		z-index: $tutor-z-level;
 		height: 0;
 		min-height: 0;
 		width: 0;
@@ -112,19 +112,6 @@
 			outline: none;
 		}
 
-		&--active {
-			color: $tutor-text-brand;
-			background: $tutor-button-primary-soft;
-
-			&:hover {
-				background: $tutor-button-primary-soft-hover;
-			}
-
-			&:active {
-				background: $tutor-button-primary-soft;
-			}
-		}
-
 		&--like + &--reply {
 			margin-inline-start: $tutor-spacing-5;
 		}
@@ -135,7 +122,7 @@
 			position: absolute;
 			top: 20px;
 			right: 0;
-			z-index: 10;
+			z-index: $tutor-z-header;
 		}
 	}
 
@@ -232,6 +219,159 @@
 			min-width: 0;
 		}
 	}
+
+	// Input field styles (replacing tutor-input-field, tutor-input-wrapper, tutor-input classes)
+	&__reply-form {
+		.tutor-input-field {
+			position: relative;
+			width: 100%;
+			margin-top: $tutor-spacing-4;
+
+			.tutor-input-wrapper {
+				position: relative;
+				@include tutor-flex(row, center, flex-start);
+				gap: $tutor-spacing-3;
+			}
+
+			.tutor-input,
+			.tutor-text-area {
+				@include tutor-typography('small', 'regular');
+				width: 100%;
+				padding: $tutor-spacing-4 $tutor-spacing-5;
+				margin: 0;
+				min-height: auto;
+				border: 1px solid $tutor-border-idle;
+				border-radius: $tutor-radius-md;
+				background-color: $tutor-surface-l1;
+				transition: all 0.2s ease;
+
+				appearance: none;
+				-moz-appearance: textfield;
+
+				&::-webkit-outer-spin-button,
+				&::-webkit-inner-spin-button {
+					-webkit-appearance: none;
+					margin: 0;
+				}
+
+				&:placeholder-shown:not(:focus):not(:disabled) {
+					background-color: $tutor-surface-base;
+				}
+
+				&::placeholder {
+					color: $tutor-text-subdued;
+				}
+
+				&:focus {
+					@include tutor-focus-ring();
+					border-color: $tutor-border-brand-tertiary;
+				}
+
+				&:disabled {
+					background-color: $tutor-surface-l1-hover;
+					cursor: not-allowed;
+				}
+			}
+
+			.tutor-text-area {
+				min-height: 144px;
+				resize: vertical;
+			}
+		}
+	}
+
+	// Reply actions styles (replacing tutor-flex, tutor-gap-2, tutor-justify-between, tutor-items-center, tutor-mt-3)
+	&__reply-actions {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		gap: $tutor-spacing-2;
+		margin-top: $tutor-spacing-3;
+		flex-wrap: wrap;
+		min-width: 0;
+
+		.tutor-comment__keyboard-hint {
+			flex: 1;
+			min-width: 0;
+		}
+
+		.tutor-comment__reply-buttons {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: $tutor-spacing-2;
+			flex-shrink: 0;
+		}
+	}
+
+	// Button styles (replacing tutor-btn, tutor-btn-outline-primary, tutor-btn-primary-soft, tutor-btn-sm)
+	&__reply-actions {
+		.tutor-btn {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			border: none;
+			border-radius: $tutor-radius-md;
+			font-weight: $tutor-font-weight-medium;
+			transition: all 0.2s ease;
+			cursor: pointer;
+			text-align: center;
+			text-decoration: none;
+			font-family: inherit;
+
+			&:disabled {
+				cursor: not-allowed;
+			}
+
+			&.tutor-btn-sm {
+				padding: $tutor-spacing-3 $tutor-spacing-5;
+				font-size: $tutor-font-size-small;
+				line-height: $tutor-line-height-small;
+				min-height: 34px;
+			}
+
+			&.tutor-btn-outline-primary {
+				background-color: $tutor-button-outline-inverse;
+				color: $tutor-text-primary;
+				box-shadow: inset 0 0 0 1px $tutor-border-idle;
+
+				&:hover:not(:disabled) {
+					background-color: $tutor-button-outline-hover;
+					color: $tutor-text-primary;
+				}
+
+				&:focus:not(:disabled) {
+					background-color: $tutor-button-outline-focused-inverse;
+					color: $tutor-text-primary;
+				}
+
+				&:disabled {
+					background-color: $tutor-button-disabled;
+					color: $tutor-text-subdued;
+				}
+			}
+
+			&.tutor-btn-primary-soft {
+				background-color: $tutor-button-primary-soft;
+				color: $tutor-text-brand;
+
+				&:hover:not(:disabled) {
+					background-color: $tutor-button-primary-soft-hover;
+				}
+
+				&:focus:not(:disabled) {
+					background-color: $tutor-button-primary-soft-focused;
+				}
+
+				&:disabled {
+					background-color: $tutor-button-disabled;
+					color: $tutor-text-subdued;
+				}
+			}
+		}
+	}
 }
 
 @include tutor-breakpoint-down(sm) {
@@ -255,6 +395,22 @@
 		&--reply {
 			@include padding-start($tutor-spacing-3);
 			@include margin-start($tutor-spacing-1);
+		}
+
+		&__reply-actions {
+			flex-direction: column;
+			align-items: stretch;
+			gap: $tutor-spacing-3;
+
+			.tutor-comment__keyboard-hint {
+				width: 100%;
+				text-align: center;
+			}
+
+			.tutor-comment__reply-buttons {
+				width: 100%;
+				justify-content: flex-end;
+			}
 		}
 	}
 }

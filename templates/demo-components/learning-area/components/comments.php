@@ -74,23 +74,23 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 
 		<!-- Reply Form -->
 		<div class="tutor-comment__reply-form" x-show="showReplyForm" x-collapse>
-			<div class="tutor-input-field tutor-mt-4">
+			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<textarea 
 						type="text"
 						placeholder="<?php esc_attr_e( 'Write your reply', 'tutor' ); ?>"
-						class="tutor-input tutor-text-area"
+						class="tutor-text-area"
 						rows="3"
 						@keydown.meta.enter.prevent="handleSaveReply()"
 						@keydown.ctrl.enter.prevent="handleSaveReply()"
 					></textarea>
 				</div>
 			</div>
-			<div class="tutor-comment__reply-actions tutor-mt-3 tutor-flex tutor-gap-2 tutor-justify-between tutor-items-center">
+			<div class="tutor-comment__reply-actions">
 				<span class="tutor-comment__keyboard-hint">
 					<?php esc_html_e( '⌘ Cmd/Ctrl + ↵ Enter to Save', 'tutor' ); ?>
 				</span>
-				<div class="tutor-flex tutor-gap-2">
+				<div class="tutor-comment__reply-buttons">
 					<button 
 						type="button" 
 						class="tutor-btn tutor-btn-outline-primary tutor-btn-sm"
