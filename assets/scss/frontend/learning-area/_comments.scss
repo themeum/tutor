@@ -7,12 +7,12 @@
 	width: 100%;
 	position: relative;
 
-	&__avatar {
+	&-avatar {
 		flex-shrink: 0;
 		position: relative;
 	}
 
-	&__connector-line {
+	&-connector-line {
 		position: absolute;
 		top: 40px;
 		left: 20px;
@@ -45,7 +45,7 @@
 		}
 	}
 
-	&__content {
+	&-content {
 		flex: 1;
 		min-width: 0;
 		@include tutor-flex(column, flex-start, flex-start);
@@ -54,36 +54,36 @@
 		@include padding-end($tutor-spacing-6);
 	}
 
-	&__header {
+	&-header {
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
 		flex-wrap: wrap;
 	}
 
-	&__author {
+	&-author {
 		@include tutor-typography('small', 'regular', 'primary');
 	}
 
-	&__time {
+	&-time {
 		@include tutor-typography('small', 'regular', 'subdued');
 	}
 
-	&__separator {
+	&-separator {
 		color: $tutor-gray-500;
 	}
 
-	&__text {
+	&-text {
 		@include tutor-typography('p2', 'regular', 'primary');
 		color: $tutor-gray-700;
 	}
 
-	&__actions {
+	&-actions {
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
 		margin-top: $tutor-spacing-5;
 	}
 
-	&__action-btn {
+	&-action-btn {
 		@include tutor-button-reset;
 		@include tutor-flex(row, center, center);
 		gap: $tutor-spacing-2;
@@ -112,11 +112,11 @@
 			outline: none;
 		}
 
-		&--like + &--reply {
+		&-like + &-reply {
 			margin-inline-start: $tutor-spacing-5;
 		}
 
-		&--menu {
+		&-menu {
 			padding: $tutor-spacing-2;
 			flex-shrink: 0;
 			position: absolute;
@@ -126,23 +126,23 @@
 		}
 	}
 
-	&__reply-form {
+	&-reply-form {
 		margin-top: $tutor-spacing-4;
 		width: 100%;
 	}
 
-	&__reply-actions {
+	&-reply-actions {
 		@include tutor-flex(row, center, space-between);
 		width: 100%;
 		gap: $tutor-spacing-3;
 	}
 
-	&__keyboard-hint {
+	&-keyboard-hint {
 		@include tutor-typography('tiny', 'regular', 'subdued');
 		flex-shrink: 0;
 	}
 
-	&__replies-toggle {
+	&-replies-toggle {
 		@include tutor-button-reset;
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
@@ -169,11 +169,11 @@
 		}
 	}
 
-	&__replies-count {
+	&-replies-count {
 		@include tutor-typography('tiny', 'medium', 'brand', 'body');
 	}
 
-	&__replies-collapse {
+	&-replies-collapse {
 		@include tutor-button-reset;
 		@include tutor-flex(row, center, flex-start);
 		gap: $tutor-spacing-2;
@@ -200,28 +200,28 @@
 		}
 	}
 
-	&__replies-wrapper {
+	&-replies-wrapper {
 		width: 100%;
 	}
 
-	&__replies {
+	&-replies {
 		@include tutor-flex(column, flex-start, flex-start);
 		gap: $tutor-spacing-6;
 		margin-top: $tutor-spacing-4;
 		width: 100%;
 	}
 
-	&--reply {
+	&-reply {
 		@include padding-start($tutor-spacing-4);
 		@include margin-start($tutor-spacing-2);
 
-		.tutor-comment__content {
+		.tutor-comment-content {
 			min-width: 0;
 		}
 	}
 
 	// Input field styles (replacing tutor-input-field, tutor-input-wrapper, tutor-input classes)
-	&__reply-form {
+	&-reply-form {
 		.tutor-input-field {
 			position: relative;
 			width: 100%;
@@ -281,7 +281,7 @@
 	}
 
 	// Reply actions styles (replacing tutor-flex, tutor-gap-2, tutor-justify-between, tutor-items-center, tutor-mt-3)
-	&__reply-actions {
+	&-reply-actions {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
@@ -292,12 +292,12 @@
 		flex-wrap: wrap;
 		min-width: 0;
 
-		.tutor-comment__keyboard-hint {
+		.tutor-comment-keyboard-hint {
 			flex: 1;
 			min-width: 0;
 		}
 
-		.tutor-comment__reply-buttons {
+		.tutor-comment-reply-buttons {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
@@ -307,7 +307,7 @@
 	}
 
 	// Button styles (replacing tutor-btn, tutor-btn-outline-primary, tutor-btn-primary-soft, tutor-btn-sm)
-	&__reply-actions {
+	&-reply-actions {
 		.tutor-btn {
 			display: inline-flex;
 			align-items: center;
@@ -378,36 +378,36 @@
 	.tutor-comment {
 		gap: $tutor-spacing-3;
 
-		&__avatar {
+		&-avatar {
 			.tutor-avatar {
 				width: 32px;
 				height: 32px;
 			}
 		}
 
-		&__action-btn {
+		&-action-btn {
 			svg {
 				width: 14px;
 				height: 14px;
 			}
 		}
 
-		&--reply {
+		&-reply {
 			@include padding-start($tutor-spacing-3);
 			@include margin-start($tutor-spacing-1);
 		}
 
-		&__reply-actions {
+		&-reply-actions {
 			flex-direction: column;
 			align-items: stretch;
 			gap: $tutor-spacing-3;
 
-			.tutor-comment__keyboard-hint {
+			.tutor-comment-keyboard-hint {
 				width: 100%;
 				text-align: center;
 			}
 
-			.tutor-comment__reply-buttons {
+			.tutor-comment-reply-buttons {
 				width: 100%;
 				justify-content: flex-end;
 			}

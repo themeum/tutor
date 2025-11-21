@@ -23,11 +23,11 @@ export const commentConnectorLine = (_props: CommentConnectorLineProps = {}) => 
     const commentEl = el.closest('.tutor-comment');
     if (!commentEl) return;
 
-    const avatar = commentEl.querySelector('.tutor-comment__avatar .tutor-avatar') as HTMLElement;
+    const avatar = commentEl.querySelector('.tutor-comment-avatar .tutor-avatar') as HTMLElement;
     if (!avatar) return;
 
-    const toggleBtn = commentEl.querySelector('.tutor-comment__replies-toggle') as HTMLElement | null;
-    const collapseBtn = commentEl.querySelector('.tutor-comment__replies-collapse') as HTMLElement | null;
+    const toggleBtn = commentEl.querySelector('.tutor-comment-replies-toggle') as HTMLElement | null;
+    const collapseBtn = commentEl.querySelector('.tutor-comment-replies-collapse') as HTMLElement | null;
 
     const commentRect = commentEl.getBoundingClientRect();
     const avatarRect = avatar.getBoundingClientRect();
@@ -86,7 +86,7 @@ export const commentConnectorLine = (_props: CommentConnectorLineProps = {}) => 
         if (parentData && typeof parentData.repliesExpanded !== 'undefined') {
           return parentData.repliesExpanded;
         }
-        const collapseBtn = commentEl.querySelector('.tutor-comment__replies-collapse') as HTMLElement | null;
+        const collapseBtn = commentEl.querySelector('.tutor-comment-replies-collapse') as HTMLElement | null;
         return collapseBtn !== null && collapseBtn.offsetParent !== null;
       };
 

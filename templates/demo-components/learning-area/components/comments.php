@@ -28,8 +28,8 @@ $replies_state  = $has_replies
 	: "{ showReplyForm: false, {$handle_save_js} }";
 $is_reply       = isset( $is_reply ) && $is_reply;
 ?>
-<div class="tutor-comment <?php echo $is_reply ? 'tutor-comment--reply' : ''; ?>" x-data="<?php echo esc_attr( $replies_state ); ?>">
-	<div class="tutor-comment__avatar">
+<div class="tutor-comment <?php echo $is_reply ? 'tutor-comment-reply' : ''; ?>" x-data="<?php echo esc_attr( $replies_state ); ?>">
+	<div class="tutor-comment-avatar">
 		<div class="tutor-avatar <?php echo $is_reply ? 'tutor-avatar-sm' : 'tutor-avatar-base'; ?>">
 			<?php if ( ! empty( $comment['avatar'] ) ) : ?>
 				<img src="<?php echo esc_url( $comment['avatar'] ); ?>" alt="<?php echo esc_attr( $comment['author'] ); ?>" class="tutor-avatar-image">
@@ -42,38 +42,38 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 	</div>
 	<?php if ( $has_replies && ! $is_reply ) : ?>
 		<div 
-			class="tutor-comment__connector-line"
-			:class="{ 'tutor-comment__connector-line--expanded': repliesExpanded }"
+			class="tutor-comment-connector-line"
+			:class="{ 'tutor-comment-connector-line-expanded': repliesExpanded }"
 			x-data="tutorCommentConnectorLine()"
 		></div>
 	<?php endif; ?>
-	<div class="tutor-comment__content">
-		<div class="tutor-comment__header">
-			<span class="tutor-comment__author"><?php echo esc_html( $comment['author'] ); ?></span>
-			<span class="tutor-comment__separator">•</span>
-			<span class="tutor-comment__time"><?php echo esc_html( $comment['time'] ); ?></span>
-			<button class="tutor-comment__action-btn tutor-comment__action-btn--menu">
+	<div class="tutor-comment-content">
+		<div class="tutor-comment-header">
+			<span class="tutor-comment-author"><?php echo esc_html( $comment['author'] ); ?></span>
+			<span class="tutor-comment-separator">•</span>
+			<span class="tutor-comment-time"><?php echo esc_html( $comment['time'] ); ?></span>
+			<button class="tutor-comment-action-btn tutor-comment-action-btn-menu">
 				<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ); ?>
 			</button>
 		</div>
-		<div class="tutor-comment__text">
+		<div class="tutor-comment-text">
 			<?php echo wp_kses_post( $comment['text'] ); ?>
 		</div>
-		<div class="tutor-comment__actions">
-			<button class="tutor-comment__action-btn tutor-comment__action-btn--like <?php echo ! empty( $comment['liked'] ) ? 'tutor-comment__action-btn--active' : ''; ?>">
+		<div class="tutor-comment-actions">
+			<button class="tutor-comment-action-btn tutor-comment-action-btn-like <?php echo ! empty( $comment['liked'] ) ? 'tutor-comment-action-btn-active' : ''; ?>">
 				<?php tutor_utils()->render_svg_icon( ! empty( $comment['liked'] ) ? Icon::THUMB_FILL : Icon::THUMB, 16, 16 ); ?>
 				<span><?php echo esc_html( $comment['likes'] ?? 0 ); ?></span>
 			</button>
-			<button class="tutor-comment__action-btn tutor-comment__action-btn--reply">
+			<button class="tutor-comment-action-btn tutor-comment-action-btn-reply">
 				<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 16, 16 ); ?>
 			</button>
-			<button class="tutor-comment__action-btn tutor-comment__action-btn--reply" @click="showReplyForm = !showReplyForm">
+			<button class="tutor-comment-action-btn tutor-comment-action-btn-reply" @click="showReplyForm = !showReplyForm">
 				<?php esc_html_e( 'Reply', 'tutor' ); ?>
 			</button>
 		</div>
 
 		<!-- Reply Form -->
-		<div class="tutor-comment__reply-form" x-show="showReplyForm" x-collapse>
+		<div class="tutor-comment-reply-form" x-show="showReplyForm" x-collapse>
 			<div class="tutor-input-field">
 				<div class="tutor-input-wrapper">
 					<textarea 
@@ -86,11 +86,11 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 					></textarea>
 				</div>
 			</div>
-			<div class="tutor-comment__reply-actions">
-				<span class="tutor-comment__keyboard-hint">
+			<div class="tutor-comment-reply-actions">
+				<span class="tutor-comment-keyboard-hint">
 					<?php esc_html_e( '⌘ Cmd/Ctrl + ↵ Enter to Save', 'tutor' ); ?>
 				</span>
-				<div class="tutor-comment__reply-buttons">
+				<div class="tutor-comment-reply-buttons">
 					<button 
 						type="button" 
 						class="tutor-btn tutor-btn-outline-primary tutor-btn-sm"
@@ -116,19 +116,19 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 			$replies_text  = sprintf( _n( '%d more reply', '%d more replies', $replies_count, 'tutor' ), $replies_count );
 			$collapse_text = __( 'Collapse all replies', 'tutor' );
 			?>
-			<div class="tutor-comment__replies-wrapper">
+			<div class="tutor-comment-replies-wrapper">
 				<!-- Replies Toggle -->
 				<button 
-					class="tutor-comment__replies-toggle"
+					class="tutor-comment-replies-toggle"
 					@click="repliesExpanded = !repliesExpanded"
 					x-show="!repliesExpanded"
 					x-ref="repliesToggle"
 				>
-					<span class="tutor-comment__replies-count"><?php echo esc_html( $replies_text ); ?></span>
+					<span class="tutor-comment-replies-count"><?php echo esc_html( $replies_text ); ?></span>
 				</button>
 
 				<!-- Nested Replies -->
-				<div class="tutor-comment__replies" x-show="repliesExpanded" x-collapse>
+				<div class="tutor-comment-replies" x-show="repliesExpanded" x-collapse>
 					<?php foreach ( $replies as $tutor_reply ) : ?>
 						<?php
 						tutor_load_template(
@@ -143,7 +143,7 @@ $is_reply       = isset( $is_reply ) && $is_reply;
 					
 					<!-- Collapse button at bottom -->
 					<button 
-						class="tutor-comment__replies-collapse"
+						class="tutor-comment-replies-collapse"
 						@click="repliesExpanded = false"
 						x-ref="repliesCollapse"
 					>

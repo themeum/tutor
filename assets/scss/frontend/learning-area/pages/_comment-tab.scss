@@ -5,7 +5,7 @@
 
 // Comments header with full-width border
 .tutor-comments-header {
-	.tutor-comments-header__title {
+	.tutor-comments-header-title {
 		flex: 1;
         border-top: 1px solid $tutor-border-idle;
 		border-bottom: 1px solid $tutor-border-idle;
@@ -23,7 +23,7 @@
 		margin-bottom: 0;
 
 		// Remove bottom border from reply comments
-		&--reply {
+		&-reply {
 			border-bottom: none;
             padding-bottom: 0;
             padding-top: 0;
