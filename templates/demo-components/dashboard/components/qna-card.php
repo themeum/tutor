@@ -14,7 +14,7 @@ $is_unread = $is_unread ?? false;
 
 ?>
 <div class="tutor-qna-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
-	<div class="tutor-avatar tutor-avatar-sm">
+	<div class="tutor-avatar tutor-avatar-32">
 		<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
 	</div>
 	<div class="tutor-qna-card-content">
