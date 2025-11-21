@@ -135,4 +135,61 @@
       }
     }
   }
+
+  .tutor-course-info-certificate {
+    display: grid;
+    grid-template-areas:
+      'thumb content'
+      'thumb buttons';
+    gap: $tutor-spacing-8;
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-8;
+    margin-bottom: $tutor-spacing-9;
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-areas:
+        'thumb content'
+        'buttons buttons';
+      padding: $tutor-spacing-5;
+      row-gap: $tutor-spacing-5;
+      column-gap: $tutor-spacing-6;
+    }
+
+    &-thumb {
+      grid-area: thumb;
+      align-self: center;
+
+      @include tutor-breakpoint-down(sm) {
+        align-self: start;
+
+        svg {
+          height: 72px;
+          width: 72px;
+        }
+      }
+    }
+
+    &-content {
+      grid-area: content;
+      align-self: end;
+    }
+
+    &-buttons {
+      grid-area: buttons;
+      align-self: start;
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-5;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column-reverse);
+        gap: $tutor-spacing-4;
+
+        button {
+          @include tutor-button-size(medium);
+        }
+      }
+    }
+  }
 }
