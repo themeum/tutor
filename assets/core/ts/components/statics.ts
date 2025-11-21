@@ -1,12 +1,14 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
 
 type StaticsType = 'progress' | 'complete' | 'locked';
-type StaticsSize = 'small' | 'medium' | 'large';
+type StaticsSize = 'tiny' | 'small' | 'medium' | 'large';
 
 export interface StaticsProps {
   value?: number;
   type?: StaticsType;
   size?: StaticsSize;
+  background?: string;
+  strokeColor?: string;
   showLabel?: boolean;
   label?: string;
   animated?: boolean;
@@ -17,12 +19,15 @@ const SIZE_CONFIG = {
   large: { dimension: 144, strokeWidth: 10.8, iconSizes: { check: 80, lock: 104 } },
   medium: { dimension: 56, strokeWidth: 4.3, iconSizes: { check: 24, lock: 32 } },
   small: { dimension: 44, strokeWidth: 3.3, iconSizes: { check: 24, lock: 32 } },
+  tiny: { dimension: 16, strokeWidth: 2, iconSizes: { check: 8, lock: 12 } },
 } as const;
 
 const DEFAULT_CONFIG = {
   value: 0,
   type: 'progress' as StaticsType,
   size: 'small' as StaticsSize,
+  background: 'none',
+  strokeColor: 'var(--tutor-actions-brand-secondary)',
   showLabel: true,
   label: '',
   animated: false,
@@ -37,6 +42,8 @@ export const statics = (config: StaticsProps) => ({
   value: 0,
   targetValue: config.value ?? DEFAULT_CONFIG.value,
   type: config.type ?? DEFAULT_CONFIG.type,
+  background: config.background ?? DEFAULT_CONFIG.background,
+  strokeColor: config.strokeColor ?? DEFAULT_CONFIG.strokeColor,
   showLabel: config.showLabel ?? DEFAULT_CONFIG.showLabel,
   label: config.label ?? DEFAULT_CONFIG.label,
   animated: config.animated ?? DEFAULT_CONFIG.animated,
@@ -149,8 +156,8 @@ export const statics = (config: StaticsProps) => ({
         cx="${this.center}" 
         cy="${this.center}" 
         r="${this.radius}"
-        fill="none"
-        stroke="var(--tutor-actions-brand-secondary)"
+        fill="${this.background}"
+        stroke="${this.strokeColor}"
         stroke-width="${this.strokeWidth}"
       ></circle>
     `;
