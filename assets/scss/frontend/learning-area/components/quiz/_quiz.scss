@@ -1,0 +1,119 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-quiz {
+  @include tutor-flex(column);
+  gap: $tutor-spacing-11;
+
+  &-header {
+    background-color: $tutor-surface-l1;
+  }
+
+  &-progress {
+    @include tutor-flex(column);
+    width: 100%;
+    max-width: 792px; // @TODO: Need to use container class
+    padding-block: $tutor-spacing-8;
+    margin-inline: auto;
+    gap: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-6;
+    }
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+    }
+
+    &-time {
+      @include tutor-flex(row, center, center);
+      @include tutor-typography('h3', 'semibold');
+      gap: $tutor-spacing-2;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  &-questions {
+    @include tutor-flex(column);
+    width: 100%;
+    max-width: 792px;
+    margin-inline: auto;
+    gap: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-10;
+    }
+  }
+
+  &-question {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-7;
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-8;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+      gap: $tutor-spacing-5;
+    }
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+    }
+
+    &-number {
+      @include tutor-flex(row, center, center);
+      @include tutor-typography('medium', 'semibold');
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-sm;
+      width: 24px;
+      height: 24px;
+    }
+
+    &-title {
+      @include tutor-typography('medium', 'semibold');
+      flex: 1;
+      margin-left: $tutor-spacing-4;
+    }
+
+    &-options {
+      @include tutor-flex(row);
+      gap: $tutor-spacing-6;
+      width: 100%;
+    }
+
+    &-option {
+      @include tutor-typography('small');
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-md;
+      background-color: $tutor-surface-l1;
+
+      &[data-option='correct'] {
+        border-color: $tutor-border-success;
+        background-color: $tutor-success-100;
+        color: $tutor-text-success;
+      }
+
+      &[data-option='incorrect'] {
+        border-color: $tutor-border-error;
+        background-color: $tutor-error-100;
+        color: $tutor-text-critical;
+      }
+    }
+  }
+
+  [data-question='true_false'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid(2, 1fr);
+      }
+
+      &-option {
+        @include tutor-flex-center;
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-3;
+      }
+    }
+  }
+}
