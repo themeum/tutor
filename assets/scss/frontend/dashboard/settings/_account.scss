@@ -1,7 +1,7 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
-.tutor-account-page {
+.tutor-account-section {
   .tutor-account-avatar-wrapper {
     @include tutor-flex(row, center, center);
     background-color: $tutor-surface-brand-tertiary;

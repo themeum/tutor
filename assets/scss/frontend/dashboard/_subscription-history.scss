@@ -1,0 +1,194 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+[data-subscription-details="1"] {
+  @include tutor-breakpoint-down(sm) {
+    .tutor-billing-header {
+      display: none;
+    }
+
+    .tutor-billing-body {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+    }
+
+    .tutor-billing-tabs {
+      padding: $tutor-spacing-5;
+      border: none;
+    }
+
+    .tutor-billing-card-details {
+      @include tutor-flex(column, flex-start, center);
+      gap: $tutor-spacing-2;
+    }
+  }
+}
+
+.tutor-subscription {
+
+  &-history {
+    .tutor-billing-card {
+      &:hover {
+        .tutor-billing-card-title-access {
+          color: $tutor-text-brand;
+        }
+      }
+
+      &-title-access {
+        color: $tutor-text-subdued;
+      }
+
+      &-amount {
+        span {
+          color: $tutor-text-subdued;
+        }
+      }
+
+      &-action-btn {
+        @include tutor-button-base;
+        @include tutor-button-variant('link');
+        @include tutor-button-size('small');
+        padding: 0;
+        min-height: unset;
+        gap: $tutor-spacing-2;
+        color: $tutor-text-brand;
+        position: relative;
+        margin-right: -$tutor-spacing-7;
+
+        svg {
+          opacity: 0;
+        }
+
+        &:hover {
+          margin-right: 0;
+
+          svg {
+            opacity: 1;
+          }
+        }
+      }
+    }
+
+  }
+
+  &-details {
+    @include tutor-flex(column, flex-start, center);
+  }
+
+  &-overview {
+    @include tutor-flex(column, flex-start, center);
+    width: 100%;
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-6;
+    border-block: 1px solid $tutor-border-idle;
+
+    &-subtitle {
+      @include tutor-typography('tiny', 'regular', 'secondary');
+    }
+
+    &-title {
+      @include tutor-typography('medium', 'medium');
+      margin-top: $tutor-spacing-1;
+    }
+
+    &-badge {
+      @include tutor-badge-base;
+      @include tutor-badge-variant('secondary');
+      border-radius: $tutor-radius-full;
+      margin-top: $tutor-spacing-2;
+      padding-block: $tutor-spacing-2;
+    }
+
+    &-status {
+      @include tutor-badge-base;
+      border-radius: $tutor-radius-full;
+      margin-top: $tutor-spacing-2;
+      background-color: $tutor-actions-success-primary;
+      color: $tutor-text-primary-inverse;
+      padding: 0 $tutor-spacing-4 0 $tutor-spacing-2;
+      text-transform: uppercase;
+    }
+
+    &-cards {
+      @include tutor-flex(row, stretch, center);
+      gap: $tutor-spacing-5;
+      width: 100%;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column, stretch, center);
+        gap: $tutor-spacing-3;
+        width: 100%;
+      }
+    }
+
+    &-card {
+      @include tutor-flex(column, flex-start, center);
+      width: 100%;
+      gap: $tutor-spacing-2;
+      background-color: $tutor-surface-l1-hover;
+      padding: $tutor-spacing-5;
+      border-radius: $tutor-radius-md;
+
+      &-title {
+        @include tutor-flex(row, center, flex-start);
+        @include tutor-typography('medium', 'semibold');
+        gap: $tutor-spacing-3;
+
+        span {
+          @include tutor-typography('tiny', 'regular', 'subdued');
+        }
+      }
+    }
+
+    &-info {
+      @include tutor-flex(row, center, space-between);
+      gap: $tutor-spacing-2;
+      width: 100%;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(column, flex-start, center);
+        gap: $tutor-spacing-4;
+      }
+    }
+  }
+
+
+  &-payments {
+    @extend .tutor-subscription-overview;
+    border: none;
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+      width: 100%;
+    }
+
+    &-title {
+      @include tutor-flex(row, center, flex-start);
+      @include tutor-typography('medium', 'medium');
+      gap: $tutor-spacing-1;
+    }
+
+    &-list {
+      @include tutor-flex(column, flex-start, center);
+      width: 100%;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-lg;
+    }
+
+    &-item {
+      @include tutor-flex(row, flex-start, space-between);
+      width: 100%;
+      border-bottom: 1px solid $tutor-border-idle;
+      padding: $tutor-spacing-6;
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: $tutor-surface-l1-hover;
+      }
+    }
+  }
+}

@@ -312,6 +312,7 @@ final class Icon {
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
 	const STAR                       = 'star';
+	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
