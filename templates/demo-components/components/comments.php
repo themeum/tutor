@@ -98,14 +98,14 @@ $sample_comments_full_demo = array(
 
 	<!-- Comments Header -->
 	<div class="tutor-comments-header tutor-flex tutor-items-center tutor-justify-between tutor-mb-4">
-		<h3 class="tutor-comments-header__title tutor-text-lg tutor-font-semibold">
+		<h3 class="tutor-comments-header-title tutor-text-lg tutor-font-semibold">
 			<?php
 			/* translators: %d: number of comments */
 			printf( esc_html__( 'Comments (%d)', 'tutor' ), 37 );
 			?>
 		</h3>
 		<button 
-			class="tutor-comment__action-btn tutor-comment__action-btn--menu"
+			class="tutor-comment-action-btn tutor-comment-action-btn-menu"
 			type="button"
 			aria-label="<?php esc_attr_e( 'Sort comments', 'tutor' ); ?>"
 		>
