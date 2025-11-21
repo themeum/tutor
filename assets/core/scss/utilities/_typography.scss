@@ -43,6 +43,22 @@ $text-align-utils: (
   @include tutor-typography('p3');
 }
 
+.tutor-medium {
+  @include tutor-typography('medium');
+}
+
+.tutor-small {
+  @include tutor-typography('small');
+}
+
+.tutor-tiny {
+  @include tutor-typography('tiny');
+}
+
+.tutor-tiny-2 {
+  @include tutor-typography('tiny-2');
+}
+
 // Font size utilities
 @each $key, $value in $tutor-font-sizes {
   .tutor-text-#{$key} {
