@@ -9,6 +9,10 @@
 	@include tutor-badge-variant(primary);
 }
 
+.tutor-badge-primary-soft {
+	@include tutor-badge-variant(primary-soft);
+}
+
 .tutor-badge-pending {
 	@include tutor-badge-variant(pending);
 }
