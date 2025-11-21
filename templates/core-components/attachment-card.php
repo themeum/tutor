@@ -30,7 +30,7 @@ $icon_name    = $is_downloading ? Icon::LOADING : Icon::RESOURCES;
 $action_icon  = $is_downloading ? Icon::CROSS : Icon::DOWNLOAD_2;
 $action_label = $is_downloading ? __( 'Cancel download', 'tutor' ) : __( 'Download file', 'tutor' );
 ?>
-<div class="tutor-attachment-card">
+<div class="tutor-card tutor-attachment-card">
 	<div class="<?php echo esc_attr( $icon_class_attr ); ?>" aria-hidden="true">
 		<?php tutor_utils()->render_svg_icon( $icon_name, 24, 24 ); ?>
 	</div>

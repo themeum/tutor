@@ -27,7 +27,7 @@ $card_items = array(
 		Display downloadable resources with consistent metadata and a clear download state.
 	</p>
 
-	<div class="tutor-p-6 tutor-bg-gray-50 tutor-rounded-md tutor-flex tutor-flex-col tutor-gap-y-4">
+	<div class="tutor-p-6 tutor-bg-gray-50 tutor-rounded-md tutor-flex tutor-flex-col tutor-gap-2">
 		<?php foreach ( $card_items as $item ) : ?>
 			<?php
 			tutor_load_template(

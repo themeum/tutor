@@ -2,12 +2,10 @@
 @use '../mixins' as *;
 
 .tutor-attachment-card {
+  width: 100%;
   @include tutor-flex(row, stretch, flex-start);
   gap: $tutor-spacing-5;
   padding: $tutor-spacing-4 $tutor-spacing-5;
-  border-radius: $tutor-radius-lg;
-  border: 1px solid $tutor-border-idle;
-  background-color: $tutor-surface-l1;
   transition: background-color 0.2s ease;
   position: relative;
   cursor: pointer;
@@ -41,9 +39,7 @@
 
   &-title {
     @include tutor-typography('small', 'medium', 'primary');
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include tutor-text-truncate;
   }
 
   &-meta {
