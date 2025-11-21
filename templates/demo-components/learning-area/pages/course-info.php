@@ -57,9 +57,11 @@ use TUTOR\Icon;
 			</button>
 		</div>
 	</div>
+
 	<div class="tutor-course-thumb">
 		<img src="http://localhost:10058/wp-content/uploads/2025/07/Course-Thumb-02.webp" alt="course thumb" />
 	</div>
+
 	<div class="tutor-course-intro">
 		<div class="tutor-flex tutor-items-center tutor-justify-center tutor-gap-3 tutor-tiny tutor-text-secondary">
 			<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2 ); ?>
@@ -68,6 +70,17 @@ use TUTOR\Icon;
 		<h3 class="tutor-h3 tutor-sm-text-h5 tutor-mt-3">Intimate Photography Portraits</h3>
 		<div class="tutor-medium tutor-sm-text-small tutor-text-secondary tutor-mt-4">by School of Rock</div>
 	</div>
+
+	<div class="tutor-course-sticky-card tutor-mt-9">
+		<div class="tutor-course-thumb">
+			<img src="http://localhost:10058/wp-content/uploads/2025/07/Course-Thumb-02.webp" alt="course thumb" />
+		</div>
+		<div class="tutor-flex tutor-flex-column tutor-gap-2">
+			<h5 class="tutor-h5 tutor-sm-text-medium">Intimate Photography Portraits</h5>
+			<div class="tutor-medium tutor-sm-text-small tutor-text-secondary">by School of Rock</div>
+		</div>
+	</div>
+
 	<div class="tutor-course-description">
 		<div x-data="{ expanded: true }" class="tutor-course-description-item">
 			<div role="button" @click="expanded = !expanded" class="tutor-course-description-header">
@@ -121,6 +134,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</div>
+
 	<div class="tutor-course-info-table tutor-table-wrapper tutor-table-column-borders tutor-mt-6">
 		<table class="tutor-table tutor-surface-l1">
 			<tr>
