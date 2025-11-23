@@ -20,5 +20,6 @@
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.ordering' ); ?>
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.matching' ); ?>
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.fill-in-the-blanks' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.openended-short-answer' ); ?>
 	</div>
 </div>

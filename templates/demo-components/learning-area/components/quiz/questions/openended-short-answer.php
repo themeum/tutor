@@ -1,6 +1,6 @@
 <?php
 /**
- * Fill In The Blanks
+ * Openended Short Answer
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
@@ -8,27 +8,22 @@
  * @since 4.0.0
  */
 
+use TUTOR\Icon;
+
 $question = array(
 	'index'           => 1,
 	'question_id'     => 1,
-	'question_title'  => __( 'Fill In The Blanks', 'tutor' ),
-	'question_type'   => 'fill_in_the_blank',
+	'question_title'  => __( 'Openended Short Answer', 'tutor' ),
+	'question_type'   => 'open_ended',
 	'answer_required' => true,
 	'question_mark'          => 10,
 	'question_settings' => array(
 		'answer_required' => '0',
 		'question_mark' => '1',
-		'question_type' => 'fill_in_the_blank',
+		'question_type' => 'open_ended',
 		'randomize_question' => '0',
 		'show_question_mark' => '1',
 		'is_image_matching' => '0'
-	),
-	'question_answers'         => array(
-		array(
-			'answer_title' => 'Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
-			"answer_two_gap_match" => "dash | dash",
-			"answer_order" => 1,
-		),
 	),
 );
 
@@ -48,14 +43,16 @@ $question = array(
 	?>
 
 	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
-		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option">
-				<?php
-          $title = $answer['answer_title'];
-          $title = str_replace( '{dash}', '<input type="text" class="tutor-quiz-question-input" placeholder="Type your answer here" />', $title );
-          echo $title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				?>
-			</div>
-		<?php endforeach; ?>
+		<div class="tutor-input-field">
+      <div class="tutor-input-wrapper">
+        <textarea 
+          type="text"
+          id="name"
+          placeholder="Type your answer here"
+          class="tutor-input tutor-text-area tutor-input-content-clear"
+        ></textarea>
+      </div>
+      <div class="tutor-help-text">This is a helper text.</div>
+    </div>
 	</div>
 </div>
