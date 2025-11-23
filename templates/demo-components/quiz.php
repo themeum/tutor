@@ -15,5 +15,6 @@
 	
 	<div class="tutor-quiz-questions">
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.true-false' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.multiple-choice' ); ?>
 	</div>
 </div>
