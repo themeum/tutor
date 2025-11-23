@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Icon;
+use Tutor\LearningArea\Helper;
 
 $question = array(
 	'index'           => 1,
@@ -28,6 +29,7 @@ $question = array(
 		),
 	),
 );
+
 ?>
 
 <div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
@@ -44,7 +46,7 @@ $question = array(
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $answer['is_correct'] ? 'correct' : 'incorrect' ); ?>">
+			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( Helper::is_correct( $answer ) ); ?>">
 				<?php tutor_utils()->render_svg_icon( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
 				<?php echo esc_html( $answer['answer_title'] ); ?>
 			</div>
