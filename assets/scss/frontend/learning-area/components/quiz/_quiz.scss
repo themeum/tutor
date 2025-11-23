@@ -219,4 +219,59 @@
       }
     }
   }
+
+  [data-question='ordering'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid(1, 1fr);
+      }
+
+      &-option {
+        @include tutor-flex(row, center, flex-start);
+        padding: 0;
+        gap: $tutor-spacing-3;
+        box-shadow: 2px 2px 0px 0px #00000014;
+
+        &:hover {
+          border-color: $tutor-border-brand;
+        }
+
+        &[data-option='dragging'] {
+          border-color: $tutor-border-brand;
+          box-shadow: -6px 7px 0px 0px #00000014;
+        }
+
+        [data-option-order] {
+          @include tutor-flex-center;
+          @include tutor-typography('small', 'semibold');
+          width: 40px;
+          height: 100%;
+          border-inline-end: 1px solid $tutor-border-idle;
+        }
+
+        [data-title] {
+          @include tutor-flex(row, center, flex-start);
+          gap: $tutor-spacing-4;
+          padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-1;
+          min-height: 56px;
+
+          img {
+            height: 88px;
+            width: 88px;
+            aspect-ratio: 1;
+            border-radius: $tutor-radius-sm;
+            object-fit: cover;
+            object-position: center;
+          }
+        }
+
+        [data-grab-handle] {
+          @include tutor-button-reset;
+          @include tutor-flex-center;
+          cursor: grab;
+          margin-inline: auto $tutor-spacing-4;
+        }
+      }
+    }
+  }
 }
