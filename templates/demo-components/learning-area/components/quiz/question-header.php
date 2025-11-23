@@ -19,10 +19,12 @@
 		<?php echo esc_html( $question_title ); ?>
 	</div>
 
-	<span class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-text-secondary">
-		<span class="tutor-text-subdued">
-			<?php esc_html_e( 'Points: ', 'tutor' ); ?>
+	<?php if ( $show_question_mark ) : ?>
+		<span class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-text-secondary">
+			<span class="tutor-text-subdued">
+				<?php esc_html_e( 'Points: ', 'tutor' ); ?>
+			</span>
+			<?php echo esc_html( $question_mark ); ?>
 		</span>
-		<?php echo esc_html( $points ); ?>
-	</span>
+	<?php endif; ?>
 </div>

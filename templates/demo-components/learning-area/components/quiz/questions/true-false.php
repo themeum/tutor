@@ -17,8 +17,15 @@ $question = array(
 	'question_title'  => __( 'Is the Earth round?', 'tutor' ),
 	'question_type'   => 'true_false',
 	'answer_required' => true,
-	'points'          => 10,
-	'answers'         => array(
+	'question_mark'          => 10,
+	'question_settings' => array(
+		'answer_required' => '0',
+		'question_mark' => '1',
+		'question_type' => 'true_false',
+		'randomize_question' => '0',
+		'show_question_mark' => '1'
+	),
+	'question_answers'         => array(
 		array(
 			'answer_title' => __( 'True', 'tutor' ),
 			'is_correct'   => true,
@@ -39,13 +46,14 @@ $question = array(
 		array(
 			'index'          => $question['index'],
 			'question_title' => $question['question_title'],
-			'points'         => $question['points'],
+			'question_mark'         => $question['question_mark'],
+			'show_question_mark' => $question['question_settings']['show_question_mark'],
 		)
 	);
 	?>
 
 	<div class="tutor-quiz-question-options">
-		<?php foreach ( $question['answers'] as $answer ) : ?>
+		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( Helper::is_correct( $answer ) ); ?>">
 				<?php tutor_utils()->render_svg_icon( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
 				<?php echo esc_html( $answer['answer_title'] ); ?>

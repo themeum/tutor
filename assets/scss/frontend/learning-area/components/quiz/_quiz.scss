@@ -5,6 +5,10 @@
   @include tutor-flex(column);
   gap: $tutor-spacing-11;
 
+  @include tutor-breakpoint-down(sm) {
+    gap: $tutor-spacing-6;
+  }
+
   &-header {
     background-color: $tutor-surface-l1;
   }
@@ -41,7 +45,7 @@
     gap: $tutor-spacing-5;
 
     @include tutor-breakpoint-down(sm) {
-      padding: $tutor-spacing-10;
+      padding-inline: $tutor-spacing-6;
     }
   }
 
@@ -189,6 +193,28 @@
             padding: $tutor-spacing-3 $tutor-spacing-4;
             text-align: left;
           }
+        }
+      }
+    }
+  }
+
+  [data-question='image_answering'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid(2, 1fr);
+      }
+
+      &-option {
+        @include tutor-flex(column, flex-start, center);
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-4;
+
+        img {
+          height: 320px;
+          width: 100%;
+          object-fit: cover;
+          object-position: center;
+          border-radius: $tutor-radius-sm;
         }
       }
     }

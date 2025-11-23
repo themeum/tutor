@@ -8,7 +8,6 @@
  * @since 4.0.0
  */
 
-use TUTOR\Icon;
 use Tutor\LearningArea\Helper;
 
 $question = array(
@@ -17,8 +16,15 @@ $question = array(
 	'question_title'  => __( 'What is the capital of France?', 'tutor' ),
 	'question_type'   => 'multiple_choice',
 	'answer_required' => true,
-	'points'          => 10,
-	'answers'         => array(
+	'question_mark'          => 10,
+	'question_settings' => array(
+		'answer_required' => '0',
+		'question_mark' => '1',
+		'question_type' => 'multiple_choice',
+		'randomize_question' => '0',
+		'show_question_mark' => '1'
+	),
+	'question_answers'         => array(
 		array(
 			'answer_title' => __( 'Paris', 'tutor' ),
 			'thumb'        => 'https://placehold.co/600x400',
@@ -51,13 +57,14 @@ $question = array(
 		array(
 			'index'          => $question['index'],
 			'question_title' => $question['question_title'],
-			'points'         => $question['points'],
+			'question_mark'         => $question['question_mark'],
+			'show_question_mark' => $question['question_settings']['show_question_mark'],
 		)
 	);
 	?>
 
 	<div class="tutor-quiz-question-options">
-		<?php foreach ( $question['answers'] as $answer ) : ?>
+		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( Helper::is_correct( $answer ) ); ?>">
 				<div class="tutor-input-field <?php echo Helper::has_thumb( $answer ) ? 'tutor-hidden' : ''; ?>">
 					<div class="tutor-input-wrapper">
