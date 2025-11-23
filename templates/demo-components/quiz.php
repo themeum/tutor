@@ -19,5 +19,6 @@
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.image-answering' ); ?>
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.ordering' ); ?>
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.matching' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.fill-in-the-blanks' ); ?>
 	</div>
 </div>
