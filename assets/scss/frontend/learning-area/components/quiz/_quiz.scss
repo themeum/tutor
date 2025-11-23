@@ -88,17 +88,60 @@
       border: 1px solid $tutor-border-idle;
       border-radius: $tutor-radius-md;
       background-color: $tutor-surface-l1;
+      cursor: pointer;
+      transition-property: background-color, border-color, color;
+      transition-duration: 0.2s;
+      transition-timing-function: ease;
+      overflow: hidden;
+
+      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']) {
+        border-color: $tutor-border-hover;
+        background-color: $tutor-surface-l1-hover;
+      }
+
+      &:has(:checked) {
+        font-weight: $tutor-font-weight-medium;
+        border-color: $tutor-border-brand;
+        background-color: $tutor-surface-brand-secondary;
+        color: $tutor-text-brand;
+
+        .tutor-label {
+          color: $tutor-text-brand;
+        }
+      }
 
       &[data-option='correct'] {
+        font-weight: $tutor-font-weight-medium;
         border-color: $tutor-border-success;
-        background-color: $tutor-success-100;
+        background-color: $tutor-actions-success-tertiary;
         color: $tutor-text-success;
+        cursor: default;
+
+        .tutor-label {
+          color: $tutor-text-success;
+        }
+
+        .tutor-checkbox:disabled {
+          background-color: $tutor-actions-success-primary;
+          color: $tutor-icon-idle-inverse;
+        }
       }
 
       &[data-option='incorrect'] {
+        font-weight: $tutor-font-weight-medium;
         border-color: $tutor-border-error;
-        background-color: $tutor-error-100;
+        background-color: $tutor-actions-critical-secondary;
         color: $tutor-text-critical;
+        cursor: default;
+
+        .tutor-label {
+          color: $tutor-text-critical;
+        }
+
+        .tutor-checkbox:disabled {
+          background-color: $tutor-actions-critical-primary;
+          color: $tutor-icon-idle-inverse;
+        }
       }
     }
   }
@@ -113,6 +156,40 @@
         @include tutor-flex-center;
         gap: $tutor-spacing-3;
         padding: $tutor-spacing-3;
+      }
+    }
+  }
+
+  [data-question='multiple_choice'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid(4, 1fr);
+      }
+
+      &-option {
+        @include tutor-flex(row, center, flex-start);
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-3;
+
+        &:has(img) {
+          @include tutor-flex(column, flex-start, center);
+          padding: 0;
+          gap: 0;
+
+          img {
+            border-end-start-radius: $tutor-radius-md;
+            border-end-end-radius: $tutor-radius-md;
+            height: 160px;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+          }
+
+          [data-title] {
+            padding: $tutor-spacing-3 $tutor-spacing-4;
+            text-align: left;
+          }
+        }
       }
     }
   }
