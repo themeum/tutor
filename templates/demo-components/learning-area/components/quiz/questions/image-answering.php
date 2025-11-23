@@ -8,7 +8,6 @@
  * @since 4.0.0
  */
 
-
 $question = array(
 	'index' => 1,
 	'question_id' => '7',

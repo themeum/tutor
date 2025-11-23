@@ -22,6 +22,7 @@ $question = array(
 		'question_mark' => '1',
 		'question_type' => 'multiple_choice',
 		'randomize_question' => '0',
+		'has_multiple_correct_answer' => '1',
 		'show_question_mark' => '1'
 	),
 	'question_answers'         => array(
@@ -70,7 +71,7 @@ $question = array(
 					<div class="tutor-input-wrapper">
 						<!-- @TODO: Disable checkbox when viewing quiz attempt -->
 						<input 
-							type="checkbox"
+							type="<?php echo esc_attr( $question['question_settings']['has_multiple_correct_answer'] === '1' ? 'checkbox' : 'radio' ); ?>"
 							id="<?php echo esc_attr( $question['question_id'] ); ?>"
 							placeholder="Enter your full name"
 							class="tutor-checkbox"

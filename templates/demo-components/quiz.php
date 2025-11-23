@@ -17,5 +17,6 @@
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.true-false' ); ?>
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.multiple-choice' ); ?>
 		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.image-answering' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.ordering' ); ?>
 	</div>
 </div>
