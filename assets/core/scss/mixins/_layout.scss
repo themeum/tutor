@@ -51,7 +51,7 @@
 
 @mixin tutor-clearfix {
   &::after {
-    content: "";
+    content: '';
     display: table;
     clear: both;
   }
@@ -66,14 +66,10 @@
       @media (min-width: $value) {
         @content;
       }
-    }
-
-    @else {
+    } @else {
       @content;
     }
-  }
-
-  @else {
+  } @else {
     @warn "Unknown breakpoint: #{$breakpoint}";
   }
 }
@@ -86,14 +82,10 @@
       @media (max-width: $value) {
         @content;
       }
-    }
-
-    @else {
+    } @else {
       @content;
     }
-  }
-
-  @else {
+  } @else {
     @warn "Unknown breakpoint: #{$breakpoint}";
   }
 }
@@ -119,12 +111,23 @@
   gap: $gap;
 }
 
+@mixin tutor-grid-auto-columns($min, $max) {
+  display: grid;
+  gap: $tutor-spacing-6;
+
+  grid-template-columns: repeat($min, 1fr);
+
+  @for $i from ($min + 1) through $max {
+    &:has(> *:nth-child(#{$i})) {
+      grid-template-columns: repeat($i, 1fr);
+    }
+  }
+}
+
 @mixin tutor-grid-area($row-start, $col-start, $row-end: null, $col-end: null) {
   @if $row-end and $col-end {
     grid-area: $row-start / $col-start / $row-end / $col-end;
-  }
-
-  @else {
+  } @else {
     grid-column-start: $col-start;
     grid-row-start: $row-start;
   }
@@ -160,7 +163,7 @@
   @supports not (gap: 1px) {
     margin: -#{$gap / 2};
 
-    >* {
+    > * {
       margin: #{$gap / 2};
     }
   }
@@ -168,7 +171,7 @@
 
 // Stack layout (vertical spacing)
 @mixin tutor-stack($spacing: $tutor-spacing-4) {
-  >*+* {
+  > * + * {
     margin-top: $spacing;
   }
 }
@@ -180,7 +183,7 @@
   align-items: $align;
   margin: -#{$spacing / 2};
 
-  >* {
+  > * {
     margin: #{$spacing / 2};
   }
 }
@@ -193,15 +196,13 @@
   @if $side ==start {
     flex-direction: row;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       flex-direction: row-reverse;
     }
-  }
-
-  @else {
+  } @else {
     flex-direction: row-reverse;
 
-    [dir="rtl"] & {
+    [dir='rtl'] & {
       flex-direction: row;
     }
   }

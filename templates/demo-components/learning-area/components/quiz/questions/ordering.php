@@ -56,7 +56,7 @@ $question = array(
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option">
+			<div class="tutor-quiz-question-option" data-option="draggable">
         <div data-option-order="<?php echo esc_attr( $answer['answer_order'] ); ?>">
           <?php echo esc_html( $answer['answer_order'] ); ?>
         </div>
