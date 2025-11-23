@@ -68,7 +68,7 @@ $question = array(
 				</div>
 
         <button type="button" data-grab-handle>
-          <?php tutor_utils()->render_svg_icon( Icon::BARS, 40, 40 ); ?>
+          <?php tutor_utils()->render_svg_icon( Icon::GRAB_HANDLE, 40, 40 ); ?>
         </button>
 			</div>
 		<?php endforeach; ?>
