@@ -69,7 +69,7 @@ use TUTOR\Icon;
 			& 5 people like this
 		</div>
 	</div>
-	<div class="tutor-qna-single-reply-form">
+	<form class="tutor-qna-single-reply-form" x-data="{ focused: false }">
 		<div class="tutor-input-field">
 			<label for="name" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4">Reply</label>
 			<div class="tutor-input-wrapper">
@@ -78,10 +78,27 @@ use TUTOR\Icon;
 					id="name"
 					placeholder="<?php esc_attr_e( 'Just drop your response here!', 'tutor' ); ?>"
 					class="tutor-input tutor-text-area"
+					@focus="focused = true"
 				></textarea>
 			</div>
 		</div>
-	</div>
+		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5" x-cloak :class="{ 'tutor-hidden': !focused }">
+			<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
+				<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
+				<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
+				<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?> 
+				<?php esc_html_e( 'Enter to Save	', 'tutor' ); ?>
+			</div>
+			<div class="tutor-flex tutor-items-center tutor-gap-4">
+				<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small" @click="focused = false">
+					<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+				</button>
+				<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-btn-x-small">
+					<?php esc_html_e( 'Save', 'tutor' ); ?>
+				</button>
+			</div>
+		</div>
+	</form>
 	<div class="tutor-qna-single-reply-filter">
 		<div class="tutor-small tutor-text-secondary">
 			<?php esc_html_e( 'Replies', 'tutor' ); ?>
