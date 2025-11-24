@@ -284,7 +284,12 @@ class Assets {
 				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
 				$learning_area_css_url  = tutor()->url . 'assets/css/tutor-learning-area.min.css';
 
+				$learning_area_js_path = tutor()->path . 'assets/js/tutor-learning-area.js';
+				$learning_area_js_url  = tutor()->url . 'assets/js/tutor-learning-area.js';
+
 				wp_enqueue_style( 'tutor-learning-area', $learning_area_css_url, array(), filemtime( $learning_area_css_path ), 'all' );
+
+				wp_enqueue_script( 'tutor-learning-area', $learning_area_js_url, array(), filemtime( $learning_area_js_path ), true );
 			}
 		}
 	}

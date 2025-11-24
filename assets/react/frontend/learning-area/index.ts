@@ -4,10 +4,11 @@
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeCoursePlayer } from './pages/course-player';
 import { initializeLessonContent } from './pages/lesson-content';
-import { initializeQuizInterface } from './pages/quiz-interface';
+import { initializeQuizInterface } from './pages/quiz';
 
 const initializeLearningArea = () => {
-  const currentPage = document.body.dataset.page;
+  const params = new URLSearchParams(window.location.search);
+  const currentPage = params.get('subpage');
 
   // eslint-disable-next-line no-console
   console.log('Initializing learning area page:', currentPage);
@@ -20,7 +21,7 @@ const initializeLearningArea = () => {
     case 'lesson-content':
       initializeLessonContent();
       break;
-    case 'quiz-interface':
+    case 'quiz':
       initializeQuizInterface();
       break;
     case 'assignment-view':
