@@ -15,6 +15,7 @@ use TUTOR\Icon;
 	<div class="tutor-qna-search">
 		<div class="tutor-input-field">
 			<div class="tutor-input-wrapper">
+				<!-- @TODO: Input size lg need to apply -->
 				<input 
 					type="text"
 					placeholder="<?php esc_attr_e( 'Search questions, topics...', 'tutor' ); ?>"
