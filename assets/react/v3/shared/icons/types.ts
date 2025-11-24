@@ -217,6 +217,7 @@ export const icons = [
   'notification2',
   'open',
   'outlineNone',
+  'passed',
   'passing',
   'pauseCircle',
   'pdf',

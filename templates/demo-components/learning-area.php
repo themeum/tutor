@@ -18,6 +18,7 @@ use TUTOR\Icon;
 		<div class="tutor-learning-area-content">
 			<div class="tutor-learning-area-container">
 				<?php tutor_load_template( 'demo-components.learning-area.components.lesson' ); ?>
+				<?php tutor_load_template( 'demo-components.learning-area.pages.course-info' ); ?>
 			</div>
 		</div>
 		<button 
