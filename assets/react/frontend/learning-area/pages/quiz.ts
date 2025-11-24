@@ -151,15 +151,19 @@ export const initializeQuizInterface = () => {
       });
 
       // Initialize draggable items
-      const draggableEls = Array.from(container.querySelectorAll<HTMLElement>('[data-option="draggable"]'));
+      const draggableEls = Array.from(
+        container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
+      );
 
       draggableEls.forEach((el, idx) => {
+        const handle = el.querySelector('[data-grab-handle]') as HTMLElement | null;
         const id = el.dataset.id ?? String(idx);
 
         const draggable = new Draggable(
           {
             id,
             element: el,
+            handle: handle ?? undefined,
             feedback: 'clone',
           },
           manager,
