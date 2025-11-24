@@ -12,13 +12,13 @@ use TUTOR\Icon;
 
 ?>
 <div class="tutor-learning-area-qna-single">
-	<div class="tutor-qna-single-header">
+	<div class="tutor-qna-single-header tutor-p-6 tutor-border-b">
 		<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</button>
 	</div>
-	<div class="tutor-qna-single-body">
+	<div class="tutor-qna-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-6 tutor-mb-5">
 			<div class="tutor-avatar tutor-avatar-40">
 				<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
@@ -39,7 +39,7 @@ use TUTOR\Icon;
 				</button>
 			</div>
 		</div>
-		<div class="tutor-qna-single-content">Blocked by “Verification Limit Exceeded” on SheerID (Figma Education), Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)</div>
+		<div class="tutor-p1 tutor-font-medium tutor-text-secondary">Blocked by “Verification Limit Exceeded” on SheerID (Figma Education), Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)</div>
 	</div>
 	<div class="tutor-qna-single-reply-count">
 		<div class="tutor-flex tutor-items-center tutor-gap-6">
@@ -69,7 +69,7 @@ use TUTOR\Icon;
 			& 5 people like this
 		</div>
 	</div>
-	<form class="tutor-qna-single-reply-form" x-data="{ focused: false }">
+	<form class="tutor-qna-single-reply-form tutor-p-6 tutor-border-b" x-data="{ focused: false }">
 		<div class="tutor-input-field">
 			<label for="name" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4">Reply</label>
 			<div class="tutor-input-wrapper">
@@ -99,7 +99,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</form>
-	<div class="tutor-qna-single-reply-filter">
+	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 		<div class="tutor-small tutor-text-secondary">
 			<?php esc_html_e( 'Replies', 'tutor' ); ?>
 			<span class="tutor-text-primary tutor-font-medium">(4)</span>
@@ -128,7 +128,7 @@ use TUTOR\Icon;
 					<span class="tutor-qna-card-author">Annathoms</span> 
 					<span class="tutor-text-subdued">2 days ago</span>
 				</div>
-				<div class="tutor-qna-reply-content">It's so nerve-racking. :(</div>
+				<div class="tutor-p2 tutor-text-secondary tutor-mb-6">It's so nerve-racking. :(</div>
 				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-text-subdued">
 					<button class="tutor-qna-thumb-button">
 						<?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20, array( 'class' => 'tutor-icon-subdued' ) ); ?>
@@ -151,7 +151,7 @@ use TUTOR\Icon;
 					<span class="tutor-qna-card-author">Annathoms</span> 
 					<span class="tutor-text-subdued">2 days ago</span>
 				</div>
-				<div class="tutor-qna-reply-content">Hi I’m facing exactly the same problems than ​@af2cb64c_8cb4 Is it possible to fall back to previous august 7th previous update for Figma Desktop to check if that issues are caused by that update ?</div>
+				<div class="tutor-p2 tutor-text-secondary tutor-mb-6">Hi I’m facing exactly the same problems than ​@af2cb64c_8cb4 Is it possible to fall back to previous august 7th previous update for Figma Desktop to check if that issues are caused by that update ?</div>
 				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-text-subdued">
 					<button class="tutor-qna-thumb-button">
 						<?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20, array( 'class' => 'tutor-icon-subdued' ) ); ?>
@@ -174,7 +174,7 @@ use TUTOR\Icon;
 					<span class="tutor-qna-card-author">Annathoms</span> 
 					<span class="tutor-text-subdued">2 days ago</span>
 				</div>
-				<div class="tutor-qna-reply-content">Hi I’m facing exactly the same problems than ​@af2cb64c_8cb4 Is it possible to fall back to previous august 7th previous update for Figma Desktop to check if that issues are caused by that update ?</div>
+				<div class="tutor-p2 tutor-text-secondary tutor-mb-6">Hi I’m facing exactly the same problems than ​@af2cb64c_8cb4 Is it possible to fall back to previous august 7th previous update for Figma Desktop to check if that issues are caused by that update ?</div>
 				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-text-subdued">
 					<button class="tutor-qna-thumb-button">
 						<?php tutor_utils()->render_svg_icon( Icon::THUMB_FILL, 20, 20, array( 'class' => 'tutor-icon-subdued' ) ); ?>

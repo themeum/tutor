@@ -8,25 +8,6 @@
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
 
-  .tutor-qna-single-header {
-    padding: $tutor-spacing-6;
-    border-bottom: 1px solid $tutor-border-idle;
-  }
-
-  .tutor-qna-single-body {
-    padding: $tutor-spacing-6;
-    border-bottom: 1px solid $tutor-border-idle;
-
-    .tutor-qna-single-content {
-      @include tutor-typography(p1, medium, secondary);
-    }
-  }
-
-  .tutor-qna-single-reply-form {
-    padding: $tutor-spacing-6;
-    border-bottom: 1px solid $tutor-border-idle;
-  }
-
   .tutor-qna-single-reply-count {
     @include tutor-typography(small, regular, secondary);
     @include tutor-flex(row, center, space-between);
@@ -43,12 +24,6 @@
     }
   }
 
-  .tutor-qna-single-reply-filter {
-    @include tutor-flex(row, center, space-between);
-    padding: $tutor-spacing-5 $tutor-spacing-6;
-    border-bottom: 1px solid $tutor-border-idle;
-  }
-
   .tutor-qna-single-reply-list {
     .tutor-qna-reply-list-item {
       @include tutor-flex(row);
@@ -57,11 +32,6 @@
 
       &:not(:last-of-type) {
         border-bottom: 1px solid $tutor-border-idle;
-      }
-
-      .tutor-qna-reply-content {
-        @include tutor-typography(p2, regular, secondary);
-        margin-bottom: $tutor-spacing-6;
       }
     }
   }

@@ -6,30 +6,4 @@
   background-color: $tutor-surface-l1;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
-
-  .tutor-qna-search {
-    padding: $tutor-spacing-6;
-    border-bottom: 1px solid $tutor-border-idle;
-  }
-
-  .tutor-qna-form {
-    padding: $tutor-spacing-6;
-    border-bottom: 1px solid $tutor-border-idle;
-  }
-
-  .tutor-qna-filter {
-    @include tutor-flex(row, center, space-between);
-    padding: $tutor-spacing-5 $tutor-spacing-6;
-    border-bottom: 1px solid $tutor-border-idle;
-  }
-
-  .tutor-qna-list {
-    @include tutor-flex(column);
-    gap: $tutor-spacing-4;
-    padding: $tutor-spacing-6;
-  }
-
-  .tutor-qna-pagination {
-    padding: $tutor-spacing-none $tutor-spacing-6 $tutor-spacing-6;
-  }
 }
