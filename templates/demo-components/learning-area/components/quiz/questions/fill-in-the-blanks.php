@@ -9,25 +9,25 @@
  */
 
 $question = array(
-	'index'           => 1,
-	'question_id'     => 1,
-	'question_title'  => __( 'Fill In The Blanks', 'tutor' ),
-	'question_type'   => 'fill_in_the_blank',
-	'answer_required' => true,
-	'question_mark'          => 10,
+	'index'             => 1,
+	'question_id'       => 1,
+	'question_title'    => __( 'Fill In The Blanks', 'tutor' ),
+	'question_type'     => 'fill_in_the_blank',
+	'answer_required'   => true,
+	'question_mark'     => 10,
 	'question_settings' => array(
-		'answer_required' => '0',
-		'question_mark' => '1',
-		'question_type' => 'fill_in_the_blank',
+		'answer_required'    => '0',
+		'question_mark'      => '1',
+		'question_type'      => 'fill_in_the_blank',
 		'randomize_question' => '0',
 		'show_question_mark' => '1',
-		'is_image_matching' => '0'
+		'is_image_matching'  => '0',
 	),
-	'question_answers'         => array(
+	'question_answers'  => array(
 		array(
-			'answer_title' => 'Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
-			"answer_two_gap_match" => "dash | dash",
-			"answer_order" => 1,
+			'answer_title'         => 'Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
+			'answer_two_gap_match' => 'dash | dash',
+			'answer_order'         => 1,
 		),
 	),
 );
@@ -51,9 +51,9 @@ $question = array(
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
 				<?php
-          $title = $answer['answer_title'];
-          $title = str_replace( '{dash}', '<input type="text" class="tutor-quiz-question-input" placeholder="Type your answer here" />', $title );
-          echo $title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$answer_title = $answer['answer_title'];
+				$answer_title = str_replace( '{dash}', '<input type="text" class="tutor-quiz-question-input" placeholder="Type your answer here" />', $answer_title );
+				echo $answer_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 				?>
 			</div>
 		<?php endforeach; ?>

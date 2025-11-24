@@ -19,7 +19,7 @@ use TUTOR\Icon;
 				<?php tutor_utils()->render_svg_icon( Icon::TIME, 32, 32, array( 'class' => 'tutor-icon-brand' ) ); ?>
 				<!-- Time -->
 				<div class="tutor-quiz-progress-time">
-					<!-- Minitues -->
+					<!-- Minutes -->
 					<span>25</span>
 					<!-- Separator -->
 					<span>:</span>

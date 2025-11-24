@@ -11,34 +11,34 @@
 use TUTOR\Icon;
 
 $question = array(
-	'index'           => 1,
-	'question_id'     => 1,
-	'question_title'  => __( 'Matching', 'tutor' ),
-	'question_type'   => 'matching',
-	'answer_required' => true,
-	'question_mark'          => 10,
+	'index'             => 1,
+	'question_id'       => 1,
+	'question_title'    => __( 'Matching', 'tutor' ),
+	'question_type'     => 'matching',
+	'answer_required'   => true,
+	'question_mark'     => 10,
 	'question_settings' => array(
-		'answer_required' => '0',
-		'question_mark' => '1',
-		'question_type' => 'matching',
+		'answer_required'    => '0',
+		'question_mark'      => '1',
+		'question_type'      => 'matching',
 		'randomize_question' => '0',
 		'show_question_mark' => '1',
-		'is_image_matching' => '0'
+		'is_image_matching'  => '0',
 	),
-	'question_answers'         => array(
+	'question_answers'  => array(
 		array(
-			'answer_title' => __( 'Option 1', 'tutor' ),
-			'is_correct'   => true,
+			'answer_title'         => __( 'Option 1', 'tutor' ),
+			'is_correct'           => true,
 			'answer_two_gap_match' => 'Matched Option 1',
-      'image_url' => 'https://placehold.co/600x400',
-			'answer_order' => 1,
+			'image_url'            => 'https://placehold.co/600x400',
+			'answer_order'         => 1,
 		),
 		array(
-			'answer_title' => __( 'Option 2', 'tutor' ),
-			'is_correct'   => false,
+			'answer_title'         => __( 'Option 2', 'tutor' ),
+			'is_correct'           => false,
 			'answer_two_gap_match' => 'Matched Option 2',
-      'image_url' => 'https://placehold.co/600x400',
-			'answer_order' => 2,
+			'image_url'            => 'https://placehold.co/600x400',
+			'answer_order'         => 2,
 		),
 	),
 );
@@ -61,19 +61,19 @@ $question = array(
 	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
-        <?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_url'] ) ) : ?>
-          <img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
-        <?php else : ?>
-          <div data-title>
-            <div class="tutor-quiz-question-option-number">
-              <?php echo esc_html( $answer['answer_order'] ); ?>
-            </div>
-            <?php echo esc_html( $answer['answer_title'] ); ?>
-          </div>
-        <?php endif; ?>
-        <div placeholder="Drop here" class="tutor-quiz-question-option-drop-zone">
-          <span class="tutor-text-subdued">Drop here</span>
-        </div>
+			<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_url'] ) ) : ?>
+			<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+		<?php else : ?>
+			<div data-title>
+			<div class="tutor-quiz-question-option-number">
+				<?php echo esc_html( $answer['answer_order'] ); ?>
+			</div>
+			<?php echo esc_html( $answer['answer_title'] ); ?>
+			</div>
+		<?php endif; ?>
+		<div placeholder="Drop here" class="tutor-quiz-question-option-drop-zone">
+			<span class="tutor-text-subdued">Drop here</span>
+		</div>
 			</div>
 		<?php endforeach; ?>
 	</div>

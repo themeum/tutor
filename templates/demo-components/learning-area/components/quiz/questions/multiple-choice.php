@@ -11,21 +11,21 @@
 use Tutor\LearningArea\Helper;
 
 $question = array(
-	'index'           => 1,
-	'question_id'     => 1,
-	'question_title'  => __( 'What is the capital of France?', 'tutor' ),
-	'question_type'   => 'multiple_choice',
-	'answer_required' => true,
-	'question_mark'          => 10,
+	'index'             => 1,
+	'question_id'       => 1,
+	'question_title'    => __( 'What is the capital of France?', 'tutor' ),
+	'question_type'     => 'multiple_choice',
+	'answer_required'   => true,
+	'question_mark'     => 10,
 	'question_settings' => array(
-		'answer_required' => '0',
-		'question_mark' => '1',
-		'question_type' => 'multiple_choice',
-		'randomize_question' => '0',
+		'answer_required'             => '0',
+		'question_mark'               => '1',
+		'question_type'               => 'multiple_choice',
+		'randomize_question'          => '0',
 		'has_multiple_correct_answer' => '1',
-		'show_question_mark' => '1'
+		'show_question_mark'          => '1',
 	),
-	'question_answers'         => array(
+	'question_answers'  => array(
 		array(
 			'answer_title' => __( 'Paris', 'tutor' ),
 			'thumb'        => 'https://placehold.co/600x400',
@@ -56,9 +56,9 @@ $question = array(
 	tutor_load_template(
 		'demo-components.learning-area.components.quiz.question-header',
 		array(
-			'index'          => $question['index'],
-			'question_title' => $question['question_title'],
-			'question_mark'         => $question['question_mark'],
+			'index'              => $question['index'],
+			'question_title'     => $question['question_title'],
+			'question_mark'      => $question['question_mark'],
 			'show_question_mark' => $question['question_settings']['show_question_mark'],
 		)
 	);
@@ -71,7 +71,7 @@ $question = array(
 					<div class="tutor-input-wrapper">
 						<!-- @TODO: Disable checkbox when viewing quiz attempt -->
 						<input 
-							type="<?php echo esc_attr( $question['question_settings']['has_multiple_correct_answer'] === '1' ? 'checkbox' : 'radio' ); ?>"
+							type="<?php echo esc_attr( '1' === $question['question_settings']['has_multiple_correct_answer'] ? 'checkbox' : 'radio' ); ?>"
 							id="<?php echo esc_attr( $question['question_id'] ); ?>"
 							placeholder="Enter your full name"
 							class="tutor-checkbox"
