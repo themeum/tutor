@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Icon;
+use TUTOR\Input;
 
 ?>
 <div class="tutor-learning-area" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
@@ -17,8 +18,27 @@ use TUTOR\Icon;
 		<?php tutor_load_template( 'demo-components.learning-area.components.sidebar' ); ?>
 		<div class="tutor-learning-area-content">
 			<div class="tutor-learning-area-container">
-				<?php tutor_load_template( 'demo-components.learning-area.components.lesson' ); ?>
-				<?php tutor_load_template( 'demo-components.learning-area.pages.course-info' ); ?>
+				<?php
+				// Get requested page from query string and sanitize.
+				$learning_page = Input::get( 'learning-page', 'home' );
+
+				// Whitelist allowed pages to avoid arbitrary file inclusion.
+				$allowed_pages = array(
+					'resources',
+					'qna',
+					'course-info',
+					'webinar',
+					'certificate',
+				);
+
+				$allowed_pages = (array) apply_filters( 'tutor_demo_dashboard_allowed_pages', $allowed_pages );
+
+				if ( $learning_page && in_array( $learning_page, $allowed_pages, true ) ) {
+					tutor_load_template( 'demo-components.learning-area.pages.' . $learning_page );
+				} else {
+					tutor_load_template( 'demo-components.learning-area.components.lesson' );
+				}
+				?>
 			</div>
 		</div>
 		<button 
