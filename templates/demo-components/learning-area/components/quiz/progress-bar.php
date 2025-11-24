@@ -12,8 +12,8 @@ use TUTOR\Icon;
 
 ?>
 
-<div x-data="tutorQuizTimer(1500)" class="tutor-quiz-header">
-	<div class="tutor-quiz-progress">
+<div class="tutor-quiz-header">
+	<div class="tutor-quiz-progress" x-data="tutorQuizTimer(1500)" >
 		<div class="tutor-quiz-progress-header">
 			<div class="tutor-flex tutor-items-center tutor-gap-4">
 				<?php tutor_utils()->render_svg_icon( Icon::TIME, 32, 32, array( 'class' => 'tutor-icon-brand' ) ); ?>

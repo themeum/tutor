@@ -35,6 +35,13 @@
       gap: $tutor-spacing-2;
       font-variant-numeric: tabular-nums;
     }
+
+    &-animate {
+      svg path:nth-child(2) {
+        @include tutor-spin;
+        transform-origin: center;
+      }
+    }
   }
 
   &-questions {

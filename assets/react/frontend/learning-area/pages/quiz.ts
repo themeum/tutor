@@ -7,6 +7,7 @@ export const initializeQuizInterface = () => {
     total: duration,
     remaining: duration,
     timer: null as number | null,
+    element: null as HTMLElement | null,
 
     // Automatically runs when component is initialized
     init() {
@@ -15,6 +16,7 @@ export const initializeQuizInterface = () => {
 
     start() {
       this.stop(); // safety
+      this.element = (this as { $el: HTMLElement }).$el;
 
       this.timer = window.setInterval(() => {
         if (this.remaining > 0) {
@@ -24,12 +26,15 @@ export const initializeQuizInterface = () => {
           // TODO: auto-submit or lock the quiz here
         }
       }, 1000);
+
+      this.element.classList.add('tutor-quiz-progress-animate');
     },
 
     stop() {
       if (this.timer) {
         clearInterval(this.timer);
         this.timer = null;
+        this.element?.classList.remove('tutor-quiz-progress-animate');
       }
     },
 
