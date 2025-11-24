@@ -1,6 +1,7 @@
 // Learning Area Entry Point
 // Initializes learning area functionality based on current page
 
+import Alpine from 'alpinejs';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeCoursePlayer } from './pages/course-player';
 import { initializeLessonContent } from './pages/lesson-content';
@@ -32,6 +33,9 @@ const initializeLearningArea = () => {
       console.warn('Unknown learning area page:', currentPage);
       initializeCoursePlayer(); // Fallback
   }
+
+  window.Alpine = Alpine;
+  Alpine.start();
 
   // TODO: Initialize common learning area features
   // - Course navigation

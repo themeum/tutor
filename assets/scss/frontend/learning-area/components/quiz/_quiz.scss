@@ -305,17 +305,31 @@
         }
 
         &-drop-zone {
-          @include tutor-flex(row, center, flex-start);
+          @include tutor-flex(row, center, space-between);
           @include tutor-typography('small');
-          padding: $tutor-spacing-4 $tutor-spacing-5;
+          padding: $tutor-spacing-3;
           background-color: $tutor-surface-l1;
           border: 1px solid $tutor-border-idle;
           border-radius: $tutor-radius-md;
           border-style: dashed;
-          height: 44px;
           box-shadow: -1px -1px 6px 0px #0000000f inset;
           max-width: 544px;
+          min-height: 46px;
           width: 100%;
+
+          &:has([data-option='dropped']) {
+            border-color: $tutor-border-idle;
+            border-style: solid;
+            box-shadow: none;
+
+            button {
+              display: flex;
+            }
+
+            &:hover {
+              border-color: $tutor-border-brand;
+            }
+          }
         }
       }
 
@@ -339,7 +353,8 @@
 
           &-option {
             @include tutor-flex(row, center, flex-start);
-            padding-inline: $tutor-spacing-4;
+            background-color: $tutor-surface-l1;
+            padding: 0 $tutor-spacing-4;
 
             [data-title] {
               @include tutor-typography('small');

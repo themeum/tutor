@@ -41,7 +41,7 @@ $question = array(
 
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
+<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>" data-question-id="question-<?php echo esc_attr( $question['question_id'] ); ?>" x-data="tutorQuestionOrdering('question-<?php echo esc_attr( $question['question_id'] ); ?>')">
 	<?php
 	tutor_load_template(
 		'demo-components.learning-area.components.quiz.question-header',

@@ -23,7 +23,7 @@ $question = array(
 		'question_type'      => 'matching',
 		'randomize_question' => '0',
 		'show_question_mark' => '1',
-		'is_image_matching'  => '0',
+		'is_image_matching'  => '1',
 	),
 	'question_answers'  => array(
 		array(
@@ -45,7 +45,7 @@ $question = array(
 
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
+<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>" x-data="tutorQuestionMatching('question-<?php echo esc_attr( $question['question_id'] ); ?>')">
 	<?php
 	tutor_load_template(
 		'demo-components.learning-area.components.quiz.question-header',
@@ -72,7 +72,10 @@ $question = array(
 			</div>
 		<?php endif; ?>
 		<div placeholder="Drop here" class="tutor-quiz-question-option-drop-zone">
-			<span class="tutor-text-subdued">Drop here</span>
+			<span data-drop-placeholder class="tutor-text-subdued">Drop here</span>
+			<button type="button" class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small">
+				<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
+			</button>
 		</div>
 			</div>
 		<?php endforeach; ?>

@@ -259,38 +259,87 @@ class Assets {
 		if ( 'tutor-lms-pro_page_playground' === $slug ) {
 			$subpage = Input::get( 'subpage' );
 
-			// Enqueue core component scripts.
-			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
-			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
-
-			$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
-			$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
-
-			wp_enqueue_style( 'tutor-core', $core_css_url, array(), filemtime( $core_css_path ), 'all' );
-			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), filemtime( $core_js_path ), true );
-
-			// Enqueue dashboard styles.
-			$supported_pages = array( 'dashboard', 'profile-settings', 'user-profile', 'certificates', 'reviews' );
-			if ( in_array( $subpage, $supported_pages, true ) ) {
+			// Dashboard pages.
+			$dashboard_pages = array( 'dashboard', 'profile-settings', 'user-profile', 'certificates', 'reviews' );
+			if ( in_array( $subpage, $dashboard_pages, true ) ) {
 				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
 				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
 
 				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), filemtime( $dashboard_css_path ), 'all' );
 			}
 
-			// Enqueue learning area styles.
-			$supported_pages = array( 'learning-area', 'quiz' );
-			if ( in_array( $subpage, $supported_pages, true ) ) {
+			// Learning area pages.
+			$learning_pages = array( 'learning-area', 'quiz' );
+			if ( in_array( $subpage, $learning_pages, true ) ) {
+
 				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
 				$learning_area_css_url  = tutor()->url . 'assets/css/tutor-learning-area.min.css';
 
 				$learning_area_js_path = tutor()->path . 'assets/js/tutor-learning-area.js';
 				$learning_area_js_url  = tutor()->url . 'assets/js/tutor-learning-area.js';
 
-				wp_enqueue_style( 'tutor-learning-area', $learning_area_css_url, array(), filemtime( $learning_area_css_path ), 'all' );
+				wp_enqueue_style(
+					'tutor-learning-area',
+					$learning_area_css_url,
+					array(),
+					filemtime( $learning_area_css_path ),
+					'all'
+				);
 
-				wp_enqueue_script( 'tutor-learning-area', $learning_area_js_url, array(), filemtime( $learning_area_js_path ), true );
+				wp_enqueue_script(
+					'tutor-learning-area',
+					$learning_area_js_url,
+					array(),
+					filemtime( $learning_area_js_path ),
+					true
+				);
+
+				// Now enqueue core *after* learning-area.
+				$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
+				$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
+
+				$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
+				$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
+
+				wp_enqueue_style(
+					'tutor-core',
+					$core_css_url,
+					array(),
+					filemtime( $core_css_path ),
+					'all'
+				);
+
+				wp_enqueue_script(
+					'tutor-core',
+					$core_js_url,
+					array( 'wp-i18n', 'tutor-learning-area' ),
+					filemtime( $core_js_path ),
+					true
+				);
+				return;
 			}
+
+			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
+			$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
+
+			$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
+			$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
+
+			wp_enqueue_style(
+				'tutor-core',
+				$core_css_url,
+				array(),
+				filemtime( $core_css_path ),
+				'all'
+			);
+
+			wp_enqueue_script(
+				'tutor-core',
+				$core_js_url,
+				array( 'wp-i18n' ),
+				filemtime( $core_js_path ),
+				true
+			);
 		}
 	}
 
