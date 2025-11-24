@@ -20,7 +20,7 @@ use TUTOR\Icon;
 			<ul class="tutor-pagination-list">
 				<li>
 					<a class="tutor-pagination-item tutor-pagination-item-prev" aria-label="Previous page" aria-disabled="true">
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_LEFT, 14, 14 ); ?>
+						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_LEFT_2 ); ?>
 					</a>
 				</li>
 
@@ -35,7 +35,7 @@ use TUTOR\Icon;
 
 				<li>
 					<a class="tutor-pagination-item tutor-pagination-item-next" aria-label="Next page">
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT, 14, 14 ); ?>
+						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT_2 ); ?>
 					</a>
 				</li>
 			</ul>
