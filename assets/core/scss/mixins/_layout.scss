@@ -111,15 +111,21 @@
   gap: $gap;
 }
 
-@mixin tutor-grid-auto-columns($min, $max) {
+@mixin tutor-grid-auto-columns($min, $max, $selector: '*') {
   display: grid;
   gap: $tutor-spacing-6;
 
   grid-template-columns: repeat($min, 1fr);
 
   @for $i from ($min + 1) through $max {
-    &:has(> *:nth-child(#{$i})) {
+    // Count all children, then subtract if any are dragging
+    &:has(> #{$selector}:nth-child(#{$i})) {
       grid-template-columns: repeat($i, 1fr);
+
+      // If one child is dragging, reduce column count by 1
+      &:has(> #{$selector}[data-dnd-dragging='true']) {
+        grid-template-columns: repeat(#{$i - 1}, 1fr);
+      }
     }
   }
 }

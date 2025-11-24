@@ -23,7 +23,7 @@ $question = array(
 		'question_type'      => 'matching',
 		'randomize_question' => '0',
 		'show_question_mark' => '1',
-		'is_image_matching'  => '1',
+		'is_image_matching'  => '0',
 	),
 	'question_answers'  => array(
 		array(

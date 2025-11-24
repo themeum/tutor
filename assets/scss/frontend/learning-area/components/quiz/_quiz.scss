@@ -348,7 +348,7 @@
 
         .tutor-quiz-question {
           &-options {
-            @include tutor-grid-auto-columns(2, 4);
+            @include tutor-grid-auto-columns(2, 4, '.tutor-quiz-question-option');
           }
 
           &-option {
