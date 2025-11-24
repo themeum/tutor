@@ -53,7 +53,7 @@ export const initializeQuizInterface = () => {
   }));
 
   Alpine.data('tutorQuestionOrdering', () => ({
-    _sortables: [] as Array<{ id: string; index: number; element: HTMLElement }>,
+    _sortables: [] as Sortable[],
     initialized: false, // **guard**
 
     init() {
@@ -84,12 +84,9 @@ export const initializeQuizInterface = () => {
         const handle = el.querySelector('[data-grab-handle]') as HTMLElement | null;
         const id = el.dataset.id ?? String(idx);
 
-        // Store item metadata
-        this._sortables.push({ id, index: idx, element: el });
-
-        new Sortable(
+        const sortable = new Sortable(
           {
-            id: Math.random().toString(),
+            id,
             index: idx,
             element: el,
             handle: handle ?? undefined,
@@ -97,6 +94,8 @@ export const initializeQuizInterface = () => {
           },
           manager,
         );
+
+        this._sortables.push(sortable);
       });
 
       // on drag start add [data-option='dragging']
@@ -128,6 +127,14 @@ export const initializeQuizInterface = () => {
       return Array.from(container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option')).map(
         (el) => el.dataset.id,
       );
+    },
+
+    destroy() {
+      // Clean up all sortables
+      this._sortables.forEach((s) => s.destroy());
+      this._sortables = [];
+
+      this.initialized = false;
     },
   }));
 
