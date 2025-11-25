@@ -18,7 +18,7 @@ use TUTOR\Icon;
 	<?php require 'components/comments.php'; ?>
 </section>
 
-?>
+
 <div class="tutor-learning-area" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
 	<?php tutor_load_template( 'demo-components.learning-area.components.header' ); ?>
 	<div class="tutor-learning-area-body">
