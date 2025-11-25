@@ -9,6 +9,7 @@
  * @version 1.4.3
  */
 
+use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\WithdrawModel;
 
@@ -109,7 +110,7 @@ $current_balance_formated         = tutor_utils()->tutor_price( $summary_data->c
 
 	<div class="current-withdraw-account-wrap tutor-d-flex tutor-mt-20">
 		<span class="tutor-svg tutor-fs-4 tutor-mr-8">
-			<?php echo tutor_utils()->get_svg_icon( 'infoCircle' );//phpcs:ignore ?>
+			<?php echo tutor_utils()->get_svg_icon( Icon::INFO );//phpcs:ignore ?>
 		</span>
 		<span class="tutor-fs-7 tutor-mt-4">
 			<?php

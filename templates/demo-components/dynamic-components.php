@@ -17,6 +17,8 @@ use Tutor\Components\InputField;
 use Tutor\Components\Modal;
 use Tutor\Components\Progress;
 use Tutor\Components\Tabs;
+use Tutor\Components\Table;
+use TUTOR\Icon;
 
 ?>
 <!-- button component  -->
@@ -202,32 +204,32 @@ use Tutor\Components\Tabs;
 	<pre><code>
 	&lt;?php
 	echo Modal::make()
-	  ->id( 'full-modal' )
-	  ->title( 'Confirm Submission' )
-	  ->subtitle( 'Are you sure you want to submit?' )
-	  ->body( 'This action cannot be undone.' )
-	  ->footer_buttons( Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("full-modal")' )->render() )
-	  ->footer_alignment( 'right' )
-	  ->render();
+		->id( 'full-modal' )
+		->title( 'Confirm Submission' )
+		->subtitle( 'Are you sure you want to submit?' )
+		->body( 'This action cannot be undone.' )
+		->footer_buttons( Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("full-modal")' )->render() )
+		->footer_alignment( 'right' )
+		->render();
 
 	echo Modal::make()
-	  ->id( 'another-modal' )
-	  ->title( 'Components' )
-	  ->template( tutor()->path . 'templates/demo-components/avatar.php' )
+		->id( 'another-modal' )
+		->title( 'Components' )
+		->template( tutor()->path . 'templates/demo-components/avatar.php' )
 		->footer_buttons(
 			Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("another-modal")' )->render()
 		)
-	  ->footer_alignment( 'center' )
-	  ->render();
+		->footer_alignment( 'center' )
+		->render();
 
 	$content = 'Hey I am headless 🤯! Footless 👣!';
 	$content .= Button::make()->label( 'Close me' )->attr( 'class', 'tutor-btn-block' )->attr( '@click', 'TutorCore.modal.closeModal("headless-modal")' )->render();
 
 	echo Modal::make()
-	  ->id( 'headless-modal' )
-	  ->closeable( false )
-	  ->body( $content )
-	  ->render();
+		->id( 'headless-modal' )
+		->closeable( false )
+		->body( $content )
+		->render();
 	?&gt;
 	</code></pre>
 	<div class="tutor-flex tutor-gap-6">
@@ -240,32 +242,32 @@ use Tutor\Components\Tabs;
 	</div>
 	<?php
 	echo Modal::make()
-	  ->id( 'full-modal' )
-	  ->title( 'Confirm Submission' )
-	  ->subtitle( 'Are you sure you want to submit?' )
-	  ->body( 'This action cannot be undone.' )
-	  ->footer_buttons( Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("full-modal")' )->render() )
-	  ->footer_alignment( 'right' )
-	  ->render();
+		->id( 'full-modal' )
+		->title( 'Confirm Submission' )
+		->subtitle( 'Are you sure you want to submit?' )
+		->body( 'This action cannot be undone.' )
+		->footer_buttons( Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("full-modal")' )->render() )
+		->footer_alignment( 'right' )
+		->render();
 
 	echo Modal::make()
-	  ->id( 'another-modal' )
-	  ->title( 'Components' )
-	  ->template( tutor()->path . 'templates/demo-components/components/avatar.php' )
+		->id( 'another-modal' )
+		->title( 'Components' )
+		->template( tutor()->path . 'templates/demo-components/components/avatar.php' )
 		->footer_buttons(
 			Button::make()->label( 'Close' )->variant( 'secondary' )->size( 'sm' )->attr( '@click', 'TutorCore.modal.closeModal("another-modal")' )->render()
 		)
-	  ->footer_alignment( 'center' )
-	  ->render();
+		->footer_alignment( 'center' )
+		->render();
 
 	$content  = 'Hey I am headless 🤯! Footless 👣!';
 	$content .= Button::make()->label( 'Close me' )->attr( 'class', 'tutor-btn-block' )->attr( '@click', 'TutorCore.modal.closeModal("headless-modal")' )->render();
 
 	echo Modal::make()
-	  ->id( 'headless-modal' )
-	  ->closeable( false )
-	  ->body( $content )
-	  ->render();
+		->id( 'headless-modal' )
+		->closeable( false )
+		->body( $content )
+		->render();
 	?>
 	</div>
 </div>
@@ -273,33 +275,33 @@ use Tutor\Components\Tabs;
 	<h2>Accordion</h2>
 	<pre><code>
 	&lt;?php
-  echo Accordion::make()
-	  ->id( 'about-course' )
-	  ->title( 'About this Course' )
-	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
-	  ->open()
-	  ->render();
-  echo Accordion::make()
-	  ->id( 'about-test' )
-	  ->title( 'About this Course' )
-	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
-	  ->open()
-	  ->render();
+	echo Accordion::make()
+		->id( 'about-course' )
+		->title( 'About this Course' )
+		->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
+		->open()
+		->render();
+	echo Accordion::make()
+		->id( 'about-test' )
+		->title( 'About this Course' )
+		->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
+		->open()
+		->render();
 	?&gt;
 	</code></pre>
 	<?php
 	echo Accordion::make()
-	  ->id( 'about-course' )
-	  ->title( 'About this Course' )
-	  ->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>', 'wp_kses_post' )
-	  ->render();
-	  echo "<br/>";
+		->id( 'about-course' )
+		->title( 'About this Course' )
+		->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>', 'wp_kses_post' )
+		->render();
+		echo '<br/>';
 	echo Accordion::make()
-	  ->id( 'about-test' )
-	  ->title( 'About this Course' )
-	  ->content( '<h3>HTML Content</h3>', 'wp_kses_post' )
-	  ->open()
-	  ->render();
+		->id( 'about-test' )
+		->title( 'About this Course' )
+		->content( '<h3>HTML Content</h3>', 'wp_kses_post' )
+		->open()
+		->render();
 	?>
 	</div>
 </div>
@@ -311,164 +313,164 @@ use Tutor\Components\Tabs;
 	</code></pre>
 	<?php
 	// Text input with clear button
-echo InputField::make()
-    ->type('text')
-    ->name('full_name')
-    ->label('Full Name')
-    ->placeholder('Enter your full name')
-    ->required()
-    ->clearable()
-    ->help_text('This is a helper text.')
-    ->render();
+	echo InputField::make()
+	->type( 'text' )
+	->name( 'full_name' )
+	->label( 'Full Name' )
+	->placeholder( 'Enter your full name' )
+	->required()
+	->clearable()
+	->help_text( 'This is a helper text.' )
+	->render();
 
-// Text input with left icon
-// echo InputField::make()
-//     ->type('email')
-//     ->name('email')
-//     ->label('Email')
-//     ->placeholder('Enter your email')
-//     ->left_icon('<svg>...</svg>')
-//     ->clearable()
-//     ->help_text('We will never share your email.')
-//     ->render();
+	// Text input with left icon
+	// echo InputField::make()
+	// ->type('email')
+	// ->name('email')
+	// ->label('Email')
+	// ->placeholder('Enter your email')
+	// ->left_icon('<svg>...</svg>')
+	// ->clearable()
+	// ->help_text('We will never share your email.')
+	// ->render();
 
-// // Disabled input
-// echo InputField::make()
-//     ->type('text')
-//     ->name('username')
-//     ->label('Username')
-//     ->placeholder('Enter username')
-//     ->disabled()
-//     ->help_text('This field is disabled.')
-//     ->render();
+	// // Disabled input
+	// echo InputField::make()
+	// ->type('text')
+	// ->name('username')
+	// ->label('Username')
+	// ->placeholder('Enter username')
+	// ->disabled()
+	// ->help_text('This field is disabled.')
+	// ->render();
 
-// // Input with error
-// echo InputField::make()
-//     ->type('text')
-//     ->name('username')
-//     ->label('Username')
-//     ->placeholder('Enter username')
-//     ->required()
-//     ->error('This field is required.')
-//     ->render();
+	// // Input with error
+	// echo InputField::make()
+	// ->type('text')
+	// ->name('username')
+	// ->label('Username')
+	// ->placeholder('Enter username')
+	// ->required()
+	// ->error('This field is required.')
+	// ->render();
 
-// // Textarea
-// echo InputField::make()
-//     ->type('textarea')
-//     ->name('bio')
-//     ->label('Bio')
-//     ->placeholder('Tell us about yourself')
-//     ->required()
-//     ->clearable()
-//     ->help_text('Maximum 500 characters.')
-//     ->render();
+	// // Textarea
+	// echo InputField::make()
+	// ->type('textarea')
+	// ->name('bio')
+	// ->label('Bio')
+	// ->placeholder('Tell us about yourself')
+	// ->required()
+	// ->clearable()
+	// ->help_text('Maximum 500 characters.')
+	// ->render();
 
-// // Small checkbox
-// echo InputField::make()
-//     ->type('checkbox')
-//     ->name('agree')
-//     ->label('I agree to terms')
-//     ->required()
-//     ->help_text('You must agree to continue.')
-//     ->render();
+	// // Small checkbox
+	// echo InputField::make()
+	// ->type('checkbox')
+	// ->name('agree')
+	// ->label('I agree to terms')
+	// ->required()
+	// ->help_text('You must agree to continue.')
+	// ->render();
 
-// // Medium checkbox (checked)
-// echo InputField::make()
-//     ->type('checkbox')
-//     ->name('subscribe')
-//     ->label('Subscribe to newsletter')
-//     ->size('md')
-//     ->checked()
-//     ->help_text('Get weekly updates.')
-//     ->render();
+	// // Medium checkbox (checked)
+	// echo InputField::make()
+	// ->type('checkbox')
+	// ->name('subscribe')
+	// ->label('Subscribe to newsletter')
+	// ->size('md')
+	// ->checked()
+	// ->help_text('Get weekly updates.')
+	// ->render();
 
-// // Intermediate checkbox
-// echo InputField::make()
-//     ->type('checkbox')
-//     ->name('select_all')
-//     ->label('Select All')
-//     ->size('md')
-//     ->checked()
-//     ->intermediate()
-//     ->render();
+	// // Intermediate checkbox
+	// echo InputField::make()
+	// ->type('checkbox')
+	// ->name('select_all')
+	// ->label('Select All')
+	// ->size('md')
+	// ->checked()
+	// ->intermediate()
+	// ->render();
 
-// // Disabled checkbox
-// echo InputField::make()
-//     ->type('checkbox')
-//     ->name('locked')
-//     ->label('This is locked')
-//     ->size('md')
-//     ->disabled()
-//     ->checked()
-//     ->render();
+	// // Disabled checkbox
+	// echo InputField::make()
+	// ->type('checkbox')
+	// ->name('locked')
+	// ->label('This is locked')
+	// ->size('md')
+	// ->disabled()
+	// ->checked()
+	// ->render();
 
-// // Small radio
-// echo InputField::make()
-//     ->type('radio')
-//     ->name('gender')
-//     ->value('male')
-//     ->label('Male')
-//     ->help_text('Select your gender.')
-//     ->render();
+	// // Small radio
+	// echo InputField::make()
+	// ->type('radio')
+	// ->name('gender')
+	// ->value('male')
+	// ->label('Male')
+	// ->help_text('Select your gender.')
+	// ->render();
 
-// // Medium radio
-// echo InputField::make()
-//     ->type('radio')
-//     ->name('gender')
-//     ->value('female')
-//     ->label('Female')
-//     ->size('md')
-//     ->render();
+	// // Medium radio
+	// echo InputField::make()
+	// ->type('radio')
+	// ->name('gender')
+	// ->value('female')
+	// ->label('Female')
+	// ->size('md')
+	// ->render();
 
-// // Disabled radio (checked)
-// echo InputField::make()
-//     ->type('radio')
-//     ->name('status')
-//     ->value('active')
-//     ->label('Active')
-//     ->size('md')
-//     ->checked()
-//     ->disabled()
-//     ->render();
+	// // Disabled radio (checked)
+	// echo InputField::make()
+	// ->type('radio')
+	// ->name('status')
+	// ->value('active')
+	// ->label('Active')
+	// ->size('md')
+	// ->checked()
+	// ->disabled()
+	// ->render();
 
-// // Small switch
-// echo InputField::make()
-//     ->type('switch')
-//     ->name('notifications')
-//     ->label('Enable notifications?')
-//     ->help_text('Get real-time alerts.')
-//     ->render();
+	// // Small switch
+	// echo InputField::make()
+	// ->type('switch')
+	// ->name('notifications')
+	// ->label('Enable notifications?')
+	// ->help_text('Get real-time alerts.')
+	// ->render();
 
-// // Medium switch
-// echo InputField::make()
-//     ->type('switch')
-//     ->name('dark_mode')
-//     ->label('Enable dark mode?')
-//     ->size('md')
-//     ->checked()
-//     ->help_text('Switch to dark theme.')
-//     ->render();
+	// // Medium switch
+	// echo InputField::make()
+	// ->type('switch')
+	// ->name('dark_mode')
+	// ->label('Enable dark mode?')
+	// ->size('md')
+	// ->checked()
+	// ->help_text('Switch to dark theme.')
+	// ->render();
 
-// // Intermediate switch
-// echo InputField::make()
-//     ->type('switch')
-//     ->name('auto_save')
-//     ->label('Auto-save enabled?')
-//     ->size('md')
-//     ->intermediate()
-//     ->help_text('Partial save mode.')
-//     ->render();
+	// // Intermediate switch
+	// echo InputField::make()
+	// ->type('switch')
+	// ->name('auto_save')
+	// ->label('Auto-save enabled?')
+	// ->size('md')
+	// ->intermediate()
+	// ->help_text('Partial save mode.')
+	// ->render();
 
-// // Disabled switch (checked)
-// echo InputField::make()
-//     ->type('switch')
-//     ->name('premium')
-//     ->label('Premium features')
-//     ->size('md')
-//     ->checked()
-//     ->disabled()
-//     ->help_text('Upgrade to access.')
-//     ->render();
+	// // Disabled switch (checked)
+	// echo InputField::make()
+	// ->type('switch')
+	// ->name('premium')
+	// ->label('Premium features')
+	// ->size('md')
+	// ->checked()
+	// ->disabled()
+	// ->help_text('Upgrade to access.')
+	// ->render();
 	?>
 		<form 
 			x-data="tutorForm({ id: 'basic-form', mode: 'onBlur', shouldFocusError: true })"
@@ -486,14 +488,14 @@ echo InputField::make()
 
 		<?php
 			echo InputField::make()
-				->type('text')
-				->name('full_name')
-				->label('Full Name')
-				->placeholder('Enter your full name')
+				->type( 'text' )
+				->name( 'full_name' )
+				->label( 'Full Name' )
+				->placeholder( 'Enter your full name' )
 				->required()
 				->clearable()
-				->help_text('This is a helper text.')
-				->attr( 'x-bind', "register('full_name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
+				->help_text( 'This is a helper text.' )
+				->attr( 'x-bind', "register('full_name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
 				->render();
 		?>
 
@@ -507,8 +509,199 @@ echo InputField::make()
 				</button>
 	
 	</form>
-	</div>
 </div>
 
+
+<!-- table component -->
+<h2>Table</h2>
+<pre>
+	<code>
+	&lt;php
+	$heading = array(
+		array(
+			'content' => __( 'Quiz Info', 'tutor' ),
+		),
+		array(
+			'content' => __( 'Marks', 'tutor' ),
+		),
+	);
+
+	$content = array(
+		array(
+			'content' => array(
+				array(
+					'content' => 'Questions',
+					'class'   => 'tutor-bg-blue',
+					'icon'    => array(
+						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+						'position' => 'left',
+					),
+				),
+				array( 'content' => 20 ),
+			),
+			'class'   => 'tutor-bg-red',
+		),
+	);
+
+	echo Table::make()
+		->headings( $heading )
+		->contents( $content )
+		->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
+		->render();
+	</code>
+</pre>
+<section class="tutor-bg-white tutor-py-6 tutor-px-6">
+<?php
+	$heading = array(
+		array(
+			'content' => __( 'Quiz Info', 'tutor' ),
+		),
+		array(
+			'content' => __( 'Marks', 'tutor' ),
+		),
+	);
+
+	$content = array(
+		array(
+			'content' => array(
+				array(
+					'content' => 'Questions',
+					'class'   => 'tutor-bg-blue',
+					'icon'    => array(
+						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+						'position' => 'left',
+					),
+				),
+				array( 'content' => 20 ),
+			),
+			'class'   => 'tutor-bg-red',
+		),
+	);
+
+	echo Table::make()
+		->headings( $heading )
+		->contents( $content )
+		->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+		->render();
+	?>
+</section>
+<pre>
+	<code>
+	&lt;php
+	$heading = array(
+		array(
+			'content' => __( 'Quiz Info', 'tutor' ),
+		),
+		array(
+			'content' => __( 'Marks', 'tutor' ),
+		),
+		array(
+			'content' => __( 'Result', 'tutor' ),
+		),
+	);
+
+	$content = array(
+		array(
+			'content' => array(
+				array(
+					'content' => 'Questions',
+					'icon'    => array(
+						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+						'position' => 'left',
+					),
+				),
+				array( 'content' => 20 ),
+				array( 'content' => 
+						'&lt;span&gt; class="tutor-badge tutor-badge-completed tutor-badge-circle">
+							Passed
+						&lt;/span&gt;'
+				),
+			),
+		),
+		array(
+			'content' => array(
+				array(
+					'content' => 'Quiz Time',
+					'icon'    => array(
+						'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
+						'position' => 'left',
+					),
+				),
+				array( 'content' => 20 ),
+				array( 'content' => 
+						'&lt;span&gt; class="tutor-badge tutor-badge-exception tutor-badge-circle">
+							Bundle
+						&lt;/span&gt;'
+				),
+			),
+		),
+	);
+
+	echo Table::make()
+		->headings( $heading )
+		->contents( $content )
+		->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
+		->render();
+	</code>
+</pre>
+<section class="tutor-bg-white tutor-py-6 tutor-px-6">
+<?php
+	$heading = array(
+		array(
+			'content' => __( 'Quiz Info', 'tutor' ),
+		),
+		array(
+			'content' => __( 'Marks', 'tutor' ),
+		),
+		array(
+			'content' => __( 'Result', 'tutor' ),
+		),
+	);
+
+	$content = array(
+		array(
+			'content' => array(
+				array(
+					'content' => 'Questions',
+					'icon'    => array(
+						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+						'position' => 'left',
+					),
+				),
+				array( 'content' => 20 ),
+				array(
+					'content' => '<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+							Passed
+						</span>',
+				),
+			),
+		),
+		array(
+			'content' => array(
+				array(
+					'content' => 'Quiz Time',
+					'icon'    => array(
+						'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
+						'position' => 'left',
+					),
+				),
+				array( 'content' => 20 ),
+				array(
+					'content' => '<span class="tutor-badge tutor-badge-exception tutor-badge-circle">
+							Bundle
+						</span>',
+				),
+			),
+		),
+	);
+
+	echo Table::make()
+		->headings( $heading )
+		->contents( $content )
+		->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+		->render();
+	?>
+</section>
+<!-- table component -->
 </body>
 </html>
