@@ -260,7 +260,7 @@ class Assets {
 			$subpage = Input::get( 'subpage' );
 
 			// Dashboard pages.
-			$dashboard_pages = array( 'dashboard', 'profile-settings', 'user-profile', 'certificates', 'reviews' );
+			$dashboard_pages = array( 'dashboard', 'profile-settings', 'user-profile', 'certificates', 'reviews', 'billing' );
 			if ( in_array( $subpage, $dashboard_pages, true ) ) {
 				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
 				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
