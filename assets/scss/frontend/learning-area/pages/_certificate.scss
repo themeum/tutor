@@ -1,1 +1,37 @@
 // Learning Area Certificate Styles
+
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-learning-area-certificate {
+  @include tutor-flex(column);
+  gap: $tutor-spacing-5;
+
+  .tutor-certificate-header {
+    @include tutor-flex(row, center, space-between);
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-4;
+  }
+
+  .tutor-certificate-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: $tutor-spacing-7;
+
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-6;
+
+    &-item {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-7;
+
+      &:last-of-type {
+        justify-self: end;
+      }
+    }
+  }
+}
