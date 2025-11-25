@@ -10,9 +10,7 @@
 	}
 
 	&-icon {
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		@include tutor-flex-center;
 		height: 330px;
 		background-color: $tutor-surface-l1-hover;
 
@@ -104,8 +102,7 @@
 			tbody {
 				tr {
 					@include tutor-breakpoint-down(sm) {
-						display: flex;
-						flex-direction: column;
+						@include tutor-flex(column);
 						gap: $tutor-spacing-4;
 						padding: $tutor-spacing-5;
 					}
@@ -117,17 +114,14 @@
 
 						td:first-child {
 							width: 100%;
-							display: flex;
-							flex-direction: column;
+							@include tutor-flex(column);
 							gap: $tutor-spacing-2;
 						}
 
 						td:nth-child(2) {
 							width: 100%;
-							display: flex;
-							align-items: center;
+							@include tutor-flex(row, center, flex-start, wrap);
 							gap: $tutor-spacing-4;
-							flex-wrap: wrap;
 
 							> div {
 								flex-shrink: 0;
@@ -199,8 +193,7 @@
 }
 
 .tutor-quiz-intro-time-info {
-	display: flex;
-	align-items: center;
+	@include tutor-flex(row, center);
 	gap: $tutor-spacing-2;
 
 	svg {
@@ -209,8 +202,7 @@
 }
 
 .tutor-quiz-marks-breakdown {
-	display: flex;
-	flex-direction: column;
+	@include tutor-flex(column);
 	gap: $tutor-spacing-2;
 
 	@include tutor-breakpoint-down(sm) {
@@ -223,7 +215,7 @@
 	display: none;
 
 	@include tutor-breakpoint-down(sm) {
-		display: flex;
+		@include tutor-flex();
 		margin-left: $tutor-spacing-4;
 	}
 }
@@ -232,9 +224,8 @@
 	display: none;
 
 	@include tutor-breakpoint-down(sm) {
-		display: flex;
+		@include tutor-flex(row, center);
 		margin-left: auto;
-		align-items: center;
 		gap: $tutor-spacing-2;
 		@include tutor-typography('tiny', 'medium', 'secondary');
 	}
@@ -243,8 +234,7 @@
 .tutor-quiz-marks-correct,
 .tutor-quiz-marks-incorrect {
 	@include tutor-typography('tiny', 'medium', 'primary', 'body');
-	display: flex;
-	align-items: center;
+	@include tutor-flex(row, center);
 	gap: $tutor-spacing-2;
 	background-color: $tutor-gray-200;
 	padding: 0 $tutor-spacing-4;
@@ -283,8 +273,7 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
-		display: flex;
-		align-items: center;
+		@include tutor-flex(row, center);
 		padding: $tutor-spacing-4 $tutor-spacing-5;
 		background-color: $tutor-surface-l1;
 		border-top: 1px solid $tutor-border-idle;
