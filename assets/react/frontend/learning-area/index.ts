@@ -1,19 +1,12 @@
 // Learning Area Entry Point
 // Initializes learning area functionality based on current page
 
-import { Alpine, TutorComponentRegistry } from '@Core/ts';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeCoursePlayer } from './pages/course-player';
 import { initializeLessonContent } from './pages/lesson-content';
-import { initializeQuizInterface, questionMatchingMeta, questionOrderingMeta, quizTimerMeta } from './pages/quiz';
+import { initializeQuizInterface } from './pages/quiz';
 
 const initializeLearningArea = () => {
-  TutorComponentRegistry.registerAll({
-    components: [quizTimerMeta, questionOrderingMeta, questionMatchingMeta],
-  });
-
-  TutorComponentRegistry.initWithAlpine(Alpine);
-
   const params = new URLSearchParams(window.location.search);
   const currentPage = params.get('subpage');
 
