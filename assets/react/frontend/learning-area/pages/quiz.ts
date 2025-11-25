@@ -9,13 +9,12 @@ export const initializeQuizInterface = () => {
     timer: null as number | null,
     element: null as HTMLElement | null,
 
-    // Automatically runs when component is initialized
     init() {
       this.start();
     },
 
     start() {
-      this.stop(); // safety
+      this.stop();
       this.element = (this as { $el: HTMLElement }).$el;
 
       this.timer = window.setInterval(() => {
@@ -38,7 +37,6 @@ export const initializeQuizInterface = () => {
       }
     },
 
-    // Reactive computed values
     get minutes() {
       return String(Math.floor(this.remaining / 60)).padStart(2, '0');
     },
