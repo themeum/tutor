@@ -10,7 +10,7 @@
 
 ?>
 
-<div class="tutor-quiz">
+<div class="tutor-quiz tutor-quiz-submission">
 	<?php tutor_load_template( 'demo-components.learning-area.components.quiz.progress-bar' ); ?>
 	
 	<div class="tutor-quiz-questions">
