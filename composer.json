@@ -11,8 +11,7 @@
       "Tutor\\Helpers\\": "helpers/",
       "Tutor\\Traits\\": "traits/",
       "Tutor\\Ecommerce\\": "ecommerce/",
-      "Tutor\\PaymentGateways\\": "ecommerce/PaymentGateways",
-      "Tutor\\LearningArea\\": "templates/demo-components/learning-area/utils/"
+      "Tutor\\PaymentGateways\\": "ecommerce/PaymentGateways"
     }
   },
   "autoload-dev": {
