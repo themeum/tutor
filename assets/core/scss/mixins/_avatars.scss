@@ -27,92 +27,63 @@
 	letter-spacing: 0.5px;
 }
 
-// Avatar sizes
-@mixin tutor-avatar-size($size: md) {
-	@if $size == xs {
-		width: 20px;
-		height: 20px;
-		
+// Avatar sizes map
+$tutor-avatar-sizes: (
+	20: (
+		font-size: 'tiny',
+		icon-size: 12px
+	),
+	32: (
+		font-size: 'tiny',
+		icon-size: 16px
+	),
+	40: (
+		font-size: 'small',
+		icon-size: 20px
+	),
+	48: (
+		font-size: 'small',
+		icon-size: 24px
+	),
+	56: (
+		font-size: 'medium',
+		icon-size: 28px
+	),
+	64: (
+		font-size: 'medium',
+		icon-size: 32px
+	),
+	80: (
+		font-size: $tutor-font-size-h4,
+		icon-size: 40px
+	),
+	104: (
+		font-size: $tutor-font-size-h3,
+		icon-size: 48px
+	)
+);
+
+@mixin tutor-avatar-size($size) {
+	@if map-has-key($tutor-avatar-sizes, $size) {
+		$config: map-get($tutor-avatar-sizes, $size);
+		$font-size: map-get($config, font-size);
+		$icon-size: map-get($config, icon-size);
+
+		width: #{$size}px;
+		height: #{$size}px;
+
 		.tutor-avatar-initials {
-			@include tutor-typography('tiny', 'medium');
+			@if type-of($font-size) == 'string' {
+				@include tutor-typography($font-size, 'medium');
+			} @else {
+				font-size: $font-size;
+				font-weight: $tutor-font-weight-medium;
+			}
 		}
 
 		svg {
-			width: 12px;
-			height: 12px;
-		}
-	} @else if $size == sm {
-		width: 32px;
-		height: 32px;
-		
-		.tutor-avatar-initials {
-			@include tutor-typography('tiny', 'medium');
-		}
-		
-		svg {
-			width: 16px;
-			height: 16px;
-		}
-	} @else if $size == base {
-		width: 40px;
-		height: 40px;
-		
-		.tutor-avatar-initials {
-			@include tutor-typography('tiny', 'medium');
-		}
-		
-		svg {
-			width: 20px;
-			height: 20px;
-		}
-	} @else if $size == md {
-		width: 48px;
-		height: 48px;
-		
-		.tutor-avatar-initials {
-			@include tutor-typography('small', 'medium');
-		}
-		svg {
-			width: 24px;
-			height: 24px;
-		}
-	} @else if $size == lg {
-		width: 64px;
-		height: 64px;
-		
-		.tutor-avatar-initials {
-			@include tutor-typography('medium', 'medium');
-		}
-		
-		svg {
-			width: 32px;
-			height: 32px;
-		}
-	} @else if $size == xl {
-		width: 80px;
-		height: 80px;
-		
-		.tutor-avatar-initials {
-			font-size: $tutor-font-size-h4;
-			font-weight: $tutor-font-weight-medium;
-		}
-		
-		svg {
-			width: 40px;
-			height: 40px;
-		}
-	} @else if $size == xxl {
-		width: 104px;
-		height: 104px;
-		
-		.tutor-avatar-initials {
-			font-size: $tutor-font-size-h3;
-			font-weight: $tutor-font-weight-medium;
-		}
-		
-		svg {
-			width: 48px;
-			height: 48px;
+			width: $icon-size;
+			height: $icon-size;
 		}
 	}
 }

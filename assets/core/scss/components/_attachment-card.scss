@@ -1,0 +1,63 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-attachment-card {
+  width: 100%;
+  @include tutor-flex(row, stretch, flex-start);
+  gap: $tutor-spacing-5;
+  padding: $tutor-spacing-4 $tutor-spacing-5;
+  transition: background-color 0.2s ease;
+  position: relative;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-within {
+    background-color: $tutor-surface-l1-hover;
+  }
+
+  &-icon {
+    @include tutor-flex(row, center, center);
+    width: 48px;
+    height: 48px;
+    border-radius: $tutor-radius-sm;
+    background-color: $tutor-surface-l2;
+    flex-shrink: 0;
+
+    &-loading {
+      svg {
+        @include tutor-spin(0.9s);
+      }
+    }
+  }
+
+  &-body {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-1;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &-title {
+    @include tutor-typography('small', 'medium', 'primary');
+    @include tutor-text-truncate;
+  }
+
+  &-meta {
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+  }
+
+  &-actions {
+    @include tutor-flex(row, center, flex-end);
+    gap: $tutor-spacing-2;
+    flex-shrink: 0;
+  }
+
+  &:hover &-actions,
+  &:focus-within &-actions,
+  &-show-actions &-actions {
+    .tutor-iconic-btn {
+      opacity: 1;
+    }
+  }
+}
+

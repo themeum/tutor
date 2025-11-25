@@ -316,6 +316,19 @@ $overflow-types: auto, hidden, visible, scroll;
       }
     }
 
+    // Gap utilities
+    @each $name, $value in $tutor-spacing {
+      .tutor-#{$breakpoint}-gap-#{$name} {
+        gap: $value;
+      }
+      .tutor-#{$breakpoint}-gap-x-#{$name} {
+        column-gap: $value;
+      }
+      .tutor-#{$breakpoint}-gap-y-#{$name} {
+        row-gap: $value;
+      }
+    }
+
     // Grid column utilities
     @each $count in $grid-cols {
       .tutor-#{$breakpoint}-grid-cols-#{$count} {
