@@ -8,8 +8,6 @@
  * @since 4.0.0
  */
 
-use Tutor\LearningArea\Helper;
-
 $question = array(
 	'index'             => 1,
 	'question_id'       => 1,
@@ -28,26 +26,62 @@ $question = array(
 	'question_answers'  => array(
 		array(
 			'answer_title' => __( 'Paris', 'tutor' ),
-			'thumb'        => 'https://placehold.co/600x400',
 			'is_correct'   => true,
 		),
 		array(
 			'answer_title' => __( 'London', 'tutor' ),
-			'thumb'        => 'https://placehold.co/600x400',
 			'is_correct'   => false,
 		),
 		array(
 			'answer_title' => __( 'Berlin', 'tutor' ),
-			'thumb'        => 'https://placehold.co/600x400',
 			'is_correct'   => '',
 		),
 		array(
 			'answer_title' => __( 'Rome', 'tutor' ),
-			'thumb'        => 'https://placehold.co/600x400',
 			'is_correct'   => false,
 		),
 	),
 );
+
+/** Check if current answer is correct
+ *
+ * @param array $answer Answer data.
+ *
+ * @return string Correct, Incorrect or Empty string.
+ */
+$is_correct = function( $answer ) {
+	if ( ! array_key_exists( 'is_correct', $answer ) ) {
+		return '';
+	}
+
+	$value = $answer['is_correct'];
+
+	// values that should return an empty string.
+	$empty_values = array( null, '' );
+
+	if ( in_array( $value, $empty_values, true ) ) {
+		return '';
+	}
+
+	// map boolean values to their labels.
+	$map = array(
+		true  => 'correct',
+		false => 'incorrect',
+	);
+
+	return $map[ $value ] ?? '';
+};
+
+/**
+ * Check if current answer has a thumb
+ *
+ * @param array $answer Answer data.
+ *
+ * @return bool
+ */
+$has_image = function( $answer ) {
+	return array_key_exists( 'image_url', $answer );
+}
 
 ?>
 
@@ -66,8 +100,8 @@ $question = array(
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( Helper::is_correct( $answer ) ); ?>">
-				<div class="tutor-input-field <?php echo Helper::has_thumb( $answer ) ? 'tutor-hidden' : ''; ?>">
+			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>">
+				<div class="tutor-input-field <?php echo $has_image( $answer ) ? 'tutor-hidden' : ''; ?>">
 					<div class="tutor-input-wrapper">
 						<!-- @TODO: Disable checkbox when viewing quiz attempt -->
 						<input 
@@ -76,7 +110,7 @@ $question = array(
 							placeholder="Enter your full name"
 							class="tutor-checkbox"
 							checked
-							<?php if ( Helper::is_correct( $answer ) ) : ?>
+							<?php if ( $is_correct( $answer ) ) : ?>
 								disabled
 							<?php endif; ?>
 						>
@@ -87,8 +121,8 @@ $question = array(
 						</label>
 					</div>
 				</div>
-				<?php if ( Helper::has_thumb( $answer ) ) : ?>
-					<img src="<?php echo esc_url( $answer['thumb'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+				<?php if ( $has_image( $answer ) ) : ?>
+					<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
 					<div data-title>
 						<?php echo esc_html( $answer['answer_title'] ); ?>
 					</div>

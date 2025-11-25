@@ -9,7 +9,6 @@
  */
 
 use TUTOR\Icon;
-use Tutor\LearningArea\Helper;
 
 $question = array(
 	'index'             => 1,
@@ -37,6 +36,35 @@ $question = array(
 	),
 );
 
+/* Check if current answer is correct
+ *
+ * @param array $answer Answer data.
+ *
+ * @return string Correct, Incorrect or Empty string.
+ */
+$is_correct = function( $answer ) {
+	if ( ! array_key_exists( 'is_correct', $answer ) ) {
+		return '';
+	}
+
+	$value = $answer['is_correct'];
+
+	// values that should return an empty string.
+	$empty_values = array( null, '' );
+
+	if ( in_array( $value, $empty_values, true ) ) {
+		return '';
+	}
+
+	// map boolean values to their labels.
+	$map = array(
+		true  => 'correct',
+		false => 'incorrect',
+	);
+
+	return $map[ $value ] ?? '';
+}
+
 ?>
 
 <div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
@@ -54,7 +82,7 @@ $question = array(
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( Helper::is_correct( $answer ) ); ?>">
+			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>">
 				<?php tutor_utils()->render_svg_icon( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
 				<?php echo esc_html( $answer['answer_title'] ); ?>
 			</div>
