@@ -7,12 +7,28 @@
   @include tutor-flex(column);
   gap: $tutor-spacing-5;
 
+  @include tutor-breakpoint-up(sm) {
+    margin-top: $tutor-spacing-7;
+  }
+
   .tutor-certificate-header {
     @include tutor-flex(row, center, space-between);
     background-color: $tutor-surface-l1;
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-2xl;
-    padding: $tutor-spacing-4;
+
+    @include tutor-breakpoint-up(sm) {
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-4;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      position: fixed;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      border-top: 1px solid $tutor-border-idle;
+      padding: $tutor-spacing-6;
+    }
   }
 
   .tutor-certificate-info {
@@ -58,6 +74,10 @@
     border-radius: $tutor-radius-2xl;
     margin-bottom: $tutor-spacing-6;
     position: relative;
+
+    @include tutor-breakpoint-down(sm) {
+      margin-bottom: $tutor-spacing-5;
+    }
 
     img {
       max-width: 264px;

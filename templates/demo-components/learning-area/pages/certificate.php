@@ -11,9 +11,9 @@
 use TUTOR\Icon;
 
 ?>
-<div class="tutor-learning-area-certificate tutor-mt-7">
+<div class="tutor-learning-area-certificate">
 	<div class="tutor-certificate-header">
-		<div class="tutor-flex tutor-items-center tutor-gap-3">
+		<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-hidden">
 			<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-icon-idle">
 				<?php tutor_utils()->render_svg_icon( Icon::SHARE ); ?>
 			</button>
@@ -21,17 +21,47 @@ use TUTOR\Icon;
 				<?php tutor_utils()->render_svg_icon( Icon::PRINTER ); ?>
 			</button>
 		</div>
-		<div class="tutor-flex tutor-items-center tutor-gap-3">
+		<div class="tutor-flex tutor-items-center tutor-sm-items-stretch tutor-gap-3 tutor-sm-gap-6 tutor-sm-w-full">
 			<button 
 				type="button" 
-				class="tutor-btn tutor-btn-secondary tutor-btn-x-small" 
+				class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-sm-hidden"
 				onclick="TutorCore.modal.showModal('certificate-modal')">
 				<?php esc_html_e( 'View Certificate', 'tutor' ); ?>
 			</button>
-			<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2">
+			<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2 tutor-sm-text-small tutor-sm-w-full">
 				<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2 ); ?>
 				<?php esc_html_e( 'Download Certificate', 'tutor' ); ?>
 			</button>
+			<div x-data="tutorPopover({ placement: 'bottom-start' })" class="tutor-hidden tutor-sm-block">
+				<button 
+					type="button"
+					x-ref="trigger"
+					@click="toggle()"
+					class="tutor-btn tutor-btn-secondary tutor-btn-large tutor-btn-icon tutor-icon-idle">
+					<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL, 20, 20 ); ?>
+				</button>
+
+				<div 
+					x-ref="content"
+					x-show="open"
+					x-cloak
+					@click.outside="handleClickOutside()"
+					class="tutor-popover"
+				>
+					<div class="tutor-popover-menu">
+						<!-- @TODO: Dropdown items design is not ready -->
+						<button class="tutor-popover-menu-item">
+							<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?> View
+						</button>
+						<button class="tutor-popover-menu-item">
+							<?php tutor_utils()->render_svg_icon( Icon::SHARE ); ?> Share
+						</button>
+						<button class="tutor-popover-menu-item">
+							<?php tutor_utils()->render_svg_icon( Icon::PRINTER ); ?> Print
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl tutor-p-4">
@@ -100,9 +130,9 @@ use TUTOR\Icon;
 							</div>
 						</div>
 					</div>
-					<h4 class="tutor-h4 tutor-font-medium tutor-mb-6">Complete at-least 85% to unlock the certificate</h4>
-					<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-mb-8">
-						<div class="tutor-flex tutor-items-center tutor-justify-between tutor-medium tutor-text-secondary">
+					<h4 class="tutor-h4 tutor-font-medium tutor-sm-text-medium tutor-mb-6 tutor-sm-mb-4">Complete at-least 85% to unlock the certificate</h4>
+					<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-mb-8 tutor-sm-mb-6">
+						<div class="tutor-flex tutor-items-center tutor-justify-between tutor-medium tutor-sm-text-small tutor-text-secondary">
 							<div><span class="tutor-font-semibold tutor-text-primary">7%</span> Completed</div>
 							<div>Required <span class="tutor-font-semibold tutor-text-primary">100%</span></div>
 						</div>
