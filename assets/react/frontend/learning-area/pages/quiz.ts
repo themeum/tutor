@@ -188,9 +188,11 @@ export const initializeQuizInterface = () => {
         this._draggables.push(draggable);
       });
 
-      const dropZoneEls = Array.from(container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option-drop-zone'));
+      const dropZoneElements = Array.from(
+        container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option-drop-zone'),
+      );
 
-      dropZoneEls.forEach((element, idx) => {
+      dropZoneElements.forEach((element, idx) => {
         const id = element.dataset.id ?? String(idx);
 
         const droppable = new Droppable(

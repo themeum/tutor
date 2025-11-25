@@ -342,7 +342,7 @@
 
       &-draggable {
         @include tutor-flex(column, flex-start, flex-start);
-        gap: $tutor-spacing-3;
+        gap: $tutor-spacing-5;
         padding: $tutor-spacing-6;
         background-color: $tutor-surface-base;
         border-radius: $tutor-radius-md;

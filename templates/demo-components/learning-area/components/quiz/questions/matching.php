@@ -85,8 +85,8 @@ $question = array(
 
 	<div class="tutor-quiz-question-draggable">
 		<div class="tutor-quiz-question-draggable-header">
-			<?php tutor_utils()->render_svg_icon( Icon::DRAG, 24, 24, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-			<span class="tutor-fs-6 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Drag from here', 'tutor' ); ?></span>
+			<?php tutor_utils()->render_svg_icon( Icon::DRAG, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+			<span class="tutor-text-small tutor-font-medium"><?php esc_html_e( 'Drag from here', 'tutor' ); ?></span>
 		</div>
 		<div class="tutor-quiz-question-options">
 			<?php foreach ( $question['question_answers'] as $answer ) : ?>
