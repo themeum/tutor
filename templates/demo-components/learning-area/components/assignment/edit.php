@@ -19,6 +19,18 @@ $back_url = add_query_arg(
 
 $assignment_title = 'React Fundamentals: Building Your First Component';
 
+$file_uploader_config = array(
+	'multiple'       => true,
+	'accept'         => '.pdf,.doc,.docx,.jpg,.jpeg,.png',
+	'max_size'       => 52428800,
+	'icon'           => Icon::FILE_ATTACHEMENT,
+	'title'          => __( 'Drop files here or click to upload', 'tutor' ),
+	'subtitle'       => __( 'PDF, DOC, DOCX, JPG, PNG Formats (Max 50MB)', 'tutor' ),
+	'button_text'    => __( 'Select Files', 'tutor' ),
+	'on_file_select' => 'null',
+	'on_error'       => 'null',
+);
+
 ?>
 
 <div class="tutor-assignment-edit">
@@ -37,5 +49,33 @@ $assignment_title = 'React Fundamentals: Building Your First Component';
 		<h4 class="tutor-h4">
 			<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
 		</h4>
+
+		<!-- @TODO: render tinyMCE editor -->
+		<div class="tutor-input-field">
+			<textarea 
+				type="text"
+				id="name"
+				placeholder="Enter assignment "
+				class="tutor-input tutor-text-area tutor-input-content-clear"
+			></textarea>
+		</div>
+
+		<div class="tutor-assignment-file-uploader">
+			<div class="tutor-medium">
+				<?php esc_html_e( 'Assignments', 'tutor' ); ?>
+			</div>
+			<?php tutor_load_template( 'core-components.file-uploader', $file_uploader_config ); ?>
+		</div>
+	</div>
+
+	<div class="tutor-assignment-actions">
+		<!-- @TODO: need to add functionality -->
+		<button class="tutor-btn tutor-btn-ghost tutor-btn-medium">
+			<?php esc_html_e( 'Save Draft', 'tutor' ); ?>
+		</button>
+		<!-- @TODO: need to add functionality -->
+		<button class="tutor-btn tutor-btn-primary tutor-btn-medium">
+			<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
+		</button>
 	</div>
 </div>

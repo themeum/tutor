@@ -65,4 +65,9 @@
     @include tutor-flex(column, stretch, flex-start);
     gap: $tutor-spacing-4;
   }
+
+  &-file-uploader {
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-4;
+  }
 }
