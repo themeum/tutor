@@ -26,22 +26,18 @@ $question = array(
 	'question_answers'  => array(
 		array(
 			'answer_title' => __( 'Paris', 'tutor' ),
-			'image_url'        => 'https://placehold.co/600x400',
 			'is_correct'   => true,
 		),
 		array(
 			'answer_title' => __( 'London', 'tutor' ),
-			'image_url'        => 'https://placehold.co/600x400',
 			'is_correct'   => false,
 		),
 		array(
 			'answer_title' => __( 'Berlin', 'tutor' ),
-			'image_url'        => 'https://placehold.co/600x400',
 			'is_correct'   => '',
 		),
 		array(
 			'answer_title' => __( 'Rome', 'tutor' ),
-			'image_url'        => 'https://placehold.co/600x400',
 			'is_correct'   => false,
 		),
 	),
