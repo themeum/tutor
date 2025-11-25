@@ -22,7 +22,6 @@ export const initializeQuizInterface = () => {
           this.remaining--;
         } else {
           this.stop();
-          // TODO: auto-submit or lock the quiz here
         }
       }, 1000);
 
