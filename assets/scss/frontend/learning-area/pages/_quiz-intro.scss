@@ -52,12 +52,9 @@
 	}
 
 	&-param {
-		&-label-col {
+		&-label {
 			width: 35%;
 			white-space: nowrap;
-		}
-
-		&-label {
 			@include tutor-flex(row, center);
 			gap: $tutor-spacing-3;
 		}

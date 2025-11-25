@@ -68,33 +68,27 @@ $attempts = array(
 				<table class="tutor-table">
 					<tbody>
 						<tr>
-							<td class="tutor-quiz-intro-param-label-col">
-								<div class="tutor-quiz-intro-param-label">
-									<?php tutor_utils()->render_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ); ?>
-									<span><?php esc_html_e( 'Questions', 'tutor' ); ?></span>
-								</div>
+							<td class="tutor-quiz-intro-param-label">
+								<?php tutor_utils()->render_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ); ?>
+								<span><?php esc_html_e( 'Questions', 'tutor' ); ?></span>
 							</td>
 							<td>
 								<span><?php echo esc_html( $quiz_questions ); ?></span>
 							</td>
 						</tr>
 						<tr>
-							<td class="tutor-quiz-intro-param-label-col">
-								<div class="tutor-quiz-intro-param-label">
-									<?php tutor_utils()->render_svg_icon( Icon::CLOCK, 20, 20 ); ?>
-									<span><?php esc_html_e( 'Quiz time', 'tutor' ); ?></span>
-								</div>
+							<td class="tutor-quiz-intro-param-label">
+								<?php tutor_utils()->render_svg_icon( Icon::CLOCK, 20, 20 ); ?>
+								<span><?php esc_html_e( 'Quiz time', 'tutor' ); ?></span>
 							</td>
 							<td>
 								<span><?php echo esc_html( $quiz_time ); ?></span>
 							</td>
 						</tr>
 						<tr>
-							<td class="tutor-quiz-intro-param-label-col">
-								<div class="tutor-quiz-intro-param-label">
-									<?php tutor_utils()->render_svg_icon( Icon::CERTIFICATE, 20, 20 ); ?>
-									<span><?php esc_html_e( 'Passing Grade', 'tutor' ); ?></span>
-								</div>
+							<td class="tutor-quiz-intro-param-label">
+								<?php tutor_utils()->render_svg_icon( Icon::CERTIFICATE, 20, 20 ); ?>
+								<span><?php esc_html_e( 'Passing Grade', 'tutor' ); ?></span>
 							</td>
 							<td>
 								<span><?php echo esc_html( $passing_grade . '%' ); ?></span>
