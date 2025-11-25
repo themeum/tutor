@@ -26,11 +26,13 @@ $question = array(
 	),
 	'question_answers'  => array(
 		array(
+			'answer_id'    => 1,
 			'answer_title' => __( 'Option 1', 'tutor' ),
 			'is_correct'   => true,
 			'answer_order' => 1,
 		),
 		array(
+			'answer_id'    => 2,
 			'answer_title' => __( 'Option 2', 'tutor' ),
 			'image_url'    => 'https://placehold.co/600x400',
 			'is_correct'   => false,
@@ -56,10 +58,10 @@ $question = array(
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option" data-option="draggable">
-		<div data-option-order="<?php echo esc_attr( $answer['answer_order'] ); ?>">
-			<?php echo esc_html( $answer['answer_order'] ); ?>
-		</div>
+			<div class="tutor-quiz-question-option" data-option="draggable" data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>">
+				<div data-option-order="<?php echo esc_attr( $answer['answer_order'] ); ?>">
+					<?php echo esc_html( $answer['answer_order'] ); ?>
+				</div>
 				<div data-title>
 					<?php if ( ! empty( $answer['image_url'] ) ) : ?>
 						<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
@@ -67,9 +69,9 @@ $question = array(
 					<?php echo esc_html( $answer['answer_title'] ); ?>
 				</div>
 
-		<button type="button" data-grab-handle>
-			<?php tutor_utils()->render_svg_icon( Icon::GRAB_HANDLE, 40, 40 ); ?>
-		</button>
+				<button type="button" data-grab-handle>
+					<?php tutor_utils()->render_svg_icon( Icon::GRAB_HANDLE, 40, 40 ); ?>
+				</button>
 			</div>
 		<?php endforeach; ?>
 	</div>

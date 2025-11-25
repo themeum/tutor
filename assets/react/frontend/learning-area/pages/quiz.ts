@@ -54,7 +54,7 @@ export const initializeQuizInterface = () => {
 
   Alpine.data('tutorQuestionOrdering', () => ({
     _sortables: [] as Sortable[],
-    initialized: false, // **guard**
+    initialized: false,
 
     init() {
       if (!this.initialized) {
@@ -77,20 +77,18 @@ export const initializeQuizInterface = () => {
         container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
       );
 
-      // Track sortable items internally
       this._sortables = [];
 
-      items.forEach((el, idx) => {
-        const handle = el.querySelector('[data-grab-handle]') as HTMLElement | null;
-        const id = el.dataset.id ?? String(idx);
+      items.forEach((element, idx) => {
+        const handle = element.querySelector('[data-grab-handle]') as HTMLElement | null;
+        const id = element.dataset.id ?? String(idx);
 
         const sortable = new Sortable(
           {
             id,
             index: idx,
-            element: el,
+            element: element,
             handle: handle ?? undefined,
-            feedback: 'clone',
           },
           manager,
         );
@@ -98,39 +96,47 @@ export const initializeQuizInterface = () => {
         this._sortables.push(sortable);
       });
 
-      // on drag start add [data-option='dragging']
       manager.monitor.addEventListener('dragstart', (event) => {
-        const op = event.operation;
-        if (!op.source) return;
+        const operation = event.operation;
+        if (!operation.source) {
+          return;
+        }
 
-        const el = op.source.element;
-        if (!el) return;
+        const sourceElement = operation.source.element;
+        if (!sourceElement) {
+          return;
+        }
 
-        el.setAttribute('data-option', 'dragging');
+        sourceElement.setAttribute('data-option', 'dragging');
       });
 
-      // on drag end remove [data-option='dragging']
       manager.monitor.addEventListener('dragend', (event) => {
-        const op = event.operation;
-        if (!op.source) return;
+        const operation = event.operation;
+        if (!operation.source) {
+          return;
+        }
 
-        const el = op.source.element;
-        if (!el) return;
+        const sourceElement = operation.source.element;
+        if (!sourceElement) {
+          return;
+        }
 
-        el.setAttribute('data-option', 'draggable');
+        sourceElement.setAttribute('data-option', 'draggable');
       });
     },
 
+    // @TODO: Will be removed if not needed
     getOrder() {
       const container = (this as { $el: HTMLElement }).$el;
-      if (!container) return [];
+      if (!container) {
+        return [];
+      }
       return Array.from(container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option')).map(
         (el) => el.dataset.id,
       );
     },
 
     destroy() {
-      // Clean up all sortables
       this._sortables.forEach((s) => s.destroy());
       this._sortables = [];
 
@@ -157,24 +163,22 @@ export const initializeQuizInterface = () => {
         return;
       }
 
-      // Create DragDropManager
       const manager = new DragDropManager({
         sensors: [PointerSensor, KeyboardSensor],
       });
 
-      // Initialize draggable items
       const draggableEls = Array.from(
         container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
       );
 
-      draggableEls.forEach((el, idx) => {
-        const handle = el.querySelector('[data-grab-handle]') as HTMLElement | null;
-        const id = el.dataset.id ?? String(idx);
+      draggableEls.forEach((element, idx) => {
+        const handle = element.querySelector('[data-grab-handle]') as HTMLElement | null;
+        const id = element.dataset.id ?? String(idx);
 
         const draggable = new Draggable(
           {
             id,
-            element: el,
+            element: element,
             handle: handle ?? undefined,
             feedback: 'clone',
           },
@@ -184,16 +188,15 @@ export const initializeQuizInterface = () => {
         this._draggables.push(draggable);
       });
 
-      // Initialize drop zones
       const dropZoneEls = Array.from(container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option-drop-zone'));
 
-      dropZoneEls.forEach((el, idx) => {
-        const id = el.dataset.id ?? String(idx);
+      dropZoneEls.forEach((element, idx) => {
+        const id = element.dataset.id ?? String(idx);
 
         const droppable = new Droppable(
           {
             id,
-            element: el,
+            element: element,
           },
           manager,
         );
@@ -201,34 +204,40 @@ export const initializeQuizInterface = () => {
         this._dropZones.push(droppable);
       });
 
-      // Listen for drag events
       manager.monitor.addEventListener('dragstart', (event) => {
-        const sourceElement = event.operation.source?.element;
+        const operation = event.operation;
+        if (!operation.source) {
+          return;
+        }
+
+        const sourceElement = operation.source.element;
         if (sourceElement) {
           sourceElement.setAttribute('data-option', 'dragging');
         }
       });
 
       manager.monitor.addEventListener('dragend', (event) => {
-        const sourceElement = event.operation.source?.element;
-        const targetDropZone = event.operation.target;
+        const operation = event.operation;
+        if (!operation.source) {
+          return;
+        }
+
+        const sourceElement = operation.source.element;
+        const targetDropZone = operation.target;
 
         if (sourceElement) {
-          // Keep dragging state on overlay
           sourceElement.setAttribute('data-option', 'draggable');
         }
 
-        // Handle successful drop
-        if (targetDropZone && event.operation.source) {
+        if (targetDropZone) {
           const dropZoneEl = targetDropZone.element;
-          const sourceId = event.operation.source.id;
+          const sourceId = operation.source.id;
 
-          // get text content from source element
           const clone = document.createElement('div');
           clone.setAttribute('data-option', 'dropped');
+          clone.setAttribute('data-id', String(sourceId));
           clone.textContent = sourceElement?.textContent ?? '';
 
-          // Replace [data-drop-placeholder] with clone
           const placeholder = dropZoneEl?.querySelector('[data-drop-placeholder]');
           const droppedOption = dropZoneEl?.querySelector('[data-option="dropped"]');
           if (placeholder) {
@@ -237,46 +246,40 @@ export const initializeQuizInterface = () => {
             droppedOption.replaceWith(clone);
           }
 
-          // Save match
           this._matches[targetDropZone.id] = String(sourceId);
         }
       });
     },
 
+    // @TODO: Will be removed if not needed
     getMatches() {
-      // Returns { dropZoneId: draggableId }
       return this._matches;
     },
 
+    // @TODO: Will be removed if not needed
     reset() {
-      // Clear all drop zones
       this._dropZones.forEach((zone) => {
-        const el = zone.element;
-        while (el?.firstChild) {
-          el.removeChild(el.firstChild);
+        const dropZone = zone.element;
+        while (dropZone?.firstChild) {
+          dropZone.removeChild(dropZone.firstChild);
         }
       });
 
-      // Reset all draggables to draggable state
-      this._draggables.forEach((d) => {
-        d.element?.setAttribute('data-option', 'draggable');
-        d.element?.classList.remove('dropped');
+      this._draggables.forEach((draggable) => {
+        draggable.element?.setAttribute('data-option', 'draggable');
+        draggable.element?.classList.remove('dropped');
       });
 
-      // Clear matches
       this._matches = {};
     },
 
     destroy() {
-      // Clean up all draggables
-      this._draggables.forEach((d) => d.destroy());
+      this._draggables.forEach((draggable) => draggable.destroy());
       this._draggables = [];
 
-      // Clean up all drop zones
-      this._dropZones.forEach((d) => d.destroy());
+      this._dropZones.forEach((dropZone) => dropZone.destroy());
       this._dropZones = [];
 
-      // Clear matches
       this._matches = {};
 
       this.initialized = false;
