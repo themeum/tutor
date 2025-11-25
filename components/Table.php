@@ -19,13 +19,15 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for rendering table component with variable number
  * of rows and columns.
+ *
  * ```
+ * // Component Data Structure
  * Table::make()
  *   ->headings(
  *      [
  *          [
  *              'content' => '',
- *              'class'   => 'the <th> tag class',
+ *              'class'   => '', // the <th> tag class
  *          ]
  *      ]
  *   )
@@ -35,15 +37,15 @@ defined( 'ABSPATH' ) || exit;
  *          'content' => [
  *              [
  *                  'content' => '',
- *                  'class' => 'the <td> tag class',
+ *                  'class' => '', // the <td> tag class
  *                  'icon' =>
  *                      [
- *                           'svg' => 'icon svg',
- *                           'position' => 'left|right'
+ *                           'svg' => '', // sanitized svg of icon
+ *                           'position' => '' // left or right
  *                       ]
  *              ]
  *           ],
- *          'class' => 'the <tr> tag class'
+ *          'class' => '' // the <tr> tag class
  *        ]
  *      ]
  *   )
@@ -53,8 +55,11 @@ defined( 'ABSPATH' ) || exit;
  *
  *
  *
- * Example Usage:
+ * 
  * ```
+ *
+ *
+ * // Example Usage:
  * $heading = array(
  *       array(
  *           'content' => __( 'Quiz Info', 'tutor' ),
