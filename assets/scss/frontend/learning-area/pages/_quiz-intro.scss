@@ -30,9 +30,9 @@
 	}
 
 	&-description {
-		@include tutor-typography('p1', 'regular', 'secondary', 'body');
+		@include tutor-typography('p1', 'regular', 'secondary');
 		@include tutor-breakpoint-down(sm) {
-			@include tutor-typography('small', 'regular', 'secondary', 'body');
+			@include tutor-typography('small', 'regular', 'secondary');
 		}
 	}
 
