@@ -1,9 +1,14 @@
+import type { AlpineComponentMeta } from '@Core/ts/types';
 import { DragDropManager, Draggable, Droppable, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
-import Alpine from 'alpinejs';
 
-export const initializeQuizInterface = () => {
-  Alpine.data('tutorQuizTimer', (duration: number) => ({
+/**
+ * Quiz Timer Component
+ * Manages countdown timer for quiz attempts
+ */
+export const quizTimerMeta: AlpineComponentMeta<number> = {
+  name: 'quizTimer',
+  component: (duration: number) => ({
     total: duration,
     remaining: duration,
     timer: null as number | null,
@@ -47,9 +52,16 @@ export const initializeQuizInterface = () => {
     get progress() {
       return ((this.total - this.remaining) / this.total) * 100;
     },
-  }));
+  }),
+};
 
-  Alpine.data('tutorQuestionOrdering', () => ({
+/**
+ * Question Ordering Component
+ * Handles drag-and-drop reordering of quiz question options
+ */
+export const questionOrderingMeta: AlpineComponentMeta = {
+  name: 'questionOrdering',
+  component: () => ({
     _sortables: [] as Sortable[],
     initialized: false,
 
@@ -134,14 +146,21 @@ export const initializeQuizInterface = () => {
     },
 
     destroy() {
-      this._sortables.forEach((s) => s.destroy());
+      this._sortables.forEach((s: Sortable) => s.destroy());
       this._sortables = [];
 
       this.initialized = false;
     },
-  }));
+  }),
+};
 
-  Alpine.data('tutorQuestionMatching', () => ({
+/**
+ * Question Matching Component
+ * Handles drag-and-drop matching of quiz question options to drop zones
+ */
+export const questionMatchingMeta: AlpineComponentMeta = {
+  name: 'questionMatching',
+  component: () => ({
     _draggables: [] as Draggable[],
     _dropZones: [] as Droppable[],
     _matches: {} as Record<string, string>,
@@ -257,14 +276,14 @@ export const initializeQuizInterface = () => {
 
     // @TODO: Will be removed if not needed
     reset() {
-      this._dropZones.forEach((zone) => {
+      this._dropZones.forEach((zone: Droppable) => {
         const dropZone = zone.element;
         while (dropZone?.firstChild) {
           dropZone.removeChild(dropZone.firstChild);
         }
       });
 
-      this._draggables.forEach((draggable) => {
+      this._draggables.forEach((draggable: Draggable) => {
         draggable.element?.setAttribute('data-option', 'draggable');
         draggable.element?.classList.remove('dropped');
       });
@@ -273,15 +292,24 @@ export const initializeQuizInterface = () => {
     },
 
     destroy() {
-      this._draggables.forEach((draggable) => draggable.destroy());
+      this._draggables.forEach((draggable: Draggable) => draggable.destroy());
       this._draggables = [];
 
-      this._dropZones.forEach((dropZone) => dropZone.destroy());
+      this._dropZones.forEach((dropZone: Droppable) => dropZone.destroy());
       this._dropZones = [];
 
       this._matches = {};
 
       this.initialized = false;
     },
-  }));
+  }),
+};
+
+/**
+ * Initialize quiz interface (if needed for additional setup)
+ * Components are now registered via ComponentRegistry
+ */
+export const initializeQuizInterface = () => {
+  // Page-specific initialization can go here if needed
+  // Components are registered through ComponentRegistry in index.ts
 };
