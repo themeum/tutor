@@ -31,6 +31,15 @@ $file_uploader_config = array(
 	'on_error'       => 'null',
 );
 
+// @TODO: Will be removed later
+$attemps_url = add_query_arg(
+	array(
+		'subpage' => 'assignment',
+		'attempts' => 'true',
+	),
+	remove_query_arg( 'edit' )
+);
+
 ?>
 
 <div class="tutor-assignment-edit">
@@ -74,8 +83,8 @@ $file_uploader_config = array(
 			<?php esc_html_e( 'Save Draft', 'tutor' ); ?>
 		</button>
 		<!-- @TODO: need to add functionality -->
-		<button class="tutor-btn tutor-btn-primary tutor-btn-medium">
+		<a href="<?php echo esc_url( $attemps_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-medium">
 			<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
-		</button>
+		</a>
 	</div>
 </div>
