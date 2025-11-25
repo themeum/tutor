@@ -49,7 +49,7 @@ $question = array(
  *
  * @return string Correct, Incorrect or Empty string.
  */
-$is_correct = function( $answer ) {
+$is_correct = function ( $answer ) {
 	if ( ! array_key_exists( 'is_correct', $answer ) ) {
 		return '';
 	}
@@ -79,7 +79,7 @@ $is_correct = function( $answer ) {
  *
  * @return bool
  */
-$has_image = function( $answer ) {
+$has_image = function ( $answer ) {
 	return array_key_exists( 'image_url', $answer );
 }
 
