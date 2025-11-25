@@ -2,33 +2,37 @@
 @use '../mixins' as *;
 
 .tutor-badge {
-	@include tutor-badge-base;
+  @include tutor-badge-base;
+}
+
+.tutor-badge-small {
+  @include tutor-badge-base(small);
 }
 
 .tutor-badge-primary {
-	@include tutor-badge-variant(primary);
+  @include tutor-badge-variant(primary);
 }
 
 .tutor-badge-primary-soft {
-	@include tutor-badge-variant(primary-soft);
+  @include tutor-badge-variant(primary-soft);
 }
 
 .tutor-badge-pending {
-	@include tutor-badge-variant(pending);
+  @include tutor-badge-variant(pending);
 }
 
 .tutor-badge-completed {
-	@include tutor-badge-variant(completed);
+  @include tutor-badge-variant(completed);
 }
 
 .tutor-badge-cancelled {
-	@include tutor-badge-variant(cancelled);
+  @include tutor-badge-variant(cancelled);
 }
 
 .tutor-badge-secondary {
-	@include tutor-badge-variant(secondary);
+  @include tutor-badge-variant(secondary);
 }
 
 .tutor-badge-exception {
-	@include tutor-badge-variant(exception);
+  @include tutor-badge-variant(exception);
 }
