@@ -36,13 +36,14 @@ $question = array(
 	),
 );
 
-/* Check if current answer is correct
+/*
+Check if current answer is correct
  *
  * @param array $answer Answer data.
  *
  * @return string Correct, Incorrect or Empty string.
  */
-$is_correct = function( $answer ) {
+$is_correct = function ( $answer ) {
 	if ( ! array_key_exists( 'is_correct', $answer ) ) {
 		return '';
 	}
