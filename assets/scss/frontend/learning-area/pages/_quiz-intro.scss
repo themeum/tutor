@@ -241,7 +241,7 @@
 			background-color: $tutor-surface-l1;
 			border-top: 1px solid $tutor-border-idle;
 			gap: $tutor-spacing-3;
-			z-index: 5;
+			z-index: $tutor-z-sidebar;
 
 			button {
 				flex: 1 1 auto;
