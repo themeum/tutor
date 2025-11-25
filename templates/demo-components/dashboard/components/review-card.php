@@ -10,31 +10,6 @@
 
 use TUTOR\Icon;
 
-// @TODO: Need to move this to utils file.
-/**
- * Render star rating.
- *
- * @param float $rating Rating value (0–5).
- * @return string HTML output for stars.
- */
-function render_star_rating( $rating = 0.00 ) {
-	$output = '<div class="tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2" data-rating-value="' . esc_attr( $rating ) . '">';
-
-	for ( $i = 1; $i <= 5; $i++ ) {
-		if ( (int) $rating >= $i ) {
-			$output .= '<i class="tutor-icon-star-bold tutor-icon-exception4" data-rating-value="' . esc_attr( $i ) . '"></i>';
-		} elseif ( ( $rating - $i ) >= -0.5 ) {
-			$output .= '<i class="tutor-icon-star-half-bold tutor-icon-exception4" data-rating-value="' . esc_attr( $i ) . '"></i>';
-		} else {
-			$output .= '<i class="tutor-icon-star-line tutor-icon-exception4" data-rating-value="' . esc_attr( $i ) . '"></i>';
-		}
-	}
-
-	$output .= '</div>';
-
-	return $output;
-}
-
 // @TODO: Replace with real data.
 $review = array(
 	'title'         => 'Course Title',
@@ -55,7 +30,7 @@ $review = array(
 				<span class="tutor-text-sm tutor-font-medium">Bundle</span>
 			</div>
 		<?php else : ?>
-			<div class="tutor-badge tutor-badge-primary tutor-badge-circle">
+			<div class="tutor-badge tutor-badge-primary-soft tutor-badge-circle">
 				<?php tutor_utils()->render_svg_icon( Icon::COURSES, 16, 16 ); ?>
 				<span class="tutor-text-sm tutor-font-medium">Course</span>
 			</div>
@@ -81,16 +56,25 @@ $review = array(
 		<div class="tutor-review-rating-wrapper">
 			<!-- Rating -->
 			<div class="tutor-review-rating">
-				<?php echo render_star_rating( $review['rating'] ?? 0 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				<?php
+				tutor_load_template(
+					'demo-components.dashboard.components.star-rating',
+					array(
+						'rating'        => $review['rating'] ?? 0,
+						'wrapper_class' => 'tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2',
+						'icon_class'    => 'tutor-icon-exception4',
+					)
+				);
+				?>
 			</div>
 
 			<!-- Actions -->
 			<div class="tutor-review-actions">
 				<a href="#" class="tutor-review-actions-button">
-					<?php tutor_utils()->render_svg_icon( Icon::EDIT, 16, 16 ); ?>
+					<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 16, 16 ); ?>
 				</a>
 				<a href="#" class="tutor-review-actions-button">
-					<?php tutor_utils()->render_svg_icon( Icon::DELETE, 16, 16 ); ?>
+					<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 16, 16 ); ?>
 				</a>
 			</div>
 		</div>

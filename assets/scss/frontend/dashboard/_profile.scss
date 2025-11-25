@@ -3,19 +3,9 @@
 
 .tutor-user-profile {
   .tutor-profile-header {
-    background-color: $tutor-surface-base;
-    border-bottom: 1px solid $tutor-border-idle;
-    padding-block: $tutor-spacing-5;
-
     @include tutor-breakpoint-down(sm) {
       display: none;
     }
-  }
-
-  .tutor-profile-container {
-    max-width: 728px;
-    margin: 0 auto;
-    padding-inline: $tutor-spacing-6;
   }
 
   .tutor-profile-page-title {

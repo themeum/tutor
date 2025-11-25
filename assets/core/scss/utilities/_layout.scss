@@ -1,243 +1,156 @@
 // Layout Utilities
-// Flexbox, grid, positioning, and display utilities
+// Flexbox, grid, positioning, display, and responsive utilities
 
 @use '../tokens' as *;
 @use '../mixins' as *;
 
-// Layout component classes
-.tutor-container {
-  @include tutor-container;
-}
+// ------------------------
+// Utility Maps
+// ------------------------
 
-.tutor-flex {
-  @include tutor-flex;
-}
+$display-utils: (
+  block: block,
+  inline-block: inline-block,
+  inline: inline,
+  flex: flex,
+  inline-flex: inline-flex,
+  grid: grid,
+  inline-grid: inline-grid,
+  hidden: none,
+);
 
-.tutor-flex-center {
-  @include tutor-flex-center;
-}
+$flex-direction-utils: (
+  flex-row: row,
+  flex-row-reverse: row-reverse,
+  flex-column: column,
+  flex-column-reverse: column-reverse,
+);
 
-.tutor-flex-between {
-  @include tutor-flex-between;
-}
+$flex-wrap-utils: (
+  wrap: wrap,
+  wrap-reverse: wrap-reverse,
+  nowrap: nowrap,
+);
 
-.tutor-flex-column {
-  @include tutor-flex-column;
-}
+$flex-grow-utils: (0, 1);
+$flex-shrink-utils: (0, 1);
 
-.tutor-grid {
-  @include tutor-grid;
-}
+$justify-utils: (
+  justify-start: flex-start,
+  justify-end: flex-end,
+  justify-center: center,
+  justify-between: space-between,
+  justify-around: space-around,
+  justify-evenly: space-evenly,
+);
 
-.tutor-visually-hidden {
-  @include tutor-visually-hidden;
-}
+$align-items-utils: (
+  items-start: flex-start,
+  items-end: flex-end,
+  items-center: center,
+  items-baseline: baseline,
+  items-stretch: stretch,
+);
 
-// Display utilities
-.tutor-block {
-  display: block;
-}
+$align-content-utils: (
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  between: space-between,
+  around: space-around,
+  evenly: space-evenly,
+);
 
-.tutor-inline-block {
-  display: inline-block;
-}
+$align-self-utils: (
+  auto: auto,
+  start: flex-start,
+  end: flex-end,
+  center: center,
+  stretch: stretch,
+  baseline: baseline,
+);
 
-.tutor-inline {
-  display: inline;
-}
+$grid-cols: (1, 2, 3, 4, 5, 6, 12);
 
-.tutor-flex {
-  display: flex;
-}
+// ------------------------
+// Base Utilities
+// ------------------------
 
-.tutor-inline-flex {
-  display: inline-flex;
-}
-
-.tutor-grid {
-  display: grid;
-}
-
-.tutor-inline-grid {
-  display: inline-grid;
-}
-
-.tutor-hidden {
-  display: none;
-}
-
-// Flexbox utilities
-.tutor-flex-row {
-  flex-direction: row;
-
-  [dir='rtl'] & {
-    flex-direction: row-reverse;
+// Display
+@each $name, $value in $display-utils {
+  .tutor-#{$name} {
+    display: $value;
   }
 }
 
-.tutor-flex-row-reverse {
-  flex-direction: row-reverse;
-
-  [dir='rtl'] & {
-    flex-direction: row;
+// Flex direction
+@each $name, $dir in $flex-direction-utils {
+  .tutor-#{$name} {
+    flex-direction: $dir;
   }
 }
 
-.tutor-flex-col {
-  flex-direction: column;
+// Flex wrap
+@each $name, $dir in $flex-wrap-utils {
+  .tutor-flex-#{$name} {
+    flex-wrap: $dir;
+  }
 }
 
-.tutor-flex-col-reverse {
-  flex-direction: column-reverse;
+// Flex grow
+@each $value in $flex-grow-utils {
+  .tutor-flex-grow-#{$value} {
+    flex-grow: $value;
+  }
 }
 
-.tutor-flex-wrap {
-  flex-wrap: wrap;
+// Flex shrink
+@each $value in $flex-shrink-utils {
+  .tutor-flex-shrink-#{$value} {
+    flex-shrink: $value;
+  }
 }
 
-.tutor-flex-wrap-reverse {
-  flex-wrap: wrap-reverse;
-}
-
-.tutor-flex-nowrap {
-  flex-wrap: nowrap;
-}
-
-// Flex grow/shrink
+// Flex shorthand
 .tutor-flex-1 {
   flex: 1 1 0%;
 }
-
 .tutor-flex-auto {
   flex: 1 1 auto;
 }
-
 .tutor-flex-initial {
   flex: 0 1 auto;
 }
-
 .tutor-flex-none {
   flex: none;
 }
 
-.tutor-grow {
-  flex-grow: 1;
-}
-
-.tutor-grow-0 {
-  flex-grow: 0;
-}
-
-.tutor-shrink {
-  flex-shrink: 1;
-}
-
-.tutor-shrink-0 {
-  flex-shrink: 0;
-}
-
 // Justify content
-.tutor-justify-start {
-  justify-content: flex-start;
-
-  [dir='rtl'] & {
-    justify-content: flex-end;
+@each $name, $value in $justify-utils {
+  .tutor-#{$name} {
+    justify-content: $value;
   }
-}
-
-.tutor-justify-end {
-  justify-content: flex-end;
-
-  [dir='rtl'] & {
-    justify-content: flex-start;
-  }
-}
-
-.tutor-justify-center {
-  justify-content: center;
-}
-
-.tutor-justify-between {
-  justify-content: space-between;
-}
-
-.tutor-justify-around {
-  justify-content: space-around;
-}
-
-.tutor-justify-evenly {
-  justify-content: space-evenly;
 }
 
 // Align items
-.tutor-items-start {
-  align-items: flex-start;
-}
-
-.tutor-items-end {
-  align-items: flex-end;
-}
-
-.tutor-items-center {
-  align-items: center;
-}
-
-.tutor-items-baseline {
-  align-items: baseline;
-}
-
-.tutor-items-stretch {
-  align-items: stretch;
+@each $name, $value in $align-items-utils {
+  .tutor-#{$name} {
+    align-items: $value;
+  }
 }
 
 // Align content
-.tutor-content-start {
-  align-content: flex-start;
-}
-
-.tutor-content-end {
-  align-content: flex-end;
-}
-
-.tutor-content-center {
-  align-content: center;
-}
-
-.tutor-content-between {
-  align-content: space-between;
-}
-
-.tutor-content-around {
-  align-content: space-around;
-}
-
-.tutor-content-evenly {
-  align-content: space-evenly;
+@each $name, $value in $align-content-utils {
+  .tutor-content-#{$name} {
+    align-content: $value;
+  }
 }
 
 // Align self
-.tutor-self-auto {
-  align-self: auto;
-}
-
-.tutor-self-start {
-  align-self: flex-start;
-}
-
-.tutor-self-end {
-  align-self: flex-end;
-}
-
-.tutor-self-center {
-  align-self: center;
-}
-
-.tutor-self-stretch {
-  align-self: stretch;
-}
-
-.tutor-self-baseline {
-  align-self: baseline;
+@each $name, $value in $align-self-utils {
+  .tutor-self-#{$name} {
+    align-self: $value;
+  }
 }
 
 // Gap utilities
@@ -245,336 +158,182 @@
   .tutor-gap-#{$key} {
     gap: $value;
   }
-
   .tutor-gap-x-#{$key} {
     column-gap: $value;
   }
-
   .tutor-gap-y-#{$key} {
     row-gap: $value;
   }
 }
 
-// Grid utilities
-.tutor-grid-cols-1 {
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+// Grid columns
+@each $count in $grid-cols {
+  .tutor-grid-cols-#{$count} {
+    grid-template-columns: repeat($count, minmax(0, 1fr));
+  }
 }
-
-.tutor-grid-cols-2 {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.tutor-grid-cols-3 {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.tutor-grid-cols-4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
-.tutor-grid-cols-5 {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-}
-
-.tutor-grid-cols-6 {
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-}
-
-.tutor-grid-cols-12 {
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-}
-
 .tutor-grid-cols-none {
   grid-template-columns: none;
 }
 
 // Grid column span
+@for $i from 1 through 6 {
+  .tutor-col-span-#{$i} {
+    grid-column: span #{$i} / span #{$i};
+  }
+}
+.tutor-col-span-full {
+  grid-column: 1 / -1;
+}
 .tutor-col-auto {
   grid-column: auto;
 }
 
-.tutor-col-span-1 {
-  grid-column: span 1 / span 1;
+// ------------------------
+// Positioning Utilities
+// ------------------------
+
+$position-values: static, fixed, absolute, relative, sticky;
+@each $pos in $position-values {
+  .tutor-#{$pos} {
+    position: $pos;
+  }
 }
 
-.tutor-col-span-2 {
-  grid-column: span 2 / span 2;
+// Insets
+$inset-sides: top, right, bottom, left;
+@each $side in $inset-sides {
+  .tutor-#{$side}-0 {
+    @if $side == 'right' {
+      inset-inline-end: 0;
+    } @else if $side == 'left' {
+      inset-inline-start: 0;
+    } @else {
+      #{$side}: 0;
+    }
+  }
+  .tutor-#{$side}-auto {
+    @if $side == 'right' {
+      inset-inline-end: auto;
+    } @else if $side == 'left' {
+      inset-inline-start: auto;
+    } @else {
+      #{$side}: auto;
+    }
+  }
 }
 
-.tutor-col-span-3 {
-  grid-column: span 3 / span 3;
-}
-
-.tutor-col-span-4 {
-  grid-column: span 4 / span 4;
-}
-
-.tutor-col-span-5 {
-  grid-column: span 5 / span 5;
-}
-
-.tutor-col-span-6 {
-  grid-column: span 6 / span 6;
-}
-
-.tutor-col-span-full {
-  grid-column: 1 / -1;
-}
-
-// Positioning
-.tutor-static {
-  position: static;
-}
-
-.tutor-fixed {
-  position: fixed;
-}
-
-.tutor-absolute {
-  position: absolute;
-}
-
-.tutor-relative {
-  position: relative;
-}
-
-.tutor-sticky {
-  position: sticky;
-}
-
-// Position values
 .tutor-inset-0 {
   top: 0;
-  right: 0;
+  inset-inline-start: 0;
   bottom: 0;
-  left: 0;
-}
-
-.tutor-inset-auto {
-  top: auto;
-  right: auto;
-  bottom: auto;
-  left: auto;
-}
-
-.tutor-top-0 {
-  top: 0;
-}
-
-.tutor-right-0 {
   inset-inline-end: 0;
 }
-
-.tutor-bottom-0 {
-  bottom: 0;
-}
-
-.tutor-left-0 {
-  inset-inline-start: 0;
-}
-
-.tutor-top-auto {
+.tutor-inset-auto {
   top: auto;
-}
-
-.tutor-right-auto {
+  inset-inline-start: auto;
+  bottom: auto;
   inset-inline-end: auto;
 }
 
-.tutor-bottom-auto {
-  bottom: auto;
+// ------------------------
+// Overflow Utilities
+// ------------------------
+
+$overflow-types: auto, hidden, visible, scroll;
+@each $type in $overflow-types {
+  .tutor-overflow-#{$type} {
+    overflow: $type;
+  }
+  .tutor-overflow-x-#{$type} {
+    overflow-x: $type;
+  }
+  .tutor-overflow-y-#{$type} {
+    overflow-y: $type;
+  }
 }
 
-.tutor-left-auto {
-  inset-inline-start: auto;
+// ------------------------
+// Float Utilities
+// ------------------------
+
+.tutor-float-start {
+  float: inline-start;
+}
+.tutor-float-end {
+  float: inline-end;
+}
+.tutor-float-left {
+  float: left;
+}
+.tutor-float-right {
+  float: right;
+}
+.tutor-float-none {
+  float: none;
 }
 
-// Overflow
-.tutor-overflow-auto {
-  overflow: auto;
-}
-
-.tutor-overflow-hidden {
-  overflow: hidden;
-}
-
-.tutor-overflow-visible {
-  overflow: visible;
-}
-
-.tutor-overflow-scroll {
-  overflow: scroll;
-}
-
-.tutor-overflow-x-auto {
-  overflow-x: auto;
-}
-
-.tutor-overflow-y-auto {
-  overflow-y: auto;
-}
-
-.tutor-overflow-x-hidden {
-  overflow-x: hidden;
-}
-
-.tutor-overflow-y-hidden {
-  overflow-y: hidden;
-}
-
-.tutor-overflow-x-visible {
-  overflow-x: visible;
-}
-
-.tutor-overflow-y-visible {
-  overflow-y: visible;
-}
-
-.tutor-overflow-x-scroll {
-  overflow-x: scroll;
-}
-
-.tutor-overflow-y-scroll {
-  overflow-y: scroll;
-}
+// ------------------------
+// Icon utility
+// ------------------------
 
 .tutor-icon {
   @include tutor-flex(row, center, center);
   flex-shrink: 0;
 }
 
-// Responsive layout utilities
-@each $breakpoint, $value in $tutor-breakpoints {
-  @if $value >0 {
-    @include tutor-breakpoint-down($breakpoint) {
-      .tutor-#{$breakpoint}-block {
-        display: block;
-      }
+// ------------------------
+// Responsive Utilities
+// ------------------------
 
-      .tutor-#{$breakpoint}-inline-block {
-        display: inline-block;
-      }
-
-      .tutor-#{$breakpoint}-inline {
-        display: inline;
-      }
-
-      .tutor-#{$breakpoint}-flex {
-        display: flex;
-      }
-
-      .tutor-#{$breakpoint}-inline-flex {
-        display: inline-flex;
-      }
-
-      .tutor-#{$breakpoint}-grid {
-        display: grid;
-      }
-
-      .tutor-#{$breakpoint}-hidden {
-        display: none;
-      }
-
-      .tutor-#{$breakpoint}-flex-row {
-        flex-direction: row;
-
-        [dir='rtl'] & {
-          flex-direction: row-reverse;
-        }
-      }
-
-      .tutor-#{$breakpoint}-flex-row-reverse {
-        flex-direction: row-reverse;
-
-        [dir='rtl'] & {
-          flex-direction: row;
-        }
-      }
-
-      .tutor-#{$breakpoint}-flex-col {
-        flex-direction: column;
-      }
-
-      .tutor-#{$breakpoint}-flex-col-reverse {
-        flex-direction: column-reverse;
-      }
-
-      .tutor-#{$breakpoint}-justify-start {
-        justify-content: flex-start;
-      }
-
-      .tutor-#{$breakpoint}-justify-center {
-        justify-content: center;
-      }
-
-      .tutor-#{$breakpoint}-justify-between {
-        justify-content: space-between;
-      }
-
-      .tutor-#{$breakpoint}-items-start {
-        align-items: flex-start;
-      }
-
-      .tutor-#{$breakpoint}-items-center {
-        align-items: center;
-      }
-
-      .tutor-#{$breakpoint}-items-end {
-        align-items: flex-end;
-      }
-
-      .tutor-#{$breakpoint}-grid-cols-1 {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-      }
-
-      .tutor-#{$breakpoint}-grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .tutor-#{$breakpoint}-grid-cols-3 {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-
-      .tutor-#{$breakpoint}-grid-cols-4 {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-      }
-
-      .tutor-#{$breakpoint}-grid-cols-6 {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
-      }
-
-      .tutor-#{$breakpoint}-grid-cols-12 {
-        grid-template-columns: repeat(12, minmax(0, 1fr));
+@each $breakpoint, $min-width in $tutor-breakpoints {
+  @include tutor-breakpoint-down($breakpoint) {
+    // Display utilities
+    @each $name, $value in $display-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        display: $value;
       }
     }
-  }
-}
 
-// Additional responsive utilities from main.scss
-@include tutor-breakpoint-down(md) {
-  .tutor-md-flex {
-    @include tutor-flex;
-  }
+    // Flex direction utilities
+    @each $name, $dir in $flex-direction-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        flex-direction: $dir;
+      }
+    }
 
-  .tutor-md-grid {
-    @include tutor-grid;
-  }
+    // Justify content utilities
+    @each $name, $value in $justify-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        justify-content: $value;
+      }
+    }
 
-  .tutor-md-hidden {
-    display: none;
-  }
-}
+    // Align items utilities
+    @each $name, $value in $align-items-utils {
+      .tutor-#{$breakpoint}-#{$name} {
+        align-items: $value;
+      }
+    }
 
-@include tutor-breakpoint-down(lg) {
-  .tutor-lg-flex {
-    @include tutor-flex;
-  }
+    // Gap utilities
+    @each $name, $value in $tutor-spacing {
+      .tutor-#{$breakpoint}-gap-#{$name} {
+        gap: $value;
+      }
+      .tutor-#{$breakpoint}-gap-x-#{$name} {
+        column-gap: $value;
+      }
+      .tutor-#{$breakpoint}-gap-y-#{$name} {
+        row-gap: $value;
+      }
+    }
 
-  .tutor-lg-grid {
-    @include tutor-grid;
-  }
-
-  .tutor-lg-hidden {
-    display: none;
+    // Grid column utilities
+    @each $count in $grid-cols {
+      .tutor-#{$breakpoint}-grid-cols-#{$count} {
+        grid-template-columns: repeat($count, minmax(0, 1fr));
+      }
+    }
   }
 }

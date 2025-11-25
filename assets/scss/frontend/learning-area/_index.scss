@@ -2,16 +2,17 @@
 // Import all learning area related styles
 
 // Layout components
-@forward "layout/header";
-@forward "layout/sidebar";
-@forward "layout/layout";
+@forward 'layout/header';
+@forward 'layout/sidebar';
+@forward 'layout/layout';
 
 // Content components
-@forward "course-player";
-@forward "lesson-content";
-@forward "curriculum-sidebar";
-@forward "quiz-interface";
-@forward "assignment-view";
-@forward "discussion-panel";
-@forward "course-navigation";
-@forward "progress-tracking";
+@forward 'course-player';
+@forward 'lesson-content';
+@forward 'quiz-interface';
+@forward 'assignment-view';
+@forward 'course-navigation';
+@forward 'progress-tracking';
+
+// Pages
+@forward './pages/';

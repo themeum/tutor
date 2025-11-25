@@ -80,6 +80,7 @@
       width: 100%;
       @include tutor-button-reset();
       @include tutor-flex(row, center, flex-start);
+      @include tutor-typography(small);
       gap: $tutor-spacing-4;
       padding: $tutor-spacing-4 $tutor-spacing-5;
 

@@ -70,9 +70,13 @@ final class Icon {
 	const CHECK_SQUARE_FILLED        = 'check-square-filled';
 	const CHECK_STROKE               = 'check-stroke';
 	const CHEVRON_DOWN               = 'chevron-down';
+	const CHEVRON_DOWN_2             = 'chevron-down-2';
 	const CHEVRON_LEFT               = 'chevron-left';
+	const CHEVRON_LEFT_2             = 'chevron-left-2';
 	const CHEVRON_RIGHT              = 'chevron-right';
+	const CHEVRON_RIGHT_2            = 'chevron-right-2';
 	const CHEVRON_UP                 = 'chevron-up';
+	const CHEVRON_UP_2               = 'chevron-up-2';
 	const CIRCLED_PLUS               = 'circled-plus';
 	const CIRCUM_LOCK                = 'circum-lock';
 	const CLOCK                      = 'clock';
@@ -214,6 +218,7 @@ final class Icon {
 	const MATERIAL                   = 'material';
 	const MATERIAL_CHECK             = 'material-check';
 	const MEMBER                     = 'member';
+	const MENU                       = 'menu';
 	const MINUS                      = 'minus';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
@@ -228,6 +233,7 @@ final class Icon {
 	const NOTIFICATION_2             = 'notification-2';
 	const OPEN                       = 'open';
 	const OUTLINE_NONE               = 'outline-none';
+	const PASSED                     = 'passed';
 	const PASSING                    = 'passing';
 	const PAUSE_CIRCLE               = 'pause-circle';
 	const PDF                        = 'pdf';
@@ -312,6 +318,7 @@ final class Icon {
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
 	const STAR                       = 'star';
+	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
