@@ -79,50 +79,34 @@ $sample_comments_full_demo = array(
 	),
 );
 
+$comment_sort_options = array(
+	array(
+		'label' => __( 'Newest first', 'tutor' ),
+		'value' => 'newest',
+	),
+	array(
+		'label' => __( 'Oldest first', 'tutor' ),
+		'value' => 'oldest',
+	),
+	array(
+		'label' => __( 'Most liked', 'tutor' ),
+		'value' => 'liked',
+	),
+);
+
 ?>
 
-<section class="tutor-bg-white tutor-py-6 tutor-px-8 tutor-rounded-lg tutor-shadow-sm">
-	<!-- Join The Conversation Section -->
-	<div class="tutor-mb-6">
-		<h3 class="tutor-text-lg tutor-font-semibold tutor-mb-4">Join The Conversation</h3>
-		<div class="tutor-input-field">
-			<div class="tutor-input-wrapper">
-				<textarea 
-					placeholder="<?php esc_attr_e( 'Write your comment...', 'tutor' ); ?>"
-					class="tutor-input tutor-text-area"
-					rows="4"
-				></textarea>
-			</div>
-		</div>
-	</div>
-
-	<!-- Comments Header -->
-	<div class="tutor-comments-header tutor-flex tutor-items-center tutor-justify-between tutor-mb-4">
-		<h3 class="tutor-comments-header-title tutor-text-lg tutor-font-semibold">
-			<?php
-			/* translators: %d: number of comments */
-			printf( esc_html__( 'Comments (%d)', 'tutor' ), 37 );
-			?>
-		</h3>
-		<button 
-			class="tutor-comment-action-btn tutor-comment-action-btn-menu"
-			type="button"
-			aria-label="<?php esc_attr_e( 'Sort comments', 'tutor' ); ?>"
-		>
-			<?php tutor_utils()->render_svg_icon( Icon::ARROWS_OUT, 16, 16 ); ?>
-		</button>
-	</div>
-
-	<!-- Comments List -->
-	<div class="tutor-comments-list">
-		<?php foreach ( $sample_comments_full_demo as $tutor_comment ) : ?>
-			<?php
-			tutor_load_template(
-				'demo-components.learning-area.components.comments',
-				array( 'comment' => $tutor_comment )
-			);
-			?>
-		<?php endforeach; ?>
-	</div>
-</section>
+<?php
+tutor_load_template(
+	'demo-components.learning-area.components.comments',
+	array(
+		'comments'       => $sample_comments_full_demo,
+		'comment_total'  => count( $sample_comments_full_demo ),
+		'sort_options'   => $comment_sort_options,
+		'sort_value'     => 'newest',
+		'show_form'      => true,
+		'comments_title' => __( 'Comments', 'tutor' ),
+		'form_title'     => __( 'Join The Conversation', 'tutor' ),
+	)
+);
 
