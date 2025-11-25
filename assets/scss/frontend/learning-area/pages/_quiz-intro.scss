@@ -164,7 +164,7 @@
 
 	&-attempt {
 		&-number {
-			@include tutor-typography('medium', 'semibold', 'primary', 'body');
+			@include tutor-typography('medium', 'semibold', 'primary');
 			margin-bottom: $tutor-spacing-3;
 
 			@include tutor-breakpoint-down(sm) {
@@ -262,7 +262,7 @@
 
 .tutor-quiz-marks-correct,
 .tutor-quiz-marks-incorrect {
-	@include tutor-typography('tiny', 'medium', 'primary', 'body');
+	@include tutor-typography('tiny', 'medium', 'primary');
 	@include tutor-flex(row, center);
 	gap: $tutor-spacing-2;
 	background-color: $tutor-gray-200;
