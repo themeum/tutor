@@ -10,8 +10,6 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Contracts\ComponentInterface;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -54,10 +52,7 @@ defined( 'ABSPATH' ) || exit;
  * ```
  *
  *
- *
- * 
  * ```
- *
  *
  * // Example Usage:
  * $heading = array(
@@ -95,7 +90,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-class Table extends BaseComponent implements ComponentInterface {
+class Table extends BaseComponent {
 
 	/**
 	 * Table header content array.

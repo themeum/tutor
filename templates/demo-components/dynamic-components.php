@@ -515,8 +515,7 @@ use TUTOR\Icon;
 <!-- table component -->
 <h2>Table</h2>
 <pre>
-	<code>
-	&lt;php
+<code>&lt;php
 	$heading = array(
 		array(
 			'content' => __( 'Quiz Info', 'tutor' ),
@@ -548,7 +547,7 @@ use TUTOR\Icon;
 		->contents( $content )
 		->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
 		->render();
-	</code>
+</code>
 </pre>
 <section class="tutor-bg-white tutor-py-6 tutor-px-6">
 <?php
@@ -586,8 +585,7 @@ use TUTOR\Icon;
 	?>
 </section>
 <pre>
-	<code>
-	&lt;php
+<code>&lt;php
 	$heading = array(
 		array(
 			'content' => __( 'Quiz Info', 'tutor' ),
@@ -642,7 +640,7 @@ use TUTOR\Icon;
 		->contents( $content )
 		->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
 		->render();
-	</code>
+</code>
 </pre>
 <section class="tutor-bg-white tutor-py-6 tutor-px-6">
 <?php
