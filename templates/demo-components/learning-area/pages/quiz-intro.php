@@ -68,7 +68,7 @@ $attempts = array(
 				<table class="tutor-table">
 					<tbody>
 						<tr>
-							<td>
+							<td class="tutor-quiz-intro-param-label-col">
 								<div class="tutor-quiz-intro-param-label">
 									<?php tutor_utils()->render_svg_icon( Icon::QUESTION_CIRCLE, 20, 20 ); ?>
 									<span><?php esc_html_e( 'Questions', 'tutor' ); ?></span>
@@ -79,7 +79,7 @@ $attempts = array(
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td class="tutor-quiz-intro-param-label-col">
 								<div class="tutor-quiz-intro-param-label">
 									<?php tutor_utils()->render_svg_icon( Icon::CLOCK, 20, 20 ); ?>
 									<span><?php esc_html_e( 'Quiz time', 'tutor' ); ?></span>
@@ -90,7 +90,7 @@ $attempts = array(
 							</td>
 						</tr>
 						<tr>
-							<td>
+							<td class="tutor-quiz-intro-param-label-col">
 								<div class="tutor-quiz-intro-param-label">
 									<?php tutor_utils()->render_svg_icon( Icon::CERTIFICATE, 20, 20 ); ?>
 									<span><?php esc_html_e( 'Passing Grade', 'tutor' ); ?></span>
@@ -110,7 +110,7 @@ $attempts = array(
 			<div class="tutor-quiz-intro-attempts tutor-mb-8">
 				<div class="tutor-table-wrapper">
 					<table class="tutor-table">
-						<thead>
+						<thead class="tutor-quiz-intro-attempts-head">
 							<tr>
 								<th class="tutor-quiz-intro-attempts-header"><?php esc_html_e( 'Attempts Date', 'tutor' ); ?></th>
 								<th class="tutor-quiz-intro-attempts-header"><?php esc_html_e( 'Marks', 'tutor' ); ?></th>
@@ -120,8 +120,8 @@ $attempts = array(
 						</thead>
 						<tbody>
 							<?php foreach ( $attempts as $index => $attempt ) : ?>
-								<tr>
-									<td>
+								<tr class="tutor-quiz-intro-attempts-row">
+									<td class="tutor-quiz-intro-attempts-cell tutor-quiz-intro-attempts-date-col">
 										<div class="tutor-quiz-intro-attempt-number">
 											<?php
 											$attempt_number = isset( $attempt['attempt_number'] ) ? $attempt['attempt_number'] : '';
@@ -133,7 +133,7 @@ $attempts = array(
 											<?php echo esc_html( $attempt['date'] ); ?>
 										</span>
 									</td>
-									<td>
+									<td class="tutor-quiz-intro-attempts-cell tutor-quiz-intro-attempts-marks-col">
 										<div class="tutor-flex tutor-gap-4 tutor-items-center tutor-quiz-intro-stats-row">
 											<div x-data="tutorStatics({ value: <?php echo esc_attr( $attempt['marks_percent'] ); ?>, type: 'progress' })">
 												<div x-html="render()"></div>
@@ -165,13 +165,13 @@ $attempts = array(
 											</div>
 										</div>
 									</td>
-									<td>
+									<td class="tutor-quiz-intro-attempts-cell tutor-quiz-intro-attempts-time-col">
 										<div class="tutor-quiz-intro-time-info">
 											<?php tutor_utils()->render_svg_icon( Icon::STOPWATCH, 20, 20 ); ?>
 											<span class="tutor-quiz-intro-time"><?php echo esc_html( $attempt['time_taken'] ); ?></span>
 										</div>
 									</td>
-									<td>
+									<td class="tutor-quiz-intro-attempts-cell tutor-quiz-intro-attempts-result-col">
 										<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
 											<?php echo esc_html( $attempt['result'] ); ?>
 										</span>

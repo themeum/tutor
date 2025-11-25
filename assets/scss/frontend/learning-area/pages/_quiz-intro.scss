@@ -48,15 +48,11 @@
 				min-width: auto;
 				width: 100%;
 			}
+		}
 
-			tbody {
-				tr {
-					td:first-child {
-						width: 35%;
-						white-space: nowrap;
-					}
-				}
-			}
+		.tutor-quiz-intro-param-label-col {
+			width: 35%;
+			white-space: nowrap;
 		}
 
 		.tutor-quiz-intro-param-label {
@@ -80,7 +76,7 @@
 				width: 100%;
 			}
 
-			thead {
+			.tutor-quiz-intro-attempts-head {
 				@include tutor-breakpoint-down(sm) {
 					display: none;
 				}
@@ -99,57 +95,59 @@
 				}
 			}
 
-			tbody {
-				tr {
-					@include tutor-breakpoint-down(sm) {
-						@include tutor-flex(column);
-						gap: $tutor-spacing-4;
-						padding: $tutor-spacing-5;
-					}
-
-					@include tutor-breakpoint-down(sm) {
-						td {
-							padding: 0;
-						}
-
-						td:first-child {
-							width: 100%;
-							@include tutor-flex(column);
-							gap: $tutor-spacing-2;
-						}
-
-						td:nth-child(2) {
-							width: 100%;
-							@include tutor-flex(row, center, flex-start, wrap);
-							gap: $tutor-spacing-4;
-
-							> div {
-								flex-shrink: 0;
-							}
-
-							.tutor-quiz-marks-breakdown {
-								flex: 1;
-								min-width: 89px;
-							}
-						}
-
-						td:nth-child(3) {
-							display: none;
-						}
-
-						td:nth-child(4) {
-							display: none;
-						}
-					}
-
-					td:first-child {
-						width: 40%;
-					}
-
-					td:nth-child(2) {
-					width: 30%;
-					}
+			.tutor-quiz-intro-attempts-row {
+				@include tutor-breakpoint-down(sm) {
+					@include tutor-flex(column);
+					gap: $tutor-spacing-4;
+					padding: $tutor-spacing-5;
 				}
+			}
+		}
+
+		.tutor-quiz-intro-attempts-cell {
+			@include tutor-breakpoint-down(sm) {
+				padding: 0;
+			}
+		}
+
+		.tutor-quiz-intro-attempts-date-col {
+			width: 40%;
+
+			@include tutor-breakpoint-down(sm) {
+				width: 100%;
+				@include tutor-flex(column);
+				gap: $tutor-spacing-2;
+			}
+		}
+
+		.tutor-quiz-intro-attempts-marks-col {
+			width: 30%;
+
+			@include tutor-breakpoint-down(sm) {
+				width: 100%;
+				@include tutor-flex(row, center, flex-start, wrap);
+				gap: $tutor-spacing-4;
+
+				> div {
+					flex-shrink: 0;
+				}
+
+				.tutor-quiz-marks-breakdown {
+					flex: 1;
+					max-width: 89px;
+				}
+			}
+		}
+
+		.tutor-quiz-intro-attempts-time-col {
+			@include tutor-breakpoint-down(sm) {
+				display: none;
+			}
+		}
+
+		.tutor-quiz-intro-attempts-result-col {
+			@include tutor-breakpoint-down(sm) {
+				display: none;
 			}
 		}
 
