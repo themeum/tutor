@@ -49,13 +49,15 @@
 				width: 100%;
 			}
 		}
+	}
 
-		.tutor-quiz-intro-param-label-col {
+	&-param {
+		&-label-col {
 			width: 35%;
 			white-space: nowrap;
 		}
 
-		.tutor-quiz-intro-param-label {
+		&-label {
 			@include tutor-flex(row, center);
 			gap: $tutor-spacing-3;
 		}
@@ -75,13 +77,15 @@
 				min-width: auto;
 				width: 100%;
 			}
+		}
 
-			.tutor-quiz-intro-attempts-head {
-				@include tutor-breakpoint-down(sm) {
-					display: none;
-				}
+		&-head {
+			@include tutor-breakpoint-down(sm) {
+				display: none;
+			}
 
-				th.tutor-quiz-intro-attempts-header {
+			th {
+				&.tutor-quiz-intro-attempts-header {
 					@include tutor-typography('tiny', 'regular', 'secondary');
 					letter-spacing: 0;
 
@@ -94,42 +98,51 @@
 					}
 				}
 			}
+		}
 
-			.tutor-quiz-intro-attempts-row {
-				@include tutor-breakpoint-down(sm) {
-					@include tutor-flex(column);
-					gap: $tutor-spacing-4;
-					padding: $tutor-spacing-5;
-				}
+		&-row {
+			@include tutor-breakpoint-down(sm) {
+				@include tutor-flex(column);
+				padding: $tutor-spacing-5;
+				gap: $tutor-spacing-4;
 			}
 		}
 
-		.tutor-quiz-intro-attempts-cell {
+		&-cell {
 			@include tutor-breakpoint-down(sm) {
 				padding: 0;
 			}
 		}
 
-		.tutor-quiz-intro-attempts-date-col {
+		@include tutor-breakpoint-down(sm) {
+			.tutor-table {
+				td.tutor-quiz-intro-attempts-cell {
+					padding: 0;
+				}
+			}
+		}
+
+		&-date-col {
 			width: 40%;
 
 			@include tutor-breakpoint-down(sm) {
 				width: 100%;
 				@include tutor-flex(column);
-				gap: $tutor-spacing-2;
 			}
 		}
 
-		.tutor-quiz-intro-attempts-marks-col {
+		&-marks-col {
 			width: 30%;
 
 			@include tutor-breakpoint-down(sm) {
 				width: 100%;
 				@include tutor-flex(row, center, flex-start, wrap);
-				gap: $tutor-spacing-4;
 
 				> div {
 					flex-shrink: 0;
+					background-color: $tutor-gray-25;
+					padding: $tutor-spacing-5;
+					border-radius: $tutor-radius-lg;
 				}
 
 				.tutor-quiz-marks-breakdown {
@@ -139,19 +152,21 @@
 			}
 		}
 
-		.tutor-quiz-intro-attempts-time-col {
+		&-time-col {
 			@include tutor-breakpoint-down(sm) {
 				display: none;
 			}
 		}
 
-		.tutor-quiz-intro-attempts-result-col {
+		&-result-col {
 			@include tutor-breakpoint-down(sm) {
 				display: none;
 			}
 		}
+	}
 
-		.tutor-quiz-intro-attempt-number {
+	&-attempt {
+		&-number {
 			@include tutor-typography('medium', 'semibold', 'primary', 'body');
 			margin-bottom: $tutor-spacing-3;
 
@@ -160,42 +175,81 @@
 			}
 		}
 
-		.tutor-quiz-intro-attempt-date {
+		&-date {
 			@include tutor-typography('tiny', 'regular', 'subdued');
 
 			@include tutor-breakpoint-down(sm) {
 				@include tutor-typography('small', 'semibold', 'brand');
 			}
 		}
+	}
 
-		.tutor-quiz-intro-time {
-			@include tutor-typography('medium', 'regular', 'subdued');
-			@include tutor-breakpoint-down(sm) {
-				@include tutor-typography('small', 'regular', 'subdued');
-			}
-		}
+	&-time {
+		@include tutor-typography('medium', 'regular', 'subdued');
 
-		.tutor-quiz-intro-stats-row {
-			width: 100%;
-
-			@include tutor-flex(row, center);
-			gap: $tutor-spacing-4;
-
-			@include tutor-breakpoint-down(sm) {
-				border-radius: $tutor-radius-2xl;
-				padding: $tutor-spacing-4;
-				gap: $tutor-spacing-3;
-			}
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-typography('small', 'regular', 'subdued');
 		}
 	}
-}
 
-.tutor-quiz-intro-time-info {
-	@include tutor-flex(row, center);
-	gap: $tutor-spacing-2;
+	&-stats-row {
+		width: 100%;
 
-	svg {
-		color: $tutor-icon-secondary;
+		@include tutor-flex(row, center);
+		gap: $tutor-spacing-4;
+
+		@include tutor-breakpoint-down(sm) {
+			border-radius: $tutor-radius-2xl;
+			gap: $tutor-spacing-3;
+		}
+	}
+
+	&-time-info {
+		@include tutor-flex(row, center);
+		gap: $tutor-spacing-2;
+
+		svg {
+			color: $tutor-icon-secondary;
+		}
+	}
+
+	&-mobile-result {
+		display: none;
+
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-flex();
+			margin-left: $tutor-spacing-4;
+		}
+	}
+
+	&-mobile-time {
+		display: none;
+
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-flex(row, center);
+			margin-left: auto;
+			gap: $tutor-spacing-2;
+			@include tutor-typography('tiny', 'medium', 'secondary');
+		}
+	}
+
+	&-actions {
+		@include tutor-breakpoint-down(sm) {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			@include tutor-flex(row, center);
+			padding: $tutor-spacing-4 $tutor-spacing-5;
+			background-color: $tutor-surface-l1;
+			border-top: 1px solid $tutor-border-idle;
+			gap: $tutor-spacing-3;
+			z-index: 5;
+
+			button {
+				flex: 1 1 auto;
+			}
+		}
 	}
 }
 
@@ -206,26 +260,6 @@
 	@include tutor-breakpoint-down(sm) {
 		flex-direction: column;
 		width: 100%;
-	}
-}
-
-.tutor-quiz-intro-mobile-result {
-	display: none;
-
-	@include tutor-breakpoint-down(sm) {
-		@include tutor-flex();
-		margin-left: $tutor-spacing-4;
-	}
-}
-
-.tutor-quiz-intro-mobile-time {
-	display: none;
-
-	@include tutor-breakpoint-down(sm) {
-		@include tutor-flex(row, center);
-		margin-left: auto;
-		gap: $tutor-spacing-2;
-		@include tutor-typography('tiny', 'medium', 'secondary');
 	}
 }
 
@@ -264,23 +298,3 @@
 		padding-bottom: $tutor-spacing-18;
 	}
 }
-
-.tutor-quiz-intro-actions {
-	@include tutor-breakpoint-down(sm) {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		@include tutor-flex(row, center);
-		padding: $tutor-spacing-4 $tutor-spacing-5;
-		background-color: $tutor-surface-l1;
-		border-top: 1px solid $tutor-border-idle;
-		gap: $tutor-spacing-3;
-		z-index: 5;
-
-		button {
-			flex: 1 1 auto;
-		}
-	}
-}
-
