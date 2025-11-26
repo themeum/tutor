@@ -51,7 +51,7 @@ use TUTOR\Icon;
 					<div class="tutor-popover-menu">
 						<!-- @TODO: Dropdown items design is not ready -->
 						<button class="tutor-popover-menu-item">
-							<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?> View
+							<?php tutor_utils()->render_svg_icon( Icon::CERTIFICATE_2 ); ?> View Certificate
 						</button>
 						<button class="tutor-popover-menu-item">
 							<?php tutor_utils()->render_svg_icon( Icon::SHARE ); ?> Share
