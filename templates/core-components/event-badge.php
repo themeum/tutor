@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 // Default values.
 $text    = isset( $text ) ? $text : __( 'Live Class', 'tutor' );
 $icon    = isset( $icon ) ? $icon : Icon::ZOOM_COLORIZE;
-$variant = isset( $variant ) ? sanitize_key( $variant ) : '';
+$variant = isset( $variant ) ? $variant : '';
 
 $badge_classes = array( 'tutor-event-badge' );
 
