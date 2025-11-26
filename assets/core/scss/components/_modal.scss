@@ -110,8 +110,11 @@
 }
 
 @include tutor-breakpoint-down(md) {
-  .tutor-modal-content {
-    max-height: 95vh;
-    padding: $tutor-spacing-4 $tutor-spacing-4;
+  .tutor-modal {
+    padding: $tutor-spacing-6;
+
+    &-content {
+      max-height: 95vh;
+    }
   }
 }

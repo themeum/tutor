@@ -56,19 +56,21 @@ $attempts_url = add_query_arg(
 ?>
 
 <div class="tutor-assignment-attempts">
-	<div>
-		<a href="<?php echo esc_url( $attempts_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-gap-2">
-			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT ); ?>
-			<?php esc_html_e( 'Back', 'tutor' ); ?>
-		</a>
-	</div>
-	
-	<div class="tutor-assignment-attempts-table">
-		<h4 class="tutor-h4">
-			<?php echo esc_html( $assignment_title ); ?>
-		</h4>
+	<div class="tutor-assignment-attempts-header">
+		<div>
+			<a href="<?php echo esc_url( $attempts_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-gap-2">
+				<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT ); ?>
+				<?php esc_html_e( 'Back', 'tutor' ); ?>
+			</a>
+		</div>
+		
+		<div class="tutor-assignment-attempts-table">
+			<h4 class="tutor-h4">
+				<?php echo esc_html( $assignment_title ); ?>
+			</h4>
 
-		<?php tutor_load_template( 'demo-components.learning-area.components.assignment.attempts-table', array( 'attempts' => $attempts ) ); ?>
+			<?php tutor_load_template( 'demo-components.learning-area.components.assignment.attempts-table', array( 'attempts' => $attempts ) ); ?>
+		</div>
 	</div>
 
 	<div class="tutor-assignment-submission">

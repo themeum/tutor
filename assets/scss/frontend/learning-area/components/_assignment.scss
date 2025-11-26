@@ -20,6 +20,7 @@
       td:first-child {
         width: 32.25%;
       }
+
       td:last-child {
         width: 67.75%;
       }
@@ -44,6 +45,10 @@
     &-cards {
       @include tutor-grid(2, 1fr);
       gap: $tutor-spacing-4;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-grid(1, 1fr);
+      }
     }
   }
 
@@ -51,11 +56,31 @@
     @include tutor-flex(row, stretch, flex-end);
     gap: $tutor-spacing-4;
     margin-top: $tutor-spacing-2;
+
+    @include tutor-breakpoint-down(sm) {
+      justify-content: space-between;
+
+      button,
+      a {
+        @include tutor-button-size(large);
+        flex-basis: 50%;
+
+        &:is(:only-child) {
+          flex-basis: 100%;
+        }
+      }
+    }
   }
 
   &-edit {
     @include tutor-flex(column, stretch, flex-start);
     gap: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-card-base();
+      @include tutor-card-padding(medium);
+      @include tutor-card-radius(2xl);
+    }
   }
 
   &-form {
@@ -64,6 +89,10 @@
     @include tutor-card-radius(2xl);
     @include tutor-flex(column, stretch, flex-start);
     gap: $tutor-spacing-4;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-reset;
+    }
   }
 
   &-file-uploader {
@@ -75,6 +104,17 @@
     @include tutor-flex(column, stretch, flex-start);
     gap: $tutor-spacing-5;
 
+    &-header {
+      @include tutor-flex(column, stretch, flex-start);
+      gap: $tutor-spacing-5;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-card-base();
+        @include tutor-card-padding(medium);
+        @include tutor-card-radius(2xl);
+      }
+    }
+
     &-table {
       @include tutor-card-base();
       @include tutor-card-padding(medium);
@@ -82,8 +122,13 @@
       @include tutor-flex(column, stretch, flex-start);
       gap: $tutor-spacing-6;
 
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-reset;
+      }
+
       .tutor-table {
         table-layout: fixed;
+
         thead {
           th {
             @include tutor-typography('tiny', 'regular');

@@ -71,17 +71,17 @@ $attemps_url = add_query_arg(
 			<?php tutor_load_template( 'core-components.file-uploader', $file_uploader_config ); ?>
 		</div>
 	</div>
+</div>
 
-	<div class="tutor-assignment-actions">
-		<!-- @TODO: need to add functionality -->
-		<button class="tutor-btn tutor-btn-ghost tutor-btn-medium">
-			<?php esc_html_e( 'Save Draft', 'tutor' ); ?>
-		</button>
-		<!-- @TODO: need to add functionality -->
-		<button onclick="TutorCore.modal.showModal('assignment-confirm-submission-modal')" class="tutor-btn tutor-btn-primary tutor-btn-medium">
-			<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
-		</button>
-	</div>
+<div class="tutor-assignment-actions tutor-mt-5">
+	<!-- @TODO: need to add functionality -->
+	<button class="tutor-btn tutor-btn-ghost tutor-btn-medium">
+		<?php esc_html_e( 'Save Draft', 'tutor' ); ?>
+	</button>
+	<!-- @TODO: need to add functionality -->
+	<button onclick="TutorCore.modal.showModal('assignment-confirm-submission-modal')" class="tutor-btn tutor-btn-primary tutor-btn-medium">
+		<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
+	</button>
 </div>
 
 <?php tutor_load_template( 'demo-components.learning-area.components.assignment.modal' ); ?>
