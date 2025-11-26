@@ -33,7 +33,7 @@
 	}
 
 	&-group-heading {
-		@include tutor-typography('small', 'regular', 'secondary', 'body');
+		@include tutor-typography('small', 'regular', 'secondary');
         margin-bottom: $tutor-spacing-3;
 	}
 
