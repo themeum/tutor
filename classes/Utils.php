@@ -5778,9 +5778,9 @@ class Utils {
 				'icon_classes' => 'tutor-icon-brand-facebook',
 			),
 			'_tutor_profile_twitter'  => array(
-				'label'        => __( 'Twitter', 'tutor' ),
-				'placeholder'  => 'https://twitter.com/username',
-				'icon_classes' => 'tutor-icon-brand-twitter',
+				'label'        => __( 'X', 'tutor' ),
+				'placeholder'  => 'https://x.com/username',
+				'icon_classes' => 'tutor-icon-brand-x-twitter',
 			),
 			'_tutor_profile_linkedin' => array(
 				'label'        => __( 'Linkedin', 'tutor' ),
