@@ -10,11 +10,9 @@
 
 use TUTOR\Icon;
 
-$modal_id = 'assignment-confirm-submission-modal';
-
 ?>
 
-<div x-data="tutorModal({ id: 'assignment-confirm-submission-modal' })" x-cloak>
+<div x-data="tutorModal({ id: '<?php echo esc_attr( $modal_id ); ?>' })" x-cloak>
 	<template x-teleport="body">
 		<div x-bind="getModalBindings()">
 			<div x-bind="getBackdropBindings()"></div>
@@ -50,7 +48,7 @@ $modal_id = 'assignment-confirm-submission-modal';
 				</div>
 			</div>
 			<div class="tutor-modal-footer">
-				<button class="tutor-btn tutor-btn-ghost" @click="TutorCore.modal.closeModal('assignment-confirm-submission-modal')"><?php esc_html_e( 'Cancel', 'tutor' ); ?></button>
+				<button class="tutor-btn tutor-btn-ghost" @click="TutorCore.modal.closeModal('<?php echo esc_attr( $modal_id ); ?>')"><?php esc_html_e( 'Cancel', 'tutor' ); ?></button>
 				<!-- @TODO: need to add functionality -->
 				<button class="tutor-btn tutor-btn-primary" @click="window.location.href = window.location.href.replace('edit', 'attempts')">
 					<?php esc_html_e( 'Confirm Submission', 'tutor' ); ?>

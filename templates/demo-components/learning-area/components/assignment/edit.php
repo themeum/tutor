@@ -10,6 +10,8 @@
 
 use TUTOR\Icon;
 
+$modal_id = 'assignment-confirm-submission-modal';
+
 $back_url = add_query_arg(
 	array(
 		'subpage' => 'assignment',
@@ -79,9 +81,9 @@ $attemps_url = add_query_arg(
 		<?php esc_html_e( 'Save Draft', 'tutor' ); ?>
 	</button>
 	<!-- @TODO: need to add functionality -->
-	<button onclick="TutorCore.modal.showModal('assignment-confirm-submission-modal')" class="tutor-btn tutor-btn-primary tutor-btn-medium">
+	<button onclick="TutorCore.modal.showModal('<?php echo esc_attr( $modal_id ); ?>')" class="tutor-btn tutor-btn-primary tutor-btn-medium">
 		<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
 	</button>
 </div>
 
-<?php tutor_load_template( 'demo-components.learning-area.components.assignment.confirmation-modal' ); ?>
+<?php tutor_load_template( 'demo-components.learning-area.components.assignment.confirmation-modal', array( 'modal_id' => $modal_id ) ); ?>
