@@ -3281,6 +3281,7 @@ class Utils {
 					ON cmeta.comment_id = c.comment_ID
 					AND cmeta.meta_key = 'tutor_rating'
 			WHERE 	user_meta.meta_key = '_is_tutor_instructor'
+				AND inst_status.meta_key = '_tutor_instructor_status'
 				AND ( user.display_name LIKE %s OR user.user_email = %s )
 				{$status}
 				{$category_where}
