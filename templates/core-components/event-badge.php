@@ -16,8 +16,8 @@ $variant = isset( $variant ) ? sanitize_key( $variant ) : '';
 
 $badge_classes = array( 'tutor-event-badge' );
 
-if ( 'expired' === $variant ) {
-	$badge_classes[] = 'tutor-event-badge-expired';
+if ( ! empty( $variant ) ) {
+	$badge_classes[] = 'tutor-event-badge-' . $variant;
 }
 
 $badge_classes = array_filter( array_map( 'sanitize_html_class', $badge_classes ) );
