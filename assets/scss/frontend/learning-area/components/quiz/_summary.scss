@@ -1,0 +1,106 @@
+// Quiz Summary Styles
+// @TODO: Move to the quiz file later.
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-quiz-summary {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-block: $tutor-spacing-13;
+
+  @include tutor-breakpoint-down(sm) {
+    background-color: $tutor-surface-base;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-5;
+  }
+
+  .tutor-quiz-result {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1.2fr;
+    grid-template-areas:
+      'progress marks statics'
+      'progress marks retake';
+    gap: $tutor-spacing-8;
+    margin-bottom: $tutor-spacing-6;
+
+    @include tutor-breakpoint-up(sm) {
+      background-color: $tutor-surface-base;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-7;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-columns: 2fr 1fr;
+      grid-template-areas:
+        'progress progress'
+        'marks statics'
+        'retake retake';
+      gap: $tutor-spacing-6;
+    }
+
+    &-progress {
+      grid-area: progress;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-flex(row, center, center);
+      }
+    }
+    &-marks {
+      grid-area: marks;
+      @include tutor-typography(medium, regular, secondary);
+      @include tutor-flex(column);
+      gap: $tutor-spacing-6;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-text(small);
+        gap: $tutor-spacing-4;
+      }
+    }
+    &-statics {
+      grid-area: statics;
+      @include tutor-typography(medium, regular, secondary);
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-text(small);
+        align-self: end;
+      }
+
+      .tutor-quiz-result-static-item {
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-3;
+
+        &::before {
+          content: '';
+          height: 8px;
+          width: 8px;
+          border-radius: 50%;
+          background-color: $tutor-icon-subdued;
+          margin-inline-end: $tutor-spacing-1;
+        }
+
+        &.correct::before {
+          background-color: $tutor-icon-success-primary;
+        }
+
+        &.incorrect::before {
+          background-color: $tutor-icon-critical;
+        }
+
+        &.total::before {
+          background-color: $tutor-icon-subdued;
+        }
+      }
+    }
+    &-retake {
+      grid-area: retake;
+      align-self: end;
+
+      @include tutor-breakpoint-down(sm) {
+        button {
+          @include tutor-button-size(large);
+        }
+      }
+    }
+  }
+}
