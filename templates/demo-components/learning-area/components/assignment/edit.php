@@ -84,4 +84,4 @@ $attemps_url = add_query_arg(
 	</button>
 </div>
 
-<?php tutor_load_template( 'demo-components.learning-area.components.assignment.modal' ); ?>
+<?php tutor_load_template( 'demo-components.learning-area.components.assignment.confirmation-modal' ); ?>
