@@ -34,7 +34,7 @@ $file_uploader_config = array(
 // @TODO: Will be removed later
 $attemps_url = add_query_arg(
 	array(
-		'subpage' => 'assignment',
+		'subpage'  => 'assignment',
 		'attempts' => 'true',
 	),
 	remove_query_arg( 'edit' )
@@ -59,14 +59,9 @@ $attemps_url = add_query_arg(
 			<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
 		</h4>
 
-		<!-- @TODO: render tinyMCE editor -->
 		<div class="tutor-input-field">
-			<textarea 
-				type="text"
-				id="name"
-				placeholder="Enter assignment "
-				class="tutor-input tutor-text-area tutor-input-content-clear"
-			></textarea>
+			<!-- @TODO: render tinyMCE editor -->
+			<?php wp_editor( '', 'assignment_title', array() ); ?>
 		</div>
 
 		<div class="tutor-assignment-file-uploader">
@@ -83,8 +78,10 @@ $attemps_url = add_query_arg(
 			<?php esc_html_e( 'Save Draft', 'tutor' ); ?>
 		</button>
 		<!-- @TODO: need to add functionality -->
-		<a href="<?php echo esc_url( $attemps_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-medium">
+		<button onclick="TutorCore.modal.showModal('assignment-confirm-submission-modal')" class="tutor-btn tutor-btn-primary tutor-btn-medium">
 			<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
-		</a>
+		</button>
 	</div>
 </div>
+
+<?php tutor_load_template( 'demo-components.learning-area.components.assignment.modal' ); ?>

@@ -513,4 +513,11 @@
       }
     }
   }
+
+  &-submission-modal {
+    &-content {
+      @include tutor-flex(column, stretch, space-between);
+      gap: $tutor-spacing-2;
+    }
+  }
 }
