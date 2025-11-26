@@ -1,0 +1,25 @@
+<?php
+/**
+ * Tutor quiz.
+ *
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+?>
+
+<div class="tutor-quiz tutor-quiz-submission">
+	<?php tutor_load_template( 'demo-components.learning-area.components.quiz.progress-bar' ); ?>
+	
+	<div class="tutor-quiz-questions">
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.true-false' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.multiple-choice' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.image-answering' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.ordering' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.matching' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.fill-in-the-blanks' ); ?>
+		<?php tutor_load_template( 'demo-components.learning-area.components.quiz.questions.openended-short-answer' ); ?>
+	</div>
+</div>

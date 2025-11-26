@@ -147,6 +147,7 @@ export const icons = [
   'globe',
   'googleMeet',
   'googleMeetColorize',
+  'grabHandle',
   'gutenbergColorized',
   'handCoin',
   'happy',

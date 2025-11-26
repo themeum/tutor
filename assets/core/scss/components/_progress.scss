@@ -20,7 +20,7 @@
     position: relative;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: $tutor-spacing-1;
       right: $tutor-spacing-2;
@@ -38,7 +38,7 @@
       background-color: $tutor-actions-brand-primary;
 
       &::before {
-        background-color: transparent;
+        background-color: $tutor-surface-brand-secondary;
       }
     }
   }

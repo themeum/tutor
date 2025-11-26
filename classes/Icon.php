@@ -163,6 +163,7 @@ final class Icon {
 	const GLOBE                      = 'globe';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
+	const GRAB_HANDLE                = 'grab-handle';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
 	const HAPPY                      = 'happy';
