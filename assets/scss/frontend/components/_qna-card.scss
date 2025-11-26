@@ -29,6 +29,18 @@
     }
   }
 
+  &.is-important {
+    background-color: $tutor-surface-brand-tertiary;
+    border-color: $tutor-border-brand-secondary;
+
+    .tutor-qna-card-bookmark {
+      position: absolute;
+      top: -3px;
+      inset-inline-end: $tutor-spacing-5;
+      color: $tutor-icon-exception4;
+    }
+  }
+
   &-top {
     @include tutor-typography(tiny);
     @include tutor-flex(row, center);
@@ -124,6 +136,7 @@
 
   &:hover {
     background-color: $tutor-surface-l1-hover;
+    border-color: $tutor-border-idle;
 
     .tutor-qna-card-title {
       color: $tutor-text-brand;

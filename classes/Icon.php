@@ -31,7 +31,9 @@ final class Icon {
 	const ARROWS_IN                  = 'arrows-in';
 	const ARROWS_OUT                 = 'arrows-out';
 	const ARROW_LEFT                 = 'arrow-left';
+	const ARROW_LEFT_2               = 'arrow-left-2';
 	const ARROW_LEFT_ALT             = 'arrow-left-alt';
+	const ARROW_RIGHT_2              = 'arrow-right-2';
 	const ASSIGNMENT                 = 'assignment';
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
