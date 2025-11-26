@@ -65,7 +65,7 @@ use TUTOR\Icon;
 		</div>
 	</div>
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl tutor-p-4">
-		<img src="http://localhost:10058/wp-content/uploads/tutor-certificates/FzweUAvhD3-cbe8db57c0c70757.jpg" alt="<?php esc_attr_e( 'Certificate preview', 'tutor' ); ?>" class="tutor-w-full" />
+		<img src="<?php echo esc_attr( tutor()->url . 'assets/images/certificate-demo.jpg' ); ?>" alt="<?php esc_attr_e( 'Certificate preview', 'tutor' ); ?>" class="tutor-w-full" />
 	</div>
 	<div class="tutor-certificate-info">
 		<div class="tutor-certificate-info-item">
