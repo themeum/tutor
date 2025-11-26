@@ -40,6 +40,8 @@ final class Icon {
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BADGE_CHECK                = 'badge-check';
+	const BADGE_INFO                 = 'badge-info';
 	const BARS                       = 'bars';
 	const BAR_LEGEND                 = 'bar-legend';
 	const BILLING                    = 'billing';
@@ -82,6 +84,7 @@ final class Icon {
 	const CIRCLED_PLUS               = 'circled-plus';
 	const CIRCUM_LOCK                = 'circum-lock';
 	const CLOCK                      = 'clock';
+	const CLOCK_2                    = 'clock-2';
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';
