@@ -44,14 +44,6 @@
 		}
 	}
 
-	&-search {
-		width: 100%;
-
-		.tutor-input-field {
-			width: 100%;
-		}
-	}
-
 	.tutor-upcoming-lesson-card + .tutor-upcoming-lesson-card {
 		margin-top: $tutor-spacing-4;
 	}
