@@ -1,12 +1,13 @@
 // Components styles index
 // Import all shared UI components
 
-@forward "course-card";
-@forward "lesson-item";
-@forward "progress-bar";
-@forward "quiz-question";
-@forward "assignment-submission";
-@forward "certificate-display";
-@forward "user-avatar";
-@forward "rating-stars";
-@forward "event-badge";
+@forward 'course-card';
+@forward 'lesson-item';
+@forward 'progress-bar';
+@forward 'quiz-question';
+@forward 'assignment-submission';
+@forward 'certificate-display';
+@forward 'user-avatar';
+@forward 'rating-stars';
+@forward 'event-badge';
+@forward 'qna-card.scss';

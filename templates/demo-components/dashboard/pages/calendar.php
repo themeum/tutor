@@ -9,6 +9,5 @@
  */
 
 ?>
-<div class="tutor-text-h3 tutor-color-black tutor-p-8">
-	<?php esc_html_e( 'Welcome to TutorLMS Calendar', 'tutor' ); ?>
-</div>
+
+<div id="tutor-calendar-root"></div>

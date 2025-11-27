@@ -104,7 +104,7 @@ $active_nav = 'profile';
 						<div class="tutor-dashboard-header-user-popover-avatar">
 							<?php echo get_avatar( get_current_user_id(), 48 ); ?>
 						</div>
-						<div class="tutor-flex tutor-flex-col tutor-items-center tutor-gap-1">
+						<div class="tutor-flex tutor-flex-column tutor-items-center tutor-gap-1">
 							<div class="tutor-text-medium tutor-text-primary tutor-font-semibold">
 								<?php echo esc_html( wp_get_current_user()->display_name ); ?>
 							</div>

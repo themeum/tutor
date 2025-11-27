@@ -548,10 +548,32 @@ class InputField extends BaseComponent {
 				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
 				$clear_icon = ob_get_clean();
 			}
+
 			$clear_button_html = sprintf(
-				'<button type="button" class="tutor-input-clear-button" aria-label="Clear input" style="display:none;">%s</button>',
+				'<button 
+					type="button"
+					class="tutor-input-clear-button"
+					aria-label="Clear input"
+					x-cloak
+					x-show="values.%1$s && String(values.%1$s).length > 0"
+					@click="setValue(\'%1$s\', \'\')"
+				>%2$s</button>',
+				esc_attr( $this->name ),
 				$clear_icon
 			);
+
+			$error_html = sprintf(
+				'<div 
+					class="tutor-error-text" 
+					x-cloak 
+					x-show="errors.%1$s" 
+					x-text="errors?.%1$s?.message" 
+					role="alert" 
+					aria-live="polite"
+				></div>',
+				esc_attr( $this->name )
+			);
+
 		}
 
 		return sprintf(
@@ -560,11 +582,14 @@ class InputField extends BaseComponent {
 				%s
 				%s
 				%s
-			</div>',
+			</div>
+			%s
+			',
 			$input_attrs,
 			$left_icon_html,
 			$right_icon_html,
-			$clear_button_html
+			$clear_button_html,
+			$error_html
 		);
 	}
 

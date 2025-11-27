@@ -487,13 +487,13 @@ echo InputField::make()
 		<?php
 			echo InputField::make()
 				->type('text')
-				->name('full_name')
+				->name('name')
 				->label('Full Name')
 				->placeholder('Enter your full name')
 				->required()
 				->clearable()
 				->help_text('This is a helper text.')
-				->attr( 'x-bind', "register('full_name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
+				->attr( 'x-bind', "register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
 				->render();
 		?>
 

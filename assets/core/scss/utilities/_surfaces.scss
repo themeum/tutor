@@ -1,7 +1,0 @@
-@use '../tokens' as *;
-
-@each $key, $value in $tutor-surfaces {
-  .tutor-surface-#{$key} {
-    background-color: $value;
-  }
-}
