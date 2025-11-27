@@ -14,6 +14,7 @@ $question = array(
 	'index'             => 1,
 	'question_id'       => 1,
 	'question_title'    => __( 'Is the Earth round?', 'tutor' ),
+	'question_description' => __( 'This is a description of the question.', 'tutor' ),
 	'question_type'     => 'true_false',
 	'answer_required'   => true,
 	'question_mark'     => 10,
@@ -75,6 +76,7 @@ $is_correct = function ( $answer ) {
 		array(
 			'index'              => $question['index'],
 			'question_title'     => $question['question_title'],
+			'question_description' => $question['question_description'],
 			'question_mark'      => $question['question_mark'],
 			'show_question_mark' => $question['question_settings']['show_question_mark'],
 		)
