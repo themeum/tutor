@@ -28,10 +28,12 @@
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-primary-hover;
+      color: $tutor-text-primary-inverse;
     }
 
     &:focus:not(:disabled) {
       background-color: $tutor-button-primary-focused;
+      color: $tutor-text-primary-inverse;
     }
 
     &:disabled {

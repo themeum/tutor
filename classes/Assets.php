@@ -269,7 +269,7 @@ class Assets {
 			}
 
 			// Learning area pages.
-			$learning_pages = array( 'learning-area', 'quiz' );
+			$learning_pages = array( 'learning-area', 'quiz', 'assignment' );
 			if ( in_array( $subpage, $learning_pages, true ) ) {
 
 				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
@@ -289,34 +289,10 @@ class Assets {
 				wp_enqueue_script(
 					'tutor-learning-area',
 					$learning_area_js_url,
-					array(),
+					array( 'wp-i18n' ),
 					filemtime( $learning_area_js_path ),
 					true
 				);
-
-				// Now enqueue core *after* learning-area.
-				$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';
-				$core_css_url  = tutor()->url . 'assets/css/tutor-core.min.css';
-
-				$core_js_path = tutor()->path . 'assets/js/tutor-core.js';
-				$core_js_url  = tutor()->url . 'assets/js/tutor-core.js';
-
-				wp_enqueue_style(
-					'tutor-core',
-					$core_css_url,
-					array(),
-					filemtime( $core_css_path ),
-					'all'
-				);
-
-				wp_enqueue_script(
-					'tutor-core',
-					$core_js_url,
-					array( 'wp-i18n', 'tutor-learning-area' ),
-					filemtime( $core_js_path ),
-					true
-				);
-				return;
 			}
 
 			$core_css_path = tutor()->path . 'assets/css/tutor-core.min.css';

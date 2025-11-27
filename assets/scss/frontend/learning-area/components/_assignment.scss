@@ -1,0 +1,216 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-assignment {
+  @include tutor-container(780px);
+
+  &-overview {
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-5;
+  }
+
+  &-info {
+    @include tutor-card-base();
+    @include tutor-card-padding(medium);
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+      gap: $tutor-spacing-3;
+    }
+
+    &-column {
+      td:first-child {
+        width: 32.25%;
+      }
+
+      td:last-child {
+        width: 67.75%;
+      }
+    }
+  }
+
+  &-description {
+    @include tutor-card-base();
+    @include tutor-card-padding(medium);
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-4;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+    }
+  }
+
+  &-attachments {
+    @include tutor-card-base();
+    @include tutor-card-padding(medium);
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-4;
+
+    &-cards {
+      @include tutor-grid(2, 1fr);
+      gap: $tutor-spacing-4;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-grid(1, 1fr);
+      }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+    }
+  }
+
+  &-actions {
+    @include tutor-flex(row, stretch, flex-end);
+    gap: $tutor-spacing-4;
+    margin-top: $tutor-spacing-2;
+
+    @include tutor-breakpoint-down(sm) {
+      justify-content: space-between;
+
+      button,
+      a {
+        @include tutor-button-size(large);
+        flex-basis: 50%;
+
+        &:is(:only-child) {
+          flex-basis: 100%;
+        }
+      }
+    }
+  }
+
+  &-edit {
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-card-base();
+      @include tutor-card-radius(2xl);
+      padding: $tutor-spacing-5;
+      gap: $tutor-spacing-5;
+    }
+  }
+
+  &-form {
+    @include tutor-card-base();
+    @include tutor-card-padding(medium);
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-3;
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-reset;
+      gap: $tutor-spacing-1;
+    }
+  }
+
+  &-file-uploader {
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-6;
+    margin-top: $tutor-spacing-4;
+
+    @include tutor-breakpoint-down(sm) {
+      margin-top: 10px; // this is outside of design system
+      gap: $tutor-spacing-3;
+    }
+  }
+
+  &-attempts {
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-5;
+
+    &-header {
+      @include tutor-flex(column, stretch, flex-start);
+      gap: $tutor-spacing-5;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-card-base();
+        @include tutor-card-radius(2xl);
+        padding: $tutor-spacing-5;
+      }
+    }
+
+    &-table {
+      @include tutor-card-base();
+      @include tutor-card-padding(medium);
+      @include tutor-card-radius(2xl);
+      @include tutor-flex(column, stretch, flex-start);
+      gap: $tutor-spacing-6;
+
+      .tutor-table {
+        table-layout: fixed;
+
+        thead {
+          th {
+            @include tutor-typography('tiny', 'regular');
+            width: 14.3%;
+
+            &:first-of-type {
+              width: 42.5%;
+            }
+          }
+        }
+
+        tbody {
+          td {
+            @include tutor-typography('small', 'regular', 'secondary');
+            width: 14.3%;
+
+            &:first-of-type {
+              color: $tutor-text-brand;
+              font-weight: $tutor-font-weight-medium;
+              width: 42.8%;
+            }
+          }
+        }
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        padding: $tutor-spacing-5;
+        gap: $tutor-spacing-4;
+      }
+    }
+
+    &-details {
+      .tutor-assignment-attempts-table {
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-reset;
+        }
+      }
+    }
+  }
+
+  &-submission {
+    @include tutor-card-base();
+    @include tutor-card-padding(medium);
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-4;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+      gap: $tutor-spacing-3;
+    }
+  }
+
+  &-feedback {
+    @include tutor-card-base();
+    @include tutor-card-padding(medium);
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column, stretch, flex-start);
+    gap: $tutor-spacing-4;
+    border: 1px solid $tutor-border-brand-secondary;
+    background-color: $tutor-surface-brand-tertiary;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+      gap: $tutor-spacing-3;
+    }
+  }
+}

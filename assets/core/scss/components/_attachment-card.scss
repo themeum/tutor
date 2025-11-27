@@ -22,6 +22,10 @@
     background-color: $tutor-surface-l2;
     flex-shrink: 0;
 
+    svg {
+      color: $tutor-icon-idle;
+    }
+
     &-loading {
       svg {
         @include tutor-spin(0.9s);
