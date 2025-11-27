@@ -12,6 +12,15 @@ const config: StorybookConfig = {
     const isDevelopment = configType === 'DEVELOPMENT';
 
     rsbuildConfig.tools = rsbuildConfig.tools || {};
+    rsbuildConfig.tools.bundlerChain = (chain, { rspack }) => {
+      chain.plugin('extra-define').use(rspack.DefinePlugin, [
+        {
+          __TUTOR_TEXT_DOMAIN__: {
+            NODE_ENV: JSON.stringify(process.env.TEXT_DOMAIN || 'tutor'),
+          },
+        },
+      ]);
+    };
     rsbuildConfig.tools.swc = {
       jsc: {
         parser: {
