@@ -1,0 +1,295 @@
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-quiz-intro {
+	@include tutor-container(748px);
+
+	&-card {
+		width: 100%;
+	}
+
+	&-icon {
+		@include tutor-flex-center;
+		height: 330px;
+		background-color: $tutor-surface-l1-hover;
+
+		&-image {
+			max-width: 100%;
+			height: auto;
+			display: block;
+			mix-blend-mode: darken;
+		}
+	}
+
+	&-title {
+		@include tutor-typography('h3', 'semibold', 'primary', 'heading');
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-typography('h5', 'semibold', 'primary', 'heading');
+		}
+	}
+
+	&-description {
+		@include tutor-typography('p1', 'regular', 'secondary');
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-typography('small', 'regular', 'secondary');
+		}
+	}
+
+	&-params {
+		.tutor-table-wrapper {
+			@include tutor-breakpoint-down(sm) {
+				overflow-x: hidden;
+			}
+		}
+
+		.tutor-table {
+			@include tutor-breakpoint-down(sm) {
+				min-width: auto;
+				width: 100%;
+			}
+		}
+	}
+
+	&-param {
+		&-label {
+			width: 35%;
+			white-space: nowrap;
+			@include tutor-flex(row, center);
+			gap: $tutor-spacing-3;
+		}
+	}
+
+	&-attempts {
+		.tutor-table-wrapper {
+			@include tutor-breakpoint-down(sm) {
+				overflow-x: hidden;
+			}
+		}
+
+		.tutor-table {
+			table-layout: fixed;
+
+			@include tutor-breakpoint-down(sm) {
+				min-width: auto;
+				width: 100%;
+			}
+		}
+
+		&-head {
+			@include tutor-breakpoint-down(sm) {
+				display: none;
+			}
+
+			th {
+				&.tutor-quiz-intro-attempts-header {
+					@include tutor-typography('tiny', 'regular', 'secondary');
+					letter-spacing: 0;
+
+					&:first-child {
+						width: 40%;
+					}
+
+					&:nth-child(2) {
+						width: 30%;
+					}
+				}
+			}
+		}
+
+		&-row {
+			@include tutor-breakpoint-down(sm) {
+				@include tutor-flex(column);
+				padding: $tutor-spacing-5;
+				gap: $tutor-spacing-4;
+			}
+		}
+
+		&-cell {
+			@include tutor-breakpoint-down(sm) {
+				padding: 0;
+			}
+		}
+
+		@include tutor-breakpoint-down(sm) {
+			.tutor-table {
+				td.tutor-quiz-intro-attempts-cell {
+					padding: 0;
+				}
+			}
+		}
+
+		&-date-col {
+			width: 40%;
+
+			@include tutor-breakpoint-down(sm) {
+				width: 100%;
+				@include tutor-flex(column);
+			}
+		}
+
+		&-marks-col {
+			width: 30%;
+
+			@include tutor-breakpoint-down(sm) {
+				width: 100%;
+				@include tutor-flex(row, center, flex-start, wrap);
+
+				> div {
+					flex-shrink: 0;
+					background-color: $tutor-gray-25;
+					padding: $tutor-spacing-5;
+					border-radius: $tutor-radius-lg;
+				}
+
+				.tutor-quiz-marks-breakdown {
+					flex: 1;
+					max-width: 89px;
+				}
+			}
+		}
+
+		&-time-col {
+			@include tutor-breakpoint-down(sm) {
+				display: none;
+			}
+		}
+
+		&-result-col {
+			@include tutor-breakpoint-down(sm) {
+				display: none;
+			}
+		}
+	}
+
+	&-attempt {
+		&-number {
+			@include tutor-typography('medium', 'semibold', 'primary');
+			margin-bottom: $tutor-spacing-3;
+
+			@include tutor-breakpoint-down(sm) {
+				display: none;
+			}
+		}
+
+		&-date {
+			@include tutor-typography('tiny', 'regular', 'subdued');
+
+			@include tutor-breakpoint-down(sm) {
+				@include tutor-typography('small', 'semibold', 'brand');
+			}
+		}
+	}
+
+	&-time {
+		@include tutor-typography('medium', 'regular', 'subdued');
+
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-typography('small', 'regular', 'subdued');
+		}
+	}
+
+	&-stats-row {
+		width: 100%;
+
+		@include tutor-flex(row, center);
+		gap: $tutor-spacing-4;
+
+		@include tutor-breakpoint-down(sm) {
+			border-radius: $tutor-radius-2xl;
+			gap: $tutor-spacing-3;
+		}
+	}
+
+	&-time-info {
+		@include tutor-flex(row, center);
+		gap: $tutor-spacing-2;
+
+		svg {
+			color: $tutor-icon-secondary;
+		}
+	}
+
+	&-mobile-result {
+		display: none;
+
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-flex();
+			margin-left: $tutor-spacing-4;
+		}
+	}
+
+	&-mobile-time {
+		display: none;
+
+		@include tutor-breakpoint-down(sm) {
+			@include tutor-flex(row, center);
+			margin-left: auto;
+			gap: $tutor-spacing-2;
+			@include tutor-typography('tiny', 'medium', 'secondary');
+		}
+	}
+
+	&-marks {
+		&-breakdown {
+			@include tutor-flex(column);
+			gap: $tutor-spacing-2;
+
+			@include tutor-breakpoint-down(sm) {
+				flex-direction: column;
+			}
+		}
+
+		&-correct,
+		&-incorrect {
+			@include tutor-typography('tiny', 'medium', 'primary');
+			@include tutor-flex(row, center);
+			gap: $tutor-spacing-2;
+			background-color: $tutor-gray-200;
+			padding: 0 $tutor-spacing-4;
+			border-radius: 40px;
+
+			&::before {
+				content: '';
+				width: 6px;
+				height: 6px;
+				border-radius: $tutor-radius-full;
+				display: inline-block;
+			}
+		}
+
+		&-correct {
+			&::before {
+				background-color: $tutor-success-700;
+			}
+		}
+
+		&-incorrect {
+			&::before {
+				background-color: $tutor-error-600;
+			}
+		}
+	}
+
+	&-actions {
+		@include tutor-breakpoint-down(sm) {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			@include tutor-flex(row, center);
+			padding: $tutor-spacing-4 $tutor-spacing-5;
+			background-color: $tutor-surface-l1;
+			border-top: 1px solid $tutor-border-idle;
+			gap: $tutor-spacing-3;
+			z-index: $tutor-z-sidebar;
+
+			button {
+				flex: 1 1 auto;
+			}
+		}
+	}
+
+	@include tutor-breakpoint-down(sm) {
+		padding-bottom: $tutor-spacing-18;
+	}
+}

@@ -19,6 +19,10 @@ use TUTOR\Input;
 	<?php require 'components/comments.php'; ?>
 </section>
 
+<section>
+	<?php tutor_load_template( 'demo-components.learning-area.pages.quiz-intro' ); ?>
+</section>
+
 
 <div class="tutor-learning-area" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
 	<?php tutor_load_template( 'demo-components.learning-area.components.header' ); ?>
