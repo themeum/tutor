@@ -310,16 +310,6 @@ use Tutor\Components\Tabs;
 	?&gt;
 	</code></pre>
 	<?php
-	// Text input with clear button
-echo InputField::make()
-    ->type('text')
-    ->name('full_name')
-    ->label('Full Name')
-    ->placeholder('Enter your full name')
-    ->required()
-    ->clearable()
-    ->help_text('This is a helper text.')
-    ->render();
 
 // Text input with left icon
 // echo InputField::make()
@@ -482,8 +472,10 @@ echo InputField::make()
 				}
 			)($event)"
 			class="tutor-max-w-md"
+			style="border: 1px solid; padding: 20px;"
 		>
 
+		<div class="tutor-flex tutor-flex-column tutor-gap-7">
 		<?php
 			echo InputField::make()
 				->type('text')
@@ -495,16 +487,29 @@ echo InputField::make()
 				->help_text('This is a helper text.')
 				->attr( 'x-bind', "register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
 				->render();
-		?>
 
-				<button 
-					type="submit" 
-					class="tutor-btn tutor-btn-primary"
-					:disabled="isSubmitting"
-					:class="{ 'tutor-btn-loading': isSubmitting }"
-				>
-					<span>Submit Form</span>
-				</button>
+			echo InputField::make()
+				->type('checkbox')
+				->name('terms')
+				->label('Agree with terms')
+				->required()
+				->clearable()
+				->help_text('This is a helper text.')
+				->attr( 'x-bind', "register('terms', { required: 'Gender is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
+				->render();
+		?>
+			<div>
+						<button 
+			type="submit" 
+			class="tutor-btn tutor-btn-primary"
+			:disabled="isSubmitting"
+			:class="{ 'tutor-btn-loading': isSubmitting }"
+		>
+			<span>Submit Form</span>
+		</button>
+			</div>
+		</div>
+
 	
 	</form>
 	</div>
