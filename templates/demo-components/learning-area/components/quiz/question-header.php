@@ -17,6 +17,12 @@
 
 	<div class="tutor-quiz-question-title">
 		<?php echo esc_html( $question_title ); ?>
+
+		<?php if ( ! empty( $question_description ) ) : ?>
+			<div class="tutor-p2 tutor-text-secondary">
+				<?php echo esc_html( $question_description ); ?>
+			</div>
+		<?php endif; ?>
 	</div>
 
 	<?php if ( $show_question_mark ) : ?>
