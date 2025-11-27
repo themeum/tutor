@@ -43,7 +43,7 @@ $attempts = array(
 
 <div class="tutor-assignment-attempts">
 	<div class="tutor-assignment-attempts-table">
-		<h4 class="tutor-h4">
+		<h4 class="tutor-h4 tutor-sm-text-medium">
 			<?php echo esc_html( $assignment_title ); ?>
 		</h4>
 

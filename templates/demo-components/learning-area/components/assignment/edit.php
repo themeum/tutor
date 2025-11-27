@@ -53,21 +53,21 @@ $attemps_url = add_query_arg(
 	</div>
 
 	<div class="tutor-assignment-form">
-		<div class="tutor-small tutor-text-brand">
+		<div class="tutor-small tutor-text-brand tutor-sm-text-tiny">
 			<?php echo esc_html( $assignment_title ); ?>
 		</div>
 
-		<h4 class="tutor-h4">
+		<h4 class="tutor-h4 tutor-sm-text-medium">
 			<?php esc_html_e( 'Submit Assignment', 'tutor' ); ?>
 		</h4>
 
-		<div class="tutor-input-field">
+		<div class="tutor-input-field tutor-mt-3 tutor-mb-1">
 			<!-- @TODO: render tinyMCE editor -->
 			<?php wp_editor( '', 'assignment_title', array() ); ?>
 		</div>
 
 		<div class="tutor-assignment-file-uploader">
-			<div class="tutor-medium">
+			<div class="tutor-medium tutor-sm-text-small">
 				<?php esc_html_e( 'Assignments', 'tutor' ); ?>
 			</div>
 			<?php tutor_load_template( 'core-components.file-uploader', $file_uploader_config ); ?>

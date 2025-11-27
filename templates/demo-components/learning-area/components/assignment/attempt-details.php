@@ -55,7 +55,7 @@ $attempts_url = add_query_arg(
 
 ?>
 
-<div class="tutor-assignment-attempts">
+<div class="tutor-assignment-attempts tutor-assignment-attempts-details">
 	<div class="tutor-assignment-attempts-header">
 		<div>
 			<a href="<?php echo esc_url( $attempts_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-gap-2">
@@ -65,7 +65,7 @@ $attempts_url = add_query_arg(
 		</div>
 		
 		<div class="tutor-assignment-attempts-table">
-			<h4 class="tutor-h4">
+			<h4 class="tutor-h4 tutor-sm-text-medium">
 				<?php echo esc_html( $assignment_title ); ?>
 			</h4>
 
@@ -74,11 +74,11 @@ $attempts_url = add_query_arg(
 	</div>
 
 	<div class="tutor-assignment-submission">
-		<div class="tutor-small tutor-text-subdued">
+		<div class="tutor-small tutor-text-subdued tutor-sm-text-tiny">
 			<?php esc_html_e( 'Your Submission', 'tutor' ); ?>
 		</div>
 
-		<div class="tutor-p1">
+		<div class="tutor-p1 tutor-sm-text-small">
 			<?php echo wp_kses_post( $attempt['content'] ); ?>
 		</div>
 
@@ -93,11 +93,11 @@ $attempts_url = add_query_arg(
 
 	<?php if ( ! empty( $attempt['instructor_feedback'] ) ) : ?>
 		<div class="tutor-assignment-feedback">
-			<div class="tutor-small tutor-text-subdued">
+			<div class="tutor-small tutor-text-subdued tutor-sm-text-tiny">
 				<?php esc_html_e( 'Instructor Feedback', 'tutor' ); ?>
 			</div>
 
-			<div class="tutor-p1">
+			<div class="tutor-p1 tutor-sm-text-small">
 				<?php echo wp_kses_post( $attempt['instructor_feedback'] ); ?>
 			</div>
 		</div>

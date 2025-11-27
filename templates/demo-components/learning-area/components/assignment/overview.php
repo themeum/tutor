@@ -39,7 +39,7 @@ $render_status = function ( $status ) {
 	<div class="tutor-assignment-info">
 		<?php echo wp_kses_post( $render_status( $assignment_status ) ); ?>
 
-		<h4 class="tutor-h4">
+		<h4 class="tutor-h4 tutor-sm-text-medium tutor-mt-1">
 			<?php echo esc_html( $assignment_title ); ?>
 		</h4>
 

@@ -32,19 +32,19 @@ $assignment_files = array(
 ?>
 
 <div class="tutor-assignment-description">
-	<div class="tutor-small tutor-text-subdued">
+	<div class="tutor-small tutor-text-subdued tutor-sm-text-tiny">
 		<?php esc_html_e( 'Assignment Description', 'tutor' ); ?>
 	</div>
-	<div class="tutor-medium tutor-text-secondary">
+	<div class="tutor-medium tutor-text-secondary tutor-sm-text-small">
 		<?php echo wp_kses_post( $assignment_description ); ?>
 	</div>
 </div>
 
 <div class="tutor-assignment-attachments">
-	<div class="tutor-small tutor-text-subdued">
+	<div class="tutor-small tutor-text-subdued tutor-sm-text-tiny">
 		<?php esc_html_e( 'Assignments', 'tutor' ); ?>
 	</div>
-	<div class="tutor-medium">
+	<div class="tutor-medium tutor-sm-text-small">
 		<?php esc_html_e( 'Download resources and materials for this assignment', 'tutor' ); ?>
 	</div>
 	<div class="tutor-assignment-attachments-cards">
