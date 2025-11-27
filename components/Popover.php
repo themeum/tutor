@@ -18,7 +18,25 @@ defined( 'ABSPATH' ) || exit;
  * Class Popover
  *
  * Responsible for rendering popover component on button
- * at different placement positions with footer component and menu items
+ * at different placement positions with footer component and menu items.
+ *
+ * Example Usage: Basic Popover
+ * ```
+ * echo Popover::make()
+ *      ->title( 'Basic' )
+ *       ->body( '<p>This is a popover component</p>' )
+ *       ->closeable( true )
+ *       ->trigger(
+ *           Button::make()
+ *           ->label( 'Show Popover' )
+ *           ->attr( 'x-ref', 'trigger' )
+ *           ->attr( '@click', 'toggle()' )
+ *           ->size( 'medium' )
+ *           ->variant( 'primary' )
+ *           ->render()
+ *       )
+ *       ->render();
+ * ```
  *
  * @since 4.0.0
  */
@@ -120,6 +138,13 @@ class Popover extends BaseComponent {
 	 * @var array
 	 */
 	protected $attributes;
+
+	/**
+	 * Prevent close from outside
+	 *
+	 * @var bool
+	 */
+	protected $popover_close_outside = true;
 
 	/**
 	 * Set Popover title
@@ -360,6 +385,20 @@ class Popover extends BaseComponent {
 	}
 
 	/**
+	 * Handle closing popover on outside click.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param boolean $is_closeable whether allow to close from outside click.
+	 *
+	 * @return self
+	 */
+	public function dismissible( bool $is_closeable ): self {
+		$this->popover_close_outside = $is_closeable;
+		return $this;
+	}
+
+	/**
 	 * Render Menu for popover.
 	 *
 	 * @since 4.0.0
@@ -436,6 +475,8 @@ class Popover extends BaseComponent {
 		$placement_class = 'bottom-start' !== $placement_position ? "tutor-popover-$placement_position" : 'tutor-popover-top';
 		$class           = 'tutor-popover ' . $placement_class;
 
+		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()' : '';
+
 		return sprintf(
 			'<div x-data="tutorPopover({ placement: \'%s\' })">
 				%s
@@ -444,7 +485,7 @@ class Popover extends BaseComponent {
 					x-show="open"
 					x-cloak
 					class=%s
-					@click.outside="handleClickOutside()"
+					%s"
 				>	
 				%s
 				%s
@@ -455,6 +496,7 @@ class Popover extends BaseComponent {
 			$placement_position,
 			$button,
 			$class,
+			$closeable_attr,
 			$header,
 			$body,
 			$footer,

@@ -847,6 +847,7 @@ echo Popover::make()
 		->title( 'Confirm Action' )
 		->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
 		->footer( $footer_buttons )
+		->dismissible( false )
 		->trigger(
 			Button::make()
 			->label( 'Popover Footer' )
@@ -886,7 +887,7 @@ echo Popover::make()
 			->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
 			->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
 			->render();
-		?>
+	?>
 </div>
 <!-- popover component -->
 </body>
