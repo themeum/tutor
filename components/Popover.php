@@ -94,6 +94,34 @@ class Popover extends BaseComponent {
 	protected $popover_footer_alignment;
 
 	/**
+	 * Popover menu item icon svg.
+	 *
+	 * @var string
+	 */
+	protected $popover_menu_item_icon;
+
+	/**
+	 * Popover menu item icon alignment.
+	 *
+	 * @var string
+	 */
+	protected $popover_menu_item_icon_alignment;
+
+	/**
+	 * Popover menu item custom class.
+	 *
+	 * @var string
+	 */
+	protected $popover_menu_item_class;
+
+	/**
+	 * Attributes of Popover menu items.
+	 *
+	 * @var array
+	 */
+	protected $attributes;
+
+	/**
 	 * Set Popover title
 	 *
 	 * @since 4.0.0
@@ -197,16 +225,34 @@ class Popover extends BaseComponent {
 	}
 
 	/**
-	 * Menu items for creating the popover menu.
+	 * Menu items for creating popover menu.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param array $popover_menu_items the popover menu items list.
+	 * @param string $tag the menu item html tag.
+	 * @param string $popover_menu_item the popover menu item.
+	 * @param string $class the menu item class.
+	 * @param string $icon the menu item icon.
+	 * @param string $icon_alignment menu item icon alignment.
+	 * @param array  $attr the menu item attributes.
 	 *
 	 * @return self
 	 */
-	public function menu_items( array $popover_menu_items ): self {
-		$this->popover_menu_items = $popover_menu_items;
+	public function menu_item( string $tag, string $popover_menu_item, string $class = '', string $icon = '', string $icon_alignment = '', array $attr = array() ): self {
+		$menu_item_tag                          = ! empty( $tag ) ? $this->esc( $tag, $this->popover_body_esc ) : '';
+		$this->popover_menu_item_class          = $class ?? '';
+		$this->popover_menu_item_icon           = $icon ?? '';
+		$this->popover_menu_item_icon_alignment = ! in_array( $icon_alignment, array( 'left', 'right' ), true ) ? 'left' : $icon_alignment;
+
+		$this->popover_menu_items[] = array(
+			'tag'            => $menu_item_tag,
+			'content'        => $popover_menu_item,
+			'class'          => $this->popover_menu_item_class,
+			'icon'           => $this->popover_menu_item_icon,
+			'icon_alignment' => $this->popover_menu_item_icon_alignment,
+			'attr'           => $attr,
+		);
+
 		return $this;
 	}
 
@@ -326,7 +372,49 @@ class Popover extends BaseComponent {
 			return $menu_items;
 		}
 
-		return $menu_items;
+		foreach ( $this->popover_menu_items as $item ) {
+			$tag            = isset( $item['tag'] ) ? $item['tag'] : 'div';
+			$content        = isset( $item['content'] ) ? $this->esc( $item['content'], $this->popover_body_esc ) : '';
+			$class          = isset( $item['class'] ) ? esc_attr( $item['class'] ) : '';
+			$icon           = isset( $item['icon'] ) ? $item['icon'] : '';
+			$icon_alignment = isset( $item['icon_alignment'] ) ? $item['icon_alignment'] : 'left';
+
+			$this->attributes = tutor_utils()->count( $item['attr'] ) ? $item['attr'] : array();
+
+			$menu_item_attr = $this->render_attributes();
+
+			if ( empty( $icon ) ) {
+				$menu_items .= sprintf(
+					'<%1$s class="tutor-popover-menu-item %2$s" %4$s>%3$s</%1$s>',
+					$tag,
+					$class,
+					$content,
+					$menu_item_attr
+				);
+			}
+
+			if ( 'right' === $icon_alignment ) {
+				$menu_items .= sprintf(
+					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
+					$tag,
+					$class,
+					$content,
+					$icon,
+					$menu_item_attr
+				);
+			} else {
+				$menu_items .= sprintf(
+					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
+					$tag,
+					$class,
+					$content,
+					$icon,
+					$menu_item_attr
+				);
+			}
+		}
+
+		return sprintf( '<div class="tutor-popover-menu">%s</div>', $menu_items );
 	}
 
 	/**
@@ -343,15 +431,10 @@ class Popover extends BaseComponent {
 		$placement_position = $this->popover_placement;
 		$button             = $this->popover_button ?? '';
 		$footer             = $this->render_footer();
+		$menu               = $this->render_menu();
 
 		$placement_class = 'bottom-start' !== $placement_position ? "tutor-popover-$placement_position" : 'tutor-popover-top';
 		$class           = 'tutor-popover ' . $placement_class;
-
-		if ( isset( $this->attributes['class'] ) ) {
-			$custom_class = $this->attributes['class'];
-			$class       .= $custom_class;
-			unset( $this->attributes['class'] );
-		}
 
 		return sprintf(
 			'<div x-data="tutorPopover({ placement: \'%s\' })">
@@ -361,7 +444,9 @@ class Popover extends BaseComponent {
 					x-show="open"
 					x-cloak
 					class=%s
+					@click.outside="handleClickOutside()"
 				>	
+				%s
 				%s
 				%s
 				%s
@@ -372,7 +457,8 @@ class Popover extends BaseComponent {
 			$class,
 			$header,
 			$body,
-			$footer
+			$footer,
+			$menu
 		);
 	}
 }

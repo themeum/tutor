@@ -704,7 +704,28 @@ use TUTOR\Icon;
 <!-- table component -->
 
 <!-- popover component -->
+<h3>Popover</h3>
 <div class="popover-wrapper tutor-pb-7">
+<p>Basic Popover</p>
+<br>
+<pre>
+	<code>echo Popover::make()
+		->title( 'Basic' )
+		->body( '&lt;p&gt;This is a popover component&lt;/p&gt;' )
+		->closeable( true )
+		->trigger(
+			Button::make()
+			->label( 'Show Popover' )
+			->attr( 'x-ref', 'trigger' )
+			->attr( '@click', 'toggle()' )
+			->size( 'medium' )
+			->variant( 'primary' )
+			->render()
+		)
+		->render();
+	</code>
+</pre>
+<br>
 <?php
 	echo Popover::make()
 		->title( 'Basic' )
@@ -723,6 +744,40 @@ use TUTOR\Icon;
 
 	?>
 </div>
+<br>
+<p> Popover with placement variations</p>
+<br>
+<pre>
+<code>$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
+
+$top_button    = $button->label( 'Top' )->render();
+$right_button  = $button->label( 'Right' )->render();
+$left_button   = $button->label( 'Left' )->render();
+$bottom_button = $button->label( 'Bottom' )->render();
+
+echo Popover::make()
+	->body( '&lt;p&gt;Right component&lt;/p&gt;' )
+	->trigger( $right_button )
+	->placement( 'right' )
+	->render();
+echo Popover::make()
+	->body( '&lt;p&gt;Left component&lt;/p&gt;' )
+	->trigger( $left_button )
+	->placement( 'left' )
+	->render();
+echo Popover::make()
+	->body( '&lt;p&gt;Top component&lt;/p&gt;' )
+	->trigger( $top_button )
+	->placement( 'top' )
+	->render();
+echo Popover::make()
+	->body( '&lt;p&gt;Bottom component&lt;/p&gt;' )
+	->trigger( $bottom_button )
+	->placement( 'bottom' )
+	->render();
+</code>
+</pre>
+<br>
 <div class="popover-wrapper tutor-pb-12 tutor-gap-12 tutor-flex tutor-items-center">
 <?php
 	$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
@@ -755,7 +810,33 @@ use TUTOR\Icon;
 
 ?>
 </div>
-<div class="popover-wrapper tutor-pb-21">
+<br>
+<p>Popover with footer</p>
+<br>
+<pre>
+<code>$footer_buttons = array(
+	Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->render(),
+	Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->render(),
+);
+
+echo Popover::make()
+->title( 'Confirm Action' )
+->body( '&lt;p&gt;Are you sure you want to delete this item? This action cannot be undone.&lt;/p&gt;' )
+->footer( $footer_buttons )
+->trigger(
+	Button::make()
+	->label( 'Popover Footer' )
+	->attr( 'x-ref', 'trigger' )
+	->attr( '@click', 'toggle()' )
+	->size( 'medium' )
+	->variant( 'destructive' )
+	->render()
+)
+->render();
+</code>
+</pre>
+<br>
+<div class="popover-wrapper tutor-pb-7">
 	<?php
 		$footer_buttons = array(
 			Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->render(),
@@ -779,5 +860,34 @@ use TUTOR\Icon;
 
 		?>
 </div>
+<p>Popover with menu</p>
+<br>
+<pre>
+<code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )
+->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->render();
+
+echo Popover::make()
+	->trigger( $kebab_button )
+	// tag, content, class, icon, icon_alignment, attributes
+	->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
+	->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
+	->render();
+?>
+</code>
+</pre>
+<br>
+<div class="popover-wrapper tutor-pb-16">
+	<?php
+		$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->render();
+
+		echo Popover::make()
+			->trigger( $kebab_button )
+			// tag, content, class, icon, icon_alignment, attributes
+			->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
+			->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
+			->render();
+		?>
+</div>
+<!-- popover component -->
 </body>
 </html>
