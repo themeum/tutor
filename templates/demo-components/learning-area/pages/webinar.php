@@ -82,6 +82,18 @@ $webinar_lessons = array(
 		'action_text'    => __( 'Join', 'tutor' ),
 		'action_url'     => '#',
 	),
+	array(
+		'group_heading'  => '',
+		'date_text'      => __( '5th Jan, 2025', 'tutor' ),
+		'time_text'      => __( '2:00 PM', 'tutor' ),
+		'lesson_title'   => __( 'Live Editing Session', 'tutor' ),
+		'course_name'    => __( 'Camera Skills & Photo Theory', 'tutor' ),
+		'show_live_tag'  => true,
+		'event_tag_text' => __( 'Live Session', 'tutor' ),
+		'event_tag_icon' => Icon::ZOOM_COLORIZE,
+		'action_text'    => __( 'Join', 'tutor' ),
+		'action_url'     => '#',
+	),
 );
 
 ?>
@@ -152,7 +164,7 @@ $webinar_lessons = array(
 					$current_group = $lesson_group;
 					$group_open    = true;
 					?>
-					<div class="tutor-space-y-3">
+					<div class="tutor-webinar-group tutor-space-y-3">
 						<div class="tutor-webinar-group-heading">
 							<?php echo esc_html( $lesson_group ); ?>
 						</div>
@@ -160,7 +172,7 @@ $webinar_lessons = array(
 				elseif ( ! $group_open ) :
 					$group_open = true;
 					?>
-					<div class="tutor-space-y-3">
+					<div class="tutor-webinar-group tutor-space-y-3">
 					<?php
 				endif;
 
