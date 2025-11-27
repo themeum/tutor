@@ -29,8 +29,18 @@ $button_class        = 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-b
 $can_complete_course = CourseModel::can_complete_course( $course_id, $user_id );
 $completion_mode     = tutor_utils()->get_option( 'course_completion_process' );
 
-if ( $retake_course && $can_complete_course && CourseModel::MODE_FLEXIBLE === $completion_mode ) {
+if ( $retake_course && $can_complete_course && in_array( $completion_mode, array( CourseModel::MODE_FLEXIBLE, CourseModel::MODE_STRICT ), true ) ) {
 	$button_class .= ' tutor-course-retake-button';
+	ob_start();
+	$link_text = __( 'Retake This Course', 'tutor' );
+	?>
+	<a href="<?php echo esc_url( $lesson_url ); ?>" 
+		class="<?php echo esc_attr( $button_class ); ?>" 
+		data-course_id="<?php echo get_the_ID(); ?>">
+		<?php echo esc_html( $link_text ); ?>
+	</a>
+	<?php
+		$enroll_btn = ob_get_clean();
 }
 
 if ( $lesson_url && ! $is_completed_course ) {
