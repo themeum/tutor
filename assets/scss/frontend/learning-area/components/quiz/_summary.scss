@@ -47,10 +47,10 @@
       }
     }
     &-marks {
-      grid-area: marks;
       @include tutor-typography(medium, regular, secondary);
       @include tutor-flex(column);
       gap: $tutor-spacing-6;
+      grid-area: marks;
 
       @include tutor-breakpoint-down(sm) {
         @include tutor-text(small);

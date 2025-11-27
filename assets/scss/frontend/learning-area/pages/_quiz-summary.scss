@@ -10,9 +10,9 @@
     border-bottom: 1px solid $tutor-border-idle;
 
     &-inner {
+      @include tutor-flex(row, center, space-between);
       max-width: 736px;
       margin: 0 auto;
-      @include tutor-flex(row, center, space-between);
     }
   }
 
@@ -31,18 +31,18 @@
 
     .tutor-quiz-sidebar-questions {
       .tutor-quiz-sidebar-question-item {
+        @include tutor-flex(row);
         outline: none;
         box-shadow: none;
-        @include tutor-flex(row);
         gap: $tutor-spacing-5;
         padding: $tutor-spacing-5 $tutor-spacing-8;
 
         .tutor-question-number {
           @include tutor-typography(p2, bold);
-          min-width: 46px;
-          align-self: start;
           @include tutor-flex(row, center);
           gap: $tutor-spacing-5;
+          min-width: 46px;
+          align-self: start;
           padding-inline-start: $tutor-spacing-4;
 
           &::before {
