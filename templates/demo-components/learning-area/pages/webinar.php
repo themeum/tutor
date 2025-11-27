@@ -85,14 +85,14 @@ $webinar_lessons = array(
 );
 
 ?>
-<section class="tutor-learning-area-webinar">
-	<div class="tutor-card tutor-learning-area-webinar-card">
+<section class="tutor-webinar">
+	<div class="tutor-card tutor-webinar-card">
 		<div class="tutor-card-header tutor-space-y-4">
-			<div class="tutor-learning-area-webinar-header">
+			<div class="tutor-webinar-header">
 					<h4 class="tutor-mb-1">
-						<span class="tutor-learning-area-webinar-month"><?php echo esc_html( $webinar_month_text ); ?></span>
+						<span class="tutor-webinar-month"><?php echo esc_html( $webinar_month_text ); ?></span>
 						<?php if ( ! empty( $webinar_year_text ) ) : ?>
-							<span class="tutor-learning-area-webinar-year"><?php echo esc_html( $webinar_year_text ); ?></span>
+							<span class="tutor-webinar-year"><?php echo esc_html( $webinar_year_text ); ?></span>
 						<?php endif; ?>
 				</h4>
 				<div class="tutor-flex tutor-items-center tutor-gap-2">
@@ -116,12 +116,12 @@ $webinar_lessons = array(
 				</div>
 			</div>
 
-			<div class="tutor-learning-area-webinar-search">
+			<div class="tutor-webinar-search">
 				<div class="tutor-input-field tutor-m-0">
 					<div class="tutor-input-wrapper">
 						<input
 							type="search"
-							id="tutor-learning-area-webinar-search-input"
+							id="tutor-webinar-search-input"
 							class="tutor-input tutor-input-content-left tutor-input-content-clear"
 							placeholder="<?php echo esc_attr( $webinar_overview['search_placeholder'] ); ?>"
 						>
@@ -131,10 +131,10 @@ $webinar_lessons = array(
 					</div>
 				</div>
 			</div>
-			<div class="tutor-learning-area-webinar-divider" aria-hidden="true"></div>
+			<div class="tutor-webinar-divider" aria-hidden="true"></div>
 		</div>
 
-		<div class="tutor-learning-area-webinar-body tutor-space-y-8">
+		<div class="tutor-webinar-body tutor-space-y-8">
 			<?php
 			$current_group = '';
 			$group_open    = false;
@@ -153,7 +153,7 @@ $webinar_lessons = array(
 					$group_open    = true;
 					?>
 					<div class="tutor-space-y-3">
-						<div class="tutor-learning-area-webinar-group-heading">
+						<div class="tutor-webinar-group-heading">
 							<?php echo esc_html( $lesson_group ); ?>
 						</div>
 					<?php
