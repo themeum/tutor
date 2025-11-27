@@ -32,10 +32,7 @@
   }
 
   .tutor-certificate-info {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: $tutor-spacing-7;
-
+    @include tutor-grid(2, $tutor-spacing-7);
     background-color: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-2xl;
