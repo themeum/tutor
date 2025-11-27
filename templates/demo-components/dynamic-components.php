@@ -15,6 +15,7 @@ use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
 use Tutor\Components\Modal;
+use Tutor\Components\Popover;
 use Tutor\Components\Progress;
 use Tutor\Components\Tabs;
 use Tutor\Components\Table;
@@ -701,5 +702,82 @@ use TUTOR\Icon;
 	?>
 </section>
 <!-- table component -->
+
+<!-- popover component -->
+<div class="popover-wrapper tutor-pb-7">
+<?php
+	echo Popover::make()
+		->title( 'Basic' )
+		->body( '<p>This is a popover component</p>' )
+		->closeable( true )
+		->trigger(
+			Button::make()
+			->label( 'Show Popover' )
+			->attr( 'x-ref', 'trigger' )
+			->attr( '@click', 'toggle()' )
+			->size( 'medium' )
+			->variant( 'primary' )
+			->render()
+		)
+		->render();
+
+	?>
+</div>
+<div class="popover-wrapper tutor-pb-12 tutor-gap-12 tutor-flex tutor-items-center">
+<?php
+	$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
+
+	$top_button    = $button->label( 'Top' )->render();
+	$right_button  = $button->label( 'Right' )->render();
+	$left_button   = $button->label( 'Left' )->render();
+	$bottom_button = $button->label( 'Bottom' )->render();
+
+	echo Popover::make()
+		->body( '<p>Right component</p>' )
+		->trigger( $right_button )
+		->placement( 'right' )
+		->render();
+	echo Popover::make()
+		->body( '<p>Left component</p>' )
+		->trigger( $left_button )
+		->placement( 'left' )
+		->render();
+	echo Popover::make()
+		->body( '<p>Top component</p>' )
+		->trigger( $top_button )
+		->placement( 'top' )
+		->render();
+	echo Popover::make()
+		->body( '<p>Bottom component</p>' )
+		->trigger( $bottom_button )
+		->placement( 'bottom' )
+		->render();
+
+?>
+</div>
+<div class="popover-wrapper tutor-pb-21">
+	<?php
+		$footer_buttons = array(
+			Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->render(),
+			Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->render(),
+		);
+
+		echo Popover::make()
+		->title( 'Confirm Action' )
+		->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
+		->footer( $footer_buttons )
+		->trigger(
+			Button::make()
+			->label( 'Popover Footer' )
+			->attr( 'x-ref', 'trigger' )
+			->attr( '@click', 'toggle()' )
+			->size( 'medium' )
+			->variant( 'destructive' )
+			->render()
+		)
+		->render();
+
+		?>
+</div>
 </body>
 </html>
