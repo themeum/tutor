@@ -8,7 +8,6 @@
   padding: $tutor-spacing-4 $tutor-spacing-5;
   transition: background-color 0.2s ease;
   position: relative;
-  cursor: pointer;
 
   &:hover,
   &:focus-within {
@@ -50,14 +49,13 @@
     @include tutor-flex(row, center, flex-end);
     gap: $tutor-spacing-2;
     flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.25s ease-in-out;
   }
 
   &:hover &-actions,
   &:focus-within &-actions,
   &-show-actions &-actions {
-    .tutor-iconic-btn {
-      opacity: 1;
-    }
+    opacity: 1;
   }
 }
-

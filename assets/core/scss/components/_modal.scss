@@ -49,6 +49,7 @@
     background-color: $tutor-surface-l1;
     border-radius: $tutor-radius-3xl;
     box-shadow: $tutor-shadow-modal;
+    overflow-y: auto;
 
     // Transitions
     &-enter {
