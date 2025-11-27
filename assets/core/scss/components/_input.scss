@@ -36,9 +36,15 @@
       &-clear {
         @include padding-end(36px);
       }
-
     }
 
+    &-sm {
+      @include tutor-input-base(sm);
+    }
+
+    &-lg {
+      @include tutor-input-base(lg);
+    }
   }
 
   .tutor-text-area {
