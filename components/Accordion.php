@@ -62,7 +62,7 @@ class Accordion extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var callback
+	 * @var string
 	 */
 	protected $title_esc_cb = 'esc_html';
 
@@ -80,7 +80,7 @@ class Accordion extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var callback
+	 * @var string
 	 */
 	protected $content_esc_cb = 'esc_html';
 
@@ -130,8 +130,8 @@ class Accordion extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string   $title Accordion title text.
-	 * @param callback $title_esc_cb Title esc callback.
+	 * @param string $title Accordion title text.
+	 * @param string $title_esc_cb Title esc callback.
 	 *
 	 * @return $this
 	 */
@@ -146,8 +146,8 @@ class Accordion extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string   $content Content HTML.
-	 * @param callback $content_esc_cb Callback for esc content.
+	 * @param string $content Content HTML.
+	 * @param string $content_esc_cb Callback for esc content.
 	 *
 	 * @return $this
 	 */
@@ -217,7 +217,8 @@ class Accordion extends BaseComponent {
 			if ( file_exists( $this->content ) ) {
 				ob_start();
 				include $this->content;
-				return ob_get_clean();
+				$content = ob_get_clean();
+				return $content ? $content : '';
 			}
 			return '';
 		}

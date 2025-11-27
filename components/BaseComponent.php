@@ -97,8 +97,8 @@ abstract class BaseComponent implements ComponentInterface {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param mixed    $value Value to escape.
-	 * @param callable $esc_fn Callable esc func.
+	 * @param mixed  $value Value to escape.
+	 * @param string $esc_fn Callable esc func.
 	 *
 	 * @return string Escaped string.
 	 */
