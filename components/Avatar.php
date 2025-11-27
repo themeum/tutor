@@ -81,6 +81,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 * Border enabled flag.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var bool
 	 */
 	protected $bordered = false;
@@ -89,7 +90,8 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 * Avatar Shape
 	 *
 	 * @since 4.0.0
-	 * @var bool
+	 *
+	 * @var string
 	 */
 	protected $shape = '';
 

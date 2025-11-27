@@ -175,8 +175,8 @@ class Modal extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string   $title Modal title.
-	 * @param callable $esc_cb Callable escaping function.
+	 * @param string $title Modal title.
+	 * @param string $esc_cb Callable escaping function.
 	 *
 	 * @return $this
 	 */
@@ -191,8 +191,8 @@ class Modal extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string   $subtitle Modal subtitle.
-	 * @param callable $esc_cb Callable escaping function.
+	 * @param string $subtitle Modal subtitle.
+	 * @param string $esc_cb Callable escaping function.
 	 *
 	 * @return $this
 	 */
@@ -207,8 +207,8 @@ class Modal extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string   $body Body content HTML.
-	 * @param callback $esc_cb Body content HTML.
+	 * @param string $body Body content HTML.
+	 * @param string $esc_cb Body content HTML.
 	 *
 	 * @return $this
 	 */
@@ -339,7 +339,7 @@ class Modal extends BaseComponent {
 				ob_start();
 				include $this->body;
 				$content = ob_get_clean();
-				return $content;
+				return $content ? $content : '';
 			}
 		} else {
 			$content = $this->esc( $this->body, $this->body_esc_cb );

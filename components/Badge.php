@@ -68,6 +68,7 @@ class Badge extends BaseComponent {
 	 * Badge attributes.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var array
 	 */
 	protected $attributes = array();

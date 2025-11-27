@@ -137,7 +137,7 @@ class Progress extends BaseComponent {
 		return sprintf(
 			'<div %s><div class="tutor-progress-bar-fill" style="--tutor-progress-width: %d%%;"></div></div>',
 			$attributes,
-			esc_attr( $this->value )
+			$this->value
 		);
 	}
 
