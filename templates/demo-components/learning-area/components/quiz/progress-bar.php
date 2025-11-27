@@ -19,9 +19,9 @@ use TUTOR\Icon;
 				<?php tutor_utils()->render_svg_icon( Icon::TIME, 32, 32, array( 'class' => 'tutor-icon-brand' ) ); ?>
 
 				<div class="tutor-quiz-progress-time">
-					<span x-text="minutes"></span>
+					<span x-text="minutes">00</span>
 					<span>:</span>
-					<span x-text="seconds"></span>
+					<span x-text="seconds">00</span>
 				</div>
 			</div>
 
