@@ -22,12 +22,20 @@
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 128px;
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+    }
   }
 
   // @TODO: Need to implement the sticky sidebar functions.
   .tutor-quiz-summary-sidebar {
     position: sticky;
     top: 0;
+
+    @include tutor-breakpoint-down(sm) {
+      display: none;
+    }
 
     .tutor-quiz-sidebar-questions {
       .tutor-quiz-sidebar-question-item {

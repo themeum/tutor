@@ -78,7 +78,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 		<div class="tutor-quiz-summary-content">
-			<h3 class="tutor-h3 tutor-text-subdued tutor-mb-10">
+			<h3 class="tutor-h3 tutor-sm-text-h5 tutor-text-subdued tutor-mb-10 tutor-sm-mb-5">
 				<?php esc_html_e( 'Review your answers', 'tutor' ); ?>
 			</h3>
 			<div class="tutor-quiz-questions">
