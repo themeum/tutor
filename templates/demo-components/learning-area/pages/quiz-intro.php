@@ -132,14 +132,14 @@ $attempts = array(
 											<div x-data="tutorStatics({ value: <?php echo esc_attr( $attempt['marks_percent'] ); ?>, type: 'progress' })">
 												<div x-html="render()"></div>
 											</div>
-											<div class="tutor-quiz-marks-breakdown">
-												<div class="tutor-quiz-marks-correct">
+											<div class="tutor-quiz-intro-marks-breakdown">
+												<div class="tutor-quiz-intro-marks-correct">
 													<?php
 													/* translators: %d: number of correct answers */
 													echo esc_html( sprintf( __( '%d correct', 'tutor' ), $attempt['correct_answers'] ) );
 													?>
 												</div>
-												<div class="tutor-quiz-marks-incorrect">
+												<div class="tutor-quiz-intro-marks-incorrect">
 													<?php
 													/* translators: %d: number of incorrect answers */
 													echo esc_html( sprintf( __( '%d incorrect', 'tutor' ), $attempt['incorrect_answers'] ) );

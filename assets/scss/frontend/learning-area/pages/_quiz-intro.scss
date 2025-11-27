@@ -1,9 +1,8 @@
-@use '../../../../core/scss/tokens' as *;
-@use '../../../../core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
 
 .tutor-quiz-intro {
-	max-width: 748px;
-	margin: 0 auto;
+	@include tutor-container(748px);
 
 	&-card {
 		width: 100%;
@@ -230,6 +229,47 @@
 		}
 	}
 
+	&-marks {
+		&-breakdown {
+			@include tutor-flex(column);
+			gap: $tutor-spacing-2;
+
+			@include tutor-breakpoint-down(sm) {
+				flex-direction: column;
+			}
+		}
+
+		&-correct,
+		&-incorrect {
+			@include tutor-typography('tiny', 'medium', 'primary');
+			@include tutor-flex(row, center);
+			gap: $tutor-spacing-2;
+			background-color: $tutor-gray-200;
+			padding: 0 $tutor-spacing-4;
+			border-radius: 40px;
+
+			&::before {
+				content: '';
+				width: 6px;
+				height: 6px;
+				border-radius: $tutor-radius-full;
+				display: inline-block;
+			}
+		}
+
+		&-correct {
+			&::before {
+				background-color: $tutor-success-700;
+			}
+		}
+
+		&-incorrect {
+			&::before {
+				background-color: $tutor-error-600;
+			}
+		}
+	}
+
 	&-actions {
 		@include tutor-breakpoint-down(sm) {
 			position: fixed;
@@ -248,50 +288,8 @@
 			}
 		}
 	}
-}
-
-.tutor-quiz-marks-breakdown {
-	@include tutor-flex(column);
-	gap: $tutor-spacing-2;
 
 	@include tutor-breakpoint-down(sm) {
-		flex-direction: column;
-		width: 100%;
-	}
-}
-
-.tutor-quiz-marks-correct,
-.tutor-quiz-marks-incorrect {
-	@include tutor-typography('tiny', 'medium', 'primary');
-	@include tutor-flex(row, center);
-	gap: $tutor-spacing-2;
-	background-color: $tutor-gray-200;
-	padding: 0 $tutor-spacing-4;
-	border-radius: 40px;
-
-	&::before {
-		content: '';
-		width: 6px;
-		height: 6px;
-		border-radius: $tutor-radius-full;
-		display: inline-block;
-	}
-}
-
-.tutor-quiz-marks-correct {
-	&::before {
-		background-color: $tutor-success-700;
-	}
-}
-
-.tutor-quiz-marks-incorrect {
-	&::before {
-		background-color: $tutor-error-600;
-	}
-}
-
-@include tutor-breakpoint-down(sm) {
-	.tutor-quiz-intro {
 		padding-bottom: $tutor-spacing-18;
 	}
 }
