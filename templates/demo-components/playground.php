@@ -40,16 +40,14 @@ use TUTOR\Input;
 
 	$subpages = array(
 		'dashboard'          => 'Dashboard',
-		'user-profile'       => 'User Profile',
-		'learning-area'      => 'Learning Area',
-		'profile-settings'   => 'Account Settings',
-		'dashboard'          => 'Dashboard',
 		'learning-area'      => 'Learning Area',
 		'user-profile'       => 'User Profile',
 		'certificates'       => 'Certificates',
 		'reviews'            => 'Reviews',
 		'profile-settings'   => 'Account Settings',
 		'billing'            => 'Billing',
+		'quiz'               => 'Quiz',
+		'assignment'         => 'Assignment',
 		'dynamic-components' => 'Dynamic Components',
 	);
 

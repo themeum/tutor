@@ -9,6 +9,39 @@
  */
 
 use TUTOR\Icon;
+use TUTOR\Input;
+
+$current_url = admin_url( 'admin.php?page=playground&subpage=learning-area' );
+
+$menu_items = array(
+	'resources'   => array(
+		'title' => esc_html__( 'Resources', 'tutor' ),
+		'icon'  => Icon::RESOURCES,
+		'url'   => esc_url( add_query_arg( 'learning-page', 'resources', $current_url ) ),
+	),
+	'qna'         => array(
+		'title' => esc_html__( 'Q&A', 'tutor' ),
+		'icon'  => Icon::QA,
+		'url'   => esc_url( add_query_arg( 'learning-page', 'qna', $current_url ) ),
+	),
+	'course-info' => array(
+		'title' => esc_html__( 'Course Info', 'tutor' ),
+		'icon'  => Icon::INFO_OCTAGON,
+		'url'   => esc_url( add_query_arg( 'learning-page', 'course-info', $current_url ) ),
+	),
+	'webinar'     => array(
+		'title' => esc_html__( 'Webinar', 'tutor' ),
+		'icon'  => Icon::VIDEO_CAMERA_2,
+		'url'   => esc_url( add_query_arg( 'learning-page', 'webinar', $current_url ) ),
+	),
+	'certificate' => array(
+		'title' => esc_html__( 'Certificate', 'tutor' ),
+		'icon'  => Icon::CERTIFICATE_2,
+		'url'   => esc_url( add_query_arg( 'learning-page', 'certificate', $current_url ) ),
+	),
+);
+
+$active_menu = Input::get( 'learning-page', '' );
 
 ?>
 <div class="tutor-learning-sidebar" :class="{ 'is-open': sidebarOpen }" @click.outside="sidebarOpen = false">
@@ -126,26 +159,17 @@ use TUTOR\Icon;
 	</div>
 	<div class="tutor-learning-sidebar-pages">
 		<div class="tutor-learning-pages">
-			<a href="#" class="tutor-learning-pages-item">
-				<?php tutor_utils()->render_svg_icon( Icon::RESOURCES, 20, 20 ); ?>
-				<?php esc_html_e( 'Resources', 'tutor' ); ?>
-			</a>
-			<a href="#" class="tutor-learning-pages-item">
-				<?php tutor_utils()->render_svg_icon( Icon::QA, 20, 20 ); ?>
-				<?php esc_html_e( 'Q&A', 'tutor' ); ?>
-			</a>
-			<a href="#" class="tutor-learning-pages-item">
-				<?php tutor_utils()->render_svg_icon( Icon::INFO, 20, 20 ); ?>
-				<?php esc_html_e( 'Course Info', 'tutor' ); ?>
-			</a>
-			<a href="#" class="tutor-learning-pages-item active">
-				<?php tutor_utils()->render_svg_icon( Icon::VIDEO_CAMERA_2, 20, 20 ); ?>
-				<?php esc_html_e( 'Webinar', 'tutor' ); ?>
-			</a>
-			<a href="#" class="tutor-learning-pages-item">
-				<?php tutor_utils()->render_svg_icon( Icon::CERTIFICATE_2, 20, 20 ); ?>
-				<?php esc_html_e( 'Certificate', 'tutor' ); ?>
-			</a>
+			<?php
+			foreach ( $menu_items as $key => $item ) {
+				$active_class = ( $key === $active_menu ) ? 'active' : '';
+				?>
+				<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-learning-pages-item <?php echo esc_attr( $active_class ); ?>">
+					<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
+					<?php echo esc_html( $item['title'] ); ?>
+				</a>
+				<?php
+			}
+			?>
 		</div>
 	</div>
 </div>

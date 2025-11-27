@@ -48,22 +48,22 @@
 // Card variants
 @mixin tutor-card-variant($variant: default) {
   @if $variant == outlined {
-    border: 1px solid var(--tutor-border-idle);
+    border: 1px solid $tutor-border-idle;
     box-shadow: none;
   } @else if $variant == filled {
-    background-color: var(--tutor-surface-l2);
+    background-color: $tutor-surface-l2;
     border: none;
   } @else if $variant == brand {
-    border: 1px solid var(--tutor-border-brand);
-    background-color: var(--tutor-brand-100);
+    border: 1px solid $tutor-border-brand;
+    background-color: $tutor-brand-100;
   } @else if $variant == success {
-    border: 1px solid var(--tutor-success);
-    background-color: var(--tutor-success-light);
+    border: 1px solid $tutor-success;
+    background-color: $tutor-success-light;
   } @else if $variant == warning {
-    border: 1px solid var(--tutor-warning);
-    background-color: var(--tutor-warning-light);
+    border: 1px solid $tutor-warning;
+    background-color: $tutor-warning-light;
   } @else if $variant == error {
-    border: 1px solid var(--tutor-error);
-    background-color: var(--tutor-error-light);
+    border: 1px solid $tutor-error;
+    background-color: $tutor-error-light;
   }
 }

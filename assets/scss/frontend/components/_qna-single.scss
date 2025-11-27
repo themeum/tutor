@@ -1,0 +1,43 @@
+// Question and Answer Single
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-learning-area-qna-single {
+  background-color: $tutor-surface-l1;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+
+  .tutor-qna-single-reply-count {
+    @include tutor-typography(small, regular, secondary);
+    @include tutor-flex(row, center, space-between);
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    border-bottom: 1px solid $tutor-border-idle;
+
+    .tutor-qna-avatar-list {
+      @include tutor-flex();
+
+      .tutor-avatar {
+        border: 1px solid $tutor-border-inverse;
+        margin-left: -4px;
+      }
+    }
+  }
+
+  .tutor-qna-single-reply-list {
+    .tutor-qna-reply-list-item {
+      @include tutor-flex(row);
+      gap: $tutor-spacing-4;
+      padding: $tutor-spacing-6;
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid $tutor-border-idle;
+      }
+    }
+  }
+
+  .tutor-qna-thumb-button {
+    @include tutor-button-reset();
+    @include tutor-flex(0);
+  }
+}

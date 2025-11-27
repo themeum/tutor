@@ -42,7 +42,7 @@
   }
 }
 
-@mixin tutor-textarea($min-height: 144px) {
+@mixin tutor-textarea($min-height: 92px) {
   @include tutor-input-base;
   min-height: $min-height;
   resize: vertical;
