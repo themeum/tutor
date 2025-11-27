@@ -36,7 +36,7 @@ if ( $retake_course && $can_complete_course && in_array( $completion_mode, array
 	?>
 	<a href="<?php echo esc_url( $lesson_url ); ?>" 
 		class="<?php echo esc_attr( $button_class ); ?>" 
-		data-course_id="<?php echo get_the_ID(); ?>">
+		data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
 		<?php echo esc_html( $link_text ); ?>
 	</a>
 	<?php
@@ -59,7 +59,7 @@ if ( $lesson_url && ! $is_completed_course ) {
 	?>
 	<a 	href="<?php echo esc_url( $lesson_url ); ?>" 
 		class="<?php echo esc_attr( $button_class ); ?>" 
-		data-course_id="<?php echo get_the_ID(); ?>">
+		data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
 		<?php echo esc_html( $link_text ); ?>
 	</a>
 	<?php
