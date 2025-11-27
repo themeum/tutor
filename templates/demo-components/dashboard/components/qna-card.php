@@ -14,7 +14,7 @@ $is_unread = $is_unread ?? false;
 
 ?>
 <div class="tutor-qna-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
-	<div class="tutor-avatar tutor-avatar-sm">
+	<div class="tutor-avatar tutor-avatar-32">
 		<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
 	</div>
 	<div class="tutor-qna-card-content">
@@ -32,7 +32,7 @@ $is_unread = $is_unread ?? false;
 			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?> 6</div>
 			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 3</div>
 			<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-ml-2">
-				<div class="tutor-avatar tutor-avatar-sm">
+				<div class="tutor-avatar tutor-avatar-20">
 					<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
 				</div>
 				<div class="tutor-text-small">1 minute ago</div>
