@@ -1,0 +1,41 @@
+// Result badge style for Quiz
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-result-badge {
+  @include tutor-typography(medium, medium);
+  width: fit-content;
+  border: 1px solid;
+  border-radius: $tutor-radius-full;
+  padding-inline-start: $tutor-spacing-8;
+  padding-inline-end: $tutor-spacing-4;
+  margin-inline-start: $tutor-spacing-4;
+  position: relative;
+
+  @include tutor-breakpoint-down(sm) {
+    @include tutor-text(small);
+  }
+
+  svg {
+    position: absolute;
+    left: -$tutor-spacing-4;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &.passed {
+    color: $tutor-text-success;
+    border-color: $tutor-border-success-secondary;
+  }
+
+  &.pending {
+    color: $tutor-text-warning;
+    border-color: $tutor-border-warning-secondary;
+  }
+
+  &.failed {
+    color: $tutor-text-critical;
+    border-color: $tutor-border-error-secondary;
+  }
+}

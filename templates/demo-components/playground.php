@@ -46,6 +46,7 @@ use TUTOR\Input;
 		'profile-settings' => 'Account Settings',
 		'billing'          => 'Billing',
 		'quiz'             => 'Quiz',
+		'quiz-summary'     => 'Quiz Summary',
 		'assignment'       => 'Assignment',
 	);
 
@@ -73,6 +74,7 @@ use TUTOR\Input;
 			<?php require 'components/button.php'; ?>
 			<?php require 'components/popover.php'; ?>
 			<?php require 'components/file-uploader.php'; ?>
+			<?php require 'components/preview-trigger.php'; ?>
 			<?php require 'components/tabs.php'; ?>
 			<?php require 'components/skeleton.php'; ?>
 			<?php require 'components/progress.php'; ?>
@@ -81,7 +83,7 @@ use TUTOR\Input;
 			<?php require 'components/card.php'; ?>
 			<?php require 'components/section-separator.php'; ?>
 			<?php require 'components/accordion.php'; ?>
-			<?php require 'components/select-dropdown.php'; ?>
+			<!-- <?php require 'components/select-dropdown.php'; ?> -->
 			<?php require 'components/stepper-dropdown.php'; ?>
 			<?php require 'components/modal.php'; ?>
 			<?php require 'components/input.php'; ?>

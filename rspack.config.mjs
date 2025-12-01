@@ -84,14 +84,7 @@ const createConfig = (env, options) => {
                 implementation: 'sass',
                 sassOptions: {
                   outputStyle: isDevelopment ? 'expanded' : 'compressed',
-                  silenceDeprecations: [
-                    'abs-percent',
-                    'color-functions',
-                    'global-builtin',
-                    'import',
-                    'legacy-js-api',
-                    'mixed-decls',
-                  ],
+                  silenceDeprecations: ['abs-percent', 'color-functions', 'global-builtin', 'import', 'legacy-js-api'],
                 },
               },
             },

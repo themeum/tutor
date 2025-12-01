@@ -1,0 +1,82 @@
+// Learning Area Quiz Summary Page Styles
+
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-quiz-summary-page {
+  .tutor-quiz-summary-header {
+    background-color: $tutor-surface-l1;
+    padding: $tutor-spacing-6;
+    border-bottom: 1px solid $tutor-border-idle;
+
+    &-inner {
+      @include tutor-flex(row, center, space-between);
+      max-width: 736px;
+      margin: 0 auto;
+    }
+  }
+
+  .tutor-quiz-summary-body {
+    max-width: 1220px;
+    margin: $tutor-spacing-13 auto;
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 128px;
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // @TODO: Need to implement the sticky sidebar functions.
+  .tutor-quiz-summary-sidebar {
+    position: sticky;
+    top: 0;
+
+    @include tutor-breakpoint-down(sm) {
+      display: none;
+    }
+
+    .tutor-quiz-sidebar-questions {
+      .tutor-quiz-sidebar-question-item {
+        @include tutor-flex(row);
+        outline: none;
+        box-shadow: none;
+        gap: $tutor-spacing-5;
+        padding: $tutor-spacing-5 $tutor-spacing-8;
+
+        .tutor-question-number {
+          @include tutor-typography(p2, bold);
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-5;
+          min-width: 46px;
+          align-self: start;
+          padding-inline-start: $tutor-spacing-4;
+
+          &::before {
+            content: '';
+            display: block;
+            height: 8px;
+            width: 8px;
+            border-radius: 50%;
+            background-color: $tutor-icon-disabled;
+          }
+        }
+
+        &.active {
+          background-color: $tutor-surface-l1;
+          border: 1px solid $tutor-border-idle;
+          border-radius: $tutor-radius-md;
+        }
+
+        &.correct .tutor-question-number::before {
+          background-color: $tutor-icon-success-primary;
+        }
+
+        &.incorrect .tutor-question-number::before {
+          background-color: $tutor-icon-critical;
+        }
+      }
+    }
+  }
+}

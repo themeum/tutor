@@ -269,7 +269,7 @@ class Assets {
 			}
 
 			// Learning area pages.
-			$learning_pages = array( 'learning-area', 'quiz', 'assignment' );
+			$learning_pages = array( 'learning-area', 'quiz', 'quiz-summary', 'assignment' );
 			if ( in_array( $subpage, $learning_pages, true ) ) {
 
 				$learning_area_css_path = tutor()->path . 'assets/css/tutor-learning-area.min.css';
