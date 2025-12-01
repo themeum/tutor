@@ -5514,6 +5514,26 @@ class Utils {
 	}
 
 	/**
+	 * Check if the current page is frontend dashboard or the subpage
+	 * is the part of dashboard
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_dashboard_page(): bool {
+		$current_id        = get_the_ID();
+		$dashboard_page_id = $this->dashboard_page_id();
+
+		return apply_filters(
+			'tutor_is_dashboard_page'
+			( $current_id && $dashboard_page_id ) && $current_id === $dashboard_page_id,
+			$current_id,
+			$dashboard_page_id
+		);
+	}
+
+	/**
 	 * Check is wishlisted.
 	 *
 	 * @since 1.0.0
