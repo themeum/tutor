@@ -871,7 +871,7 @@ class Options_V2 {
 									),
 									'strict'   => array(
 										'label' => __( 'Strict', 'tutor' ),
-										'desc'  => __( 'Students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
+										'desc'  => __( 'Students must complete all lessons, quizzes, and assignments to mark their courses as complete.', 'tutor' ),
 									),
 								),
 								'desc'           => __( 'Choose when a user can click on the <strong>“Complete Course”</strong> button', 'tutor' ),

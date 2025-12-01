@@ -2785,16 +2785,22 @@ class Course extends Tutor_Base {
 
 		foreach ( $assignments as $row ) {
 
-			$submitted_assignment      = tutor_utils()->is_assignment_submitted( $row->ID );
-			$is_reviewed_by_instructor = null === $submitted_assignment
+			$assignment_submission     = tutor_utils()->is_assignment_submitted( $row->ID );
+			$is_reviewed_by_instructor = ! count( $assignment_submission )
 											? false
-											: get_comment_meta( $submitted_assignment->comment_ID, 'evaluate_time', true );
+											: get_comment_meta( $assignment_submission[0]->comment_ID, 'evaluate_time', true );
 
-			if ( $submitted_assignment && $is_reviewed_by_instructor ) {
-				$pass_mark  = tutor_utils()->get_assignment_option( $submitted_assignment->comment_post_ID, 'pass_mark' );
-				$given_mark = get_comment_meta( $submitted_assignment->comment_ID, 'assignment_mark', true );
-
-				if ( $given_mark < $pass_mark ) {
+			if ( $assignment_submission && $is_reviewed_by_instructor ) {
+				$pass_mark  = tutor_utils()->get_assignment_option( $row->ID, 'pass_mark' );
+				$has_passed = false;
+				foreach ( $assignment_submission as $submission ) {
+					$given_mark = (int) get_comment_meta( $submission->comment_ID, 'assignment_mark', true );
+					if ( $given_mark >= $pass_mark ) {
+						$has_passed = true;
+						break;
+					}
+				}
+				if ( ! $has_passed ) {
 					$required_assignment_pass++;
 				}
 			} else {

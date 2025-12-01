@@ -95,21 +95,17 @@
 							<div id="droip-color-modes">
 							</div>
 						</div>
-						<div class="tutor-include-demo-courses-toggle tutor-d-flex">
-							<input id="include-demo-courses" class="tutor-form-check-input" type="checkbox" checked>
-							<input type="hidden" id="tutor_template_course_data_url">
-							<label for="include-demo-courses"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
-						</div>
+						<?php if ( tutor()->has_pro ) { ?>
+							<div class="tutor-include-demo-courses-toggle tutor-d-flex">
+								<input id="include-demo-courses" class="tutor-form-check-input" type="checkbox" checked>
+								<input type="hidden" id="tutor_template_course_data_url">
+								<label for="include-demo-courses"><?php esc_html_e( 'Include Tutor LMS demo courses', 'tutor' ); ?></label>
+							</div>
+						<?php } ?>
 						<div class="tutor-template-import-btn-wrapper">
-							<?php
-							$pro = tutor()->has_pro;
-							?>
-							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-import-btn tutor-justify-center" <?php echo tutor()->has_pro ? '' : ' disabled'; ?> >
+							<button class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-import-btn tutor-justify-center">
 								<i class="tutor-icon-import tutor-mr-8"></i>
-								<?php esc_html_e( 'Import', 'tutor' ); ?>
-								<?php if ( ! tutor()->has_pro ) : ?>
-									<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="presentation" aria-hidden="true" class="css-xron3k-svg-SVGIcon"><rect width="16" height="16" rx="8" fill="#E5803C"></rect><path d="M12.252 7.042c0 .004 0 .008-.003.012l-.862 3.951a.609.609 0 0 1-.598.495H5.213a.61.61 0 0 1-.598-.495l-.862-3.95c0-.005-.002-.009-.003-.013a.609.609 0 0 1 1.056-.51l1.28 1.38 1.362-3.054v-.004a.609.609 0 0 1 1.106.004l1.362 3.054 1.28-1.38a.609.609 0 0 1 1.055.51h.001Z" fill="#fff"></path></svg>
-								<?php endif; ?>
+							<?php esc_html_e( 'Import', 'tutor' ); ?>
 							</button>
 						</div>
 					</div>
