@@ -47,6 +47,7 @@ use TUTOR\Input;
 		'billing'          => 'Billing',
 		'quiz'             => 'Quiz',
 		'quiz-summary'     => 'Quiz Summary',
+		'assignment'       => 'Assignment',
 	);
 
 	$subpage = Input::get( 'subpage', '' );

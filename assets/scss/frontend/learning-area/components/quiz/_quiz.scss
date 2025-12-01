@@ -72,7 +72,8 @@
     }
 
     &-header {
-      @include tutor-flex(row, center, space-between);
+      @include tutor-flex(row, flex-start, space-between);
+      gap: $tutor-spacing-4;
     }
 
     &-number {
@@ -85,9 +86,14 @@
     }
 
     &-title {
+      @include tutor-flex(column);
       @include tutor-typography('medium', 'semibold');
+      gap: $tutor-spacing-4;
       flex: 1;
-      margin-left: $tutor-spacing-4;
+
+      @include tutor-breakpoint-down(sm) {
+        gap: $tutor-spacing-2;
+      }
     }
 
     &-options {
@@ -511,6 +517,13 @@
           box-shadow: none;
         }
       }
+    }
+  }
+
+  &-submission-modal {
+    &-content {
+      @include tutor-flex(column, stretch, space-between);
+      gap: $tutor-spacing-2;
     }
   }
 }

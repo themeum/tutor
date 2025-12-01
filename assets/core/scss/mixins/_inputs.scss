@@ -4,7 +4,7 @@
 @use 'utilities' as *;
 @use 'buttons' as *;
 
-@mixin tutor-input-base {
+@mixin tutor-input-base($size: md) {
   @include tutor-typography('small', 'regular');
   width: 100%;
   padding: $tutor-spacing-4 $tutor-spacing-5;
@@ -39,6 +39,14 @@
   &:disabled {
     background-color: $tutor-surface-l1-hover;
     cursor: not-allowed;
+  }
+
+  @if $size == sm {
+    padding: $tutor-spacing-3 $tutor-spacing-5;
+  }
+
+  @if $size == lg {
+    padding: $tutor-spacing-5;
   }
 }
 
@@ -81,11 +89,15 @@
     height: $svg-size;
     transform: translate(-50%, -50%) scale(0.6);
     opacity: 0;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease;
 
     background-color: currentColor;
-    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E") center / contain no-repeat;
-    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E")
+      center / contain no-repeat;
   }
 
   &:checked {
@@ -132,7 +144,6 @@
   }
 }
 
-
 @mixin tutor-radio($size: sm) {
   $radio-size: if($size ==md, 20px, 16px);
   $inner-circle: if($size ==md, 8px, 6px);
@@ -145,7 +156,10 @@
   background-color: $tutor-surface-l1;
   cursor: pointer;
   position: relative;
-  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:checked {
     background-color: $tutor-surface-brand-primary;
@@ -214,7 +228,9 @@
     height: $thumb;
     border-radius: 50%;
     background-color: $tutor-surface-l1;
-    transition: transform 0.25s ease, background-color 0.25s ease;
+    transition:
+      transform 0.25s ease,
+      background-color 0.25s ease;
     box-shadow: $tutor-shadow-sm;
   }
 
