@@ -19,6 +19,10 @@
     @include tutor-breakpoint-down(sm) {
       padding: $tutor-spacing-5;
       gap: $tutor-spacing-3;
+
+      .tutor-table-wrapper table {
+        min-width: min-content;
+      }
     }
 
     &-column {
@@ -174,6 +178,30 @@
       @include tutor-breakpoint-down(sm) {
         padding: $tutor-spacing-5;
         gap: $tutor-spacing-4;
+      }
+    }
+
+    &-list {
+      @include tutor-card-base();
+      @include tutor-card-radius(lg);
+
+      &-item {
+        @include tutor-flex(column);
+        gap: $tutor-spacing-4;
+        padding: $tutor-spacing-5;
+        border-bottom: 1px solid $tutor-border-idle;
+
+        &:last-child {
+          border-bottom: none;
+        }
+      }
+
+      &-card {
+        @include tutor-grid(3, 1fr);
+        padding: $tutor-spacing-5;
+        gap: $tutor-spacing-2;
+        background-color: $tutor-surface-base;
+        border-radius: $tutor-radius-lg;
       }
     }
 
