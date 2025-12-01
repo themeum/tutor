@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.9.2
+Stable tag: 3.9.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.9.3 - Nov 27, 2025
+
+Fix: Grades were auto-generated for all quizzes after a student attempted any quiz. (Pro)
+Fix: Automatic enrollment was not working when users enrolled in cancelled courses.
+Fix: Incorrect list of instructors shown when using the Instructor shortcode.
+Fix: Certificate download option appearing for courses that don’t provide certificates. (Pro)
+Fix: Incorrect email content in the assignment evaluation trigger. (Pro)
 
 = 3.9.2 - Nov 10, 2025
 

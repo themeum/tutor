@@ -1339,7 +1339,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 			}
 		}
 
-		return apply_filters( 'tutor_enrollment_buttons', $conditional_buttons );
+		return apply_filters( 'tutor_enrollment_buttons', $conditional_buttons, $course_id, $user_id );
 	}
 }
 
