@@ -96,6 +96,13 @@ class Assets {
 		 * @since v2.0.5
 		 */
 		add_action( 'enqueue_block_editor_assets', __CLASS__ . '::add_frontend_editor_button' );
+
+		/**
+		 * Enqueue styles & scripts
+		 *
+		 * @since 4.0.0
+		 */
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), PHP_INT_MAX );
 	}
 
 	/**
@@ -815,6 +822,44 @@ class Assets {
 				'const tutorInlineData =' . json_encode( $data ),
 				'before'
 			);
+		}
+	}
+
+	/**
+	 * Enqueue styles & scripts for latest design system
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		$is_dashboard     = tutor_utils()->is_dashboard_page();
+		$is_learning_area = false; // @TODO.
+
+		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
+		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
+		$learning_area_css_url = tutor()->assets_url . 'css/tutor-learning-area.min.css';
+
+		$core_js_url          = tutor()->assets_url . 'js/tutor-core.js';
+		$dashboard_js_url     = tutor()->assets_url . 'js/tutor-dashboard.js';
+		$learning_area_js_url = tutor()->assets_url . 'js/tutor-learning-area.js';
+
+		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
+
+		if ( $is_dashboard || $is_learning_area ) {
+			// Core.
+			wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
+			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );
+
+			if ( $is_dashboard ) {
+				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
+				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'wp-i18n' ), $version, true );
+			}
+
+			if ( $is_learning_area ) {
+				wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
+				wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'wp-i18n' ), $version, true );
+			}
 		}
 	}
 }
