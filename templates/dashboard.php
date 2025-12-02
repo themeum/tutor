@@ -8,9 +8,11 @@
  * @since 1.4.3
  */
 
+use TUTOR\Input;
+
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
-	tutor_utils()->tutor_custom_header();
+	wp_head();
 }
 
 global $wp_query;
@@ -285,5 +287,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 
 <?php
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
-	tutor_utils()->tutor_custom_footer();
+	wp_footer();
 }
+
+
