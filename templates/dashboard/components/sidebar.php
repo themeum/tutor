@@ -5,45 +5,25 @@
  * @package tutor
  */
 
-use TUTOR\Icon;
-use TUTOR\Input;
+global $wp_query;
 
-$current_url = admin_url( 'admin.php?page=playground&subpage=dashboard' );
-
-$menu_items = array(
-	'dashboard'   => array(
-		'title'       => esc_html__( 'Home', 'tutor' ),
-		'icon'        => Icon::HOME,
-		'active_icon' => Icon::HOME_FILL,
-		'url'         => esc_url( add_query_arg( 'dashboard-page', 'home', $current_url ) ),
-	),
-	'courses'     => array(
-		'title'       => esc_html__( 'Courses', 'tutor' ),
-		'icon'        => Icon::COURSES,
-		'active_icon' => Icon::COURSES_FILL,
-		'url'         => esc_url( add_query_arg( 'dashboard-page', 'courses', $current_url ) ),
-	),
-	'notes'       => array(
-		'title'       => esc_html__( 'Notes', 'tutor' ),
-		'icon'        => Icon::NOTES,
-		'active_icon' => Icon::NOTES_FILL,
-		'url'         => esc_url( add_query_arg( 'dashboard-page', 'notes', $current_url ) ),
-	),
-	'discussions' => array(
-		'title'       => esc_html__( 'Discussions', 'tutor' ),
-		'icon'        => Icon::QA,
-		'active_icon' => Icon::QA_FILL,
-		'url'         => esc_url( add_query_arg( 'dashboard-page', 'discussions', $current_url ) ),
-	),
-	'calendar'    => array(
-		'title'       => esc_html__( 'Calendar', 'tutor' ),
-		'icon'        => Icon::CALENDAR_2,
-		'active_icon' => Icon::CALENDAR_2_FILL,
-		'url'         => esc_url( add_query_arg( 'dashboard-page', 'calendar', $current_url ) ),
-	),
-);
-
-$active_menu = Input::get( 'dashboard-page', 'dashboard' );
+$dashboard_page_slug = '';
+$dashboard_page_name = '';
+if ( isset( $wp_query->query_vars['tutor_dashboard_page'] ) && $wp_query->query_vars['tutor_dashboard_page'] ) {
+	$dashboard_page_slug = $wp_query->query_vars['tutor_dashboard_page'];
+	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_page'];
+}
+/**
+ * Getting dashboard sub pages
+ */
+if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->query_vars['tutor_dashboard_sub_page'] ) {
+	$dashboard_page_name = $wp_query->query_vars['tutor_dashboard_sub_page'];
+	if ( $dashboard_page_slug ) {
+		$dashboard_page_name = $dashboard_page_slug . '/' . $dashboard_page_name;
+	}
+}
+$dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dashboard_page_name );
+$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
 
 ?>
 <div class="tutor-dashboard-sidebar">
@@ -55,17 +35,70 @@ $active_menu = Input::get( 'dashboard-page', 'dashboard' );
 	<div class="tutor-dashboard-sidebar-nav">
 		<ul>
 			<?php
-			foreach ( $menu_items as $key => $item ) {
-				$active_class = ( $key === $active_menu ) ? 'active' : '';
-				$icon         = ( $key === $active_menu ) ? $item['active_icon'] : $item['icon'];
-				?>
-				<li>
-					<a class="<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $item['url'] ); ?>">
-						<?php tutor_utils()->render_svg_icon( $icon, 20, 20 ); ?>
-						<span><?php echo esc_html( $item['title'] ); ?></span>
-					</a>
-				</li>
-				<?php
+			// get reviews settings value.
+			$disable = ! get_tutor_option( 'enable_course_review' );
+			foreach ( $dashboard_pages as $dashboard_key => $dashboard_page ) {
+				/**
+				 * If not enable from settings then quit
+				 *
+				 *  @since v2.0.0
+				 */
+				if ( $disable && 'reviews' === $dashboard_key ) {
+					continue;
+				}
+
+				$menu_title = $dashboard_page;
+				$menu_link  = tutor_utils()->get_tutor_dashboard_page_permalink( $dashboard_key );
+				$separator  = false;
+				$menu_icon  = '';
+
+				if ( is_array( $dashboard_page ) ) {
+					$menu_title     = tutor_utils()->array_get( 'title', $dashboard_page );
+					$menu_icon_name = tutor_utils()->array_get( 'icon', $dashboard_page, ( isset( $dashboard_page['icon'] ) ? $dashboard_page['icon'] : '' ) );
+					if ( $menu_icon_name ) {
+						$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon'></span>";
+					}
+					// Add new menu item property "url" for custom link.
+					if ( isset( $dashboard_page['url'] ) ) {
+						$menu_link = $dashboard_page['url'];
+					}
+					if ( isset( $dashboard_page['type'] ) && 'separator' === $dashboard_page['type'] ) {
+						$separator = true;
+					}
+				}
+				if ( $separator ) {
+					echo '<li class="tutor-dashboard-menu-divider"></li>';
+					if ( $menu_title ) {
+						?>
+						<li class='tutor-dashboard-menu-divider-header'>
+							<?php echo esc_html( $menu_title ); ?>
+						</li>
+						<?php
+					}
+				} else {
+					$li_class = "tutor-dashboard-menu-{$dashboard_key}";
+					if ( 'index' === $dashboard_key ) {
+						$dashboard_key = '';
+					}
+					$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
+					$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
+					$menu_link = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
+					?>
+					<li>
+						<a <?php echo esc_html( $data_no_instant ); ?> href="<?php echo esc_url( $menu_link ); ?>" class='<?php echo esc_attr( $active_class ); ?>'>
+							<?php
+							echo wp_kses(
+								$menu_icon,
+								tutor_utils()->allowed_icon_tags()
+							);
+							?>
+							<span>
+								<?php echo esc_html( $menu_title ); ?>
+							</span>
+						</a>
+					</li>
+					<?php
+				}
 			}
 			?>
 		</ul>
