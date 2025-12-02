@@ -23,7 +23,7 @@ if ( isset( $wp_query->query_vars['tutor_dashboard_sub_page'] ) && $wp_query->qu
 	}
 }
 $dashboard_page_name = apply_filters( 'tutor_dashboard_sub_page_template', $dashboard_page_name );
-$dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
+$dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 
 ?>
 <div class="tutor-dashboard-sidebar">
@@ -80,17 +80,14 @@ $dashboard_pages = tutor_utils()->tutor_dashboard_nav_ui_items();
 					if ( 'index' === $dashboard_key ) {
 						$dashboard_key = '';
 					}
-					$active_class    = $dashboard_key == $dashboard_page_slug ? 'active' : '';
-					$data_no_instant = 'logout' == $dashboard_key ? 'data-no-instant' : '';
-					$menu_link = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
+					$active_class    = $dashboard_key === $dashboard_page_slug ? 'active' : '';
+					$data_no_instant = 'logout' === $dashboard_key ? 'data-no-instant' : '';
+					$menu_link       = apply_filters( 'tutor_dashboard_menu_link', $menu_link, $menu_title );
 					?>
 					<li>
 						<a <?php echo esc_html( $data_no_instant ); ?> href="<?php echo esc_url( $menu_link ); ?>" class='<?php echo esc_attr( $active_class ); ?>'>
 							<?php
-							echo wp_kses(
-								$menu_icon,
-								tutor_utils()->allowed_icon_tags()
-							);
+							tutor_utils()->render_svg_icon( $menu_icon_name )
 							?>
 							<span>
 								<?php echo esc_html( $menu_title ); ?>
