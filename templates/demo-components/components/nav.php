@@ -51,8 +51,36 @@ $items = array(
 <section class="tutor-bg-white tutor-py-6 tutor-px-8 tutor-rounded-lg tutor-shadow-sm">
 	<h1 class="tutor-text-2xl tutor-font-bold tutor-mb-6">Nav</h1>
 
-	<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6">Size</h2>
-	<?php tutor_load_template( 'core-components.nav', array( 'items' => $items ) ); ?>
+	<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6">Size Large</h2>
+	<?php
+	tutor_load_template(
+		'core-components.nav',
+		array(
+			'items' => $items,
+			'size'  => 'lg',
+		),
+	);
+	?>
+	<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6 tutor-mt-8">Size Medium</h2>
+	<?php
+	tutor_load_template(
+		'core-components.nav',
+		array(
+			'items' => $items,
+			'size'  => 'md',
+		)
+	);
+	?>
+	<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6 tutor-mt-8">Size Small</h2>
+	<?php
+	tutor_load_template(
+		'core-components.nav',
+		array(
+			'items' => $items,
+			'size'  => 'sm',
+		)
+	);
+	?>
 
 	<div class="tutor-mb-8 tutor-mt-12">
 		<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-3">Usage</h2>

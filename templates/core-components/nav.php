@@ -42,12 +42,26 @@ use TUTOR\Icon;
  *             ),
  *         ),
  *     ),
+ *     'size' => 'md', // 'sm', 'md', or 'lg' (default: 'md')
  * );
  */
 
 if ( empty( $items ) ) {
 	return;
 }
+
+// Get size variant (default to 'md').
+$size          = $size ?? 'md';
+$allowed_sizes = array( 'sm', 'md', 'lg' );
+$size          = in_array( $size, $allowed_sizes, true ) ? $size : 'md';
+
+// Icon sizes based on variant.
+$icon_sizes = array(
+	'sm' => 16,
+	'md' => 16,
+	'lg' => 20,
+);
+$icon_size  = $icon_sizes[ $size ];
 
 /**
  * Get the label of the active dropdown option.
@@ -57,79 +71,59 @@ if ( empty( $items ) ) {
  * @param array $options Array of dropdown options.
  * @return string The label of the active option, or the first option's label if none are active.
  */
-function get_active_dropdown_label( $options ) {
+$get_active_dropdown_label = function ( $options ) {
 	foreach ( $options as $option ) {
 		if ( ! empty( $option['active'] ) ) {
 			return $option['label'] ?? '';
 		}
 	}
 	return $options[0]['label'] ?? '';
-}
+};
 ?>
 
-<ul class="tutor-nav">
+<div class="tutor-nav tutor-nav-<?php echo esc_attr( $size ); ?>">
 	<?php foreach ( $items as $item ) : ?>
-		<li class="tutor-nav-item">
-			<?php if ( 'dropdown' === ( $item['type'] ?? 'link' ) ) : ?>
-				<?php
-				$options      = $item['options'] ?? array();
-				$active_label = get_active_dropdown_label( $options );
-				?>
-				<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })">
-					<button 
-						x-ref="trigger" 
-						@click="toggle()" 
-						class="tutor-nav-link <?php echo ! empty( $item['active'] ) ? 'active' : ''; ?>"
-					>
-						<?php if ( ! empty( $item['icon'] ) ) : ?>
-							<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
-						<?php endif; ?>
-						<?php echo esc_html( $active_label ); ?>
-						<?php
-						tutor_utils()->render_svg_icon(
-							Icon::CHEVRON_DOWN,
-							20,
-							20,
-							array( 'class' => 'tutor-icon-subdued' )
-						);
-						?>
-					</button>
-
-					<div 
-						x-ref="content"
-						x-show="open"
-						x-cloak
-						@click.outside="handleClickOutside()"
-						class="tutor-popover tutor-nav-dropdown"
-					>
-						<ul>
-							<?php foreach ( $options as $option ) : ?>
-								<li>
-									<a 
-										href="<?php echo esc_url( $option['url'] ?? '#' ); ?>" 
-										class="tutor-nav-dropdown-link <?php echo ! empty( $option['active'] ) ? 'active' : ''; ?>"
-									>
-										<?php if ( ! empty( $option['icon'] ) ) : ?>
-											<?php tutor_utils()->render_svg_icon( $option['icon'], 20, 20 ); ?>
-										<?php endif; ?>
-										<?php echo esc_html( $option['label'] ?? '' ); ?>
-									</a>
-								</li>
-							<?php endforeach; ?>
-						</ul>
-					</div>
-				</div>
-			<?php else : ?>
-				<a 
-					href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" 
-					class="tutor-nav-link <?php echo ! empty( $item['active'] ) ? 'active' : ''; ?>"
-				>
+		<?php if ( 'dropdown' === $item['type'] ) : ?>
+			<?php
+			$options      = $item['options'] ?? array();
+			$active_label = $get_active_dropdown_label( $options );
+			?>
+			<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })">
+				<button x-ref="trigger" @click="toggle()" class="tutor-nav-item<?php echo ! empty( $item['active'] ) ? ' active' : ''; ?>">
 					<?php if ( ! empty( $item['icon'] ) ) : ?>
-						<?php tutor_utils()->render_svg_icon( $item['icon'], 20, 20 ); ?>
+						<?php tutor_utils()->render_svg_icon( $item['icon'], $icon_size, $icon_size ); ?>
 					<?php endif; ?>
-					<?php echo esc_html( $item['label'] ?? '' ); ?>
-				</a>
-			<?php endif; ?>
-		</li>
+					<?php echo esc_html( $active_label ); ?>
+					<?php
+					tutor_utils()->render_svg_icon(
+						Icon::CHEVRON_DOWN_2,
+						$icon_size,
+						$icon_size,
+						array( 'class' => 'tutor-icon-subdued' )
+					);
+					?>
+				</button>
+
+				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()"
+					class="tutor-popover tutor-nav-dropdown">
+					<?php foreach ( $options as $option ) : ?>
+						<a href="<?php echo esc_url( $option['url'] ?? '#' ); ?>"
+							class="tutor-nav-dropdown-item <?php echo ! empty( $option['active'] ) ? 'active' : ''; ?>">
+							<?php if ( ! empty( $option['icon'] ) ) : ?>
+								<?php tutor_utils()->render_svg_icon( $option['icon'], $icon_size, $icon_size ); ?>
+							<?php endif; ?>
+							<?php echo esc_html( $option['label'] ?? '' ); ?>
+						</a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		<?php else : ?>
+			<a href="<?php echo esc_url( $item['url'] ?? '#' ); ?>" class="tutor-nav-item<?php echo ! empty( $item['active'] ) ? ' active' : ''; ?>">
+				<?php if ( ! empty( $item['icon'] ) ) : ?>
+					<?php tutor_utils()->render_svg_icon( $item['icon'], $icon_size, $icon_size ); ?>
+				<?php endif; ?>
+				<?php echo esc_html( $item['label'] ?? '' ); ?>
+			</a>
+		<?php endif; ?>
 	<?php endforeach; ?>
-</ul>
+</div>

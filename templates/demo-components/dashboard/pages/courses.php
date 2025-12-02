@@ -58,7 +58,15 @@ $page_nav_items = array(
 <div class="tutor-pt-7">
 	<div class="tutor-dashboard-page-card">
 		<div class="tutor-p-6 tutor-sm-p-2 tutor-border-b tutor-sm-border tutor-sm-rounded-2xl">
-			<?php tutor_load_template( 'core-components.nav', array( 'items' => $page_nav_items ) ); ?>
+			<?php
+			tutor_load_template(
+				'core-components.nav',
+				array(
+					'items' => $page_nav_items,
+					'size'  => 'lg',
+				)
+			);
+			?>
 		</div>
 		<div class="tutor-dashboard-page-card-body">
 			<p class="tutor-text-center tutor-py-16 tutor-text-muted">
