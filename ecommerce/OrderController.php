@@ -259,9 +259,8 @@ class OrderController {
 	 * @return void
 	 */
 	public function get_order_by_id() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
 
 		$order_id = Input::post( 'order_id' );
 
