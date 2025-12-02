@@ -20,5 +20,14 @@
 		@include tutor-typography('tiny');
 		white-space: nowrap;
 	}
+
+	&-expired {
+		background-color: $tutor-actions-critical-secondary;
+		padding: 0 $tutor-spacing-4;
+
+		.tutor-event-badge-text {
+			@include tutor-typography('tiny', 'medium', 'critical');
+		}
+	}
 }
 

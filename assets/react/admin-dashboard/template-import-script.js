@@ -1,23 +1,21 @@
-function resizeIframe() {
-	const wrapper = document.querySelector('.tutor-template-preview-iframe-parent');
-	const iframe = wrapper.querySelector('.tutor-template-preview-iframe-parent iframe');
-	const activeSwitcher = document.querySelector('.tutor-template-preview-device-switcher li.active');
-
-	const designWidth = activeSwitcher.getAttribute('data-width') || 1400;
-	const containerWidth = wrapper.offsetWidth;
-	if (containerWidth < Number(designWidth)) {
-		const scale = containerWidth / Number(designWidth);
-		if (scale > 0) {
-			iframe.style.transform = `scale(${scale})`;
-			iframe.style.transformOrigin = 'left top';
-			iframe.style.height = `${100 / scale}%`;
-		}
-	} else {
-		iframe.style.transformOrigin = 'center top';
-	}
-}
-
-window.addEventListener('resize', resizeIframe);
+/**
+ * Template Import Script
+ *
+ * This file contains utilities and high-level documentation for the template import
+ * workflow and the live preview UI. It describes behavior implemented below:
+ * - tutor course data import (supports .zip and JSON import via chunked job)
+ * - plugin installation and template import flow (fetch/AJAX POSTs, processing loop)
+ * - preview modal management (open/close, shimmer loading state)
+ * - device preview switching and iframe resizing/scale handling
+ * - communication with the preview iframe (postMessage) for Droip color presets and mode
+ *
+ * Notes:
+ * - This script relies on a global _tutorobject (nonce, ajax URL, site_url, etc.).
+ * - Keep DOM selectors and event handlers idempotent because the admin UI may be re-rendered.
+ *
+ * @file template-import-script.js
+ * @since v3.9.2
+ */
 
 document.addEventListener('DOMContentLoaded', function () {
 	const templateDemoImportRoot = document.querySelector(".tutor-template-import-area");
@@ -31,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const importBtn = document.querySelector('.tutor-template-import-btn');
 	const tutorTemplateCourseDataUrl = document.getElementById("tutor_template_course_data_url");
 	let colorPresetBlock = document.getElementById("droip-color-presets");
+	const presetHeading = document.querySelector('.tutor-droip-color-presets-heading');
 
 	if (templateDemoImportRoot) {
 		// Open live preview modal
@@ -41,11 +40,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				iframeParent.classList.remove('tutor-divider');
 				livePreviewModal.style.display = "flex";
 				previewTemplateName.innerText = event.target.dataset.template_name;
-				tutorTemplateCourseDataUrl.value = event.target.dataset.template_course_data_url;
-				iframe.src = event.target.dataset.template_url;
-				if (_tutorobject?.tutor_pro_url) {
-					importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);
+				if ( tutorTemplateCourseDataUrl ) {
+					tutorTemplateCourseDataUrl.value = event.target.dataset.template_course_data_url;
 				}
+				iframe.src = event.target.dataset.template_url;
+				importBtn.setAttribute('data-import_template_id', event.target.dataset.template_id);
 			}
 		});
 
@@ -63,8 +62,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			importBtn.classList.remove('tutor-template-view-template-btn');
 			icon.classList.add('tutor-icon-import');
 			icon.classList.remove('tutor-icon-circle-mark');
-			const proBadge = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" role="presentation" aria-hidden="true" class="css-xron3k-svg-SVGIcon"><rect width="16" height="16" rx="8" fill="#E5803C"></rect><path d="M12.252 7.042c0 .004 0 .008-.003.012l-.862 3.951a.609.609 0 0 1-.598.495H5.213a.61.61 0 0 1-.598-.495l-.862-3.95c0-.005-.002-.009-.003-.013a.609.609 0 0 1 1.056-.51l1.28 1.38 1.362-3.054v-.004a.609.609 0 0 1 1.106.004l1.362 3.054 1.28-1.38a.609.609 0 0 1 1.055.51h.001Z" fill="#fff"></path></svg>`;
-			importBtn.innerHTML = `${icon.outerHTML} import ${_tutorobject.tutor_pro_url ? '' : proBadge}`;
 		});
 
 		// Device switcher
@@ -89,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			iframe.style.width = "1400px";
 			iframe.style.transformOrigin = "left top";
 			colorPresetBlock.style.display = "none";
+			presetHeading.style.display = 'none';
 		}
 
 		// Remove active class from device list
@@ -100,9 +98,227 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 });
 
+function resizeIframe() {
+	const wrapper = document.querySelector('.tutor-template-preview-iframe-parent');
+	const iframe = wrapper.querySelector('.tutor-template-preview-iframe-parent iframe');
+	const activeSwitcher = document.querySelector('.tutor-template-preview-device-switcher li.active');
+
+	const designWidth = activeSwitcher.getAttribute('data-width') || 1400;
+	const containerWidth = wrapper.offsetWidth;
+	if (containerWidth < Number(designWidth)) {
+		const scale = containerWidth / Number(designWidth);
+		if (scale > 0) {
+			iframe.style.transform = `scale(${scale})`;
+			iframe.style.transformOrigin = 'left top';
+			iframe.style.height = `${100 / scale}%`;
+		}
+	} else {
+		iframe.style.transformOrigin = 'center top';
+	}
+}
+
+window.addEventListener('resize', resizeIframe);
+
+
+document.addEventListener('DOMContentLoaded', function () {
+	const { __ } = wp.i18n;
+	const templateDemoImportRoot = document.querySelector(".tutor-template-import-area");
+	const tutorTemplateDemoImportBtn = document.querySelector('.tutor-template-import-btn');
+	const includeDemoCourses = document.getElementById('include-demo-courses');
+	let templateId;
+	let isPluginInstallationDone = false;
+
+	if (templateDemoImportRoot) {
+		document.addEventListener('click', (event) => {
+			if (event.target.closest('.tutor-template-import-btn')) {
+				tutorTemplateDemoImportBtn.classList.add('is-loading');
+				tutorTemplateDemoImportBtn.setAttribute('disabled', 'disabled');
+				const icon = tutorTemplateDemoImportBtn.querySelector('i');
+				tutorTemplateDemoImportBtn.innerHTML = `${icon.outerHTML} Importing`;
+				install_plugin();
+			}
+		});
+
+		document.addEventListener('click', (event) => {
+			if (event.target.closest('.tutor-template-view-template-btn')) {
+				window.open(_tutorobject.site_url, '_blank');
+			}
+		});
+
+		const plugins_array = ['tutorbase', 'droip'];
+
+		// install required plugin.
+		async function install_plugin() {
+			isPluginInstallationDone = false;
+			
+			for (let i = 0; i < plugins_array.length; i++) {
+				try {
+					let data = new FormData();
+					data.append('action', 'tutor_template_required_plugin_install');
+					data.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+					data.append('plugin_name', plugins_array[i]);
+
+					let response = await fetch(_tutorobject.ajaxurl, {
+						method: 'POST',
+						body: data,
+					});
+					let res = await response.json();
+					if (200 === res.status_code) {
+						isPluginInstallationDone = true;
+					} else {
+						resetImportBtn()
+						tutor_toast(__('Error', 'tutor-pro'), res?.message, 'error');
+						return;
+					}
+				} catch (error) {
+					resetImportBtn()
+					tutor_toast(__('Something went wrong!', 'tutor-pro'), '', 'error');
+					return;
+				}
+			}
+
+			// if plugin installation done start importing template content.
+			if (isPluginInstallationDone) {
+				templateId = tutorTemplateDemoImportBtn.getAttribute('data-import_template_id');
+				try {
+					const templateImportResponse = await importContent();
+					const importRes = await templateImportResponse.json();
+					if (templateImportResponse.ok && 200 === importRes.status_code) {
+						processImportedTemplate();
+					} else {
+						throw new Error(importRes?.message || __('Template import failed!', 'tutor-pro'));
+					}
+				} catch (error) {
+					resetImportBtn()
+					tutor_toast(__('Error', 'tutor-pro'), __(error?.message, 'tutor-pro'), 'error');
+					return;
+				}
+			}
+		}
+
+		// import template zip file.
+		const importContent = async () => {
+			let selectedMode = document.querySelector('.color-palette.active')?.getAttribute('data-mode');
+			if (!selectedMode) selectedMode = 'default';
+			let importFormData = new FormData();
+			importFormData.append('action', 'import_droip_template');
+			importFormData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+			importFormData.append('template_id', templateId);
+			importFormData.append('selected_mode', selectedMode);
+
+			let response = await fetch(_tutorobject.ajaxurl, {
+				method: 'POST',
+				body: importFormData,
+			});
+			return response;
+		}
+
+		// import template content.
+		const processImportedTemplate = async () => {
+			let importFormData = new FormData();
+			importFormData.append('action', 'process_droip_template');
+			importFormData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+
+			try {
+				const response = await fetch(_tutorobject.ajaxurl, {
+					method: 'POST',
+					body: importFormData,
+				});
+				const res = await response.json();
+				if (200 === res.status_code) {
+					let data = res?.data;
+					if (data.status === 'importing') {
+						setTimeout(() => {
+							processImportedTemplate();
+						}, 10);
+					} else if (data.status === 'done') {
+						if (includeDemoCourses) {
+							const isChecked = includeDemoCourses.checked;
+							if (isChecked) {
+								await importTutorCourseData();
+							}
+						}
+						setImportBtnToViewTemplateBtn();
+						tutor_toast(__('Success', 'tutor-pro'), __('Template imported successfully.', 'tutor-pro'), 'success');
+						return true;
+					}
+				}
+			} catch (error) {
+				resetImportBtn()
+				tutor_toast(__('Error', 'tutor-pro'), __(`Error while processing imported template!`, 'tutor-pro'), 'error');
+				return false;
+			}
+		};
+
+		const importTutorCourseData = async (jobId = 0) => {
+			const tutorTemplateCourseDataUrl = document.getElementById("tutor_template_course_data_url");
+			const courseDataUrl = tutorTemplateCourseDataUrl?.value;
+			if (!courseDataUrl) return false;
+
+			const formData = new FormData();
+			formData.append('job_id', jobId);
+			formData.append('action', 'tutor_pro_import');
+			formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
+			if (!jobId) {
+				const isZipFile = courseDataUrl.toLowerCase().endsWith('.zip');
+				const data = await fetch(courseDataUrl);
+				const blob = await data.blob();
+				if (isZipFile) {
+					const filename = courseDataUrl.split('/').pop() || 'importer.zip';
+					formData.append('data', blob, filename);
+				} else {
+					formData.append('data', blob, 'importer.json');
+				}
+			}
+
+			const post = await fetch(_tutorobject.ajaxurl, {
+				method: 'POST',
+				body: formData,
+				credentials: 'same-origin',
+			});
+			if (post.ok) {
+				const response = await post.json();
+				if (response.status_code == 200) {
+					const jobId = response.data.job_id;
+					const jobProgress = response.data.job_progress;
+					if (jobProgress != 100) {
+						await importTutorCourseData(jobId);
+					}
+					if (jobProgress == 100) {
+						return true;
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+
+		function resetImportBtn() {
+			const icon = tutorTemplateDemoImportBtn.querySelector('i');
+			tutorTemplateDemoImportBtn.classList.remove('is-loading');
+			tutorTemplateDemoImportBtn.classList.add('tutor-template-import-btn');
+			tutorTemplateDemoImportBtn.classList.remove('tutor-template-view-template-btn');
+			tutorTemplateDemoImportBtn.removeAttribute('disabled');
+			icon.classList.add('tutor-icon-import');
+			icon.classList.remove('tutor-icon-circle-mark');
+		}
+
+		function setImportBtnToViewTemplateBtn() {
+			const icon = tutorTemplateDemoImportBtn.querySelector('i');
+			tutorTemplateDemoImportBtn.classList.remove('is-loading');
+			tutorTemplateDemoImportBtn.classList.remove('tutor-template-import-btn');
+			tutorTemplateDemoImportBtn.removeAttribute('disabled');
+			tutorTemplateDemoImportBtn.classList.add('tutor-template-view-template-btn');
+			icon.classList.remove('tutor-icon-import');
+			icon.classList.add('tutor-icon-circle-mark');
+			tutorTemplateDemoImportBtn.innerHTML = `${icon.outerHTML} View Template`;
+		}
+	}
+});
 
 (function () {
 	const iframe = document.querySelector("#tutor-template-preview-iframe");
+	let colorPresetBlock = document.getElementById("droip-color-presets");
 	document.addEventListener("DOMContentLoaded", () => {
 		// Wait for the iframe to load before interacting with it
 		iframe.addEventListener("load", () => {
@@ -228,3 +444,4 @@ document.addEventListener('DOMContentLoaded', function () {
 		return colors;
 	};
 })();
+

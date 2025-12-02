@@ -68,6 +68,30 @@ use TUTOR\Icon;
 					This field is required.
 				</div>
 			</div>
+			<div class="tutor-input-field">
+				<label for="name" class="tutor-label tutor-label-required">Full Name (Error)</label>
+				<div class="tutor-input-wrapper">
+					<input 
+						type="text"
+						id="name"
+						placeholder="Enter your full name"
+						class="tutor-input tutor-input-sm"
+					>
+				</div>
+				<div class="tutor-help-text">This field is small.</div>
+			</div>
+			<div class="tutor-input-field">
+				<label for="name" class="tutor-label tutor-label-required">Full Name (Error)</label>
+				<div class="tutor-input-wrapper">
+					<input 
+						type="text"
+						id="name"
+						placeholder="Enter your full name"
+						class="tutor-input tutor-input-lg"
+					>
+				</div>
+				<div class="tutor-help-text">This field is large.</div>
+			</div>
 		</div>
 
 		<div>
@@ -127,6 +151,36 @@ use TUTOR\Icon;
 				<div class="tutor-error-text" role="alert" aria-live="polite">
 					This field is required.
 				</div>
+			</div>
+			<div class="tutor-input-field">
+				<label for="name" class="tutor-label tutor-label-required">Full Name (Error)</label>
+				<div class="tutor-input-wrapper">
+					<input 
+						type="text"
+						id="name"
+						placeholder="Enter your full name"
+						class="tutor-input tutor-input-sm tutor-input-content-left"
+					>
+					<div class="tutor-input-content tutor-input-content-left">
+						<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::EMAIL, 16, 16 ) ); ?>
+					</div>
+				</div>
+				<div class="tutor-help-text">This field is small.</div>
+			</div>
+			<div class="tutor-input-field">
+				<label for="name" class="tutor-label tutor-label-required">Full Name (Error)</label>
+				<div class="tutor-input-wrapper">
+					<input 
+						type="text"
+						id="name"
+						placeholder="Enter your full name"
+						class="tutor-input tutor-input-lg tutor-input-content-left"
+					>
+					<div class="tutor-input-content tutor-input-content-left">
+						<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::EMAIL, 16, 16 ) ); ?>
+					</div>
+				</div>
+				<div class="tutor-help-text">This field is large.</div>
 			</div>
 		</div>
 	</div>

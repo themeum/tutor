@@ -31,13 +31,17 @@ final class Icon {
 	const ARROWS_IN                  = 'arrows-in';
 	const ARROWS_OUT                 = 'arrows-out';
 	const ARROW_LEFT                 = 'arrow-left';
+	const ARROW_LEFT_2               = 'arrow-left-2';
 	const ARROW_LEFT_ALT             = 'arrow-left-alt';
+	const ARROW_RIGHT_2              = 'arrow-right-2';
 	const ASSIGNMENT                 = 'assignment';
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BADGE_CHECK                = 'badge-check';
+	const BADGE_INFO                 = 'badge-info';
 	const BARS                       = 'bars';
 	const BAR_LEGEND                 = 'bar-legend';
 	const BILLING                    = 'billing';
@@ -80,6 +84,7 @@ final class Icon {
 	const CIRCLED_PLUS               = 'circled-plus';
 	const CIRCUM_LOCK                = 'circum-lock';
 	const CLOCK                      = 'clock';
+	const CLOCK_2                    = 'clock-2';
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';
@@ -161,6 +166,7 @@ final class Icon {
 	const GLOBE                      = 'globe';
 	const GOOGLE_MEET                = 'google-meet';
 	const GOOGLE_MEET_COLORIZE       = 'google-meet-colorize';
+	const GRAB_HANDLE                = 'grab-handle';
 	const GUTENBERG_COLORIZED        = 'gutenberg-colorized';
 	const HAND_COIN                  = 'hand-coin';
 	const HAPPY                      = 'happy';

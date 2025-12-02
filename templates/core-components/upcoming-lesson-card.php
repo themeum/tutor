@@ -10,11 +10,12 @@ use TUTOR\Icon;
 defined( 'ABSPATH' ) || exit;
 
 // Optional props with defaults.
-$show_live_tag  = isset( $show_live_tag ) ? $show_live_tag : true;
-$event_tag_text = isset( $event_tag_text ) ? $event_tag_text : __( 'Live Session', 'tutor' );
-$event_tag_icon = isset( $event_tag_icon ) ? $event_tag_icon : Icon::ZOOM_COLORIZE;
-$action_url     = isset( $action_url ) ? $action_url : '';
-$action_text    = isset( $action_text ) ? $action_text : __( 'Open', 'tutor' );
+$show_live_tag     = isset( $show_live_tag ) ? $show_live_tag : true;
+$event_tag_text    = isset( $event_tag_text ) ? $event_tag_text : __( 'Live Session', 'tutor' );
+$event_tag_icon    = isset( $event_tag_icon ) ? $event_tag_icon : Icon::ZOOM_COLORIZE;
+$event_tag_variant = isset( $event_tag_variant ) ? $event_tag_variant : '';
+$action_url        = isset( $action_url ) ? $action_url : '';
+$action_text       = isset( $action_text ) ? $action_text : __( 'Open', 'tutor' );
 
 ?>
 <div class="tutor-card tutor-upcoming-lesson-card">
@@ -36,8 +37,9 @@ $action_text    = isset( $action_text ) ? $action_text : __( 'Open', 'tutor' );
 					tutor_load_template(
 						'core-components.event-badge',
 						array(
-							'text' => $event_tag_text,
-							'icon' => $event_tag_icon,
+							'text'    => $event_tag_text,
+							'icon'    => $event_tag_icon,
+							'variant' => $event_tag_variant,
 						)
 					);
 					?>

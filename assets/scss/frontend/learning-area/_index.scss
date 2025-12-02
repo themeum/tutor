@@ -13,6 +13,10 @@
 @forward 'assignment-view';
 @forward 'course-navigation';
 @forward 'progress-tracking';
+@forward 'lesson-comments';
+
+// Components
+@forward './components';
 
 // Pages
 @forward './pages/';

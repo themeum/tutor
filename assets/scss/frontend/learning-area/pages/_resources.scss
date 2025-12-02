@@ -1,1 +1,64 @@
 // Learning Area Resources Styles
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-learning-area-resources {
+  margin-block: $tutor-spacing-7;
+
+  .tutor-resources-list {
+    @include tutor-flex(column);
+  }
+
+  @include tutor-breakpoint-up(sm) {
+    .tutor-resources-wrapper {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+    }
+
+    .tutor-tabs-nav {
+      padding: $tutor-spacing-6;
+    }
+
+    .tutor-tabs-content {
+      border-top: 1px solid $tutor-border-idle;
+      padding: $tutor-spacing-6;
+    }
+
+    .tutor-resources-list {
+      gap: $tutor-spacing-4;
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    margin-top: $tutor-spacing-2;
+
+    .tutor-tabs-nav {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      padding: $tutor-spacing-2;
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    .tutor-tabs-tab {
+      flex: 1;
+    }
+
+    .tutor-tabs-content {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      overflow: hidden;
+    }
+
+    .tutor-attachment-card {
+      border: none;
+      border-radius: $tutor-radius-none;
+
+      &:not(:last-of-type) {
+        border-bottom: 1px solid $tutor-border-idle;
+      }
+    }
+  }
+}
