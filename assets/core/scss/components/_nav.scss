@@ -1,0 +1,82 @@
+// Dashboard Page Nav Styles
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-nav {
+  @include tutor-flex(row, center);
+  gap: $tutor-spacing-2;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  @include tutor-breakpoint-down(sm) {
+    gap: 0;
+    justify-content: space-between;
+  }
+
+  li {
+    margin: 0;
+    padding: 0;
+
+    a,
+    button {
+      width: 100%;
+      @include tutor-button-reset();
+      @include tutor-typography(small, medium, secondary);
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-3;
+      padding: $tutor-spacing-5 $tutor-spacing-6;
+      border-radius: $tutor-radius-md;
+      color: $tutor-text-primary;
+      transition: background-color 0.25 ease-in-out;
+
+      &:hover {
+        background-color: $tutor-tab-l3-active-hover;
+      }
+
+      &.active {
+        background-color: $tutor-tab-l3-active;
+        color: $tutor-text-brand;
+
+        &:hover {
+          background-color: $tutor-tab-l3-active-hover;
+          color: $tutor-text-primary;
+
+          svg:first-of-type {
+            color: $tutor-icon-brand;
+          }
+        }
+      }
+
+      svg {
+        flex-shrink: 0;
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        justify-content: center;
+        font-size: $tutor-font-size-tiny;
+        line-height: $tutor-line-height-medium;
+        padding: $tutor-spacing-4 $tutor-spacing-5;
+        border-radius: $tutor-radius-lg;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+
+  .tutor-nav-dropdown {
+    min-width: 170px;
+    padding: $tutor-spacing-2 0px;
+
+    li {
+      a,
+      button {
+        padding: $tutor-spacing-4 $tutor-spacing-5;
+      }
+    }
+  }
+}
