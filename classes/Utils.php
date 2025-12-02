@@ -5526,7 +5526,7 @@ class Utils {
 		$dashboard_page_id = $this->dashboard_page_id();
 
 		return apply_filters(
-			'tutor_is_dashboard_page'
+			'tutor_is_dashboard_page',
 			( $current_id && $dashboard_page_id ) && $current_id === $dashboard_page_id,
 			$current_id,
 			$dashboard_page_id
