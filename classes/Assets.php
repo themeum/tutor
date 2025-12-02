@@ -102,7 +102,7 @@ class Assets {
 		 *
 		 * @since 4.0.0
 		 */
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), PHP_INT_MAX );
 	}
 
 	/**
@@ -840,9 +840,9 @@ class Assets {
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
 		$learning_area_css_url = tutor()->assets_url . 'css/tutor-learning-area.min.css';
 
-		$core_js_url          = tutor()->assets_url . 'js/tutor-core.min.js';
-		$dashboard_js_url     = tutor()->assets_url . 'js/tutor-dashboard.min.js';
-		$learning_area_js_url = tutor()->assets_url . 'js/tutor-learning-area.min.js';
+		$core_js_url          = tutor()->assets_url . 'js/tutor-core.js';
+		$dashboard_js_url     = tutor()->assets_url . 'js/tutor-dashboard.js';
+		$learning_area_js_url = tutor()->assets_url . 'js/tutor-learning-area.js';
 
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
