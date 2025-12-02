@@ -23,6 +23,40 @@ $border-directions: (
 
 $border-styles: (solid, dashed, dotted, double, none);
 
+$radius-directions: (
+  '': (
+    border-radius,
+  ),
+  't': (
+    border-start-start-radius,
+    border-start-end-radius,
+  ),
+  'b': (
+    border-end-start-radius,
+    border-end-end-radius,
+  ),
+  'r': (
+    border-start-end-radius,
+    border-end-end-radius,
+  ),
+  'l': (
+    border-start-start-radius,
+    border-end-start-radius,
+  ),
+  'tl': (
+    border-start-start-radius,
+  ),
+  'tr': (
+    border-start-end-radius,
+  ),
+  'br': (
+    border-end-end-radius,
+  ),
+  'bl': (
+    border-end-start-radius,
+  ),
+);
+
 // =============================================================================
 // SMART BORDER UTILITIES
 // =============================================================================
@@ -87,38 +121,14 @@ $border-styles: (solid, dashed, dotted, double, none);
 // BORDER RADIUS (RTL-aware)
 // =============================================================================
 @each $key, $value in $tutor-radius {
-  .tutor-rounded-#{$key} {
-    border-radius: $value;
-  }
+  @each $abbr, $props in $radius-directions {
+    $prefix: if($abbr == '', '', $abbr + '-');
 
-  .tutor-rounded-t-#{$key} {
-    border-start-start-radius: $value;
-    border-start-end-radius: $value;
-  }
-  .tutor-rounded-b-#{$key} {
-    border-end-start-radius: $value;
-    border-end-end-radius: $value;
-  }
-  .tutor-rounded-r-#{$key} {
-    border-start-end-radius: $value;
-    border-end-end-radius: $value;
-  }
-  .tutor-rounded-l-#{$key} {
-    border-start-start-radius: $value;
-    border-end-start-radius: $value;
-  }
-
-  .tutor-rounded-tl-#{$key} {
-    border-start-start-radius: $value;
-  }
-  .tutor-rounded-tr-#{$key} {
-    border-start-end-radius: $value;
-  }
-  .tutor-rounded-br-#{$key} {
-    border-end-end-radius: $value;
-  }
-  .tutor-rounded-bl-#{$key} {
-    border-end-start-radius: $value;
+    .tutor-rounded-#{$prefix}#{$key} {
+      @each $prop in $props {
+        #{$prop}: $value;
+      }
+    }
   }
 }
 
@@ -160,6 +170,19 @@ $border-styles: (solid, dashed, dotted, double, none);
       @each $width-key, $width-value in $border-widths {
         .tutor-#{$breakpoint}-#{$dir}-#{$width-key} {
           #{$property}: #{$width-value} solid $tutor-border-idle;
+        }
+      }
+    }
+
+    // Border radius
+    @each $key, $value in $tutor-radius {
+      @each $abbr, $props in $radius-directions {
+        $prefix: if($abbr == '', '', $abbr + '-');
+
+        .tutor-#{$breakpoint}-rounded-#{$prefix}#{$key} {
+          @each $prop in $props {
+            #{$prop}: $value;
+          }
         }
       }
     }
