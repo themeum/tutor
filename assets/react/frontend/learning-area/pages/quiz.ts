@@ -1,8 +1,9 @@
-import { TutorComponentRegistry } from '@Core/ts';
-import type { AlpineComponentMeta } from '@Core/ts/types';
 import { DragDropManager, Draggable, Droppable, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
 import Alpine from 'alpinejs';
+
+import { TutorComponentRegistry } from '@Core/ts';
+import type { AlpineComponentMeta } from '@Core/ts/types';
 
 /**
  * Quiz Timer Component
