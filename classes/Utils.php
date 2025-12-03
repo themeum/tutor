@@ -3267,6 +3267,7 @@ class Utils {
 					ON cmeta.comment_id = c.comment_ID
 					AND cmeta.meta_key = 'tutor_rating'
 			WHERE 	user_meta.meta_key = '_is_tutor_instructor'
+				AND inst_status.meta_key = '_tutor_instructor_status'
 				AND ( user.display_name LIKE %s OR user.user_email = %s )
 				{$status}
 				{$category_where}
@@ -5795,9 +5796,9 @@ class Utils {
 				'icon_classes' => 'tutor-icon-brand-facebook',
 			),
 			'_tutor_profile_twitter'  => array(
-				'label'        => __( 'Twitter', 'tutor' ),
-				'placeholder'  => 'https://twitter.com/username',
-				'icon_classes' => 'tutor-icon-brand-twitter',
+				'label'        => __( 'X', 'tutor' ),
+				'placeholder'  => 'https://x.com/username',
+				'icon_classes' => 'tutor-icon-brand-x-twitter',
 			),
 			'_tutor_profile_linkedin' => array(
 				'label'        => __( 'Linkedin', 'tutor' ),
