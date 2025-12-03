@@ -15,6 +15,7 @@ use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
 use Tutor\Components\Modal;
+use Tutor\Components\Pagination;
 use Tutor\Components\Popover;
 use Tutor\Components\Progress;
 use Tutor\Components\Tabs;
@@ -706,7 +707,7 @@ use TUTOR\Icon;
 <!-- popover component -->
 <h3>Popover</h3>
 <div class="popover-wrapper tutor-pb-7">
-<p>Basic Popover</p>
+<h4>Basic Popover</h4>
 <br>
 <pre>
 	<code>echo Popover::make()
@@ -745,7 +746,7 @@ use TUTOR\Icon;
 	?>
 </div>
 <br>
-<p> Popover with placement variations</p>
+<h4> Popover with placement variations</h4>
 <br>
 <pre>
 <code>$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
@@ -811,7 +812,7 @@ echo Popover::make()
 ?>
 </div>
 <br>
-<p>Popover with footer</p>
+<h4>Popover with footer</h4>
 <br>
 <pre>
 <code>$footer_buttons = array(
@@ -861,7 +862,7 @@ echo Popover::make()
 
 		?>
 </div>
-<p>Popover with menu</p>
+<h4>Popover with menu</h4>
 <br>
 <pre>
 <code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )
@@ -890,5 +891,33 @@ echo Popover::make()
 	?>
 </div>
 <!-- popover component -->
+
+<!-- pagination component -->
+<h3>Pagination</h3>
+<br>
+<pre>
+<code>echo Pagination::make()
+		->current( 2 )
+		->total( 200 )
+		->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+		->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+		->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+		->render();</code>
+</pre>
+<br>
+<div class="pagination-wrapper tutor-pb-6">
+	<?php
+
+	echo Pagination::make()
+		->current( 2 )
+		->total( 200 )
+		->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+		->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+		->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+		->render();
+	?>
+</div>
+<!-- pagination component -->
+
 </body>
 </html>
