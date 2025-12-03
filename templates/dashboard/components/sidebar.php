@@ -29,7 +29,16 @@ $dashboard_pages     = tutor_utils()->tutor_dashboard_nav_ui_items();
 <div class="tutor-dashboard-sidebar">
 	<div class="tutor-dashboard-sidebar-logo">
 		<a href="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/tutor-logo.png' ); ?>" alt="<?php esc_attr_e( 'Tutor LMS', 'tutor' ); ?>"> 
+			<?php
+			$custom_logo_id = get_theme_mod( 'custom_logo' );
+			$logo_url       = $custom_logo_id ? wp_get_attachment_image_url( $custom_logo_id, 'full' ) : false;
+
+			if ( $logo_url ) :
+				?>
+				<img src="<?php echo esc_url( $logo_url ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
+			<?php else : ?>
+				<span class="site-title"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
+			<?php endif; ?>
 		</a>
 	</div>
 	<div class="tutor-dashboard-sidebar-nav">
