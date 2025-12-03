@@ -41,7 +41,7 @@ interface OrderCoursePlan extends OrderSummary {
 export type OrderSummaryItem = Prettify<OrderCourse | OrderBundle | OrderCoursePlan>;
 
 export type DiscountType = 'flat' | 'percentage';
-export type PaymentStatus = 'paid' | 'unpaid' | 'failed' | 'partially-refunded' | 'refunded';
+export type PaymentStatus = 'pending' | 'paid' | 'unpaid' | 'failed' | 'partially-refunded' | 'refunded';
 export type OrderStatus = 'incomplete' | 'completed' | 'cancelled' | 'trash';
 export type ActivityType =
   | 'order-placed'
