@@ -7,11 +7,6 @@
   @include tutor-flex(row, center);
   gap: $tutor-spacing-2;
 
-  @include tutor-breakpoint-down(sm) {
-    justify-content: space-between;
-    gap: 0;
-  }
-
   &-item {
     @include tutor-button-reset();
     @include tutor-typography(tiny, medium, secondary);
@@ -23,6 +18,11 @@
 
     &:hover {
       background-color: $tutor-tab-l3-active-hover;
+    }
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
     }
 
     &.active {
@@ -42,19 +42,6 @@
     svg {
       flex-shrink: 0;
     }
-
-    @include tutor-breakpoint-down(sm) {
-      justify-content: center;
-      font-size: $tutor-font-size-tiny;
-      line-height: $tutor-line-height-medium;
-      padding: $tutor-spacing-4 $tutor-spacing-5;
-      border-radius: $tutor-radius-lg;
-
-      svg {
-        width: 16px;
-        height: 16px;
-      }
-    }
   }
 
   &-dropdown {
@@ -72,6 +59,11 @@
 
       &:hover {
         background-color: $tutor-tab-l3-active-hover;
+      }
+
+      &:focus {
+        box-shadow: none;
+        outline: none;
       }
 
       &.active {
@@ -134,6 +126,25 @@
 
       .tutor-nav-item {
         padding: $tutor-spacing-5 $tutor-spacing-6;
+      }
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    gap: 0;
+
+    .tutor-nav-item {
+      flex: 1;
+      min-width: fit-content;
+      justify-content: center;
+      font-size: $tutor-font-size-tiny;
+      line-height: $tutor-line-height-medium;
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      border-radius: $tutor-radius-lg;
+
+      svg {
+        width: 16px;
+        height: 16px;
       }
     }
   }
