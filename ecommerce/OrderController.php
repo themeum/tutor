@@ -208,6 +208,8 @@ class OrderController {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 3.9.2 `prepare_order_data` method added.
+	 *
 	 * @param int    $user_id Typically student.
 	 * @param array  $items Key value pairs based on order_items table.
 	 * @param string $payment_status Order payment status.
@@ -222,86 +224,8 @@ class OrderController {
 	 * @return mixed order id or order data.
 	 */
 	public function create_order( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array(), $return_id = true ) {
-		$items          = Input::sanitize_array( $items );
-		$payment_status = Input::sanitize( $payment_status );
-		$coupon_code    = Input::sanitize( $coupon_code );
 
-		$allowed_item_fields = $this->model->get_order_items_fillable_fields();
-		unset( $allowed_item_fields['order_id'] );
-
-		// Validate order items.
-		if ( ! isset( $items[0] ) ) {
-			$items = array( $items );
-		}
-
-		// Validate payment status.
-		if ( ! in_array( $payment_status, array_keys( $this->model->get_payment_status() ) ) ) {
-			throw new \Exception( __( 'Invalid payment status', 'tutor' ) );
-		}
-
-		$subtotal_price = 0;
-		$total_price    = 0;
-
-		if ( $this->model::TYPE_SINGLE_ORDER === $order_type ) {
-			$item_price     = $this->model::calculate_order_price( $items );
-			$subtotal_price = $item_price->subtotal;
-			$total_price    = $item_price->total;
-		} else {
-			// For subscription and renewal order.
-			$prices = apply_filters( 'tutor_create_order_prices_for_subscription', null, $items, $order_type, $user_id );
-			if ( $prices ) {
-				$subtotal_price = $prices->subtotal_price;
-				$total_price    = $prices->total_price;
-			}
-		}
-
-		$order_data = array(
-			'items'          => $items,
-			'payment_status' => $payment_status,
-			'order_type'     => $order_type,
-			'coupon_code'    => $coupon_code,
-			'coupon_amount'  => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
-			'subtotal_price' => $subtotal_price,
-			'pre_tax_price'  => $total_price,
-			'total_price'    => $total_price,
-			'net_payment'    => $total_price,
-			'user_id'        => $user_id,
-			'order_status'   => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
-			'created_at_gmt' => current_time( 'mysql', true ),
-			'created_by'     => get_current_user_id(),
-			'updated_at_gmt' => current_time( 'mysql', true ),
-			'updated_by'     => get_current_user_id(),
-		);
-
-		if ( isset( $args['discount_amount'] ) && $args['discount_amount'] > 0 ) {
-			$order_data['discount_type']   = 'flat';
-			$order_data['discount_amount'] = floatval( $args['discount_amount'] );
-			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
-		}
-
-		$calculate_tax = apply_filters( 'tutor_calculate_order_tax', Tax::should_calculate_tax(), $args );
-
-		if ( $calculate_tax ) {
-			/**
-			 * Tax calculation for order.
-			 */
-			$tax_rate = Tax::get_user_tax_rate( $user_id );
-			if ( $tax_rate ) {
-				$tax_amount = apply_filters( 'tutor_calculate_order_tax_amount', 0, $total_price, $tax_rate, $order_type, $items );
-
-				$order_data['tax_type']   = Tax::get_tax_type();
-				$order_data['tax_rate']   = $tax_rate;
-				$order_data['tax_amount'] = $tax_amount;
-
-				if ( ! Tax::is_tax_included_in_price() ) {
-					$total_price              += $tax_amount;
-					$order_data['total_price'] = $total_price;
-					$order_data['net_payment'] = $total_price;
-				} else {
-					$order_data['pre_tax_price'] = $total_price - $tax_amount;
-				}
-			}
-		}
+		$order_data = $this->prepare_order_data( $user_id, $items, $payment_status, $order_type, $coupon_code, $args );
 
 		// Update data with arguments.
 		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
@@ -1220,5 +1144,140 @@ class OrderController {
 		);
 
 		return (object) $refund_data;
+	}
+
+	/**
+	 * Prepare sanitized and calculated order data for database insertion or update.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int         $user_id        The ID of the user placing or updating the order.
+	 * @param array       $items          The list of items included in the order.
+	 * @param string      $payment_status The current payment status (e.g., 'paid', 'unpaid').
+	 * @param string      $order_type     The type of order (e.g., single, subscription, renewal).
+	 * @param string|null $coupon_code    Optional coupon code applied to the order.
+	 * @param array       $args           Optional additional arguments, such as discounts or custom data.
+	 *
+	 * @return array The fully prepared order data array, ready to be stored or updated.
+	 *
+	 * @throws \Exception If the payment status is invalid or required data is missing.
+	 */
+	private function prepare_order_data( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array() ): array {
+		$items          = Input::sanitize_array( $items );
+		$payment_status = Input::sanitize( $payment_status );
+		$coupon_code    = Input::sanitize( $coupon_code );
+
+		$allowed_item_fields = $this->model->get_order_items_fillable_fields();
+		unset( $allowed_item_fields['order_id'] );
+
+		// Validate order items.
+		if ( ! isset( $items[0] ) ) {
+			$items = array( $items );
+		}
+
+		// Validate payment status.
+		if ( ! in_array( $payment_status, array_keys( $this->model->get_payment_status() ) ) ) {
+			throw new \Exception( __( 'Invalid payment status', 'tutor' ) );
+		}
+
+		$subtotal_price = 0;
+		$total_price    = 0;
+
+		if ( $this->model::TYPE_SINGLE_ORDER === $order_type ) {
+			$item_price     = $this->model::calculate_order_price( $items );
+			$subtotal_price = $item_price->subtotal;
+			$total_price    = $item_price->total;
+		} else {
+			// For subscription and renewal order.
+			$prices = apply_filters( 'tutor_create_order_prices_for_subscription', null, $items, $order_type, $user_id );
+			if ( $prices ) {
+				$subtotal_price = $prices->subtotal_price;
+				$total_price    = $prices->total_price;
+			}
+		}
+
+		$order_data = array(
+			'items'          => $items,
+			'payment_status' => $payment_status,
+			'order_type'     => $order_type,
+			'coupon_code'    => $coupon_code,
+			'coupon_amount'  => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
+			'subtotal_price' => $subtotal_price,
+			'pre_tax_price'  => $total_price,
+			'total_price'    => $total_price,
+			'net_payment'    => $total_price,
+			'user_id'        => $user_id,
+			'order_status'   => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
+			'created_at_gmt' => current_time( 'mysql', true ),
+			'created_by'     => get_current_user_id(),
+			'updated_at_gmt' => current_time( 'mysql', true ),
+			'updated_by'     => get_current_user_id(),
+		);
+
+		if ( isset( $args['discount_amount'] ) && $args['discount_amount'] > 0 ) {
+			$order_data['discount_type']   = 'flat';
+			$order_data['discount_amount'] = floatval( $args['discount_amount'] );
+			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
+		}
+
+		$calculate_tax = apply_filters( 'tutor_calculate_order_tax', Tax::should_calculate_tax(), $args );
+
+		if ( $calculate_tax ) {
+			/**
+			 * Tax calculation for order.
+			 */
+			$tax_rate = Tax::get_user_tax_rate( $user_id );
+			if ( $tax_rate ) {
+				$tax_amount = apply_filters( 'tutor_calculate_order_tax_amount', 0, $total_price, $tax_rate, $order_type, $items );
+
+				$order_data['tax_type']   = Tax::get_tax_type();
+				$order_data['tax_rate']   = $tax_rate;
+				$order_data['tax_amount'] = $tax_amount;
+
+				if ( ! Tax::is_tax_included_in_price() ) {
+					$total_price              += $tax_amount;
+					$order_data['total_price'] = $total_price;
+					$order_data['net_payment'] = $total_price;
+				} else {
+					$order_data['pre_tax_price'] = $total_price - $tax_amount;
+				}
+			}
+		}
+
+		return $order_data;
+	}
+
+	/**
+	 * Update an existing order with validated and recalculated data.
+	 *
+	 * @since 3.9.2
+	 *
+	 * @param int         $order_id       The unique ID of the order to update.
+	 * @param int         $user_id        The ID of the user associated with the order.
+	 * @param array       $items          The list of items to update for the order.
+	 * @param string      $payment_status The payment status (e.g., 'paid', 'unpaid').
+	 * @param string      $order_type     The order type (e.g., single, subscription, renewal).
+	 * @param string|null $coupon_code    Optional coupon code applied to the order.
+	 * @param array       $args           Optional additional arguments (discounts, tax data, etc.).
+	 * @param bool        $return_data    Whether to return the updated order data on success.
+	 *
+	 * @return array|bool The updated order data if $return_data is true and the update succeeds,
+	 *                    or false otherwise.
+	 */
+	public function update_order( int $order_id, int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array(), $return_data = false ) {
+
+		$update_data = $this->prepare_order_data( $user_id, $items, $payment_status, $order_type, $coupon_code, $args );
+		$order_items = $update_data['items'];
+
+		unset( $update_data['items'], $update_data['created_at_gmt'], $update_data['created_by'] );
+
+		if ( $this->model->update_order( $order_id, $update_data, $order_items ) ) {
+			$update_data['id']    = $order_id;
+			$update_data['items'] = $order_items;
+			do_action( 'tutor_order_updated', $update_data );
+			return $return_data ? $update_data : true;
+		}
+
+		return false;
 	}
 }

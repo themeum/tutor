@@ -22,17 +22,17 @@ use Tutor\Ecommerce\CheckoutController;
  */
 $user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
 
-$order_model         = new OrderModel();
 $coupon_model        = new CouponModel();
 $cart_controller     = new CartController( false );
 $checkout_controller = new CheckoutController( false );
 $order_id            = (int) Input::sanitize_request_data( 'order_id', 0 );
-$order_data          = $order_id ? $order_model->get_order_by_id( $order_id ) : null;
+$order_data          = $order_id ? OrderModel::get_valid_incomplete_order( $order_id, (int) $user_id, true ) : null;
 $get_cart            = ! empty( $order_data ) ? $checkout_controller->get_courses_data_by_order_items( $order_data->items ) : $cart_controller->get_cart_items();
 $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
 $course_id           = (int) Input::sanitize_request_data( 'course_id', 0 );
 $course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
+$coupon_code         = Input::sanitize_request_data( 'coupon_code', '' );
 
 $plan_id       = (int) Input::sanitize_request_data( 'plan' );
 $plan_info     = apply_filters( 'tutor_get_plan_info', null, $plan_id );
@@ -43,7 +43,9 @@ $object_ids = array();
 $item_ids   = $has_plan_info ? array( $plan_info->id ) : array_column( $course_list, 'ID' );
 $order_type = $has_plan_info ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-$coupon_code            = apply_filters( 'tutor_checkout_coupon_code', Input::sanitize_request_data( 'coupon_code', '' ), $order_type, $item_ids );
+// Check for applicable coupon in the existing order data.
+$has_applicable_coupon  = ! empty( $order_data ) && empty( $coupon_code ) && $coupon_model->order_has_applicable_coupon( $order_data );
+$coupon_code            = $has_applicable_coupon ? $order_data->coupon_code : apply_filters( 'tutor_checkout_coupon_code', $coupon_code, $order_type, $item_ids );
 $has_manual_coupon_code = ! empty( $coupon_code );
 
 $should_calculate_tax     = Tax::should_calculate_tax();

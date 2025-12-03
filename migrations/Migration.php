@@ -31,8 +31,11 @@ class Migration {
 	public function schedule_migrations() {
 		$migrators = array(
 			QuizAttemptMigrator::instance(),
-			ProcessByWcMigrator::instance(),
 		);
+
+		if ( tutor_utils()->has_wc() ) {
+			$migrators[] = ProcessByWcMigrator::instance();
+		}
 
 		foreach ( $migrators as $migrator ) {
 			if ( ! $migrator->is_completed() ) {

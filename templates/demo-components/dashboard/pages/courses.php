@@ -55,16 +55,23 @@ $page_nav_items = array(
 );
 
 ?>
-<div class="tutor-dashboard-page-card">
-	<?php
-	tutor_load_template(
-		'demo-components.dashboard.components.page-nav',
-		array( 'items' => $page_nav_items )
-	);
-	?>
-	<div class="tutor-dashboard-page-card-body">
-		<p class="tutor-text-center tutor-py-16 tutor-text-muted">
-			<?php esc_html_e( 'You have not enrolled in any courses yet.', 'tutor' ); ?>
-		</p>
+<div class="tutor-pt-7">
+	<div class="tutor-dashboard-page-card">
+		<div class="tutor-p-6 tutor-sm-p-2 tutor-border-b tutor-sm-border tutor-sm-rounded-2xl">
+			<?php
+			tutor_load_template(
+				'core-components.nav',
+				array(
+					'items' => $page_nav_items,
+					'size'  => 'lg',
+				)
+			);
+			?>
+		</div>
+		<div class="tutor-dashboard-page-card-body">
+			<p class="tutor-text-center tutor-py-16 tutor-text-muted">
+				<?php esc_html_e( 'You have not enrolled in any courses yet.', 'tutor' ); ?>
+			</p>
+		</div>
 	</div>
 </div>
