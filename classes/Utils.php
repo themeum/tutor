@@ -5520,6 +5520,18 @@ class Utils {
 	}
 
 	/**
+	 * Check if the current page is the part of learning area
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_learning_area(): bool {
+		// @TODO.
+		return true;
+	}
+
+	/**
 	 * Check is wishlisted.
 	 *
 	 * @since 1.0.0

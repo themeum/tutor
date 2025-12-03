@@ -330,6 +330,9 @@ class Assets {
 	 * Load frontend scripts
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
+	 *
 	 * @return void
 	 */
 	public function frontend_scripts() {
@@ -483,6 +486,8 @@ class Assets {
 	 * Load common scripts for frontend and backend
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
 	 *
 	 * @param string $slug The page slug.
 	 *
@@ -842,7 +847,7 @@ class Assets {
 	 */
 	public function enqueue_scripts() {
 		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = false; // @TODO.
+		$is_learning_area = tutor_utils()->is_learning_area();
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
@@ -881,6 +886,8 @@ class Assets {
 	 * If the current screen is dashboard or new learning area
 	 * then this method will return false to avoid loading legacy css & js files
 	 *
+	 * @since 4.0.0
+	 *
 	 * @return boolean
 	 */
 	public function should_load_legacy_scripts(): bool {
@@ -889,7 +896,7 @@ class Assets {
 		}
 
 		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = false; // @TODO.
+		$is_learning_area = tutor_utils()->is_learning_area();
 
 		return ! ( $is_dashboard || $is_learning_area );
 	}
