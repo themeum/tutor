@@ -30,18 +30,17 @@ $page_nav_items = array(
 );
 
 ?>
-<div class="tutor-dashboard-discussions tutor-mt-7">
-	<div class="tutor-dashboard-page-card">
-		<div class="tutor-p-6 tutor-sm-p-2 tutor-border-b tutor-sm-border tutor-sm-rounded-2xl">
-			<?php
-			tutor_load_template(
-				'core-components.nav',
-				array(
-					'items' => $page_nav_items,
-					'size'  => 'lg',
-				)
-			);
-			?>
+<div class="tutor-dashboard-discussions tutor-surface-l1 tutor-border tutor-rounded-2xl">
+	<?php
+	tutor_load_template(
+		'demo-components.dashboard.components.page-nav',
+		array( 'items' => $page_nav_items )
+	);
+	?>
+	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+		<div class="tutor-small tutor-text-secondary">
+			<?php esc_html_e( 'Questions', 'tutor' ); ?>
+			<span class="tutor-text-primary tutor-font-medium">(3234)</span>
 		</div>
 		<div class="tutor-sm-border tutor-sm-rounded-2xl tutor-sm-mt-4">
 			<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
