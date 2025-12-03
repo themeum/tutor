@@ -244,7 +244,7 @@ class Button extends BaseComponent {
 		}
 
 		// Build button inner HTML depending on icon position.
-		$content = 'right' === ( $this->icon_position ?? 'left' )
+		$content = 'right' === ( $this->icon_position ? $this->icon_position : 'left' )
 			? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
 			: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
 
