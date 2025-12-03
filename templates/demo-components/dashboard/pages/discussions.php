@@ -30,7 +30,7 @@ $page_nav_items = array(
 );
 
 ?>
-<div class="tutor-dashboard-discussions tutor-surface-l1 tutor-border tutor-rounded-2xl tutor-mt-7">
+<div class="tutor-dashboard-discussions tutor-surface-l1 tutor-border tutor-rounded-2xl">
 	<?php
 	tutor_load_template(
 		'demo-components.dashboard.components.page-nav',
