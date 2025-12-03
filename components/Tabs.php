@@ -162,13 +162,13 @@ class Tabs extends BaseComponent {
 	}
 
 	/**
-	 * Render the tabs component.
+	 * Get the tabs component.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML markup for the tabs component.
 	 */
-	public function render(): string {
+	public function get(): string {
 		$tabs_json   = wp_json_encode( $this->tabs );
 		$default     = esc_js( $this->default_tab );
 		$orientation = esc_attr( $this->orientation );
@@ -213,7 +213,9 @@ class Tabs extends BaseComponent {
 			</div>
 		</div>
 		<?php
-		return ob_get_clean();
+		$this->component_string = ob_get_clean();
+
+		return $this->component_string;
 	}
 }
 

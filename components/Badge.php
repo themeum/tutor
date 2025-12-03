@@ -170,13 +170,13 @@ class Badge extends BaseComponent {
 	}
 
 	/**
-	 * Render the final badge HTML.
+	 * Get the final badge HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		$classes = sprintf(
 			'tutor-badge tutor-badge-%s',
 			esc_attr( $this->variant )
@@ -207,11 +207,13 @@ class Badge extends BaseComponent {
 			esc_html( $this->label )
 		);
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<span %s>%s</span>',
 			$attributes,
 			$content
 		);
+
+		return $this->component_string;
 	}
 
 }

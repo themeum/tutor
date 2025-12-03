@@ -375,13 +375,13 @@ class Modal extends BaseComponent {
 	}
 
 	/**
-	 * Render the modal HTML.
+	 * Get the modal HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		if ( empty( $this->id ) ) {
 			return '';
 		}
@@ -409,7 +409,7 @@ class Modal extends BaseComponent {
 		$body   = $this->render_body();
 		$footer = $this->render_footer();
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<div x-data="tutorModal(%s)" x-cloak>
 				<template x-teleport="body">
 					<div x-bind="getModalBindings()">
@@ -430,5 +430,7 @@ class Modal extends BaseComponent {
 			$body,
 			$footer
 		);
+
+		return $this->component_string;
 	}
 }

@@ -212,13 +212,13 @@ class Button extends BaseComponent {
 	}
 
 	/**
-	 * Render the final button HTML.
+	 * Get the final button HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		$classes = sprintf(
 			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
 			esc_attr( $this->variant ),
@@ -248,12 +248,14 @@ class Button extends BaseComponent {
 			? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
 			: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<%1$s %2$s>%3$s</%1$s>',
 			esc_attr( $this->tag ),
 			$attributes,
 			$content
 		);
+
+		return $this->component_string;
 	}
 
 }

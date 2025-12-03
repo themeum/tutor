@@ -177,13 +177,13 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	}
 
 	/**
-	 * Render the avatar HTML.
+	 * Get the avatar HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		$classes = array(
 			'tutor-avatar',
 			'tutor-avatar-' . esc_attr( $this->size ),
@@ -214,6 +214,8 @@ class Avatar extends BaseComponent implements ComponentInterface {
 			);
 		}
 
-		return sprintf( '<div %1$s>%2$s</div>', $attributes, $content );
+		$this->component_string = sprintf( '<div %1$s>%2$s</div>', $attributes, $content );
+
+		return $this->component_string;
 	}
 }

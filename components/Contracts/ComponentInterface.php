@@ -12,9 +12,7 @@
 
 namespace Tutor\Components\Contracts;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+defined( 'ABSPATH' ) || exit;
 
 /**
  * Interface ComponentInterface
@@ -35,7 +33,7 @@ interface ComponentInterface {
 	public static function make(): ComponentInterface;
 
 	/**
-	 * Render the component output.
+	 * Get the component output.
 	 *
 	 * All components must return their HTML as a string.
 	 *
@@ -43,5 +41,14 @@ interface ComponentInterface {
 	 *
 	 * @return string Component HTML output.
 	 */
-	public function render(): string;
+	public function get(): string;
+
+	/**
+	 * Render the component output.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Component HTML output.
+	 */
+	public function render(): void;
 }

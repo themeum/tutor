@@ -797,13 +797,13 @@ class InputField extends BaseComponent {
 	}
 
 	/**
-	 * Render the input field HTML.
+	 * Get the input field HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		if ( empty( $this->name ) ) {
 			return '';
 		}
@@ -861,13 +861,15 @@ class InputField extends BaseComponent {
 			);
 		}
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<div class="%s">%s%s%s</div>',
 			esc_attr( $field_classes ),
 			$label_html,
 			$input_html,
 			$help_html
 		);
+
+		return $this->component_string;
 	}
 
 }

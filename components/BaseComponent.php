@@ -27,6 +27,15 @@ defined( 'ABSPATH' ) || exit;
 abstract class BaseComponent implements ComponentInterface {
 
 	/**
+	 * Keep the component as string
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $component_string = '';
+
+	/**
 	 * Create a new Button instance.
 	 *
 	 * @since 4.0.0
@@ -105,4 +114,16 @@ abstract class BaseComponent implements ComponentInterface {
 	protected function esc( $value, $esc_fn = 'esc_html' ): string {
 		return call_user_func( $esc_fn, $value );
 	}
+
+	/**
+	 * Render the component
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function render(): void {
+		echo $this->get(); // phpcs:ignore.
+	}
+
 }
