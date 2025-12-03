@@ -839,6 +839,7 @@ echo Popover::make()
 ->title( 'Confirm Action' )
 ->body( '&lt;p&gt;Are you sure you want to delete this item? This action cannot be undone.&lt;/p&gt;' )
 ->footer( $footer_buttons )
+->dismissible( false )
 ->trigger(
 	Button::make()
 	->label( 'Popover Footer' )
