@@ -90,6 +90,22 @@
     }
   }
 
+  // Variant styles
+  &.tutor-nav-secondary {
+    .tutor-nav-item {
+      border-bottom: 2px solid transparent;
+      transition:
+        border-color 0.25s ease-in-out,
+        background-color 0.25s ease-in-out;
+
+      &.active {
+        background-color: transparent;
+        border-bottom-color: $tutor-border-brand;
+        border-radius: $tutor-radius-none;
+      }
+    }
+  }
+
   // Size variants
   &.tutor-nav-sm {
     .tutor-nav-item {

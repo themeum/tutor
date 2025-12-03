@@ -82,6 +82,19 @@ $items = array(
 	);
 	?>
 
+
+	<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6 tutor-mt-8">Variant Secondary</h2>
+	<?php
+	tutor_load_template(
+		'core-components.nav',
+		array(
+			'items'   => $items,
+			'variant' => 'secondary',
+			'size'    => 'md',
+		)
+	);
+	?>
+
 	<div class="tutor-mb-8 tutor-mt-12">
 		<h2 class="tutor-text-xl tutor-font-semibold tutor-mb-3">Usage</h2>
 		<div class="tutor-bg-gray-50 tutor-p-4 tutor-rounded-lg"></div>
