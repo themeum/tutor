@@ -132,6 +132,24 @@
     }
   }
 
+  .tutor-input-wrapper:has(.tutor-input-sm) {
+    .tutor-input.tutor-input-content-left {
+      @include padding-start($tutor-spacing-9);
+    }
+
+    .tutor-input.tutor-input-content-right {
+      @include padding-end($tutor-spacing-9);
+    }
+
+    .tutor-input-content-left {
+      @include left($tutor-spacing-4);
+    }
+
+    &.tutor-input-content-right {
+      @include right($tutor-spacing-4);
+    }
+  }
+
   .tutor-error-text {
     @include tutor-typography('small', 'regular', 'critical');
     margin-top: $tutor-spacing-3;
