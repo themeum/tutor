@@ -77,6 +77,17 @@ class Tabs extends BaseComponent {
 	 */
 	protected string $default_tab = '';
 
+
+	/**
+	 * Tab orientation type (horizontal|vertical).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	public const TYPE_HORIZONTAL = 'horizontal';
+	public const TYPE_VERTICAL   = 'vertical';
+
 	/**
 	 * Tab orientation (horizontal|vertical).
 	 *
@@ -135,9 +146,9 @@ class Tabs extends BaseComponent {
 	 * @return $this
 	 */
 	public function orientation( string $orientation ) {
-		$this->orientation = in_array( $orientation, array( 'horizontal', 'vertical' ), true )
+		$this->orientation = in_array( $orientation, array( self::TYPE_HORIZONTAL, self::TYPE_VERTICAL ), true )
 			? $orientation
-			: 'horizontal';
+			: self::TYPE_HORIZONTAL;
 		return $this;
 	}
 
