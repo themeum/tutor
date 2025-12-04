@@ -20,13 +20,13 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
- * echo Badge::make()
+ * Badge::make()
  *     ->label( 'Primary' )
  *     ->variant( 'primary' )
  *     ->icon( '<svg>...</svg>' )
  *     ->render();
  *
- * echo Badge::make()
+ * Badge::make()
  *     ->label( 'Points: 20' )
  *     ->variant( 'secondary' )
  *     ->circle()

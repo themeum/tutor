@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
  *     ],
  * ];
  *
- * echo Tabs::make()
+ * Tabs::make()
  *     ->tabs( $tabs_data )
  *     ->default_tab( 'lesson' )
  *     ->orientation( 'horizontal' )

@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * // Example usage:
  *
- * echo Modal::make()
+ * Modal::make()
  *     ->id( 'confirm-modal' )
  *     ->title( 'Confirm Submission' )
  *     ->subtitle( 'Are you sure you want to submit?' )
@@ -30,14 +30,14 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // With template path
- * echo Modal::make()
+ * Modal::make()
  *     ->id( 'course-modal' )
  *     ->title( 'Course Details' )
  *     ->template( 'path/to/template.php' )
  *     ->render();
  *
  * // Headless modal (no close button)
- * echo Modal::make()
+ * Modal::make()
  *     ->id( 'headless-modal' )
  *     ->closeable( false )
  *     ->body( '<h3>Success!</h3>' )

@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
- * echo Accordion::make()
+ * Accordion::make()
  *     ->id( 'about-course' )
  *     ->title( 'About this Course' )
  *     ->content( '<p>Course description here...</p>' )
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // With template path
- * echo Accordion::make()
+ * Accordion::make()
  *     ->id( 'course-details' )
  *     ->title( 'Course Details' )
  *     ->template( 'path/to/template.php' )

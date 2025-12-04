@@ -21,14 +21,14 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  * ```
  * // Progress bar
- * echo Progress::make()
+ * Progress::make()
  *     ->type( 'bar' )
  *     ->value( 75 )
  *     ->animated()
  *     ->render();
  *
  * // Progress circle
- * echo Progress::make()
+ * Progress::make()
  *     ->type( 'circle' )
  *     ->value( 75 )
  *     ->render();

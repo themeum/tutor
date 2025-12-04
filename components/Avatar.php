@@ -25,14 +25,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * ```php
  * Avatar with image
- * echo Avatar::make()
+ * Avatar::make()
  *     ->src('https://example.com/avatar.jpg')
  *     ->size(Size::SIZE_20)
  *     ->bordered()
  *     ->render();
  *
  * Avatar with initials
- * echo Avatar::make()
+ * Avatar::make()
  *     ->initials('SK')
  *     ->size(Size::SIZE_32)
  *     ->rounded(false)

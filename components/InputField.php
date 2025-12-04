@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  * ```
  * // Text input with clear button
- * echo InputField::make()
+ * InputField::make()
  *     ->type( 'text' )
  *     ->name( 'full_name' )
  *     ->label( 'Full Name' )
@@ -33,7 +33,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // Text input with left icon
- * echo InputField::make()
+ * InputField::make()
  *     ->type( 'text' )
  *     ->name( 'email' )
  *     ->label( 'Email' )
@@ -41,14 +41,14 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // Textarea
- * echo InputField::make()
+ * InputField::make()
  *     ->type( 'textarea' )
  *     ->name( 'bio' )
  *     ->label( 'Bio' )
  *     ->render();
  *
  * // Checkbox
- * echo InputField::make()
+ * InputField::make()
  *     ->type( 'checkbox' )
  *     ->name( 'agree' )
  *     ->label( 'I agree to terms' )
@@ -56,7 +56,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // Radio
- * echo InputField::make()
+ * InputField::make()
  *     ->type( 'radio' )
  *     ->name( 'gender' )
  *     ->label( 'Male' )
@@ -64,7 +64,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // Switch
- * echo InputField::make()
+ * InputField::make()
  *     ->type( 'switch' )
  *     ->name( 'notifications' )
  *     ->label( 'Enable notifications?' )
@@ -72,7 +72,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // InputField with error
- * echo InputField::make()
+ * InputField::make()
  *     ->type( 'text' )
  *     ->name( 'username' )
  *     ->label( 'Username' )

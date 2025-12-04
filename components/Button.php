@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
- * echo Button::make()
+ * Button::make()
  *     ->label( 'Enroll Now' )
  *     ->size( 'large' )
  *     ->variant( 'primary' )
