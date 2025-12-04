@@ -167,45 +167,51 @@ $wishlists = array(
 );
 
 ?>
-<div class="tutor-dashboard-page-card">
-	<?php
-	tutor_load_template(
-		'demo-components.dashboard.components.page-nav',
-		array( 'items' => $page_nav_items )
-	);
-	?>
-	<div class="tutor-dashboard-page-card-body">
-		<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
-			<div class="tutor-wishlist-grid">
-				<?php foreach ( $wishlists as $wishlist_item ) : ?>
-					<div>
-					<?php
-					tutor_load_template(
-						'demo-components.dashboard.components.course-card',
-						array(
-							'image_url'       => isset( $wishlist_item['image_url'] ) ? $wishlist_item['image_url'] : '',
-							'title'           => isset( $wishlist_item['title'] ) ? $wishlist_item['title'] : '',
-							'rating_avg'      => isset( $wishlist_item['rating_avg'] ) ? $wishlist_item['rating_avg'] : 0,
-							'rating_count'    => isset( $wishlist_item['rating_count'] ) ? $wishlist_item['rating_count'] : 0,
-							'learners'        => isset( $wishlist_item['learners'] ) ? $wishlist_item['learners'] : 0,
-							'instructor'      => isset( $wishlist_item['instructor'] ) ? $wishlist_item['instructor'] : '',
-							'instructor_url'  => '#',
-							'provider'        => isset( $wishlist_item['provider'] ) ? $wishlist_item['provider'] : '',
-							'show_bestseller' => isset( $wishlist_item['show_bestseller'] ) ? $wishlist_item['show_bestseller'] : false,
-							'price'           => isset( $wishlist_item['price'] ) ? $wishlist_item['price'] : '',
-							'original_price'  => isset( $wishlist_item['original_price'] ) ? $wishlist_item['original_price'] : '',
-							'permalink'       => '#',
-						)
-					);
-					?>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		<?php else : ?>
-			<div class="tutor-text-center tutor-py-16 tutor-text-muted">
-				<?php esc_html_e( 'You have not added any courses to your wishlist yet.', 'tutor' ); ?>
-			</div>
-		<?php endif; ?>
+<div class="tutor-pt-7">
+	<div class="tutor-dashboard-page-card">
+		<div class="tutor-p-6 tutor-sm-p-2 tutor-border-b tutor-sm-border tutor-sm-rounded-2xl">
+			<?php
+			tutor_load_template(
+				'core-components.nav',
+				array(
+					'items' => $page_nav_items,
+					'size'  => 'lg',
+				)
+			);
+			?>
+		</div>
+		<div class="tutor-dashboard-page-card-body">
+			<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
+				<div class="tutor-wishlist-grid">
+					<?php foreach ( $wishlists as $wishlist_item ) : ?>
+						<div>
+						<?php
+						tutor_load_template(
+							'demo-components.dashboard.components.course-card',
+							array(
+								'image_url'       => isset( $wishlist_item['image_url'] ) ? $wishlist_item['image_url'] : '',
+								'title'           => isset( $wishlist_item['title'] ) ? $wishlist_item['title'] : '',
+								'rating_avg'      => isset( $wishlist_item['rating_avg'] ) ? $wishlist_item['rating_avg'] : 0,
+								'rating_count'    => isset( $wishlist_item['rating_count'] ) ? $wishlist_item['rating_count'] : 0,
+								'learners'        => isset( $wishlist_item['learners'] ) ? $wishlist_item['learners'] : 0,
+								'instructor'      => isset( $wishlist_item['instructor'] ) ? $wishlist_item['instructor'] : '',
+								'instructor_url'  => '#',
+								'provider'        => isset( $wishlist_item['provider'] ) ? $wishlist_item['provider'] : '',
+								'show_bestseller' => isset( $wishlist_item['show_bestseller'] ) ? $wishlist_item['show_bestseller'] : false,
+								'price'           => isset( $wishlist_item['price'] ) ? $wishlist_item['price'] : '',
+								'original_price'  => isset( $wishlist_item['original_price'] ) ? $wishlist_item['original_price'] : '',
+								'permalink'       => '#',
+							)
+						);
+						?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			<?php else : ?>
+				<div class="tutor-text-center tutor-py-16 tutor-text-muted">
+					<?php esc_html_e( 'You have not added any courses to your wishlist yet.', 'tutor' ); ?>
+				</div>
+			<?php endif; ?>
+		</div>
 	</div>
 </div>
-
