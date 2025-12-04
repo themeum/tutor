@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Variant;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -22,13 +24,13 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * Badge::make()
  *     ->label( 'Primary' )
- *     ->variant( 'primary' )
+ *     ->variant( Variant::PRIMARY )
  *     ->icon( '<svg>...</svg>' )
  *     ->render();
  *
  * Badge::make()
  *     ->label( 'Points: 20' )
- *     ->variant( 'secondary' )
+ *     ->variant( Variant::SECONDARY )
  *     ->circle()
  *     ->render();
  * ```
@@ -47,13 +49,15 @@ class Badge extends BaseComponent {
 	protected $label = '';
 
 	/**
-	 * Badge variant style (primary|pending|completed|cancelled|secondary|exception).
+	 * Badge variant style.
 	 *
 	 * @since 4.0.0
 	 *
+	 * @see Variant constants.
+	 *
 	 * @var string
 	 */
-	protected $variant = 'primary';
+	protected $variant = Variant::PRIMARY;
 
 	/**
 	 * Whether badge has circle style.
