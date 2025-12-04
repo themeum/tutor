@@ -175,7 +175,7 @@
 		Tabs::make()
 		->tabs( $tabs_data )
 		->default_tab( 'quizzes' )
-		->orientation( 'horizontal' )
+		->orientation( Tabs::TYPE_HORIZONTAL )
 		->url_params( array( 'enabled' => true ) )
 		->render();
 		?&gt;
@@ -206,7 +206,7 @@
 		Tabs::make()
 		->tabs( $tabs_data )
 		->default_tab( 'quizzes' )
-		->orientation( 'horizontal' )
+		->orientation( Tabs::TYPE_HORIZONTAL )
 		->url_params( array( 'enabled' => true ) )
 		->render();
 
@@ -310,7 +310,9 @@
 		->title( 'About this Course' )
 		->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>', 'wp_kses_post' )
 		->render();
-		'<br/>';
+
+		echo '<br/>';
+
 		Accordion::make()
 		->id( 'about-test' )
 		->title( 'About this Course' )
