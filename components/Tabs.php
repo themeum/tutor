@@ -194,7 +194,9 @@ class Tabs extends BaseComponent {
 						:disabled="tab.disabled ? true : false"
 						@click="selectTab(tab.id)"
 					>
-						<span x-data="tutorIcon({ name: tab.icon, width: 24, height: 24 })"></span>
+						<template x-if="tab.icon">
+							<span x-data="tutorIcon({ name: tab.icon, width: 24, height: 24 })"></span>
+						</template>
 						<span x-text="tab.label"></span>
 					</button>
 				</template>
