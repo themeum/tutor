@@ -8,6 +8,9 @@
  * @since 4.0.0
  */
 
+namespace Tutor\Components\Constants;
+
+defined( 'ABSPATH' ) || exit;
 /**
  * Class for containing variant constants
  *

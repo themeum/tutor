@@ -13,6 +13,7 @@ use Tutor\Components\Accordion;
 use Tutor\Components\Avatar;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
 use Tutor\Components\InputField;
 use Tutor\Components\Modal;
 use Tutor\Components\Progress;
@@ -59,26 +60,26 @@ use Tutor\Components\Tabs;
 	<h2>Avatar</h2>
 	<pre><code>
 	&lt;?php
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'xs' )->render();
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'sm' )->render();
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'md' )->render();
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'lg' )->bordered()->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_20 )->bordered()->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_40 )->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_56 )->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_104 )->render();
 
-	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( 'md' )->render();
-	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( 'lg' )->render();
-	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( 'xl' )->render();
+	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( Size::SIZE_20 )->render();
+	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( Size::SIZE_40 )->render();
+	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( Size::SIZE_56 )->render();
 	?&gt;
 	</code></pre>
 	<div class="tutor-dynamic-btn-wrapper tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 	<?php
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'xs' )->render();
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'sm' )->render();
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'md' )->render();
-	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( 'lg' )->bordered()->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_20 )->bordered()->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_40 )->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_56 )->render();
+	echo Avatar::make()->src( 'https://avatar.iran.liara.run/public/14' )->size( Size::SIZE_104 )->render();
 
-	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( 'md' )->render();
-	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( 'lg' )->render();
-	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( 'xl' )->render();
+	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( Size::SIZE_20 )->render();
+	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( Size::SIZE_40 )->render();
+	echo Avatar::make()->initials( 'SK' )->shape( 'square' )->size( Size::SIZE_56 )->render();
 	?>
 	</div>
 </div>

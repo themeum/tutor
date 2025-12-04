@@ -10,6 +10,7 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Contracts\ComponentInterface;
 
 defined( 'ABSPATH' ) || exit;
@@ -26,14 +27,14 @@ defined( 'ABSPATH' ) || exit;
  * Avatar with image
  * echo Avatar::make()
  *     ->src('https://example.com/avatar.jpg')
- *     ->size('xl')
+ *     ->size(Size::SIZE_20)
  *     ->bordered()
  *     ->render();
  *
  * Avatar with initials
  * echo Avatar::make()
  *     ->initials('SK')
- *     ->size('md')
+ *     ->size(Size::SIZE_32)
  *     ->rounded(false)
  *     ->render();
  * ```
@@ -43,13 +44,15 @@ defined( 'ABSPATH' ) || exit;
 class Avatar extends BaseComponent implements ComponentInterface {
 
 	/**
-	 * Avatar size (xs, sm, md, lg, xl).
+	 * Avatar size (20, 24, etc).
 	 *
 	 * @since 4.0.0
 	 *
+	 * @see Size constants
+	 *
 	 * @var string
 	 */
-	protected $size = 'md';
+	protected $size = Size::SIZE_56;
 
 	/**
 	 * Avatar type (image or initials).
@@ -100,7 +103,7 @@ class Avatar extends BaseComponent implements ComponentInterface {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $size Avatar size (xs, sm, md, lg, xl).
+	 * @param string $size Avatar size, see size constants.
 	 *
 	 * @return $this
 	 */
