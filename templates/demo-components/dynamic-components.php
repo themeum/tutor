@@ -113,20 +113,27 @@
 		<h2>Progress</h2>
 		<pre><code>
 		&lt;?php
-			Badge::make()->label( 'Primary' )->variant( 'primary' )->icon( 'svg icon' )->render();
-			Badge::make()->label( 'Points: 20' )->variant( 'secondary' )->render();
-			Badge::make()->label( 'Completed' )->variant( 'completed' )->circle()->render();
-			Badge::make()->label( 'Cancelled' )->variant( 'cancelled' )->circle()->render();
+		Progress::make()->type( 'bar' )->value( 75 )->render();
+		Progress::make()->type( 'bar' )->value( 75 )->animated()->render();
+		Progress::make()->type( 'bar' )->value( 50 )
+		->attrs(
+			array(
+				'id'             => 'my-progress',
+				'data-course-id' => '123',
+			)
+		)->render();
+
+		Progress::make()->type( 'circle' )->value( 75 )->render();
 		?&gt;
 		</code></pre>
 		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
 		Progress::make()->type( 'bar' )->value( 75 )->render();
 
-		// Animated progress bar
+		// Animated progress bar.
 		Progress::make()->type( 'bar' )->value( 75 )->animated()->render();
 
-		// With custom attributes
+		// With custom attributes.
 		Progress::make()->type( 'bar' )->value( 50 )
 		->attrs(
 			array(
