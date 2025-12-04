@@ -44,11 +44,10 @@ abstract class Size {
 	 *
 	 * @var string
 	 */
-	public const XS = 'xs';
-	public const SM = 'sm';
-	public const MD = 'md';
-	public const LG = 'lg';
-	public const XL = 'xl';
+	public const X_SMALL = 'x-small';
+	public const SMALL   = 'small';
+	public const MEDIUM  = 'medium';
+	public const LARGE   = 'large';
 
 }
 
