@@ -133,6 +133,7 @@ final class Icon {
 	const DROP                       = 'drop';
 	const DUPLICATE                  = 'duplicate';
 	const DWG                        = 'dwg';
+	const EARNING                    = 'earning';
 	const EDIT                       = 'edit';
 	const EDIT_2                     = 'edit-2';
 	const ELEMENTOR_COLORIZED        = 'elementor-colorized';
@@ -155,6 +156,7 @@ final class Icon {
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
 	const FILTER                     = 'filter';
+	const FILTER_2                   = 'filter-2';
 	const FIRE                       = 'fire';
 	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
