@@ -13,6 +13,9 @@
 
 namespace Tutor\Components;
 
+use ReflectionClass;
+use Tutor\Components\Constants\InputType;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -91,7 +94,7 @@ class InputField extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $type = 'text';
+	protected $type = InputType::TEXT;
 
 	/**
 	 * InputField name attribute.
@@ -247,11 +250,25 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function type( $type ) {
-		$allowed = array( 'text', 'email', 'password', 'number', 'textarea', 'checkbox', 'radio', 'switch' );
+		$allowed = $this->get_allowed_types();
 		if ( in_array( $type, $allowed, true ) ) {
 			$this->type = $type;
 		}
 		return $this;
+	}
+
+	/**
+	 * Get allowed input types
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public function get_allowed_types() {
+		$class     = new ReflectionClass( InputType::class );
+		$constants = $class->getConstants();
+
+		return array_values( $constants );
 	}
 
 	/**
@@ -818,7 +835,7 @@ class InputField extends BaseComponent {
 
 		// Render label for text inputs.
 		$label_html = '';
-		if ( ! in_array( $this->type, array( 'checkbox', 'radio', 'switch' ), true ) && ! empty( $this->label ) ) {
+		if ( ! in_array( $this->type, array( InputType::CHECKBOX, InputType::RADIO, InputType::SWITCH ), true ) && ! empty( $this->label ) ) {
 			$label_html = sprintf(
 				'<label for="%s" class="tutor-label%s">%s</label>',
 				esc_attr( $input_id ),
@@ -830,16 +847,16 @@ class InputField extends BaseComponent {
 		// Render input based on type.
 		$input_html = '';
 		switch ( $this->type ) {
-			case 'textarea':
+			case InputType::TEXTAREA:
 				$input_html = $this->render_textarea();
 				break;
-			case 'checkbox':
+			case InputType::CHECKBOX:
 				$input_html = $this->render_checkbox();
 				break;
-			case 'radio':
+			case InputType::RADIO:
 				$input_html = $this->render_radio();
 				break;
-			case 'switch':
+			case InputType::SWITCH:
 				$input_html = $this->render_switch();
 				break;
 			default:
