@@ -98,6 +98,7 @@
     "@wordpress/i18n": "^4.49.0",
     "alpinejs": "^3.15.1",
     "axios": "^1.9.0",
+    "chart.js": "^4.5.1",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "immer": "^10.0.3",
