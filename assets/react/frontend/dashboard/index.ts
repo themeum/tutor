@@ -3,35 +3,40 @@
 
 import { initializeAssignments } from './pages/assignments';
 import { initializeCertificates } from './pages/certificates';
+import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
 import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
 import { initializeSettings } from './pages/settings';
 
 const initializeDashboard = () => {
-  const currentPage = document.body.dataset.page;
+  const params = new URLSearchParams(window.location.search);
+  const currentPage = params.get('subpage');
+  const currentDashboardPage = params.get('dashboard-page') || 'home';
 
-  // eslint-disable-next-line no-console
-  console.log('Initializing dashboard page:', currentPage);
+  if (currentPage !== 'dashboard') {
+    return;
+  }
 
   // Initialize page-specific functionality
-  switch (currentPage) {
-    case 'dashboard-overview':
+  switch (currentDashboardPage) {
+    case 'home':
       initializeOverview();
+      initializeHome();
       break;
-    case 'dashboard-courses':
+    case 'courses':
       initializeMyCourses();
       break;
-    case 'dashboard-assignments':
+    case 'assignments':
       initializeAssignments();
       break;
-    case 'dashboard-quiz-attempts':
+    case 'quiz-attempts':
       initializeQuizAttempts();
       break;
-    case 'dashboard-settings':
+    case 'settings':
       initializeSettings();
       break;
-    case 'dashboard-certificates':
+    case 'certificates':
       initializeCertificates();
       break;
     default:
@@ -48,7 +53,7 @@ const initializeDashboard = () => {
 
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeDashboard);
+  document.addEventListener('alpine:init', initializeDashboard);
 } else {
   initializeDashboard();
 }
