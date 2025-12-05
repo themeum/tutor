@@ -78,7 +78,7 @@ class Popover extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $popover_placement = 'bottom-start';
+	protected $popover_placement = self::DEFAULT;
 
 	/**
 	 * Popover button element.
@@ -262,28 +262,32 @@ class Popover extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $tag the menu item html tag.
-	 * @param string $popover_menu_item the popover menu item.
-	 * @param string $class the menu item class.
-	 * @param string $icon the menu item icon.
-	 * @param string $icon_alignment menu item icon alignment.
-	 * @param array  $attr the menu item attributes.
+	 * @param array $args {
+	 *    Array of arguments to be provided for the menu items.
+	 *
+	 *    @type string $tag the tag of the menu item.
+	 *    @type string $class the class for the menu items.
+	 *    @type string $icon the icon svg.
+	 *    @type string $icon_alignment the alignment of menu item icon (left | right).
+	 *    @type string $content the popover menu item content.
+	 *    @type array  $attr the popover menu item attributes.
+	 * }
 	 *
 	 * @return self
 	 */
-	public function menu_item( string $tag, string $popover_menu_item, string $class = '', string $icon = '', string $icon_alignment = '', array $attr = array() ): self {
-		$menu_item_tag                          = ! empty( $tag ) ? $this->esc( $tag, $this->popover_body_esc ) : '';
-		$this->popover_menu_item_class          = $class ?? '';
-		$this->popover_menu_item_icon           = $icon ?? '';
-		$this->popover_menu_item_icon_alignment = ! in_array( $icon_alignment, array( 'left', 'right' ), true ) ? 'left' : $icon_alignment;
+	public function menu_item( array $args ): self {
+		$menu_item_tag                          = isset( $args['tag'] ) ? $this->esc( $args['tag'], $this->popover_body_esc ) : '';
+		$this->popover_menu_item_class          = $args['class'] ?? '';
+		$this->popover_menu_item_icon           = $args['icon'] ?? '';
+		$this->popover_menu_item_icon_alignment = isset( $args['icon_alignment'] ) && ! in_array( $args['icon_alignment'], array( self::LEFT, self::RIGHT ), true ) ? self::LEFT : $icon_alignment;
 
 		$this->popover_menu_items[] = array(
 			'tag'            => $menu_item_tag,
-			'content'        => $popover_menu_item,
+			'content'        => $args['content'] ?? '',
 			'class'          => $this->popover_menu_item_class,
 			'icon'           => $this->popover_menu_item_icon,
 			'icon_alignment' => $this->popover_menu_item_icon_alignment,
-			'attr'           => $attr,
+			'attr'           => $args['attr'] ?? array(),
 		);
 
 		return $this;
@@ -424,7 +428,7 @@ class Popover extends BaseComponent {
 			$content        = isset( $item['content'] ) ? $this->esc( $item['content'], $this->popover_body_esc ) : '';
 			$class          = isset( $item['class'] ) ? esc_attr( $item['class'] ) : '';
 			$icon           = isset( $item['icon'] ) ? $item['icon'] : '';
-			$icon_alignment = isset( $item['icon_alignment'] ) ? $item['icon_alignment'] : 'left';
+			$icon_alignment = isset( $item['icon_alignment'] ) ? $item['icon_alignment'] : self::LEFT;
 
 			$this->attributes = tutor_utils()->count( $item['attr'] ) ? $item['attr'] : array();
 
@@ -440,7 +444,7 @@ class Popover extends BaseComponent {
 				);
 			}
 
-			if ( 'right' === $icon_alignment ) {
+			if ( self::RIGHT === $icon_alignment ) {
 				$menu_items .= sprintf(
 					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
 					$tag,
@@ -480,7 +484,7 @@ class Popover extends BaseComponent {
 		$footer             = $this->render_footer();
 		$menu               = $this->render_menu();
 
-		$placement_class = 'bottom-start' !== $placement_position ? "tutor-popover-$placement_position" : 'tutor-popover-top';
+		$placement_class = self::DEFAULT !== $placement_position ? "tutor-popover-$placement_position" : 'tutor-popover-top';
 		$class           = 'tutor-popover ' . $placement_class;
 
 		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()' : '';

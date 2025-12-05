@@ -318,7 +318,7 @@
 		Accordion::make()
 			->add_item( 'About Course', '<h2>Description...</h2>' )
 			->render();
-			echo "<br>";
+			echo '<br>';
 
 		Accordion::make()
 			->add_item( 'About Course', '<p>Description...</p>' )
@@ -326,7 +326,7 @@
 			->add_item( 'Instructor', '<p>Meet your instructor...</p>' )
 			->default_open( array( 0 ) )
 			->render();
-		echo "<br>";
+		echo '<br>';
 
 		// With custom icon and template.
 		Accordion::make()
@@ -673,28 +673,50 @@
 		<br>
 		<h3>Popover with menu</h3>
 		<br>
-		<pre><code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )
-		->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
-
-		echo Popover::make()
-			->trigger( $kebab_button )
-			// tag, content, class, icon, icon_alignment, attributes
-			->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
-			->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
-			->render();
-		?>
+		<pre><code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
+			echo Popover::make()
+				->trigger( $kebab_button )
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Edit',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::EDIT_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Delete',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
+				->render();
 		</code></pre>
 		<br>
 		<?php
 			$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
-
 			echo Popover::make()
 				->trigger( $kebab_button )
-				// tag, content, class, icon, icon_alignment, attributes
-				->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
-				->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Edit',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::EDIT_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Delete',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
 				->render();
-		?>
+			?>
 	</div>
 	<!-- popover component -->
 
