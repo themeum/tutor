@@ -83,8 +83,10 @@
       @include tutor-typography(small);
       gap: $tutor-spacing-4;
       padding: $tutor-spacing-4 $tutor-spacing-5;
+      transition: background-color 0.25s ease-in-out;
 
-      &:hover {
+      &:hover,
+      &.tutor-active {
         background-color: $tutor-surface-l1-hover;
       }
     }

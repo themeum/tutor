@@ -66,18 +66,56 @@ $tabs = array(
 	),
 );
 
+$nav_items = array(
+	array(
+		'type'    => 'dropdown',
+		'active'  => true,
+		'options' => array(
+			array(
+				'label'  => __( 'Published', 'tutor' ) . ' (' . ( $count_map['publish'] ?? 0 ) . ')',
+				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ),
+				'active' => 'my-courses' === $active_tab,
+			),
+			array(
+				'label'  => __( 'Pending', 'tutor' ) . ' (' . ( $count_map['pending'] ?? 0 ) . ')',
+				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ),
+				'active' => 'my-courses/pending-courses' === $active_tab,
+			),
+			array(
+				'label'  => __( 'Draft', 'tutor' ) . ' (' . ( $count_map['draft'] ?? 0 ) . ')',
+				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ),
+				'active' => 'my-courses/draft-courses' === $active_tab,
+			),
+			array(
+				'label'  => __( 'Schedule', 'tutor' ) . ' (' . ( $count_map['future'] ?? 0 ) . ')',
+				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ),
+				'active' => 'my-courses/schedule-courses' === $active_tab,
+			),
+		),
+	),
+);
+
 if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
 	$show_course_delete = false;
 }
 ?>
 
-<div class="tutor-dashboard-my-courses" x-data="">
-	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl tutor-mt-7">
+<div class="tutor-dashboard-my-courses">
+	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-p-6 tutor-border-b">
-			<div>status</div>
+			<?php
+			tutor_load_template(
+				'core-components.nav',
+				array(
+					'items'   => $nav_items,
+					'size'    => 'sm',
+					'variant' => 'primary',
+				)
+			);
+			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-5">
 				<?php do_action( 'tutor_course_create_button' ); ?>
-				<button class="tutor-btn tutor-btn-primary tutor-gap-2 tutor-create-new-course tutor-dashboard-create-course">
+				<button class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2 tutor-create-new-course tutor-dashboard-create-course">
 					<!-- @TODO: Need to add API integration -->
 					<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
 					<?php esc_html_e( 'New Course', 'tutor' ); ?>
@@ -89,7 +127,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				<div class="tutor-input-field">
 					<div class="tutor-input-wrapper">
 						<div class="tutor-input-content tutor-input-content-left">
-							<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::SEARCH_2, 20, 20 ) ); ?>
+							<?php
+							tutor_utils()->render_svg_icon(
+								Icon::SEARCH_2,
+								20,
+								20,
+								array( 'class' => 'tutor-icon-idle' )
+							)
+							?>
 						</div>
 						<input 
 							type="text"
@@ -102,9 +147,32 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			</div>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
 				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
-				<button type="button" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::STEPPER ); ?>
-				</button>
+				<div
+					x-data="tutorPopover({
+						placement: 'bottom-end',
+						offset: 4,
+					})"
+				>
+					<button type="button" x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
+						<?php tutor_utils()->render_svg_icon( Icon::STEPPER ); ?>
+					</button>
+					<div 
+						x-ref="content"
+						x-show="open"
+						x-cloak
+						@click.outside="handleClickOutside()"
+						class="tutor-popover"
+					>
+						<div class="tutor-popover-menu" style="min-width: 108px;">
+							<a href="#" class="tutor-popover-menu-item">
+								<?php esc_html_e( 'Newest First', 'tutor' ); ?>
+							</a>
+							<a href="#" class="tutor-popover-menu-item">
+								<?php esc_html_e( 'Oldest First', 'tutor' ); ?>
+							</a>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
@@ -169,8 +237,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 					<div class="tutor-my-courses-card-footer">
 						<div class="tutor-flex tutor-items-center tutor-gap-2">
 							<?php
-							$price = tutor_utils()->get_course_price();
-							if ( null === $price ) {
+							if ( null === tutor_utils()->get_course_price() ) {
 								esc_html_e( 'Free', 'tutor' );
 							} else {
 								echo wp_kses_post( tutor_utils()->get_course_price() );
@@ -180,7 +247,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<div
 							class="tutor-my-courses-card-footer-actions"
 							x-data="tutorPopover({
-								placement: 'bottom',
+								placement: 'top-end',
 								offset: 4,
 								onShow: () => { $el.classList.add('tutor-popover-open') },
 								onHide: () => { $el.classList.remove('tutor-popover-open') }
@@ -197,7 +264,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 								@click.outside="handleClickOutside()"
 								class="tutor-popover"
 							>
-								<div class="tutor-popover-menu">
+								<div class="tutor-popover-menu" style="min-width: 182px;">
 									<!-- Submit Action -->
 									<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_DRAFT ), true ) ) : ?>
 										<?php
@@ -285,7 +352,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									<?php if ( $show_course_delete && $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ), true ) ) : ?>
 										<button 
 											class="tutor-popover-menu-item"
-											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: 42 });"
+											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: <?php echo esc_html( $post->ID ); ?> });"
 										>
 											<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
 											<?php esc_html_e( 'Delete', 'tutor' ); ?>
