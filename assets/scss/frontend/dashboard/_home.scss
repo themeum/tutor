@@ -1,0 +1,38 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-dashboard-home {
+  &-chart {
+    @include tutor-card-base;
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column);
+    padding-bottom: $tutor-spacing-6;
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+      padding: $tutor-spacing-6;
+    }
+
+    &-legend {
+      @include tutor-flex(row, center);
+      @include tutor-typography('tiny', 'regular', 'subdued');
+      gap: $tutor-spacing-2;
+
+      &::before {
+        @include tutor-flex-center();
+        content: '';
+        height: 2px;
+        width: 14px;
+        border-radius: $tutor-radius-sm;
+      }
+
+      &[data-color='brand']::before {
+        background-color: $tutor-actions-brand-primary;
+      }
+
+      &[data-color='success']::before {
+        background-color: $tutor-actions-success-primary;
+      }
+    }
+  }
+}
