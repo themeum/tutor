@@ -199,14 +199,15 @@ class Table extends BaseComponent {
 		}
 
 		foreach ( $this->cell_headers as $heading ) {
+			$heading_content = esc_attr( apply_filters( 'tutor_table_heading', $heading['content'] ) );
 			if ( isset( $heading['class'] ) ) {
 				$headings .= sprintf(
 					'<th class="%s">%s</th>',
 					esc_attr( $heading['class'] ),
-					esc_attr( $heading['content'] )
+					$heading_content
 				);
 			} else {
-				$headings .= sprintf( '<th>%1$s</th>', esc_attr( $heading['content'] ) );
+				$headings .= sprintf( '<th>%1$s</th>', $heading_content );
 			}
 		}
 
@@ -230,7 +231,7 @@ class Table extends BaseComponent {
 		foreach ( $this->cell_content as $row ) {
 			$columns = '';
 			foreach ( $row['content'] as $column ) {
-				$column_content = wp_kses_post( $column['content'] );
+				$column_content = wp_kses_post( apply_filters( 'tutor_table_content', $column['content'] ) );
 				if ( isset( $column['icon'] ) ) {
 					$position       = $column['icon']['position'];
 					$svg            = $column['icon']['svg'];
@@ -239,7 +240,7 @@ class Table extends BaseComponent {
 						'<div class="tutor-flex tutor-gap-3 tutor-items-center">%1$s%2$s</div>' :
 						'<div class="tutor-flex tutor-gap-3 tutor-items-center">%2$s%1$s</div>',
 						$svg,
-						wp_kses_post( $column['content'] )
+						$column_content
 					);
 				}
 

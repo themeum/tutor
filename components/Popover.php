@@ -42,6 +42,14 @@ defined( 'ABSPATH' ) || exit;
  */
 class Popover extends BaseComponent {
 
+	const LEFT    = 'left';
+	const RIGHT   = 'right';
+	const TOP     = 'top';
+	const BOTTOM  = 'bottom';
+	const DEFAULT = 'bottom-start';
+	const CENTER  = 'center';
+
+
 	/**
 	 * The popover title.
 	 *
@@ -184,9 +192,9 @@ class Popover extends BaseComponent {
 	 * @return self
 	 */
 	public function placement( string $popover_placement = 'bottom-start' ): self {
-		$placement_positions = array( 'top', 'left', 'right', 'bottom', 'bottom-start' );
+		$placement_positions = array( self::TOP, self::LEFT, self::RIGHT, self::BOTTOM, self::DEFAULT );
 		if ( ! in_array( $popover_placement, $placement_positions, true ) ) {
-			$this->popover_placement = 'bottom-start';
+			$this->popover_placement = self::DEFAULT;
 		}
 
 		$this->popover_placement = $popover_placement;
@@ -354,13 +362,13 @@ class Popover extends BaseComponent {
 	 */
 	protected function render_footer(): string {
 		$footer_buttons   = '';
-		$footer_alignment = in_array( $this->popover_footer_alignment, array( 'left', 'center' ), true ) ? $this->popover_footer_alignment : '';
+		$footer_alignment = in_array( $this->popover_footer_alignment, array( self::LEFT, self::CENTER ), true ) ? $this->popover_footer_alignment : '';
 
 		if ( ! tutor_utils()->count( $this->popover_footer_buttons ) ) {
 			return $footer_buttons;
 		}
 
-		$alignment = 'left' === $footer_alignment ? 'tutor-justify-start' : 'tutor-justify-center';
+		$alignment = self::LEFT === $footer_alignment ? 'tutor-justify-start' : 'tutor-justify-center';
 
 		foreach ( $this->popover_footer_buttons as $button ) {
 			$footer_buttons .= $button;
