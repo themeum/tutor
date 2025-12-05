@@ -2806,10 +2806,10 @@ class Course extends Tutor_Base {
 					}
 				}
 				if ( ! $has_passed ) {
-					++$required_assignment_pass;
+					$required_assignment_pass++;
 				}
 			} else {
-				++$required_assignment_pass;
+				$required_assignment_pass++;
 			}
 		}
 
