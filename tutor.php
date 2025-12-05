@@ -28,6 +28,7 @@ require_once __DIR__ . '/vendor/autoload.php';
  */
 define( 'TUTOR_VERSION', '4.0.0-dev' );
 define( 'TUTOR_FILE', __FILE__ );
+define( 'TUTOR_ENV', 'DEV' ); // DEV || PROD.
 
 /**
  * Load text domain for translations.
