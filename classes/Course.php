@@ -2125,6 +2125,11 @@ class Course extends Tutor_Base {
 		 * from the filter value to prevent the completion.
 		 */
 		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			die( esc_html__( 'User is not enrolled in course', 'tutor' ) );
+		}
+
 		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
 		} else {
@@ -2801,10 +2806,10 @@ class Course extends Tutor_Base {
 					}
 				}
 				if ( ! $has_passed ) {
-					$required_assignment_pass++;
+					++$required_assignment_pass;
 				}
 			} else {
-				$required_assignment_pass++;
+				++$required_assignment_pass;
 			}
 		}
 
@@ -2992,6 +2997,11 @@ class Course extends Tutor_Base {
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
 			}
+
+			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
+				wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
+			}
+
 			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
