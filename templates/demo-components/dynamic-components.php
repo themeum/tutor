@@ -294,35 +294,45 @@
 		<h2>Accordion</h2>
 		<pre><code>
 		&lt;?php
-			Accordion::make()
-			->id( 'about-course' )
-			->title( 'About this Course' )
-			->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
-			->open()
+		Accordion::make()
+			->add_item( 'About Course', '<h2>Description...</h2>' )
 			->render();
-			Accordion::make()
-			->id( 'about-test' )
-			->title( 'About this Course' )
-			->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>' )
-			->open()
+			echo "<br>";
+
+		Accordion::make()
+			->add_item( 'About Course', '<p>Description...</p>' )
+			->add_item( 'Requirements', '<p>Prerequisites...</p>' )
+			->add_item( 'Instructor', '<p>Meet your instructor...</p>' )
+			->default_open( array( 0 ) )
+			->render();
+		echo "<br>";
+
+		// With custom icon and template.
+		Accordion::make()
+			->add_item( 'Details', '', 'path/to/template.php', 'custom-icon' )
+			->allow_multiple( false )
 			->render();
 		?&gt;
 		</code></pre>
 		<?php
 		Accordion::make()
-		->id( 'about-course' )
-		->title( 'About this Course' )
-		->content( '<p>This course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.his course provides a comprehensive overview of the subject matter, covering all essential topics and practical applications.</p>', 'wp_kses_post' )
-		->render();
-
-		echo '<br/>';
+			->add_item( 'About Course', '<h2>Description...</h2>' )
+			->render();
+			echo "<br>";
 
 		Accordion::make()
-		->id( 'about-test' )
-		->title( 'About this Course' )
-		->content( '<h3>HTML Content</h3>', 'wp_kses_post' )
-		->open()
-		->render();
+			->add_item( 'About Course', '<p>Description...</p>' )
+			->add_item( 'Requirements', '<p>Prerequisites...</p>' )
+			->add_item( 'Instructor', '<p>Meet your instructor...</p>' )
+			->default_open( array( 0 ) )
+			->render();
+		echo "<br>";
+
+		// With custom icon and template.
+		Accordion::make()
+			->add_item( 'Details', '', 'path/to/template.php', 'custom-icon' )
+			->allow_multiple( false )
+			->render();
 		?>
 	</div>
 	<!-- table component -->
