@@ -21,14 +21,14 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  * ```
  * // Progress bar
- * echo Progress::make()
+ * Progress::make()
  *     ->type( 'bar' )
  *     ->value( 75 )
  *     ->animated()
  *     ->render();
  *
  * // Progress circle
- * echo Progress::make()
+ * Progress::make()
  *     ->type( 'circle' )
  *     ->value( 75 )
  *     ->render();
@@ -174,18 +174,20 @@ class Progress extends BaseComponent {
 	}
 
 	/**
-	 * Render the final progress HTML.
+	 * Get the final progress HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		if ( 'circle' === $this->type ) {
-			return $this->render_circle();
+			$this->component_string = $this->render_circle();
+		} else {
+			$this->component_string = $this->render_bar();
 		}
 
-		return $this->render_bar();
+		return $this->component_string;
 	}
 
 }

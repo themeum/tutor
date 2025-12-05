@@ -13,25 +13,32 @@
 
 namespace Tutor\Components;
 
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Accordion Component Class.
  *
  * Example usage:
  * ```
- * echo Accordion::make()
- *     ->id( 'about-course' )
- *     ->title( 'About this Course' )
- *     ->content( '<p>Course description here...</p>' )
- *     ->open()
+ * // Single item accordion
+ * Accordion::make()
+ *     ->add_item( 'About Course', '<p>Description...</p>' )
  *     ->render();
  *
- * // With template path
- * echo Accordion::make()
- *     ->id( 'course-details' )
- *     ->title( 'Course Details' )
- *     ->template( 'path/to/template.php' )
+ * // Multiple items
+ * Accordion::make()
+ *     ->add_item( 'About Course', '<p>Description...</p>' )
+ *     ->add_item( 'Requirements', '<p>Prerequisites...</p>' )
+ *     ->add_item( 'Instructor', '<p>Meet your instructor...</p>' )
+ *     ->default_open( array( 0 ) )
+ *     ->render();
+ *
+ * // With custom icon and template
+ * Accordion::make()
+ *     ->add_item( 'Details', '', 'path/to/template.php', 'custom-icon' )
+ *     ->allow_multiple( false )
  *     ->render();
  * ```
  *
@@ -40,190 +47,101 @@ defined( 'ABSPATH' ) || exit;
 class Accordion extends BaseComponent {
 
 	/**
-	 * Accordion item unique ID.
+	 * Accordion items array.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $id = '';
+	protected $items = array();
 
 	/**
-	 * Accordion title text.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $title = '';
-
-	/**
-	 * Accordion title esc fn.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $title_esc_cb = 'esc_html';
-
-	/**
-	 * Accordion content or template path.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $content = '';
-
-	/**
-	 * Accordion content esc fn.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $content_esc_cb = 'esc_html';
-
-	/**
-	 * Whether content is a template path.
+	 * Whether multiple items can be open.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @var bool
 	 */
-	protected $is_template = false;
+	protected $multiple = true;
 
 	/**
-	 * Whether accordion is open by default.
+	 * Default open item indices.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var bool
+	 * @var array
 	 */
-	protected $is_open = false;
+	protected $default_open = array();
 
 	/**
-	 * Custom icon SVG.
+	 * Add accordion item.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var string
-	 */
-	protected $icon = '';
-
-	/**
-	 * Set accordion ID.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $id Accordion unique ID.
+	 * @param string $title Item title.
+	 * @param string $content Item content HTML.
+	 * @param string $template Optional. Template path instead of content.
+	 * @param string $icon Optional. Custom icon name.
 	 *
 	 * @return $this
 	 */
-	public function id( $id ) {
-		$this->id = sanitize_key( $id );
+	public function add_item( $title, $content = '', $template = '', $icon = '' ) {
+		$this->items[] = array(
+			'title'    => $title,
+			'content'  => $content,
+			'template' => $template,
+			'icon'     => $icon,
+		);
 		return $this;
 	}
 
 	/**
-	 * Set accordion title.
+	 * Set whether multiple items can be open.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $title Accordion title text.
-	 * @param string $title_esc_cb Title esc callback.
+	 * @param bool $multiple Whether to allow multiple open items.
 	 *
 	 * @return $this
 	 */
-	public function title( $title, $title_esc_cb = 'esc_html' ) {
-		$this->title        = $title;
-		$this->title_esc_cb = $title_esc_cb;
+	public function allow_multiple( $multiple = true ) {
+		$this->multiple = (bool) $multiple;
 		return $this;
 	}
 
 	/**
-	 * Set accordion content.
+	 * Set default open item indices.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $content Content HTML.
-	 * @param string $content_esc_cb Callback for esc content.
+	 * @param array $indices Array of item indices to open by default.
 	 *
 	 * @return $this
 	 */
-	public function content( $content, $content_esc_cb = 'esc_html' ) {
-		$this->content        = $content;
-		$this->content_esc_cb = $content_esc_cb;
-		$this->is_template    = false;
+	public function default_open( $indices ) {
+		$this->default_open = is_array( $indices ) ? $indices : array( $indices );
 		return $this;
 	}
 
 	/**
-	 * Set accordion content from template path.
+	 * Render accordion item content.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $path Template file path.
-	 *
-	 * @return $this
-	 */
-	public function template( $path ) {
-		$this->content     = $path;
-		$this->is_template = true;
-		return $this;
-	}
-
-	/**
-	 * Set accordion open by default.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param bool $open Whether accordion is open.
-	 *
-	 * @return $this
-	 */
-	public function open( $open = true ) {
-		$this->is_open = (bool) $open;
-		return $this;
-	}
-
-	/**
-	 * Set custom icon.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $icon SVG icon markup.
-	 *
-	 * @return $this
-	 */
-	public function icon( $icon ) {
-		$this->icon = $icon;
-		return $this;
-	}
-
-	/**
-	 * Render accordion content.
-	 *
-	 * @since 4.0.0
+	 * @param array $item Item data.
 	 *
 	 * @return string Content HTML.
 	 */
-	protected function render_content() {
-		if ( empty( $this->content ) ) {
-			return '';
+	protected function render_item_content( $item ) {
+		// If template is provided, use it.
+		if ( ! empty( $item['template'] ) && file_exists( $item['template'] ) ) {
+			ob_start();
+			include $item['template'];
+			return ob_get_clean();
 		}
 
-		if ( $this->is_template ) {
-			if ( file_exists( $this->content ) ) {
-				ob_start();
-				include $this->content;
-				$content = ob_get_clean();
-				return $content ? $content : '';
-			}
-			return '';
-		}
-
-		return $this->esc( $this->content, $this->content_esc_cb );
+		// Otherwise return content.
+		return ! empty( $item['content'] ) ? $item['content'] : '';
 	}
 
 	/**
@@ -234,92 +152,125 @@ class Accordion extends BaseComponent {
 	 * @return string Icon SVG.
 	 */
 	protected function render_default_icon() {
+		if ( function_exists( 'tutor_utils' ) ) {
+			ob_start();
+			tutor_utils()->render_svg_icon( 'chevron-down', 24, 24 );
+			return ob_get_clean();
+		}
 		return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" role="presentation" aria-hidden="true"><path d="M19.5 8.25L12 15.75L4.5 8.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"></path></svg>';
 	}
 
 	/**
-	 * Render the accordion item HTML.
+	 * Render custom icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $icon Icon name.
+	 *
+	 * @return string Icon SVG.
+	 */
+	protected function render_icon( $icon ) {
+		if ( empty( $icon ) ) {
+			return $this->render_default_icon();
+		}
+
+		if ( function_exists( 'tutor_utils' ) ) {
+			ob_start();
+			tutor_utils()->render_svg_icon( $icon, 24, 24 );
+			return ob_get_clean();
+		}
+
+		return $icon;
+	}
+
+	/**
+	 * Get the accordion HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
-		if ( empty( $this->id ) || empty( $this->title ) ) {
+	public function get(): string {
+		if ( empty( $this->items ) ) {
 			return '';
 		}
 
-		$accordion_id = esc_attr( $this->id );
-		$trigger_id   = sprintf( 'tutor-acc-trigger-%s', $accordion_id );
-		$panel_id     = sprintf( 'tutor-acc-panel-%s', $accordion_id );
-
-		$icon_html = ! empty( $this->icon ) ? $this->icon : $this->render_default_icon();
-		$content   = $this->render_content();
-
-		$aria_expanded = $this->is_open ? 'true' : 'false';
-		$content_class = $this->is_open ? 'tutor-accordion-content tutor-accordion-content-expanded' : 'tutor-accordion-content tutor-accordion-content-collapsed';
-
-		$content_style = $this->is_open ? 'height: auto;' : 'height: 0px;';
+		// Build Alpine.js config.
+		$alpine_config = array(
+			'multiple'    => $this->multiple,
+			'defaultOpen' => $this->default_open,
+		);
+		$alpine_json = wp_json_encode( $alpine_config );
 
 		// Merge custom classes.
-		$item_classes = 'tutor-accordion-item';
+		$wrapper_classes = 'tutor-accordion';
 		if ( ! empty( $this->attributes['class'] ) ) {
-			$item_classes .= ' ' . $this->attributes['class'];
+			$wrapper_classes .= ' ' . $this->attributes['class'];
 			unset( $this->attributes['class'] );
 		}
 
-		// Build Alpine.js x-data using tutorAccordion component.
-		$alpine_config = array(
-			'id'     => $this->id,
-			'isOpen' => $this->is_open,
-		);
-		$alpine_json   = wp_json_encode( $alpine_config );
-
 		$this->attributes['x-data'] = sprintf( 'tutorAccordion(%s)', $alpine_json );
+		$this->attributes['class']  = $wrapper_classes;
 
-		$item_attrs = $this->render_attributes();
+		$wrapper_attrs = $this->render_attributes();
+
+		// Build items HTML.
+		$items_html = '';
+		foreach ( $this->items as $index => $item ) {
+			$title     = isset( $item['title'] ) ? $item['title'] : '';
+			$icon      = isset( $item['icon'] ) ? $item['icon'] : '';
+			$panel_id  = 'tutor-acc-panel-' . $index;
+			$trigger_id = 'tutor-acc-trigger-' . $index;
+
+			$icon_html = $this->render_icon( $icon );
+			$content   = $this->render_item_content( $item );
+
+			$items_html .= sprintf(
+				'<div class="tutor-accordion-item">
+					<button
+						@click="toggle(%d)"
+						@keydown="handleKeydown($event, %d)"
+						:aria-expanded="isOpen(%d)"
+						class="tutor-accordion-header tutor-accordion-trigger"
+						aria-controls="%s"
+						id="%s"
+					>
+						<span class="tutor-accordion-title">%s</span>
+						<span class="tutor-accordion-icon" aria-hidden="true">
+							%s
+						</span>
+					</button>
+					<div
+						id="%s"
+						role="region"
+						aria-labelledby="%s"
+						class="tutor-accordion-content"
+						x-show="isOpen(%d)"
+						x-collapse.duration.350ms
+					>
+						<div class="tutor-accordion-body">
+							%s
+						</div>
+					</div>
+				</div>',
+				$index,
+				$index,
+				$index,
+				esc_attr( $panel_id ),
+				esc_attr( $trigger_id ),
+				esc_html( $title ),
+				$icon_html,
+				esc_attr( $panel_id ),
+				esc_attr( $trigger_id ),
+				$index,
+				wp_kses_post( $content )
+			);
+		}
 
 		return sprintf(
-			'<div class="%s" %s>
-				<button 
-					@click="toggle(\'%s\')" 
-					:aria-expanded="isOpen(\'%s\')" 
-					class="tutor-accordion-header tutor-accordion-trigger" 
-					aria-controls="%s" 
-					id="%s" 
-					aria-expanded="%s"
-				>
-					<span class="tutor-accordion-title">%s</span>
-					<span class="tutor-accordion-icon" aria-hidden="true">
-						%s
-					</span>
-				</button>
-				<div 
-					id="%s" 
-					role="region" 
-					aria-labelledby="%s" 
-					class="%s"
-					style="%s"
-				>
-					<div class="tutor-accordion-body">
-						%s
-					</div>
-				</div>
-			</div>',
-			esc_attr( $item_classes ),
-			$item_attrs,
-			$accordion_id,
-			$accordion_id,
-			esc_attr( $panel_id ),
-			esc_attr( $trigger_id ),
-			esc_attr( $aria_expanded ),
-			$this->esc( $this->title, $this->title_esc_cb ),
-			$icon_html,
-			esc_attr( $panel_id ),
-			esc_attr( $trigger_id ),
-			esc_attr( $content_class ),
-			esc_attr( $content_style ),
-			$content
+			'<div %s>%s</div>',
+			$wrapper_attrs,
+			$items_html
 		);
 	}
 
