@@ -76,6 +76,7 @@ use TUTOR\Input;
 			<?php require 'components/file-uploader.php'; ?>
 			<?php require 'components/preview-trigger.php'; ?>
 			<?php require 'components/tabs.php'; ?>
+			<?php require 'components/nav.php'; ?>
 			<?php require 'components/skeleton.php'; ?>
 			<?php require 'components/progress.php'; ?>
 			<?php require 'components/statics.php'; ?>
@@ -83,7 +84,6 @@ use TUTOR\Input;
 			<?php require 'components/card.php'; ?>
 			<?php require 'components/section-separator.php'; ?>
 			<?php require 'components/accordion.php'; ?>
-			<!-- <?php require 'components/select-dropdown.php'; ?> -->
 			<?php require 'components/stepper-dropdown.php'; ?>
 			<?php require 'components/modal.php'; ?>
 			<?php require 'components/input.php'; ?>
