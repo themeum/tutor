@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
- * echo Accordion::make()
+ * Accordion::make()
  *     ->id( 'about-course' )
  *     ->title( 'About this Course' )
  *     ->content( '<p>Course description here...</p>' )
@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // With template path
- * echo Accordion::make()
+ * Accordion::make()
  *     ->id( 'course-details' )
  *     ->title( 'Course Details' )
  *     ->template( 'path/to/template.php' )
@@ -238,13 +238,13 @@ class Accordion extends BaseComponent {
 	}
 
 	/**
-	 * Render the accordion item HTML.
+	 * Get the accordion item HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		if ( empty( $this->id ) || empty( $this->title ) ) {
 			return '';
 		}
@@ -279,7 +279,7 @@ class Accordion extends BaseComponent {
 
 		$item_attrs = $this->render_attributes();
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<div class="%s" %s>
 				<button 
 					@click="toggle(\'%s\')" 
@@ -321,6 +321,8 @@ class Accordion extends BaseComponent {
 			esc_attr( $content_style ),
 			$content
 		);
+
+		return $this->component_string;
 	}
 
 }

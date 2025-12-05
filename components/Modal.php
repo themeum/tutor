@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * // Example usage:
  *
- * echo Modal::make()
+ * Modal::make()
  *     ->id( 'confirm-modal' )
  *     ->title( 'Confirm Submission' )
  *     ->subtitle( 'Are you sure you want to submit?' )
@@ -30,14 +30,14 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // With template path
- * echo Modal::make()
+ * Modal::make()
  *     ->id( 'course-modal' )
  *     ->title( 'Course Details' )
  *     ->template( 'path/to/template.php' )
  *     ->render();
  *
  * // Headless modal (no close button)
- * echo Modal::make()
+ * Modal::make()
  *     ->id( 'headless-modal' )
  *     ->closeable( false )
  *     ->body( '<h3>Success!</h3>' )
@@ -375,13 +375,13 @@ class Modal extends BaseComponent {
 	}
 
 	/**
-	 * Render the modal HTML.
+	 * Get the modal HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		if ( empty( $this->id ) ) {
 			return '';
 		}
@@ -409,7 +409,7 @@ class Modal extends BaseComponent {
 		$body   = $this->render_body();
 		$footer = $this->render_footer();
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<div x-data="tutorModal(%s)" x-cloak>
 				<template x-teleport="body">
 					<div x-bind="getModalBindings()">
@@ -430,5 +430,7 @@ class Modal extends BaseComponent {
 			$body,
 			$footer
 		);
+
+		return $this->component_string;
 	}
 }
