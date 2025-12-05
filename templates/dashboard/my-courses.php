@@ -194,6 +194,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				<div class="tutor-my-courses-card">
 					<div class="tutor-my-courses-card-body">
 						<div class="tutor-my-courses-card-thumb">
+							<?php do_action( 'tutor_my_courses_card_thumbnail_before', $post->ID ); ?>
 							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							<div class="tutor-my-courses-card-actions">
 								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
@@ -205,6 +206,8 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							</div>
 						</div>
 						<div class="tutor-my-courses-card-content">
+							<?php do_action( 'tutor_my_courses_before_meta', get_the_ID() ); ?>
+
 							<div class="tutor-tiny tutor-text-secondary tutor-flex tutor-items-center tutor-gap-2 tutor-mb-2">
 								<?php tutor_utils()->render_svg_icon( Icon::RELOAD_2, 14, 14, array( 'class' => 'tutor-icon-brand' ) ); ?>
 								<?php echo esc_html( get_the_date() ); ?> - <?php echo esc_html( get_the_time() ); ?>
