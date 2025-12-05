@@ -24,6 +24,10 @@
     max-width: 760px;
     margin: 0 auto;
     padding-inline: $tutor-spacing-6;
+
+    &:not(:has(.tutor-announcement-notice)) {
+      padding-top: $tutor-spacing-7;
+    }
   }
 }
 

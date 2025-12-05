@@ -1,0 +1,151 @@
+// Dashboard Page Nav Styles
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-nav {
+  @include tutor-flex(row, center);
+  gap: $tutor-spacing-2;
+
+  &-item {
+    @include tutor-button-reset();
+    @include tutor-typography(tiny, medium, secondary);
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-2;
+    padding: 10px $tutor-spacing-5;
+    border-radius: $tutor-radius-lg;
+    transition: background-color 0.25 ease-in-out;
+
+    &:hover {
+      background-color: $tutor-tab-l3-active-hover;
+    }
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+
+    &.active {
+      background-color: $tutor-tab-l3-active;
+      color: $tutor-text-brand;
+
+      &:hover {
+        background-color: $tutor-tab-l3-active-hover;
+        color: $tutor-text-primary;
+
+        svg:first-of-type {
+          color: $tutor-icon-brand;
+        }
+      }
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+  }
+
+  &-dropdown {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-2;
+    min-width: 170px;
+    padding: $tutor-spacing-2 0px;
+
+    &-item {
+      @include tutor-button-reset();
+      @include tutor-typography(small);
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-5;
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+
+      &:hover {
+        background-color: $tutor-tab-l3-active-hover;
+      }
+
+      &:focus {
+        box-shadow: none;
+        outline: none;
+      }
+
+      &.active {
+        background-color: $tutor-tab-l3-active;
+        color: $tutor-text-brand;
+
+        &:hover {
+          background-color: $tutor-tab-l3-active-hover;
+          color: $tutor-text-primary;
+
+          svg {
+            color: $tutor-icon-brand;
+          }
+        }
+      }
+    }
+  }
+
+  // Variant styles
+  &.tutor-nav-secondary {
+    .tutor-nav-item {
+      border-bottom: 2px solid transparent;
+      transition:
+        border-color 0.25s ease-in-out,
+        background-color 0.25s ease-in-out;
+
+      &.active {
+        background-color: transparent;
+        border-bottom-color: $tutor-border-brand;
+        border-radius: $tutor-radius-none;
+      }
+    }
+  }
+
+  // Size variants
+  &.tutor-nav-sm {
+    .tutor-nav-item {
+      @include tutor-text(tiny);
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+    }
+
+    .tutor-nav-dropdown {
+      min-width: 150px;
+
+      .tutor-nav-item {
+        padding: $tutor-spacing-3 $tutor-spacing-4;
+      }
+    }
+  }
+
+  &.tutor-nav-lg {
+    .tutor-nav-item {
+      @include tutor-text(small);
+      gap: $tutor-spacing-4;
+      padding: 11px $tutor-spacing-6;
+    }
+
+    .tutor-nav-dropdown {
+      min-width: 200px;
+
+      .tutor-nav-item {
+        padding: $tutor-spacing-5 $tutor-spacing-6;
+      }
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    gap: 0;
+
+    .tutor-nav-item {
+      flex: 1;
+      min-width: fit-content;
+      justify-content: center;
+      font-size: $tutor-font-size-tiny;
+      line-height: $tutor-line-height-medium;
+      padding: $tutor-spacing-4 $tutor-spacing-5;
+      border-radius: $tutor-radius-lg;
+
+      svg {
+        width: 16px;
+        height: 16px;
+      }
+    }
+  }
+}
