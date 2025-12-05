@@ -234,6 +234,7 @@ final class Icon {
 	const MOVE                       = 'move';
 	const MP3                        = 'mp3';
 	const MP4                        = 'mp4';
+	const MULTIPLE_INSTRUCTORS       = 'multiple-instructors';
 	const MUSIC                      = 'music';
 	const NOTE                       = 'note';
 	const NOTEBOOK                   = 'notebook';

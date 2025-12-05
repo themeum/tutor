@@ -218,6 +218,7 @@ export const icons = [
   'move',
   'mp3',
   'mp4',
+  'multipleInstructors',
   'music',
   'note',
   'notebook',
