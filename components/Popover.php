@@ -279,7 +279,7 @@ class Popover extends BaseComponent {
 		$menu_item_tag                          = isset( $args['tag'] ) ? $this->esc( $args['tag'], $this->popover_body_esc ) : '';
 		$this->popover_menu_item_class          = $args['class'] ?? '';
 		$this->popover_menu_item_icon           = $args['icon'] ?? '';
-		$this->popover_menu_item_icon_alignment = isset( $args['icon_alignment'] ) && ! in_array( $args['icon_alignment'], array( self::LEFT, self::RIGHT ), true ) ? self::LEFT : $icon_alignment;
+		$this->popover_menu_item_icon_alignment = isset( $args['icon_alignment'] ) && ! in_array( $args['icon_alignment'], array( self::LEFT, self::RIGHT ), true ) ? self::LEFT : $args['icon_alignment'];
 
 		$this->popover_menu_items[] = array(
 			'tag'            => $menu_item_tag,
