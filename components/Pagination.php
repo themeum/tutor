@@ -263,13 +263,13 @@ class Pagination extends BaseComponent {
 	}
 
 	/**
-	 * Render Pagination Component.
+	 * Get the final Pagination HTML Component.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string
 	 */
-	public function render(): string {
+	public function get(): string {
 		$pagination_links = $this->get_paginated_links_list() ?? array();
 		$pagination_info  = $this->render_pagination_info() ?? '';
 		$links            = '';

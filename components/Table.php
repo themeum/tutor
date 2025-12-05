@@ -268,13 +268,13 @@ class Table extends BaseComponent {
 	}
 
 	/**
-	 * Render HTML Content.
+	 * Get the final Table HTML Content.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML
 	 */
-	public function render(): string {
+	public function get(): string {
 		return sprintf(
 			'<div class="%s">
 				<table class="tutor-table">

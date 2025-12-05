@@ -457,13 +457,13 @@ class Popover extends BaseComponent {
 	}
 
 	/**
-	 * Render Popover Component.
+	 * Get the final Popover HTML Component.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML content.
 	 */
-	public function render(): string {
+	public function get(): string {
 
 		$header             = $this->render_header();
 		$body               = $this->render_body();

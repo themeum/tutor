@@ -18,11 +18,11 @@
 	use Tutor\Components\InputField;
 	use Tutor\Components\Modal;
 	use Tutor\Components\Pagination;
-use Tutor\Components\Popover;
-use Tutor\Components\Progress;
+	use Tutor\Components\Popover;
+	use Tutor\Components\Progress;
 	use Tutor\Components\Tabs;
-use Tutor\Components\Table;
-use TUTOR\Icon;
+	use Tutor\Components\Table;
+	use TUTOR\Icon;
 
 	?>
 
@@ -325,11 +325,399 @@ use TUTOR\Icon;
 		->render();
 		?>
 	</div>
+	<!-- table component -->
+	<div class="tutor-bg-white tutor-py-6 tutor-px-6 tutor-mb-12">
+		<h2>Table</h2>
+		<br>
+		<pre><code>&lt;php
+			$heading = array(
+				array(
+					'content' => __( 'Quiz Info', 'tutor' ),
+				),
+				array(
+					'content' => __( 'Marks', 'tutor' ),
+				),
+			);
+
+			$content = array(
+				array(
+					'content' => array(
+						array(
+							'content' => 'Questions',
+							'class'   => 'tutor-bg-blue',
+							'icon'    => array(
+								'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+								'position' => 'left',
+							),
+						),
+						array( 'content' => 20 ),
+					),
+					'class'   => 'tutor-bg-red',
+				),
+			);
+
+			echo Table::make()
+				->headings( $heading )
+				->contents( $content )
+				->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
+				->render();
+		</code></pre>
+		<?php
+		$heading = array(
+			array(
+				'content' => __( 'Quiz Info', 'tutor' ),
+			),
+			array(
+				'content' => __( 'Marks', 'tutor' ),
+			),
+		);
+
+		$content = array(
+			array(
+				'content' => array(
+					array(
+						'content' => 'Questions',
+						'class'   => 'tutor-bg-blue',
+						'icon'    => array(
+							'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+							'position' => 'left',
+						),
+					),
+					array( 'content' => 20 ),
+				),
+				'class'   => 'tutor-bg-red',
+			),
+		);
+
+		echo Table::make()
+			->headings( $heading )
+			->contents( $content )
+			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->render();
+		?>
+
+		<pre><code>&lt;php
+			$heading = array(
+				array(
+					'content' => __( 'Quiz Info', 'tutor' ),
+				),
+				array(
+					'content' => __( 'Marks', 'tutor' ),
+				),
+				array(
+					'content' => __( 'Result', 'tutor' ),
+				),
+			);
+
+			$content = array(
+				array(
+					'content' => array(
+						array(
+							'content' => 'Questions',
+							'icon'    => array(
+								'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+								'position' => 'left',
+							),
+						),
+						array( 'content' => 20 ),
+						array( 'content' => 
+								'&lt;span&gt; class="tutor-badge tutor-badge-completed tutor-badge-circle">
+									Passed
+								&lt;/span&gt;'
+						),
+					),
+				),
+				array(
+					'content' => array(
+						array(
+							'content' => 'Quiz Time',
+							'icon'    => array(
+								'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
+								'position' => 'left',
+							),
+						),
+						array( 'content' => 20 ),
+						array( 'content' => 
+								'&lt;span&gt; class="tutor-badge tutor-badge-exception tutor-badge-circle">
+									Bundle
+								&lt;/span&gt;'
+						),
+					),
+				),
+			);
+
+			echo Table::make()
+				->headings( $heading )
+				->contents( $content )
+				->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
+				->render();
+		</code></pre>
+		<?php
+			$heading = array(
+				array(
+					'content' => __( 'Quiz Info', 'tutor' ),
+				),
+				array(
+					'content' => __( 'Marks', 'tutor' ),
+				),
+				array(
+					'content' => __( 'Result', 'tutor' ),
+				),
+			);
+
+			$content = array(
+				array(
+					'content' => array(
+						array(
+							'content' => 'Questions',
+							'icon'    => array(
+								'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
+								'position' => 'left',
+							),
+						),
+						array( 'content' => 20 ),
+						array(
+							'content' => '<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+									Passed
+								</span>',
+						),
+					),
+				),
+				array(
+					'content' => array(
+						array(
+							'content' => 'Quiz Time',
+							'icon'    => array(
+								'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
+								'position' => 'left',
+							),
+						),
+						array( 'content' => 20 ),
+						array(
+							'content' => '<span class="tutor-badge tutor-badge-exception tutor-badge-circle">
+									Bundle
+								</span>',
+						),
+					),
+				),
+			);
+
+			echo Table::make()
+				->headings( $heading )
+				->contents( $content )
+				->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+				->render();
+			?>
+	</div>
+	<!-- table component -->
+
+	<!-- popover component -->
+	<div class="popover-wrapper tutor-mb-12">
+		<h2>Popover</h2>
+		<h3>Basic Popover</h3>
+		<br>
+		<pre><code>echo Popover::make()
+				->title( 'Basic' )
+				->body( '&lt;p&gt;This is a popover component&lt;/p&gt;' )
+				->closeable( true )
+				->trigger(
+					Button::make()
+					->label( 'Show Popover' )
+					->attr( 'x-ref', 'trigger' )
+					->attr( '@click', 'toggle()' )
+					->size( 'medium' )
+					->variant( 'primary' )
+					->get()
+				)
+				->render();
+			</code></pre>
+		<br>
+		<?php
+			echo Popover::make()
+				->title( 'Basic' )
+				->body( '<p>This is a popover component</p>' )
+				->closeable( true )
+				->trigger(
+					Button::make()
+					->label( 'Show Popover' )
+					->attr( 'x-ref', 'trigger' )
+					->attr( '@click', 'toggle()' )
+					->size( 'medium' )
+					->variant( 'primary' )
+					->get()
+				)
+				->render();
+
+			?>
+		<br>
+		<h3> Popover with placement variations</h3>
+		<br>
+		<pre><code>$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
+
+		$top_button    = $button->label( 'Top' )->get();
+		$right_button  = $button->label( 'Right' )->get();
+		$left_button   = $button->label( 'Left' )->get();
+		$bottom_button = $button->label( 'Bottom' )->get();
+
+		echo Popover::make()
+			->body( '&lt;p&gt;Right component&lt;/p&gt;' )
+			->trigger( $right_button )
+			->placement( 'right' )
+			->render();
+		echo Popover::make()
+			->body( '&lt;p&gt;Left component&lt;/p&gt;' )
+			->trigger( $left_button )
+			->placement( 'left' )
+			->render();
+		echo Popover::make()
+			->body( '&lt;p&gt;Top component&lt;/p&gt;' )
+			->trigger( $top_button )
+			->placement( 'top' )
+			->render();
+		echo Popover::make()
+			->body( '&lt;p&gt;Bottom component&lt;/p&gt;' )
+			->trigger( $bottom_button )
+			->placement( 'bottom' )
+			->render();
+		</code></pre>
+		<br>
+		<div class="tutor-flex tutor-align-center tutor-gap-7">
+			<?php
+			$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
+
+			$top_button    = $button->label( 'Top' )->get();
+			$right_button  = $button->label( 'Right' )->get();
+			$left_button   = $button->label( 'Left' )->get();
+			$bottom_button = $button->label( 'Bottom' )->get();
+
+			echo Popover::make()
+				->body( '<p>Right component</p>' )
+				->trigger( $right_button )
+				->placement( 'right' )
+				->render();
+			echo Popover::make()
+				->body( '<p>Top component</p>' )
+				->trigger( $top_button )
+				->placement( 'top' )
+				->render();
+			echo Popover::make()
+				->body( '<p>Bottom component</p>' )
+				->trigger( $bottom_button )
+				->placement( 'bottom' )
+				->render();
+			echo Popover::make()
+				->body( '<p>Left component</p>' )
+				->trigger( $left_button )
+				->placement( 'left' )
+				->render();
+			?>
+		</div>
+		<br>
+		<h3>Popover with footer</h3>
+		<br>
+		<pre><code>$footer_buttons = array(
+			Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->get(),
+			Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
+		);
+
+		echo Popover::make()
+		->title( 'Confirm Action' )
+		->body( '&lt;p&gt;Are you sure you want to delete this item? This action cannot be undone.&lt;/p&gt;' )
+		->footer( $footer_buttons )
+		->dismissible( false )
+		->trigger(
+			Button::make()
+			->label( 'Popover Footer' )
+			->attr( 'x-ref', 'trigger' )
+			->attr( '@click', 'toggle()' )
+			->size( 'medium' )
+			->variant( 'destructive' )
+			->render()
+		)
+		->render();
+		</code></pre>
+		<br>
+		<?php
+			$footer_buttons = array(
+				Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->get(),
+				Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
+			);
+
+			echo Popover::make()
+			->title( 'Confirm Action' )
+			->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
+			->footer( $footer_buttons )
+			->dismissible( false )
+			->trigger(
+				Button::make()
+				->label( 'Popover Footer' )
+				->attr( 'x-ref', 'trigger' )
+				->attr( '@click', 'toggle()' )
+				->size( 'medium' )
+				->variant( 'destructive' )
+				->get()
+			)
+			->render();
+
+			?>
+		<br>
+		<h3>Popover with menu</h3>
+		<br>
+		<pre><code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )
+		->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
+
+		echo Popover::make()
+			->trigger( $kebab_button )
+			// tag, content, class, icon, icon_alignment, attributes
+			->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
+			->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
+			->render();
+		?>
+		</code></pre>
+		<br>
+		<?php
+			$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
+
+			echo Popover::make()
+				->trigger( $kebab_button )
+				// tag, content, class, icon, icon_alignment, attributes
+				->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
+				->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
+				->render();
+		?>
+	</div>
+	<!-- popover component -->
+
+	<!-- pagination component -->
+	<div class="pagination-wrapper tutor-mb-12">
+		<h2>Pagination</h2>
+		<br>
+		<pre><code>echo Pagination::make()
+				->current( 2 )
+				->total( 200 )
+				->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+				->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+				->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+				->render();</code></pre>
+		<br>
+		<?php
+
+		echo Pagination::make()
+			->current( 2 )
+			->total( 200 )
+			->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+			->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+			->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+			->render();
+		?>
+	</div>
+	<!-- pagination component -->
+
 	<div class="input-field-wrapper tutor-mb-12">
 		<h2>Input Fields</h2>
 		<pre><code>
 		&lt;?php
-		?&gt;
+		?&gt;</code></pre>
 			<?php
 
 			// Text input with left icon
@@ -531,413 +919,9 @@ use TUTOR\Icon;
 				</div>
 			</form>
 		</div>
+
 </div>
 
 
-<!-- table component -->
-<h2>Table</h2>
-<pre>
-<code>&lt;php
-	$heading = array(
-		array(
-			'content' => __( 'Quiz Info', 'tutor' ),
-		),
-		array(
-			'content' => __( 'Marks', 'tutor' ),
-		),
-	);
-
-	$content = array(
-		array(
-			'content' => array(
-				array(
-					'content' => 'Questions',
-					'class'   => 'tutor-bg-blue',
-					'icon'    => array(
-						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-						'position' => 'left',
-					),
-				),
-				array( 'content' => 20 ),
-			),
-			'class'   => 'tutor-bg-red',
-		),
-	);
-
-	echo Table::make()
-		->headings( $heading )
-		->contents( $content )
-		->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
-		->render();
-</code>
-</pre>
-<section class="tutor-bg-white tutor-py-6 tutor-px-6">
-<?php
-	$heading = array(
-		array(
-			'content' => __( 'Quiz Info', 'tutor' ),
-		),
-		array(
-			'content' => __( 'Marks', 'tutor' ),
-		),
-	);
-
-	$content = array(
-		array(
-			'content' => array(
-				array(
-					'content' => 'Questions',
-					'class'   => 'tutor-bg-blue',
-					'icon'    => array(
-						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-						'position' => 'left',
-					),
-				),
-				array( 'content' => 20 ),
-			),
-			'class'   => 'tutor-bg-red',
-		),
-	);
-
-	echo Table::make()
-		->headings( $heading )
-		->contents( $content )
-		->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
-		->render();
-	?>
-</section>
-<pre>
-<code>&lt;php
-	$heading = array(
-		array(
-			'content' => __( 'Quiz Info', 'tutor' ),
-		),
-		array(
-			'content' => __( 'Marks', 'tutor' ),
-		),
-		array(
-			'content' => __( 'Result', 'tutor' ),
-		),
-	);
-
-	$content = array(
-		array(
-			'content' => array(
-				array(
-					'content' => 'Questions',
-					'icon'    => array(
-						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-						'position' => 'left',
-					),
-				),
-				array( 'content' => 20 ),
-				array( 'content' => 
-						'&lt;span&gt; class="tutor-badge tutor-badge-completed tutor-badge-circle">
-							Passed
-						&lt;/span&gt;'
-				),
-			),
-		),
-		array(
-			'content' => array(
-				array(
-					'content' => 'Quiz Time',
-					'icon'    => array(
-						'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
-						'position' => 'left',
-					),
-				),
-				array( 'content' => 20 ),
-				array( 'content' => 
-						'&lt;span&gt; class="tutor-badge tutor-badge-exception tutor-badge-circle">
-							Bundle
-						&lt;/span&gt;'
-				),
-			),
-		),
-	);
-
-	echo Table::make()
-		->headings( $heading )
-		->contents( $content )
-		->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
-		->render();
-</code>
-</pre>
-<section class="tutor-bg-white tutor-py-6 tutor-px-6">
-<?php
-	$heading = array(
-		array(
-			'content' => __( 'Quiz Info', 'tutor' ),
-		),
-		array(
-			'content' => __( 'Marks', 'tutor' ),
-		),
-		array(
-			'content' => __( 'Result', 'tutor' ),
-		),
-	);
-
-	$content = array(
-		array(
-			'content' => array(
-				array(
-					'content' => 'Questions',
-					'icon'    => array(
-						'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-						'position' => 'left',
-					),
-				),
-				array( 'content' => 20 ),
-				array(
-					'content' => '<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
-							Passed
-						</span>',
-				),
-			),
-		),
-		array(
-			'content' => array(
-				array(
-					'content' => 'Quiz Time',
-					'icon'    => array(
-						'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
-						'position' => 'left',
-					),
-				),
-				array( 'content' => 20 ),
-				array(
-					'content' => '<span class="tutor-badge tutor-badge-exception tutor-badge-circle">
-							Bundle
-						</span>',
-				),
-			),
-		),
-	);
-
-	echo Table::make()
-		->headings( $heading )
-		->contents( $content )
-		->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
-		->render();
-	?>
-</section>
-<!-- table component -->
-
-<!-- popover component -->
-<h3>Popover</h3>
-<div class="popover-wrapper tutor-pb-7">
-<h4>Basic Popover</h4>
-<br>
-<pre>
-	<code>echo Popover::make()
-		->title( 'Basic' )
-		->body( '&lt;p&gt;This is a popover component&lt;/p&gt;' )
-		->closeable( true )
-		->trigger(
-			Button::make()
-			->label( 'Show Popover' )
-			->attr( 'x-ref', 'trigger' )
-			->attr( '@click', 'toggle()' )
-			->size( 'medium' )
-			->variant( 'primary' )
-			->render()
-		)
-		->render();
-	</code>
-</pre>
-<br>
-<?php
-	echo Popover::make()
-		->title( 'Basic' )
-		->body( '<p>This is a popover component</p>' )
-		->closeable( true )
-		->trigger(
-			Button::make()
-			->label( 'Show Popover' )
-			->attr( 'x-ref', 'trigger' )
-			->attr( '@click', 'toggle()' )
-			->size( 'medium' )
-			->variant( 'primary' )
-			->render()
-		)
-		->render();
-
-	?>
-</div>
-<br>
-<h4> Popover with placement variations</h4>
-<br>
-<pre>
-<code>$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
-
-$top_button    = $button->label( 'Top' )->render();
-$right_button  = $button->label( 'Right' )->render();
-$left_button   = $button->label( 'Left' )->render();
-$bottom_button = $button->label( 'Bottom' )->render();
-
-echo Popover::make()
-	->body( '&lt;p&gt;Right component&lt;/p&gt;' )
-	->trigger( $right_button )
-	->placement( 'right' )
-	->render();
-echo Popover::make()
-	->body( '&lt;p&gt;Left component&lt;/p&gt;' )
-	->trigger( $left_button )
-	->placement( 'left' )
-	->render();
-echo Popover::make()
-	->body( '&lt;p&gt;Top component&lt;/p&gt;' )
-	->trigger( $top_button )
-	->placement( 'top' )
-	->render();
-echo Popover::make()
-	->body( '&lt;p&gt;Bottom component&lt;/p&gt;' )
-	->trigger( $bottom_button )
-	->placement( 'bottom' )
-	->render();
-</code>
-</pre>
-<br>
-<div class="popover-wrapper tutor-pb-12 tutor-gap-12 tutor-flex tutor-items-center">
-<?php
-	$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
-
-	$top_button    = $button->label( 'Top' )->render();
-	$right_button  = $button->label( 'Right' )->render();
-	$left_button   = $button->label( 'Left' )->render();
-	$bottom_button = $button->label( 'Bottom' )->render();
-
-	echo Popover::make()
-		->body( '<p>Right component</p>' )
-		->trigger( $right_button )
-		->placement( 'right' )
-		->render();
-	echo Popover::make()
-		->body( '<p>Left component</p>' )
-		->trigger( $left_button )
-		->placement( 'left' )
-		->render();
-	echo Popover::make()
-		->body( '<p>Top component</p>' )
-		->trigger( $top_button )
-		->placement( 'top' )
-		->render();
-	echo Popover::make()
-		->body( '<p>Bottom component</p>' )
-		->trigger( $bottom_button )
-		->placement( 'bottom' )
-		->render();
-
-?>
-</div>
-<br>
-<h4>Popover with footer</h4>
-<br>
-<pre>
-<code>$footer_buttons = array(
-	Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->render(),
-	Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->render(),
-);
-
-echo Popover::make()
-->title( 'Confirm Action' )
-->body( '&lt;p&gt;Are you sure you want to delete this item? This action cannot be undone.&lt;/p&gt;' )
-->footer( $footer_buttons )
-->dismissible( false )
-->trigger(
-	Button::make()
-	->label( 'Popover Footer' )
-	->attr( 'x-ref', 'trigger' )
-	->attr( '@click', 'toggle()' )
-	->size( 'medium' )
-	->variant( 'destructive' )
-	->render()
-)
-->render();
-</code>
-</pre>
-<br>
-<div class="popover-wrapper tutor-pb-7">
-	<?php
-		$footer_buttons = array(
-			Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->render(),
-			Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->render(),
-		);
-
-		echo Popover::make()
-		->title( 'Confirm Action' )
-		->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
-		->footer( $footer_buttons )
-		->dismissible( false )
-		->trigger(
-			Button::make()
-			->label( 'Popover Footer' )
-			->attr( 'x-ref', 'trigger' )
-			->attr( '@click', 'toggle()' )
-			->size( 'medium' )
-			->variant( 'destructive' )
-			->render()
-		)
-		->render();
-
-		?>
-</div>
-<h4>Popover with menu</h4>
-<br>
-<pre>
-<code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )
-->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->render();
-
-echo Popover::make()
-	->trigger( $kebab_button )
-	// tag, content, class, icon, icon_alignment, attributes
-	->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
-	->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
-	->render();
-?>
-</code>
-</pre>
-<br>
-<div class="popover-wrapper tutor-pb-16">
-	<?php
-		$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->render();
-
-		echo Popover::make()
-			->trigger( $kebab_button )
-			// tag, content, class, icon, icon_alignment, attributes
-			->menu_item( 'a', 'Edit', '', tutor_utils()->get_svg_icon( Icon::EDIT_2 ), '', array( 'href' => '#' ) )
-			->menu_item( 'a', 'Delete', '', tutor_utils()->get_svg_icon( Icon::DELETE_2 ), '', array( 'href' => '#' ) )
-			->render();
-	?>
-</div>
-<!-- popover component -->
-
-<!-- pagination component -->
-<h3>Pagination</h3>
-<br>
-<pre>
-<code>echo Pagination::make()
-		->current( 2 )
-		->total( 200 )
-		->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
-		->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-		->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
-		->render();</code>
-</pre>
-<br>
-<div class="pagination-wrapper tutor-pb-6">
-	<?php
-
-	echo Pagination::make()
-		->current( 2 )
-		->total( 200 )
-		->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
-		->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-		->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
-		->render();
-	?>
-</div>
-<!-- pagination component -->
 </body>
 </html>
