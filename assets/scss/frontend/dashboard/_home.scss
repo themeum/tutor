@@ -8,6 +8,10 @@
     @include tutor-flex(column);
     padding-bottom: $tutor-spacing-6;
 
+    &-canvas {
+      max-height: 179px;
+    }
+
     &-header {
       @include tutor-flex(row, center, space-between);
       padding: $tutor-spacing-6;

@@ -104,6 +104,6 @@ $overview_chart_data = array(
 				</div>
 			</div>
 		</div>
-		<canvas x-data='tutorOverviewChart(<?php echo wp_json_encode( $overview_chart_data ); ?>)' x-ref="canvas"></canvas>
+		<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo wp_json_encode( $overview_chart_data ); ?>)' x-ref="canvas"></canvas>
 	</div>
 </div>
