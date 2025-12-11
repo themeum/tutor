@@ -92,6 +92,7 @@ use TUTOR\Input;
 			<?php require 'components/form.php'; ?>
 			<?php require 'components/select.php'; ?>
 			<?php require 'components/attachment-card.php'; ?>
+			<?php require 'components/query.php'; ?>
 		</section>
 	<?php endif ?>
 </body>
