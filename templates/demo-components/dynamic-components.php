@@ -289,7 +289,6 @@
 		->render();
 		?>
 		</div>
-	</div>
 	<div class="accordion-wrapper tutor-mb-12">
 		<h2>Accordion</h2>
 		<pre><code>
@@ -890,7 +889,6 @@
 				</div>
 			</form>
 		</div>
-
 </div>
 
 
