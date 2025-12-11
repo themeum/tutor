@@ -13,12 +13,17 @@
 	use Tutor\Components\Avatar;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
-	use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Size;
 	use Tutor\Components\Constants\Variant;
 	use Tutor\Components\InputField;
 	use Tutor\Components\Modal;
+	use Tutor\Components\Pagination;
+	use Tutor\Components\Popover;
 	use Tutor\Components\Progress;
 	use Tutor\Components\Tabs;
+	use Tutor\Components\Table;
+	use TUTOR\Icon;
 
 	?>
 
@@ -285,7 +290,6 @@
 		->render();
 		?>
 		</div>
-	</div>
 	<div class="accordion-wrapper tutor-mb-12">
 		<h2>Accordion</h2>
 		<pre><code>
@@ -314,7 +318,7 @@
 		Accordion::make()
 			->add_item( 'About Course', '<h2>Description...</h2>' )
 			->render();
-			echo "<br>";
+			echo '<br>';
 
 		Accordion::make()
 			->add_item( 'About Course', '<p>Description...</p>' )
@@ -322,7 +326,7 @@
 			->add_item( 'Instructor', '<p>Meet your instructor...</p>' )
 			->default_open( array( 0 ) )
 			->render();
-		echo "<br>";
+		echo '<br>';
 
 		// With custom icon and template.
 		Accordion::make()
@@ -331,11 +335,360 @@
 			->render();
 		?>
 	</div>
+	<!-- table component -->
+	<div class="tutor-bg-white tutor-py-6 tutor-px-6 tutor-mb-12">
+		<h2>Table</h2>
+		<br>
+		<pre><code>&lt;php
+			$heading = array(
+				array(
+					'content' => __( 'Quiz Info', 'tutor' ),
+				),
+				array(
+					'content' => __( 'Marks', 'tutor' ),
+				),
+			);
+
+			$content = array(
+				array(
+					'columns' => array(
+						array(
+							'content' => '&lt;div class="tutor-flex tutor-gap-3 tutor-items-center">
+								' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '
+							&lt;/div&gt;',
+						),
+						array( 'content' => 20 ),
+					),
+				),
+			);
+
+			echo Table::make()
+				->headings( $heading )
+				->contents( $content )
+				->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+				->render();
+		</code></pre>
+		<?php
+		$heading = array(
+			array(
+				'content' => __( 'Quiz Info', 'tutor' ),
+			),
+			array(
+				'content' => __( 'Marks', 'tutor' ),
+			),
+		);
+
+		$content = array(
+			array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => 20 ),
+				),
+			),
+		);
+
+		echo Table::make()
+			->headings( $heading )
+			->contents( $content )
+			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->render();
+		?>
+		<pre><code>&lt;php
+		$content = array(
+				array(
+					'columns' => array(
+						array(
+							'content' => '&lt;div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::TICK_MARK ) . __( 'Total Marks', 'tutor' ) . '
+						&lt;/div&gt;',
+						),
+						array( 'content' => 10 ),
+					),
+				),
+				array(
+					'columns' => array(
+						array(
+							'content' => '&lt;div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::PASSED ) . __( 'Passing Marks', 'tutor' ) . '
+						&lt;/div&gt;',
+						),
+						array( 'content' => 6 ),
+					),
+				),
+			);
+
+			echo Table::make()
+			->contents( $content )
+			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->render();php&gt;
+		</code></pre>
+
+		<?php
+			$content = array(
+				array(
+					'columns' => array(
+						array(
+							'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::TICK_MARK ) . __( 'Total Marks', 'tutor' ) . '
+						</div>',
+						),
+						array( 'content' => 10 ),
+					),
+				),
+				array(
+					'columns' => array(
+						array(
+							'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::PASSED ) . __( 'Passing Marks', 'tutor' ) . '
+						</div>',
+						),
+						array( 'content' => 6 ),
+					),
+				),
+			);
+
+			echo Table::make()
+			->contents( $content )
+			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->render();
+			?>
+
+	</div>
+	<!-- table component -->
+
+	<!-- popover component -->
+	<div class="popover-wrapper tutor-mb-12">
+		<h2>Popover</h2>
+		<h3>Basic Popover</h3>
+		<br>
+		<pre><code>echo Popover::make()
+				->title( 'Basic' )
+				->body( '&lt;p&gt;This is a popover component&lt;/p&gt;' )
+				->closeable( true )
+				->trigger(
+					Button::make()
+					->label( 'Show Popover' )
+					->attr( 'x-ref', 'trigger' )
+					->attr( '@click', 'toggle()' )
+					->size( 'medium' )
+					->variant( 'primary' )
+					->get()
+				)
+				->render();
+			</code></pre>
+		<br>
+		<?php
+			echo Popover::make()
+				->title( 'Basic' )
+				->body( '<p>This is a popover component</p>' )
+				->closeable( true )
+				->trigger(
+					Button::make()
+					->label( 'Show Popover' )
+					->attr( 'x-ref', 'trigger' )
+					->attr( '@click', 'toggle()' )
+					->size( 'medium' )
+					->variant( 'primary' )
+					->get()
+				)
+				->render();
+
+			?>
+		<br>
+		<h3> Popover with placement variations</h3>
+		<br>
+		<pre><code>$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
+
+		$top_button    = $button->label( 'Top' )->get();
+		$right_button  = $button->label( 'Right' )->get();
+		$left_button   = $button->label( 'Left' )->get();
+		$bottom_button = $button->label( 'Bottom' )->get();
+
+		echo Popover::make()
+			->body( '&lt;p&gt;Right component&lt;/p&gt;' )
+			->trigger( $right_button )
+			->placement( 'right' )
+			->render();
+		echo Popover::make()
+			->body( '&lt;p&gt;Left component&lt;/p&gt;' )
+			->trigger( $left_button )
+			->placement( 'left' )
+			->render();
+		echo Popover::make()
+			->body( '&lt;p&gt;Top component&lt;/p&gt;' )
+			->trigger( $top_button )
+			->placement( 'top' )
+			->render();
+		echo Popover::make()
+			->body( '&lt;p&gt;Bottom component&lt;/p&gt;' )
+			->trigger( $bottom_button )
+			->placement( 'bottom' )
+			->render();
+		</code></pre>
+		<br>
+		<div class="tutor-flex tutor-align-center tutor-gap-7">
+			<?php
+			$button = Button::make()->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->size( 'small' )->variant( 'secondary' );
+
+			$top_button    = $button->label( 'Top' )->get();
+			$right_button  = $button->label( 'Right' )->get();
+			$left_button   = $button->label( 'Left' )->get();
+			$bottom_button = $button->label( 'Bottom' )->get();
+
+			echo Popover::make()
+				->body( '<p>Right component</p>' )
+				->trigger( $right_button )
+				->placement( Positions::RIGHT )
+				->render();
+			echo Popover::make()
+				->body( '<p>Top component</p>' )
+				->trigger( $top_button )
+				->placement( Positions::TOP )
+				->render();
+			echo Popover::make()
+				->body( '<p>Bottom component</p>' )
+				->trigger( $bottom_button )
+				->placement( Positions::BOTTOM )
+				->render();
+			echo Popover::make()
+				->body( '<p>Left component</p>' )
+				->trigger( $left_button )
+				->placement( Positions::LEFT )
+				->render();
+			?>
+		</div>
+		<br>
+		<h3>Popover with footer</h3>
+		<br>
+		<pre><code>$footer_buttons = array(
+			Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->get(),
+			Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
+		);
+
+		echo Popover::make()
+		->title( 'Confirm Action' )
+		->body( '&lt;p&gt;Are you sure you want to delete this item? This action cannot be undone.&lt;/p&gt;' )
+		->footer( $footer_buttons )
+		->dismissible( false )
+		->trigger(
+			Button::make()
+			->label( 'Popover Footer' )
+			->attr( 'x-ref', 'trigger' )
+			->attr( '@click', 'toggle()' )
+			->size( 'medium' )
+			->variant( 'destructive' )
+			->render()
+		)
+		->render();
+		</code></pre>
+		<br>
+		<?php
+			$footer_buttons = array(
+				Button::make()->label( 'Cancel' )->size( 'medium' )->variant( 'secondary' )->get(),
+				Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
+			);
+
+			echo Popover::make()
+			->title( 'Confirm Action' )
+			->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
+			->footer( $footer_buttons )
+			->dismissible( false )
+			->trigger(
+				Button::make()
+				->label( 'Popover Footer' )
+				->attr( 'x-ref', 'trigger' )
+				->attr( '@click', 'toggle()' )
+				->size( 'medium' )
+				->variant( 'destructive' )
+				->get()
+			)
+			->render();
+
+			?>
+		<br>
+		<h3>Popover with menu</h3>
+		<br>
+		<pre><code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
+			echo Popover::make()
+				->trigger( $kebab_button )
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Edit',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::EDIT_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Delete',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
+				->render();
+		</code></pre>
+		<br>
+		<?php
+			$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
+			echo Popover::make()
+				->trigger( $kebab_button )
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Edit',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::EDIT_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
+				->menu_item(
+					array(
+						'tag'     => 'a',
+						'content' => 'Delete',
+						'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+						'attr'    => array( 'href' => '#' ),
+					)
+				)
+				->render();
+			?>
+	</div>
+	<!-- popover component -->
+
+	<!-- pagination component -->
+	<div class="pagination-wrapper tutor-mb-12">
+		<h2>Pagination</h2>
+		<br>
+		<pre><code>echo Pagination::make()
+				->current( 2 )
+				->total( 200 )
+				->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+				->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+				->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+				->render();</code></pre>
+		<br>
+		<?php
+
+		echo Pagination::make()
+			->current( 2 )
+			->total( 200 )
+			->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+			->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+			->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+			->render();
+		?>
+	</div>
+	<!-- pagination component -->
+
 	<div class="input-field-wrapper tutor-mb-12">
 		<h2>Input Fields</h2>
 		<pre><code>
 		&lt;?php
-		?&gt;
+		?&gt;</code></pre>
 			<?php
 
 			// Text input with left icon
@@ -537,7 +890,8 @@
 				</div>
 			</form>
 		</div>
-	</div>
 </div>
+
+
 </body>
 </html>
