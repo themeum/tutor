@@ -351,25 +351,21 @@
 
 			$content = array(
 				array(
-					'content' => array(
+					'columns' => array(
 						array(
-							'content' => 'Questions',
-							'class'   => 'tutor-bg-blue',
-							'icon'    => array(
-								'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-								'position' => 'left',
-							),
+							'content' => '&lt;div class="tutor-flex tutor-gap-3 tutor-items-center">
+								' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '
+							&lt;/div&gt;',
 						),
 						array( 'content' => 20 ),
 					),
-					'class'   => 'tutor-bg-red',
 				),
 			);
 
 			echo Table::make()
 				->headings( $heading )
 				->contents( $content )
-				->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
+				->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 				->render();
 		</code></pre>
 		<?php
@@ -384,18 +380,14 @@
 
 		$content = array(
 			array(
-				'content' => array(
+				'columns' => array(
 					array(
-						'content' => 'Questions',
-						'class'   => 'tutor-bg-blue',
-						'icon'    => array(
-							'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-							'position' => 'left',
-						),
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '
+						</div>',
 					),
 					array( 'content' => 20 ),
 				),
-				'class'   => 'tutor-bg-red',
 			),
 		);
 
@@ -405,119 +397,66 @@
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
 		?>
-
 		<pre><code>&lt;php
-			$heading = array(
+		$content = array(
 				array(
-					'content' => __( 'Quiz Info', 'tutor' ),
-				),
-				array(
-					'content' => __( 'Marks', 'tutor' ),
-				),
-				array(
-					'content' => __( 'Result', 'tutor' ),
-				),
-			);
-
-			$content = array(
-				array(
-					'content' => array(
+					'columns' => array(
 						array(
-							'content' => 'Questions',
-							'icon'    => array(
-								'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-								'position' => 'left',
-							),
+							'content' => '&lt;div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::TICK_MARK ) . __( 'Total Marks', 'tutor' ) . '
+						&lt;/div&gt;',
 						),
-						array( 'content' => 20 ),
-						array( 'content' => 
-								'&lt;span&gt; class="tutor-badge tutor-badge-completed tutor-badge-circle">
-									Passed
-								&lt;/span&gt;'
-						),
+						array( 'content' => 10 ),
 					),
 				),
 				array(
-					'content' => array(
+					'columns' => array(
 						array(
-							'content' => 'Quiz Time',
-							'icon'    => array(
-								'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
-								'position' => 'left',
-							),
+							'content' => '&lt;div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::PASSED ) . __( 'Passing Marks', 'tutor' ) . '
+						&lt;/div&gt;',
 						),
-						array( 'content' => 20 ),
-						array( 'content' => 
-								'&lt;span&gt; class="tutor-badge tutor-badge-exception tutor-badge-circle">
-									Bundle
-								&lt;/span&gt;'
-						),
+						array( 'content' => 6 ),
 					),
 				),
 			);
 
 			echo Table::make()
-				->headings( $heading )
-				->contents( $content )
-				->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
-				->render();
+			->contents( $content )
+			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->render();php&gt;
 		</code></pre>
-		<?php
-			$heading = array(
-				array(
-					'content' => __( 'Quiz Info', 'tutor' ),
-				),
-				array(
-					'content' => __( 'Marks', 'tutor' ),
-				),
-				array(
-					'content' => __( 'Result', 'tutor' ),
-				),
-			);
 
+		<?php
 			$content = array(
 				array(
-					'content' => array(
+					'columns' => array(
 						array(
-							'content' => 'Questions',
-							'icon'    => array(
-								'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
-								'position' => 'left',
-							),
+							'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::TICK_MARK ) . __( 'Total Marks', 'tutor' ) . '
+						</div>',
 						),
-						array( 'content' => 20 ),
-						array(
-							'content' => '<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
-									Passed
-								</span>',
-						),
+						array( 'content' => 10 ),
 					),
 				),
 				array(
-					'content' => array(
+					'columns' => array(
 						array(
-							'content' => 'Quiz Time',
-							'icon'    => array(
-								'svg'      => tutor_utils()->get_svg_icon( Icon::CLOCK ),
-								'position' => 'left',
-							),
+							'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::PASSED ) . __( 'Passing Marks', 'tutor' ) . '
+						</div>',
 						),
-						array( 'content' => 20 ),
-						array(
-							'content' => '<span class="tutor-badge tutor-badge-exception tutor-badge-circle">
-									Bundle
-								</span>',
-						),
+						array( 'content' => 6 ),
 					),
 				),
 			);
 
 			echo Table::make()
-				->headings( $heading )
-				->contents( $content )
-				->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
-				->render();
+			->contents( $content )
+			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->render();
 			?>
+
 	</div>
 	<!-- table component -->
 

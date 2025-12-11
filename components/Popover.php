@@ -10,6 +10,7 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Positions;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -22,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example Usage: Basic Popover
  * ```
- * echo Popover::make()
+ * Popover::make()
  *      ->title( 'Basic' )
  *       ->body( '<p>This is a popover component</p>' )
  *       ->closeable( true )
@@ -33,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
  *           ->attr( '@click', 'toggle()' )
  *           ->size( 'medium' )
  *           ->variant( 'primary' )
- *           ->render()
+ *           ->get()
  *       )
  *       ->render();
  * ```
@@ -41,13 +42,6 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.0.0
  */
 class Popover extends BaseComponent {
-
-	const LEFT    = 'left';
-	const RIGHT   = 'right';
-	const TOP     = 'top';
-	const BOTTOM  = 'bottom';
-	const DEFAULT = 'bottom-start';
-	const CENTER  = 'center';
 
 
 	/**
@@ -78,7 +72,7 @@ class Popover extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $popover_placement = self::DEFAULT;
+	protected $popover_placement = Positions::BOTTOM_START;
 
 	/**
 	 * Popover button element.
@@ -192,9 +186,9 @@ class Popover extends BaseComponent {
 	 * @return self
 	 */
 	public function placement( string $popover_placement = 'bottom-start' ): self {
-		$placement_positions = array( self::TOP, self::LEFT, self::RIGHT, self::BOTTOM, self::DEFAULT );
+		$placement_positions = array( Positions::TOP, Positions::LEFT, Positions::RIGHT, Positions::BOTTOM, Positions::BOTTOM_START );
 		if ( ! in_array( $popover_placement, $placement_positions, true ) ) {
-			$this->popover_placement = self::DEFAULT;
+			$this->popover_placement = Positions::BOTTOM_START;
 		}
 
 		$this->popover_placement = $popover_placement;
@@ -279,7 +273,7 @@ class Popover extends BaseComponent {
 		$menu_item_tag                          = isset( $args['tag'] ) ? $this->esc( $args['tag'], $this->popover_body_esc ) : '';
 		$this->popover_menu_item_class          = $args['class'] ?? '';
 		$this->popover_menu_item_icon           = $args['icon'] ?? '';
-		$this->popover_menu_item_icon_alignment = isset( $args['icon_alignment'] ) && in_array( $args['icon_alignment'], array( self::LEFT, self::RIGHT ), true ) ? $args['icon_alignment'] : self::LEFT;
+		$this->popover_menu_item_icon_alignment = isset( $args['icon_alignment'] ) && in_array( $args['icon_alignment'], array( Positions::LEFT, Positions::RIGHT ), true ) ? $args['icon_alignment'] : Positions::LEFT;
 
 		$this->popover_menu_items[] = array(
 			'tag'            => $menu_item_tag,
@@ -366,13 +360,13 @@ class Popover extends BaseComponent {
 	 */
 	protected function render_footer(): string {
 		$footer_buttons   = '';
-		$footer_alignment = in_array( $this->popover_footer_alignment, array( self::LEFT, self::CENTER ), true ) ? $this->popover_footer_alignment : '';
+		$footer_alignment = in_array( $this->popover_footer_alignment, array( Positions::LEFT, Positions::CENTER ), true ) ? $this->popover_footer_alignment : '';
 
 		if ( ! tutor_utils()->count( $this->popover_footer_buttons ) ) {
 			return $footer_buttons;
 		}
 
-		$alignment = self::LEFT === $footer_alignment ? 'tutor-justify-start' : 'tutor-justify-center';
+		$alignment = Positions::LEFT === $footer_alignment ? 'tutor-justify-start' : 'tutor-justify-center';
 
 		foreach ( $this->popover_footer_buttons as $button ) {
 			$footer_buttons .= $button;
@@ -424,11 +418,11 @@ class Popover extends BaseComponent {
 		}
 
 		foreach ( $this->popover_menu_items as $item ) {
-			$tag            = isset( $item['tag'] ) ? $item['tag'] : 'div';
+			$tag            = $item['tag'] ?? 'div';
 			$content        = isset( $item['content'] ) ? $this->esc( $item['content'], $this->popover_body_esc ) : '';
 			$class          = isset( $item['class'] ) ? esc_attr( $item['class'] ) : '';
-			$icon           = isset( $item['icon'] ) ? $item['icon'] : '';
-			$icon_alignment = isset( $item['icon_alignment'] ) ? $item['icon_alignment'] : self::LEFT;
+			$icon           = $item['icon'] ?? '';
+			$icon_alignment = $item['icon_alignment'] ?? Positions::LEFT;
 
 			$this->attributes = tutor_utils()->count( $item['attr'] ) ? $item['attr'] : array();
 
@@ -444,7 +438,7 @@ class Popover extends BaseComponent {
 				);
 			}
 
-			if ( self::RIGHT === $icon_alignment ) {
+			if ( Positions::RIGHT === $icon_alignment ) {
 				$menu_items .= sprintf(
 					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
 					$tag,
@@ -484,7 +478,7 @@ class Popover extends BaseComponent {
 		$footer             = $this->render_footer();
 		$menu               = $this->render_menu();
 
-		$placement_class = self::DEFAULT !== $placement_position ? "tutor-popover-$placement_position" : 'tutor-popover-top';
+		$placement_class = Positions::BOTTOM_START !== $placement_position ? "tutor-popover-$placement_position" : 'tutor-popover-top';
 		$class           = 'tutor-popover ' . $placement_class;
 
 		$closeable_attr = $this->popover_close_outside ? '@click.outside="handleClickOutside()' : '';

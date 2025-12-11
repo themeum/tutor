@@ -25,25 +25,17 @@ defined( 'ABSPATH' ) || exit;
  *      [
  *          [
  *              'content' => '',
- *              'class'   => '', // the <th> tag class
  *          ]
  *      ]
  *   )
  *  ->contents(
  *      [
  *        [
- *          'content' => [
+ *          'columns' => [
  *              [
  *                  'content' => '',
- *                  'class' => '', // the <td> tag class
- *                  'icon' =>
- *                      [
- *                           'svg' => '', // sanitized svg of icon
- *                           'position' => '' // left or right
- *                       ]
  *              ]
  *           ],
- *          'class' => '' // the <tr> tag class
  *        ]
  *      ]
  *   )
@@ -53,7 +45,6 @@ defined( 'ABSPATH' ) || exit;
  *
  *
  * ```
- *
  * // Example Usage:
  * $heading = array(
  *       array(
@@ -64,27 +55,21 @@ defined( 'ABSPATH' ) || exit;
  *       ),
  *   );
  *
- *   $content = array(
+ * $content = array(
  *       array(
- *           'content' => array(
+ *           'columns' => array(
  *               array(
- *                   'content' => 'Questions',
- *                   'class'   => 'tutor-bg-blue',
- *                   'icon'    => array(
- *                       'svg'      => tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ),
- *                       'position' => 'left',
- *                   ),
+ *                   'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '</div>',
  *               ),
  *               array( 'content' => 20 ),
  *           ),
- *           'class'   => 'tutor-bg-red',
  *       ),
- *   );
+ *  );
  *
  *   echo Table::make()
  *       ->headings( $heading )
  *       ->contents( $content )
- *       ->attributes( "tutor-table-wrapper tutor-table-column-borders tutor-mb-6" )
+ *       ->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
  *       ->render();
  * ```
  *
@@ -97,21 +82,21 @@ class Table extends BaseComponent {
 	 *
 	 * @var array
 	 */
-	private $cell_headers;
+	protected $cell_headers;
 
 	/**
 	 * A 2D array of cell content.
 	 *
 	 * @var array
 	 */
-	private $cell_content;
+	protected $cell_content;
 
 	/**
 	 * Table class names.
 	 *
 	 * @var string
 	 */
-	private $attribute;
+	protected $attribute;
 
 	/**
 	 * Set table column headings.
@@ -124,7 +109,6 @@ class Table extends BaseComponent {
 	 * [
 	 *   [
 	 *       'content' => '',
-	 *       'class'   => 'the <th> tag class',
 	 *   ]
 	 * ]
 	 * ```
@@ -161,18 +145,11 @@ class Table extends BaseComponent {
 	 * ```
 	 * [
 	 *   [
-	 *     'content' => [
+	 *     'columns' => [
 	 *         [
 	 *             'content' => '',
-	 *             'class' => 'the <td> tag class',
-	 *             'icon' =>
-	 *                 [
-	 *                      'svg' => 'icon svg',
-	 *                      'position' => 'left|right'
-	 *                  ]
 	 *         ]
 	 *      ],
-	 *     'class' => 'the <tr> tag class'
 	 *   ]
 	 * ]
 	 * ```
@@ -192,23 +169,17 @@ class Table extends BaseComponent {
 	 *
 	 * @return string HTML
 	 */
-	private function render_table_headings(): string {
+	protected function render_table_headings(): string {
 		$headings = '';
-		if ( ! count( $this->cell_headers ) ) {
+		if ( ! tutor_utils()->count( $this->cell_headers ) ) {
 			return $headings;
 		}
 
 		foreach ( $this->cell_headers as $heading ) {
-			$heading_content = esc_attr( apply_filters( 'tutor_table_heading', $heading['content'] ) );
-			if ( isset( $heading['class'] ) ) {
-				$headings .= sprintf(
-					'<th class="%s">%s</th>',
-					esc_attr( $heading['class'] ),
-					$heading_content
-				);
-			} else {
-				$headings .= sprintf( '<th>%1$s</th>', $heading_content );
-			}
+			$headings .= sprintf(
+				'<th>%1$s</th>',
+				apply_filters( 'tutor_table_heading', $heading['content'] )
+			);
 		}
 
 		return $headings;
@@ -221,7 +192,7 @@ class Table extends BaseComponent {
 	 *
 	 * @return string HTML
 	 */
-	private function render_table_body(): string {
+	protected function render_table_body(): string {
 		$rows = '';
 
 		if ( ! count( $this->cell_content ) ) {
@@ -230,39 +201,14 @@ class Table extends BaseComponent {
 
 		foreach ( $this->cell_content as $row ) {
 			$columns = '';
-			foreach ( $row['content'] as $column ) {
-				$column_content = wp_kses_post( apply_filters( 'tutor_table_content', $column['content'] ) );
-				if ( isset( $column['icon'] ) ) {
-					$position       = $column['icon']['position'];
-					$svg            = $column['icon']['svg'];
-					$column_content = sprintf(
-						'left' === $position ?
-						'<div class="tutor-flex tutor-gap-3 tutor-items-center">%1$s%2$s</div>' :
-						'<div class="tutor-flex tutor-gap-3 tutor-items-center">%2$s%1$s</div>',
-						$svg,
-						$column_content
-					);
-				}
-
-				if ( isset( $column['class'] ) ) {
-					$columns .= sprintf(
-						'<td class="%s">%s</td>',
-						esc_attr( $column['class'] ),
-						$column_content
-					);
-				} else {
-					$columns .= sprintf(
-						'<td>%s</td>',
-						$column_content
-					);
-				}
+			foreach ( $row['columns'] as $column ) {
+				$columns .= sprintf(
+					'<td>%s</td>',
+					apply_filters( 'tutor_table_content', $column['content'] )
+				);
 			}
 
-			if ( isset( $row['class'] ) ) {
-				$rows .= sprintf( '<tr class="%s">%s</tr>', $row['class'], $columns );
-			} else {
-				$rows .= sprintf( '<tr>%s</tr>', $columns );
-			}
+			$rows .= sprintf( '<tr>%s</tr>', $columns );
 		}
 
 		return $rows;

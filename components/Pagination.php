@@ -38,14 +38,14 @@ class Pagination extends BaseComponent {
 	 *
 	 * @var int
 	 */
-	protected $pagination_current = 0;
+	protected $pagination_current = 1;
 
 	/**
 	 * Total paginated value.
 	 *
 	 * @var int
 	 */
-	protected $pagination_total = 0;
+	protected $pagination_total = 1;
 
 	/**
 	 * Pagination based url.
@@ -73,7 +73,7 @@ class Pagination extends BaseComponent {
 	 *
 	 * @var  int
 	 */
-	protected $pagination_limit = 1;
+	protected $pagination_limit = 10;
 
 	/**
 	 * Whether to show all links or not.
@@ -128,7 +128,7 @@ class Pagination extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function limit( int $limit = 1 ): self {
+	public function limit( int $limit = 10 ): self {
 		$this->pagination_limit = $limit;
 		return $this;
 	}
@@ -214,8 +214,8 @@ class Pagination extends BaseComponent {
 	 * @return string the HTML content.
 	 */
 	protected function render_pagination_info(): string {
-		$total   = $this->pagination_limit ? ceil( $this->pagination_total / $this->pagination_limit ) : 1;
-		$current = $this->pagination_current ? $this->pagination_current : 1;
+		$per_page = max( ceil( $this->pagination_total / $this->pagination_limit ), 1 );
+		$current  = max( intval( $this->pagination_current ), 1 );
 
 		return sprintf(
 			'<span class="tutor-pagination-info" aria-live="polite">
@@ -227,7 +227,7 @@ class Pagination extends BaseComponent {
 			__( 'Page', 'tutor' ),
 			$current,
 			__( 'of', 'tutor' ),
-			$total
+			$per_page
 		);
 	}
 
@@ -240,8 +240,8 @@ class Pagination extends BaseComponent {
 	 */
 	protected function get_paginated_links_list() {
 
-		$total     = $this->pagination_limit ? ceil( $this->pagination_total / $this->pagination_limit ) : 1;
-		$current   = $this->pagination_current ? $this->pagination_current : 1;
+		$per_page  = max( ceil( $this->pagination_total / $this->pagination_limit ), 1 );
+		$current   = max( intval( $this->pagination_current ), 1 );
 		$format    = ! empty( $this->format ) ? $this->format : '?paged=%#%';
 		$base_url  = str_replace( PHP_INT_MAX, '%#%', esc_url( admin_url( PHP_INT_MAX ) . 'admin.php?paged=%#%' ) );
 		$base      = ! empty( $this->base_url ) ? $this->base_url : $base_url;
@@ -253,7 +253,7 @@ class Pagination extends BaseComponent {
 				'base'         => $base,
 				'format'       => $format,
 				'current'      => $current,
-				'total'        => $total,
+				'total'        => $per_page,
 				'prev_text'    => $prev_text,
 				'next_text'    => $next_text,
 				'add_fragment' => 'tutor-pagination-item',
