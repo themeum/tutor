@@ -13,7 +13,8 @@
 	use Tutor\Components\Avatar;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
-	use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Positions;
+use Tutor\Components\Constants\Size;
 	use Tutor\Components\Constants\Variant;
 	use Tutor\Components\InputField;
 	use Tutor\Components\Modal;
@@ -541,22 +542,22 @@
 			echo Popover::make()
 				->body( '<p>Right component</p>' )
 				->trigger( $right_button )
-				->placement( 'right' )
+				->placement( Positions::RIGHT )
 				->render();
 			echo Popover::make()
 				->body( '<p>Top component</p>' )
 				->trigger( $top_button )
-				->placement( 'top' )
+				->placement( Positions::TOP )
 				->render();
 			echo Popover::make()
 				->body( '<p>Bottom component</p>' )
 				->trigger( $bottom_button )
-				->placement( 'bottom' )
+				->placement( Positions::BOTTOM )
 				->render();
 			echo Popover::make()
 				->body( '<p>Left component</p>' )
 				->trigger( $left_button )
-				->placement( 'left' )
+				->placement( Positions::LEFT )
 				->render();
 			?>
 		</div>
