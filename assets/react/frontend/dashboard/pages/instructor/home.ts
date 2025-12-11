@@ -1,6 +1,6 @@
+import { Chart, type ChartConfiguration, type ScriptableContext, type TooltipModel } from 'chart.js/auto';
+
 import { Alpine, TutorComponentRegistry } from '@Core/ts';
-import { formatPrice } from '@TutorShared/utils/currency';
-import { Chart, type ChartConfiguration } from 'chart.js/auto';
 
 const POINT_STYLE = {
   RADIUS: 4,
@@ -111,6 +111,14 @@ interface OverviewChartProps {
   labels: string[];
 }
 
+interface OverviewChartColors {
+  earnings: { line: string; point: string; pointBorder: string; linearGradient: string[] };
+  enrolled: { line: string; point: string; pointBorder: string; linearGradient: string[] };
+  tooltip: { background: string; title: string; subtitle: string };
+  ticks: { color: string };
+  border: string;
+}
+
 const CHART_STYLE = {
   LINE_WIDTH: 1.3,
   POINT_RADIUS: 6,
@@ -166,32 +174,202 @@ const overviewChart = (data: OverviewChartProps) => ({
     };
   },
 
+  getOrCreateTooltip(chart: Chart) {
+    let tooltipEl = chart.canvas.parentNode?.querySelector('div[data-chart-tooltip]') as HTMLDivElement;
+
+    if (!tooltipEl) {
+      tooltipEl = document.createElement('div');
+      tooltipEl.setAttribute('data-chart-tooltip', '');
+      tooltipEl.style.background = 'transparent';
+      tooltipEl.style.pointerEvents = 'none';
+      tooltipEl.style.position = 'absolute';
+      tooltipEl.style.transform = 'translate(-50%, 0)';
+      tooltipEl.style.transition = 'all .1s ease';
+
+      const table = document.createElement('table');
+      table.style.margin = '0px';
+
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode?.appendChild(tooltipEl);
+    }
+
+    return tooltipEl;
+  },
+
+  externalTooltipHandler(context: { chart: Chart; tooltip: TooltipModel<'line'> }, colors: OverviewChartColors) {
+    const { chart, tooltip } = context;
+
+    const tooltipEl = this.getOrCreateTooltip(chart);
+
+    if (tooltip.opacity === 0 || !tooltip.dataPoints || tooltip.dataPoints.length === 0) {
+      tooltipEl.style.opacity = '0';
+      return;
+    }
+
+    const dataPoint = tooltip.dataPoints[0];
+    const datasetLength = dataPoint.dataset.data.length;
+    const isFirstOrLast = dataPoint.dataIndex === 0 || dataPoint.dataIndex === datasetLength - 1;
+
+    if (isFirstOrLast) {
+      tooltipEl.style.opacity = '0';
+      return;
+    }
+
+    if (tooltip.body) {
+      const titleLines = tooltip.title || [];
+      const bodyLines = tooltip.body.map((b) => b.lines);
+
+      const tableHead = document.createElement('thead');
+      titleLines.forEach((title: string) => {
+        const tr = document.createElement('tr');
+        tr.style.borderWidth = '0';
+
+        const th = document.createElement('th');
+        th.style.borderWidth = '0';
+        th.style.fontSize = '10px';
+        th.style.lineHeight = '1.6';
+        th.style.fontWeight = 'normal';
+        th.style.color = colors.tooltip.title;
+        th.style.marginBottom = '4px';
+        th.style.textAlign = 'start';
+
+        const text = document.createTextNode(title);
+        th.appendChild(text);
+        tr.appendChild(th);
+        tableHead.appendChild(tr);
+      });
+
+      const tableBody = document.createElement('tbody');
+      bodyLines.forEach((body: string[]) => {
+        const tr = document.createElement('tr');
+        tr.style.backgroundColor = 'inherit';
+        tr.style.borderWidth = '0';
+
+        const td = document.createElement('td');
+        td.style.borderWidth = '0';
+        td.style.fontSize = '10px';
+        td.style.lineHeight = '1.6';
+        td.style.fontWeight = 'bold';
+        td.style.color = colors.tooltip.subtitle;
+        td.style.textAlign = 'start';
+
+        const text = document.createTextNode(body[0]);
+        td.appendChild(text);
+        tr.appendChild(td);
+        tableBody.appendChild(tr);
+      });
+
+      const tableRoot = tooltipEl.querySelector('table');
+      if (tableRoot) {
+        while (tableRoot.firstChild) {
+          tableRoot.firstChild.remove();
+        }
+
+        tableRoot.appendChild(tableHead);
+        tableRoot.appendChild(tableBody);
+
+        tableRoot.style.background = colors.tooltip.background;
+        tableRoot.style.borderRadius = '4px';
+        tableRoot.style.padding = '4px 7px';
+        tableRoot.style.minWidth = '70px';
+        tableRoot.style.boxShadow = '0px 2px 4px -2px #1018280F, 0px 4px 8px -2px #1018281A';
+        tableRoot.style.position = 'relative';
+        tableRoot.style.direction = 'inherit';
+
+        const existingCarets = tableRoot.querySelectorAll('[data-caret]');
+        existingCarets.forEach((el) => el.remove());
+
+        const caret = document.createElement('div');
+        caret.setAttribute('data-caret', 'outer');
+        caret.style.position = 'absolute';
+        caret.style.left = '-6px';
+        caret.style.top = '50%';
+        caret.style.transform = 'translateY(-50%)';
+        caret.style.width = '0';
+        caret.style.height = '0';
+        caret.style.borderTop = '6px solid transparent';
+        caret.style.borderBottom = '6px solid transparent';
+        caret.style.borderRight = '6px solid transparent';
+        caret.style.zIndex = '1';
+
+        // Create inner caret for fill
+        const caretInner = document.createElement('div');
+        caretInner.setAttribute('data-caret', 'inner');
+        caretInner.style.position = 'absolute';
+        caretInner.style.left = '-4px';
+        caretInner.style.top = '50%';
+        caretInner.style.transform = 'translateY(-50%)';
+        caretInner.style.width = '0';
+        caretInner.style.height = '0';
+        caretInner.style.borderTop = '5px solid transparent';
+        caretInner.style.borderBottom = '5px solid transparent';
+        caretInner.style.borderRight = `5px solid ${colors.tooltip.background}`;
+        caretInner.style.zIndex = '2';
+
+        tableRoot.appendChild(caret);
+        tableRoot.appendChild(caretInner);
+      }
+    }
+
+    const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+
+    tooltipEl.style.opacity = '1';
+    tooltipEl.style.left = positionX + tooltip.caretX + 12 + 'px';
+    tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+    tooltipEl.style.transform = 'translate(0, -50%)';
+  },
+
   createLinearGradient(
     ctx: CanvasRenderingContext2D,
     chartArea: { top: number; bottom: number },
     colorTop: string,
     colorBottom: string = '#FFFFFF',
     topOffset: number = -0.95,
+    opacity: number = 0.9,
   ): CanvasGradient {
     const height = chartArea.bottom - chartArea.top;
     const adjustedTop = chartArea.top + height * topOffset;
 
     const gradient = ctx.createLinearGradient(0, adjustedTop, 0, chartArea.bottom);
-    gradient.addColorStop(0, colorTop);
-    gradient.addColorStop(1, colorBottom);
+
+    const hexToRgba = (hex: string, alpha: number) => {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    };
+
+    gradient.addColorStop(0, hexToRgba(colorTop, opacity));
+    gradient.addColorStop(1, hexToRgba(colorBottom, 0));
     return gradient;
   },
 
-  createChartConfig(
+  getPointRadius(context: ScriptableContext<'line'>, data: OverviewChartProps) {
+    if (context.dataIndex === 0 || context.dataIndex === data.earnings.length - 1) {
+      return 0;
+    }
+    return CHART_STYLE.POINT_RADIUS;
+  },
+
+  getPointHoverBackgroundColor(
+    context: ScriptableContext<'line'>,
     data: OverviewChartProps,
-    colors: {
-      earnings: { line: string; point: string; pointBorder: string; linearGradient: string[] };
-      enrolled: { line: string; point: string; pointBorder: string; linearGradient: string[] };
-      tooltip: { background: string; title: string; subtitle: string };
-      ticks: { color: string };
-      border: string;
-    },
-  ): ChartConfiguration<'line'> {
+    colors: OverviewChartColors,
+  ) {
+    if (context.dataIndex === 0 || context.dataIndex === data.earnings.length - 1) {
+      return 'transparent';
+    }
+    return context.datasetIndex === 0 ? colors.earnings.point : colors.enrolled.point;
+  },
+
+  getPointHoverBorderColor(context: ScriptableContext<'line'>, data: OverviewChartProps, colors: OverviewChartColors) {
+    if (context.dataIndex === 0 || context.dataIndex === data.earnings.length - 1) {
+      return 'transparent';
+    }
+    return context.datasetIndex === 0 ? colors.earnings.pointBorder : colors.enrolled.pointBorder;
+  },
+
+  createChartConfig(data: OverviewChartProps, colors: OverviewChartColors): ChartConfiguration<'line'> {
     return {
       type: 'line',
       data: {
@@ -219,13 +397,13 @@ const overviewChart = (data: OverviewChartProps) => ({
             borderWidth: CHART_STYLE.LINE_WIDTH,
             tension: CHART_STYLE.TENSION,
             fill: true,
-            pointRadius: CHART_STYLE.POINT_RADIUS,
+            pointRadius: (context) => this.getPointRadius(context, data),
             pointBackgroundColor: 'transparent',
             pointBorderColor: 'transparent',
             pointBorderWidth: CHART_STYLE.POINT_BORDER_WIDTH,
             pointHoverRadius: CHART_STYLE.POINT_RADIUS,
-            pointHoverBackgroundColor: colors.earnings.point,
-            pointHoverBorderColor: colors.earnings.pointBorder,
+            pointHoverBackgroundColor: (context) => this.getPointHoverBackgroundColor(context, data, colors),
+            pointHoverBorderColor: (context) => this.getPointHoverBorderColor(context, data, colors),
             pointHoverBorderWidth: CHART_STYLE.POINT_BORDER_WIDTH,
           },
           {
@@ -250,13 +428,13 @@ const overviewChart = (data: OverviewChartProps) => ({
             borderWidth: CHART_STYLE.LINE_WIDTH,
             tension: CHART_STYLE.TENSION,
             fill: true,
-            pointRadius: CHART_STYLE.POINT_RADIUS,
+            pointRadius: (context) => this.getPointRadius(context, data),
             pointBackgroundColor: 'transparent',
             pointBorderColor: 'transparent',
             pointBorderWidth: CHART_STYLE.POINT_BORDER_WIDTH,
             pointHoverRadius: CHART_STYLE.POINT_RADIUS,
-            pointHoverBackgroundColor: colors.enrolled.point,
-            pointHoverBorderColor: colors.enrolled.pointBorder,
+            pointHoverBackgroundColor: (context) => this.getPointHoverBackgroundColor(context, data, colors),
+            pointHoverBorderColor: (context) => this.getPointHoverBorderColor(context, data, colors),
             pointHoverBorderWidth: CHART_STYLE.POINT_BORDER_WIDTH,
           },
         ],
@@ -273,39 +451,14 @@ const overviewChart = (data: OverviewChartProps) => ({
             display: false,
           },
           tooltip: {
-            enabled: true,
-            backgroundColor: colors.tooltip.background,
-            titleColor: colors.tooltip.title,
-            titleMarginBottom: 4,
-            titleFont: {
-              size: 10,
-              lineHeight: 1.6,
-              weight: 'normal',
+            enabled: false,
+            position: 'nearest',
+            filter: (tooltipItem) => {
+              const index = tooltipItem.dataIndex;
+              const datasetLength = tooltipItem.dataset.data.length;
+              return !(index === 0 || index === datasetLength - 1);
             },
-            bodyFont: {
-              size: 10,
-              lineHeight: 1.6,
-              weight: 'bold',
-            },
-            borderWidth: 1,
-            borderColor: colors.border,
-            bodyColor: colors.tooltip.subtitle,
-            padding: {
-              x: 7,
-              y: 4,
-            },
-            callbacks: {
-              title: (context) => {
-                return context[0].label;
-              },
-              label: (context) => {
-                const value = context.parsed.y as number;
-                if (context.datasetIndex === 0) {
-                  return formatPrice(value);
-                }
-                return value.toString();
-              },
-            },
+            external: (context) => this.externalTooltipHandler(context, colors),
           },
         },
         scales: {
@@ -314,11 +467,18 @@ const overviewChart = (data: OverviewChartProps) => ({
             grid: {
               display: true,
               tickWidth: 0,
-              color: colors.border,
+              color: (context) => {
+                const index = context.index;
+                const ticksLength = context.chart.scales.x.ticks.length;
+                if (index === 0 || index === ticksLength - 1) {
+                  return 'transparent';
+                }
+                return colors.border;
+              },
             },
             border: {
               color: colors.border,
-              dash: [5, 5],
+              dash: [3, 3],
             },
             ticks: {
               color: colors.ticks.color,
@@ -329,6 +489,7 @@ const overviewChart = (data: OverviewChartProps) => ({
           },
           y: {
             display: false,
+            grace: '10%',
             grid: {
               display: false,
             },
