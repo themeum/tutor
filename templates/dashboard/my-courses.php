@@ -100,7 +100,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 }
 ?>
 
-<div class="tutor-dashboard-my-courses">
+<div class="tutor-dashboard-my-courses" x-data="myCourses()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-p-6 tutor-border-b">
 			<?php
@@ -115,8 +115,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-5">
 				<?php do_action( 'tutor_course_create_button' ); ?>
-				<button class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2 tutor-create-new-course tutor-dashboard-create-course">
-					<!-- @TODO: Need to add API integration -->
+				<button 
+					class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"
+					:class="createMutation.isPending ? 'tutor-btn-loading' : ''"
+					@click="handleCreateCourse()"
+					:disabled="createMutation.isPending"
+				>
 					<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
 					<?php esc_html_e( 'New Course', 'tutor' ); ?>
 				</button>
@@ -426,7 +430,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal('tutor-course-delete-modal')">
 							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 						</button>
-						<button class="tutor-btn tutor-btn-destructive tutor-btn-small" x-bind:data-course-id="payload?.courseId">
+						<button 
+							class="tutor-btn tutor-btn-destructive tutor-btn-small"
+							:class="deleteMutation?.isPending ? 'tutor-btn-loading' : ''"
+							@click="handleDeleteCourse(payload?.courseId)"
+							:disabled="deleteMutation?.isPending"
+						>
 							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
 						</button>
 					</div>
