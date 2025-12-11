@@ -87,7 +87,7 @@ $get_active_dropdown_label = function ( $options ) {
 };
 ?>
 
-<ul class="tutor-nav tutor-nav-<?php echo esc_attr( $size ); ?> tutor-nav-<?php echo esc_attr( $variant ); ?>">
+<div class="tutor-nav tutor-nav-<?php echo esc_attr( $size ); ?> tutor-nav-<?php echo esc_attr( $variant ); ?>">
 	<?php foreach ( $items as $item ) : ?>
 		<?php if ( 'dropdown' === $item['type'] ) : ?>
 			<?php
@@ -134,4 +134,4 @@ $get_active_dropdown_label = function ( $options ) {
 			</a>
 		<?php endif; ?>
 	<?php endforeach; ?>
-</ul>
+</div>

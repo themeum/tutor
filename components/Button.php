@@ -1,0 +1,259 @@
+<?php
+/**
+ * Tutor Component: Button
+ *
+ * Provides a fluent builder for rendering buttons with
+ * different sizes, variants, and styles.
+ *
+ * @package Tutor\Components
+ * @author Themeum
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+namespace Tutor\Components;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Button Component Class.
+ *
+ * Example usage:
+ * ```
+ * echo Button::make()
+ *     ->label( 'Enroll Now' )
+ *     ->size( 'large' )
+ *     ->variant( 'primary' )
+ *     ->icon( 'tutor-icon-play' )
+ *     ->attr( 'data-id', 101 )
+ *     ->render();
+ * ```
+ *
+ * @since 4.0.0
+ */
+class Button extends BaseComponent {
+
+	/**
+	 * Button label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $label = '';
+
+	/**
+	 * Button size (small|medium|large).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $size = 'medium';
+
+	/**
+	 * Button variant style (primary|secondary|success|danger|link).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $variant = 'primary';
+
+	/**
+	 * Button HTML tag (button|a).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $tag = 'button';
+
+	/**
+	 * Button attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $attributes = array();
+
+	/**
+	 * The SVG icon markup.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $icon = '';
+
+	/**
+	 * The icon position relative to label. Accepts 'left' or 'right'.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $icon_position = 'left';
+
+	/**
+	 * Whether button is disabled.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $disabled = false;
+
+	/**
+	 * Set button label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $label Button label text.
+	 *
+	 * @return $this
+	 */
+	public function label( $label ) {
+		$this->label = esc_html( $label );
+		return $this;
+	}
+
+	/**
+	 * Set button size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $size Button size (small|medium|large).
+	 *
+	 * @return $this
+	 */
+	public function size( $size ) {
+		$allowed = array( 'small', 'medium', 'large' );
+		if ( in_array( $size, $allowed, true ) ) {
+			$this->size = $size;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set button variant style.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $variant Button variant (primary|secondary|success|danger|link).
+	 *
+	 * @return $this
+	 */
+	public function variant( $variant ) {
+		$this->variant = sanitize_html_class( $variant );
+		return $this;
+	}
+
+	/**
+	 * Set custom HTML attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key   Attribute name.
+	 * @param string $value Attribute value.
+	 *
+	 * @return $this
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = esc_attr( $value );
+		return $this;
+	}
+
+	/**
+	 * Set the SVG icon for the button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $svg SVG markup (already escaped and sanitized).
+	 * @param string $position Optional. Icon position: 'left' or 'right'.
+	 *
+	 * @return $this
+	 */
+	public function icon( string $svg, string $position = 'left' ): self {
+		$this->icon          = $svg;
+		$this->icon_position = in_array( $position, array( 'left', 'right' ), true ) ? $position : 'left';
+		return $this;
+	}
+
+	/**
+	 * Set the HTML tag for rendering.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $tag HTML tag (button|a).
+	 *
+	 * @return $this
+	 */
+	public function tag( $tag ) {
+		if ( in_array( $tag, array( 'a', 'button' ), true ) ) {
+			$this->tag = $tag;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set button disabled state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $disabled Whether the button is disabled.
+	 *
+	 * @return $this
+	 */
+	public function disabled( $disabled = true ) {
+		$this->disabled = (bool) $disabled;
+		return $this;
+	}
+
+	/**
+	 * Render the final button HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string HTML output.
+	 */
+	public function render(): string {
+		$classes = sprintf(
+			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
+			esc_attr( $this->variant ),
+			esc_attr( $this->size )
+		);
+
+		if ( $this->disabled ) {
+			$this->attributes['disabled'] = 'disabled';
+			$classes                     .= ' is-disabled';
+		}
+
+		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
+
+		$attributes = $this->render_attributes();
+
+		// Prepare icon HTML if exists.
+		$icon_html = '';
+		if ( ! empty( $this->icon ) ) {
+			$icon_html = sprintf(
+				'%1$s',
+				$this->icon // SVG is expected to be escaped markup.
+			);
+		}
+
+		// Build button inner HTML depending on icon position.
+		$content = 'right' === ( $this->icon_position ? $this->icon_position : 'left' )
+			? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
+			: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
+
+		return sprintf(
+			'<%1$s %2$s>%3$s</%1$s>',
+			esc_attr( $this->tag ),
+			$attributes,
+			$content
+		);
+	}
+
+}

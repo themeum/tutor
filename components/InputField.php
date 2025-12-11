@@ -1,0 +1,873 @@
+<?php
+/**
+ * Tutor Component: InputField
+ *
+ * Provides a fluent builder for rendering various input field types with
+ * labels, validation states, and helper text.
+ *
+ * @package Tutor\Components
+ * @author Themeum
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+namespace Tutor\Components;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * InputField Component Class.
+ *
+ * Example usage:
+ * ```
+ * // Text input with clear button
+ * echo InputField::make()
+ *     ->type( 'text' )
+ *     ->name( 'full_name' )
+ *     ->label( 'Full Name' )
+ *     ->placeholder( 'Enter your full name' )
+ *     ->required()
+ *     ->clearable()
+ *     ->help_text( 'This is a helper text.' )
+ *     ->attr( 'x-bind', "register('full_name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })")
+ *     ->render();
+ *
+ * // Text input with left icon
+ * echo InputField::make()
+ *     ->type( 'text' )
+ *     ->name( 'email' )
+ *     ->label( 'Email' )
+ *     ->left_icon( '<svg>...</svg>' )
+ *     ->render();
+ *
+ * // Textarea
+ * echo InputField::make()
+ *     ->type( 'textarea' )
+ *     ->name( 'bio' )
+ *     ->label( 'Bio' )
+ *     ->render();
+ *
+ * // Checkbox
+ * echo InputField::make()
+ *     ->type( 'checkbox' )
+ *     ->name( 'agree' )
+ *     ->label( 'I agree to terms' )
+ *     ->size( 'md' )
+ *     ->render();
+ *
+ * // Radio
+ * echo InputField::make()
+ *     ->type( 'radio' )
+ *     ->name( 'gender' )
+ *     ->label( 'Male' )
+ *     ->value( 'male' )
+ *     ->render();
+ *
+ * // Switch
+ * echo InputField::make()
+ *     ->type( 'switch' )
+ *     ->name( 'notifications' )
+ *     ->label( 'Enable notifications?' )
+ *     ->size( 'md' )
+ *     ->render();
+ *
+ * // InputField with error
+ * echo InputField::make()
+ *     ->type( 'text' )
+ *     ->name( 'username' )
+ *     ->label( 'Username' )
+ *     ->error( 'This field is required.' )
+ *     ->render();
+ * ```
+ *
+ * @since 4.0.0
+ */
+class InputField extends BaseComponent {
+
+	/**
+	 * InputField type (text|email|password|number|textarea|checkbox|radio|switch).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $type = 'text';
+
+	/**
+	 * InputField name attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $name = '';
+
+	/**
+	 * InputField ID attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $id = '';
+
+	/**
+	 * InputField value.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $value = '';
+
+	/**
+	 * InputField label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $label = '';
+
+	/**
+	 * InputField placeholder text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $placeholder = '';
+
+	/**
+	 * Help text below input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $help_text = '';
+
+	/**
+	 * Error message text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $error = '';
+
+	/**
+	 * Whether input is required.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $required = false;
+
+	/**
+	 * Input field attr like alpine attribute for validation
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $attr = '';
+
+	/**
+	 * Whether input is disabled.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $disabled = false;
+
+	/**
+	 * Whether input is checked (checkbox/radio/switch).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $checked = false;
+
+	/**
+	 * Whether checkbox is intermediate state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $intermediate = false;
+
+	/**
+	 * Whether input has clear button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $clearable = false;
+
+	/**
+	 * Left icon SVG markup.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $left_icon = '';
+
+	/**
+	 * Right icon SVG markup.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $right_icon = '';
+
+	/**
+	 * InputField size (sm|md).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $size = 'sm';
+
+	/**
+	 * Set input type.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $type InputField type.
+	 *
+	 * @return $this
+	 */
+	public function type( $type ) {
+		$allowed = array( 'text', 'email', 'password', 'number', 'textarea', 'checkbox', 'radio', 'switch' );
+		if ( in_array( $type, $allowed, true ) ) {
+			$this->type = $type;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set input name.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $name InputField name.
+	 *
+	 * @return $this
+	 */
+	public function name( $name ) {
+		$this->name = sanitize_key( $name );
+		return $this;
+	}
+
+	/**
+	 * Set input ID.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $id InputField ID.
+	 *
+	 * @return $this
+	 */
+	public function id( $id ) {
+		$this->id = sanitize_key( $id );
+		return $this;
+	}
+
+	/**
+	 * Set input value.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $value InputField value.
+	 *
+	 * @return $this
+	 */
+	public function value( $value ) {
+		$this->value = $value;
+		return $this;
+	}
+
+	/**
+	 * Set input label.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $label Label text.
+	 *
+	 * @return $this
+	 */
+	public function label( $label ) {
+		$this->label = $label;
+		return $this;
+	}
+
+	/**
+	 * Set input placeholder.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $placeholder Placeholder text.
+	 *
+	 * @return $this
+	 */
+	public function placeholder( $placeholder ) {
+		$this->placeholder = $placeholder;
+		return $this;
+	}
+
+	/**
+	 * Set help text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $text Help text.
+	 *
+	 * @return $this
+	 */
+	public function help_text( $text ) {
+		$this->help_text = $text;
+		return $this;
+	}
+
+	/**
+	 * Set error message.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $error Error message.
+	 *
+	 * @return $this
+	 */
+	public function error( $error ) {
+		$this->error = $error;
+		return $this;
+	}
+
+	/**
+	 * Set required state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $required Whether input is required.
+	 *
+	 * @return $this
+	 */
+	public function required( $required = true ) {
+		$this->required = (bool) $required;
+		return $this;
+	}
+
+	/**
+	 * Set attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key Attribute key.
+	 * @param string $value Attribute value.
+	 *
+	 * @return $this
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = esc_attr( $value );
+		return $this;
+	}
+
+	/**
+	 * Set disabled state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $disabled Whether input is disabled.
+	 *
+	 * @return $this
+	 */
+	public function disabled( $disabled = true ) {
+		$this->disabled = (bool) $disabled;
+		return $this;
+	}
+
+	/**
+	 * Set checked state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $checked Whether input is checked.
+	 *
+	 * @return $this
+	 */
+	public function checked( $checked = true ) {
+		$this->checked = (bool) $checked;
+		return $this;
+	}
+
+	/**
+	 * Set intermediate state for checkbox.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $intermediate Whether checkbox is intermediate.
+	 *
+	 * @return $this
+	 */
+	public function intermediate( $intermediate = true ) {
+		$this->intermediate = (bool) $intermediate;
+		return $this;
+	}
+
+	/**
+	 * Enable clear button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $clearable Whether to show clear button.
+	 *
+	 * @return $this
+	 */
+	public function clearable( $clearable = true ) {
+		$this->clearable = (bool) $clearable;
+		return $this;
+	}
+
+	/**
+	 * Set left icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $icon SVG icon markup.
+	 *
+	 * @return $this
+	 */
+	public function left_icon( $icon ) {
+		$this->left_icon = $icon;
+		return $this;
+	}
+
+	/**
+	 * Set right icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $icon SVG icon markup.
+	 *
+	 * @return $this
+	 */
+	public function right_icon( $icon ) {
+		$this->right_icon = $icon;
+		return $this;
+	}
+
+	/**
+	 * Set input size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $size Size (sm|md).
+	 *
+	 * @return $this
+	 */
+	public function size( $size ) {
+		$allowed = array( 'sm', 'md' );
+		if ( in_array( $size, $allowed, true ) ) {
+			$this->size = $size;
+		}
+		return $this;
+	}
+
+	/**
+	 * Render text/email/password/number input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string InputField HTML.
+	 */
+	protected function render_text_input() {
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		$input_classes = 'tutor-input';
+		if ( ! empty( $this->left_icon ) ) {
+			$input_classes .= ' tutor-input-content-left';
+		}
+		if ( ! empty( $this->right_icon ) ) {
+			$input_classes .= ' tutor-input-content-right';
+		}
+		if ( $this->clearable ) {
+			$input_classes .= ' tutor-input-content-clear';
+		}
+
+		$input_attrs = sprintf(
+			'type="%s" id="%s" name="%s" class="%s" %s',
+			esc_attr( $this->type ),
+			esc_attr( $input_id ),
+			esc_attr( $this->name ),
+			esc_attr( $input_classes ),
+			$this->render_attributes()
+		);
+
+		if ( ! empty( $this->placeholder ) ) {
+			$input_attrs .= sprintf( ' placeholder="%s"', esc_attr( $this->placeholder ) );
+		}
+
+		if ( ! empty( $this->value ) ) {
+			$input_attrs .= sprintf( ' value="%s"', esc_attr( $this->value ) );
+		}
+
+		if ( $this->disabled ) {
+			$input_attrs .= ' disabled';
+		}
+
+		$left_icon_html = '';
+		if ( ! empty( $this->left_icon ) ) {
+			$left_icon_html = sprintf(
+				'<div class="tutor-input-content tutor-input-content-left">%s</div>',
+				$this->left_icon
+			);
+		}
+
+		$right_icon_html = '';
+		if ( ! empty( $this->right_icon ) ) {
+			$right_icon_html = sprintf(
+				'<div class="tutor-input-content tutor-input-content-right">%s</div>',
+				$this->right_icon
+			);
+		}
+
+		$clear_button_html = '';
+		if ( $this->clearable ) {
+			$clear_icon = '';
+			if ( function_exists( 'tutor_utils' ) ) {
+				ob_start();
+				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
+				$clear_icon = ob_get_clean();
+			}
+
+			$clear_button_html = sprintf(
+				'<button 
+					type="button"
+					class="tutor-input-clear-button"
+					aria-label="Clear input"
+					x-cloak
+					x-show="values.%1$s && String(values.%1$s).length > 0"
+					@click="setValue(\'%1$s\', \'\')"
+				>%2$s</button>',
+				esc_attr( $this->name ),
+				$clear_icon
+			);
+
+			$error_html = sprintf(
+				'<div 
+					class="tutor-error-text" 
+					x-cloak 
+					x-show="errors.%1$s" 
+					x-text="errors?.%1$s?.message" 
+					role="alert" 
+					aria-live="polite"
+				></div>',
+				esc_attr( $this->name )
+			);
+
+		}
+
+		return sprintf(
+			'<div class="tutor-input-wrapper">
+				<input %s>
+				%s
+				%s
+				%s
+			</div>
+			%s
+			',
+			$input_attrs,
+			$left_icon_html,
+			$right_icon_html,
+			$clear_button_html,
+			$error_html
+		);
+	}
+
+	/**
+	 * Render textarea input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Textarea HTML.
+	 */
+	protected function render_textarea() {
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		$input_classes = 'tutor-input tutor-text-area';
+		if ( $this->clearable ) {
+			$input_classes .= ' tutor-input-content-clear';
+		}
+
+		$input_attrs = sprintf(
+			'id="%s" name="%s" class="%s" %s',
+			esc_attr( $input_id ),
+			esc_attr( $this->name ),
+			esc_attr( $input_classes ),
+			$this->render_attributes()
+		);
+
+		if ( ! empty( $this->placeholder ) ) {
+			$input_attrs .= sprintf( ' placeholder="%s"', esc_attr( $this->placeholder ) );
+		}
+
+		if ( $this->disabled ) {
+			$input_attrs .= ' disabled';
+		}
+
+		$clear_button_html = '';
+		if ( $this->clearable ) {
+			$clear_icon = '';
+			if ( function_exists( 'tutor_utils' ) ) {
+				ob_start();
+				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
+				$clear_icon = ob_get_clean();
+			}
+			$clear_button_html = sprintf(
+				'<button type="button" class="tutor-input-clear-button" aria-label="Clear input">%s</button>',
+				$clear_icon
+			);
+		}
+
+		return sprintf(
+			'<div class="tutor-input-wrapper">
+				<textarea %s %s>%s</textarea>
+				%s
+			</div>',
+			$input_attrs,
+			esc_textarea( $this->value ),
+			$clear_button_html
+		);
+	}
+
+	/**
+	 * Render checkbox input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Checkbox HTML.
+	 */
+	protected function render_checkbox() {
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		$input_classes = 'tutor-checkbox';
+		if ( 'md' === $this->size ) {
+			$input_classes .= ' tutor-checkbox-md';
+		}
+		if ( $this->intermediate ) {
+			$input_classes .= ' tutor-checkbox-intermediate';
+		}
+
+		$input_attrs = sprintf(
+			'type="checkbox" id="%s" name="%s" class="%s" %s',
+			esc_attr( $input_id ),
+			esc_attr( $this->name ),
+			esc_attr( $input_classes ),
+			$this->render_attributes()
+		);
+
+		if ( ! empty( $this->value ) ) {
+			$input_attrs .= sprintf( ' value="%s"', esc_attr( $this->value ) );
+		}
+
+		if ( $this->checked ) {
+			$input_attrs .= ' checked';
+		}
+
+		if ( $this->disabled ) {
+			$input_attrs .= ' disabled';
+		}
+
+		return sprintf(
+			'<div class="tutor-input-wrapper">
+				<input %s>
+				<label for="%s" class="tutor-label%s">%s</label>
+			</div>',
+			$input_attrs,
+			esc_attr( $input_id ),
+			$this->required ? ' tutor-label-required' : '',
+			$this->esc( $this->label )
+		);
+	}
+
+	/**
+	 * Render radio input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Radio HTML.
+	 */
+	protected function render_radio() {
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		$input_classes = 'tutor-radio';
+		if ( 'md' === $this->size ) {
+			$input_classes .= ' tutor-radio-md';
+		}
+
+		$input_attrs = sprintf(
+			'type="radio" id="%s" name="%s" class="%s" %s',
+			esc_attr( $input_id ),
+			esc_attr( $this->name ),
+			esc_attr( $input_classes ),
+			$this->render_attributes()
+		);
+
+		if ( ! empty( $this->value ) ) {
+			$input_attrs .= sprintf( ' value="%s"', esc_attr( $this->value ) );
+		}
+
+		if ( $this->checked ) {
+			$input_attrs .= ' checked';
+		}
+
+		if ( $this->disabled ) {
+			$input_attrs .= ' disabled';
+		}
+
+		return sprintf(
+			'<div class="tutor-input-wrapper">
+				<input %s>
+				<label for="%s" class="tutor-label%s">%s</label>
+			</div>',
+			$input_attrs,
+			esc_attr( $input_id ),
+			$this->required ? ' tutor-label-required' : '',
+			$this->esc( $this->label )
+		);
+	}
+
+	/**
+	 * Render switch input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Switch HTML.
+	 */
+	protected function render_switch() {
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		$input_classes = 'tutor-switch';
+		if ( 'md' === $this->size ) {
+			$input_classes .= ' tutor-switch-md';
+		}
+		if ( $this->intermediate ) {
+			$input_classes .= ' tutor-switch--intermediate';
+		}
+
+		$input_attrs = sprintf(
+			'type="checkbox" id="%s" name="%s" class="%s" %s',
+			esc_attr( $input_id ),
+			esc_attr( $this->name ),
+			esc_attr( $input_classes ),
+			$this->render_attributes()
+		);
+
+		if ( ! empty( $this->value ) ) {
+			$input_attrs .= sprintf( ' value="%s"', esc_attr( $this->value ) );
+		}
+
+		if ( $this->checked ) {
+			$input_attrs .= ' checked';
+		}
+
+		if ( $this->disabled ) {
+			$input_attrs .= ' disabled';
+		}
+
+		return sprintf(
+			'<div class="tutor-input-wrapper">
+				<input %s>
+				<label for="%s" class="tutor-label%s">%s</label>
+			</div>',
+			$input_attrs,
+			esc_attr( $input_id ),
+			$this->required ? ' tutor-label-required' : '',
+			$this->esc( $this->label )
+		);
+	}
+
+	/**
+	 * Render the input field HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string HTML output.
+	 */
+	public function render(): string {
+		if ( empty( $this->name ) ) {
+			return '';
+		}
+
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		// Field wrapper classes.
+		$field_classes = 'tutor-input-field';
+		if ( ! empty( $this->error ) ) {
+			$field_classes .= ' tutor-input-field-error';
+		}
+
+		// Render label for text inputs.
+		$label_html = '';
+		if ( ! in_array( $this->type, array( 'checkbox', 'radio', 'switch' ), true ) && ! empty( $this->label ) ) {
+			$label_html = sprintf(
+				'<label for="%s" class="tutor-label%s">%s</label>',
+				esc_attr( $input_id ),
+				$this->required ? ' tutor-label-required' : '',
+				$this->esc( $this->label )
+			);
+		}
+
+		// Render input based on type.
+		$input_html = '';
+		switch ( $this->type ) {
+			case 'textarea':
+				$input_html = $this->render_textarea();
+				break;
+			case 'checkbox':
+				$input_html = $this->render_checkbox();
+				break;
+			case 'radio':
+				$input_html = $this->render_radio();
+				break;
+			case 'switch':
+				$input_html = $this->render_switch();
+				break;
+			default:
+				$input_html = $this->render_text_input();
+				break;
+		}
+
+		// Render help text or error.
+		$help_html = '';
+		if ( ! empty( $this->error ) ) {
+			$help_html = sprintf(
+				'<div class="tutor-error-text" role="alert" aria-live="polite">%s</div>',
+				$this->esc( $this->error )
+			);
+		} elseif ( ! empty( $this->help_text ) ) {
+			$help_html = sprintf(
+				'<div class="tutor-help-text">%s</div>',
+				$this->esc( $this->help_text )
+			);
+		}
+
+		return sprintf(
+			'<div class="%s">%s%s%s</div>',
+			esc_attr( $field_classes ),
+			$label_html,
+			$input_html,
+			$help_html
+		);
+	}
+
+}

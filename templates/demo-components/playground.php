@@ -35,19 +35,21 @@ use TUTOR\Input;
 </head>
 <body>
 <?php
+
 	$current_url = admin_url( 'admin.php?page=playground' );
 
 	$subpages = array(
-		'dashboard'        => 'Dashboard',
-		'learning-area'    => 'Learning Area',
-		'user-profile'     => 'User Profile',
-		'certificates'     => 'Certificates',
-		'reviews'          => 'Reviews',
-		'profile-settings' => 'Account Settings',
-		'billing'          => 'Billing',
-		'quiz'             => 'Quiz',
-		'quiz-summary'     => 'Quiz Summary',
-		'assignment'       => 'Assignment',
+		'dashboard'          => 'Dashboard',
+		'learning-area'      => 'Learning Area',
+		'user-profile'       => 'User Profile',
+		'certificates'       => 'Certificates',
+		'reviews'            => 'Reviews',
+		'profile-settings'   => 'Account Settings',
+		'billing'            => 'Billing',
+		'quiz'               => 'Quiz',
+		'quiz-summary'       => 'Quiz Summary',
+		'assignment'         => 'Assignment',
+		'dynamic-components' => 'Dynamic Components',
 	);
 
 	$subpage = Input::get( 'subpage', '' );
