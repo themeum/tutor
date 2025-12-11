@@ -13,6 +13,9 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,10 +23,10 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
- * echo Button::make()
+ * Button::make()
  *     ->label( 'Enroll Now' )
- *     ->size( 'large' )
- *     ->variant( 'primary' )
+ *     ->size( Size::LARGE )
+ *     ->variant( Variant::PRIMARY )
  *     ->icon( 'tutor-icon-play' )
  *     ->attr( 'data-id', 101 )
  *     ->render();
@@ -47,18 +50,22 @@ class Button extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
+	 * @see Size constants
+	 *
 	 * @var string
 	 */
-	protected $size = 'medium';
+	protected $size = Size::MEDIUM;
 
 	/**
-	 * Button variant style (primary|secondary|success|danger|link).
+	 * Button variant style (primary|secondary, etc).
 	 *
 	 * @since 4.0.0
 	 *
+	 * @see Size constants
+	 *
 	 * @var string
 	 */
-	protected $variant = 'primary';
+	protected $variant = Variant::PRIMARY;
 
 	/**
 	 * Button HTML tag (button|a).
@@ -86,6 +93,16 @@ class Button extends BaseComponent {
 	 * @var string
 	 */
 	protected $icon = '';
+
+	/**
+	 * Button icon position
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	private const POSITION_LEFT  = 'left';
+	private const POSITION_RIGHT = 'left';
 
 	/**
 	 * The icon position relative to label. Accepts 'left' or 'right'.
@@ -129,7 +146,7 @@ class Button extends BaseComponent {
 	 * @return $this
 	 */
 	public function size( $size ) {
-		$allowed = array( 'small', 'medium', 'large' );
+		$allowed = $this->get_allowed_sizes();
 		if ( in_array( $size, $allowed, true ) ) {
 			$this->size = $size;
 		}
@@ -177,7 +194,7 @@ class Button extends BaseComponent {
 	 */
 	public function icon( string $svg, string $position = 'left' ): self {
 		$this->icon          = $svg;
-		$this->icon_position = in_array( $position, array( 'left', 'right' ), true ) ? $position : 'left';
+		$this->icon_position = in_array( $position, array( self::POSITION_LEFT, self::POSITION_RIGHT ), true ) ? $position : 'left';
 		return $this;
 	}
 
@@ -212,13 +229,29 @@ class Button extends BaseComponent {
 	}
 
 	/**
-	 * Render the final button HTML.
+	 * Allowed sizes
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	public function get_allowed_sizes() {
+		return array(
+			Size::SMALL,
+			Size::MEDIUM,
+			Size::LARGE,
+			Size::X_SMALL,
+		);
+	}
+
+	/**
+	 * Get the final button HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		$classes = sprintf(
 			'tutor-btn tutor-btn-%1$s tutor-btn-%2$s',
 			esc_attr( $this->variant ),
@@ -244,16 +277,18 @@ class Button extends BaseComponent {
 		}
 
 		// Build button inner HTML depending on icon position.
-		$content = 'right' === ( $this->icon_position ? $this->icon_position : 'left' )
+		$content = self::POSITION_RIGHT === ( $this->icon_position ? $this->icon_position : self::POSITION_LEFT )
 			? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
 			: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<%1$s %2$s>%3$s</%1$s>',
 			esc_attr( $this->tag ),
 			$attributes,
 			$content
 		);
+
+		return $this->component_string;
 	}
 
 }

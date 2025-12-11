@@ -13,6 +13,8 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Variant;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -20,15 +22,15 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example usage:
  * ```
- * echo Badge::make()
+ * Badge::make()
  *     ->label( 'Primary' )
- *     ->variant( 'primary' )
+ *     ->variant( Variant::PRIMARY )
  *     ->icon( '<svg>...</svg>' )
  *     ->render();
  *
- * echo Badge::make()
+ * Badge::make()
  *     ->label( 'Points: 20' )
- *     ->variant( 'secondary' )
+ *     ->variant( Variant::SECONDARY )
  *     ->circle()
  *     ->render();
  * ```
@@ -47,13 +49,15 @@ class Badge extends BaseComponent {
 	protected $label = '';
 
 	/**
-	 * Badge variant style (primary|pending|completed|cancelled|secondary|exception).
+	 * Badge variant style.
 	 *
 	 * @since 4.0.0
 	 *
+	 * @see Variant constants.
+	 *
 	 * @var string
 	 */
-	protected $variant = 'primary';
+	protected $variant = Variant::PRIMARY;
 
 	/**
 	 * Whether badge has circle style.
@@ -170,13 +174,13 @@ class Badge extends BaseComponent {
 	}
 
 	/**
-	 * Render the final badge HTML.
+	 * Get the final badge HTML.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML output.
 	 */
-	public function render(): string {
+	public function get(): string {
 		$classes = sprintf(
 			'tutor-badge tutor-badge-%s',
 			esc_attr( $this->variant )
@@ -207,11 +211,13 @@ class Badge extends BaseComponent {
 			esc_html( $this->label )
 		);
 
-		return sprintf(
+		$this->component_string = sprintf(
 			'<span %s>%s</span>',
 			$attributes,
 			$content
 		);
+
+		return $this->component_string;
 	}
 
 }

@@ -21,6 +21,7 @@ import { tabsMeta } from '@Core/ts/components/tabs';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
+import { queryServiceMeta } from '@Core/ts/services/Query';
 
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
@@ -43,7 +44,7 @@ const initializePlugin = () => {
       selectMeta,
       previewTriggerMeta,
     ],
-    services: [formServiceMeta, modalServiceMeta],
+    services: [formServiceMeta, modalServiceMeta, queryServiceMeta],
   });
 
   TutorComponentRegistry.initWithAlpine(Alpine);
