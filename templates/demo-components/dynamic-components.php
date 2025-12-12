@@ -13,8 +13,8 @@
 	use Tutor\Components\Avatar;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
-use Tutor\Components\Constants\Positions;
-use Tutor\Components\Constants\Size;
+	use Tutor\Components\Constants\Positions;
+	use Tutor\Components\Constants\Size;
 	use Tutor\Components\Constants\Variant;
 	use Tutor\Components\InputField;
 	use Tutor\Components\Modal;

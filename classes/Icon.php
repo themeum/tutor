@@ -40,6 +40,7 @@ final class Icon {
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BADGE                      = 'badge';
 	const BADGE_CHECK                = 'badge-check';
 	const BADGE_INFO                 = 'badge-info';
 	const BARS                       = 'bars';

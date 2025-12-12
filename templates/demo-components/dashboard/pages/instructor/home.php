@@ -9,6 +9,8 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\Avatar;
+use Tutor\Components\Constants\Size;
 
 // Define stat card variations with sample data matching the design.
 $stat_cards = array(
@@ -78,31 +80,31 @@ $course_completion_data = array(
 $leaderboard_data = array(
 	array(
 		'name'                  => esc_html__( 'John Doe', 'tutor' ),
-		'avatar'                => 'https://ui-avatars.com/api/?name=John+Doe&background=0D0D0D&color=fff&size=40',
+		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
 		'no_of_courses'         => 10,
 		'completion_percentage' => 50,
 	),
 	array(
 		'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
-		'avatar'                => 'https://ui-avatars.com/api/?name=Jane+Doe&background=0D0D0D&color=fff&size=40',
+		'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
 		'no_of_courses'         => 20,
 		'completion_percentage' => 30,
 	),
 	array(
 		'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
-		'avatar'                => 'https://ui-avatars.com/api/?name=Bob+Doe&background=0D0D0D&color=fff&size=40',
+		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
 		'no_of_courses'         => 30,
 		'completion_percentage' => 70,
 	),
 	array(
 		'name'                  => esc_html__( 'Alice Doe', 'tutor' ),
-		'avatar'                => 'https://ui-avatars.com/api/?name=Alice+Doe&background=0D0D0D&color=fff&size=40',
+		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826752d',
 		'no_of_courses'         => 40,
 		'completion_percentage' => 10,
 	),
 	array(
 		'name'                  => esc_html__( 'Charlie Doe', 'tutor' ),
-		'avatar'                => 'https://ui-avatars.com/api/?name=Charlie+Doe&background=0D0D0D&color=fff&size=40',
+		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d823712d',
 		'no_of_courses'         => 50,
 		'completion_percentage' => 40,
 	),
@@ -163,7 +165,7 @@ $leaderboard_data = array(
 		<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo wp_json_encode( $overview_chart_data ); ?>)' x-ref="canvas"></canvas>
 	</div>
 
-	<div class="tutor-flex tutor-gap-5">
+	<div class="tutor-flex tutor-gap-6">
 		<!-- Course Completion Chart -->
 		<div class="tutor-dashboard-home-chart tutor-flex-1" data-stacked="true">
 			<div class="tutor-small">
@@ -172,7 +174,7 @@ $leaderboard_data = array(
 
 			<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorCourseCompletionChart(<?php echo wp_json_encode( $course_completion_data ); ?>)' x-ref="canvas"></canvas>
 			
-			<div class="tutor-flex tutor-align-center tutor-gap-6 tutor-mt-11">
+			<div class="tutor-grid tutor-grid-cols-3 tutor-gap-6 tutor-mt-11">
 				<?php foreach ( $course_completion_data as $key => $value ) : ?>
 					<div class="tutor-dashboard-home-chart-legend" data-color="<?php echo esc_attr( $key ); ?>">
 						<div class="tutor-flex tutor-flex-column">
@@ -195,34 +197,48 @@ $leaderboard_data = array(
 			</div>
 
 			<div class="tutor-dashboard-home-leaderboard-body">
-				<?php foreach ( $leaderboard_data as $item ) : ?>
+				<?php foreach ( $leaderboard_data as $item_key => $item ) : ?>
 					<div class="tutor-dashboard-home-leaderboard-item">
-						<div class="tutor-flex tutor-align-center">
+						<div class="tutor-flex tutor-align-center tutor-gap-4">
 							<!-- Index -->
-							<div class="tutor-small tutor-font-medium">
-								<?php echo esc_html( $item['index'] ); ?>
-							</div>
-
-							<!-- Avatar -->
-							<div class="tutor-avatar tutor-avatar-56">
-								<?php if ( $item['avatar'] ) : ?>
-									<img src="<?php echo esc_url( $item['avatar'] ); ?>" alt="<?php echo esc_attr( $item['name'] ); ?>" class="tutor-avatar-image">
+							<div class="tutor-dashboard-home-leaderboard-icon">
+								<?php if ( 0 === $item_key ) : ?>
+									<?php tutor_utils()->render_svg_icon( Icon::BADGE, 16, 16, array( 'class' => 'tutor-icon-exception4' ) ); ?>
 								<?php else : ?>
-									<span class="tutor-avatar-initials">
-										<?php echo esc_html( $item['name'] ); ?>
-									</span>
+									<?php echo esc_html( $item_key + 1 ); ?>
 								<?php endif; ?>
 							</div>
 
-							<div class="tutor-tiny">
-								<?php echo esc_html( $item['no_of_courses'] ); ?>
+							<!-- Avatar -->
+							<div class="tutor-dashboard-home-leaderboard-avatar">
+								<?php Avatar::make()->src( $item['avatar'] )->initials( $item['name'] )->size( Size::SIZE_32 )->render(); ?>
 							</div>
-							<div class="tutor-flex-1">
-								<div class="tutor-small">
-									<?php echo esc_html( $item['completion_percentage'] ); ?>%
+
+							<!-- Info -->
+							<div class="tutor-flex-1 tutor-flex tutor-flex-column">
+								<div class="tutor-tiny tutor-font-medium">
+									<?php echo esc_html( $item['name'] ); ?>
 								</div>
 								<div class="tutor-tiny">
-									<?php echo esc_html( $item['completion_percentage'] > 50 ? esc_html__( 'Completed', 'tutor' ) : esc_html__( 'Incomplete', 'tutor' ) ); ?>
+									<span class="tutor-text-subdued">
+										<?php
+										printf(
+											// translators: %s: Number of courses.
+											esc_html__( '%s Courses', 'tutor' ),
+											esc_html( $item['no_of_courses'] )
+										);
+										?>
+									</span>
+									<span class="tutor-text-subdued">•</span>
+									<span class="tutor-text-success">
+										<?php
+										printf(
+											// translators: %s: Completion percentage.
+											esc_html__( '%s Completion', 'tutor' ),
+											esc_html( $item['completion_percentage'] . '%' )
+										);
+										?>
+									</span>
 								</div>
 							</div>
 						</div>

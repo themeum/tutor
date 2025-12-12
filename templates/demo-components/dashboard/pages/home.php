@@ -136,10 +136,6 @@ $upcoming_lessons = array(
 	</div>
 </div>
 
-<div class="tutor-mb-4">
-	<?php tutor_load_template( 'core-components.event-badge' ); ?>
-</div>
-
 <div class="tutor-mb-8">
 	<h2 class="tutor-text-xl tutor-font-bold tutor-mb-6"><?php echo esc_html__( 'My Progress', 'tutor' ); ?></h2>
 	<div class="tutor-flex tutor-flex-column tutor-gap-4">

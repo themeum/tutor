@@ -24,6 +24,7 @@ export const icons = [
   'audio',
   'avi',
   'back',
+  'badge',
   'badgeCheck',
   'badgeInfo',
   'barLegend',
