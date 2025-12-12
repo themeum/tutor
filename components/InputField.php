@@ -81,6 +81,23 @@ defined( 'ABSPATH' ) || exit;
  *     ->label( 'Username' )
  *     ->error( 'This field is required.' )
  *     ->render();
+ *
+ * // Select
+ *  InputField::make()
+ *      ->type( 'select' )
+ *      ->name( 'interests' )
+ *      ->label( 'Interests' )
+ *      ->placeholder( 'Select your interests')
+ *      ->required( 'Please select an interest')
+ *      ->clearable()
+ *      ->options( $interests )
+ *      ->multiple()
+ *      ->searchable()
+ *      ->size( 'md' )
+ *      ->max_selections( 2 )
+ *      ->help_text( 'This is a helper next.' )
+ *      ->render();
+ *
  * ```
  *
  * @since 4.0.0
