@@ -13,11 +13,12 @@
 	use Tutor\Components\Avatar;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
-use Tutor\Components\Constants\Positions;
-use Tutor\Components\Constants\Size;
+	use Tutor\Components\Constants\Positions;
+	use Tutor\Components\Constants\Size;
 	use Tutor\Components\Constants\Variant;
 	use Tutor\Components\InputField;
 	use Tutor\Components\Modal;
+	use Tutor\Components\Nav;
 	use Tutor\Components\Pagination;
 	use Tutor\Components\Popover;
 	use Tutor\Components\Progress;
@@ -683,6 +684,78 @@ use Tutor\Components\Constants\Size;
 		?>
 	</div>
 	<!-- pagination component -->
+
+	<!-- nav component -->
+	<div class="nav-wrapper tutor-mb-12">
+		<h2>Nav Component</h2>
+		<pre><code>$dropdown = array(
+				'type'    => 'dropdown',
+				'icon'    => Icon::ENROLLED,
+				'active'  => true,
+				'options' => array(
+					array(
+						'label'  => 'Active',
+						'icon'   => Icon::PLAY_LINE,
+						'url'    => '#',
+						'active' => false,
+					),
+					array(
+						'label'  => 'Enrolled',
+						'icon'   => Icon::ENROLLED,
+						'url'    => '#',
+						'active' => true,
+					),
+				),
+			);
+
+			echo Nav::make()
+				->items( array( $dropdown ) )
+				->size( Size::SM )
+				->variant( Variant::SECONDARY )
+				->render();</code></pre>
+		<br>
+		<?php
+			$wishlist = array(
+				'type'   => 'link',
+				'label'  => __( 'Wishlist', 'tutor' ),
+				'icon'   => Icon::WISHLIST,
+				'url'    => '#',
+				'active' => false,
+			);
+
+			$dropdown = array(
+				'type'    => 'dropdown',
+				'icon'    => Icon::ENROLLED,
+				'active'  => true,
+				'options' => array(
+					array(
+						'label'  => 'Active',
+						'icon'   => Icon::PLAY_LINE,
+						'url'    => '#',
+						'active' => false,
+					),
+					array(
+						'label'  => 'Enrolled',
+						'icon'   => Icon::ENROLLED,
+						'url'    => '#',
+						'active' => true,
+					),
+				),
+			);
+
+			echo Nav::make()
+				->items( array( $wishlist, $dropdown ) )
+				->size( Size::LG )
+				->render();
+
+			echo Nav::make()
+				->items( array( $dropdown ) )
+				->size( Size::SM )
+				->variant( Variant::SECONDARY )
+				->render();
+			?>
+	</div>
+	<!-- nav component -->
 
 	<div class="input-field-wrapper tutor-mb-12">
 		<h2>Input Fields</h2>
