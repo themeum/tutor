@@ -1,6 +1,7 @@
-import { Alpine, TutorComponentRegistry } from '@Core/ts';
-import { formatPrice } from '@TutorShared/utils/currency';
 import { Chart, type ChartConfiguration, type ScriptableContext, type TooltipModel } from 'chart.js/auto';
+
+import { TutorComponentRegistry } from '@Core/ts';
+import { formatPrice } from '@TutorShared/utils/currency';
 
 interface OverviewChartProps {
   earnings: number[];
@@ -27,65 +28,70 @@ interface OverviewChartColors {
   border: string;
 }
 
-const POINT_STYLE = {
-  RADIUS: 4,
-  HOVER_RADIUS: 6,
-  BORDER_WIDTH: 2,
-  HOVER_BORDER_WIDTH: 3,
-} as const;
+type CourseCompletionChartDataKey = 'enrolled' | 'completed' | 'in_progress' | 'inactive' | 'cancelled';
 
-const CANVAS_CONFIG = {
-  STAT_CARD_HEIGHT: '33px',
-  WIDTH: '100%',
-  ASPECT_RATIO: 3,
-  OVERVIEW_MAX_HEIGHT: 179,
-} as const;
-
-const CHART_STYLE = {
-  LINE_WIDTH: 1.3,
-  TENSION: 0.4,
-} as const;
-
-const extractStatCardColors = (element: HTMLElement, data: number[]): ChartColors => {
-  const style = getComputedStyle(element);
-  const getProperty = (name: string) => style.getPropertyValue(name).trim();
-  const isPositiveTrend = data[data.length - 1] > data[0];
-
-  return {
-    line: getProperty(isPositiveTrend ? '--tutor-border-success' : '--tutor-border-error'),
-    point: getProperty(isPositiveTrend ? '--tutor-actions-success-primary' : '--tutor-icon-critical'),
-    pointBorder: getProperty('--tutor-surface-l2'),
+type CourseCompletionChartData = {
+  [key in CourseCompletionChartDataKey]: {
+    label: string;
+    value: number;
   };
 };
 
-const extractOverviewChartColors = (element: HTMLElement): OverviewChartColors => {
-  const style = getComputedStyle(element);
-  const getProperty = (name: string) => style.getPropertyValue(name).trim();
+const CHART_CONFIG = {
+  canvas: {
+    statCardHeight: '33px',
+    width: '100%',
+    overviewMaxHeight: 179,
+    completionMaxHeight: 60,
+  },
 
-  return {
-    earnings: {
-      line: getProperty('--tutor-border-brand'),
-      point: getProperty('--tutor-actions-brand-primary'),
-      pointBorder: getProperty('--tutor-actions-brand-secondary'),
-      linearGradient: ['#5E81F4', '#FFFFFF'],
-    },
-    enrolled: {
-      line: getProperty('--tutor-border-success'),
-      point: getProperty('--tutor-actions-success-primary'),
-      pointBorder: getProperty('--tutor-actions-success-secondary'),
-      linearGradient: ['#8AF1B9', '#FFFFFF'],
-    },
-    tooltip: {
-      background: getProperty('--tutor-surface-l1'),
-      title: getProperty('--tutor-text-subdued'),
-      subtitle: getProperty('--tutor-text-primary'),
-    },
-    ticks: {
-      color: getProperty('--tutor-text-subdued'),
-    },
-    border: getProperty('--tutor-border-idle'),
-  };
-};
+  aspectRatio: {
+    overview: 3,
+  },
+
+  point: {
+    radius: 4,
+    hoverRadius: 6,
+    borderWidth: 2,
+    hoverBorderWidth: 3,
+  },
+
+  line: {
+    width: 1.3,
+    tension: 0.4,
+  },
+
+  bar: {
+    thickness: 54,
+    borderRadius: 5,
+    borderWidth: 3,
+  },
+
+  gradient: {
+    topOffset: -0.95,
+    opacity: 0.9,
+  },
+
+  tooltip: {
+    fontSize: '10px',
+    lineHeight: '1.6',
+    padding: '4px 7px',
+    minWidth: '70px',
+    borderRadius: '4px',
+    boxShadow: '0px 2px 4px -2px #1018280F, 0px 4px 8px -2px #1018281A',
+    caretSize: 6,
+    caretInnerSize: 5,
+    offsetX: 12,
+  },
+
+  common: {
+    devicePixelRatio: () => window.devicePixelRatio || 2,
+    responsive: true,
+    hiddenLegend: { display: false },
+    disabledTooltip: { enabled: false },
+    hiddenAxis: { display: false, grid: { display: false } },
+  },
+} as const;
 
 const hexToRgba = (hex: string, alpha: number): string => {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -94,22 +100,88 @@ const hexToRgba = (hex: string, alpha: number): string => {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 };
 
+const isEndPoint = (index: number, dataLength: number): boolean => {
+  return index === 0 || index === dataLength - 1;
+};
+
+const calculatePointRadii = (dataLength: number): number[] => {
+  return Array.from({ length: dataLength }, (_, index) => {
+    return isEndPoint(index, dataLength) ? 0 : CHART_CONFIG.point.radius;
+  });
+};
+
+const getCSSProperty = (element: HTMLElement, propertyName: string): string => {
+  return getComputedStyle(element).getPropertyValue(propertyName).trim();
+};
+
+const extractStatCardColors = (element: HTMLElement, data: number[]): ChartColors => {
+  const isPositiveTrend = data[data.length - 1] > data[0];
+
+  return {
+    line: getCSSProperty(element, isPositiveTrend ? '--tutor-border-success' : '--tutor-border-error'),
+    point: getCSSProperty(element, isPositiveTrend ? '--tutor-actions-success-primary' : '--tutor-icon-critical'),
+    pointBorder: getCSSProperty(element, '--tutor-surface-l2'),
+  };
+};
+
+const extractOverviewChartColors = (element: HTMLElement): OverviewChartColors => {
+  return {
+    earnings: {
+      line: getCSSProperty(element, '--tutor-border-brand'),
+      point: getCSSProperty(element, '--tutor-actions-brand-primary'),
+      pointBorder: getCSSProperty(element, '--tutor-actions-brand-secondary'),
+      linearGradient: ['#5E81F4', '#FFFFFF'],
+    },
+    enrolled: {
+      line: getCSSProperty(element, '--tutor-border-success'),
+      point: getCSSProperty(element, '--tutor-actions-success-primary'),
+      pointBorder: getCSSProperty(element, '--tutor-actions-success-secondary'),
+      linearGradient: ['#8AF1B9', '#FFFFFF'],
+    },
+    tooltip: {
+      background: getCSSProperty(element, '--tutor-surface-l1'),
+      title: getCSSProperty(element, '--tutor-text-subdued'),
+      subtitle: getCSSProperty(element, '--tutor-text-primary'),
+    },
+    ticks: {
+      color: getCSSProperty(element, '--tutor-text-subdued'),
+    },
+    border: getCSSProperty(element, '--tutor-border-idle'),
+  };
+};
+
+const extractCompletionChartColors = (element: HTMLElement) => {
+  return {
+    enrolled: getCSSProperty(element, '--tutor-actions-exception5'),
+    completed: getCSSProperty(element, '--tutor-actions-success-primary'),
+    in_progress: getCSSProperty(element, '--tutor-button-caution'),
+    inactive: getCSSProperty(element, '--tutor-surface-l2-hover'),
+    cancelled: getCSSProperty(element, '--tutor-actions-critical-primary'),
+  };
+};
+
+// ============================================================================
+// Gradient Creation
+// ============================================================================
+
 const createLinearGradient = (
   ctx: CanvasRenderingContext2D,
   chartArea: { top: number; bottom: number },
   colorTop: string,
   colorBottom: string = '#FFFFFF',
-  topOffset: number = -0.95,
-  opacity: number = 0.9,
 ): CanvasGradient => {
   const height = chartArea.bottom - chartArea.top;
-  const adjustedTop = chartArea.top + height * topOffset;
+  const adjustedTop = chartArea.top + height * CHART_CONFIG.gradient.topOffset;
   const gradient = ctx.createLinearGradient(0, adjustedTop, 0, chartArea.bottom);
 
-  gradient.addColorStop(0, hexToRgba(colorTop, opacity));
+  gradient.addColorStop(0, hexToRgba(colorTop, CHART_CONFIG.gradient.opacity));
   gradient.addColorStop(1, hexToRgba(colorBottom, 0));
   return gradient;
 };
+
+// ============================================================================
+// Tooltip Functions
+// ============================================================================
 
 const createTooltipElement = (): HTMLDivElement => {
   const tooltipEl = document.createElement('div');
@@ -162,8 +234,8 @@ const createTooltipHeader = (titleLines: string[], colors: OverviewChartColors):
     const th = document.createElement('th');
     Object.assign(th.style, {
       borderWidth: '0',
-      fontSize: '10px',
-      lineHeight: '1.6',
+      fontSize: CHART_CONFIG.tooltip.fontSize,
+      lineHeight: CHART_CONFIG.tooltip.lineHeight,
       fontWeight: 'normal',
       color: colors.tooltip.title,
       marginBottom: '4px',
@@ -191,8 +263,8 @@ const createTooltipBody = (bodyLines: string[][], colors: OverviewChartColors): 
     const td = document.createElement('td');
     Object.assign(td.style, {
       borderWidth: '0',
-      fontSize: '10px',
-      lineHeight: '1.6',
+      fontSize: CHART_CONFIG.tooltip.fontSize,
+      lineHeight: CHART_CONFIG.tooltip.lineHeight,
       fontWeight: 'bold',
       color: colors.tooltip.subtitle,
       textAlign: 'start',
@@ -209,10 +281,10 @@ const createTooltipBody = (bodyLines: string[][], colors: OverviewChartColors): 
 const styleTooltipTable = (table: HTMLTableElement, colors: OverviewChartColors): void => {
   Object.assign(table.style, {
     background: colors.tooltip.background,
-    borderRadius: '4px',
-    padding: '4px 7px',
-    minWidth: '70px',
-    boxShadow: '0px 2px 4px -2px #1018280F, 0px 4px 8px -2px #1018281A',
+    borderRadius: CHART_CONFIG.tooltip.borderRadius,
+    padding: CHART_CONFIG.tooltip.padding,
+    minWidth: CHART_CONFIG.tooltip.minWidth,
+    boxShadow: CHART_CONFIG.tooltip.boxShadow,
     position: 'relative',
     direction: 'inherit',
   });
@@ -221,18 +293,20 @@ const styleTooltipTable = (table: HTMLTableElement, colors: OverviewChartColors)
 const addCaretToTable = (table: HTMLTableElement, colors: OverviewChartColors): void => {
   table.querySelectorAll('[data-caret]').forEach((el) => el.remove());
 
+  const { caretSize, caretInnerSize } = CHART_CONFIG.tooltip;
+
   const caret = document.createElement('div');
   caret.setAttribute('data-caret', 'outer');
   Object.assign(caret.style, {
     position: 'absolute',
-    left: '-6px',
+    left: `-${caretSize}px`,
     top: '50%',
     transform: 'translateY(-50%)',
     width: '0',
     height: '0',
-    borderTop: '6px solid transparent',
-    borderBottom: '6px solid transparent',
-    borderRight: '6px solid transparent',
+    borderTop: `${caretSize}px solid transparent`,
+    borderBottom: `${caretSize}px solid transparent`,
+    borderRight: `${caretSize}px solid transparent`,
     zIndex: '1',
   });
 
@@ -245,9 +319,9 @@ const addCaretToTable = (table: HTMLTableElement, colors: OverviewChartColors): 
     transform: 'translateY(-50%)',
     width: '0',
     height: '0',
-    borderTop: '5px solid transparent',
-    borderBottom: '5px solid transparent',
-    borderRight: `5px solid ${colors.tooltip.background}`,
+    borderTop: `${caretInnerSize}px solid transparent`,
+    borderBottom: `${caretInnerSize}px solid transparent`,
+    borderRight: `${caretInnerSize}px solid ${colors.tooltip.background}`,
     zIndex: '2',
   });
 
@@ -288,19 +362,9 @@ const handleTooltip = (context: { chart: Chart; tooltip: TooltipModel<'line'> },
   const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
   Object.assign(tooltipEl.style, {
     opacity: '1',
-    left: `${positionX + tooltip.caretX + 12}px`,
+    left: `${positionX + tooltip.caretX + CHART_CONFIG.tooltip.offsetX}px`,
     top: `${positionY + tooltip.caretY}px`,
     transform: 'translate(0, -50%)',
-  });
-};
-
-const isEndPoint = (index: number, dataLength: number): boolean => {
-  return index === 0 || index === dataLength - 1;
-};
-
-const calculatePointRadii = (dataLength: number): number[] => {
-  return Array.from({ length: dataLength }, (_, index) => {
-    return isEndPoint(index, dataLength) ? 0 : POINT_STYLE.RADIUS;
   });
 };
 
@@ -320,8 +384,8 @@ const statCard = (data: number[]) => ({
   },
 
   setupCanvas() {
-    this.$refs.canvas.setAttribute('height', CANVAS_CONFIG.STAT_CARD_HEIGHT);
-    this.$refs.canvas.setAttribute('width', CANVAS_CONFIG.WIDTH);
+    this.$refs.canvas.setAttribute('height', CHART_CONFIG.canvas.statCardHeight);
+    this.$refs.canvas.setAttribute('width', CHART_CONFIG.canvas.width);
   },
 
   createChartConfig(data: number[], colors: ChartColors): ChartConfiguration<'line'> {
@@ -336,11 +400,11 @@ const statCard = (data: number[]) => ({
             type: 'line',
             data,
             borderWidth: 1,
-            tension: CHART_STYLE.TENSION,
+            tension: CHART_CONFIG.line.tension,
             pointRadius: pointRadii,
             pointBackgroundColor: colors.point,
             pointHoverRadius: pointRadii,
-            pointBorderWidth: POINT_STYLE.BORDER_WIDTH,
+            pointBorderWidth: CHART_CONFIG.point.borderWidth,
             pointBorderColor: colors.pointBorder,
             borderColor: colors.line,
             backgroundColor: colors.line,
@@ -348,26 +412,21 @@ const statCard = (data: number[]) => ({
         ],
       },
       options: {
-        devicePixelRatio: window.devicePixelRatio || 2,
-        responsive: true,
+        devicePixelRatio: CHART_CONFIG.common.devicePixelRatio(),
+        responsive: CHART_CONFIG.common.responsive,
         maintainAspectRatio: false,
         plugins: {
-          legend: { display: false },
-          tooltip: { enabled: false },
+          legend: CHART_CONFIG.common.hiddenLegend,
+          tooltip: CHART_CONFIG.common.disabledTooltip,
         },
         scales: {
-          x: { display: false, grid: { display: false } },
-          y: { display: false, grid: { display: false } },
+          x: CHART_CONFIG.common.hiddenAxis,
+          y: CHART_CONFIG.common.hiddenAxis,
         },
       },
     };
   },
 });
-
-const statCardMeta = {
-  name: 'statCard',
-  component: statCard,
-};
 
 const overviewChart = (data: OverviewChartProps) => ({
   $el: null as HTMLDivElement | null,
@@ -375,9 +434,6 @@ const overviewChart = (data: OverviewChartProps) => ({
   colors: null as OverviewChartColors | null,
 
   init() {
-    if (this.$el) {
-      this.$el.style.maxHeight = `250px`;
-    }
     if (!this.$refs.canvas) {
       return;
     }
@@ -390,12 +446,12 @@ const overviewChart = (data: OverviewChartProps) => ({
   },
 
   setupCanvas() {
-    this.$refs.canvas.style.maxHeight = `${CANVAS_CONFIG.OVERVIEW_MAX_HEIGHT}px`;
-    this.$refs.canvas.setAttribute('width', CANVAS_CONFIG.WIDTH);
+    this.$refs.canvas.style.maxHeight = `${CHART_CONFIG.canvas.overviewMaxHeight}px`;
+    this.$refs.canvas.setAttribute('width', CHART_CONFIG.canvas.width);
   },
 
   getPointRadius(context: ScriptableContext<'line'>, dataLength: number): number {
-    return isEndPoint(context.dataIndex, dataLength) ? 0 : POINT_STYLE.HOVER_RADIUS;
+    return isEndPoint(context.dataIndex, dataLength) ? 0 : CHART_CONFIG.point.hoverRadius;
   },
 
   getPointHoverColor(
@@ -431,19 +487,19 @@ const overviewChart = (data: OverviewChartProps) => ({
 
         return createLinearGradient(ctx, chartArea, colors.linearGradient[0], colors.linearGradient[1]);
       },
-      borderWidth: CHART_STYLE.LINE_WIDTH,
-      tension: CHART_STYLE.TENSION,
+      borderWidth: CHART_CONFIG.line.width,
+      tension: CHART_CONFIG.line.tension,
       fill: true,
       pointRadius: (context: ScriptableContext<'line'>) => this.getPointRadius(context, dataLength),
       pointBackgroundColor: 'transparent',
       pointBorderColor: 'transparent',
-      pointBorderWidth: POINT_STYLE.HOVER_BORDER_WIDTH,
-      pointHoverRadius: POINT_STYLE.HOVER_RADIUS,
+      pointBorderWidth: CHART_CONFIG.point.hoverBorderWidth,
+      pointHoverRadius: CHART_CONFIG.point.hoverRadius,
       pointHoverBackgroundColor: (context: ScriptableContext<'line'>) =>
         this.getPointHoverColor(context, dataLength, allColors, 'point'),
       pointHoverBorderColor: (context: ScriptableContext<'line'>) =>
         this.getPointHoverColor(context, dataLength, allColors, 'pointBorder'),
-      pointHoverBorderWidth: POINT_STYLE.HOVER_BORDER_WIDTH,
+      pointHoverBorderWidth: CHART_CONFIG.point.hoverBorderWidth,
     };
   },
 
@@ -460,14 +516,14 @@ const overviewChart = (data: OverviewChartProps) => ({
         ],
       },
       options: {
-        devicePixelRatio: window.devicePixelRatio || 2,
-        aspectRatio: CANVAS_CONFIG.ASPECT_RATIO,
+        devicePixelRatio: CHART_CONFIG.common.devicePixelRatio(),
+        aspectRatio: CHART_CONFIG.aspectRatio.overview,
         interaction: {
           mode: 'nearest',
           intersect: true,
         },
         plugins: {
-          legend: { display: false },
+          legend: CHART_CONFIG.common.hiddenLegend,
           tooltip: {
             enabled: false,
             position: 'nearest',
@@ -477,7 +533,6 @@ const overviewChart = (data: OverviewChartProps) => ({
               label: (context) => {
                 const value = context.parsed.y;
                 if (value === null) return '';
-                // Format earnings (dataset 0) with currency, enrolled (dataset 1) as plain number
                 return context.datasetIndex === 0 ? formatPrice(value) : value.toString();
               },
             },
@@ -516,18 +571,102 @@ const overviewChart = (data: OverviewChartProps) => ({
   },
 });
 
+const courseCompletionChart = (data: CourseCompletionChartData) => ({
+  $el: null as HTMLDivElement | null,
+  $refs: {} as { canvas: HTMLCanvasElement },
+
+  init() {
+    if (!this.$refs.canvas) {
+      return;
+    }
+
+    this.setupCanvas();
+    const chartConfig = this.createChartConfig(data);
+    new Chart(this.$refs.canvas, chartConfig);
+  },
+
+  setupCanvas() {
+    this.$refs.canvas.style.maxHeight = `${CHART_CONFIG.canvas.completionMaxHeight}px`;
+    this.$refs.canvas.setAttribute('width', CHART_CONFIG.canvas.width);
+  },
+
+  createChartConfig(data: CourseCompletionChartData): ChartConfiguration<'bar'> {
+    const colors = extractCompletionChartColors(this.$refs.canvas);
+
+    const chartData = [
+      data.enrolled.value,
+      data.completed.value,
+      data.in_progress.value,
+      data.inactive.value,
+      data.cancelled.value,
+    ];
+
+    const chartColors = [colors.enrolled, colors.completed, colors.in_progress, colors.inactive, colors.cancelled];
+
+    return {
+      type: 'bar',
+      data: {
+        labels: [''],
+        datasets: chartData.map((value, index) => ({
+          data: [value],
+          backgroundColor: chartColors[index],
+          barThickness: CHART_CONFIG.bar.thickness,
+          borderRadius: {
+            bottomLeft: index === 0 ? CHART_CONFIG.bar.borderRadius : 0,
+            topLeft: index === 0 ? CHART_CONFIG.bar.borderRadius : 0,
+            bottomRight: index === chartData.length - 1 ? CHART_CONFIG.bar.borderRadius : 0,
+            topRight: index === chartData.length - 1 ? CHART_CONFIG.bar.borderRadius : 0,
+          },
+          borderSkipped: false,
+          borderWidth: {
+            right: index === chartData.length - 1 ? 0 : CHART_CONFIG.bar.borderWidth,
+          },
+          borderColor: getCSSProperty(this.$refs.canvas, '--tutor-surface-l1'),
+        })),
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: CHART_CONFIG.common.responsive,
+        maintainAspectRatio: false,
+        devicePixelRatio: CHART_CONFIG.common.devicePixelRatio(),
+        plugins: {
+          legend: CHART_CONFIG.common.hiddenLegend,
+          tooltip: CHART_CONFIG.common.disabledTooltip,
+        },
+        scales: {
+          x: {
+            stacked: true,
+            ...CHART_CONFIG.common.hiddenAxis,
+          },
+          y: {
+            stacked: true,
+            ...CHART_CONFIG.common.hiddenAxis,
+          },
+        },
+      },
+    };
+  },
+});
+
+const statCardMeta = {
+  name: 'statCard',
+  component: statCard,
+};
+
 const overviewChartMeta = {
   name: 'overviewChart',
   component: overviewChart,
 };
 
+const courseCompletionChartMeta = {
+  name: 'courseCompletionChart',
+  component: courseCompletionChart,
+};
+
 export const initializeHome = () => {
   TutorComponentRegistry.registerAll({
-    components: [overviewChartMeta, statCardMeta],
+    components: [courseCompletionChartMeta, overviewChartMeta, statCardMeta],
   });
 
-  TutorComponentRegistry.initWithAlpine(Alpine);
-
-  // eslint-disable-next-line no-console
-  console.log('Dashboard home page initialized');
+  TutorComponentRegistry.initWithAlpine(window.Alpine);
 };

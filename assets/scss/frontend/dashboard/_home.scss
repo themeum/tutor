@@ -38,5 +38,74 @@
         background-color: $tutor-actions-success-primary;
       }
     }
+
+    &[data-stacked='true'] {
+      padding: $tutor-spacing-6;
+
+      canvas {
+        margin-top: $tutor-spacing-13;
+        max-height: 60px;
+      }
+
+      .tutor-dashboard-home-chart-legend {
+        @include tutor-flex(row, start);
+        @include tutor-typography('tiny', 'regular', 'subdued');
+        gap: $tutor-spacing-2;
+
+        &::before {
+          content: '';
+          height: 12px;
+          width: 12px;
+          aspect-ratio: 1;
+          margin-top: $tutor-spacing-2;
+          border-radius: $tutor-radius-sm;
+        }
+
+        &[data-color='enrolled']::before {
+          background-color: $tutor-actions-exception5;
+        }
+
+        &[data-color='completed']::before {
+          background-color: $tutor-actions-success-primary;
+        }
+
+        &[data-color='in_progress']::before {
+          background-color: $tutor-button-caution;
+        }
+
+        &[data-color='inactive']::before {
+          background-color: $tutor-surface-l2-hover;
+        }
+
+        &[data-color='cancelled']::before {
+          background-color: $tutor-actions-critical-primary;
+        }
+      }
+    }
+  }
+
+  &-leaderboard {
+    @include tutor-card-base;
+    @include tutor-card-radius(2xl);
+    @include tutor-flex(column);
+    padding: $tutor-spacing-6;
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+      padding: $tutor-spacing-6;
+    }
+
+    &-body {
+      @include tutor-flex(column, center);
+      gap: $tutor-spacing-5;
+    }
+
+    &-item {
+      @include tutor-flex(row, center);
+      @include tutor-typography('tiny', 'regular', 'subdued');
+      gap: $tutor-spacing-2;
+      padding: $tutor-spacing-2 $tutor-spacing-6;
+      border-radius: $tutor-radius-sm;
+    }
   }
 }
