@@ -160,10 +160,6 @@ const extractCompletionChartColors = (element: HTMLElement) => {
   };
 };
 
-// ============================================================================
-// Gradient Creation
-// ============================================================================
-
 const createLinearGradient = (
   ctx: CanvasRenderingContext2D,
   chartArea: { top: number; bottom: number },
@@ -178,10 +174,6 @@ const createLinearGradient = (
   gradient.addColorStop(1, hexToRgba(colorBottom, 0));
   return gradient;
 };
-
-// ============================================================================
-// Tooltip Functions
-// ============================================================================
 
 const createTooltipElement = (): HTMLDivElement => {
   const tooltipEl = document.createElement('div');
@@ -636,6 +628,7 @@ const courseCompletionChart = (data: CourseCompletionChartData) => ({
         scales: {
           x: {
             stacked: true,
+            max: chartData.reduce((sum, value) => sum + value, 0),
             ...CHART_CONFIG.common.hiddenAxis,
           },
           y: {

@@ -224,17 +224,17 @@ $leaderboard_data = array(
 										<?php
 										printf(
 											// translators: %s: Number of courses.
-											esc_html__( '%s Courses', 'tutor' ),
+											esc_html__( '%s courses', 'tutor' ),
 											esc_html( $item['no_of_courses'] )
 										);
 										?>
 									</span>
-									<span class="tutor-text-subdued">•</span>
+									<span class="tutor-text-subdued tutor-mx-2">•</span>
 									<span class="tutor-text-success">
 										<?php
 										printf(
 											// translators: %s: Completion percentage.
-											esc_html__( '%s Completion', 'tutor' ),
+											esc_html__( '%s completion', 'tutor' ),
 											esc_html( $item['completion_percentage'] . '%' )
 										);
 										?>
