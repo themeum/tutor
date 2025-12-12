@@ -1,51 +1,50 @@
 // Toast Component
-// RTL-aware toast notifications with positioning, stacking, and animations
 
 @use '../mixins' as *;
-@use '../mixins/rtl' as rtl;
+@use '../tokens' as *;
 
 .tutor-toast-container {
   position: fixed;
   z-index: 1080;
   pointer-events: none;
-  
+
   // Position variants
-  &--top-right {
-    top: var(--tutor-spacing-6, 16px);
-    @include rtl.right(var(--tutor-spacing-6, 16px));
+  &-top-right {
+    top: $tutor-spacing-6;
+    inset-inline-end: $tutor-spacing-6;
   }
-  
-  &--top-left {
-    top: var(--tutor-spacing-6, 16px);
-    @include rtl.left(var(--tutor-spacing-6, 16px));
+
+  &-top-left {
+    top: $tutor-spacing-6;
+    inset-inline-start: $tutor-spacing-6;
   }
-  
-  &--top-center {
-    top: var(--tutor-spacing-6, 16px);
+
+  &-top-center {
+    top: $tutor-spacing-6;
     left: 50%;
     transform: translateX(-50%);
   }
-  
-  &--bottom-right {
-    bottom: var(--tutor-spacing-6, 16px);
-    @include rtl.right(var(--tutor-spacing-6, 16px));
+
+  &-bottom-right {
+    bottom: $tutor-spacing-6;
+    inset-inline-end: $tutor-spacing-6;
   }
-  
-  &--bottom-left {
-    bottom: var(--tutor-spacing-6, 16px);
-    @include rtl.left(var(--tutor-spacing-6, 16px));
+
+  &-bottom-left {
+    bottom: $tutor-spacing-6;
+    inset-inline-start: $tutor-spacing-6;
   }
-  
-  &--bottom-center {
-    bottom: var(--tutor-spacing-6, 16px);
+
+  &-bottom-center {
+    bottom: $tutor-spacing-6;
     left: 50%;
     transform: translateX(-50%);
   }
-  
+
   // Stacking
   .tutor-toast {
-    margin-bottom: var(--tutor-spacing-3, 6px);
-    
+    margin-bottom: $tutor-spacing-4;
+
     &:last-child {
       margin-bottom: 0;
     }
@@ -53,381 +52,127 @@
 }
 
 .tutor-toast {
-  @include tutor-flex(row, flex-start, flex-start);
+  @include tutor-flex(row, center, flex-start);
+  gap: $tutor-spacing-4;
   min-width: 300px;
   max-width: 400px;
-  padding: var(--tutor-spacing-4, 8px);
-  background-color: var(--tutor-surface-l1);
-  border: 1px solid var(--tutor-border-idle);
-  border-radius: 9999px;
-  box-shadow: var(--tutor-shadow-lg);
+  padding: $tutor-spacing-5 $tutor-spacing-6;
+  border-radius: $tutor-radius-full;
   pointer-events: auto;
   position: relative;
-  
+
   // RTL support
-  [dir="rtl"] & {
+  [dir='rtl'] & {
     flex-direction: row-reverse;
   }
-  
-  &__icon {
+
+  &-icon {
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     @include tutor-flex(row, center, center);
     border-radius: 50%;
-    @include rtl.margin-end(var(--tutor-spacing-3, 6px));
-    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
-    
-    svg {
-      width: 16px;
-      height: 16px;
-    }
+    color: $tutor-icon-idle-inverse;
   }
-  
-  &__content {
+
+  &-content {
     flex: 1;
     min-width: 0;
   }
-  
-  &__title {
-    margin: 0 0 var(--tutor-spacing-1, 2px);
-    font-size: var(--tutor-font-size-p1, 16px);
-    font-weight: var(--tutor-font-weight-semibold, 600);
-    color: var(--tutor-text-primary);
-    line-height: var(--tutor-line-height-p1, 22px);
-    
-    @include rtl.text-align-start();
+
+  &-title {
+    @include tutor-typography(medium, medium);
   }
-  
-  &__message {
-    margin: 0;
-    font-size: var(--tutor-font-size-p2, 14px);
-    color: var(--tutor-text-secondary);
-    line-height: var(--tutor-line-height-p2, 18px);
-    
-    @include rtl.text-align-start();
+
+  &-message {
+    @include tutor-typography(tiny, regular, secondary);
   }
-  
-  &__close {
-    position: absolute;
-    top: var(--tutor-spacing-2, 4px);
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    border: none;
-    background: none;
-    border-radius: var(--tutor-radius-sm, 4px);
-    color: var(--tutor-icon-idle);
-    cursor: pointer;
-    transition: all 0.2s ease;
+
+  &-close {
+    @include tutor-button-reset();
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    color: $tutor-icon-idle;
     flex-shrink: 0;
-    
-    @include rtl.right(var(--tutor-spacing-2, 4px));
-    
-    &:hover,
-    &:focus {
-      background-color: var(--tutor-surface-l2);
-      color: var(--tutor-icon-hover);
-      outline: none;
-    }
-    
-    .tutor-icon {
-      width: 14px;
-      height: 14px;
-    }
   }
-  
-  &__actions {
-    @include tutor-flex(row, center, flex-end);
-    gap: var(--tutor-spacing-2, 4px);
-    margin-top: var(--tutor-spacing-3, 6px);
-    
-    [dir="rtl"] & {
-      justify-content: flex-start;
-      flex-direction: row-reverse;
-    }
-  }
-  
-  // Progress bar for auto-dismiss
-  &__progress {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background-color: var(--tutor-surface-l2);
-    overflow: hidden;
-    
-    &-bar {
-      height: 100%;
-      background-color: var(--tutor-border-brand);
-      transition: width linear;
-      width: 100%;
-      
-      &--animate {
-        animation: tutor-toast-progress linear forwards;
-      }
-    }
-  }
-  
+
   // Type variants
-  &--success {
-    border-color: var(--tutor-success);
-    
-    .tutor-toast__icon {
-      color: var(--tutor-success);
-      background-color: rgba(var(--tutor-success-rgb, 34, 197, 94), 0.1);
-    }
-    
-    .tutor-toast__progress-bar {
-      background-color: var(--tutor-success);
-    }
-  }
-  
-  &--warning {
-    border-color: var(--tutor-warning);
-    
-    .tutor-toast__icon {
-      color: var(--tutor-warning);
-      background-color: rgba(var(--tutor-warning-rgb, 251, 146, 60), 0.1);
-    }
-    
-    .tutor-toast__progress-bar {
-      background-color: var(--tutor-warning);
-    }
-  }
-  
-  &--error {
-    border-color: var(--tutor-error);
-    
-    .tutor-toast__icon {
-      color: var(--tutor-error);
-      background-color: rgba(var(--tutor-error-rgb, 239, 68, 68), 0.1);
-    }
-    
-    .tutor-toast__progress-bar {
-      background-color: var(--tutor-error);
-    }
-  }
-  
-  &--info {
-    border-color: var(--tutor-brand-600);
-    
-    .tutor-toast__icon {
-      color: var(--tutor-brand-600);
-      background-color: rgba(var(--tutor-brand-600-rgb, 37, 99, 235), 0.1);
-    }
-    
-    .tutor-toast__progress-bar {
-      background-color: var(--tutor-brand-600);
-    }
-  }
-  
-  // Filled variants
-  &--success-filled {
-    background-color: var(--tutor-success);
-    border-color: var(--tutor-success);
-    color: white;
-    
-    .tutor-toast__title,
-    .tutor-toast__message {
-      color: white;
-    }
-    
-    .tutor-toast__icon,
-    .tutor-toast__close {
-      color: white;
-    }
-    
-    .tutor-toast__close:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  &--warning-filled {
-    background-color: var(--tutor-warning);
-    border-color: var(--tutor-warning);
-    color: white;
-    
-    .tutor-toast__title,
-    .tutor-toast__message {
-      color: white;
-    }
-    
-    .tutor-toast__icon,
-    .tutor-toast__close {
-      color: white;
-    }
-    
-    .tutor-toast__close:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  &--error-filled {
-    background-color: var(--tutor-error);
-    border-color: var(--tutor-error);
-    color: white;
-    
-    .tutor-toast__title,
-    .tutor-toast__message {
-      color: white;
-    }
-    
-    .tutor-toast__icon,
-    .tutor-toast__close {
-      color: white;
-    }
-    
-    .tutor-toast__close:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-  
-  &--info-filled {
-    background-color: var(--tutor-brand-600);
-    border-color: var(--tutor-brand-600);
-    color: white;
-    
-    .tutor-toast__title,
-    .tutor-toast__message {
-      color: white;
-    }
-    
-    .tutor-toast__icon,
-    .tutor-toast__close {
-      color: white;
-    }
-    
-    .tutor-toast__close:hover {
-      background-color: rgba(255, 255, 255, 0.1);
-    }
-  }
-}
+  &-success {
+    background-color: $tutor-actions-success-tertiary;
 
-// Animation classes for Alpine.js
-.tutor-toast {
-  &[x-cloak] {
-    display: none !important;
-  }
-  
-  // Slide in from right (for right-positioned toasts)
-  &.tutor-toast-enter-right {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  
-  &.tutor-toast-enter-active-right {
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  
-  &.tutor-toast-leave-right {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  
-  &.tutor-toast-leave-active-right {
-    opacity: 0;
-    transform: translateX(100%);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-  }
-  
-  // Slide in from left (for left-positioned toasts)
-  &.tutor-toast-enter-left {
-    opacity: 0;
-    transform: translateX(-100%);
-  }
-  
-  &.tutor-toast-enter-active-left {
-    opacity: 1;
-    transform: translateX(0);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  
-  &.tutor-toast-leave-left {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  
-  &.tutor-toast-leave-active-left {
-    opacity: 0;
-    transform: translateX(-100%);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-  }
-  
-  // Slide in from top (for top-positioned toasts)
-  &.tutor-toast-enter-top {
-    opacity: 0;
-    transform: translateY(-100%);
-  }
-  
-  &.tutor-toast-enter-active-top {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  
-  &.tutor-toast-leave-top {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  &.tutor-toast-leave-active-top {
-    opacity: 0;
-    transform: translateY(-100%);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-  }
-  
-  // Slide in from bottom (for bottom-positioned toasts)
-  &.tutor-toast-enter-bottom {
-    opacity: 0;
-    transform: translateY(100%);
-  }
-  
-  &.tutor-toast-enter-active-bottom {
-    opacity: 1;
-    transform: translateY(0);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-  }
-  
-  &.tutor-toast-leave-bottom {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  &.tutor-toast-leave-active-bottom {
-    opacity: 0;
-    transform: translateY(100%);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-  }
-}
+    .tutor-toast-icon {
+      background-color: $tutor-actions-success-primary;
+      box-shadow:
+        0px 0px 0px 2px #36cf4224,
+        0px 1px 2px 0px #1018280f,
+        0px 1px 3px 0px #1018281a;
+    }
 
-// Progress bar animation
-@keyframes tutor-toast-progress {
-  from {
-    width: 100%;
+    .tutor-toast-title {
+      color: $tutor-text-success;
+    }
   }
-  to {
-    width: 0%;
+
+  &-warning {
+    background-color: $tutor-actions-warning-tertiary;
+
+    .tutor-toast-icon {
+      background-color: $tutor-button-caution;
+      box-shadow:
+        0px 0px 0px 2px #dee52624,
+        0px 1px 2px 0px #1018280f,
+        0px 1px 3px 0px #1018281a;
+    }
+
+    .tutor-toast-title {
+      color: $tutor-text-caution;
+    }
+  }
+
+  &-error {
+    background-color: $tutor-button-destructive-soft;
+
+    .tutor-toast-icon {
+      background-color: $tutor-button-destructive;
+      box-shadow:
+        0px 0px 0px 2px #f044383d,
+        0px 1px 2px 0px #1018280d;
+    }
+
+    .tutor-toast-title {
+      color: $tutor-text-critical;
+    }
+  }
+
+  &-info {
+    background-color: $tutor-button-primary-soft-focused;
+
+    .tutor-toast-icon {
+      background-color: $tutor-surface-brand-primary;
+      box-shadow: 0px 0px 0px 2px #90a0f7;
+    }
+
+    .tutor-toast-title {
+      color: $tutor-text-brand;
+    }
   }
 }
 
 // Responsive adjustments
 @media (max-width: 576px) {
   .tutor-toast-container {
-    left: var(--tutor-spacing-4, 8px) !important;
-    right: var(--tutor-spacing-4, 8px) !important;
+    left: $tutor-spacing-4 !important;
+    right: $tutor-spacing-4 !important;
     transform: none !important;
-    
-    &--top-center,
-    &--bottom-center {
-      left: var(--tutor-spacing-4, 8px);
-      right: var(--tutor-spacing-4, 8px);
+
+    &-top-center,
+    &-bottom-center {
+      left: $tutor-spacing-4;
+      right: $tutor-spacing-4;
     }
   }
-  
+
   .tutor-toast {
     min-width: auto;
     max-width: none;
