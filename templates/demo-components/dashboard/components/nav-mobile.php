@@ -71,7 +71,7 @@ $active_nav = 'profile';
 							alt="<?php echo esc_attr( $item['title'] ); ?>" 
 							width="20" 
 							height="20" 
-							class="tutor-rounded-full <?php echo ( $key === $active_nav ) ? 'tutor-border tutor-border-brand' : ''; ?>"
+							class="tutor-avatar tutor-avatar-20 <?php echo ( $key === $active_nav ) ? 'tutor-border tutor-border-brand' : ''; ?>"
 						>
 					<?php else : ?>
 						<?php tutor_utils()->render_svg_icon( ( $key === $active_nav ) ? $item['active_icon'] : $item['icon'], 20, 20 ); ?>

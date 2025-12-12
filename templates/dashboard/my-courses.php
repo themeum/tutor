@@ -46,6 +46,8 @@ $show_course_delete = true;
 $post_type_query    = Input::get( 'type', '' );
 $post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
 
+$current_url = add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( $active_tab ) );
+
 $nav_items = array(
 	array(
 		'type'    => 'dropdown',
@@ -82,7 +84,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 
 <div class="tutor-dashboard-my-courses" x-data="myCourses()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
-		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-p-6 tutor-border-b">
+		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-border-b">
 			<?php
 			tutor_load_template(
 				'core-components.nav',
@@ -106,7 +108,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				</button>
 			</div>
 		</div>
-		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-py-5 tutor-px-6 tutor-border-b">
+		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-py-5 tutor-px-6 tutor-border-b">
 			<div>
 				<div class="tutor-input-field">
 					<div class="tutor-input-wrapper">
@@ -160,7 +162,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			</div>
 		</div>
 
-		<div class="tutor-p-6 tutor-grid tutor-grid-cols-3 tutor-gap-4">
+		<div class="tutor-p-6 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
 			<?php
 			global $post;
 			$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
@@ -358,6 +360,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			// @TODO:: Need to update after pagination fixed.
 			if ( $count_map[ $status ] > $per_page ) {
 				Pagination::make()
+					->base( $current_url . '/' )
 					->current( $paged )
 					->total( $count_map[ $status ] )
 					->limit( $per_page )
