@@ -49,6 +49,7 @@ class Config extends Singleton {
 		$this->settings = array(
 			'path'                   => $path,
 			'url'                    => plugin_dir_url( TUTOR_FILE ),
+			'assets_url'             => plugin_dir_url( TUTOR_FILE ) . 'assets/',
 			'icon_dir'               => plugin_dir_url( TUTOR_FILE ) . 'assets/images/images-v2/icons/',
 			'v2_img_dir'             => plugin_dir_url( TUTOR_FILE ) . 'assets/images/images-v2/',
 			'current_url'            => $current_url,

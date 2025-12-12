@@ -2908,35 +2908,21 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 4.0.0 View mode added.
+	 *
 	 * @return mixed
 	 */
 	public function tutor_dashboard_pages() {
-		$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+		// @TODO need to make it dynamic with account view as mode.
+		$view_mode = 'student';
+		if ( User::is_admin() || User::is_instructor() ) {
+			$view_mode = 'instructor';
+		}
 
+		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
 
-		$nav_items = array_merge( $nav_items, $instructor_nav_items );
-
-		$new_navs      = apply_filters(
-			'tutor_dashboard/bottom_nav_items',
-			array(
-				'separator-2' => array(
-					'title' => '',
-					'type'  => 'separator',
-				),
-				'settings'    => array(
-					'title' => __( 'Settings', 'tutor' ),
-					'icon'  => 'tutor-icon-gear',
-				),
-				'logout'      => array(
-					'title' => __( 'Logout', 'tutor' ),
-					'icon'  => 'tutor-icon-signout',
-				),
-			)
-		);
-		$all_nav_items = array_merge( $nav_items, $new_navs );
-
-		return apply_filters( 'tutor_dashboard/nav_items_all', $all_nav_items );
+		return apply_filters( 'tutor_dashboard/nav_items_all', 'student' === $view_mode ? $student_nav_items : $instructor_nav_items );
 	}
 
 	/**
@@ -5512,6 +5498,38 @@ class Utils {
 		$page_id = (int) $this->get_option( 'tutor_dashboard_page_id' );
 		$page_id = apply_filters( 'tutor_dashboard_page_id', $page_id );
 		return $page_id;
+	}
+
+	/**
+	 * Check if the current page is frontend dashboard or the subpage
+	 * is the part of dashboard
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_dashboard_page(): bool {
+		$current_id        = get_the_ID();
+		$dashboard_page_id = $this->dashboard_page_id();
+
+		return apply_filters(
+			'tutor_is_dashboard_page',
+			( $current_id && $dashboard_page_id ) && $current_id === $dashboard_page_id,
+			$current_id,
+			$dashboard_page_id
+		);
+	}
+
+	/**
+	 * Check if the current page is the part of learning area
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_learning_area(): bool {
+		// @TODO.
+		return true;
 	}
 
 	/**
@@ -9371,11 +9389,17 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'separator-1'   => array(
-				'title'    => __( 'Instructor', 'tutor' ),
+			'index'   => array(
+				'title'    => __( 'Home', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'type'     => 'separator',
+				'icon'     => Icon::HOME_FILL,
 			),
+			'my-courses'    => array(
+				'title'    => __( 'Courses', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::COURSES,
+			),
+			// Hidden menu.
 			'create-course' => array(
 				'title'    => __( 'Create Course', 'tutor' ),
 				'show_ui'  => false,
@@ -9386,90 +9410,78 @@ class Utils {
 				'show_ui'  => false,
 				'auth_cap' => tutor()->instructor_role,
 			),
-			'my-courses'    => array(
-				'title'    => __( 'My Courses', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-rocket',
-			),
 		);
 
 		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
 
 		$other_menus = array(
-			'announcements' => array(
-				'title'    => __( 'Announcements', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-bullhorn',
-			),
-			'withdraw'      => array(
-				'title'    => __( 'Withdrawals', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-wallet',
-			),
 			'quiz-attempts' => array(
 				'title'    => __( 'Quiz Attempts', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => 'tutor-icon-quiz-o',
+				'icon'     => Icon::QUIZ,
+			),
+			'announcements' => array(
+				'title'    => __( 'Announcements', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::NOTIFICATION,
 			),
 		);
+		
+		if ( $this->should_show_dicussion_menu() ) {
+			$other_menus['discussions'] = array(
+				'title'    => __( 'Discussions', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QA,
+			);
+		}
 
-		return array_merge( $menus, $other_menus );
+		return apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
 	}
 
+	/**
+	 * Should show the disscussion menu on the student
+	 * and instructor dashboard menu
+	 * 
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function should_show_dicussion_menu(): bool {
+		$is_q_and_a_enabled        = tutor_utils()->get_option( 'enable_q_and_a_on_course', false );
+		$is_lesson_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson', false );
+
+		return $is_q_and_a_enabled || $is_lesson_comment_enabled;
+	}
 
 	/**
 	 * Separation of all menu items for providing ease of usage
 	 *
 	 * @since 2.0.0
 	 *
+	 * @since 4.0.0 Menu item updated based on student view
+	 *
 	 * @return array array of menu items.
 	 */
 	public function default_menus(): array {
 		$items = array(
 			'index'            => array(
-				'title' => __( 'Dashboard', 'tutor' ),
-				'icon'  => 'tutor-icon-dashboard',
-			),
-			'my-profile'       => array(
-				'title' => __( 'My Profile', 'tutor' ),
-				'icon'  => 'tutor-icon-user-bold',
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME_FILL,
 			),
 			'enrolled-courses' => array(
-				'title' => __( 'Enrolled Courses', 'tutor' ),
-				'icon'  => 'tutor-icon-mortarboard-o',
-			),
-			'reviews'          => array(
-				'title' => __( 'Reviews', 'tutor' ),
-				'icon'  => 'tutor-icon-star-bold',
-			),
-			'my-quiz-attempts' => array(
-				'title' => __( 'My Quiz Attempts', 'tutor' ),
-				'icon'  => 'tutor-icon-quiz-attempt',
+				'title' => __( 'Courses', 'tutor' ),
+				'icon'  => Icon::COURSES,
 			),
 		);
 
-		$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
-
-		if ( $is_enabled_wishlist ) {
-			$items['wishlist'] = array(
-				'title' => __( 'Wishlist', 'tutor' ),
-				'icon'  => 'tutor-icon-bookmark-bold',
+		if ( $this->should_show_dicussion_menu() ) {
+			$items['discussions'] = array(
+				'title' => __( 'Discussions', 'tutor' ),
+				'icon'  => Icon::QA,
 			);
 		}
 
-		$items['purchase_history'] = array(
-			'title' => __( 'Order History', 'tutor' ),
-			'icon'  => 'tutor-icon-cart-bold',
-		);
-
-		$items = apply_filters( 'tutor_after_order_history_menu', $items );
-
-		$items['question-answer'] = array(
-			'title' => __( 'Question & Answer', 'tutor' ),
-			'icon'  => 'tutor-icon-question',
-		);
-
-		return $items;
+		return apply_filters( 'tutor_student_dashboard_nav', $items );
 	}
 
 	/**
@@ -9721,24 +9733,46 @@ class Utils {
 	 * Get predefined icon
 	 *
 	 * @since 2.0.2
+	 * @since 4.0.0 param $name, $width, $height & $attributes added.
 	 *
 	 * @param string $name name.
+	 * @param int    $width the svg icon width.
+	 * @param int    $height the svg icon height.
+	 * @param array  $attributes svg attributes.
 	 *
 	 * @return string
 	 */
-	public function get_svg_icon( $name = '' ) {
+	public function get_svg_icon( $name = '', $width = 16, $height = 16,  $attributes = array() ) {
 
-		$json = tutor()->path . 'assets/images/icons.json';
-
-		if ( file_exists( $json ) ) {
-			$icons = json_decode( file_get_contents( $json ), true );
-			$icon  = isset( $icons[ $name ] ) ? $icons[ $name ] : '';
-
-			if ( isset( $icon['viewBox'] ) && isset( $icon['path'] ) ) {
-				$html = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="' . esc_attr( $icon['viewBox'] ) . '"><path fill="currentColor" d="' . esc_attr( $icon['path'] ) . '" /></svg>';
-				return $html;
-			}
+		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
+		if ( ! file_exists( $icon_path ) ) {
+			return;
 		}
+
+		$svg = file_get_contents( $icon_path );
+		if ( ! $svg ) {
+			return;
+		}
+
+		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
+		if ( ! $matches ) {
+			return;
+		}
+
+		list( $svg_tag, $view_box, $inner_svg ) = $matches;
+
+		$attr_string = sprintf(
+			'width="%d" height="%d" viewBox="%s" fill="none" role="presentation" aria-hidden="true"',
+			esc_attr( $width ),
+			esc_attr( $height ),
+			esc_attr( $view_box ),
+		);
+
+		foreach ( $attributes as $key => $value ) {
+			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+		}
+
+		return sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 
 	/**
