@@ -9733,24 +9733,46 @@ class Utils {
 	 * Get predefined icon
 	 *
 	 * @since 2.0.2
+	 * @since 4.0.0 param $name, $width, $height & $attributes added.
 	 *
 	 * @param string $name name.
+	 * @param int    $width the svg icon width.
+	 * @param int    $height the svg icon height.
+	 * @param array  $attributes svg attributes.
 	 *
 	 * @return string
 	 */
-	public function get_svg_icon( $name = '' ) {
+	public function get_svg_icon( $name = '', $width = 16, $height = 16,  $attributes = array() ) {
 
-		$json = tutor()->path . 'assets/images/icons.json';
-
-		if ( file_exists( $json ) ) {
-			$icons = json_decode( file_get_contents( $json ), true );
-			$icon  = isset( $icons[ $name ] ) ? $icons[ $name ] : '';
-
-			if ( isset( $icon['viewBox'] ) && isset( $icon['path'] ) ) {
-				$html = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="' . esc_attr( $icon['viewBox'] ) . '"><path fill="currentColor" d="' . esc_attr( $icon['path'] ) . '" /></svg>';
-				return $html;
-			}
+		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
+		if ( ! file_exists( $icon_path ) ) {
+			return;
 		}
+
+		$svg = file_get_contents( $icon_path );
+		if ( ! $svg ) {
+			return;
+		}
+
+		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
+		if ( ! $matches ) {
+			return;
+		}
+
+		list( $svg_tag, $view_box, $inner_svg ) = $matches;
+
+		$attr_string = sprintf(
+			'width="%d" height="%d" viewBox="%s" fill="none" role="presentation" aria-hidden="true"',
+			esc_attr( $width ),
+			esc_attr( $height ),
+			esc_attr( $view_box ),
+		);
+
+		foreach ( $attributes as $key => $value ) {
+			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
+		}
+
+		return sprintf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
 
 	/**
