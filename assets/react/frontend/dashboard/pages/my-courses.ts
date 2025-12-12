@@ -41,7 +41,7 @@ const myCoursesPage = () => {
      * Create course mutation function
      */
     createCourse() {
-      return wpAjaxInstance.post('tutor_create_new_draft_courses', {
+      return wpAjaxInstance.post('tutor_create_new_draft_course', {
         from_dashboard: true,
       });
     },

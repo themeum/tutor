@@ -9,6 +9,7 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\Pagination;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
@@ -37,8 +38,6 @@ $count_map = array(
 	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $post_type ),
 );
 
-$course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
-$courseCols         = null === $course_archive_arg ? tutor_utils()->get_option( 'courses_col_per_row', 4 ) : $course_archive_arg;
 $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
@@ -46,25 +45,6 @@ $results            = CourseModel::get_courses_by_instructor( $current_user_id, 
 $show_course_delete = true;
 $post_type_query    = Input::get( 'type', '' );
 $post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
-
-$tabs = array(
-	'publish' => array(
-		'title' => __( 'Publish', 'tutor' ),
-		'link'  => 'my-courses',
-	),
-	'pending' => array(
-		'title' => __( 'Pending', 'tutor' ),
-		'link'  => 'my-courses/pending-courses',
-	),
-	'draft'   => array(
-		'title' => __( 'Draft', 'tutor' ),
-		'link'  => 'my-courses/draft-courses',
-	),
-	'future'  => array(
-		'title' => __( 'Schedule', 'tutor' ),
-		'link'  => 'my-courses/schedule-courses',
-	),
-);
 
 $nav_items = array(
 	array(
@@ -186,11 +166,8 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
 			foreach ( $results as $post ) :
 				setup_postdata( $post );
-
 				$tutor_course_img   = get_tutor_course_thumbnail_src();
-				$id_string_delete   = 'tutor_my_courses_delete_' . $post->ID;
-				$row_id             = 'tutor-dashboard-my-course-' . $post->ID;
-				$course_duration    = get_tutor_course_duration_context( $post->ID, true );
+				$course_duration    = tutor_utils()->get_course_duration( $post->ID, false );
 				$course_students    = tutor_utils()->count_enrolled_users_by_course();
 				$is_main_instructor = CourseModel::is_main_instructor( $post->ID );
 				$course_edit_link   = apply_filters( 'tutor_dashboard_course_list_edit_link', tutor_utils()->course_edit_link( $post->ID, tutor()->has_pro ? 'frontend' : 'backend' ), $post );
@@ -233,8 +210,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 								<?php if ( ! empty( $course_duration ) ) : ?>
 								<div class="tutor-flex tutor-items-center tutor-gap-2">
 									<?php tutor_utils()->render_svg_icon( Icon::TIME, 14, 14 ); ?>
-									3h 30m
-									<?php // echo esc_html( $course_duration ); ?>
+									<?php echo esc_html( $course_duration ); ?>
 								</div>
 								<?php endif; ?>
 							</div>
@@ -378,34 +354,18 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		</div>
 
 		<div class="tutor-p-6">
-			<nav class="tutor-pagination" role="navigation" aria-label="Pagination Navigation">
-				<span class="tutor-pagination-info" aria-live="polite">
-					Page <span class="tutor-pagination-current">3</span> of <span class="tutor-pagination-total">12</span>
-				</span>
-
-				<ul class="tutor-pagination-list">
-					<li>
-						<a class="tutor-pagination-item tutor-pagination-item-prev" aria-label="Previous page" aria-disabled="true">
-							<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_LEFT_2 ); ?>
-						</a>
-					</li>
-
-					<li><a class="tutor-pagination-item">1</a></li>
-					<li>
-						<a class="tutor-pagination-item tutor-pagination-item-active" aria-current="page">2</a>
-					</li>
-					<li><a class="tutor-pagination-item">3</a></li>
-					<li><span class="tutor-pagination-ellipsis" aria-hidden="true">…</span></li>
-					<li><a class="tutor-pagination-item">6</a></li>
-					<li><a class="tutor-pagination-item">7</a></li>
-
-					<li>
-						<a class="tutor-pagination-item tutor-pagination-item-next" aria-label="Next page">
-							<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT_2 ); ?>
-						</a>
-					</li>
-				</ul>
-			</nav>
+			<?php
+			// @TODO:: Need to update after pagination fixed.
+			if ( $count_map[ $status ] > $per_page ) {
+				Pagination::make()
+					->current( $paged )
+					->total( $count_map[ $status ] )
+					->limit( $per_page )
+					->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+					->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+					->render();
+			}
+			?>
 		</div>
 	</div>
 
