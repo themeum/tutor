@@ -30,18 +30,21 @@ $status_map = array(
 $status    = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : CourseModel::STATUS_PUBLISH;
 $post_type = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );
 
+$order  = Input::get( 'order', 'DESC' );
+$search = Input::get( 'search', '' );
+
 // Get counts for course tabs.
 $count_map = array(
-	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $post_type ),
-	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $post_type ),
-	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $post_type ),
-	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $post_type ),
+	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $post_type, $search ),
+	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $post_type, $search ),
+	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $post_type, $search ),
+	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $post_type, $search ),
 );
 
 $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
-$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type );
+$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type, $search, $order );
 $show_course_delete = true;
 $post_type_query    = Input::get( 'type', '' );
 $post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
@@ -109,7 +112,23 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			</div>
 		</div>
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-py-5 tutor-px-6 tutor-border-b">
-			<div>
+			<form 
+				action="<?php echo esc_url( $current_url ); ?>" 
+				method="GET" 
+				id="tutor-my-courses-search-form"
+				x-data="tutorForm({ id: 'tutor-my-courses-search-form', mode: 'onSubmit' })"
+				x-bind="getFormBindings()"
+				@submit="handleSubmit(
+					(data) => { 
+						$el.submit();
+					}
+				)($event)"
+			>
+				<input type="hidden" name="paged" value="1">
+				<input type="hidden" name="order" value="<?php echo esc_attr( $order ); ?>">
+				<?php if ( ! empty( $post_type_query ) ) : ?>
+					<input type="hidden" name="type" value="<?php echo esc_attr( $post_type_query ); ?>">
+				<?php endif; ?>
 				<div class="tutor-input-field">
 					<div class="tutor-input-wrapper">
 						<div class="tutor-input-content tutor-input-content-left">
@@ -123,14 +142,28 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 							?>
 						</div>
 						<input 
-							type="text"
-							placeholder="Search courses..."
-							class="tutor-input tutor-input-sm tutor-input-content-left"
+							type="search"
+							name="search"
+							placeholder="<?php esc_attr_e( 'Search courses...', 'tutor' ); ?>"
+							class="tutor-input tutor-input-sm tutor-input-content-left tutor-input-content-clear"
 							style="width: 280px;"
+							x-bind="register('search')"
+							x-init="$nextTick(() => setValue('search', '<?php echo esc_attr( $search ); ?>'))"
+						/>
+
+						<button 
+							type="button"
+							class="tutor-input-clear-button"
+							x-show="values.search && String(values.search).length > 0"
+							x-cloak
+							aria-label="<?php esc_attr_e( 'Clear search', 'tutor' ); ?>"
+							@click="setValue('search', ''); $el.closest('form').submit();"
 						>
+							<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
+						</button>
 					</div>
 				</div>
-			</div>
+			</form>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
 				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
 				<div
@@ -150,10 +183,16 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						class="tutor-popover"
 					>
 						<div class="tutor-popover-menu" style="min-width: 108px;">
-							<a href="#" class="tutor-popover-menu-item">
+							<a 
+								href="<?php echo esc_attr( add_query_arg( 'order', 'DESC' ) ); ?>" 
+								class="tutor-popover-menu-item<?php echo esc_attr( 'DESC' === $order ? ' tutor-active' : '' ); ?>"
+							>
 								<?php esc_html_e( 'Newest First', 'tutor' ); ?>
 							</a>
-							<a href="#" class="tutor-popover-menu-item">
+							<a 
+								href="<?php echo esc_attr( add_query_arg( 'order', 'ASC' ) ); ?>" 
+								class="tutor-popover-menu-item<?php echo esc_attr( 'ASC' === $order ? ' tutor-active' : '' ); ?>"
+							>
 								<?php esc_html_e( 'Oldest First', 'tutor' ); ?>
 							</a>
 						</div>
