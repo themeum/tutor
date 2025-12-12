@@ -59,7 +59,7 @@
   padding: var(--tutor-spacing-4, 8px);
   background-color: var(--tutor-surface-l1);
   border: 1px solid var(--tutor-border-idle);
-  border-radius: var(--tutor-radius-lg, 8px);
+  border-radius: 9999px;
   box-shadow: var(--tutor-shadow-lg);
   pointer-events: auto;
   position: relative;
@@ -71,10 +71,17 @@
   
   &__icon {
     flex-shrink: 0;
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 32px;
+    @include tutor-flex(row, center, center);
+    border-radius: 50%;
     @include rtl.margin-end(var(--tutor-spacing-3, 6px));
-    margin-top: 2px;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    
+    svg {
+      width: 16px;
+      height: 16px;
+    }
   }
   
   &__content {
@@ -169,6 +176,7 @@
     
     .tutor-toast__icon {
       color: var(--tutor-success);
+      background-color: rgba(var(--tutor-success-rgb, 34, 197, 94), 0.1);
     }
     
     .tutor-toast__progress-bar {
@@ -181,6 +189,7 @@
     
     .tutor-toast__icon {
       color: var(--tutor-warning);
+      background-color: rgba(var(--tutor-warning-rgb, 251, 146, 60), 0.1);
     }
     
     .tutor-toast__progress-bar {
@@ -193,6 +202,7 @@
     
     .tutor-toast__icon {
       color: var(--tutor-error);
+      background-color: rgba(var(--tutor-error-rgb, 239, 68, 68), 0.1);
     }
     
     .tutor-toast__progress-bar {
@@ -205,6 +215,7 @@
     
     .tutor-toast__icon {
       color: var(--tutor-brand-600);
+      background-color: rgba(var(--tutor-brand-600-rgb, 37, 99, 235), 0.1);
     }
     
     .tutor-toast__progress-bar {

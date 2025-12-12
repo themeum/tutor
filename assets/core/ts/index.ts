@@ -18,10 +18,12 @@ import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
+import { toastMeta } from '@Core/ts/components/toast';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { queryServiceMeta } from '@Core/ts/services/Query';
+import { toastServiceMeta } from '@Core/ts/services/Toast';
 
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
@@ -43,8 +45,9 @@ const initializePlugin = () => {
       stepperDropdownMeta,
       selectMeta,
       previewTriggerMeta,
+      toastMeta,
     ],
-    services: [formServiceMeta, modalServiceMeta, queryServiceMeta],
+    services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta],
   });
 
   TutorComponentRegistry.initWithAlpine(Alpine);

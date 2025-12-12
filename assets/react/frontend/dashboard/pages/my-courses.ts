@@ -21,8 +21,7 @@ const myCoursesPage = () => {
           }
         },
         onError: (error: Error) => {
-          // @TODO:: Need to implement toast.
-          alert(error.message || 'Failed to create course');
+          window.TutorCore.toast.error(error.message || 'Failed to create course');
         },
       });
 
@@ -33,8 +32,7 @@ const myCoursesPage = () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          // @TODO:: Need to implement toast.
-          alert(error.message || 'Failed to delete course');
+          window.TutorCore.toast.error(error.message || 'Failed to delete course');
         },
       });
     },
@@ -43,7 +41,7 @@ const myCoursesPage = () => {
      * Create course mutation function
      */
     createCourse() {
-      return wpAjaxInstance.post('tutor_create_new_draft_course', {
+      return wpAjaxInstance.post('tutor_create_new_draft_courses', {
         from_dashboard: true,
       });
     },
