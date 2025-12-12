@@ -12,11 +12,14 @@
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Components\Pagination;
+
 
 // Pagination.
 $courses_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
-$courses_paged    = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
-$offset           = ( $courses_per_page * $courses_paged ) - $courses_per_page;
+// $courses_per_page = 1;
+$courses_paged = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
+$offset        = ( $courses_per_page * $courses_paged ) - $courses_per_page;
 
 $courses_tab_query_param = Input::get( 'tab', '' );
 
@@ -127,5 +130,17 @@ $courses_tab = apply_filters(
 				?>
 			<?php endwhile; ?>
 		<?php endif; ?>
+<?php
+	Pagination::make()
+		->base( esc_url( tutor_utils()->tutor_dashboard_url( $active_tab ) ) )
+		->current( $courses_paged )
+		->total( 100 )
+		// ->total( $courses_list->found_posts )
+		->limit( $courses_per_page )
+		// ->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
+		->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+		->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+		->render();
+?>
 	</div>
 </div>
