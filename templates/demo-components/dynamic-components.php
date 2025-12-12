@@ -912,6 +912,48 @@
 			// ->disabled()
 			// ->help_text('Upgrade to access.')
 			// ->render();
+
+
+			// // Input field with selection and search.
+			//  InputField::make()
+			// 	->type( InputType::SELECT )
+			// 	->name( 'country' )
+			// 	->label( 'Countries' )
+			// 	->options( $options )
+			// 	->placeholder( 'Select a Country....' )
+			// 	->searchable()
+			// 	->multiple()
+			// 	->max_selections( 1 )
+			// 	->render();
+
+			// // Input field with grouped options.
+			//  InputField::make()
+			// 	->type( InputType::SELECT )
+			// 	->name( 'language' )
+			// 	->label( 'Languages' )
+			// 	->groups( $grouped_options )
+			// 	->placeholder( 'Select a Language....' )
+			// 	->render();
+
+			// // Disabled input field.
+			//   InputField::make()
+			// 	->type( InputType::SELECT )
+			// 	->name( 'disabled' )
+			// 	->label( 'Disabled Field' )
+			// 	->disabled()
+			// 	->options( $options )
+			// 	->placeholder( 'Disable....' )
+			// 	->render();
+
+			// // Loading input field.
+			//   InputField::make()
+			// 	->type( InputType::SELECT )
+			// 	->name( 'loading' )
+			// 	->label( 'Loading Field' )
+			// 	->loading()
+			// 	->options( $options )
+			// 	->placeholder( 'Loading....' )
+			// 	->render();
 			?>
 			<form 
 				x-data="tutorForm({ id: 'basic-form', mode: 'onBlur', shouldFocusError: true })"
@@ -929,6 +971,27 @@
 				>
 				<div class="tutor-flex tutor-flex-column tutor-gap-7">
 					<?php
+						$interests = array(
+							array(
+								'label' => 'Software Development',
+								'value' => 'sd',
+								'icon'  => Icon::BOOK_2,
+								'description' => 'Interest in software',
+							),
+							array(
+								'label' => 'UI/UX',
+								'value' => 'uiux',
+								'icon'  => Icon::ALERT,
+								'description' => 'Interest in UI/UX',
+							),
+							array(
+								'label' => 'Testing',
+								'value' => 'test',
+								'icon'  => Icon::CART,
+								'description' => 'Interest in testing',
+							),
+						);
+
 						InputField::make()
 							->type( 'text' )
 							->name( 'name' )
@@ -938,6 +1001,21 @@
 							->clearable()
 							->help_text( 'This is a helper text.' )
 							->attr( 'x-bind', "register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+							->render();
+
+						InputField::make()
+							->type( 'select' )
+							->name( 'interests' )
+							->label( 'Interests' )
+							->placeholder( 'Select your interests')
+							->required( 'Please select an interest')
+							->clearable()
+							->options( $interests )
+							->multiple()
+							->searchable()
+							->size( 'md' )
+							->max_selections( 2 )
+							->help_text( 'This is a helper next.' )
 							->render();
 
 						InputField::make()

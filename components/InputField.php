@@ -187,6 +187,15 @@ class InputField extends BaseComponent {
 	protected $disabled = false;
 
 	/**
+	 * Whether input is loading
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var boolean
+	 */
+	protected $loading = false;
+
+	/**
 	 * Whether input is checked (checkbox/radio/switch).
 	 *
 	 * @since 4.0.0
@@ -214,6 +223,24 @@ class InputField extends BaseComponent {
 	protected $clearable = false;
 
 	/**
+	 * Whether input is searchable.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var boolean
+	 */
+	protected $searchable = false;
+
+	/**
+	 * Whether multiple option can be selected in input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var boolean
+	 */
+	protected $multiple = false;
+
+	/**
 	 * Left icon SVG markup.
 	 *
 	 * @since 4.0.0
@@ -239,6 +266,33 @@ class InputField extends BaseComponent {
 	 * @var string
 	 */
 	protected $size = 'sm';
+
+	/**
+	 * Options for select input field.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $options = array();
+
+	/**
+	 * Grouped option for input field.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $groups = array();
+
+	/**
+	 * Max number of input option to be selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var integer
+	 */
+	protected $max_selections = 3;
 
 	/**
 	 * Set input type.
@@ -374,12 +428,12 @@ class InputField extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param bool $required Whether input is required.
+	 * @param bool|string $required Whether input is required.
 	 *
 	 * @return $this
 	 */
 	public function required( $required = true ) {
-		$this->required = (bool) $required;
+		$this->required = $required;
 		return $this;
 	}
 
@@ -409,6 +463,20 @@ class InputField extends BaseComponent {
 	 */
 	public function disabled( $disabled = true ) {
 		$this->disabled = (bool) $disabled;
+		return $this;
+	}
+
+	/**
+	 * Set loading state.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $loading Whether input is loading.
+	 *
+	 * @return $this
+	 */
+	public function loading( $loading = true ) {
+		$this->loading = (bool) $loading;
 		return $this;
 	}
 
@@ -492,11 +560,149 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function size( $size ) {
-		$allowed = array( 'sm', 'md' );
+		$allowed = array( 'sm', 'md', 'lg' );
 		if ( in_array( $size, $allowed, true ) ) {
 			$this->size = $size;
 		}
 		return $this;
+	}
+
+	/**
+	 * Set whether multiple select enabled or not.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param boolean $multiple whether multiple select is enable.
+	 *
+	 * @return self
+	 */
+	public function multiple( $multiple = true ): self {
+		$this->multiple = $multiple;
+		return $this;
+	}
+
+	/**
+	 * Set if input field is searchable.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param boolean $searchable whether input is searchable.
+	 *
+	 * @return self
+	 */
+	public function searchable( $searchable = true ): self {
+		$this->searchable = $searchable;
+		return $this;
+	}
+
+
+	/**
+	 * Options for select input field.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options the options for input field.
+	 *
+	 * Example format for $options:
+	 * ```
+	 * $options = array(
+	 *    'label'       => '',
+	 *    'value'       => '',
+	 *    'icon'        => '',
+	 *    'description' => '',
+	 * );
+	 * ```
+	 * @return self
+	 */
+	public function options( $options = array() ): self {
+		$this->options = $options;
+		return $this;
+	}
+
+	/**
+	 * Set the number of max option to be selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $max_selections the number of max selections.
+	 *
+	 * @return self
+	 */
+	public function max_selections( $max_selections = 3 ): self {
+		$this->max_selections = $max_selections;
+		return $this;
+	}
+
+	/**
+	 * Grouped Options for select input field.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $groups the options for input field.
+	 *
+	 * Example format for $groups:
+	 * ```
+	 * $groups = array(
+	 *    array(
+	 *       'label'   => '',
+	 *       'options' => array(
+	 *           array(
+	 *               'label' => '',
+	 *               'value' => '',
+	 *           ),
+	 *           array(
+	 *               'label' => '',
+	 *               'value' => '',
+	 *           ),
+	 *           array(
+	 *               'label' => '',
+	 *               'value' => '',
+	 *           ),
+	 *       ),
+	 *   ),
+	 * );
+	 * ```
+	 * @return self
+	 */
+	public function groups( $groups = array() ): self {
+		$this->groups = $groups;
+		return $this;
+	}
+
+	/**
+	 * Render the Select Input Component HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	protected function render_select_input(): string {
+
+		if ( ! count( $this->options ) && ! count( $this->groups ) ) {
+			return '';
+		}
+
+		ob_start();
+		tutor_load_template(
+			'core-components.form-select',
+			array(
+				'options'        => $this->options,
+				'groups'         => $this->groups,
+				'placeholder'    => $this->placeholder,
+				'name'           => $this->name,
+				'required'       => $this->required,
+				'searchable'     => $this->searchable,
+				'multiple'       => $this->multiple,
+				'clearable'      => $this->clearable,
+				'max_selections' => $this->max_selections,
+				'size'           => $this->size,
+				'disabled'       => $this->disabled,
+				'loading'        => $this->loading,
+			)
+		);
+
+		$output = ob_get_clean();
+		return $output;
 	}
 
 	/**
@@ -859,6 +1065,9 @@ class InputField extends BaseComponent {
 			case InputType::SWITCH:
 				$input_html = $this->render_switch();
 				break;
+			case InputType::SELECT:
+				$input_html = $this->render_select_input();
+				break;
 			default:
 				$input_html = $this->render_text_input();
 				break;
@@ -888,5 +1097,4 @@ class InputField extends BaseComponent {
 
 		return $this->component_string;
 	}
-
 }

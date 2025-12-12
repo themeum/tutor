@@ -10,6 +10,8 @@
 
 namespace Tutor\Components;
 
+use TUTOR\Icon;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -46,13 +48,6 @@ class Pagination extends BaseComponent {
 	 * @var int
 	 */
 	protected $pagination_total = 1;
-
-	/**
-	 * Pagination based url.
-	 *
-	 * @var string
-	 */
-	protected $base_url;
 
 	/**
 	 * Pagination previous text.
@@ -161,21 +156,6 @@ class Pagination extends BaseComponent {
 		return $this;
 	}
 
-
-	/**
-	 * Set the base url for pagination.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $base the base url.
-	 *
-	 * @return self
-	 */
-	public function base( string $base ): self {
-		$this->base_url = $base;
-		return $this;
-	}
-
 	/**
 	 * Set previous text for pagination.
 	 *
@@ -243,21 +223,16 @@ class Pagination extends BaseComponent {
 		$per_page  = max( ceil( $this->pagination_total / $this->pagination_limit ), 1 );
 		$current   = max( intval( $this->pagination_current ), 1 );
 		$format    = ! empty( $this->format ) ? $this->format : '?paged=%#%';
-		$base_url  = str_replace( PHP_INT_MAX, '%#%', esc_url( admin_url( PHP_INT_MAX ) . 'admin.php?paged=%#%' ) );
-		$base      = ! empty( $this->base_url ) ? $this->base_url : $base_url;
-		$prev_text = ! empty( $this->prev ) ? $this->prev : __( '&laquo; Previous', 'tutor' );
-		$next_text = ! empty( $this->next ) ? $this->next : __( 'Next &raquo;', 'tutor' );
-
+		$prev_text = ! empty( $this->prev ) ? $this->prev : tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 );
+		$next_text = ! empty( $this->next ) ? $this->next : tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 );
 		return paginate_links(
 			array(
-				'base'         => $base,
-				'format'       => $format,
-				'current'      => $current,
-				'total'        => $per_page,
-				'prev_text'    => $prev_text,
-				'next_text'    => $next_text,
-				'add_fragment' => 'tutor-pagination-item',
-				'type'         => 'array',
+				'format'    => $format,
+				'current'   => $current,
+				'total'     => $per_page,
+				'prev_text' => $prev_text,
+				'next_text' => $next_text,
+				'type'      => 'array',
 			)
 		);
 	}
