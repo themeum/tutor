@@ -83,7 +83,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->render();
  *
  * // Select
- *  InputField::make()
+ * InputField::make()
  *      ->type( 'select' )
  *      ->name( 'interests' )
  *      ->label( 'Interests' )
