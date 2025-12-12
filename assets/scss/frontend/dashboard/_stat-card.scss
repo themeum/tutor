@@ -76,5 +76,36 @@
 			color: $tutor-text-exception4;
 		}
 	}
+
+	&-courses {
+        .tutor-stat-card-icon {
+            color: $tutor-text-success;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-success;
+		}
+	}
+
+
+	&-students {
+        .tutor-stat-card-icon {
+            color: $tutor-text-brand;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-brand;
+		}
+	}
+
+	&-reviews {
+        .tutor-stat-card-icon {
+            color: $tutor-warning-400;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-warning-400;
+		}
+	}
 }
 
