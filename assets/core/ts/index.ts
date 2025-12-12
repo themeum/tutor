@@ -25,6 +25,10 @@ import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/Toast';
 
+import { registerLegacyFunctions } from '@Core/ts/legacy';
+import { getNonceData } from '@Core/ts/utils/nonce';
+import { escapeAttr, escapeHtml } from '@Core/ts/utils/security';
+
 Alpine.plugin(focus);
 Alpine.plugin(collapse);
 
@@ -54,6 +58,23 @@ const initializePlugin = () => {
 
   window.TutorComponentRegistry = TutorComponentRegistry;
   window.Alpine = Alpine;
+
+  // Expose TutorCore with services and utilities
+  // Use Object.assign to extend existing TutorCore instead of overwriting
+  window.TutorCore = Object.assign(window.TutorCore || {}, {
+    toast: toastServiceMeta.instance,
+    security: {
+      escapeHtml,
+      escapeAttr,
+    },
+    nonce: {
+      getNonceData,
+    },
+  });
+
+  // Register legacy functions for backward compatibility
+  // This should be called AFTER TutorCore is set up
+  registerLegacyFunctions();
 
   Alpine.start();
 };

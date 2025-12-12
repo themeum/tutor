@@ -122,7 +122,7 @@ export class ToastService {
   }
 }
 
-export const toastServiceMeta: ServiceMeta = {
+export const toastServiceMeta: ServiceMeta<ToastService> = {
   name: 'toast',
   instance: new ToastService(),
 };
