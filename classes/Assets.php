@@ -330,9 +330,16 @@ class Assets {
 	 * Load frontend scripts
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
+	 *
 	 * @return void
 	 */
 	public function frontend_scripts() {
+		if ( ! $this->should_load_legacy_scripts() ) {
+			return;
+		}
+
 		global $post, $wp_query;
 
 		/**
@@ -480,11 +487,17 @@ class Assets {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 4.0.0 Legacy scripts loading check added.
+	 *
 	 * @param string $slug The page slug.
 	 *
 	 * @return void
 	 */
 	public function common_scripts( $slug ) {
+		if ( ! $this->should_load_legacy_scripts() ) {
+			return;
+		}
+
 		/**
 		 * Load TinyMCE for tutor settings page if tutor pro is not available.
 		 *
@@ -834,7 +847,7 @@ class Assets {
 	 */
 	public function enqueue_scripts() {
 		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = false; // @TODO.
+		$is_learning_area = tutor_utils()->is_learning_area();
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
@@ -847,9 +860,13 @@ class Assets {
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
 		if ( $is_dashboard || $is_learning_area ) {
+			$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
+
 			// Core.
 			wp_enqueue_style( 'tutor-core', $core_css_url, array(), $version );
 			wp_enqueue_script( 'tutor-core', $core_js_url, array( 'wp-i18n' ), TUTOR_VERSION, true );
+
+			wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
 
 			if ( $is_dashboard ) {
 				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
@@ -861,5 +878,26 @@ class Assets {
 				wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'wp-i18n' ), $version, true );
 			}
 		}
+	}
+
+	/**
+	 * Check if need to load legacy scripts
+	 *
+	 * If the current screen is dashboard or new learning area
+	 * then this method will return false to avoid loading legacy css & js files
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return boolean
+	 */
+	public function should_load_legacy_scripts(): bool {
+		if ( is_admin() ) {
+			return true;
+		}
+
+		$is_dashboard     = tutor_utils()->is_dashboard_page();
+		$is_learning_area = tutor_utils()->is_learning_area();
+
+		return ! ( $is_dashboard || $is_learning_area );
 	}
 }

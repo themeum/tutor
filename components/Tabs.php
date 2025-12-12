@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
  *     ],
  * ];
  *
- * echo Tabs::make()
+ * Tabs::make()
  *     ->tabs( $tabs_data )
  *     ->default_tab( 'lesson' )
  *     ->orientation( 'horizontal' )
@@ -76,6 +76,17 @@ class Tabs extends BaseComponent {
 	 * @var string
 	 */
 	protected string $default_tab = '';
+
+
+	/**
+	 * Tab orientation type (horizontal|vertical).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	public const TYPE_HORIZONTAL = 'horizontal';
+	public const TYPE_VERTICAL   = 'vertical';
 
 	/**
 	 * Tab orientation (horizontal|vertical).
@@ -135,9 +146,9 @@ class Tabs extends BaseComponent {
 	 * @return $this
 	 */
 	public function orientation( string $orientation ) {
-		$this->orientation = in_array( $orientation, array( 'horizontal', 'vertical' ), true )
+		$this->orientation = in_array( $orientation, array( self::TYPE_HORIZONTAL, self::TYPE_VERTICAL ), true )
 			? $orientation
-			: 'horizontal';
+			: self::TYPE_HORIZONTAL;
 		return $this;
 	}
 
@@ -162,13 +173,13 @@ class Tabs extends BaseComponent {
 	}
 
 	/**
-	 * Render the tabs component.
+	 * Get the tabs component.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return string HTML markup for the tabs component.
 	 */
-	public function render(): string {
+	public function get(): string {
 		$tabs_json   = wp_json_encode( $this->tabs );
 		$default     = esc_js( $this->default_tab );
 		$orientation = esc_attr( $this->orientation );
@@ -213,7 +224,9 @@ class Tabs extends BaseComponent {
 			</div>
 		</div>
 		<?php
-		return ob_get_clean();
+		$this->component_string = ob_get_clean();
+
+		return $this->component_string;
 	}
 }
 
