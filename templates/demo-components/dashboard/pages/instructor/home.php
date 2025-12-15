@@ -266,6 +266,52 @@ $recent_activity = array(
 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
 		),
 	),
+	array(
+		'course_name' => 'Complete Web Development Bootcamp',
+		'course_url'  => '#',
+		'date'        => '2022-01-01 10:00 AM',
+		'meta'        => 'enrolled in',
+		'user'        => array(
+			'name'   => 'John Doe',
+			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+		),
+	),
+);
+
+$recent_reviews = array(
+	array(
+		'user'          => array(
+			'name'   => 'Sarah Johnson',
+			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
+		),
+		'course_name'   => 'Complete Web Development Bootcamp',
+		'date'          => '2022-01-01 08:00 AM',
+		'rating'        => 5,
+		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
+		'helpful_count' => 12,
+	),
+	array(
+		'user'          => array(
+			'name'   => 'Sarah Johnson',
+			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
+		),
+		'course_name'   => 'Complete Web Development Bootcamp',
+		'date'          => '2022-01-01 08:00 AM',
+		'rating'        => 5,
+		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
+		'helpful_count' => 12,
+	),
+	array(
+		'user'          => array(
+			'name'   => 'Sarah Johnson',
+			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
+		),
+		'course_name'   => 'Complete Web Development Bootcamp',
+		'date'          => '2022-01-01 08:00 AM',
+		'rating'        => 5,
+		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
+		'helpful_count' => 12,
+	),
 );
 
 ?>
@@ -417,7 +463,17 @@ $recent_activity = array(
 			<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
 		</div>
 
-		<div class="tutor-dashboard-home-card-body">
+		<div class="tutor-dashboard-home-card-body tutor-gap-6">
+			<?php foreach ( $recent_reviews as $review ) : ?>
+				<?php
+				tutor_load_template(
+					'demo-components.dashboard.components.instructor.home.recent-student-review-item',
+					array(
+						'review' => $review,
+					)
+				);
+				?>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </div>

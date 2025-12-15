@@ -202,7 +202,7 @@
       @include tutor-button-variant(link);
       min-height: unset;
       padding: 0;
-      margin-top: $tutor-spacing-5;
+      margin-top: $tutor-spacing-6;
       color: $tutor-text-brand;
       width: fit-content;
     }
@@ -211,5 +211,31 @@
   &-activity {
     padding-inline: 0;
     width: 100%;
+  }
+
+  &-review {
+    @include tutor-card-base;
+    @include tutor-card-radius(lg);
+    width: 100%;
+    padding: $tutor-spacing-5;
+
+    &-avatar {
+      @include tutor-flex-center();
+      flex-shrink: 0;
+      align-self: flex-start;
+    }
+
+    &-action {
+      @include tutor-button-base;
+      @include tutor-button-size(x-small);
+      @include tutor-button-variant(link);
+      @include tutor-flex(row, center);
+      color: $tutor-text-subdued;
+      gap: $tutor-spacing-2;
+      min-height: unset;
+      padding: 0;
+      margin-top: $tutor-spacing-6;
+      width: fit-content;
+    }
   }
 }

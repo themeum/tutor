@@ -48,7 +48,7 @@ $get_icon_by_post_type = function ( $post_type ) {
 		<div class="tutor-small tutor-font-medium">
 			<?php echo esc_html( $item['name'] ); ?>
 		</div>
-		<div class="tutor-dashboard-home-task-meta" data-meta>
+		<div class="tutor-badge tutor-text-subdued tutor-mt-5" data-meta>
 			<?php echo esc_html( $item['meta_info'] ); ?>
 		</div>
 		<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-dashboard-home-task-link" data-link>
