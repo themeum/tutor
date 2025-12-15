@@ -126,9 +126,13 @@
     @include tutor-card-base;
     @include tutor-card-radius(lg);
     @include tutor-flex(row, center, space-between);
+    @include tutor-transition(background-color);
     width: 100%;
     padding: $tutor-spacing-4 $tutor-spacing-5;
-    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background-color: $tutor-surface-base;
+    }
 
     &-index {
       @include tutor-typography('p3', 'medium', 'secondary');
@@ -139,19 +143,36 @@
       border-radius: $tutor-radius-sm;
       background-color: $tutor-surface-l1-hover;
     }
-
-    &:hover {
-      background-color: $tutor-surface-base;
-    }
   }
 
   &-task {
     @include tutor-card-base;
     @include tutor-card-radius(lg);
     @include tutor-flex(row, flex-start);
+    @include tutor-transition(background-color);
     gap: $tutor-spacing-5;
     width: 100%;
     padding: $tutor-spacing-5;
+
+    [data-meta] {
+      display: block;
+    }
+
+    [data-link] {
+      display: none;
+    }
+
+    &:hover {
+      background-color: $tutor-surface-base;
+
+      [data-meta] {
+        display: none;
+      }
+
+      [data-link] {
+        display: flex;
+      }
+    }
 
     &-icon {
       @include tutor-flex-center();
@@ -173,6 +194,17 @@
       border-radius: $tutor-radius-sm;
       background-color: $tutor-actions-gray-secondary;
       margin-top: $tutor-spacing-5;
+    }
+
+    &-link {
+      @include tutor-button-base;
+      @include tutor-button-size(x-small);
+      @include tutor-button-variant(link);
+      min-height: unset;
+      padding: 0;
+      margin-top: $tutor-spacing-5;
+      color: $tutor-text-brand;
+      width: fit-content;
     }
   }
 

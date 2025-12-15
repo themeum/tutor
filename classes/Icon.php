@@ -122,6 +122,7 @@ final class Icon {
 	const DIVI_COLORIZED             = 'divi-colorized';
 	const DOC                        = 'doc';
 	const DOCUMENT                   = 'document';
+	const DOLLAR                     = 'dollar';
 	const DOLLAR_RECURRING           = 'dollar-recurring';
 	const DOT                        = 'dot';
 	const DOWNLOAD                   = 'download';
@@ -332,6 +333,7 @@ final class Icon {
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
 	const STORE_IMAGE                = 'store-image';
+	const STUDENT                    = 'student';
 	const STYLE_NONE                 = 'style-none';
 	const SUBSCRIPTION               = 'subscription';
 	const SUBTITLE                   = 'subtitle';

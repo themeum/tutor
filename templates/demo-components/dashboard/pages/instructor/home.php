@@ -443,8 +443,7 @@ $get_icon_by_post_type = function ( $post_type ) {
 						<!-- Revenue -->
 						<div class="tutor-flex tutor-flex-column tutor-items-center">
 							<div class="tutor-flex tutor-items-center tutor-gap-2">
-								<!-- @TODO: Add revenue icon -->
-								<?php tutor_utils()->render_svg_icon( Icon::EARNING ); ?>
+								<?php tutor_utils()->render_svg_icon( Icon::DOLLAR, 12, 12, array( 'class' => 'tutor-icon-secondary' ) ); ?>
 								<div class="tutor-tiny tutor-text-subdued">
 									<?php esc_html_e( 'Revenue', 'tutor' ); ?>
 								</div>
@@ -459,7 +458,7 @@ $get_icon_by_post_type = function ( $post_type ) {
 						<div class="tutor-flex tutor-flex-column tutor-items-center">
 							<div class="tutor-flex tutor-items-center tutor-gap-2">
 								<!-- @TODO: Add students icon -->
-								<?php tutor_utils()->render_svg_icon( Icon::PASSED ); ?>
+								<?php tutor_utils()->render_svg_icon( Icon::STUDENT, 12, 12, array( 'class' => 'tutor-icon-secondary' ) ); ?>
 								<div class="tutor-tiny tutor-text-subdued">
 									<?php esc_html_e( 'Students', 'tutor' ); ?>
 								</div>
@@ -505,9 +504,13 @@ $get_icon_by_post_type = function ( $post_type ) {
 							<div class="tutor-small tutor-font-medium">
 								<?php echo esc_html( $item['name'] ); ?>
 							</div>
-							<div class="tutor-dashboard-home-task-meta">
+							<div class="tutor-dashboard-home-task-meta" data-meta>
 								<?php echo esc_html( $item['meta_info'] ); ?>
 							</div>
+							<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-dashboard-home-task-link" data-link>
+								<?php esc_html_e( 'Open', 'tutor' ); ?>
+								<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT_2 ); ?>
+							</a>
 						</div>
 					</div>
 				<?php endforeach; ?>
