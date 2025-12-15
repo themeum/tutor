@@ -1,8 +1,8 @@
 <?php
 /**
  * Sorting Component Class.
- * 
- * Responsible for rendering a sorting dropdown 
+ *
+ * Responsible for rendering a sorting dropdown
  * with ascending and descending options.
  *
  * @package Tutor\Components

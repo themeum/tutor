@@ -1,8 +1,8 @@
 <?php
 /**
  * EmptyState Component Class.
- * 
- * Responsible for rendering an empty state 
+ *
+ * Responsible for rendering an empty state
  * with an icon, title, and subtitle.
  *
  * @package Tutor\Components
