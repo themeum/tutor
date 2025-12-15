@@ -124,6 +124,7 @@
     @include tutor-flex(row, center, space-between);
     width: 100%;
     padding: $tutor-spacing-4 $tutor-spacing-5;
+    transition: background-color 0.2s ease-in-out;
 
     &-index {
       @include tutor-typography('p3', 'medium', 'secondary');
@@ -133,6 +134,41 @@
       aspect-ratio: 1/1;
       border-radius: $tutor-radius-sm;
       background-color: $tutor-surface-l1-hover;
+    }
+
+    &:hover {
+      background-color: $tutor-surface-base;
+    }
+  }
+
+  &-task {
+    @include tutor-card-base;
+    @include tutor-card-radius(lg);
+    @include tutor-flex(row, flex-start);
+    gap: $tutor-spacing-5;
+    width: 100%;
+    padding: $tutor-spacing-5;
+
+    &-icon {
+      @include tutor-flex-center();
+      width: 32px;
+      height: 32px;
+      aspect-ratio: 1/1;
+      border-radius: $tutor-radius-sm;
+      background-color: $tutor-actions-brand-tertiary;
+
+      svg {
+        color: $tutor-icon-brand;
+      }
+    }
+
+    &-meta {
+      @include tutor-typography('tiny', 'medium', 'subdued');
+      width: fit-content;
+      padding-inline: $tutor-spacing-4;
+      border-radius: $tutor-radius-sm;
+      background-color: $tutor-actions-gray-secondary;
+      margin-top: $tutor-spacing-5;
     }
   }
 }

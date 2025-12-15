@@ -137,6 +137,74 @@ $top_performing_courses = array(
 	),
 );
 
+$upcoming_tasks = array(
+	array(
+		'name'      => 'Complete Web Development Bootcamp',
+		'date'      => '2022-01-01 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor_assignments',
+		'meta_info' => 'Web Dev 101',
+	),
+	array(
+		'name'      => 'Live Q&A: React Hooks',
+		'date'      => '2022-01-02 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor-google-meet',
+		'meta_info' => '67 registered',
+	),
+	array(
+		'name'      => 'Quiz Closes: Python Functions',
+		'date'      => '2022-01-03 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor_quiz',
+		'meta_info' => 'Python Basics',
+	),
+	array(
+		'name'      => 'Live Q&A: Python Functions',
+		'date'      => '2022-01-04 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor_zoom_meeting',
+		'meta_info' => '67 registered',
+	),
+	array(
+		'name'      => 'Lesson Closes: Python Functions',
+		'date'      => '2022-01-05 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'lesson',
+		'meta_info' => 'Python Basics',
+	),
+);
+
+$recent_activity = array(
+	array(
+		'name' => 'Complete Web Development Bootcamp',
+		'url'  => '#',
+	),
+	array(
+		'name' => 'Complete Web Development Bootcamp',
+		'url'  => '#',
+	),
+	array(
+		'name' => 'Complete Web Development Bootcamp',
+		'url'  => '#',
+	),
+);
+
+$get_icon_by_post_type = function ( $post_type ) {
+	switch ( $post_type ) {
+		case 'tutor_assignments':
+			return Icon::ASSIGNMENT;
+		case 'tutor-google-meet':
+			return Icon::GOOGLE_MEET;
+		case 'tutor_quiz':
+			return Icon::QUIZ;
+		case 'tutor_zoom_meeting':
+			return Icon::ZOOM;
+		case 'lesson':
+			return Icon::LESSON;
+	}
+};
+
 ?>
 
 <div class="tutor-flex tutor-flex-column tutor-gap-6 tutor-mt-7">
@@ -326,6 +394,73 @@ $top_performing_courses = array(
 					</div>
 				</div>
 			<?php endforeach; ?>
+		</div>
+	</div>
+
+	<div class="tutor-flex tutor-gap-6">
+		<!-- Upcoming Tasks -->
+		<div class="tutor-dashboard-home-card tutor-flex-1">
+			<div class="tutor-small">
+				<?php esc_html_e( 'Upcoming Tasks', 'tutor' ); ?>
+			</div>
+
+			<div class="tutor-dashboard-home-card-body tutor-gap-4">
+				<?php foreach ( $upcoming_tasks as $item ) : ?>
+					<div class="tutor-dashboard-home-task">
+						<div class="tutor-dashboard-home-task-icon">
+							<?php tutor_utils()->render_svg_icon( $get_icon_by_post_type( $item['post_type'] ) ); ?>
+						</div>
+						<div class="tutor-flex tutor-flex-column tutor-mt-1">
+							<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-text-secondary">
+								<span class="tutor-text-secondary">
+									<?php if ( gmdate( 'Y-m-d' ) === $item['date'] ) : ?>
+										<?php esc_html_e( 'Today', 'tutor' ); ?>
+									<?php else : ?>
+										<?php echo esc_html( date_i18n( get_option( 'date_format' ), $item['date'] ) ); ?>
+									<?php endif; ?>
+								</span>
+								<span class="tutor-icon-secondary">•</span>
+								<span class="tutor-text-secondary">
+									<?php echo esc_html( date_i18n( get_option( 'time_format' ), $item['date'] ) ); ?>
+								</span>
+							</div>
+							<div class="tutor-small tutor-font-medium">
+								<?php echo esc_html( $item['name'] ); ?>
+							</div>
+							<div class="tutor-dashboard-home-task-meta">
+								<?php echo esc_html( $item['meta_info'] ); ?>
+							</div>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+
+		<!-- Recent Activity -->
+		<div class="tutor-dashboard-home-card tutor-flex-1">
+			<div class="tutor-small">
+				<?php esc_html_e( 'Recent Activity', 'tutor' ); ?>
+			</div>
+
+			<div class="tutor-dashboard-home-card-body">
+				<?php foreach ( $recent_activity as $item ) : ?>
+					<div class="tutor-dashboard-home-task">
+						<div class="tutor-flex tutor-items-center tutor-gap-4">
+							<div class="tutor-dashboard-home-task-icon">
+								<?php tutor_utils()->render_svg_icon( Icon::CLOCK ); ?>
+							</div>
+							<div class="tutor-flex tutor-flex-column">
+								<div class="tutor-p3">
+									<?php echo esc_html( $item['name'] ); ?>
+								</div>
+								<div class="tutor-text-subdued">
+									<?php echo esc_html( $item['date'] ); ?>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
 		</div>
 	</div>
 </div>
