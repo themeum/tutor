@@ -268,21 +268,6 @@ $recent_activity = array(
 	),
 );
 
-$get_icon_by_post_type = function ( $post_type ) {
-	switch ( $post_type ) {
-		case 'tutor_assignments':
-			return Icon::ASSIGNMENT;
-		case 'tutor-google-meet':
-			return Icon::GOOGLE_MEET;
-		case 'tutor_quiz':
-			return Icon::QUIZ;
-		case 'tutor_zoom_meeting':
-			return Icon::ZOOM;
-		case 'lesson':
-			return Icon::LESSON;
-	}
-};
-
 ?>
 
 <div class="tutor-flex tutor-flex-column tutor-gap-6 tutor-mt-7">
@@ -321,47 +306,25 @@ $get_icon_by_post_type = function ( $post_type ) {
 	</div>
 
 	<!-- Overview Chart -->
-	<div class="tutor-dashboard-home-chart">
-		<div class="tutor-dashboard-home-chart-header">
-			<div class="tutor-small">
-				<?php esc_html_e( 'Earnings Over Time', 'tutor' ); ?>
-			</div>
-			<div class="tutor-flex tutor-align-center tutor-gap-6">
-				<div class="tutor-dashboard-home-chart-legend" data-color="brand">
-					<?php esc_html_e( 'Earnings', 'tutor' ); ?>
-				</div>
-				<div class="tutor-dashboard-home-chart-legend" data-color="success">
-					<?php esc_html_e( 'Enrolled', 'tutor' ); ?>
-				</div>
-			</div>
-		</div>
-		<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo wp_json_encode( $overview_chart_data ); ?>)' x-ref="canvas"></canvas>
-	</div>
+	<?php
+	tutor_load_template(
+		'demo-components.dashboard.components.instructor.home.overview-chart',
+		array(
+			'overview_chart_data' => $overview_chart_data,
+		)
+	);
+	?>
 
 	<div class="tutor-flex tutor-gap-6">
 		<!-- Course Completion Chart -->
-		<div class="tutor-dashboard-home-chart tutor-flex-1" data-stacked="true">
-			<div class="tutor-small">
-				<?php esc_html_e( 'Course Completion Distribution', 'tutor' ); ?>
-			</div>
-
-			<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorCourseCompletionChart(<?php echo wp_json_encode( $course_completion_data ); ?>)' x-ref="canvas"></canvas>
-			
-			<div class="tutor-grid tutor-grid-cols-3 tutor-gap-6 tutor-mt-11">
-				<?php foreach ( $course_completion_data as $key => $value ) : ?>
-					<div class="tutor-dashboard-home-chart-legend" data-color="<?php echo esc_attr( $key ); ?>">
-						<div class="tutor-flex tutor-flex-column">
-							<div>
-								<?php echo esc_html( $value['label'] ); ?>
-							</div>
-							<div class="tutor-text-primary tutor-font-medium">
-								<?php echo esc_html( $value['value'] ); ?>
-							</div>
-						</div>
-					</div>
-				<?php endforeach; ?>
-			</div>
-		</div>
+		<?php
+		tutor_load_template(
+			'demo-components.dashboard.components.instructor.home.course-completion-chart',
+			array(
+				'course_completion_data' => $course_completion_data,
+			)
+		);
+		?>
 
 		<!-- Leaderboard -->
 		<div class="tutor-dashboard-home-card tutor-flex-1">
@@ -371,51 +334,15 @@ $get_icon_by_post_type = function ( $post_type ) {
 
 			<div class="tutor-dashboard-home-card-body">
 				<?php foreach ( $leaderboard_data as $item_key => $item ) : ?>
-					<div class="tutor-dashboard-home-card-item">
-						<div class="tutor-flex tutor-align-center tutor-gap-4">
-							<!-- Index -->
-							<div class="tutor-dashboard-home-card-icon">
-								<?php if ( 0 === $item_key ) : ?>
-									<?php tutor_utils()->render_svg_icon( Icon::BADGE, 16, 16, array( 'class' => 'tutor-icon-exception4' ) ); ?>
-								<?php else : ?>
-									<?php echo esc_html( $item_key + 1 ); ?>
-								<?php endif; ?>
-							</div>
-
-							<!-- Avatar -->
-							<div class="tutor-dashboard-home-card-avatar">
-								<?php Avatar::make()->src( $item['avatar'] )->initials( $item['name'] )->size( Size::SIZE_32 )->render(); ?>
-							</div>
-
-							<!-- Info -->
-							<div class="tutor-flex-1 tutor-flex tutor-flex-column">
-								<div class="tutor-tiny tutor-font-medium">
-									<?php echo esc_html( $item['name'] ); ?>
-								</div>
-								<div class="tutor-tiny">
-									<span class="tutor-text-subdued">
-										<?php
-										printf(
-											// translators: %s: Number of courses.
-											esc_html__( '%s courses', 'tutor' ),
-											esc_html( $item['no_of_courses'] )
-										);
-										?>
-									</span>
-									<span class="tutor-text-subdued tutor-mx-2">•</span>
-									<span class="tutor-text-success">
-										<?php
-										printf(
-											// translators: %s: Completion percentage.
-											esc_html__( '%s completion', 'tutor' ),
-											esc_html( $item['completion_percentage'] . '%' )
-										);
-										?>
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
+					<?php
+					tutor_load_template(
+						'demo-components.dashboard.components.instructor.home.leaderboard-item',
+						array(
+							'item_key' => $item_key,
+							'item'     => $item,
+						)
+					);
+					?>
 				<?php endforeach; ?>
 			</div>
 		</div>
@@ -429,47 +356,15 @@ $get_icon_by_post_type = function ( $post_type ) {
 
 		<div class="tutor-dashboard-home-card-body tutor-gap-4">
 			<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
-				<div class="tutor-dashboard-home-course">
-					<div class="tutor-flex tutor-items-center tutor-gap-4">
-						<div class="tutor-dashboard-home-course-index">
-							#<?php echo esc_html( $item_key + 1 ); ?>
-						</div>
-						<div class="tutor-p3">
-							<?php echo esc_html( $item['name'] ); ?>
-						</div>
-					</div>
-
-					<div class="tutor-flex tutor-items-center tutor-gap-7">
-						<!-- Revenue -->
-						<div class="tutor-flex tutor-flex-column tutor-items-center">
-							<div class="tutor-flex tutor-items-center tutor-gap-2">
-								<?php tutor_utils()->render_svg_icon( Icon::DOLLAR, 12, 12, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-								<div class="tutor-tiny tutor-text-subdued">
-									<?php esc_html_e( 'Revenue', 'tutor' ); ?>
-								</div>
-							</div>
-
-							<div class="tutor-tiny tutor-font-semibold">
-								<?php echo esc_html( $item['revenue'] ); ?>
-							</div>
-						</div>
-
-						<!-- Students -->
-						<div class="tutor-flex tutor-flex-column tutor-items-center">
-							<div class="tutor-flex tutor-items-center tutor-gap-2">
-								<!-- @TODO: Add students icon -->
-								<?php tutor_utils()->render_svg_icon( Icon::STUDENT, 12, 12, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-								<div class="tutor-tiny tutor-text-subdued">
-									<?php esc_html_e( 'Students', 'tutor' ); ?>
-								</div>
-							</div>
-							
-							<div class="tutor-tiny tutor-font-semibold">
-								<?php echo esc_html( $item['students'] ); ?>
-							</div>
-						</div>
-					</div>
-				</div>
+				<?php
+				tutor_load_template(
+					'demo-components.dashboard.components.instructor.home.top-performing-course-item',
+					array(
+						'item_key' => $item_key,
+						'item'     => $item,
+					)
+				);
+				?>
 			<?php endforeach; ?>
 		</div>
 	</div>
@@ -483,36 +378,14 @@ $get_icon_by_post_type = function ( $post_type ) {
 
 			<div class="tutor-dashboard-home-card-body tutor-gap-4">
 				<?php foreach ( $upcoming_tasks as $item ) : ?>
-					<div class="tutor-dashboard-home-task">
-						<div class="tutor-dashboard-home-task-icon">
-							<?php tutor_utils()->render_svg_icon( $get_icon_by_post_type( $item['post_type'] ) ); ?>
-						</div>
-						<div class="tutor-flex tutor-flex-column tutor-mt-1">
-							<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-text-secondary">
-								<span class="tutor-text-secondary">
-									<?php if ( gmdate( 'Y-m-d' ) === $item['date'] ) : ?>
-										<?php esc_html_e( 'Today', 'tutor' ); ?>
-									<?php else : ?>
-										<?php echo esc_html( date_i18n( get_option( 'date_format' ), $item['date'] ) ); ?>
-									<?php endif; ?>
-								</span>
-								<span class="tutor-icon-secondary">•</span>
-								<span class="tutor-text-secondary">
-									<?php echo esc_html( date_i18n( get_option( 'time_format' ), $item['date'] ) ); ?>
-								</span>
-							</div>
-							<div class="tutor-small tutor-font-medium">
-								<?php echo esc_html( $item['name'] ); ?>
-							</div>
-							<div class="tutor-dashboard-home-task-meta" data-meta>
-								<?php echo esc_html( $item['meta_info'] ); ?>
-							</div>
-							<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-dashboard-home-task-link" data-link>
-								<?php esc_html_e( 'Open', 'tutor' ); ?>
-								<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT_2 ); ?>
-							</a>
-						</div>
-					</div>
+					<?php
+					tutor_load_template(
+						'demo-components.dashboard.components.instructor.home.upcoming-task-item',
+						array(
+							'item' => $item,
+						)
+					);
+					?>
 				<?php endforeach; ?>
 			</div>
 		</div>
@@ -525,32 +398,26 @@ $get_icon_by_post_type = function ( $post_type ) {
 
 			<div class="tutor-dashboard-home-card-body">
 				<?php foreach ( $recent_activity as $item ) : ?>
-					<div class="tutor-dashboard-home-card-item tutor-dashboard-home-activity">
-						<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-w-full">
-							<!-- Avatar -->
-							<div class="tutor-dashboard-home-card-avatar">
-								<?php Avatar::make()->src( $item['user']['avatar'] )->initials( $item['user']['name'] )->size( Size::SIZE_40 )->render(); ?>
-							</div>
-							<div class="tutor-flex-1 tutor-flex tutor-flex-column">
-								<div class="tutor-flex tutor-justify-between tutor-items-center tutor-tiny">
-									<div>
-										<?php echo esc_html( $item['user']['name'] ); ?>
-										<span class="tutor-text-subdued">
-											<?php echo esc_html( $item['meta'] ); ?>
-										</span>
-									</div>
-									<div class="tutor-tiny-2 tutor-text-subdued">
-										<?php echo esc_html( human_time_diff( strtotime( $item['date'] ) ) ); ?>
-									</div>
-								</div>
-								<a class="tutor-tiny tutor-font-medium" href="<?php echo esc_url( $item['course_url'] ); ?>">
-									<?php echo esc_html( $item['course_name'] ); ?>
-								</a>
-							</div>
-						</div>
-					</div>
+					<?php
+					tutor_load_template(
+						'demo-components.dashboard.components.instructor.home.recent-activity-item',
+						array(
+							'item' => $item,
+						)
+					);
+					?>
 				<?php endforeach; ?>
 			</div>
+		</div>
+	</div>
+
+	<!-- Recent Student Reviews -->
+	<div class="tutor-dashboard-home-card">
+		<div class="tutor-small">
+			<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
+		</div>
+
+		<div class="tutor-dashboard-home-card-body">
 		</div>
 	</div>
 </div>
