@@ -2999,14 +2999,12 @@ class Course extends Tutor_Base {
 			}
 
 			/**
-			 * This check was added for a security issue
-			 * where users without purchasing a course can
-			 * enroll into the course by ajax call. To fix this
-			 * the following check was added to check if course is
-			 * paid or not. Furthermore, to check if user has already
-			 * purchased the course another check was added to check
-			 * if user is enrolled in course cause default behavior
-			 * for tutor is user is enrolled in course if purchased.
+			 * This check was added to address a security issue where users could
+			 * enroll in a course via an AJAX call without purchasing it.
+			 *
+			 * To prevent this, we now verify whether the course is paid.
+			 * Additionally, we check if the user is already enrolled, since
+			 * Tutor's default behavior enrolls users automatically upon purchase.
 			 *
 			 * @since 3.9.4
 			 */
