@@ -3011,11 +3011,6 @@ class Course extends Tutor_Base {
 			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
 				$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
 
-				/**
-				 * Check if user has already purchased course.
-				 * By default tutor enrolls user to course if
-				 * purchased that's why this check is given.
-				 */
 				if ( ! $is_enrolled ) {
 					wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
 				}
