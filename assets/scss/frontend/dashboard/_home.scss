@@ -95,6 +95,10 @@
     &-body {
       @include tutor-flex(column, center);
       gap: $tutor-spacing-5;
+
+      &:has(.tutor-dashboard-home-activity) {
+        gap: $tutor-spacing-7;
+      }
     }
 
     &-item {
@@ -170,5 +174,10 @@
       background-color: $tutor-actions-gray-secondary;
       margin-top: $tutor-spacing-5;
     }
+  }
+
+  &-activity {
+    padding-inline: 0;
+    width: 100%;
   }
 }
