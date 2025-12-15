@@ -110,6 +110,33 @@ $leaderboard_data = array(
 	),
 );
 
+$top_performing_courses = array(
+	array(
+		'name'     => 'Complete Web Development Bootcamp',
+		'url'      => '#',
+		'revenue'  => 5000,
+		'students' => 50,
+	),
+	array(
+		'name'     => 'Complete Web Development Bootcamp',
+		'url'      => '#',
+		'revenue'  => 5000,
+		'students' => 50,
+	),
+	array(
+		'name'     => 'Complete Web Development Bootcamp',
+		'url'      => '#',
+		'revenue'  => 4000,
+		'students' => 40,
+	),
+	array(
+		'name'     => 'Complete Web Development Bootcamp',
+		'url'      => '#',
+		'revenue'  => 3000,
+		'students' => 30,
+	),
+);
+
 ?>
 
 <div class="tutor-flex tutor-flex-column tutor-gap-6 tutor-mt-7">
@@ -181,7 +208,7 @@ $leaderboard_data = array(
 							<div>
 								<?php echo esc_html( $value['label'] ); ?>
 							</div>
-							<div class="tutor-tiny tutor-font-medium">
+							<div class="tutor-text-primary tutor-font-medium">
 								<?php echo esc_html( $value['value'] ); ?>
 							</div>
 						</div>
@@ -191,17 +218,17 @@ $leaderboard_data = array(
 		</div>
 
 		<!-- Leaderboard -->
-		<div class="tutor-dashboard-home-leaderboard tutor-flex-1">
+		<div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
 				<?php esc_html_e( 'Leaderboard', 'tutor' ); ?>
 			</div>
 
-			<div class="tutor-dashboard-home-leaderboard-body">
+			<div class="tutor-dashboard-home-card-body">
 				<?php foreach ( $leaderboard_data as $item_key => $item ) : ?>
-					<div class="tutor-dashboard-home-leaderboard-item">
+					<div class="tutor-dashboard-home-card-item">
 						<div class="tutor-flex tutor-align-center tutor-gap-4">
 							<!-- Index -->
-							<div class="tutor-dashboard-home-leaderboard-icon">
+							<div class="tutor-dashboard-home-card-icon">
 								<?php if ( 0 === $item_key ) : ?>
 									<?php tutor_utils()->render_svg_icon( Icon::BADGE, 16, 16, array( 'class' => 'tutor-icon-exception4' ) ); ?>
 								<?php else : ?>
@@ -210,7 +237,7 @@ $leaderboard_data = array(
 							</div>
 
 							<!-- Avatar -->
-							<div class="tutor-dashboard-home-leaderboard-avatar">
+							<div class="tutor-dashboard-home-card-avatar">
 								<?php Avatar::make()->src( $item['avatar'] )->initials( $item['name'] )->size( Size::SIZE_32 )->render(); ?>
 							</div>
 
@@ -245,6 +272,60 @@ $leaderboard_data = array(
 					</div>
 				<?php endforeach; ?>
 			</div>
+		</div>
+	</div>
+
+	<!-- Top Performing Courses -->
+	<div class="tutor-dashboard-home-card">
+		<div class="tutor-small">
+			<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
+		</div>
+
+		<div class="tutor-dashboard-home-card-body tutor-gap-4">
+			<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
+				<div class="tutor-dashboard-home-course">
+					<div class="tutor-flex tutor-items-center tutor-gap-4">
+						<div class="tutor-dashboard-home-course-index">
+							#<?php echo esc_html( $item_key + 1 ); ?>
+						</div>
+						<div class="tutor-p3">
+							<?php echo esc_html( $item['name'] ); ?>
+						</div>
+					</div>
+
+					<div class="tutor-flex tutor-items-center tutor-gap-7">
+						<!-- Revenue -->
+						<div class="tutor-flex tutor-flex-column tutor-items-center">
+							<div class="tutor-flex tutor-items-center tutor-gap-2">
+								<!-- @TODO: Add revenue icon -->
+								<?php tutor_utils()->render_svg_icon( Icon::EARNING ); ?>
+								<div class="tutor-tiny tutor-text-subdued">
+									<?php esc_html_e( 'Revenue', 'tutor' ); ?>
+								</div>
+							</div>
+
+							<div class="tutor-tiny tutor-font-semibold">
+								<?php echo esc_html( $item['revenue'] ); ?>
+							</div>
+						</div>
+
+						<!-- Students -->
+						<div class="tutor-flex tutor-flex-column tutor-items-center">
+							<div class="tutor-flex tutor-items-center tutor-gap-2">
+								<!-- @TODO: Add students icon -->
+								<?php tutor_utils()->render_svg_icon( Icon::PASSED ); ?>
+								<div class="tutor-tiny tutor-text-subdued">
+									<?php esc_html_e( 'Students', 'tutor' ); ?>
+								</div>
+							</div>
+							
+							<div class="tutor-tiny tutor-font-semibold">
+								<?php echo esc_html( $item['students'] ); ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			<?php endforeach; ?>
 		</div>
 	</div>
 </div>

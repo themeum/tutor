@@ -85,17 +85,12 @@
     }
   }
 
-  &-leaderboard {
+  &-card {
     @include tutor-card-base;
     @include tutor-card-radius(2xl);
     @include tutor-flex(column);
     gap: $tutor-spacing-5;
     padding: $tutor-spacing-6;
-
-    &-header {
-      @include tutor-flex(row, center, space-between);
-      padding: $tutor-spacing-6;
-    }
 
     &-body {
       @include tutor-flex(column, center);
@@ -120,6 +115,24 @@
       @include tutor-typography('tiny', 'regular', 'subdued');
       width: 16px;
       flex-shrink: 0;
+    }
+  }
+
+  &-course {
+    @include tutor-card-base;
+    @include tutor-card-radius(lg);
+    @include tutor-flex(row, center, space-between);
+    width: 100%;
+    padding: $tutor-spacing-4 $tutor-spacing-5;
+
+    &-index {
+      @include tutor-typography('p3', 'medium', 'secondary');
+      @include tutor-flex-center();
+      width: 32px;
+      height: 32px;
+      aspect-ratio: 1/1;
+      border-radius: $tutor-radius-sm;
+      background-color: $tutor-surface-l1-hover;
     }
   }
 }
