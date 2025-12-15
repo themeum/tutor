@@ -2119,16 +2119,16 @@ class Course extends Tutor_Base {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
 
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			die( esc_html__( 'User is not enrolled in course', 'tutor' ) );
+		}
+
 		/**
 		 * Filter hook provided to restrict course completion. This is useful
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
 		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
-
-		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
-			die( esc_html__( 'User is not enrolled in course', 'tutor' ) );
-		}
 
 		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
@@ -2992,13 +2992,15 @@ class Course extends Tutor_Base {
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$user_id   = get_current_user_id();
 
+		$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
+
 		if ( $course_id ) {
 			$password_protected = post_password_required( $course_id );
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
 			}
 
-			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
+			if ( tutor_utils()->is_course_purchasable( $course_id ) && ! $is_enrolled ) {
 				wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
 			}
 

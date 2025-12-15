@@ -84,7 +84,7 @@ class OrderController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_order_details', array( $this, 'get_order_by_id' ) );
+			add_action( 'wp_ajax_tutor_order_details', array( $this, 'ajax_get_order_details' ) );
 
 			/**
 			 * Handle AJAX request for marking an order as paid by order ID.
@@ -258,7 +258,7 @@ class OrderController {
 	 *
 	 * @return void
 	 */
-	public function get_order_by_id() {
+	public function ajax_get_order_details() {
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
