@@ -9,11 +9,10 @@
 
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
+use TutorPro\CourseBundle\Models\BundleModel;
 
 $course_permalink = get_the_permalink();
 $course_title     = get_the_title();
-
-$tutor_course_img = get_tutor_course_thumbnail_src();
 
 $course_id       = get_the_ID();
 $course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
@@ -22,24 +21,28 @@ $course_categories = get_the_terms( $course_id, CourseModel::COURSE_CATEGORY );
 $category_names    = is_array( $course_categories ) && ! is_wp_error( $course_categories ) ? wp_list_pluck( $course_categories, 'name' ) : array();
 $category          = implode( ', ', $category_names );
 
+$bundle_id = BundleModel::get_bundle_id_by_course( $course_id );
+
 ?>
 
 <a href="<?php echo esc_html( $course_permalink ); ?>">
 	<div class="tutor-card tutor-progress-card">
-		<?php
-		// load loop folder thumbnail template here.
-		tutor_load_template( 'loop.thumbnail', array( 'course_title' => $course_title ) );
-		?>
-		<div class="tutor-progress-card-content">
+		
+		<div class="tutor-courses-thumb tutor-position-relative">
 			<?php
-			tutor_load_template(
-				'loop.title',
-				array(
-					'course_title' => $course_title,
-					'category'     => $category,
-				)
-			);
-			?>
+			if ( $bundle_id ) :
+				$bundle_course = BundleModel::get_bundle_courses( $bundle_id );
+				?>
+				<div class="tutor-bundle-course-badge tutor-badge tutor-badge-exception tutor-badge-circle">
+					<?php tutor_utils()->render_svg_icon( Icon::BUNDLE ); ?>
+					<span><?php echo esc_html( count( $bundle_course ) ); ?></span> Course Bundle
+				</div>
+			<?php endif; ?>
+			<?php tutor_load_template( 'loop.thumbnail' ); ?>
+		</div>
+
+		<div class="tutor-progress-card-content">
+			<?php tutor_load_template( 'loop.title', array( 'category' => $category ) ); ?>
 
 			<!-- course progress  -->
 			<?php if ( $course_progress['completed_count'] > 0 || $course_progress['total_count'] > 0 ) : ?>

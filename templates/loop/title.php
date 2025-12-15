@@ -11,17 +11,13 @@
 
 ?>
 
-<?php if ( ! empty( $course_title ) ) : ?>
-	<div class="tutor-progress-card-header">
-		<?php if ( ! empty( $category ) ) : ?>
-			<div class="tutor-progress-card-category">
-				<?php echo esc_html( $category ); ?>
-			</div>
-		<?php endif; ?>
-		<?php if ( ! empty( $course_title ) ) : ?>
-			<h3 class="tutor-progress-card-title">
-				<?php echo esc_html( $course_title ); ?>
-			</h3>
-		<?php endif; ?>
-	</div>
-<?php endif; ?>
+<div class="tutor-progress-card-header">
+	<?php if ( ! empty( $category ) ) : ?>
+		<div class="tutor-progress-card-category">
+			<?php echo esc_html( $category ); ?>
+		</div>
+	<?php endif; ?>
+	<h3 class="tutor-progress-card-title">
+		<?php the_title(); ?>
+	</h3>
+</div>
