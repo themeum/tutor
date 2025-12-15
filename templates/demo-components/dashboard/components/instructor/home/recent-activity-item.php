@@ -31,7 +31,7 @@ use Tutor\Components\Constants\Size;
 					<?php echo esc_html( human_time_diff( strtotime( $item['date'] ) ) ); ?>
 				</div>
 			</div>
-			<a class="tutor-tiny tutor-font-medium" href="<?php echo esc_url( $item['course_url'] ); ?>">
+			<a class="tutor-tiny tutor-font-medium tutor-truncate" href="<?php echo esc_url( $item['course_url'] ); ?>">
 				<?php echo esc_html( $item['course_name'] ); ?>
 			</a>
 		</div>
