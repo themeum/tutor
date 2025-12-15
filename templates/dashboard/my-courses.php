@@ -9,7 +9,9 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
+use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
@@ -42,7 +44,7 @@ $count_map = array(
 );
 
 $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
-$paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
+$paged              = Input::get( 'paged', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
 $results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type, $search, $order );
 $show_course_delete = true;
@@ -125,7 +127,6 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				)($event)"
 			>
 				<input type="hidden" name="paged" value="1">
-				<input type="hidden" name="order" value="<?php echo esc_attr( $order ); ?>">
 				<?php if ( ! empty( $post_type_query ) ) : ?>
 					<input type="hidden" name="type" value="<?php echo esc_attr( $post_type_query ); ?>">
 				<?php endif; ?>
@@ -166,41 +167,13 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			</form>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
 				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
-				<div
-					x-data="tutorPopover({
-						placement: 'bottom-end',
-						offset: 4,
-					})"
-				>
-					<button type="button" x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::STEPPER ); ?>
-					</button>
-					<div 
-						x-ref="content"
-						x-show="open"
-						x-cloak
-						@click.outside="handleClickOutside()"
-						class="tutor-popover"
-					>
-						<div class="tutor-popover-menu" style="min-width: 108px;">
-							<a 
-								href="<?php echo esc_attr( add_query_arg( 'order', 'DESC' ) ); ?>" 
-								class="tutor-popover-menu-item<?php echo esc_attr( 'DESC' === $order ? ' tutor-active' : '' ); ?>"
-							>
-								<?php esc_html_e( 'Newest First', 'tutor' ); ?>
-							</a>
-							<a 
-								href="<?php echo esc_attr( add_query_arg( 'order', 'ASC' ) ); ?>" 
-								class="tutor-popover-menu-item<?php echo esc_attr( 'ASC' === $order ? ' tutor-active' : '' ); ?>"
-							>
-								<?php esc_html_e( 'Oldest First', 'tutor' ); ?>
-							</a>
-						</div>
-					</div>
-				</div>
+				<?php Sorting::make()->order( $order )->render(); ?>
 			</div>
 		</div>
 
+		<?php if ( empty( $results ) ) : ?>
+			<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
+		<?php else : ?>
 		<div class="tutor-p-6 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
 			<?php
 			global $post;
@@ -393,24 +366,22 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			wp_reset_postdata();
 			?>
 		</div>
+		<?php endif; ?>
 
+		<?php if ( $count_map[ $status ] > $per_page ) : ?>
 		<div class="tutor-p-6">
 			<?php
-			// @TODO:: Need to update after pagination fixed.
-			if ( $count_map[ $status ] > $per_page ) {
-				Pagination::make()
-					->base( $current_url . '/' )
-					->current( $paged )
-					->total( $count_map[ $status ] )
-					->limit( $per_page )
-					->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-					->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
-					->render();
-			}
+			Pagination::make()
+				->current( $paged )
+				->total( $count_map[ $status ] )
+				->limit( $per_page )
+				->render();
 			?>
 		</div>
+		<?php endif; ?>
 	</div>
 
+	<?php if ( ! empty( $results ) && $show_course_delete ) : ?>
 	<div x-data="tutorModal({ id: 'tutor-course-delete-modal' })" x-cloak>
 		<template x-teleport="body">
 			<div x-bind="getModalBindings()">
@@ -445,4 +416,5 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			</div>
 		</template>
 	</div>
+	<?php endif; ?>
 </div>
