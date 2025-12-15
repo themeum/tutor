@@ -2992,16 +2992,35 @@ class Course extends Tutor_Base {
 		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$user_id   = get_current_user_id();
 
-		$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
-
 		if ( $course_id ) {
 			$password_protected = post_password_required( $course_id );
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
 			}
 
-			if ( tutor_utils()->is_course_purchasable( $course_id ) && ! $is_enrolled ) {
-				wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
+			/**
+			 * This check was added for a security issue
+			 * where users without purchasing a course can
+			 * enroll into the course by ajax call. To fix this
+			 * the following check was added to check if course is
+			 * paid or not. Furthermore, to check if user has already
+			 * purchased the course another check was added to check
+			 * if user is enrolled in course cause default behavior
+			 * for tutor is user is enrolled in course if purchased.
+			 *
+			 * @since 3.9.4
+			 */
+			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
+				$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
+
+				/**
+				 * Check if user has already purchased course.
+				 * By default tutor enrolls user to course if
+				 * purchased that's why this check is given.
+				 */
+				if ( ! $is_enrolled ) {
+					wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
+				}
 			}
 
 			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
