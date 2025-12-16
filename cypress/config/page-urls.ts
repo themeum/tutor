@@ -7,7 +7,7 @@ export const frontendUrls = {
   dashboard: {
     DASHBOARD: dashboardUrl,
     MY_PROFILE: `${dashboardUrl}/my-profile/`,
-    ENROLLED_COURSES: `${dashboardUrl}/courses?tab=enrolled`,
+    ENROLLED_COURSES: `${dashboardUrl}/enrolled-courses/`,
     WISHLIST: `${dashboardUrl}/wishlist/`,
     REVIEWS: `${dashboardUrl}/reviews/`,
     MY_QUIZ_ATTEMPTS: `${dashboardUrl}/my-quiz-attempts/`,

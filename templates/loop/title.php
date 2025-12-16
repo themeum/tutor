@@ -11,13 +11,6 @@
 
 ?>
 
-<div class="tutor-progress-card-header">
-	<?php if ( ! empty( $category ) ) : ?>
-		<div class="tutor-progress-card-category">
-			<?php echo esc_html( $category ); ?>
-		</div>
-	<?php endif; ?>
-	<h3 class="tutor-progress-card-title">
-		<?php the_title(); ?>
-	</h3>
-</div>
+<h3 class="tutor-course-name tutor-fs-5 tutor-fw-medium" title="<?php the_title(); ?>">
+	<a href="<?php echo esc_url( get_the_permalink() ); ?>"><?php the_title(); ?></a>
+</h3>

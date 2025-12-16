@@ -1,7 +1,7 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-dashboard-courses-wrapper {
-	background: #fff;
+	background: $tutor-surface-base;
 	border-radius: $tutor-radius-3xl;
 	border: 1px solid $tutor-border-idle;
 
@@ -12,12 +12,10 @@
 	.tutor-courses-thumb {
 		position: relative;
 		flex-basis: 200px;
-	}
-
-	.tutor-bundle-course-badge {
-		position: absolute;
-		right: 4px;
-		top: 4px;
-		z-index: 1;
+		.tutor-badge {
+			top: 4px;
+			right: 4px;
+			z-index: 1;
+		}
 	}
 }
