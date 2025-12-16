@@ -177,8 +177,9 @@ class Table extends BaseComponent {
 
 		foreach ( $this->cell_headers as $heading ) {
 			$headings .= sprintf(
-				'<th>%1$s</th>',
-				apply_filters( 'tutor_table_heading', $heading['content'] )
+				'<th class="%s">%s</th>',
+				$heading['class'],
+				apply_filters( 'tutor_table_heading',$heading['content'] )
 			);
 		}
 
