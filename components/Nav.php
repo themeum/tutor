@@ -12,8 +12,10 @@ namespace Tutor\Components;
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use TUTOR\Icon;
 
 /**
  * Class Nav
@@ -25,24 +27,27 @@ use Tutor\Components\Constants\Variant;
  *
  * ```
  * $dropdown = array(
- *        'type'    => 'dropdown',
- *        'icon'    => Icon::ENROLLED,
- *        'active'  => true,
- *        'options' => array(
- *            array(
- *                'label'  => 'Active',
- *                'icon'   => Icon::PLAY_LINE,
- *                'url'    => '#',
- *                'active' => false,
- *            ),
- *            array(
- *                'label'  => 'Enrolled',
- *                'icon'   => Icon::ENROLLED,
- *                'url'    => '#',
- *                'active' => true,
- *            ),
- *        ),
- *    );
+ *      'type'    => 'dropdown',
+ *      'icon'    => Icon::ENROLLED,
+ *      'active'  => true,
+ *      'count' => 3,
+ *      'options' => array(
+ *         array(
+ *             'label'  => 'Active',
+ *             'icon'   => Icon::PLAY_LINE,
+ *             'url'    => '#',
+ *             'active' => false,
+ *             'count' => 2,
+ *         ),
+ *         array(
+ *             'label'  => 'Enrolled',
+ *             'icon'   => Icon::ENROLLED,
+ *             'url'    => '#',
+ *             'active' => true,
+ *             'count' => 3,
+ *         ),
+ *      ),
+ * );
  *
  *   echo Nav::make()
  *       ->items( array( $dropdown ) )
@@ -86,7 +91,8 @@ class Nav extends BaseComponent {
 	 * @return self
 	 */
 	public function variant( $variant = Variant::PRIMARY ): self {
-		$this->nav_variant = $variant;
+		$allowed_variants  = array( Variant::PRIMARY, Variant::SECONDARY );
+		$this->nav_variant = in_array( $variant, $allowed_variants, true ) ? $variant : Variant::PRIMARY;
 		return $this;
 	}
 
@@ -100,7 +106,9 @@ class Nav extends BaseComponent {
 	 * @return self
 	 */
 	public function size( $size = Size::MD ): self {
-		$this->nav_size = $size;
+		$allowed_sizes  = array( Size::MD, Size::SM, Size::LG );
+		$this->nav_size = in_array( $size, $allowed_sizes, true ) ? $size : Size::MD;
+
 		return $this;
 	}
 
@@ -150,6 +158,160 @@ class Nav extends BaseComponent {
 	}
 
 	/**
+	 * Get icon size for item size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $size the item size.
+	 *
+	 * @return integer
+	 */
+	protected function get_icon_size( $size ): int {
+		$icon_sizes = array(
+			'sm' => 16,
+			'md' => 20,
+			'lg' => 24,
+		);
+
+		return $icon_sizes[ $size ];
+	}
+
+	/**
+	 * Get the label of the active dropdown option.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $options Array of dropdown options.
+	 *
+	 * @return string The label of the active option, or the first option's label * if none are active.
+	 */
+	protected function get_active_dropdown_label( array $options ): string {
+		if ( ! tutor_utils()->count( $options ) ) {
+			return '';
+		}
+
+		foreach ( $options as $option ) {
+			if ( ! empty( $option['active'] ) ) {
+				return $option['label'] ?? '';
+			}
+		}
+		return $options[0]['label'] ?? '';
+	}
+
+
+	/**
+	 * Render dropdown nav if it is selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $item the dropdown nav item.
+	 *
+	 * @return string
+	 */
+	protected function render_dropdown_item( array $item ): string {
+		$dropdown = '';
+
+		if ( ! tutor_utils()->count( $item ) ) {
+			return '';
+		}
+
+		$options       = $item['options'] ?? array();
+		$active_label  = $this->get_active_dropdown_label( $options );
+		$active_label  = $item['count'] ? $active_label . '(' . esc_html( $item['count'] ) . ')' : $active_label;
+		$icon_size     = $this->get_icon_size( $this->nav_size );
+		$active_item   = $item['active'] ? 'active' : '';
+		$icon          = isset( $item['icon'] ) ? tutor_utils()->get_svg_icon( $item['icon'], $icon_size, $icon_size ) : '';
+		$dropdown_icon = tutor_utils()->get_svg_icon(
+			Icon::CHEVRON_DOWN_2,
+			$icon_size,
+			$icon_size,
+			array( 'class' => 'tutor-icon-subdued' )
+		);
+
+		$dropdown_options = '';
+
+		if ( count( $options ) ) {
+			foreach ( $options as $option ) {
+				$icon      = $option['icon'] ? tutor_utils()->get_svg_icon( $option['icon'], $icon_size, $icon_size ) : '';
+				$is_active = $option['active'] ? 'active' : '';
+				$label     = esc_html( $option['label'] );
+				$label     = isset( $option['count'] ) ? $label . '(' . esc_html( $option['count'] ) . ')' : $label;
+				$url       = $option['url'] ? esc_url( $option['url'] ) : '#';
+
+				$dropdown_options .= sprintf(
+					'<a href="%s" class="tutor-nav-dropdown-item %s">
+						%s
+						%s
+					</a>',
+					$url,
+					$is_active,
+					$icon,
+					$label
+				);
+			}
+		}
+
+		$dropdown = sprintf(
+			'<div x-data="tutorPopover({ placement: \'bottom-start\', offset: 4 })">
+				<button x-ref="trigger" @click="toggle()"
+					class="tutor-nav-item %s">
+				%s
+				%s
+				%s	
+				</button>
+				<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover tutor-nav-dropdown">
+					%s
+				</div>
+			</div>',
+			$active_item,
+			$icon,
+			esc_html( $active_label ),
+			$dropdown_icon,
+			$dropdown_options
+		);
+
+		return $dropdown;
+	}
+
+
+	/**
+	 * Render link nav item if it is selected.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $item the link nav item.
+	 *
+	 * @return string
+	 */
+	protected function render_link_item( array $item ): string {
+		$dropdown = '';
+
+		if ( ! tutor_utils()->count( $item ) ) {
+			return '';
+		}
+
+		$active_item = $item['active'] ? 'active' : '';
+		$url         = $item['url'] ? esc_url( $item['url'] ) : '#';
+		$icon_size   = $this->get_icon_size( $this->nav_size );
+		$label       = esc_html( $item['label'] ?? '' );
+		$label       = isset( $item['count'] ) ? $label . '(' . esc_html( $item['count'] ) . ')' : $label;
+		$icon        = $item['icon'] ? tutor_utils()->get_svg_icon( $item['icon'], $icon_size, $icon_size ) : '';
+
+		$dropdown = sprintf(
+			'<a href="%s" class="tutor-nav-item %s">
+				%s
+				%s
+			</a>',
+			$url,
+			$active_item,
+			$icon,
+			$label
+		);
+
+		return $dropdown;
+	}
+
+	/**
 	 * Get the HTML nav component.
 	 *
 	 * @since 4.0.0
@@ -161,17 +323,23 @@ class Nav extends BaseComponent {
 			return '';
 		}
 
-		ob_start();
-		tutor_load_template(
-			'core-components.nav',
-			array(
-				'items'   => $this->nav_items,
-				'size'    => $this->nav_size,
-				'variant' => $this->nav_variant,
-			)
-		);
-		$output = ob_get_clean();
+		$nav_items = '';
 
-		return $output;
+		foreach ( $this->nav_items as $nav_item ) {
+			if ( InputType::DROPDOWN === $nav_item['type'] ) {
+				$nav_items .= $this->render_dropdown_item( $nav_item );
+			} else {
+				$nav_items .= $this->render_link_item( $nav_item );
+			}
+		}
+
+		return sprintf(
+			'<ul class="tutor-nav tutor-nav-%s tutor-nav-%s">
+				%s
+			</ul>',
+			$this->nav_size,
+			$this->nav_variant,
+			$nav_items
+		);
 	}
 }

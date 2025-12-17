@@ -692,18 +692,21 @@
 				'type'    => 'dropdown',
 				'icon'    => Icon::ENROLLED,
 				'active'  => true,
+				'count' => 3,
 				'options' => array(
 					array(
 						'label'  => 'Active',
 						'icon'   => Icon::PLAY_LINE,
 						'url'    => '#',
 						'active' => false,
+						'count' => 2,
 					),
 					array(
 						'label'  => 'Enrolled',
 						'icon'   => Icon::ENROLLED,
 						'url'    => '#',
 						'active' => true,
+						'count' => 3,
 					),
 				),
 			);
@@ -727,18 +730,21 @@
 				'type'    => 'dropdown',
 				'icon'    => Icon::ENROLLED,
 				'active'  => true,
+				'count'   => 3,
 				'options' => array(
 					array(
 						'label'  => 'Active',
 						'icon'   => Icon::PLAY_LINE,
 						'url'    => '#',
 						'active' => false,
+						'count'  => 2,
 					),
 					array(
 						'label'  => 'Enrolled',
 						'icon'   => Icon::ENROLLED,
 						'url'    => '#',
 						'active' => true,
+						'count'  => 3,
 					),
 				),
 			);
@@ -915,45 +921,45 @@
 
 
 			// // Input field with selection and search.
-			//  InputField::make()
-			// 	->type( InputType::SELECT )
-			// 	->name( 'country' )
-			// 	->label( 'Countries' )
-			// 	->options( $options )
-			// 	->placeholder( 'Select a Country....' )
-			// 	->searchable()
-			// 	->multiple()
-			// 	->max_selections( 1 )
-			// 	->render();
+			// InputField::make()
+			// ->type( InputType::SELECT )
+			// ->name( 'country' )
+			// ->label( 'Countries' )
+			// ->options( $options )
+			// ->placeholder( 'Select a Country....' )
+			// ->searchable()
+			// ->multiple()
+			// ->max_selections( 1 )
+			// ->render();
 
 			// // Input field with grouped options.
-			//  InputField::make()
-			// 	->type( InputType::SELECT )
-			// 	->name( 'language' )
-			// 	->label( 'Languages' )
-			// 	->groups( $grouped_options )
-			// 	->placeholder( 'Select a Language....' )
-			// 	->render();
+			// InputField::make()
+			// ->type( InputType::SELECT )
+			// ->name( 'language' )
+			// ->label( 'Languages' )
+			// ->groups( $grouped_options )
+			// ->placeholder( 'Select a Language....' )
+			// ->render();
 
 			// // Disabled input field.
-			//   InputField::make()
-			// 	->type( InputType::SELECT )
-			// 	->name( 'disabled' )
-			// 	->label( 'Disabled Field' )
-			// 	->disabled()
-			// 	->options( $options )
-			// 	->placeholder( 'Disable....' )
-			// 	->render();
+			// InputField::make()
+			// ->type( InputType::SELECT )
+			// ->name( 'disabled' )
+			// ->label( 'Disabled Field' )
+			// ->disabled()
+			// ->options( $options )
+			// ->placeholder( 'Disable....' )
+			// ->render();
 
 			// // Loading input field.
-			//   InputField::make()
-			// 	->type( InputType::SELECT )
-			// 	->name( 'loading' )
-			// 	->label( 'Loading Field' )
-			// 	->loading()
-			// 	->options( $options )
-			// 	->placeholder( 'Loading....' )
-			// 	->render();
+			// InputField::make()
+			// ->type( InputType::SELECT )
+			// ->name( 'loading' )
+			// ->label( 'Loading Field' )
+			// ->loading()
+			// ->options( $options )
+			// ->placeholder( 'Loading....' )
+			// ->render();
 			?>
 			<form 
 				x-data="tutorForm({ id: 'basic-form', mode: 'onBlur', shouldFocusError: true })"
@@ -973,21 +979,21 @@
 					<?php
 						$interests = array(
 							array(
-								'label' => 'Software Development',
-								'value' => 'sd',
-								'icon'  => Icon::BOOK_2,
+								'label'       => 'Software Development',
+								'value'       => 'sd',
+								'icon'        => Icon::BOOK_2,
 								'description' => 'Interest in software',
 							),
 							array(
-								'label' => 'UI/UX',
-								'value' => 'uiux',
-								'icon'  => Icon::ALERT,
+								'label'       => 'UI/UX',
+								'value'       => 'uiux',
+								'icon'        => Icon::ALERT,
 								'description' => 'Interest in UI/UX',
 							),
 							array(
-								'label' => 'Testing',
-								'value' => 'test',
-								'icon'  => Icon::CART,
+								'label'       => 'Testing',
+								'value'       => 'test',
+								'icon'        => Icon::CART,
 								'description' => 'Interest in testing',
 							),
 						);
@@ -1007,8 +1013,8 @@
 							->type( 'select' )
 							->name( 'interests' )
 							->label( 'Interests' )
-							->placeholder( 'Select your interests')
-							->required( 'Please select an interest')
+							->placeholder( 'Select your interests' )
+							->required( 'Please select an interest' )
 							->clearable()
 							->options( $interests )
 							->multiple()
@@ -1027,7 +1033,7 @@
 							->help_text( 'This is a helper text.' )
 							->attr( 'x-bind', "register('terms', { required: 'Gender is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
 							->render();
-					?>
+						?>
 				</div>
 				<div>
 					<button 
