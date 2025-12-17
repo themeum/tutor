@@ -7,7 +7,6 @@
  * @author Themeum
  */
 
-use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 
 $course_permalink = get_the_permalink();
