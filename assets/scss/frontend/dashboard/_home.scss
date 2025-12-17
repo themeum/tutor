@@ -2,6 +2,18 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-dashboard-home {
+  &-sort {
+    .tutor-input-field .tutor-label {
+      @include tutor-typography('tiny', 'regular');
+    }
+
+    [data-grab] {
+      @include tutor-reset;
+      @include tutor-flex-center;
+      cursor: grab;
+    }
+  }
+
   &-chart {
     @include tutor-card-base;
     @include tutor-card-radius(2xl);

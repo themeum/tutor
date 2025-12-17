@@ -1,6 +1,7 @@
+import { DragDropManager, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
+import { Sortable } from '@dnd-kit/dom/sortable';
 import { Chart, type ChartConfiguration, type ScriptableContext, type TooltipModel } from 'chart.js/auto';
 
-import { TutorComponentRegistry } from '@Core/ts';
 import { formatPrice } from '@TutorShared/utils/currency';
 
 interface OverviewChartProps {
@@ -360,6 +361,152 @@ const handleTooltip = (context: { chart: Chart; tooltip: TooltipModel<'line'> },
   });
 };
 
+const sortSections = (sectionsIds: string[]) => ({
+  _sortables: [] as Sortable[],
+  _sortableSections: [] as HTMLElement[],
+  initialized: false,
+  sectionsIds: sectionsIds,
+  $el: null as HTMLElement | null,
+
+  init() {
+    if (!this.initialized) {
+      this.setupDrag();
+      this.initialized = true;
+    }
+  },
+
+  setupDrag() {
+    const container = this.$el;
+    if (!container) {
+      return;
+    }
+
+    const manager = new DragDropManager({
+      sensors: [PointerSensor, KeyboardSensor],
+    });
+
+    const items = Array.from(container.querySelectorAll<HTMLElement>('.tutor-popover-menu-item'));
+
+    this._sortables = [];
+    this._sortableSections = [];
+
+    items.forEach((element, idx) => {
+      const handle = element.querySelector('[data-grab]') as HTMLElement | null;
+      const id = element.dataset.id ?? String(idx);
+
+      const sortable = new Sortable(
+        {
+          id,
+          index: idx,
+          element: element,
+          handle: handle ?? undefined,
+        },
+        manager,
+      );
+
+      this._sortables.push(sortable);
+    });
+
+    manager.monitor.addEventListener('dragstart', (event) => {
+      const operation = event.operation;
+      if (!operation.source) {
+        return;
+      }
+
+      const sourceElement = operation.source.element;
+      if (!sourceElement) {
+        return;
+      }
+    });
+
+    manager.monitor.addEventListener('dragend', (event) => {
+      const operation = event.operation;
+      if (!operation.source) {
+        return;
+      }
+
+      const sourceElement = operation.source.element;
+      if (!sourceElement) {
+        return;
+      }
+
+      const newOrder = this.getOrder();
+      const sectionMap = this.getSortableSections();
+
+      // Get the first section's parent to know where to insert
+      const firstSectionId = Object.keys(sectionMap)[0];
+      const parentContainer = firstSectionId ? sectionMap[firstSectionId]?.parentElement : null;
+
+      if (!parentContainer) {
+        return;
+      }
+
+      // Get current order from DOM (using Set to ensure uniqueness)
+      const existingOrder = Array.from(
+        new Set(
+          Array.from(parentContainer.querySelectorAll<HTMLElement>('[data-section-id]'))
+            .map((el) => el.dataset.sectionId)
+            .filter((id): id is string => id !== undefined),
+        ),
+      );
+
+      // Check if order actually changed
+      if (newOrder.length === existingOrder.length && newOrder.every((id, index) => id === existingOrder[index])) {
+        return;
+      }
+
+      // Reorder sections based on newOrder
+      const fragment = document.createDocumentFragment();
+
+      newOrder.forEach((id) => {
+        const section = sectionMap[id];
+        if (section) {
+          // Remove from DOM and add to fragment in new order
+          section.remove();
+          fragment.appendChild(section);
+        }
+      });
+
+      // Append all sections in new order
+      parentContainer.appendChild(fragment);
+    });
+  },
+
+  getOrder() {
+    const container = this.$el;
+    if (!container) {
+      return [];
+    }
+    const ids = Array.from(container.querySelectorAll<HTMLElement>('.tutor-popover-menu-item'))
+      .map((el) => el.dataset.id)
+      .filter((id): id is string => id !== undefined);
+
+    return Array.from(new Set(ids));
+  },
+
+  getSortableSections() {
+    const sections = document.querySelectorAll<HTMLElement>('[data-section-id]');
+
+    return Array.from(sections).reduce(
+      (acc, section) => {
+        const sectionId = section.dataset.sectionId;
+        if (sectionId) {
+          acc[sectionId] = section;
+        }
+        return acc;
+      },
+      {} as Record<string, HTMLElement>,
+    );
+  },
+
+  destroy() {
+    this._sortables.forEach((s: Sortable) => s.destroy());
+    this._sortables = [];
+
+    this.initialized = false;
+  },
+});
+
 const statCard = (data: number[]) => ({
   $refs: {} as { canvas: HTMLCanvasElement },
 
@@ -641,6 +788,11 @@ const courseCompletionChart = (data: CourseCompletionChartData) => ({
   },
 });
 
+const sortableSectionsMeta = {
+  name: 'sortableSections',
+  component: sortSections,
+};
+
 const statCardMeta = {
   name: 'statCard',
   component: statCard,
@@ -657,9 +809,9 @@ const courseCompletionChartMeta = {
 };
 
 export const initializeHome = () => {
-  TutorComponentRegistry.registerAll({
-    components: [courseCompletionChartMeta, overviewChartMeta, statCardMeta],
+  window.TutorComponentRegistry.registerAll({
+    components: [courseCompletionChartMeta, overviewChartMeta, sortableSectionsMeta, statCardMeta],
   });
 
-  TutorComponentRegistry.initWithAlpine(window.Alpine);
+  window.TutorComponentRegistry.initWithAlpine(window.Alpine);
 };

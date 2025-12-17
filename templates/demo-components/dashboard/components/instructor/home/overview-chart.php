@@ -11,7 +11,11 @@
 ?>
 
 <!-- Overview Chart -->
-<div class="tutor-dashboard-home-chart">
+<div 
+	data-section-id="overview_chart"
+	class="tutor-dashboard-home-chart"
+	:class="{ 'tutor-hidden':  !watch('overview_chart')}"
+>
 	<div class="tutor-dashboard-home-chart-header">
 		<div class="tutor-small">
 			<?php esc_html_e( 'Earnings Over Time', 'tutor' ); ?>

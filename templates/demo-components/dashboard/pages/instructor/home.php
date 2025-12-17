@@ -10,9 +10,66 @@
 
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
+use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 
-// Define stat card variations with sample data matching the design.
+$sortable_sections = array(
+	array(
+		'id'        => 'current_stats',
+		'label'     => esc_html__( 'Current Stats', 'tutor' ),
+		'is_active' => true,
+		'order'     => 0,
+	),
+	array(
+		'id'        => 'overview_chart',
+		'label'     => esc_html__( 'Earning Over Time', 'tutor' ),
+		'is_active' => true,
+		'order'     => 1,
+	),
+	array(
+		'id'        => 'course_completion_and_leader',
+		'label'     => esc_html__( 'Course Completion and Leader', 'tutor' ),
+		'is_active' => false,
+		'order'     => 2,
+	),
+	array(
+		'id'        => 'top_performing_courses',
+		'label'     => esc_html__( 'Top Performing Courses', 'tutor' ),
+		'is_active' => false,
+		'order'     => 3,
+	),
+	array(
+		'id'        => 'upcoming_tasks_and_activity',
+		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+		'is_active' => false,
+		'order'     => 4,
+	),
+	array(
+		'id'        => 'recent_reviews',
+		'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
+		'is_active' => false,
+		'order'     => 6,
+	),
+);
+
+$sortable_sections_defaults = array_reduce(
+	$sortable_sections,
+	function ( $carry, $section ) {
+		$carry[ $section['id'] ] = $section['is_active'] ?? false;
+		return $carry;
+	},
+	array()
+);
+
+$sortable_sections_ids = array_reduce(
+	$sortable_sections,
+	function ( $carry, $section ) {
+		$carry[] = $section['id'];
+		return $carry;
+	},
+	array()
+);
+
 $stat_cards = array(
 	array(
 		'variation' => 'success',
@@ -316,7 +373,14 @@ $recent_reviews = array(
 
 ?>
 
-<div class="tutor-flex tutor-flex-column tutor-gap-6 tutor-mt-7">
+<form x-data='tutorForm({
+		id: "sortable-sections",
+		mode: "onBlur",
+		defaultValues: <?php echo wp_json_encode( $sortable_sections_defaults ); ?>
+	})' 
+	x-bind="getFormBindings()"
+	class="tutor-flex tutor-flex-column tutor-gap-6 tutor-mt-7"
+>
 	<!-- Filters -->
 	<div class="tutor-flex tutor-justify-between tutor-align-center">
 		<button class="tutor-btn tutor-btn-outline tutor-btn-small tutor-flex-center tutor-gap-2">
@@ -324,13 +388,58 @@ $recent_reviews = array(
 			<?php esc_html_e( 'All Time', 'tutor' ); ?>
 		</button>
 
-		<button class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon">
-			<?php tutor_utils()->render_svg_icon( Icon::FILTER_2 ); ?>
-		</button>
+		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: 'bottom-end' })">
+			<button
+				x-ref="trigger"
+				@click="toggle()"
+				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon"
+			>
+				<?php tutor_utils()->render_svg_icon( Icon::FILTER_2 ); ?>
+			</button>
+
+			<div
+				x-ref="content"
+				x-show="open"
+				x-cloak
+				@click.outside="handleClickOutside()"
+				class="tutor-popover tutor-popover-bottom"
+			>
+				<div 
+					class="tutor-popover-menu"
+					style="width: 288px;"
+					x-data='tutorSortableSections(
+							<?php echo wp_json_encode( $sortable_sections_ids ); ?>
+						)'
+				>
+					<?php foreach ( $sortable_sections as $section ) : ?>
+						<div
+							data-id="<?php echo esc_attr( $section['id'] ); ?>"
+							class="tutor-popover-menu-item"
+						>
+							<button data-grab>
+								<?php tutor_utils()->render_svg_icon( Icon::DRAG_VERTICAL, 16, 16 ); ?>
+							</button>
+							<?php
+								InputField::make()
+									->type( 'checkbox' )
+									->name( "$section[id]" )
+									->label( $section['label'] )
+									->attr( 'x-bind', "register('$section[id]')" )
+									->render();
+							?>
+						</div>
+					<?php endforeach; ?>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<!-- Stat cards -->
-	<div class="tutor-flex tutor-gap-4">
+	<div 
+		data-section-id="current_stats" 
+		class="tutor-flex tutor-gap-4"					
+		:class="{ 'tutor-hidden':  !watch('current_stats')}"
+	>
 		<?php foreach ( $stat_cards as $card ) : ?>
 			<div class="tutor-flex-1">
 			<?php
@@ -361,7 +470,11 @@ $recent_reviews = array(
 	);
 	?>
 
-	<div class="tutor-flex tutor-gap-6">
+	<div 
+		data-section-id="course_completion_and_leader" 
+		class="tutor-flex tutor-gap-6"
+		:class="{ 'tutor-hidden':  !watch('course_completion_and_leader')}"
+	>
 		<!-- Course Completion Chart -->
 		<?php
 		tutor_load_template(
@@ -395,7 +508,11 @@ $recent_reviews = array(
 	</div>
 
 	<!-- Top Performing Courses -->
-	<div class="tutor-dashboard-home-card">
+	<div 
+		data-section-id="top_performing_courses"
+		class="tutor-dashboard-home-card"
+		:class="{ 'tutor-hidden':  !watch('top_performing_courses')}"
+	>
 		<div class="tutor-small">
 			<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
 		</div>
@@ -415,7 +532,11 @@ $recent_reviews = array(
 		</div>
 	</div>
 
-	<div class="tutor-flex tutor-gap-6">
+	<div
+		data-section-id="upcoming_tasks_and_activity"
+		class="tutor-flex tutor-gap-6"
+		:class="{ 'tutor-hidden':  !watch('upcoming_tasks_and_activity')}"
+	>
 		<!-- Upcoming Tasks -->
 		<div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
@@ -458,7 +579,11 @@ $recent_reviews = array(
 	</div>
 
 	<!-- Recent Student Reviews -->
-	<div class="tutor-dashboard-home-card">
+	<div 
+		data-section-id="recent_reviews" 
+		class="tutor-dashboard-home-card"
+		:class="{ 'tutor-hidden':  !watch('recent_reviews')}"
+	>
 		<div class="tutor-small">
 			<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
 		</div>
@@ -476,4 +601,4 @@ $recent_reviews = array(
 			<?php endforeach; ?>
 		</div>
 	</div>
-</div>
+</form>
