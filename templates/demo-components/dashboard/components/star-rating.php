@@ -1,4 +1,6 @@
 <?php
+
+use TUTOR\Icon;
 /**
  * Star Rating Component
  * Reusable star rating component for displaying ratings
@@ -16,23 +18,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Default values - all data must be passed from parent.
 $rating              = isset( $rating ) ? floatval( $rating ) : 0.00;
 $wrapper_class       = isset( $wrapper_class ) ? $wrapper_class : 'tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2';
-$icon_class          = isset( $icon_class ) ? $icon_class : 'tutor-icon-exception4';
+$icon_class          = ! empty( $icon_class ) ? $icon_class : 'tutor-icon-exception4';
 $show_rating_average = isset( $show_rating_average ) ? (bool) $show_rating_average : false;
 ?>
 <div class="<?php echo esc_attr( $wrapper_class ); ?>" data-rating-value="<?php echo esc_attr( $rating ); ?>">
 	<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
 		<?php
-		$icon_class_name = '';
-		if ( (int) $rating >= $i ) {
-			$icon_class_name = 'tutor-icon-star-bold tutor-icon-exception4';
-		} elseif ( ( $rating - $i ) >= -0.5 ) {
-			$icon_class_name = 'tutor-icon-star-half-bold tutor-icon-exception4';
-		} else {
-			$icon_class_name = 'tutor-icon-star-line tutor-icon-exception4';
-		}
-		$final_class = ! empty( $icon_class ) ? $icon_class_name . ' ' . $icon_class : $icon_class_name;
+		$is_full = (int) $rating >= $i;
+		$is_half = ! $is_full && ( $rating >= ( $i - 0.5 ) );
+
+		$icon_name = $is_full
+			? Icon::STAR
+			: ( $is_half ? Icon::STAR_LINE : Icon::STAR_LINE ); // Todo: Half star icon.
+
+		$icon_html = tutor_utils()->render_svg_icon( $icon_name, 16, 16, array(), true ); // phpcs:ignore
 		?>
-		<i class="<?php echo esc_attr( $final_class ); ?>" data-rating-value="<?php echo esc_attr( $i ); ?>"></i>
+		<div class="<?php echo esc_attr( $icon_class ); ?>" data-rating-value="<?php echo esc_attr( $i ); ?>">
+			<?php echo $icon_html; // phpcs:ignore ?>
+		</div>
 	<?php endfor; ?>
 	<?php if ( $show_rating_average ) : ?>
 		<div class="tutor-ratings-average">

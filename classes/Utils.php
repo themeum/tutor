@@ -10662,28 +10662,31 @@ class Utils {
 	 * Render SVG icon
 	 *
 	 * @since 3.7.0
+	 * @since 4.0.0 added $return parameter.
 	 *
 	 * @param string  $name Icon name.
 	 * @param integer $width Icon width.
 	 * @param integer $height Icon height.
 	 * @param array   $attributes Custom attributes.
+	 * @param bool   $return     Whether to return the SVG markup instead of echoing it.
+ 	 *                           Default false (echo).
 	 *
-	 * @return void
+	 * @return string|null Returns the SVG markup when $return is true, otherwise null.
 	 */
-	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array(), $return = false ) :?string {
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
-			return;
+			return null;
 		}
 
 		$svg = file_get_contents( $icon_path );
 		if ( ! $svg ) {
-			return;
+			return null;
 		}
 
 		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
 		if ( ! $matches ) {
-			return;
+			return null;
 		}
 
 		list( $svg_tag, $view_box, $inner_svg ) = $matches;
@@ -10699,7 +10702,11 @@ class Utils {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		if ( ! $return ) {
+			printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		}
+
+		return '<svg '. $attr_string .'>'. $inner_svg .'</svg>';
 	}
 
 	/**
