@@ -581,6 +581,7 @@ const statCard = (data: number[]) => ({
             pointHoverBackgroundColor: colors.point,
             pointHoverBorderColor: colors.pointBorder,
             pointHoverBorderWidth: CHART_CONFIG.point.hoverBorderWidth,
+            pointHitRadius: 30,
           },
         ],
       },
@@ -602,7 +603,10 @@ const statCard = (data: number[]) => ({
             callbacks: {
               label: (context) => {
                 const value = context.parsed.y;
-                return value !== null ? value.toString() : '';
+                if (value === null) {
+                  return '';
+                }
+                return context.datasetIndex === 0 ? formatPrice(value) : value.toString();
               },
               title: () => '',
             },
@@ -721,7 +725,9 @@ const overviewChart = (data: OverviewChartProps) => ({
             callbacks: {
               label: (context) => {
                 const value = context.parsed.y;
-                if (value === null) return '';
+                if (value === null) {
+                  return '';
+                }
                 return context.datasetIndex === 0 ? formatPrice(value) : value.toString();
               },
             },
