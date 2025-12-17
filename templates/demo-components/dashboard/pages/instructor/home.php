@@ -9,9 +9,8 @@
  */
 
 use TUTOR\Icon;
-use Tutor\Components\Avatar;
+use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
-use Tutor\Components\Constants\Size;
 
 $sortable_sections = array(
 	array(
@@ -421,7 +420,7 @@ $recent_reviews = array(
 							</button>
 							<?php
 								InputField::make()
-									->type( 'checkbox' )
+									->type( InputType::CHECKBOX )
 									->name( "$section[id]" )
 									->label( $section['label'] )
 									->attr( 'x-bind', "register('$section[id]')" )

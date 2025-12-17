@@ -251,3 +251,27 @@
     }
   }
 }
+
+[data-section-id='current_stats'] {
+  view-transition-name: current-stats;
+}
+
+[data-section-id='overview_chart'] {
+  view-transition-name: overview-chart;
+}
+
+[data-section-id='course_completion_and_leader'] {
+  view-transition-name: course-completion-and-leader;
+}
+
+[data-section-id='top_performing_courses'] {
+  view-transition-name: top-performing-courses;
+}
+
+[data-section-id='upcoming_tasks_and_activity'] {
+  view-transition-name: upcoming-tasks-and-activity;
+}
+
+[data-section-id='recent_reviews'] {
+  view-transition-name: recent-reviews;
+}

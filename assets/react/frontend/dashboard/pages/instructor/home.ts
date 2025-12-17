@@ -430,46 +430,48 @@ const sortSections = (sectionsIds: string[]) => ({
         return;
       }
 
-      const newOrder = this.getOrder();
-      const sectionMap = this.getSortableSections();
-
-      // Get the first section's parent to know where to insert
-      const firstSectionId = Object.keys(sectionMap)[0];
-      const parentContainer = firstSectionId ? sectionMap[firstSectionId]?.parentElement : null;
-
-      if (!parentContainer) {
-        return;
+      if ('startViewTransition' in document) {
+        document.startViewTransition(() => this.updateDom());
+      } else {
+        this.updateDom();
       }
-
-      // Get current order from DOM (using Set to ensure uniqueness)
-      const existingOrder = Array.from(
-        new Set(
-          Array.from(parentContainer.querySelectorAll<HTMLElement>('[data-section-id]'))
-            .map((el) => el.dataset.sectionId)
-            .filter((id): id is string => id !== undefined),
-        ),
-      );
-
-      // Check if order actually changed
-      if (newOrder.length === existingOrder.length && newOrder.every((id, index) => id === existingOrder[index])) {
-        return;
-      }
-
-      // Reorder sections based on newOrder
-      const fragment = document.createDocumentFragment();
-
-      newOrder.forEach((id) => {
-        const section = sectionMap[id];
-        if (section) {
-          // Remove from DOM and add to fragment in new order
-          section.remove();
-          fragment.appendChild(section);
-        }
-      });
-
-      // Append all sections in new order
-      parentContainer.appendChild(fragment);
     });
+  },
+
+  updateDom() {
+    const newOrder = this.getOrder();
+    const sectionMap = this.getSortableSections();
+
+    const firstSectionId = Object.keys(sectionMap)[0];
+    const parentContainer = firstSectionId ? sectionMap[firstSectionId]?.parentElement : null;
+
+    if (!parentContainer) {
+      return;
+    }
+
+    const existingOrder = Array.from(
+      new Set(
+        Array.from(parentContainer.querySelectorAll<HTMLElement>('[data-section-id]'))
+          .map((el) => el.dataset.sectionId)
+          .filter((id): id is string => id !== undefined),
+      ),
+    );
+
+    if (newOrder.length === existingOrder.length && newOrder.every((id, index) => id === existingOrder[index])) {
+      return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    newOrder.forEach((id) => {
+      const section = sectionMap[id];
+      if (section) {
+        section.remove();
+        fragment.appendChild(section);
+      }
+    });
+
+    parentContainer.appendChild(fragment);
   },
 
   getOrder() {
