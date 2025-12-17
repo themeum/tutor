@@ -76,7 +76,7 @@ $stat_cards = array(
 		'icon'      => Icon::EARNING,
 		'value'     => '$740.00',
 		'change'    => '+2',
-		'data'      => array( 0, 5, 8 ),
+		'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
 		'variation' => 'brand',
@@ -84,7 +84,7 @@ $stat_cards = array(
 		'icon'      => Icon::COURSES,
 		'value'     => '12',
 		'change'    => '+2',
-		'data'      => array( 0, 8, 5 ),
+		'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
 		'variation' => 'exception5',
@@ -92,7 +92,7 @@ $stat_cards = array(
 		'icon'      => Icon::PASSED,
 		'value'     => '3000',
 		'change'    => '+2',
-		'data'      => array( 0, 8, 5 ),
+		'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
 		'variation' => 'exception4',
@@ -100,7 +100,7 @@ $stat_cards = array(
 		'icon'      => Icon::STAR,
 		'value'     => '4.2',
 		'change'    => '+2',
-		'data'      => array( 4.5, 4.2, 3 ),
+		'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
 	),
 );
 

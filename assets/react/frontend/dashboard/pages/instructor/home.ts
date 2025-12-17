@@ -17,16 +17,22 @@ interface ChartColors {
   linearGradient?: string[];
 }
 
+interface TooltipColors {
+  background: string;
+  title: string;
+  subtitle: string;
+}
+
 interface OverviewChartColors {
   earnings: ChartColors & { linearGradient: string[] };
   enrolled: ChartColors & { linearGradient: string[] };
-  tooltip: {
-    background: string;
-    title: string;
-    subtitle: string;
-  };
+  tooltip: TooltipColors;
   ticks: { color: string };
   border: string;
+}
+
+interface StatCardColors extends ChartColors {
+  tooltip: TooltipColors;
 }
 
 type CourseCompletionChartDataKey = 'enrolled' | 'completed' | 'in_progress' | 'inactive' | 'cancelled';
@@ -105,23 +111,22 @@ const isEndPoint = (index: number, dataLength: number): boolean => {
   return index === 0 || index === dataLength - 1;
 };
 
-const calculatePointRadii = (dataLength: number): number[] => {
-  return Array.from({ length: dataLength }, (_, index) => {
-    return isEndPoint(index, dataLength) ? 0 : CHART_CONFIG.point.radius;
-  });
-};
-
 const getCSSProperty = (element: HTMLElement, propertyName: string): string => {
   return getComputedStyle(element).getPropertyValue(propertyName).trim();
 };
 
-const extractStatCardColors = (element: HTMLElement, data: number[]): ChartColors => {
+const extractStatCardColors = (element: HTMLElement, data: number[]): StatCardColors => {
   const isPositiveTrend = data[data.length - 1] > data[0];
 
   return {
     line: getCSSProperty(element, isPositiveTrend ? '--tutor-border-success' : '--tutor-border-error'),
     point: getCSSProperty(element, isPositiveTrend ? '--tutor-actions-success-primary' : '--tutor-icon-critical'),
     pointBorder: getCSSProperty(element, '--tutor-surface-l2'),
+    tooltip: {
+      background: getCSSProperty(element, '--tutor-surface-l1'),
+      title: getCSSProperty(element, '--tutor-text-subdued'),
+      subtitle: getCSSProperty(element, '--tutor-text-primary'),
+    },
   };
 };
 
@@ -158,6 +163,11 @@ const extractCompletionChartColors = (element: HTMLElement) => {
     in_progress: getCSSProperty(element, '--tutor-button-caution'),
     inactive: getCSSProperty(element, '--tutor-surface-l2-hover'),
     cancelled: getCSSProperty(element, '--tutor-actions-critical-primary'),
+    tooltip: {
+      background: getCSSProperty(element, '--tutor-surface-l1'),
+      title: getCSSProperty(element, '--tutor-text-subdued'),
+      subtitle: getCSSProperty(element, '--tutor-text-primary'),
+    },
   };
 };
 
@@ -205,9 +215,13 @@ const getOrCreateTooltip = (chart: Chart): HTMLDivElement => {
   return tooltipEl;
 };
 
-const shouldShowTooltip = (tooltip: TooltipModel<'line'>): boolean => {
+const shouldShowTooltip = (tooltip: TooltipModel<'line'> | TooltipModel<'bar'>, chartType: string): boolean => {
   if (tooltip.opacity === 0 || !tooltip.dataPoints?.length) {
     return false;
+  }
+
+  if (chartType === 'bar') {
+    return true;
   }
 
   const dataPoint = tooltip.dataPoints[0];
@@ -217,10 +231,14 @@ const shouldShowTooltip = (tooltip: TooltipModel<'line'>): boolean => {
   return !isEndPoint;
 };
 
-const createTooltipHeader = (titleLines: string[], colors: OverviewChartColors): HTMLElement => {
+const createTooltipHeader = (titleLines: string[], colors: { tooltip: TooltipColors }): HTMLElement => {
   const tableHead = document.createElement('thead');
 
-  titleLines.forEach((title: string) => {
+  if (titleLines.length === 0 || titleLines[0] === '') {
+    return tableHead;
+  }
+
+  for (const title of titleLines) {
     const tr = document.createElement('tr');
     tr.style.borderWidth = '0';
 
@@ -238,15 +256,15 @@ const createTooltipHeader = (titleLines: string[], colors: OverviewChartColors):
     th.appendChild(document.createTextNode(title));
     tr.appendChild(th);
     tableHead.appendChild(tr);
-  });
+  }
 
   return tableHead;
 };
 
-const createTooltipBody = (bodyLines: string[][], colors: OverviewChartColors): HTMLElement => {
+const createTooltipBody = (bodyLines: string[][], colors: { tooltip: TooltipColors }): HTMLElement => {
   const tableBody = document.createElement('tbody');
 
-  bodyLines.forEach((body: string[]) => {
+  for (const body of bodyLines) {
     const tr = document.createElement('tr');
     Object.assign(tr.style, {
       backgroundColor: 'inherit',
@@ -266,12 +284,12 @@ const createTooltipBody = (bodyLines: string[][], colors: OverviewChartColors): 
     td.appendChild(document.createTextNode(body[0]));
     tr.appendChild(td);
     tableBody.appendChild(tr);
-  });
+  }
 
   return tableBody;
 };
 
-const styleTooltipTable = (table: HTMLTableElement, colors: OverviewChartColors): void => {
+const styleTooltipTable = (table: HTMLTableElement, colors: { tooltip: TooltipColors }): void => {
   Object.assign(table.style, {
     background: colors.tooltip.background,
     borderRadius: CHART_CONFIG.tooltip.borderRadius,
@@ -283,8 +301,11 @@ const styleTooltipTable = (table: HTMLTableElement, colors: OverviewChartColors)
   });
 };
 
-const addCaretToTable = (table: HTMLTableElement, colors: OverviewChartColors): void => {
-  table.querySelectorAll('[data-caret]').forEach((el) => el.remove());
+const addCaretToTable = (table: HTMLTableElement, colors: { tooltip: TooltipColors }): void => {
+  const carets = table.querySelectorAll('[data-caret]');
+  for (const el of carets) {
+    el.remove();
+  }
 
   const { caretSize, caretInnerSize } = CHART_CONFIG.tooltip;
 
@@ -322,11 +343,15 @@ const addCaretToTable = (table: HTMLTableElement, colors: OverviewChartColors): 
   table.appendChild(caretInner);
 };
 
-const handleTooltip = (context: { chart: Chart; tooltip: TooltipModel<'line'> }, colors: OverviewChartColors): void => {
+const handleTooltip = (
+  context: { chart: Chart; tooltip: TooltipModel<'line'> | TooltipModel<'bar'> },
+  colors: { tooltip: TooltipColors },
+): void => {
   const { chart, tooltip } = context;
   const tooltipEl = getOrCreateTooltip(chart);
 
-  if (!shouldShowTooltip(tooltip)) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (!shouldShowTooltip(tooltip, (chart.config as any).type)) {
     tooltipEl.style.opacity = '0';
     return;
   }
@@ -390,7 +415,7 @@ const sortSections = (sectionsIds: string[]) => ({
     this._sortables = [];
     this._sortableSections = [];
 
-    items.forEach((element, idx) => {
+    for (const [idx, element] of items.entries()) {
       const handle = element.querySelector('[data-grab]') as HTMLElement | null;
       const id = element.dataset.id ?? String(idx);
 
@@ -405,7 +430,7 @@ const sortSections = (sectionsIds: string[]) => ({
       );
 
       this._sortables.push(sortable);
-    });
+    }
 
     manager.monitor.addEventListener('dragstart', (event) => {
       const operation = event.operation;
@@ -463,13 +488,13 @@ const sortSections = (sectionsIds: string[]) => ({
 
     const fragment = document.createDocumentFragment();
 
-    newOrder.forEach((id) => {
+    for (const id of newOrder) {
       const section = sectionMap[id];
       if (section) {
         section.remove();
         fragment.appendChild(section);
       }
-    });
+    }
 
     parentContainer.appendChild(fragment);
   },
@@ -502,7 +527,9 @@ const sortSections = (sectionsIds: string[]) => ({
   },
 
   destroy() {
-    this._sortables.forEach((s: Sortable) => s.destroy());
+    for (const sortable of this._sortables) {
+      sortable.destroy();
+    }
     this._sortables = [];
 
     this.initialized = false;
@@ -529,26 +556,31 @@ const statCard = (data: number[]) => ({
     this.$refs.canvas.setAttribute('width', CHART_CONFIG.canvas.width);
   },
 
-  createChartConfig(data: number[], colors: ChartColors): ChartConfiguration<'line'> {
-    const pointRadii = calculatePointRadii(data.length);
+  createChartConfig(data: number[], colors: StatCardColors): ChartConfiguration<'line'> {
+    const dataLength = data.length;
 
     return {
       type: 'line',
       data: {
-        labels: Array.from({ length: data.length }, (_, i) => i),
+        labels: Array.from({ length: dataLength }, (_, i) => i),
         datasets: [
           {
             type: 'line',
             data,
             borderWidth: 1,
             tension: CHART_CONFIG.line.tension,
-            pointRadius: pointRadii,
+            pointRadius: 0,
             pointBackgroundColor: colors.point,
-            pointHoverRadius: pointRadii,
+            pointHoverRadius: (context: ScriptableContext<'line'>) => {
+              return isEndPoint(context.dataIndex, dataLength) ? 0 : 6;
+            },
             pointBorderWidth: CHART_CONFIG.point.borderWidth,
             pointBorderColor: colors.pointBorder,
             borderColor: colors.line,
             backgroundColor: colors.line,
+            pointHoverBackgroundColor: colors.point,
+            pointHoverBorderColor: colors.pointBorder,
+            pointHoverBorderWidth: CHART_CONFIG.point.hoverBorderWidth,
           },
         ],
       },
@@ -556,9 +588,25 @@ const statCard = (data: number[]) => ({
         devicePixelRatio: CHART_CONFIG.common.devicePixelRatio(),
         responsive: CHART_CONFIG.common.responsive,
         maintainAspectRatio: false,
+        interaction: {
+          mode: 'nearest',
+          intersect: true,
+        },
         plugins: {
           legend: CHART_CONFIG.common.hiddenLegend,
-          tooltip: CHART_CONFIG.common.disabledTooltip,
+          tooltip: {
+            enabled: false,
+            position: 'nearest',
+            filter: (tooltipItem) => !isEndPoint(tooltipItem.dataIndex, tooltipItem.dataset.data.length),
+            external: (context) => handleTooltip(context, colors),
+            callbacks: {
+              label: (context) => {
+                const value = context.parsed.y;
+                return value !== null ? value.toString() : '';
+              },
+              title: () => '',
+            },
+          },
         },
         scales: {
           x: CHART_CONFIG.common.hiddenAxis,
@@ -743,6 +791,7 @@ const courseCompletionChart = (data: CourseCompletionChartData) => ({
     ];
 
     const chartColors = [colors.enrolled, colors.completed, colors.in_progress, colors.inactive, colors.cancelled];
+    const dataKeys: CourseCompletionChartDataKey[] = ['enrolled', 'completed', 'in_progress', 'inactive', 'cancelled'];
 
     return {
       type: 'bar',
@@ -772,7 +821,21 @@ const courseCompletionChart = (data: CourseCompletionChartData) => ({
         devicePixelRatio: CHART_CONFIG.common.devicePixelRatio(),
         plugins: {
           legend: CHART_CONFIG.common.hiddenLegend,
-          tooltip: CHART_CONFIG.common.disabledTooltip,
+          tooltip: {
+            enabled: false,
+            position: 'nearest',
+            external: (context) => handleTooltip(context, colors),
+            callbacks: {
+              title: (items) => {
+                const item = items[0];
+                return data[dataKeys[item.datasetIndex]]?.label || '';
+              },
+              label: (item) => {
+                const value = item.raw as number;
+                return `${value}`;
+              },
+            },
+          },
         },
         scales: {
           x: {
