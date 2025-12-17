@@ -859,6 +859,9 @@ class InputField extends BaseComponent {
 			case InputType::SWITCH:
 				$input_html = $this->render_switch();
 				break;
+			case InputType::SEARCH:
+				$input_html = $this->render_search();
+				break;
 			default:
 				$input_html = $this->render_text_input();
 				break;
@@ -889,4 +892,7 @@ class InputField extends BaseComponent {
 		return $this->component_string;
 	}
 
+	protected function render_search(){
+		
+	}
 }
