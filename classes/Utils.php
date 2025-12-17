@@ -2916,7 +2916,7 @@ class Utils {
 		// @TODO need to make it dynamic with account view as mode.
 		// $view_mode = 'student';
 		// if ( User::is_admin() || User::is_instructor() ) {
-		// 	$view_mode = 'instructor';
+		// $view_mode = 'instructor';
 		// }
 
 		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
@@ -9391,7 +9391,7 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'index'   => array(
+			'index'         => array(
 				'title'    => __( 'Home', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => Icon::HOME_FILL,
@@ -9428,7 +9428,7 @@ class Utils {
 				'icon'     => Icon::NOTIFICATION,
 			),
 		);
-		
+
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
 				'title'    => __( 'Discussions', 'tutor' ),
@@ -9443,7 +9443,7 @@ class Utils {
 	/**
 	 * Should show the disscussion menu on the student
 	 * and instructor dashboard menu
-	 * 
+	 *
 	 * @since 4.0.0
 	 *
 	 * @return boolean
@@ -9744,7 +9744,7 @@ class Utils {
 	 *
 	 * @return string
 	 */
-	public function get_svg_icon( $name = '', $width = 16, $height = 16,  $attributes = array() ) {
+	public function get_svg_icon( $name = '', $width = 16, $height = 16, $attributes = array() ) {
 
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
@@ -10668,12 +10668,12 @@ class Utils {
 	 * @param integer $width Icon width.
 	 * @param integer $height Icon height.
 	 * @param array   $attributes Custom attributes.
-	 * @param bool   $return     Whether to return the SVG markup instead of echoing it.
- 	 *                           Default false (echo).
-	 *
-	 * @return string|null Returns the SVG markup when $return is true, otherwise null.
+	 * @param bool    $return     Whether to return the SVG markup instead of echoing it.
+	 *                            Default false (echo).
+	 * 
+	 * @return string|null Returns the SVG markup when `$return` is true, otherwise null.
 	 */
-	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array(), $return = false ) :?string {
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array(), $return = false ):? string {
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
 			return null;
@@ -10704,6 +10704,7 @@ class Utils {
 
 		if ( ! $return ) {
 			printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+			return null;
 		}
 
 		return '<svg '. $attr_string .'>'. $inner_svg .'</svg>';
