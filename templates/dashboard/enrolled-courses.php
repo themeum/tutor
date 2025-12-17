@@ -55,7 +55,7 @@ $enrolled_course_count  = $full_course_list_array['enrolled-courses'] ? $full_co
 $active_course_count    = $full_course_list_array['enrolled-courses/active-courses'] ? $full_course_list_array['enrolled-courses/active-courses']->found_posts : 0;
 $completed_course_count = $full_course_list_array['enrolled-courses/completed-courses'] ? $full_course_list_array['enrolled-courses/completed-courses']->found_posts : 0;
 
-$courses_tabs = array(
+$courses_tab = array(
 	array(
 		'type'    => 'dropdown',
 		'icon'    => Icon::ENROLLED,
@@ -100,7 +100,7 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 			tutor_load_template(
 				'core-components.nav',
 				array(
-					'items'   => $courses_tabs,
+					'items'   => $courses_tab,
 					'size'    => 'sm',
 					'variant' => 'primary',
 				)
