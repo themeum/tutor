@@ -1,6 +1,7 @@
 import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { type AlpineToastData, type ToastConfig, type ToastItem, type ToastType } from '@Core/ts/types/toast';
+import { __ } from '@wordpress/i18n';
 
 export function createToast(): AlpineToastData {
   return {
@@ -21,10 +22,10 @@ export function createToast(): AlpineToastData {
     show(message: string, config: ToastConfig = {}): void {
       const type = config.type || 'info';
       const defaultTitles: Record<ToastType, string> = {
-        success: 'Success',
-        error: 'Error',
-        warning: 'Warning',
-        info: 'Info',
+        success: __('Success', 'tutor'),
+        error: __('Error', 'tutor'),
+        warning: __('Warning', 'tutor'),
+        info: __('Info', 'tutor'),
       };
 
       const toast: ToastItem = {
