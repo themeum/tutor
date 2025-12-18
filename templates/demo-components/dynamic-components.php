@@ -765,9 +765,66 @@
 
 	<div class="input-field-wrapper tutor-mb-12">
 		<h2>Input Fields</h2>
-		<pre><code>
-		&lt;?php
-		?&gt;</code></pre>
+		<br>
+		<pre><code>&lt;?php
+	$interests = array(
+		array(
+			'label'       => 'Software Development',
+			'value'       => 'sd',
+			'icon'        => Icon::BOOK_2,
+			'description' => 'Interest in software',
+		),
+		array(
+			'label'       => 'UI/UX',
+			'value'       => 'uiux',
+			'icon'        => Icon::ALERT,
+			'description' => 'Interest in UI/UX',
+		),
+		array(
+			'label'       => 'Testing',
+			'value'       => 'test',
+			'icon'        => Icon::CART,
+			'description' => 'Interest in testing',
+		),
+	);
+
+	InputField::make()
+		->type( 'text' )
+		->name( 'name' )
+		->label( 'Full Name' )
+		->placeholder( 'Enter your full name' )
+		->required()
+		->clearable()
+		->help_text( 'This is a helper text.' )
+		->attr( 'x-bind', "register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+		->render();
+
+	InputField::make()
+		->type( 'select' )
+		->name( 'interests' )
+		->label( 'Interests' )
+		->placeholder( 'Select your interests' )
+		->required( 'Please select an interest' )
+		->clearable()
+		->options( $interests )
+		->placeholder( 'Search for interests', true )
+		->multiple()
+		->searchable()
+		->size( 'md' )
+		->help_text( 'This is a selection helper text.' )
+		->render();
+
+	InputField::make()
+		->type( 'checkbox' )
+		->name( 'terms' )
+		->label( 'Agree with terms' )
+		->required()
+		->clearable()
+		->help_text( 'This is a helper text.' )
+		->attr( 'x-bind', "register('terms', { required: 'Gender is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+		->render();
+	?&gt;</code></pre>
+	<br>
 			<?php
 
 			// Text input with left icon
@@ -919,13 +976,56 @@
 			// ->help_text('Upgrade to access.')
 			// ->render();
 
+			// $countries = array(
+			// array(
+			// 'label' => 'United States',
+			// 'value' => 'us',
+			// 'icon'  => Icon::GLOBE,
+			// ),
+			// array(
+			// 'label'    => 'United Kingdom',
+			// 'value'    => 'uk',
+			// 'disabled' => true,
+			// 'icon'     => Icon::GLOBE,
+			// ),
+			// array(
+			// 'label' => 'Canada',
+			// 'value' => 'ca',
+			// 'icon'  => Icon::GLOBE,
+			// ),
+			// );
+
+			// $grouped_options = array(
+			// array(
+			// 'label'   => 'Popular',
+			// 'options' => array(
+			// array(
+			// 'label' => 'JavaScript',
+			// 'value' => 'js',
+			// ),
+			// ),
+			// ),
+			// array(
+			// 'label'   => 'Other Languages',
+			// 'options' => array(
+			// array(
+			// 'label' => 'Ruby',
+			// 'value' => 'rb',
+			// ),
+			// array(
+			// 'label' => 'Go',
+			// 'value' => 'go',
+			// ),
+			// ),
+			// ),
+			// );
 
 			// // Input field with selection and search.
 			// InputField::make()
-			// ->type( InputType::SELECT )
+			// ->type( 'select' )
 			// ->name( 'country' )
 			// ->label( 'Countries' )
-			// ->options( $options )
+			// ->options( $countries )
 			// ->placeholder( 'Select a Country....' )
 			// ->searchable()
 			// ->multiple()
@@ -934,7 +1034,7 @@
 
 			// // Input field with grouped options.
 			// InputField::make()
-			// ->type( InputType::SELECT )
+			// ->type( 'select' )
 			// ->name( 'language' )
 			// ->label( 'Languages' )
 			// ->groups( $grouped_options )
@@ -943,21 +1043,21 @@
 
 			// // Disabled input field.
 			// InputField::make()
-			// ->type( InputType::SELECT )
+			// ->type( 'select' )
 			// ->name( 'disabled' )
 			// ->label( 'Disabled Field' )
 			// ->disabled()
-			// ->options( $options )
+			// ->options( $countries )
 			// ->placeholder( 'Disable....' )
 			// ->render();
 
 			// // Loading input field.
 			// InputField::make()
-			// ->type( InputType::SELECT )
+			// ->type( 'select' )
 			// ->name( 'loading' )
 			// ->label( 'Loading Field' )
 			// ->loading()
-			// ->options( $options )
+			// ->options( $countries )
 			// ->placeholder( 'Loading....' )
 			// ->render();
 			?>
@@ -1017,11 +1117,11 @@
 							->required( 'Please select an interest' )
 							->clearable()
 							->options( $interests )
+							->placeholder( 'Search for interests', true )
 							->multiple()
 							->searchable()
 							->size( 'md' )
-							->max_selections( 2 )
-							->help_text( 'This is a helper next.' )
+							->help_text( 'This is a selection helper text.' )
 							->render();
 
 						InputField::make()

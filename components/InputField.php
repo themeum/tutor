@@ -15,6 +15,8 @@ namespace Tutor\Components;
 
 use ReflectionClass;
 use Tutor\Components\Constants\InputType;
+use Tutor\Components\Constants\Size;
+use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -157,6 +159,15 @@ class InputField extends BaseComponent {
 	 * @var string
 	 */
 	protected $placeholder = '';
+
+	/**
+	 * Search Input placeholder text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $searchPlaceholder = '';
 
 	/**
 	 * Help text below input.
@@ -309,7 +320,43 @@ class InputField extends BaseComponent {
 	 *
 	 * @var integer
 	 */
-	protected $max_selections = 3;
+	protected $max_selections = 0;
+
+	/**
+	 * Close select input on selecting option.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var boolean
+	 */
+	protected $close_on_select = false;
+
+	/**
+	 * Max Height for select input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var integer
+	 */
+	protected $max_height = 280;
+
+	/**
+	 * Empty state message for input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $empty_message = '';
+
+	/**
+	 * Loading state message for input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $loading_message = '';
 
 	/**
 	 * Set input type.
@@ -404,11 +451,16 @@ class InputField extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param string $placeholder Placeholder text.
+	 * @param bool   $search whether placeholder is for search input.
 	 *
 	 * @return $this
 	 */
-	public function placeholder( $placeholder ) {
-		$this->placeholder = $placeholder;
+	public function placeholder( $placeholder, $search = false ) {
+		if ( $search ) {
+			$this->searchPlaceholder = $placeholder;
+		} else {
+			$this->placeholder = $placeholder;
+		}
 		return $this;
 	}
 
@@ -423,6 +475,34 @@ class InputField extends BaseComponent {
 	 */
 	public function help_text( $text ) {
 		$this->help_text = $text;
+		return $this;
+	}
+
+	/**
+	 * Set the max height for select input
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $max_height the max height.
+	 *
+	 * @return self
+	 */
+	public function max_height( $max_height = 280 ): self {
+		$this->max_height = $max_height;
+		return $this;
+	}
+
+	/**
+	 * Collapse select input on selecting option.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param boolean $close_on_select close on selecting option.
+	 *
+	 * @return self
+	 */
+	public function collapsable( $close_on_select = false ): self {
+		$this->close_on_select = $close_on_select;
 		return $this;
 	}
 
@@ -612,6 +692,34 @@ class InputField extends BaseComponent {
 		return $this;
 	}
 
+	/**
+	 * Set empty message for input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $empty_message the empty message.
+	 *
+	 * @return self
+	 */
+	public function empty_message( $empty_message = '' ): self {
+		$this->empty_message = $empty_message;
+		return $this;
+	}
+
+	/**
+	 * Set loading message for input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $loading_message the empty message.
+	 *
+	 * @return self
+	 */
+	public function loading_message( $loading_message = '' ): self {
+		$this->loading_message = $loading_message;
+		return $this;
+	}
+
 
 	/**
 	 * Options for select input field.
@@ -623,10 +731,12 @@ class InputField extends BaseComponent {
 	 * Example format for $options:
 	 * ```
 	 * $options = array(
-	 *    'label'       => '',
-	 *    'value'       => '',
-	 *    'icon'        => '',
-	 *    'description' => '',
+	 *    array(
+	 *      'label'       => '',
+	 *      'value'       => '',
+	 *      'icon'        => '',
+	 *      'description' => '',
+	 *    )
 	 * );
 	 * ```
 	 * @return self
@@ -687,6 +797,261 @@ class InputField extends BaseComponent {
 	}
 
 	/**
+	 * Render select input trigger button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	protected function render_select_input_button(): string {
+
+		$single_input = '
+			<div class="tutor-select-value">
+				<template x-if="selectedOptions.length > 0 && selectedOptions[0].icon">
+					<span class="tutor-select-value-icon" x-data="tutorIcon({ name: selectedOptions[0].icon })"></span>
+				</template>
+				<span 
+					class="tutor-select-value-text"
+					:class="{ \'tutor-select-value-placeholder\': selectedValues.size === 0 }"
+					x-text="displayValue"
+				></span>
+			</div>';
+
+		$multiple_input = sprintf(
+			'
+			<div class="tutor-select-tags">
+				<template x-if="selectedOptions.length === 0">
+					<span class="tutor-select-value-placeholder" x-text="placeholder"></span>
+				</template>
+				<template x-for="option in selectedOptions" :key="option.value">
+					<span class="tutor-select-tag">
+						<span class="tutor-select-tag-label" x-text="option.label"></span>
+						<button
+							type="button"
+							class="tutor-select-tag-remove"
+							@click.stop="deselectOption(option, $event)"
+							:aria-label="\'Remove \' + option.label"
+						>
+						%s
+						</button>
+					</span>
+				</template>
+			</div>
+		',
+			tutor_utils()->get_svg_icon( Icon::CROSS, 12, 12 )
+		);
+
+		$right_icon_html = $this->right_icon ? $this->right_icon : tutor_utils()->get_svg_icon( Icon::CHEVRON_DOWN, 16, 16 );
+
+		$input_button = $this->multiple ? $multiple_input : $single_input;
+
+		return sprintf(
+			'<button
+				type="button"
+				class="tutor-select-trigger"
+				data-select-trigger
+				@click="toggle()"
+				:aria-expanded="isOpen.toString()"
+				:aria-haspopup="\'listbox\'"
+				:disabled="disabled"
+			>
+			%s
+				<div class="tutor-select-actions" x-cloak>
+					<template x-if="canClear">
+						<button
+							type="button"
+							class="tutor-select-clear"
+							@click.stop="clear($event)"
+							aria-label="%s"
+						>
+						%s
+						</button>
+					</template>
+				%s
+				</div>
+			</button>
+			',
+			$input_button,
+			esc_attr__( 'Clear selection', 'tutor' ),
+			tutor_utils()->get_svg_icon( Icon::CROSS, 16, 16 ),
+			$right_icon_html
+		);
+	}
+
+	/**
+	 * Render option values for different selection.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param boolean $is_grouped whether the options are grouped.
+	 *
+	 * @return string
+	 */
+	protected function render_selection_option( $is_grouped = false ): string {
+		$option_type = $is_grouped ? 'group.options' : 'filteredOptions';
+
+		return sprintf(
+			'
+			<template x-for="(option, optionIndex) in %s" :key="option.value">
+				<div
+					class="tutor-select-option"
+					data-select-option
+					:data-disabled="option.disabled ? \'true\' : \'false\'"
+					:data-selected="isSelected(option) ? \'true\' : \'false\'"
+					:data-highlighted="isHighlighted(filteredOptions.indexOf(option)) ? \'true\' : \'false\'"
+					@click="selectOption(option)"
+					@mouseenter="highlightedIndex = filteredOptions.indexOf(option)"
+					role="option"
+					:aria-selected="isSelected(option).toString()"
+				>
+					<template x-if="option.icon">
+						<span class="tutor-select-option-icon" x-data="tutorIcon({ name: option.icon })"></span>
+					</template>
+					<div class="tutor-select-option-content">
+						<div class="tutor-select-option-label" x-text="option.label"></div>
+						<template x-if="option.description">
+							<div class="tutor-select-option-description" x-text="option.description"></div>
+						</template>
+					</div>
+				</div>
+			</template>
+			',
+			$option_type
+		);
+	}
+
+	/**
+	 * Get grouped select option markup
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	protected function get_grouped_option_markup(): string {
+		return sprintf(
+			'
+		<template x-if="!isLoading && !loading && hasGroups">
+			<template x-for="(group, groupIndex) in filteredGroups" :key="groupIndex">
+				<div class="tutor-select-group">
+					<div class="tutor-select-group-label" x-text="group.label"></div>
+					<div class="tutor-select-group-options">
+						%s
+					</div>
+				</div>
+			</template>
+		</template>',
+			$this->render_selection_option( true )
+		);
+	}
+
+	/**
+	 * Get flat select option markup
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	protected function get_flat_option_markup(): string {
+		return sprintf(
+			'
+			<template x-if="!isLoading && !loading && !hasGroups">
+				%s
+			</template>
+			',
+			$this->render_selection_option()
+		);
+	}
+
+	/**
+	 * Get select input search field markup
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	protected function get_search_input_markup(): string {
+
+		$left_icon_html = $this->left_icon ? $this->left_icon : tutor_utils()->get_svg_icon( Icon::SEARCH_2, 20, 20 );
+
+		$search_input = sprintf(
+			'
+			<template x-if="searchable">
+				<div class="tutor-select-search">
+					<span class="tutor-select-search-icon">
+							%s
+					</span>
+					<input
+							type="text"
+							class="tutor-select-search-input"
+							data-select-search
+							:placeholder="searchPlaceholder"
+							x-model="searchQuery"
+							@input="handleSearch($event.target.value)"
+							@keydown.stop
+						/>
+					</div>
+				</div>
+			</template>
+			',
+			$left_icon_html
+		);
+
+		return $search_input;
+	}
+
+	/**
+	 * Render select input option list.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	protected function render_select_input_options(): string {
+
+		$loading_state = '
+			<template x-if="isLoading || loading">
+				<div class="tutor-select-loading">
+					<span class="tutor-select-loading-spinner"></span>
+					<span x-text="loadingMessage"></span>
+				</div>
+			</template>';
+
+		$empty_state = '
+			<template x-if="!isLoading && !loading && filteredOptions.length === 0">
+				<div class="tutor-select-empty" x-text="emptyMessage"></div>
+			</template>';
+
+		$grouped_options = $this->get_grouped_option_markup();
+		$flat_options    = $this->get_flat_option_markup();
+
+		return sprintf(
+			'<div
+				x-show="isOpen"
+				x-cloak
+				x-transition
+				@click.outside="close()"
+				class="tutor-select-menu"
+				data-select-menu
+				:data-position="dropdownPosition"
+				:style="{ maxHeight: maxHeight + \'px\' }"
+			>
+			%s
+				<div class="tutor-select-options">
+					%s
+					%s
+					%s
+					%s
+				</div>
+			</div>',
+			$this->get_search_input_markup(),
+			$loading_state,
+			$empty_state,
+			$grouped_options,
+			$flat_options
+		);
+	}
+
+	/**
 	 * Render the Select Input Component HTML.
 	 *
 	 * @since 4.0.0
@@ -699,27 +1064,76 @@ class InputField extends BaseComponent {
 			return '';
 		}
 
-		ob_start();
-		tutor_load_template(
-			'core-components.form-select',
-			array(
-				'options'        => $this->options,
-				'groups'         => $this->groups,
-				'placeholder'    => $this->placeholder,
-				'name'           => $this->name,
-				'required'       => $this->required,
-				'searchable'     => $this->searchable,
-				'multiple'       => $this->multiple,
-				'clearable'      => $this->clearable,
-				'max_selections' => $this->max_selections,
-				'size'           => $this->size,
-				'disabled'       => $this->disabled,
-				'loading'        => $this->loading,
-			)
+		$props = array(
+			'options'           => $this->options,
+			'groups'            => $this->groups,
+
+			'searchable'        => $this->searchable,
+			'clearable'         => $this->clearable,
+			'disabled'          => $this->disabled,
+			'loading'           => $this->loading,
+			'closeOnSelect'     => $this->close_on_select,
+
+			'multiple'          => $this->multiple,
+
+			'name'              => $this->name,
+			'required'          => $this->required,
+
+			'placeholder'       => $this->placeholder,
+			'searchPlaceholder' => $this->searchPlaceholder,
+			'emptyMessage'      => $this->empty_message,
+			'loadingMessage'    => $this->loading_message,
+			'maxHeight'         => $this->max_height,
+
 		);
 
-		$output = ob_get_clean();
-		return $output;
+		if ( $this->value ) {
+			$props['value'] = $this->value;
+		}
+
+		if ( $this->max_selections ) {
+			$props['maxSelections'] = $this->max_selections;
+		}
+
+		$size_class = '';
+		if ( Size::SM === $this->size ) {
+			$size_class = 'tutor-select-sm';
+		} elseif ( Size::LG === $this->size ) {
+			$size_class = 'tutor-select-lg';
+		}
+
+		$props_json           = htmlspecialchars( wp_json_encode( $props ), ENT_QUOTES, 'UTF-8' );
+		$select_input_buttons = $this->render_select_input_button() ?? '';
+		$select_input_options = $this->render_select_input_options() ?? '';
+
+		$error_html = sprintf(
+			'<div 
+				class="tutor-error-text" 
+				x-cloak 
+				x-show="errors.%1$s" 
+				x-text="errors?.%1$s?.message" 
+				role="alert" 
+				aria-live="polite"
+			></div>',
+			esc_attr( $this->name )
+		);
+
+		return sprintf(
+			'<div
+				x-data="tutorSelect(%s)",
+				class="tutor-select %s"
+				:data-disabled="disabled.toString()"
+			>
+				%s
+				%s
+			</div>
+			%s',
+			$props_json,
+			$size_class,
+			$select_input_buttons,
+			$select_input_options,
+			$error_html
+		);
 	}
 
 	/**
