@@ -6,12 +6,12 @@
 
 .tutor-preview-trigger {
   display: inline;
-  border-bottom: 1px dashed $tutor-border-idle;
   position: relative;
 
   &-text {
     font-style: italic;
-    text-decoration: none;
+    text-decoration: underline dashed $tutor-border-hover;
+    text-underline-offset: 4px;
     color: $tutor-text-secondary;
     transition: color 0.2s ease;
     cursor: pointer;
