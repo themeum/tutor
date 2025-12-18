@@ -29,6 +29,8 @@ $page_tabs = apply_filters(
 		'courses'                   => __( 'Enrolled Courses', 'tutor' ),
 		'courses/active-courses'    => __( 'Active Courses', 'tutor' ),
 		'courses/completed-courses' => __( 'Completed Courses', 'tutor' ),
+		'courses/wishlist'          => __( 'Wishlist', 'tutor' ),
+		'courses/my-quiz-attempts'  => __( 'Quiz Attempts', 'tutor' ),
 	),
 	$post_type_query
 );
@@ -84,11 +86,23 @@ $courses_tab = array(
 			),
 		),
 	),
+	array(
+		'type'   => 'link',
+		'label'  => __( 'Wishlist', 'tutor' ),
+		'icon'   => Icon::WISHLIST,
+		'url'    => esc_url( tutor_utils()->tutor_dashboard_url( 'courses/wishlist' ) ),
+		'active' => 'courses/wishlist' === $active_tab ? true : false,
+		'count'  => $wishlist_course_count ?? 0,
+	),
+	array(
+		'type'   => 'link',
+		'label'  => __( 'Quiz Attempts', 'tutor' ),
+		'icon'   => Icon::QUIZ_2,
+		'url'    => esc_url( tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) ),
+		'active' => 'courses/my-quiz-attempts' === $active_tab ? true : false,
+		'count'  => 0,
+	),
 );
-
-// Prepare course list based on page tab.
-$courses_list           = $courses_list_array[ $active_tab ];
-$paginated_courses_list = $full_course_list_array[ $active_tab ];
 
 ?>
 
@@ -106,21 +120,33 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 				)
 			);
 			?>
-		<div class="tutor-flex tutor-items-center tutor-gap-3">
-			<?php do_action( 'tutor_dashboard_enrolled_courses_filter' ); ?>
-		</div>
+		<?php if ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) : ?>
+			<div class="tutor-flex tutor-items-center tutor-gap-3">
+				<?php do_action( 'tutor_dashboard_enrolled_courses_filter' ); ?>
+			</div>
+		<?php endif; ?>
 	</div>
 
-	<!-- courses list  -->
-	<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+	<?php
+	if ( 'courses/wishlist' === $active_tab || 'courses/my-quiz-attempts' === $active_tab ) :
+		match ( $active_tab ) {
+			'courses/wishlist' => tutor_load_template( 'dashboard.wishlist' ),
+			'courses/my-quiz-attempts' => tutor_load_template( 'dashboard.my-quiz-attempts' ),
+		};
+	elseif ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) :
+		// Prepare course list based on page tab.
+		$courses_list           = $courses_list_array[ $active_tab ];
+		$paginated_courses_list = $full_course_list_array[ $active_tab ];
+		?>
+		<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
 		<?php
 		if ( $courses_list && $courses_list->have_posts() ) :
 			while ( $courses_list->have_posts() ) :
 				$courses_list->the_post();
 				tutor_load_template( 'dashboard.courses.course-card' );
-			endwhile;
+				endwhile;
 			?>
-			<div class="tutor-dashboard-courses-pagination tutor-pt-6">
+				<div class="tutor-dashboard-courses-pagination tutor-pt-6">
 				<?php
 					Pagination::make()
 					->current( $paged )
@@ -130,9 +156,10 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 					->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
 					->render();
 				?>
-			</div>
-		<?php else : ?>
-			<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+				</div>
+			<?php else : ?>
+				<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+			<?php endif; ?>
+		</div>
 		<?php endif; ?>
-	</div>
 </div>
