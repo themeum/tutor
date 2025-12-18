@@ -11,6 +11,7 @@
 
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
+use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Input;
@@ -87,7 +88,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 }
 ?>
 
-<div class="tutor-dashboard-my-courses" x-data="myCourses()">
+<div class="tutor-dashboard-my-courses" x-data="tutorMyCourses()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-border-b">
 			<?php
@@ -114,57 +115,20 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			</div>
 		</div>
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-py-5 tutor-px-6 tutor-border-b">
-			<form 
-				action="<?php echo esc_url( $current_url ); ?>" 
-				method="GET" 
-				id="tutor-my-courses-search-form"
-				x-data="tutorForm({ id: 'tutor-my-courses-search-form', mode: 'onSubmit' })"
-				x-bind="getFormBindings()"
-				@submit="handleSubmit(
-					(data) => { 
-						$el.submit();
-					}
-				)($event)"
-			>
-				<input type="hidden" name="paged" value="1">
-				<?php if ( ! empty( $post_type_query ) ) : ?>
-					<input type="hidden" name="type" value="<?php echo esc_attr( $post_type_query ); ?>">
-				<?php endif; ?>
-				<div class="tutor-input-field">
-					<div class="tutor-input-wrapper">
-						<div class="tutor-input-content tutor-input-content-left">
-							<?php
-							tutor_utils()->render_svg_icon(
-								Icon::SEARCH_2,
-								20,
-								20,
-								array( 'class' => 'tutor-icon-idle' )
-							)
-							?>
-						</div>
-						<input 
-							type="search"
-							name="search"
-							placeholder="<?php esc_attr_e( 'Search courses...', 'tutor' ); ?>"
-							class="tutor-input tutor-input-sm tutor-input-content-left tutor-input-content-clear"
-							style="width: 280px;"
-							x-bind="register('search')"
-							x-init="$nextTick(() => setValue('search', '<?php echo esc_attr( $search ); ?>'))"
-						/>
+			<?php
+			$hidden_inputs = array();
+			if ( ! empty( $post_type_query ) ) {
+				$hidden_inputs['type'] = $post_type_query;
+			}
 
-						<button 
-							type="button"
-							class="tutor-input-clear-button"
-							x-show="values.search && String(values.search).length > 0"
-							x-cloak
-							aria-label="<?php esc_attr_e( 'Clear search', 'tutor' ); ?>"
-							@click="setValue('search', ''); $el.closest('form').submit();"
-						>
-							<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
-						</button>
-					</div>
-				</div>
-			</form>
+			SearchFilter::make()
+				->form_id( 'tutor-my-courses-search-form' )
+				->placeholder( __( 'Search courses...', 'tutor' ) )
+				->size( 'small' )
+				->action( $current_url )
+				->hidden_inputs( $hidden_inputs )
+				->render();
+			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
 				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
 				<?php Sorting::make()->order( $order )->render(); ?>
