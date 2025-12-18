@@ -77,21 +77,20 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 								<div class="tutor-course-card-rating">
 									<div class="tutor-ratings">
 										<?php
-										$course_rating = tutor_utils()->get_course_rating(1687);
-										tutor_utils()->star_rating_generator_course( $course_rating->rating_avg );
+										$course_rating = tutor_utils()->get_course_rating();
 										tutor_load_template(
 											'dashboard.wishlist.star-rating',
 											array(
-												'rating' => $rating_avg,
+												'rating' => $course_rating,
 												'wrapper_class' => 'tutor-course-card-ratings-stars',
 												'icon_class' => '',
 												'show_rating_average' => true,
 											)
 										);
 										?>
-										<?php if ( $rating_count > 0 ) : ?>
+										<?php if ( $course_rating->rating_count > 0 ) : ?>
 											<div class="tutor-ratings-count">
-												(<?php echo esc_html( number_format_i18n( $rating_count ) ); ?>)
+												(<?php echo esc_html( number_format_i18n( $course_rating->rating_count ) ); ?>)
 											</div>
 										<?php endif; ?>
 									</div>
@@ -163,7 +162,7 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 
 
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24"><?php esc_html_e( 'Wishlist', 'tutor' ); ?></div>
-<div class="tutor-dashboard-content-inner my-wishlist" style="display: none;">
+<div class="tutor-dashboard-content-inner my-wishlist" style="display: block;">
 	<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
 		<div class="tutor-grid tutor-grid-3">
 			<?php
