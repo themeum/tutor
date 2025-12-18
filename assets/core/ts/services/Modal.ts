@@ -5,7 +5,7 @@ import { type ServiceMeta } from '@Core/ts/types';
  * ModalService: programmatic API for opening/closing/updating modals.
  * Emits DOM CustomEvents consumed by Alpine modal instances.
  */
-class ModalService {
+export class ModalService {
   showModal(id?: string | null, data?: unknown): void {
     document.dispatchEvent(
       new CustomEvent(TUTOR_CUSTOM_EVENTS.MODAL_OPEN, {

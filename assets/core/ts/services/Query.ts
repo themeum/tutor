@@ -56,7 +56,7 @@ class QueryCache {
 /**
  * Query state interface
  */
-interface QueryState<TData = unknown, TError = Error> {
+export interface QueryState<TData = unknown, TError = Error> {
   data: TData | null;
   error: TError | null;
   isLoading: boolean;
@@ -72,14 +72,14 @@ interface QueryState<TData = unknown, TError = Error> {
 /**
  * Mutation state interface
  */
-interface MutationState<TData = unknown, TVariables = unknown, TError = Error> {
+export interface MutationState<TData = unknown, TVariables = unknown, TError = Error> {
   data: TData | null;
   error: TError | null;
   isPending: boolean;
   isError: boolean;
   isSuccess: boolean;
-  mutate(variables: TVariables): Promise<TData>;
-  mutateAsync(variables: TVariables): Promise<TData>;
+  mutate(variables?: TVariables): Promise<TData>;
+  mutateAsync(variables?: TVariables): Promise<TData>;
   reset(): void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
@@ -108,7 +108,7 @@ interface MutationOptions<TData = unknown, TVariables = unknown, TError = Error>
  * QueryService: Provides TanStack Query-like functionality using Alpine.reactive
  * Supports data fetching with caching, mutations, and cache invalidation
  */
-class QueryService {
+export class QueryService {
   private queryCache = new QueryCache();
 
   /**
