@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * EmptyState::make()
  *     ->title( 'No Data' )
  *     ->subtitle( 'Please check back later.' )
+ *     ->icon_path( 'path/to/icon.png' )
  *     ->render();
  * ```
  *
@@ -50,6 +51,13 @@ class EmptyState extends BaseComponent {
 	 * @var string
 	 */
 	protected $icon;
+
+	/**
+	 * Icon path (URL)
+	 *
+	 * @var string
+	 */
+	protected $icon_path;
 
 	/**
 	 * Set title
@@ -88,6 +96,18 @@ class EmptyState extends BaseComponent {
 	}
 
 	/**
+	 * Set icon path
+	 *
+	 * @param string $icon_path icon path (URL).
+	 *
+	 * @return self
+	 */
+	public function icon_path( string $icon_path ): self {
+		$this->icon_path = $icon_path;
+		return $this;
+	}
+
+	/**
 	 * Get default icon
 	 *
 	 * @return string
@@ -121,7 +141,15 @@ class EmptyState extends BaseComponent {
 			$subtitle = tutor_utils()->get_list_empty_state_subtitle();
 		}
 
-		$icon = $this->icon ?? $this->get_default_icon();
+		$icon = $this->icon;
+
+		if ( ! empty( $this->icon_path ) ) {
+			$icon = '<img src="' . esc_url( $this->icon_path ) . '" alt="' . esc_attr( $title ) . '">';
+		}
+
+		if ( empty( $icon ) ) {
+			$icon = $this->get_default_icon();
+		}
 
 		ob_start();
 		?>
