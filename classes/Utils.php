@@ -10670,10 +10670,10 @@ class Utils {
 	 * @param array   $attributes Custom attributes.
 	 * @param bool    $return     Whether to return the SVG markup instead of echoing it.
 	 *                            Default false (echo).
-	 * 
+	 *
 	 * @return string|null Returns the SVG markup when `$return` is true, otherwise null.
 	 */
-	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array(), $return = false ):? string {
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array(), $return = false ): ?string {
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
 			return null;
@@ -10707,7 +10707,7 @@ class Utils {
 			return null;
 		}
 
-		return '<svg '. $attr_string .'>'. $inner_svg .'</svg>';
+		return '<svg ' . $attr_string . '>' . $inner_svg . '</svg>';
 	}
 
 	/**
@@ -10744,5 +10744,29 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	public function render_template( $template, $data, $type, $tutor_pro = false ) {
+
+		ob_start();
+
+		switch ( $type ) {
+			case 'include':
+				include $template;
+				break;
+
+			case 'custom_template':
+				tutor_load_template_from_custom_path( $template, $data );
+				break;
+
+			case 'template':
+				tutor_load_template( $template, $data, $tutor_pro );
+				break;
+
+			default:
+				break;
+		}
+
+		return (string) ob_get_clean();
 	}
 }
