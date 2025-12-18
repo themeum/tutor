@@ -1,4 +1,5 @@
 import { DragDropManager, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
+import { RestrictToElement } from '@dnd-kit/dom/modifiers';
 import { Sortable } from '@dnd-kit/dom/sortable';
 import { Chart, type ChartConfiguration, type ScriptableContext, type TooltipModel } from 'chart.js/auto';
 
@@ -424,6 +425,11 @@ const sortSections = (sectionsIds: string[]) => ({
           index: idx,
           element: element,
           handle: handle ?? undefined,
+          modifiers: [
+            RestrictToElement.configure({
+              element: this.$el,
+            }),
+          ],
         },
         manager,
       );
