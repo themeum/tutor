@@ -315,7 +315,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isSubmitting = false;
       this.isValidating = false;
 
-      if (this.formId && window.TutorCore) {
+      if (this.formId) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (formServiceMeta.instance as any).register(this.formId, this);
       }
