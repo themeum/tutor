@@ -28,25 +28,25 @@ $sortable_sections = array(
 	array(
 		'id'        => 'course_completion_and_leader',
 		'label'     => esc_html__( 'Course Completion and Leader', 'tutor' ),
-		'is_active' => false,
+		'is_active' => true,
 		'order'     => 2,
 	),
 	array(
 		'id'        => 'top_performing_courses',
 		'label'     => esc_html__( 'Top Performing Courses', 'tutor' ),
-		'is_active' => false,
+		'is_active' => true,
 		'order'     => 3,
 	),
 	array(
 		'id'        => 'upcoming_tasks_and_activity',
 		'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
-		'is_active' => false,
+		'is_active' => true,
 		'order'     => 4,
 	),
 	array(
 		'id'        => 'recent_reviews',
 		'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
-		'is_active' => false,
+		'is_active' => true,
 		'order'     => 6,
 	),
 );
