@@ -24,7 +24,7 @@ export interface PopoverProps {
 export const popover = (props: PopoverProps = {}) => ({
   open: false,
   placement: props.placement || PLACEMENTS.BOTTOM_START,
-  offset: props.offset || 4,
+  offset: props.offset ?? 4,
   actualPlacement: '',
   $el: undefined as HTMLElement | undefined,
   $refs: {} as { trigger: HTMLElement; content: HTMLElement },
