@@ -249,7 +249,6 @@ const createTooltipHeader = (titleLines: string[], colors: { tooltip: TooltipCol
       lineHeight: CHART_CONFIG.tooltip.lineHeight,
       fontWeight: 'normal',
       color: colors.tooltip.title,
-      marginBottom: '4px',
       textAlign: 'start',
     });
 
@@ -456,7 +455,9 @@ const sortSections = (sectionsIds: string[]) => ({
       }
 
       if ('startViewTransition' in document) {
-        document.startViewTransition(() => this.updateDom());
+        setTimeout(() => {
+          document.startViewTransition(() => this.updateDom());
+        }, 260);
       } else {
         this.updateDom();
       }

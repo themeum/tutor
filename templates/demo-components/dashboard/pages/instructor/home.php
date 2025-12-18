@@ -436,7 +436,7 @@ $recent_reviews = array(
 	<!-- Stat cards -->
 	<div 
 		data-section-id="current_stats" 
-		class="tutor-flex tutor-gap-4"					
+		class="tutor-flex tutor-gap-5"					
 		:class="{ 'tutor-hidden':  !watch('current_stats')}"
 	>
 		<?php foreach ( $stat_cards as $card ) : ?>

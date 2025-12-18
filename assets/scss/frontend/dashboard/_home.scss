@@ -12,6 +12,10 @@
       @include tutor-flex-center;
       cursor: grab;
     }
+
+    .tutor-popover {
+      view-transition-name: tutor-dashboard-home-sort-popover;
+    }
   }
 
   &-chart {
