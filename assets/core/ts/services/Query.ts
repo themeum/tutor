@@ -78,8 +78,8 @@ export interface MutationState<TData = unknown, TVariables = unknown, TError = E
   isPending: boolean;
   isError: boolean;
   isSuccess: boolean;
-  mutate(variables?: TVariables): Promise<TData>;
-  mutateAsync(variables?: TVariables): Promise<TData>;
+  mutate(variables: TVariables): Promise<TData>;
+  mutateAsync(variables: TVariables): Promise<TData>;
   reset(): void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;

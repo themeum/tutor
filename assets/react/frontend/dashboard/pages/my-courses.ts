@@ -20,7 +20,7 @@ const myCoursesPage = () => {
 
     init() {
       // Setup create mutation
-      this.createMutation = this.query.useMutation(() => this.createCourse(), {
+      this.createMutation = this.query.useMutation(this.createCourse, {
         onSuccess: (response: CourseCreateResponse) => {
           if (response.status_code === 201 && response.data) {
             window.location.href = response.data;
@@ -43,10 +43,8 @@ const myCoursesPage = () => {
       });
     },
 
-    createCourse() {
-      return wpAjaxInstance.post('tutor_create_new_draft_course', {
-        from_dashboard: true,
-      });
+    createCourse(payload: { from_dashboard: boolean }) {
+      return wpAjaxInstance.post('tutor_create_new_draft_course', payload);
     },
 
     deleteCourse(courseId: number) {
@@ -56,7 +54,9 @@ const myCoursesPage = () => {
     },
 
     async handleCreateCourse() {
-      await this.createMutation?.mutate();
+      await this.createMutation?.mutate({
+        from_dashboard: true,
+      });
     },
 
     async handleDeleteCourse(courseId: number) {
