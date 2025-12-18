@@ -36,10 +36,6 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 
 ?>
 
-<?php
-// tutor_load_template( 'demo-components.dashboard.pages.wishlist' );
-?>
-
 <div class="tutor-dashboard-page-card-body">
 	<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
 		<div class="tutor-wishlist-grid">
@@ -79,7 +75,8 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 										<?php
 										$course_rating = tutor_utils()->get_course_rating();
 										tutor_load_template(
-											'dashboard.wishlist.star-rating',
+											'core-components.star-rating',
+											// 'dashboard.wishlist.star-rating',
 											array(
 												'rating' => $course_rating,
 												'wrapper_class' => 'tutor-course-card-ratings-stars',
