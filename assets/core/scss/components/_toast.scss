@@ -54,8 +54,7 @@
 .tutor-toast {
   @include tutor-flex(row, center, flex-start);
   gap: $tutor-spacing-4;
-  min-width: 300px;
-  max-width: 400px;
+  width: 320px;
   padding: $tutor-spacing-5 $tutor-spacing-6;
   border-radius: $tutor-radius-full;
   pointer-events: auto;
@@ -159,23 +158,3 @@
   }
 }
 
-// Responsive adjustments
-@media (max-width: 576px) {
-  .tutor-toast-container {
-    left: $tutor-spacing-4 !important;
-    right: $tutor-spacing-4 !important;
-    transform: none !important;
-
-    &-top-center,
-    &-bottom-center {
-      left: $tutor-spacing-4;
-      right: $tutor-spacing-4;
-    }
-  }
-
-  .tutor-toast {
-    min-width: auto;
-    max-width: none;
-    width: 100%;
-  }
-}
