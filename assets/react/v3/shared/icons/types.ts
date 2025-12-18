@@ -312,6 +312,7 @@ export const icons = [
   'spinner',
   'spreadsheet',
   'star',
+  'star2',
   'stepper',
   'stopwatch',
   'storeEye',

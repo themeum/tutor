@@ -11,6 +11,10 @@
       @include tutor-reset;
       @include tutor-flex-center;
       cursor: grab;
+      
+      svg {
+        color: $tutor-icon-secondary;
+      }
     }
 
     .tutor-popover {
