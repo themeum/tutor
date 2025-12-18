@@ -1,9 +1,6 @@
 import { type ServiceMeta } from '@Core/ts/types';
 import Alpine from 'alpinejs';
 
-/**
- * Query key type - supports string or array for complex keys
- */
 type QueryKey = string | readonly unknown[];
 
 /**
