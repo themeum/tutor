@@ -90,7 +90,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 
 <div class="tutor-dashboard-my-courses" x-data="tutorMyCourses()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
-		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-border-b">
+		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
 			<?php
 			tutor_load_template(
 				'core-components.nav',
@@ -114,7 +114,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				</button>
 			</div>
 		</div>
-		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-py-5 tutor-px-6 tutor-border-b">
+		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-py-5 tutor-px-6 tutor-sm-p-5 tutor-border-b">
 			<?php
 			$hidden_inputs = array();
 			if ( ! empty( $post_type_query ) ) {
@@ -138,7 +138,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<?php if ( empty( $results ) ) : ?>
 			<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
 		<?php else : ?>
-		<div class="tutor-p-6 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
+		<div class="tutor-p-6 tutor-sm-p-5 tutor-grid tutor-grid-cols-3 tutor-lg-grid-cols-2 tutor-md-grid-cols-3 tutor-sm-grid-cols-2 tutor-xs-grid-cols-1 tutor-gap-4">
 			<?php
 			global $post;
 			$tutor_nonce_value = wp_create_nonce( tutor()->nonce_action );
@@ -273,6 +273,20 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									<?php endif; ?>
 									<!-- # Cancel Submission -->
 
+									<!-- Edit Link -->
+									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
+										<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
+										<?php esc_html_e( 'Edit', 'tutor' ); ?>
+									</a>
+									<!-- Edit Link -->
+
+									<!-- View Link -->
+									<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-popover-menu-item tutor-hidden tutor-sm-flex">
+										<?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?>
+										<?php esc_html_e( 'Overview', 'tutor' ); ?>
+									</a>
+									<!-- View Link -->
+
 									<!-- Duplicate Action -->
 									<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_PENDING, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ), true ) ) : ?>
 										<?php
@@ -312,7 +326,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									<!-- Delete Action -->
 									<?php if ( $show_course_delete && $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT, CourseModel::STATUS_FUTURE ), true ) ) : ?>
 										<button 
-											class="tutor-popover-menu-item"
+											class="tutor-popover-menu-item tutor-border-t"
 											@click="hide(); TutorCore.modal.showModal('tutor-course-delete-modal', { courseId: <?php echo esc_html( $post->ID ); ?> });"
 										>
 											<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>

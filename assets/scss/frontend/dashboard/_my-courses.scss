@@ -79,6 +79,10 @@
     }
 
     @include tutor-breakpoint-down(sm) {
+      .tutor-my-courses-card-actions {
+        display: none;
+      }
+
       .tutor-my-courses-card-footer-actions {
         visibility: visible;
         opacity: 1;
