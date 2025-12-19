@@ -157,17 +157,6 @@ export const popover = (props: PopoverProps = {}) => ({
       height: window.innerHeight,
     };
 
-    const isTriggerOutOfView =
-      triggerRect.bottom < 0 ||
-      triggerRect.top > viewport.height ||
-      triggerRect.right < 0 ||
-      triggerRect.left > viewport.width;
-
-    if (isTriggerOutOfView) {
-      this.hide();
-      return;
-    }
-
     let top = 0;
     let left = 0;
     let actualPlacement = this.actualPlacement;
