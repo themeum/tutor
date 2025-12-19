@@ -1,8 +1,6 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { isRTL } from '@TutorShared/config/constants';
 
-const VIEWPORT_PADDING = 8;
-
 const PLACEMENTS = {
   TOP: 'top',
   TOP_START: 'top-start',
@@ -157,41 +155,8 @@ export const popover = (props: PopoverProps = {}) => ({
       height: window.innerHeight,
     };
 
-    let top = 0;
-    let left = 0;
-    let actualPlacement = this.actualPlacement;
-
-    // Calculate initial position based on placement
-    const positions = this.calculatePosition(triggerRect, contentRect, actualPlacement);
-    top = positions.top;
-    left = positions.left;
-
-    // Collision detection and flip if necessary
-    const collisions = this.detectCollisions(top, left, contentRect, viewport);
-
-    if (collisions.top || collisions.bottom || collisions.left || collisions.right) {
-      const flippedPlacement = this.getFlippedPlacement(actualPlacement, collisions);
-      if (flippedPlacement !== actualPlacement) {
-        const flippedPositions = this.calculatePosition(triggerRect, contentRect, flippedPlacement);
-        const flippedCollisions = this.detectCollisions(
-          flippedPositions.top,
-          flippedPositions.left,
-          contentRect,
-          viewport,
-        );
-
-        // Use flipped position if it has fewer collisions
-        if (this.countCollisions(flippedCollisions) < this.countCollisions(collisions)) {
-          top = flippedPositions.top;
-          left = flippedPositions.left;
-          actualPlacement = flippedPlacement;
-        }
-      }
-    }
-
-    // Final boundary adjustments
-    top = Math.max(VIEWPORT_PADDING, Math.min(top, viewport.height - contentRect.height - VIEWPORT_PADDING));
-    left = Math.max(VIEWPORT_PADDING, Math.min(left, viewport.width - contentRect.width - VIEWPORT_PADDING));
+    const placement = this.resolvePlacement(this.actualPlacement, triggerRect, contentRect, viewport);
+    const { top, left } = this.calculatePosition(triggerRect, contentRect, placement);
 
     // Apply positioning
     content.style.position = 'fixed';
@@ -200,7 +165,49 @@ export const popover = (props: PopoverProps = {}) => ({
     content.style.zIndex = '1060';
 
     // Update CSS classes for placement
-    this.updatePlacementClasses(content, actualPlacement);
+    this.updatePlacementClasses(content, placement);
+  },
+
+  resolvePlacement(
+    placement: string,
+    triggerRect: DOMRect,
+    contentRect: DOMRect,
+    viewport: { width: number; height: number },
+  ): string {
+    const space = {
+      top: triggerRect.top,
+      bottom: viewport.height - triggerRect.bottom,
+      left: triggerRect.left,
+      right: viewport.width - triggerRect.right,
+    };
+
+    const needsVerticalFlip = {
+      top: space.top < contentRect.height + this.offset && space.bottom > space.top,
+      bottom: space.bottom < contentRect.height + this.offset && space.top > space.bottom,
+    };
+
+    const needsHorizontalFlip = {
+      left: space.left < contentRect.width + this.offset && space.right > space.left,
+      right: space.right < contentRect.width + this.offset && space.left > space.right,
+    };
+
+    if (placement.startsWith('top') && needsVerticalFlip.top) {
+      return placement.replace('top', 'bottom');
+    }
+
+    if (placement.startsWith('bottom') && needsVerticalFlip.bottom) {
+      return placement.replace('bottom', 'top');
+    }
+
+    if (placement === PLACEMENTS.LEFT && needsHorizontalFlip.left) {
+      return PLACEMENTS.RIGHT;
+    }
+
+    if (placement === PLACEMENTS.RIGHT && needsHorizontalFlip.right) {
+      return PLACEMENTS.LEFT;
+    }
+
+    return placement;
   },
 
   calculatePosition(triggerRect: DOMRect, contentRect: DOMRect, placement: string) {
@@ -243,47 +250,6 @@ export const popover = (props: PopoverProps = {}) => ({
     }
 
     return { top, left };
-  },
-
-  detectCollisions(top: number, left: number, contentRect: DOMRect, viewport: { width: number; height: number }) {
-    return {
-      top: top < VIEWPORT_PADDING,
-      bottom: top + contentRect.height > viewport.height - VIEWPORT_PADDING,
-      left: left < VIEWPORT_PADDING,
-      right: left + contentRect.width > viewport.width - VIEWPORT_PADDING,
-    };
-  },
-
-  countCollisions(collisions: { top: boolean; bottom: boolean; left: boolean; right: boolean }) {
-    return Object.values(collisions).filter(Boolean).length;
-  },
-
-  getFlippedPlacement(placement: string, collisions: { top: boolean; bottom: boolean; left: boolean; right: boolean }) {
-    const flips: Record<string, string> = {
-      [PLACEMENTS.TOP]: PLACEMENTS.BOTTOM,
-      [PLACEMENTS.BOTTOM]: PLACEMENTS.TOP,
-      [PLACEMENTS.LEFT]: PLACEMENTS.RIGHT,
-      [PLACEMENTS.RIGHT]: PLACEMENTS.LEFT,
-      [PLACEMENTS.TOP_START]: PLACEMENTS.BOTTOM_START,
-      [PLACEMENTS.TOP_END]: PLACEMENTS.BOTTOM_END,
-      [PLACEMENTS.BOTTOM_START]: PLACEMENTS.TOP_START,
-      [PLACEMENTS.BOTTOM_END]: PLACEMENTS.TOP_END,
-    };
-
-    if (collisions.top && placement.startsWith(PLACEMENTS.TOP)) {
-      return flips[placement] || PLACEMENTS.BOTTOM;
-    }
-    if (collisions.bottom && placement.startsWith(PLACEMENTS.BOTTOM)) {
-      return flips[placement] || PLACEMENTS.TOP;
-    }
-    if (collisions.left && placement === PLACEMENTS.LEFT) {
-      return PLACEMENTS.RIGHT;
-    }
-    if (collisions.right && placement === PLACEMENTS.RIGHT) {
-      return PLACEMENTS.LEFT;
-    }
-
-    return placement;
   },
 
   updatePlacementClasses(content: HTMLElement, placement: string) {
