@@ -244,7 +244,7 @@ class Nav extends BaseComponent {
 		$active_label  = $this->get_active_dropdown_label( $options );
 		$active_label  = isset( $item['count'] ) ? $active_label . '(' . esc_html( $item['count'] ) . ')' : $active_label;
 		$icon_size     = $this->get_icon_size( $this->nav_size );
-		$active_item   = isset( $item['active'] ) ? 'active' : '';
+		$active_item   = isset( $item['active'] ) && $item['active'] ? 'active' : '';
 		$icon          = isset( $item['icon'] ) ? tutor_utils()->get_svg_icon( $item['icon'], $icon_size, $icon_size ) : '';
 		$dropdown_icon = tutor_utils()->get_svg_icon(
 			Icon::CHEVRON_DOWN_2,
