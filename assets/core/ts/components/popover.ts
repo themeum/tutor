@@ -29,18 +29,15 @@ export const popover = (props: PopoverProps = {}) => ({
   $nextTick: undefined as ((callback: () => void) => void) | undefined,
   scrollHandler: null as (() => void) | null,
   resizeHandler: null as (() => void) | null,
+  escapeHandler: null as ((e: KeyboardEvent) => void) | null,
 
   init() {
     this.actualPlacement = this.getActualPlacement();
     this.setupEventListeners();
-
-    // Add global escape key listener
-    document.addEventListener('keydown', (e) => this.handleEscapeKeydown(e));
   },
 
   destroy() {
     this.removeEventListeners();
-    document.removeEventListener('keydown', (e) => this.handleEscapeKeydown(e));
   },
 
   setupEventListeners() {
@@ -56,16 +53,27 @@ export const popover = (props: PopoverProps = {}) => ({
       }
     };
 
+    this.escapeHandler = (e: KeyboardEvent) => {
+      this.handleEscapeKeydown(e);
+    };
+
     window.addEventListener('scroll', this.scrollHandler, true);
     window.addEventListener('resize', this.resizeHandler);
+    document.addEventListener('keydown', this.escapeHandler);
   },
 
   removeEventListeners() {
     if (this.scrollHandler) {
       window.removeEventListener('scroll', this.scrollHandler, true);
     }
+
     if (this.resizeHandler) {
       window.removeEventListener('resize', this.resizeHandler);
+    }
+
+    if (this.escapeHandler) {
+      document.removeEventListener('keydown', this.escapeHandler);
+      this.escapeHandler = null;
     }
   },
 
