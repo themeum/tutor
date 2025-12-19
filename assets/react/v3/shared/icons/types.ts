@@ -274,6 +274,7 @@ export const icons = [
   'reload',
   'reload2',
   'reload3',
+  'reload4',
   'removeImage',
   'report',
   'resources',

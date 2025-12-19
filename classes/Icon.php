@@ -290,6 +290,7 @@ final class Icon {
 	const RELOAD                     = 'reload';
 	const RELOAD_2                   = 'reload-2';
 	const RELOAD_3                   = 'reload-3';
+	const RELOAD_4                   = 'reload-4';
 	const REMOVE_IMAGE               = 'remove-image';
 	const REPORT                     = 'report';
 	const RESOURCES                  = 'resources';
