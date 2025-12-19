@@ -82,6 +82,15 @@ class Nav extends BaseComponent {
 	protected $nav_items = array();
 
 	/**
+	 * Nav attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $attributes = array();
+
+	/**
 	 * Set the nav variant.
 	 *
 	 * @since 4.0.0
@@ -95,6 +104,22 @@ class Nav extends BaseComponent {
 		$this->nav_variant = in_array( $variant, $allowed_variants, true ) ? $variant : Variant::PRIMARY;
 		return $this;
 	}
+
+	/**
+	 * Set custom HTML attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key   Attribute name.
+	 * @param string $value Attribute value.
+	 *
+	 * @return $this
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = esc_attr( $value );
+		return $this;
+	}
+
 
 	/**
 	 * Set the nav size.
@@ -233,7 +258,7 @@ class Nav extends BaseComponent {
 		if ( count( $options ) ) {
 			foreach ( $options as $option ) {
 				$icon      = isset( $option['icon'] ) ? tutor_utils()->get_svg_icon( $option['icon'], $icon_size, $icon_size ) : '';
-				$is_active = isset( $option['active'] ) ? 'active' : '';
+				$is_active = isset( $option['active'] ) && $option['active'] ? 'active' : '';
 				$label     = esc_html( $option['label'] );
 				$label     = isset( $option['count'] ) ? $label . '(' . esc_html( $option['count'] ) . ')' : $label;
 				$url       = isset( $option['url'] ) ? esc_url( $option['url'] ) : '#';
@@ -290,7 +315,7 @@ class Nav extends BaseComponent {
 			return '';
 		}
 
-		$active_item = isset( $item['active'] ) ? 'active' : '';
+		$active_item = isset( $item['active'] ) && $item['active'] ? 'active' : '';
 		$url         = isset( $item['url'] ) ? esc_url( $item['url'] ) : '#';
 		$icon_size   = $this->get_icon_size( $this->nav_size );
 		$label       = esc_html( $item['label'] ?? '' );
@@ -333,12 +358,22 @@ class Nav extends BaseComponent {
 			}
 		}
 
-		return sprintf(
-			'<ul class="tutor-nav tutor-nav-%s tutor-nav-%s">
-				%s
-			</ul>',
+		$classes = sprintf(
+			'tutor-nav tutor-nav-%s tutor-nav-%s',
 			$this->nav_size,
 			$this->nav_variant,
+		);
+
+		// Merge with any custom class attribute.
+		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
+
+		$attributes = $this->render_attributes();
+
+		return sprintf(
+			'<ul %s>
+				%s
+			</ul>',
+			$attributes,
 			$nav_items
 		);
 	}
