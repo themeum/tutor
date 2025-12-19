@@ -217,9 +217,9 @@ class Nav extends BaseComponent {
 
 		$options       = $item['options'] ?? array();
 		$active_label  = $this->get_active_dropdown_label( $options );
-		$active_label  = $item['count'] ? $active_label . '(' . esc_html( $item['count'] ) . ')' : $active_label;
+		$active_label  = isset( $item['count'] ) ? $active_label . '(' . esc_html( $item['count'] ) . ')' : $active_label;
 		$icon_size     = $this->get_icon_size( $this->nav_size );
-		$active_item   = $item['active'] ? 'active' : '';
+		$active_item   = isset( $item['active'] ) ? 'active' : '';
 		$icon          = isset( $item['icon'] ) ? tutor_utils()->get_svg_icon( $item['icon'], $icon_size, $icon_size ) : '';
 		$dropdown_icon = tutor_utils()->get_svg_icon(
 			Icon::CHEVRON_DOWN_2,
@@ -232,11 +232,11 @@ class Nav extends BaseComponent {
 
 		if ( count( $options ) ) {
 			foreach ( $options as $option ) {
-				$icon      = $option['icon'] ? tutor_utils()->get_svg_icon( $option['icon'], $icon_size, $icon_size ) : '';
-				$is_active = $option['active'] ? 'active' : '';
+				$icon      = isset( $option['icon'] ) ? tutor_utils()->get_svg_icon( $option['icon'], $icon_size, $icon_size ) : '';
+				$is_active = isset( $option['active'] ) ? 'active' : '';
 				$label     = esc_html( $option['label'] );
 				$label     = isset( $option['count'] ) ? $label . '(' . esc_html( $option['count'] ) . ')' : $label;
-				$url       = $option['url'] ? esc_url( $option['url'] ) : '#';
+				$url       = isset( $option['url'] )? esc_url( $option['url'] ) : '#';
 
 				$dropdown_options .= sprintf(
 					'<a href="%s" class="tutor-nav-dropdown-item %s">
