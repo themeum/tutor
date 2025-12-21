@@ -107,5 +107,55 @@
 			color: $tutor-warning-400;
 		}
 	}
+
+	&-passed {
+        .tutor-stat-card-icon {
+            color: $tutor-text-brand;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-brand;
+		}
+	}
+
+	&-progress {
+        .tutor-stat-card-icon {
+            color: $tutor-exception-5;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-exception-5;
+		}
+	}
+
+	&-completed {
+        .tutor-stat-card-icon {
+            color: $tutor-text-success;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-text-success;
+		}
+	}
+
+	&-qa {
+        .tutor-stat-card-icon {
+            color: $tutor-exception-2;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-exception-2;
+		}
+	}
+
+	&-book-2 {
+        .tutor-stat-card-icon {
+            color: $tutor-exception-1;
+        }
+
+		.tutor-stat-card-value {
+			color: $tutor-exception-1;
+		}
+	}
 }
 

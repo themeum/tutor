@@ -13,6 +13,7 @@
 $variation = isset( $variation ) ? $variation : 'enrolled';
 $value     = isset( $value ) ? $value : 0;
 $change    = isset( $change ) ? $change : '';
+$icon_size = $icon_size ?? 24;
 
 // Required fields validation.
 if ( ! isset( $card_title ) || empty( $card_title ) ) {
@@ -22,9 +23,7 @@ if ( ! isset( $icon ) || empty( $icon ) ) {
 	return;
 }
 
-$change_display = ! empty( $change )
-	? $change . ' ' . esc_html__( 'this month', 'tutor' )
-	: '';
+$change_display = ! empty( $change ) ? $change : '';
 
 ?>
 <div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $variation ); ?>">
@@ -33,7 +32,7 @@ $change_display = ! empty( $change )
 			<?php echo esc_html( $card_title ); ?>
 		</h3>
 		<div class="tutor-stat-card-icon">
-			<?php tutor_utils()->render_svg_icon( $icon, 24, 24 ); ?>
+			<?php tutor_utils()->render_svg_icon( $icon, $icon_size, $icon_size ); ?>
 		</div>
 	</div>
 	<div class="tutor-stat-card-content">

@@ -249,6 +249,7 @@ export const icons = [
   'profile',
   'profileCircle',
   'profileCircleFill',
+  'progress',
   'psd',
   'qa',
   'qaFill',
