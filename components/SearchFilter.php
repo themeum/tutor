@@ -30,6 +30,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->hidden_inputs( array( 'type' => 'course' ) )
  *     ->action( 'https://example.com/search' )
  *     ->input_name( 'search' )
+ *     ->method( 'GET' )
  *     ->size( 'small' )
  *     ->render();
  * ```
@@ -79,6 +80,14 @@ class SearchFilter extends BaseComponent {
 	 * @var string
 	 */
 	protected $size = Size::MEDIUM;
+
+	/**
+	 * Form Method
+	 *
+	 * @var string
+	 */
+	protected $method = 'GET';
+
 
 	/**
 	 * Set form ID
@@ -153,6 +162,19 @@ class SearchFilter extends BaseComponent {
 	}
 
 	/**
+	 * Set form method
+	 *
+	 * @param string $method form method.
+	 *
+	 * @return self
+	 */
+	public function method( string $method ): self {
+		$this->method = $method;
+		return $this;
+	}
+
+
+	/**
 	 * Get component content
 	 *
 	 * @return string
@@ -164,6 +186,7 @@ class SearchFilter extends BaseComponent {
 		$input_name   = $this->input_name;
 		$search_value = Input::get( $input_name, '' );
 		$size         = Size::SMALL === $this->size ? 'tutor-input-sm' : ( Size::LARGE === $this->size ? 'tutor-input-lg' : '' );
+		$method       = $this->method;
 
 		if ( empty( $current_url ) ) {
 			// Fallback to current URL with preserved query args if not provided.
@@ -175,7 +198,7 @@ class SearchFilter extends BaseComponent {
 		?>
 		<form 
 			action="<?php echo esc_url( $current_url ); ?>" 
-			method="GET" 
+			method="<?php echo esc_attr( $method ); ?>" 
 			id="<?php echo esc_attr( $form_id ); ?>"
 			x-data="tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit' })"
 			x-bind="getFormBindings()"
