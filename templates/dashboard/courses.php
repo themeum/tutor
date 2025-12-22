@@ -139,7 +139,7 @@ $courses_tab = array(
 			while ( $courses_list->have_posts() ) :
 				$courses_list->the_post();
 				tutor_load_template( 'dashboard.courses.course-card' );
-				endwhile;
+			endwhile;
 			?>
 				<div class="tutor-dashboard-courses-pagination tutor-pt-6">
 				<?php
@@ -156,5 +156,5 @@ $courses_tab = array(
 				<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 			<?php endif; ?>
 		</div>
-		<?php endif; ?>
+	<?php endif; ?>
 </div>
