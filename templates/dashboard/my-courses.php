@@ -356,6 +356,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<div class="tutor-p-6">
 			<?php
 			Pagination::make()
+				->format( '?paged=%#%' )
 				->current( $paged )
 				->total( $count_map[ $status ] )
 				->limit( $per_page )
