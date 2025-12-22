@@ -109,7 +109,7 @@ $courses_tab = array(
 <div class="tutor-dashboard-courses-wrapper">
 
 	<!-- Courses nav  -->
-	<div class="tutor-dashboard-page-nav tutor-p-6 tutor-flex tutor-justify-between">
+	<div class="tutor-dashboard-page-nav tutor-p-6">
 		<?php
 			tutor_load_template(
 				'core-components.nav',
@@ -120,11 +120,6 @@ $courses_tab = array(
 				)
 			);
 			?>
-		<?php if ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) : ?>
-			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<?php do_action( 'tutor_dashboard_enrolled_courses_filter' ); ?>
-			</div>
-		<?php endif; ?>
 	</div>
 
 	<?php

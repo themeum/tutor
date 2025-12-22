@@ -36,6 +36,6 @@ abstract class InputType {
 	public const PASSWORD = 'password';
 	public const NUMBER   = 'number';
 	public const COLOR    = 'color';
-
+	public const DROPDOWN = 'dropdown';
+	public const LINK     = 'link';
 }
-
