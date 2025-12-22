@@ -10769,4 +10769,17 @@ class Utils {
 
 		return (string) ob_get_clean();
 	}
+
+	public function get_stepper_sort_options() {
+		return array(
+			array(
+				'id'    => 'newest',
+				'label' => __( 'Newest First', 'tutor' ),
+			),
+			array(
+				'id'    => 'oldest',
+				'label' => __( 'Oldest First', 'tutor' ),
+			),
+		);
+	}
 }
