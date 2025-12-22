@@ -1,11 +1,46 @@
 // Quiz Attempts Page
-// TODO: Implement quiz attempts functionality
+import { type MutationState } from '@Core/ts/services/Query';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+
+const quizAttemptsPage = () => {
+  const query = window.TutorCore.query;
+
+  return {
+    query,
+    deleteMutation: null as MutationState<unknown, number> | null,
+
+    init() {
+      this.deleteMutation = this.query.useMutation(this.deleteAttempt, {
+        onSuccess: () => {
+          window.TutorCore.modal.closeModal('tutor-course-delete-modal');
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || 'Failed to delete quiz attempt');
+        },
+      });
+    },
+
+    deleteAttempt(attemptID: number) {
+      return wpAjaxInstance.post('tutor_attempt_delete', {
+        id: attemptID,
+      });
+    },
+
+    async handleQuizAttemptDelete(attemptID: number) {
+      await this.deleteMutation?.mutate(attemptID);
+    },
+  };
+};
 
 export const initializeQuizAttempts = () => {
-  // eslint-disable-next-line no-console
-  console.log('Quiz attempts page initialized');
+  window.TutorComponentRegistry.register({
+    type: 'component',
+    meta: {
+      name: 'quizAttempts',
+      component: quizAttemptsPage,
+    },
+  });
 
-  // TODO: Load quiz attempts history
-  // TODO: Display quiz results
-  // TODO: Handle quiz retakes
+  window.TutorComponentRegistry.initWithAlpine(window.Alpine);
 };
