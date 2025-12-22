@@ -197,13 +197,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						</div>
 					</div>
 					<div class="tutor-my-courses-card-footer">
-						<div class="tutor-flex tutor-items-center tutor-gap-2">
-							<span class="tutor-font-medium tutor-mr-4">
-								<?php
-								$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
-								echo esc_html( $membership_only_mode ? __( 'Plan:', 'tutor' ) : '' );
-								?>
+						<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
+							<?php if ( apply_filters( 'tutor_membership_only_mode', false ) ) : ?>
+							<span class="tutor-font-medium tutor-text-subdued">
+								<?php esc_html_e( 'Plan:', 'tutor' ); ?>
 							</span>
+							<?php endif ?>
 							<?php
 							if ( null === tutor_utils()->get_course_price() ) {
 								esc_html_e( 'Free', 'tutor' );
