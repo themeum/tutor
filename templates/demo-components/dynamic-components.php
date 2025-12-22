@@ -13,11 +13,12 @@
 	use Tutor\Components\Avatar;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
-use Tutor\Components\Constants\Positions;
-use Tutor\Components\Constants\Size;
+	use Tutor\Components\Constants\Positions;
+	use Tutor\Components\Constants\Size;
 	use Tutor\Components\Constants\Variant;
 	use Tutor\Components\InputField;
 	use Tutor\Components\Modal;
+	use Tutor\Components\Nav;
 	use Tutor\Components\Pagination;
 	use Tutor\Components\Popover;
 	use Tutor\Components\Progress;
@@ -391,7 +392,7 @@ use Tutor\Components\Constants\Size;
 			),
 		);
 
-		echo Table::make()
+		Table::make()
 			->headings( $heading )
 			->contents( $content )
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
@@ -451,7 +452,7 @@ use Tutor\Components\Constants\Size;
 				),
 			);
 
-			echo Table::make()
+			Table::make()
 			->contents( $content )
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
@@ -482,7 +483,7 @@ use Tutor\Components\Constants\Size;
 			</code></pre>
 		<br>
 		<?php
-			echo Popover::make()
+			Popover::make()
 				->title( 'Basic' )
 				->body( '<p>This is a popover component</p>' )
 				->closeable( true )
@@ -539,22 +540,22 @@ use Tutor\Components\Constants\Size;
 			$left_button   = $button->label( 'Left' )->get();
 			$bottom_button = $button->label( 'Bottom' )->get();
 
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Right component</p>' )
 				->trigger( $right_button )
 				->placement( Positions::RIGHT )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Top component</p>' )
 				->trigger( $top_button )
 				->placement( Positions::TOP )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Bottom component</p>' )
 				->trigger( $bottom_button )
 				->placement( Positions::BOTTOM )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Left component</p>' )
 				->trigger( $left_button )
 				->placement( Positions::LEFT )
@@ -592,7 +593,7 @@ use Tutor\Components\Constants\Size;
 				Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
 			);
 
-			echo Popover::make()
+			Popover::make()
 			->title( 'Confirm Action' )
 			->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
 			->footer( $footer_buttons )
@@ -636,7 +637,7 @@ use Tutor\Components\Constants\Size;
 		<br>
 		<?php
 			$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
-			echo Popover::make()
+			Popover::make()
 				->trigger( $kebab_button )
 				->menu_item(
 					array(
@@ -663,7 +664,7 @@ use Tutor\Components\Constants\Size;
 	<div class="pagination-wrapper tutor-mb-12">
 		<h2>Pagination</h2>
 		<br>
-		<pre><code>echo Pagination::make()
+		<pre><code> Pagination::make()
 				->current( 2 )
 				->total( 200 )
 				->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
@@ -673,7 +674,7 @@ use Tutor\Components\Constants\Size;
 		<br>
 		<?php
 
-		echo Pagination::make()
+		Pagination::make()
 			->current( 2 )
 			->total( 200 )
 			->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
@@ -684,11 +685,146 @@ use Tutor\Components\Constants\Size;
 	</div>
 	<!-- pagination component -->
 
+	<!-- nav component -->
+	<div class="nav-wrapper tutor-mb-12">
+		<h2>Nav Component</h2>
+		<pre><code>$dropdown = array(
+				'type'    => 'dropdown',
+				'icon'    => Icon::ENROLLED,
+				'active'  => true,
+				'count' => 3,
+				'options' => array(
+					array(
+						'label'  => 'Active',
+						'icon'   => Icon::PLAY_LINE,
+						'url'    => '#',
+						'active' => false,
+						'count' => 2,
+					),
+					array(
+						'label'  => 'Enrolled',
+						'icon'   => Icon::ENROLLED,
+						'url'    => '#',
+						'active' => true,
+						'count' => 3,
+					),
+				),
+			);
+
+			Nav::make()
+				->items( array( $dropdown ) )
+				->size( Size::SM )
+				->variant( Variant::SECONDARY )
+				->render();</code></pre>
+		<br>
+		<?php
+			$wishlist = array(
+				'type'   => 'link',
+				'label'  => __( 'Wishlist', 'tutor' ),
+				'icon'   => Icon::WISHLIST,
+				'url'    => '#',
+				'active' => false,
+			);
+
+			$dropdown = array(
+				'type'    => 'dropdown',
+				'icon'    => Icon::ENROLLED,
+				'active'  => true,
+				'count'   => 3,
+				'options' => array(
+					array(
+						'label'  => 'Active',
+						'icon'   => Icon::PLAY_LINE,
+						'url'    => '#',
+						'active' => false,
+						'count'  => 2,
+					),
+					array(
+						'label'  => 'Enrolled',
+						'icon'   => Icon::ENROLLED,
+						'url'    => '#',
+						'active' => true,
+						'count'  => 3,
+					),
+				),
+			);
+
+			Nav::make()
+				->items( array( $wishlist, $dropdown ) )
+				->size( Size::LG )
+				->render();
+
+			Nav::make()
+				->items( array( $dropdown ) )
+				->size( Size::SM )
+				->variant( Variant::SECONDARY )
+				->render();
+			?>
+	</div>
+	<!-- nav component -->
+
 	<div class="input-field-wrapper tutor-mb-12">
 		<h2>Input Fields</h2>
-		<pre><code>
-		&lt;?php
-		?&gt;</code></pre>
+		<br>
+		<pre><code>&lt;?php
+	$interests = array(
+		array(
+			'label'       => 'Software Development',
+			'value'       => 'sd',
+			'icon'        => Icon::BOOK_2,
+			'description' => 'Interest in software',
+		),
+		array(
+			'label'       => 'UI/UX',
+			'value'       => 'uiux',
+			'icon'        => Icon::ALERT,
+			'description' => 'Interest in UI/UX',
+		),
+		array(
+			'label'       => 'Testing',
+			'value'       => 'test',
+			'icon'        => Icon::CART,
+			'description' => 'Interest in testing',
+		),
+	);
+
+	InputField::make()
+		->type( 'text' )
+		->name( 'name' )
+		->label( 'Full Name' )
+		->placeholder( 'Enter your full name' )
+		->required()
+		->clearable()
+		->help_text( 'This is a helper text.' )
+		->attr( 'x-bind', "register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+		->render();
+
+	InputField::make()
+		->type( 'select' )
+		->name( 'interests' )
+		->label( 'Interests' )
+		->placeholder( 'Select your interests' )
+		->required( 'Please select an interest' )
+		->clearable()
+		->options( $interests )
+		->placeholder( 'Search for interests', true )
+		->multiple()
+		->searchable()
+		->size( 'md' )
+		->help_text( 'This is a selection helper text.' )
+		->render();
+
+	InputField::make()
+		->type( 'checkbox' )
+		->name( 'terms' )
+		->label( 'Agree with terms' )
+		->required()
+		->clearable()
+		->help_text( 'This is a helper text.' )
+		->attr( 'x-bind', "register('terms', { required: 'Gender is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+		->render();
+	?&gt;</code></pre>
+	<br>
 			<?php
 
 			// Text input with left icon
@@ -839,6 +975,91 @@ use Tutor\Components\Constants\Size;
 			// ->disabled()
 			// ->help_text('Upgrade to access.')
 			// ->render();
+
+			// $countries = array(
+			// array(
+			// 'label' => 'United States',
+			// 'value' => 'us',
+			// 'icon'  => Icon::GLOBE,
+			// ),
+			// array(
+			// 'label'    => 'United Kingdom',
+			// 'value'    => 'uk',
+			// 'disabled' => true,
+			// 'icon'     => Icon::GLOBE,
+			// ),
+			// array(
+			// 'label' => 'Canada',
+			// 'value' => 'ca',
+			// 'icon'  => Icon::GLOBE,
+			// ),
+			// );
+
+			// $grouped_options = array(
+			// array(
+			// 'label'   => 'Popular',
+			// 'options' => array(
+			// array(
+			// 'label' => 'JavaScript',
+			// 'value' => 'js',
+			// ),
+			// ),
+			// ),
+			// array(
+			// 'label'   => 'Other Languages',
+			// 'options' => array(
+			// array(
+			// 'label' => 'Ruby',
+			// 'value' => 'rb',
+			// ),
+			// array(
+			// 'label' => 'Go',
+			// 'value' => 'go',
+			// ),
+			// ),
+			// ),
+			// );
+
+			// // Input field with selection and search.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'country' )
+			// ->label( 'Countries' )
+			// ->options( $countries )
+			// ->placeholder( 'Select a Country....' )
+			// ->searchable()
+			// ->multiple()
+			// ->max_selections( 1 )
+			// ->render();
+
+			// // Input field with grouped options.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'language' )
+			// ->label( 'Languages' )
+			// ->groups( $grouped_options )
+			// ->placeholder( 'Select a Language....' )
+			// ->render();
+
+			// // Disabled input field.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'disabled' )
+			// ->label( 'Disabled Field' )
+			// ->disabled()
+			// ->options( $countries )
+			// ->placeholder( 'Disable....' )
+			// ->render();
+
+			// // Loading input field.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'loading' )
+			// ->label( 'Loading Field' )
+			// ->loading()
+			// ->options( $countries )
+			// ->placeholder( 'Loading....' )
+			// ->render();
 			?>
 			<form 
 				x-data="tutorForm({ id: 'basic-form', mode: 'onBlur', shouldFocusError: true })"
@@ -856,6 +1077,27 @@ use Tutor\Components\Constants\Size;
 				>
 				<div class="tutor-flex tutor-flex-column tutor-gap-7">
 					<?php
+						$interests = array(
+							array(
+								'label'       => 'Software Development',
+								'value'       => 'sd',
+								'icon'        => Icon::BOOK_2,
+								'description' => 'Interest in software',
+							),
+							array(
+								'label'       => 'UI/UX',
+								'value'       => 'uiux',
+								'icon'        => Icon::ALERT,
+								'description' => 'Interest in UI/UX',
+							),
+							array(
+								'label'       => 'Testing',
+								'value'       => 'test',
+								'icon'        => Icon::CART,
+								'description' => 'Interest in testing',
+							),
+						);
+
 						InputField::make()
 							->type( 'text' )
 							->name( 'name' )
@@ -868,6 +1110,21 @@ use Tutor\Components\Constants\Size;
 							->render();
 
 						InputField::make()
+							->type( 'select' )
+							->name( 'interests' )
+							->label( 'Interests' )
+							->placeholder( 'Select your interests' )
+							->required( 'Please select an interest' )
+							->clearable()
+							->options( $interests )
+							->placeholder( 'Search for interests', true )
+							->multiple()
+							->searchable()
+							->size( 'md' )
+							->help_text( 'This is a selection helper text.' )
+							->render();
+
+						InputField::make()
 							->type( 'checkbox' )
 							->name( 'terms' )
 							->label( 'Agree with terms' )
@@ -876,7 +1133,7 @@ use Tutor\Components\Constants\Size;
 							->help_text( 'This is a helper text.' )
 							->attr( 'x-bind', "register('terms', { required: 'Gender is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
 							->render();
-					?>
+						?>
 				</div>
 				<div>
 					<button 
