@@ -26,32 +26,40 @@ use TUTOR\Icon;
  * //Example Usage :
  *
  * ```
- * $dropdown = array(
- *      'type'    => 'dropdown',
- *      'icon'    => Icon::ENROLLED,
- *      'active'  => true,
- *      'count' => 3,
- *      'options' => array(
- *         array(
- *             'label'  => 'Active',
- *             'icon'   => Icon::PLAY_LINE,
- *             'url'    => '#',
- *             'active' => false,
- *             'count' => 2,
- *         ),
- *         array(
- *             'label'  => 'Enrolled',
- *             'icon'   => Icon::ENROLLED,
- *             'url'    => '#',
- *             'active' => true,
- *             'count' => 3,
- *         ),
- *      ),
+ * $items = array(
+ *   array(
+ *       'type'     => 'link',        // 'link' or 'dropdown'
+ *       'label'    => 'Wishlist',
+ *       'icon'     => Icon::WISHLIST,
+ *       'url'      => '#',
+ *       'active'   => false,
+ *   ),
+ *   array(
+ *       'type'    => 'dropdown',
+ *       'icon'    => Icon::ENROLLED,
+ *       'active'  => true,
+ *       'options' => array(
+ *           array(
+ *               'label'  => 'Active',
+ *               'count   => 4,
+ *               'icon'   => Icon::PLAY_LINE,
+ *               'url'    => '#',
+ *               'active' => false,
+ *           ),
+ *           array(
+ *               'label'  => 'Enrolled',
+ *               'count   => 4,
+ *               'icon'   => Icon::ENROLLED,
+ *               'url'    => '#',
+ *               'active' => true,
+ *           ),
+ *       ),
+ *   ),
  * );
  *
  *   echo Nav::make()
  *       ->items( array( $dropdown ) )
- *       ->size( Size::SM )
+ *       ->size( Size::SMALL )
  *       ->variant( Variant::SECONDARY )
  *       ->render();
  * ```
@@ -72,7 +80,7 @@ class Nav extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $nav_size = Size::MD;
+	protected $nav_size = Size::MEDIUM;
 
 	/**
 	 * The nav items.
@@ -130,9 +138,9 @@ class Nav extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function size( $size = Size::MD ): self {
-		$allowed_sizes  = array( Size::MD, Size::SM, Size::LG );
-		$this->nav_size = in_array( $size, $allowed_sizes, true ) ? $size : Size::MD;
+	public function size( $size = Size::MEDIUM ): self {
+		$allowed_sizes  = array( Size::MEDIUM, Size::SMALL, Size::LARGE );
+		$this->nav_size = in_array( $size, $allowed_sizes, true ) ? $size : Size::MEDIUM;
 
 		return $this;
 	}
@@ -143,37 +151,6 @@ class Nav extends BaseComponent {
 	 * @since 4.0.0
 	 *
 	 * @param array $items the nav items.
-	 *
-	 * Expected $items structure:
-	 *
-	 * $items = array(
-	 *            array(
-	 *                'type'     => 'link',        // 'link' or 'dropdown'
-	 *                'label'    => 'Wishlist',
-	 *                'icon'     => Icon::WISHLIST,
-	 *                'url'      => '#',
-	 *                'active'   => false,
-	 *            ),
-	 *            array(
-	 *                'type'    => 'dropdown',
-	 *                'icon'    => Icon::ENROLLED,
-	 *                'active'  => true,
-	 *                'options' => array(
-	 *                    array(
-	 *                        'label'  => 'Active',
-	 *                        'icon'   => Icon::PLAY_LINE,
-	 *                        'url'    => '#',
-	 *                        'active' => false,
-	 *                    ),
-	 *                    array(
-	 *                        'label'  => 'Enrolled',
-	 *                        'icon'   => Icon::ENROLLED,
-	 *                        'url'    => '#',
-	 *                        'active' => true,
-	 *                    ),
-	 *                ),
-	 *            ),
-	 *         );
 	 *
 	 * @return self
 	 */
@@ -193,9 +170,9 @@ class Nav extends BaseComponent {
 	 */
 	protected function get_icon_size( $size ): int {
 		$icon_sizes = array(
-			'sm' => 16,
-			'md' => 20,
-			'lg' => 24,
+			'small'  => 16,
+			'medium' => 20,
+			'large'  => 24,
 		);
 
 		return $icon_sizes[ $size ];
@@ -215,12 +192,20 @@ class Nav extends BaseComponent {
 			return '';
 		}
 
+		$active_option = $options[0];
 		foreach ( $options as $option ) {
 			if ( ! empty( $option['active'] ) ) {
-				return $option['label'] ?? '';
+				$active_option = $option;
+				break;
 			}
 		}
-		return $options[0]['label'] ?? '';
+
+		$label = $active_option['label'] ?? '';
+		if ( isset( $active_option['count'] ) ) {
+			$label .= ' (' . $active_option['count'] . ')';
+		}
+
+		return $label;
 	}
 
 
@@ -242,7 +227,6 @@ class Nav extends BaseComponent {
 
 		$options       = $item['options'] ?? array();
 		$active_label  = $this->get_active_dropdown_label( $options );
-		$active_label  = isset( $item['count'] ) ? $active_label . ' (' . esc_html( $item['count'] ) . ')' : $active_label;
 		$icon_size     = $this->get_icon_size( $this->nav_size );
 		$active_item   = isset( $item['active'] ) && $item['active'] ? 'active' : '';
 		$icon          = isset( $item['icon'] ) ? tutor_utils()->get_svg_icon( $item['icon'], $icon_size, $icon_size ) : '';
@@ -297,7 +281,6 @@ class Nav extends BaseComponent {
 
 		return $dropdown;
 	}
-
 
 	/**
 	 * Render link nav item if it is selected.
@@ -370,9 +353,9 @@ class Nav extends BaseComponent {
 		$attributes = $this->render_attributes();
 
 		return sprintf(
-			'<ul %s>
+			'<div %s>
 				%s
-			</ul>',
+			</div>',
 			$attributes,
 			$nav_items
 		);

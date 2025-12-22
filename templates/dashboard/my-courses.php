@@ -10,7 +10,9 @@
  */
 
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
+use Tutor\Components\Nav;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
@@ -61,22 +63,26 @@ $nav_items = array(
 		'active'  => true,
 		'options' => array(
 			array(
-				'label'  => __( 'Published', 'tutor' ) . ' (' . ( $count_map['publish'] ?? 0 ) . ')',
+				'label'  => __( 'Published', 'tutor' ),
+				'count'  => $count_map['publish'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ),
 				'active' => 'my-courses' === $active_tab,
 			),
 			array(
-				'label'  => __( 'Pending', 'tutor' ) . ' (' . ( $count_map['pending'] ?? 0 ) . ')',
+				'label'  => __( 'Pending', 'tutor' ),
+				'count'  => $count_map['pending'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ),
 				'active' => 'my-courses/pending-courses' === $active_tab,
 			),
 			array(
-				'label'  => __( 'Draft', 'tutor' ) . ' (' . ( $count_map['draft'] ?? 0 ) . ')',
+				'label'  => __( 'Draft', 'tutor' ),
+				'count'  => $count_map['draft'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ),
 				'active' => 'my-courses/draft-courses' === $active_tab,
 			),
 			array(
-				'label'  => __( 'Schedule', 'tutor' ) . ' (' . ( $count_map['future'] ?? 0 ) . ')',
+				'label'  => __( 'Schedule', 'tutor' ),
+				'count'  => $count_map['future'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ),
 				'active' => 'my-courses/schedule-courses' === $active_tab,
 			),
@@ -92,16 +98,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 <div class="tutor-dashboard-my-courses" x-data="tutorMyCourses()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
-			<?php
-			tutor_load_template(
-				'core-components.nav',
-				array(
-					'items'   => $nav_items,
-					'size'    => 'sm',
-					'variant' => 'primary',
-				)
-			);
-			?>
+			<?php Nav::make()->variant( Variant::PRIMARY )->size( Size::SMALL )->items( $nav_items )->render(); ?>
 			<div class="tutor-flex tutor-items-center tutor-gap-5">
 				<?php do_action( 'tutor_course_create_button' ); ?>
 				<button 
