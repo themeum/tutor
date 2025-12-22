@@ -222,7 +222,7 @@ class Pagination extends BaseComponent {
 
 		$per_page  = max( ceil( $this->pagination_total / $this->pagination_limit ), 1 );
 		$current   = max( intval( $this->pagination_current ), 1 );
-		$format    = ! empty( $this->format ) ? $this->format : '?paged=%#%';
+		$format    = ! empty( $this->format ) ? $this->format : '?current_page=%#%';
 		$prev_text = ! empty( $this->prev ) ? $this->prev : tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 );
 		$next_text = ! empty( $this->next ) ? $this->next : tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 );
 		return paginate_links(
