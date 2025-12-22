@@ -21,12 +21,18 @@ $attempt      = tutor_utils()->get_attempt( $attempt_id );
 $attempt_data = $attempt;
 $user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
 $quiz_id      = $attempt && isset( $attempt->quiz_id ) ? $attempt->quiz_id : 0;
+$course_id    = tutor_utils()->avalue_dot( 'course_id', $attempt_data );
 if ( ! $attempt ) {
-	tutor_utils()->tutor_empty_state( __( 'Attemp not found', 'tutor' ) );
+	tutor_utils()->tutor_empty_state( __( 'Attempt not found', 'tutor' ) );
 	return;
 }
 if ( 0 === $quiz_id ) {
-	tutor_utils()->tutor_empty_state( __( 'Attemp not found', 'tutor' ) );
+	tutor_utils()->tutor_empty_state( __( 'Attempt not found', 'tutor' ) );
+	return;
+}
+
+if ( ! tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) ) {
+	tutor_utils()->tutor_empty_state();
 	return;
 }
 
