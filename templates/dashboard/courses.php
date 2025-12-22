@@ -95,7 +95,7 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 <div class="tutor-dashboard-courses-wrapper">
 
 	<!-- Courses nav  -->
-	<div class="tutor-dashboard-page-nav tutor-p-6 tutor-flex tutor-justify-between">
+	<div class="tutor-dashboard-page-nav tutor-p-6">
 		<?php
 			tutor_load_template(
 				'core-components.nav',
@@ -106,9 +106,6 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 				)
 			);
 			?>
-		<div class="tutor-flex tutor-items-center tutor-gap-3">
-			<?php do_action( 'tutor_dashboard_enrolled_courses_filter' ); ?>
-		</div>
 	</div>
 
 	<!-- courses list  -->
