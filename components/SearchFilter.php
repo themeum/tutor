@@ -13,6 +13,7 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -71,6 +72,13 @@ class SearchFilter extends BaseComponent {
 	 * @var array
 	 */
 	protected $hidden_inputs = array();
+
+	/**
+	 * Input Size
+	 *
+	 * @var string
+	 */
+	protected $size = Size::MEDIUM;
 
 	/**
 	 * Set form ID
@@ -133,13 +141,6 @@ class SearchFilter extends BaseComponent {
 	}
 
 	/**
-	 * Input Size
-	 *
-	 * @var string
-	 */
-	protected $size = 'medium';
-
-	/**
 	 * Set size of the input
 	 *
 	 * @param string $size size of the input.
@@ -162,7 +163,7 @@ class SearchFilter extends BaseComponent {
 		$current_url  = $this->action_url ?? '';
 		$input_name   = $this->input_name;
 		$search_value = Input::get( $input_name, '' );
-		$size         = 'small' === $this->size ? 'tutor-input-sm' : ( 'large' === $this->size ? 'tutor-input-lg' : '' );
+		$size         = Size::SMALL === $this->size ? 'tutor-input-sm' : ( Size::LARGE === $this->size ? 'tutor-input-lg' : '' );
 
 		if ( empty( $current_url ) ) {
 			// Fallback to current URL with preserved query args if not provided.

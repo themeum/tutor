@@ -73,7 +73,6 @@ class PreviewTrigger extends BaseComponent {
 			$thumbnail = tutor()->url . 'assets/images/placeholder.svg';
 		}
 
-		// @TODO:: Need to update.
 		$instructor_name = '';
 		$instructor_url  = '';
 

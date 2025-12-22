@@ -48,6 +48,13 @@ class CourseFilter extends BaseComponent {
 	protected $current_course_id;
 
 	/**
+	 * Count of items
+	 *
+	 * @var int
+	 */
+	protected $count;
+
+	/**
 	 * Set courses list
 	 *
 	 * @param array $courses list of courses.
@@ -70,13 +77,6 @@ class CourseFilter extends BaseComponent {
 		$this->current_course_id = $course_id;
 		return $this;
 	}
-
-	/**
-	 * Count of items
-	 *
-	 * @var int
-	 */
-	protected $count;
 
 	/**
 	 * Set count
