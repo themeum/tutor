@@ -899,7 +899,13 @@ class InputField extends BaseComponent {
 					:data-disabled="option.disabled ? \'true\' : \'false\'"
 					:data-selected="isSelected(option) ? \'true\' : \'false\'"
 					:data-highlighted="isHighlighted(filteredOptions.indexOf(option)) ? \'true\' : \'false\'"
-					@click="selectOption(option)"
+					@click="
+						selectOption(option);
+
+						if (option.href) {
+							window.location.href = option.href;
+						}
+					"
 					@mouseenter="highlightedIndex = filteredOptions.indexOf(option)"
 					role="option"
 					:aria-selected="isSelected(option).toString()"
