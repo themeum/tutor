@@ -179,7 +179,7 @@ class Table extends BaseComponent {
 			$headings .= sprintf(
 				'<th class="%s">%s</th>',
 				$heading['class'],
-				apply_filters( 'tutor_table_heading',$heading['content'] )
+				apply_filters( 'tutor_table_heading', $heading['content'] )
 			);
 		}
 
