@@ -9,6 +9,7 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\Constants\Size;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
@@ -124,7 +125,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			SearchFilter::make()
 				->form_id( 'tutor-my-courses-search-form' )
 				->placeholder( __( 'Search courses...', 'tutor' ) )
-				->size( 'small' )
+				->size( Size::SMALL )
 				->action( $current_url )
 				->hidden_inputs( $hidden_inputs )
 				->render();
@@ -197,6 +198,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 					</div>
 					<div class="tutor-my-courses-card-footer">
 						<div class="tutor-flex tutor-items-center tutor-gap-2">
+							<span class="tutor-font-medium tutor-mr-4">
+								<?php
+								$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
+								echo esc_html( $membership_only_mode ? __( 'Plan:', 'tutor' ) : '' );
+								?>
+							</span>
 							<?php
 							if ( null === tutor_utils()->get_course_price() ) {
 								esc_html_e( 'Free', 'tutor' );
