@@ -68,10 +68,17 @@ ol {
   list-style: none;
 }
 
-a{
+li > ol,
+li > ul,
+ol,
+ul {
+  padding: 0;
+}
+
+a {
   text-decoration: none;
   color: inherit;
-  
+
   &:hover {
     text-decoration: none;
     color: inherit;

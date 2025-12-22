@@ -24,6 +24,7 @@
     max-width: 758px;
     margin: 0 auto;
     padding-inline: $tutor-spacing-6;
+    padding-bottom: $tutor-spacing-7;
 
     &:not(:has(.tutor-announcement-notice)) {
       padding-top: $tutor-spacing-7;
