@@ -48,8 +48,8 @@ $count_map = array(
 );
 
 $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
-$paged              = Input::get( 'paged', 1, Input::TYPE_INT );
-$offset             = $per_page * ( $paged - 1 );
+$current_page       = Input::get( 'current_page', 1, Input::TYPE_INT );
+$offset             = $per_page * ( $current_page - 1 );
 $results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type, $search, $order );
 $show_course_delete = true;
 $post_type_query    = Input::get( 'type', '' );
@@ -353,8 +353,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<div class="tutor-p-6">
 			<?php
 			Pagination::make()
-				->format( '?paged=%#%' )
-				->current( $paged )
+				->current( $current_page )
 				->total( $count_map[ $status ] )
 				->limit( $per_page )
 				->render();
