@@ -57,7 +57,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$completed_course_link = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/completed-courses' );
 	$active_course_link    = tutor_utils()->tutor_dashboard_url( 'enrolled-courses/active-courses' );
 	?>
-	<div class="tutor-grid tutor-grid-cols-4 tutor-gap-5 tutor-mb-7">
+	<div class="tutor-grid tutor-grid-cols-4 tutor-sm-grid-cols-2 tutor-gap-5 tutor-mb-7">
 		<a href="<?php echo esc_url( $enrolled_course_link ); ?>" class="tutor-card tutor-stat-card tutor-stat-card-enrolled">
 			<div class="tutor-stat-card-header">
 				<h3 class="tutor-stat-card-title">
