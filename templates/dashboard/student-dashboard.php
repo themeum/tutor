@@ -182,78 +182,77 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
  * Active users in progress courses
  */
 $placeholder_img     = tutor()->url . 'assets/images/placeholder.svg';
-$courses_in_progress = CourseModel::get_active_courses_by_user( get_current_user_id() );
+$courses_in_progress = CourseModel::get_active_courses_by_user( get_current_user_id(), 0, 2 );
 ?>
 
 <?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
 	<div class="tutor-frontend-dashboard-course-progress">
-		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-text-capitalize tutor-mb-24">
-			<?php esc_html_e( 'In Progress Courses', 'tutor' ); ?>
+		<div class="tutor-small tutor-font-medium tutor-mb-4">
+			<?php esc_html_e( 'Continue Learning', 'tutor' ); ?>
 		</div>
+		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 		<?php
 		while ( $courses_in_progress->have_posts() ) :
 			$courses_in_progress->the_post();
-			$tutor_course_img = get_tutor_course_thumbnail_src();
-			$course_rating    = tutor_utils()->get_course_rating( get_the_ID() );
-			$course_progress  = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
-			$completed_number = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
+			$tutor_course_img  = get_tutor_course_thumbnail_src();
+			$course_categories = get_tutor_course_categories();
+			$course_progress   = tutor_utils()->get_course_completed_percent( get_the_ID(), 0, true );
+			$completed_number  = 0 === (int) $course_progress['completed_count'] ? 1 : (int) $course_progress['completed_count'];
 			?>
-			<div class="tutor-course-progress-item tutor-card tutor-mb-20">
-				<div class="tutor-row tutor-gx-0">
-					<div class="tutor-col-lg-4">
-						<div class="tutor-ratio tutor-ratio-3x2">
-							<img class="tutor-card-image-left" src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
-						</div>
+			<div class="tutor-card tutor-progress-card">
+				<div class="tutor-progress-card-thumbnail">
+					<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+				</div>
+				<div class="tutor-progress-card-content">
+					<div class="tutor-progress-card-header">
+						<?php if ( ! empty( $course_categories ) ) : ?>
+							<div class="tutor-progress-card-category">
+								<?php echo esc_html( implode( ', ', wp_list_pluck( $course_categories, 'name' ) ) ); ?>
+							</div>
+						<?php endif; ?>
+						<h3 class="tutor-progress-card-title"><?php the_title(); ?></h3>
 					</div>
-
-					<div class="tutor-col-lg-8 tutor-align-self-center">
-						<div class="tutor-card-body">
-						<?php if ( $course_rating ) : ?>
-								<div class="tutor-ratings tutor-mb-4">
-									<?php tutor_utils()->star_rating_generator( $course_rating->rating_avg ); ?>
-									<div class="tutor-ratings-count">
-										<?php echo esc_html( number_format( $course_rating->rating_avg, 2 ) ); ?>
-									</div>
-								</div>
-							<?php endif; ?>
-
-							<div class="tutor-course-progress-item-title tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
-							<?php the_title(); ?>
-							</div>
-
-							<div class="tutor-d-flex tutor-fs-7 tutor-mb-32">
-								<span class="tutor-color-muted tutor-mr-4"><?php esc_html_e( 'Completed Lessons:', 'tutor' ); ?></span>
-								<span class="tutor-fw-medium tutor-color-black">
-									<span>
-									<?php echo esc_html( $course_progress['completed_count'] ); ?>
-									</span>
-								<?php esc_html_e( 'of', 'tutor' ); ?>
-									<span>
-									<?php echo esc_html( $course_progress['total_count'] ); ?>
-									</span>
-								<?php echo esc_html( _n( 'lesson', 'lessons', $completed_number, 'tutor' ) ); ?>
-								</span>
-							</div>
-
-							<div class="tutor-row tutor-align-center">
-								<div class="tutor-col">
-									<div class="tutor-progress-bar tutor-mr-16" style="--tutor-progress-value:<?php echo esc_attr( $course_progress['completed_percent'] ); ?>%"><span class="tutor-progress-value" area-hidden="true"></span></div>
-								</div>
-
-								<div class="tutor-col-auto">
-									<span class="progress-percentage tutor-fs-7 tutor-color-muted">
-										<span class="tutor-fw-medium tutor-color-black ">
-										<?php echo esc_html( $course_progress['completed_percent'] . '%' ); ?>
-										</span><?php esc_html_e( 'Complete', 'tutor' ); ?>
-									</span>
-								</div>
+					<div class="tutor-progress-card-progress">
+						<div class="tutor-progress-card-details">
+							<?php
+								echo esc_html(
+									sprintf(
+									/* translators: 1: completed lesson count, 2: total lesson count */
+										__( '%1$s of %2$s lessons', 'tutor' ),
+										$course_progress['completed_count'],
+										$course_progress['total_count']
+									)
+								);
+							?>
+							<span class="tutor-progress-card-separator">•</span>
+							<?php
+								printf(
+								/* translators: %s: completed percentage */
+									esc_html__( '%s%% Complete', 'tutor' ),
+									esc_html( $course_progress['completed_percent'] )
+								);
+							?>
+						</div>
+						<div class="tutor-progress-card-bar">
+							<div class="tutor-progress-bar" data-tutor-animated>
+								<div class="tutor-progress-bar-fill" style="--tutor-progress-width: <?php echo esc_attr( $course_progress['completed_percent'] ); ?>%;"></div>
 							</div>
 						</div>
 					</div>
-					<a class="tutor-stretched-link" href="<?php the_permalink(); ?>"></a>
+				</div>
+				<div class="tutor-progress-card-actions">
+					<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-primary tutor-btn-small">
+						<?php esc_html_e( 'Resume', 'tutor' ); ?>
+					</a>
+				</div>
+				<div class="tutor-progress-card-footer">
+					<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-primary tutor-btn-block">
+						<?php esc_html_e( 'Resume', 'tutor' ); ?>
+					</a>
 				</div>
 			</div>
 			<?php endwhile; ?>
-		<?php wp_reset_postdata(); ?>
+			<?php wp_reset_postdata(); ?>
+		</div>
 	</div>
 <?php endif; ?>
