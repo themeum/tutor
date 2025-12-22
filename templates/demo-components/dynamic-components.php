@@ -392,7 +392,7 @@
 			),
 		);
 
-		echo Table::make()
+		Table::make()
 			->headings( $heading )
 			->contents( $content )
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
@@ -452,7 +452,7 @@
 				),
 			);
 
-			echo Table::make()
+			Table::make()
 			->contents( $content )
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
@@ -483,7 +483,7 @@
 			</code></pre>
 		<br>
 		<?php
-			echo Popover::make()
+			Popover::make()
 				->title( 'Basic' )
 				->body( '<p>This is a popover component</p>' )
 				->closeable( true )
@@ -540,22 +540,22 @@
 			$left_button   = $button->label( 'Left' )->get();
 			$bottom_button = $button->label( 'Bottom' )->get();
 
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Right component</p>' )
 				->trigger( $right_button )
 				->placement( Positions::RIGHT )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Top component</p>' )
 				->trigger( $top_button )
 				->placement( Positions::TOP )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Bottom component</p>' )
 				->trigger( $bottom_button )
 				->placement( Positions::BOTTOM )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Left component</p>' )
 				->trigger( $left_button )
 				->placement( Positions::LEFT )
@@ -593,7 +593,7 @@
 				Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
 			);
 
-			echo Popover::make()
+			Popover::make()
 			->title( 'Confirm Action' )
 			->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
 			->footer( $footer_buttons )
@@ -637,7 +637,7 @@
 		<br>
 		<?php
 			$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
-			echo Popover::make()
+			Popover::make()
 				->trigger( $kebab_button )
 				->menu_item(
 					array(
@@ -664,7 +664,7 @@
 	<div class="pagination-wrapper tutor-mb-12">
 		<h2>Pagination</h2>
 		<br>
-		<pre><code>echo Pagination::make()
+		<pre><code> Pagination::make()
 				->current( 2 )
 				->total( 200 )
 				->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
@@ -674,7 +674,7 @@
 		<br>
 		<?php
 
-		echo Pagination::make()
+		Pagination::make()
 			->current( 2 )
 			->total( 200 )
 			->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
@@ -711,7 +711,7 @@
 				),
 			);
 
-			echo Nav::make()
+			Nav::make()
 				->items( array( $dropdown ) )
 				->size( Size::SM )
 				->variant( Variant::SECONDARY )
@@ -749,12 +749,12 @@
 				),
 			);
 
-			echo Nav::make()
+			Nav::make()
 				->items( array( $wishlist, $dropdown ) )
 				->size( Size::LG )
 				->render();
 
-			echo Nav::make()
+			Nav::make()
 				->items( array( $dropdown ) )
 				->size( Size::SM )
 				->variant( Variant::SECONDARY )
