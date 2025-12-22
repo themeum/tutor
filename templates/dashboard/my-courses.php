@@ -154,7 +154,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				<div class="tutor-my-courses-card">
 					<div class="tutor-my-courses-card-body">
 						<div class="tutor-my-courses-card-thumb">
-							<?php do_action( 'tutor_my_courses_card_thumbnail_before', $post->ID ); ?>
+							<?php do_action( 'tutor_my_courses_before_thumbnail', $post->ID ); ?>
 							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							<div class="tutor-my-courses-card-actions">
 								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
