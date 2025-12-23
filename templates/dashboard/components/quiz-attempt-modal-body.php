@@ -13,7 +13,7 @@ use TUTOR\Icon;
 ?>
 
 <div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
-    <?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 100, 100 ); ?>
+    <?php tutor_utils()->render_svg_icon( Icon::BIN, 100, 100 ); ?>
     <h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
         <?php esc_html_e( 'Do You Want to Delete This?', 'tutor' ); ?>
     </h5>

@@ -11,9 +11,7 @@
 
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
-use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-use Tutor\Components\Modal;
 use Tutor\Components\Popover;
 use TUTOR\Icon;
 use Tutor\Models\QuizModel;
@@ -141,9 +139,11 @@ $kebab_button    = Button::make()
 		}
 
 		$review_url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt_id ), get_pagenum_link() );
+		$click_attr = sprintf( 'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt_id );
 
 		Popover::make()
 			->trigger( $kebab_button )
+			->placement('bottom')
 			->menu_item(
 				array(
 					'tag'     => 'a',
@@ -159,7 +159,7 @@ $kebab_button    = Button::make()
 					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
 					'attr'    => array(
 						'href'   => '#',
-						'@click' => 'hide(); TutorCore.modal.showModal("attempt-delete-modal");',
+						'@click' => $click_attr,
 					),
 				)
 			)

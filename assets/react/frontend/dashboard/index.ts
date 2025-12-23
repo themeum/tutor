@@ -29,7 +29,7 @@ const getCurrentPage = (): string => {
     return 'dashboard-assignments';
   }
   if (path.includes('/quiz-attempts')) {
-    return 'dashboard-quiz-attempts';
+    return 'quiz-attempts';
   }
   if (path.includes('/settings')) {
     return 'dashboard-settings';
@@ -56,7 +56,7 @@ const initializeDashboard = () => {
     case 'dashboard-assignments':
       initializeAssignments();
       break;
-    case 'dashboard-quiz-attempts':
+    case 'quiz-attempts':
       initializeQuizAttempts();
       break;
     case 'dashboard-settings':

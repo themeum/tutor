@@ -12,7 +12,7 @@ const quizAttemptsPage = () => {
     init() {
       this.deleteMutation = this.query.useMutation(this.deleteAttempt, {
         onSuccess: () => {
-          window.TutorCore.modal.closeModal('tutor-course-delete-modal');
+          window.TutorCore.modal.closeModal('tutor-quiz-attempt-delete-modal');
           window.location.reload();
         },
         onError: (error: Error) => {
@@ -27,7 +27,7 @@ const quizAttemptsPage = () => {
       });
     },
 
-    async handleQuizAttemptDelete(attemptID: number) {
+    async handleDeleteAttempt(attemptID: number) {
       await this.deleteMutation?.mutate(attemptID);
     },
   };
