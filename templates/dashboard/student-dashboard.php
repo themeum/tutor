@@ -9,30 +9,27 @@
  * @since 4.0.0
  */
 
-use Tutor\Components\Modal;
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
 	if ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
-		$alert_message = sprintf(
-			'<div class="tutor-alert tutor-primary tutor-mb-20">
-				<div class="tutor-alert-text">
-					<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
-					<span>
-						%s
+		?>
+		<div class="tutor-border tutor-mb-7 tutor-rounded-2xl tutor-surface-l1 tutor-p-5">
+			<div class="tutor-flex tutor-items-center tutor-justify-between">
+				<div class="tutor-flex tutor-items-center tutor-gap-2">
+					<?php tutor_utils()->render_svg_icon( Icon::INFO, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
+					<span class="tutor-small">
+						<?php echo esc_html( $profile_completion['_tutor_profile_photo']['text'] ); ?>
 					</span>
 				</div>
-				<div class="alert-btn-group">
-					<a href="%s" class="tutor-btn tutor-btn-sm">' . __( 'Click Here', 'tutor' ) . '</a>
-				</div>
-			</div>',
-			$profile_completion['_tutor_profile_photo']['text'],
-			tutor_utils()->tutor_dashboard_url( 'settings' )
-		);
-
-		echo $alert_message; //phpcs:ignore
+				<a href="<?php echo esc_attr( tutor_utils()->tutor_dashboard_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
+					<?php esc_html_e( 'Click Here', 'tutor' ); ?>
+				</a>
+			</div>
+		</div>
+		<?php
 	}
 }
 ?>
@@ -186,9 +183,17 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( get_current_user
 ?>
 
 <?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
-	<div class="tutor-frontend-dashboard-course-progress">
-		<div class="tutor-small tutor-font-medium tutor-mb-4">
-			<?php esc_html_e( 'Continue Learning', 'tutor' ); ?>
+	<div class="tutor-student-dashboard-courses">
+		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mb-4">
+			<div class="tutor-small tutor-font-medium">
+				<?php esc_html_e( 'Continue Learning', 'tutor' ); ?>
+			</div>
+			<a 
+				href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url( 'enrolled-courses' ) ); ?>" 
+				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-text-brand tutor-p-none tutor-min-h-0"
+			>
+				<?php esc_html_e( 'See All', 'tutor' ); ?>
+			</a>
 		</div>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 		<?php
