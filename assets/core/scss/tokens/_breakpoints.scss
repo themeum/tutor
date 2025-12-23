@@ -1,7 +1,7 @@
 // Design Tokens - Breakpoints
 // Mobile-first responsive design breakpoints
 
-$tutor-breakpoint-xs: 0px;
+$tutor-breakpoint-xs: 480px;
 $tutor-breakpoint-sm: 576px;
 $tutor-breakpoint-md: 768px;
 $tutor-breakpoint-lg: 992px;
@@ -10,10 +10,10 @@ $tutor-breakpoint-2xl: 1400px;
 
 // Breakpoint map for mixins
 $tutor-breakpoints: (
-  xs: $tutor-breakpoint-xs,
-  sm: $tutor-breakpoint-sm,
-  md: $tutor-breakpoint-md,
-  lg: $tutor-breakpoint-lg,
+  2xl: $tutor-breakpoint-2xl,
   xl: $tutor-breakpoint-xl,
-  2xl: $tutor-breakpoint-2xl
+  lg: $tutor-breakpoint-lg,
+  md: $tutor-breakpoint-md,
+  sm: $tutor-breakpoint-sm,
+  xs: $tutor-breakpoint-xs,
 );

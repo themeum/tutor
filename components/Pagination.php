@@ -89,7 +89,7 @@ class Pagination extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var int $current the current number of pagination's.
+	 * @param int $current the current number of pagination's.
 	 *
 	 * @return self
 	 */
@@ -98,13 +98,12 @@ class Pagination extends BaseComponent {
 		return $this;
 	}
 
-
 	/**
 	 * Set the total number of pagination's.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var int $total the current number of pagination's.
+	 * @param int $total the current number of pagination's.
 	 *
 	 * @return self
 	 */
@@ -112,7 +111,6 @@ class Pagination extends BaseComponent {
 		$this->pagination_total = $total;
 		return $this;
 	}
-
 
 	/**
 	 * Set the pagination limit for each page.
@@ -170,7 +168,6 @@ class Pagination extends BaseComponent {
 		return $this;
 	}
 
-
 	/**
 	 * Set next text for pagination.
 	 *
@@ -184,7 +181,6 @@ class Pagination extends BaseComponent {
 		$this->next = $next;
 		return $this;
 	}
-
 
 	/**
 	 * Render pagination info content.
@@ -219,7 +215,6 @@ class Pagination extends BaseComponent {
 	 * @return array|null
 	 */
 	protected function get_paginated_links_list() {
-
 		$per_page  = max( ceil( $this->pagination_total / $this->pagination_limit ), 1 );
 		$current   = max( intval( $this->pagination_current ), 1 );
 		$format    = ! empty( $this->format ) ? $this->format : '?current_page=%#%';
@@ -253,7 +248,7 @@ class Pagination extends BaseComponent {
 			foreach ( $pagination_links as $link ) {
 				$link = str_replace( 'page-numbers dots', 'tutor-pagination-ellipsis', $link );
 				$link = str_replace( 'page-numbers', 'tutor-pagination-item', $link );
-				$link = str_replace( 'current', 'tutor-pagination-item-active', $link );
+				$link = preg_replace( '/\bcurrent\b(?=[^"]*"[^"]*$)/', 'tutor-pagination-item-active', $link );
 				$link = str_replace( 'prev', 'tutor-pagination-item-prev', $link );
 				$link = str_replace( 'next', 'tutor-pagination-item-next', $link );
 				$link = str_replace( 'tutor-pagination-item-activeColor', 'currentColor', $link );

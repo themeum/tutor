@@ -87,6 +87,20 @@ class Badge extends BaseComponent {
 	protected $icon = '';
 
 	/**
+	 * Sort Icon width.
+	 *
+	 * @var int
+	 */
+	protected $icon_width = 16;
+
+	/**
+	 * Sort Icon height.
+	 *
+	 * @var int
+	 */
+	protected $icon_height = 16;
+
+	/**
 	 * Prefix content (e.g., subdued text before label).
 	 *
 	 * @since 4.0.0
@@ -164,12 +178,16 @@ class Badge extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $svg SVG markup (already escaped and sanitized).
+	 * @param string $icon   SVG icon name or markup.
+	 * @param int    $width  Optional. Icon width.
+	 * @param int    $height Optional. Icon height.
 	 *
 	 * @return $this
 	 */
-	public function icon( $svg ) {
-		$this->icon = $svg;
+	public function icon( string $icon, int $width = 16, int $height = 16 ): self {
+		$this->icon        = $icon;
+		$this->icon_width  = $width;
+		$this->icon_height = $height;
 		return $this;
 	}
 
@@ -198,10 +216,13 @@ class Badge extends BaseComponent {
 		// Build icon HTML if exists.
 		$icon_html = '';
 		if ( ! empty( $this->icon ) ) {
-			$icon_html = sprintf(
-				'%s',
-				$this->icon // SVG is expected to be escaped markup.
-			);
+			if ( false !== strpos( $this->icon, '<svg' ) ) {
+				$icon_html = $this->icon;
+			} else {
+				ob_start();
+				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
+				$icon_html = ob_get_clean();
+			}
 		}
 
 		// Build content.

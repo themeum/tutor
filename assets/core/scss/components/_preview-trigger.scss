@@ -6,12 +6,12 @@
 
 .tutor-preview-trigger {
   display: inline;
-  border-bottom: 1px dashed $tutor-border-idle;
   position: relative;
 
   &-text {
     font-style: italic;
-    text-decoration: none;
+    text-decoration: underline dashed $tutor-border-hover;
+    text-underline-offset: 4px;
     color: $tutor-text-secondary;
     transition: color 0.2s ease;
     cursor: pointer;
@@ -62,6 +62,11 @@
   a {
     text-decoration: none;
     color: inherit;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: $tutor-text-brand;
+    }
   }
 }
 
@@ -71,6 +76,11 @@
   a {
     color: $tutor-text-secondary;
     text-decoration: none;
+    transition: color 0.3s ease-in-out;
+
+    &:hover {
+      color: $tutor-text-brand;
+    }
   }
 }
 
