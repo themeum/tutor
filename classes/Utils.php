@@ -3876,6 +3876,40 @@ class Utils {
 	}
 
 	/**
+	 * Get user avatar URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $user_id user id.
+	 *
+	 * @return string
+	 */
+	public function get_user_avatar_url( $user_id = 0 ) {
+		$user_id     = $this->get_user_id( $user_id );
+		$cache_key   = 'tutor_get_user_avatar_url_' . $user_id;
+		$cached_data = TutorCache::get( $cache_key );
+
+		if ( false !== $cached_data ) {
+			return $cached_data;
+		}
+
+		$avatar_url = '';
+
+		$user = get_userdata( $user_id );
+		if ( is_a( $user, 'WP_User' ) ) {
+			$user->tutor_profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+		}
+
+		if ( is_object( $user ) && $user->tutor_profile_photo && wp_get_attachment_image_url( $user->tutor_profile_photo ) ) {
+			$avatar_url = wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' );
+		}
+
+		TutorCache::set( $cache_key, $avatar_url );
+
+		return $avatar_url;
+	}
+
+	/**
 	 * Get tutor user.
 	 *
 	 * @since 1.0.0
