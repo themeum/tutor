@@ -104,7 +104,7 @@
   }
 
   // Size variants
-  &.tutor-nav-sm {
+  &.tutor-nav-small {
     .tutor-nav-item {
       @include tutor-text(tiny);
       padding: $tutor-spacing-3 $tutor-spacing-5;
@@ -116,7 +116,7 @@
     }
   }
 
-  &.tutor-nav-lg {
+  &.tutor-nav-large {
     .tutor-nav-item {
       @include tutor-text(small);
       gap: $tutor-spacing-4;

@@ -9,7 +9,10 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
+use Tutor\Components\Nav;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
@@ -45,8 +48,8 @@ $count_map = array(
 );
 
 $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
-$paged              = Input::get( 'paged', 1, Input::TYPE_INT );
-$offset             = $per_page * ( $paged - 1 );
+$current_page       = Input::get( 'current_page', 1, Input::TYPE_INT );
+$offset             = $per_page * ( $current_page - 1 );
 $results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type, $search, $order );
 $show_course_delete = true;
 $post_type_query    = Input::get( 'type', '' );
@@ -60,22 +63,26 @@ $nav_items = array(
 		'active'  => true,
 		'options' => array(
 			array(
-				'label'  => __( 'Published', 'tutor' ) . ' (' . ( $count_map['publish'] ?? 0 ) . ')',
+				'label'  => __( 'Published', 'tutor' ),
+				'count'  => $count_map['publish'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses' ) ),
 				'active' => 'my-courses' === $active_tab,
 			),
 			array(
-				'label'  => __( 'Pending', 'tutor' ) . ' (' . ( $count_map['pending'] ?? 0 ) . ')',
+				'label'  => __( 'Pending', 'tutor' ),
+				'count'  => $count_map['pending'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/pending-courses' ) ),
 				'active' => 'my-courses/pending-courses' === $active_tab,
 			),
 			array(
-				'label'  => __( 'Draft', 'tutor' ) . ' (' . ( $count_map['draft'] ?? 0 ) . ')',
+				'label'  => __( 'Draft', 'tutor' ),
+				'count'  => $count_map['draft'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ),
 				'active' => 'my-courses/draft-courses' === $active_tab,
 			),
 			array(
-				'label'  => __( 'Schedule', 'tutor' ) . ' (' . ( $count_map['future'] ?? 0 ) . ')',
+				'label'  => __( 'Schedule', 'tutor' ),
+				'count'  => $count_map['future'] ?? 0,
 				'url'    => add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ),
 				'active' => 'my-courses/schedule-courses' === $active_tab,
 			),
@@ -91,16 +98,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 <div class="tutor-dashboard-my-courses" x-data="tutorMyCourses()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
-			<?php
-			tutor_load_template(
-				'core-components.nav',
-				array(
-					'items'   => $nav_items,
-					'size'    => 'sm',
-					'variant' => 'primary',
-				)
-			);
-			?>
+			<?php Nav::make()->variant( Variant::PRIMARY )->size( Size::SMALL )->items( $nav_items )->render(); ?>
 			<div class="tutor-flex tutor-items-center tutor-gap-5">
 				<?php do_action( 'tutor_course_create_button' ); ?>
 				<button 
@@ -124,7 +122,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			SearchFilter::make()
 				->form_id( 'tutor-my-courses-search-form' )
 				->placeholder( __( 'Search courses...', 'tutor' ) )
-				->size( 'small' )
+				->size( Size::SMALL )
 				->action( $current_url )
 				->hidden_inputs( $hidden_inputs )
 				->render();
@@ -153,7 +151,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				<div class="tutor-my-courses-card">
 					<div class="tutor-my-courses-card-body">
 						<div class="tutor-my-courses-card-thumb">
-							<?php do_action( 'tutor_my_courses_card_thumbnail_before', $post->ID ); ?>
+							<?php do_action( 'tutor_my_courses_before_thumbnail', $post->ID ); ?>
 							<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 							<div class="tutor-my-courses-card-actions">
 								<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon">
@@ -196,7 +194,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						</div>
 					</div>
 					<div class="tutor-my-courses-card-footer">
-						<div class="tutor-flex tutor-items-center tutor-gap-2">
+						<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-overflow-hidden">
+							<?php if ( apply_filters( 'tutor_membership_only_mode', false ) ) : ?>
+							<span class="tutor-font-medium tutor-text-subdued">
+								<?php esc_html_e( 'Plan:', 'tutor' ); ?>
+							</span>
+							<?php endif ?>
 							<?php
 							if ( null === tutor_utils()->get_course_price() ) {
 								esc_html_e( 'Free', 'tutor' );
@@ -350,7 +353,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		<div class="tutor-p-6">
 			<?php
 			Pagination::make()
-				->current( $paged )
+				->current( $current_page )
 				->total( $count_map[ $status ] )
 				->limit( $per_page )
 				->render();
