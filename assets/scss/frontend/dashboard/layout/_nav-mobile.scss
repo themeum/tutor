@@ -11,8 +11,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  // @TODO: Need to adjust z-index in frontend properly
-  z-index: 9999;
+  z-index: $tutor-z-footer;
 
   @include tutor-breakpoint-up(md) {
     display: none;

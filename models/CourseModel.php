@@ -266,6 +266,7 @@ class CourseModel {
 	 *
 	 * @since 1.0.0
 	 * @since 3.5.0 param $post_types added.
+	 * @since 4.0.0 params $search and $order added.
 	 *
 	 * @param integer      $instructor_id instructor id.
 	 * @param array|string $post_status post status.
@@ -273,10 +274,21 @@ class CourseModel {
 	 * @param integer      $limit limit.
 	 * @param boolean      $count_only count or not.
 	 * @param array        $post_types array of post types.
+	 * @param string       $search search keyword.
+	 * @param string       $order order.
 	 *
 	 * @return array|null|object
 	 */
-	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false, $post_types = array() ) {
+	public static function get_courses_by_instructor(
+		$instructor_id = 0,
+		$post_status = array( 'publish' ),
+		int $offset = 0,
+		int $limit = PHP_INT_MAX,
+		$count_only = false,
+		$post_types = array(),
+		$search = '',
+		$order = 'DESC'
+	) {
 		global $wpdb;
 		$offset        = sanitize_text_field( $offset );
 		$limit         = sanitize_text_field( $limit );
@@ -296,6 +308,19 @@ class CourseModel {
 			$where_post_status                        = "AND $wpdb->posts.post_status IN({$statuses}) ";
 		}
 
+		$search_sql = '';
+		if ( ! empty( $search ) ) {
+			$like       = '%' . $wpdb->esc_like( $search ) . '%';
+			$search_sql = $wpdb->prepare(
+				" AND ( {$wpdb->posts}.post_title LIKE %s OR {$wpdb->posts}.post_excerpt LIKE %s ) ",
+				$like,
+				$like
+			);
+		}
+
+		$order     = strtoupper( $order ) === 'ASC' ? 'ASC' : 'DESC';
+		$order_sql = " ORDER BY $wpdb->posts.post_date {$order} ";
+
 		$select_col   = $count_only ? " COUNT(DISTINCT $wpdb->posts.ID) " : " $wpdb->posts.* ";
 		$limit_offset = $count_only ? '' : " LIMIT $offset, $limit ";
 
@@ -310,7 +335,8 @@ class CourseModel {
 			WHERE	1 = 1 {$where_post_status}
 				AND $wpdb->posts.post_type IN ({$post_types})
 				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
-			ORDER BY $wpdb->posts.post_date DESC $limit_offset",
+				{$search_sql}
+			{$order_sql} {$limit_offset}",
 			$instructor_id,
 			'_tutor_instructor_course_id',
 			$instructor_id,

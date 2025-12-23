@@ -222,6 +222,19 @@ $inset-sides: top, right, bottom, left;
     }
   }
 }
+@each $key, $value in $tutor-spacing {
+  @each $side in $inset-sides {
+    .tutor-#{$side}-#{$key} {
+      @if $side == 'right' {
+        inset-inline-end: $value;
+      } @else if $side == 'left' {
+        inset-inline-start: $value;
+      } @else {
+        #{$side}: $value;
+      }
+    }
+  }
+}
 
 .tutor-inset-0 {
   top: 0;
