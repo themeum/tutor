@@ -5538,7 +5538,7 @@ class Utils {
 			tutor()->meet_post_type,
 		);
 
-		$current_post_type = get_query_var( 'post_type' );
+		$current_post_type = get_post_type();
 
 		return is_single() && ! empty( $current_post_type ) && in_array( $current_post_type, $post_types, true );
 	}
