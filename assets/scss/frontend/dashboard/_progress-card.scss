@@ -11,6 +11,7 @@
 	gap: $tutor-spacing-5;
 	border: 1px solid $tutor-border-idle;
 	border-radius: $tutor-radius-2xl;
+	height: 128px;
 	transition: all 0.2s ease;
 	cursor: pointer;
 	overflow: hidden;
@@ -21,8 +22,9 @@
 
 	&-thumbnail {
 		position: relative;
-		flex: 0 0 200px;
-		aspect-ratio: 16 / 9;
+		flex: 0 0 auto;
+		max-width: 220px;
+		aspect-ratio: 220 / 112;
 		border-radius: $tutor-radius-lg;
 		overflow: hidden;
 
@@ -39,7 +41,7 @@
 	}
 
 	&-content {
-		flex: 1 1 calc(100% - 224px);
+		flex: 1 1 auto;
 		@include tutor-flex(column, stretch, space-between);
 	}
 
@@ -170,3 +172,4 @@
 		}
 	}
 }
+

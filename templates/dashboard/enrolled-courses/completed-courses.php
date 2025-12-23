@@ -9,6 +9,6 @@
  * @since 1.4.3
  */
 
-$active_tab = 'courses/completed-courses';
-require dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'courses.php';
+$active_tab = 'enrolled-courses/completed-courses';
+require dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'enrolled-courses.php';
 
