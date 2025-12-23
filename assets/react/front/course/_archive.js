@@ -126,7 +126,7 @@ window.jQuery(document).ready($ => {
         content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
         course_filter_container.find('[action-tutor-clear-filter]').closest('.tutor-widget-course-filter').removeClass('tutor-d-none');
         
-        if ('category' in filter_criteria.supported_filters) {
+        if (!('category' in filter_criteria.supported_filters)) {
             const filter_property = 'tutor-course-filter-category';
             const category_keys = Object.keys(params).filter((val) => val.includes(filter_property));
             if (category_keys.length > 0) {
@@ -135,9 +135,6 @@ window.jQuery(document).ready($ => {
                     category_ids.push(params[category_key]);
                 });
                 filter_criteria['tutor-course-filter-category'] = [...new Set(category_ids)];
-            }
-            else {
-                filter_criteria['tutor-course-filter-category'] = JSON.parse($("#course_filter_categories").val());
             }
 
         }
