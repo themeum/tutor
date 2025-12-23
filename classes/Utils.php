@@ -3775,27 +3775,19 @@ class Utils {
 	 */
 	public function star_rating_generator_course( $current_rating = 0.00, $echo = true ) {
 		$output = '';
+		
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
-				$output .= '<span class="tutor-icon-star-bold" data-rating-value="' . $i . '"></span>';
+				$output .= tutor_utils()->get_svg_icon( Icon::STAR_FILL, 14, 14, array( 'data-rating-value' => $i ) );
 			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
-				$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
+				$output .=  tutor_utils()->get_svg_icon( Icon::STAR_HALF, 14, 14, array( 'data-rating-value' => $i ) );
 			} else {
-				$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
+				$output .= tutor_utils()->get_svg_icon( Icon::STAR_LINE, 14, 14, array( 'data-rating-value' => $i ) );
 			}
 		}
 
 		if ( $echo ) {
-			echo wp_kses(
-				$output,
-				array(
-					'span' => array(
-						'class'             => true,
-						'data-rating'       => true,
-						'data-rating-value' => true,
-					),
-				)
-			);
+			echo tutor_kses_html( $output );
 		}
 
 		return $output;
