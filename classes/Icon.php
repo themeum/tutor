@@ -45,6 +45,7 @@ final class Icon {
 	const BARS                       = 'bars';
 	const BAR_LEGEND                 = 'bar-legend';
 	const BILLING                    = 'billing';
+	const BIN                        = 'bin';
 	const BOOK                       = 'book';
 	const BOOKMARK                   = 'bookmark';
 	const BOOK_2                     = 'book-2';
@@ -100,12 +101,14 @@ final class Icon {
 	const CONTENT_DRIP               = 'content-drip';
 	const CONTRAST                   = 'contrast';
 	const COPY                       = 'copy';
+	const COPY_2                     = 'copy-2';
 	const COPY_PASTE                 = 'copy-paste';
 	const COUPON                     = 'coupon';
 	const COURSE                     = 'course';
 	const COURSES                    = 'courses';
 	const COURSES_FILL               = 'courses-fill';
 	const CROSS                      = 'cross';
+	const CROSS_2                    = 'cross-2';
 	const CROSS_CIRCLE               = 'cross-circle';
 	const CROWN                      = 'crown';
 	const CROWN_OUTLINED             = 'crown-outlined';
@@ -228,8 +231,10 @@ final class Icon {
 	const MINUS                      = 'minus';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
+	const MOVE                       = 'move';
 	const MP3                        = 'mp3';
 	const MP4                        = 'mp4';
+	const MULTIPLE_INSTRUCTORS       = 'multiple-instructors';
 	const MUSIC                      = 'music';
 	const NOTE                       = 'note';
 	const NOTEBOOK                   = 'notebook';
@@ -266,6 +271,7 @@ final class Icon {
 	const PROFILE_CIRCLE             = 'profile-circle';
 	const PROFILE_CIRCLE_FILL        = 'profile-circle-fill';
 	const PSD                        = 'psd';
+	const PUBLISH                    = 'publish';
 	const QA                         = 'qa';
 	const QA_FILL                    = 'qa-fill';
 	const QUESTION                   = 'question';

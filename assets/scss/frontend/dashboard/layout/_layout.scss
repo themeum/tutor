@@ -5,10 +5,10 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-dashboard-container {
-	width: 100%;
-	max-width: 728px;
+  width: 100%;
+  max-width: 728px;
   // padding-inline: 16px;
-	margin: 0 auto;
+  margin: 0 auto;
 }
 
 .tutor-dashboard-layout {
@@ -21,9 +21,14 @@
   }
 
   .tutor-dashboard-page {
-    max-width: 758px;
+    max-width: 760px;
     margin: 0 auto;
     padding-inline: $tutor-spacing-6;
+    padding-bottom: $tutor-spacing-7;
+
+    @include tutor-breakpoint-down(sm) {
+      padding-bottom: $tutor-spacing-16;
+    }
 
     &:not(:has(.tutor-announcement-notice)) {
       padding-top: $tutor-spacing-7;
@@ -36,8 +41,27 @@
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
 
+  &-header {
+    padding: $tutor-spacing-6;
+    border-bottom: 1px solid $tutor-border-idle;
+  }
+
   @include tutor-breakpoint-down(sm) {
     background-color: transparent;
     border: none;
+
+    &-header {
+      background-color: $tutor-surface-l1;
+      padding: $tutor-spacing-2;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    &-body {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+    }
   }
 }
