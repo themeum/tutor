@@ -14,6 +14,7 @@ use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
+use Tutor\Components\Modal;
 use Tutor\Components\Nav;
 use Tutor\Components\Pagination;
 use TUTOR\Icon;
@@ -131,3 +132,17 @@ Pagination::make()
 	->render();
 ?>
 </div>
+
+<?php
+	$confirm_delete           = Button::make()->label( __( "Yes, I'm sure", 'tutor' ) )->size( Size::SMALL )->variant( Variant::DESTRUCTIVE )->get();
+	$cancel                   = Button::make()->label( __( 'Cancel', 'tutor' ) )->size( Size::SMALL )->variant( Variant::GHOST )->get();
+	$footer_buttons           = sprintf( '%1$s %2$s', $cancel, $confirm_delete );
+	$modal_body_template_path = tutor_get_template_path( 'dashboard.components.quiz-attempt-modal-body' );
+
+	Modal::make()
+		->id( 'attempt-delete-modal' )
+		->template( $modal_body_template_path )
+		->footer_buttons( $footer_buttons )
+		->closeable()
+		->render();
+?>

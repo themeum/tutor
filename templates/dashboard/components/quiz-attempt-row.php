@@ -11,7 +11,9 @@
 
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\Modal;
 use Tutor\Components\Popover;
 use TUTOR\Icon;
 use Tutor\Models\QuizModel;
@@ -156,11 +158,9 @@ $kebab_button    = Button::make()
 					'content' => __( 'Delete', 'tutor' ),
 					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
 					'attr'    => array(
-						'href'                    => '#',
-						'data-id'                 => $attempt_id,
-						'data-tutor-modal-target' => 'tutor-common-confirmation-modal',
+						'href'   => '#',
+						'@click' => 'hide(); TutorCore.modal.showModal("attempt-delete-modal");',
 					),
-					'class'   => 'tutor-quiz-attempt-delete',
 				)
 			)
 			->render()
