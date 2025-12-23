@@ -6,6 +6,7 @@
  */
 
 use TUTOR\Icon;
+use TUTOR\User;
 
 $profile_menu_items = array(
 	'profile'      => array(
@@ -108,7 +109,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 					class="tutor-popover tutor-dashboard-header-user-popover"
 				>
 					<div class="tutor-dashboard-header-user-popover-profile">
-						<div class="tutor-dashboard-header-user-popover-avatar">
+						<div class="tutor-avatar tutor-border tutor-border-brand-secondary">
 							<?php echo get_avatar( get_current_user_id(), 48 ); ?>
 						</div>
 						<div class="tutor-flex tutor-flex-column tutor-items-center tutor-gap-1">
@@ -119,6 +120,43 @@ $display_name = tutor_utils()->display_name( $user_id );
 								<?php echo esc_html( wp_get_current_user()->user_email ); ?>
 							</div>
 						</div>
+						<?php
+						if ( ! User::is_instructor() ) {
+							$instructor_status = tutor_utils()->instructor_status( 0, false );
+							$instructor_status = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
+							$is_rejected       = get_user_meta( $user_id, '_is_tutor_instructor_rejected', true );
+
+							if ( 'pending' === $instructor_status ) {
+								$applied_on = get_user_meta( $user_id, '_is_tutor_instructor', true );
+								$applied_on = gmdate( 'd F, Y', $applied_on );
+								?>
+								<div class="tutor-flex tutor-gap-3 tutor-py-2 tutor-px-4 tutor-surface-l4 tutor-rounded-sm">
+									<span class="tutor-pt-1">
+										<?php tutor_utils()->render_svg_icon( Icon::INFO_OCTAGON, 16, 16, array( 'class' => 'tutor-icon-warning' ) ); ?>
+									</span>
+									<span class="tutor-p3 tutor-text-warning">
+									<?php
+										echo wp_kses_post(
+											sprintf(
+											/* translators: %s: application date */
+												__( 'Your Application is pending as of <span class="tutor-font-medium">%s</span>', 'tutor' ),
+												esc_html( $applied_on ),
+											)
+										);
+									?>
+									</span>
+								</div>
+								<?php
+							} elseif ( $is_rejected || 'blocked' !== $instructor_status ) {
+								?>
+								<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-x-small tutor-gap-2 tutor-btn-block">
+									<?php tutor_utils()->render_svg_icon( Icon::INSTRUCTOR ); ?>
+									<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
+								</a>
+								<?php
+							}
+						}
+						?>
 					</div>
 					<ul class="tutor-dashboard-header-user-popover-menu">
 						<?php
