@@ -13,6 +13,7 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Pagination;
 use Tutor\Models\CourseModel;
+use Tutor\Components\EmptyState;
 
 // Pagination.
 $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -128,8 +129,10 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 					->render();
 				?>
 			</div>
-		<?php else : ?>
-			<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
-		<?php endif; ?>
+			<?php
+		else :
+			EmptyState::make()->title( 'No Courses Found' )->render();
+		endif;
+		?>
 	</div>
 </div>
