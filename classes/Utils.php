@@ -5530,8 +5530,17 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_learning_area(): bool {
-		// @TODO.
-		return true;
+		$post_types = array(
+			tutor()->lesson_post_type,
+			tutor()->quiz_post_type,
+			tutor()->assignment_post_type,
+			tutor()->zoom_post_type,
+			tutor()->meet_post_type,
+		);
+
+		$current_post_type = get_query_var( 'post_type' );
+
+		return is_single() && ! empty( $current_post_type ) && in_array( $current_post_type, $post_types, true );
 	}
 
 	/**
