@@ -128,7 +128,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 
 							if ( 'pending' === $instructor_status ) {
 								$applied_on = get_user_meta( $user_id, '_is_tutor_instructor', true );
-								$applied_on = gmdate( 'd F, Y', $applied_on );
+								$applied_on = tutor_i18n_get_formated_date( $applied_on, get_option( 'date_format' ) );
 								?>
 								<div class="tutor-flex tutor-gap-3 tutor-py-2 tutor-px-4 tutor-surface-l4 tutor-rounded-sm">
 									<span class="tutor-pt-1">
