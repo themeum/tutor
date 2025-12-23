@@ -9423,14 +9423,6 @@ class Utils {
 				'icon'     => Icon::NOTIFICATION,
 			),
 		);
-		
-		if ( $this->should_show_dicussion_menu() ) {
-			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
-			);
-		}
 
 		return apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
 	}
