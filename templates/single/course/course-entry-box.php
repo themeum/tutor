@@ -125,7 +125,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 				if ( $retake_course && ( CourseModel::MODE_FLEXIBLE === $completion_mode || $is_completed_course ) ) {
 					?>
 					<button type="button" 
-							class="tutor-btn tutor-btn-block tutor-btn-outline-primary start-continue-retake-button tutor-course-retake-button" 
+							class="tutor-btn tutor-btn-block tutor-btn-primary-soft start-continue-retake-button tutor-course-retake-button" 
 							href="<?php echo esc_url( $lesson_url ); ?>"
 							data-course_id="<?php echo esc_attr( get_the_ID() ); ?>">
 						<?php esc_html_e( 'Retake This Course', 'tutor' ); ?>
@@ -185,7 +185,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 					<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="course_id"/>
 					<input type="hidden" value="tutor_complete_course" name="tutor_action"/>
 
-					<button type="submit" class="tutor-btn tutor-btn-outline-primary tutor-btn-block" name="complete_course_btn" value="complete_course">
+					<button type="submit" class="tutor-btn tutor-btn-primary-soft tutor-btn-block" name="complete_course_btn" value="complete_course">
 						<?php esc_html_e( 'Complete Course', 'tutor' ); ?>
 					</button>
 				</form>
