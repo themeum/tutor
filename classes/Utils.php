@@ -9391,11 +9391,6 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'index'   => array(
-				'title'    => __( 'Home', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::HOME_FILL,
-			),
 			'my-courses'    => array(
 				'title'    => __( 'Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9468,7 +9463,7 @@ class Utils {
 		$items = array(
 			'index'            => array(
 				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME_FILL,
+				'icon'  => Icon::HOME,
 			),
 			'enrolled-courses' => array(
 				'title' => __( 'Courses', 'tutor' ),
