@@ -4745,13 +4745,16 @@ class Utils {
 	 * Get question and asnwer by question
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 param $order is added.
 	 *
-	 * @param int $question_id question id.
+	 * @param int    $question_id question id.
+	 * @param string $order order ASC or DESC.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_qa_answer_by_question( $question_id ) {
+	public function get_qa_answer_by_question( $question_id, $order = 'ASC' ) {
 		global $wpdb;
+		$order = 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT _chat.comment_ID,
@@ -4767,7 +4770,7 @@ class Utils {
 					INNER JOIN {$wpdb->users} ON _chat.user_id = {$wpdb->users}.ID
 			WHERE 	comment_type = 'tutor_q_and_a'
 					AND ( _chat.comment_ID=%d OR _chat.comment_parent = %d)
-			ORDER BY _chat.comment_ID ASC;",
+			ORDER BY _chat.comment_ID {$order};",
 				$question_id,
 				$question_id
 			)
