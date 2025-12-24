@@ -13,8 +13,6 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Contracts\ComponentInterface;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
