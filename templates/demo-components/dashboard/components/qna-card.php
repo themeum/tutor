@@ -8,35 +8,55 @@
  * @since 4.0.0
  */
 
+use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use Tutor\Components\Avatar;
 
-$is_unread = $is_unread ?? false;
+$context   = 'frontend-dashboard-qna-table-' . $view_as;
+$key_slug  = 'frontend-dashboard-qna-table-student' === $context ? '_' . $current_user_id : '';
+$meta      = $question->meta;
+$is_read   = (int) tutor_utils()->array_get( 'tutor_qna_read' . $key_slug, $meta, 0 );
+$is_unread = 0 === $is_read;
+
+$last_reply = null;
+$answers    = tutils()->get_qa_answer_by_question( $question->comment_ID, 'DESC' );
+
+if ( ! empty( $answers ) ) {
+	$last_reply = $answers[0];
+}
 
 ?>
 <div class="tutor-qna-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
-	<div class="tutor-avatar tutor-avatar-32">
-		<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
-	</div>
+	<?php
+		Avatar::make()
+			->src( tutor_utils()->get_user_avatar_url( $question->user_id ) )
+			->size( Size::SIZE_32 )
+			->render();
+	?>
 	<div class="tutor-qna-card-content">
 		<div class="tutor-qna-card-top">
-			<div class="tutor-qna-card-author">Annathoms</div>
+			<div class="tutor-qna-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
 			<div>
 				<span class="tutor-text-subdued">asked in</span> 
-				<div class="tutor-preview-trigger">Camera Skills & Photo Theory</div>
+				<div class="tutor-preview-trigger"><?php echo esc_html( $question->post_title ); ?></div>
 			</div>
 		</div>
-		<h6 class="tutor-qna-card-title">This is the question posted by the student.</h6>
+		<h6 class="tutor-qna-card-title"><?php echo wp_kses_post( $question->comment_content ); ?></h6>
 		<div class="tutor-qna-card-meta">
 			<button class="tutor-qna-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
-			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20 ); ?> 0</div>
-			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::EYE_LINE, 20, 20 ); ?> 6</div>
-			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 3</div>
+			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> <?php echo esc_html( $question->answer_count ); ?></div>
+
+			<?php if ( $last_reply ) : ?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-ml-2">
-				<div class="tutor-avatar tutor-avatar-20">
-					<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
-				</div>
-				<div class="tutor-text-small">1 minute ago</div>
+				<?php
+				Avatar::make()
+					->src( tutor_utils()->get_user_avatar_url( $last_reply->user_id ) )
+					->size( Size::SIZE_20 )
+					->render();
+				?>
+				<div class="tutor-text-small"><?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date ) ) ) ); //phpcs:ignore ?></div>
 			</div>
+			<?php endif; ?>
 		</div>
 	</div>
 	<div class="tutor-qna-card-actions">
