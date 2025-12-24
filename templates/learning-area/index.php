@@ -1,4 +1,3 @@
-
 <?php
 /**
  * Learning area main file
@@ -13,19 +12,28 @@
 use TUTOR\Icon;
 use TUTOR\Input;
 
+wp_head();
+
+// Tutor global variable for using inside learning area.
+
+$tutor_course_content_id = get_the_ID();
+$tutor_course_id         = tutor_utils()->get_course_id_by_subcontent( $tutor_course_content_id );
+$tutor_course            = get_post( $tutor_course_id );
+$tutor_course_list_url   = tutor_utils()->course_archive_page_url();
+
 ?>
 <div class="tutor-learning-area" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
-	<?php tutor_load_template( 'demo-components.learning-area.components.header' ); ?>
+	<?php tutor_load_template( 'learning-area.components.header' ); ?>
 	<div class="tutor-learning-area-body">
-		<?php tutor_load_template( 'demo-components.learning-area.components.sidebar' ); ?>
+		<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
 		<div class="tutor-learning-area-content">
 			<div class="tutor-learning-area-container">
 				<?php
 				// Get requested page from query string and sanitize.
-				$learning_page = Input::get( 'page', 'home' );
+				$subpage = Input::get( 'subpage' );
 
-				// Whitelist allowed pages to avoid arbitrary file inclusion.
-				$allowed_pages = array(
+				// Whitelist allowed items to avoid arbitrary file inclusion.
+				$nav_items = array(
 					'resources',
 					'qna',
 					'course-info',
@@ -33,12 +41,12 @@ use TUTOR\Input;
 					'certificate',
 				);
 
-				$allowed_pages = (array) apply_filters( 'tutor_demo_dashboard_allowed_pages', $allowed_pages );
+				$nav_items = apply_filters( 'tutor_learning_area_nav_items', $nav_items );
 
-				if ( $learning_page && in_array( $learning_page, $allowed_pages, true ) ) {
-					tutor_load_template( 'demo-components.learning-area.pages.' . $learning_page );
+				if ( $subpage && in_array( $subpage, $nav_items, true ) ) {
+					tutor_load_template( 'learning-area.subpages.' . $subpage );
 				} else {
-					tutor_load_template( 'demo-components.learning-area.components.lesson' );
+					tutor_load_template( 'learning-area.lesson.index' );
 				}
 				?>
 			</div>
@@ -57,3 +65,4 @@ use TUTOR\Input;
 		</button>
 	</div>
 </div>
+<?php wp_footer(); ?>

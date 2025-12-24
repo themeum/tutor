@@ -11,37 +11,39 @@
 use TUTOR\Icon;
 use TUTOR\Input;
 
-$current_url = get_permalink();
+global $tutor_course, $tutor_course_list_url;
+
+$current_url = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 
 $menu_items = array(
 	'resources'   => array(
 		'title' => esc_html__( 'Resources', 'tutor' ),
 		'icon'  => Icon::RESOURCES,
-		'url'   => esc_url( add_query_arg( 'page', 'resources', $current_url ) ),
+		'url'   => esc_url( add_query_arg( 'subpage', 'resources', $current_url ) ),
 	),
 	'qna'         => array(
 		'title' => esc_html__( 'Q&A', 'tutor' ),
 		'icon'  => Icon::QA,
-		'url'   => esc_url( add_query_arg( 'page', 'qna', $current_url ) ),
+		'url'   => esc_url( add_query_arg( 'subpage', 'qna', $current_url ) ),
 	),
 	'course-info' => array(
 		'title' => esc_html__( 'Course Info', 'tutor' ),
 		'icon'  => Icon::INFO_OCTAGON,
-		'url'   => esc_url( add_query_arg( 'page', 'course-info', $current_url ) ),
+		'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $current_url ) ),
 	),
 	'webinar'     => array(
 		'title' => esc_html__( 'Webinar', 'tutor' ),
 		'icon'  => Icon::VIDEO_CAMERA_2,
-		'url'   => esc_url( add_query_arg( 'page', 'webinar', $current_url ) ),
+		'url'   => esc_url( add_query_arg( 'subpage', 'webinar', $current_url ) ),
 	),
 	'certificate' => array(
 		'title' => esc_html__( 'Certificate', 'tutor' ),
 		'icon'  => Icon::CERTIFICATE_2,
-		'url'   => esc_url( add_query_arg( 'page', 'certificate', $current_url ) ),
+		'url'   => esc_url( add_query_arg( 'subpage', 'certificate', $current_url ) ),
 	),
 );
 
-$active_menu = Input::get( 'page', '' );
+$active_menu = Input::get( 'subpage', '' );
 
 ?>
 <div class="tutor-learning-sidebar" :class="{ 'is-open': sidebarOpen }" @click.outside="sidebarOpen = false">

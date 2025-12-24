@@ -163,7 +163,6 @@ class Template extends Tutor_Base {
 	 */
 	public function load_single_course_template( $template ) {
 		global $wp_query;
-
 		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->course_post_type ) {
 			do_action( 'single_course_template_before_load', get_the_ID() );
 			wp_reset_query();
@@ -171,6 +170,7 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
+
 	}
 
 	/**
@@ -517,13 +517,13 @@ class Template extends Tutor_Base {
 	public function load_learning_template( string $template ): string {
 		if ( tutor_utils()->is_learning_area() ) {
 			$post_type   = get_post_type();
-			$legacy_mode = true;
+			$legacy_mode = false;
 
 			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );
 			if ( $legacy_mode ) {
 				$template = $template_path;
 			} else {
-				// @TODO.
+				$template = tutor_get_template( 'learning-area.index' );
 			}
 		}
 
