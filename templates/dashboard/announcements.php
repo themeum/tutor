@@ -67,10 +67,10 @@ $total_announcements = $the_query->found_posts;
 $current_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'announcements' );
 ?>
 
-<div class="tutor-dashboard-announcements">
+<div class="tutor-dashboard-announcements" x-data="tutorAnnouncements()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
-			<?php CourseFilter::make()->count( 30 )->button_class( 'tutor-btn tutor-btn-primary-soft tutor-btn-small' )->render(); ?>
+			<?php CourseFilter::make()->count( $total_announcements )->button_class( 'tutor-btn tutor-btn-primary-soft tutor-btn-small' )->render(); ?>
 			<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2">
 				<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
 				<?php esc_html_e( 'New Announcement', 'tutor' ); ?>
@@ -119,6 +119,7 @@ $current_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'announcements
 									<button 
 										type="button" 
 										class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon"
+										@click="TutorCore.modal.showModal('tutor-announcement-delete-modal', { announcementId: <?php echo esc_html( $announcement->ID ); ?> });"
 									>
 										<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
 									</button>
@@ -134,7 +135,10 @@ $current_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'announcements
 												<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</button>
-											<button class="tutor-popover-menu-item">
+											<button 
+												class="tutor-popover-menu-item"
+												@click="hide(); TutorCore.modal.showModal('tutor-announcement-delete-modal', { announcementId: <?php echo esc_html( $announcement->ID ); ?> });"
+											>
 												<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
 												<?php esc_html_e( 'Delete', 'tutor' ); ?>
 											</button>
@@ -168,5 +172,41 @@ $current_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'announcements
 		</div>
 		<?php endif; ?>
 	</div>
-</div>
 
+	<?php if ( ! empty( $announcements ) ) : ?>
+	<div x-data="tutorModal({ id: 'tutor-announcement-delete-modal' })" x-cloak>
+		<template x-teleport="body">
+			<div x-bind="getModalBindings()">
+				<div x-bind="getBackdropBindings()"></div>
+				<div x-bind="getModalContentBindings()" style="max-width: 426px;">
+					<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
+
+					<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
+						<?php tutor_utils()->render_svg_icon( Icon::BIN, 100, 100 ); ?>
+						<h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
+							<?php esc_html_e( 'Delete This Announcement?', 'tutor' ); ?>
+						</h5>
+						<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">
+							<?php esc_html_e( 'Are you sure you want to delete this announcement permanently? Please confirm your choice.', 'tutor' ); ?>
+						</p>
+					</div>
+
+					<div class="tutor-modal-footer">
+						<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal('tutor-announcement-delete-modal')">
+							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
+						</button>
+						<button 
+							class="tutor-btn tutor-btn-destructive tutor-btn-small"
+							:class="deleteMutation?.isPending ? 'tutor-btn-loading' : ''"
+							@click="handleDeleteAnnouncement(payload?.announcementId)"
+							:disabled="deleteMutation?.isPending"
+						>
+							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
+						</button>
+					</div>
+				</div>
+			</div>
+		</template>
+	</div>
+	<?php endif; ?>
+</div>
