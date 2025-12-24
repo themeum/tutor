@@ -49,7 +49,6 @@ class Announcements {
 		 * @since 2.0.0
 		 */
 		add_action( 'wp_ajax_tutor_announcement_bulk_action', array( $this, 'announcement_bulk_action' ) );
-		add_action( 'wp_ajax_tutor_delete_dashboard_announcement', array( $this, 'tutor_delete_dashboard_announcement' ) );
 	}
 
 	/**
@@ -135,32 +134,5 @@ class Announcements {
 			return false === $delete ? false : true;
 		}
 		return false;
-	}
-
-	/**
-	 * Delete announcement from frontend dashboard
-	 *
-	 * @since 3.0.0
-	 * @return void
-	 */
-	public function tutor_delete_dashboard_announcement() {
-		tutor_utils()->checking_nonce();
-
-		$announcement_id = Input::post( 'announcement_id', 0, Input::TYPE_INT );
-		if ( ! tutor_utils()->can_user_manage( 'announcement', $announcement_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
-
-		$trash_announcement = wp_update_post(
-			array(
-				'ID'          => $announcement_id,
-				'post_status' => 'trash',
-			)
-		);
-
-		if ( $trash_announcement ) {
-			wp_send_json_success( __( 'Announcement has been deleted successfully', 'tutor' ) );
-		}
-		wp_send_json_error( array( 'message' => __( 'Failed to delete announcement', 'tutor' ) ) );
 	}
 }
