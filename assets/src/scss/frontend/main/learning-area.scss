@@ -2,8 +2,8 @@
 // Compiles all learning area related styles using core design tokens and mixins
 
 // Import design tokens and mixins from core (not the full main file)
-@use '../../../core/scss/tokens';
-@use '../../../core/scss/mixins';
+@use '@Core/scss/tokens';
+@use '@Core/scss/mixins';
 
 // Import shared components
 @use '../components';
