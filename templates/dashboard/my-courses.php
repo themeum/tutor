@@ -11,6 +11,7 @@
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Components\DeleteConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Nav;
 use Tutor\Components\Pagination;
@@ -363,39 +364,15 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 	</div>
 
 	<?php if ( ! empty( $results ) && $show_course_delete ) : ?>
-	<div x-data="tutorModal({ id: 'tutor-course-delete-modal' })" x-cloak>
-		<template x-teleport="body">
-			<div x-bind="getModalBindings()">
-				<div x-bind="getBackdropBindings()"></div>
-				<div x-bind="getModalContentBindings()" style="max-width: 426px;">
-					<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
-
-					<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
-						<?php tutor_utils()->render_svg_icon( Icon::BIN, 100, 100 ); ?>
-						<h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
-							<?php esc_html_e( 'Delete This Course?', 'tutor' ); ?>
-						</h5>
-						<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">
-							<?php esc_html_e( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ); ?>
-						</p>
-					</div>
-
-					<div class="tutor-modal-footer">
-						<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal('tutor-course-delete-modal')">
-							<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-						</button>
-						<button 
-							class="tutor-btn tutor-btn-destructive tutor-btn-small"
-							:class="deleteMutation?.isPending ? 'tutor-btn-loading' : ''"
-							@click="handleDeleteCourse(payload?.courseId)"
-							:disabled="deleteMutation?.isPending"
-						>
-							<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
-						</button>
-					</div>
-				</div>
-			</div>
-		</template>
-	</div>
+		<?php
+		DeleteConfirmationModal::make()
+			->id( 'tutor-course-delete-modal' )
+			->title( __( 'Delete This Course?', 'tutor' ) )
+			->message( __( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) )
+			->delete_handler( 'handleDeleteCourse' )
+			->mutation_state( 'deleteMutation' )
+			->payload_key( 'courseId' )
+			->render();
+		?>
 	<?php endif; ?>
 </div>
