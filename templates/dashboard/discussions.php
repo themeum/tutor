@@ -17,25 +17,7 @@ use TUTOR\Input;
 
 defined( 'ABSPATH' ) || exit;
 
-$current_url = admin_url( 'admin.php?page=playground&subpage=dashboard' );
-
-$page_nav_items = array(
-	array(
-		'type'   => 'link',
-		'label'  => __( 'Q&A', 'tutor' ),
-		'icon'   => Icon::QA,
-		'url'    => esc_url( add_query_arg( 'dashboard-page', 'qna', $current_url ) ),
-		'active' => true,
-	),
-	array(
-		'type'   => 'link',
-		'label'  => __( 'Lesson Comments', 'tutor' ),
-		'icon'   => Icon::COMMENTS,
-		'url'    => esc_url( add_query_arg( 'dashboard-page', 'lesson-comments', $current_url ) ),
-		'active' => false,
-	),
-);
-
+$current_tab   = Input::get( 'tab' );
 $order_filter  = Input::get( 'order', 'DESC' );
 $is_instructor = tutor_utils()->is_instructor( null, true );
 $view_option   = get_user_meta( get_current_user_id(), 'tutor_qa_view_as', true );
@@ -47,8 +29,27 @@ $current_page  = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset        = ( $current_page - 1 ) * $item_per_page;
 
-$total_items = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, $q_status, true );
+$total_items = (int) tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, $q_status, true );
 $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, $q_status, false, array( 'order' => $order_filter ) );
+
+
+$discussion_url = tutor_utils()->tutor_dashboard_url( 'discussions' );
+$page_nav_items = array(
+	array(
+		'type'   => 'link',
+		'label'  => __( 'Q&A', 'tutor' ),
+		'icon'   => Icon::QA,
+		'url'    => esc_url( $discussion_url ),
+		'active' => 'qna' === $current_tab || empty( $current_tab ),
+	),
+	array(
+		'type'   => 'link',
+		'label'  => __( 'Lesson Comments', 'tutor' ),
+		'icon'   => Icon::COMMENTS,
+		'url'    => esc_url( add_query_arg( 'tab', 'lesson-comments', $discussion_url ) ),
+		'active' => 'lesson-comments' === $current_tab,
+	),
+);
 ?>
 <div class="tutor-dashboard-discussions tutor-surface-l1 tutor-border tutor-rounded-2xl">
 	<div class="tutor-p-6 tutor-border-b">
@@ -68,10 +69,11 @@ $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', nul
 			<?php
 			foreach ( $questions as $question ) :
 				tutor_load_template(
-					'demo-components.dashboard.components.qna-card',
+					'dashboard.question-answer.qna-card',
 					array(
-						'question' => $question,
-						'view_as'  => $view_as,
+						'question'       => $question,
+						'view_as'        => $view_as,
+						'discussion_url' => $discussion_url,
 					)
 				);
 			endforeach;
