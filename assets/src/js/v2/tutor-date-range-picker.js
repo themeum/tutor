@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import TutorDateRangePicker from '../../../v2-library/src/components/datapicker/TutorDateRangePicker';
+import TutorDateRangePicker from '../../../../v2-library/src/components/datapicker/TutorDateRangePicker';
 
 function DateRangePicker() {
     const wrappers = document.querySelectorAll('.tutor-v2-date-range-picker');
