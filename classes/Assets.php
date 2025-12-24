@@ -891,14 +891,14 @@ class Assets {
 	 * @return boolean
 	 */
 	public function should_load_legacy_scripts(): bool {
-		$load = false;
-		if ( is_admin() ) {
-			$load = true;
+		$load = true;
+		if ( tutor_utils()->is_dashboard_page() ) {
+			$load = false;
 		} else {
-			$is_enable_legacy_learning = true; // @TODO.
-			$is_learning_area          = tutor_utils()->is_learning_area();
-			if ( $is_learning_area && $is_enable_legacy_learning ) {
-				$load = true;
+			$is_learning_area   = tutor_utils()->is_learning_area();
+			$is_legacy_learning = true; // @TODO.
+			if ( $is_learning_area && ! $is_legacy_learning ) {
+				$load = false;
 			}
 		}
 
