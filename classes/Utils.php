@@ -2916,7 +2916,7 @@ class Utils {
 		// @TODO need to make it dynamic with account view as mode.
 		// $view_mode = 'student';
 		// if ( User::is_admin() || User::is_instructor() ) {
-		// 	$view_mode = 'instructor';
+		// $view_mode = 'instructor';
 		// }
 
 		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
@@ -5545,9 +5545,15 @@ class Utils {
 	 *
 	 * @since 4.0.0
 	 *
+	 * @param string $subpage check is dashboard subpage or not.
+	 *
 	 * @return bool
 	 */
-	public function is_dashboard_page(): bool {
+	public function is_dashboard_page( $subpage = null ): bool {
+		if ( $subpage ) {
+			return $this->is_tutor_frontend_dashboard( $subpage );
+		}
+
 		$current_id        = get_the_ID();
 		$dashboard_page_id = $this->dashboard_page_id();
 
@@ -9428,7 +9434,7 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'index'   => array(
+			'index'         => array(
 				'title'    => __( 'Home', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => Icon::HOME_FILL,
@@ -9465,7 +9471,7 @@ class Utils {
 				'icon'     => Icon::NOTIFICATION,
 			),
 		);
-		
+
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
 				'title'    => __( 'Discussions', 'tutor' ),
@@ -9480,7 +9486,7 @@ class Utils {
 	/**
 	 * Should show the disscussion menu on the student
 	 * and instructor dashboard menu
-	 * 
+	 *
 	 * @since 4.0.0
 	 *
 	 * @return boolean
@@ -9781,7 +9787,7 @@ class Utils {
 	 *
 	 * @return string
 	 */
-	public function get_svg_icon( $name = '', $width = 16, $height = 16,  $attributes = array() ) {
+	public function get_svg_icon( $name = '', $width = 16, $height = 16, $attributes = array() ) {
 
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
