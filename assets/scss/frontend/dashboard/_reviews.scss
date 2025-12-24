@@ -59,13 +59,8 @@
   &-actions {
     @include tutor-flex(row);
     gap: $tutor-spacing-4;
+    transition: opacity 0.2s ease-in-out;
     opacity: 0;
-
-    &-button {
-      @include tutor-button-base;
-      @include tutor-button-variant(secondary);
-      @include tutor-button-icon-size(x-small)
-    }
   }
 
   &-text {

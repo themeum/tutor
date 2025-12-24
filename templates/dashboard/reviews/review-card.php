@@ -9,15 +9,20 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\Button;
+use Tutor\Helpers\DateTimeHelper;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 
-// @TODO: Replace with real data.
-$review = array(
-	'title'         => 'Course Title',
-	'reviewed_date' => '2022-01-01',
-	'rating'        => 4.5,
-	'is_bundle'     => false,
-	'review_text'   => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl eget ultrices ultricies, orci ipsum tincidunt nisi, sit amet ultricies nisi nisl eu nisl. Donec euismod, nisl eget ultrices ultricies, orci ipsum tincidunt nisi, sit amet ultricies nisi nisl eu nisl.',
+$default_review = array(
+	'title'          => '',
+	'review_date'    => '',
+	'rating'         => 0,
+	'is_bundle'      => false,
+	'review_content' => '',
 );
+
+$review = wp_parse_args( $review, $default_review );
 ?>
 
 <div class="tutor-review-card">
@@ -43,7 +48,13 @@ $review = array(
 
 		<!-- Review Date -->
 		<div class="tutor-review-date">
-			Reviewed on: <?php echo esc_html( $review['reviewed_date'] ?? '' ); ?>
+			<?php
+				printf(
+					// translators: %s - Review date.
+					esc_html__( 'Reviewed on: %s', 'tutor' ),
+					esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $review['review_date'], get_option( 'date_format' ) ) ?? '' )
+				);
+				?>
 		</div>
 	</div>
 
@@ -70,18 +81,30 @@ $review = array(
 
 			<!-- Actions -->
 			<div class="tutor-review-actions">
-				<a href="#" class="tutor-review-actions-button">
-					<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 16, 16 ); ?>
-				</a>
-				<a href="#" class="tutor-review-actions-button">
-					<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 16, 16 ); ?>
-				</a>
+				<?php
+					Button::make()
+						->label( __( 'Edit Review', 'tutor' ) )
+						->variant( Variant::SECONDARY )
+						->size( Size::X_SMALL )
+						->icon( tutor_utils()->get_svg_icon( Icon::EDIT_2 ) )
+						->icon_only()
+						->render();
+				?>
+				<?php
+					Button::make()
+						->label( __( 'Delete Review', 'tutor' ) )
+						->variant( Variant::SECONDARY )
+						->size( Size::X_SMALL )
+						->icon( tutor_utils()->get_svg_icon( Icon::DELETE_2 ) )
+						->icon_only()
+						->render();
+				?>
 			</div>
 		</div>
 
 		<!-- Review Text -->
 		<div class="tutor-review-text">
-			<?php echo wp_kses_post( nl2br( $review['review_text'] ?? '' ) ); ?>
+			<?php echo esc_textarea( htmlspecialchars( stripslashes( $review['review_content'] ?? '' ) ) ); ?>
 		</div>
 	</div>
 </div>
