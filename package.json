@@ -12,11 +12,11 @@
     "build-analysis": "RSDOCTOR=true npx rspack --mode=production",
     "watch": "rspack --watch --mode=development",
     "make-pot": "rspack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
-    "eslint:fix": "npx eslint ./assets/react/v3 --fix",
+    "eslint:fix": "npx eslint ./assets/src/js/v3 --fix",
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run",
-    "generate:icon-types": "tsx ./assets/react/v3/shared/icons/generate-icon-types.ts",
+    "generate:icon-types": "tsx ./assets/src/js/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"

@@ -3,7 +3,7 @@ import { readdirSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 
 const ICONS_DIR = resolve('./assets/icons');
-const TS_OUTPUT_FILE = resolve('./assets/react/v3/shared/icons/types.ts');
+const TS_OUTPUT_FILE = resolve('./assets/src/js/v3/shared/icons/types.ts');
 const PHP_OUTPUT_FILE = resolve('./classes/Icon.php');
 
 const iconNames = readdirSync(ICONS_DIR)

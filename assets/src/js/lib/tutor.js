@@ -1,4 +1,4 @@
-import '../../../v2-library/src/js/main';
+import '../../../../v2-library/src/js/main';
 import ajaxHandler from '../helper/ajax-handler';
 import tutorFormData from "../helper/tutor-formdata";
 
