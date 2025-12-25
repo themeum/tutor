@@ -291,6 +291,12 @@ const DEFAULT_CONFIG: FormControlConfig = {
   shouldScrollToError: true,
 };
 
+interface AlpineComponent {
+  $el: HTMLElement;
+  $refs: Record<string, HTMLElement & { _x_model?: { set: (val: unknown) => void } }>;
+  $data: (el: HTMLElement) => Record<string, unknown>;
+}
+
 export const form = (config: FormControlConfig & { id?: string } = {}) => {
   const { id: formId, ...formConfig } = config;
   const mergedConfig = { ...DEFAULT_CONFIG, ...formConfig };
@@ -315,8 +321,14 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValidating = false;
 
       if (this.formId) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (formServiceMeta.instance as any).register(this.formId, this);
+        const globalFormService = window.TutorCore?.form;
+        const service =
+          globalFormService && typeof globalFormService.register === 'function'
+            ? globalFormService
+            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              (formServiceMeta.instance as any);
+
+        service.register(this.formId, this as unknown as FormControlMethods);
       }
 
       this.setupFormListeners();
@@ -328,11 +340,12 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
+      const component = this as unknown as AlpineComponent;
       this.fields[name] = {
         name,
         rules,
         defaultValue: this.values[name] || '',
-        ref: (this as unknown as { $el: HTMLInputElement }).$el,
+        ref: component.$el as HTMLInputElement,
       };
 
       if (!(name in this.values)) {
@@ -364,8 +377,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.updateFieldRef(name);
 
       if (isNumber) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (this as any).$refs.div._x_model.set(parsedValue);
+        const component = this as unknown as AlpineComponent;
+        const refs = component.$refs;
+        if (refs[name]?._x_model) {
+          refs[name]._x_model?.set(parsedValue);
+        }
       }
 
       const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
@@ -398,6 +414,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       if (shouldTouch) this.touchedFields[name] = true;
       if (shouldDirty) this.dirtyFields[name] = true;
 
+      this.updateFieldRef(name);
+
       const fieldElement = this.fields[name]?.ref;
       if (fieldElement) {
         DOMUtils.updateElementValue(fieldElement, value);
@@ -413,6 +431,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     setFocus(name: string, options: FocusOptions = {}): void {
+      this.updateFieldRef(name);
       const field = this.fields[name];
       const fieldElement = field?.ref;
 
@@ -509,15 +528,19 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
     reset(values?: Record<string, unknown>): void {
       if (values) {
-        this.values = { ...values };
+        // Update reactive object props instead of replacing it to maintain bindings
+        Object.keys(this.values).forEach((key) => delete this.values[key]);
+        Object.assign(this.values, values);
       } else {
-        this.values = Object.keys(this.fields).reduce(
+        const defaultValues = Object.keys(this.fields).reduce(
           (acc, name) => {
             acc[name] = this.fields[name].defaultValue;
             return acc;
           },
           {} as Record<string, unknown>,
         );
+        Object.keys(this.values).forEach((key) => delete this.values[key]);
+        Object.assign(this.values, defaultValues);
       }
 
       this.syncDOMWithState();
@@ -583,7 +606,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     serializeParams: FormDataUtils.serializeParams.bind(FormDataUtils),
 
     setupFormListeners(): void {
-      const formElement = (this as unknown as { $el: HTMLElement }).$el;
+      const component = this as unknown as AlpineComponent;
+      const formElement = component.$el;
 
       if (!formElement) {
         this.cleanup = () => {
@@ -611,10 +635,14 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     updateFieldRef(name: string): void {
-      const element = (this as unknown as { $refs: Record<string, HTMLElement> }).$refs[name] as HTMLInputElement;
+      const component = this as unknown as AlpineComponent;
+      const formElement = component.$el;
+      if (!formElement) return;
+
+      const element = DOMUtils.getFieldElement(formElement, name) as HTMLInputElement;
       const field = this.fields[name];
 
-      if (element && field && !field.ref) {
+      if (element && field) {
         field.ref = element;
       }
     },
@@ -625,6 +653,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     updateAriaInvalidState(name: string): void {
+      this.updateFieldRef(name);
       const fieldRef = this.fields[name]?.ref;
       if (!fieldRef) return;
 
@@ -644,6 +673,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
     syncDOMWithState(): void {
       for (const [name, value] of Object.entries(this.values)) {
+        this.updateFieldRef(name);
         const fieldRef = this.fields[name]?.ref;
         if (fieldRef) {
           DOMUtils.updateElementValue(fieldRef, value);
