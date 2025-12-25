@@ -167,7 +167,7 @@ class InputField extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $searchPlaceholder = '';
+	protected $search_placeholder = '';
 
 	/**
 	 * Help text below input.
@@ -457,7 +457,7 @@ class InputField extends BaseComponent {
 	 */
 	public function placeholder( $placeholder, $search = false ) {
 		if ( $search ) {
-			$this->searchPlaceholder = $placeholder;
+			$this->search_placeholder = $placeholder;
 		} else {
 			$this->placeholder = $placeholder;
 		}
@@ -738,7 +738,8 @@ class InputField extends BaseComponent {
 	 *      'description' => '',
 	 *    )
 	 * );
-	 * ```
+	 * ```.
+	 *
 	 * @return self
 	 */
 	public function options( $options = array() ): self {
@@ -768,6 +769,7 @@ class InputField extends BaseComponent {
 	 * @param array $groups the options for input field.
 	 *
 	 * Example format for $groups:
+	 *
 	 * ```
 	 * $groups = array(
 	 *    array(
@@ -788,7 +790,8 @@ class InputField extends BaseComponent {
 	 *       ),
 	 *   ),
 	 * );
-	 * ```
+	 * ```.
+	 *
 	 * @return self
 	 */
 	public function groups( $groups = array() ): self {
@@ -1086,7 +1089,7 @@ class InputField extends BaseComponent {
 			'required'          => $this->required,
 
 			'placeholder'       => $this->placeholder,
-			'searchPlaceholder' => $this->searchPlaceholder,
+			'searchPlaceholder' => $this->search_placeholder,
 			'emptyMessage'      => $this->empty_message,
 			'loadingMessage'    => $this->loading_message,
 			'maxHeight'         => $this->max_height,
