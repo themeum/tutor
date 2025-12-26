@@ -10,12 +10,12 @@
  */
 
 ?>
-<?php 
-	tutor_course_loop_thumbnail(); 
+<?php
+	tutor_course_loop_thumbnail();
 	$is_enabled_wishlist = tutor_utils()->get_option( 'enable_wishlist', true );
 ?>
 <?php if ( $is_enabled_wishlist ) : ?>
-<div class="tutor-course-bookmark">
+<!-- <div class="tutor-course-bookmark">
 	<?php
 	$course_id      = get_the_ID();
 	$is_wish_listed = tutor_utils()->is_wishlisted( $course_id );
@@ -37,5 +37,5 @@
 		<i class="' . ( $is_wish_listed ? 'tutor-icon-bookmark-bold' : 'tutor-icon-bookmark-line' ) . '"></i>
 	</a>';
 	?>
-</div>
+</div> -->
 <?php endif; ?>

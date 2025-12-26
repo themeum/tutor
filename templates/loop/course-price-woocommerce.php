@@ -31,7 +31,8 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	$product         = wc_get_product( $product_id );
 	$wc_price_html   = '';
 	$product_type    = '';
-	$utility_classes = 'tutor-d-flex tutor-align-center tutor-justify-between';
+	// $utility_classes = 'tutor-course-price-wrapper';
+	$utility_classes = '';
 	if ( is_a( $product, 'WC_Product' ) ) {
 		$wc_price_html = apply_filters( 'tutor_loop_wc_price_html', $product->get_price_html(), $product );
 		$product_type  = $product->get_type();

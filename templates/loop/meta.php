@@ -20,50 +20,42 @@ $course_students   = apply_filters( 'tutor_course_students', tutor_utils()->coun
 ?>
 
 <?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) || ! empty( $course_duration ) ) : ?>
-<div class="tutor-meta tutor-mt-12 tutor-mb-20">
+<div class="tutor-meta tutor-course-card-meta tutor-mt-2 tutor-mb-2">
 	<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
-		<div>
-			<span class="tutor-meta-icon tutor-icon-user-line" area-hidden="true"></span>
-			<span class="tutor-meta-value"><?php echo esc_html( $course_students ); ?></span>
-		</div>
+		<span class="tutor-course-meta-value"><?php echo esc_html( $course_students ); ?></span>
+		<span>Learners</span>
 	<?php endif; ?>
 
 	<?php if ( ! empty( $course_duration ) ) : ?>
-		<div>
-			<span class="tutor-icon-clock-line tutor-meta-icon" area-hidden="true"></span>
-			<span class="tutor-meta-value">
-				<?php
-                    //phpcs:ignore --escaping through helper method
-					echo tutor_utils()->clean_html_content( $course_duration );
-				?>
-			</span>
-		</div>
+		<span class="tutor-course-card-separator"></span>
+		<span class="">
+			<?php
+				//phpcs:ignore --escaping through helper method
+				echo tutor_utils()->clean_html_content( $course_duration );
+			?>
+		</span>
 	<?php endif; ?>
-</div>
-<?php endif; ?>
 
-<div class="tutor-meta tutor-mt-auto">
-	<div>
-		<a href="<?php echo esc_url( $profile_url ); ?>" class="tutor-d-flex">
-			<?php echo wp_kses( tutor_utils()->get_tutor_avatar( $post->post_author ), tutor_utils()->allowed_avatar_tags() ); ?>
-		</a>
-	</div>
-
-	<div>
+	<!-- <div> -->
+		<span class="tutor-course-card-separator"></span>
 		<?php esc_html_e( 'By', 'tutor' ); ?>
 		<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_html( get_the_author() ); ?></a>
+	<!-- </div> -->
 
-		<?php if ( ! empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
-			<?php esc_html_e( 'In', 'tutor' ); ?>
-			<?php
-				$category_links = array();
-			foreach ( $course_categories as $course_category ) :
-				$category_name    = $course_category->name;
-				$category_link    = get_term_link( $course_category->term_id );
-				$category_links[] = wp_sprintf( '<a href="%1$s">%2$s</a>', esc_url( $category_link ), esc_html( $category_name ) );
-				endforeach;
-				echo implode( ', ', $category_links ); //phpcs:ignore --contain safe data
-			?>
-		<?php endif; ?>
+	<div>
+	<?php if ( ! empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
+		<?php esc_html_e( 'In', 'tutor' ); ?>
+		<?php
+			$category_links = array();
+		foreach ( $course_categories as $course_category ) :
+			$category_name    = $course_category->name;
+			$category_link    = get_term_link( $course_category->term_id );
+			$category_links[] = wp_sprintf( '<a href="%1$s">%2$s</a>', esc_url( $category_link ), esc_html( $category_name ) );
+			endforeach;
+			echo implode( ', ', $category_links ); //phpcs:ignore --contain safe data
+		?>
+	<?php endif; ?>
 	</div>
+
 </div>
+<?php endif; ?>

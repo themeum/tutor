@@ -1,0 +1,117 @@
+// Course Card Component
+// Dashboard course card with image, rating, title, meta, and pricing
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-course-card {
+	height: 100%;
+	transition: background-color 0.2s ease;
+	border: 1px solid var(--tutor-border-idle);
+	display: flex;
+    flex-direction: column;
+
+	&:hover {
+		background-color: $tutor-surface-l1-hover;
+	}
+
+	a:hover {
+		text-decoration: dashed;
+		color: $tutor-text-brand;
+	}
+
+	&-thumbnail {
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+		border-radius: $tutor-radius-sm;
+		margin-bottom: $tutor-spacing-4;
+
+		.tutor-ratio {
+			width: 100%;
+		}
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center;
+		}
+	}
+
+	&-badge {
+		position: absolute;
+		top: $tutor-spacing-2;
+		right: $tutor-spacing-2;
+		z-index: $tutor-z-positive;
+	}
+
+	&-rating {
+		margin-bottom: $tutor-spacing-2;
+
+		.tutor-ratings {
+			@include tutor-flex(row, center, flex-start, wrap);
+			gap: $tutor-spacing-2;
+		}
+
+		.tutor-course-card-ratings-stars {
+			@include tutor-flex(row, center, flex-start);
+			gap: $tutor-spacing-2;
+
+			i[class*='tutor-icon-star'] {
+				@include tutor-typography('tiny', 'regular', 'exception4');
+				line-height: 12px;
+			}
+		}
+
+		.tutor-ratings-count {
+			@include tutor-typography('tiny', 'regular', 'subdued');
+		}
+	}
+
+	&-title {
+		@include tutor-typography('p2', 'medium', 'primary');
+		margin-bottom: $tutor-spacing-2;
+	}
+
+	&-meta {
+		@include tutor-flex(row, center, flex-start, wrap);
+		gap: $tutor-spacing-1 $tutor-spacing-3;
+		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
+		margin-top: auto;
+	}
+
+	&-separator {
+		display: inline-block;
+		width: 4px;
+		height: 4px;
+		background: $tutor-text-subdued;
+		border-radius: $tutor-radius-lg;
+	}
+
+	&-body {
+		flex: 1 1 auto;
+		padding: 0px $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-4;
+	}
+
+	&-price {
+		@include tutor-typography('small', 'medium', 'primary');
+	}
+
+	&-price-original {
+		@include tutor-typography('tiny', 'regular', 'subdued');
+	}
+}
+
+.tutor-course-card-footer {
+	.list-item-price,
+	.list-item-button, 
+	>.tutor-course-list-btn {
+		padding: $tutor-spacing-4;
+	}
+
+	.list-item-button,
+	.tutor-course-list-btn {
+		border-top: 1px solid $tutor-border-idle;
+	}
+}

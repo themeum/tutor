@@ -9,7 +9,7 @@
 
 ?>
 
-<div class="tutor-card-footer">
+<div class="tutor-course-card-footer">
 	<?php tutor_course_loop_price(); ?>
 	<?php do_action( 'tutor_course_loop_footer_bottom', get_the_ID() ); ?>
 </div>

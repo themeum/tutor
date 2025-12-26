@@ -3778,11 +3778,11 @@ class Utils {
 		
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
-				$output .= tutor_utils()->get_svg_icon( Icon::STAR_FILL, 14, 14, array( 'data-rating-value' => $i ) );
+				$output .= tutor_utils()->get_svg_icon( Icon::STAR_FILL, 12, 12, array( 'data-rating-value' => $i ) );
 			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
-				$output .=  tutor_utils()->get_svg_icon( Icon::STAR_HALF, 14, 14, array( 'data-rating-value' => $i ) );
+				$output .=  tutor_utils()->get_svg_icon( Icon::STAR_HALF, 12, 12, array( 'data-rating-value' => $i ) );
 			} else {
-				$output .= tutor_utils()->get_svg_icon( Icon::STAR_LINE, 14, 14, array( 'data-rating-value' => $i ) );
+				$output .= tutor_utils()->get_svg_icon( Icon::STAR_LINE, 12, 12, array( 'data-rating-value' => $i ) );
 			}
 		}
 

@@ -33,12 +33,10 @@ if ( $is_course_in_user_cart ) {
 	<?php
 } else {
 	?>
-	<div class="list-item-button"> 
 		<button data-quantity="1" class="tutor-btn tutor-btn-primary tutor-btn-md tutor-btn-block <?php echo esc_attr( $conditional_class ); ?>" data-course-id="<?php the_ID(); ?>" rel="nofollow">
 			<span class="tutor-icon-cart-line tutor-mr-4"></span>
 			<span class="cart-text"><?php esc_html_e( 'Add to Cart', 'tutor' ); ?></span>
 		</button> 
-	</div>
 	<?php
 }
 

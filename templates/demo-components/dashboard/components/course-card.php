@@ -85,7 +85,7 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 			<?php endif; ?>
 			<?php if ( ! empty( $instructor ) ) : ?>
 				<?php if ( $learners > 0 ) : ?>
-					<span class="tutor-course-card-separator">•</span>
+					<span class="tutor-course-card-separator"></span>
 				<?php endif; ?>
 				<span class="tutor-course-card-instructor">
 					<?php echo esc_html( $instructor ); ?>
@@ -93,7 +93,7 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 			<?php endif; ?>
 			<?php if ( ! empty( $provider ) ) : ?>
 				<?php if ( $learners > 0 || ! empty( $instructor ) ) : ?>
-					<span class="tutor-course-card-separator">•</span>
+					<span class="tutor-course-card-separator"></span>
 				<?php endif; ?>
 				<span>
 					<?php

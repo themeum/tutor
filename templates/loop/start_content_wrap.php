@@ -11,4 +11,5 @@
 
 ?>
 
-<div class="tutor-card-body">
+<div class="tutor-course-card-body">
+<!-- <div class="tutor-course-card-body tutor-card--padding-small"> -->

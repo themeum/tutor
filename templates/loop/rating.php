@@ -28,10 +28,10 @@ $show_course_ratings = apply_filters( 'tutor_show_course_ratings', true, get_the
 		</div>
 
 		<?php if ( $course_rating->rating_avg > 0 ) : ?>
-			<div class="tutor-ratings-average">
+			<div class="tutor-ratings-average tutor-text-tiny tutor-text-exception4">
 				<?php echo esc_html( apply_filters( 'tutor_course_rating_average', $course_rating->rating_avg ) ); ?>
 			</div>
-			<div class="tutor-ratings-count">
+			<div class="tutor-ratings-count tutor-text-tiny tutor-text-subdued">
 				(<?php echo esc_html( $course_rating->rating_count > 0 ? $course_rating->rating_count : 0 ); ?>)
 			</div>
 		<?php endif; ?>
