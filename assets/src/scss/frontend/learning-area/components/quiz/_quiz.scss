@@ -83,6 +83,12 @@
       border-radius: $tutor-radius-sm;
       width: 24px;
       height: 24px;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography('tiny', 'semibold');
+        width: 20px;
+        height: 20px;
+      }
     }
 
     &-title {
@@ -92,6 +98,7 @@
       flex: 1;
 
       @include tutor-breakpoint-down(sm) {
+        @include tutor-typography('p2', 'semibold');
         gap: $tutor-spacing-2;
       }
     }
