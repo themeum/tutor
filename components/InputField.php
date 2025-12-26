@@ -870,7 +870,7 @@ class InputField extends BaseComponent {
 						%s
 						</button>
 					</template>
-				%s
+					<span class="tutor-select-arrow" :data-open="isOpen.toString()">%s</span>
 				</div>
 			</button>
 			',
