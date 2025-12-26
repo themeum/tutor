@@ -10,6 +10,9 @@
 
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
+	?>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<?php
 	wp_head();
 }
 

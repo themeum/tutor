@@ -49,5 +49,14 @@ abstract class Size {
 	public const MEDIUM  = 'medium';
 	public const LARGE   = 'large';
 
+	/**
+	 * Shorthand sizes
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	public const SM = 'sm';
+	public const MD = 'md';
+	public const LG = 'lg';
 }
-

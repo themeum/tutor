@@ -11,7 +11,6 @@
 namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Contracts\ComponentInterface;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -41,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-class Avatar extends BaseComponent implements ComponentInterface {
+class Avatar extends BaseComponent {
 
 	/**
 	 * Avatar size (20, 24, etc).
