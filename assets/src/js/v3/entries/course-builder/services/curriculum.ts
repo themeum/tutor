@@ -70,7 +70,7 @@ export interface ZoomLive extends Content {
   type: 'zoom';
 }
 export interface MeetLive extends Content {
-  type: '"tutor-google-meet"';
+  type: 'tutor-google-meet';
 }
 
 export interface CourseTopic {

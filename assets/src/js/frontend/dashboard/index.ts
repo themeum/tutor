@@ -3,6 +3,7 @@
 
 import { initializeAssignments } from './pages/assignments';
 import { initializeCertificates } from './pages/certificates';
+import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
 import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
@@ -10,12 +11,28 @@ import { initializeSettings } from './pages/settings';
 
 /**
  * Get current dashboard page from URL
+ *
+ * Currently, we are supporting both the playground and the dashboard
+ *
+ * @TODO: Remove playground support
  */
 const getCurrentPage = (): string => {
   const path = window.location.pathname;
   const params = new URLSearchParams(window.location.search);
 
-  // Check for query parameter (e.g., ?page=my-courses)
+  // Check for subpage parameter - if not 'dashboard', return early
+  const subpage = params.get('subpage');
+  if (subpage && subpage !== 'dashboard') {
+    return ''; // Not on dashboard, will be handled by early return in initializeDashboard
+  }
+
+  // Check for dashboard-page parameter (highest priority when subpage=dashboard)
+  const dashboardPage = params.get('dashboard-page');
+  if (dashboardPage) {
+    return dashboardPage;
+  }
+
+  // Check for legacy query parameters
   const pageParam = params.get('tutor_dashboard_page') || params.get('page');
   if (pageParam) {
     return pageParam;
@@ -26,20 +43,20 @@ const getCurrentPage = (): string => {
     return 'my-courses';
   }
   if (path.includes('/assignments')) {
-    return 'dashboard-assignments';
+    return 'assignments';
   }
   if (path.includes('/quiz-attempts')) {
-    return 'dashboard-quiz-attempts';
+    return 'quiz-attempts';
   }
   if (path.includes('/settings')) {
-    return 'dashboard-settings';
+    return 'settings';
   }
   if (path.includes('/certificates')) {
-    return 'dashboard-certificates';
+    return 'certificates';
   }
 
-  // Default to overview
-  return 'dashboard-overview';
+  // Default to home when subpage=dashboard
+  return 'home';
 };
 
 const initializeDashboard = () => {
@@ -47,22 +64,24 @@ const initializeDashboard = () => {
 
   // Initialize page-specific functionality
   switch (currentPage) {
-    case 'dashboard-overview':
+    case 'home':
       initializeOverview();
+      initializeHome();
       break;
+    case 'courses':
     case 'my-courses':
       initializeMyCourses();
       break;
-    case 'dashboard-assignments':
+    case 'assignments':
       initializeAssignments();
       break;
-    case 'dashboard-quiz-attempts':
+    case 'quiz-attempts':
       initializeQuizAttempts();
       break;
-    case 'dashboard-settings':
+    case 'settings':
       initializeSettings();
       break;
-    case 'dashboard-certificates':
+    case 'certificates':
       initializeCertificates();
       break;
     default:
@@ -70,11 +89,6 @@ const initializeDashboard = () => {
       console.warn('Unknown dashboard page:', currentPage);
       initializeOverview(); // Fallback
   }
-
-  // TODO: Initialize common dashboard features
-  // - Sidebar navigation
-  // - Global search
-  // - Notifications
 };
 
 // Initialize when Alpine is ready
