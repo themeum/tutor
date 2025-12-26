@@ -1,0 +1,536 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-quiz {
+  &-submission {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-11;
+
+    @include tutor-breakpoint-down(sm) {
+      gap: $tutor-spacing-6;
+    }
+  }
+
+  &-header {
+    background-color: $tutor-surface-l1;
+  }
+
+  &-progress {
+    @include tutor-flex(column);
+    width: 100%;
+    max-width: 792px; // @TODO: Need to use container class
+    padding-block: $tutor-spacing-8;
+    margin-inline: auto;
+    gap: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-6;
+    }
+
+    &-header {
+      @include tutor-flex(row, center, space-between);
+    }
+
+    &-time {
+      @include tutor-flex(row, center, center);
+      @include tutor-typography('h3', 'semibold');
+      gap: $tutor-spacing-2;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &-animate {
+      svg path:nth-child(2) {
+        @include tutor-spin;
+        transform-origin: center;
+      }
+    }
+  }
+
+  &-questions {
+    @include tutor-flex(column);
+    width: 100%;
+    max-width: 792px;
+    margin-inline: auto;
+    gap: $tutor-spacing-5;
+
+    @include tutor-breakpoint-down(sm) {
+      padding-inline: $tutor-spacing-6;
+    }
+  }
+
+  &-question {
+    @include tutor-flex(column);
+    gap: $tutor-spacing-7;
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+    padding: $tutor-spacing-8;
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+      gap: $tutor-spacing-5;
+    }
+
+    &-header {
+      @include tutor-flex(row, flex-start, space-between);
+      gap: $tutor-spacing-4;
+    }
+
+    &-number {
+      @include tutor-flex(row, center, center);
+      @include tutor-typography('medium', 'semibold');
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-sm;
+      width: 24px;
+      height: 24px;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography('tiny', 'semibold');
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    &-title {
+      @include tutor-flex(column);
+      @include tutor-typography('medium', 'semibold');
+      gap: $tutor-spacing-4;
+      flex: 1;
+
+      @include tutor-breakpoint-down(sm) {
+        @include tutor-typography('p2', 'semibold');
+        gap: $tutor-spacing-2;
+      }
+    }
+
+    &-options {
+      @include tutor-flex(row);
+      gap: $tutor-spacing-6;
+      width: 100%;
+    }
+
+    &-option {
+      @include tutor-typography('small');
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-md;
+      background-color: $tutor-surface-l1;
+      cursor: pointer;
+      transition-property: background-color, border-color, color;
+      transition-duration: 0.2s;
+      transition-timing-function: ease;
+      overflow: hidden;
+
+      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not([data-option='draggable']) {
+        border-color: $tutor-border-hover;
+        background-color: $tutor-surface-l1-hover;
+      }
+
+      &:has(:checked) {
+        font-weight: $tutor-font-weight-medium;
+        border-color: $tutor-border-brand;
+        background-color: $tutor-surface-brand-secondary;
+        color: $tutor-text-brand;
+
+        .tutor-label {
+          color: $tutor-text-brand;
+        }
+      }
+
+      &[data-option='correct'] {
+        font-weight: $tutor-font-weight-medium;
+        border-color: $tutor-border-success;
+        background-color: $tutor-actions-success-tertiary;
+        color: $tutor-text-success;
+        cursor: default;
+
+        .tutor-label {
+          color: $tutor-text-success;
+        }
+
+        .tutor-checkbox:disabled {
+          background-color: $tutor-actions-success-primary;
+          color: $tutor-icon-idle-inverse;
+        }
+      }
+
+      &[data-option='incorrect'] {
+        font-weight: $tutor-font-weight-medium;
+        border-color: $tutor-border-error;
+        background-color: $tutor-actions-critical-secondary;
+        color: $tutor-text-critical;
+        cursor: default;
+
+        .tutor-label {
+          color: $tutor-text-critical;
+        }
+
+        .tutor-checkbox:disabled {
+          background-color: $tutor-actions-critical-primary;
+          color: $tutor-icon-idle-inverse;
+        }
+      }
+
+      &[data-option='draggable'] {
+        box-shadow: 2px 2px 0px 0px #00000014;
+
+        &:hover {
+          border-color: $tutor-border-brand;
+          background-color: $tutor-surface-l1-hover;
+        }
+      }
+
+      &[data-option='dragging'] {
+        border-color: $tutor-border-brand;
+        box-shadow: -6px 7px 0px 0px #00000014;
+      }
+    }
+  }
+
+  [data-question='true_false'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid-auto-columns(2, 2);
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-grid-auto-columns(1, 1);
+          gap: $tutor-spacing-5;
+        }
+      }
+
+      &-option {
+        @include tutor-flex-center;
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-3;
+      }
+    }
+  }
+
+  [data-question='multiple_choice'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid-auto-columns(2, 4);
+
+        @include tutor-breakpoint-down(sm) {
+          &:has(img) {
+            @include tutor-grid-auto-columns(2, 2);
+            gap: $tutor-spacing-5;
+          }
+
+          &:not(:has(img)) {
+            @include tutor-grid-auto-columns(1, 1);
+            gap: $tutor-spacing-5;
+          }
+        }
+      }
+
+      &-option {
+        @include tutor-flex(row, center, flex-start);
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-3;
+
+        &:has(img) {
+          @include tutor-flex(column, flex-start, center);
+          padding: 0;
+          gap: 0;
+
+          img {
+            border-end-start-radius: $tutor-radius-md;
+            border-end-end-radius: $tutor-radius-md;
+            height: 160px;
+            width: 100%;
+            object-fit: cover;
+            object-position: center;
+          }
+
+          [data-title] {
+            padding: $tutor-spacing-3 $tutor-spacing-4;
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+
+  [data-question='image_answering'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid-auto-columns(2, 2);
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-grid-auto-columns(1, 1);
+          gap: $tutor-spacing-5;
+        }
+      }
+
+      &-option {
+        @include tutor-flex(column, flex-start, center);
+        gap: $tutor-spacing-3;
+        padding: $tutor-spacing-4;
+
+        img {
+          height: 320px;
+          width: 100%;
+          object-fit: cover;
+          object-position: center;
+          border-radius: $tutor-radius-sm;
+        }
+      }
+    }
+  }
+
+  [data-question='ordering'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid-auto-columns(1, 1);
+
+        @include tutor-breakpoint-down(sm) {
+          gap: $tutor-spacing-5;
+        }
+      }
+
+      &-option {
+        @include tutor-flex(row, center, flex-start);
+        padding: 0;
+        gap: $tutor-spacing-3;
+
+        [data-option-order] {
+          @include tutor-flex-center;
+          @include tutor-typography('small', 'semibold');
+          width: 40px;
+          height: 100%;
+          border-inline-end: 1px solid $tutor-border-idle;
+        }
+
+        [data-title] {
+          @include tutor-flex(row, center, flex-start);
+          gap: $tutor-spacing-4;
+          padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-1;
+          min-height: 56px;
+
+          img {
+            height: 88px;
+            width: 88px;
+            aspect-ratio: 1;
+            border-radius: $tutor-radius-sm;
+            object-fit: cover;
+            object-position: center;
+          }
+        }
+
+        [data-grab-handle] {
+          @include tutor-button-reset;
+          @include tutor-flex-center;
+          cursor: grab;
+          margin-inline: auto $tutor-spacing-4;
+        }
+      }
+    }
+  }
+
+  [data-question='matching'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid-auto-columns(1, 1);
+
+        &[data-image-matching='1'] {
+          @include tutor-grid-auto-columns(2, 4);
+        }
+
+        @include tutor-breakpoint-down(sm) {
+          gap: $tutor-spacing-5;
+
+          &[data-image-matching='1'] {
+            @include tutor-grid-auto-columns(1, 1);
+            gap: $tutor-spacing-5;
+          }
+        }
+      }
+
+      &-option {
+        padding: $tutor-spacing-4;
+        background-color: $tutor-surface-base;
+        cursor: default;
+
+        img {
+          height: 320px;
+          width: 100%;
+          border-radius: $tutor-radius-sm;
+          object-fit: cover;
+          object-position: center;
+        }
+
+        &-drop-zone {
+          @include tutor-flex(row, center, space-between);
+          @include tutor-typography('small');
+          padding: $tutor-spacing-3;
+          background-color: $tutor-surface-l1;
+          border: 1px solid $tutor-border-idle;
+          border-radius: $tutor-radius-md;
+          border-style: dashed;
+          box-shadow: -1px -1px 6px 0px #0000000f inset;
+          max-width: 544px;
+          min-height: 46px;
+          width: 100%;
+
+          &:has([data-option='dropped']) {
+            border-color: $tutor-border-idle;
+            border-style: solid;
+            box-shadow: none;
+
+            button {
+              display: flex;
+            }
+
+            &:hover {
+              border-color: $tutor-border-brand;
+            }
+          }
+        }
+      }
+
+      &-draggable {
+        @include tutor-flex(column, flex-start, flex-start);
+        gap: $tutor-spacing-5;
+        padding: $tutor-spacing-6;
+        background-color: $tutor-surface-base;
+        border-radius: $tutor-radius-md;
+        border: 1px solid $tutor-border-idle;
+
+        @include tutor-breakpoint-down(sm) {
+          gap: $tutor-spacing-4;
+          padding: $tutor-spacing-5;
+        }
+
+        &-header {
+          @include tutor-flex(row, center, flex-start);
+          gap: $tutor-spacing-3;
+        }
+
+        .tutor-quiz-question {
+          &-options {
+            @include tutor-grid-auto-columns(2, 4, '.tutor-quiz-question-option');
+
+            @include tutor-breakpoint-down(sm) {
+              @include tutor-grid-auto-columns(1, 1, '.tutor-quiz-question-option');
+              gap: $tutor-spacing-5;
+            }
+          }
+
+          &-option {
+            @include tutor-flex(row, center, flex-start);
+            background-color: $tutor-surface-l1;
+            padding: 0 $tutor-spacing-4;
+
+            [data-title] {
+              @include tutor-typography('small');
+              @include tutor-flex(row, center, flex-start);
+              min-height: 36px;
+            }
+
+            [data-grab-handle] {
+              @include tutor-button-reset;
+              @include tutor-flex-center;
+              cursor: grab;
+              margin-inline-start: auto;
+            }
+          }
+        }
+      }
+    }
+
+    [data-image-matching='0'] {
+      .tutor-quiz-question {
+        &-option {
+          @include tutor-flex(row, center, space-between);
+          padding: 0;
+          gap: $tutor-spacing-3;
+          border: none;
+          background-color: transparent !important;
+
+          &:hover {
+            background-color: transparent !important;
+          }
+
+          &-number {
+            @include tutor-flex(row, center, center);
+            @include tutor-typography('medium', 'semibold');
+            border-radius: $tutor-radius-sm;
+            width: 28px;
+            height: 28px;
+            background-color: #fafafa;
+          }
+
+          [data-title] {
+            @include tutor-flex(row, center, flex-start);
+            gap: $tutor-spacing-4;
+          }
+
+          @include tutor-breakpoint-down(sm) {
+            flex-wrap: wrap;
+            gap: $tutor-spacing-4;
+          }
+        }
+      }
+    }
+  }
+
+  [data-question='fill_in_the_blank'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid-auto-columns(1, 1);
+      }
+
+      &-option {
+        @include tutor-typography('small', 'regular');
+        border: none;
+        line-height: 2.5;
+
+        &:hover {
+          background-color: transparent !important;
+          cursor: default;
+        }
+      }
+
+      &-input {
+        border: none;
+        outline: none;
+        border-bottom: 2px solid $tutor-border-idle;
+        background-color: transparent;
+        border-radius: 0;
+        padding: 0 $tutor-spacing-2;
+        width: 167px;
+        transition-property: color, opacity;
+        transition-duration: 0.2s;
+        transition-timing-function: ease-in-out;
+        color: $tutor-text-brand;
+
+        &::placeholder {
+          opacity: 0;
+        }
+
+        &:hover {
+          &::placeholder {
+            color: $tutor-text-brand-secondary;
+            opacity: 1;
+          }
+        }
+
+        &:not(:placeholder-shown) {
+          border-color: $tutor-border-brand;
+        }
+
+        &:focus {
+          border-color: $tutor-border-brand;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+
+  &-submission-modal {
+    &-content {
+      @include tutor-flex(column, stretch, space-between);
+      gap: $tutor-spacing-2;
+    }
+  }
+}

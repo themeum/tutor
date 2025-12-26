@@ -1,3 +1,15 @@
+<?php
+/**
+ * Dynamic component examples.
+ *
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +30,7 @@
 	use Tutor\Components\Constants\Variant;
 	use Tutor\Components\InputField;
 	use Tutor\Components\Modal;
+	use Tutor\Components\Nav;
 	use Tutor\Components\Pagination;
 	use Tutor\Components\Popover;
 	use Tutor\Components\Progress;
@@ -39,8 +52,7 @@
 			Button::make()->label( 'I am a button' )->variant(Variant::DESTRUCTIVE_SOFT )->attr( 'class', 'tutor-btn-loading' )->render(); // phpcs:ignore 
 			Button::make()->label( 'I am a button' )->variant( Variant::OUTLINE )->render(); // phpcs:ignore 
 			Button::make()->label( 'I am a button' )->variant( Variant::PENDING )->render(); // phpcs:ignore 
-			Button::make()->size( Size::LARGE )->icon(
-				'SVG' )->variant( Variant::COMPLETED )->render(); // phpcs:ignore
+			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::COMPLETED )->render(); // phpcs:ignore
 
 			Button::make()->attr( 'class', 'tutor-btn-block' )->label( 'I am a block button' )->variant( Variant::PRIMARY_SOFT )->render();
 		?&gt;
@@ -56,10 +68,7 @@
 			Button::make()->label( 'I am a button' )->variant(Variant::DESTRUCTIVE_SOFT )->attr( 'class', 'tutor-btn-loading' )->render(); // phpcs:ignore 
 			Button::make()->label( 'I am a button' )->variant( Variant::OUTLINE )->render(); // phpcs:ignore 
 			Button::make()->label( 'I am a button' )->variant( Variant::PENDING )->render(); // phpcs:ignore 
-			Button::make()->size( Size::LARGE )->icon(
-				'<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-									<path d="M11.617 5.28089C12.9779 6.05395 14.0472 6.66146 14.809 7.21795C15.576 7.77827 16.1434 8.36389 16.3465 9.13605C16.4955 9.70222 16.4955 10.2979 16.3465 10.8641C16.1434 11.6362 15.576 12.2218 14.809 12.7821C14.0472 13.3386 12.9779 13.9461 11.6171 14.7192C10.3026 15.466 9.19413 16.0957 8.35263 16.4537C7.50438 16.8145 6.73103 16.9974 5.97943 16.7844C5.42706 16.6278 4.92447 16.3307 4.51959 15.9222C3.97012 15.3679 3.74955 14.6016 3.6452 13.6796C3.54161 12.7641 3.54162 11.5659 3.54163 10.0418V9.9583C3.54162 8.43422 3.54161 7.23596 3.6452 6.32059C3.74955 5.39847 3.97012 4.63223 4.51959 4.07784C4.92447 3.66936 5.42706 3.37227 5.97943 3.21574C6.73103 3.00276 7.50438 3.18563 8.35263 3.54643C9.19413 3.90435 10.3026 4.53409 11.617 5.28089Z" fill="currentColor"></path>
-								</svg>' )->variant( Variant::COMPLETED )->render(); // phpcs:ignore
+			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::COMPLETED )->render(); // phpcs:ignore
 
 			Button::make()->attr( 'class', 'tutor-btn-block' )->label( 'I am a block button' )->variant( Variant::PRIMARY_SOFT )->render();
 			?>
@@ -98,7 +107,7 @@
 		<h2>Badge</h2>
 		<pre><code>
 		&lt;?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( 'svg' )->render();
+			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->variant( Variant::SECONDARY )->render();
 			Badge::make()->label( 'Completed' )->variant( Variant::COMPLETED )->circle()->render();
 			Badge::make()->label( 'Cancelled' )->variant( Variant::CANCELLED )->circle()->render();
@@ -106,7 +115,7 @@
 		</code></pre>
 		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( '<svg width="16" height="16" viewBox="0 0 20 20" fill="none" role="presentation" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.91699 10.0004C2.91699 6.09462 6.09458 2.91699 10.0003 2.91699C13.9061 2.91699 17.0837 6.09462 17.0837 10.0004C17.0837 13.9061 13.9061 17.0837 10.0003 17.0837C6.09458 17.0837 2.91699 13.9061 2.91699 10.0004ZM4.20448 10.0006C4.20448 13.1962 6.80428 15.796 9.99993 15.796C13.1955 15.796 15.7954 13.1962 15.7954 10.0006C15.7954 6.80501 13.1956 4.20513 9.99993 4.20513C6.80428 4.20513 4.20448 6.80501 4.20448 10.0006ZM10.0001 5.92213C9.52679 5.92213 9.14171 6.30747 9.14171 6.78111C9.14171 7.25432 9.52679 7.63931 10.0001 7.63931C10.4735 7.63931 10.8585 7.25432 10.8585 6.78111C10.8585 6.30747 10.4735 5.92213 10.0001 5.92213ZM9.35615 9.571C9.35615 9.21537 9.64446 8.92706 10.0001 8.92706C10.3557 8.92706 10.644 9.21537 10.644 9.571V13.4346C10.644 13.7903 10.3557 14.0786 10.0001 14.0786C9.64446 14.0786 9.35615 13.7903 9.35615 13.4346V9.571Z" fill="currentColor"></path></svg>' )->render();
+			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->variant( Variant::SECONDARY )->render();
 			Badge::make()->label( 'Completed' )->variant( Variant::COMPLETED )->circle()->render();
 			Badge::make()->label( 'Cancelled' )->variant( Variant::CANCELLED )->circle()->render();
@@ -258,7 +267,7 @@
 				Button::make()->label( 'Another Modal' )->variant( 'destructive' )->attr( 'onclick', 'TutorCore.modal.showModal("another-modal")' )->render();
 				Button::make()->label( 'Headless Modal' )->variant( 'primary-soft' )->attr( 'onclick', 'TutorCore.modal.showModal("headless-modal")' )->render();
 			?>
-					
+		
 		</div>
 		<?php
 		Modal::make()
@@ -391,7 +400,7 @@
 			),
 		);
 
-		echo Table::make()
+		Table::make()
 			->headings( $heading )
 			->contents( $content )
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
@@ -451,7 +460,7 @@
 				),
 			);
 
-			echo Table::make()
+			Table::make()
 			->contents( $content )
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
@@ -482,7 +491,7 @@
 			</code></pre>
 		<br>
 		<?php
-			echo Popover::make()
+			Popover::make()
 				->title( 'Basic' )
 				->body( '<p>This is a popover component</p>' )
 				->closeable( true )
@@ -539,22 +548,22 @@
 			$left_button   = $button->label( 'Left' )->get();
 			$bottom_button = $button->label( 'Bottom' )->get();
 
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Right component</p>' )
 				->trigger( $right_button )
 				->placement( Positions::RIGHT )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Top component</p>' )
 				->trigger( $top_button )
 				->placement( Positions::TOP )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Bottom component</p>' )
 				->trigger( $bottom_button )
 				->placement( Positions::BOTTOM )
 				->render();
-			echo Popover::make()
+			Popover::make()
 				->body( '<p>Left component</p>' )
 				->trigger( $left_button )
 				->placement( Positions::LEFT )
@@ -592,7 +601,7 @@
 				Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
 			);
 
-			echo Popover::make()
+			Popover::make()
 			->title( 'Confirm Action' )
 			->body( '<p>Are you sure you want to delete this item? This action cannot be undone.</p>' )
 			->footer( $footer_buttons )
@@ -636,7 +645,7 @@
 		<br>
 		<?php
 			$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
-			echo Popover::make()
+			Popover::make()
 				->trigger( $kebab_button )
 				->menu_item(
 					array(
@@ -663,7 +672,7 @@
 	<div class="pagination-wrapper tutor-mb-12">
 		<h2>Pagination</h2>
 		<br>
-		<pre><code>echo Pagination::make()
+		<pre><code> Pagination::make()
 				->current( 2 )
 				->total( 200 )
 				->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
@@ -673,7 +682,7 @@
 		<br>
 		<?php
 
-		echo Pagination::make()
+		Pagination::make()
 			->current( 2 )
 			->total( 200 )
 			->limit( tutor_utils()->get_option( 'pagination_per_page' ) )
@@ -684,11 +693,146 @@
 	</div>
 	<!-- pagination component -->
 
+	<!-- nav component -->
+	<div class="nav-wrapper tutor-mb-12">
+		<h2>Nav Component</h2>
+		<pre><code>$dropdown = array(
+				'type'    => 'dropdown',
+				'icon'    => Icon::ENROLLED,
+				'active'  => true,
+				'count' => 3,
+				'options' => array(
+					array(
+						'label'  => 'Active',
+						'icon'   => Icon::PLAY_LINE,
+						'url'    => '#',
+						'active' => false,
+						'count' => 2,
+					),
+					array(
+						'label'  => 'Enrolled',
+						'icon'   => Icon::ENROLLED,
+						'url'    => '#',
+						'active' => true,
+						'count' => 3,
+					),
+				),
+			);
+
+			Nav::make()
+				->items( array( $dropdown ) )
+				->size( Size::SM )
+				->variant( Variant::SECONDARY )
+				->render();</code></pre>
+		<br>
+		<?php
+			$wishlist = array(
+				'type'   => 'link',
+				'label'  => __( 'Wishlist', 'tutor' ),
+				'icon'   => Icon::WISHLIST,
+				'url'    => '#',
+				'active' => false,
+			);
+
+			$dropdown = array(
+				'type'    => 'dropdown',
+				'icon'    => Icon::ENROLLED,
+				'active'  => true,
+				'count'   => 3,
+				'options' => array(
+					array(
+						'label'  => 'Active',
+						'icon'   => Icon::PLAY_LINE,
+						'url'    => '#',
+						'active' => false,
+						'count'  => 2,
+					),
+					array(
+						'label'  => 'Enrolled',
+						'icon'   => Icon::ENROLLED,
+						'url'    => '#',
+						'active' => true,
+						'count'  => 3,
+					),
+				),
+			);
+
+			Nav::make()
+				->items( array( $wishlist, $dropdown ) )
+				->size( Size::LG )
+				->render();
+
+			Nav::make()
+				->items( array( $dropdown ) )
+				->size( Size::SM )
+				->variant( Variant::SECONDARY )
+				->render();
+			?>
+	</div>
+	<!-- nav component -->
+
 	<div class="input-field-wrapper tutor-mb-12">
 		<h2>Input Fields</h2>
-		<pre><code>
-		&lt;?php
-		?&gt;</code></pre>
+		<br>
+		<pre><code>&lt;?php
+	$interests = array(
+		array(
+			'label'       => 'Software Development',
+			'value'       => 'sd',
+			'icon'        => Icon::BOOK_2,
+			'description' => 'Interest in software',
+		),
+		array(
+			'label'       => 'UI/UX',
+			'value'       => 'uiux',
+			'icon'        => Icon::ALERT,
+			'description' => 'Interest in UI/UX',
+		),
+		array(
+			'label'       => 'Testing',
+			'value'       => 'test',
+			'icon'        => Icon::CART,
+			'description' => 'Interest in testing',
+		),
+	);
+
+	InputField::make()
+		->type( 'text' )
+		->name( 'name' )
+		->label( 'Full Name' )
+		->placeholder( 'Enter your full name' )
+		->required()
+		->clearable()
+		->help_text( 'This is a helper text.' )
+		->attr( 'x-bind', "register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+		->render();
+
+	InputField::make()
+		->type( 'select' )
+		->name( 'interests' )
+		->label( 'Interests' )
+		->placeholder( 'Select your interests' )
+		->required( 'Please select an interest' )
+		->clearable()
+		->options( $interests )
+		->placeholder( 'Search for interests', true )
+		->multiple()
+		->searchable()
+		->size( 'md' )
+		->help_text( 'This is a selection helper text.' )
+		->render();
+
+	InputField::make()
+		->type( 'checkbox' )
+		->name( 'terms' )
+		->label( 'Agree with terms' )
+		->required()
+		->clearable()
+		->help_text( 'This is a helper text.' )
+		->attr( 'x-bind', "register('terms', { required: 'Gender is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+		->render();
+	?&gt;</code></pre>
+	<br>
 			<?php
 
 			// Text input with left icon
@@ -839,6 +983,91 @@
 			// ->disabled()
 			// ->help_text('Upgrade to access.')
 			// ->render();
+
+			// $countries = array(
+			// array(
+			// 'label' => 'United States',
+			// 'value' => 'us',
+			// 'icon'  => Icon::GLOBE,
+			// ),
+			// array(
+			// 'label'    => 'United Kingdom',
+			// 'value'    => 'uk',
+			// 'disabled' => true,
+			// 'icon'     => Icon::GLOBE,
+			// ),
+			// array(
+			// 'label' => 'Canada',
+			// 'value' => 'ca',
+			// 'icon'  => Icon::GLOBE,
+			// ),
+			// );
+
+			// $grouped_options = array(
+			// array(
+			// 'label'   => 'Popular',
+			// 'options' => array(
+			// array(
+			// 'label' => 'JavaScript',
+			// 'value' => 'js',
+			// ),
+			// ),
+			// ),
+			// array(
+			// 'label'   => 'Other Languages',
+			// 'options' => array(
+			// array(
+			// 'label' => 'Ruby',
+			// 'value' => 'rb',
+			// ),
+			// array(
+			// 'label' => 'Go',
+			// 'value' => 'go',
+			// ),
+			// ),
+			// ),
+			// );
+
+			// // Input field with selection and search.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'country' )
+			// ->label( 'Countries' )
+			// ->options( $countries )
+			// ->placeholder( 'Select a Country....' )
+			// ->searchable()
+			// ->multiple()
+			// ->max_selections( 1 )
+			// ->render();
+
+			// // Input field with grouped options.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'language' )
+			// ->label( 'Languages' )
+			// ->groups( $grouped_options )
+			// ->placeholder( 'Select a Language....' )
+			// ->render();
+
+			// // Disabled input field.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'disabled' )
+			// ->label( 'Disabled Field' )
+			// ->disabled()
+			// ->options( $countries )
+			// ->placeholder( 'Disable....' )
+			// ->render();
+
+			// // Loading input field.
+			// InputField::make()
+			// ->type( 'select' )
+			// ->name( 'loading' )
+			// ->label( 'Loading Field' )
+			// ->loading()
+			// ->options( $countries )
+			// ->placeholder( 'Loading....' )
+			// ->render();
 			?>
 			<form 
 				x-data="tutorForm({ id: 'basic-form', mode: 'onBlur', shouldFocusError: true })"
@@ -856,6 +1085,27 @@
 				>
 				<div class="tutor-flex tutor-flex-column tutor-gap-7">
 					<?php
+						$interests = array(
+							array(
+								'label'       => 'Software Development',
+								'value'       => 'sd',
+								'icon'        => Icon::BOOK_2,
+								'description' => 'Interest in software',
+							),
+							array(
+								'label'       => 'UI/UX',
+								'value'       => 'uiux',
+								'icon'        => Icon::ALERT,
+								'description' => 'Interest in UI/UX',
+							),
+							array(
+								'label'       => 'Testing',
+								'value'       => 'test',
+								'icon'        => Icon::CART,
+								'description' => 'Interest in testing',
+							),
+						);
+
 						InputField::make()
 							->type( 'text' )
 							->name( 'name' )
@@ -868,6 +1118,21 @@
 							->render();
 
 						InputField::make()
+							->type( 'select' )
+							->name( 'interests' )
+							->label( 'Interests' )
+							->placeholder( 'Select your interests' )
+							->required( 'Please select an interest' )
+							->clearable()
+							->options( $interests )
+							->placeholder( 'Search for interests', true )
+							->multiple()
+							->searchable()
+							->size( 'md' )
+							->help_text( 'This is a selection helper text.' )
+							->render();
+
+						InputField::make()
 							->type( 'checkbox' )
 							->name( 'terms' )
 							->label( 'Agree with terms' )
@@ -876,7 +1141,7 @@
 							->help_text( 'This is a helper text.' )
 							->attr( 'x-bind', "register('terms', { required: 'Gender is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
 							->render();
-					?>
+						?>
 				</div>
 				<div>
 					<button 

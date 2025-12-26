@@ -1,0 +1,38 @@
+@import "../../../../v2-library/src/scss/reusables.scss";
+@import "theme";
+@import "single_course";
+@import "single_lesson";
+@import "_archive";
+@import "user_login";
+@import "./course/index.scss";
+@import "./select_dd_search";
+//dashboard
+@import "dashboard";
+@import "_dashboard_assignment";
+@import "_dashboard_announcements"; //since 1.7.9
+@import "_dashboard_quiz_review";
+@import "_student_public_profile";
+//frontend-builder
+@import "_frontend_withdrawal";
+@import "_tooltip";
+// Instructor list short code
+@import "_instructor";
+//Any kind of denied (permission, unauthorized, not found)
+@import "_denied";
+@import "./course-spotlight/index.scss";
+@import "../modules/qna.scss";
+@import "../modules/quiz-attempts.scss";
+@import "../modules/quiz-icons.scss";
+@import '../modules/instructor-note.scss';
+@import "../frontend-dashboard/snackbar";
+@import "./cart";
+@import "./checkout";
+@import "./order";
+
+// Utils class
+.tutor-display-none {
+    display: none;
+}
+.tutor-page-wrap {
+	width: 100%;
+}
