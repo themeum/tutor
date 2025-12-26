@@ -13,6 +13,7 @@ const DEFAULT_CONFIG: ModalConfig = {
 
 export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   open: false,
+  payload: null,
   isCloseable: config.isCloseable ?? DEFAULT_CONFIG.isCloseable,
   id: config.id,
   cleanup: undefined as (() => void) | undefined,
@@ -21,6 +22,8 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
     const onOpen = (event: CustomEvent) => {
       const targetId = event?.detail?.id as string | undefined;
       if (!targetId || targetId === this.id) {
+        this.payload = event?.detail?.data ?? null;
+
         this.show();
       }
     };
@@ -51,6 +54,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
 
   close(): void {
     this.open = false;
+    this.payload = null;
   },
 
   getBackdropBindings() {

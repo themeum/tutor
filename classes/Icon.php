@@ -40,11 +40,13 @@ final class Icon {
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BADGE                      = 'badge';
 	const BADGE_CHECK                = 'badge-check';
 	const BADGE_INFO                 = 'badge-info';
 	const BARS                       = 'bars';
 	const BAR_LEGEND                 = 'bar-legend';
 	const BILLING                    = 'billing';
+	const BIN                        = 'bin';
 	const BOOK                       = 'book';
 	const BOOKMARK                   = 'bookmark';
 	const BOOK_2                     = 'book-2';
@@ -100,12 +102,14 @@ final class Icon {
 	const CONTENT_DRIP               = 'content-drip';
 	const CONTRAST                   = 'contrast';
 	const COPY                       = 'copy';
+	const COPY_2                     = 'copy-2';
 	const COPY_PASTE                 = 'copy-paste';
 	const COUPON                     = 'coupon';
 	const COURSE                     = 'course';
 	const COURSES                    = 'courses';
 	const COURSES_FILL               = 'courses-fill';
 	const CROSS                      = 'cross';
+	const CROSS_2                    = 'cross-2';
 	const CROSS_CIRCLE               = 'cross-circle';
 	const CROWN                      = 'crown';
 	const CROWN_OUTLINED             = 'crown-outlined';
@@ -121,6 +125,7 @@ final class Icon {
 	const DIVI_COLORIZED             = 'divi-colorized';
 	const DOC                        = 'doc';
 	const DOCUMENT                   = 'document';
+	const DOLLAR                     = 'dollar';
 	const DOLLAR_RECURRING           = 'dollar-recurring';
 	const DOT                        = 'dot';
 	const DOWNLOAD                   = 'download';
@@ -133,6 +138,7 @@ final class Icon {
 	const DROP                       = 'drop';
 	const DUPLICATE                  = 'duplicate';
 	const DWG                        = 'dwg';
+	const EARNING                    = 'earning';
 	const EDIT                       = 'edit';
 	const EDIT_2                     = 'edit-2';
 	const ELEMENTOR_COLORIZED        = 'elementor-colorized';
@@ -155,6 +161,7 @@ final class Icon {
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
 	const FILTER                     = 'filter';
+	const FILTER_2                   = 'filter-2';
 	const FIRE                       = 'fire';
 	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
@@ -228,8 +235,10 @@ final class Icon {
 	const MINUS                      = 'minus';
 	const MINUS_SQUARE               = 'minus-square';
 	const MONITOR_PLAY               = 'monitor-play';
+	const MOVE                       = 'move';
 	const MP3                        = 'mp3';
 	const MP4                        = 'mp4';
+	const MULTIPLE_INSTRUCTORS       = 'multiple-instructors';
 	const MUSIC                      = 'music';
 	const NOTE                       = 'note';
 	const NOTEBOOK                   = 'notebook';
@@ -266,6 +275,7 @@ final class Icon {
 	const PROFILE_CIRCLE             = 'profile-circle';
 	const PROFILE_CIRCLE_FILL        = 'profile-circle-fill';
 	const PSD                        = 'psd';
+	const PUBLISH                    = 'publish';
 	const QA                         = 'qa';
 	const QA_FILL                    = 'qa-fill';
 	const QUESTION                   = 'question';
@@ -324,11 +334,13 @@ final class Icon {
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
 	const STAR                       = 'star';
+	const STAR_2                     = 'star-2';
 	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
 	const STORE_IMAGE                = 'store-image';
+	const STUDENT                    = 'student';
 	const STYLE_NONE                 = 'style-none';
 	const SUBSCRIPTION               = 'subscription';
 	const SUBTITLE                   = 'subtitle';

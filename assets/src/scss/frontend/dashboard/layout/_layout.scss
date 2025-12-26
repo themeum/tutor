@@ -1,0 +1,67 @@
+// Dashboard Layout Styles
+// Overall dashboard grid/flex layout structure
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-dashboard-container {
+  width: 100%;
+  max-width: 728px;
+  // padding-inline: 16px;
+  margin: 0 auto;
+}
+
+.tutor-dashboard-layout {
+  background-color: $tutor-surface-base;
+  display: grid;
+  grid-template-columns: 274px 1fr;
+
+  @include tutor-breakpoint-down(md) {
+    grid-template-columns: 1fr;
+  }
+
+  .tutor-dashboard-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding-inline: $tutor-spacing-6;
+    padding-bottom: $tutor-spacing-7;
+
+    @include tutor-breakpoint-down(sm) {
+      padding-bottom: $tutor-spacing-16;
+    }
+
+    &:not(:has(.tutor-announcement-notice)) {
+      padding-top: $tutor-spacing-7;
+    }
+  }
+}
+
+.tutor-dashboard-page-card {
+  background-color: $tutor-surface-l1;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+
+  &-header {
+    padding: $tutor-spacing-6;
+    border-bottom: 1px solid $tutor-border-idle;
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    background-color: transparent;
+    border: none;
+
+    &-header {
+      background-color: $tutor-surface-l1;
+      padding: $tutor-spacing-2;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+      margin-bottom: $tutor-spacing-4;
+    }
+
+    &-body {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-2xl;
+    }
+  }
+}

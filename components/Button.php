@@ -86,13 +86,27 @@ class Button extends BaseComponent {
 	protected $attributes = array();
 
 	/**
-	 * The SVG icon markup.
+	 * The SVG icon name or markup.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @var string
 	 */
 	protected $icon = '';
+
+	/**
+	 * Icon width.
+	 *
+	 * @var int
+	 */
+	protected $icon_width = 16;
+
+	/**
+	 * Icon height.
+	 *
+	 * @var int
+	 */
+	protected $icon_height = 16;
 
 	/**
 	 * Button icon position
@@ -187,14 +201,18 @@ class Button extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $svg SVG markup (already escaped and sanitized).
+	 * @param string $icon     SVG icon name or markup.
 	 * @param string $position Optional. Icon position: 'left' or 'right'.
+	 * @param int    $width    Optional. Icon width.
+	 * @param int    $height   Optional. Icon height.
 	 *
 	 * @return $this
 	 */
-	public function icon( string $svg, string $position = 'left' ): self {
-		$this->icon          = $svg;
+	public function icon( string $icon, string $position = 'left', int $width = 16, int $height = 16 ): self {
+		$this->icon          = $icon;
 		$this->icon_position = in_array( $position, array( self::POSITION_LEFT, self::POSITION_RIGHT ), true ) ? $position : 'left';
+		$this->icon_width    = $width;
+		$this->icon_height   = $height;
 		return $this;
 	}
 
@@ -270,10 +288,19 @@ class Button extends BaseComponent {
 		// Prepare icon HTML if exists.
 		$icon_html = '';
 		if ( ! empty( $this->icon ) ) {
-			$icon_html = sprintf(
-				'%1$s',
-				$this->icon // SVG is expected to be escaped markup.
-			);
+			if ( false !== strpos( $this->icon, '<svg' ) ) {
+				$icon_html = $this->icon;
+			} else {
+				ob_start();
+				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
+				$icon_html = ob_get_clean();
+			}
+		}
+
+		if ( ! empty( $icon_html ) && empty( $this->label ) ) {
+			$this->attributes['class'] .= ' tutor-btn-icon';
+			// Re-render attributes to include updated class.
+			$attributes = $this->render_attributes();
 		}
 
 		// Build button inner HTML depending on icon position.
