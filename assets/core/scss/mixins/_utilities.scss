@@ -7,6 +7,12 @@
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 @mixin tutor-text-truncate {

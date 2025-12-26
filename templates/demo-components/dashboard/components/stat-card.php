@@ -10,10 +10,12 @@
  */
 
 // Default values.
-$variation = isset( $variation ) ? $variation : 'enrolled';
-$value     = isset( $value ) ? $value : 0;
-$change    = isset( $change ) ? $change : '';
-$icon_size = $icon_size ?? 24;
+$icon_size  = $icon_size ?? 24;
+$variation  = isset( $variation ) ? $variation : 'enrolled';
+$value      = isset( $value ) ? $value : 0;
+$change     = isset( $change ) ? $change : '';
+$show_graph = isset( $show_graph ) ? $show_graph : false;
+$data       = isset( $data ) ? $data : array( 0, 0, 0 );
 
 // Required fields validation.
 if ( ! isset( $card_title ) || empty( $card_title ) ) {
@@ -28,9 +30,9 @@ $change_display = ! empty( $change ) ? $change : '';
 ?>
 <div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $variation ); ?>">
 	<div class="tutor-stat-card-header">
-		<h3 class="tutor-stat-card-title">
+		<div class="tutor-stat-card-title">
 			<?php echo esc_html( $card_title ); ?>
-		</h3>
+		</div>
 		<div class="tutor-stat-card-icon">
 			<?php tutor_utils()->render_svg_icon( $icon, $icon_size, $icon_size ); ?>
 		</div>
@@ -45,5 +47,10 @@ $change_display = ! empty( $change ) ? $change : '';
 			</p>
 		<?php endif; ?>
 	</div>
+	<?php if ( $show_graph ) : ?>
+		<div class="tutor-stat-card-chart" x-data="tutorStatCard(<?php echo wp_json_encode( $data ); ?>)">
+			<canvas x-ref="canvas" hright="33" width="100%"></canvas>
+		</div>
+	<?php endif; ?>
 </div>
 

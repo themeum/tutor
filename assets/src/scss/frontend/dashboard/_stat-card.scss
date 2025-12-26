@@ -5,67 +5,58 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-stat-card {
-	padding: $tutor-spacing-6;
-	height: 146px;
-	@include tutor-flex(column, stretch, space-between);
-    border: 1px solid $tutor-border-idle;
-    border-radius: $tutor-radius-2xl;
-	cursor: pointer;
-	transition: background-color 0.2s ease;
+  @include tutor-flex(column, stretch, space-between);
+  padding: $tutor-spacing-6;
+  height: 146px;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 
-	&:hover {
-		background-color: $tutor-surface-l1-hover;
-	}
+  &:hover {
+    background-color: $tutor-surface-l1-hover;
+  }
 
-	&-header {
-		@include tutor-flex(row, center, space-between);
-	}
+  &-header {
+    @include tutor-flex(row, center, space-between);
+  }
 
-	&-title {
-		@include tutor-typography('small');
-        margin: 0;
-	}
+  &-title {
+    @include tutor-typography('small');
+    margin: 0;
+  }
 
-	&-value {
-		@include tutor-typography('h2', 'bold', 'primary', 'heading');
-		margin: 0;
-	}
+  &-icon {
+    @include tutor-flex-center();
+  }
 
-	&-change {
-		@include tutor-typography('tiny', 'regular', 'secondary', 'body');
-		margin: 0;
-	}
+  &-value {
+    @include tutor-typography('h2', 'bold', 'primary', 'heading');
+    margin: 0;
+  }
 
-	// Color variations
-	&-enrolled {
-        .tutor-stat-card-icon {
-            color: $tutor-text-brand;
-        }
+  &-change {
+    @include tutor-typography('tiny', 'regular', 'secondary');
+    margin: 0;
+  }
 
-		.tutor-stat-card-value {
-			color: $tutor-text-brand;
-		}
-	}
+  // Color variations
+  &-brand {
+    .tutor-stat-card-icon {
+      color: $tutor-text-brand;
+    }
 
-	&-active {
-		.tutor-stat-card-icon {
-			color: $tutor-exception-1;
-		}
-        
-		.tutor-stat-card-value {
-			color: $tutor-exception-1;
-		}
-	}
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
 
-	&-completed {
-		.tutor-stat-card-icon {
-			color: $tutor-text-success;
-		}
-        
-		.tutor-stat-card-value {
-			color: $tutor-text-success;
-		}
-	}
+  &:has(canvas) {
+    height: 179px;
+    .tutor-stat-card {
+      &-content {
+        margin-top: 38px;
+      }
 
 	&-time-spent {
 		.tutor-stat-card-icon {
@@ -157,5 +148,49 @@
 			color: $tutor-exception-1;
 		}
 	}
-}
+      &-value {
+        @include tutor-text('h3');
+      }
+    }
+  }
 
+  &-exception1 {
+    .tutor-stat-card-icon {
+      color: $tutor-exception-1;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-exception-1;
+    }
+  }
+
+  &-success {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
+
+  &-exception4 {
+    .tutor-stat-card-icon {
+      color: $tutor-text-exception4;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception4;
+    }
+  }
+
+  &-exception5 {
+    .tutor-stat-card-icon {
+      color: $tutor-icon-exception5;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception5;
+    }
+  }
+}
