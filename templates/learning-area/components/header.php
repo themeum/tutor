@@ -11,6 +11,7 @@
 
 use TUTOR\Icon;
 
+global $tutor_course;
 ?>
 <div class="tutor-learning-header">
 	<div class="tutor-learning-header-inner">
@@ -18,7 +19,7 @@ use TUTOR\Icon;
 			<?php tutor_utils()->render_svg_icon( Icon::LEFT, 20, 20 ); ?>
 		</button>
 		<h5 class="tutor-learning-header-title">
-			Intimate Photography Portraits
+			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
 		<div class="tutor-learning-header-mobile">
 			<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">

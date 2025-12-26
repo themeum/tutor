@@ -12,9 +12,11 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Template;
 
-global $tutor_course, $tutor_course_list_url;
+global $tutor_course, $tutor_course_list_url, $tutor_course_content_id;
 
-$current_url = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
+$current_post = get_post( $tutor_course_content_id );
+$is_preview   = get_post_meta( $current_post->ID, '_is_preview', true );
+$current_url  = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 
 $menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu = Input::get( 'subpage', '' );
@@ -34,37 +36,28 @@ $active_menu = Input::get( 'subpage', '' );
 			</div>
 		</div>
 		<div class="tutor-learning-nav">
-			<div x-data="{ expanded: true }" class="tutor-learning-nav-topic active">
-				<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
-					<div class="tutor-learning-nav-header-progress">
-						<div x-data="tutorStatics({ 
-							value: 65,
-							size: 'tiny',
-							type: 'progress',
-							showLabel: false,
-							background: 'var(--tutor-actions-gray-empty)',
-							strokeColor: 'var(--tutor-border-hover)' })">
-							<div x-html="render()"></div>
-						</div>
-						<!-- <div class="tutor-learning-nav-header-progress-inner"></div> -->
-					</div>
-					<div class="tutor-learning-nav-header-title">
-						Before the picture: the idea
-					</div>
-					<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP_2, 20, 20 ); ?>
-					</div>
-				</div>
-				<div x-show="expanded" x-collapse x-cloak class="tutor-learning-nav-body">
-					<div class="tutor-learning-nav-item">
-						<a href="#">
-							<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_COLORIZE, 20, 20 ); ?>
-							<div>Introduction</div>
-						</a>
-					</div>
-					<div class="tutor-learning-nav-item active">
-						<a href="#">
-							<div class="tutor-learning-nav-progress">
+			<?php
+			$topics = tutor_utils()->get_topics( $tutor_course->ID );
+			if ( $topics->have_posts() ) {
+				while ( $topics->have_posts() ) {
+					$topics->the_post();
+					$topic_id        = get_the_ID();
+					$topic_summery   = get_the_content();
+					$total_contents  = tutor_utils()->count_completed_contents_by_topic( $topic_id );
+					$course_contents = tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 );
+					$is_topic_active = ! empty(
+						array_filter(
+							$course_contents->posts,
+							function ( $content ) use ( $current_post ) {
+								return $content->ID === $current_post->ID;
+							}
+						)
+					);
+					?>
+
+					<div x-data="{ expanded: true }" class="tutor-learning-nav-topic active">
+						<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
+							<div class="tutor-learning-nav-header-progress">
 								<div x-data="tutorStatics({ 
 									value: 65,
 									size: 'tiny',
@@ -74,63 +67,39 @@ $active_menu = Input::get( 'subpage', '' );
 									strokeColor: 'var(--tutor-border-hover)' })">
 									<div x-html="render()"></div>
 								</div>
+								<!-- <div class="tutor-learning-nav-header-progress-inner"></div> -->
 							</div>
-							<div>Introduction</div>
-						</a>
+							<div class="tutor-learning-nav-header-title">
+								<?php the_title(); ?>
+							</div>
+							<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
+								<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP_2, 20, 20 ); ?>
+							</div>
+						</div>
+						<div x-show="expanded" x-collapse x-cloak class="tutor-learning-nav-body">
+							<?php
+							// Backward compatible hook.
+							do_action( 'tutor/lesson_list/before/topic', $topic_id );
+							// Loop through lesson, quiz, assignment, zoom lesson.
+							while ( $course_contents->have_posts() ) {
+								$course_contents->the_post();
+
+								$can_access = ! $is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
+								$can_access = apply_filters( 'tutor_course/single/content/show_permalink', $can_access, get_the_ID() );
+								$is_locked  = ! $can_access;
+								$can_access = null === $can_access ? true : $can_access;
+
+                                echo apply_filters( 'tutor_learning_area_nav_item', '', get_post(), $can_access , $is_locked); //phpcs:ignore.
+							}
+							$course_contents->reset_postdata();
+							do_action( 'tutor/lesson_list/after/topic', $topic_id ); // Backward compatible hook.
+							?>
+						</div>
 					</div>
-					<div class="tutor-learning-nav-item">
-						<a href="#">
-							<?php tutor_utils()->render_svg_icon( Icon::COURSES, 20, 20 ); ?>
-							<div>Journey to transparent wash </div>
-						</a>
-					</div>
-					<div class="tutor-learning-nav-item">
-						<a href="#">
-							<?php tutor_utils()->render_svg_icon( Icon::QUIZ_2, 20, 20 ); ?>
-							<div>Quick Quiz</div>
-						</a>
-					</div>
-					<div class="tutor-learning-nav-item">
-						<a href="#">
-							<?php tutor_utils()->render_svg_icon( Icon::BOOK_2, 20, 20 ); ?>
-							<div>Assignment</div>
-						</a>
-					</div>
-				</div>
-			</div>
-			<div x-data="{ expanded: false }" class="tutor-learning-nav-topic">
-				<div role="button" @click="expanded = !expanded" class="tutor-learning-nav-header">
-					<div class="tutor-learning-nav-header-progress">
-						<div class="tutor-learning-nav-header-progress-inner"></div>
-					</div>
-					<div class="tutor-learning-nav-header-title">
-						Before the picture: the idea
-					</div>
-					<div class="tutor-learning-nav-header-arrow" :class="{ 'is-expanded': expanded }">
-						<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_UP_2, 20, 20 ); ?>
-					</div>
-				</div>
-				<div x-show="expanded" x-collapse x-cloak class="tutor-learning-nav-body">
-					<div class="tutor-learning-nav-item">
-						<a href="#">
-							<?php tutor_utils()->render_svg_icon( Icon::COURSES, 20, 20 ); ?>
-							<div>Journey to transparent wash </div>
-						</a>
-					</div>
-					<div class="tutor-learning-nav-item">
-						<a href="#">
-							<?php tutor_utils()->render_svg_icon( Icon::QUIZ_2, 20, 20 ); ?>
-							<div>Quick Quiz</div>
-						</a>
-					</div>
-					<div class="tutor-learning-nav-item">
-						<a href="#">
-							<?php tutor_utils()->render_svg_icon( Icon::BOOK_2, 20, 20 ); ?>
-							<div>Assignment</div>
-						</a>
-					</div>
-				</div>
-			</div>
+					<?
+				}
+			}
+			?>
 		</div>
 	</div>
 	<div class="tutor-learning-sidebar-pages">
