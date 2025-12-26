@@ -15,9 +15,9 @@ use TUTOR\Input;
 wp_head();
 
 // Tutor global variable for using inside learning area.
-
+$tutor_post_type         = get_post_type();
 $tutor_course_content_id = get_the_ID();
-$tutor_course_id         = tutor_utils()->get_course_id_by_subcontent( $tutor_course_content_id );
+$tutor_course_id         = tutor()->course_post_type === $tutor_post_type ? $tutor_course_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_course_content_id );
 $tutor_course            = get_post( $tutor_course_id );
 $tutor_course_list_url   = tutor_utils()->course_archive_page_url();
 
@@ -32,19 +32,13 @@ $tutor_course_list_url   = tutor_utils()->course_archive_page_url();
 				// Get requested page from query string and sanitize.
 				$subpage = Input::get( 'subpage' );
 
-				// Whitelist allowed items to avoid arbitrary file inclusion.
-				$nav_items = array(
-					'resources',
-					'qna',
-					'course-info',
-					'webinar',
-					'certificate',
-				);
-
-				$nav_items = apply_filters( 'tutor_learning_area_nav_items', $nav_items );
-
-				if ( $subpage && in_array( $subpage, $nav_items, true ) ) {
-					tutor_load_template( 'learning-area.subpages.' . $subpage );
+				if ( $subpage ) {
+					$subpage_template = tutor_get_template( 'learning-area.subpages.' . $subpage );
+					if ( file_exists( $subpage_template ) ) {
+					    tutor_load_template( 'learning-area.subpages.' . $subpage );
+					} else {
+						tutor_load_template( 'learning-area.lesson.index' );
+					}
 				} else {
 					tutor_load_template( 'learning-area.lesson.index' );
 				}

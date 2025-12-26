@@ -164,9 +164,18 @@ class Template extends Tutor_Base {
 	public function load_single_course_template( $template ) {
 		global $wp_query;
 		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->course_post_type ) {
-			do_action( 'single_course_template_before_load', get_the_ID() );
-			wp_reset_query();
-			return tutor_get_template( 'single-course' );
+			// Check if the slug contains subpage of learning area.
+			$learning_area_subpages = self::make_learning_area_sub_page_nav_items();
+			$subpage                = Input::get( 'subpage' );
+			$subpage_slugs          = array_keys( $learning_area_subpages );
+
+			if ( in_array( $subpage, $subpage_slugs, true ) ) {
+				$template = tutor_get_template( 'learning-area.index' );
+			} else {
+				do_action( 'single_course_template_before_load', get_the_ID() );
+				wp_reset_query();
+				$template = tutor_get_template( 'single-course' );
+			}
 		}
 
 		return $template;
@@ -520,6 +529,7 @@ class Template extends Tutor_Base {
 			$legacy_mode = false; // @TODO.
 
 			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );
+			tutor_get_template( 'single-course' );
 			if ( $legacy_mode ) {
 				$template = $template_path;
 			} else {
@@ -528,5 +538,50 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
+	}
+
+	/**
+	 * Make learning area sub pages nav items
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $base_url Nav items base url.
+	 *
+	 * @return array
+	 */
+	public static function make_learning_area_sub_page_nav_items( $base_url = '' ): array {
+		if ( empty( $base_url ) ) {
+			$base_url = get_permalink();
+		}
+
+		$menu_items = array(
+			'resources'   => array(
+				'title' => esc_html__( 'Resources', 'tutor' ),
+				'icon'  => Icon::RESOURCES,
+				'url'   => esc_url( add_query_arg( 'subpage', 'resources', $base_url ) ),
+			),
+			'qna'         => array(
+				'title' => esc_html__( 'Q&A', 'tutor' ),
+				'icon'  => Icon::QA,
+				'url'   => esc_url( add_query_arg( 'subpage', 'qna', $base_url ) ),
+			),
+			'course-info' => array(
+				'title' => esc_html__( 'Course Info', 'tutor' ),
+				'icon'  => Icon::INFO_OCTAGON,
+				'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $base_url ) ),
+			),
+			'webinar'     => array(
+				'title' => esc_html__( 'Webinar', 'tutor' ),
+				'icon'  => Icon::VIDEO_CAMERA_2,
+				'url'   => esc_url( add_query_arg( 'subpage', 'webinar', $base_url ) ),
+			),
+			'certificate' => array(
+				'title' => esc_html__( 'Certificate', 'tutor' ),
+				'icon'  => Icon::CERTIFICATE_2,
+				'url'   => esc_url( add_query_arg( 'subpage', 'certificate', $base_url ) ),
+			),
+		);
+
+		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items );
 	}
 }

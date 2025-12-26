@@ -10,39 +10,13 @@
 
 use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\Template;
 
 global $tutor_course, $tutor_course_list_url;
 
 $current_url = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 
-$menu_items = array(
-	'resources'   => array(
-		'title' => esc_html__( 'Resources', 'tutor' ),
-		'icon'  => Icon::RESOURCES,
-		'url'   => esc_url( add_query_arg( 'subpage', 'resources', $current_url ) ),
-	),
-	'qna'         => array(
-		'title' => esc_html__( 'Q&A', 'tutor' ),
-		'icon'  => Icon::QA,
-		'url'   => esc_url( add_query_arg( 'subpage', 'qna', $current_url ) ),
-	),
-	'course-info' => array(
-		'title' => esc_html__( 'Course Info', 'tutor' ),
-		'icon'  => Icon::INFO_OCTAGON,
-		'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $current_url ) ),
-	),
-	'webinar'     => array(
-		'title' => esc_html__( 'Webinar', 'tutor' ),
-		'icon'  => Icon::VIDEO_CAMERA_2,
-		'url'   => esc_url( add_query_arg( 'subpage', 'webinar', $current_url ) ),
-	),
-	'certificate' => array(
-		'title' => esc_html__( 'Certificate', 'tutor' ),
-		'icon'  => Icon::CERTIFICATE_2,
-		'url'   => esc_url( add_query_arg( 'subpage', 'certificate', $current_url ) ),
-	),
-);
-
+$menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu = Input::get( 'subpage', '' );
 
 ?>

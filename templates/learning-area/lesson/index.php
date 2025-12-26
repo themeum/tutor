@@ -11,7 +11,6 @@
 
 use TUTOR\Icon;
 
-
 $tabs_data = array(
 	array(
 		'id'    => 'overview',
