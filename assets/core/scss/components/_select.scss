@@ -189,7 +189,8 @@
 
     .tutor-select-search-input {
       @include tutor-input-base();
-      @include padding-start($tutor-spacing-9);
+      padding-block: $tutor-spacing-3;
+      padding-inline-start: $tutor-spacing-9;
     }
   }
 
