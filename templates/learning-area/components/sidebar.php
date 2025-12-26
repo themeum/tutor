@@ -89,6 +89,7 @@ $active_menu = Input::get( 'subpage', '' );
 								$is_locked  = ! $can_access;
 								$can_access = null === $can_access ? true : $can_access;
 
+								// Nav item will be rendered using hook from their respective files.
                                 echo apply_filters( 'tutor_learning_area_nav_item', '', get_post(), $can_access , $is_locked); //phpcs:ignore.
 							}
 							$course_contents->reset_postdata();
