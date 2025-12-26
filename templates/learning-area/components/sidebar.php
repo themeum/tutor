@@ -84,13 +84,14 @@ $active_menu = Input::get( 'subpage', '' );
 							while ( $course_contents->have_posts() ) {
 								$course_contents->the_post();
 
+                                $topic_item = get_post();
+
 								$can_access = ! $is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
 								$can_access = apply_filters( 'tutor_course/single/content/show_permalink', $can_access, get_the_ID() );
-								$is_locked  = ! $can_access;
 								$can_access = null === $can_access ? true : $can_access;
 
-								// Nav item will be rendered using hook from their respective files.
-                                echo apply_filters( 'tutor_learning_area_nav_item', '', get_post(), $can_access , $is_locked); //phpcs:ignore.
+								// Rendered the nav item using hook from their respective files.
+								do_action( 'tutor_learning_area_nav_item_' . $topic_item->post_type, $topic_item, $can_access );
 							}
 							$course_contents->reset_postdata();
 							do_action( 'tutor/lesson_list/after/topic', $topic_id ); // Backward compatible hook.
