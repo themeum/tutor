@@ -58,6 +58,12 @@
         margin-top: 38px;
       }
 
+      &-value {
+        @include tutor-text('h3');
+      }
+    }
+  }
+
 	&-time-spent {
 		.tutor-stat-card-icon {
 			color: $tutor-text-exception4;
@@ -69,9 +75,9 @@
 	}
 
 	&-courses {
-        .tutor-stat-card-icon {
-            color: $tutor-text-success;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-text-success;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-text-success;
@@ -80,9 +86,9 @@
 
 
 	&-students {
-        .tutor-stat-card-icon {
-            color: $tutor-text-brand;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-text-brand;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-text-brand;
@@ -90,9 +96,9 @@
 	}
 
 	&-reviews {
-        .tutor-stat-card-icon {
-            color: $tutor-warning-400;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-warning-400;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-warning-400;
@@ -100,9 +106,9 @@
 	}
 
 	&-passed {
-        .tutor-stat-card-icon {
-            color: $tutor-text-brand;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-text-brand;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-text-brand;
@@ -110,9 +116,9 @@
 	}
 
 	&-progress {
-        .tutor-stat-card-icon {
-            color: $tutor-exception-5;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-exception-5;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-exception-5;
@@ -120,9 +126,9 @@
 	}
 
 	&-completed {
-        .tutor-stat-card-icon {
-            color: $tutor-text-success;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-text-success;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-text-success;
@@ -130,9 +136,9 @@
 	}
 
 	&-qa {
-        .tutor-stat-card-icon {
-            color: $tutor-exception-2;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-exception-2;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-exception-2;
@@ -140,19 +146,14 @@
 	}
 
 	&-book-2 {
-        .tutor-stat-card-icon {
-            color: $tutor-exception-1;
-        }
+    .tutor-stat-card-icon {
+        color: $tutor-exception-1;
+    }
 
 		.tutor-stat-card-value {
 			color: $tutor-exception-1;
 		}
 	}
-      &-value {
-        @include tutor-text('h3');
-      }
-    }
-  }
 
   &-exception1 {
     .tutor-stat-card-icon {
