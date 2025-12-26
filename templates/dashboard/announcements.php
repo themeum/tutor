@@ -247,6 +247,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 								->label( __( 'Select Course', 'tutor' ) )
 								->placeholder( __( 'Select a course', 'tutor' ) )
 								->options( $course_options )
+								->searchable()
 								->attr( 'x-bind', "register('tutor_announcement_course', { required: 'Please select a course' })" )
 								->render();
 
