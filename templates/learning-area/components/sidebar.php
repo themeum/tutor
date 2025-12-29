@@ -12,11 +12,14 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Template;
 
-global $tutor_course, $tutor_course_list_url, $tutor_current_content_id, $tutor_is_enrolled;
+global $tutor_course,
+$tutor_course_list_url,
+$tutor_current_content_id,
+$tutor_is_enrolled,
+$tutor_current_post;
 
-$current_post = get_post( $tutor_current_content_id );
-$is_preview   = get_post_meta( $current_post->ID, '_is_preview', true );
-$current_url  = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
+$is_preview  = get_post_meta( $tutor_current_post->ID, '_is_preview', true );
+$current_url = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 
 $menu_items  = Template::make_learning_area_sub_page_nav_items( $current_url );
 $active_menu = Input::get( 'subpage', '' );
@@ -48,8 +51,8 @@ $active_menu = Input::get( 'subpage', '' );
 					$is_topic_active = ! empty(
 						array_filter(
 							$course_contents->posts,
-							function ( $content ) use ( $current_post ) {
-								return $content->ID === $current_post->ID;
+							function ( $content ) use ( $tutor_current_post ) {
+								return $content->ID === $tutor_current_post->ID;
 							}
 						)
 					);
@@ -84,7 +87,7 @@ $active_menu = Input::get( 'subpage', '' );
 							while ( $course_contents->have_posts() ) {
 								$course_contents->the_post();
 
-                                $topic_item = get_post();
+								$topic_item = get_post();
 
 								$can_access = ! $is_preview || $tutor_is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
 								$can_access = apply_filters( 'tutor_course/single/content/show_permalink', $can_access, get_the_ID() );
