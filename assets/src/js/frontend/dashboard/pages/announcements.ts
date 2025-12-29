@@ -1,6 +1,7 @@
 import { type FormControlMethods } from '@Core/ts/components/form';
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
 import { __ } from '@wordpress/i18n';
 
 /**
@@ -83,14 +84,14 @@ const announcementsPage = () => {
     },
 
     async deleteAnnouncement(announcementId: number) {
-      const response = await wpAjaxInstance.post<AnnouncementResponse>('tutor_delete_dashboard_announcement', {
+      const response = await wpAjaxInstance.post<AnnouncementResponse>(endpoints.DELETE_ANNOUNCEMENT, {
         announcement_id: announcementId,
       });
       return response.data;
     },
 
     async createUpdateAnnouncement(payload: AnnouncementPayload) {
-      const response = await wpAjaxInstance.post<AnnouncementResponse>('tutor_announcement_create', payload);
+      const response = await wpAjaxInstance.post<AnnouncementResponse>(endpoints.CREATE_ANNOUNCEMENT, payload);
       return response.data;
     },
 
