@@ -9,7 +9,7 @@
 	transition: background-color 0.2s ease;
 	border: 1px solid var(--tutor-border-idle);
 	display: flex;
-    flex-direction: column;
+	flex-direction: column;
 
 	&:hover {
 		background-color: $tutor-surface-l1-hover;
@@ -100,12 +100,12 @@
 
 	&-price-original {
 		@include tutor-typography('tiny', 'regular', 'subdued');
-	}
+	}	
 }
 
 .tutor-course-card-footer {
 	.list-item-price,
-	.list-item-button, 
+	.list-item-button,
 	>.tutor-course-list-btn {
 		padding: $tutor-spacing-4;
 	}
@@ -113,5 +113,13 @@
 	.list-item-button,
 	.tutor-course-list-btn {
 		border-top: 1px solid $tutor-border-idle;
+	}
+
+	// woo-commerce
+	.list-item-price {
+		ins {
+			text-decoration: none;
+			color: $tutor-text-primary;
+		}
 	}
 }
