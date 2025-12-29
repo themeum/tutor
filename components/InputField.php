@@ -359,6 +359,15 @@ class InputField extends BaseComponent {
 	protected $loading_message = '';
 
 	/**
+	 * Selection time mode (12|24).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int|null
+	 */
+	protected $selection_time_mode = null;
+
+	/**
 	 * Set input type.
 	 *
 	 * @since 4.0.0
@@ -717,6 +726,20 @@ class InputField extends BaseComponent {
 	 */
 	public function loading_message( $loading_message = '' ): self {
 		$this->loading_message = $loading_message;
+		return $this;
+	}
+
+	/**
+	 * Set selection time mode.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $mode Mode (12 or 24).
+	 *
+	 * @return self
+	 */
+	public function selection_time_mode( $mode = 12 ): self {
+		$this->selection_time_mode = $mode;
 		return $this;
 	}
 
@@ -1454,6 +1477,48 @@ class InputField extends BaseComponent {
 	}
 
 	/**
+	 * Render date/time input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string InputField HTML.
+	 */
+	protected function render_date_input() {
+		$original_type      = $this->type;
+		$original_left_icon = $this->left_icon;
+		$this->type         = 'text';
+
+		if ( empty( $this->left_icon ) && empty( $this->right_icon ) && function_exists( 'tutor_utils' ) ) {
+			$this->left_icon = tutor_utils()->get_svg_icon( Icon::CALENDAR_2, 20, 20 );
+		}
+
+		$options = array(
+			'inputMode' => true,
+		);
+
+		if ( InputType::DATE_TIME === $original_type ) {
+			$options['selectionTimeMode'] = $this->selection_time_mode ? $this->selection_time_mode : 12;
+		} elseif ( ! is_null( $this->selection_time_mode ) ) {
+			$options['selectionTimeMode'] = $this->selection_time_mode;
+		}
+
+		$config = array(
+			'options' => $options,
+		);
+
+		$json_config = wp_json_encode( $config );
+		$this->attr( 'x-data', "tutorCalendar($json_config)" );
+		$this->attr( 'readonly', 'readonly' );
+
+		$html = $this->render_text_input();
+
+		$this->type      = $original_type;
+		$this->left_icon = $original_left_icon;
+
+		return $html;
+	}
+
+	/**
 	 * Get the input field HTML.
 	 *
 	 * @since 4.0.0
@@ -1498,6 +1563,10 @@ class InputField extends BaseComponent {
 				break;
 			case InputType::SWITCH:
 				$input_html = $this->render_switch();
+				break;
+			case InputType::DATE:
+			case InputType::DATE_TIME:
+				$input_html = $this->render_date_input();
 				break;
 			case InputType::SELECT:
 				$input_html = $this->render_select_input();
