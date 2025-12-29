@@ -414,8 +414,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       if (shouldTouch) this.touchedFields[name] = true;
       if (shouldDirty) this.dirtyFields[name] = true;
 
-      this.updateFieldRef(name);
-
       const fieldElement = this.fields[name]?.ref;
       if (fieldElement) {
         DOMUtils.updateElementValue(fieldElement, value);
@@ -431,7 +429,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     setFocus(name: string, options: FocusOptions = {}): void {
-      this.updateFieldRef(name);
       const field = this.fields[name];
       const fieldElement = field?.ref;
 
@@ -653,7 +650,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     updateAriaInvalidState(name: string): void {
-      this.updateFieldRef(name);
       const fieldRef = this.fields[name]?.ref;
       if (!fieldRef) return;
 
@@ -673,7 +669,6 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
     syncDOMWithState(): void {
       for (const [name, value] of Object.entries(this.values)) {
-        this.updateFieldRef(name);
         const fieldRef = this.fields[name]?.ref;
         if (fieldRef) {
           DOMUtils.updateElementValue(fieldRef, value);
