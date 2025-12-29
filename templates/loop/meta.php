@@ -23,7 +23,7 @@ $course_students   = apply_filters( 'tutor_course_students', tutor_utils()->coun
 <div class="tutor-meta tutor-course-card-meta tutor-mt-2 tutor-mb-2">
 	<?php if ( tutor_utils()->get_option( 'enable_course_total_enrolled' ) ) : ?>
 		<span class="tutor-course-meta-value"><?php echo esc_html( $course_students ); ?></span>
-		<span>Learners</span>
+		<span><?php esc_html_e( 'Learners', 'tutor' ); ?></span>
 	<?php endif; ?>
 
 	<?php if ( ! empty( $course_duration ) ) : ?>
