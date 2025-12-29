@@ -12,7 +12,7 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Template;
 
-global $tutor_course, $tutor_course_list_url, $tutor_current_content_id;
+global $tutor_course, $tutor_course_list_url, $tutor_current_content_id, $tutor_is_enrolled;
 
 $current_post = get_post( $tutor_current_content_id );
 $is_preview   = get_post_meta( $current_post->ID, '_is_preview', true );
@@ -86,7 +86,7 @@ $active_menu = Input::get( 'subpage', '' );
 
                                 $topic_item = get_post();
 
-								$can_access = ! $is_preview || $is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
+								$can_access = ! $is_preview || $tutor_is_enrolled || get_post_meta( $post->ID, '_is_preview', true ) || $is_public_course || $is_instructor_of_this_course;
 								$can_access = apply_filters( 'tutor_course/single/content/show_permalink', $can_access, get_the_ID() );
 								$can_access = null === $can_access ? true : $can_access;
 
