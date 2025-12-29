@@ -137,9 +137,6 @@ const announcementsPage = () => {
         };
 
         window.TutorCore.form.reset(formId, values);
-        Object.entries(values).forEach(([key, val]) => {
-          window.TutorCore.form.setValue(formId, key, val, { shouldValidate: true });
-        });
       }
     },
 
