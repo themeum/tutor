@@ -1,6 +1,7 @@
 import { type FormControlMethods } from '@Core/ts/components/form';
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Type Definitions
@@ -47,11 +48,13 @@ const announcementsPage = () => {
     } as AnnouncementFormData,
 
     get formTitle() {
-      return this.formData.action_type === 'create' ? 'Create Announcement' : 'Edit Announcement';
+      return this.formData.action_type === 'create'
+        ? __('Create Announcement', 'tutor')
+        : __('Edit Announcement', 'tutor');
     },
 
     get formActionText() {
-      return this.formData.action_type === 'create' ? 'Publish' : 'Update';
+      return this.formData.action_type === 'create' ? __('Publish', 'tutor') : __('Update', 'tutor');
     },
 
     init() {
@@ -62,7 +65,7 @@ const announcementsPage = () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to delete announcement');
+          window.TutorCore.toast.error(error.message || __('Failed to delete announcement', 'tutor'));
         },
       });
 
@@ -70,11 +73,11 @@ const announcementsPage = () => {
       this.createUpdateMutation = this.query.useMutation(this.createUpdateAnnouncement, {
         onSuccess: (response: AnnouncementResponse) => {
           window.TutorCore.modal.closeModal('tutor-announcement-form-modal');
-          window.TutorCore.toast.success(response.message || 'Operation successful');
+          window.TutorCore.toast.success(response.message || __('Operation successful', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to save announcement');
+          window.TutorCore.toast.error(error.message || __('Failed to save announcement', 'tutor'));
         },
       });
     },
