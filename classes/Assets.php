@@ -899,7 +899,7 @@ class Assets {
 			$load = false;
 		} else {
 			$is_learning_area   = tutor_utils()->is_learning_area();
-			$is_legacy_learning = true; // @TODO.
+			$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
 			if ( $is_learning_area && ! $is_legacy_learning ) {
 				$load = false;
 			}
