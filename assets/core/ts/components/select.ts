@@ -5,8 +5,8 @@
  * @since 4.0.0
  */
 
+import { type FormControlMethods } from '@Core/ts/components/form';
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { type FormControlMethods } from './form';
 
 export interface SelectOption {
   label: string;
