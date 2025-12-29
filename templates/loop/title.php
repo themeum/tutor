@@ -11,6 +11,6 @@
 
 ?>
 
-<h3 class="tutor-course-name tutor-text-p2 tutor-font-medium tutor-text-primary" title="<?php the_title(); ?>">
+<h3 class="tutor-course-name tutor-text-p2 tutor-font-medium tutor-text-primary tutor-mt-2" title="<?php the_title(); ?>">
 	<a href="<?php echo esc_url( get_the_permalink() ); ?>"><?php the_title(); ?></a>
 </h3>

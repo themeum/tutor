@@ -91,7 +91,7 @@
 
 	&-body {
 		flex: 1 1 auto;
-		padding: 0px $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-4;
+		padding: $tutor-spacing-none $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-4;
 	}
 
 	&-price {
@@ -100,26 +100,34 @@
 
 	&-price-original {
 		@include tutor-typography('tiny', 'regular', 'subdued');
-	}	
-}
-
-.tutor-course-card-footer {
-	.list-item-price,
-	.list-item-button,
-	>.tutor-course-list-btn {
-		padding: $tutor-spacing-4;
 	}
 
-	.list-item-button,
-	.tutor-course-list-btn {
-		border-top: 1px solid $tutor-border-idle;
+	.tutor-course-ratings {
+		padding-left: 4px;
 	}
 
-	// woo-commerce
-	.list-item-price {
-		ins {
-			text-decoration: none;
-			color: $tutor-text-primary;
+	.tutor-ratings-stars > * {
+		margin: 0 2px;
+	}
+
+	.tutor-course-card-footer {
+		.list-item-price,
+		.list-item-button,
+		>.tutor-course-list-btn {
+			padding: $tutor-spacing-4;
+		}
+	
+		.list-item-button,
+		.tutor-course-list-btn {
+			border-top: 1px solid $tutor-border-idle;
+		}
+	
+		// woo-commerce
+		.list-item-price {
+			ins {
+				text-decoration: none;
+				color: $tutor-text-primary;
+			}
 		}
 	}
 }
