@@ -293,7 +293,7 @@ class InputField extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $size = 'md';
+	protected $size = Size::MD;
 
 	/**
 	 * Options for select input field.
