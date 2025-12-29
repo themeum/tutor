@@ -1,0 +1,49 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-range-calendar-popover {
+  max-width: 700px;
+
+  [data-vc='calendar'] {
+    padding: $tutor-spacing-5;
+  }
+
+  .vc-layout {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: $tutor-spacing-6;
+  }
+
+  .vc-presets {
+    @include tutor-flex(column);
+
+    button {
+      @include tutor-button-reset();
+      @include tutor-typography(tiny, medium);
+      border-radius: $tutor-radius-sm;
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+      text-align: left;
+
+      &:hover {
+        background-color: $tutor-tab-sidebar-l2-hover;
+      }
+
+      &[data-active] {
+        background-color: $tutor-tab-sidebar-l2-active;
+        color: $tutor-text-brand;
+      }
+    }
+  }
+
+  .vc-main {
+    position: relative;
+  }
+
+  .vc-controls {
+    padding: $tutor-spacing-2 $tutor-spacing-none $tutor-spacing-none $tutor-spacing-none;
+  }
+
+  .vc-date__btn {
+    font-size: $tutor-font-size-small;
+  }
+}

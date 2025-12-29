@@ -113,6 +113,7 @@
     "react-use-measure": "^2.1.1",
     "stylis-plugin-rtl": "^2.1.1",
     "typescript": "^5.8.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "vanilla-calendar-pro": "^3.0.5"
   }
 }
