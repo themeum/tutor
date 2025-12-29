@@ -1212,7 +1212,7 @@ class Options_V2 {
 				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
 					// Experimental.
-					'block_appearance'   => array(
+					'block_appearance' => array(
 						'label'      => __( 'Appearance', 'tutor' ),
 						'slug'       => 'appearance',
 						'block_type' => 'uniform',
@@ -1227,7 +1227,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'block_course'   => array(
+					'block_course`'    => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
@@ -1286,7 +1286,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'layout'         => array(
+					'layout'           => array(
 						'label'      => __( 'Layout', 'tutor' ),
 						'slug'       => 'layout',
 						'block_type' => 'uniform',
@@ -1376,7 +1376,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'course-details' => array(
+					'course-details'   => array(
 						'label'      => __( 'Course Details', 'tutor' ),
 						'slug'       => 'course-details',
 						'block_type' => 'isolate',
@@ -1527,12 +1527,12 @@ class Options_V2 {
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
 										'desc'        => __( 'Enable to show course review section', 'tutor' ),
-									)
+									),
 								),
 							),
 						),
 					),
-					'colors'         => array(
+					'colors'           => array(
 						'label'        => __( 'Colors', 'tutor' ),
 						'slug'         => 'colors',
 						'block_type'   => 'color_picker',
