@@ -36,13 +36,11 @@ $course_students   = apply_filters( 'tutor_course_students', tutor_utils()->coun
 		</span>
 	<?php endif; ?>
 
-	<!-- <div> -->
-		<span class="tutor-course-card-separator"></span>
-		<?php esc_html_e( 'By', 'tutor' ); ?>
-		<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_html( get_the_author() ); ?></a>
-	<!-- </div> -->
+	<span class="tutor-course-card-separator"></span>
+	<?php esc_html_e( 'By', 'tutor' ); ?>
+	<a href="<?php echo esc_url( $profile_url ); ?>"><?php echo esc_html( get_the_author() ); ?></a>
 
-	<div>
+	<div class="tutor-mt-2">
 	<?php if ( ! empty( $course_categories ) && is_array( $course_categories ) && count( $course_categories ) ) : ?>
 		<?php esc_html_e( 'In', 'tutor' ); ?>
 		<?php
