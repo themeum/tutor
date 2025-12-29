@@ -1211,6 +1211,22 @@ class Options_V2 {
 				'template' => 'design',
 				'icon'     => 'tutor-icon-color-palette',
 				'blocks'   => array(
+					// Experimental.
+					'block_appearance'   => array(
+						'label'      => __( 'Appearance', 'tutor' ),
+						'slug'       => 'appearance',
+						'block_type' => 'uniform',
+						'fields'     => array(
+							array(
+								'key'         => 'is_legacy_learning_mode',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Legacy Learning Mode', 'tutor' ),
+								'label_title' => '',
+								'default'     => 'off',
+								'desc'        => __( 'If enabled, the course learning area will be back to the older system.', 'tutor' ),
+							),
+						),
+					),
 					'block_course'   => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
