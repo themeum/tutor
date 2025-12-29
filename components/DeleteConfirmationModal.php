@@ -61,7 +61,7 @@ class DeleteConfirmationModal extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $title = 'Delete This Item?';
+	protected $title;
 
 	/**
 	 * Confirmation message.
@@ -70,7 +70,7 @@ class DeleteConfirmationModal extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $message = 'Are you sure you want to delete this item permanently? Please confirm your choice.';
+	protected $message;
 
 	/**
 	 * Icon name from Icon class.
@@ -374,8 +374,8 @@ class DeleteConfirmationModal extends BaseComponent {
 			esc_attr( $alpine_json ),
 			$style_attr,
 			$icon_html,
-			esc_html( $this->title ),
-			esc_html( $this->message ),
+			esc_html( $this->title ?? __( 'Delete This Item?', 'tutor' ) ),
+			esc_html( $this->message ?? __( 'Are you sure you want to delete this item permanently? Please confirm your choice.', 'tutor' ) ),
 			esc_js( $this->id ),
 			esc_html( $this->cancel_text ),
 			esc_js( $this->mutation_state ),
