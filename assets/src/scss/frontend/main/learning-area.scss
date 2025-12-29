@@ -1,0 +1,12 @@
+// Learning Area Main Entry Point
+// Compiles all learning area related styles using core design tokens and mixins
+
+// Import design tokens and mixins from core (not the full main file)
+@use '@Core/scss/tokens';
+@use '@Core/scss/mixins';
+
+// Import shared components
+@use '../components';
+
+// Import learning area specific styles
+@use '../learning-area';
