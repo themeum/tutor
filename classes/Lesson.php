@@ -100,7 +100,7 @@ class Lesson extends Tutor_Base {
 
 		// Add lesson title as nav item on the learning area.
 		add_filter( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
-		add_filter( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
+		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
 	}
 
 	/**

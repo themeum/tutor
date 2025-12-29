@@ -12,9 +12,9 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Template;
 
-global $tutor_course, $tutor_course_list_url, $tutor_course_content_id;
+global $tutor_course, $tutor_course_list_url, $tutor_current_content_id;
 
-$current_post = get_post( $tutor_course_content_id );
+$current_post = get_post( $tutor_current_content_id );
 $is_preview   = get_post_meta( $current_post->ID, '_is_preview', true );
 $current_url  = trailingslashit( $tutor_course_list_url ) . $tutor_course->post_name;
 

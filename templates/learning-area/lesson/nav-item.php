@@ -11,7 +11,7 @@
 
 use TUTOR\Icon;
 
-global $tutor_course_content_id;
+global $tutor_current_content_id;
 
 $lesson     = $lesson ?? null;
 $can_access = $can_access ?? false;
@@ -22,9 +22,11 @@ if ( ! $lesson && ! is_a( $lesson, 'WP_Post' ) ) {
 
 $is_completed = tutor_utils()->is_completed_lesson( $lesson->ID );
 $lesson_title = $lesson->post_title;
+
+$active_class = $tutor_current_content_id === $lesson->ID ? 'active' : '';
 ?>
 
-<div class="tutor-learning-nav-item">
+<div class="<?php echo esc_html( sprintf( 'tutor-learning-nav-item %s', $active_class ) ); ?>">
 	<?php if ( $is_completed ) : ?>
 	<a href="<?php echo esc_url( $can_access ? get_permalink( $lesson->ID ) : '#' ); ?>">
 		<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_COLORIZE, 20, 20 ); ?>

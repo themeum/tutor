@@ -11,6 +11,11 @@
 
 use TUTOR\Icon;
 
+$lesson = $lesson ?? null;
+if ( ! $lesson || ! is_a( $lesson, 'WP_Post' ) ) {
+	return;
+}
+
 $tabs_data = array(
 	array(
 		'id'    => 'overview',
@@ -59,48 +64,16 @@ $tabs_data = array(
 
 		<div class="tutor-tabs-content tutor-p-6">
 			<div x-show="activeTab === 'overview'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				<h4 class="tutor-heading-4 tutor-mb-4">Learning the way of water</h4>
-				<p class="tutor-mb-6">I do a something I call a “twenty application test” every quarter
-					where I will send out my resume to 20 companies who are hiring designers to see if I can
-					make the cut. </p>
-				<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
-					resilience in both thought and action. Just as water carves through stone over time,
-					those who follow its path learn to navigate obstacles with patience and quiet strength.
-					It’s not about overpowering challenges, but moving with them—finding paths of least
-					resistance, bending when necessary, and returning to form when pressure subsides. Like a
-					stream that adapts to its landscape, learning the way of water teaches us to remain calm
-					under pressure and persistent through change. In this way, water becomes not just a
-					force of nature, but a quiet mentor in the art of living.</p>
-				<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
-					resilience in both thought and action. Just as water carves through stone over time,
-					those who follow its path learn to navigate obstacles with patience and quiet strength.
-					It’s not about overpowering challenges, but moving with them—finding paths of least
-					resistance, bending when necessary, and returning to form when pressure subsides. Like a
-					stream that adapts to its landscape, learning the way of water teaches us to remain calm
-					under pressure and persistent through change. In this way, water becomes not just a
-					force of nature, but a quiet mentor in the art of living.</p>
-				<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
-					resilience in both thought and action. Just as water carves through stone over time,
-					those who follow its path learn to navigate obstacles with patience and quiet strength.
-					It’s not about overpowering challenges, but moving with them—finding paths of least
-					resistance, bending when necessary, and returning to form when pressure subsides. Like a
-					stream that adapts to its landscape, learning the way of water teaches us to remain calm
-					under pressure and persistent through change. In this way, water becomes not just a
-					force of nature, but a quiet mentor in the art of living.</p>
-				<p class="tutor-mb-6">Learning the way of water is about embracing flow, adaptability, and
-					resilience in both thought and action. Just as water carves through stone over time,
-					those who follow its path learn to navigate obstacles with patience and quiet strength.
-					It’s not about overpowering challenges, but moving with them—finding paths of least
-					resistance, bending when necessary, and returning to form when pressure subsides. Like a
-					stream that adapts to its landscape, learning the way of water teaches us to remain calm
-					under pressure and persistent through change. In this way, water becomes not just a
-					force of nature, but a quiet mentor in the art of living.</p>
+				<h4 class="tutor-heading-4 tutor-mb-4">
+					<?php echo esc_html( $lesson->post_title ); ?>
+				</h4>
+				<?php echo wp_kses_post( $lesson->post_content ); ?>
 			</div>
 			<div x-show="activeTab === 'notes'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				Notes
+				<?php esc_html_e( 'Notes', 'tutor' ); ?>
 			</div>
 			<div x-show="activeTab === 'comments'" x-cloak class="tutor-tab-panel" role="tabpanel">
-				Comments
+				<?php esc_html_e( 'Comments', 'tutor' ); ?>
 			</div>
 		</div>
 	</div>
