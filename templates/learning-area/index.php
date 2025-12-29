@@ -37,10 +37,10 @@ $tutor_course_list_url   = tutor_utils()->course_archive_page_url();
 					if ( file_exists( $subpage_template ) ) {
 					    tutor_load_template( 'learning-area.subpages.' . $subpage );
 					} else {
-						tutor_load_template( 'learning-area.lesson.index' );
+						do_action( 'tutor_single_content_' . $tutor_post_type );
 					}
 				} else {
-					tutor_load_template( 'learning-area.lesson.index' );
+					do_action( 'tutor_single_content_' . $tutor_post_type );
 				}
 				?>
 			</div>

@@ -100,6 +100,7 @@ class Lesson extends Tutor_Base {
 
 		// Add lesson title as nav item on the learning area.
 		add_filter( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
+		add_filter( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
 	}
 
 	/**
@@ -771,12 +772,36 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param WP_Post $post Post object.
+	 * @param WP_Post $lesson Lesson post object.
 	 * @param bool    $can_access Can user access this content.
 	 *
 	 * @return void
 	 */
-	public function render_nav_item( $post, $can_access ): void {
-		tutor_load_template( 'learning-area.lesson.nav-item', compact( $post, $can_access ) );
+	public function render_nav_item( $lesson, $can_access ): void {
+		tutor_load_template(
+			'learning-area.lesson.nav-item',
+			array(
+				'lesson'     => $lesson,
+				'can_access' => $can_access,
+			)
+		);
+	}
+
+	/**
+	 * Return lesson title as nav item to print on the learning area
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $lesson Lesson post object.
+	 *
+	 * @return void
+	 */
+	public function render_single_content( $lesson ): void {
+		tutor_load_template(
+			'learning-area.lesson.content',
+			array(
+				'lesson' => $lesson,
+			)
+		);
 	}
 }

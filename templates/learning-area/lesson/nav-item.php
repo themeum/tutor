@@ -11,19 +11,30 @@
 
 use TUTOR\Icon;
 
+global $tutor_course_content_id;
+
+$lesson     = $lesson ?? null;
+$can_access = $can_access ?? false;
+
+if ( ! $lesson && ! is_a( $lesson, 'WP_Post' ) ) {
+	return;
+}
+
+$is_completed = tutor_utils()->is_completed_lesson( $lesson->ID );
+$lesson_title = $lesson->post_title;
 ?>
 
 <div class="tutor-learning-nav-item">
-	<a href="#">
+	<?php if ( $is_completed ) : ?>
+	<a href="<?php echo esc_url( $can_access ? get_permalink( $lesson->ID ) : '#' ); ?>">
 		<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_COLORIZE, 20, 20 ); ?>
-		<div>Introduction</div>
+		<div><?php echo esc_html( $lesson_title ); ?></div>
 	</a>
-</div>
-<div class="tutor-learning-nav-item active">
-	<a href="#">
+	<?php else : ?>
+	<a href="<?php echo esc_url( $can_access ? get_permalink( $lesson->ID ) : '#' ); ?>">
 		<div class="tutor-learning-nav-progress">
 			<div x-data="tutorStatics({ 
-				value: 65,
+				value: 0,
 				size: 'tiny',
 				type: 'progress',
 				showLabel: false,
@@ -32,6 +43,8 @@ use TUTOR\Icon;
 				<div x-html="render()"></div>
 			</div>
 		</div>
-		<div>Introduction</div>
+		<div><?php echo esc_html( $lesson_title ); ?></div>
 	</a>
+	<?php endif; ?>
 </div>
+
