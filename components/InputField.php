@@ -81,7 +81,6 @@ defined( 'ABSPATH' ) || exit;
  *     ->type( 'text' )
  *     ->name( 'username' )
  *     ->label( 'Username' )
- *     ->error( 'This field is required.' )
  *     ->render();
  *
  * // Select
@@ -177,15 +176,6 @@ class InputField extends BaseComponent {
 	 * @var string
 	 */
 	protected $help_text = '';
-
-	/**
-	 * Error message text.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $error = '';
 
 	/**
 	 * Whether input is required.
@@ -503,20 +493,6 @@ class InputField extends BaseComponent {
 	 */
 	public function collapsable( $close_on_select = false ): self {
 		$this->close_on_select = $close_on_select;
-		return $this;
-	}
-
-	/**
-	 * Set error message.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $error Error message.
-	 *
-	 * @return $this
-	 */
-	public function error( $error ) {
-		$this->error = $error;
 		return $this;
 	}
 
@@ -1290,14 +1266,15 @@ class InputField extends BaseComponent {
 				$clear_icon = ob_get_clean();
 			}
 			$clear_button_html = sprintf(
-				'<button type="button" class="tutor-input-clear-button" aria-label="Clear input">%s</button>',
+				'<button type="button" class="tutor-input-clear-button" x-show="values.%1$s && String(values.%1$s).length > 0" aria-label="Clear input" @click="setValue(\'%1$s\', \'\')">%2$s</button>',
+				esc_attr( $this->name ),
 				$clear_icon
 			);
 		}
 
 		return sprintf(
 			'<div class="tutor-input-wrapper">
-				<textarea %s %s>%s</textarea>
+				<textarea %s>%s</textarea>
 				%s
 			</div>',
 			$input_attrs,
@@ -1507,25 +1484,34 @@ class InputField extends BaseComponent {
 				break;
 		}
 
-		// Render help text or error.
-		$help_html = '';
-		if ( ! empty( $this->error ) ) {
-			$help_html = sprintf(
-				'<div class="tutor-error-text" role="alert" aria-live="polite">%s</div>',
-				$this->esc( $this->error )
-			);
-		} elseif ( ! empty( $this->help_text ) ) {
-			$help_html = sprintf(
-				'<div class="tutor-help-text">%s</div>',
-				$this->esc( $this->help_text )
-			);
-		}
+		$error_html = sprintf(
+			'<div 
+				class="tutor-error-text" 
+				x-cloak 
+				x-show="errors.%1$s" 
+				x-text="errors?.%1$s?.message" 
+				role="alert" 
+				aria-live="polite"
+			></div>',
+			esc_attr( $this->name )
+		);
+
+		$help_html = sprintf(
+			'<div
+				class="tutor-help-text"
+				x-show="!errors?.%1$s?.message"
+			>%2$s</div>',
+			esc_attr( $this->name ),
+			$this->esc( $this->help_text )
+		);
 
 		$this->component_string = sprintf(
-			'<div class="%s">%s%s%s</div>',
+			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }">%s%s%s%s</div>',
 			esc_attr( $field_classes ),
+			esc_attr( $this->name ),
 			$label_html,
 			$input_html,
+			$error_html,
 			$help_html
 		);
 
