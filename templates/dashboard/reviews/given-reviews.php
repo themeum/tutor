@@ -1,16 +1,17 @@
 <?php
 /**
- * Tutor dashboard reviews.
+ *  Tutor dashboard reviews.
  *
- * @package Tutor\Templates
- * @author Themeum <support@themeum.com>
- * @link https://themeum.com
- * @since 4.0.0
+ *  @package Tutor\Templates
+ *  @author Themeum <support@themeum.com>
+ *  @link https://themeum.com
+ *  @since 4.0.0
  */
 
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Modal;
+use Tutor\Components\Pagination;
 
 // Pagination Variable.
 $pagination_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
@@ -39,19 +40,40 @@ $converted_reviews = array_map(
 );
 
 $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
-
 ?>
-<div class="tutor-user-reviews">
-	<div class="tutor-profile-container">
-		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
-			<?php foreach ( $converted_reviews as $review ) : ?>
-				<?php tutor_load_template( 'dashboard.reviews.review-card', array( 'review' => $review ) ); ?>
-			<?php endforeach; ?>
+
+<?php if ( $all_reviews->count > 0 ) : ?>
+	<div class="tutor-user-reviews">
+		<div class="tutor-profile-container">
+			<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
+				<?php foreach ( $converted_reviews as $review ) : ?>
+					<?php tutor_load_template( 'dashboard.reviews.review-card', array( 'review' => $review ) ); ?>
+				<?php endforeach; ?>
+			</div>
+
+			<?php if ( $all_reviews->count > $pagination_per_page ) : ?>
+				<div class="tutor-mt-6">
+					<?php
+						Pagination::make()
+						->current( $current_page )
+						->total( $all_reviews->count )
+						->limit( $pagination_per_page )
+						->render();
+					?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
-</div>
+<?php else : ?>
+	<?php
+		EmptyState::make()
+			->title( 'No Reviews Found' )
+			->render();
+	?>
+<?php endif; ?>
 
-<?php Modal::make()
+<?php
+Modal::make()
 	->id( 'review-delete-modal' )
 	->width( '426px' )
 	->body(

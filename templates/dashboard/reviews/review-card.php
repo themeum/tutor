@@ -28,13 +28,6 @@ $default_review = array(
 
 $review = wp_parse_args( $review, $default_review );
 
-$converted_review = array(
-	'id'            => $review['id'],
-	'courseId'      => $review['post_id'],
-	'rating'        => $review['rating'],
-	'reviewContent' => $review['review_content'],
-);
-
 $form_id         = "review-form-{$review['id']}";
 $delete_modal_id = 'review-delete-modal';
 ?>
@@ -140,7 +133,7 @@ $delete_modal_id = 'review-delete-modal';
 			x-data='tutorForm({
 				id: "<?php echo esc_attr( $form_id ); ?>",
 				mode: "onBlur",
-				defaultValues: <?php echo wp_json_encode( $converted_review ); ?>,
+				defaultValues: <?php echo wp_json_encode( $review ); ?>,
 			})'
 			x-bind="getFormBindings()"
 			@submit.prevent="handleSubmit(
@@ -160,10 +153,10 @@ $delete_modal_id = 'review-delete-modal';
 			<?php
 				InputField::make()
 					->type( 'textarea' )
-					->name( 'reviewContent' )
+					->name( 'review_content' )
 					->required()
 					->clearable()
-					->attr( 'x-bind', "register('reviewContent', { required: '" . esc_js( __( 'Review content is required', 'tutor' ) ) . "' })" )
+					->attr( 'x-bind', "register('review_content', { required: '" . esc_js( __( 'Review content is required', 'tutor' ) ) . "' })" )
 					->attr( '@keydown.meta.enter.prevent', 'handleSubmit((data) => handleReviewSubmit(data))' )
 					->attr( '@keydown.ctrl.enter.prevent', 'handleSubmit((data) => handleReviewSubmit(data))' )
 					->render();

@@ -6,9 +6,9 @@ import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ReviewFormProps {
   id?: string;
-  courseId: string;
+  post_id: string;
   rating: string;
-  reviewContent: string;
+  review_content: string;
 }
 
 interface ReviewPayload {
@@ -119,9 +119,9 @@ const reviewCard = (id: string) => {
     convertFormDataToPayload(data: ReviewFormProps): ReviewPayload {
       return {
         ...(data.id && { review_id: data.id }),
-        course_id: data.courseId,
+        course_id: data.post_id,
         tutor_rating_gen_input: data.rating,
-        review: data.reviewContent,
+        review: data.review_content,
       };
     },
 
