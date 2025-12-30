@@ -12,6 +12,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+use TUTOR\Icon;
 
 // Default values - all data must be passed from parent.
 $rating              = isset( $rating ) ? floatval( $rating ) : 0.00;
@@ -19,7 +20,6 @@ $wrapper_class       = isset( $wrapper_class ) ? $wrapper_class : 'tutor-ratings
 $show_rating_average = isset( $show_rating_average ) ? (bool) $show_rating_average : false;
 $icon_size           = 16;
 
-use TUTOR\Icon;
 
 $star_fill = tutor_utils()->get_svg_icon( Icon::STAR_FILL, $icon_size, $icon_size );
 $star_half = tutor_utils()->get_svg_icon( Icon::STAR_HALF, $icon_size, $icon_size );
