@@ -34,7 +34,7 @@ const getCurrentPage = (): string => {
   }
 
   // Check for legacy query parameters
-  const pageParam = params.get('tutor_dashboard_page') || params.get('page');
+  const pageParam = params.get('subpage');
   if (pageParam) {
     return pageParam;
   }
@@ -69,6 +69,7 @@ const initializeDashboard = () => {
   // Initialize page-specific functionality
   switch (currentPage) {
     case 'home':
+    case 'dashboard':
       initializeOverview();
       initializeHome();
       break;
