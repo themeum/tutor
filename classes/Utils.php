@@ -2916,7 +2916,7 @@ class Utils {
 		// @TODO need to make it dynamic with account view as mode.
 		// $view_mode = 'student';
 		// if ( User::is_admin() || User::is_instructor() ) {
-		// 	$view_mode = 'instructor';
+		// $view_mode = 'instructor';
 		// }
 
 		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
@@ -5515,6 +5515,25 @@ class Utils {
 	}
 
 	/**
+	 * Check if the current page is the frontend's course list page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_course_list_page(): bool {
+		global $wp;
+
+		$current_url    = trailingslashit( home_url( add_query_arg( array(), $wp->request ) ) );
+		$is_course_list = $this->course_archive_page_url() === $current_url;
+
+		return apply_filters(
+			'tutor_is_course_list_page',
+			$is_course_list
+		);
+	}
+
+	/**
 	 * Check if the current page is the part of learning area
 	 *
 	 * @since 4.0.0
@@ -5522,8 +5541,28 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_learning_area(): bool {
-		// @TODO.
-		return true;
+		$post_types = array(
+			tutor()->lesson_post_type,
+			tutor()->quiz_post_type,
+			tutor()->assignment_post_type,
+			tutor()->zoom_post_type,
+			tutor()->meet_post_type,
+		);
+
+		$current_post_type = get_post_type();
+
+		if ( is_single() && ! empty( $current_post_type ) ) {
+			if ( in_array( $current_post_type, $post_types, true ) ) {
+				return true;
+			} elseif ( tutor()->course_post_type === $current_post_type ) {
+				// Check if the subpage is belongs to learning area.
+				$learning_subpage = Input::get( 'subpage' );
+				$allowed_subpages = array_keys( Template::make_learning_area_sub_page_nav_items() );
+				return in_array( $learning_subpage, $allowed_subpages, true );
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -9383,7 +9422,7 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'index'   => array(
+			'index'         => array(
 				'title'    => __( 'Home', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => Icon::HOME_FILL,
@@ -9420,7 +9459,7 @@ class Utils {
 				'icon'     => Icon::NOTIFICATION,
 			),
 		);
-		
+
 		if ( $this->should_show_dicussion_menu() ) {
 			$other_menus['discussions'] = array(
 				'title'    => __( 'Discussions', 'tutor' ),
@@ -9435,7 +9474,7 @@ class Utils {
 	/**
 	 * Should show the disscussion menu on the student
 	 * and instructor dashboard menu
-	 * 
+	 *
 	 * @since 4.0.0
 	 *
 	 * @return boolean
@@ -9736,7 +9775,7 @@ class Utils {
 	 *
 	 * @return string
 	 */
-	public function get_svg_icon( $name = '', $width = 16, $height = 16,  $attributes = array() ) {
+	public function get_svg_icon( $name = '', $width = 16, $height = 16, $attributes = array() ) {
 
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {

@@ -42,10 +42,10 @@ class Template extends Tutor_Base {
 
 		add_filter( 'template_include', array( $this, 'load_course_archive_template' ), 99 );
 		add_filter( 'template_include', array( $this, 'load_single_course_template' ), 99 );
-		add_filter( 'template_include', array( $this, 'load_single_lesson_template' ), 99 );
 		add_filter( 'template_include', array( $this, 'play_private_video' ), 99 );
-		add_filter( 'template_include', array( $this, 'load_quiz_template' ), 99 );
-		add_filter( 'template_include', array( $this, 'load_assignment_template' ), 99 );
+		add_filter( 'tutor_single_content_template', array( $this, 'load_single_lesson_template' ), 99, 2 );
+		add_filter( 'tutor_single_content_template', array( $this, 'load_quiz_template' ), 99, 2 );
+		add_filter( 'tutor_single_content_template', array( $this, 'load_assignment_template' ), 99, 2 );
 
 		add_filter( 'template_include', array( $this, 'student_public_profile' ), 99 );
 		add_filter( 'template_include', array( $this, 'tutor_dashboard' ), 99 );
@@ -53,6 +53,7 @@ class Template extends Tutor_Base {
 
 		add_filter( 'the_content', array( $this, 'convert_static_page_to_template' ) );
 		add_action( 'pre_get_posts', array( $this, 'limit_course_query_archive' ), 99 );
+		add_filter( 'template_include', array( $this, 'load_learning_template' ) );
 	}
 
 	/**
@@ -162,14 +163,23 @@ class Template extends Tutor_Base {
 	 */
 	public function load_single_course_template( $template ) {
 		global $wp_query;
-
 		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->course_post_type ) {
-			do_action( 'single_course_template_before_load', get_the_ID() );
-			wp_reset_query();
-			return tutor_get_template( 'single-course' );
+			// Check if the slug contains subpage of learning area.
+			$learning_area_subpages = self::make_learning_area_sub_page_nav_items();
+			$subpage                = Input::get( 'subpage' );
+			$subpage_slugs          = array_keys( $learning_area_subpages );
+
+			if ( in_array( $subpage, $subpage_slugs, true ) ) {
+				$template = tutor_get_template( 'learning-area.index' );
+			} else {
+				do_action( 'single_course_template_before_load', get_the_ID() );
+				wp_reset_query();
+				$template = tutor_get_template( 'single-course' );
+			}
 		}
 
 		return $template;
+
 	}
 
 	/**
@@ -191,18 +201,21 @@ class Template extends Tutor_Base {
 	 *
 	 * @since v.1.0.0
 	 *
+	 * @since 4.0.0 Post type argument added
+	 *
 	 * @param string $template template name to load.
+	 * @param string $post_type Post type added.
 	 *
 	 * @return bool|string
 	 */
-	public function load_single_lesson_template( $template ) {
-		global $wp_query;
+	public function load_single_lesson_template( $template, $post_type ) {
+		if ( tutor()->lesson_post_type !== $post_type ) {
+			return $template;
+		}
 
-		$post_type = get_query_var( 'post_type' );
+		$is_lesson_post_type = apply_filters( 'tutor_is_lesson_post_type', true, $post_type );
 
-		$is_lesson_post_type = apply_filters( 'tutor_is_lesson_post_type', $wp_query->query_vars['post_type'] === $this->lesson_post_type, $post_type );
-
-		if ( $wp_query->is_single && ! empty( $post_type ) && $is_lesson_post_type ) {
+		if ( $is_lesson_post_type ) {
 			$page_id = get_the_ID();
 
 			do_action( 'tutor_lesson_load_before', $template );
@@ -228,6 +241,7 @@ class Template extends Tutor_Base {
 
 			return apply_filters( 'tutor_lesson_template', $template );
 		}
+
 		return $template;
 	}
 
@@ -395,31 +409,35 @@ class Template extends Tutor_Base {
 	 * If course public then enrollment not required
 	 *
 	 * @since 2.0.2
+	 * @since 4.0.0 $post_type param added.
 	 *
 	 * @param string $template template to load.
+	 * @param string $post_type Post type.
 	 *
 	 * @return bool|string
 	 */
-	public function load_quiz_template( $template ) {
-		global $wp_query, $post;
-
-		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && 'tutor_quiz' === $wp_query->query_vars['post_type'] ) {
-			if ( is_user_logged_in() ) {
-				$has_content_access = tutor_utils()->has_enrolled_content_access( 'quiz' );
-				$course_id          = tutor_utils()->get_course_id_by_content( $post );
-				$is_public          = Course_List::is_public( $course_id );
-
-				// if public course don't need to be enrolled.
-				if ( $has_content_access || $is_public ) {
-					$template = tutor_get_template( 'single-quiz' );
-				} else {
-					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
-				}
-			} else {
-				$template = tutor_get_template( 'login' );
-			}
+	public function load_quiz_template( $template, $post_type ) {
+		if ( tutor()->quiz_post_type !== $post_type ) {
 			return $template;
 		}
+
+		global $post;
+
+		if ( is_user_logged_in() ) {
+			$has_content_access = tutor_utils()->has_enrolled_content_access( 'quiz' );
+			$course_id          = tutor_utils()->get_course_id_by_content( $post );
+			$is_public          = Course_List::is_public( $course_id );
+
+			// if public course don't need to be enrolled.
+			if ( $has_content_access || $is_public ) {
+				$template = tutor_get_template( 'single-quiz' );
+			} else {
+				$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
+			}
+		} else {
+			$template = tutor_get_template( 'login' );
+		}
+
 		return $template;
 	}
 
@@ -428,25 +446,27 @@ class Template extends Tutor_Base {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 4.0.0 Post type.
+	 *
 	 * @param string $template template file to load.
+	 * @param string $post_type Post type.
 	 *
 	 * @return string template path
 	 */
-	public function load_assignment_template( $template ) {
-		global $wp_query;
-
-		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && 'tutor_assignments' === $wp_query->query_vars['post_type'] ) {
-			if ( is_user_logged_in() ) {
-				$has_content_access = tutor_utils()->has_enrolled_content_access( 'assignment' );
-				if ( $has_content_access ) {
-					$template = tutor_get_template( 'single-assignment' );
-				} else {
-					$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
-				}
-			} else {
-				$template = tutor_get_template( 'login' );
-			}
+	public function load_assignment_template( $template, $post_type ) {
+		if ( tutor()->lesson_post_type !== $post_type ) {
 			return $template;
+		}
+
+		if ( is_user_logged_in() ) {
+			$has_content_access = tutor_utils()->has_enrolled_content_access( 'assignment' );
+			if ( $has_content_access ) {
+				$template = tutor_get_template( 'single-assignment' );
+			} else {
+				$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
+			}
+		} else {
+			$template = tutor_get_template( 'login' );
 		}
 
 		return $template;
@@ -492,5 +512,76 @@ class Template extends Tutor_Base {
 			}
 		}
 		return '';
+	}
+
+	/**
+	 * Load learning template
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $template template to load.
+	 *
+	 * @return string
+	 */
+	public function load_learning_template( string $template ): string {
+		if ( tutor_utils()->is_learning_area() ) {
+			$post_type   = get_post_type();
+			$legacy_mode = tutor_utils()->get_option( 'is_legacy_learning_mode', false );
+
+			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );
+			tutor_get_template( 'single-course' );
+			if ( $legacy_mode ) {
+				$template = $template_path;
+			} else {
+				$template = tutor_get_template( 'learning-area.index' );
+			}
+		}
+
+		return $template;
+	}
+
+	/**
+	 * Make learning area sub pages nav items
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $base_url Nav items base url.
+	 *
+	 * @return array
+	 */
+	public static function make_learning_area_sub_page_nav_items( $base_url = '' ): array {
+		if ( empty( $base_url ) ) {
+			$base_url = get_permalink();
+		}
+
+		$menu_items = array(
+			'resources'   => array(
+				'title' => esc_html__( 'Resources', 'tutor' ),
+				'icon'  => Icon::RESOURCES,
+				'url'   => esc_url( add_query_arg( 'subpage', 'resources', $base_url ) ),
+			),
+			'qna'         => array(
+				'title' => esc_html__( 'Q&A', 'tutor' ),
+				'icon'  => Icon::QA,
+				'url'   => esc_url( add_query_arg( 'subpage', 'qna', $base_url ) ),
+			),
+			'course-info' => array(
+				'title' => esc_html__( 'Course Info', 'tutor' ),
+				'icon'  => Icon::INFO_OCTAGON,
+				'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $base_url ) ),
+			),
+			'webinar'     => array(
+				'title' => esc_html__( 'Webinar', 'tutor' ),
+				'icon'  => Icon::VIDEO_CAMERA_2,
+				'url'   => esc_url( add_query_arg( 'subpage', 'webinar', $base_url ) ),
+			),
+			'certificate' => array(
+				'title' => esc_html__( 'Certificate', 'tutor' ),
+				'icon'  => Icon::CERTIFICATE_2,
+				'url'   => esc_url( add_query_arg( 'subpage', 'certificate', $base_url ) ),
+			),
+		);
+
+		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items );
 	}
 }
