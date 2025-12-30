@@ -5523,6 +5523,25 @@ class Utils {
 	}
 
 	/**
+	 * Check if the current page is the frontend's course list page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_course_list_page(): bool {
+		global $wp;
+
+		$current_url    = trailingslashit( home_url( add_query_arg( array(), $wp->request ) ) );
+		$is_course_list = $this->course_archive_page_url() === $current_url;
+
+		return apply_filters(
+			'tutor_is_course_list_page',
+			$is_course_list
+		);
+	}
+
+	/**
 	 * Check if the current page is the part of learning area
 	 *
 	 * @since 4.0.0
