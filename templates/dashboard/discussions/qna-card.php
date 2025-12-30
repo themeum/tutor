@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
+use Tutor\Helpers\UrlHelper;
 
 $context      = 'frontend-dashboard-qna-table-' . $view_as;
 $key_slug     = 'frontend-dashboard-qna-table-student' === $context ? '_' . $current_user_id : '';
@@ -29,12 +30,12 @@ if ( ! empty( $answers ) ) {
 	$last_reply = $answers[0];
 }
 
-$replies_url = add_query_arg(
+$replies_url = UrlHelper::prepare(
+	$discussion_url,
 	array(
 		'tab'     => 'qna',
 		'replies' => $question->comment_ID,
-	),
-	$discussion_url
+	)
 );
 ?>
 <div class="tutor-qna-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
