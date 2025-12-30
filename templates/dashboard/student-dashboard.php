@@ -14,14 +14,18 @@ use Tutor\Models\CourseModel;
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
-	if ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
+
+	$photo_data = $profile_completion['_tutor_profile_photo'] ?? array();
+	$is_set     = $photo_data['is_set'] ?? null;
+	$text       = $photo_data['text'] ?? '';
+	if ( empty( $is_set ) ) {
 		?>
 		<div class="tutor-border tutor-mb-7 tutor-rounded-2xl tutor-surface-l1 tutor-p-5">
 			<div class="tutor-flex tutor-items-center tutor-justify-between">
 				<div class="tutor-flex tutor-items-center tutor-gap-2">
 					<?php tutor_utils()->render_svg_icon( Icon::INFO, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
 					<span class="tutor-small">
-						<?php echo esc_html( $profile_completion['_tutor_profile_photo']['text'] ); ?>
+						<?php echo esc_html( $text ); ?>
 					</span>
 				</div>
 				<a href="<?php echo esc_attr( tutor_utils()->tutor_dashboard_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
