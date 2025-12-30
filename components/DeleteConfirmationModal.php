@@ -346,7 +346,7 @@ class DeleteConfirmationModal extends BaseComponent {
 
 							<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
 								%s
-								<h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
+								<h5 class="tutor-h5 tutor-font-medium tutor-mt-7">
 									%s
 								</h5>
 								<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">
@@ -354,16 +354,16 @@ class DeleteConfirmationModal extends BaseComponent {
 								</p>
 							</div>
 
-							<div class="tutor-modal-footer">
-								<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal(\'%s\')">
-									%s
-								</button>
+							<div class="tutor-grid tutor-grid-cols-2 tutor-gap-6 tutor-px-7 tutor-pb-6">
 								<button 
-									class="tutor-btn tutor-btn-destructive tutor-btn-small"
+									class="tutor-btn tutor-btn-secondary tutor-btn-small"
 									:class="%s?.isPending ? \'tutor-btn-loading\' : \'\'"
 									@click="%s"
 									:disabled="%s?.isPending"
 								>
+									%s
+								</button>
+								<button class="tutor-btn tutor-btn-primary tutor-btn-small" @click="TutorCore.modal.closeModal(\'%s\')">
 									%s
 								</button>
 							</div>
@@ -376,12 +376,12 @@ class DeleteConfirmationModal extends BaseComponent {
 			$icon_html,
 			esc_html( $this->title ?? __( 'Delete This Item?', 'tutor' ) ),
 			esc_html( $this->message ?? __( 'Are you sure you want to delete this item permanently? Please confirm your choice.', 'tutor' ) ),
-			esc_js( $this->id ),
-			esc_html( $this->cancel_text ),
 			esc_js( $this->mutation_state ),
 			$delete_call,
 			esc_js( $this->mutation_state ),
-			esc_html( $this->confirm_text )
+			esc_html( $this->confirm_text ),
+			esc_js( $this->id ),
+			esc_html( $this->cancel_text ),
 		);
 
 		return $this->component_string;
