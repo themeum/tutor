@@ -1227,7 +1227,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'block_course`'    => array(
+					'block_course'    => array(
 						'label'      => __( 'Course', 'tutor' ),
 						'slug'       => 'course',
 						'block_type' => 'uniform',
