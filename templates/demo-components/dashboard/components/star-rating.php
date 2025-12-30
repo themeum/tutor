@@ -16,23 +16,28 @@ if ( ! defined( 'ABSPATH' ) ) {
 // Default values - all data must be passed from parent.
 $rating              = isset( $rating ) ? floatval( $rating ) : 0.00;
 $wrapper_class       = isset( $wrapper_class ) ? $wrapper_class : 'tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2';
-$icon_class          = isset( $icon_class ) ? $icon_class : 'tutor-icon-exception4';
 $show_rating_average = isset( $show_rating_average ) ? (bool) $show_rating_average : false;
+$icon_size           = 16;
+
+use TUTOR\Icon;
+
+$star_fill = tutor_utils()->get_svg_icon( Icon::STAR_FILL, $icon_size, $icon_size );
+$star_half = tutor_utils()->get_svg_icon( Icon::STAR_HALF, $icon_size, $icon_size );
+$star      = tutor_utils()->get_svg_icon( Icon::STAR_2, $icon_size, $icon_size );
 ?>
 <div class="<?php echo esc_attr( $wrapper_class ); ?>" data-rating-value="<?php echo esc_attr( $rating ); ?>">
 	<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
-		<?php
-		$icon_class_name = '';
-		if ( (int) $rating >= $i ) {
-			$icon_class_name = 'tutor-icon-star-bold tutor-icon-exception4';
-		} elseif ( ( $rating - $i ) >= -0.5 ) {
-			$icon_class_name = 'tutor-icon-star-half-bold tutor-icon-exception4';
-		} else {
-			$icon_class_name = 'tutor-icon-star-line tutor-icon-exception4';
-		}
-		$final_class = ! empty( $icon_class ) ? $icon_class_name . ' ' . $icon_class : $icon_class_name;
-		?>
-		<i class="<?php echo esc_attr( $final_class ); ?>" data-rating-value="<?php echo esc_attr( $i ); ?>"></i>
+		<span class="tutor-icon-exception4 tutor-flex-center">
+			<?php
+			if ( (int) $rating >= $i ) {
+				echo $star_fill; // phpcs:ignore
+			} elseif ( ( $rating - $i ) >= -0.5 ) {
+				echo $star_half; // phpcs:ignore
+			} else {
+				echo $star; // phpcs:ignore
+			}
+			?>
+		</span>
 	<?php endfor; ?>
 	<?php if ( $show_rating_average ) : ?>
 		<div class="tutor-ratings-average">
