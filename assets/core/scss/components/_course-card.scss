@@ -7,7 +7,7 @@
 .tutor-course-card {
 	height: 100%;
 	transition: background-color 0.2s ease;
-	border: 1px solid var(--tutor-border-idle);
+	border: 1px solid $tutor-border-idle;
 	display: flex;
 	flex-direction: column;
 
@@ -103,11 +103,11 @@
 	}
 
 	.tutor-course-ratings {
-		padding-left: 4px;
+		padding-left: $tutor-spacing-2;
 	}
 
 	.tutor-ratings-stars > * {
-		margin: 0 2px;
+		margin: $tutor-spacing-none $tutor-spacing-1;
 	}
 
 	.tutor-course-card-footer {
