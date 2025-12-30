@@ -16,8 +16,8 @@
     width: var(--tutor-progress-width);
     background-color: $tutor-actions-success-primary;
     border-radius: inherit;
-    transition: width 0.3s ease;
     position: relative;
+    @include tutor-transition(width, 0.3s);
 
     &::before {
       content: '';

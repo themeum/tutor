@@ -17,8 +17,8 @@
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-md;
     cursor: pointer;
-    transition: all 0.2s ease;
     text-align: left;
+    @include tutor-transition();
 
     &:focus {
       @include tutor-focus-ring();
@@ -102,7 +102,7 @@
       padding: 0;
       color: $tutor-icon-secondary;
       cursor: pointer;
-      transition: color 0.2s ease;
+      @include tutor-transition(color);
 
       &:hover {
         color: $tutor-icon-critical;
@@ -121,17 +121,17 @@
     @include tutor-button-base;
     @include tutor-button-variant('ghost');
     @include tutor-flex(row, center, center);
+    @include margin-end($tutor-spacing-2);
     padding: 0;
     color: $tutor-icon-secondary;
     cursor: pointer;
-    transition: color 0.2s ease;
-    @include margin-end($tutor-spacing-2);
+    @include tutor-transition(color);
   }
 
   &-arrow {
     @include tutor-flex(row, center, center);
     color: $tutor-icon-secondary;
-    transition: transform 0.2s ease;
+    @include tutor-transition(transform);
 
     &[data-open='true'] {
       transform: rotate(180deg);
@@ -237,8 +237,8 @@
     gap: $tutor-spacing-3;
     padding: $tutor-spacing-4 $tutor-spacing-5;
     cursor: pointer;
-    transition: background-color 0.15s ease;
     position: relative;
+    @include tutor-transition(background-color);
 
     &-icon {
       flex-shrink: 0;

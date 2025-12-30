@@ -61,7 +61,7 @@
           @include tutor-flex-center();
 
           svg {
-            transition: transform 0.25s ease-in-out;
+            @include tutor-transition(transform);
 
             @include tutor-breakpoint-down(sm) {
               height: 20px;
