@@ -22,28 +22,27 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * // Example usage:
  *
- * DeleteConfirmationModal::make()
+ * ConfirmationModal::make()
  *     ->id( 'delete-course-modal' )
  *     ->title( 'Delete This Course?' )
  *     ->message( 'Are you sure you want to delete this course permanently? Please confirm your choice.' )
- *     ->delete_handler( 'handleDeleteCourse' )
+ *     ->confirm_handler( 'handleDeleteCourse(payload?.courseId)' )
  *     ->mutation_state( 'deleteMutation' )
- *     ->payload_key( 'courseId' )
  *     ->render();
  *
  * // With custom icon
- * DeleteConfirmationModal::make()
+ * ConfirmationModal::make()
  *     ->id( 'delete-announcement-modal' )
  *     ->title( 'Delete This Announcement?' )
  *     ->message( 'This action cannot be undone.' )
  *     ->icon( Icon::DELETE_2, 80, 80 )
- *     ->delete_handler( 'handleDeleteAnnouncement' )
+ *     ->confirm_handler( 'handleDeleteAnnouncement(payload?.announcementId)' )
  *     ->render();
  * ```
  *
  * @since 4.0.0
  */
-class DeleteConfirmationModal extends BaseComponent {
+class ConfirmationModal extends BaseComponent {
 
 	/**
 	 * Modal unique ID.
@@ -106,7 +105,7 @@ class DeleteConfirmationModal extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $delete_handler = '';
+	protected $confirm_handler = '';
 
 	/**
 	 * Mutation state variable name (e.g., 'deleteMutation').
@@ -116,15 +115,6 @@ class DeleteConfirmationModal extends BaseComponent {
 	 * @var string
 	 */
 	protected $mutation_state = 'deleteMutation';
-
-	/**
-	 * Payload key to pass to delete handler (e.g., 'courseId', 'announcementId').
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $payload_key = 'id';
 
 	/**
 	 * Cancel button text.
@@ -222,8 +212,8 @@ class DeleteConfirmationModal extends BaseComponent {
 	 *
 	 * @return $this
 	 */
-	public function delete_handler( string $handler ) {
-		$this->delete_handler = $handler;
+	public function confirm_handler( string $handler ) {
+		$this->confirm_handler = $handler;
 		return $this;
 	}
 
@@ -238,20 +228,6 @@ class DeleteConfirmationModal extends BaseComponent {
 	 */
 	public function mutation_state( string $state ) {
 		$this->mutation_state = $state;
-		return $this;
-	}
-
-	/**
-	 * Set payload key.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $key Payload key name.
-	 *
-	 * @return $this
-	 */
-	public function payload_key( string $key ) {
-		$this->payload_key = $key;
 		return $this;
 	}
 
@@ -331,11 +307,6 @@ class DeleteConfirmationModal extends BaseComponent {
 		tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
 		$icon_html = ob_get_clean();
 
-		// Build delete handler call.
-		$delete_call = $this->delete_handler
-			? sprintf( '%s(payload?.%s)', esc_js( $this->delete_handler ), esc_js( $this->payload_key ) )
-			: '';
-
 		$this->component_string = sprintf(
 			'<div x-data="tutorModal(%s)" x-cloak>
 				<template x-teleport="body">
@@ -377,7 +348,7 @@ class DeleteConfirmationModal extends BaseComponent {
 			esc_html( $this->title ?? __( 'Delete This Item?', 'tutor' ) ),
 			esc_html( $this->message ?? __( 'Are you sure you want to delete this item permanently? Please confirm your choice.', 'tutor' ) ),
 			esc_js( $this->mutation_state ),
-			$delete_call,
+			$this->confirm_handler,
 			esc_js( $this->mutation_state ),
 			esc_html( $this->confirm_text ),
 			esc_js( $this->id ),

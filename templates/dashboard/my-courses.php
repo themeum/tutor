@@ -11,7 +11,7 @@
 
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
-use Tutor\Components\DeleteConfirmationModal;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Nav;
 use Tutor\Components\Pagination;
@@ -365,13 +365,12 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 
 	<?php if ( ! empty( $results ) && $show_course_delete ) : ?>
 		<?php
-		DeleteConfirmationModal::make()
+		ConfirmationModal::make()
 			->id( 'tutor-course-delete-modal' )
 			->title( __( 'Delete This Course?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) )
-			->delete_handler( 'handleDeleteCourse' )
-			->mutation_state( 'deleteMutation' )
-			->payload_key( 'courseId' )
+			->confirm_handler( 'handleDeleteCourse' )
+			->mutation_state( 'deleteMutation(payload?.courseId)' )
 			->render();
 		?>
 	<?php endif; ?>

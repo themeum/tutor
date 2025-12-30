@@ -13,7 +13,7 @@ use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\CourseFilter;
-use Tutor\Components\DeleteConfirmationModal;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\PreviewTrigger;
@@ -198,13 +198,12 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 
 	<?php if ( ! empty( $announcements ) ) : ?>
 		<?php
-		DeleteConfirmationModal::make()
+		ConfirmationModal::make()
 			->id( 'tutor-announcement-delete-modal' )
 			->title( __( 'Delete This Announcement?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this announcement permanently? Please confirm your choice.', 'tutor' ) )
-			->delete_handler( 'handleDeleteAnnouncement' )
+			->confirm_handler( 'handleDeleteAnnouncement(payload?.announcementId)' )
 			->mutation_state( 'deleteMutation' )
-			->payload_key( 'announcementId' )
 			->render();
 		?>
 	<?php endif; ?>
