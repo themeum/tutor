@@ -14,8 +14,10 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-interface ProIdentifierModalProps
-  extends Omit<ModalProps, 'entireHeader' | 'headerChildren' | 'icon' | 'subtitle' | 'actions'> {
+interface ProIdentifierModalProps extends Omit<
+  ModalProps,
+  'entireHeader' | 'headerChildren' | 'icon' | 'subtitle' | 'actions'
+> {
   image?: string;
   image2x?: string;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

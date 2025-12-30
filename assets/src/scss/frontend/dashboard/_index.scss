@@ -16,7 +16,6 @@
 @forward "star-rating";
 
 // Page components
-@forward 'overview';
 @forward 'my-courses';
 @forward 'assignments';
 @forward 'quiz-attempts';
@@ -29,3 +28,6 @@
 @forward 'subscription-history';
 @forward 'announcement-notice';
 @forward 'wishlist';
+
+// Instructor components
+@forward 'instructor/dashboard';

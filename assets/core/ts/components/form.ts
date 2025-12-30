@@ -8,6 +8,7 @@ interface FormControlConfig {
   mode?: 'onChange' | 'onBlur' | 'onSubmit';
   shouldFocusError?: boolean;
   shouldScrollToError?: boolean;
+  defaultValues?: Record<string, unknown>;
 }
 
 interface FieldConfig {
@@ -292,7 +293,7 @@ const DEFAULT_CONFIG: FormControlConfig = {
 };
 
 export const form = (config: FormControlConfig & { id?: string } = {}) => {
-  const { id: formId, ...formConfig } = config;
+  const { id: formId, defaultValues = {}, ...formConfig } = config;
   const mergedConfig = { ...DEFAULT_CONFIG, ...formConfig };
 
   const formInstance = {
@@ -300,7 +301,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     formId,
 
     fields: {} as Record<string, FieldConfig>,
-    values: {} as Record<string, unknown>,
+    values: { ...defaultValues },
     errors: {} as Record<string, FieldError>,
     touchedFields: {} as Record<string, boolean>,
     dirtyFields: {} as Record<string, boolean>,

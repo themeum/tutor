@@ -271,8 +271,11 @@ class Assets {
 			if ( in_array( $subpage, $dashboard_pages, true ) ) {
 				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
 				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
+				$dashboard_js_url   = tutor()->url . 'assets/js/tutor-dashboard.js';
+				$dashboard_js_path  = tutor()->path . 'assets/js/tutor-dashboard.js';
 
 				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), filemtime( $dashboard_css_path ), 'all' );
+				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array(), filemtime( $dashboard_js_path ), true );
 			}
 
 			// Learning area pages.
