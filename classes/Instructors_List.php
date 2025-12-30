@@ -30,9 +30,9 @@ class Instructors_List {
 	const INSTRUCTOR_LIST_CACHE_KEY  = 'tutor-instructors-list';
 	const INSTRUCTOR_COUNT_CACHE_KEY = 'tutor-instructors-count';
 
-	const INSTRUCTOR_APPROVED = 'approved';
-	const INSTRUCTOR_PENDING  = 'pending';
-	const INSTRUCTOR_BLOCKED  = 'blocked';
+	const STATUS_APPROVED = 'approved';
+	const STATUS_PENDING  = 'pending';
+	const STATUS_BLOCKED  = 'blocked';
 
 	/**
 	 * Trait for utilities

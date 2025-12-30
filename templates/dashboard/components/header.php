@@ -126,7 +126,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 							$instructor_status = tutor_utils()->instructor_status( 0, false );
 							$instructor_status = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
 
-							if ( Instructors_List::INSTRUCTOR_PENDING === $instructor_status ) {
+							if ( Instructors_List::STATUS_PENDING === $instructor_status ) {
 								$applied_on = get_user_meta( $user_id, '_is_tutor_instructor', true );
 								$applied_on = tutor_i18n_get_formated_date( $applied_on, get_option( 'date_format' ) );
 								?>
@@ -147,7 +147,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 									</span>
 								</div>
 								<?php
-							} elseif ( Instructors_List::INSTRUCTOR_BLOCKED !== $instructor_status ) {
+							} elseif ( Instructors_List::STATUS_BLOCKED !== $instructor_status ) {
 								?>
 								<a href="<?php echo esc_url( tutor_utils()->instructor_register_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-x-small tutor-gap-2 tutor-btn-block">
 									<?php tutor_utils()->render_svg_icon( Icon::INSTRUCTOR ); ?>
