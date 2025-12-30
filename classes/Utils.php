@@ -10782,4 +10782,66 @@ class Utils {
 			),
 		);
 	}
+
+	public function get_topic_progress_by_course_id( $course_id ) {
+
+		$topics     = $this->get_topics( $course_id );
+		$topic_list = array();
+
+		if ( $topics->have_posts() ) {
+			while ( $topics->have_posts() ) {
+				$topics->the_post();
+				$topic_list[] = array(
+					'topic_id' => get_the_ID(),
+					'topic_summery' =>  get_the_content(),
+					'topic_title' => the_title(),
+					'lessons' => tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 )
+				);
+
+				if ( $lessons->have_posts() ) {
+					foreach ( $lessons->posts as $post ) {
+						if ( 'tutor_quiz' === $post->post_type ) {
+							$quiz = $post;
+							$topic_list[]['lessons']['tutor_quiz'] = array(
+								'quiz_id' => $quiz->ID,
+								'quiz_link' => esc_url( get_permalink( $quiz->ID ) ),
+								'quiz_title' => $quiz->post_title,
+								'has_attempt' => tutor_utils()->has_attempted_quiz( $student_id, $quiz->ID ),
+								'time_limit' => tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' ),
+								'time_type' => tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' ),
+							)
+						} elseif ( 'tutor_assignments' === $post->post_type ) {
+							$topic_list[]['lessons']['tutor_assignments'] = array(
+								'assignment_submitted' => tutor_utils()->get_submitted_assignment_count( $post->ID, $student_id ),
+								'assignment_id' =>  $post->ID,
+								'assignment_link' => esc_url( get_permalink( $post->ID ) ),
+								'assignment_title' => $post->post_title
+							);
+						} elseif ( 'tutor_zoom_meeting' === $post->post_type ) {
+							$topic_list[]['lessons']['tutor_zoom_meeting'] = array(
+								'zoom_meeting' => $post->ID,
+								'zoom_meeting_link' => esc_url( get_permalink( $post->ID ) )
+							)
+						} else {
+							
+							$topic_list[]['lessons']['lesson'] = array (
+								'video' => tutor_utils()->get_video_info( $post->ID ),
+								'video_play_time' => $video->playtime ?? '',
+								'is_completed_lesson' => tutor_utils()->is_completed_lesson( $post->ID, $student_id ),
+								'lesson_id' => $post->ID,
+								'lesson_link' => esc_url( get_permalink( $post->ID ) ),
+								'lesson_title' => $post->post_title
+							);
+						}
+					}
+
+					$lessons->reset_postdata();
+				
+				}									
+
+			}						
+			$topics->reset_postdata();
+			wp_reset_postdata();
+		}
+	}
 }
