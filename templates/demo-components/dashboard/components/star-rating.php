@@ -30,11 +30,11 @@ $star      = tutor_utils()->get_svg_icon( Icon::STAR_2, $icon_size, $icon_size )
 		<span class="tutor-icon-exception4 tutor-flex-center">
 			<?php
 			if ( (int) $rating >= $i ) {
-				echo $star_fill; // phpcs:ignore
+				echo $star_fill; // phpcs:ignore -- already escaped inside template file
 			} elseif ( ( $rating - $i ) >= -0.5 ) {
-				echo $star_half; // phpcs:ignore
+				echo $star_half; // phpcs:ignore -- already escaped inside template file
 			} else {
-				echo $star; // phpcs:ignore
+				echo $star; // phpcs:ignore -- already escaped inside template file
 			}
 			?>
 		</span>
