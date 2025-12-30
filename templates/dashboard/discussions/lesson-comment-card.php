@@ -90,10 +90,6 @@ $replies_url = UrlHelper::prepare(
 
 			<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 				<div class="tutor-popover-menu">
-					<button class="tutor-popover-menu-item">
-						<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
-						<?php esc_html_e( 'Mark as Unread', 'tutor' ); ?>
-					</button>
 					<button class="tutor-popover-menu-item"
 						@click="hide(); TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> });">
 						<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
