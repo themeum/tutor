@@ -10809,7 +10809,7 @@ class Utils {
 								'has_attempt' => tutor_utils()->has_attempted_quiz( $student_id, $quiz->ID ),
 								'time_limit'  => tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' ),
 								'time_type'   => tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' ),
-							)
+							);
 						} elseif ( 'tutor_assignments' === $post->post_type ) {
 							$topic_list[]['lessons']['tutor_assignments'] = array(
 								'assignment_submitted' => tutor_utils()->get_submitted_assignment_count( $post->ID, $student_id ),
@@ -10821,7 +10821,7 @@ class Utils {
 							$topic_list[]['lessons']['tutor_zoom_meeting'] = array(
 								'zoom_meeting'      => $post->ID,
 								'zoom_meeting_link' => esc_url( get_permalink( $post->ID ) ),
-							)
+							);
 						} else {
 
 							$topic_list[]['lessons']['lesson'] = array(

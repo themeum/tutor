@@ -90,6 +90,7 @@ final class Icon {
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';
+	const COMMISSION                 = 'commission';
 	const COMMAND                    = 'command';
 	const COMMENTS                   = 'comments';
 	const COMPLETED                  = 'completed';
@@ -157,6 +158,7 @@ final class Icon {
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
 	const FACEBOOK                   = 'facebook';
+	const FEES                       = 'fees';
 	const FEATHER                    = 'feather';
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
@@ -307,6 +309,7 @@ final class Icon {
 	const RESOURCES                  = 'resources';
 	const ROTATE                     = 'rotate';
 	const RTF                        = 'rtf';
+	const SALE                       = 'sale';
 	const SALE_TYPE                  = 'sale-type';
 	const SAVE                       = 'save';
 	const SEARCH                     = 'search';
@@ -336,8 +339,8 @@ final class Icon {
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
 	const STAR                       = 'star';
-	const STAR_LINE                  = 'star-line';
 	const STAR_2                     = 'star-2';
+	const STAR_LINE                  = 'star-line';
 	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
@@ -378,10 +381,12 @@ final class Icon {
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
 	const VISITED                    = 'visited';
+	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
 	const WISHLIST                   = 'wishlist';
+	const WITHDRAW                   = 'withdraw';
 	const X                          = 'x';
 	const XLS                        = 'xls';
 	const XML                        = 'xml';
