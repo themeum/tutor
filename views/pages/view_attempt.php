@@ -31,8 +31,8 @@ if ( 0 === $quiz_id ) {
 	return;
 }
 
-if ( ! tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) ) {
-	tutor_utils()->tutor_empty_state();
+if ( ! current_user_can( 'manage_options' ) && ! tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id ) ) {
+	tutor_utils()->tutor_empty_state( __( 'Access denied!', 'tutor' ) );
 	return;
 }
 
