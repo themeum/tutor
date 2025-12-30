@@ -66,4 +66,17 @@
   &-text {
     @include tutor-typography('p1', 'regular', 'secondary');
   }
+
+  &-form {
+    @include tutor-flex(column);
+    background-color: $tutor-surface-l1-hover;
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-6;
+
+    &-fields {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-6;
+      width: 100%;
+    }
+  }
 }

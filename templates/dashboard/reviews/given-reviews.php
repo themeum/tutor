@@ -8,7 +8,9 @@
  * @since 4.0.0
  */
 
+use TUTOR\Icon;
 use TUTOR\Input;
+use Tutor\Components\Modal;
 
 // Pagination Variable.
 $pagination_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
@@ -36,6 +38,8 @@ $converted_reviews = array_map(
 	$reviews ?? array()
 );
 
+$bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
+
 ?>
 <div class="tutor-user-reviews">
 	<div class="tutor-profile-container">
@@ -46,3 +50,21 @@ $converted_reviews = array_map(
 		</div>
 	</div>
 </div>
+
+<?php Modal::make()
+	->id( 'review-delete-modal' )
+	->width( '426px' )
+	->body(
+		'<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
+			' . $bin_icon . '
+			<h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
+				' . esc_html__( 'Delete This Course?', 'tutor' ) . '
+			</h5>
+			<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">
+				' . esc_html__( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) . '
+			</p>
+		</div>'
+	)
+	->footer_buttons( '<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal(\'review-delete-modal\')">Cancel</button><button class="tutor-btn tutor-btn-destructive tutor-btn-small" @click="handleDeleteReview(id)">Yes, Delete This</button>' )
+	->render();
+?>

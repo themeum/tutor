@@ -153,6 +153,10 @@ const endpoints = {
 
   // Calendar
   GET_CALENDAR_EVENTS: 'get_calendar_materials',
+
+  //Reviews
+  PLACE_RATING: 'tutor_place_rating',
+  DELETE_REVIEW: 'delete_tutor_review',
 } as const;
 
 export default endpoints;

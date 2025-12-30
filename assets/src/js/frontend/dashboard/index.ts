@@ -7,6 +7,7 @@ import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
 import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
+import { initializeReviews } from './pages/reviews';
 import { initializeSettings } from './pages/settings';
 
 /**
@@ -54,6 +55,9 @@ const getCurrentPage = (): string => {
   if (path.includes('/certificates')) {
     return 'certificates';
   }
+  if (path.includes('/reviews')) {
+    return 'reviews';
+  }
 
   // Default to home when subpage=dashboard
   return 'home';
@@ -83,6 +87,9 @@ const initializeDashboard = () => {
       break;
     case 'certificates':
       initializeCertificates();
+      break;
+    case 'reviews':
+      initializeReviews();
       break;
     default:
       // eslint-disable-next-line no-console
