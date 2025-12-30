@@ -59,11 +59,9 @@ const reviewDeleteModal = (id: string) => {
 
 const reviewCard = (id: string) => {
   const query = window.TutorCore.query;
-  const modal = window.TutorCore.modal;
 
   return {
     query,
-    modal,
     id,
     isEditMode: false,
     $el: null as HTMLElement | null,
@@ -83,7 +81,6 @@ const reviewCard = (id: string) => {
 
       // Bind handlers once to maintain stable references for cleanup
       this.handlers.toggleEditMode = () => this.toggleEditMode();
-      this.handlers.onDeleteButtonClick = () => this.modal.showModal(reviewDeleteModal(this.id));
 
       this.$refs.edit?.addEventListener('click', this.handlers.toggleEditMode);
       this.$refs.cancel?.addEventListener('click', this.handlers.toggleEditMode);

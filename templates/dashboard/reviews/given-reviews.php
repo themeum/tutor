@@ -72,6 +72,7 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 	?>
 <?php endif; ?>
 
+<!-- @TODO: Need to use new DeleteConfirmationModal component -->
 <?php
 Modal::make()
 	->id( 'review-delete-modal' )
