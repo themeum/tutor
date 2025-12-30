@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 
-export interface StarRatingConfig {
+interface StarRatingConfig {
   initialRating?: number;
   fieldName: string;
 }
 
-export const starRatingInput = (config: StarRatingConfig) => ({
+const starRatingInput = (config: StarRatingConfig) => ({
   rating: config.initialRating || 1,
   hoverRating: 0,
   fieldName: config.fieldName,
