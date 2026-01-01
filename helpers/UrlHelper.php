@@ -25,7 +25,7 @@ class UrlHelper {
 	 * @return string
 	 */
 	public static function ajax() : string {
-		return esc_url( admin_url( 'admin-ajax.php' ) );
+		return admin_url( 'admin-ajax.php' );
 	}
 
 	/**
@@ -37,7 +37,7 @@ class UrlHelper {
 	 * @return string
 	 */
 	public static function asset( $path = '' ) : string {
-		return esc_url( tutor()->assets_url . $path );
+		return tutor()->assets_url . $path;
 	}
 
 	/**
@@ -50,10 +50,8 @@ class UrlHelper {
 	public static function current() : string {
 		global $wp;
 
-		return esc_url(
-			home_url(
-				add_query_arg( array(), $wp->request )
-			)
+		return home_url(
+			add_query_arg( array(), $wp->request )
 		);
 	}
 
@@ -74,7 +72,7 @@ class UrlHelper {
 			$url = add_query_arg( $query_args, $url );
 		}
 
-		return esc_url( $url );
+		return $url;
 	}
 
 	/**
@@ -88,7 +86,7 @@ class UrlHelper {
 	 * @return string
 	 */
 	public static function remove_query_var( $url, array $query_args = array() ) : string {
-		return self::add_query_var( $url, array_diff_key( $query_args, $query_args ) );
+		return remove_query_arg( $query_args, $url );
 	}
 }
 
