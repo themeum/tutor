@@ -38,7 +38,9 @@ $page_tabs = apply_filters(
 );
 
 // Default tab set.
-( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) ? $active_tab = 'courses' : 0;
+if ( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) {
+	$active_tab = 'courses';
+}
 
 // Get Paginated course list.
 $courses_list_array = array(
@@ -118,7 +120,7 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 			?>
 		</div>
 
-		<?php if ( $courses_list->found_posts > $per_page ) : ?>
+		<?php if ( $courses_list->found_posts ?? 0 > $per_page ) : ?>
 		<div class="tutor-p-6 tutor-border-t">
 			<?php
 				Pagination::make()

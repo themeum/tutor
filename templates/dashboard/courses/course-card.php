@@ -17,12 +17,12 @@ $course_id       = get_the_ID();
 $course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
 
 $course_categories = get_the_terms( $course_id, CourseModel::COURSE_CATEGORY );
-$category_names    = is_array( $course_categories ) && ! is_wp_error( $course_categories ) ? wp_list_pluck( $course_categories, 'name' ) : array();
+$category_names    = is_array( $course_categories ) ? wp_list_pluck( $course_categories, 'name' ) : array();
 $category          = implode( ', ', $category_names );
 
 ?>
 
-<a href="<?php echo esc_html( $course_permalink ); ?>">
+<a href="<?php echo esc_url( $course_permalink ); ?>">
 	<div class="tutor-card tutor-progress-card">
 		
 		<div class="tutor-courses-thumb tutor-position-relative">
@@ -55,7 +55,19 @@ $category          = implode( ', ', $category_names );
 					<?php if ( $course_progress['total_count'] > 0 ) : ?>
 						<div class="tutor-progress-card-details">
 							<?php
-							echo esc_html( $course_progress['completed_percent'] ) . ' ' . esc_html__( 'of', 'tutor' ) . ' ' . esc_html( $course_progress['total_count'] ) . ' ' . esc_html__( 'lessons', 'tutor' );
+							printf(
+								esc_html(
+									_n(
+										'%1$s of %2$s lesson',
+										'%1$s of %2$s lessons',
+										(int) $course_progress['total_count'],
+										'tutor'
+									)
+								),
+								esc_html( $course_progress['completed_percent'] ),
+								esc_html( $course_progress['total_count'] )
+							);
+
 							?>
 							<span class="tutor-progress-card-separator">•</span>
 							<?php echo esc_html( $course_progress['completed_percent'] ); ?>%
