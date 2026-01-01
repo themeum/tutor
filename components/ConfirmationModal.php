@@ -108,6 +108,15 @@ class ConfirmationModal extends BaseComponent {
 	protected $confirm_handler = '';
 
 	/**
+	 * Mutation state variable name (e.g., 'deleteMutation').
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $mutation_state = 'confirmMutation';
+
+	/**
 	 * Cancel button text.
 	 *
 	 * @since 4.0.0
