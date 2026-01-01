@@ -158,6 +158,10 @@ const endpoints = {
 
   // Calendar
   GET_CALENDAR_EVENTS: 'get_calendar_materials',
+
+  // Announcement
+  CREATE_ANNOUNCEMENT: 'tutor_announcement_create',
+  DELETE_ANNOUNCEMENT: 'tutor_announcement_delete',
 } as const;
 
 export default endpoints;

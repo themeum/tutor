@@ -26,18 +26,46 @@
     margin: 0;
   }
 
-  &-icon {
-    @include tutor-flex-center();
-  }
-
   &-value {
     @include tutor-typography('h2', 'bold', 'primary', 'heading');
     margin: 0;
   }
 
   &-change {
-    @include tutor-typography('tiny', 'regular', 'secondary');
-    margin: 0;
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+    margin-top: $tutor-spacing-1;
+    margin-bottom: 0;
+  }
+
+  // Color variations
+  &-enrolled {
+    .tutor-stat-card-icon {
+      color: $tutor-text-brand;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
+
+  &-active {
+    .tutor-stat-card-icon {
+      color: $tutor-exception-1;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-exception-1;
+    }
+  }
+
+  &-completed {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
   }
 
   // Color variations
@@ -84,7 +112,8 @@
     }
   }
 
-  &-exception4 {
+  &-exception4,
+  &-time-spent {
     .tutor-stat-card-icon {
       color: $tutor-text-exception4;
     }

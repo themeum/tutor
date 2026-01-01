@@ -9472,11 +9472,6 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'index'         => array(
-				'title'    => __( 'Home', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::HOME_FILL,
-			),
 			'my-courses'    => array(
 				'title'    => __( 'Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9506,17 +9501,9 @@ class Utils {
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::NOTIFICATION,
+				'icon'     => Icon::ANNOUNCEMENT,
 			),
 		);
-
-		if ( $this->should_show_dicussion_menu() ) {
-			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
-			);
-		}
 
 		return apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
 	}
@@ -9549,7 +9536,7 @@ class Utils {
 		$items = array(
 			'index'            => array(
 				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME_FILL,
+				'icon'  => Icon::HOME,
 			),
 			'enrolled-courses' => array(
 				'title' => __( 'Courses', 'tutor' ),
