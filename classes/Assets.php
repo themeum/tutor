@@ -906,6 +906,6 @@ class Assets {
 			}
 		}
 
-		return apply_filters( 'tutor_load_legacy_scripts', $load );
+		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
 	}
 }

@@ -96,10 +96,11 @@ class Lesson extends Tutor_Base {
 		 */
 		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_delete_lesson_comment', array( $this, 'ajax_delete_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
 
 		// Add lesson title as nav item & render single content on the learning area.
-		add_filter( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
+		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
 		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
 	}
 
@@ -125,6 +126,34 @@ class Lesson extends Tutor_Base {
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
 		wp_send_json_success( array( 'html' => $html ) );
+	}
+
+	/**
+	 * Delete lesson comment by AJAX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_delete_lesson_comment() {
+		tutor_utils()->check_nonce();
+		$comment_id = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$lesson_id = $comment->comment_post_ID;
+		if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+			$this->response_bad_request( tutor_utils()->error_message() );
+		}
+
+		wp_delete_comment( $comment_id, true );
+		$this->json_response( __( 'Comment deleted successfully', 'tutor' ) );
 	}
 
 	/**
@@ -788,7 +817,7 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Return lesson title as nav item to print on the learning area
+	 * Render content for the a single lesson
 	 *
 	 * @since 4.0.0
 	 *

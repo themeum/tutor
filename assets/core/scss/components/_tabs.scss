@@ -30,13 +30,11 @@
     padding: $tutor-spacing-5 $tutor-spacing-6;
     gap: $tutor-spacing-4;
     white-space: nowrap;
-    transition:
-      color 0.2s ease,
-      background-color 0.2s ease;
     cursor: pointer;
     color: $tutor-text-primary;
     font-weight: $tutor-font-weight-medium;
     height: 44px;
+    @include tutor-transition((background-color, color));
 
     @include tutor-breakpoint-down(sm) {
       @include tutor-text('tiny');

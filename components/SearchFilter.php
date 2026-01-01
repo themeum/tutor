@@ -186,6 +186,7 @@ class SearchFilter extends BaseComponent {
 		$input_name   = $this->input_name;
 		$search_value = Input::get( $input_name, '' );
 		$size         = Size::SMALL === $this->size ? 'tutor-input-sm' : ( Size::LARGE === $this->size ? 'tutor-input-lg' : '' );
+		$icon_size    = Size::SMALL === $this->size ? 16 : ( Size::LARGE === $this->size ? 24 : 20 );
 		$method       = $this->method;
 
 		if ( empty( $current_url ) ) {
@@ -220,8 +221,8 @@ class SearchFilter extends BaseComponent {
 						<?php
 						tutor_utils()->render_svg_icon(
 							Icon::SEARCH_2,
-							20,
-							20,
+							$icon_size,
+							$icon_size,
 							array( 'class' => 'tutor-icon-idle' )
 						)
 						?>

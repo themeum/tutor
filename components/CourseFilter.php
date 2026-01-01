@@ -26,6 +26,10 @@ defined( 'ABSPATH' ) || exit;
  * Example Usage:
  * ```
  * CourseFilter::make()
+ *     ->courses( $courses )
+ *     ->current( $course_id )
+ *     ->count( $total_count )
+ *     ->button_class( 'tutor-btn tutor-btn-primary' )
  *     ->render();
  * ```
  *
@@ -53,6 +57,13 @@ class CourseFilter extends BaseComponent {
 	 * @var int
 	 */
 	protected $count;
+
+	/**
+	 * Button CSS classes
+	 *
+	 * @var string
+	 */
+	protected $button_class = 'tutor-btn tutor-btn-link tutor-btn-small tutor-font-regular tutor-gap-2 tutor-p-none tutor-min-h-0';
 
 	/**
 	 * Set courses list
@@ -87,6 +98,18 @@ class CourseFilter extends BaseComponent {
 	 */
 	public function count( int $count ): self {
 		$this->count = $count;
+		return $this;
+	}
+
+	/**
+	 * Set button CSS classes
+	 *
+	 * @param string $classes CSS classes for the button.
+	 *
+	 * @return self
+	 */
+	public function button_class( string $classes ): self {
+		$this->button_class = $classes;
 		return $this;
 	}
 
@@ -145,7 +168,7 @@ class CourseFilter extends BaseComponent {
 				type="button" 
 				x-ref="trigger" 
 				@click="toggle()" 
-				class="tutor-btn tutor-btn-link tutor-btn-small tutor-font-regular tutor-gap-2 tutor-p-none tutor-min-h-0"
+				class="<?php echo esc_attr( $this->button_class ); ?>"
 			>
 				<span class="tutor-truncate" style="max-width: 150px;">
 					<?php echo esc_html( $selected_course ); ?>
@@ -164,6 +187,7 @@ class CourseFilter extends BaseComponent {
 				x-cloak
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
+				style="width: 275px;"
 			>
 				<div class="tutor-popover-menu" x-data="{ search: '' }">
 					<div class="tutor-input-field tutor-px-5 tutor-pt-2 tutor-pb-4">

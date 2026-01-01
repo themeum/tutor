@@ -2,6 +2,7 @@
 // Reusable Pagination styles with variants and sizes
 
 @use "../tokens" as *;
+@use "utilities" as *;
 @use "typography" as *;
 @use "layout" as *;
 
@@ -45,10 +46,10 @@
 	border-radius: $tutor-radius-md;
 	text-decoration: none;
 	@include tutor-typography('tiny', 'medium');
-	transition: all 0.2s ease;
 	cursor: pointer;
 	min-width: 32px;
 	min-height: 32px;
+	@include tutor-transition((background-color, color));
 
 	// Default state
 	background-color: transparent;

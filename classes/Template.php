@@ -526,15 +526,11 @@ class Template extends Tutor_Base {
 	public function load_learning_template( string $template ): string {
 		if ( tutor_utils()->is_learning_area() ) {
 			$post_type   = get_post_type();
-			$legacy_mode = tutor_utils()->get_option( 'is_legacy_learning_mode', false );
+			$legacy_mode = tutor_utils()->get_option( 'is_legacy_learning_mode' );
 
 			$template_path = apply_filters( 'tutor_single_content_template', $template, $post_type );
-			tutor_get_template( 'single-course' );
-			if ( $legacy_mode ) {
-				$template = $template_path;
-			} else {
-				$template = tutor_get_template( 'learning-area.index' );
-			}
+
+			$template = $legacy_mode ? $template_path : tutor_get_template( 'learning-area.index' );
 		}
 
 		return $template;

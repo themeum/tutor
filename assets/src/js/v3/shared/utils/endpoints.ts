@@ -78,6 +78,11 @@ const endpoints = {
   // LESSON
   GET_LESSON_DETAILS: 'tutor_lesson_details',
   SAVE_LESSON: 'tutor_save_lesson',
+  DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
+
+  // Q&A
+  QNA_SINGLE_ACTION: 'tutor_qna_single_action',
+  DELETE_DASHBOARD_QNA: 'tutor_delete_dashboard_question',
 
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',
@@ -153,6 +158,10 @@ const endpoints = {
 
   // Calendar
   GET_CALENDAR_EVENTS: 'get_calendar_materials',
+
+  // Announcement
+  CREATE_ANNOUNCEMENT: 'tutor_announcement_create',
+  DELETE_ANNOUNCEMENT: 'tutor_announcement_delete',
 } as const;
 
 export default endpoints;

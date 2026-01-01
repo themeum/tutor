@@ -10,8 +10,8 @@
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-lg;
   padding: $tutor-spacing-6;
-  transition: background-color 0.25s ease-in-out;
   position: relative;
+  @include tutor-transition(background-color);
 
   &.unread {
     background-color: $tutor-surface-brand-tertiary;
@@ -74,7 +74,7 @@
     @include tutor-typography(medium, semibold);
     margin-bottom: $tutor-spacing-4;
     margin-top: 0px;
-    transition: 0.25s ease-in-out;
+    @include tutor-transition();
   }
 
   &-meta {
@@ -122,9 +122,7 @@
     @include tutor-breakpoint-up(sm) {
       visibility: hidden;
       opacity: 0;
-      transition:
-        opacity 0.25s ease-in-out,
-        visibility 0.25s ease-in-out;
+      @include tutor-transition((opacity, visibility));
     }
 
     @include tutor-breakpoint-down(sm) {
