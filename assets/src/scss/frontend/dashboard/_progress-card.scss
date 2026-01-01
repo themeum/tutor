@@ -12,9 +12,9 @@
 	border: 1px solid $tutor-border-idle;
 	border-radius: $tutor-radius-2xl;
 	height: 128px;
-	transition: all 0.2s ease;
 	cursor: pointer;
 	overflow: hidden;
+	@include tutor-transition();
 
 	&:hover {
 		background-color: $tutor-surface-l1-hover;
@@ -73,15 +73,15 @@
 	}
 
 	&-actions {
-		position: absolute;
-		top: $tutor-spacing-4;
 		@include right($tutor-spacing-4);
 		@include tutor-flex(row, center, flex-end);
+		position: absolute;
+		top: $tutor-spacing-4;
 		gap: $tutor-spacing-3;
 		opacity: 0;
 		visibility: hidden;
 		z-index: $tutor-z-dropdown;
-		transition: opacity 0.2s ease, visibility 0.2s ease;
+		@include tutor-transition((opacity, visibility));
 	}
 
 	&-resume-btn {

@@ -46,7 +46,7 @@
 	&-arrow {
 		margin-left: auto;
 		color: $tutor-icon-secondary;
-		transition: transform 0.2s ease;
+		@include tutor-transition(transform);
 	}
 
 	// Rotate arrow when dropdown is expanded

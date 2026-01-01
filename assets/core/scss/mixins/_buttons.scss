@@ -10,11 +10,11 @@
   border: none;
   border-radius: $tutor-radius-md;
   font-weight: $tutor-font-weight-medium;
-  transition: all 0.2s ease;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
   font-family: inherit;
+  @include tutor-transition(all);
 
   &:disabled {
     cursor: not-allowed;
