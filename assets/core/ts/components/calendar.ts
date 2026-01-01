@@ -1,6 +1,6 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { CALENDAR_PRESETS, type Preset } from '@Core/ts/types/calendar';
 import { tutorConfig } from '@TutorShared/config/config';
-import { __ } from '@wordpress/i18n';
 import {
   endOfMonth,
   endOfYear,
@@ -16,8 +16,6 @@ import { type Calendar, Calendar as VanillaCalendar } from 'vanilla-calendar-pro
 import type OptionsCalendar from 'vanilla-calendar-pro/options';
 // @ts-ignore
 import 'vanilla-calendar-pro/styles/index.css';
-
-type Preset = 'all-time' | 'yesterday' | 'last-7' | 'last-14' | 'last-30' | 'this-month' | 'last-month' | 'last-year';
 
 export function calendar({ options, hidePopover }: { options: OptionsCalendar; hidePopover?: () => void }) {
   return {
@@ -73,14 +71,9 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
             multiple: `
               <div class="vc-layout">
                 <aside class="vc-presets">
-                  <button type="button" data-preset="all-time" data-active>${__('All Time', 'tutor')}</button>
-                  <button type="button" data-preset="yesterday">${__('Yesterday', 'tutor')}</button>
-                  <button type="button" data-preset="last-7">${__('Last 7 days', 'tutor')}</button>
-                  <button type="button" data-preset="last-14">${__('Last 14 days', 'tutor')}</button>
-                  <button type="button" data-preset="last-30">${__('Last 30 days', 'tutor')}</button>
-                  <button type="button" data-preset="this-month">${__('This month', 'tutor')}</button>
-                  <button type="button" data-preset="last-month">${__('Last month', 'tutor')}</button>
-                  <button type="button" data-preset="last-year">${__('Last year', 'tutor')}</button>
+                  ${(Object.entries(CALENDAR_PRESETS) as [Preset, string][])
+                    .map(([key, label]) => `<button type="button" data-preset="${key}">${label}</button>`)
+                    .join('')}
                 </aside>
 
                 <div class="vc-main">
@@ -269,15 +262,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       if (!startDate && !endDate) {
         activePreset = 'all-time';
       } else if (startDate && endDate) {
-        const presets: Preset[] = [
-          'yesterday',
-          'last-7',
-          'last-14',
-          'last-30',
-          'this-month',
-          'last-month',
-          'last-year',
-        ];
+        const presets = Object.keys(CALENDAR_PRESETS).filter((key) => key !== 'all-time') as Preset[];
 
         for (const preset of presets) {
           const [start, end] = this.getPresetDates(preset);
