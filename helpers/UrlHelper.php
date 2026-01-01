@@ -20,6 +20,8 @@ class UrlHelper {
 	/**
 	 * Get AJAX URL.
 	 *
+	 * @since 4.0.0
+	 *
 	 * @return string
 	 */
 	public static function ajax() : string {
@@ -28,6 +30,8 @@ class UrlHelper {
 
 	/**
 	 * Get plugin asset URL.
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param string $path Relative asset path.
 	 * @return string
@@ -38,6 +42,8 @@ class UrlHelper {
 
 	/**
 	 * Get current URL.
+	 *
+	 * @since 4.0.0
 	 *
 	 * @return string
 	 */
@@ -53,6 +59,8 @@ class UrlHelper {
 
 	/**
 	 * Prepare URL with query args.
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param string $url URL.
 	 * @param array  $query_args Query args.
@@ -71,6 +79,8 @@ class UrlHelper {
 
 	/**
 	 * Remove query args from URL.
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param string $url URL.
 	 * @param array  $query_args Query args.
