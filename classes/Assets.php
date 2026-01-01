@@ -851,6 +851,7 @@ class Assets {
 	public function enqueue_scripts() {
 		$is_dashboard     = tutor_utils()->is_dashboard_page();
 		$is_learning_area = tutor_utils()->is_learning_area();
+		$is_course_list   = tutor_utils()->is_course_list_page();
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
@@ -862,7 +863,7 @@ class Assets {
 
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
-		if ( $is_dashboard || $is_learning_area ) {
+		if ( $is_dashboard || $is_learning_area || $is_course_list ) {
 			$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 
 			// Core.
@@ -894,13 +895,17 @@ class Assets {
 	 * @return boolean
 	 */
 	public function should_load_legacy_scripts(): bool {
-		if ( is_admin() ) {
-			return true;
+		$load = true;
+		if ( tutor_utils()->is_dashboard_page() ) {
+			$load = false;
+		} else {
+			$is_learning_area   = tutor_utils()->is_learning_area();
+			$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
+			if ( $is_learning_area && ! $is_legacy_learning ) {
+				$load = false;
+			}
 		}
 
-		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = tutor_utils()->is_learning_area();
-
-		return ! ( $is_dashboard || $is_learning_area );
+		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
 	}
 }
