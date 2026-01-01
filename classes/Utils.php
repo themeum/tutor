@@ -19,6 +19,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\UrlHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -5573,9 +5574,7 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_course_list_page(): bool {
-		global $wp;
-
-		$current_url    = trailingslashit( home_url( add_query_arg( array(), $wp->request ) ) );
+		$current_url    = trailingslashit( UrlHelper::current() );
 		$is_course_list = $this->course_archive_page_url() === $current_url;
 
 		return apply_filters(

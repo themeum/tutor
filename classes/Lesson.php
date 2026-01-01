@@ -100,7 +100,7 @@ class Lesson extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
 
 		// Add lesson title as nav item & render single content on the learning area.
-		add_filter( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
+		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
 		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
 	}
 
@@ -817,7 +817,7 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Return lesson title as nav item to print on the learning area
+	 * Render content for the a single lesson
 	 *
 	 * @since 4.0.0
 	 *
