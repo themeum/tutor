@@ -15,6 +15,7 @@ export interface SelectOption {
   icon?: string;
   description?: string;
   group?: string;
+  href?: string;
 }
 
 export interface SelectGroup {
@@ -329,8 +330,16 @@ export const select = (props: SelectProps = {}) => {
       }
     },
 
-    async selectOption(option: SelectOption) {
-      if (option.disabled) return;
+    async selectOption(option: SelectOption, event?: Event) {
+      if (option.disabled) {
+        return;
+      }
+
+      if (option.href) {
+        event?.preventDefault();
+        window.location.href = option.href;
+        return;
+      }
 
       if (this.multiple) {
         this.toggleMultipleSelection(option);

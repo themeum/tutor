@@ -60,6 +60,9 @@ foreach ( $options as $option ) {
 	if ( isset( $option['group'] ) ) {
 		$opt['group'] = $option['group'];
 	}
+	if ( isset( $option['href'] ) ) {
+		$opt['href'] = $option['href'];
+	}
 	$options_json[] = $opt;
 }
 
@@ -83,6 +86,9 @@ foreach ( $groups as $group ) {
 		}
 		if ( isset( $option['description'] ) ) {
 			$opt['description'] = $option['description'];
+		}
+		if ( isset( $option['href'] ) ) {
+			$opt['href'] = $option['href'];
 		}
 		$grp['options'][] = $opt;
 	}
@@ -268,7 +274,7 @@ $props_json = htmlspecialchars( wp_json_encode( $component_props ), ENT_QUOTES, 
 									:data-disabled="option.disabled ? 'true' : 'false'"
 									:data-selected="isSelected(option) ? 'true' : 'false'"
 									:data-highlighted="isHighlighted(filteredOptions.indexOf(option)) ? 'true' : 'false'"
-									@click="selectOption(option)"
+									@click="selectOption(option, $event)"
 									@mouseenter="highlightedIndex = filteredOptions.indexOf(option)"
 									role="option"
 									:aria-selected="isSelected(option).toString()"
@@ -298,7 +304,7 @@ $props_json = htmlspecialchars( wp_json_encode( $component_props ), ENT_QUOTES, 
 						:data-disabled="option.disabled ? 'true' : 'false'"
 						:data-selected="isSelected(option) ? 'true' : 'false'"
 						:data-highlighted="isHighlighted(index) ? 'true' : 'false'"
-						@click="selectOption(option)"
+						@click="selectOption(option, $event)"
 						@mouseenter="highlightedIndex = index"
 						role="option"
 						:aria-selected="isSelected(option).toString()"

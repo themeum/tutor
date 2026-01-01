@@ -7,6 +7,8 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\InputField;
+use Tutor\Components\Constants\InputType;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -250,6 +252,43 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 				)($event)"
 				class="tutor-max-w-md tutor-space-y-5"
 			>
+				<?php
+				// Example: Filter by status using href options.
+				$current_status = sanitize_text_field( wp_unslash( $_GET['status'] ?? '' ) );
+				$options        = array(
+					array(
+						'label' => 'All Statuses',
+						'value' => '',
+						'href'  => remove_query_arg( 'status' ),
+					),
+					array(
+						'label' => 'Published',
+						'value' => 'published',
+						'href'  => add_query_arg( 'status', 'published' ),
+					),
+					array(
+						'label' => 'Draft',
+						'value' => 'draft',
+						'href'  => add_query_arg( 'status', 'draft' ),
+					),
+					array(
+						'label' => 'Pending',
+						'value' => 'pending',
+						'href'  => add_query_arg( 'status', 'pending' ),
+					),
+				);
+
+				InputField::make()
+					->type( InputType::SELECT )
+					->name( 'status' )
+					->label( __( 'Select Course', 'tutor' ) )
+					->placeholder( __( 'Select a course', 'tutor' ) )
+					->value( $current_status )
+					->options( $options )
+					->searchable()
+					->render();
+				?>
+
 				<!-- Using form-select wrapper -->
 				<?php
 				tutor_load_template(
