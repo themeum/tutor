@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
@@ -18,12 +20,11 @@ interface ReviewPayload {
   review: string;
 }
 
-const reviewDeleteModal = (id: string) => {
+const reviewDeleteModal = () => {
   const query = window.TutorCore.query;
 
   return {
     query,
-    id,
     $el: null as HTMLElement | null,
     deleteReviewMutation: null as MutationState<unknown> | null,
 
@@ -35,7 +36,7 @@ const reviewDeleteModal = (id: string) => {
       this.deleteReviewMutation = this.query.useMutation(this.deleteReview, {
         onSuccess: (data: TutorMutationResponse<string>) => {
           this.$el?.remove();
-          window.TutorCore.toast.success(data.message);
+          window.TutorCore.toast.success(data.message ?? __('Review deleted successfully', 'tutor'));
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || 'Failed to delete review');
@@ -129,7 +130,7 @@ const reviewCard = (id: string) => {
 };
 
 const reviewServicesMeta = {
-  name: 'reviewServices',
+  name: 'reviewDeleteModal',
   component: reviewDeleteModal,
 };
 

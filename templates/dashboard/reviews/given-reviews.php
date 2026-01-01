@@ -10,8 +10,13 @@
 
 use TUTOR\Icon;
 use TUTOR\Input;
+use Tutor\Components\ConfirmationModal;
+use Tutor\Components\EmptyState;
 use Tutor\Components\Modal;
 use Tutor\Components\Pagination;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 
 // Pagination Variable.
 $pagination_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
@@ -63,6 +68,34 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 				</div>
 			<?php endif; ?>
 		</div>
+
+		<div x-data="tutorReviewDeleteModal()" x-cloak>
+			<?php
+			ConfirmationModal::make()
+				->id( 'review-delete-modal' )
+				->title( __( 'Delete This Review?', 'tutor' ) )
+				->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
+				->confirm_handler( 'handleDeleteReview(payload?.id)' )
+				->mutation_state( 'deleteReviewMutation' )
+				->confirm_button(
+					Button::make()
+						->attr( '@click', 'handleDeleteReview(payload?.id)' )
+						->label( __( 'Yes, Delete This', 'tutor' ) )
+						->variant( Variant::DESTRUCTIVE )
+						->size( Size::X_SMALL )
+						->get()
+				)
+				->cancel_button(
+					Button::make()
+						->attr( '@click', 'TutorCore.modal.closeModal("review-delete-modal")' )
+						->label( __( 'Cancel', 'tutor' ) )
+						->variant( Variant::SECONDARY )
+						->size( Size::X_SMALL )
+						->get()
+				)
+				->render();
+			?>
+		</div>
 	</div>
 <?php else : ?>
 	<?php
@@ -73,21 +106,3 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 <?php endif; ?>
 
 <!-- @TODO: Need to use new DeleteConfirmationModal component -->
-<?php
-Modal::make()
-	->id( 'review-delete-modal' )
-	->width( '426px' )
-	->body(
-		'<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
-			' . $bin_icon . '
-			<h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
-				' . esc_html__( 'Delete This Course?', 'tutor' ) . '
-			</h5>
-			<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">
-				' . esc_html__( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) . '
-			</p>
-		</div>'
-	)
-	->footer_buttons( '<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal(\'review-delete-modal\')">Cancel</button><button class="tutor-btn tutor-btn-destructive tutor-btn-small" @click="handleDeleteReview(id)">Yes, Delete This</button>' )
-	->render();
-?>
