@@ -22,7 +22,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function ajax() {
+	public static function ajax() : string {
 		return esc_url( admin_url( 'admin-ajax.php' ) );
 	}
 
@@ -32,7 +32,7 @@ class UrlHelper {
 	 * @param string $path Relative asset path.
 	 * @return string
 	 */
-	public static function asset( $path = '' ) {
+	public static function asset( $path = '' ) : string {
 		return esc_url( tutor()->assets_url . $path );
 	}
 
@@ -41,7 +41,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function current() {
+	public static function current() : string {
 		global $wp;
 
 		return esc_url(
@@ -59,7 +59,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function prepare( $url, array $query_args = array() ) {
+	public static function prepare( $url, array $query_args = array() ) : string {
 		$url = ltrim( $url, '/' );
 
 		if ( ! empty( $query_args ) ) {
@@ -77,7 +77,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function remove_query_var( $url, array $query_args = array() ) {
+	public static function remove_query_var( $url, array $query_args = array() ) : string {
 		return self::prepare( $url, array_diff_key( $query_args, $query_args ) );
 	}
 }
