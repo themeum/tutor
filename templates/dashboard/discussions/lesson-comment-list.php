@@ -11,10 +11,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Lesson;
+
+$is_instructor = tutor_utils()->is_instructor( null, true );
 
 $lesson_ids = get_posts(
 	array(
@@ -34,12 +37,20 @@ $list_args = array(
 	'order'    => $order_filter,
 );
 
+if ( ! $is_instructor ) {
+	$list_args['user_id'] = get_current_user_id();
+}
+
 $count_args = array(
 	'post__in' => $lesson_ids,
 	'status'   => 'approve',
 	'parent'   => 0,
 	'count'    => true,
 );
+
+if ( ! $is_instructor ) {
+	$count_args['user_id'] = get_current_user_id();
+}
 
 $lesson_comments = Lesson::get_comments( $list_args );
 $total_items     = Lesson::get_comments( $count_args );
@@ -74,39 +85,15 @@ $total_items     = Lesson::get_comments( $count_args );
 	<?php endif; ?>
 </div>
 
-<?php if ( ! empty( $lesson_comments ) ) : ?>
-<div x-data="tutorModal({ id: 'tutor-comment-delete-modal' })" x-cloak>
-	<template x-teleport="body">
-		<div x-bind="getModalBindings()">
-			<div x-bind="getBackdropBindings()"></div>
-			<div x-bind="getModalContentBindings()" style="max-width: 426px;">
-				<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
+<?php
+if ( ! empty( $lesson_comments ) ) {
+	ConfirmationModal::make()
+		->id( 'tutor-comment-delete-modal' )
+		->title( __( 'Delete This Comment?', 'tutor' ) )
+		->message( __( 'Are you sure you want to delete this comment permanently? Please confirm your choice.', 'tutor' ) )
+		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+		->confirm_handler( 'handleDeleteComment(payload?.commentId)' )
+		->mutation_state( 'deleteCommentMutation' )
+		->render();
+}
 
-				<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
-					<?php tutor_utils()->render_svg_icon( Icon::BIN, 100, 100 ); ?>
-					<h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
-						<?php esc_html_e( 'Delete This Comment?', 'tutor' ); ?>
-					</h5>
-					<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">
-						<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
-					</p>
-				</div>
-
-				<div class="tutor-modal-footer">
-					<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal('tutor-comment-delete-modal')">
-						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-					</button>
-					<button 
-						class="tutor-btn tutor-btn-destructive tutor-btn-small"
-						:class="deleteCommentMutation?.isPending ? 'tutor-btn-loading' : ''"
-						@click="handleDeleteComment(payload?.commentId)"
-						:disabled="deleteCommentMutation?.isPending"
-					>
-						<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
-					</button>
-				</div>
-			</div>
-		</div>
-	</template>
-</div>
-<?php endif; ?>
