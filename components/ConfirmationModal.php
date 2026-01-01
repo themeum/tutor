@@ -144,6 +144,24 @@ class ConfirmationModal extends BaseComponent {
 	protected $width = '426px';
 
 	/**
+	 * Custom confirm button HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $confirm_btn = '';
+
+	/**
+	 * Custom cancel button HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $cancel_btn = '';
+
+	/**
 	 * Set modal ID.
 	 *
 	 * @since 4.0.0
@@ -274,6 +292,34 @@ class ConfirmationModal extends BaseComponent {
 	}
 
 	/**
+	 * Set custom confirm button HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $html Button HTML.
+	 *
+	 * @return $this
+	 */
+	public function confirm_button( string $html ) {
+		$this->confirm_btn = $html;
+		return $this;
+	}
+
+	/**
+	 * Set custom cancel button HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $html Button HTML.
+	 *
+	 * @return $this
+	 */
+	public function cancel_button( string $html ) {
+		$this->cancel_btn = $html;
+		return $this;
+	}
+
+	/**
 	 * Get the modal HTML.
 	 *
 	 * @since 4.0.0
@@ -307,6 +353,40 @@ class ConfirmationModal extends BaseComponent {
 		tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
 		$icon_html = ob_get_clean();
 
+		// Prepare confirm button HTML.
+		$confirm_html = $this->confirm_btn;
+		if ( empty( $confirm_html ) ) {
+			$confirm_html = sprintf(
+				'<button 
+					class="tutor-btn tutor-btn-secondary tutor-btn-small"
+					:class="%s?.isPending ? \'tutor-btn-loading\' : \'\'"
+					@click="%s"
+					:disabled="%s?.isPending"
+				>
+					%s
+				</button>',
+				esc_js( $this->mutation_state ),
+				$this->confirm_handler,
+				esc_js( $this->mutation_state ),
+				esc_html( $this->confirm_text )
+			);
+		}
+
+		// Prepare cancel button HTML.
+		$cancel_html = $this->cancel_btn;
+		if ( empty( $cancel_html ) ) {
+			$cancel_html = sprintf(
+				'<button 
+					class="tutor-btn tutor-btn-primary tutor-btn-small" 
+					@click="TutorCore.modal.closeModal(\'%s\')"
+				>
+					%s
+				</button>',
+				esc_js( $this->id ),
+				esc_html( $this->cancel_text )
+			);
+		}
+
 		$this->component_string = sprintf(
 			'<div x-data="tutorModal(%s)" x-cloak>
 				<template x-teleport="body">
@@ -326,17 +406,8 @@ class ConfirmationModal extends BaseComponent {
 							</div>
 
 							<div class="tutor-grid tutor-grid-cols-2 tutor-gap-6 tutor-px-7 tutor-pb-6">
-								<button 
-									class="tutor-btn tutor-btn-secondary tutor-btn-small"
-									:class="%s?.isPending ? \'tutor-btn-loading\' : \'\'"
-									@click="%s"
-									:disabled="%s?.isPending"
-								>
-									%s
-								</button>
-								<button class="tutor-btn tutor-btn-primary tutor-btn-small" @click="TutorCore.modal.closeModal(\'%s\')">
-									%s
-								</button>
+								%s
+								%s
 							</div>
 						</div>
 					</div>
@@ -347,12 +418,8 @@ class ConfirmationModal extends BaseComponent {
 			$icon_html,
 			esc_html( $this->title ?? __( 'Delete This Item?', 'tutor' ) ),
 			esc_html( $this->message ?? __( 'Are you sure you want to delete this item permanently? Please confirm your choice.', 'tutor' ) ),
-			esc_js( $this->mutation_state ),
-			$this->confirm_handler,
-			esc_js( $this->mutation_state ),
-			esc_html( $this->confirm_text ),
-			esc_js( $this->id ),
-			esc_html( $this->cancel_text ),
+			$confirm_html,
+			$cancel_html
 		);
 
 		return $this->component_string;
