@@ -58,7 +58,7 @@ class UrlHelper {
 	}
 
 	/**
-	 * Prepare URL with query args.
+	 * Add query args to URL.
 	 *
 	 * @since 4.0.0
 	 *
@@ -67,7 +67,7 @@ class UrlHelper {
 	 *
 	 * @return string
 	 */
-	public static function prepare( $url, array $query_args = array() ) : string {
+	public static function add_query_var( $url, array $query_args = array() ) : string {
 		$url = ltrim( $url, '/' );
 
 		if ( ! empty( $query_args ) ) {
@@ -88,7 +88,7 @@ class UrlHelper {
 	 * @return string
 	 */
 	public static function remove_query_var( $url, array $query_args = array() ) : string {
-		return self::prepare( $url, array_diff_key( $query_args, $query_args ) );
+		return self::add_query_var( $url, array_diff_key( $query_args, $query_args ) );
 	}
 }
 
