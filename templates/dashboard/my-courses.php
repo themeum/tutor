@@ -355,7 +355,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			<?php
 			Pagination::make()
 				->current( $current_page )
-				->total( $count_map[ $status ] )
+				->total( (int) $count_map[ $status ] )
 				->limit( $per_page )
 				->render();
 			?>
@@ -369,8 +369,8 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			->id( 'tutor-course-delete-modal' )
 			->title( __( 'Delete This Course?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) )
-			->confirm_handler( 'handleDeleteCourse' )
-			->mutation_state( 'deleteMutation(payload?.courseId)' )
+			->confirm_handler( 'handleDeleteCourse(payload?.courseId)' )
+			->mutation_state( 'deleteMutation' )
 			->render();
 		?>
 	<?php endif; ?>

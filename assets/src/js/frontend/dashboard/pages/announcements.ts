@@ -141,11 +141,11 @@ const announcementsPage = () => {
       }
     },
 
-    async handleFormSubmit(data: Record<string, unknown>) {
+    async handleFormSubmit(data: AnnouncementPayload) {
       const payload: AnnouncementPayload = {
-        tutor_announcement_course: String(data.tutor_announcement_course || ''),
-        tutor_announcement_title: String(data.tutor_announcement_title || ''),
-        tutor_announcement_summary: String(data.tutor_announcement_summary || ''),
+        tutor_announcement_course: data.tutor_announcement_course || '',
+        tutor_announcement_title: data.tutor_announcement_title || '',
+        tutor_announcement_summary: data.tutor_announcement_summary || '',
         action_type: this.formData.action_type,
       };
 
