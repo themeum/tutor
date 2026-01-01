@@ -18,54 +18,12 @@ defined( 'ABSPATH' ) || exit;
 class UrlHelper {
 
 	/**
-	 * Get site base URL.
-	 *
-	 * @param string $path Optional path.
-	 *
-	 * @return string
-	 */
-	public static function site( $path = '' ) {
-		return esc_url( site_url( $path ) );
-	}
-
-	/**
-	 * Get home URL.
-	 *
-	 * @param string $path Optional path.
-	 *
-	 * @return string
-	 */
-	public static function home( $path = '' ) {
-		return esc_url( home_url( $path ) );
-	}
-
-	/**
-	 * Get admin URL.
-	 *
-	 * @param string $path Optional path.
-	 * @return string
-	 */
-	public static function admin( $path = '' ) {
-		return esc_url( admin_url( $path ) );
-	}
-
-	/**
 	 * Get AJAX URL.
 	 *
 	 * @return string
 	 */
 	public static function ajax() {
 		return esc_url( admin_url( 'admin-ajax.php' ) );
-	}
-
-	/**
-	 * Get REST API base URL.
-	 *
-	 * @param string $route Optional route.
-	 * @return string
-	 */
-	public static function rest( $route = '' ) {
-		return esc_url( rest_url( $route ) );
 	}
 
 	/**
@@ -94,24 +52,6 @@ class UrlHelper {
 	}
 
 	/**
-	 * Get referer URL safely.
-	 *
-	 * @return string
-	 */
-	public static function referer() {
-		return esc_url( wp_get_referer() );
-	}
-
-	/**
-	 * Check if current request is HTTPS.
-	 *
-	 * @return bool
-	 */
-	public static function is_https() {
-		return is_ssl();
-	}
-
-	/**
 	 * Prepare URL with query args.
 	 *
 	 * @param string $url URL.
@@ -130,18 +70,6 @@ class UrlHelper {
 	}
 
 	/**
-	 * Add query args to URL.
-	 *
-	 * @param string $url URL.
-	 * @param array  $query_args Query args.
-	 *
-	 * @return string
-	 */
-	public static function add_query_var( $url, array $query_args = array() ) {
-		return self::prepare( $url, $query_args );
-	}
-
-	/**
 	 * Remove query args from URL.
 	 *
 	 * @param string $url URL.
@@ -151,26 +79,6 @@ class UrlHelper {
 	 */
 	public static function remove_query_var( $url, array $query_args = array() ) {
 		return self::prepare( $url, array_diff_key( $query_args, $query_args ) );
-	}
-
-	/**
-	 * Get login URL with redirect.
-	 *
-	 * @param string $redirect Redirect URL.
-	 * @return string
-	 */
-	public static function login( $redirect = '' ) {
-		return esc_url( wp_login_url( $redirect ) );
-	}
-
-	/**
-	 * Get logout URL.
-	 *
-	 * @param string $redirect Redirect URL.
-	 * @return string
-	 */
-	public static function logout( $redirect = '' ) {
-		return esc_url( wp_logout_url( $redirect ) );
 	}
 }
 
