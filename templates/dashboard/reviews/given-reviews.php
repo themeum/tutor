@@ -80,6 +80,7 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 				->confirm_button(
 					Button::make()
 						->attr( '@click', 'handleDeleteReview(payload?.id)' )
+						->attr( ':class', '{ \'tutor-btn-loading\': deleteReviewMutation.isPending }' )
 						->label( __( 'Yes, Delete This', 'tutor' ) )
 						->variant( Variant::DESTRUCTIVE )
 						->size( Size::X_SMALL )
@@ -104,5 +105,3 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 			->render();
 	?>
 <?php endif; ?>
-
-<!-- @TODO: Need to use new DeleteConfirmationModal component -->

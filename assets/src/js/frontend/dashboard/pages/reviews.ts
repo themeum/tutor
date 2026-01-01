@@ -35,8 +35,8 @@ const reviewDeleteModal = () => {
 
       this.deleteReviewMutation = this.query.useMutation(this.deleteReview, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.$el?.remove();
-          window.TutorCore.toast.success(data.message ?? __('Review deleted successfully', 'tutor'));
+          window.location.reload();
+          window.TutorCore.toast.success(data?.message ?? __('Review deleted successfully', 'tutor'));
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || 'Failed to delete review');
