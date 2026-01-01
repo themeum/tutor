@@ -1,5 +1,6 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
 
 /**
  * Discussions Page Component
@@ -47,15 +48,15 @@ const discussionsPage = () => {
     },
 
     readUnreadQnA(payload: { question_id: number; qna_action: string }) {
-      return wpAjaxInstance.post('tutor_qna_single_action', payload);
+      return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
     },
 
     deleteQnA(payload: { question_id: number }) {
-      return wpAjaxInstance.post('tutor_delete_dashboard_question', payload);
+      return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
     },
 
     deleteComment(payload: { comment_id: number }) {
-      return wpAjaxInstance.post('tutor_delete_lesson_comment', payload);
+      return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
     },
 
     async handleReadUnreadQnA(questionId: number) {
