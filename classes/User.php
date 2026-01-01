@@ -44,6 +44,14 @@ class User {
 	const TUTOR_STUDENT_META     = '_is_tutor_student';
 
 	/**
+	 * View as constants
+	 *
+	 * @since 4.0.0
+	 */
+	const VIEW_AS_INSTRUCTOR = 'instructor';
+	const VIEW_AS_STUDENT    = 'student';
+
+	/**
 	 * User model
 	 *
 	 * @since 3.0.0
