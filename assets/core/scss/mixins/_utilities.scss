@@ -7,6 +7,12 @@
   font-size: 100%;
   font: inherit;
   vertical-align: baseline;
+  background-color: transparent;
+  color: inherit;
+  text-decoration: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
 }
 
 @mixin tutor-text-truncate {
@@ -38,12 +44,32 @@
 
 }
 
-@mixin tutor-transition($properties: all, $duration: 0.2s, $timing: ease) {
-  transition: $properties $duration $timing;
+@mixin tutor-transition(
+  $properties: all,
+  $duration: 0.25s,
+  $timing: ease-in-out,
+  $delay: 0s
+) {
+  @if $properties == all {
+    transition: all $duration $timing $delay;
+  } @else {
+    $transitions: ();
+
+    @each $property in $properties {
+      $transitions: append(
+        $transitions,
+        $property $duration $timing $delay,
+        comma
+      );
+    }
+
+    transition: $transitions;
+  }
 }
 
+
 @mixin tutor-hover-lift {
-  transition: transform 0.2s ease;
+  @include tutor-transition(transform);
 
   &:hover {
     transform: translateY(-2px);

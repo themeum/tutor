@@ -14,9 +14,7 @@
     gap: $tutor-spacing-2;
     padding: 10px $tutor-spacing-5;
     border-radius: $tutor-radius-lg;
-    transition:
-      background-color 0.25s ease-in-out,
-      color 0.25s ease-in-out;
+    @include tutor-transition((background-color, color));
 
     &:hover {
       background-color: $tutor-tab-l3-active-hover;
@@ -58,9 +56,7 @@
       @include tutor-flex(row, center);
       gap: $tutor-spacing-5;
       padding: $tutor-spacing-4 $tutor-spacing-5;
-      transition:
-        background-color 0.25s ease-in-out,
-        color 0.25s ease-in-out;
+      @include tutor-transition((background-color, color));
 
       &:hover {
         background-color: $tutor-tab-l3-active-hover;
@@ -91,9 +87,7 @@
   &.tutor-nav-secondary {
     .tutor-nav-item {
       border-bottom: 2px solid transparent;
-      transition:
-        border-color 0.25s ease-in-out,
-        background-color 0.25s ease-in-out;
+      @include tutor-transition((border-color, background-color));
 
       &.active {
         background-color: transparent;

@@ -96,35 +96,38 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 
 ?>
 
-<div class="tutor-dashboard-courses-wrapper">
+<div class="tutor-dashboard-courses-wrapper ">
 
 	<!-- Courses nav  -->
-	<div class="tutor-dashboard-page-nav tutor-p-6">
-		<?php Nav::make()->items( $courses_tab )->size( Size::SMALL )->render(); ?>
-	</div>
+	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
+		<div class="tutor-p-6 tutor-border-b">
+			<?php Nav::make()->items( $courses_tab )->size( Size::SMALL )->render(); ?>
+		</div>
 
-	<!-- courses list  -->
-	<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
-		<?php
-		if ( $courses_list && $courses_list->have_posts() ) :
-			while ( $courses_list->have_posts() ) :
-				$courses_list->the_post();
-				tutor_load_template( 'dashboard.courses.course-card' );
-			endwhile;
-			?>
-			<div class="tutor-dashboard-courses-pagination tutor-pt-6">
-				<?php
-					Pagination::make()
-					->current( $paged )
-					->total( $courses_list->found_posts )
-					->limit( $per_page )
-					->render();
-				?>
-			</div>
+		<!-- courses list  -->
+		<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
 			<?php
-		else :
-			EmptyState::make()->title( 'No Courses Found' )->render();
-		endif;
-		?>
+			if ( $courses_list && $courses_list->have_posts() ) :
+				while ( $courses_list->have_posts() ) :
+					$courses_list->the_post();
+					tutor_load_template( 'dashboard.courses.course-card' );
+				endwhile;
+			else :
+				EmptyState::make()->title( 'No Courses Found' )->render();
+			endif;
+			?>
+		</div>
+
+		<?php if ( $courses_list->found_posts > $per_page ) : ?>
+		<div class="tutor-p-6 tutor-border-t">
+			<?php
+				Pagination::make()
+				->current( $paged )
+				->total( $courses_list->found_posts )
+				->limit( $per_page )
+				->render();
+			?>
+		</div>
+		<?php endif; ?>
 	</div>
 </div>

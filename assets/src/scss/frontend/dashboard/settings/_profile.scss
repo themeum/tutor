@@ -1,0 +1,133 @@
+// Tutor dashboard profile settings
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-profile-settings-section {
+	background: $tutor-surface-base;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	.tutor-tabs-vertical {
+		display: block;
+	}
+
+	@media (max-width: 768px) {
+		.tutor-tabs-vertical .tutor-tabs-nav {
+			flex-direction: column;
+		}
+	}
+	@include tutor-breakpoint-down(sm) {
+		.tutor-dashboard-container {
+			.tutor-tabs-vertical .tutor-tabs-nav {
+				flex-direction: column;
+				gap: $tutor-spacing-6;
+				background: transparent;
+				border: 0px;
+				padding: 0px;
+				overflow: unset;
+			}
+	
+			.tutor-tabs-tab {
+				gap: $tutor-spacing-6;
+				&:hover:not(:disabled):not(.tutor-tabs-tab-active) {
+					background: transparent;
+				}
+			}
+	
+			.tutor-profile-settings-tab { 
+				background: $tutor-surface-base;
+			}
+	
+			.tutor-profile-settings-tab button {
+				padding: 0px 0px;
+			}
+	
+			.tutor-icon {
+				background: $tutor-surface-l1;
+				color: $tutor-text-secondary;
+				width: 48px;
+				height: 48px;
+				border-radius: $tutor-radius-md;
+				border: 1px solid $tutor-border-idle;
+			}
+	
+			.tutor-tabs-tab-active {
+				color: $tutor-text-brand;
+				background-color: transparent;
+			}
+		}
+		.tutor-profile-settings-tab-content {
+			background: $tutor-surface-base;
+			position: absolute;
+			top: 60px;
+			height: 100vh;
+			display: none;
+			&.tutor-profile-tab-activated {
+				left: 0px;
+				display: block;
+			}
+		}
+	}
+}
+
+.tutor-profile-settings-tab {
+	border: 1px solid $tutor-border-idle;
+	padding: $tutor-spacing-5;
+	border-radius: $tutor-radius-2xl;
+	background-color: $tutor-surface-l1;
+	button {
+		font-weight: $tutor-font-weight-regular;
+		height: unset;
+		padding: $tutor-spacing-4 $tutor-spacing-7;
+	}
+}
+
+// profile notification section
+.tutor-profile-notification {
+	.tutor-profile-notification-card {
+		background-color: $tutor-surface-l1;
+		border: 1px solid $tutor-border-idle;
+		overflow: hidden;
+		&:hover {
+			.tutor-profile-notification-toggle {
+				visibility: visible;
+			}
+		}
+	}
+
+	.tutor-profile-notification-content {
+		border-top: 1px solid $tutor-border-idle;
+	}
+
+	.tutor-profile-notification-toggle {
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		visibility: hidden;
+		&:hover {
+			color: $tutor-text-primary;
+		}
+		svg {
+			@include tutor-transition(transform);
+			path {
+				transform: translate(0px, 2px);
+			}
+		}
+		&.is-expanded {
+			visibility: visible;
+			svg {
+				color: $tutor-text-primary;
+				transform: rotate(90deg);
+			}
+		}
+	}
+
+	.tutor-input-field {
+		margin-bottom: 0px;
+	}
+
+	.tutor-profile-notification-content {
+		border-top: 1px solid $tutor-border-idle;
+	}
+}

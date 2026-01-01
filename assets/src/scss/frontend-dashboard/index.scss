@@ -1,0 +1,38 @@
+@import '../../../../v2-library/src/scss/reusables.scss';
+.tutor-dashboard {
+	// Libraries to use in all frontend dashboard pages
+	@import './lib/phone-number-field.scss';
+
+	// Frontend dashboard wrapper header, sidebar etc.
+	@import './header.scss';
+	@import './sidebar.scss';
+	@import './footer';
+	@import './my-courses';
+
+	// Individual dashboard pages
+	.tutor-dashboard-content {
+		padding-top: 28px;
+		& > h3,
+		& > h4 {
+			font-style: normal;
+			font-weight: 500;
+			font-size: 24px;
+			color: var(--tutor-body-color);
+			margin: 0 0 25px 0;
+			line-height: 34px;
+		}
+		& > h3 {
+			&.popular-courses-heading-dashboard {
+				margin-top: 28px;
+			}
+		}
+
+		@import './pages/quiz-attempt.scss';
+		@import './pages/setting.scss';
+		@import './pages/assignment.scss';
+		@import './pages/qna';
+		@import './pages/order-history.scss';
+		@import '../modules/certificate-list.scss';
+	}
+}
+@import './snackbar';
