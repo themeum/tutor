@@ -41,6 +41,7 @@ final class Icon {
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BADGE                      = 'badge';
 	const BADGE_CHECK                = 'badge-check';
 	const BADGE_INFO                 = 'badge-info';
 	const BARS                       = 'bars';
@@ -125,6 +126,7 @@ final class Icon {
 	const DIVI_COLORIZED             = 'divi-colorized';
 	const DOC                        = 'doc';
 	const DOCUMENT                   = 'document';
+	const DOLLAR                     = 'dollar';
 	const DOLLAR_RECURRING           = 'dollar-recurring';
 	const DOT                        = 'dot';
 	const DOWNLOAD                   = 'download';
@@ -137,6 +139,7 @@ final class Icon {
 	const DROP                       = 'drop';
 	const DUPLICATE                  = 'duplicate';
 	const DWG                        = 'dwg';
+	const EARNING                    = 'earning';
 	const EDIT                       = 'edit';
 	const EDIT_2                     = 'edit-2';
 	const ELEMENTOR_COLORIZED        = 'elementor-colorized';
@@ -159,6 +162,7 @@ final class Icon {
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
 	const FILTER                     = 'filter';
+	const FILTER_2                   = 'filter-2';
 	const FIRE                       = 'fire';
 	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
@@ -331,11 +335,13 @@ final class Icon {
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
 	const STAR                       = 'star';
+	const STAR_2                     = 'star-2';
 	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
 	const STORE_IMAGE                = 'store-image';
+	const STUDENT                    = 'student';
 	const STYLE_NONE                 = 'style-none';
 	const SUBSCRIPTION               = 'subscription';
 	const SUBTITLE                   = 'subtitle';

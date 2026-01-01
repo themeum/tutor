@@ -3,10 +3,10 @@ import { type buttonMeta } from '@Core/ts/components/button';
 import { type fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { type iconMeta } from '@Core/ts/components/icon';
 import { type popoverMeta } from '@Core/ts/components/popover';
-import { type tabsMeta } from '@Core/ts/components/tabs';
-
 import { type selectDropdownMeta } from '@Core/ts/components/select-dropdown';
 import { type stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
+import { type tabsMeta } from '@Core/ts/components/tabs';
+
 import { type FormService } from '@Core/ts/services/Form';
 import { type ModalService } from '@Core/ts/services/Modal';
 import { type QueryService } from '@Core/ts/services/Query';

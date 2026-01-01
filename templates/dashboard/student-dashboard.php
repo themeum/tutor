@@ -12,16 +12,22 @@
 use TUTOR\Icon;
 use Tutor\Models\CourseModel;
 
+$user_id = get_current_user_id();
+
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
-	$profile_completion = tutor_utils()->user_profile_completion();
-	if ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
+	$profile_completion = tutor_utils()->user_profile_completion( $user_id );
+
+	$photo_data = $profile_completion['_tutor_profile_photo'] ?? array();
+	$is_set     = $photo_data['is_set'] ?? null;
+	$text       = $photo_data['text'] ?? '';
+	if ( empty( $is_set ) ) {
 		?>
 		<div class="tutor-border tutor-mb-7 tutor-rounded-2xl tutor-surface-l1 tutor-p-5">
 			<div class="tutor-flex tutor-items-center tutor-justify-between">
 				<div class="tutor-flex tutor-items-center tutor-gap-2">
 					<?php tutor_utils()->render_svg_icon( Icon::INFO, 24, 24, array( 'class' => 'tutor-icon-brand' ) ); ?>
 					<span class="tutor-small">
-						<?php echo esc_html( $profile_completion['_tutor_profile_photo']['text'] ); ?>
+						<?php echo esc_html( $text ); ?>
 					</span>
 				</div>
 				<a href="<?php echo esc_attr( tutor_utils()->tutor_dashboard_url( 'settings' ) ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-small">
@@ -36,7 +42,6 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 <?php do_action( 'tutor_before_dashboard_content' ); ?>
 <div class="tutor-student-dashboard" x-data>
 	<?php
-	$user_id           = get_current_user_id();
 	$enrolled_course   = CourseModel::get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
 	$active_courses    = CourseModel::get_active_courses_by_user( $user_id );
@@ -178,8 +183,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 /**
  * Active users in progress courses
  */
-$placeholder_img     = tutor()->url . 'assets/images/placeholder.svg';
-$courses_in_progress = CourseModel::get_active_courses_by_user( get_current_user_id(), 0, 2 );
+$courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 );
 ?>
 
 <?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
@@ -206,7 +210,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( get_current_user
 			?>
 			<div class="tutor-card tutor-progress-card">
 				<div class="tutor-progress-card-thumbnail">
-					<img src="<?php echo empty( $tutor_course_img ) ? esc_url( $placeholder_img ) : esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
+					<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" loading="lazy">
 				</div>
 				<div class="tutor-progress-card-content">
 					<div class="tutor-progress-card-header">

@@ -30,6 +30,10 @@ class Instructors_List {
 	const INSTRUCTOR_LIST_CACHE_KEY  = 'tutor-instructors-list';
 	const INSTRUCTOR_COUNT_CACHE_KEY = 'tutor-instructors-count';
 
+	const STATUS_APPROVED = 'approved';
+	const STATUS_PENDING  = 'pending';
+	const STATUS_BLOCKED  = 'blocked';
+
 	/**
 	 * Trait for utilities
 	 *
@@ -373,8 +377,8 @@ class Instructors_List {
 			}
 		}
 
-		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
-		$in_clause     = QueryHelper::prepare_in_clause( $status );
+		$date_clause = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
+		$in_clause   = QueryHelper::prepare_in_clause( $status );
 
 		$query  = "SELECT
 					DISTINCT user.*,
@@ -446,10 +450,10 @@ class Instructors_List {
 		$course_clause = '';
 		if ( '' !== $course_id ) {
 			$course_id     = (int) $course_id;
-			$course_clause =  "AND umeta.meta_value = {$course_id}";
+			$course_clause = "AND umeta.meta_value = {$course_id}";
 		}
-		$date_clause   = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
-		$in_clause     = QueryHelper::prepare_in_clause( $status );
+		$date_clause = '' !== $date ? "AND DATE(user.user_registered) = CAST('$date' AS DATE )" : '';
+		$in_clause   = QueryHelper::prepare_in_clause( $status );
 
 		$query  = "SELECT
 					COUNT(DISTINCT user.ID)

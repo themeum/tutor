@@ -143,11 +143,11 @@ const LessonModal = ({
 
   const hasRightSidebar = Boolean(
     contentDripType !== '' ||
-      isVideoPlaybackTimeVisible ||
-      isFeaturedImageVisible ||
-      isVideoVisible ||
-      isExerciseFilesVisible ||
-      (isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && isLessonPreviewVisible),
+    isVideoPlaybackTimeVisible ||
+    isFeaturedImageVisible ||
+    isVideoVisible ||
+    isExerciseFilesVisible ||
+    (isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && isLessonPreviewVisible),
   );
 
   useEffect(() => {

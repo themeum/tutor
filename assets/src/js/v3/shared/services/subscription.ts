@@ -42,11 +42,10 @@ export type Subscription = {
   is_enabled: '0' | '1';
 };
 
-export interface SubscriptionFormData
-  extends Omit<
-    Subscription,
-    'provide_certificate' | 'sale_price_from' | 'sale_price_to' | 'is_featured' | 'is_enabled'
-  > {
+export interface SubscriptionFormData extends Omit<
+  Subscription,
+  'provide_certificate' | 'sale_price_from' | 'sale_price_to' | 'is_featured' | 'is_enabled'
+> {
   charge_enrollment_fee: boolean;
   enable_free_trial: boolean;
   offer_sale_price: boolean;
