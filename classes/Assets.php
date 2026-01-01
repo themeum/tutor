@@ -497,9 +497,9 @@ class Assets {
 	 * @return void
 	 */
 	public function common_scripts( $slug ) {
-		// if ( ! $this->should_load_legacy_scripts() ) {
-		// 	return;
-		// }
+		if ( ! $this->should_load_legacy_scripts() ) {
+			return;
+		}
 
 		/**
 		 * Load TinyMCE for tutor settings page if tutor pro is not available.
