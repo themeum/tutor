@@ -11,13 +11,13 @@
 
 // Dashboard components
 @forward "stat-card";
-@forward "popup-progress-card";
 @forward "progress-card";
 @forward "course-card";
 @forward "star-rating";
 
 // Page components
-@forward 'my-courses';
+@forward 'pages/my-courses';
+@forward 'pages/announcements';
 @forward 'assignments';
 @forward 'quiz-attempts';
 @forward 'certificates';

@@ -11,6 +11,7 @@ export const icons = [
   'all',
   'anglesRight',
   'animation',
+  'announcement',
   'archive',
   'arrowLeft',
   'arrowLeft2',
