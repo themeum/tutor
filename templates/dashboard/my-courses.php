@@ -369,6 +369,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 			->id( 'tutor-course-delete-modal' )
 			->title( __( 'Delete This Course?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this course permanently from the site? Please confirm your choice.', 'tutor' ) )
+			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
 			->confirm_handler( 'handleDeleteCourse(payload?.courseId)' )
 			->mutation_state( 'deleteMutation' )
 			->render();

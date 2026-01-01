@@ -202,6 +202,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 			->id( 'tutor-announcement-delete-modal' )
 			->title( __( 'Delete This Announcement?', 'tutor' ) )
 			->message( __( 'Are you sure you want to delete this announcement permanently? Please confirm your choice.', 'tutor' ) )
+			->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
 			->confirm_handler( 'handleDeleteAnnouncement(payload?.announcementId)' )
 			->mutation_state( 'deleteMutation' )
 			->render();

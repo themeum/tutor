@@ -1,8 +1,8 @@
 <?php
 /**
- * Tutor Component: Delete Confirmation Modal
+ * Tutor Component: Confirmation Modal
  *
- * Provides a reusable delete confirmation modal with Alpine.js integration.
+ * Provides a reusable confirmation modal with Alpine.js integration.
  *
  * @package Tutor\Components
  * @author Themeum
@@ -17,7 +17,7 @@ use TUTOR\Icon;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Delete Confirmation Modal Component Class.
+ * Confirmation Modal Component Class.
  *
  * ```
  * // Example usage:
@@ -99,22 +99,13 @@ class ConfirmationModal extends BaseComponent {
 	protected $icon_height = 100;
 
 	/**
-	 * Delete handler function name (Alpine.js method).
+	 * Confirm handler function name (Alpine.js method).
 	 *
 	 * @since 4.0.0
 	 *
 	 * @var string
 	 */
 	protected $confirm_handler = '';
-
-	/**
-	 * Mutation state variable name (e.g., 'deleteMutation').
-	 *
-	 * @since 4.0.0
-	 *
-	 * @var string
-	 */
-	protected $mutation_state = 'deleteMutation';
 
 	/**
 	 * Cancel button text.
@@ -222,7 +213,7 @@ class ConfirmationModal extends BaseComponent {
 	}
 
 	/**
-	 * Set delete handler function name.
+	 * Set confirm handler function name.
 	 *
 	 * @since 4.0.0
 	 *
@@ -336,7 +327,7 @@ class ConfirmationModal extends BaseComponent {
 			$this->cancel_text = __( 'Cancel', 'tutor' );
 		}
 		if ( empty( $this->confirm_text ) ) {
-			$this->confirm_text = __( 'Yes, Delete This', 'tutor' );
+			$this->confirm_text = __( 'Yes', 'tutor' );
 		}
 
 		// Build Alpine.js x-data.
@@ -416,8 +407,8 @@ class ConfirmationModal extends BaseComponent {
 			esc_attr( $alpine_json ),
 			$style_attr,
 			$icon_html,
-			esc_html( $this->title ?? __( 'Delete This Item?', 'tutor' ) ),
-			esc_html( $this->message ?? __( 'Are you sure you want to delete this item permanently? Please confirm your choice.', 'tutor' ) ),
+			esc_html( $this->title ?? __( 'Are you sure?', 'tutor' ) ),
+			esc_html( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ) ),
 			$confirm_html,
 			$cancel_html
 		);
