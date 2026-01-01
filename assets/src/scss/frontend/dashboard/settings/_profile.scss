@@ -109,7 +109,7 @@
 			color: $tutor-text-primary;
 		}
 		svg {
-			transition: transform 0.2s ease;
+			@include tutor-transition(transform);
 			path {
 				transform: translate(0px, 2px);
 			}

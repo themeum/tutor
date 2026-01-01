@@ -61,10 +61,10 @@
 
 		&-badge {
 			@include tutor-flex(row, center, center);
-			transition: opacity 0.2s ease, visibility 0.2s ease;
 			opacity: 1;
 			visibility: visible;
 			z-index: $tutor-z-positive;
+			@include tutor-transition((opacity, visibility));
 		}
 	}
 
@@ -76,8 +76,8 @@
 		opacity: 0;
 		visibility: hidden;
 		pointer-events: none;
-		transition: opacity 0.2s ease, visibility 0.2s ease;
 		z-index: $tutor-z-dropdown;
+		@include tutor-transition((opacity, visibility));
 
 		&:hover {
 			color: $tutor-text-primary-inverse;
