@@ -79,7 +79,8 @@
 		width: 32px;
 		height: 32px;
 		cursor: pointer;
-		transition: background-color 0.2s ease;
+		@include tutor-transition(background-color);
+
 		&:hover {
 			opacity: 0.9;
 		}
