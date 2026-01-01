@@ -40,11 +40,9 @@ body {
   margin: 0;
   font-family: inherit;
   line-height: inherit;
-  background-color: var(--tutor-surface-base);
-  color: var(--tutor-text-primary);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  background-color: $tutor-surface-base;
+  color: $tutor-text-primary;
+  @include tutor-transition((background-color, color));
 }
 
 // Remove default margin in all browsers

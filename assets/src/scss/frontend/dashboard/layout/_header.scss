@@ -69,7 +69,7 @@
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-full;
     overflow: hidden;
-    transition: border-color 0.25s ease-in-out;
+    @include tutor-transition(border-color);
 
     &:hover,
     &.active {
@@ -136,7 +136,7 @@
           text-decoration: none;
           box-shadow: none;
           outline: none;
-          transition: background-color 0.25 ease-in-out;
+          @include tutor-transition(background-color);
 
           &:hover {
             background-color: $tutor-tab-sidebar-l2-hover;
