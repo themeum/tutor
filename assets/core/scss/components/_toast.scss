@@ -5,7 +5,7 @@
 
 .tutor-toast-container {
   position: fixed;
-  z-index: 1080;
+  z-index: $tutor-z-highest;
   pointer-events: none;
 
   // Position variants

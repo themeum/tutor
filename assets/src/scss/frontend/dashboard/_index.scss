@@ -16,7 +16,8 @@
 @forward "star-rating";
 
 // Page components
-@forward 'my-courses';
+@forward 'pages/my-courses';
+@forward 'pages/announcements';
 @forward 'assignments';
 @forward 'quiz-attempts';
 @forward 'certificates';

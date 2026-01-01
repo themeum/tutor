@@ -9420,7 +9420,7 @@ class Utils {
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::NOTIFICATION,
+				'icon'     => Icon::ANNOUNCEMENT,
 			),
 		);
 

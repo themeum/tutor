@@ -5,7 +5,7 @@ import { type ServiceMeta } from '@Core/ts/types';
  * FormService: programmatic API for interacting with form instances.
  * Provides methods to access form state and control form behavior from outside Alpine components.
  */
-class FormService {
+export class FormService {
   private forms: Map<string, FormControlMethods> = new Map();
 
   /**

@@ -1,6 +1,7 @@
 // Dashboard Entry Point
 // Initializes dashboard functionality based on current page
 
+import { initializeAnnouncements } from './pages/announcements';
 import { initializeAssignments } from './pages/assignments';
 import { initializeCertificates } from './pages/certificates';
 import { initializeHome } from './pages/instructor/home';
@@ -42,6 +43,9 @@ const getCurrentPage = (): string => {
   if (path.includes('/my-courses') || path.includes('my-courses')) {
     return 'my-courses';
   }
+  if (path.includes('/announcements')) {
+    return 'dashboard-announcements';
+  }
   if (path.includes('/assignments')) {
     return 'assignments';
   }
@@ -73,6 +77,10 @@ const initializeDashboard = () => {
     case 'my-courses':
       initializeMyCourses();
       break;
+    case 'dashboard-announcements':
+      initializeAnnouncements();
+      break;
+    case 'dashboard-assignments':
     case 'assignments':
       initializeAssignments();
       break;
