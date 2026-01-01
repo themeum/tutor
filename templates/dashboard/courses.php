@@ -9,11 +9,14 @@
  * @since 1.4.3
  */
 
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Pagination;
 use Tutor\Models\CourseModel;
 use Tutor\Components\EmptyState;
+use Tutor\Components\Nav;
 
 // Pagination.
 $per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -97,16 +100,7 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 
 	<!-- Courses nav  -->
 	<div class="tutor-dashboard-page-nav tutor-p-6">
-		<?php
-			tutor_load_template(
-				'core-components.nav',
-				array(
-					'items'   => $courses_tab,
-					'size'    => 'sm',
-					'variant' => 'primary',
-				)
-			);
-			?>
+		<?php Nav::make()->items( $courses_tab )->size( Size::SMALL )->render(); ?>
 	</div>
 
 	<!-- courses list  -->
@@ -124,8 +118,6 @@ $paginated_courses_list = $full_course_list_array[ $active_tab ];
 					->current( $paged )
 					->total( $courses_list->found_posts )
 					->limit( $per_page )
-					->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-					->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
 					->render();
 				?>
 			</div>
