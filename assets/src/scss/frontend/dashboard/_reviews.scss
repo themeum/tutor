@@ -12,9 +12,7 @@
     background-color: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-lg;
-    transition-property: background-color, border-color, opacity;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-in-out;
+    @include tutor-transition((background-color, border-color, opacity));
 
     &:hover {
       background-color: $tutor-surface-l1-hover;
@@ -59,7 +57,7 @@
   &-actions {
     @include tutor-flex(row);
     gap: $tutor-spacing-4;
-    transition: opacity 0.2s ease-in-out;
+    @include tutor-transition(opacity);
     opacity: 0;
   }
 
