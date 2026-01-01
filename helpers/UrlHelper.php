@@ -56,37 +56,37 @@ class UrlHelper {
 	}
 
 	/**
-	 * Add query args to URL.
+	 * Add query params to URL.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param string $url URL.
-	 * @param array  $query_args Query args.
+	 * @param array  $query_params Query params.
 	 *
 	 * @return string
 	 */
-	public static function add_query_var( $url, array $query_args = array() ) : string {
+	public static function add_query_params( $url, array $query_params = array() ) : string {
 		$url = ltrim( $url, '/' );
 
-		if ( ! empty( $query_args ) ) {
-			$url = add_query_arg( $query_args, $url );
+		if ( ! empty( $query_params ) ) {
+			$url = add_query_arg( $query_params, $url );
 		}
 
 		return $url;
 	}
 
 	/**
-	 * Remove query args from URL.
+	 * Remove query params from URL.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @param string $url URL.
-	 * @param array  $query_args Query args.
+	 * @param array  $query_params Query params.
 	 *
 	 * @return string
 	 */
-	public static function remove_query_var( $url, array $query_args = array() ) : string {
-		return remove_query_arg( $query_args, $url );
+	public static function remove_query_params( $url, array $query_params = array() ) : string {
+		return remove_query_arg( $query_params, $url );
 	}
 }
 
