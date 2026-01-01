@@ -15,9 +15,7 @@
   top: 0;
   inset-inline-start: 0;
   overflow: hidden;
-  transition:
-    opacity 0.25s ease-in-out,
-    transform 0.25s ease-in-out;
+  @include tutor-transition((opacity, transform));
 
   .is-fullscreen & {
     opacity: 0;
@@ -35,9 +33,9 @@
     background-color: $tutor-surface-l1;
     z-index: 100;
     transform: translateX(100%);
-    transition: transform 0.3s ease-in-out;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
+    @include tutor-transition(transform, 0.3s);
 
     &.is-open {
       transform: translateX(0);
@@ -119,7 +117,7 @@
           @include tutor-flex-center();
           margin-inline-start: auto;
           color: $tutor-icon-secondary;
-          transition: transform 0.25s ease-in-out;
+          @include tutor-transition(transform);
 
           &.is-expanded {
             transform: rotate(180deg);
@@ -196,7 +194,7 @@
       gap: $tutor-spacing-5;
       padding: $tutor-spacing-4 $tutor-spacing-5;
       border-radius: $tutor-radius-md;
-      transition: background-color 0.25s ease-in-out;
+      @include tutor-transition(background-color);
 
       &:hover {
         background-color: $tutor-tab-sidebar-l2-hover;

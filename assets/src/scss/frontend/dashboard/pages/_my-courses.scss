@@ -9,8 +9,8 @@
     @include tutor-flex(column);
     @include tutor-card-base();
     @include tutor-card-radius();
-    transition: background-color 0.3s ease-in-out;
     position: relative;
+    @include tutor-transition(background-color);
 
     &-body {
       @include tutor-flex(column);
@@ -41,9 +41,7 @@
       box-shadow: 0px 4px 4px 0px #00000040;
       visibility: hidden;
       opacity: 0;
-      transition:
-        visibility 0.3s ease-in-out,
-        opacity 0.3s ease-in-out;
+      @include tutor-transition((opacity, visibility));
     }
 
     &-footer {
@@ -61,9 +59,7 @@
       &-actions {
         visibility: hidden;
         opacity: 0;
-        transition:
-          visibility 0.3s ease-in-out,
-          opacity 0.3s ease-in-out;
+        @include tutor-transition((opacity, visibility));
       }
     }
 

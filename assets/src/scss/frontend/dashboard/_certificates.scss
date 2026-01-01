@@ -14,7 +14,7 @@
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-lg;
     padding: $tutor-spacing-4 $tutor-spacing-5;
-    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+    @include tutor-transition((background-color, border-color));
 
     &:hover {
       background-color: $tutor-surface-l1-hover;
