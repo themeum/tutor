@@ -283,7 +283,7 @@ class InputField extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $size = 'sm';
+	protected $size = Size::MD;
 
 	/**
 	 * Options for select input field.
@@ -319,7 +319,7 @@ class InputField extends BaseComponent {
 	 *
 	 * @var boolean
 	 */
-	protected $close_on_select = false;
+	protected $close_on_select = null;
 
 	/**
 	 * Max Height for select input.
@@ -491,7 +491,7 @@ class InputField extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function collapsable( $close_on_select = false ): self {
+	public function collapsable( $close_on_select = true ): self {
 		$this->close_on_select = $close_on_select;
 		return $this;
 	}
@@ -521,7 +521,7 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function attr( $key, $value ) {
-		$this->attributes[ $key ] = esc_attr( $value );
+		$this->attributes[ $key ] = $value;
 		return $this;
 	}
 
@@ -846,7 +846,7 @@ class InputField extends BaseComponent {
 						%s
 						</button>
 					</template>
-				%s
+					<span class="tutor-select-arrow" :data-open="isOpen.toString()">%s</span>
 				</div>
 			</button>
 			',
@@ -1051,7 +1051,6 @@ class InputField extends BaseComponent {
 			'clearable'         => $this->clearable,
 			'disabled'          => $this->disabled,
 			'loading'           => $this->loading,
-			'closeOnSelect'     => $this->close_on_select,
 
 			'multiple'          => $this->multiple,
 
@@ -1074,6 +1073,10 @@ class InputField extends BaseComponent {
 			$props['maxSelections'] = $this->max_selections;
 		}
 
+		if ( null !== $this->close_on_select ) {
+			$props['closeOnSelect'] = $this->close_on_select;
+		}
+
 		$size_class = '';
 		if ( Size::SM === $this->size ) {
 			$size_class = 'tutor-select-sm';
@@ -1085,33 +1088,21 @@ class InputField extends BaseComponent {
 		$select_input_buttons = $this->render_select_input_button() ?? '';
 		$select_input_options = $this->render_select_input_options() ?? '';
 
-		$error_html = sprintf(
-			'<div 
-				class="tutor-error-text" 
-				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
-				role="alert" 
-				aria-live="polite"
-			></div>',
-			esc_attr( $this->name )
-		);
-
 		return sprintf(
 			'<div
-				x-data="tutorSelect(%s)",
+				x-data="tutorSelect(%s)"
 				class="tutor-select %s"
 				:data-disabled="disabled.toString()"
+				%s
 			>
 				%s
 				%s
-			</div>
-			%s',
+			</div>',
 			$props_json,
 			$size_class,
+			$this->render_attributes(),
 			$select_input_buttons,
-			$select_input_options,
-			$error_html
+			$select_input_options
 		);
 	}
 
@@ -1126,6 +1117,13 @@ class InputField extends BaseComponent {
 		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
 
 		$input_classes = 'tutor-input';
+
+		if ( Size::SM === $this->size ) {
+			$input_classes .= ' tutor-input-sm';
+		} elseif ( Size::LG === $this->size ) {
+			$input_classes .= ' tutor-input-lg';
+		}
+
 		if ( ! empty( $this->left_icon ) ) {
 			$input_classes .= ' tutor-input-content-left';
 		}
@@ -1194,19 +1192,6 @@ class InputField extends BaseComponent {
 				esc_attr( $this->name ),
 				$clear_icon
 			);
-
-			$error_html = sprintf(
-				'<div 
-					class="tutor-error-text" 
-					x-cloak 
-					x-show="errors.%1$s" 
-					x-text="errors?.%1$s?.message" 
-					role="alert" 
-					aria-live="polite"
-				></div>',
-				esc_attr( $this->name )
-			);
-
 		}
 
 		return sprintf(
@@ -1216,13 +1201,11 @@ class InputField extends BaseComponent {
 				%s
 				%s
 			</div>
-			%s
 			',
 			$input_attrs,
 			$left_icon_html,
 			$right_icon_html,
-			$clear_button_html,
-			$error_html
+			$clear_button_html
 		);
 	}
 
@@ -1237,6 +1220,13 @@ class InputField extends BaseComponent {
 		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
 
 		$input_classes = 'tutor-input tutor-text-area';
+
+		if ( Size::SM === $this->size ) {
+			$input_classes .= ' tutor-input-sm';
+		} elseif ( Size::LG === $this->size ) {
+			$input_classes .= ' tutor-input-lg';
+		}
+
 		if ( $this->clearable ) {
 			$input_classes .= ' tutor-input-content-clear';
 		}
@@ -1266,7 +1256,14 @@ class InputField extends BaseComponent {
 				$clear_icon = ob_get_clean();
 			}
 			$clear_button_html = sprintf(
-				'<button type="button" class="tutor-input-clear-button" x-show="values.%1$s && String(values.%1$s).length > 0" aria-label="Clear input" @click="setValue(\'%1$s\', \'\')">%2$s</button>',
+				'<button 
+					type="button" 
+					class="tutor-input-clear-button" 
+					aria-label="Clear input"
+					x-cloak
+					x-show="values.%1$s && String(values.%1$s).length > 0"
+					@click="setValue(\'%1$s\', \'\')"
+				>%2$s</button>',
 				esc_attr( $this->name ),
 				$clear_icon
 			);
@@ -1279,7 +1276,7 @@ class InputField extends BaseComponent {
 			</div>',
 			$input_attrs,
 			esc_textarea( $this->value ),
-			$clear_button_html
+			$clear_button_html,
 		);
 	}
 

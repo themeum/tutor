@@ -27,6 +27,7 @@ final class Icon {
 	const ALL                        = 'all';
 	const ANGLES_RIGHT               = 'angles-right';
 	const ANIMATION                  = 'animation';
+	const ANNOUNCEMENT               = 'announcement';
 	const ARCHIVE                    = 'archive';
 	const ARROWS_IN                  = 'arrows-in';
 	const ARROWS_OUT                 = 'arrows-out';

@@ -2916,7 +2916,7 @@ class Utils {
 		// @TODO need to make it dynamic with account view as mode.
 		// $view_mode = 'student';
 		// if ( User::is_admin() || User::is_instructor() ) {
-		// 	$view_mode = 'instructor';
+		// $view_mode = 'instructor';
 		// }
 
 		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
@@ -3876,6 +3876,40 @@ class Utils {
 	}
 
 	/**
+	 * Get user avatar URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $user_id user id.
+	 *
+	 * @return string
+	 */
+	public function get_user_avatar_url( $user_id = 0 ) {
+		$user_id     = $this->get_user_id( $user_id );
+		$cache_key   = 'tutor_get_user_avatar_url_' . $user_id;
+		$cached_data = TutorCache::get( $cache_key );
+
+		if ( false !== $cached_data ) {
+			return $cached_data;
+		}
+
+		$avatar_url = '';
+
+		$user = get_userdata( $user_id );
+		if ( is_a( $user, 'WP_User' ) ) {
+			$user->tutor_profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+		}
+
+		if ( is_object( $user ) && $user->tutor_profile_photo && wp_get_attachment_image_url( $user->tutor_profile_photo ) ) {
+			$avatar_url = wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' );
+		}
+
+		TutorCache::set( $cache_key, $avatar_url );
+
+		return $avatar_url;
+	}
+
+	/**
 	 * Get tutor user.
 	 *
 	 * @since 1.0.0
@@ -4711,13 +4745,16 @@ class Utils {
 	 * Get question and asnwer by question
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 param $order is added.
 	 *
-	 * @param int $question_id question id.
+	 * @param int    $question_id question id.
+	 * @param string $order order ASC or DESC.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_qa_answer_by_question( $question_id ) {
+	public function get_qa_answer_by_question( $question_id, $order = 'ASC' ) {
 		global $wpdb;
+		$order = 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT _chat.comment_ID,
@@ -4733,7 +4770,7 @@ class Utils {
 					INNER JOIN {$wpdb->users} ON _chat.user_id = {$wpdb->users}.ID
 			WHERE 	comment_type = 'tutor_q_and_a'
 					AND ( _chat.comment_ID=%d OR _chat.comment_parent = %d)
-			ORDER BY _chat.comment_ID ASC;",
+			ORDER BY _chat.comment_ID {$order};",
 				$question_id,
 				$question_id
 			)
@@ -5508,9 +5545,15 @@ class Utils {
 	 *
 	 * @since 4.0.0
 	 *
+	 * @param string $subpage check is dashboard subpage or not.
+	 *
 	 * @return bool
 	 */
-	public function is_dashboard_page(): bool {
+	public function is_dashboard_page( $subpage = null ): bool {
+		if ( $subpage ) {
+			return $this->is_tutor_frontend_dashboard( $subpage );
+		}
+
 		$current_id        = get_the_ID();
 		$dashboard_page_id = $this->dashboard_page_id();
 
@@ -9391,11 +9434,6 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'index'   => array(
-				'title'    => __( 'Home', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::HOME_FILL,
-			),
 			'my-courses'    => array(
 				'title'    => __( 'Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9425,17 +9463,9 @@ class Utils {
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::NOTIFICATION,
+				'icon'     => Icon::ANNOUNCEMENT,
 			),
 		);
-		
-		if ( $this->should_show_dicussion_menu() ) {
-			$other_menus['discussions'] = array(
-				'title'    => __( 'Discussions', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QA,
-			);
-		}
 
 		return apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
 	}
@@ -9443,7 +9473,7 @@ class Utils {
 	/**
 	 * Should show the disscussion menu on the student
 	 * and instructor dashboard menu
-	 * 
+	 *
 	 * @since 4.0.0
 	 *
 	 * @return boolean
@@ -9468,7 +9498,7 @@ class Utils {
 		$items = array(
 			'index'            => array(
 				'title' => __( 'Home', 'tutor' ),
-				'icon'  => Icon::HOME_FILL,
+				'icon'  => Icon::HOME,
 			),
 			'enrolled-courses' => array(
 				'title' => __( 'Courses', 'tutor' ),
@@ -9744,7 +9774,7 @@ class Utils {
 	 *
 	 * @return string
 	 */
-	public function get_svg_icon( $name = '', $width = 16, $height = 16,  $attributes = array() ) {
+	public function get_svg_icon( $name = '', $width = 16, $height = 16, $attributes = array() ) {
 
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
