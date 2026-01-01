@@ -27,7 +27,7 @@ ob_start();
 
 if ( $is_course_in_user_cart ) {
 	?>
-	<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-md <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
+	<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-md tutor-btn-block <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
 		<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 	</a>
 	<?php

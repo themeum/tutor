@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 				if (status_code === 201) {
 					tutor_toast(__('Success', 'tutor'), message, 'success');
-					const viewCartButton = `<a data-cy="tutor-native-view-cart" href="${data?.cart_page_url ?? "#"}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'} ${!data?.cart_page_url ? 'tutor-cart-page-not-configured' : ''}">${__('View Cart', 'tutor')}</a>`
+					const viewCartButton = `<a data-cy="tutor-native-view-cart" href="${data?.cart_page_url ?? "#"}" class="tutor-btn tutor-btn-primary-soft tutor-btn-block ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'} ${!data?.cart_page_url ? 'tutor-cart-page-not-configured' : ''}">${__('View Cart', 'tutor')}</a>`
 					button.parentElement.innerHTML = viewCartButton;
 
 					// Create a custom event with cart count
