@@ -10746,6 +10746,21 @@ class Utils {
 		return null;
 	}
 
+	/**
+	 * Render a template and return its output as a string.
+	 * 
+	 * @since 4.0.0
+	 *
+	 * @param string $template   Template file path or slug.
+	 * @param array  $data       Data to be passed to the template.
+	 * @param string $type       Template type. Allowed values:
+	 *                           - include
+	 *                           - custom_template
+	 *                           - template
+	 * @param bool   $tutor_pro  Whether to load Tutor Pro template.
+	 *
+	 * @return string Rendered template output.
+	 */
 	public function render_template( $template, $data, $type, $tutor_pro = false ) {
 
 		ob_start();
@@ -10770,6 +10785,13 @@ class Utils {
 		return (string) ob_get_clean();
 	}
 
+	/**
+	 * Get stepper sort options.
+	 * 
+	 * @since 4.0.0
+	 *
+	 * @return array[] List of sort options with id and label.
+	 */
 	public function get_stepper_sort_options() {
 		return array(
 			array(
@@ -10783,64 +10805,91 @@ class Utils {
 		);
 	}
 
-	public function get_topic_progress_by_course_id( $course_id ) {
+	/**
+	 * Get topic-wise progress data for a course and a student.
+	 *
+	 * @since 4.0.0
+	 * 
+	 * @param int $course_id   Course ID.
+	 * @param int $student_id Student ID.
+	 *
+	 * @return array[] Topic progress data.
+	 */
+	public function get_topic_progress_by_course_id( $course_id, $student_id ) {
 
-		$topics     = $this->get_topics( $course_id );
+		$topics_query = $this->get_topics( $course_id );
+
 		$topic_list = array();
 
-		if ( $topics->have_posts() ) {
-			while ( $topics->have_posts() ) {
-				$topics->the_post();
-				$topic_list[] = array(
-					'topic_id'      => get_the_ID(),
-					'topic_summery' => get_the_content(),
-					'topic_title'   => the_title(),
-					'lessons'       => tutor_utils()->get_course_contents_by_topic( get_the_ID(), -1 ),
-				);
+		if ( empty( $topics_query ) || ! $topics_query->have_posts() ) {
+			return $topic_list;
+		}
 
-				if ( $lessons->have_posts() ) {
-					foreach ( $lessons->posts as $post ) {
-						if ( 'tutor_quiz' === $post->post_type ) {
-							$quiz                                  = $post;
-							$topic_list[]['lessons']['tutor_quiz'] = array(
-								'quiz_id'     => $quiz->ID,
-								'quiz_link'   => esc_url( get_permalink( $quiz->ID ) ),
-								'quiz_title'  => $quiz->post_title,
-								'has_attempt' => tutor_utils()->has_attempted_quiz( $student_id, $quiz->ID ),
-								'time_limit'  => tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_value' ),
-								'time_type'   => tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' ),
-							);
-						} elseif ( 'tutor_assignments' === $post->post_type ) {
-							$topic_list[]['lessons']['tutor_assignments'] = array(
-								'assignment_submitted' => tutor_utils()->get_submitted_assignment_count( $post->ID, $student_id ),
-								'assignment_id'        => $post->ID,
-								'assignment_link'      => esc_url( get_permalink( $post->ID ) ),
-								'assignment_title'     => $post->post_title,
-							);
-						} elseif ( 'tutor_zoom_meeting' === $post->post_type ) {
-							$topic_list[]['lessons']['tutor_zoom_meeting'] = array(
-								'zoom_meeting'      => $post->ID,
-								'zoom_meeting_link' => esc_url( get_permalink( $post->ID ) ),
-							);
-						} else {
+		foreach ( $topics_query->posts as $topic_post ) {
+			$topic_id = (int) $topic_post->ID;
 
-							$topic_list[]['lessons']['lesson'] = array(
-								'video'               => tutor_utils()->get_video_info( $post->ID ),
-								'video_play_time'     => $video->playtime ?? '',
-								'is_completed_lesson' => tutor_utils()->is_completed_lesson( $post->ID, $student_id ),
-								'lesson_id'           => $post->ID,
-								'lesson_link'         => esc_url( get_permalink( $post->ID ) ),
-								'lesson_title'        => $post->post_title,
-							);
-						}
+			$topic = array(
+				'topic_id'      => $topic_id,
+				'topic_summary' => apply_filters( 'the_content', $topic_post->post_content ),
+				'topic_title'   => get_the_title( $topic_id ),
+				'items'         => array(),
+			);
+
+			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
+
+			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
+				foreach ( $contents_query->posts as $content_post ) {
+					$post_id   = (int) $content_post->ID;
+					$post_type = $content_post->post_type;
+
+					if ( 'tutor_quiz' === $post_type ) {
+						$topic['items'][] = array(
+							'type'        => 'quiz',
+							'quiz_id'     => $post_id,
+							'quiz_link'   => esc_url( get_permalink( $post_id ) ),
+							'quiz_title'  => $content_post->post_title,
+							'has_attempt' => (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id ),
+							'time_limit'  => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
+							'time_type'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
+						);
+
+					} elseif ( 'tutor_assignments' === $post_type ) {
+						$topic['items'][] = array(
+							'type'                 => 'assignment',
+							'assignment_id'        => $post_id,
+							'assignment_link'      => esc_url( get_permalink( $post_id ) ),
+							'assignment_title'     => $content_post->post_title,
+							'assignment_submitted' => (int) tutor_utils()->get_submitted_assignment_count( $post_id, $student_id ),
+						);
+
+					} elseif ( 'tutor_zoom_meeting' === $post_type ) {
+						$topic['items'][] = array(
+							'type'              => 'zoom_meeting',
+							'zoom_meeting_id'   => $post_id,
+							'zoom_meeting_link' => esc_url( get_permalink( $post_id ) ),
+						);
+
+					} else {
+						$video = tutor_utils()->get_video_info( $post_id );
+
+						$topic['items'][] = array(
+							'type'                => 'lesson',
+							'lesson_id'           => $post_id,
+							'lesson_link'         => esc_url( get_permalink( $post_id ) ),
+							'lesson_title'        => $content_post->post_title,
+							'video'               => $video,
+							'video_play_time'     => isset( $video->playtime ) ? $video->playtime : '',
+							'is_completed_lesson' => (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id ),
+						);
 					}
-
-					$lessons->reset_postdata();
-
 				}
 			}
-			$topics->reset_postdata();
-			wp_reset_postdata();
+
+			$topic_list[] = $topic;
 		}
+
+		wp_reset_postdata();
+
+		return $topic_list;
 	}
 }
