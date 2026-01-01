@@ -1,6 +1,7 @@
 // Button Mixins
 // Reusable button styles with variants and sizes
 
+@use './utilities' as *;
 @use '../tokens' as *;
 
 @mixin tutor-button-base {
@@ -14,7 +15,7 @@
   text-align: center;
   text-decoration: none;
   font-family: inherit;
-  @include tutor-transition(all);
+  @include tutor-transition();
 
   &:disabled {
     cursor: not-allowed;
