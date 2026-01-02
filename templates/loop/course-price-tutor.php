@@ -26,7 +26,6 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
 
 	$price_html       = tutor_utils()->get_course_price();
-	// $utility_classes  = 'tutor-d-flex tutor-align-center tutor-justify-between';
 	$utility_classes  = '';
 	$total_enrolled   = (int) tutor_utils()->count_enrolled_users_by_course( $course_id );
 	$maximum_students = (int) tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
