@@ -59,9 +59,9 @@ const discussionsPage = () => {
       return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
     },
 
-    async handleReadUnreadQnA(questionId: number) {
+    async handleReadUnreadQnA(questionId: number, context: string) {
       await this.readUnreadQnAMutation?.mutate({
-        context: 'frontend-dashboard-qna-table-instructor',
+        context: context,
         question_id: questionId,
         qna_action: 'read',
       });

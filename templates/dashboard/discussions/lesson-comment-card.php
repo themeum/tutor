@@ -31,7 +31,7 @@ if ( ! empty( $replies ) ) {
 	$last_reply = $replies[0];
 }
 
-$replies_url = UrlHelper::prepare(
+$replies_url = UrlHelper::add_query_params(
 	$discussion_url,
 	array(
 		'tab'     => 'lesson-comments',
