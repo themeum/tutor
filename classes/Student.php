@@ -317,10 +317,10 @@ class Student {
 	 * @return void
 	 */
 	public function tutor_social_profile() {
-			tutor_utils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
-			$user_id           = get_current_user_id();
-			$tutor_user_social = tutor_utils()->tutor_user_social_icons();
+		$user_id           = get_current_user_id();
+		$tutor_user_social = tutor_utils()->tutor_user_social_icons();
 
 		foreach ( $tutor_user_social as $key => $social ) {
 			$user_social_value = sanitize_text_field( tutor_utils()->input_old( $key ) );
@@ -331,8 +331,8 @@ class Student {
 			}
 		}
 
-			wp_send_json_success( array( 'message' => __( 'Social Profile Updated', 'tutor' ) ) );
-			die();
+		wp_send_json_success( array( 'message' => __( 'Social Profile Updated', 'tutor' ) ) );
+		die();
 	}
 
 	/**
