@@ -41,30 +41,26 @@ if ( ! isset( $active_tab, $page_tabs[ $active_tab ] ) ) {
 	$active_tab = 'courses';
 }
 
+$enrolled_courses  = CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $courses_per_page );
+$active_courses    = CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page );
+$completed_courses = CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page );
+
+$enrolled_course_count  = is_a( $enrolled_courses, 'WP_Query' ) ? $enrolled_courses->found_posts : 0;
+$active_course_count    = is_a( $active_courses, 'WP_Query' ) ? $active_courses->found_posts : 0;
+$completed_course_count = is_a( $completed_courses, 'WP_Query' ) ? $completed_courses->found_posts : 0;
+
+
 // Get Paginated course list.
 $courses_list_array = array(
-	'courses'                   => CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ), $offset, $courses_per_page ),
-	'courses/active-courses'    => CourseModel::get_active_courses_by_user( null, $offset, $courses_per_page ),
-	'courses/completed-courses' => CourseModel::get_completed_courses_by_user( null, $offset, $courses_per_page ),
+	'courses'                   => $enrolled_courses,
+	'courses/active-courses'    => $active_courses,
+	'courses/completed-courses' => $completed_courses,
 );
-
-// Get Full course list.
-$full_course_list_array = array(
-	'courses'                   => CourseModel::get_enrolled_courses_by_user( get_current_user_id(), array( 'private', 'publish' ) ),
-	'courses/active-courses'    => CourseModel::get_active_courses_by_user(),
-	'courses/completed-courses' => CourseModel::get_completed_courses_by_user(),
-);
-
-// Count course list based on query param.
-$enrolled_course_count  = $full_course_list_array['courses'] ? $full_course_list_array['courses']->found_posts : 0;
-$active_course_count    = $full_course_list_array['courses/active-courses'] ? $full_course_list_array['courses/active-courses']->found_posts : 0;
-$completed_course_count = $full_course_list_array['courses/completed-courses'] ? $full_course_list_array['courses/completed-courses']->found_posts : 0;
 
 $courses_tab = ( new Student() )->get_courses_tab( $active_tab, $post_type_args, $enrolled_course_count, $active_course_count, $completed_course_count );
 
 // Prepare course list based on page tab.
-$courses_list           = $courses_list_array[ $active_tab ];
-$paginated_courses_list = $full_course_list_array[ $active_tab ];
+$courses_list = $courses_list_array[ $active_tab ];
 
 ?>
 
