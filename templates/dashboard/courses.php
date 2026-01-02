@@ -10,8 +10,6 @@
  */
 
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Pagination;
 use Tutor\Models\CourseModel;
