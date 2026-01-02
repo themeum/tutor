@@ -70,8 +70,12 @@ $category          = implode( ', ', $category_names );
 
 							?>
 							<span class="tutor-progress-card-separator">•</span>
-							<?php echo esc_html( $course_progress['completed_percent'] ); ?>%
-							<?php echo esc_html__( 'Complete', 'tutor' ); ?>
+							<?php
+								printf(
+									esc_html__( '%1$s%% Complete', 'tutor' ),
+									esc_html( $course_progress['completed_percent'] )
+								);
+							?>
 						</div>
 					<?php endif; ?>
 					<?php if ( $course_progress['completed_percent'] >= 0 ) : ?>
