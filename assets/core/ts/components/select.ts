@@ -5,6 +5,7 @@
  * @since 4.0.0
  */
 
+import { type FormControlMethods } from '@Core/ts/components/form';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 
 export interface SelectOption {
@@ -101,6 +102,7 @@ export const select = (props: SelectProps = {}) => {
 
     // State
     ...state,
+    _boundReposition: null as (() => void) | null,
 
     // Computed
     get allOptions(): SelectOption[] {
@@ -173,10 +175,15 @@ export const select = (props: SelectProps = {}) => {
       this.setupFormIntegration();
       this.setupKeyboardNavigation();
       this.syncHiddenInput();
+      this._boundReposition = this.calculateDropdownPosition.bind(this);
     },
 
     destroy() {
       // Cleanup
+      if (this._boundReposition) {
+        window.removeEventListener('resize', this._boundReposition);
+        window.removeEventListener('scroll', this._boundReposition);
+      }
     },
 
     // Initialization
@@ -195,30 +202,63 @@ export const select = (props: SelectProps = {}) => {
       if (!this.name) return;
 
       const $el = (this as unknown as { $el: HTMLElement }).$el;
-      const formElement = $el.closest('form[x-data*="tutorForm"], form[x-data*="form("]');
+      const formElement = $el.closest('form[x-data*="tutorForm"], form[x-data*="form("]') as HTMLElement;
 
       if (formElement) {
         try {
+          const alpine = window.Alpine;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const alpineData = (window as any).Alpine?.$data(formElement);
+          const alpineData = alpine?.$data(formElement) as FormControlMethods & { values: Record<string, any> };
 
           if (alpineData && typeof alpineData.register === 'function') {
             // Build validation rules
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const rules: any = {};
+            const rules: Record<string, any> = {};
             if (this.required) {
-              // Keep the format consistent with form expectations
-              // If it's a string, use it as custom message, otherwise just true
               rules.required = this.required;
             }
 
-            // Register with form (will be called in init, so should be safe)
-            alpineData.register(this.name, rules);
+            // Register with form
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            alpineData.register(this.name, rules as any);
 
-            // Always set initial value (even if empty) so form knows about this field
-            if (typeof alpineData.setValue === 'function') {
+            // If form already has a value for this field (e.g. from reset() called earlier), sync it TO this component
+            const formValue = alpineData.values?.[this.name];
+            if (formValue !== undefined && formValue !== null && formValue !== '') {
+              if (Array.isArray(formValue)) {
+                this.selectedValues = new Set(formValue);
+              } else {
+                this.selectedValues = new Set([formValue]);
+              }
+              this.syncHiddenInput();
+            } else {
+              // Otherwise, set form value from component's initial state
               const currentValue = this.getCurrentValue();
               alpineData.setValue(this.name, currentValue ?? '', { shouldValidate: false });
+            }
+
+            // Watch for external form changes
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const component = this as unknown as { $watch: (path: string, cb: (val: any) => void) => void };
+            if (component.$watch) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              component.$watch(`values.${this.name}`, (newVal: any) => {
+                const current = this.getCurrentValue();
+                const isSame = Array.isArray(newVal)
+                  ? JSON.stringify([...newVal].sort()) ===
+                    JSON.stringify(Array.isArray(current) ? [...current].sort() : [current])
+                  : String(newVal) === String(current);
+                if (!isSame) {
+                  if (Array.isArray(newVal)) {
+                    this.selectedValues = new Set(newVal);
+                  } else if (newVal === null || newVal === undefined || newVal === '') {
+                    this.selectedValues.clear();
+                  } else {
+                    this.selectedValues = new Set([newVal]);
+                  }
+                  this.syncHiddenInput();
+                }
+              });
             }
           }
         } catch (error) {
@@ -251,6 +291,12 @@ export const select = (props: SelectProps = {}) => {
       await this.nextTick();
       this.calculateDropdownPosition();
 
+      // Listen for resize/scroll to update position
+      if (this._boundReposition) {
+        window.addEventListener('resize', this._boundReposition);
+        window.addEventListener('scroll', this._boundReposition, { passive: true });
+      }
+
       // Focus search input if searchable
       if (this.searchable) {
         this.focusSearchInput();
@@ -268,6 +314,11 @@ export const select = (props: SelectProps = {}) => {
       this.highlightedIndex = -1;
 
       props.onClose?.();
+
+      if (this._boundReposition) {
+        window.removeEventListener('resize', this._boundReposition);
+        window.removeEventListener('scroll', this._boundReposition);
+      }
     },
 
     toggle() {
@@ -502,12 +553,12 @@ export const select = (props: SelectProps = {}) => {
       if (!this.name) return;
 
       const $el = (this as unknown as { $el: HTMLElement }).$el;
-      const formElement = $el.closest('form[x-data*="tutorForm"], form[x-data*="form("]');
+      const formElement = $el.closest('form[x-data*="tutorForm"], form[x-data*="form("]') as HTMLElement;
 
       if (formElement) {
         try {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const alpineData = (window as any).Alpine?.$data(formElement);
+          const alpineData = window.Alpine?.$data(formElement) as any;
 
           if (alpineData && typeof alpineData.setValue === 'function') {
             const value = this.getCurrentValue();
@@ -606,9 +657,9 @@ export const select = (props: SelectProps = {}) => {
 
     async nextTick() {
       return new Promise((resolve) => {
-        const $nextTick = (this as unknown as { $nextTick?: (cb: () => void) => void }).$nextTick;
-        if ($nextTick) {
-          $nextTick(() => resolve(undefined));
+        const component = this as unknown as { $nextTick?: (cb: () => void) => void };
+        if (component.$nextTick) {
+          component.$nextTick(() => resolve(undefined));
         } else {
           setTimeout(() => resolve(undefined), 0);
         }

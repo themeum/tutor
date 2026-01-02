@@ -2,13 +2,13 @@
 // Single CSS file with all themes and RTL support
 
 // Import design tokens
-@use 'tokens';
+@use 'tokens' as *;
 
 // Import themes
 @use 'themes';
 
 // Import mixins
-@use 'mixins';
+@use 'mixins' as *;
 
 // Import base components
 @use 'components';
@@ -66,10 +66,10 @@ ol {
   list-style: none;
 }
 
-a{
+a {
   text-decoration: none;
   color: inherit;
-  
+
   &:hover {
     text-decoration: none;
     color: inherit;

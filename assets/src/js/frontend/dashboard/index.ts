@@ -1,8 +1,10 @@
 // Dashboard Entry Point
 // Initializes dashboard functionality based on current page
 
+import { initializeAnnouncements } from './pages/announcements';
 import { initializeAssignments } from './pages/assignments';
 import { initializeCertificates } from './pages/certificates';
+import { initializeDiscussions } from './pages/discussions';
 import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
 import { initializeOverview } from './pages/overview';
@@ -42,6 +44,9 @@ const getCurrentPage = (): string => {
   if (path.includes('/my-courses') || path.includes('my-courses')) {
     return 'my-courses';
   }
+  if (path.includes('/announcements')) {
+    return 'dashboard-announcements';
+  }
   if (path.includes('/assignments')) {
     return 'assignments';
   }
@@ -53,6 +58,9 @@ const getCurrentPage = (): string => {
   }
   if (path.includes('/certificates')) {
     return 'certificates';
+  }
+  if (path.includes('/discussions')) {
+    return 'discussions';
   }
 
   // Default to home when subpage=dashboard
@@ -73,6 +81,10 @@ const initializeDashboard = () => {
     case 'my-courses':
       initializeMyCourses();
       break;
+    case 'dashboard-announcements':
+      initializeAnnouncements();
+      break;
+    case 'dashboard-assignments':
     case 'assignments':
       initializeAssignments();
       break;
@@ -84,6 +96,9 @@ const initializeDashboard = () => {
       break;
     case 'certificates':
       initializeCertificates();
+      break;
+    case 'discussions':
+      initializeDiscussions();
       break;
     default:
       // eslint-disable-next-line no-console

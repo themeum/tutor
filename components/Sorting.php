@@ -115,7 +115,7 @@ class Sorting extends BaseComponent {
 			})"
 		>
 			<button type="button" x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
-				<?php tutor_utils()->render_svg_icon( Icon::STEPPER ); ?>
+				<?php tutor_utils()->render_svg_icon( Icon::STEPPER, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
 			</button>
 			<div 
 				x-ref="content"

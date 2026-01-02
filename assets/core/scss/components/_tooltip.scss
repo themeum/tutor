@@ -1,6 +1,7 @@
 // Tooltip Component
 // RTL-aware tooltip positioning and styling
 
+@use '../mixins' as *;
 @use '../mixins/rtl' as rtl;
 
 .tutor-tooltip {
