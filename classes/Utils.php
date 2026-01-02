@@ -9530,7 +9530,7 @@ class Utils {
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),
-			'enrolled-courses' => array(
+			'courses' => array(
 				'title' => __( 'Courses', 'tutor' ),
 				'icon'  => Icon::COURSES,
 			),

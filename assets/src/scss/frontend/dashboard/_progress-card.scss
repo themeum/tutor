@@ -5,161 +5,168 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-progress-card {
-  @include tutor-flex(row, stretch, flex-start);
-  position: relative;
-  padding: $tutor-spacing-4;
-  gap: $tutor-spacing-5;
-  border: 1px solid $tutor-border-idle;
-  border-radius: $tutor-radius-2xl;
-  overflow: hidden;
-  @include tutor-transition();
+	position: relative;
+	padding: $tutor-spacing-4;
+	@include tutor-flex(row, stretch, flex-start);
+	gap: $tutor-spacing-5;
+	border: 1px solid $tutor-border-idle;
+	border-radius: $tutor-radius-2xl;
+	transition: all 0.2s ease;
+	cursor: pointer;
+	overflow: hidden;
 
-  &:hover {
-    background-color: $tutor-surface-l1-hover;
-  }
+	&:hover {
+		background-color: $tutor-surface-l1-hover;
+	}
 
-  &-thumbnail {
-    position: relative;
-    flex: 0 0 auto;
-    max-width: 200px;
-    aspect-ratio: 200 / 112;
-    border-radius: $tutor-radius-lg;
-    overflow: hidden;
+	.tutor-courses-thumb {
+		position: relative;
+		flex: 0 0 200px;
+		aspect-ratio: 16 / 9;
+		border-radius: $tutor-radius-lg;
+		overflow: hidden;
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-  }
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			object-position: center;
+		}
+	}
 
-  &-kebab-overlay {
-    display: none;
-  }
+	&-kebab-overlay {
+		display: none;
+	}
 
-  &-content {
-    @include tutor-flex(column, stretch, space-between);
-    flex: 1 1 auto;
-    max-width: 412px;
-  }
+	&-content {
+		flex: 1 1 calc(100% - 224px);
+		@include tutor-flex(column, stretch, space-between);
+	}
 
-  &-header {
-    @include tutor-flex(column, stretch, flex-start);
-    gap: $tutor-spacing-1;
-  }
+	&-header {
+		@include tutor-flex(column, stretch, flex-start);
+		gap: $tutor-spacing-1;
+	}
 
-  &-category {
-    @include tutor-typography('tiny', 'regular', 'secondary');
-    @include tutor-text-truncate();
-    margin-bottom: $tutor-spacing-1;
-  }
+	&-category {
+		@include tutor-typography('tiny', 'regular', 'secondary');
+		margin-bottom: $tutor-spacing-1;
+	}
 
-  &-title {
-    @include tutor-typography('small', 'medium', 'primary');
-    margin: 0;
-  }
+	&-title {
+		@include tutor-typography('small', 'medium', 'primary');
+		margin: 0;
+	}
 
-  &-details {
-    @include tutor-typography('tiny', 'regular', 'secondary');
-    display: flex;
-    align-items: center;
-    gap: $tutor-spacing-2;
-    margin-bottom: $tutor-spacing-2;
-  }
+	&-details {
+		@include tutor-typography('tiny', 'regular', 'secondary');
+		display: flex;
+		align-items: center;
+		gap: $tutor-spacing-2;
+		margin-bottom: $tutor-spacing-2;
+	}
 
-  &-separator {
-    color: $tutor-icon-secondary;
-  }
+	&-separator {
+		color: $tutor-text-secondary;
+	}
 
-  &-actions {
-    position: absolute;
-    top: $tutor-spacing-4;
-    @include right($tutor-spacing-4);
-    @include tutor-flex(row, center, flex-end);
-    gap: $tutor-spacing-3;
-    opacity: 0;
-    visibility: hidden;
-    z-index: $tutor-z-dropdown;
-    @include tutor-transition((opacity, visibility));
-  }
+	&-actions {
+		position: absolute;
+		top: $tutor-spacing-4;
+		@include right($tutor-spacing-4);
+		@include tutor-flex(row, center, flex-end);
+		gap: $tutor-spacing-3;
+		opacity: 0;
+		visibility: hidden;
+		z-index: $tutor-z-dropdown;
+		transition: opacity 0.2s ease, visibility 0.2s ease;
+	}
 
-  &-resume-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: $tutor-spacing-2;
-    white-space: nowrap;
-  }
+	&-resume-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: $tutor-spacing-2;
+		white-space: nowrap;
+	}
 
-  &-menu {
-    display: inline-flex;
-  }
+	&-menu {
+		display: inline-flex;
+	}
 
-  &-menu-btn {
-    padding: $tutor-spacing-2;
-    min-width: auto;
-    min-height: auto;
-    background-color: $tutor-button-ghost-hover;
+	&-menu-btn {
+		padding: $tutor-spacing-2;
+		min-width: auto;
+		min-height: auto;
+		background-color: $tutor-button-ghost-hover;
 
-    &:hover:not(:disabled) {
-      background-color: $tutor-button-ghost-hover;
-    }
-  }
+		&:hover:not(:disabled) {
+			background-color: $tutor-button-ghost-hover;
+		}
+	}
 
-  &-footer {
-    display: none;
-  }
+	&-footer {
+		display: none;
+	}
 
-  &:hover &-actions {
-    opacity: 1;
-    visibility: visible;
-  }
+	&:hover &-actions {
+		opacity: 1;
+		visibility: visible;
+	}
 
-  // Mobile styles
-  @include tutor-breakpoint-down(sm) {
-    @include tutor-flex(column, stretch, flex-start);
-    height: auto;
-    gap: $tutor-spacing-none;
-    padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-5;
+	// Ensure button text colors remain unchanged for all button instances
+	.tutor-btn-primary {
+		color: $tutor-text-primary-inverse;
+	}
 
-    &:hover {
-      background-color: transparent;
-    }
+	.tutor-btn-ghost {
+		color: $tutor-text-primary;
+	}
 
-    &-thumbnail {
-      width: 100%;
-      max-width: 100%;
-      margin-bottom: $tutor-spacing-4;
-      aspect-ratio: 16 / 9;
-    }
+	// Mobile styles
+	@include tutor-breakpoint-down(sm) {
+		@include tutor-flex(column, stretch, flex-start);
+		height: auto;
+		gap: $tutor-spacing-none;
+		padding: $tutor-spacing-4 $tutor-spacing-4 $tutor-spacing-5;
 
-    &-kebab-overlay {
-      display: block;
-      position: absolute;
-      top: $tutor-spacing-4;
-      @include right($tutor-spacing-4);
-      z-index: $tutor-z-dropdown;
-    }
+		&:hover {
+			background-color: transparent;
+		}
 
-    &-header {
-      margin-bottom: $tutor-spacing-4;
-    }
+		.tutor-courses-thumb {
+			width: 100%;
+			max-width: 100%;
+			margin-bottom: $tutor-spacing-4;
+			aspect-ratio: 16 / 9;
+		}
 
-    &-details {
-      margin-bottom: $tutor-spacing-3;
-    }
+		&-kebab-overlay {
+			display: block;
+			position: absolute;
+			top: $tutor-spacing-4;
+			@include right($tutor-spacing-4);
+			z-index: $tutor-z-dropdown;
+		}
 
-    &-content {
-      padding: 0 $tutor-spacing-3;
-    }
+		&-header {
+			margin-bottom: $tutor-spacing-4;
+		}
 
-    &-actions {
-      display: none;
-    }
+		&-details {
+			margin-bottom: $tutor-spacing-3;
+		}
 
-    &-footer {
-      display: block;
-      padding: $tutor-spacing-6 $tutor-spacing-4 0;
-    }
-  }
+		&-content {
+			padding: 0 $tutor-spacing-3;
+		}
+
+		&-actions {
+			display: none;
+		}
+
+		&-footer {
+			display: block;
+			padding: $tutor-spacing-6 $tutor-spacing-4 0;
+		}
+	}
 }
