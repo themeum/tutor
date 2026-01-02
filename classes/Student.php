@@ -341,7 +341,7 @@ class Student {
 	 * Generates the tab structure for displaying student courses with dropdown options
 	 * for enrolled, active, and completed courses including counts and navigation URLs.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @param string $active_tab              The currently active tab identifier.
 	 * @param array  $post_type_args          Query arguments for post type filtering.
