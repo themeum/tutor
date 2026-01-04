@@ -10901,6 +10901,7 @@ class Utils {
 				'topic_summary' => apply_filters( 'the_content', $topic_post->post_content ),
 				'topic_title'   => get_the_title( $topic_id ),
 				'items'         => array(),
+				'topic_completed' => true, 
 			);
 
 			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
@@ -10909,25 +10910,35 @@ class Utils {
 				foreach ( $contents_query->posts as $content_post ) {
 					$post_id   = (int) $content_post->ID;
 					$post_type = $content_post->post_type;
+					$is_completed = true; 
 
 					if ( 'tutor_quiz' === $post_type ) {
+
+						$has_attempt = (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id );
+						$is_completed = $has_attempt;
+
 						$topic['items'][] = array(
 							'type'        => 'quiz',
 							'quiz_id'     => $post_id,
 							'quiz_link'   => esc_url( get_permalink( $post_id ) ),
 							'quiz_title'  => $content_post->post_title,
-							'has_attempt' => (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id ),
+							'has_attempt' => $has_attempt,
 							'time_limit'  => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
 							'time_type'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
 						);
 
 					} elseif ( 'tutor_assignments' === $post_type ) {
+
+						$submitted_count = (int) tutor_utils()->get_submitted_assignment_count( $post_id, $student_id );
+						$is_completed    = $submitted_count > 0;
+
 						$topic['items'][] = array(
 							'type'                 => 'assignment',
 							'assignment_id'        => $post_id,
 							'assignment_link'      => esc_url( get_permalink( $post_id ) ),
 							'assignment_title'     => $content_post->post_title,
-							'assignment_submitted' => (int) tutor_utils()->get_submitted_assignment_count( $post_id, $student_id ),
+							'assignment_submitted' => $submitted_count,
+							'is_completed'         => $is_completed,
 						);
 
 					} elseif ( 'tutor_zoom_meeting' === $post_type ) {
@@ -10939,6 +10950,8 @@ class Utils {
 
 					} else {
 						$video = tutor_utils()->get_video_info( $post_id );
+						$is_completed_lesson = (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id );
+						$is_completed = $is_completed_lesson;
 
 						$topic['items'][] = array(
 							'type'                => 'lesson',
@@ -10947,8 +10960,12 @@ class Utils {
 							'lesson_title'        => $content_post->post_title,
 							'video'               => $video,
 							'video_play_time'     => isset( $video->playtime ) ? $video->playtime : '',
-							'is_completed_lesson' => (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id ),
+							'is_completed_lesson' => $is_completed_lesson
 						);
+					}
+
+					if ( ! $is_completed ) {
+						$topic['topic_completed'] = false;
 					}
 				}
 			}
