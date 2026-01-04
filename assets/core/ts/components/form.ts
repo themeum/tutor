@@ -1,6 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 
-import { formServiceMeta } from '@Core/ts/services/Form';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { parseNumberOnly } from '@TutorShared/utils/util';
 
@@ -322,14 +322,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValidating = false;
 
       if (this.formId) {
-        const globalFormService = window.TutorCore?.form;
-        const service =
-          globalFormService && typeof globalFormService.register === 'function'
-            ? globalFormService
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (formServiceMeta.instance as any);
-
-        service.register(this.formId, this as unknown as FormControlMethods);
+        document.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_REGISTER, {
+            detail: { id: this.formId, instance: this as unknown as FormControlMethods },
+          }),
+        );
       }
 
       this.setupFormListeners();
@@ -610,8 +607,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       if (!formElement) {
         this.cleanup = () => {
           if (this.formId) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (formServiceMeta.instance as any).unregister(this.formId);
+            document.dispatchEvent(
+              new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, {
+                detail: { id: this.formId },
+              }),
+            );
           }
         };
         return;
@@ -626,8 +626,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.cleanup = () => {
         formElement.removeEventListener('submit', handleFormSubmit);
         if (this.formId) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (formServiceMeta.instance as any).unregister(this.formId);
+          document.dispatchEvent(
+            new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, {
+              detail: { id: this.formId },
+            }),
+          );
         }
       };
     },

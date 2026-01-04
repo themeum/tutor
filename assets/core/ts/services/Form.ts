@@ -1,4 +1,5 @@
 import { type FormControlMethods } from '@Core/ts/components/form';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type ServiceMeta } from '@Core/ts/types';
 
 /**
@@ -7,6 +8,23 @@ import { type ServiceMeta } from '@Core/ts/types';
  */
 export class FormService {
   private forms: Map<string, FormControlMethods> = new Map();
+
+  constructor() {
+    this.setupEventListeners();
+  }
+
+  /** Setup event listeners for form events */
+  private setupEventListeners(): void {
+    document.addEventListener(TUTOR_CUSTOM_EVENTS.FORM_REGISTER, ((event: CustomEvent) => {
+      const { id, instance } = event.detail;
+      this.register(id, instance);
+    }) as EventListener);
+
+    document.addEventListener(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, ((event: CustomEvent) => {
+      const { id } = event.detail;
+      this.unregister(id);
+    }) as EventListener);
+  }
 
   /**
    * Register a form instance with the service
