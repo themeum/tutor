@@ -9,16 +9,18 @@
  * @since 4.0.0
  */
 
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
-use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\User;
 
-$is_instructor = tutor_utils()->is_instructor( null, true );
-$view_option   = get_user_meta( get_current_user_id(), 'tutor_qa_view_as', true );
+$user_id       = get_current_user_id();
+$is_instructor = tutor_utils()->is_instructor( $user_id, true );
+$view_option   = get_user_meta( $user_id, 'tutor_qa_view_as', true );
 $q_status      = Input::get( 'data' );
-$view_as       = $is_instructor ? ( $view_option ? $view_option : 'instructor' ) : 'student';
-$asker_id      = 'instructor' === $view_as ? null : get_current_user_id();
+$view_as       = $is_instructor ? ( $view_option ? $view_option : User::VIEW_AS_INSTRUCTOR ) : User::VIEW_AS_STUDENT;
+$asker_id      = User::VIEW_AS_INSTRUCTOR === $view_as ? null : $user_id;
 
 $total_items = (int) tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, $q_status, true );
 $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, $q_status, false, array( 'order' => $order_filter ) );
@@ -55,39 +57,15 @@ $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', nul
 	<?php endif; ?>
 </div>
 
-<?php if ( ! empty( $questions ) ) : ?>
-<div x-data="tutorModal({ id: 'tutor-qna-delete-modal' })" x-cloak>
-	<template x-teleport="body">
-		<div x-bind="getModalBindings()">
-			<div x-bind="getBackdropBindings()"></div>
-			<div x-bind="getModalContentBindings()" style="max-width: 426px;">
-				<button x-data="tutorIcon({ name: 'cross', width: 16, height: 16})", x-bind="getCloseButtonBindings()"></button>
-
-				<div class="tutor-p-7 tutor-pt-10 tutor-flex tutor-flex-column tutor-items-center">
-					<?php tutor_utils()->render_svg_icon( Icon::BIN, 100, 100 ); ?>
-					<h5 class="tutor-h5 tutor-font-medium tutor-mt-8">
-						<?php esc_html_e( 'Delete This Question?', 'tutor' ); ?>
-					</h5>
-					<p class="tutor-p3 tutor-text-secondary tutor-mt-2 tutor-text-center">
-						<?php esc_html_e( 'All the replies also will be deleted.', 'tutor' ); ?>
-					</p>
-				</div>
-
-				<div class="tutor-modal-footer">
-					<button class="tutor-btn tutor-btn-ghost tutor-btn-small" @click="TutorCore.modal.closeModal('tutor-qna-delete-modal')">
-						<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-					</button>
-					<button 
-						class="tutor-btn tutor-btn-destructive tutor-btn-small"
-						:class="deleteQnAMutation?.isPending ? 'tutor-btn-loading' : ''"
-						@click="handleDeleteQnA(payload?.questionId)"
-						:disabled="deleteQnAMutation?.isPending"
-					>
-						<?php esc_html_e( 'Yes, Delete This', 'tutor' ); ?>
-					</button>
-				</div>
-			</div>
-		</div>
-	</template>
-</div>
-<?php endif; ?>
+<?php
+if ( ! empty( $questions ) ) {
+	ConfirmationModal::make()
+		->id( 'tutor-qna-delete-modal' )
+		->title( __( 'Delete This Question?', 'tutor' ) )
+		->message( __( 'Are you sure you want to delete this question permanently? Please confirm your choice.', 'tutor' ) )
+		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+		->confirm_handler( 'handleDeleteQnA(payload?.questionId)' )
+		->mutation_state( 'deleteQnAMutation' )
+		->render();
+}
+?>
