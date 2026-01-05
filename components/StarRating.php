@@ -142,13 +142,13 @@ class StarRating extends BaseComponent {
 			<?php if ( $this->show_average || null !== $this->count ) : ?>
 				<div class="tutor-ratings-meta tutor-flex tutor-items-center tutor-gap-1 tutor-ml-1">
 					<?php if ( $this->show_average ) : ?>
-						<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
+						<span class="tutor-small tutor-font-medium tutor-text-primary">
 							<?php echo esc_html( number_format( $rating, 1 ) ); ?>
 						</span>
 					<?php endif; ?>
 
 					<?php if ( null !== $this->count ) : ?>
-						<span class="tutor-fs-7 tutor-color-muted">
+						<span class="tutor-small tutor-text-subdued">
 							<?php
 							/* translators: %s: review count */
 							echo esc_html( sprintf( _n( '(%s Review)', '(%s Reviews)', $this->count, 'tutor' ), number_format_i18n( $this->count ) ) );
