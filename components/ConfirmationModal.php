@@ -358,7 +358,7 @@ class ConfirmationModal extends BaseComponent {
 		if ( empty( $confirm_html ) ) {
 			$confirm_html = sprintf(
 				'<button 
-					class="tutor-btn tutor-btn-primary tutor-btn-small"
+					class="tutor-btn tutor-btn-destructive tutor-btn-small"
 					:class="%s?.isPending ? \'tutor-btn-loading\' : \'\'"
 					@click="%s"
 					:disabled="%s?.isPending"
