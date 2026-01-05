@@ -77,23 +77,8 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 				->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
 				->confirm_handler( 'handleDeleteReview(payload?.id)' )
 				->mutation_state( 'deleteReviewMutation' )
-				->confirm_button(
-					Button::make()
-						->attr( '@click', 'handleDeleteReview(payload?.id)' )
-						->attr( ':class', '{ \'tutor-btn-loading\': deleteReviewMutation.isPending }' )
-						->label( __( 'Yes, Delete This', 'tutor' ) )
-						->variant( Variant::DESTRUCTIVE )
-						->size( Size::X_SMALL )
-						->get()
-				)
-				->cancel_button(
-					Button::make()
-						->attr( '@click', 'TutorCore.modal.closeModal("review-delete-modal")' )
-						->label( __( 'Cancel', 'tutor' ) )
-						->variant( Variant::SECONDARY )
-						->size( Size::X_SMALL )
-						->get()
-				)
+				->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+				->cancel_text( __( 'Cancel', 'tutor' ) )
 				->render();
 			?>
 		</div>
