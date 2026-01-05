@@ -1,7 +1,7 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
-import { CALENDAR_PRESETS, type Preset } from '@Core/ts/types/calendar';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
+import { __ } from '@wordpress/i18n';
 import {
   endOfMonth,
   endOfYear,
@@ -17,6 +17,30 @@ import { type Calendar, Calendar as VanillaCalendar } from 'vanilla-calendar-pro
 import type OptionsCalendar from 'vanilla-calendar-pro/options';
 // @ts-ignore
 import 'vanilla-calendar-pro/styles/index.css';
+
+const PRESETS = {
+  ALL_TIME: 'all-time',
+  YESTERDAY: 'yesterday',
+  LAST_7: 'last-7',
+  LAST_14: 'last-14',
+  LAST_30: 'last-30',
+  THIS_MONTH: 'this-month',
+  LAST_MONTH: 'last-month',
+  LAST_YEAR: 'last-year',
+} as const;
+
+type Preset = (typeof PRESETS)[keyof typeof PRESETS];
+
+const PRESET_LABELS: Record<Preset, string> = {
+  [PRESETS.ALL_TIME]: __('All Time', 'tutor'),
+  [PRESETS.YESTERDAY]: __('Yesterday', 'tutor'),
+  [PRESETS.LAST_7]: __('Last 7 days', 'tutor'),
+  [PRESETS.LAST_14]: __('Last 14 days', 'tutor'),
+  [PRESETS.LAST_30]: __('Last 30 days', 'tutor'),
+  [PRESETS.THIS_MONTH]: __('This month', 'tutor'),
+  [PRESETS.LAST_MONTH]: __('Last month', 'tutor'),
+  [PRESETS.LAST_YEAR]: __('Last year', 'tutor'),
+};
 
 export function calendar({ options, hidePopover }: { options: OptionsCalendar; hidePopover?: () => void }) {
   return {
@@ -72,7 +96,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
             multiple: `
               <div class="vc-layout">
                 <aside class="vc-presets">
-                  ${(Object.entries(CALENDAR_PRESETS) as [Preset, string][])
+                  ${(Object.entries(PRESET_LABELS) as [Preset, string][])
                     .map(([key, label]) => `<button type="button" data-preset="${key}">${label}</button>`)
                     .join('')}
                 </aside>
@@ -207,30 +231,30 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       const today = startOfToday();
 
       switch (preset) {
-        case 'all-time':
+        case PRESETS.ALL_TIME:
           return [];
-        case 'yesterday':
+        case PRESETS.YESTERDAY:
           return [
             format(subDays(today, 1), DateFormats.yearMonthDay),
             format(subDays(today, 1), DateFormats.yearMonthDay),
           ];
-        case 'last-7':
+        case PRESETS.LAST_7:
           return [format(subDays(today, 6), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
-        case 'last-14':
+        case PRESETS.LAST_14:
           return [format(subDays(today, 13), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
-        case 'last-30':
+        case PRESETS.LAST_30:
           return [format(subDays(today, 29), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
-        case 'this-month':
+        case PRESETS.THIS_MONTH:
           return [
             format(startOfMonth(today), DateFormats.yearMonthDay),
             format(endOfMonth(today), DateFormats.yearMonthDay),
           ];
-        case 'last-month':
+        case PRESETS.LAST_MONTH:
           return [
             format(startOfMonth(subMonths(today, 1)), DateFormats.yearMonthDay),
             format(endOfMonth(subMonths(today, 1)), DateFormats.yearMonthDay),
           ];
-        case 'last-year':
+        case PRESETS.LAST_YEAR:
           return [
             format(startOfYear(subYears(today, 1)), DateFormats.yearMonthDay),
             format(endOfYear(subYears(today, 1)), DateFormats.yearMonthDay),
@@ -267,9 +291,9 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       let activePreset: Preset | '' = '';
 
       if (!startDate && !endDate) {
-        activePreset = 'all-time';
+        activePreset = PRESETS.ALL_TIME;
       } else if (startDate && endDate) {
-        const presets = Object.keys(CALENDAR_PRESETS).filter((key) => key !== 'all-time') as Preset[];
+        const presets = (Object.values(PRESETS) as Preset[]).filter((key) => key !== PRESETS.ALL_TIME);
 
         for (const preset of presets) {
           const [start, end] = this.getPresetDates(preset);
