@@ -11,6 +11,7 @@
 use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
+use Tutor\Components\StarRating;
 use Tutor\Components\StarRatingInput;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Components\Constants\Size;
@@ -80,18 +81,11 @@ $delete_modal_id = 'review-delete-modal';
 			<!-- Actions and Rating -->
 			<div class="tutor-review-rating-wrapper">
 				<!-- Rating -->
-				<div class="tutor-review-rating">
 					<?php
-					tutor_load_template(
-						'demo-components.dashboard.components.star-rating',
-						array(
-							'rating'        => $review['rating'] ?? 0,
-							'wrapper_class' => 'tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2',
-							'icon_class'    => 'tutor-icon-exception4',
-						)
-					);
+						StarRating::make()
+							->rating( $review['rating'] ?? 0 )
+							->render();
 					?>
-				</div>
 
 				<!-- Actions -->
 				<div class="tutor-review-actions">
