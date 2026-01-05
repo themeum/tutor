@@ -124,7 +124,6 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 			?>
 		<?php endif; ?>
 	</div>
-<?php if ( $quiz_attempts_count > $item_per_page ) : ?>
 	<div class="tutor-pt-6">
 		<?php
 		Pagination::make()
@@ -136,31 +135,4 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 		->render();
 		?>
 	</div>
-<?php endif; ?>
-
-<?php
-	$confirm_delete           = Button::make()->label( __( "Yes, I'm sure", 'tutor' ) )
-									->size( Size::SMALL )
-									->variant( Variant::DESTRUCTIVE )
-									->attr(
-										':class',
-										"deleteMutation?.isPending ? 'tutor-btn-loading' : ''"
-									)
-									->attr(
-										'@click',
-										'handleDeleteAttempt(payload?.attemptID)'
-									)
-									->attr( ':disabled', 'deleteMutation?.isPending' )
-									->get();
-	$cancel                   = Button::make()->label( __( 'Cancel', 'tutor' ) )->size( Size::SMALL )->variant( Variant::GHOST )->get();
-	$footer_buttons           = sprintf( '%1$s %2$s', $cancel, $confirm_delete );
-	$modal_body_template_path = tutor_get_template_path( 'dashboard.components.quiz-attempt-modal-body' );
-
-	Modal::make()
-		->id( 'tutor-quiz-attempt-delete-modal' )
-		->template( $modal_body_template_path )
-		->footer_buttons( $footer_buttons )
-		->closeable()
-		->render();
-	?>
 </div>

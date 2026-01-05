@@ -33,7 +33,7 @@
 
   &-header {
     display: grid;
-    grid-template-columns: 300px 180px 1.5fr 1fr;
+    grid-template-columns: 340px 180px 1.5fr 1fr;
     gap: $tutor-spacing-4;
     background-color: $tutor-surface-base;
     border-bottom: 1px solid $tutor-border-idle;
@@ -68,7 +68,7 @@
 
     .tutor-quiz-attempts-item {
       display: grid;
-      grid-template-columns: 300px 180px 1.5fr 1fr;
+      grid-template-columns: 340px 180px 1.5fr 1fr;
       grid-template-areas: 'info marks time result';
       gap: $tutor-spacing-4;
       align-items: center;
