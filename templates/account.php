@@ -19,7 +19,7 @@ wp_head();
 $subpage       = Input::get( Dashboard::ACCOUNT_PAGE_QUERY_PARAM, 'profile' );
 $account_pages = Dashboard::get_account_pages();
 $page_data     = $account_pages[ $subpage ];
-$page_template = $page_data['page_template'];
+$page_template = $page_data['template'];
 
 $back_url = wp_get_referer();
 if ( ! $back_url ) {

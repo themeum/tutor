@@ -70,25 +70,25 @@ class Dashboard {
 	public static function get_account_pages() {
 		$pages = array(
 			'profile'  => array(
-				'title'         => esc_html__( 'Profile', 'tutor' ),
-				'icon'          => Icon::PROFILE_CIRCLE,
-				'icon_active'   => Icon::PROFILE_CIRCLE_FILL,
-				'url'           => self::get_account_page_url( 'profile' ),
-				'page_template' => tutor_get_template( 'dashboard.account.profile' ),
+				'title'       => esc_html__( 'Profile', 'tutor' ),
+				'icon'        => Icon::PROFILE_CIRCLE,
+				'icon_active' => Icon::PROFILE_CIRCLE_FILL,
+				'url'         => self::get_account_page_url( 'profile' ),
+				'template'    => tutor_get_template( 'dashboard.account.profile' ),
 			),
 			'reviews'  => array(
-				'title'         => esc_html__( 'Reviews', 'tutor' ),
-				'icon'          => Icon::RATINGS,
-				'icon_active'   => Icon::RATINGS,
-				'url'           => self::get_account_page_url( 'reviews' ),
-				'page_template' => tutor_get_template( 'dashboard.account.reviews' ),
+				'title'       => esc_html__( 'Reviews', 'tutor' ),
+				'icon'        => Icon::RATINGS,
+				'icon_active' => Icon::RATINGS,
+				'url'         => self::get_account_page_url( 'reviews' ),
+				'template'    => tutor_get_template( 'dashboard.account.reviews' ),
 			),
 			'settings' => array(
-				'title'         => esc_html__( 'Settings', 'tutor' ),
-				'icon'          => Icon::SETTING,
-				'icon_active'   => Icon::SETTING,
-				'url'           => self::get_account_page_url( 'settings' ),
-				'page_template' => tutor_get_template( 'dashboard.account.settings' ),
+				'title'       => esc_html__( 'Settings', 'tutor' ),
+				'icon'        => Icon::SETTING,
+				'icon_active' => Icon::SETTING,
+				'url'         => self::get_account_page_url( 'settings' ),
+				'template'    => tutor_get_template( 'dashboard.account.settings' ),
 			),
 		);
 
