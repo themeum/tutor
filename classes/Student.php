@@ -387,7 +387,6 @@ class Student {
 				'icon'   => Icon::WISHLIST,
 				'url'    => esc_url( tutor_utils()->tutor_dashboard_url( 'courses/wishlist' ) ),
 				'active' => 'courses/wishlist' === $active_tab ? true : false,
-				'count'  => $wishlist_course_count ?? 0,
 			),
 			array(
 				'type' => 'link',
@@ -395,7 +394,6 @@ class Student {
 				'icon'   => Icon::QUIZ_2,
 				'url'    => esc_url( tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) ),
 				'active' => 'courses/my-quiz-attempts' === $active_tab ? true : false,
-				'count'  => 0,
 			),
 		);
 
