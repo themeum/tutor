@@ -48,7 +48,7 @@
 
   .tutor-quiz-attempts-item-wrapper {
     padding: $tutor-spacing-6;
-    transition: background-color 0.25 ease-in-out;
+    @include tutor-transition(background-color);
 
     &:not(:last-child) {
       border-bottom: 1px solid $tutor-border-idle;
@@ -128,7 +128,7 @@
 
         .tutor-quiz-attempts-expand-icon {
           display: flex;
-          transition: transform 0.3s ease;
+          @include tutor-transition(transform, 0.3s);
 
           @include tutor-breakpoint-down(sm) {
             svg {
@@ -256,7 +256,7 @@
       .tutor-quiz-attempts-item {
         grid-template-columns: 324px 180px 1.5fr 1fr;
         padding: $tutor-spacing-6;
-        transition: background-color 0.25s ease-in-out;
+        @include tutor-transition(background-color);
 
         @include tutor-breakpoint-down(sm) {
           grid-template-columns: 2.5fr 1fr 1fr;

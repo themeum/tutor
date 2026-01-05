@@ -6,8 +6,8 @@
 .tutor-learning-area {
   &-body {
     padding-inline-start: 320px;
-    transition: padding 0.25s ease-in-out;
     position: relative;
+    @include tutor-transition(padding);
 
     @include tutor-breakpoint-down(lg) {
       padding-inline-start: 0;

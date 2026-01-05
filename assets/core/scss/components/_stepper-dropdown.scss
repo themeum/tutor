@@ -1,4 +1,5 @@
 @use '../tokens' as *;
+@use '../mixins' as *;
 @use '../mixins/typography' as *;
 @use '../mixins/layout' as *;
 
@@ -36,10 +37,8 @@
     border: none;
     cursor: pointer;
     color: $tutor-icon-secondary;
-    transition:
-      background-color 0.2s ease,
-      color 0.2s ease;
     flex: 1;
+    @include tutor-transition((background-color, color));
 
     &-up {
       padding-top: $tutor-spacing-3;

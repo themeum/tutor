@@ -6,8 +6,8 @@
 
 .tutor-course-card {
   height: 100%;
-  transition: background-color 0.2s ease;
   display: block;
+  @include tutor-transition(background-color);
 
   &:hover {
     background-color: $tutor-surface-l1-hover;

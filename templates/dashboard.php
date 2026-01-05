@@ -8,6 +8,8 @@
  * @since 1.4.3
  */
 
+use TUTOR\User;
+
 $is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
 if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
 	?>
@@ -99,7 +101,11 @@ $footer_links = array(
 
 					do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
 				} else {
-					tutor_load_template( 'dashboard.dashboard' );
+					if ( User::is_student() ) {
+						tutor_load_template( 'dashboard.student-dashboard' );
+					} else {
+						tutor_load_template( 'dashboard.dashboard' );
+					}
 				}
 				?>
 			</div>

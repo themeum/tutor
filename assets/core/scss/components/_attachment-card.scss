@@ -2,11 +2,11 @@
 @use '../mixins' as *;
 
 .tutor-attachment-card {
-  width: 100%;
   @include tutor-flex(row, stretch, flex-start);
+  width: 100%;
   gap: $tutor-spacing-5;
   padding: $tutor-spacing-4 $tutor-spacing-5;
-  transition: background-color 0.2s ease;
+  @include tutor-transition(background-color);
   position: relative;
 
   &:hover,
@@ -54,7 +54,7 @@
     gap: $tutor-spacing-2;
     flex-shrink: 0;
     opacity: 0;
-    transition: opacity 0.25s ease-in-out;
+    @include tutor-transition(opacity);
   }
 
   &:hover &-actions,

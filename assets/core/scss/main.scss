@@ -2,13 +2,13 @@
 // Single CSS file with all themes and RTL support
 
 // Import design tokens
-@use 'tokens';
+@use 'tokens' as *;
 
 // Import themes
 @use 'themes';
 
 // Import mixins
-@use 'mixins';
+@use 'mixins' as *;
 
 // Import base components
 @use 'components';
@@ -40,11 +40,9 @@ body {
   margin: 0;
   font-family: inherit;
   line-height: inherit;
-  background-color: var(--tutor-surface-base);
-  color: var(--tutor-text-primary);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
+  background-color: $tutor-surface-base;
+  color: $tutor-text-primary;
+  @include tutor-transition((background-color, color));
 }
 
 // Remove default margin in all browsers
@@ -68,10 +66,10 @@ ol {
   list-style: none;
 }
 
-a{
+a {
   text-decoration: none;
   color: inherit;
-  
+
   &:hover {
     text-decoration: none;
     color: inherit;

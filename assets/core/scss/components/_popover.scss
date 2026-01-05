@@ -35,7 +35,7 @@
       border-radius: $tutor-radius-5xl;
       color: $tutor-icon-idle;
       cursor: pointer;
-      transition: all 0.2s ease;
+      @include tutor-transition();
 
       @include tutor-flex-center();
 
@@ -83,7 +83,7 @@
       @include tutor-typography(small);
       gap: $tutor-spacing-4;
       padding: $tutor-spacing-4 $tutor-spacing-5;
-      transition: background-color 0.25s ease-in-out;
+      @include tutor-transition(background-color);
 
       &:hover,
       &.tutor-active {

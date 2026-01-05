@@ -116,7 +116,7 @@ class Button extends BaseComponent {
 	 * @var string
 	 */
 	private const POSITION_LEFT  = 'left';
-	private const POSITION_RIGHT = 'left';
+	private const POSITION_RIGHT = 'right';
 
 	/**
 	 * The icon position relative to label. Accepts 'left' or 'right'.
