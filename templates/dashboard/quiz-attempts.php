@@ -9,12 +9,10 @@
  * @since 1.4.0
  */
 
-use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
+use Tutor\Components\DateFilter;
 use Tutor\Components\EmptyState;
-use Tutor\Components\Modal;
 use Tutor\Components\Nav;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
@@ -77,13 +75,14 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 						?>
 
 					</div>
-					<div class="tutor-quiz-attempts-filter-item">
+					<div class="tutor-quiz-attempts-filter-item tutor-quiz-attempts-calender-filter">
 					<?php
-						Button::make()
-								->icon( tutor_utils()->get_svg_icon( Icon::CALENDAR_2 ) )
-								->size( Size::X_SMALL )
-								->variant( Variant::OUTLINE )
-								->render();
+						DateFilter::make()
+							->type( DateFilter::TYPE_SINGLE )
+							->placement( 'bottom' )
+							->size( Size::X_SMALL )
+							->icon_size( 15 )
+							->render();
 					?>
 					</div>
 					<div class="tutor-quiz-attempts-filter-item">
