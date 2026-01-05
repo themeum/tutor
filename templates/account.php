@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Dashboard;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -18,13 +19,10 @@ wp_head();
 
 $subpage       = Input::get( Dashboard::ACCOUNT_PAGE_QUERY_PARAM, 'profile' );
 $account_pages = Dashboard::get_account_pages();
-$page_data     = $account_pages[ $subpage ];
-$page_template = $page_data['template'];
+$page_data     = $account_pages[ $subpage ] ?? array();
+$page_template = $page_data['template'] ?? '';
 
-$back_url = wp_get_referer();
-if ( ! $back_url ) {
-	$back_url = tutor_utils()->tutor_dashboard_url();
-}
+$back_url = UrlHelper::back( tutor_utils()->tutor_dashboard_url() );
 ?>
 <div class="tutor-account-page-wrapper">
 	<?php require_once $page_template; ?>
