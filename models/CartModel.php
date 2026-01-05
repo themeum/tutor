@@ -73,12 +73,10 @@ class CartModel {
 			);
 		}
 
-		if ( $item_details ) {
-			if ( 'gift' === $item_type ) {
-				$item_details = wp_json_encode( $item_details, JSON_UNESCAPED_UNICODE );
-			} else {
-				$item_details = wp_json_encode( $item_details );
-			}
+		if ( 'gift' === $item_type ) {
+			$item_details = wp_json_encode( $item_details, JSON_UNESCAPED_UNICODE );
+		} else {
+			$item_details = wp_json_encode( $item_details );
 		}
 
 		return QueryHelper::insert(
