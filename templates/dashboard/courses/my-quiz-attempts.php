@@ -1,6 +1,6 @@
 <?php
 /**
- * Completed Courses Template
+ * My quiz attempts template
  *
  * @package Tutor\Templates
  * @subpackage Dashboard\Enrolled_Courses
@@ -9,5 +9,6 @@
  * @since 1.4.3
  */
 
-$active_tab = 'courses/completed-courses';
+$active_tab = 'courses/my-quiz-attempts';
+
 require dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'courses.php';
