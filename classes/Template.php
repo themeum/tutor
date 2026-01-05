@@ -406,9 +406,6 @@ class Template extends Tutor_Base {
 
 							if ( file_exists( $page_template ) ) {
 								$template = tutor_get_template( 'account' );
-							} else {
-								wp_safe_redirect( tutor_utils()->tutor_dashboard_url() );
-								exit;
 							}
 						}
 					} else {
