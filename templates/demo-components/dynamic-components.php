@@ -1,3 +1,15 @@
+<?php
+/**
+ * Dynamic component examples.
+ *
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -255,7 +267,7 @@
 				Button::make()->label( 'Another Modal' )->variant( 'destructive' )->attr( 'onclick', 'TutorCore.modal.showModal("another-modal")' )->render();
 				Button::make()->label( 'Headless Modal' )->variant( 'primary-soft' )->attr( 'onclick', 'TutorCore.modal.showModal("headless-modal")' )->render();
 			?>
-					
+		
 		</div>
 		<?php
 		Modal::make()
