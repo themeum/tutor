@@ -581,7 +581,7 @@ const LessonModal = ({
                       }
                       helpText={
                         // prettier-ignore
-                        __('If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
+                        __( 'If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
                       }
                       visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.LESSON_PREVIEW}
                     />
