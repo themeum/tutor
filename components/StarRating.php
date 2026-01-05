@@ -78,7 +78,7 @@ class StarRating extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function showAverage( bool $show = true ): self {
+	public function show_average( bool $show = true ): self {
 		$this->show_average = $show;
 		return $this;
 	}
@@ -90,7 +90,7 @@ class StarRating extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function iconSize( int $size ): self {
+	public function icon_size( int $size ): self {
 		$this->icon_size = $size;
 		return $this;
 	}
