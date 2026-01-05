@@ -12,12 +12,13 @@ use TUTOR\Icon;
 
 ?>
 <div class="tutor-profile-header">
-	<div class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
+	<div 
+		x-data="{ 
+			windowWidth: window.innerWidth,
+			isDirty: {}
+		}"
+		class="tutor-dashboard-container tutor-flex tutor-items-center tutor-justify-between">
 		<div class="tutor-profile-header-left tutor-flex tutor-items-center"
-			x-data="{ 
-				windowWidth: window.innerWidth,
-				isDirty: {}
-			}"
 			@resize.window="windowWidth = window.innerWidth"
 			@tutor-form-state-change.document="if ($event.detail.id === activeTab + '-form') isDirty[$event.detail.id] = $event.detail.isDirty"
 		>
@@ -37,7 +38,7 @@ use TUTOR\Icon;
 			</span>
 		</div>
 		<div class="tutor-profile-header-right tutor-flex tutor-gap-4">
-			<div class="tutor-sm-hidden">
+			<div x-show="activeTab !== 'none' && isDirty[activeTab + '-form']" x-cloak>
 				<button 
 					type="button" 
 					class="tutor-btn tutor-btn-ghost tutor-btn-x-small"
@@ -55,8 +56,9 @@ use TUTOR\Icon;
 			</div>
 			<div class="tutor-profile-header-close"
 				@click="activeTab = 'none'"
+				x-show="activeTab === 'none' || !isDirty[activeTab + '-form']"
 			>
-				<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-hidden tutor-sm-flex">
+				<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
 					<?php tutor_utils()->render_svg_icon( Icon::CROSS ); ?>
 				</button>
 			</div>
