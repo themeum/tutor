@@ -29,7 +29,7 @@ interface ValidationRules {
   validate?: (value: unknown) => boolean | string | Promise<boolean | string>;
 }
 
-interface FieldError {
+export interface FieldError {
   type: string;
   message: string;
 }
@@ -44,12 +44,13 @@ interface FocusOptions {
   shouldSelect?: boolean;
 }
 
-interface FormState {
+export interface FormState {
   values: Record<string, unknown>;
   errors: Record<string, FieldError>;
   touchedFields: Record<string, boolean>;
   dirtyFields: Record<string, boolean>;
   isValid: boolean;
+  isDirty: boolean;
   isSubmitting: boolean;
   isValidating: boolean;
 }
@@ -315,11 +316,13 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     isSubmitting: false,
     isValidating: false,
     cleanup: undefined as (() => void) | undefined,
+    lastIsDirty: false,
 
     init(): void {
       this.isValid = true;
       this.isSubmitting = false;
       this.isValidating = false;
+      this.lastIsDirty = false;
 
       if (this.formId) {
         document.dispatchEvent(
@@ -330,11 +333,32 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
 
       this.setupFormListeners();
+      this.dispatchStateChange(); // Initial dispatch
     },
 
     destroy(): void {
       this.cleanup?.();
       this.clearAllState();
+    },
+
+    dispatchStateChange(): void {
+      if (!this.formId) {
+        return;
+      }
+
+      const isDirty = Object.values(this.dirtyFields).some(Boolean);
+
+      if (isDirty === this.lastIsDirty) {
+        return;
+      }
+
+      this.lastIsDirty = isDirty;
+
+      document.dispatchEvent(
+        new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_STATE_CHANGE, {
+          detail: { id: this.formId, isDirty },
+        }),
+      );
     },
 
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
@@ -366,12 +390,17 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     handleFieldInput(name: string, value: unknown): void {
-      const isNumber = this.fields[name].rules?.numberOnly;
+      const field = this.fields[name];
+      const isNumber = field?.rules?.numberOnly;
       const allowNegative = typeof isNumber === 'object' && isNumber.allowNegative;
       const whole = typeof isNumber === 'object' && isNumber.whole;
-      const parsedValue = parseNumberOnly(value as string, allowNegative, whole);
-      this.values[name] = isNumber ? parsedValue : value;
-      this.dirtyFields[name] = true;
+      const parsedValue = isNumber ? parseNumberOnly(value as string, allowNegative, whole) : value;
+
+      // Only mark as dirty if the value is different from the baseline
+      const isActuallyChanged = String(parsedValue) !== String(field?.defaultValue ?? '');
+
+      this.values[name] = parsedValue;
+      this.dirtyFields[name] = isActuallyChanged;
       this.updateFieldRef(name);
 
       if (isNumber) {
@@ -385,7 +414,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
 
       if (shouldValidate) {
-        this.validateField(name, value);
+        this.validateField(name, isNumber ? parsedValue : value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -397,6 +428,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       if (shouldValidate) {
         this.validateField(name, value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -410,7 +443,10 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.values[name] = value;
 
       if (shouldTouch) this.touchedFields[name] = true;
-      if (shouldDirty) this.dirtyFields[name] = true;
+      if (shouldDirty) {
+        const field = this.fields[name];
+        this.dirtyFields[name] = String(value) !== String(field?.defaultValue ?? '');
+      }
 
       const fieldElement = this.fields[name]?.ref;
       if (fieldElement) {
@@ -419,6 +455,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       if (shouldValidate) {
         this.validateField(name, value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -453,6 +491,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         return await this.validateAllFields();
       } finally {
         this.isValidating = false;
+        this.dispatchStateChange();
       }
     },
 
@@ -468,6 +507,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       this.updateAriaInvalidState(name);
       this.updateFormValidState();
+      this.dispatchStateChange();
 
       return !error;
     },
@@ -513,12 +553,14 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
 
       this.updateFormValidState();
+      this.dispatchStateChange();
     },
 
     setError(name: string, error: FieldError): void {
       this.errors[name] = error;
       this.updateAriaInvalidState(name);
       this.updateFormValidState();
+      this.dispatchStateChange();
     },
 
     reset(values?: Record<string, unknown>): void {
@@ -545,6 +587,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValid = true;
       this.isSubmitting = false;
       this.isValidating = false;
+      this.dispatchStateChange();
     },
 
     handleSubmit(
@@ -569,19 +612,19 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           }
         } finally {
           this.isSubmitting = false;
+          this.dispatchStateChange();
         }
       };
     },
 
     getFormState(): FormState {
-      this.validateAllFields();
-
       return {
         values: { ...this.values },
         errors: { ...this.errors },
         touchedFields: { ...this.touchedFields },
         dirtyFields: { ...this.dirtyFields },
         isValid: this.isValid,
+        isDirty: Object.values(this.dirtyFields).some(Boolean),
         isSubmitting: this.isSubmitting,
         isValidating: this.isValidating,
       };

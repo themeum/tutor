@@ -7,4 +7,5 @@ export const TUTOR_CUSTOM_EVENTS = {
   TOAST_CLEAR: 'tutor-toast-clear',
   FORM_REGISTER: 'tutor-form-register',
   FORM_UNREGISTER: 'tutor-form-unregister',
+  FORM_STATE_CHANGE: 'tutor-form-state-change',
 };
