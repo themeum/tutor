@@ -204,21 +204,5 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 				?>
 			</div>
 		</div>
-
-		<button 
-					type="button" 
-					class="tutor-btn tutor-btn-ghost tutor-btn-x-small"
-					@click="TutorCore.form.reset(activeTab+'-form')"
-				>
-					<?php esc_html_e( 'Discard', 'tutor' ); ?>
-				</button>
-				<button 
-					type="submit"
-					class="tutor-btn tutor-btn-primary tutor-btn-x-small"
-					x-bind:form="activeTab === 'none' ? '' : activeTab+'-form'"
-				>
-					<?php esc_html_e( 'Save', 'tutor' ); ?>
-				</button>
-			</div>
 	</form>
 </div>
