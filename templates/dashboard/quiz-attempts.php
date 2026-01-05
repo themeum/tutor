@@ -10,6 +10,7 @@
  */
 
 use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
@@ -126,13 +127,24 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 	</div>
 	<div class="tutor-pt-6">
 		<?php
-		Pagination::make()
-		->current( $current_page )
-		->total( $quiz_attempts_count )
-		->limit( $item_per_page )
-		->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-		->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
-		->render();
+		if ( $quiz_attempts_count > $item_per_page ) {
+			Pagination::make()
+			->current( $current_page )
+			->total( $quiz_attempts_count )
+			->limit( $item_per_page )
+			->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+			->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+			->render();
+		}
 		?>
 	</div>
+	<?php
+	ConfirmationModal::make()
+		->id( 'tutor-quiz-attempt-delete-modal' )
+		->title( __( 'Do You Want to Delete This?', 'tutor' ) )
+		->message( __( 'Would you like to delete Quiz Attempt permanently? We suggest you proceed with caution.', 'tutor' ) )
+		->confirm_handler( 'handleDeleteAttempt(payload?.attemptID)' )
+		->mutation_state( 'deleteMutation' )
+		->render();
+	?>
 </div>

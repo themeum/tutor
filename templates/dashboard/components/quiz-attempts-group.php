@@ -29,9 +29,9 @@ $remaining_attempts = array_slice( $attempts, 1 );
 			'attempt'         => $first_attempt,
 			'quiz_title'      => $quiz_title,
 			'course_title'    => $course_title,
-			'course_data'     => $course_data,
 			'show_quiz_title' => true,
 			'show_course'     => true,
+			'quiz_id'         => $quiz_id,
 			'attempts_count'  => $attempts_count,
 			'attempt_id'      => $first_attempt['attempt_id'] ?? 0,
 		)

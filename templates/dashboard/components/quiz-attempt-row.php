@@ -13,6 +13,7 @@ use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Popover;
+use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
 use Tutor\Models\QuizModel;
 
@@ -70,26 +71,14 @@ $kebab_button    = Button::make()
 			</div>
 		<?php endif; ?>
 
-		<?php if ( $show_course && ! empty( $course_title ) && ! empty( $course_data ) ) : ?>
-			<div class="tutor-quiz-item-info-course">
-				<?php esc_html_e( 'Course:', 'tutor' ); ?> 
-				<div 
-					x-data="tutorPreviewTrigger({ data: <?php echo esc_attr( wp_json_encode( $course_data ) ); ?> })"
-					x-ref="trigger"
-					class="tutor-preview-trigger"
-				>
-					<span class="tutor-preview-trigger-text"><?php echo esc_html( $course_title ); ?></span>
-					<div 
-						x-ref="content"
-						x-show="open"
-						x-cloak
-						@click.outside="handleClickOutside()"
-						class="tutor-popover tutor-preview-card"
-					>
-					</div>
-				</div>
-			</div>
-		<?php endif; ?>
+		<div class="tutor-quiz-item-info-course">
+			<?php esc_html_e( 'Course:', 'tutor' ); ?> 
+			<?php
+			PreviewTrigger::make()
+				->id( $quiz_id ?? 0 )
+				->render()
+			?>
+		</div>
 
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
 		<?php if ( ! empty( $attempt['student'] ) ) : ?>
@@ -143,7 +132,7 @@ $kebab_button    = Button::make()
 
 		Popover::make()
 			->trigger( $kebab_button )
-			->placement('bottom')
+			->placement( 'bottom' )
 			->menu_item(
 				array(
 					'tag'     => 'a',
