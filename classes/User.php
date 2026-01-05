@@ -244,8 +244,6 @@ class User {
 	 */
 	private function delete_existing_user_photo( $user_id, $type ) {
 		$meta_key = 'cover_photo' == $type ? '_tutor_cover_photo' : '_tutor_profile_photo';
-		$photo_id = get_user_meta( $user_id, $meta_key, true );
-		is_numeric( $photo_id ) ? wp_delete_attachment( $photo_id, true ) : 0;
 		delete_user_meta( $user_id, $meta_key );
 	}
 
