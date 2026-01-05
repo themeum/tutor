@@ -9,8 +9,20 @@
  * @since 1.4.3
  */
 
+defined( 'ABSPATH' ) || exit;
+
+tutor_load_template(
+	'account-header',
+	array(
+		'page_data' => array(
+			'title' => esc_html__( 'Reviews', 'tutor' ),
+		),
+		'back_url'  => tutor_utils()->get_tutor_dashboard_page_permalink(),
+	)
+);
+
 if ( ! tutor_utils()->is_instructor( 0, true ) ) {
-	include __DIR__ . '/reviews/given-reviews.php';
+	tutor_load_template( 'dashboard.reviews.given-reviews' );
 	return;
 }
 

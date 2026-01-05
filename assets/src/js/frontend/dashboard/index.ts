@@ -24,7 +24,7 @@ const getCurrentPage = (): string => {
   const params = new URLSearchParams(window.location.search);
 
   // Check for subpage parameter - if not 'dashboard', return early
-  const subpage = params.get('subpage');
+  const subpage = params.get('page') ? params.get('subpage') : '';
   if (subpage && subpage !== 'dashboard') {
     return ''; // Not on dashboard, will be handled by early return in initializeDashboard
   }

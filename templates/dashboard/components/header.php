@@ -5,50 +5,19 @@
  * @package tutor
  */
 
+use TUTOR\Dashboard;
 use TUTOR\Icon;
 use TUTOR\Instructors_List;
 use TUTOR\User;
 
-$profile_menu_items = array(
-	'profile'      => array(
-		'title'       => esc_html__( 'Profile', 'tutor' ),
-		'icon'        => Icon::PROFILE_CIRCLE,
-		'icon_active' => Icon::PROFILE_CIRCLE_FILL,
-		'url'         => tutor_utils()->get_tutor_dashboard_page_permalink( 'profile' ),
-	),
-	'certificates' => array(
-		'title'       => esc_html__( 'Certificates', 'tutor' ),
-		'icon'        => Icon::CERTIFICATE_2,
-		'icon_active' => Icon::CERTIFICATE_2,
-		'url'         => tutor_utils()->get_tutor_dashboard_page_permalink( 'certificates' ),
-	),
-	'reviews'      => array(
-		'title'       => esc_html__( 'Reviews', 'tutor' ),
-		'icon'        => Icon::RATINGS,
-		'icon_active' => Icon::RATINGS,
-		'url'         => tutor_utils()->get_tutor_dashboard_page_permalink( 'reviews' ),
-	),
-	'billing'      => array(
-		'title'       => esc_html__( 'Billing', 'tutor' ),
-		'icon'        => Icon::BILLING,
-		'icon_active' => Icon::BILLING,
-		'url'         => tutor_utils()->get_tutor_dashboard_page_permalink( 'billing' ),
-	),
-	'settings'     => array(
-		'title'       => esc_html__( 'Settings', 'tutor' ),
-		'icon'        => Icon::SETTING,
-		'icon_active' => Icon::SETTING,
-		'url'         => tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' ),
-	),
-	'logout'       => array(
-		'title' => esc_html__( 'Logout', 'tutor' ),
-		'icon'  => Icon::LOGOUT,
-		'url'   => wp_logout_url( home_url() ),
-	),
+$menu_items           = Dashboard::get_account_pages();
+$menu_items['logout'] = array(
+	'title' => esc_html__( 'Logout', 'tutor' ),
+	'icon'  => Icon::LOGOUT,
+	'url'   => wp_logout_url( home_url() ),
 );
 
-$active_nav = 'profile';
-
+$active_nav   = 'profile';
 $user_id      = get_current_user_id();
 $display_name = tutor_utils()->display_name( $user_id );
 ?>
@@ -160,7 +129,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 					</div>
 					<ul class="tutor-dashboard-header-user-popover-menu">
 						<?php
-						foreach ( $profile_menu_items as $key => $item ) {
+						foreach ( $menu_items as $key => $item ) {
 							$icon = ( $key === $active_nav && isset( $item['icon_active'] ) ) ? $item['icon_active'] : $item['icon'];
 							?>
 							<li>

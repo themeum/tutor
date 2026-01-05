@@ -18,159 +18,92 @@ defined( 'ABSPATH' ) || exit;
 class UrlHelper {
 
 	/**
-	 * Get site base URL.
-	 *
-	 * @param string $path Optional path.
-	 *
-	 * @return string
-	 */
-	public static function site( $path = '' ) {
-		return esc_url( site_url( $path ) );
-	}
-
-	/**
-	 * Get home URL.
-	 *
-	 * @param string $path Optional path.
-	 *
-	 * @return string
-	 */
-	public static function home( $path = '' ) {
-		return esc_url( home_url( $path ) );
-	}
-
-	/**
-	 * Get admin URL.
-	 *
-	 * @param string $path Optional path.
-	 * @return string
-	 */
-	public static function admin( $path = '' ) {
-		return esc_url( admin_url( $path ) );
-	}
-
-	/**
 	 * Get AJAX URL.
 	 *
-	 * @return string
-	 */
-	public static function ajax() {
-		return esc_url( admin_url( 'admin-ajax.php' ) );
-	}
-
-	/**
-	 * Get REST API base URL.
+	 * @since 4.0.0
 	 *
-	 * @param string $route Optional route.
 	 * @return string
 	 */
-	public static function rest( $route = '' ) {
-		return esc_url( rest_url( $route ) );
+	public static function ajax() : string {
+		return admin_url( 'admin-ajax.php' );
 	}
 
 	/**
 	 * Get plugin asset URL.
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param string $path Relative asset path.
 	 * @return string
 	 */
-	public static function asset( $path = '' ) {
-		return esc_url( tutor()->assets_url . $path );
+	public static function asset( $path = '' ) : string {
+		return tutor()->assets_url . $path;
 	}
 
 	/**
 	 * Get current URL.
 	 *
+	 * @since 4.0.0
+	 *
 	 * @return string
 	 */
-	public static function current() {
+	public static function current() : string {
 		global $wp;
 
-		return esc_url(
-			home_url(
-				add_query_arg( array(), $wp->request )
-			)
+		return home_url(
+			add_query_arg( array(), $wp->request )
 		);
 	}
 
 	/**
-	 * Get referer URL safely.
+	 * Add query params to URL.
 	 *
-	 * @return string
-	 */
-	public static function referer() {
-		return esc_url( wp_get_referer() );
-	}
-
-	/**
-	 * Check if current request is HTTPS.
-	 *
-	 * @return bool
-	 */
-	public static function is_https() {
-		return is_ssl();
-	}
-
-	/**
-	 * Prepare URL with query args.
+	 * @since 4.0.0
 	 *
 	 * @param string $url URL.
-	 * @param array  $query_args Query args.
+	 * @param array  $query_params Query params.
 	 *
 	 * @return string
 	 */
-	public static function prepare( $url, array $query_args = array() ) {
+	public static function add_query_params( $url, array $query_params = array() ) : string {
 		$url = ltrim( $url, '/' );
 
-		if ( ! empty( $query_args ) ) {
-			$url = add_query_arg( $query_args, $url );
+		if ( ! empty( $query_params ) ) {
+			$url = add_query_arg( $query_params, $url );
 		}
 
-		return esc_url( $url );
+		return $url;
 	}
 
 	/**
-	 * Add query args to URL.
+	 * Remove query params from URL.
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param string $url URL.
-	 * @param array  $query_args Query args.
+	 * @param array  $query_params Query params.
 	 *
 	 * @return string
 	 */
-	public static function add_query_var( $url, array $query_args = array() ) {
-		return self::prepare( $url, $query_args );
+	public static function remove_query_params( $url, array $query_params = array() ) : string {
+		return remove_query_arg( $query_params, $url );
 	}
 
 	/**
-	 * Remove query args from URL.
+	 * Get back URL.
 	 *
-	 * @param string $url URL.
-	 * @param array  $query_args Query args.
+	 * @since 4.0.0
+	 *
+	 * @param string $fallback fallback URL.
 	 *
 	 * @return string
 	 */
-	public static function remove_query_var( $url, array $query_args = array() ) {
-		return self::prepare( $url, array_diff_key( $query_args, $query_args ) );
-	}
-
-	/**
-	 * Get login URL with redirect.
-	 *
-	 * @param string $redirect Redirect URL.
-	 * @return string
-	 */
-	public static function login( $redirect = '' ) {
-		return esc_url( wp_login_url( $redirect ) );
-	}
-
-	/**
-	 * Get logout URL.
-	 *
-	 * @param string $redirect Redirect URL.
-	 * @return string
-	 */
-	public static function logout( $redirect = '' ) {
-		return esc_url( wp_logout_url( $redirect ) );
+	public static function back( $fallback = '' ) : string {
+		$back_url = wp_get_referer();
+		if ( empty( $back_url ) ) {
+			$back_url = empty( $fallback ) ? self::current() : $fallback;
+		}
+		return $back_url;
 	}
 }
 

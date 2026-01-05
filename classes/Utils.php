@@ -19,6 +19,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\DateTimeHelper;
+use Tutor\Helpers\UrlHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -2922,7 +2923,17 @@ class Utils {
 		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
 
-		$all_menus = array_merge( $student_nav_items, $instructor_nav_items );
+		/**
+		 * Miscellaneous menus pages
+		 * Which are not visible to any nav.
+		 *
+		 * @since 4.0.0
+		 */
+		$misc_menus = array(
+			'account' => array( 'label' => __( 'Account', 'tutor' ) ),
+		);
+
+		$all_menus = array_merge( $student_nav_items, $instructor_nav_items, $misc_menus );
 
 		return apply_filters( 'tutor_dashboard/nav_items_all', $all_menus );
 	}
@@ -5566,6 +5577,23 @@ class Utils {
 	}
 
 	/**
+	 * Check if the current page is the frontend's course list page
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public function is_course_list_page(): bool {
+		$current_url    = trailingslashit( UrlHelper::current() );
+		$is_course_list = $this->course_archive_page_url() === $current_url;
+
+		return apply_filters(
+			'tutor_is_course_list_page',
+			$is_course_list
+		);
+	}
+
+	/**
 	 * Check if the current page is the part of learning area
 	 *
 	 * @since 4.0.0
@@ -5573,8 +5601,28 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_learning_area(): bool {
-		// @TODO.
-		return true;
+		$post_types = array(
+			tutor()->lesson_post_type,
+			tutor()->quiz_post_type,
+			tutor()->assignment_post_type,
+			tutor()->zoom_post_type,
+			tutor()->meet_post_type,
+		);
+
+		$current_post_type = get_post_type();
+
+		if ( is_single() && ! empty( $current_post_type ) ) {
+			if ( in_array( $current_post_type, $post_types, true ) ) {
+				return true;
+			} elseif ( tutor()->course_post_type === $current_post_type ) {
+				// Check if the subpage is belongs to learning area.
+				$learning_subpage = Input::get( 'subpage' );
+				$allowed_subpages = array_keys( Template::make_learning_area_sub_page_nav_items() );
+				return in_array( $learning_subpage, $allowed_subpages, true );
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -9500,7 +9548,7 @@ class Utils {
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),
-			'enrolled-courses' => array(
+			'courses' => array(
 				'title' => __( 'Courses', 'tutor' ),
 				'icon'  => Icon::COURSES,
 			),

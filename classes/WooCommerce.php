@@ -805,7 +805,7 @@ class WooCommerce extends Tutor_Base {
 		// get woo order details.
 		$order         = wc_get_order( $order_id );
 		$tutor_product = false;
-		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
+		$url           = tutor_utils()->tutor_dashboard_url() . 'courses/';
 
 		/**
 		 * Loop though each WC order item.

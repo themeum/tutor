@@ -15,12 +15,13 @@ use TUTOR\Icon;
 use Tutor\Components\Avatar;
 use Tutor\Helpers\UrlHelper;
 
-$context      = 'frontend-dashboard-qna-table-' . $view_as;
-$key_slug     = 'frontend-dashboard-qna-table-student' === $context ? '_' . $current_user_id : '';
-$meta         = $question->meta;
-$is_read      = (int) tutor_utils()->array_get( 'tutor_qna_read' . $key_slug, $meta, 0 );
-$is_unread    = 0 === $is_read;
-$text_mark_as = $is_unread ? __( 'Mark as Read', 'tutor' ) : __( 'Mark as Unread', 'tutor' );
+$current_user_id = get_current_user_id();
+$context         = 'frontend-dashboard-qna-table-' . $view_as;
+$key_slug        = 'frontend-dashboard-qna-table-student' === $context ? '_' . $current_user_id : '';
+$meta            = $question->meta;
+$is_read         = (int) tutor_utils()->array_get( 'tutor_qna_read' . $key_slug, $meta, 0 );
+$is_unread       = 0 === $is_read;
+$text_mark_as    = $is_unread ? __( 'Mark as Read', 'tutor' ) : __( 'Mark as Unread', 'tutor' );
 
 $question_id = $question->comment_ID;
 $last_reply  = null;
@@ -30,7 +31,7 @@ if ( ! empty( $answers ) ) {
 	$last_reply = $answers[0];
 }
 
-$replies_url = UrlHelper::prepare(
+$replies_url = UrlHelper::add_query_params(
 	$discussion_url,
 	array(
 		'tab'     => 'qna',
@@ -89,7 +90,7 @@ $replies_url = UrlHelper::prepare(
 				<div class="tutor-popover-menu">
 					<button 
 						class="tutor-popover-menu-item"
-						@click="handleReadUnreadQnA(<?php echo esc_html( $question_id ); ?>)">
+						@click="handleReadUnreadQnA(<?php echo esc_html( $question_id ); ?>,'<?php echo esc_html( $context ); ?>')">
 						<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
 						<?php echo esc_html( $text_mark_as ); ?>
 					</button>
