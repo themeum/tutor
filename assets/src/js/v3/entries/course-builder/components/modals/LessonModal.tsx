@@ -143,11 +143,11 @@ const LessonModal = ({
 
   const hasRightSidebar = Boolean(
     contentDripType !== '' ||
-      isVideoPlaybackTimeVisible ||
-      isFeaturedImageVisible ||
-      isVideoVisible ||
-      isExerciseFilesVisible ||
-      (isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && isLessonPreviewVisible),
+    isVideoPlaybackTimeVisible ||
+    isFeaturedImageVisible ||
+    isVideoVisible ||
+    isExerciseFilesVisible ||
+    (isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && isLessonPreviewVisible),
   );
 
   useEffect(() => {
@@ -581,7 +581,7 @@ const LessonModal = ({
                       }
                       helpText={
                         // prettier-ignore
-                        __( 'If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
+                        __('If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
                       }
                       visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.LESSON_PREVIEW}
                     />
