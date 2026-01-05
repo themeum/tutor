@@ -1,16 +1,17 @@
 import { __ } from '@wordpress/i18n';
 
 import { type MutationState } from '@Core/ts/services/Query';
+
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ReviewFormProps {
-  id?: string;
-  post_id: string;
+  comment_ID?: string;
+  comment_post_ID: string;
   rating: string;
-  review_content: string;
+  comment_content: string;
 }
 
 interface ReviewPayload {
@@ -39,7 +40,7 @@ const reviewDeleteModal = () => {
           window.TutorCore.toast.success(data?.message ?? __('Review deleted successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to delete review');
+          window.TutorCore.toast.error(error.message || __('Failed to delete review', 'tutor'));
         },
       });
     },
@@ -116,10 +117,10 @@ const reviewCard = (id: string) => {
 
     convertFormDataToPayload(data: ReviewFormProps): ReviewPayload {
       return {
-        ...(data.id && { review_id: data.id }),
-        course_id: data.post_id,
+        ...(data.comment_ID && { comment_id: data.comment_ID }),
+        course_id: data.comment_post_ID,
         tutor_rating_gen_input: data.rating,
-        review: data.review_content,
+        review: data.comment_content,
       };
     },
 

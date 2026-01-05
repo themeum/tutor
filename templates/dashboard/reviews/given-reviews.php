@@ -29,21 +29,6 @@ $review_count   = $all_reviews->count;
 $reviews        = $all_reviews->results;
 $received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
 
-$converted_reviews = array_map(
-	function ( $review ) {
-		return array(
-			'id'             => $review->comment_ID,
-			'post_id'        => $review->comment_post_ID, // course or bundle id.
-			'title'          => $review->course_title, // course or bundle title.
-			'review_date'    => $review->comment_date,
-			'rating'         => $review->rating,
-			'is_bundle'      => false, // Currently only course reviews are supported.
-			'review_content' => $review->comment_content,
-		);
-	},
-	$reviews ?? array()
-);
-
 $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 ?>
 
@@ -51,7 +36,7 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 	<div class="tutor-user-reviews">
 		<div class="tutor-profile-container">
 			<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
-				<?php foreach ( $converted_reviews as $review ) : ?>
+				<?php foreach ( $reviews as $review ) : ?>
 					<?php tutor_load_template( 'dashboard.reviews.review-card', array( 'review' => $review ) ); ?>
 				<?php endforeach; ?>
 			</div>
@@ -77,23 +62,8 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 				->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
 				->confirm_handler( 'handleDeleteReview(payload?.id)' )
 				->mutation_state( 'deleteReviewMutation' )
-				->confirm_button(
-					Button::make()
-						->attr( '@click', 'handleDeleteReview(payload?.id)' )
-						->attr( ':class', '{ \'tutor-btn-loading\': deleteReviewMutation.isPending }' )
-						->label( __( 'Yes, Delete This', 'tutor' ) )
-						->variant( Variant::DESTRUCTIVE )
-						->size( Size::X_SMALL )
-						->get()
-				)
-				->cancel_button(
-					Button::make()
-						->attr( '@click', 'TutorCore.modal.closeModal("review-delete-modal")' )
-						->label( __( 'Cancel', 'tutor' ) )
-						->variant( Variant::SECONDARY )
-						->size( Size::X_SMALL )
-						->get()
-				)
+				->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+				->cancel_text( __( 'Cancel', 'tutor' ) )
 				->render();
 			?>
 		</div>

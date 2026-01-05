@@ -11,28 +11,29 @@
 use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
+use Tutor\Components\StarRating;
 use Tutor\Components\StarRatingInput;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 
 $default_review = array(
-	'id'             => '',
-	'post_id'        => '',
-	'title'          => '',
-	'review_date'    => '',
-	'rating'         => 0,
-	'is_bundle'      => false,
-	'review_content' => '',
+	'comment_ID'      => '',
+	'comment_post_ID' => '',
+	'course_title'    => '',
+	'comment_date'    => '',
+	'rating'          => 0,
+	'is_bundle'       => false,
+	'comment_content' => '',
 );
 
 $review = wp_parse_args( $review, $default_review );
 
-$form_id         = "review-form-{$review['id']}";
+$form_id         = "review-form-{$review['comment_ID']}";
 $delete_modal_id = 'review-delete-modal';
 ?>
 
-<div class="tutor-review-card" x-data="tutorReviewCard('<?php echo esc_attr( $review['id'] ); ?>')">
+<div class="tutor-review-card" x-data="tutorReviewCard('<?php echo esc_attr( $review['comment_ID'] ); ?>')">
 
 	<!-- Review Display (Hidden in Edit Mode) -->
 	<div x-show="!isEditMode">
@@ -57,7 +58,7 @@ $delete_modal_id = 'review-delete-modal';
 
 			<!-- Course Title -->
 			<div class="tutor-review-title">
-				<?php echo esc_html( $review['title'] ?? '' ); ?>
+				<?php echo esc_html( $review['course_title'] ?? '' ); ?>
 			</div>
 
 			<!-- Review Date -->
@@ -66,7 +67,7 @@ $delete_modal_id = 'review-delete-modal';
 					printf(
 						// translators: %s - Review date.
 						esc_html__( 'Reviewed on: %s', 'tutor' ),
-						esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $review['review_date'], get_option( 'date_format' ) ) ?? '' )
+						esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $review['comment_date'], get_option( 'date_format' ) ) ?? '' )
 					);
 					?>
 			</div>
@@ -80,18 +81,11 @@ $delete_modal_id = 'review-delete-modal';
 			<!-- Actions and Rating -->
 			<div class="tutor-review-rating-wrapper">
 				<!-- Rating -->
-				<div class="tutor-review-rating">
 					<?php
-					tutor_load_template(
-						'demo-components.dashboard.components.star-rating',
-						array(
-							'rating'        => $review['rating'] ?? 0,
-							'wrapper_class' => 'tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2',
-							'icon_class'    => 'tutor-icon-exception4',
-						)
-					);
+						StarRating::make()
+							->rating( $review['rating'] ?? 0 )
+							->render();
 					?>
-				</div>
 
 				<!-- Actions -->
 				<div class="tutor-review-actions">
@@ -112,7 +106,7 @@ $delete_modal_id = 'review-delete-modal';
 							->size( Size::X_SMALL )
 							->icon( tutor_utils()->get_svg_icon( Icon::DELETE_2 ) )
 							->icon_only()
-							->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review['id'] ) . ' })' )
+							->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review['comment_ID'] ) . ' })' )
 							->render();
 					?>
 				</div>
@@ -120,7 +114,7 @@ $delete_modal_id = 'review-delete-modal';
 
 			<!-- Review Text -->
 			<div class="tutor-review-text">
-				<?php echo esc_textarea( htmlspecialchars( stripslashes( $review['review_content'] ?? '' ) ) ); ?>
+				<?php echo esc_textarea( htmlspecialchars( stripslashes( $review['comment_content'] ?? '' ) ) ); ?>
 			</div>
 		</div>
 	</div>
@@ -138,9 +132,6 @@ $delete_modal_id = 'review-delete-modal';
 			x-bind="getFormBindings()"
 			@submit.prevent="handleSubmit(
 				(data) => handleReviewSubmit(data),
-				(errors) => { 
-					console.log('Form errors:', errors); 
-				}
 			)($event)"
 		>
 			<?php
@@ -153,10 +144,10 @@ $delete_modal_id = 'review-delete-modal';
 			<?php
 				InputField::make()
 					->type( 'textarea' )
-					->name( 'review_content' )
+					->name( 'comment_content' )
 					->required()
 					->clearable()
-					->attr( 'x-bind', "register('review_content', { required: '" . esc_js( __( 'Review content is required', 'tutor' ) ) . "' })" )
+					->attr( 'x-bind', "register('comment_content', { required: '" . esc_js( __( 'Review content is required', 'tutor' ) ) . "' })" )
 					->attr( '@keydown.meta.enter.prevent', 'handleSubmit((data) => handleReviewSubmit(data))' )
 					->attr( '@keydown.ctrl.enter.prevent', 'handleSubmit((data) => handleReviewSubmit(data))' )
 					->render();

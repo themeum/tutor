@@ -1,0 +1,31 @@
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-account-page-wrapper {
+  .tutor-account-header {
+    @include tutor-breakpoint-down(sm) {
+      display: none;
+    }
+  }
+
+  .tutor-account-header {
+    background-color: $tutor-surface-base;
+    border-bottom: 1px solid $tutor-border-idle;
+    padding-block: $tutor-spacing-5;
+
+    &-title {
+      @include tutor-typography(h4, semibold, primary, heading);
+
+      @include tutor-breakpoint-up(sm) {
+        margin-inline-end: auto;
+        margin-inline-start: $tutor-spacing-4;
+      }
+    }
+  }
+
+  .tutor-account-container {
+    max-width: 728px;
+    margin: 0 auto;
+    padding-inline: $tutor-spacing-6;
+  }
+}

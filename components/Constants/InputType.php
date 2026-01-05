@@ -38,4 +38,6 @@ abstract class InputType {
 	public const COLOR    = 'color';
 	public const DROPDOWN = 'dropdown';
 	public const LINK     = 'link';
+	public const DATE     = 'date';
+	public const DATE_TIME = 'date-time';
 }
