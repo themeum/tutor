@@ -88,5 +88,22 @@ class UrlHelper {
 	public static function remove_query_params( $url, array $query_params = array() ) : string {
 		return remove_query_arg( $query_params, $url );
 	}
+
+	/**
+	 * Get back URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $fallback fallback URL.
+	 *
+	 * @return string
+	 */
+	public static function back( $fallback = '' ) : string {
+		$back_url = wp_get_referer();
+		if ( empty( $back_url ) ) {
+			$back_url = empty( $fallback ) ? self::current() : $fallback;
+		}
+		return $back_url;
+	}
 }
 
