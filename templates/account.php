@@ -26,26 +26,7 @@ if ( ! $back_url ) {
 	$back_url = tutor_utils()->tutor_dashboard_url();
 }
 ?>
-<div class="tutor-user-reviews">
-	<div class="tutor-profile-header">
-		<div class="tutor-profile-container">
-			<div class="tutor-flex tutor-items-center tutor-justify-between">
-				<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::LEFT ); ?>
-				</a>
-				<h4 class="tutor-profile-header-title">
-					<?php echo esc_html( $page_data['title'] ?? '' ); ?>
-				</h4>
-				<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::CROSS ); ?>
-				</a>
-			</div>
-		</div>
-	</div>
-	<div class="tutor-profile-container">
-		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
-			<?php require_once $page_template; ?>
-		</div>
-	</div>
+<div class="tutor-account-page-wrapper">
+	<?php require_once $page_template; ?>
 </div>
 <?php wp_footer(); ?>
