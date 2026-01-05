@@ -1,6 +1,7 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { CALENDAR_PRESETS, type Preset } from '@Core/ts/types/calendar';
 import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
 import {
   endOfMonth,
   endOfYear,
@@ -209,24 +210,30 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
         case 'all-time':
           return [];
         case 'yesterday':
-          return [format(subDays(today, 1), 'yyyy-MM-dd'), format(subDays(today, 1), 'yyyy-MM-dd')];
+          return [
+            format(subDays(today, 1), DateFormats.yearMonthDay),
+            format(subDays(today, 1), DateFormats.yearMonthDay),
+          ];
         case 'last-7':
-          return [format(subDays(today, 6), 'yyyy-MM-dd'), format(today, 'yyyy-MM-dd')];
+          return [format(subDays(today, 6), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
         case 'last-14':
-          return [format(subDays(today, 13), 'yyyy-MM-dd'), format(today, 'yyyy-MM-dd')];
+          return [format(subDays(today, 13), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
         case 'last-30':
-          return [format(subDays(today, 29), 'yyyy-MM-dd'), format(today, 'yyyy-MM-dd')];
+          return [format(subDays(today, 29), DateFormats.yearMonthDay), format(today, DateFormats.yearMonthDay)];
         case 'this-month':
-          return [format(startOfMonth(today), 'yyyy-MM-dd'), format(endOfMonth(today), 'yyyy-MM-dd')];
+          return [
+            format(startOfMonth(today), DateFormats.yearMonthDay),
+            format(endOfMonth(today), DateFormats.yearMonthDay),
+          ];
         case 'last-month':
           return [
-            format(startOfMonth(subMonths(today, 1)), 'yyyy-MM-dd'),
-            format(endOfMonth(subMonths(today, 1)), 'yyyy-MM-dd'),
+            format(startOfMonth(subMonths(today, 1)), DateFormats.yearMonthDay),
+            format(endOfMonth(subMonths(today, 1)), DateFormats.yearMonthDay),
           ];
         case 'last-year':
           return [
-            format(startOfYear(subYears(today, 1)), 'yyyy-MM-dd'),
-            format(endOfYear(subYears(today, 1)), 'yyyy-MM-dd'),
+            format(startOfYear(subYears(today, 1)), DateFormats.yearMonthDay),
+            format(endOfYear(subYears(today, 1)), DateFormats.yearMonthDay),
           ];
         default:
           return [];
