@@ -18,13 +18,13 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 
 $default_review = array(
-	'id'             => '',
-	'post_id'        => '',
-	'title'          => '',
-	'review_date'    => '',
-	'rating'         => 0,
-	'is_bundle'      => false,
-	'review_content' => '',
+	'comment_ID'      => '',
+	'comment_post_ID' => '',
+	'course_title'    => '',
+	'comment_date'    => '',
+	'rating'          => 0,
+	'is_bundle'       => false,
+	'comment_content' => '',
 );
 
 $review = wp_parse_args( $review, $default_review );
@@ -58,7 +58,7 @@ $delete_modal_id = 'review-delete-modal';
 
 			<!-- Course Title -->
 			<div class="tutor-review-title">
-				<?php echo esc_html( $review['title'] ?? '' ); ?>
+				<?php echo esc_html( $review['course_title'] ?? '' ); ?>
 			</div>
 
 			<!-- Review Date -->
@@ -67,7 +67,7 @@ $delete_modal_id = 'review-delete-modal';
 					printf(
 						// translators: %s - Review date.
 						esc_html__( 'Reviewed on: %s', 'tutor' ),
-						esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $review['review_date'], get_option( 'date_format' ) ) ?? '' )
+						esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $review['comment_date'], get_option( 'date_format' ) ) ?? '' )
 					);
 					?>
 			</div>
@@ -132,9 +132,6 @@ $delete_modal_id = 'review-delete-modal';
 			x-bind="getFormBindings()"
 			@submit.prevent="handleSubmit(
 				(data) => handleReviewSubmit(data),
-				(errors) => { 
-					console.log('Form errors:', errors); 
-				}
 			)($event)"
 		>
 			<?php
@@ -147,10 +144,10 @@ $delete_modal_id = 'review-delete-modal';
 			<?php
 				InputField::make()
 					->type( 'textarea' )
-					->name( 'review_content' )
+					->name( 'comment_content' )
 					->required()
 					->clearable()
-					->attr( 'x-bind', "register('review_content', { required: '" . esc_js( __( 'Review content is required', 'tutor' ) ) . "' })" )
+					->attr( 'x-bind', "register('comment_content', { required: '" . esc_js( __( 'Review content is required', 'tutor' ) ) . "' })" )
 					->attr( '@keydown.meta.enter.prevent', 'handleSubmit((data) => handleReviewSubmit(data))' )
 					->attr( '@keydown.ctrl.enter.prevent', 'handleSubmit((data) => handleReviewSubmit(data))' )
 					->render();
