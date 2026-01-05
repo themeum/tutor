@@ -29,11 +29,11 @@ $default_review = array(
 
 $review = wp_parse_args( $review, $default_review );
 
-$form_id         = "review-form-{$review['id']}";
+$form_id         = "review-form-{$review['comment_ID']}";
 $delete_modal_id = 'review-delete-modal';
 ?>
 
-<div class="tutor-review-card" x-data="tutorReviewCard('<?php echo esc_attr( $review['id'] ); ?>')">
+<div class="tutor-review-card" x-data="tutorReviewCard('<?php echo esc_attr( $review['comment_ID'] ); ?>')">
 
 	<!-- Review Display (Hidden in Edit Mode) -->
 	<div x-show="!isEditMode">
@@ -106,7 +106,7 @@ $delete_modal_id = 'review-delete-modal';
 							->size( Size::X_SMALL )
 							->icon( tutor_utils()->get_svg_icon( Icon::DELETE_2 ) )
 							->icon_only()
-							->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review['id'] ) . ' })' )
+							->attr( 'onclick', 'TutorCore.modal.showModal(' . wp_json_encode( $delete_modal_id ) . ', { id: ' . esc_js( $review['comment_ID'] ) . ' })' )
 							->render();
 					?>
 				</div>
@@ -114,7 +114,7 @@ $delete_modal_id = 'review-delete-modal';
 
 			<!-- Review Text -->
 			<div class="tutor-review-text">
-				<?php echo esc_textarea( htmlspecialchars( stripslashes( $review['review_content'] ?? '' ) ) ); ?>
+				<?php echo esc_textarea( htmlspecialchars( stripslashes( $review['comment_content'] ?? '' ) ) ); ?>
 			</div>
 		</div>
 	</div>
