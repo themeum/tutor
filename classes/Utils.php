@@ -10950,7 +10950,7 @@ class Utils {
 							'is_completed'  => $is_completed,
 						);
 
-					} elseif ( 'tutor_zoom_meeting' === $post_type ) {
+					} elseif ( 'tutor_zoom_meeting' === $post_type ) { //@todo Need to add more information.
 						$topic['items'][] = array(
 							'type' => 'zoom_meeting',
 							'id'   => $post_id,
