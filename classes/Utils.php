@@ -9544,7 +9544,7 @@ class Utils {
 	 */
 	public function default_menus(): array {
 		$items = array(
-			'index'            => array(
+			'index'   => array(
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),
@@ -10826,7 +10826,7 @@ class Utils {
 
 	/**
 	 * Render a template and return its output as a string.
-	 * 
+	 *
 	 * @since 4.0.0
 	 *
 	 * @param string $template   Template file path or slug.
@@ -10865,7 +10865,7 @@ class Utils {
 
 	/**
 	 * Get stepper sort options.
-	 * 
+	 *
 	 * @since 4.0.0
 	 *
 	 * @return array[] List of sort options with id and label.
@@ -10887,7 +10887,7 @@ class Utils {
 	 * Get topic-wise progress data for a course and a student.
 	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @param int $course_id   Course ID.
 	 * @param int $student_id Student ID.
 	 *
@@ -10911,7 +10911,7 @@ class Utils {
 				'topic_summary'   => apply_filters( 'the_content', $topic_post->post_content ),
 				'topic_title'     => get_the_title( $topic_id ),
 				'items'           => array(),
-				'topic_completed' => true, 
+				'topic_completed' => true,
 				'topic_started'   => false,
 			);
 
@@ -10919,23 +10919,22 @@ class Utils {
 
 			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
 				foreach ( $contents_query->posts as $content_post ) {
-					$post_id   	  = (int) $content_post->ID;
-					$post_type 	  = $content_post->post_type;
-					$is_completed = true; 
+					$post_id      = (int) $content_post->ID;
+					$post_type    = $content_post->post_type;
+					$is_completed = true;
 
 					if ( 'tutor_quiz' === $post_type ) {
 
-						$has_attempt = (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id );
-						$is_completed = $has_attempt;
+						$is_completed = (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id );
 
 						$topic['items'][] = array(
-							'type'        => 'quiz',
-							'quiz_id'     => $post_id,
-							'quiz_link'   => esc_url( get_permalink( $post_id ) ),
-							'quiz_title'  => $content_post->post_title,
-							'has_attempt' => $has_attempt,
-							'time_limit'  => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
-							'time_type'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
+							'type'         => 'quiz',
+							'id'           => $post_id,
+							'link'         => esc_url( get_permalink( $post_id ) ),
+							'title'        => $content_post->post_title,
+							'is_completed' => $is_completed,
+							'time_limit'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
+							'time_type'    => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
 						);
 
 					} elseif ( 'tutor_assignments' === $post_type ) {
@@ -10944,34 +10943,32 @@ class Utils {
 						$is_completed    = $submitted_count > 0;
 
 						$topic['items'][] = array(
-							'type'                 => 'assignment',
-							'assignment_id'        => $post_id,
-							'assignment_link'      => esc_url( get_permalink( $post_id ) ),
-							'assignment_title'     => $content_post->post_title,
-							'assignment_submitted' => $submitted_count,
-							'is_completed'         => $is_completed,
+							'type'          => 'assignment',
+							'id'            => $post_id,
+							'link'          => esc_url( get_permalink( $post_id ) ),
+							'title'         => $content_post->post_title,
+							'is_completed'  => $is_completed,
 						);
 
 					} elseif ( 'tutor_zoom_meeting' === $post_type ) {
 						$topic['items'][] = array(
-							'type'              => 'zoom_meeting',
-							'zoom_meeting_id'   => $post_id,
-							'zoom_meeting_link' => esc_url( get_permalink( $post_id ) ),
+							'type' => 'zoom_meeting',
+							'id'   => $post_id,
+							'link' => esc_url( get_permalink( $post_id ) ),
 						);
 
 					} else {
-						$video = tutor_utils()->get_video_info( $post_id );
-						$is_completed_lesson = (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id );
-						$is_completed = $is_completed_lesson;
+						$video        = tutor_utils()->get_video_info( $post_id );
+						$is_completed = (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id );
 
 						$topic['items'][] = array(
-							'type'                => 'lesson',
-							'lesson_id'           => $post_id,
-							'lesson_link'         => esc_url( get_permalink( $post_id ) ),
-							'lesson_title'        => $content_post->post_title,
-							'video'               => $video,
-							'video_play_time'     => isset( $video->playtime ) ? $video->playtime : '',
-							'is_completed_lesson' => $is_completed_lesson
+							'type'            => 'lesson',
+							'id'              => $post_id,
+							'link'            => esc_url( get_permalink( $post_id ) ),
+							'title'           => $content_post->post_title,
+							'video'           => $video,
+							'video_play_time' => isset( $video->playtime ) ? $video->playtime : '',
+							'is_completed'    => $is_completed,
 						);
 					}
 
