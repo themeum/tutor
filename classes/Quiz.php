@@ -1284,7 +1284,7 @@ class Quiz {
 	}
 
 	/**
-	 * Return quiz title as nav item to print on the learning area
+	 * Render quiz title as nav item to show on the learning area
 	 *
 	 * @since 4.0.0
 	 *
@@ -1304,7 +1304,7 @@ class Quiz {
 	}
 
 	/**
-	 * Render content for the a single lesson
+	 * Render content for the a single quiz
 	 *
 	 * @since 4.0.0
 	 *

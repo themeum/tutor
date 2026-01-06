@@ -1,6 +1,6 @@
 <?php
 /**
- * Tutor learning area lesson.
+ * Tutor learning area quiz.
  *
  * @package Tutor\Templates
  * @subpackage LearningArea

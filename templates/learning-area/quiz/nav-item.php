@@ -1,6 +1,6 @@
 <?php
 /**
- * Show lesson nav item on the learning area
+ * Show quiz nav item on the learning area
  *
  * @package Tutor\Templates
  * @subpackage LearningArea
