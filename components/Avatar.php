@@ -11,6 +11,7 @@
 namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
+use Tutor\Cache\TutorCache;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -213,33 +214,59 @@ class Avatar extends BaseComponent {
 			return $this;
 		}
 
+		$user_id    = is_object( $user ) ? $user->ID : (int) $user;
+		$cache_key  = 'tutor_avatar_component_user_data_' . $user_id;
+		$cache_data = TutorCache::get( $cache_key );
+
+		if ( false !== $cache_data ) {
+			if ( $cache_data['src'] ) {
+				$this->src( $cache_data['src'] );
+			}
+			$this->type( $cache_data['type'] );
+			$this->initials( $cache_data['initials'] );
+			$this->alt( $cache_data['alt'] );
+			return $this;
+		}
+
 		if ( ! is_object( $user ) ) {
-			$user = get_userdata( $user );
+			$user = get_userdata( $user_id );
 		}
 
 		if ( is_a( $user, 'WP_User' ) ) {
 			$profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+			$avatar_src    = '';
+
 			if ( $profile_photo ) {
 				$url = wp_get_attachment_image_url( $profile_photo, 'thumbnail' );
 				if ( $url ) {
-					$this->src( $url );
-					$this->type( 'image' );
+					$avatar_src = $url;
 				}
 			}
 
 			// Generate initials.
-			$name = $user->display_name;
-			$this->alt( $name );
-
+			$name        = $user->display_name;
 			$arr         = explode( ' ', trim( $name ) );
 			$first_char  = ! empty( $arr[0] ) ? mb_substr( $arr[0], 0, 1, 'UTF-8' ) : '';
 			$second_char = ! empty( $arr[1] ) ? mb_substr( $arr[1], 0, 1, 'UTF-8' ) : '';
+			$initials    = $first_char . $second_char;
 
-			$this->initials( $first_char . $second_char );
+			$data = array(
+				'src'      => $avatar_src,
+				'type'     => $avatar_src ? 'image' : 'initials',
+				'initials' => $initials,
+				'alt'      => $name,
+			);
 
-			if ( ! $this->src ) {
-				$this->type( 'initials' );
+			// Store in cache.
+			TutorCache::set( $cache_key, $data );
+
+			// Apply to current instance.
+			if ( $data['src'] ) {
+				$this->src( $data['src'] );
 			}
+			$this->type( $data['type'] );
+			$this->initials( $data['initials'] );
+			$this->alt( $data['alt'] );
 		}
 
 		return $this;
