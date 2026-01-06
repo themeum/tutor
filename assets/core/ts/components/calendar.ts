@@ -88,7 +88,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
           displayDatesOutside: false,
           ...(selectedDates.length ? { selectedDates } : {}),
           ...(selectedTime ? { selectedTime } : {}),
-          onClickDate: (self) => this.handleDateClick(self),
+          onClickDate: (self, event: MouseEvent) => this.handleDateClick(self, event),
           styles: {
             calendar: 'vc tutor-vc-calendar',
           },
@@ -172,11 +172,11 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       }
     },
 
-    handleDateClick(self: Calendar) {
+    handleDateClick(self: Calendar, event: MouseEvent) {
       if (self.context.inputElement) {
         this.handleInputSelection(self);
       } else if (self.selectionDatesMode === 'multiple-ranged') {
-        this.handleRangeSelection(self);
+        this.handleRangeSelection(self, event);
       } else {
         this.handleSingleDateSelection(self);
       }
@@ -196,13 +196,17 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       }
     },
 
-    handleRangeSelection(self: Calendar) {
+    handleRangeSelection(self: Calendar, event: MouseEvent) {
       if (self.context.selectedDates.length !== 2) return;
+
+      const fallbackDate =
+        (event.target as HTMLElement).closest('[data-vc-date]')?.getAttribute('data-vc-date') ||
+        format(new Date(), DateFormats.yearMonthDay);
 
       hidePopover?.();
       this.navigateWithParams({
-        start_date: self.context.selectedDates[0],
-        end_date: self.context.selectedDates[1],
+        start_date: self.context.selectedDates[0] ?? fallbackDate,
+        end_date: self.context.selectedDates[1] ?? fallbackDate,
       });
     },
 
