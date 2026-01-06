@@ -11,6 +11,7 @@
 
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Popover;
 use Tutor\Components\PreviewTrigger;
@@ -30,13 +31,30 @@ $badge           = Badge::make()->label( 'Failed' )->variant( Variant::CANCELLED
 $kebab_button    = Button::make()
 					->icon(
 						tutor_utils()
-						->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 )
+						->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 )
 					)
 					->attr( 'x-ref', 'trigger' )
 					->attr( '@click', 'toggle()' )
 					->attr( 'class', 'tutor-quiz-item-result-more' )
 					->variant( 'secondary' )
+					->size( Size::X_SMALL )
 					->get();
+
+$review_url     = add_query_arg( array( 'view_quiz_attempt_id' => $attempt_id ), get_pagenum_link() );
+$click_attr     = sprintf( 'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt_id );
+$delete_attr    = sprintf( 'TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt_id );
+$details_button = Button::make()->label( __( 'Details', 'tutor' ) )
+					->icon( Icon::RESOURCES, 'left', 20, 20 )
+					->size( Size::MEDIUM )
+					->tag( 'a' )
+					->attr( 'href', $review_url )
+					->variant( 'primary' );
+
+$delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
+					->icon( Icon::DELETE_2, 'left', 20, 20 )
+					->size( Size::MEDIUM )
+					->attr( '@click', $delete_attr )
+					->variant( 'secondary' );
 
 
 ?>
@@ -127,8 +145,6 @@ $kebab_button    = Button::make()
 			$badge->render();
 		}
 
-		$review_url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt_id ), get_pagenum_link() );
-		$click_attr = sprintf( 'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt_id );
 
 		Popover::make()
 			->trigger( $kebab_button )
@@ -156,4 +172,8 @@ $kebab_button    = Button::make()
 		?>
 		
 	</div>
+</div>
+<div class="tutor-quiz-item-actions tutor-flex tutor-justify-between">
+	<?php $details_button->render(); ?>
+	<?php $delete_button->render(); ?>
 </div>

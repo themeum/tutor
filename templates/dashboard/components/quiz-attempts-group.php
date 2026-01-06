@@ -41,7 +41,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 	<!-- Additional Attempts (Collapsible) -->
 	<?php if ( ! empty( $remaining_attempts ) ) : ?>
 		<div x-show="expanded" x-collapse x-cloak class="tutor-quiz-previous-attempts">
-			<div class="tutor-text-tiny tutor-text-subdued tutor-py-4 tutor-px-6">
+			<div class="tutor-text-tiny tutor-text-subdued tutor-py-4 tutor-px-6 tutor-quiz-previous-attempts-title">
 				<?php esc_html_e( 'Previous Attempts', 'tutor' ); ?>
 			</div>
 			<?php foreach ( $remaining_attempts as $key => $attempt ) : ?>

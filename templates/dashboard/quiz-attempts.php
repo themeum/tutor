@@ -10,6 +10,7 @@
  */
 
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\DateFilter;
 use Tutor\Components\EmptyState;
@@ -51,11 +52,14 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 ?>
 
 <div class="tutor-dashboard-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
+	<h4 class="tutor-quiz-attempts-mobile-heading tutor-h4">
+	<?php esc_html_e( 'Quiz Attempts', 'tutor' ); ?>
+	</h4>
 	<div class="tutor-dashboard-page-card">
 		<?php if ( $quiz_attempts_count ) : ?>
 		<div class="tutor-quiz-attempts">
 			<div class="tutor-quiz-attempts-filter">
-				<div class="tutor-quiz-attempts-filter-item ">
+				<div class="tutor-quiz-attempts-filter-item nav-filter">
 					<?php
 						Nav::make()
 						->items( array( $nav_links ) )
@@ -63,7 +67,7 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 						->render();
 					?>
 				</div>
-				<div class="tutor-flex tutor-gap-3">
+				<div class="tutor-flex tutor-gap-3 tutor-quiz-attempt-filters">
 					<div class="tutor-quiz-attempts-filter-item">
 						<?php
 							SearchFilter::make()
@@ -75,11 +79,11 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 						?>
 
 					</div>
-					<div class="tutor-quiz-attempts-filter-item tutor-quiz-attempts-calender-filter">
+					<div class="tutor-quiz-attempts-filter-item calender-filter">
 					<?php
 						DateFilter::make()
 							->type( DateFilter::TYPE_SINGLE )
-							->placement( 'bottom' )
+							->placement( Positions::BOTTOM )
 							->size( Size::X_SMALL )
 							->icon_size( 15 )
 							->render();
@@ -88,6 +92,26 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 					<div class="tutor-quiz-attempts-filter-item">
 					<?php Sorting::make()->order( $order_filter )->render(); ?>
 					</div>
+				</div>
+			</div>
+			<div class="tutor-quiz-attempts-filter mobile-filter">
+				<div class="tutor-quiz-attempts-filter-item nav-filter">
+					<?php
+						Nav::make()
+						->items( array( $nav_links ) )
+						->size( Size::SMALL )
+						->render();
+					?>
+				</div>
+				<div class="tutor-quiz-attempts-filter-item calender-filter">
+					<?php
+						DateFilter::make()
+							->type( DateFilter::TYPE_SINGLE )
+							->placement( Positions::BOTTOM_START )
+							->size( Size::X_SMALL )
+							->icon_size( 15 )
+							->render();
+					?>
 				</div>
 			</div>
 			<div class="tutor-quiz-attempts-header">
