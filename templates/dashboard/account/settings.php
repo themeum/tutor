@@ -60,6 +60,7 @@ $profile_tab_data = array(
 	class="tutor-profile-settings-section"
 >
 	<?php tutor_load_template( 'dashboard.settings.profile-header' ); ?>
+	
 	<div class="tutor-dashboard-container">
 		<div 
 			x-init="$watch('$store.windowWidth', () => {
@@ -79,7 +80,6 @@ $profile_tab_data = array(
 			x-cloak
 			class="tutor-gap-8"
 		>
-
 			<div class="tutor-flex tutor-gap-8">
 				<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab">
 					<template x-for="tab in tabs" :key="tab.id">
@@ -105,19 +105,19 @@ $profile_tab_data = array(
 					class="tutor-profile-settings-tab-content tutor-w-full"
 				>
 					<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'demo-components.dashboard.components.settings.account' ); ?>
+						<?php tutor_load_template( 'dashboard.account.settings.account' ); ?>
 					</div>
 					<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'demo-components.dashboard.components.settings.social-accounts' ); ?>
+						<?php tutor_load_template( 'dashboard.account.settings.social-accounts' ); ?>
 					</div>
 					<div x-show="activeTab === 'notifications'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'demo-components.dashboard.components.settings.notifications' ); ?>
+						<?php tutor_load_template( 'dashboard.account.settings.notifications' ); ?>
 					</div>
 					<div x-show="activeTab === 'preferences'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'demo-components.dashboard.components.settings.preferences' ); ?>
+						<?php tutor_load_template( 'dashboard.account.settings.preferences' ); ?>
 					</div>
 					<div x-show="activeTab === 'billing-address'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'demo-components.dashboard.components.settings.billing-address' ); ?>
+						<?php tutor_load_template( 'dashboard.account.settings.billing-address' ); ?>
 					</div>
 				</div>
 			</div>
