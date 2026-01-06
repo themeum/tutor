@@ -244,6 +244,11 @@ class Pagination extends BaseComponent {
 		$pagination_info  = $this->render_pagination_info() ?? '';
 		$links            = '';
 
+		$classes = array( 'tutor-pagination' );
+		if ( isset( $this->attributes['class'] ) ) {
+			$classes[] = $this->attributes['class'];
+		}
+
 		if ( count( $pagination_links ) ) {
 			foreach ( $pagination_links as $link ) {
 				$link = str_replace( 'page-numbers dots', 'tutor-pagination-ellipsis', $link );
@@ -258,12 +263,13 @@ class Pagination extends BaseComponent {
 		}
 
 		return sprintf(
-			'<nav class="tutor-pagination" role="navigation" aria-label="Pagination Navigation">
+			'<nav class="%s" role="navigation" aria-label="Pagination Navigation">
 				%s
 				<ul class="tutor-pagination-list">
 				%s
 				</ul>
 			</nav>',
+			esc_attr( implode( ' ', $classes ) ),
 			$pagination_info,
 			$links
 		);
