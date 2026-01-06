@@ -23,7 +23,13 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  *
  * ```php
- * Avatar with image
+ * Avatar with user object/ID
+ * Avatar::make()
+ *     ->user($user_id)
+ *     ->size(Size::SIZE_56)
+ *     ->render();
+ *
+ * Avatar with image source
  * Avatar::make()
  *     ->src('https://example.com/avatar.jpg')
  *     ->size(Size::SIZE_20)
@@ -78,6 +84,22 @@ class Avatar extends BaseComponent {
 	 * @var string|null
 	 */
 	protected $initials = null;
+
+	/**
+	 * User object or ID.
+	 *
+	 * @since 4.0.0
+	 * @var int|object|null
+	 */
+	protected $user = null;
+
+	/**
+	 * Avatar alt text.
+	 *
+	 * @since 4.0.0
+	 * @var string|null
+	 */
+	protected $alt = null;
 
 	/**
 	 * Border enabled flag.
@@ -166,6 +188,64 @@ class Avatar extends BaseComponent {
 	}
 
 	/**
+	 * Set alt text for the avatar.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $alt Alt text.
+	 * @return $this
+	 */
+	public function alt( string $alt ): self {
+		$this->alt = $alt;
+		return $this;
+	}
+
+	/**
+	 * Set user for the avatar.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int|object $user User ID or object.
+	 * @return $this
+	 */
+	public function user( $user ): self {
+		if ( ! $user ) {
+			return $this;
+		}
+
+		if ( ! is_object( $user ) ) {
+			$user = get_userdata( $user );
+		}
+
+		if ( is_a( $user, 'WP_User' ) ) {
+			$profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+			if ( $profile_photo ) {
+				$url = wp_get_attachment_image_url( $profile_photo, 'thumbnail' );
+				if ( $url ) {
+					$this->src( $url );
+					$this->type( 'image' );
+				}
+			}
+
+			// Generate initials.
+			$name = $user->display_name;
+			$this->alt( $name );
+
+			$arr         = explode( ' ', trim( $name ) );
+			$first_char  = ! empty( $arr[0] ) ? mb_substr( $arr[0], 0, 1, 'UTF-8' ) : '';
+			$second_char = ! empty( $arr[1] ) ? mb_substr( $arr[1], 0, 1, 'UTF-8' ) : '';
+
+			$this->initials( $first_char . $second_char );
+
+			if ( ! $this->src ) {
+				$this->type( 'initials' );
+			}
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Enable or disable border.
 	 *
 	 * @since 4.0.0
@@ -207,16 +287,20 @@ class Avatar extends BaseComponent {
 			$content = sprintf(
 				'<img src="%1$s" alt="%2$s" class="tutor-avatar-image" />',
 				esc_url( $this->src ),
-				esc_attr( $this->initials ?? _x( 'User Avatar', 'image alter text', 'tutor' ) )
+				esc_attr( $this->alt ?? $this->initials ?? _x( 'User Avatar', 'image alter text', 'tutor' ) )
 			);
 		} else {
 			$content = sprintf(
-				'<span class="tutor-avatar-initials">%s</span>',
+				'<span class="tutor-avatar-text">%s</span>',
 				esc_html( $this->initials ?? '' )
 			);
 		}
 
-		$this->component_string = sprintf( '<div %1$s>%2$s</div>', $attributes, $content );
+		$this->component_string = sprintf(
+			'<div %1$s><div class="tutor-ratio tutor-ratio-1x1">%2$s</div></div>',
+			$attributes,
+			$content
+		);
 
 		return $this->component_string;
 	}
