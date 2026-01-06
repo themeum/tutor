@@ -391,6 +391,22 @@ class Template extends Tutor_Base {
 						if ( $auth_cap && ! current_user_can( $auth_cap ) ) {
 							$template = tutor_get_template( 'permission-denied' );
 						}
+
+						/**
+						 * Account pages of dashboard.
+						 *
+						 * @since 4.0.0
+						 */
+						if ( Dashboard::ACCOUNT_PAGE_SLUG === $dashboard_page ) {
+							$subpage       = Input::get( Dashboard::ACCOUNT_PAGE_QUERY_PARAM, 'profile' );
+							$account_pages = Dashboard::get_account_pages();
+							$page_data     = $account_pages[ $subpage ] ?? array();
+							$page_template = $page_data['template'] ?? '';
+
+							if ( file_exists( $page_template ) ) {
+								$template = tutor_get_template( 'account' );
+							}
+						}
 					} else {
 						$template = tutor_get_template( 'login' );
 					}
