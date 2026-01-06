@@ -153,6 +153,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
 
         el.addEventListener('click', (e) => this.handlePresetClick(e));
         window.addEventListener('popstate', this.updateActivePreset);
+        window.addEventListener('tutor-calendar:clear', () => this.clear());
       });
     },
 
@@ -160,6 +161,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       this.calendar?.destroy();
       this.calendar = null;
       window.removeEventListener('popstate', this.updateActivePreset);
+      window.removeEventListener('tutor-calendar:clear', () => this.clear());
     },
 
     handlePresetClick(e: Event) {
@@ -229,6 +231,14 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       });
 
       window.location.href = url.toString();
+    },
+
+    clear() {
+      this.navigateWithParams({
+        start_date: null,
+        end_date: null,
+        date: null,
+      });
     },
 
     getPresetDates(preset: Preset): string[] {

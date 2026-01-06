@@ -170,6 +170,12 @@ class DateFilter extends BaseComponent {
 				<?php if ( ! empty( $this->label ) ) : ?>
 					<span><?php echo esc_html( $this->label ); ?></span>
 				<?php endif; ?>
+
+				<?php if ( $this->has_selection() ) : ?>
+					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary">
+						<?php tutor_utils()->render_svg_icon( Icon::CROSS_2 ); ?>
+					</span>
+				<?php endif; ?>
 			</button>
 
 			<div 
@@ -184,6 +190,18 @@ class DateFilter extends BaseComponent {
 		</div>
 		<?php
 		return ob_get_clean();
+	}
+
+	/**
+	 * Check if filter has active selection.
+	 *
+	 * @return bool
+	 */
+	protected function has_selection(): bool {
+		if ( self::TYPE_SINGLE === $this->type ) {
+			return ! empty( Input::get( 'date' ) );
+		}
+		return ! empty( Input::get( 'start_date' ) ) && ! empty( Input::get( 'end_date' ) );
 	}
 
 	/**
