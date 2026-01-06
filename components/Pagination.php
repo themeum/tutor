@@ -240,6 +240,10 @@ class Pagination extends BaseComponent {
 	 * @return string
 	 */
 	public function get(): string {
+		if ( $this->pagination_total <= $this->pagination_limit ) {
+			return '';
+		}
+
 		$pagination_links = $this->get_paginated_links_list() ?? array();
 		$pagination_info  = $this->render_pagination_info() ?? '';
 		$links            = '';
