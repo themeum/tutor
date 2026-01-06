@@ -2923,7 +2923,17 @@ class Utils {
 		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
 
-		$all_menus = array_merge( $student_nav_items, $instructor_nav_items );
+		/**
+		 * Miscellaneous menus pages
+		 * Which are not visible to any nav.
+		 *
+		 * @since 4.0.0
+		 */
+		$misc_menus = array(
+			'account' => array( 'label' => __( 'Account', 'tutor' ) ),
+		);
+
+		$all_menus = array_merge( $student_nav_items, $instructor_nav_items, $misc_menus );
 
 		return apply_filters( 'tutor_dashboard/nav_items_all', $all_menus );
 	}
@@ -9538,7 +9548,7 @@ class Utils {
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),
-			'enrolled-courses' => array(
+			'courses' => array(
 				'title' => __( 'Courses', 'tutor' ),
 				'icon'  => Icon::COURSES,
 			),

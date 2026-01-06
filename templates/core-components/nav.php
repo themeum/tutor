@@ -10,43 +10,6 @@
 
 use TUTOR\Icon;
 
-/**
- * Expected $args structure:
- *
- * $args = array(
- *     'items' => array(
- *         array(
- *             'type'     => 'link',        // 'link' or 'dropdown'
- *             'label'    => 'Wishlist',
- *             'icon'     => Icon::WISHLIST,
- *             'url'      => '#',
- *             'active'   => false,
- *         ),
- *         array(
- *             'type'    => 'dropdown',
- *             'icon'    => Icon::ENROLLED,
- *             'active'  => true,
- *             'options' => array(
- *                 array(
- *                     'label'  => 'Active',
- *                     'icon'   => Icon::PLAY_LINE,
- *                     'url'    => '#',
- *                     'active' => false,
- *                 ),
- *                 array(
- *                     'label'  => 'Enrolled',
- *                     'icon'   => Icon::ENROLLED,
- *                     'url'    => '#',
- *                     'active' => true,
- *                 ),
- *             ),
- *         ),
- *     ),
- *     'variant' => 'primary', // 'primary' or 'secondary' (default: 'primary')
- *     'size'    => 'md',      // 'sm', 'md', or 'lg' (default: 'md')
- * );
- */
-
 if ( empty( $items ) ) {
 	return;
 }
@@ -75,16 +38,23 @@ $icon_size  = $icon_sizes[ $size ];
  * @since 4.0.0
  *
  * @param array $options Array of dropdown options.
- * @return string The label of the active option, or the first option's label if none are active.
+ * @return array The label and count of the active option, or the first option's label if none are active.
  */
-$get_active_dropdown_label = function ( $options ) {
+function get_active_dropdown_label( $options ) {
+	$active_info = array(
+		'label' => $options[0]['label'],
+		'count' => $options[0]['count'] ?? 0,
+	);
 	foreach ( $options as $option ) {
 		if ( ! empty( $option['active'] ) ) {
-			return $option['label'] ?? '';
+			$active_info['label'] = $option['label'];
+		}
+		if ( ! empty( $option['active'] ) && ! empty( $option['count'] ) ) {
+			$active_info['count'] = $option['count'];
 		}
 	}
-	return $options[0]['label'] ?? '';
-};
+	return $active_info;
+}
 ?>
 
 <div class="tutor-nav tutor-nav-<?php echo esc_attr( $size ); ?> tutor-nav-<?php echo esc_attr( $variant ); ?>">
@@ -92,7 +62,7 @@ $get_active_dropdown_label = function ( $options ) {
 		<?php if ( 'dropdown' === $item['type'] ) : ?>
 			<?php
 			$options      = $item['options'] ?? array();
-			$active_label = $get_active_dropdown_label( $options );
+			$active_info = get_active_dropdown_label( $options );
 			?>
 			<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })">
 				<button x-ref="trigger" @click="toggle()"
@@ -100,7 +70,12 @@ $get_active_dropdown_label = function ( $options ) {
 					<?php if ( ! empty( $item['icon'] ) ) : ?>
 						<?php tutor_utils()->render_svg_icon( $item['icon'], $icon_size, $icon_size ); ?>
 					<?php endif; ?>
-					<?php echo esc_html( $active_label ); ?>
+					<?php echo esc_html( $active_info['label'] ); ?>
+					<?php if ( ! empty( $active_info['count'] ) ) : ?>
+						<span class="tutor-ml-1">
+							(<?php echo esc_html( $active_info['count'] ); ?>)
+						</span>
+					<?php endif; ?>
 					<?php
 					tutor_utils()->render_svg_icon(
 						Icon::CHEVRON_DOWN_2,
@@ -120,6 +95,11 @@ $get_active_dropdown_label = function ( $options ) {
 								<?php tutor_utils()->render_svg_icon( $option['icon'], $icon_size, $icon_size ); ?>
 							<?php endif; ?>
 							<?php echo esc_html( $option['label'] ?? '' ); ?>
+							<?php if ( ! empty( $option['count'] ) ) : ?>
+								<span class="ml-1">
+									(<?php echo esc_html( $option['count'] ); ?>)
+								</span>
+							<?php endif; ?>
 						</a>
 					<?php endforeach; ?>
 				</div>
