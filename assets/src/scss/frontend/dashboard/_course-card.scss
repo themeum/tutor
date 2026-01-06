@@ -6,31 +6,31 @@
 
 .tutor-course-card {
   height: 100%;
-  display: block;
+  // display: block;
   @include tutor-transition(background-color);
 
   &:hover {
     background-color: $tutor-surface-l1-hover;
   }
 
-  &-thumbnail {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-radius: $tutor-radius-sm;
-    margin-bottom: $tutor-spacing-4;
+  // &-thumbnail {
+  //   position: relative;
+  //   width: 100%;
+  //   overflow: hidden;
+  //   border-radius: $tutor-radius-sm;
+  //   margin-bottom: $tutor-spacing-4;
 
-    .tutor-ratio {
-      width: 100%;
-    }
+  //   .tutor-ratio {
+  //     width: 100%;
+  //   }
 
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-  }
+  //   img {
+  //     width: 100%;
+  //     height: 100%;
+  //     object-fit: cover;
+  //     object-position: center;
+  //   }
+  // }
 
   &-badge {
     position: absolute;

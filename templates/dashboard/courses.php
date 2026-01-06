@@ -51,7 +51,6 @@ $enrolled_course_count  = is_a( $enrolled_courses, 'WP_Query' ) ? $enrolled_cour
 $active_course_count    = is_a( $active_courses, 'WP_Query' ) ? $active_courses->found_posts : 0;
 $completed_course_count = is_a( $completed_courses, 'WP_Query' ) ? $completed_courses->found_posts : 0;
 
-
 // Get Paginated course list.
 $courses_list_array = array(
 	'courses'                   => $enrolled_courses,
@@ -85,8 +84,8 @@ $courses_list = $courses_list_array[ $active_tab ];
 			};
 		elseif ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) :
 			// Prepare course list based on page tab.
-			$courses_list           = $courses_list_array[ $active_tab ];
-		?>
+				$courses_list = $courses_list_array[ $active_tab ];
+			?>
 			<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
 				<?php
 				if ( $courses_list && $courses_list->have_posts() ) :

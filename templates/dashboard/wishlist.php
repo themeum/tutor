@@ -39,10 +39,12 @@ $permalink       = isset( $permalink ) ? $permalink : '#';
 
 <!-- <?php tutor_load_template( 'demo-components.dashboard.pages.wishlist' ); ?> -->
 
-<!-- <?php 
+<!-- 
+<?php
 tutor_utils()->render_svg_icon( Icon::STAR, 14 );
 tutor_utils()->render_svg_icon( Icon::STAR_2, 14 );
-?> -->
+?>
+-->
 
 <div class="tutor-dashboard-page-card-body">
 	<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
@@ -53,10 +55,10 @@ tutor_utils()->render_svg_icon( Icon::STAR_2, 14 );
 				$tutor_course_img = get_tutor_course_thumbnail_src();
 				?>
 				<div>
-					<div class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
+					<div class="tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
 						<a href="<?php echo esc_url( $permalink ); ?>" class="tutor-course-card-thumbnail">
-							<div class="tutor-ratio tutor-ratio-16x9" style="max-width: 100px;">
-								<img src="<?php echo esc_url( $tutor_course_img ); ?>"
+							<div class="tutor-ratio tutor-ratio-16x9">
+								<img style="max-width: 100%;" src="<?php echo esc_url( $tutor_course_img ); ?>"
 									alt="<?php the_title(); ?>" loading="lazy" />
 							</div>
 							<?php if ( $show_bestseller ) : ?>
@@ -137,19 +139,15 @@ tutor_utils()->render_svg_icon( Icon::STAR_2, 14 );
 							</div>
 						</div>
 
-						<?php tutor_course_loop_price(); ?>
-						<?php if ( ! empty( $price ) ) : ?>
-							<div class="tutor-course-card-footer">
-								<span class="tutor-course-card-price">
-									<?php echo esc_html( $price ); ?>
-								</span>
-								<?php if ( ! empty( $original_price ) ) : ?>
-									<del class="tutor-course-card-price-original">
-										<?php echo esc_html( $original_price ); ?>
-									</del>
-								<?php endif; ?>
-							</div>
-						<?php endif; ?>
+						<div class="tutor-course-card-footer">
+							<?php
+							if ( null === tutor_utils()->get_course_price() ) {
+								esc_html_e( 'Free', 'tutor' );
+							} else {
+								echo wp_kses_post( tutor_utils()->get_course_price() );
+							}
+							?>
+						</div>
 					</div>
 				</div>
 				<?php
