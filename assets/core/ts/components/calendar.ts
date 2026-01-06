@@ -88,7 +88,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
           displayDatesOutside: false,
           ...(selectedDates.length ? { selectedDates } : {}),
           ...(selectedTime ? { selectedTime } : {}),
-          onClickDate: (self) => this.handleDateClick(self),
+          onClickDate: (self, event) => this.handleDateClick(self, event as MouseEvent),
           styles: {
             calendar: 'vc tutor-vc-calendar',
           },
@@ -196,10 +196,16 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       }
     },
 
-    handleDateClick(self: Calendar) {
+    handleDateClick(self: Calendar, event: MouseEvent) {
       if (self.context.inputElement) {
         this.handleInputSelection(self);
-      } else if (self.selectionDatesMode === 'single') {
+      } else if (self.selectionDatesMode === 'multiple-ranged') {
+        const date = (event.target as HTMLElement).closest('[data-vc-date]')?.getAttribute('data-vc-date');
+
+        if (date && self.context.selectedDates.length === 2 && !self.context.selectedDates[0]) {
+          this.calendar?.set({ selectedDates: [date, date] });
+        }
+      } else {
         this.handleSingleDateSelection(self);
       }
     },
