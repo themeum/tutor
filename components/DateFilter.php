@@ -193,8 +193,7 @@ class DateFilter extends BaseComponent {
 	 */
 	protected function calculate_label(): string {
 		if ( self::TYPE_SINGLE === $this->type ) {
-			$date = Input::get( 'date' );
-			return $date ? date_i18n( tutor_utils()->get_local_date_format(), strtotime( $date ) ) : '';
+			return Input::get( 'date', '' );
 		}
 
 		$start_date = Input::get( 'start_date' );
