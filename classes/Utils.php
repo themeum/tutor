@@ -10907,19 +10907,20 @@ class Utils {
 			$topic_id = (int) $topic_post->ID;
 
 			$topic = array(
-				'topic_id'      => $topic_id,
-				'topic_summary' => apply_filters( 'the_content', $topic_post->post_content ),
-				'topic_title'   => get_the_title( $topic_id ),
-				'items'         => array(),
+				'topic_id'        => $topic_id,
+				'topic_summary'   => apply_filters( 'the_content', $topic_post->post_content ),
+				'topic_title'     => get_the_title( $topic_id ),
+				'items'           => array(),
 				'topic_completed' => true, 
+				'topic_started'   => false,
 			);
 
 			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
 
 			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
 				foreach ( $contents_query->posts as $content_post ) {
-					$post_id   = (int) $content_post->ID;
-					$post_type = $content_post->post_type;
+					$post_id   	  = (int) $content_post->ID;
+					$post_type 	  = $content_post->post_type;
 					$is_completed = true; 
 
 					if ( 'tutor_quiz' === $post_type ) {
@@ -10976,6 +10977,8 @@ class Utils {
 
 					if ( ! $is_completed ) {
 						$topic['topic_completed'] = false;
+					} else {
+						$topic['topic_started'] = true;
 					}
 				}
 			}
