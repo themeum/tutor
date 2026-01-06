@@ -45,7 +45,6 @@ class Template extends Tutor_Base {
 		add_filter( 'template_include', array( $this, 'play_private_video' ), 99 );
 		add_filter( 'tutor_single_content_template', array( $this, 'load_single_lesson_template' ), 99, 2 );
 		add_filter( 'tutor_single_content_template', array( $this, 'load_quiz_template' ), 99, 2 );
-		add_filter( 'tutor_single_content_template', array( $this, 'load_assignment_template' ), 99, 2 );
 
 		add_filter( 'template_include', array( $this, 'student_public_profile' ), 99 );
 		add_filter( 'template_include', array( $this, 'tutor_dashboard' ), 99 );
@@ -431,37 +430,6 @@ class Template extends Tutor_Base {
 			// if public course don't need to be enrolled.
 			if ( $has_content_access || $is_public ) {
 				$template = tutor_get_template( 'single-quiz' );
-			} else {
-				$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
-			}
-		} else {
-			$template = tutor_get_template( 'login' );
-		}
-
-		return $template;
-	}
-
-	/**
-	 * Load assignment template
-	 *
-	 * @since 1.0.0
-	 *
-	 * @since 4.0.0 Post type.
-	 *
-	 * @param string $template template file to load.
-	 * @param string $post_type Post type.
-	 *
-	 * @return string template path
-	 */
-	public function load_assignment_template( $template, $post_type ) {
-		if ( tutor()->lesson_post_type !== $post_type ) {
-			return $template;
-		}
-
-		if ( is_user_logged_in() ) {
-			$has_content_access = tutor_utils()->has_enrolled_content_access( 'assignment' );
-			if ( $has_content_access ) {
-				$template = tutor_get_template( 'single-assignment' );
 			} else {
 				$template = tutor_get_template( 'single.lesson.required-enroll' ); // You need to enroll first.
 			}
