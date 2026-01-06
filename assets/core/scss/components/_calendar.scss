@@ -23,7 +23,12 @@
 }
 
 .tutor-range-calendar-popover {
+  width: 700px;
   max-width: 700px;
+
+  @include tutor-breakpoint-down(md) {
+    width: 300px;
+  }
 
   [data-vc='calendar'] {
     padding: $tutor-spacing-5;
@@ -33,6 +38,10 @@
     display: grid;
     grid-template-columns: 150px 1fr;
     gap: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(md) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .vc-presets {
