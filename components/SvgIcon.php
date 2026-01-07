@@ -29,6 +29,12 @@ defined( 'ABSPATH' ) || exit;
  *     ->size( 16 )
  *     ->attr( 'class', 'tutor-icon-secondary' )
  *     ->render();
+ *
+ * SvgIcon::make()
+ *     ->name( Icon::DELETE )
+ *     ->size( 16 )
+ *     ->color( 'secondary' )
+ *     ->render();
  * ```
  *
  * @since 4.0.0
@@ -61,6 +67,14 @@ class SvgIcon extends BaseComponent {
 	 * @var int
 	 */
 	protected $height = 16;
+	/**
+	 * Icon color.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $color = '';
 
 	/**
 	 * Set icon name.
@@ -120,6 +134,20 @@ class SvgIcon extends BaseComponent {
 	}
 
 	/**
+	 * Set icon color.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $color Icon color (idle|idle-inverse|hover|secondary|subdued|disabled|brand|exception1|exception2|success|exception4|exception5|caution|critical|warning).
+	 *
+	 * @return $this
+	 */
+	public function color( string $color ): self {
+		$this->color = $color;
+		return $this;
+	}
+
+	/**
 	 * Set custom HTML attribute.
 	 *
 	 * @since 4.0.0
@@ -169,6 +197,11 @@ class SvgIcon extends BaseComponent {
 		$this->attributes['fill']        = $this->attributes['fill'] ?? 'none';
 		$this->attributes['role']        = $this->attributes['role'] ?? 'presentation';
 		$this->attributes['aria-hidden'] = $this->attributes['aria-hidden'] ?? 'true';
+
+		if ( ! empty( $this->color ) ) {
+			$color_class               = "tutor-icon-{$this->color}";
+			$this->attributes['class'] = trim( ( $this->attributes['class'] ?? '' ) . " {$color_class}" );
+		}
 
 		$attributes = $this->render_attributes();
 
