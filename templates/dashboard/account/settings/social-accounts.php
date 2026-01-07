@@ -9,6 +9,8 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\InputField;
+use Tutor\Components\Constants\InputType;
 
 $social_fields = array(
 	'facebook' => array(
@@ -68,47 +70,20 @@ $social_fields = array(
 				<div class="tutor-social-icon">
 					<?php tutor_utils()->render_svg_icon( $field['icon'], 20, 20 ); ?>
 				</div>
-				<div class="tutor-input-field" :class="{
-					'tutor-input-field-error': errors.<?php echo esc_attr( $key ); ?>,
-				}">
-					<label for="<?php echo esc_attr( $key ); ?>" class="tutor-label">
-						<?php echo esc_html( $field['label'] ); ?>
-					</label>
+				<?php
+					$message = sprintf( /* translators: field label */ __( 'Please enter a valid %s URL', 'tutor' ), $field['label'] );
 
-					<div class="tutor-input-wrapper">
-						<input
-							type="url"
-							id="<?php echo esc_attr( $key ); ?>"
-							class="tutor-input tutor-input-content-clear"
-							placeholder="<?php echo esc_attr( $field['placeholder'] ); ?>"
-							x-bind="register('<?php echo esc_attr( $key ); ?>', { 
-								pattern: { 
-									value: /<?php echo esc_html( $field['pattern'] ); ?>/i,
-									message: '<?php echo esc_html( sprintf( /* translators: field label */ __( 'Please enter a valid %s URL', 'tutor' ), $field['label'] ) ); ?>',
-
-								}
-							})"
-						>
-						<button 
-							type="button"
-							class="tutor-input-clear-button"
-							x-show="values.<?php echo esc_attr( $key ); ?> && String(values.<?php echo esc_attr( $key ); ?>).length > 0"
-							x-cloak
-							@click="setValue('<?php echo esc_attr( $key ); ?>', '')"
-							aria-label="Clear input"
-						>
-							<?php echo esc_html( tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ) ); ?>
-						</button>
-					</div>
-
-					<div class="tutor-error-text" x-cloak x-show="errors.<?php echo esc_attr( $key ); ?>" x-text="errors?.<?php echo esc_attr( $key ); ?>?.message" role="alert" aria-live="polite"></div>
-					
-					<?php if ( ! empty( $field['help_text'] ) ) : ?>
-						<div class="tutor-help-text" x-show="!errors?.<?php echo esc_attr( $key ); ?>?.message">
-							<?php echo esc_html( $field['help_text'] ); ?>
-						</div>
-					<?php endif; ?>
-				</div>
+					InputField::make()
+						->type( InputType::TEXT )
+						->name( $key )
+						->label( $field['label'] )
+						->clearable()
+						->id( $key )
+						->required()
+						->placeholder( $field['placeholder'] )
+						->attr( 'x-bind', "register('$key', { pattern: { value: /$field[pattern]/i, message: '$message' } })" )
+						->render();
+				?>
 			</div>
 		<?php endforeach; ?>
 	</form>
