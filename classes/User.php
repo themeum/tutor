@@ -244,6 +244,10 @@ class User {
 	 */
 	private function delete_existing_user_photo( $user_id, $type ) {
 		$meta_key = 'cover_photo' == $type ? '_tutor_cover_photo' : '_tutor_profile_photo';
+		$photo_id = get_user_meta( $user_id, $meta_key, true );
+		if ( is_numeric( $photo_id ) ) {
+			wp_delete_attachment( $photo_id, true );
+		}
 		delete_user_meta( $user_id, $meta_key );
 	}
 
@@ -370,6 +374,14 @@ class User {
 		$_tutor_profile_job_title = Input::post( self::PROFILE_JOB_TITLE_META, '' );
 		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
 		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
+
+		if ( is_numeric( $_tutor_profile_image ) ) {
+			$attachment = get_post( $_tutor_profile_image );
+
+			if ( 'attachment' === $attachment->post_type && $user_id !== $attachment->post_author ) {
+				return;
+			}
+		}
 
 		update_user_meta( $user_id, self::PROFILE_JOB_TITLE_META, $_tutor_profile_job_title );
 		update_user_meta( $user_id, self::PROFILE_BIO_META, $_tutor_profile_bio );
