@@ -97,7 +97,14 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
               <div class="vc-layout">
                 <aside class="vc-presets">
                   ${(Object.entries(PRESET_LABELS) as [Preset, string][])
-                    .map(([key, label]) => `<button type="button" data-preset="${key}">${label}</button>`)
+                    .map(
+                      ([key, label]) => `
+                      <button type="button" data-preset="${key}">
+                        <span>${label}</span>
+                        <span class="vc-preset-icon" x-data="tutorIcon({ name: 'check-2' })"></span>
+                      </button>
+                    `,
+                    )
                     .join('')}
                 </aside>
 
