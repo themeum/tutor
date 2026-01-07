@@ -6922,17 +6922,28 @@ class Utils {
 
 		$pagination_query = '';
 		$date_query       = '';
+		$search_query     = '';
 		$sort_query       = 'ORDER BY ID DESC';
 
 		if ( $this->count( $filter_data ) ) {
 			extract( $filter_data );//phpcs:ignore
 
+			if ( ! empty( $search_filter ) ) {
+				$like         = '%' . $wpdb->esc_like( $search_filter ) . '%';
+				$search_query = $wpdb->prepare(
+					' AND assignment.post_title LIKE %s ',
+					$like
+				);
+			}
+
 			if ( ! empty( $course_id ) ) {
 				$in_course_ids = $course_id;
 			}
-			if ( ! empty( $date_filter ) ) {
-				$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
-				$date_query  = " AND DATE(post_date) = '{$date_filter}'";
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$start_date = tutor_get_formated_date( 'Y-m-d', $start_date );
+				$end_date   = tutor_get_formated_date( 'Y-m-d', $end_date );
+
+				$date_query = $wpdb->prepare( 'AND DATE(post_date) BETWEEN %s AND %s', $start_date, $end_date );
 			}
 			if ( ! empty( $order_filter ) ) {
 				$order_filter = QueryHelper::get_valid_sort_order( $order_filter );
@@ -6955,6 +6966,7 @@ class Utils {
 					AND assignment.post_parent>0
 					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
+					{$search_query}
 			",
 				$assignment_post_type
 			)
@@ -6971,6 +6983,7 @@ class Utils {
 					AND assignment.post_parent>0
 					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
+					{$search_query}
 					{$sort_query}
 					{$pagination_query}
 			",
@@ -9544,7 +9557,7 @@ class Utils {
 	 */
 	public function default_menus(): array {
 		$items = array(
-			'index'            => array(
+			'index'   => array(
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),

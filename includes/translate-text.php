@@ -21,98 +21,106 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function tutor_get_translate_text() {
 	return array(
-		'all'        => array(
+		'all'                => array(
 			'text' => __( 'All', 'tutor' ),
 		),
-		'read'       => array(
+		'read'               => array(
 			'text' => __( 'Read', 'tutor' ),
 		),
-		'unread'     => array(
+		'unread'             => array(
 			'text' => __( 'Unread', 'tutor' ),
 		),
-		'important'  => array(
+		'important'          => array(
 			'text' => __( 'Important', 'tutor' ),
 		),
-		'archived'   => array(
+		'archived'           => array(
 			'text' => __( 'Archived', 'tutor' ),
 		),
-		'pending'    => array(
+		'pending'            => array(
 			'badge' => 'warning',
 			'text'  => __( 'Pending', 'tutor' ),
 		),
-		'pass'       => array(
+		'pass'               => array(
 			'badge' => 'success',
 			'text'  => __( 'Pass', 'tutor' ),
 		),
-		'correct'    => array(
+		'passed'             => array(
+			'badge' => 'success',
+			'text'  => __( 'Passed', 'tutor' ),
+		),
+		'correct'            => array(
 			'badge' => 'success',
 			'text'  => __( 'Correct', 'tutor' ),
 		),
-		'fail'       => array(
+		'fail'               => array(
 			'badge' => 'danger',
 			'text'  => __( 'Fail', 'tutor' ),
 		),
-		'wrong'      => array(
+		'failed'             => array(
+			'badge' => 'danger',
+			'text'  => __( 'Failed', 'tutor' ),
+		),
+		'wrong'              => array(
 			'badge' => 'danger',
 			'text'  => __( 'Wrong', 'tutor' ),
 		),
-		'approved'   => array(
+		'approved'           => array(
 			'badge' => 'success',
 			'text'  => __( 'Approved', 'tutor' ),
 		),
-		'rejected'   => array(
+		'rejected'           => array(
 			'badge' => 'danger',
 			'text'  => __( 'Rejected', 'tutor' ),
 		),
-		'completed'  => array(
+		'completed'          => array(
 			'badge' => 'success',
 			'text'  => __( 'Completed', 'tutor' ),
 		),
-		'incomplete'  => array(
+		'incomplete'         => array(
 			'badge' => 'default',
 			'text'  => __( 'Incomplete', 'tutor' ),
 		),
-		'processing' => array(
+		'processing'         => array(
 			'badge' => 'warning',
 			'text'  => __( 'Processing', 'tutor' ),
 		),
-		'cancelled'  => array(
+		'cancelled'          => array(
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
 		),
-		'canceled'   => array(
+		'canceled'           => array(
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
 		),
-		'expired'    => array(
+		'expired'            => array(
 			'badge' => 'danger',
 			'text'  => __( 'Expired', 'tutor' ),
 		),
-		'blocked'    => array(
+		'blocked'            => array(
 			'badge' => 'danger',
 			'text'  => __( 'Blocked', 'tutor' ),
 		),
-		'cancel'     => array(
+		'cancel'             => array(
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
 		),
-		'hold' => array(
+		'hold'               => array(
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
-		'trial' => array(
+		'trial'              => array(
 			'badge' => 'warning',
 			'text'  => __( 'Trial', 'tutor' ),
 		),
-		'on-hold'    => array(
+		'on-hold'            => array(
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
-		'onhold'     => array(
+		'onhold'             => array(
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
-		'wc-on-hold' => array(
+		'wc-on-hold'         => array(
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
@@ -120,171 +128,167 @@ function tutor_get_translate_text() {
 			'badge' => 'default',
 			'text'  => __( 'Partially Refunded', 'tutor' ),
 		),
-		'refunded' => array(
+		'refunded'           => array(
 			'badge' => 'danger',
 			'text'  => __( 'Refunded', 'tutor' ),
 		),
-		'unpaid' => array(
+		'unpaid'             => array(
 			'badge' => 'warning',
 			'text'  => __( 'Unpaid', 'tutor' ),
 		),
-		'paid' => array(
+		'paid'               => array(
 			'badge' => 'success',
 			'text'  => __( 'Paid', 'tutor' ),
 		),
-		'failed' => array(
-			'badge' => 'danger',
-			'text'  => __( 'Failed', 'tutor' ),
-		),
-		'partially-paid'    => array(
+		'partially-paid'     => array(
 			'badge' => 'success',
 			'text'  => __( 'Partially Paid', 'tutor' ),
 		),
-		'trash'      => array(
+		'trash'              => array(
 			'badge' => 'danger',
 			'text'  => __( 'Trash', 'tutor' ),
 		),
-		'draft'      => array(
+		'draft'              => array(
 			'badge' => 'warning',
 			'text'  => __( 'Draft', 'tutor' ),
 		),
-		'private'    => array(
+		'private'            => array(
 			'badge' => 'warning',
 			'text'  => __( 'Private', 'tutor' ),
 		),
-		'active'    => array(
+		'active'             => array(
 			'badge' => 'success',
 			'text'  => __( 'Active', 'tutor' ),
 		),
-		'inactive'    => array(
+		'inactive'           => array(
 			'badge' => 'default',
 			'text'  => __( 'Inactive', 'tutor' ),
 		),
-		'true'       => array(
+		'true'               => array(
 			'text' => _x( 'True', 'true/false question options', 'tutor' ),
 		),
-		'false'      => array(
+		'false'              => array(
 			'text' => _x( 'False', 'true/false question options', 'tutor' ),
 		),
-		'days'  => array(
+		'days'               => array(
 			'text' => __( 'Days', 'tutor' ),
 		),
-		'day'  => array(
+		'day'                => array(
 			'text' => __( 'Day', 'tutor' ),
 		),
-		'hours'  => array(
+		'hours'              => array(
 			'text' => __( 'Hours', 'tutor' ),
 		),
-		'hour'  => array(
+		'hour'               => array(
 			'text' => __( 'Hour', 'tutor' ),
 		),
-		'minutes'  => array(
+		'minutes'            => array(
 			'text' => __( 'Minutes', 'tutor' ),
 		),
-		'minute'  => array(
+		'minute'             => array(
 			'text' => __( 'Minute', 'tutor' ),
 		),
-		'seconds'  => array(
+		'seconds'            => array(
 			'text' => __( 'Seconds', 'tutor' ),
 		),
-		'second'  => array(
+		'second'             => array(
 			'text' => __( 'Second', 'tutor' ),
 		),
 
 		// Translate able week name.
-		'monday'     => array(
+		'monday'             => array(
 			'text' => _x( 'Monday', 'Week name', 'tutor' ),
 		),
-		'tuesday'    => array(
+		'tuesday'            => array(
 			'text' => _x( 'Tuesday', 'Week name', 'tutor' ),
 		),
-		'wednesday'  => array(
+		'wednesday'          => array(
 			'text' => _x( 'Wednesday', 'Week name', 'tutor' ),
 		),
-		'thursday'   => array(
+		'thursday'           => array(
 			'text' => _x( 'Thursday', 'Week name', 'tutor' ),
 		),
-		'friday'     => array(
+		'friday'             => array(
 			'text' => _x( 'Friday', 'Week name', 'tutor' ),
 		),
-		'saturday'   => array(
+		'saturday'           => array(
 			'text' => _x( 'Saturday', 'Week name', 'tutor' ),
 		),
-		'sunday'     => array(
+		'sunday'             => array(
 			'text' => _x( 'Sunday', 'Week name', 'tutor' ),
 		),
 
 		// Translate able month name.
-		'january'    => array(
+		'january'            => array(
 			'text' => _x( 'January', 'Month name', 'tutor' ),
 		),
-		'february'   => array(
+		'february'           => array(
 			'text' => _x( 'February', 'Month name', 'tutor' ),
 		),
-		'march'      => array(
+		'march'              => array(
 			'text' => _x( 'March', 'Month name', 'tutor' ),
 		),
-		'april'      => array(
+		'april'              => array(
 			'text' => _x( 'April', 'Month name', 'tutor' ),
 		),
-		'may'        => array(
+		'may'                => array(
 			'text' => _x( 'May', 'Month name', 'tutor' ),
 		),
-		'june'       => array(
+		'june'               => array(
 			'text' => _x( 'June', 'Month name', 'tutor' ),
 		),
-		'july'       => array(
+		'july'               => array(
 			'text' => _x( 'July', 'Month name', 'tutor' ),
 		),
-		'august'     => array(
+		'august'             => array(
 			'text' => _x( 'August', 'Month name', 'tutor' ),
 		),
-		'september'  => array(
+		'september'          => array(
 			'text' => _x( 'September', 'Month name', 'tutor' ),
 		),
-		'october'    => array(
+		'october'            => array(
 			'text' => _x( 'October', 'Month name', 'tutor' ),
 		),
-		'november'   => array(
+		'november'           => array(
 			'text' => _x( 'November', 'Month name', 'tutor' ),
 		),
-		'december'   => array(
+		'december'           => array(
 			'text' => _x( 'December', 'Month name', 'tutor' ),
 		),
-		'jan'    => array(
+		'jan'                => array(
 			'text' => _x( 'January', 'Month name', 'tutor' ),
 		),
-		'feb'   => array(
+		'feb'                => array(
 			'text' => _x( 'February', 'Month name', 'tutor' ),
 		),
-		'mar'      => array(
+		'mar'                => array(
 			'text' => _x( 'March', 'Month name', 'tutor' ),
 		),
-		'apr'      => array(
+		'apr'                => array(
 			'text' => _x( 'April', 'Month name', 'tutor' ),
 		),
-		'may'        => array(
+		'may'                => array(
 			'text' => _x( 'May', 'Month name', 'tutor' ),
 		),
-		'jun'       => array(
+		'jun'                => array(
 			'text' => _x( 'June', 'Month name', 'tutor' ),
 		),
-		'jul'       => array(
+		'jul'                => array(
 			'text' => _x( 'July', 'Month name', 'tutor' ),
 		),
-		'aug'     => array(
+		'aug'                => array(
 			'text' => _x( 'August', 'Month name', 'tutor' ),
 		),
-		'sep'  => array(
+		'sep'                => array(
 			'text' => _x( 'September', 'Month name', 'tutor' ),
 		),
-		'oct'    => array(
+		'oct'                => array(
 			'text' => _x( 'October', 'Month name', 'tutor' ),
 		),
-		'nov'   => array(
+		'nov'                => array(
 			'text' => _x( 'November', 'Month name', 'tutor' ),
 		),
-		'dec'   => array(
+		'dec'                => array(
 			'text' => _x( 'December', 'Month name', 'tutor' ),
 		),
 	);

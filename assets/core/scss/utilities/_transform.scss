@@ -1,0 +1,133 @@
+// Transform Utilities
+// Utilities for transform properties
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+// Transform origin utilities
+.tutor-origin-center {
+  transform-origin: center;
+}
+
+.tutor-origin-top {
+  transform-origin: top;
+}
+
+.tutor-origin-top-right {
+  transform-origin: top right;
+}
+
+.tutor-origin-right {
+  transform-origin: right;
+}
+
+.tutor-origin-bottom-right {
+  transform-origin: bottom right;
+}
+
+.tutor-origin-bottom {
+  transform-origin: bottom;
+}
+
+.tutor-origin-bottom-left {
+  transform-origin: bottom left;
+}
+
+.tutor-origin-left {
+  transform-origin: left;
+}
+
+.tutor-origin-top-left {
+  transform-origin: top left;
+}
+
+// Scale utilities
+$tutor-scale-values: (
+  0: 0,
+  50: 0.5,
+  75: 0.75,
+  90: 0.9,
+  95: 0.95,
+  100: 1,
+  105: 1.05,
+  110: 1.1,
+  125: 1.25,
+  150: 1.5,
+);
+
+@each $key, $value in $tutor-scale-values {
+  .tutor-scale-#{$key} {
+    transform: scale($value);
+  }
+
+  .tutor-scale-x-#{$key} {
+    transform: scaleX($value);
+  }
+
+  .tutor-scale-y-#{$key} {
+    transform: scaleY($value);
+  }
+}
+
+// Rotate utilities
+$tutor-rotate-values: (
+  0: 0deg,
+  45: 45deg,
+  90: 90deg,
+  180: 180deg,
+  270: 270deg,
+);
+
+@each $key, $value in $tutor-rotate-values {
+  .tutor-rotate-#{$key} {
+    transform: rotate($value);
+  }
+}
+
+@each $key, $value in $tutor-spacing {
+  .tutor-translate-x-#{$key} {
+    transform: translateX($value);
+  }
+
+  .tutor-translate-y-#{$key} {
+    transform: translateY($value);
+  }
+}
+
+// Skew utilities
+$tutor-skew-values: (
+  0: 0deg,
+  1: 1deg,
+  2: 2deg,
+  3: 3deg,
+  6: 6deg,
+  12: 12deg,
+);
+
+@each $key, $value in $tutor-skew-values {
+  .tutor-skew-x-#{$key} {
+    transform: skewX($value);
+  }
+
+  .tutor-skew-y-#{$key} {
+    transform: skewY($value);
+  }
+}
+
+// Transform style utilities
+.tutor-transform-flat {
+  transform-style: flat;
+}
+
+.tutor-transform-3d {
+  transform-style: preserve-3d;
+}
+
+// Backface visibility utilities
+.tutor-backface-visible {
+  backface-visibility: visible;
+}
+
+.tutor-backface-hidden {
+  backface-visibility: hidden;
+}

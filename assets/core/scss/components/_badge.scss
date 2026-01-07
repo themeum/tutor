@@ -21,11 +21,13 @@
   @include tutor-badge-variant(pending);
 }
 
-.tutor-badge-completed {
+.tutor-badge-completed,
+.tutor-badge-passed {
   @include tutor-badge-variant(completed);
 }
 
-.tutor-badge-cancelled {
+.tutor-badge-cancelled,
+.tutor-badge-failed {
   @include tutor-badge-variant(cancelled);
 }
 
