@@ -10864,26 +10864,6 @@ class Utils {
 	}
 
 	/**
-	 * Get stepper sort options.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array[] List of sort options with id and label.
-	 */
-	public function get_stepper_sort_options() {
-		return array(
-			array(
-				'id'    => 'newest',
-				'label' => __( 'Newest First', 'tutor' ),
-			),
-			array(
-				'id'    => 'oldest',
-				'label' => __( 'Oldest First', 'tutor' ),
-			),
-		);
-	}
-
-	/**
 	 * Get topic-wise progress data for a course and a student.
 	 *
 	 * @since 4.0.0

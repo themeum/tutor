@@ -1604,9 +1604,6 @@ class InputField extends BaseComponent {
 			case InputType::SWITCH:
 				$input_html = $this->render_switch();
 				break;
-			case InputType::SEARCH:
-				$input_html = $this->render_search();
-				break;
 			case InputType::DATE:
 			case InputType::DATE_TIME:
 				$input_html = $this->render_date_input();
@@ -1642,112 +1639,5 @@ class InputField extends BaseComponent {
 		);
 
 		return $this->component_string;
-	}
-
-	/**
-	 * Render the HTML markup for a search-style input field.
-	 *
-	 * @since 4.0.0
-	 *
-	 * Behavior:
-	 * - Determines the input `id` from `$this->id` or falls back to `$this->name`.
-	 * - Composes CSS classes based on:
-	 *   - `$this->left_icon`   → adds `tutor-input-content-left`
-	 *   - `$this->right_icon`  → adds `tutor-input-content-right`
-	 *   - `$this->clearable`   → adds `tutor-input-content-clear`
-	 * - Applies attributes produced by `$this->render_attributes()` and sets optional
-	 *   `placeholder` and `value` when provided.
-	 * - When `$this->clearable` is true and `tutor_utils()` exists, renders a “cross” SVG icon
-	 *   and outputs a clear button with:
-	 *   - `x-cloak`
-	 *   - `x-show="values.{name} && String(values.{name}).length > 0"`
-	 *   - `@click="setValue('{name}', '')"`
-	 *
-	 * @return string Fully composed HTML for the input, icons, and clear button.
-	 */
-	protected function render_search() {
-		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
-
-		$input_classes = 'tutor-input';
-		if ( ! empty( $this->left_icon ) ) {
-			$input_classes .= ' tutor-input-content-left';
-		}
-		if ( ! empty( $this->right_icon ) ) {
-			$input_classes .= ' tutor-input-content-right';
-		}
-		if ( $this->clearable ) {
-			$input_classes .= ' tutor-input-content-clear';
-		}
-
-		$input_attrs = sprintf(
-			'type="%s" id="%s" name="%s" class="%s" %s',
-			esc_attr( $this->type ),
-			esc_attr( $input_id ),
-			esc_attr( $this->name ),
-			esc_attr( $input_classes ),
-			$this->render_attributes()
-		);
-
-		if ( ! empty( $this->placeholder ) ) {
-			$input_attrs .= sprintf( ' placeholder="%s"', esc_attr( $this->placeholder ) );
-		}
-
-		if ( ! empty( $this->value ) ) {
-			$input_attrs .= sprintf( ' value="%s"', esc_attr( $this->value ) );
-		}
-
-		$left_icon_html = '';
-		if ( ! empty( $this->left_icon ) ) {
-			$left_icon_html = sprintf(
-				'<div class="tutor-input-content tutor-input-content-left">%s</div>',
-				$this->left_icon
-			);
-		}
-
-		$right_icon_html = '';
-		if ( ! empty( $this->right_icon ) ) {
-			$right_icon_html = sprintf(
-				'<div class="tutor-input-content tutor-input-content-right">%s</div>',
-				$this->right_icon
-			);
-		}
-
-		$clear_button_html = '';
-		if ( $this->clearable ) {
-			$clear_icon = '';
-			if ( function_exists( 'tutor_utils' ) ) {
-				ob_start();
-				tutor_utils()->render_svg_icon( 'cross', 16, 16 );
-				$clear_icon = ob_get_clean();
-			}
-
-			$clear_button_html = sprintf(
-				'<button 
-					type="button"
-					class="tutor-input-clear-button"
-					aria-label="Clear input"
-					x-cloak
-					x-show="values.%1$s && String(values.%1$s).length > 0"
-					@click="setValue(\'%1$s\', \'\')"
-				>%2$s</button>',
-				esc_attr( $this->name ),
-				$clear_icon
-			);
-
-		}
-
-		return sprintf(
-			'<div class="tutor-input-wrapper">
-				<input %s>
-				%s
-				%s
-				%s
-			</div>
-			',
-			$input_attrs,
-			$left_icon_html,
-			$right_icon_html,
-			$clear_button_html,
-		);
 	}
 }
