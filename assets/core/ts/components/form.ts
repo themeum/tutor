@@ -16,9 +16,10 @@ interface FieldConfig {
   rules?: ValidationRules;
   defaultValue?: unknown;
   ref?: HTMLInputElement;
+  type?: string;
 }
 
-interface ValidationRules {
+export interface ValidationRules {
   required?: boolean | string;
   minLength?: number | { value: number; message: string };
   maxLength?: number | { value: number; message: string };
@@ -216,7 +217,11 @@ const DOMUtils = {
   },
 
   updateElementValue(element: HTMLElement, value: unknown): void {
-    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    if (
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement
+    ) {
       element.value = String(value ?? '');
     }
   },
@@ -363,11 +368,14 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
       const component = this as unknown as AlpineComponent;
+      const element = component.$el as HTMLInputElement;
+      const inputType = element?.type || 'text';
       this.fields[name] = {
         name,
         rules,
         defaultValue: this.values[name] || '',
-        ref: component.$el as HTMLInputElement,
+        ref: element,
+        type: inputType,
       };
 
       if (!(name in this.values)) {
@@ -376,9 +384,13 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       return {
         name,
-        'x-model': `values.${name}`,
-        '@input': `handleFieldInput('${name}', $event.target.value)`,
-        '@blur': `handleFieldBlur('${name}', $event.target.value)`,
+        ...(inputType !== 'file'
+          ? {
+              'x-model': `values.${name}`,
+              '@input': `handleFieldInput('${name}', $event.target.value)`,
+              '@blur': `handleFieldBlur('${name}', $event.target.value)`,
+            }
+          : {}),
         'x-ref': name,
         ':aria-invalid': `errors.${name} ? 'true' : 'false'`,
         ':class': `{
@@ -449,7 +461,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
 
       const fieldElement = this.fields[name]?.ref;
-      if (fieldElement) {
+      if (fieldElement && this.fields[name].type !== 'file') {
         DOMUtils.updateElementValue(fieldElement, value);
       }
 
