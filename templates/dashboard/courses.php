@@ -84,7 +84,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 			};
 		elseif ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) :
 			// Prepare course list based on page tab.
-				$courses_list = $courses_list_array[ $active_tab ];
+			$courses_list = $courses_list_array[ $active_tab ];
 			?>
 			<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
 				<?php

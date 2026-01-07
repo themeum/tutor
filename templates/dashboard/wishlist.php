@@ -13,7 +13,6 @@ use TUTOR\Input;
 use Tutor\Components\Pagination;
 use Tutor\Components\EmptyState;
 
-
 global $post;
 $wishlist_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page      = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );

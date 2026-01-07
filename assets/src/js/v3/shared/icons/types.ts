@@ -318,8 +318,6 @@ export const icons = [
   'sortMinor',
   'spinner',
   'spreadsheet',
-  'star',
-  'star2',
   'starFill',
   'starHalf',
   'starLine',
