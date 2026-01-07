@@ -77,6 +77,21 @@ abstract class BaseComponent {
 	}
 
 	/**
+	 * Set a custom HTML attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key   Attribute name.
+	 * @param string $value Attribute value.
+	 *
+	 * @return static
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = $value;
+		return $this;
+	}
+
+	/**
 	 * Compile the stored attributes into an HTML string.
 	 *
 	 * Converts attributes array into a properly escaped
