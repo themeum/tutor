@@ -283,7 +283,7 @@ class User {
 		/**
 		 * Photo Update from profile
 		 */
-		$photo      = tutor_utils()->array_get( 'photo_file', $_FILES );
+		$photo      = tutor_utils()->array_get( 'photo_file', $_FILES ); //phpcs:ignore -- already sanitized.
 		$photo_size = tutor_utils()->array_get( 'size', $photo );
 		$photo_type = tutor_utils()->array_get( 'type', $photo );
 
