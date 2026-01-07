@@ -849,9 +849,9 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = tutor_utils()->is_learning_area();
-		$is_course_list   = tutor_utils()->is_course_list_page();
+		$is_dashboard       = tutor_utils()->is_dashboard_page();
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
@@ -863,7 +863,7 @@ class Assets {
 
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
-		if ( $is_dashboard || $is_learning_area || $is_course_list ) {
+		if ( $is_dashboard || ( $is_learning_area && ! $is_legacy_learning ) ) {
 			$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 
 			// Core.
