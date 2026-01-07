@@ -16,6 +16,8 @@ namespace Tutor\Components;
 use ReflectionClass;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\Button;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -293,6 +295,69 @@ class InputField extends BaseComponent {
 	 * @var array
 	 */
 	protected $options = array();
+
+	/**
+	 * File uploader accept attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $accept = '.pdf,.doc,.docx,.jpg,.jpeg,.png';
+
+	/**
+	 * File uploader max size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int
+	 */
+	protected $max_size = null;
+
+	/**
+	 * File uploader icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $uploader_icon = Icon::UPLOAD_FILE;
+
+	/**
+	 * File uploader title.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $uploader_title = '';
+
+	/**
+	 * File uploader subtitle.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $uploader_subtitle = '';
+
+	/**
+	 * File uploader button text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $uploader_button_text = '';
+
+	/**
+	 * Component variant.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $variant = '';
 
 	/**
 	 * Grouped option for input field.
@@ -586,7 +651,116 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function intermediate( $intermediate = true ) {
-		$this->intermediate = (bool) $intermediate;
+		$this->intermediate = $intermediate;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader accept attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $accept Accept attribute.
+	 *
+	 * @return $this
+	 */
+	public function accept( $accept ) {
+		$this->accept = $accept;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader max size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $max_size Max size in bytes.
+	 *
+	 * @return $this
+	 */
+	public function max_size( $max_size = null ) {
+		if ( null === $max_size ) {
+			$max_size = wp_max_upload_size();
+		}
+		$this->max_size = $max_size;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader icon.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $icon Icon name.
+	 *
+	 * @return $this
+	 */
+	public function uploader_icon( $icon ) {
+		$this->uploader_icon = $icon;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader title.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $title Title text.
+	 *
+	 * @return $this
+	 */
+	public function uploader_title( $title ) {
+		$this->uploader_title = $title;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader subtitle.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $subtitle Subtitle text.
+	 *
+	 * @return $this
+	 */
+	public function uploader_subtitle( $subtitle ) {
+		$this->uploader_subtitle = $subtitle;
+
+		return $this;
+	}
+
+	/**
+	 * Set uploader button text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $text Button text.
+	 *
+	 * @return $this
+	 */
+	public function uploader_button_text( $text ) {
+		$this->uploader_button_text = $text;
+
+		return $this;
+	}
+
+	/**
+	 * Set component variant.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $variant Component variant.
+	 *
+	 * @return $this
+	 */
+	public function variant( $variant ) {
+		$this->variant = $variant;
+
 		return $this;
 	}
 
@@ -1493,6 +1667,142 @@ class InputField extends BaseComponent {
 	}
 
 	/**
+	 * Render file uploader.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string File uploader HTML.
+	 */
+	protected function render_file_uploader() {
+		$multiple            = $this->multiple;
+		$accept              = $this->accept;
+		$max_size            = $this->max_size ?? wp_max_upload_size();
+		$icon                = $this->uploader_icon;
+		$title               = ! empty( $this->uploader_title ) ? $this->uploader_title : __( 'Drop files here or click to upload', 'tutor' );
+		$subtitle            = ! empty( $this->uploader_subtitle ) ? $this->uploader_subtitle : __( 'PDF, DOC, DOCX, JPG, PNG Formats (Max 50MB)', 'tutor' );
+		$button_text         = ! empty( $this->uploader_button_text ) ? $this->uploader_button_text : __( 'Select Files', 'tutor' );
+		$on_file_select      = $this->attributes['onFileSelect'] ?? 'null';
+		$on_error            = $this->attributes['onError'] ?? 'null';
+		$variant             = ! empty( $this->variant ) ? $this->variant : Variant::FILE_UPLOADER;
+		$uploader_attributes = $this->attributes;
+
+		// Remove Alpine specific attributes from HTML attributes.
+		unset( $uploader_attributes['onFileSelect'] );
+		unset( $uploader_attributes['onError'] );
+
+		$this->attributes = $uploader_attributes;
+
+		ob_start();
+		?>
+		<div 
+			class="tutor-file-uploader-wrapper"
+			x-data="tutorFileUploader({
+				multiple: <?php echo $multiple ? 'true' : 'false'; ?>,
+				accept: '<?php echo esc_attr( $accept ); ?>',
+				maxSize: <?php echo (int) $max_size; ?>,
+				onFileSelect: <?php echo esc_js( $on_file_select ); ?>,
+				onError: <?php echo esc_js( $on_error ); ?>,
+				variant: '<?php echo esc_attr( $variant ); ?>',
+				value: values.<?php echo esc_attr( $this->name ); ?>,
+				name: '<?php echo esc_attr( $this->name ); ?>',
+				required: <?php echo is_bool( $this->required ) ? ( $this->required ? 'true' : 'false' ) : "'" . esc_js( $this->required ) . "'"; ?>,
+			})"
+		>
+			<template x-if="imagePreview">
+				<div class="tutor-file-preview">
+					<img :src="imagePreview" alt="Preview">
+					<div class="tutor-file-preview-overlay">
+						<div class="tutor-file-preview-actions">
+							<?php
+								Button::make()
+									->label( __( 'Delete', 'tutor' ) )
+									->variant( Variant::DESTRUCTIVE )
+									->size( Size::SMALL )
+									->attr( 'type', 'button' )
+									->attr( '@click.stop', 'removeFile()' )
+									->render();
+
+								Button::make()
+									->label( __( 'Upload New', 'tutor' ) )
+									->variant( Variant::PRIMARY )
+									->size( Size::SMALL )
+									->attr( 'type', 'button' )
+									->attr( '@click.stop', 'openFileDialog()' )
+									->render();
+							?>
+						</div>
+					</div>
+				</div>
+			</template>
+
+			<template x-if="variant === 'file-uploader' && selectedFiles.length > 0">
+				<div class="tutor-flex tutor-flex-column tutor-gap-3">
+					<div class="tutor-grid tutor-grid-cols-2 tutor-sm-grid-col-1 tutor-gap-5">
+						<template x-for="(file, index) in selectedFiles" :key="index">
+							<div class="tutor-attachment-card-wrapper">
+								<?php
+								tutor_load_template(
+									'core-components.attachment-card',
+									array(
+										'title_attr'  => 'x-text="file.name"',
+										'meta_attr'   => 'x-text="formatBytes(file.size)"',
+										'action_attr' => '@click.stop="removeFile(index)"',
+									)
+								);
+								?>
+							</div>
+						</template>
+					</div>
+					<div class="tutor-mt-1">
+						<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-btn-sm" @click="openFileDialog()">
+							<?php esc_html_e( 'Upload More Files', 'tutor' ); ?>
+						</button>
+					</div>
+				</div>
+			</template>
+
+			<!-- Upload Area -->
+			<div
+				x-show="!imagePreview && (variant !== 'file-uploader' || selectedFiles.length === 0)"
+				class="tutor-file-uploader"
+				:class="{
+					'tutor-file-uploader-drag-over': isDragOver,
+					'tutor-file-uploader-disabled': isDisabled
+				}"
+				@click="openFileDialog()"
+				@dragover.prevent="handleDragOver($event)"
+				@dragleave.prevent="handleDragLeave($event)"
+				@drop.prevent="handleDrop($event)"
+				<?php echo Variant::IMAGE_UPLOADER === $variant ? 'data-image-uploader' : ''; ?>
+			>
+				<input 
+					type="file" 
+					class="tutor-file-uploader-input"
+					:multiple="multiple"
+					:accept="accept"
+					:disabled="isDisabled"
+					x-ref="fileInput"
+					@change="handleFileSelect($event)"
+					name="<?php echo esc_attr( $this->name ); ?>"
+					<?php echo $this->render_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+				>
+				<div class="tutor-file-uploader-icon">
+					<?php tutor_utils()->render_svg_icon( $icon, 24, 24 ); ?>
+				</div>
+				<div class="tutor-file-uploader-content">
+					<p class="tutor-file-uploader-title"><?php echo esc_html( $title ); ?></p>
+					<p class="tutor-file-uploader-subtitle"><?php echo esc_html( $subtitle ); ?></p>
+				</div>
+				<button type="button" class="tutor-btn tutor-btn-primary-soft" :disabled="isDisabled">
+					<?php echo esc_html( $button_text ); ?>
+				</button>
+			</div>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
 	 * Get the input field HTML.
 	 *
 	 * @since 4.0.0
@@ -1544,6 +1854,9 @@ class InputField extends BaseComponent {
 				break;
 			case InputType::SELECT:
 				$input_html = $this->render_select_input();
+				break;
+			case InputType::FILE:
+				$input_html = $this->render_file_uploader();
 				break;
 			default:
 				$input_html = $this->render_text_input();
