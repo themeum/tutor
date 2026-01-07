@@ -27,7 +27,7 @@ $course_duration = get_tutor_course_duration_context( $course_id, true );
 $course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_enrolled_users_by_course( $course_id ), $course_id );
 ?>
 
-<div class="tutor-dashboard-page-card-body">
+<div class="tutor-dashboard-page-card-body tutor-dashboard-wishlist-wrapper">
 
 	<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
 		<div class="tutor-wishlist-grid">

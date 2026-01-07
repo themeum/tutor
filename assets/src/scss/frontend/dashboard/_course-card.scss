@@ -100,3 +100,11 @@
   }
 }
 
+@media (max-width: $tutor-breakpoint-sm) {
+  .tutor-dashboard-page-card-body {
+    &.tutor-dashboard-wishlist-wrapper {
+      margin: 10px;
+      border: unset;
+    }
+  }
+}
