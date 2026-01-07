@@ -97,11 +97,10 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 							->type( InputType::TEXT )
 							->label( __( 'First Name', 'tutor' ) )
 							->name( 'first_name' )
-							->required()
 							->clearable()
 							->id( 'first_name' )
 							->placeholder( __( 'Enter your first name', 'tutor' ) )
-							->attr( 'x-bind', "register('first_name', { required: true })" )
+							->attr( 'x-bind', "register('first_name')" )
 							->render();
 					?>
 					<?php
@@ -109,11 +108,10 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 							->type( InputType::TEXT )
 							->label( __( 'Last Name', 'tutor' ) )
 							->name( 'last_name' )
-							->required()
 							->clearable()
 							->id( 'last_name' )
 							->placeholder( __( 'Enter your last name', 'tutor' ) )
-							->attr( 'x-bind', "register('last_name', { required: true })" )
+							->attr( 'x-bind', "register('last_name')" )
 							->render();
 					?>
 				</div>
@@ -123,11 +121,10 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 						->type( InputType::TEXT )
 						->label( __( 'Username', 'tutor' ) )
 						->name( 'username' )
-						->required()
 						->clearable()
 						->id( 'username' )
 						->placeholder( __( 'Enter your username', 'tutor' ) )
-						->attr( 'x-bind', "register('username', { required: true })" )
+						->attr( 'x-bind', "register('username')" )
 						->render();
 				?>
 
@@ -160,13 +157,12 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 					->type( InputType::SELECT )
 					->label( __( 'Timezone', 'tutor' ) )
 					->name( 'timezone' )
-					->required()
 					->options( $timezone_options )
 					->searchable()
 					->clearable()
 					->id( 'timezone' )
 					->placeholder( __( 'Select your timezone', 'tutor' ) )
-					->attr( 'x-bind', "register('timezone', { required: true })" )
+					->attr( 'x-bind', "register('timezone')" )
 					->render();
 				?>
 
@@ -220,8 +216,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 				<?php
 					InputField::make()
 						->type( InputType::FILE )
-						->variant( Variant::FILE_UPLOADER )
-						->multiple()
+						->variant( Variant::IMAGE_UPLOADER )
 						->name( 'signature' )
 						->accept( '.jpg,.jpeg,.png' )
 						->uploader_icon( Icon::SIGNATURE_UPLOAD )
