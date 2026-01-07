@@ -42,7 +42,7 @@ if ( tutor_utils()->is_monetize_by_tutor() ) {
 </div>
 
 <?php Pagination::make()
-	->attrs( array( 'class' => 'tutor-px-6 tutor-py-6 tutor-border-t' ) )
+	->attr( 'class', 'tutor-px-6 tutor-py-6 tutor-border-t' )
 	->current( $current_page )
 	->total( $total_items )
 	->limit( $item_per_page )
