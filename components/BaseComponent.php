@@ -127,6 +127,11 @@ abstract class BaseComponent {
 	 * @return string Escaped string.
 	 */
 	protected function esc( $value, $esc_fn = 'esc_html' ): string {
+
+		if ( 'no_esc' === $esc_fn ) {
+			return $value;
+		}
+
 		return call_user_func( $esc_fn, $value );
 	}
 
@@ -153,5 +158,4 @@ abstract class BaseComponent {
 		// phpcs:ignore -- Sanitization is performed within each child class’s `get` method implementation.
 		echo $this->get();
 	}
-
 }

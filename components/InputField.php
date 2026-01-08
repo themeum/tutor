@@ -13,10 +13,10 @@
 
 namespace Tutor\Components;
 
-use ReflectionClass;
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
+use ReflectionClass;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\InputType;
 
 defined( 'ABSPATH' ) || exit;
 

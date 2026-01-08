@@ -1,6 +1,4 @@
 <?php
-
-use TUTOR\Icon;
 /**
  * Star Rating Component
  * Reusable star rating component for displaying ratings
@@ -10,6 +8,8 @@ use TUTOR\Icon;
  * @link https://themeum.com
  * @since 4.0.0
  */
+
+use TUTOR\Icon;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,4 +43,3 @@ $show_rating_average = isset( $show_rating_average ) ? (bool) $show_rating_avera
 		</div>
 	<?php endif; ?>
 </div>
-

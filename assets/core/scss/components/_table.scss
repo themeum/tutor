@@ -7,8 +7,6 @@
   display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border: 1px solid $tutor-border-idle;
-  border-radius: $tutor-radius-lg;
   table {
     min-width: 600px;
   }
@@ -41,7 +39,6 @@
     td {
       padding: $tutor-spacing-5;
       vertical-align: middle;
-      min-width: 180px;
     }
   }
 }
