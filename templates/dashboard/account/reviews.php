@@ -21,26 +21,20 @@ use Tutor\Components\Constants\Variant;
 
 defined( 'ABSPATH' ) || exit;
 
-// Pagination Variable.
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page  = max( 1, Input::get( 'current_page', 0, Input::TYPE_INT ) );
 $offset        = ( $current_page - 1 ) * $item_per_page;
 
+$all_reviews   = tutor_utils()->get_reviews_by_user( 0, $offset, $item_per_page, true );
+$review_count  = $all_reviews->count;
+$reviews       = $all_reviews->results;
+$is_instructor = tutor_utils()->is_instructor( 0, true );
+$is_editable   = $is_instructor ? false : true;
 
-$all_reviews    = tutor_utils()->get_reviews_by_user( 0, $offset, $item_per_page, true );
-$review_count   = $all_reviews->count;
-$reviews        = $all_reviews->results;
-$received_count = tutor_utils()->get_reviews_by_instructor( 0, 0, 0 )->count;
-$is_instructor  = tutor_utils()->is_instructor( 0, true );
-$is_editable    = $is_instructor ? false : true;
+foreach ( $reviews as $review ) {
+	$review->is_editable = $is_editable;
+}
 
-$reviews = array_map(
-	function ( $review ) {
-		$review->is_editable = $is_editable;
-		return $review;
-	},
-	$reviews
-);
 
 $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 
@@ -48,7 +42,7 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 
 <?php require_once tutor_get_template( 'account-header' ); ?>
 
-<?php if ( $all_reviews->count > 0 ) : ?>
+<?php if ( $review_count > 0 ) : ?>
 	<div class="tutor-user-reviews">
 		<div class="tutor-profile-container">
 			<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
@@ -62,12 +56,12 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 				<?php endforeach; ?>
 			</div>
 
-			<?php if ( $all_reviews->count > $item_per_page ) : ?>
+			<?php if ( $review_count > $item_per_page ) : ?>
 				<div class="tutor-mt-6">
 					<?php
 						Pagination::make()
 						->current( $current_page )
-						->total( $all_reviews->count )
+						->total( $review_count )
 						->limit( $item_per_page )
 						->render();
 					?>
