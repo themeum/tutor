@@ -107,7 +107,7 @@ class DateFilter extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function size( string $size ): self {
+	public function trigger_size( string $size ): self {
 		$allowed_sizes = array( Size::X_SMALL, Size::SMALL, Size::MEDIUM, Size::LARGE );
 		if ( in_array( $size, $allowed_sizes, true ) ) {
 			$this->size = $size;

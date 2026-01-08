@@ -86,22 +86,11 @@ class QuizModel {
 				continue;
 			}
 
-			$course_data = get_post( $course_id );
-			$instructor  = tutor_utils()->get_tutor_user( $course_data->post_author ?? get_current_user_id() );
-			$course_data = array(
-				'type'       => tutor()->course_post_type,
-				'title'      => $course_data->post_title ?? '',
-				'excerpt'    => $course_data->post_content ?? '',
-				'instructor' => $instructor->display_name ?? '',
-				'url'        => get_post_permalink( $course_id ) ?? '',
-				'thumbnail'  => get_tutor_course_thumbnail_src( 'post-thumbnail', $course_id ) ?? '',
-			);
-
 			if ( ! isset( $formatted_attempts[ $quiz_attempt->quiz_id ] ) ) {
 				$formatted_attempts[ $quiz_attempt->quiz_id ] = array(
 					'quiz_title'   => $quiz_title,
 					'course_title' => $course_title,
-					'course_data'  => $course_data,
+					'course_id'    => $course_id,
 				);
 			}
 

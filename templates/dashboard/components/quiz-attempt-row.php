@@ -93,7 +93,7 @@ $delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
 			<?php esc_html_e( 'Course:', 'tutor' ); ?> 
 			<?php
 			PreviewTrigger::make()
-				->id( $quiz_id ?? 0 )
+				->id( $course_id ?? 0 )
 				->render()
 			?>
 		</div>

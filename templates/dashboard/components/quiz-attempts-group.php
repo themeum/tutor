@@ -29,6 +29,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 			'attempt'         => $first_attempt,
 			'quiz_title'      => $quiz_title,
 			'course_title'    => $course_title,
+			'course_id'       => $course_id,
 			'show_quiz_title' => true,
 			'show_course'     => true,
 			'quiz_id'         => $quiz_id,
@@ -53,6 +54,7 @@ $remaining_attempts = array_slice( $attempts, 1 );
 						'attempt_number' => count( $remaining_attempts ) - $key,
 						'quiz_id'        => $quiz_id,
 						'attempt_id'     => $attempt['attempt_id'] ?? 0,
+						'course_id'      => $course_id,
 					)
 				);
 				?>

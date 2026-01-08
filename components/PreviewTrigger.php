@@ -81,7 +81,7 @@ class PreviewTrigger extends BaseComponent {
 			$author_id       = $post->post_author;
 			$instructor_name = tutor_utils()->display_name( $author_id );
 			$instructor_url  = tutor_utils()->profile_url( $author_id, true );
-		} else {
+		} elseif ( tutor()->lesson_post_type === $post_type ) {
 			$course_id = tutor_utils()->get_course_id_by_lesson( $id );
 			if ( $course_id ) {
 				$course_post     = get_post( $course_id );
