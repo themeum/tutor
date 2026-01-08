@@ -83,6 +83,7 @@ const endpoints = {
   // Q&A
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
   DELETE_DASHBOARD_QNA: 'tutor_delete_dashboard_question',
+  CREATE_UPDATE_QNA: 'tutor_qna_create_update',
 
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',

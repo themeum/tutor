@@ -31,11 +31,11 @@ if ( ! empty( $replies ) ) {
 	$last_reply = $replies[0];
 }
 
-$replies_url = UrlHelper::add_query_params(
+$single_url = UrlHelper::add_query_params(
 	$discussion_url,
 	array(
-		'tab'     => 'lesson-comments',
-		'replies' => $lesson_comment->comment_ID,
+		'tab' => 'lesson-comments',
+		'id'  => $lesson_comment->comment_ID,
 	)
 );
 ?>
@@ -77,7 +77,7 @@ $replies_url = UrlHelper::add_query_params(
 		</div>
 	</div>
 	<div class="tutor-qna-card-actions">
-		<a href="<?php echo esc_url( $replies_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
+		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
 		</a>
 		<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-flex">

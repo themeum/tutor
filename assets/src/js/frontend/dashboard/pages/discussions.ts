@@ -14,6 +14,7 @@ const discussionsPage = () => {
     readUnreadQnAMutation: null as MutationState<unknown, unknown> | null,
     deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
+    createUpdateQnAMutation: null as MutationState<unknown, unknown> | null,
 
     init() {
       // Q&A read-unread mutation.
@@ -29,6 +30,7 @@ const discussionsPage = () => {
       // Q&A delete mutation.
       this.deleteQnAMutation = this.query.useMutation(this.deleteQnA, {
         onSuccess: () => {
+          // @TODO:: Handle redirect from single page.
           window.location.reload();
         },
         onError: (error: Error) => {
@@ -45,6 +47,17 @@ const discussionsPage = () => {
           window.TutorCore.toast.error(error.message || 'Failed to delete Comment');
         },
       });
+
+      // Q&A create/update mutation.
+      this.createUpdateQnAMutation = this.query.useMutation(this.createUpdateQnA, {
+        onSuccess: () => {
+          window.TutorCore.toast.success('Reply saved successfully');
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || 'Failed to save reply');
+        },
+      });
     },
 
     readUnreadQnA(payload: { question_id: number; qna_action: string }) {
@@ -57,6 +70,10 @@ const discussionsPage = () => {
 
     deleteComment(payload: { comment_id: number }) {
       return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
+    },
+
+    createUpdateQnA(payload: { course_id: number; question_id: number; answer: string }) {
+      return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
     async handleReadUnreadQnA(questionId: number, context: string) {
@@ -73,6 +90,29 @@ const discussionsPage = () => {
 
     async handleDeleteComment(commentId: number) {
       await this.deleteCommentMutation?.mutate({ comment_id: commentId });
+    },
+
+    async handleSaveQnAReply(data: Record<string, unknown>) {
+      const answer = (data.answer as string) || '';
+      const courseId = (data.course_id as number) || 0;
+      const questionId = (data.question_id as number) || 0;
+
+      if (!answer.trim()) {
+        window.TutorCore.toast.error('Please enter a response');
+        return;
+      }
+
+      await this.createUpdateQnAMutation?.mutate({
+        course_id: courseId,
+        question_id: questionId,
+        answer: answer,
+      });
+    },
+
+    handleKeydown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        (event.target as HTMLFormElement).closest('form')?.requestSubmit();
+      }
     },
   };
 };

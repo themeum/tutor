@@ -25,17 +25,17 @@ $text_mark_as    = $is_unread ? __( 'Mark as Read', 'tutor' ) : __( 'Mark as Unr
 
 $question_id = $question->comment_ID;
 $last_reply  = null;
-$answers     = tutils()->get_qa_answer_by_question( $question_id, 'DESC' );
+$answers     = tutor_utils()->get_qa_answer_by_question( $question_id, 'DESC', 'frontend' );
 
 if ( ! empty( $answers ) ) {
 	$last_reply = $answers[0];
 }
 
-$replies_url = UrlHelper::add_query_params(
+$single_url = UrlHelper::add_query_params(
 	$discussion_url,
 	array(
-		'tab'     => 'qna',
-		'replies' => $question->comment_ID,
+		'tab' => 'qna',
+		'id'  => $question->comment_ID,
 	)
 );
 ?>
@@ -75,7 +75,7 @@ $replies_url = UrlHelper::add_query_params(
 		</div>
 	</div>
 	<div class="tutor-qna-card-actions">
-		<a href="<?php echo esc_url( $replies_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
+		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
 		</a>
 		<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-flex">
