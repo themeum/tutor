@@ -81,6 +81,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->type( 'text' )
  *     ->name( 'username' )
  *     ->label( 'Username' )
+ *     ->error( 'This field is required.' )
  *     ->render();
  *
  * // Select
@@ -176,6 +177,15 @@ class InputField extends BaseComponent {
 	 * @var string
 	 */
 	protected $help_text = '';
+
+	/**
+	 * Error message text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $error = '';
 
 	/**
 	 * Whether input is required.
@@ -502,6 +512,20 @@ class InputField extends BaseComponent {
 	 */
 	public function collapsable( $close_on_select = true ): self {
 		$this->close_on_select = $close_on_select;
+		return $this;
+	}
+
+	/**
+	 * Set error message.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $error Error message.
+	 *
+	 * @return $this
+	 */
+	public function error( $error ) {
+		$this->error = $error;
 		return $this;
 	}
 
