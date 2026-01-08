@@ -369,36 +369,43 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
       const component = this as unknown as AlpineComponent;
       const element = component.$el as HTMLInputElement;
-      const inputType = element?.type || 'text';
+
+      const type = element?.type ?? 'text';
+      const isCheckbox = type === 'checkbox';
+      const isFile = type === 'file';
+
+      const defaultValue = this.values[name] ?? (isCheckbox ? false : '');
+
       this.fields[name] = {
         name,
         rules,
-        defaultValue: this.values[name] || '',
+        defaultValue,
         ref: element,
-        type: inputType,
+        type,
       };
 
-      if (!(name in this.values)) {
-        this.values[name] = this.fields[name].defaultValue;
-      }
+      this.values[name] ??= defaultValue;
 
-      return {
+      const valueExpression = isCheckbox ? '$event.target.checked' : '$event.target.value';
+
+      const bindings: Record<string, unknown> = {
         name,
-        ...(inputType !== 'file'
-          ? {
-              'x-model': `values.${name}`,
-              '@input': `handleFieldInput('${name}', $event.target.value)`,
-              '@blur': `handleFieldBlur('${name}', $event.target.value)`,
-            }
-          : {}),
         'x-ref': name,
-        ':aria-invalid': `errors.${name} ? 'true' : 'false'`,
+        ':aria-invalid': `!!errors.${name}`,
         ':class': `{
           'tutor-input-error': errors.${name},
           'tutor-input-touched': touchedFields.${name},
           'tutor-input-dirty': dirtyFields.${name}
         }`,
       };
+
+      if (!isFile) {
+        bindings['x-model'] = `values.${name}`;
+        bindings['@input'] = `handleFieldInput('${name}', ${valueExpression})`;
+        bindings['@blur'] = `handleFieldBlur('${name}', ${valueExpression})`;
+      }
+
+      return bindings;
     },
 
     handleFieldInput(name: string, value: unknown): void {
