@@ -26,7 +26,6 @@ $category          = implode( ', ', $category_names );
 	<div class="tutor-card tutor-progress-card">
 		
 		<div class="tutor-courses-thumb tutor-position-relative">
-
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
 				<div class="tutor-progress-card-thumbnail">
 					<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" />
@@ -37,6 +36,7 @@ $category          = implode( ', ', $category_names );
 
 		<div class="tutor-progress-card-content">
 
+			<!-- course header  -->
 			<div class="tutor-progress-card-header">
 				<?php if ( ! empty( $category ) ) : ?>
 					<div class="tutor-progress-card-category">
@@ -88,6 +88,7 @@ $category          = implode( ', ', $category_names );
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
+			
 		</div>
 	</div>
 </a>
