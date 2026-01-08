@@ -97,7 +97,7 @@ $stat_cards = array(
 	array(
 		'variation' => 'exception4',
 		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
-		'icon'      => Icon::STAR_2,
+		'icon'      => Icon::STAR_LINE,
 		'value'     => '4.2',
 		'change'    => '+2',
 		'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
