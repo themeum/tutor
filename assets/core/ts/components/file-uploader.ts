@@ -1,6 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 
-import { type FormControlMethods, type ValidationRules } from '@Core/ts/components/form';
+import { type FormControlMethods, type SetValueOptions, type ValidationRules } from '@Core/ts/components/form';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 import { formatBytes } from '@TutorShared/utils/util';
@@ -246,16 +246,22 @@ export const fileUploader = (props: FileUploaderProps = {}) => ({
     return $el.closest('form[x-data*="tutorForm"], form[x-data*="form("]');
   },
   setupFormIntegration() {
-    if (!this.name) return;
+    if (!this.name) {
+      return;
+    }
 
     const formElement = this.getFormElement();
-    if (!formElement) return;
+    if (!formElement) {
+      return;
+    }
 
     try {
       const alpine = window.Alpine;
       const alpineData = alpine?.$data(formElement) as FormControlMethods & { values: Record<string, unknown> };
 
-      if (!alpineData || typeof alpineData.register !== 'function') return;
+      if (!alpineData || typeof alpineData.register !== 'function') {
+        return;
+      }
 
       this.registerFormField(alpineData);
       this.syncInitialValue(alpineData);
@@ -294,18 +300,26 @@ export const fileUploader = (props: FileUploaderProps = {}) => ({
       return;
     }
 
-    this.updateFormValue();
+    this.updateFormValue({
+      shouldValidate: false,
+      shouldTouch: false,
+      shouldDirty: false,
+    });
   },
 
   watchFormChanges() {
     const component = this as unknown as { $watch: (path: string, cb: (val: unknown) => void) => void };
 
-    if (!component.$watch) return;
+    if (!component.$watch) {
+      return;
+    }
 
     component.$watch(`values.${this.name}`, (newVal: unknown) => {
       const normalized = Array.isArray(newVal) ? newVal : ((newVal ? [newVal] : []) as (File | string)[]);
 
-      if (!this.isFileListChanged(this.selectedFiles, normalized)) return;
+      if (!this.isFileListChanged(this.selectedFiles, normalized)) {
+        return;
+      }
 
       this.selectedFiles = normalized;
       this.syncFileInput();
@@ -338,22 +352,28 @@ export const fileUploader = (props: FileUploaderProps = {}) => ({
     }
   },
 
-  updateFormValue() {
-    if (!this.name) return;
+  updateFormValue(options?: SetValueOptions) {
+    options = options ?? {
+      shouldValidate: true,
+      shouldTouch: true,
+      shouldDirty: true,
+    };
+
+    if (!this.name) {
+      return;
+    }
 
     const formElement = this.getFormElement();
-    if (!formElement) return;
+    if (!formElement) {
+      return;
+    }
 
     try {
       const alpineData = window.Alpine?.$data(formElement) as FormControlMethods & { values: Record<string, unknown> };
 
       if (alpineData && typeof alpineData.setValue === 'function') {
         const value = this.multiple ? this.selectedFiles : this.selectedFiles[0] || null;
-        alpineData.setValue(this.name, value, {
-          shouldValidate: true,
-          shouldTouch: true,
-          shouldDirty: true,
-        });
+        alpineData.setValue(this.name, value, options);
       }
     } catch (err) {
       // eslint-disable-next-line no-console

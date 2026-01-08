@@ -35,7 +35,7 @@ export interface FieldError {
   message: string;
 }
 
-interface SetValueOptions {
+export interface SetValueOptions {
   shouldValidate?: boolean;
   shouldTouch?: boolean;
   shouldDirty?: boolean;

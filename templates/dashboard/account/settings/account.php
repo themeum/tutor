@@ -31,7 +31,6 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		x-data="tutorForm({ 
 			id: 'account-form', 
 			mode: 'onChange', 
-			shouldFocusError: true 
 		})"
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(
