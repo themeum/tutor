@@ -59,7 +59,7 @@ $profile_tab_data = array(
 			})'
 	class="tutor-profile-settings-section"
 >
-	<?php tutor_load_template( 'dashboard.settings.profile-header' ); ?>
+	<?php tutor_load_template( 'dashboard.account.settings.header' ); ?>
 	
 	<div class="tutor-dashboard-container">
 		<div 

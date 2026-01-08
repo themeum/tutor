@@ -12,35 +12,37 @@ use TUTOR\Icon;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
+$user = wp_get_current_user();
+
 $social_fields = array(
 	'facebook' => array(
 		'label'       => __( 'Facebook', 'tutor' ),
 		'placeholder' => __( 'Enter your Facebook profile URL', 'tutor' ),
-		'icon'        => 'facebook',
+		'icon'        => Icon::FACEBOOK,
 		'pattern'     => '^https?:\/\/(www\.|m\.|web\.|mobile\.)?facebook\.com\/([A-Za-z0-9._-]+)\/?$',
 	),
 	'x'        => array(
 		'label'       => __( 'X.com', 'tutor' ),
 		'placeholder' => __( 'Enter your X.com profile URL', 'tutor' ),
-		'icon'        => 'x',
+		'icon'        => Icon::X,
 		'pattern'     => '^https?:\/\/(www\.)?(x\.com|twitter\.com)\/([A-Za-z0-9_]+)\/?$',
 	),
 	'linkedin' => array(
 		'label'       => __( 'LinkedIn', 'tutor' ),
 		'placeholder' => __( 'Enter your LinkedIn profile URL', 'tutor' ),
-		'icon'        => 'linkedin',
+		'icon'        => Icon::LINKEDIN,
 		'pattern'     => '^https?:\/\/(www\.)?linkedin\.com\/(in|company|school)\/([A-Za-z0-9_-]+)\/?$',
 	),
 	'github'   => array(
 		'label'       => __( 'GitHub', 'tutor' ),
 		'placeholder' => __( 'Enter your GitHub profile URL', 'tutor' ),
-		'icon'        => 'github',
+		'icon'        => Icon::GITHUB,
 		'pattern'     => '^https?:\/\/(www\.)?github\.com\/([A-Za-z0-9_-]+)\/?$',
 	),
 	'website'  => array(
 		'label'       => __( 'Website', 'tutor' ),
 		'placeholder' => __( 'Enter your website URL', 'tutor' ),
-		'icon'        => 'globe',
+		'icon'        => Icon::GLOBE,
 		'pattern'     => '^https?:\/\/(www\.)?[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*\.[A-Za-z]{2,}(\/.*)?$',
 	),
 );

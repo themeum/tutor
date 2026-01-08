@@ -9,6 +9,53 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\InputField;
+use Tutor\Components\Constants\InputType;
+use Tutor\Ecommerce\BillingController;
+
+$billing_controller = new BillingController( false );
+$billing_info       = $billing_controller->get_billing_info();
+
+$countries       = tutor_get_country_list();
+$country_options = array();
+$state_mapping   = array();
+
+foreach ( $countries as $country ) {
+	array_push(
+		$country_options,
+		array(
+			'label' => $country['name'],
+			'value' => $country['name'],
+		)
+	);
+
+	if ( ! empty( $country['states'] ) ) {
+		$state_mapping[ $country['name'] ] = array_map(
+			function ( $state ) {
+				return array(
+					'label' => $state['name'],
+					'value' => $state['name'],
+				);
+			},
+			$country['states']
+		);
+	}
+}
+
+$billing_country = $billing_info->billing_country ?? tutor_utils()->input_old( 'billing_country', '' );
+$initial_states  = $state_mapping[ $billing_country ] ?? array();
+
+$default_values = array(
+	'billing_first_name' => $billing_info->billing_first_name ?? '',
+	'billing_last_name'  => $billing_info->billing_last_name ?? '',
+	'billing_email'      => $billing_info->billing_email ?? '',
+	'billing_country'    => $billing_country,
+	'billing_state'      => $billing_info->billing_state ?? '',
+	'billing_city'       => $billing_info->billing_city ?? '',
+	'billing_phone'      => $billing_info->billing_phone ?? '',
+	'billing_zip_code'   => $billing_info->billing_zip_code ?? '',
+	'billing_address'    => $billing_info->billing_address ?? '',
+);
 
 ?>
 
@@ -18,7 +65,15 @@ use TUTOR\Icon;
 	<div class="tutor-surface-l1 tutor-rounded-2xl tutor-p-6 tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
 		<form
 			id="billing-address-form"
-			x-data="tutorForm({ id: 'billing-address-form', mode: 'onBlur', shouldFocusError: true })"
+			x-data="{ 
+				...tutorForm({ 
+					id: 'billing-address-form', 
+					mode: 'onChange', 
+					shouldFocusError: true,
+					defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>
+				}),
+				stateMapping: <?php echo esc_attr( wp_json_encode( $state_mapping ) ); ?>
+			}"
 			x-bind="getFormBindings()"
 			@submit="handleSubmit(
 				(data) => { 
@@ -33,154 +88,122 @@ use TUTOR\Icon;
 			)($event)"
 			class="tutor-flex tutor-flex-column tutor-gap-2"
 		>
-			<!-- First Name & Last Name Row -->
 			<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
-				<!-- First Name -->
-				<div class="tutor-input-field" :class="{
-					'tutor-input-field-error': errors.firstName,
-				}">
-					<label for="firstName" class="tutor-label"><?php echo esc_html__( 'First Name', 'tutor' ); ?></label>
-					<input 
-						type="text"
-						id="firstName"
-						placeholder="<?php echo esc_html__( 'Enter your first name', 'tutor' ); ?>"
-						class="tutor-input"
-						x-bind="register('firstName', { 
-							required: true,
-						})"
-					>
-					<div class="tutor-error-text" x-cloak x-show="errors.firstName" x-text="errors?.firstName?.message" role="alert" aria-live="polite"></div>
-				</div>
+				<?php
+					InputField::make()
+						->type( InputType::TEXT )
+						->name( 'billing_first_name' )
+						->label( __( 'First Name', 'tutor' ) )
+						->clearable()
+						->id( 'billing_first_name' )
+						->required()
+						->placeholder( __( 'Enter your first name', 'tutor' ) )
+						->attr( 'x-bind', "register('billing_first_name', { required: true })" )
+						->render();
 
-				<!-- Last Name -->
-				<div class="tutor-input-field" :class="{
-					'tutor-input-field-error': errors.lastName,
-				}">
-					<label for="lastName" class="tutor-label"><?php echo esc_html__( 'Last Name', 'tutor' ); ?></label>
-					<input 
-						type="text"
-						id="lastName"
-						placeholder="<?php echo esc_html__( 'Enter your last name', 'tutor' ); ?>"
-						class="tutor-input"
-						x-bind="register('lastName', { 
-							required: true,
-						})"
-					>
-					<div class="tutor-error-text" x-cloak x-show="errors.lastName" x-text="errors?.lastName?.message" role="alert" aria-live="polite"></div>
-				</div>
+					InputField::make()
+						->type( InputType::TEXT )
+						->name( 'billing_last_name' )
+						->label( __( 'Last Name', 'tutor' ) )
+						->clearable()
+						->id( 'billing_last_name' )
+						->required()
+						->placeholder( __( 'Enter your last name', 'tutor' ) )
+						->attr( 'x-bind', "register('billing_last_name', { required: true })" )
+						->render();
+				?>
 			</div>
 
-			<!-- Email Address -->
-			<div class="tutor-input-field" :class="{
-				'tutor-input-field-error': errors.emailAddress,
-			}">
-				<label for="emailAddress" class="tutor-label"><?php echo esc_html__( 'Email Address', 'tutor' ); ?></label>
-				<input 
-					type="email"
-					id="emailAddress"
-					placeholder="<?php echo esc_html__( 'Enter your email address', 'tutor' ); ?>"
-					class="tutor-input"
-					x-bind="register('emailAddress', { 
-						required: true,
-						pattern: { 
-							value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, 
-							message: '<?php echo esc_html__( 'Please enter a valid email address', 'tutor' ); ?>'
-						}
-					})"
-				>
-				<div class="tutor-error-text" x-cloak x-show="errors.emailAddress" x-text="errors?.emailAddress?.message" role="alert" aria-live="polite"></div>
-			</div>
+			<?php
+				InputField::make()
+					->type( InputType::EMAIL )
+					->name( 'billing_email' )
+					->label( __( 'Email Address', 'tutor' ) )
+					->clearable()
+					->id( 'billing_email' )
+					->required()
+					->placeholder( __( 'Enter your email address', 'tutor' ) )
+					->attr( 'x-bind', "register('billing_email', { required: true })" )
+					->render();
 
-			<!-- Country -->
-			<div class="tutor-input-field" :class="{
-				'tutor-input-field-error': errors.country,
-			}">
-				<label for="country" class="tutor-label"><?php echo esc_html__( 'Country', 'tutor' ); ?></label>
-				<input 
-					type="text"
-					id="country"
-					placeholder="<?php echo esc_html__( 'Enter your country', 'tutor' ); ?>"
-					class="tutor-input"
-					x-bind="register('country', { 
-						required: true
-					})"
-				>
-				<div class="tutor-error-text" x-cloak x-show="errors.country" x-text="errors?.country?.message" role="alert" aria-live="polite"></div>
-			</div>
+				InputField::make()
+					->type( InputType::TEXT )
+					->name( 'billing_phone' )
+					->label( __( 'Phone', 'tutor' ) )
+					->clearable()
+					->id( 'billing_phone' )
+					->required()
+					->placeholder( __( 'Enter your phone number', 'tutor' ) )
+					->attr( 'x-bind', "register('billing_phone', { required: true })" )
+					->render();
 
-			<!-- Street -->
-			<div class="tutor-input-field" :class="{
-				'tutor-input-field-error': errors.street,
-			}">
-				<label for="street" class="tutor-label"><?php echo esc_html__( 'Street', 'tutor' ); ?></label>
-				<input 
-					type="text"
-					id="street"
-					placeholder="<?php echo esc_html__( 'Enter your street', 'tutor' ); ?>"
-					class="tutor-input"
-					x-bind="register('street', { 
-						required: true
-					})"
-				>
-				<div class="tutor-error-text" x-cloak x-show="errors.street" x-text="errors?.street?.message" role="alert" aria-live="polite"></div>
-			</div>
+				InputField::make()
+					->type( InputType::SELECT )
+					->name( 'billing_country' )
+					->label( __( 'Country', 'tutor' ) )
+					->options( $country_options )
+					->searchable()
+					->clearable()
+					->id( 'billing_country' )
+					->required()
+					->placeholder( __( 'Enter your country', 'tutor' ) )
+					->attr( 'x-bind', "register('billing_country', { required: true })" )
+					->render();
+
+				InputField::make()
+					->type( InputType::SELECT )
+					->name( 'billing_state' )
+					->label( __( 'State', 'tutor' ) )
+					->options( $initial_states )
+					->clearable()
+					->searchable()
+					->id( 'billing_state' )
+					->required()
+					->placeholder( __( 'Enter your state', 'tutor' ) )
+					->attr( 'x-bind', "register('billing_state', { required: true })" )
+					->render();
+			?>
 
 			<!-- City & Postcode Row -->
 			<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
-				<!-- City -->
-				<div class="tutor-input-field" :class="{
-					'tutor-input-field-error': errors.city,
-				}">
-					<label for="city" class="tutor-label"><?php echo esc_html__( 'City', 'tutor' ); ?></label>
-					<input 
-						type="text"
-						id="city"
-						placeholder="<?php echo esc_html__( 'Enter your city', 'tutor' ); ?>"
-						class="tutor-input"
-						x-bind="register('city', { 
-							required: true,
-						})"
-					>
-					<div class="tutor-error-text" x-cloak x-show="errors.city" x-text="errors?.city?.message" role="alert" aria-live="polite"></div>
-				</div>
+				<?php
+					InputField::make()
+						->type( InputType::TEXT )
+						->name( 'billing_city' )
+						->label( __( 'City', 'tutor' ) )
+						->clearable()
+						->id( 'billing_city' )
+						->required()
+						->placeholder( __( 'Enter your city', 'tutor' ) )
+						->attr( 'x-bind', "register('billing_city', { required: true })" )
+						->render();
 
-				<!-- Postcode/Zip -->
-				<div class="tutor-input-field" :class="{
-					'tutor-input-field-error': errors.postcode,
-				}">
-					<label for="postcode" class="tutor-label"><?php echo esc_html__( 'Postcode/ Zip', 'tutor' ); ?></label>
-					<input 
-						type="text"
-						id="postcode"
-						placeholder="<?php echo esc_html__( 'Enter your postcode/ zip', 'tutor' ); ?>"
-						class="tutor-input"
-						x-bind="register('postcode', { 
-							required: true,
-							pattern: { 
-								value: /^[A-Z0-9\s-]+$/i, 
-								message: 'Please enter a valid postcode' 
-							}
-						})"
-					>
-					<div class="tutor-error-text" x-cloak x-show="errors.postcode" x-text="errors?.postcode?.message" role="alert" aria-live="polite"></div>
-				</div>
+					InputField::make()
+						->type( InputType::TEXT )
+						->name( 'billing_zip_code' )
+						->label( __( 'Postcode/ Zip', 'tutor' ) )
+						->clearable()
+						->id( 'billing_zip_code' )
+						->required()
+						->placeholder( __( 'Enter your postcode/ zip', 'tutor' ) )
+						->attr( 'x-bind', "register('billing_zip_code', { required: true })" )
+						->render();
+				?>
 			</div>
 
 			<!-- Address -->
-			<div class="tutor-input-field" :class="{
-				'tutor-input-field-error': errors.address,
-			}">
-				<label for="address" class="tutor-label"><?php echo esc_html__( 'Address', 'tutor' ); ?></label>
-				<input 
-					id="address"
-					placeholder="<?php echo esc_html__( 'Enter your address', 'tutor' ); ?>"
-					rows="3"
-					class="tutor-input"
-					x-bind="register('address')"
-				>
-				<div class="tutor-error-text" x-cloak x-show="errors.address" x-text="errors?.address?.message" role="alert" aria-live="polite"></div>
-			</div>
-			</div>
+			<?php
+				InputField::make()
+					->type( InputType::TEXTAREA )
+					->name( 'billing_address' )
+					->label( __( 'Address', 'tutor' ) )
+					->clearable()
+					->id( 'billing_address' )
+					->required()
+					->placeholder( __( 'Enter your address', 'tutor' ) )
+					->attr( 'x-bind', "register('billing_address', { required: true })" )
+					->render();
+			?>
 		</form>
 	</div>
 </section>
