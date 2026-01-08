@@ -69,10 +69,25 @@ abstract class BaseComponent {
 	 *
 	 * @param array $attrs Key–value pairs of HTML attributes.
 	 *
-	 * @return self
+	 * @return static
 	 */
-	public function attrs( array $attrs ): self {
+	public function attrs( array $attrs ) {
 		$this->attributes = array_merge( $this->attributes, $attrs );
+		return $this;
+	}
+
+	/**
+	 * Set a custom HTML attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key   Attribute name.
+	 * @param string $value Attribute value.
+	 *
+	 * @return static
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = $value;
 		return $this;
 	}
 

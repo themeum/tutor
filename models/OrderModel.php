@@ -988,21 +988,26 @@ class OrderModel {
 	 * Get order of a user
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 params $order_status and $order added.
 	 *
 	 * @param string $time_period $time_period Sorting time period,
 	 * supported time periods are: today, monthly & yearly.
 	 * @param string $start_date $start_date For date range sorting.
 	 * @param string $end_date $end_date For date range sorting.
+	 * @param string $order_status $order_status Order status.
 	 * @param int    $user_id  User id for fetching order list.
 	 * @param int    $limit  Limit to fetch record.
 	 * @param int    $offset  Offset to fetch record.
+	 * @param string $order  Order to fetch record.
 	 *
 	 * @throws \Exception Throw exception if database error occur.
 	 *
 	 * @return array
 	 */
-	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, int $user_id = 0, $limit = 10, int $offset = 0 ) {
-		$user_id = $user_id ? $user_id : get_current_user_id();
+	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, $order_status = '', int $user_id = 0, $limit = 10, int $offset = 0, $order = 'DESC' ) {
+		$user_id      = tutor_utils()->get_user_id( $user_id );
+		$order        = QueryHelper::get_valid_sort_order( $order );
+		$order_status = esc_sql( $order_status );
 
 		$response = array(
 			'results'     => array(),
@@ -1011,8 +1016,9 @@ class OrderModel {
 
 		global $wpdb;
 
-		$time_period_clause = '';
-		$date_range_clause  = '';
+		$time_period_clause  = '';
+		$date_range_clause   = '';
+		$order_status_clause = ( empty( $order_status ) || 'all' === $order_status ) ? '' : "AND o.order_status = '{$order_status}'";
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
@@ -1035,7 +1041,8 @@ class OrderModel {
 				WHERE o.user_id = %d
 				{$time_period_clause}
 				{$date_range_clause}
-				ORDER BY o.id DESC
+				{$order_status_clause}
+				ORDER BY o.id {$order}
 				LIMIT %d OFFSET %d
 			",
 			$user_id,
@@ -2126,7 +2133,7 @@ class OrderModel {
 
 		$link =
 			sprintf(
-				'<a href="%s" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+				'<a href="%s" class="tutor-btn tutor-btn-link tutor-text-brand tutor-p-none tutor-min-h-fit">
 				%s
 			</a>',
 				esc_url( $checkout_url ),
