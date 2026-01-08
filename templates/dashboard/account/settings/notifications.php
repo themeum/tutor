@@ -13,8 +13,6 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 
-$form_id = 'notification-form';
-
 ?>
 <section class="tutor-profile-notification">
 	<h5 class="tutor-mb-4 tutor-mt-4 tutor-md-mt-1 tutor-h5 tutor-sm-hidden">
@@ -22,13 +20,11 @@ $form_id = 'notification-form';
 	</h5>
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
-		x-data="{ 
-			...tutorForm({ 
-				id: '<?php echo esc_attr( $form_id ); ?>', 
-				mode: 'onChange', 
+		x-data='tutorForm({ 
+				id: "<?php echo esc_attr( $form_id ); ?>",
+				mode: "onChange",
 				shouldFocusError: true,
-			}),
-		}"
+			})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(
 			(data) => { 

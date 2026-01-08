@@ -64,10 +64,10 @@ $default_values = array(
 
 	<div class="tutor-surface-l1 tutor-rounded-2xl tutor-p-6 tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
 		<form
-			id="billing-address-form"
+			id="<?php echo esc_attr( $form_id ); ?>"
 			x-data="{ 
 				...tutorForm({ 
-					id: 'billing-address-form', 
+					id: '<?php echo esc_attr( $form_id ); ?>',
 					mode: 'onChange', 
 					shouldFocusError: true,
 					defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>

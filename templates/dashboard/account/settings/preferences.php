@@ -13,8 +13,6 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 
-$form_id = 'preferences-form';
-
 // Video quality options.
 $video_quality_options = array(
 	array(
@@ -97,6 +95,7 @@ $default_values = array(
 					<?php
 						InputField::make()
 							->type( InputType::SWITCH )
+							->size( Size::SM )
 							->name( 'auto_play_next' )
 							->attr( 'x-bind', "register('auto_play_next')" )
 							->render();
@@ -115,6 +114,7 @@ $default_values = array(
 					<?php
 						InputField::make()
 							->type( InputType::SWITCH )
+							->size( Size::SM )
 							->name( 'download_wifi_only' )
 							->attr( 'x-bind', "register('download_wifi_only')" )
 							->render();
@@ -178,6 +178,7 @@ $default_values = array(
 					<?php
 						InputField::make()
 							->type( InputType::SWITCH )
+							->size( Size::SM )
 							->name( 'sound_effects' )
 							->attr( 'x-bind', "register('sound_effects')" )
 							->render();
@@ -196,6 +197,7 @@ $default_values = array(
 					<?php
 						InputField::make()
 							->type( InputType::SWITCH )
+							->size( Size::SM )
 							->name( 'animations' )
 							->attr( 'x-bind', "register('animations')" )
 							->render();
@@ -244,6 +246,7 @@ $default_values = array(
 					<?php
 						InputField::make()
 							->type( InputType::SWITCH )
+							->size( Size::SM )
 							->name( 'high_contrast' )
 							->attr( 'x-bind', "register('high_contrast')" )
 							->render();

@@ -15,34 +15,39 @@ use TUTOR\Icon;
 
 $profile_tab_data = array(
 	array(
-		'id'    => 'account',
-		'label' => 'Account',
-		'icon'  => Icon::USER_CIRCLE,
-		'text'  => __( 'Name, email, phone number, profiles', 'tutor' ),
+		'id'       => 'account',
+		'label'    => 'Account',
+		'icon'     => Icon::USER_CIRCLE,
+		'text'     => __( 'Name, email, phone number, profiles', 'tutor' ),
+		'template' => 'dashboard.account.settings.account',
 	),
 	array(
-		'id'    => 'social-accounts',
-		'label' => 'Social Accounts',
-		'icon'  => Icon::GLOBE,
-		'text'  => __( 'Linked social media profiles', 'tutor' ),
+		'id'       => 'social-accounts',
+		'label'    => 'Social Accounts',
+		'icon'     => Icon::GLOBE,
+		'text'     => __( 'Linked social media profiles', 'tutor' ),
+		'template' => 'dashboard.account.settings.social-accounts',
 	),
 	array(
-		'id'    => 'billing-address',
-		'label' => 'Billing Address',
-		'icon'  => Icon::BILLING,
-		'text'  => __( 'Your payment address', 'tutor' ),
+		'id'       => 'billing-address',
+		'label'    => 'Billing Address',
+		'icon'     => Icon::BILLING,
+		'text'     => __( 'Your payment address', 'tutor' ),
+		'template' => 'dashboard.account.settings.billing-address',
 	),
 	array(
-		'id'    => 'notifications',
-		'label' => 'Notifications',
-		'icon'  => Icon::NOTIFICATION,
-		'text'  => __( 'Message, group, order', 'tutor' ),
+		'id'       => 'notifications',
+		'label'    => 'Notifications',
+		'icon'     => Icon::NOTIFICATION,
+		'text'     => __( 'Message, group, order', 'tutor' ),
+		'template' => 'dashboard.account.settings.notifications',
 	),
 	array(
-		'id'    => 'preferences',
-		'label' => 'Preferences',
-		'icon'  => Icon::PREFERENCE,
-		'text'  => __( 'Sound effects, animations, theme', 'tutor' ),
+		'id'       => 'preferences',
+		'label'    => 'Preferences',
+		'icon'     => Icon::PREFERENCE,
+		'text'     => __( 'Sound effects, animations, theme', 'tutor' ),
+		'template' => 'dashboard.account.settings.preferences',
 	),
 );
 ?>
@@ -104,21 +109,16 @@ $profile_tab_data = array(
 					:class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" 
 					class="tutor-profile-settings-tab-content tutor-w-full"
 				>
-					<div x-show="activeTab === 'account'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'dashboard.account.settings.account' ); ?>
-					</div>
-					<div x-show="activeTab === 'social-accounts'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'dashboard.account.settings.social-accounts' ); ?>
-					</div>
-					<div x-show="activeTab === 'notifications'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'dashboard.account.settings.notifications' ); ?>
-					</div>
-					<div x-show="activeTab === 'preferences'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'dashboard.account.settings.preferences' ); ?>
-					</div>
-					<div x-show="activeTab === 'billing-address'" x-cloak class="tutor-tab-panel" role="tabpanel">
-						<?php tutor_load_template( 'dashboard.account.settings.billing-address' ); ?>
-					</div>
+					<?php foreach ( $profile_tab_data as $profile_tab ) : ?>
+						<div x-show="activeTab === '<?php echo esc_attr( $profile_tab['id'] ); ?>'" x-cloak class="tutor-tab-panel" role="tabpanel">
+							<?php
+								tutor_load_template(
+									$profile_tab['template'],
+									array( 'form_id' => "tutor-{$profile_tab['id']}-form" )
+								);
+							?>
+						</div>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>

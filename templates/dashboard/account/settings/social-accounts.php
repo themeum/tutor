@@ -14,46 +14,25 @@ use Tutor\Components\Constants\InputType;
 
 $user = wp_get_current_user();
 
-$social_fields = array(
-	'facebook' => array(
-		'label'       => __( 'Facebook', 'tutor' ),
-		'placeholder' => __( 'Enter your Facebook profile URL', 'tutor' ),
-		'icon'        => Icon::FACEBOOK,
-		'pattern'     => '^https?:\/\/(www\.|m\.|web\.|mobile\.)?facebook\.com\/([A-Za-z0-9._-]+)\/?$',
-	),
-	'x'        => array(
-		'label'       => __( 'X.com', 'tutor' ),
-		'placeholder' => __( 'Enter your X.com profile URL', 'tutor' ),
-		'icon'        => Icon::X,
-		'pattern'     => '^https?:\/\/(www\.)?(x\.com|twitter\.com)\/([A-Za-z0-9_]+)\/?$',
-	),
-	'linkedin' => array(
-		'label'       => __( 'LinkedIn', 'tutor' ),
-		'placeholder' => __( 'Enter your LinkedIn profile URL', 'tutor' ),
-		'icon'        => Icon::LINKEDIN,
-		'pattern'     => '^https?:\/\/(www\.)?linkedin\.com\/(in|company|school)\/([A-Za-z0-9_-]+)\/?$',
-	),
-	'github'   => array(
-		'label'       => __( 'GitHub', 'tutor' ),
-		'placeholder' => __( 'Enter your GitHub profile URL', 'tutor' ),
-		'icon'        => Icon::GITHUB,
-		'pattern'     => '^https?:\/\/(www\.)?github\.com\/([A-Za-z0-9_-]+)\/?$',
-	),
-	'website'  => array(
-		'label'       => __( 'Website', 'tutor' ),
-		'placeholder' => __( 'Enter your website URL', 'tutor' ),
-		'icon'        => Icon::GLOBE,
-		'pattern'     => '^https?:\/\/(www\.)?[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*\.[A-Za-z]{2,}(\/.*)?$',
-	),
-);
+$social_fields = tutor_utils()->tutor_user_social_icons();
+
+$social_links = array();
+foreach ( $social_fields as $key => $field ) {
+	$social_links[ $key ] = get_user_meta( $user->ID, $key, true );
+}
 
 ?>
 
 <section class="tutor-social-accounts">
 	<div class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Social Profile Link', 'tutor' ); ?></div>
 	<form
-		id="social-accounts-form"
-		x-data="tutorForm({ id: 'social-accounts-form', mode: 'onChange', shouldFocusError: true })"
+		id="<?php echo esc_attr( $form_id ); ?>"
+		x-data='tutorForm({ 
+			id: "<?php echo esc_attr( $form_id ); ?>",
+			mode: "onChange",
+			shouldFocusError: true,
+			defaultValues: <?php echo wp_json_encode( $social_links ); ?>
+		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(
 			(data) => { 
@@ -66,21 +45,23 @@ $social_fields = array(
 		)($event)"
 		class="tutor-social-form"
 	>
+		<?php do_action( 'tutor_social_profile_links_before', $user ); ?>
+
 		<?php foreach ( $social_fields as $key => $field ) : ?>
 			<div class='tutor-social-field'>
 				<!-- Social icon -->
 				<div class="tutor-social-icon">
-					<?php tutor_utils()->render_svg_icon( $field['icon'], 20, 20 ); ?>
+					<?php tutor_utils()->render_svg_icon( $field['svg_icon'], 20, 20 ); ?>
 				</div>
 				<?php
 					$message = sprintf( /* translators: field label */ __( 'Please enter a valid %s URL', 'tutor' ), $field['label'] );
 
 					InputField::make()
 						->type( InputType::TEXT )
+						->id( $key )
 						->name( $key )
 						->label( $field['label'] )
 						->clearable()
-						->id( $key )
 						->required()
 						->placeholder( $field['placeholder'] )
 						->attr( 'x-bind', "register('$key', { pattern: { value: /$field[pattern]/i, message: '$message' } })" )

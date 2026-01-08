@@ -27,11 +27,11 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 
 <div class="tutor-account-section">
 	<form
-		id="account-form"
-		x-data="tutorForm({ 
-			id: 'account-form', 
-			mode: 'onChange', 
-		})"
+		id="<?php echo esc_attr( $form_id ); ?>"
+		x-data='tutorForm({ 
+			id: "<?php echo esc_attr( $form_id ); ?>",
+			mode: "onChange",
+		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(
 			(data) => { 
