@@ -50,24 +50,25 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		</button>
 		<?php if ( ! $is_user_asker ) : ?>
 		<div class="tutor-flex tutor-gap-2">
-			<?php
-				Button::make()
-				->label( __( 'Solved', 'tutor' ) )
-				->variant( Variant::LINK )
-				->size( Size::X_SMALL )
-				->icon( $is_solved ? Icon::COMPLETED_FILL : Icon::COMPLETED_CIRCLE )
-				->attr( 'class', 'tutor-gap-2 tutor-text-subdued' )
-				->render();
-			?>
-			<?php
-				Button::make()
-				->label( __( 'Important', 'tutor' ) )
-				->variant( Variant::LINK )
-				->size( Size::X_SMALL )
-				->icon( $is_important ? Icon::BOOKMARK_FILL : Icon::BOOKMARK )
-				->attr( 'class', 'tutor-gap-2 tutor-text-subdued' )
-				->render();
-			?>
+			<button 
+				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
+				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'solved')"
+				:class="{ 'tutor-btn-loading': qnaSingleActionMutation?.isPending && currentAction === 'solved' }"
+				:disabled="qnaSingleActionMutation?.isPending"
+			>
+				<?php tutor_utils()->render_svg_icon( $is_solved ? Icon::COMPLETED_FILL : Icon::COMPLETED_CIRCLE, 16, 16, array( 'class' => $is_solved ? 'tutor-icon-success-primary' : 'tutor-icon-secondary' ) ); ?>
+				<?php esc_html_e( 'Solved', 'tutor' ); ?>
+			</button>
+
+			<button 
+				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
+				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'important')"
+				:class="{ 'tutor-btn-loading': qnaSingleActionMutation?.isPending && currentAction === 'important' }"
+				:disabled="qnaSingleActionMutation?.isPending"
+			>
+				<?php tutor_utils()->render_svg_icon( $is_important ? Icon::BOOKMARK_FILL : Icon::BOOKMARK, 16, 16, array( 'class' => $is_important ? 'tutor-icon-exception4' : 'tutor-icon-secondary' ) ); ?>
+				<?php esc_html_e( 'Important', 'tutor' ); ?>
+			</button>
 		</div>
 		<?php endif; ?>
 	</div>
@@ -104,7 +105,11 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 						class="tutor-popover"
 					>
 						<div class="tutor-popover-menu" style="min-width: 120px;">
-							<button class="tutor-popover-menu-item">
+							<button 
+								class="tutor-popover-menu-item"
+								@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'archived')"
+								:disabled="qnaSingleActionMutation?.isPending"
+							>
 								<?php tutor_utils()->render_svg_icon( Icon::ARCHIVE_2 ); ?> 
 								<?php $is_archived ? esc_html_e( 'Un-Archive', 'tutor' ) : esc_html_e( 'Archive', 'tutor' ); ?>
 							</button>

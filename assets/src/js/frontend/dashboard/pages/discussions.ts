@@ -1,6 +1,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Discussions Page Component
@@ -11,19 +12,20 @@ const discussionsPage = () => {
 
   return {
     query,
-    readUnreadQnAMutation: null as MutationState<unknown, unknown> | null,
+    qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
     deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
     createUpdateQnAMutation: null as MutationState<unknown, unknown> | null,
+    currentAction: null as string | null,
 
     init() {
-      // Q&A read-unread mutation.
-      this.readUnreadQnAMutation = this.query.useMutation(this.readUnreadQnA, {
+      // Q&A single action mutation (read, unread, solved, important, archived).
+      this.qnaSingleActionMutation = this.query.useMutation(this.qnaSingleAction, {
         onSuccess: () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to mark as read-unread');
+          window.TutorCore.toast.error(error.message || __('Action failed', 'tutor'));
         },
       });
 
@@ -34,7 +36,7 @@ const discussionsPage = () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to delete Q&A');
+          window.TutorCore.toast.error(error.message || __('Failed to delete Q&A', 'tutor'));
         },
       });
 
@@ -44,23 +46,23 @@ const discussionsPage = () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to delete Comment');
+          window.TutorCore.toast.error(error.message || __('Failed to delete Comment', 'tutor'));
         },
       });
 
       // Q&A create/update mutation.
       this.createUpdateQnAMutation = this.query.useMutation(this.createUpdateQnA, {
         onSuccess: () => {
-          window.TutorCore.toast.success('Reply saved successfully');
+          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to save reply');
+          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
         },
       });
     },
 
-    readUnreadQnA(payload: { question_id: number; qna_action: string }) {
+    qnaSingleAction(payload: { question_id: number; qna_action: string; [key: string]: string | number }) {
       return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
     },
 
@@ -76,12 +78,17 @@ const discussionsPage = () => {
       return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
-    async handleReadUnreadQnA(questionId: number, context: string) {
-      await this.readUnreadQnAMutation?.mutate({
-        context: context,
-        question_id: questionId,
-        qna_action: 'read',
-      });
+    async handleQnASingleAction(questionId: number, action: string, extras: Record<string, string> = {}) {
+      this.currentAction = action;
+      try {
+        await this.qnaSingleActionMutation?.mutate({
+          question_id: questionId,
+          qna_action: action,
+          ...extras,
+        });
+      } finally {
+        this.currentAction = null;
+      }
     },
 
     async handleDeleteQnA(questionId: number) {
@@ -98,7 +105,7 @@ const discussionsPage = () => {
       const questionId = (data.question_id as number) || 0;
 
       if (!answer.trim()) {
-        window.TutorCore.toast.error('Please enter a response');
+        window.TutorCore.toast.error(__('Please enter a response', 'tutor'));
         return;
       }
 

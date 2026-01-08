@@ -90,7 +90,7 @@ $single_url = UrlHelper::add_query_params(
 				<div class="tutor-popover-menu">
 					<button 
 						class="tutor-popover-menu-item"
-						@click="handleReadUnreadQnA(<?php echo esc_html( $question_id ); ?>,'<?php echo esc_html( $context ); ?>')">
+						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'read', { context: '<?php echo esc_html( $context ); ?>' })">
 						<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
 						<?php echo esc_html( $text_mark_as ); ?>
 					</button>
