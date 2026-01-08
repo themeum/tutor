@@ -10,11 +10,12 @@
 
 use TUTOR\Dashboard;
 use Tutor\Helpers\UrlHelper;
-use TUTOR\Icon;
 use TUTOR\Input;
 
 defined( 'ABSPATH' ) || exit;
-
+?>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<?php
 wp_head();
 
 $subpage       = Input::get( Dashboard::ACCOUNT_PAGE_QUERY_PARAM, 'profile' );
