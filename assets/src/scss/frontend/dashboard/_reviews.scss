@@ -77,4 +77,10 @@
       width: 100%;
     }
   }
+
+  &-student {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-4;
+    margin-top: $tutor-spacing-4;
+  }
 }
