@@ -17,12 +17,27 @@ const discussionsPage = () => {
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
     createUpdateQnAMutation: null as MutationState<unknown, unknown> | null,
     currentAction: null as string | null,
+    isSolved: false,
+    isImportant: false,
+    isArchived: false,
 
     init() {
       // Q&A single action mutation (read, unread, solved, important, archived).
       this.qnaSingleActionMutation = this.query.useMutation(this.qnaSingleAction, {
-        onSuccess: () => {
-          window.location.reload();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onSuccess: (response: any, payload: any) => {
+          const action = payload.qna_action;
+          if (action === 'solved') {
+            this.isSolved = !this.isSolved;
+          } else if (action === 'important') {
+            this.isImportant = !this.isImportant;
+          } else if (action === 'archived') {
+            this.isArchived = !this.isArchived;
+          } else {
+            // For actions like read/unread that might affect more UI, a reload might be safer,
+            // but for toggle icons, we handle it above.
+            window.location.reload();
+          }
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Action failed', 'tutor'));

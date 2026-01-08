@@ -41,3 +41,8 @@
     @include tutor-flex(0);
   }
 }
+
+// @TODO:: Will be removed after transition.scss merged
+.tutor-animate-spin {
+  @include tutor-spin();
+}
