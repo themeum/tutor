@@ -16,6 +16,7 @@ use Tutor\Components\Avatar;
 use Tutor\Helpers\UrlHelper;
 
 $current_user_id = get_current_user_id();
+$is_user_asker   = $current_user_id === (int) $question->user_id;
 $context         = 'frontend-dashboard-qna-table-' . $view_as;
 $key_slug        = 'frontend-dashboard-qna-table-student' === $context ? '_' . $current_user_id : '';
 $meta            = $question->meta;
@@ -39,7 +40,20 @@ $single_url = UrlHelper::add_query_params(
 	)
 );
 ?>
-<div class="tutor-qna-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
+<div 
+	class="tutor-qna-card"
+	x-data="{ 
+		isUnread: <?php echo $is_unread ? 'true' : 'false'; ?>, 
+		isArchived: <?php echo (int) tutor_utils()->array_get( 'tutor_qna_archived', $meta, 0 ) ? 'true' : 'false'; ?> 
+	}"
+	:class="{ 'unread': isUnread }"
+	@tutor-qna-action-success.window="
+		if ($event.detail.questionId === <?php echo (int) $question_id; ?>) {
+			if ($event.detail.action === 'read') isUnread = !isUnread;
+			if ($event.detail.action === 'archived') isArchived = !isArchived;
+		}
+	"
+>
 	<?php
 		Avatar::make()
 			->src( tutor_utils()->get_user_avatar_url( $question->user_id ) )
@@ -88,12 +102,36 @@ $single_url = UrlHelper::add_query_params(
 
 			<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 				<div class="tutor-popover-menu">
+					<?php if ( ! $is_user_asker ) : ?>
 					<button 
 						class="tutor-popover-menu-item"
-						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'read', { context: '<?php echo esc_html( $context ); ?>' })">
-						<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
-						<?php echo esc_html( $text_mark_as ); ?>
+						@click="handleQnASingleAction(<?php echo (int) $question_id; ?>, 'archived')"
+						:disabled="qnaSingleActionMutation?.isPending"
+					>
+						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'archived' && currentQuestionId === <?php echo (int) $question_id; ?>">
+							<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
+						</template>
+						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+							<?php tutor_utils()->render_svg_icon( Icon::ARCHIVE_2 ); ?>
+						</template>
+						<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
 					</button>
+					<?php endif; ?>
+
+					<button 
+						class="tutor-popover-menu-item"
+						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'read', { context: '<?php echo esc_html( $context ); ?>' })"
+						:disabled="qnaSingleActionMutation?.isPending"
+					>
+						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo (int) $question_id; ?>">
+							<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
+						</template>
+						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+							<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
+						</template>
+						<span x-text="isUnread ? '<?php echo esc_js( __( 'Mark as Read', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Unread', 'tutor' ) ); ?>'"></span>
+					</button>
+
 					<button
 						class="tutor-popover-menu-item"
 						@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question_id ); ?> });"

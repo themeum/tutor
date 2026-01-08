@@ -51,11 +51,11 @@ $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', nul
 	endforeach;
 	?>
 </div>
+<?php if ( $total_items > $item_per_page ) : ?>
 <div class="tutor-px-6 tutor-pb-6">
-	<?php if ( $total_items > $item_per_page ) : ?>
-		<?php Pagination::make()->current( $current_page )->total( $total_items )->limit( $item_per_page )->render(); ?>
-	<?php endif; ?>
+	<?php Pagination::make()->current( $current_page )->total( $total_items )->limit( $item_per_page )->render(); ?>
 </div>
+<?php endif; ?>
 
 <?php
 if ( ! empty( $questions ) ) {

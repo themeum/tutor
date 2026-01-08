@@ -17,6 +17,7 @@ const discussionsPage = () => {
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
     createUpdateQnAMutation: null as MutationState<unknown, unknown> | null,
     currentAction: null as string | null,
+    currentQuestionId: null as number | null,
     isSolved: false,
     isImportant: false,
     isArchived: false,
@@ -33,11 +34,13 @@ const discussionsPage = () => {
             this.isImportant = !this.isImportant;
           } else if (action === 'archived') {
             this.isArchived = !this.isArchived;
-          } else {
-            // For actions like read/unread that might affect more UI, a reload might be safer,
-            // but for toggle icons, we handle it above.
-            window.location.reload();
           }
+
+          window.dispatchEvent(
+            new CustomEvent('tutor-qna-action-success', {
+              detail: { questionId: payload.question_id, action },
+            }),
+          );
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Action failed', 'tutor'));
@@ -95,6 +98,7 @@ const discussionsPage = () => {
 
     async handleQnASingleAction(questionId: number, action: string, extras: Record<string, string> = {}) {
       this.currentAction = action;
+      this.currentQuestionId = questionId;
       try {
         await this.qnaSingleActionMutation?.mutate({
           question_id: questionId,
@@ -103,6 +107,7 @@ const discussionsPage = () => {
         });
       } finally {
         this.currentAction = null;
+        this.currentQuestionId = null;
       }
     },
 
