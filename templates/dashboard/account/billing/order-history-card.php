@@ -12,41 +12,16 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Icon;
 use Tutor\Models\OrderModel;
-
-$render_status_badge = function ( $status ) {
-	$badge_class = 'secondary';
-
-	if ( 'completed' === $status ) {
-		return '';
-	}
-
-	switch ( $status ) {
-		case 'processing':
-		case 'pending':
-		case 'on-hold':
-			$badge_class = 'pending';
-			break;
-		case 'refunded':
-		case 'cancelled':
-			$badge_class = 'cancelled';
-			break;
-		case 'incomplete':
-			$badge_class = 'secondary';
-			break;
-	}
-
-	return '<span class="tutor-capitalize tutor-badge tutor-badge-small tutor-badge-circle tutor-py-none tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
-};
-
 ?>
 <div class="tutor-billing-card">
 	<div class="tutor-billing-card-left">
 		<div class="tutor-billing-card-title">
 			<div class="tutor-hidden tutor-sm-block">
-				<?php echo wp_kses_post( $render_status_badge( $order->order_status ) ); ?>
+				<div class="tutor-ml-6"><?php echo wp_kses_post( ComponentHelper::order_status_badge( $order->order_status ) ); ?></div>
 			</div>
 			<ul class="tutor-pl-1">
 				<?php
@@ -69,7 +44,7 @@ $render_status_badge = function ( $status ) {
 				<?php endforeach; ?>
 			</ul>
 			<div class="tutor-sm-hidden">
-				<?php echo wp_kses_post( $render_status_badge( $order->order_status ) ); ?>
+				<div class="tutor-ml-6"><?php echo wp_kses_post( ComponentHelper::order_status_badge( $order->order_status ) ); ?></div>
 			</div>
 		</div>
 		<div class="tutor-billing-card-details">
