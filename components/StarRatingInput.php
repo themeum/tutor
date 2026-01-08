@@ -172,6 +172,8 @@ class StarRatingInput extends BaseComponent {
 			<span class="tutor-small tutor-font-medium" x-text="feedback"></span>
 		</div>
 		<?php
-		return ob_get_clean();
+
+		$this->component_string = ob_get_clean();
+		return $this->component_string;
 	}
 }
