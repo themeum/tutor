@@ -21,7 +21,7 @@ use Tutor\Models\OrderModel;
 	<div class="tutor-billing-card-left">
 		<div class="tutor-billing-card-title">
 			<div class="tutor-hidden tutor-sm-block">
-				<div class="tutor-ml-6"><?php echo wp_kses_post( ComponentHelper::order_status_badge( $order->order_status ) ); ?></div>
+				<?php echo wp_kses_post( ComponentHelper::order_status_badge( $order->order_status ) ); ?>
 			</div>
 			<ul class="tutor-pl-1">
 				<?php
