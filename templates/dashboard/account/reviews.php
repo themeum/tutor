@@ -6,35 +6,28 @@
  * @subpackage Dashboard
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 1.4.3
+ * @since 4.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
 
-tutor_load_template(
-	'account-header',
-	array(
-		'page_data' => array(
-			'title' => esc_html__( 'Reviews', 'tutor' ),
-		),
-		'back_url'  => tutor_utils()->get_tutor_dashboard_page_permalink(),
-	)
-);
+use TUTOR\Input;
+
+require_once tutor_get_template( 'account-header' );
 
 if ( ! tutor_utils()->is_instructor( 0, true ) ) {
 	tutor_load_template( 'dashboard.reviews.given-reviews' );
 	return;
 }
 
-use TUTOR\Input;
-
 // Pagination Variable.
-$per_page     = tutor_utils()->get_option( 'pagination_per_page', 20 );
-$current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
-$offset       = ( $current_page - 1 ) * $per_page;
+$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
+$current_page  = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
+$offset        = ( $current_page - 1 ) * $item_per_page;
 
-$reviews     = tutor_utils()->get_reviews_by_instructor( get_current_user_id(), $offset, $per_page );
-$given_count = tutor_utils()->get_reviews_by_user( get_current_user_id(), 0, 0, true )->count;
+$user_id     = get_current_user_id();
+$reviews     = tutor_utils()->get_reviews_by_instructor( $user_id, $offset, $item_per_page );
+$given_count = tutor_utils()->get_reviews_by_user( $user_id, 0, 0, true )->count;
 ?>
 <div class="tutor-dashboard-content-inner">
 	<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16"><?php esc_html_e( 'Reviews', 'tutor' ); ?></div>

@@ -13,6 +13,7 @@
 namespace Tutor\Components;
 
 use TUTOR\Icon;
+use Tutor\components\Constants\Size;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -36,7 +37,7 @@ class StarRatingInput extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $field_name = '';
+	protected $field_name = 'rating';
 
 	/**
 	 * Current rating value
@@ -64,7 +65,7 @@ class StarRatingInput extends BaseComponent {
 	 *
 	 * @var int
 	 */
-	protected $icon_size = 20;
+	protected $icon_size = Size::SIZE_20;
 
 	/**
 	 * Set field name
@@ -130,7 +131,7 @@ class StarRatingInput extends BaseComponent {
 		<div 
 			class="tutor-flex tutor-gap-4 tutor-justify-between tutor-items-center"
 			x-data="tutorStarRatingInput({
-				initialRating: <?php echo esc_js( $current_rating ); ?>,
+				initialRating: <?php echo esc_attr( $current_rating ); ?>,
 				fieldName: '<?php echo esc_attr( $this->field_name ); ?>'
 			})"
 			@mouseleave="hoverRating = 0"
@@ -151,17 +152,17 @@ class StarRatingInput extends BaseComponent {
 					>
 						<template x-if="effectiveRating >= <?php echo (int) $i; ?>">
 							<span class="tutor-icon-exception4 tutor-flex-center">
-								<?php echo $star_fill; // phpcs:ignore ?>
+												<?php echo $star_fill; // phpcs:ignore ?>
 							</span>
 						</template>
 						<template x-if="effectiveRating > <?php echo (int) ( $i - 1 ); ?> && effectiveRating < <?php echo (int) $i; ?>">
 							<span class="tutor-icon-exception4 tutor-flex-center">
-								<?php echo $star_half; // phpcs:ignore ?>
+												<?php echo $star_half; // phpcs:ignore ?>
 							</span>
 						</template>
 						<template x-if="effectiveRating <= <?php echo (int) ( $i - 1 ); ?>">
 							<span class="tutor-icon-exception4 tutor-flex-center">
-								<?php echo $star; // phpcs:ignore ?>
+												<?php echo $star; // phpcs:ignore ?>
 							</span>
 						</template>
 					</button>
