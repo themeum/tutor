@@ -4,7 +4,7 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-.tutor-quiz-attempts-mobile-heading {
+.tutor-h4 {
   @include tutor-breakpoint-up(sm) {
     display: none;
   }
