@@ -162,6 +162,9 @@ const endpoints = {
   // Announcement
   CREATE_ANNOUNCEMENT: 'tutor_announcement_create',
   DELETE_ANNOUNCEMENT: 'tutor_announcement_delete',
+
+  // Export Analytics
+  EXPORT_ANALYTICS: 'export_analytics',
 } as const;
 
 export default endpoints;
