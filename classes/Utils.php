@@ -3494,11 +3494,11 @@ class Utils {
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
-				FROM 	{$wpdb->posts} enrollment
-					INNER  JOIN {$wpdb->posts} AS course
-							ON enrollment.post_parent=course.ID
-					INNER  JOIN {$wpdb->users} AS user
-							ON user.ID = enrollment.post_author
+				FROM {$wpdb->posts} enrollment
+				INNER JOIN {$wpdb->posts} AS course
+					ON enrollment.post_parent=course.ID
+				INNER JOIN {$wpdb->users} AS user
+					ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
 					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
@@ -3507,11 +3507,9 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
-
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
-				LIMIT %d, %d
-			",
+				LIMIT %d, %d",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
@@ -3540,9 +3538,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 				GROUP BY enrollment.post_author
-				ORDER BY {$order_by} {$order}
-
-			",
+				ORDER BY {$order_by} {$order}",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
