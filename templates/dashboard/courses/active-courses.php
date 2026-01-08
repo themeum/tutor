@@ -11,4 +11,3 @@
 
 $active_tab = 'courses/active-courses';
 require dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'courses.php';
-

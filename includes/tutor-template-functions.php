@@ -647,10 +647,8 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 
 		if ( $can_continue ) {
 			tutor_load_template( 'loop.course-continue' );
-
 		} elseif ( tutor_utils()->is_course_added_to_cart( $course_id ) ) {
 			tutor_load_template( 'loop.course-in-cart' );
-
 		} else {
 			$tutor_course_sell_by = apply_filters( 'tutor_course_sell_by', null );
 

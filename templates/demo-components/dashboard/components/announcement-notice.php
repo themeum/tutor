@@ -19,7 +19,7 @@ use TUTOR\Icon;
 		</svg>
 	</div>
 	<div class="tutor-announcement-content">
-		<h3 class="tutor-announcement-title tutor-medium tutor-font-semibold">
+		<h3 class="tutor-announcement-title tutor-font-size-medium tutor-font-weight-semibold tutor-line-height-medium">
 			Apni kursi ki peti bandhlo, Tutor 4.w0w a raha hain!
 		</h3>
 		<p class="tutor-announcement-message tutor-p3 tutor-mt-2">

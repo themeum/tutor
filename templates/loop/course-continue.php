@@ -16,7 +16,7 @@ use Tutor\Models\CourseModel;
 <?php
 $user_id    = get_current_user_id();
 $course_id  = get_the_ID();
-$enroll_btn = '<a href="' . esc_url( get_the_permalink() ) . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">
+$enroll_btn = '<a href="' . esc_url( get_the_permalink() ) . '" class="tutor-btn tutor-btn-primary-soft tutor-btn-md tutor-btn-block">
 					' . __( 'Start Learning', 'tutor' ) . '
 				</a>
 			';
@@ -25,7 +25,7 @@ $lesson_url          = tutor_utils()->get_course_first_lesson();
 $completed_percent   = tutor_utils()->get_course_completed_percent();
 $is_completed_course = tutor_utils()->is_completed_course();
 $retake_course       = tutor_utils()->can_user_retake_course();
-$button_class        = 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ';
+$button_class        = 'tutor-btn tutor-btn-primary-soft tutor-btn-md tutor-btn-block ';
 $can_complete_course = CourseModel::can_complete_course( $course_id, $user_id );
 $completion_mode     = tutor_utils()->get_option( 'course_completion_process' );
 

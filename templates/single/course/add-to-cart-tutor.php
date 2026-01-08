@@ -68,7 +68,7 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 	if ( $is_course_in_user_cart && ! $buy_now ) {
 		?>
 		
-		<a data-cy="tutor-native-view-cart" href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-mt-24 tutor-btn-lg tutor-btn-block <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
+		<a data-cy="tutor-native-view-cart" href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-mt-24 tutor-btn-lg tutor-btn-block <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
 			<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 		</a>
 		<?php
@@ -84,7 +84,7 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 		?>
 	<div class="tutor-mt-24">
 		<button type="button" data-cy="tutor-native-add-to-cart" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
-			<span class="tutor-icon-cart-line tutor-mr-8"></span>
+			<span class="tutor-icon-cart-line tutor-mr-4"></span>
 			<span><?php esc_html_e( 'Add to Cart', 'tutor' ); ?></span>
 		</button>
 	</div>

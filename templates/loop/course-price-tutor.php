@@ -17,7 +17,7 @@ if ( ! $is_logged_in ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
 
-$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $required_loggedin_class . '">' . __( 'Enroll Course', 'tutor' ) . '</a>', $course_id ) . '</div>';
+$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-primary-soft tutor-btn-md tutor-btn-block ' . $required_loggedin_class . '">' . __( 'Enroll Course', 'tutor' ) . '</a>', $course_id ) . '</div>';
 $free_html  = $enroll_btn;
 
 
@@ -26,7 +26,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
 
 	$price_html       = tutor_utils()->get_course_price();
-	$utility_classes  = 'tutor-d-flex tutor-align-center tutor-justify-between';
+	$utility_classes  = '';
 	$total_enrolled   = (int) tutor_utils()->count_enrolled_users_by_course( $course_id );
 	$maximum_students = (int) tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
 
@@ -36,7 +36,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 		if ( 0 === $maximum_students ) {
 			?>
 				<div class="<?php echo esc_attr( $utility_classes ); ?>">
-					<div class="list-item-price tutor-d-flex tutor-align-center">
+					<div class="tutor-d-flex tutor-align-center">
 						<span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">
 							<?php echo wp_kses_post( $price_html ); ?>
 						</span>

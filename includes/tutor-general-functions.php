@@ -1610,10 +1610,10 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 		?>
 			<div class="list-item-price tutor-item-price">
 				<?php if ( $price_data->sale_price ) : ?>
-					<span><?php tutor_print_formatted_price( $price_data->display_price ); ?></span>
-					<del><?php tutor_print_formatted_price( $price_data->regular_price ); ?></del>
+					<span class="tutor-text-small tutor-font-medium tutor-text-primary"><?php tutor_print_formatted_price( $price_data->display_price ); ?></span>
+					<del class="tutor-text-tiny tutor-font-medium tutor-text-subdued"><?php tutor_print_formatted_price( $price_data->regular_price ); ?></del>
 				<?php else : ?>
-					<span><?php tutor_print_formatted_price( $price_data->display_price ); ?></span>
+					<span class="tutor-text-small tutor-font-medium tutor-text-primary"><?php tutor_print_formatted_price( $price_data->display_price ); ?></span>
 				<?php endif; ?>
 			</div>
 			<?php if ( $price_data->show_incl_tax_label ) : ?>

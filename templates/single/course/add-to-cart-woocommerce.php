@@ -22,7 +22,7 @@ if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 if ( $product ) {
 	if ( tutor_utils()->is_course_added_to_cart( $product_id, true ) ) {
 		?>
-			<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block tutor-woocommerce-view-cart">
+			<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="tutor-btn tutor-btn-primary-soft tutor-btn-lg tutor-btn-block tutor-woocommerce-view-cart">
 				<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 			</a>
 		<?php

@@ -104,11 +104,16 @@ if ( isset( $the_query ) ) {
 				)
 			),
 		);
-
-		tutor_load_template_from_custom_path(
-			tutor()->path . 'templates/dashboard/elements/pagination.php',
-			$pagination_data
-		);
+		?>
+		<div class="tutor-course-pagination">
+			<?php
+			tutor_load_template_from_custom_path(
+				tutor()->path . 'templates/dashboard/elements/pagination.php',
+				$pagination_data
+			);
+			?>
+		</div>
+		<?php
 	}
 
 	$course_loop = ob_get_clean();
@@ -123,7 +128,7 @@ if ( isset( $the_query ) ) {
 	$has_course_filters = $course_filter && count( $supported_filters );
 
 	$supported_filters_keys = array_keys( $supported_filters );
-?>
+	?>
 
 <div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode( $GLOBALS['tutor_course_archive_arg'] ) ); ?>">
 	<?php if ( $has_course_filters ) : ?>
