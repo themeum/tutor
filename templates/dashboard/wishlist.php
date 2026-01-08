@@ -18,7 +18,7 @@ $wishlist_per_page = (int) tutor_utils()->get_option( 'pagination_per_page', 10 
 $current_page      = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset            = ( $current_page - 1 ) * $wishlist_per_page;
 
-$wishlists             = tutor_utils()->get_wishlist( $offset, $wishlist_per_page );
+$wishlists             = tutor_utils()->get_wishlist( null, $offset, $wishlist_per_page );
 $total_wishlists_count = count( tutor_utils()->get_wishlist() );
 
 $course_id       = $post->ID;
