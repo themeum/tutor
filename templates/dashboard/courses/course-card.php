@@ -26,6 +26,7 @@ $category          = implode( ', ', $category_names );
 	<div class="tutor-card tutor-progress-card">
 		
 		<div class="tutor-progress-card-thumbnail">
+			<?php do_action( 'tutor_my_courses_before_thumbnail', $course_id ); ?>
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
 				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" />
 			<?php endif; ?>

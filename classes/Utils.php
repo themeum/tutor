@@ -2228,21 +2228,37 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $user_id user id.
+	 * @param int     $user_id user id.
+	 *
+	 * @param boolean $with_bundle_enrolled_courses including bundle courses.
 	 *
 	 * @return array
 	 */
-	public function get_enrolled_courses_ids_by_user( $user_id = 0 ) {
+	public function get_enrolled_courses_ids_by_user( $user_id = 0, $with_bundle_enrolled_courses = true ) {
 		global $wpdb;
-		$user_id    = $this->get_user_id( $user_id );
+		$user_id = $this->get_user_id( $user_id );
+
+		$with_bundle_enrolled_courses_clause = '';
+		if ( ! $with_bundle_enrolled_courses ) {
+			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
+				"AND NOT EXISTS (
+					SELECT 1
+					FROM wp_postmeta pm
+					WHERE pm.post_id = e.ID
+						AND pm.meta_key = %s
+				)",
+				'_tutor_bundle_id'
+			);
+		}
 		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT DISTINCT post_parent
-			FROM 	{$wpdb->posts}
-			WHERE 	post_type = %s
-					AND post_status = %s
-					AND post_author = %d
-				ORDER BY post_date DESC;
+				"SELECT DISTINCT e.post_parent, e.post_date
+			FROM 	{$wpdb->posts} e
+			WHERE 	e.post_type = %s
+					AND e.post_status = %s
+					AND e.post_author = %d
+					{$with_bundle_enrolled_courses_clause}
+				ORDER BY e.post_date DESC;
 			",
 				'tutor_enrolled',
 				'completed',

@@ -94,7 +94,7 @@ $courses_list = $courses_list_array[ $active_tab ];
 						tutor_load_template( 'dashboard.courses.course-card' );
 					endwhile;
 				else :
-					EmptyState::make()->title( 'No Courses Found' )->render();
+					EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render();
 				endif;
 				?>
 			</div>

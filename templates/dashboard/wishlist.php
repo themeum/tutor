@@ -18,8 +18,8 @@ $wishlist_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page      = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset            = ( $current_page - 1 ) * $wishlist_per_page;
 
-$wishlists             = tutor_utils()->get_wishlist( null, $offset, $wishlist_per_page );
-$total_wishlists_count = count( tutor_utils()->get_wishlist( null ) );
+$wishlists             = tutor_utils()->get_wishlist( $offset, $wishlist_per_page );
+$total_wishlists_count = count( tutor_utils()->get_wishlist() );
 
 $course_id       = $post->ID;
 $profile_url     = tutor_utils()->profile_url( $post->post_author, true );
@@ -105,7 +105,7 @@ $course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_
 			?>
 		</div>
 	<?php else : ?>
-		<?php EmptyState::make()->title( 'No Courses Found' )->render(); ?>
+		<?php EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render(); ?>
 	<?php endif; ?>
 
 	<!-- Wishlist pagination  -->
