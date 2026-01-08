@@ -567,16 +567,16 @@ class Tutor_Setup {
 												<?php esc_html_e( 'Congratulations, you’re all set!', 'tutor' ); ?>
 											</h2>
 											<p>
-												<?php esc_html_x( 'Tutor LMS is up and running on your website! If you really want to become a Tutor LMS genius, read our ', 'tutor setup content', 'tutor' ); ?>
+												<?php echo esc_html_x( 'Tutor LMS is up and running on your website! If you really want to become a Tutor LMS genius, read our ', 'tutor setup content', 'tutor' ); ?>
 												<a target="_blank" href="https://docs.themeum.com/tutor-lms/">
-													<?php esc_html_x( 'documentation', 'tutor setup content', 'tutor' ); ?>
+													<?php echo esc_html_x( 'documentation', 'tutor setup content', 'tutor' ); ?>
 												</a>
-												<?php esc_html_x( 'that covers everything!', 'tutor setup content', 'tutor' ); ?>
+												<?php echo esc_html_x( 'that covers everything!', 'tutor setup content', 'tutor' ); ?>
 											</p>
 											<p>
-												<?php esc_html_x( 'If you need further assistance, please don’t hesitate to contact us via our ', 'tutor-setup-assistance', 'tutor' ); ?>
+												<?php echo esc_html_x( 'If you need further assistance, please don’t hesitate to contact us via our ', 'tutor-setup-assistance', 'tutor' ); ?>
 												<a target="_blank" href="https://tutorlms.com/contact/">
-													<?php esc_html_x( 'contact form.', 'tutor-setup-assistance', 'tutor' ); ?>
+													<?php echo esc_html_x( 'contact form.', 'tutor-setup-assistance', 'tutor' ); ?>
 												</a>
 											</p>
 										</div>
