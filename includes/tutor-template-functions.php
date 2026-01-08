@@ -545,14 +545,23 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
 		$placeholder_url   = tutor()->url . 'assets/images/placeholder.svg';
 		$thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url( $post_thumbnail_id, $size ) : $placeholder_url;
 		$thumb_url         = apply_filters( 'tutor_course_thumb_url', $thumb_url, $post_id, $size, $post_thumbnail_id );
+		$alt_text = '';
 
 		if ( $url ) {
 			return $thumb_url;
 		}
 
+		if ( $post_thumbnail_id ) {
+			$alt_text = get_post_meta( $post_thumbnail_id, '_wp_attachment_image_alt', true );
+	}
+
+		if ( empty( $alt_text ) ) {
+			$alt_text = get_the_title( $post_id );
+		}
+		
 		echo '<div class="tutor-course-thumbnail">
-            <img src="' . esc_url( $thumb_url ) . '" />
-        </div>';
+		<img src="' . esc_url( $thumb_url ) . '" alt="' . esc_attr( $alt_text ) . '" />
+	</div>';
 	}
 }
 
