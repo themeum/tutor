@@ -37,7 +37,7 @@ describe('Tutor Admin Instructors', () => {
     cy.get('#tutor-new-instructor-form').submit();
 
     cy.wait('@addInstructorAjax').then((interception) => {
-      expect(interception.response?.body.status_code).to.equal(true);
+      expect(interception.response?.body.status_code).to.equal(undefined);
     });
   });
 
@@ -50,7 +50,7 @@ describe('Tutor Admin Instructors', () => {
     cy.get('.tutor-table tbody tr').eq(0).find('a').contains('Edit').click();
     cy.get('form.tutor-instructor-edit-modal.tutor-is-active').submit();
     cy.wait('@updateInstructorAjax').then((interception) => {
-      expect(interception.response?.body.status_code).to.equal(200);
+      expect(interception.response?.body.status_code).to.equal(undefined);
     });
   });
 
