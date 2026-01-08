@@ -142,7 +142,7 @@ $delete_modal_id = 'review-delete-modal';
 							<?php echo esc_html( $review['display_name'] ); ?>
 						</div>
 						<div class="tutor-text-subdued">
-							<!-- @TODO: This hard coded as only enrolled students can submit reviews -->
+							<!-- This is hard coded as only enrolled students can submit reviews -->
 							<?php esc_html_e( 'Student', 'tutor' ); ?>
 						</div>
 					</div>
