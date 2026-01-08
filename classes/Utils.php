@@ -6317,6 +6317,7 @@ class Utils {
 	 * Get purchase history by customer id
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 param $order added.
 	 *
 	 * @param integer $user_id user id.
 	 * @param string  $period period.
@@ -6324,14 +6325,16 @@ class Utils {
 	 * @param string  $end_date end date.
 	 * @param string  $offset offset.
 	 * @param string  $per_page per page.
+	 * @param string  $order order.
 	 *
 	 * @return mixed
 	 */
-	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '' ) {
+	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '', $order = 'DESC' ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
 		$monetize_by = $this->get_option( 'monetize_by' );
+		$order       = QueryHelper::get_valid_sort_order( $order );
 
 		$post_type = '';
 		$user_meta = '';
@@ -6380,7 +6383,7 @@ class Utils {
 					WHERE 	orders.type = %s 
 					  		AND orders.customer_id = %d 
 							{$period_query}
-					ORDER BY orders.id DESC
+					ORDER BY orders.id {$order}
 					{$offset_limit_query}",
 					$post_type,
 					$user_id
@@ -6400,7 +6403,7 @@ class Utils {
 				WHERE	post_type = %s
 						AND customer.meta_value = %d
 						{$period_query}
-				ORDER BY {$wpdb->posts}.id DESC
+				ORDER BY {$wpdb->posts}.id {$order}
 				{$offset_limit_query}
 				",
 					$post_type,

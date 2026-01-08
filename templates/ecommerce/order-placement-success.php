@@ -8,6 +8,8 @@
  * @since 3.0.0
  */
 
+use TUTOR\Dashboard;
+
 tutor_utils()->tutor_custom_header();
 
 $order_status;
@@ -31,7 +33,7 @@ $order_id;
 		</div>
 
 		<div class="tutor-d-flex tutor-gap-2 tutor-align-center tutor-justify-center tutor-flex-wrap">
-			<a data-cy="tutor-native-order-history" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) ); ?>" class="tutor-btn tutor-btn-secondary">
+			<a data-cy="tutor-native-order-history" href="<?php echo esc_url( Dashboard::get_account_page_url( 'billing' ) ); ?>" class="tutor-btn tutor-btn-secondary">
 				<?php esc_html_e( 'Check Order List', 'tutor' ); ?>
 			</a>
 			<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-btn tutor-btn-primary">
