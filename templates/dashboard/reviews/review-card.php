@@ -9,13 +9,14 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
 use Tutor\Components\StarRating;
 use Tutor\Components\StarRatingInput;
-use Tutor\Helpers\DateTimeHelper;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+use Tutor\Helpers\DateTimeHelper;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -28,6 +29,8 @@ $default_review = array(
 	'is_bundle'       => false,
 	'comment_content' => '',
 	'is_editable'     => false,
+	'user_avatar'     => '',
+	'display_name'    => '',
 );
 
 $review = wp_parse_args( $review, $default_review );
@@ -123,6 +126,28 @@ $delete_modal_id = 'review-delete-modal';
 			<div class="tutor-review-text">
 				<?php echo esc_textarea( html_entity_decode( $review['comment_content'] ?? '' ) ); ?>
 			</div>
+
+			<?php	if ( ! $review['is_editable'] ) : ?>
+				<!-- Student Information -->
+				<div class="tutor-review-student">
+					<?php
+						Avatar::make()
+							->src( $review['user_avatar'] )
+							->size( Size::SIZE_40 )
+							->initials( $review['display_name'] )
+							->render();
+					?>
+					<div class="tutor-flex tutor-flex-column tutor-tiny">
+						<div class="tutor-font-medium">
+							<?php echo esc_html( $review['display_name'] ); ?>
+						</div>
+						<div class="tutor-text-subdued">
+							<!-- @TODO: This hard coded as only enrolled students can submit reviews -->
+							<?php esc_html_e( 'Student', 'tutor' ); ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
 		</div>
 	</div>
 

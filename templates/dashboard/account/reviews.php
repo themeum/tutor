@@ -33,8 +33,8 @@ $is_editable   = $is_instructor ? false : true;
 
 foreach ( $reviews as $review ) {
 	$review->is_editable = $is_editable;
+	$review->user_avatar = tutor_utils()->get_user_avatar_url( $review->user_id );
 }
-
 
 $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 
