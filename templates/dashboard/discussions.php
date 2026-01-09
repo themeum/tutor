@@ -50,11 +50,11 @@ $page_nav_items = array(
 		require_once $template;
 	} else {
 		?>
-		<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
-			<div class="tutor-p-6 tutor-border-b">
+		<div class="tutor-dashboard-page-card">
+			<div class="tutor-dashboard-page-card-header">
 				<?php Nav::make()->items( $page_nav_items )->render(); ?>
 			</div>
-			<div class="tutor-sm-border tutor-sm-rounded-2xl tutor-sm-mt-4">
+			<div class="tutor-dashboard-page-card-body">
 				<?php
 				$template = tutor()->path . 'templates/dashboard/discussions/qna-list.php';
 				if ( 'lesson-comments' === $current_tab ) {

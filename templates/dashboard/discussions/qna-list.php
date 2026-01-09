@@ -27,7 +27,7 @@ $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', nul
 
 ?>
 
-<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+<div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
 	<div class="tutor-small tutor-text-secondary">
 		<?php esc_html_e( 'Questions', 'tutor' ); ?>
 		<span class="tutor-text-primary tutor-font-medium">(<?php echo esc_html( $total_items ); ?>)</span>
@@ -37,7 +37,7 @@ $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', nul
 	</div>
 </div>
 
-<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 	<?php
 	foreach ( $questions as $question ) :
 		tutor_load_template(
@@ -52,7 +52,7 @@ $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', nul
 	?>
 </div>
 <?php if ( $total_items > $item_per_page ) : ?>
-<div class="tutor-px-6 tutor-pb-6">
+<div class="tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t">
 	<?php Pagination::make()->current( $current_page )->total( $total_items )->limit( $item_per_page )->render(); ?>
 </div>
 <?php endif; ?>

@@ -13,6 +13,16 @@
   position: relative;
   @include tutor-transition(background-color);
 
+  @include tutor-breakpoint-down(sm) {
+    padding: $tutor-spacing-5;
+    border: none;
+    border-radius: 0;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+  }
+
   &.unread {
     background-color: $tutor-surface-brand-tertiary;
     border-color: $tutor-border-brand-secondary;
@@ -26,6 +36,11 @@
       top: 30px;
       background-color: $tutor-icon-critical;
       border-radius: $tutor-radius-lg;
+
+      @include tutor-breakpoint-down(sm) {
+        left: 4px;
+        top: 26px;
+      }
     }
   }
 
@@ -39,6 +54,10 @@
       inset-inline-end: $tutor-spacing-5;
       color: $tutor-icon-exception4;
     }
+  }
+
+  &-content {
+    width: 100%;
   }
 
   &-top {
@@ -58,16 +77,18 @@
     position: relative;
     text-transform: capitalize;
 
-    &::after {
-      content: '';
-      width: 4px;
-      height: 4px;
-      position: absolute;
-      right: -8px;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: $tutor-text-secondary;
-      border-radius: $tutor-radius-lg;
+    @include tutor-breakpoint-up(sm) {
+      &::after {
+        content: '';
+        width: 4px;
+        height: 4px;
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: $tutor-text-subdued;
+        border-radius: $tutor-radius-lg;
+      }
     }
   }
 
@@ -75,7 +96,7 @@
     @include tutor-typography(medium, semibold);
     margin-bottom: $tutor-spacing-4;
     margin-top: 0px;
-    @include tutor-transition();
+    @include tutor-transition(color);
   }
 
   &-meta {
@@ -100,6 +121,7 @@
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography(tiny, regular, subdued);
       gap: $tutor-spacing-5;
+      width: 100%;
 
       svg {
         height: 16px;
@@ -127,7 +149,10 @@
     }
 
     @include tutor-breakpoint-down(sm) {
-      &-more {
+      top: $tutor-spacing-5;
+      right: $tutor-spacing-5;
+
+      &-trigger {
         @include tutor-button-variant(ghost);
       }
     }
