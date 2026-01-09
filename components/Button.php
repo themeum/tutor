@@ -191,21 +191,6 @@ class Button extends BaseComponent {
 	}
 
 	/**
-	 * Set custom HTML attribute.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $key   Attribute name.
-	 * @param string $value Attribute value.
-	 *
-	 * @return $this
-	 */
-	public function attr( $key, $value ) {
-		$this->attributes[ $key ] = esc_attr( $value );
-		return $this;
-	}
-
-	/**
 	 * Set the SVG icon for the button.
 	 *
 	 * @since 4.0.0

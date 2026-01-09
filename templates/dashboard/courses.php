@@ -32,6 +32,8 @@ $page_tabs = apply_filters(
 		'courses'                   => __( 'Enrolled Courses', 'tutor' ),
 		'courses/active-courses'    => __( 'Active Courses', 'tutor' ),
 		'courses/completed-courses' => __( 'Completed Courses', 'tutor' ),
+		'courses/wishlist'          => __( 'Wishlist', 'tutor' ),
+		'courses/my-quiz-attempts'  => __( 'Quiz Attempts', 'tutor' ),
 	),
 	$post_type_query
 );
@@ -49,12 +51,13 @@ $enrolled_course_count  = is_a( $enrolled_courses, 'WP_Query' ) ? $enrolled_cour
 $active_course_count    = is_a( $active_courses, 'WP_Query' ) ? $active_courses->found_posts : 0;
 $completed_course_count = is_a( $completed_courses, 'WP_Query' ) ? $completed_courses->found_posts : 0;
 
-
 // Get Paginated course list.
 $courses_list_array = array(
 	'courses'                   => $enrolled_courses,
 	'courses/active-courses'    => $active_courses,
 	'courses/completed-courses' => $completed_courses,
+	'courses/wishlist'          => array(),
+	'courses/my-quiz-attempts'  => __( 'Quiz Attempts', 'tutor' ),
 );
 
 $courses_tab = ( new Student() )->get_courses_tab( $active_tab, $post_type_args, $enrolled_course_count, $active_course_count, $completed_course_count );
@@ -73,28 +76,39 @@ $courses_list = $courses_list_array[ $active_tab ];
 		</div>
 
 		<!-- courses list  -->
-		<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
-			<?php
-			if ( $courses_list && $courses_list->have_posts() ) :
-				while ( $courses_list->have_posts() ) :
-					$courses_list->the_post();
-					tutor_load_template( 'dashboard.courses.course-card' );
-				endwhile;
-			else :
-				EmptyState::make()->title( 'No Courses Found' )->render();
-			endif;
+		<?php
+		if ( 'courses/wishlist' === $active_tab || 'courses/my-quiz-attempts' === $active_tab ) :
+			match ( $active_tab ) {
+				'courses/wishlist' => tutor_load_template( 'dashboard.wishlist' ),
+				'courses/my-quiz-attempts' => tutor_load_template( 'dashboard.my-quiz-attempts' ),
+			};
+		elseif ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) :
+			// Prepare course list based on page tab.
+			$courses_list = $courses_list_array[ $active_tab ];
 			?>
-		</div>
-		<?php if ( ! empty( $courses_list->found_posts ) && $courses_list->found_posts > $courses_per_page ) : ?>
-		<div class="tutor-p-6 tutor-border-t">
-			<?php
-				Pagination::make()
-				->current( $current_page )
-				->total( $courses_list->found_posts )
-				->limit( $courses_per_page )
-				->render();
-			?>
-		</div>
+			<div class="tutor-dashboard-courses tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+				<?php
+				if ( $courses_list && $courses_list->have_posts() ) :
+					while ( $courses_list->have_posts() ) :
+						$courses_list->the_post();
+						tutor_load_template( 'dashboard.courses.course-card' );
+					endwhile;
+				else :
+					EmptyState::make()->title( __( 'No Courses Found', 'tutor' ) )->render();
+				endif;
+				?>
+			</div>
+			<?php if ( ! empty( $courses_list->found_posts ) && $courses_list->found_posts > $courses_per_page ) : ?>
+			<div class="tutor-p-6 tutor-border-t">
+				<?php
+					Pagination::make()
+					->current( $current_page )
+					->total( $courses_list->found_posts )
+					->limit( $courses_per_page )
+					->render();
+				?>
+			</div>
+			<?php endif; ?>
 		<?php endif; ?>
 	</div>
 </div>

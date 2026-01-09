@@ -715,11 +715,14 @@ class OrderController {
 	/**
 	 * Available tabs that will visible on the right side of page navbar
 	 *
-	 * @return array
-	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 param $context added.
+	 *
+	 * @param string $context context.
+	 *
+	 * @return array
 	 */
-	public function tabs_key_value(): array {
+	public function tabs_key_value( $context = '' ): array {
 		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$date           = Input::get( 'date', '' );
@@ -732,6 +735,14 @@ class OrderController {
 
 		if ( ! empty( $date ) ) {
 			$where['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
+		}
+
+		if ( 'dashboard' === $context ) {
+			$start_date = Input::get( 'start_date', '' );
+			$end_date   = Input::get( 'end_date', '' );
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$where['date(o.created_at_gmt)'] = array( 'BETWEEN', array( tutor_get_formated_date( '', $start_date ), tutor_get_formated_date( '', $end_date ) ) );
+			}
 		}
 
 		if ( ! empty( $payment_status ) ) {
