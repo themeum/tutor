@@ -54,7 +54,7 @@ $course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_
 										'dashboard.wishlist.star-rating',
 										array(
 											'course_rating' => $course_rating,
-											'wrapper_class' => 'tutor-course-card-ratings-stars tutor-mt-2',
+											'wrapper_class' => 'tutor-course-card-ratings-stars',
 											'icon_class' => '',
 											'show_rating_average' => true,
 										)
@@ -63,7 +63,7 @@ $course_students = apply_filters( 'tutor_course_students', tutor_utils()->count_
 								</div>
 							</div>
 
-							<div class="tutor-course-card-title tutor-mt-2">
+							<div class="tutor-course-card-title tutor-mt-2 tutor-line-clamp-3">
 								<a href="<?php the_permalink(); ?>">
 									<?php the_title(); ?>
 								</a>

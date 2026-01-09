@@ -41,7 +41,7 @@ $category          = implode( ', ', $category_names );
 						<?php echo esc_html( $category ); ?>
 					</div>
 				<?php endif; ?>
-				<h3 class="tutor-progress-card-title">
+				<h3 class="tutor-progress-card-title tutor-line-clamp-2">
 					<?php the_title(); ?>
 				</h3>
 			</div>
