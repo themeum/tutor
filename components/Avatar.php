@@ -157,21 +157,10 @@ class Avatar extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $initials User display name.
+	 * @param string $initials User initials.
 	 * @return $this
 	 */
 	public function initials( string $initials ): self {
-		$initials = implode(
-			'',
-			array_map(
-				function ( $word ) {
-					return strtoupper( substr( $word, 0, 1 ) );
-				},
-				explode( ' ', sanitize_text_field( $initials ) )
-			)
-		);
-
-		$this->initials = substr( $initials, 0, 2 );
 		$this->initials = strtoupper( sanitize_text_field( $initials ) );
 		return $this;
 	}
