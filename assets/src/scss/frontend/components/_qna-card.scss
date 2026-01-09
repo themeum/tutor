@@ -158,6 +158,7 @@
     }
   }
 
+  &.active,
   &:hover {
     background-color: $tutor-surface-l1-hover;
     border-color: $tutor-border-idle;

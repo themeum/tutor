@@ -50,12 +50,13 @@ $single_url = UrlHelper::add_query_params(
 <div 
 	class="tutor-qna-card"
 	x-data="{ 
+		...tutorPopover({ placement: 'bottom-end' }),
 		isUnread: <?php echo $is_unread ? 'true' : 'false'; ?>, 
 		isArchived: <?php echo (int) tutor_utils()->array_get( 'tutor_qna_archived', $meta, 0 ) ? 'true' : 'false'; ?>,
 		isSolved: <?php echo $is_solved ? 'true' : 'false'; ?>,
 		isImportant: <?php echo $is_important ? 'true' : 'false'; ?>
 	}"
-	:class="{ 'unread': isUnread }"
+	:class="{ 'unread': isUnread, 'active': open }"
 	@tutor-qna-action-success.window="
 		if ($event.detail.questionId === <?php echo (int) $question_id; ?>) {
 			if ($event.detail.action === 'read') isUnread = !isUnread;
@@ -152,7 +153,7 @@ $single_url = UrlHelper::add_query_params(
 		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
 		</a>
-		<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-flex">
+		<div class="tutor-flex">
 			<button 
 				x-ref="trigger" 
 				@click="toggle()" 
