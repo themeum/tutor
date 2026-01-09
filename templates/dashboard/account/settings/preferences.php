@@ -49,13 +49,52 @@ $theme_options = array(
 	),
 );
 
+$font_size_options = array(
+	array(
+		'label' => esc_html__( '70%', 'tutor' ),
+		'value' => 70,
+	),
+	array(
+		'label' => esc_html__( '80%', 'tutor' ),
+		'value' => 80,
+	),
+	array(
+		'label' => esc_html__( '90%', 'tutor' ),
+		'value' => 90,
+	),
+	array(
+		'label' => esc_html__( '100%', 'tutor' ),
+		'value' => 100,
+	),
+	array(
+		'label' => esc_html__( '110%', 'tutor' ),
+		'value' => 110,
+	),
+	array(
+		'label' => esc_html__( '120%', 'tutor' ),
+		'value' => 120,
+	),
+	array(
+		'label' => esc_html__( '130%', 'tutor' ),
+		'value' => 130,
+	),
+	array(
+		'label' => esc_html__( '140%', 'tutor' ),
+		'value' => 140,
+	),
+	array(
+		'label' => esc_html__( '150%', 'tutor' ),
+		'value' => 150,
+	),
+);
+
 $default_values = array(
 	'auto_play_next'     => true,
 	'download_wifi_only' => true,
 	'video_quality'      => '720p',
 	'sound_effects'      => true,
 	'animations'         => true,
-	'font_size'          => '120%',
+	'font_size'          => 120,
 	'theme'              => 'light',
 );
 
@@ -156,8 +195,8 @@ $default_values = array(
 							->name( 'video_quality' )
 							->options( $video_quality_options )
 							->placeholder( __( 'Select quality...', 'tutor' ) )
-							->value( '720p' )
 							->attr( 'x-bind', "register('video_quality')" )
+							->attr( 'style', 'min-width: 160px;' )
 							->render();
 					?>
 				</div>
@@ -224,8 +263,8 @@ $default_values = array(
 							->name( 'theme' )
 							->options( $theme_options )
 							->placeholder( __( 'Select theme...', 'tutor' ) )
-							->value( 'system' )
 							->attr( 'x-bind', "register('theme')" )
+							->attr( 'style', 'min-width: 140px;' )
 							->render();
 					?>
 				</div>
@@ -264,9 +303,12 @@ $default_values = array(
 				<div class="tutor-preferences-setting-action">
 					<?php
 						InputField::make()
-							->type( InputType::TEXT )
+							->type( InputType::SELECT )
 							->name( 'font_size' )
+							->options( $font_size_options )
+							->placeholder( __( 'Select font size...', 'tutor' ) )
 							->attr( 'x-bind', "register('font_size')" )
+							->attr( 'style', 'min-width: 140px;' )
 							->render();
 					?>
 				</div>
