@@ -72,6 +72,15 @@ class DateFilter extends BaseComponent {
 	protected $placement = 'bottom-start';
 
 	/**
+	 * CSS class name used for the icon element.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $icon_class;
+
+	/**
 	 * Set filter type.
 	 *
 	 * @param string $type Filter type (single|range).
@@ -108,6 +117,20 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Set Icon Class.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $icon_class CSS class name used for the icon element.
+	 *
+	 * @return self
+	 */
+	public function icon_class( string $icon_class ): self {
+		$this->icon_class = $icon_class;
+		return $this;
+	}
+
+	/**
 	 * Render the component.
 	 *
 	 * @return string
@@ -128,8 +151,13 @@ class DateFilter extends BaseComponent {
 				'type'               => 'multiple',
 				'selectionDatesMode' => 'multiple-ranged',
 			);
+
 			$button_classes  .= ' tutor-gap-2';
 			$popover_classes .= ' tutor-range-calendar-popover';
+
+			if ( ! empty( $this->icon_class ) ) {
+				$button_classes .= " {$this->icon_class}";
+			}
 
 			// Default label for range if not set.
 			if ( empty( $this->label ) ) {
