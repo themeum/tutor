@@ -3,6 +3,12 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { __ } from '@wordpress/i18n';
 
+interface QnASingleActionPayload {
+  question_id: number;
+  qna_action: string;
+  [key: string]: string | number;
+}
+
 /**
  * Discussions Page Component
  * Handles Q&A, Lesson comments related actions
@@ -25,8 +31,7 @@ const discussionsPage = () => {
     init() {
       // Q&A single action mutation (read, unread, solved, important, archived).
       this.qnaSingleActionMutation = this.query.useMutation(this.qnaSingleAction, {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        onSuccess: (response: any, payload: any) => {
+        onSuccess: (response, payload: QnASingleActionPayload) => {
           const action = payload.qna_action;
           if (action === 'solved') {
             this.isSolved = !this.isSolved;
@@ -81,7 +86,7 @@ const discussionsPage = () => {
       });
     },
 
-    qnaSingleAction(payload: { question_id: number; qna_action: string; [key: string]: string | number }) {
+    qnaSingleAction(payload: QnASingleActionPayload) {
       return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
     },
 
