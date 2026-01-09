@@ -41,14 +41,14 @@ use TUTOR\Icon;
  *       'options' => array(
  *           array(
  *               'label'  => 'Active',
- *               'count   => 4,
+ *               'count'   => 4,
  *               'icon'   => Icon::PLAY_LINE,
  *               'url'    => '#',
  *               'active' => false,
  *           ),
  *           array(
  *               'label'  => 'Enrolled',
- *               'count   => 4,
+ *               'count'   => 4,
  *               'icon'   => Icon::ENROLLED,
  *               'url'    => '#',
  *               'active' => true,
@@ -108,7 +108,7 @@ class Nav extends BaseComponent {
 	 * @return self
 	 */
 	public function variant( $variant = Variant::PRIMARY ): self {
-		$allowed_variants  = array( Variant::PRIMARY, Variant::SECONDARY );
+		$allowed_variants  = array( Variant::PRIMARY, Variant::SECONDARY, Variant::GHOST );
 		$this->nav_variant = in_array( $variant, $allowed_variants, true ) ? $variant : Variant::PRIMARY;
 		return $this;
 	}
