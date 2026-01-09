@@ -147,20 +147,20 @@ class StarRatingInput extends BaseComponent {
 					<button 
 						type="button"
 						class="tutor-btn tutor-btn-link tutor-p-none tutor-min-h-0"
-						@click="setRating(<?php echo (int) $i; ?>, (rating) => setValue('<?php echo esc_attr( $this->field_name ); ?>', rating))"
-						@mouseenter="hoverRating = <?php echo (int) $i; ?>"
+						@click="setRating(<?php echo esc_attr( $i ); ?>, (rating) => setValue('<?php echo esc_attr( $this->field_name ); ?>', rating))"
+						@mouseenter="hoverRating = <?php echo esc_attr( $i ); ?>"
 					>
-						<template x-if="effectiveRating >= <?php echo (int) $i; ?>">
+						<template x-if="effectiveRating >= <?php echo esc_attr( $i ); ?>">
 							<span class="tutor-icon-exception4 tutor-flex-center">
 												<?php echo $star_fill; // phpcs:ignore ?>
 							</span>
 						</template>
-						<template x-if="effectiveRating > <?php echo (int) ( $i - 1 ); ?> && effectiveRating < <?php echo (int) $i; ?>">
+						<template x-if="effectiveRating > <?php echo esc_attr( $i - 1 ); ?> && effectiveRating < <?php echo esc_attr( $i ); ?>">
 							<span class="tutor-icon-exception4 tutor-flex-center">
 												<?php echo $star_half; // phpcs:ignore ?>
 							</span>
 						</template>
-						<template x-if="effectiveRating <= <?php echo (int) ( $i - 1 ); ?>">
+						<template x-if="effectiveRating <= <?php echo esc_attr( $i - 1 ); ?>">
 							<span class="tutor-icon-exception4 tutor-flex-center">
 												<?php echo $star; // phpcs:ignore ?>
 							</span>
