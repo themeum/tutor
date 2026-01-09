@@ -50,8 +50,9 @@ const discussionsPage = () => {
       // Q&A delete mutation.
       this.deleteQnAMutation = this.query.useMutation(this.deleteQnA, {
         onSuccess: () => {
-          // @TODO:: Handle redirect from single page.
-          window.location.reload();
+          const url = new URL(window.location.href);
+          url.searchParams.delete('id');
+          window.location.href = url.toString();
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to delete Q&A', 'tutor'));

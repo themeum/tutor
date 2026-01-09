@@ -19,6 +19,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\InputField;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Components\Sorting;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -44,10 +45,10 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 ?>
 <div class="tutor-qna-single" x-init="isSolved = <?php echo $is_solved ? 'true' : 'false'; ?>; isImportant = <?php echo $is_important ? 'true' : 'false'; ?>; isArchived = <?php echo $is_archived ? 'true' : 'false'; ?>;">
 	<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
-		<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
+		<a href="<?php echo esc_url( $discussion_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
-		</button>
+		</a>
 		<?php if ( ! $is_user_asker ) : ?>
 		<div class="tutor-flex tutor-gap-2">
 			<button 
