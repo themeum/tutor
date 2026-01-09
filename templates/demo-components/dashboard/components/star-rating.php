@@ -23,7 +23,7 @@ $icon_size           = 16;
 
 $star_fill = tutor_utils()->get_svg_icon( Icon::STAR_FILL, $icon_size, $icon_size );
 $star_half = tutor_utils()->get_svg_icon( Icon::STAR_HALF, $icon_size, $icon_size );
-$star      = tutor_utils()->get_svg_icon( Icon::STAR_2, $icon_size, $icon_size );
+$star      = tutor_utils()->get_svg_icon( Icon::STAR_LINE, $icon_size, $icon_size );
 ?>
 <div class="<?php echo esc_attr( $wrapper_class ); ?>" data-rating-value="<?php echo esc_attr( $rating ); ?>">
 	<?php for ( $i = 1; $i <= 5; $i++ ) : ?>

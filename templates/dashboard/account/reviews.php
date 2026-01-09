@@ -56,30 +56,27 @@ $bin_icon = tutor_utils()->get_svg_icon( Icon::BIN );
 				<?php endforeach; ?>
 			</div>
 
-			<?php if ( $review_count > $item_per_page ) : ?>
-				<div class="tutor-mt-6">
-					<?php
-						Pagination::make()
-						->current( $current_page )
-						->total( $review_count )
-						->limit( $item_per_page )
-						->render();
-					?>
-				</div>
-			<?php endif; ?>
+			<?php
+				Pagination::make()
+					->current( $current_page )
+					->total( $review_count )
+					->limit( $item_per_page )
+					->attr( 'class', 'tutor-mt-6' )
+					->render();
+			?>
 		</div>
 
 		<div x-data="tutorReviewDeleteModal()" x-cloak>
 			<?php
-			ConfirmationModal::make()
-				->id( 'review-delete-modal' )
-				->title( __( 'Delete This Review?', 'tutor' ) )
-				->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
-				->confirm_handler( 'handleDeleteReview(payload?.id)' )
-				->mutation_state( 'deleteReviewMutation' )
-				->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
-				->cancel_text( __( 'Cancel', 'tutor' ) )
-				->render();
+				ConfirmationModal::make()
+					->id( 'review-delete-modal' )
+					->title( __( 'Delete This Review?', 'tutor' ) )
+					->message( __( 'Are you sure you want to delete this review? Please confirm your choice.', 'tutor' ) )
+					->confirm_handler( 'handleDeleteReview(payload?.id)' )
+					->mutation_state( 'deleteReviewMutation' )
+					->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+					->cancel_text( __( 'Cancel', 'tutor' ) )
+					->render();
 			?>
 		</div>
 	</div>

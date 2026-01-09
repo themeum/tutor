@@ -180,7 +180,7 @@ $wishlists = array(
 			);
 			?>
 		</div>
-		<div class="tutor-dashboard-page-card-body">
+		<div class="tutor-dashboard-page-card-body tutor-dashboard-wishlist-wrapper">
 			<?php if ( is_array( $wishlists ) && count( $wishlists ) ) : ?>
 				<div class="tutor-wishlist-grid">
 					<?php foreach ( $wishlists as $wishlist_item ) : ?>

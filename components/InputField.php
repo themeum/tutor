@@ -609,21 +609,6 @@ class InputField extends BaseComponent {
 	}
 
 	/**
-	 * Set attributes.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $key Attribute key.
-	 * @param string $value Attribute value.
-	 *
-	 * @return $this
-	 */
-	public function attr( $key, $value ) {
-		$this->attributes[ $key ] = $value;
-		return $this;
-	}
-
-	/**
 	 * Set disabled state.
 	 *
 	 * @since 4.0.0
