@@ -90,6 +90,13 @@ class DropdownFilter extends BaseComponent {
 	protected $count = null;
 
 	/**
+	 * Popover width
+	 *
+	 * @var string
+	 */
+	protected $popover_width = '172px';
+
+	/**
 	 * Set options list
 	 *
 	 * @param array $options list of options. Each item: array( 'label' => string, 'url' => string, 'count' => int|null, 'active' => bool, 'value' => mixed ).
@@ -174,6 +181,18 @@ class DropdownFilter extends BaseComponent {
 	}
 
 	/**
+	 * Set popover width
+	 *
+	 * @param string $width popover width (e.g., '275px', '300px').
+	 *
+	 * @return self
+	 */
+	public function popover_width( string $width ): self {
+		$this->popover_width = $width;
+		return $this;
+	}
+
+	/**
 	 * Set count
 	 *
 	 * @param int $count count to display.
@@ -213,6 +232,12 @@ class DropdownFilter extends BaseComponent {
 		}
 
 		$this->options = $options;
+
+		// Set popover width for course filters.
+		if ( '172px' === $this->popover_width ) {
+			$this->popover_width = '275px';
+		}
+
 		return $this;
 	}
 
@@ -313,8 +338,9 @@ class DropdownFilter extends BaseComponent {
 				x-cloak
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
+				style="width: <?php echo esc_attr( $this->popover_width ); ?>;"
 			>
-				<div class="tutor-popover-menu" x-data="{ search: '' }">
+				<div class="tutor-popover-menu" x-data="{ search: '', get hasResults() { return this.search === '' || [...$el.querySelectorAll('.tutor-popover-menu-item')].some(el => el.style.display !== 'none' && !el.hasAttribute('hidden')); } }">
 					<?php if ( $this->show_search ) : ?>
 						<div class="tutor-input-field tutor-px-5 tutor-pt-2 tutor-pb-4">
 							<div class="tutor-input-wrapper">
@@ -357,6 +383,15 @@ class DropdownFilter extends BaseComponent {
 								<?php endif; ?>
 							</a>
 						<?php endforeach; ?>
+
+						<?php if ( $this->show_search ) : ?>
+							<div 
+								x-show="search !== '' && !hasResults" 
+								class="tutor-p-5 tutor-text-center tutor-text-secondary tutor-p2"
+							>
+								<?php esc_html_e( 'No results found', 'tutor' ); ?>
+							</div>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
