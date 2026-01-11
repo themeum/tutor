@@ -45,7 +45,7 @@ foreach ( $social_fields as $key => $field ) {
 		)($event)"
 		class="tutor-social-form"
 	>
-		<?php do_action( 'tutor_social_profile_links_before', $user ); ?>
+		<?php do_action( 'tutor_profile_edit_before_social_media', $user ); ?>
 
 		<?php foreach ( $social_fields as $key => $field ) : ?>
 			<div class='tutor-social-field'>
