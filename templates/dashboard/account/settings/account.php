@@ -46,8 +46,9 @@ $default_values = array(
 	'display_name'  => $user->display_name,
 	'profile_photo' => $settings_data['profile_photo_src'],
 	'cover_photo'   => $settings_data['cover_photo_src'],
-	'signature'     => '',
 );
+
+$default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
 
 ?>
 
@@ -251,25 +252,6 @@ $default_values = array(
 						->id( 'bio' )
 						->placeholder( __( 'Enter your bio', 'tutor' ) )
 						->attr( 'x-bind', "register('bio')" )
-						->render();
-				?>
-			</div>
-		</div>
-
-		<!-- Certificate Signature will be served from certificate addon -->
-		<div class="tutor-flex tutor-flex-column tutor-gap-4">
-			<h5 class="tutor-h5"><?php echo esc_html__( 'Certificate Signature', 'tutor' ); ?></h5>
-			<div class="tutor-card tutor-card-rounded-2xl tutor-pb-5">
-				<?php
-					InputField::make()
-						->type( InputType::FILE )
-						->variant( Variant::IMAGE_UPLOADER )
-						->name( 'signature' )
-						->accept( '.jpg,.jpeg,.png' )
-						->uploader_icon( Icon::SIGNATURE_UPLOAD )
-						->attr( 'x-bind', "register('signature')" )
-						->uploader_subtitle( __( 'JPG, JPEG, GIF OR PNG Formats (700x430 Pixels)', 'tutor' ) )
-						->uploader_button_text( __( 'Upload Image', 'tutor' ) )
 						->render();
 				?>
 			</div>
