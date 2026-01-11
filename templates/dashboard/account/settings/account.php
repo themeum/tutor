@@ -9,11 +9,23 @@
  */
 
 use TUTOR\Icon;
+use TUTOR\User;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
+
+$settings_data = User::get_profile_settings_data( $user->ID );
+$user          = $settings_data['user'];
+
+$display_name_options = array();
+foreach ( $settings_data['public_display'] as $_id => $item ) {
+	$display_name_options[] = array(
+		'label' => $item,
+		'value' => $item,
+	);
+}
 
 $timezone_options = array();
 foreach ( tutor_global_timezone_lists() as $key => $value ) {
@@ -23,6 +35,19 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 	);
 }
 
+$default_values = array(
+	'first_name'    => $user->first_name,
+	'last_name'     => $user->last_name,
+	'username'      => $user->user_login,
+	'phone_number'  => $settings_data['phone_number'],
+	'timezone'      => $settings_data['timezone'],
+	'occupation'    => $settings_data['job_title'],
+	'bio'           => $settings_data['profile_bio'],
+	'display_name'  => $user->display_name,
+	'profile_photo' => $settings_data['profile_photo_src'],
+	'cover_photo'   => $settings_data['cover_photo_src'],
+);
+
 ?>
 
 <div class="tutor-account-section">
@@ -31,6 +56,7 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 		x-data='tutorForm({ 
 			id: "<?php echo esc_attr( $form_id ); ?>",
 			mode: "onChange",
+			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(
@@ -184,9 +210,10 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 			<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5">
 				<?php
 					InputField::make()
-						->type( InputType::TEXT )
+						->type( InputType::SELECT )
 						->label( __( 'Display Name', 'tutor' ) )
 						->name( 'display_name' )
+						->options( $display_name_options )
 						->clearable()
 						->id( 'display_name' )
 						->placeholder( __( 'Enter your display name', 'tutor' ) )
@@ -196,13 +223,13 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 
 				<?php
 					InputField::make()
-						->type( InputType::TEXT )
+						->type( InputType::TEXTAREA )
 						->label( __( 'Bio', 'tutor' ) )
-						->name( 'tutor_profile_bio' )
+						->name( 'bio' )
 						->clearable()
-						->id( 'tutor_profile_bio' )
+						->id( 'bio' )
 						->placeholder( __( 'Enter your bio', 'tutor' ) )
-						->attr( 'x-bind', "register('tutor_profile_bio')" )
+						->attr( 'x-bind', "register('bio')" )
 						->render();
 				?>
 			</div>
