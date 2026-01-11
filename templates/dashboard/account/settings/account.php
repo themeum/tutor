@@ -10,11 +10,11 @@
 
 use TUTOR\Icon;
 use TUTOR\User;
+use Tutor\Components\Button;
+use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
-use Tutor\Components\Button;
-use Tutor\Components\InputField;
 
 $user          = wp_get_current_user();
 $settings_data = User::get_profile_settings_data( $user->ID );
@@ -52,6 +52,8 @@ $default_values = array(
 ?>
 
 <div class="tutor-account-section">
+	<?php do_action( 'tutor_profile_edit_form_before' ); ?>
+
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
 		x-data='tutorForm({ 
@@ -76,6 +78,8 @@ $default_values = array(
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 			<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Account', 'tutor' ); ?></h5>
 			<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5">
+				<?php do_action( 'tutor_profile_edit_input_before' ); ?>
+
 				<div class="tutor-account-avatar-wrapper">
 					<div x-data="tutorPopover({
 						placement: 'bottom',
@@ -151,6 +155,7 @@ $default_values = array(
 						</div>
 					</div>
 				</div>
+				
 				<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 					<?php
 						InputField::make()
@@ -206,17 +211,19 @@ $default_values = array(
 						->attr( 'x-bind', "register('occupation')" )
 						->render();
 
-					Inputfield::make()
-						->type( InputType::SELECT )
-						->label( __( 'Timezone', 'tutor' ) )
-						->name( 'timezone' )
-						->options( $timezone_options )
-						->searchable()
-						->clearable()
-						->id( 'timezone' )
-						->placeholder( __( 'Select your timezone', 'tutor' ) )
-						->attr( 'x-bind', "register('timezone')" )
-						->render();
+					if ( ! User::is_admin() ) {
+						Inputfield::make()
+							->type( InputType::SELECT )
+							->label( __( 'Timezone', 'tutor' ) )
+							->name( 'timezone' )
+							->options( $timezone_options )
+							->searchable()
+							->clearable()
+							->id( 'timezone' )
+							->placeholder( __( 'Select your timezone', 'tutor' ) )
+							->attr( 'x-bind', "register('timezone')" )
+							->render();
+					}
 
 					InputField::make()
 						->type( InputType::TEXT )
@@ -277,5 +284,9 @@ $default_values = array(
 				?>
 			</div>
 		</div>
+
+		<?php do_action( 'tutor_profile_edit_input_after', $user ); ?>
 	</form>
+
+	<?php do_action( 'tutor_profile_edit_form_after' ); ?>
 </div>
