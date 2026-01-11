@@ -1336,7 +1336,7 @@ class InputField extends BaseComponent {
 		if ( ! empty( $this->right_icon ) ) {
 			$input_classes .= ' tutor-input-content-right';
 		}
-		if ( $this->clearable ) {
+		if ( ! $this->disabled && $this->clearable ) {
 			$input_classes .= ' tutor-input-content-clear';
 		}
 
@@ -1378,7 +1378,7 @@ class InputField extends BaseComponent {
 		}
 
 		$clear_button_html = '';
-		if ( $this->clearable ) {
+		if ( ! $this->disabled && $this->clearable ) {
 			$clear_icon = '';
 			if ( function_exists( 'tutor_utils' ) ) {
 				ob_start();

@@ -185,6 +185,7 @@ $default_values = array(
 						->type( InputType::TEXT )
 						->label( __( 'Username', 'tutor' ) )
 						->name( 'username' )
+						->disabled()
 						->clearable()
 						->id( 'username' )
 						->placeholder( __( 'Enter your username', 'tutor' ) )
@@ -224,16 +225,6 @@ $default_values = array(
 							->attr( 'x-bind', "register('timezone')" )
 							->render();
 					}
-
-					InputField::make()
-						->type( InputType::TEXT )
-						->label( __( 'Birthdate', 'tutor' ) )
-						->name( 'birthdate' )
-						->clearable()
-						->id( 'birthdate' )
-						->placeholder( __( 'Enter your birthdate', 'tutor' ) )
-						->attr( 'x-bind', "register('birthdate')" )
-						->render();
 				?>
 			</div>
 		</div>
@@ -247,7 +238,6 @@ $default_values = array(
 						->label( __( 'Display Name', 'tutor' ) )
 						->name( 'display_name' )
 						->options( $display_name_options )
-						->clearable()
 						->id( 'display_name' )
 						->placeholder( __( 'Enter your display name', 'tutor' ) )
 						->attr( 'x-bind', "register('display_name')" )
