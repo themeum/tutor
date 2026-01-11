@@ -20,13 +20,23 @@ export interface FileUploaderProps {
   required?: boolean | string;
 }
 
-export const fileUploader = (props: FileUploaderProps = {}) => ({
+const defaultProps = {
+  multiple: false,
+  accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
+  maxSize: Number(tutorConfig.max_upload_size),
+  variant: 'file-uploader',
+  value: [],
+  name: '',
+  required: false,
+} satisfies FileUploaderProps;
+
+export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   isDragOver: false,
-  isDisabled: props.disabled || false,
-  multiple: props.multiple || false,
-  accept: props.accept || '.pdf,.doc,.docx,.jpg,.jpeg,.png',
-  maxSize: props.maxSize || Number(tutorConfig.max_upload_size) || 52428800,
-  variant: props.variant || 'file-uploader',
+  isDisabled: props.disabled,
+  multiple: props.multiple,
+  accept: props.accept,
+  maxSize: props.maxSize || 52428800,
+  variant: props.variant,
   imagePreview:
     props.variant === 'image-uploader' && typeof props.value?.[0] === 'string'
       ? props.value[0]

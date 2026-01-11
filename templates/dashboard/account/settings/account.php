@@ -105,9 +105,20 @@ $default_values = array(
 								class="tutor-avatar-image"
 								alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
 							>
-							<button type="button" class="tutor-account-avatar-edit" x-ref="trigger" @click="toggle()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 24, 24 ); ?>
-							</button>
+
+							<?php
+								Button::make()
+									->label( __( 'Upload Photo', 'tutor' ) )
+									->variant( Variant::PRIMARY )
+									->size( Size::X_SMALL )
+									->icon( Icon::EDIT_2, 'left', 24, 24 )
+									->icon_only()
+									->attr( 'type', 'button' )
+									->attr( 'class', 'tutor-account-avatar-edit' )
+									->attr( 'x-ref', 'trigger' )
+									->attr( '@click', 'toggle()' )
+									->render();
+							?>
 
 							<div 
 								x-ref="content"
@@ -126,8 +137,7 @@ $default_values = array(
 											->attr( 'x-ref', 'upload' )
 											->attr( '@click', 'openFileDialog()' )
 											->render();
-									?>
-									<?php
+
 										Button::make()
 											->label( __( 'Remove Photo', 'tutor' ) )
 											->variant( Variant::SECONDARY )
@@ -152,8 +162,7 @@ $default_values = array(
 							->placeholder( __( 'Enter your first name', 'tutor' ) )
 							->attr( 'x-bind', "register('first_name')" )
 							->render();
-					?>
-					<?php
+
 						InputField::make()
 							->type( InputType::TEXT )
 							->label( __( 'Last Name', 'tutor' ) )
@@ -176,9 +185,7 @@ $default_values = array(
 						->placeholder( __( 'Enter your username', 'tutor' ) )
 						->attr( 'x-bind', "register('username')" )
 						->render();
-				?>
-
-				<?php
+					
 					InputField::make()
 						->type( InputType::TEXT )
 						->label( __( 'Phone Number', 'tutor' ) )
@@ -188,9 +195,7 @@ $default_values = array(
 						->placeholder( __( 'Enter your phone number', 'tutor' ) )
 						->attr( 'x-bind', "register('phone_number')" )
 						->render();
-				?>
 
-				<?php
 					InputField::make()
 						->type( InputType::TEXT )
 						->label( __( 'Skill/Occupation', 'tutor' ) )
@@ -200,23 +205,19 @@ $default_values = array(
 						->placeholder( __( 'Enter your skill/occupation', 'tutor' ) )
 						->attr( 'x-bind', "register('occupation')" )
 						->render();
-				?>
 
-				<?php
-				Inputfield::make()
-					->type( InputType::SELECT )
-					->label( __( 'Timezone', 'tutor' ) )
-					->name( 'timezone' )
-					->options( $timezone_options )
-					->searchable()
-					->clearable()
-					->id( 'timezone' )
-					->placeholder( __( 'Select your timezone', 'tutor' ) )
-					->attr( 'x-bind', "register('timezone')" )
-					->render();
-				?>
+					Inputfield::make()
+						->type( InputType::SELECT )
+						->label( __( 'Timezone', 'tutor' ) )
+						->name( 'timezone' )
+						->options( $timezone_options )
+						->searchable()
+						->clearable()
+						->id( 'timezone' )
+						->placeholder( __( 'Select your timezone', 'tutor' ) )
+						->attr( 'x-bind', "register('timezone')" )
+						->render();
 
-				<?php
 					InputField::make()
 						->type( InputType::TEXT )
 						->label( __( 'Birthdate', 'tutor' ) )
@@ -244,9 +245,7 @@ $default_values = array(
 						->placeholder( __( 'Enter your display name', 'tutor' ) )
 						->attr( 'x-bind', "register('display_name')" )
 						->render();
-				?>
 
-				<?php
 					InputField::make()
 						->type( InputType::TEXTAREA )
 						->label( __( 'Bio', 'tutor' ) )
@@ -263,7 +262,7 @@ $default_values = array(
 		<!-- Certificate Signature will be served from certificate addon -->
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 			<h5 class="tutor-h5"><?php echo esc_html__( 'Certificate Signature', 'tutor' ); ?></h5>
-			<div class="tutor-card tutor-card-rounded-2xl">
+			<div class="tutor-card tutor-card-rounded-2xl tutor-pb-5">
 				<?php
 					InputField::make()
 						->type( InputType::FILE )
