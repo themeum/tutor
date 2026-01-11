@@ -16,8 +16,8 @@ use Tutor\Components\Constants\InputType;
 use Tutor\Components\Button;
 use Tutor\Components\InputField;
 
+$user          = wp_get_current_user();
 $settings_data = User::get_profile_settings_data( $user->ID );
-$user          = $settings_data['user'];
 
 $display_name_options = array();
 foreach ( $settings_data['public_display'] as $_id => $item ) {
@@ -46,6 +46,7 @@ $default_values = array(
 	'display_name'  => $user->display_name,
 	'profile_photo' => $settings_data['profile_photo_src'],
 	'cover_photo'   => $settings_data['cover_photo_src'],
+	'signature'     => '',
 );
 
 ?>
@@ -80,38 +81,62 @@ $default_values = array(
 						placement: 'bottom',
 						offset: 8,
 					})">
-						<div class="tutor-account-avatar" :class="open ? 'active' : ''">
-							<img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User Avatar" class="tutor-avatar-image">
+						<div
+							x-data="tutorFileUploader({
+								name: 'profile_photo',
+								value: [getValue('profile_photo')],
+								variant: 'image-uploader',
+								accept: '.png,.jpg,.jpeg',
+							})"
+							class="tutor-account-avatar" 
+							:class="open ? 'active' : ''"
+						>
+							<input
+								class="tutor-hidden"
+								type="file"
+								name="profile_photo"
+								x-ref="fileInput"
+								:multiple="multiple"
+								:accept="accept"
+								@change="handleFileSelect($event)"
+							/>
+							<img 
+								:src="imagePreview ? imagePreview : '<?php echo esc_url( $default_values['profile_photo'] ); ?>'"
+								class="tutor-avatar-image"
+								alt="<?php esc_attr_e( 'User Avatar', 'tutor' ); ?>"
+							>
 							<button type="button" class="tutor-account-avatar-edit" x-ref="trigger" @click="toggle()">
 								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 24, 24 ); ?>
 							</button>
-						</div>
 
-						<div 
-							x-ref="content"
-							x-show="open"
-							x-cloak
-							@click.outside="handleClickOutside()"
-							class="tutor-popover"
-						>
-							<div class="tutor-flex tutor-flex-column tutor-gap-3 tutor-p-5">
-								<?php
-									Button::make()
-										->label( __( 'Upload Photo', 'tutor' ) )
-										->variant( Variant::PRIMARY )
-										->size( Size::X_SMALL )
-										->attr( 'type', 'button' )
-										->attr( 'x-ref', 'upload' )
-										->render();
-								?>
-								<?php
-									Button::make()
-										->label( __( 'Remove Photo', 'tutor' ) )
-										->variant( Variant::SECONDARY )
-										->size( Size::X_SMALL )
-										->attr( 'type', 'button' )
-										->render();
-								?>
+							<div 
+								x-ref="content"
+								x-show="open"
+								x-cloak
+								@click.outside="handleClickOutside()"
+								class="tutor-popover"
+							>
+								<div class="tutor-flex tutor-flex-column tutor-gap-3 tutor-p-5">
+									<?php
+										Button::make()
+											->label( __( 'Upload Photo', 'tutor' ) )
+											->variant( Variant::PRIMARY )
+											->size( Size::X_SMALL )
+											->attr( 'type', 'button' )
+											->attr( 'x-ref', 'upload' )
+											->attr( '@click', 'openFileDialog()' )
+											->render();
+									?>
+									<?php
+										Button::make()
+											->label( __( 'Remove Photo', 'tutor' ) )
+											->variant( Variant::SECONDARY )
+											->size( Size::X_SMALL )
+											->attr( 'type', 'button' )
+											->attr( '@click', 'removeFile(), hide()' )
+											->render();
+									?>
+								</div>
 							</div>
 						</div>
 					</div>

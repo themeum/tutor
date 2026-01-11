@@ -27,7 +27,10 @@ export const fileUploader = (props: FileUploaderProps = {}) => ({
   accept: props.accept || '.pdf,.doc,.docx,.jpg,.jpeg,.png',
   maxSize: props.maxSize || Number(tutorConfig.max_upload_size) || 52428800,
   variant: props.variant || 'file-uploader',
-  imagePreview: typeof props.value?.[0] === 'string' ? props.value[0] : (null as string | null),
+  imagePreview:
+    props.variant === 'image-uploader' && typeof props.value?.[0] === 'string'
+      ? props.value[0]
+      : (null as string | null),
   selectedFiles: props.value || [],
   name: props.name || '',
   required: props.required || false,
