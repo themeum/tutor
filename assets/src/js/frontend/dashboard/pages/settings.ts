@@ -6,6 +6,15 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
 
+interface SocialFormProps {
+  _tutor_profile_facebook: string;
+  _tutor_profile_twitter: string;
+  _tutor_profile_linkedin: string;
+  _tutor_profile_github: string;
+  _tutor_profile_website: string;
+  [key: string]: string;
+}
+
 interface SettingsFormProps {
   billing_first_name: string;
   billing_last_name: string;
@@ -20,11 +29,14 @@ interface SettingsFormProps {
 
 const settings = () => {
   const query = window.TutorCore.query;
+  const form = window.TutorCore.form;
 
   return {
     query,
+    form,
     $el: null as HTMLElement | null,
     updateProfileMutation: null as MutationState<unknown> | null,
+    saveSocialProfileMutation: null as MutationState<unknown> | null,
     saveBillingInfoMutation: null as MutationState<unknown> | null,
 
     init() {
@@ -32,33 +44,39 @@ const settings = () => {
         return;
       }
 
+      this.handleUpdateProfile = this.handleUpdateProfile.bind(this);
+      this.handleSaveSocialProfile = this.handleSaveSocialProfile.bind(this);
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
 
       this.updateProfileMutation = this.query.useMutation(this.updateProfile, {
         onSuccess: (data: TutorMutationResponse<string>) => {
           window.TutorCore.toast.success(data?.message ?? __('Success', 'tutor'));
+          window.location.reload();
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to update profile', 'tutor'));
         },
       });
 
+      this.saveSocialProfileMutation = this.query.useMutation(this.saveSocialProfile, {
+        onSuccess: (data: TutorMutationResponse<string>) => {
+          window.TutorCore.toast.success(data?.message ?? __('Success', 'tutor'));
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to save social profile', 'tutor'));
+        },
+      });
+
       this.saveBillingInfoMutation = this.query.useMutation(this.saveBillingInfo, {
         onSuccess: (data: TutorMutationResponse<string>) => {
           window.TutorCore.toast.success(data?.message ?? __('Success', 'tutor'));
+          window.location.reload();
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to save billing info', 'tutor'));
         },
       });
-    },
-
-    async handleSaveBillingInfo(data: SettingsFormProps) {
-      await this.saveBillingInfoMutation?.mutate(data);
-    },
-
-    async saveBillingInfo(payload: SettingsFormProps) {
-      return wpAjaxInstance.post(endpoints.SAVE_BILLING_INFO, payload).then((res) => res.data);
     },
 
     async updateProfile(payload: SettingsFormProps) {
@@ -67,6 +85,22 @@ const settings = () => {
 
     async handleUpdateProfile(data: SettingsFormProps) {
       await this.updateProfileMutation?.mutate(data);
+    },
+
+    async saveSocialProfile(payload: SocialFormProps) {
+      return wpAjaxInstance.post(endpoints.SAVE_SOCIAL_PROFILE, payload).then((res) => res.data);
+    },
+
+    async handleSaveSocialProfile(data: SocialFormProps) {
+      await this.saveSocialProfileMutation?.mutate(data);
+    },
+
+    async saveBillingInfo(payload: SettingsFormProps) {
+      return wpAjaxInstance.post(endpoints.SAVE_BILLING_INFO, payload).then((res) => res.data);
+    },
+
+    async handleSaveBillingInfo(data: SettingsFormProps) {
+      await this.saveBillingInfoMutation?.mutate(data);
     },
   };
 };
@@ -77,8 +111,9 @@ const settingsMeta = {
 };
 
 export const initializeSettings = () => {
-  window.TutorComponentRegistry.registerAll({
-    components: [settingsMeta],
+  window.TutorComponentRegistry.register({
+    type: 'component',
+    meta: settingsMeta,
   });
   window.TutorComponentRegistry.initWithAlpine(window.Alpine);
 };
