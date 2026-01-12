@@ -174,27 +174,6 @@ class Badge extends BaseComponent {
 	}
 
 	/**
-	 * Set additional CSS classes.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string|array $classes CSS classes.
-	 *
-	 * @return $this
-	 */
-	public function classes( $classes ) {
-		if ( is_string( $classes ) ) {
-			$classes = explode( ' ', $classes );
-		}
-
-		if ( is_array( $classes ) ) {
-			$this->extra_classes = array_merge( $this->extra_classes, $classes );
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Set the SVG icon for the badge.
 	 *
 	 * @since 4.0.0
@@ -230,8 +209,7 @@ class Badge extends BaseComponent {
 		}
 
 		// Merge with any custom class attribute.
-		$extra_classes             = implode( ' ', array_map( 'sanitize_html_class', array_filter( $this->extra_classes ) ) );
-		$this->attributes['class'] = trim( "{$classes} {$extra_classes} " . ( $this->attributes['class'] ?? '' ) );
+		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
 		$attributes = $this->render_attributes();
 
