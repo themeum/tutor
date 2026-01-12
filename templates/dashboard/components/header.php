@@ -5,6 +5,9 @@
  * @package tutor
  */
 
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
 use TUTOR\Instructors_List;
@@ -38,7 +41,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 			</ul> -->
 		</div>
 		<div class="tutor-dashboard-header-right">
-			<!-- @TODO -->
+			
 			<!-- <button class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-2">
 				24 
 				<?php
@@ -123,6 +126,19 @@ $display_name = tutor_utils()->display_name( $user_id );
 									<?php esc_html_e( 'Become an Instructor', 'tutor' ); ?>
 								</a>
 								<?php
+							}
+						} else {
+							if ( User::is_student() ) {
+								$current_mode = User::get_current_view_mode();
+								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'Switch to learner', 'tutor' ) : esc_html__( 'Switch to instructor', 'tutor' );
+
+								Button::make()
+								->label( $button_label )
+								->size( Size::MEDIUM )
+								->variant( Variant::PRIMARY_SOFT )
+								->icon( Icon::RELOAD )
+								->attr( 'data-id', 101 )
+								->render();
 							}
 						}
 						?>

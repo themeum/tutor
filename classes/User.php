@@ -580,4 +580,15 @@ class User {
 			$response
 		);
 	}
+
+	/**
+	 * Get current view mode STUDENT/INSTRUCTOR
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public static function get_current_view_mode(): string {
+		return get_option( 'tutor_instructor_view_mode', self::VIEW_AS_INSTRUCTOR );
+	}
 }
