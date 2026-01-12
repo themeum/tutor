@@ -90,6 +90,7 @@ class Avatar extends BaseComponent {
 	 * User object or ID.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var int|object|null
 	 */
 	protected $user = null;
@@ -98,6 +99,7 @@ class Avatar extends BaseComponent {
 	 * Avatar alt text.
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var string|null
 	 */
 	protected $alt = null;
@@ -215,7 +217,7 @@ class Avatar extends BaseComponent {
 		}
 
 		$user_id    = is_object( $user ) ? $user->ID : (int) $user;
-		$cache_key  = 'tutor_avatar_component_user_data_' . $user_id;
+		$cache_key  = 'avatar_component_user_data_' . $user_id;
 		$cache_data = TutorCache::get( $cache_key );
 
 		if ( false !== $cache_data ) {
@@ -261,9 +263,7 @@ class Avatar extends BaseComponent {
 			TutorCache::set( $cache_key, $data );
 
 			// Apply to current instance.
-			if ( $data['src'] ) {
-				$this->src( $data['src'] );
-			}
+			$this->src( $data['src'] );
 			$this->type( $data['type'] );
 			$this->initials( $data['initials'] );
 			$this->alt( $data['alt'] );
