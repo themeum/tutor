@@ -103,11 +103,11 @@ class DropdownFilter extends BaseComponent {
 	protected $count = null;
 
 	/**
-	 * Popover width
+	 * Popover size
 	 *
 	 * @var string
 	 */
-	protected $popover_width = '172px';
+	protected $popover_size = Size::SMALL;
 
 	/**
 	 * Set options list
@@ -196,13 +196,32 @@ class DropdownFilter extends BaseComponent {
 	/**
 	 * Set popover width
 	 *
-	 * @param string $width popover width (e.g., '275px', '300px').
+	 * @param string $size popover width size (Size::SMALL, Size::MEDIUM, Size::LARGE).
 	 *
 	 * @return self
 	 */
-	public function popover_width( string $width ): self {
-		$this->popover_width = $width;
+	public function popover_size( string $size ): self {
+		$this->popover_size = $size;
 		return $this;
+	}
+
+	/**
+	 * Get popover width in pixels based on size constant
+	 *
+	 * @param string $size Size constant.
+	 *
+	 * @return string Width in pixels.
+	 */
+	protected function get_popover_width( string $size ): string {
+		switch ( $size ) {
+			case Size::MEDIUM:
+				return '275px';
+			case Size::LARGE:
+				return '350px';
+			case Size::SMALL:
+			default:
+				return '172px';
+		}
 	}
 
 	/**
@@ -314,7 +333,7 @@ class DropdownFilter extends BaseComponent {
 				x-cloak
 				@click.outside="handleClickOutside()"
 				class="tutor-popover"
-				style="width: <?php echo esc_attr( $this->popover_width ); ?>;"
+				style="width: <?php echo esc_attr( $this->get_popover_width( $this->popover_size ) ); ?>; max-width: unset;"
 			>
 				<div class="tutor-popover-menu" x-data="{ search: '', get hasResults() { return this.search === '' || [...$el.querySelectorAll('.tutor-popover-menu-item')].some(el => el.style.display !== 'none' && !el.hasAttribute('hidden')); } }">
 					<?php if ( $this->show_search ) : ?>

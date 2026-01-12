@@ -83,6 +83,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 				->query_param( 'course-id' )
 				->variant( Variant::PRIMARY_SOFT )
 				->size( Size::X_SMALL )
+				->popover_size( Size::MEDIUM )
 				->placeholder( __( 'Search Course', 'tutor' ) )
 				->search( true )
 				->render();
