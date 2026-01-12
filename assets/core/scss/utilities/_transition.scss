@@ -34,7 +34,7 @@
 }
 
 // Transition duration utilities
-$tutor-duration-values: (
+$tutor-transition-values: (
   75: 75ms,
   100: 100ms,
   150: 150ms,
@@ -45,26 +45,13 @@ $tutor-duration-values: (
   1000: 1000ms,
 );
 
-@each $key, $value in $tutor-duration-values {
+@each $key, $value in $tutor-transition-values {
   .tutor-duration-#{$key} {
     transition-duration: $value;
   }
 }
 
-// Transition delay utilities
-$tutor-delay-values: (
-  0: 0ms,
-  75: 75ms,
-  100: 100ms,
-  150: 150ms,
-  200: 200ms,
-  300: 300ms,
-  500: 500ms,
-  700: 700ms,
-  1000: 1000ms,
-);
-
-@each $key, $value in $tutor-delay-values {
+@each $key, $value in $tutor-transition-values {
   .tutor-delay-#{$key} {
     transition-delay: $value;
   }
