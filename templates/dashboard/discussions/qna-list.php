@@ -57,7 +57,7 @@ $nav_items = array(
 );
 ?>
 <div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
-	<?php DropdownFilter::make()->options( $nav_items )->query_arg( 'data' )->search( false )->render(); ?>
+	<?php DropdownFilter::make()->options( $nav_items )->query_param( 'data' )->render(); ?>
 	<div class="tutor-qna-filter-right">
 		<?php Sorting::make()->order( $order_filter )->render(); ?>
 	</div>

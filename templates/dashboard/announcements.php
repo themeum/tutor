@@ -78,9 +78,9 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
 			<?php
 			DropdownFilter::make()
-				->courses( $courses )
+				->options( CourseModel::get_course_filter_options( $courses ) )
 				->count( $total_announcements )
-				->query_arg( 'course-id' )
+				->query_param( 'course-id' )
 				->variant( Variant::PRIMARY_SOFT )
 				->size( Size::X_SMALL )
 				->placeholder( __( 'Search Course', 'tutor' ) )

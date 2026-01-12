@@ -13,6 +13,7 @@ namespace Tutor\Components;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
+use TUTOR\Input;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -24,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
  * // Basic dropdown with custom options
  * DropdownFilter::make()
  *     ->options( $options )
- *     ->query_arg( 'status' )
+ *     ->query_param( 'status' )
  *     ->variant( Variant::PRIMARY )
  *     ->size( Size::SMALL )
  *     ->search( true )
@@ -32,9 +33,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * // Course filter (convenience method)
  * DropdownFilter::make()
- *     ->courses( $courses )
+ *     ->options( $courses )
  *     ->count( $total_items )
- *     ->query_arg( 'course_id' )
+ *     ->query_param( 'course_id' )
  *     ->variant( Variant::PRIMARY_SOFT )
  *     ->size( Size::X_SMALL )
  *     ->placeholder( __( 'Search Course', 'tutor' ) )
@@ -57,7 +58,7 @@ class DropdownFilter extends BaseComponent {
 	 *
 	 * @var bool
 	 */
-	protected $show_search = true;
+	protected $show_search = false;
 
 	/**
 	 * Trigger button variant
@@ -92,7 +93,7 @@ class DropdownFilter extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $query_arg = '';
+	protected $query_param = '';
 
 	/**
 	 * Count to display
@@ -127,8 +128,8 @@ class DropdownFilter extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function query_arg( string $key ): self {
-		$this->query_arg = $key;
+	public function query_param( string $key ): self {
+		$this->query_param = $key;
 		return $this;
 	}
 
@@ -217,43 +218,6 @@ class DropdownFilter extends BaseComponent {
 	}
 
 	/**
-	 * Set courses as options (convenience method)
-	 *
-	 * @param array $courses Array of course objects/arrays.
-	 *
-	 * @return self
-	 */
-	public function courses( array $courses ): self {
-		$options = array(
-			array(
-				'label' => __( 'All Courses', 'tutor' ),
-				'value' => '',
-			),
-		);
-
-		if ( ! empty( $courses ) ) {
-			foreach ( $courses as $course ) {
-				$course_id    = is_object( $course ) ? $course->ID : $course['ID'];
-				$course_title = is_object( $course ) ? $course->post_title : $course['post_title'];
-
-				$options[] = array(
-					'label' => $course_title,
-					'value' => $course_id,
-				);
-			}
-		}
-
-		$this->options = $options;
-
-		// Set popover width for course filters.
-		if ( '172px' === $this->popover_width ) {
-			$this->popover_width = '275px';
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Get component content
 	 *
 	 * @return string
@@ -261,16 +225,16 @@ class DropdownFilter extends BaseComponent {
 	public function get(): string {
 		$options = $this->options;
 
-		// Automatically manage active state and URL if query_arg is set.
-		if ( ! empty( $this->query_arg ) ) {
-			$current_val = \TUTOR\Input::get( $this->query_arg, '' );
+		// Automatically manage active state and URL if query_param is set.
+		if ( ! empty( $this->query_param ) ) {
+			$current_val = Input::get( $this->query_param, '' );
 			foreach ( $options as &$option ) {
 				$val = isset( $option['value'] ) ? $option['value'] : '';
 				if ( ! isset( $option['active'] ) ) {
 					$option['active'] = (string) $val === (string) $current_val;
 				}
 				if ( ! isset( $option['url'] ) ) {
-					$option['url'] = ! empty( $val ) ? add_query_arg( $this->query_arg, $val ) : remove_query_arg( $this->query_arg );
+					$option['url'] = ! empty( $val ) ? add_query_arg( $this->query_param, $val ) : remove_query_arg( $this->query_param );
 				}
 			}
 			unset( $option );
