@@ -67,16 +67,14 @@ $default_values = array(
 	<div class="tutor-surface-l1 tutor-rounded-2xl tutor-p-6 tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
 		<form
 			id="<?php echo esc_attr( $form_id ); ?>"
-			x-data="{ 
-				...tutorForm({ 
-					id: '<?php echo esc_attr( $form_id ); ?>',
-					mode: 'onChange', 
-					shouldFocusError: true,
-					defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>
-				}),
-				stateMapping: <?php echo esc_attr( wp_json_encode( $state_mapping ) ); ?>
-			}"
+			x-data="tutorForm({ 
+				id: '<?php echo esc_attr( $form_id ); ?>',
+				mode: 'onChange', 
+				shouldFocusError: true,
+				defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>
+			})"
 			x-bind="getFormBindings()"
+			x-init="$watch('values.billing_country', (newCountry, oldCountry) => { if (oldCountry !== undefined && newCountry !== oldCountry) setValue('billing_state', '', { shouldDirty: true }) })"
 			@submit="handleSubmit(handleSaveBillingInfo)($event)"
 			class="tutor-flex tutor-flex-column tutor-gap-2"
 		>
@@ -153,6 +151,7 @@ $default_values = array(
 					->required()
 					->placeholder( __( 'Enter your state', 'tutor' ) )
 					->attr( 'x-bind', "register('billing_state', { required: true })" )
+					->attr( 'x-effect', 'options = (fetchCountriesQuery.data || []).find(country => country.name === values.billing_country)?.states.map(state => ({ label: state.name, value: state.name })) || []' )
 					->render();
 			?>
 

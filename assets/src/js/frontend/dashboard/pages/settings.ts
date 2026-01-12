@@ -1,7 +1,9 @@
 import { __ } from '@wordpress/i18n';
+import axios from 'axios';
 
-import { type MutationState } from '@Core/ts/services/Query';
+import { type MutationState, type QueryState } from '@Core/ts/services/Query';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
@@ -35,6 +37,7 @@ const settings = () => {
     query,
     form,
     $el: null as HTMLElement | null,
+    fetchCountriesQuery: null as QueryState<unknown> | null,
     updateProfileMutation: null as MutationState<unknown> | null,
     saveSocialProfileMutation: null as MutationState<unknown> | null,
     saveBillingInfoMutation: null as MutationState<unknown> | null,
@@ -48,9 +51,11 @@ const settings = () => {
       this.handleSaveSocialProfile = this.handleSaveSocialProfile.bind(this);
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
 
+      this.fetchCountriesQuery = this.query.useQuery('fetch-countries', () => this.fetchCountries());
+
       this.updateProfileMutation = this.query.useMutation(this.updateProfile, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Success', 'tutor'));
+          window.TutorCore.toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
@@ -60,7 +65,7 @@ const settings = () => {
 
       this.saveSocialProfileMutation = this.query.useMutation(this.saveSocialProfile, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Success', 'tutor'));
+          window.TutorCore.toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
@@ -70,13 +75,17 @@ const settings = () => {
 
       this.saveBillingInfoMutation = this.query.useMutation(this.saveBillingInfo, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Success', 'tutor'));
+          window.TutorCore.toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to save billing info', 'tutor'));
         },
       });
+    },
+
+    async fetchCountries() {
+      return await axios.get(`${tutorConfig.tutor_url}${endpoints.FETCH_COUNTRIES}`).then((res) => res.data);
     },
 
     async updateProfile(payload: SettingsFormProps) {
