@@ -39,7 +39,7 @@ use Tutor\Components\Constants\Variant;
 					->variant( Variant::SECONDARY )
 					->circle()
 					->label( __( 'Unsaved changes', 'tutor' ) )
-					->attr( 'x-show', 'activeTab !== "none" && isDirty[`tutor-${activeTab}-form`]')
+					->attr( 'x-show', 'activeTab !== "none" && isDirty[`tutor-${activeTab}-form`]' )
 					->attr( 'x-cloak', '' )
 					->attr( 'class', 'tutor-ml-5 tutor-sm-hidden' )
 					->render();
@@ -53,15 +53,15 @@ use Tutor\Components\Constants\Variant;
 						->variant( Variant::SECONDARY )
 						->size( Size::X_SMALL )
 						->attr( 'type', 'button' )
-						->attr( '@click', 'TutorCore.form.reset(`tutor-${activeTab}-form`)')
+						->attr( '@click', 'TutorCore.form.reset(`tutor-${activeTab}-form`)' )
 						->render();
-					
+
 					Button::make()
 						->label( __( 'Save', 'tutor' ) )
 						->variant( Variant::PRIMARY )
 						->size( Size::X_SMALL )
 						->attr( 'type', 'submit' )
-						->attr( 'class', 'tutor-ml-4')
+						->attr( 'class', 'tutor-ml-4' )
 						->attr( 'x-bind:form', 'activeTab === "none" ? "" : `tutor-${activeTab}-form`' )
 						->render();
 				?>
