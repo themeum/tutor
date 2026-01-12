@@ -74,7 +74,7 @@ $default_values = array(
 				defaultValues: <?php echo esc_attr( wp_json_encode( $default_values ) ); ?>
 			})"
 			x-bind="getFormBindings()"
-			x-init="$watch('values.billing_country', (newCountry, oldCountry) => { if (oldCountry !== undefined && newCountry !== oldCountry) setValue('billing_state', '', { shouldDirty: true }) })"
+			x-init="$watch('values.billing_country', () => !isResetting && setValue('billing_state', '', { shouldDirty: true }))"
 			@submit="handleSubmit(handleSaveBillingInfo)($event)"
 			class="tutor-flex tutor-flex-column tutor-gap-2"
 		>

@@ -320,6 +320,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     isValid: true,
     isSubmitting: false,
     isValidating: false,
+    isResetting: false,
     cleanup: undefined as (() => void) | undefined,
     lastIsDirty: false,
 
@@ -583,6 +584,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     },
 
     reset(values?: Record<string, unknown>): void {
+      this.isResetting = true;
+
       if (values) {
         // Update reactive object props instead of replacing it to maintain bindings
         Object.keys(this.values).forEach((key) => delete this.values[key]);
@@ -607,6 +610,10 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isSubmitting = false;
       this.isValidating = false;
       this.dispatchStateChange();
+
+      setTimeout(() => {
+        this.isResetting = false;
+      }, 0);
     },
 
     handleSubmit(
