@@ -10,13 +10,9 @@
  */
 
 use Tutor\Components\ConfirmationModal;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\Nav;
+use Tutor\Components\DropdownFilter;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
-use Tutor\Helpers\UrlHelper;
-use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\User;
 
@@ -32,47 +28,36 @@ $questions   = tutor_utils()->get_qa_questions( $offset, $item_per_page, '', nul
 
 $nav_items = array(
 	array(
-		'type'    => 'dropdown',
-		'active'  => true,
-		'options' => array(
-			array(
-				'label'  => __( 'All', 'tutor' ),
-				'count'  => $total_items,
-				'url'    => UrlHelper::remove_query_params( UrlHelper::current(), array( 'data' ) ),
-				'active' => '' === $q_status,
-			),
-			array(
-				'label'  => __( 'Read', 'tutor' ),
-				'count'  => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'read', true ),
-				'url'    => UrlHelper::add_query_params( UrlHelper::current(), array( 'data' => 'read' ) ),
-				'active' => 'read' === $q_status,
-			),
-			array(
-				'label'  => __( 'Unread', 'tutor' ),
-				'count'  => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'unread', true ),
-				'url'    => UrlHelper::add_query_params( UrlHelper::current(), array( 'data' => 'unread' ) ),
-				'active' => 'unread' === $q_status,
-			),
-			...( User::VIEW_AS_INSTRUCTOR === $view_as ? array(
-				array(
-					'label'  => __( 'Important', 'tutor' ),
-					'count'  => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'important', true ),
-					'url'    => UrlHelper::add_query_params( UrlHelper::current(), array( 'data' => 'important' ) ),
-					'active' => 'important' === $q_status,
-				),
-				array(
-					'label'  => __( 'Archived', 'tutor' ),
-					'count'  => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'archived', true ),
-					'url'    => UrlHelper::add_query_params( UrlHelper::current(), array( 'data' => 'archived' ) ),
-					'active' => 'archived' === $q_status,
-				),
-			) : array() ),
-		),
+		'label' => __( 'All', 'tutor' ),
+		'value' => '',
+		'count' => $total_items,
 	),
+	array(
+		'label' => __( 'Read', 'tutor' ),
+		'value' => 'read',
+		'count' => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'read', true ),
+	),
+	array(
+		'label' => __( 'Unread', 'tutor' ),
+		'value' => 'unread',
+		'count' => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'unread', true ),
+	),
+	...( User::VIEW_AS_INSTRUCTOR === $view_as ? array(
+		array(
+			'label' => __( 'Important', 'tutor' ),
+			'value' => 'important',
+			'count' => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'important', true ),
+		),
+		array(
+			'label' => __( 'Archived', 'tutor' ),
+			'value' => 'archived',
+			'count' => tutor_utils()->get_qa_questions( $offset, $item_per_page, '', null, null, $asker_id, 'archived', true ),
+		),
+	) : array() ),
 );
 ?>
 <div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-sm-p-5 tutor-border-b">
-	<?php Nav::make()->items( $nav_items )->size( Size::SMALL )->variant( Variant::GHOST )->render(); ?>
+	<?php DropdownFilter::make()->options( $nav_items )->query_arg( 'data' )->search( false )->render(); ?>
 	<div class="tutor-qna-filter-right">
 		<?php Sorting::make()->order( $order_filter )->render(); ?>
 	</div>
