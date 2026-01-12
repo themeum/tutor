@@ -2241,12 +2241,12 @@ class Utils {
 		$with_bundle_enrolled_courses_clause = '';
 		if ( ! $with_bundle_enrolled_courses ) {
 			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
-				"AND NOT EXISTS (
+				'AND NOT EXISTS (
 					SELECT 1
 					FROM wp_postmeta pm
 					WHERE pm.post_id = e.ID
 						AND pm.meta_key = %s
-				)",
+				)',
 				'_tutor_bundle_id'
 			);
 		}
@@ -8524,16 +8524,23 @@ class Utils {
 	 * Check if current screen tutor frontend dashboard
 	 *
 	 * @since 1.9.4
+	 * @since 4.0.0 Subpage check support added.
+	 * 				Example: assignments/submitted	
 	 *
 	 * @param string $subpage subpage.
 	 *
 	 * @return boolean
 	 */
 	public function is_tutor_frontend_dashboard( $subpage = null ) {
-
 		global $wp_query;
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
+
+			$subpage_parts = explode( '/', $subpage, 2 );
+			if ( isset( $subpage_parts[1] ) ) {
+				$dashboard_subpage = $this->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+				return $dashboard_page == $subpage_parts[0] && $dashboard_subpage == $subpage_parts[1];
+			}
 
 			if ( $subpage ) {
 				return $dashboard_page == $subpage;
