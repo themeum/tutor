@@ -166,6 +166,10 @@ const endpoints = {
   //Reviews
   PLACE_RATING: 'tutor_place_rating',
   DELETE_REVIEW: 'delete_tutor_review',
+
+  // Settings
+  UPDATE_PROFILE: 'tutor_update_profile',
+  SAVE_BILLING_INFO: 'tutor_save_billing_info',
 } as const;
 
 export default endpoints;

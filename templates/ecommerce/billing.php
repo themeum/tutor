@@ -13,6 +13,8 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 use Tutor\Ecommerce\BillingController;
 
+$form_id = $data['form_id'] ?? 'tutor-billing-address-form';
+
 $billing_controller = new BillingController( false );
 $billing_info       = $billing_controller->get_billing_info();
 
@@ -75,17 +77,7 @@ $default_values = array(
 				stateMapping: <?php echo esc_attr( wp_json_encode( $state_mapping ) ); ?>
 			}"
 			x-bind="getFormBindings()"
-			@submit="handleSubmit(
-				(data) => { 
-					// @TODO: Handle form submission here
-					console.log('Billing address saved:', data);
-					alert('Billing address saved successfully!');
-				},
-				(errors) => { 
-					// @TODO: Handle form validation errors
-					console.log('Form validation errors:', errors); 
-				}
-			)($event)"
+			@submit="handleSubmit(handleSaveBillingInfo,)($event)"
 			class="tutor-flex tutor-flex-column tutor-gap-2"
 		>
 			<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">

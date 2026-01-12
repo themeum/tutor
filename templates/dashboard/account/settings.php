@@ -56,77 +56,83 @@ $settings_tab_data = array(
 $settings_tab_data = apply_filters( 'tutor_dashboard_settings_tabs', $settings_tab_data );
 ?>
 
-<section 
-	x-data='tutorTabs({
-		tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
-		orientation: "vertical",
-		defaultTab: window.innerWidth >= 576 ? "account" : "none",
-		urlParams: {
-			enabled: true,
-			paramName: "tab",
-		}
-	})'
-	class="tutor-profile-settings-section"
->
-	<?php tutor_load_template( 'dashboard.account.settings.header' ); ?>
-	
-	<div class="tutor-dashboard-container">
-		<div 
-			x-init="$watch('$store.windowWidth', () => {
-				if (window.innerWidth >= 576 && activeTab === 'none') {
-					selectTab('account');
-				} else if (window.innerWidth < 576 && activeTab !== 'none') {
-					selectTab('none');
-				}
-			})"
-			@resize.window="
-				if (window.innerWidth >= 576 && activeTab === 'none') {
-					selectTab('account');
-				} else if (window.innerWidth < 576 && activeTab !== 'none') {
-					selectTab('none');
-				}
-			"
-			x-cloak
-			class="tutor-gap-8"
-		>
-			<div class="tutor-flex tutor-gap-8 tutor-mb-9">
-				<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab">
-					<template x-for="tab in tabs" :key="tab.id">
-						<button
-							type="button"
-							role="tab"
-							:class='getTabClass(tab)'
-							x-bind:aria-selected="isActive(tab.id)"
-							:disabled="tab.disabled ? true : false"
-							@click="selectTab(tab.id)"
-						>
-							<span x-data="tutorIcon({ name: tab.icon, width: 20, height: 20})"></span>
-							<div class="tutor-flex tutor-flex-column tutor-items-start">
-								<span x-text="tab.label" class="tutor-text-small"></span>
-								<span x-text="tab.text" class="tutor-text-tiny tutor-hidden tutor-sm-block tutor-text-subdued"></span>
-							</div>
-						</button>
-					</template>
-				</div>
+<section x-data="tutorSettings()">
+	<div 
+		x-data='tutorTabs({
+			tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
+			orientation: "vertical",
+			defaultTab: window.innerWidth >= 576 ? "account" : "none",
+			urlParams: {
+				enabled: true,
+				paramName: "tab",
+			}
+		})'
+		class="tutor-profile-settings-section"
+	>
+		<?php tutor_load_template( 'dashboard.account.settings.header' ); ?>
+		
+		<div class="tutor-dashboard-container">
+			<div 
+				x-init="$watch('$store.windowWidth', () => {
+					if (window.innerWidth >= 576 && activeTab === 'none') {
+						selectTab('account');
+					} else if (window.innerWidth < 576 && activeTab !== 'none') {
+						selectTab('none');
+					}
+				})"
+				@resize.window="
+					if (window.innerWidth >= 576 && activeTab === 'none') {
+						selectTab('account');
+					} else if (window.innerWidth < 576 && activeTab !== 'none') {
+						selectTab('none');
+					}
+				"
+				x-cloak
+				class="tutor-gap-8"
+			>
+				<div class="tutor-flex tutor-gap-8 tutor-mb-9">
+					<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab">
+						<template x-for="tab in tabs" :key="tab.id">
+							<button
+								type="button"
+								role="tab"
+								:class='getTabClass(tab)'
+								x-bind:aria-selected="isActive(tab.id)"
+								:disabled="tab.disabled ? true : false"
+								@click="selectTab(tab.id)"
+							>
+								<span x-data="tutorIcon({ name: tab.icon, width: 20, height: 20})"></span>
+								<div class="tutor-flex tutor-flex-column tutor-items-start">
+									<span x-text="tab.label" class="tutor-text-small"></span>
+									<span x-text="tab.text" class="tutor-text-tiny tutor-hidden tutor-sm-block tutor-text-subdued"></span>
+								</div>
+							</button>
+						</template>
+					</div>
 
-				<div 
-					:class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" 
-					class="tutor-profile-settings-tab-content tutor-w-full"
-				>
-					<?php foreach ( $settings_tab_data as $settings_tab ) : ?>
-						<div x-show="activeTab === '<?php echo esc_attr( $settings_tab['id'] ); ?>'" x-cloak class="tutor-tab-panel" role="tabpanel">
-							<?php
-							if ( $settings_tab['custom_template'] ) {
-								tutor_load_template_from_custom_path( $settings_tab['custom_template'] );
-							} else {
-								tutor_load_template(
-									$settings_tab['template'],
-									array( 'form_id' => "tutor-{$settings_tab['id']}-form" )
-								);
-							}
-							?>
-						</div>
-					<?php endforeach; ?>
+					<div 
+						:class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" 
+						class="tutor-profile-settings-tab-content tutor-w-full"
+					>
+						<?php foreach ( $settings_tab_data as $settings_tab ) : ?>
+							<div x-show="activeTab === '<?php echo esc_attr( $settings_tab['id'] ); ?>'" x-cloak class="tutor-tab-panel" role="tabpanel">
+								<?php
+								$form_id = "tutor-{$settings_tab['id']}-form";
+								if ( $settings_tab['custom_template'] ) {
+									tutor_load_template_from_custom_path(
+										$settings_tab['custom_template'],
+										array( 'form_id' => $form_id )
+									);
+								} else {
+									tutor_load_template(
+										$settings_tab['template'],
+										array( 'form_id' => $form_id )
+									);
+								}
+								?>
+							</div>
+						<?php endforeach; ?>
+					</div>
 				</div>
 			</div>
 		</div>
