@@ -25,19 +25,16 @@ $category          = implode( ', ', $category_names );
 <a href="<?php echo esc_url( $course_permalink ); ?>">
 	<div class="tutor-card tutor-progress-card">
 		
-		<div class="tutor-courses-thumb tutor-position-relative">
+		<div class="tutor-progress-card-thumbnail">
 			<?php do_action( 'tutor_my_courses_before_thumbnail', $course_id ); ?>
-
 			<?php if ( ! empty( $tutor_course_img ) ) : ?>
-				<div class="tutor-progress-card-thumbnail">
-					<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" />
-				</div>
+				<img src="<?php echo esc_url( $tutor_course_img ); ?>" alt="<?php the_title(); ?>" />
 			<?php endif; ?>
 		</div>
 
-
 		<div class="tutor-progress-card-content">
 
+			<!-- course header  -->
 			<div class="tutor-progress-card-header">
 				<?php if ( ! empty( $category ) ) : ?>
 					<div class="tutor-progress-card-category">
@@ -89,6 +86,7 @@ $category          = implode( ', ', $category_names );
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
+
 		</div>
 	</div>
 </a>

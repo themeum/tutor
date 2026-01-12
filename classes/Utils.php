@@ -2228,21 +2228,37 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $user_id user id.
+	 * @param int     $user_id user id.
+	 *
+	 * @param boolean $with_bundle_enrolled_courses including bundle courses.
 	 *
 	 * @return array
 	 */
-	public function get_enrolled_courses_ids_by_user( $user_id = 0 ) {
+	public function get_enrolled_courses_ids_by_user( $user_id = 0, $with_bundle_enrolled_courses = true ) {
 		global $wpdb;
-		$user_id    = $this->get_user_id( $user_id );
+		$user_id = $this->get_user_id( $user_id );
+
+		$with_bundle_enrolled_courses_clause = '';
+		if ( ! $with_bundle_enrolled_courses ) {
+			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
+				"AND NOT EXISTS (
+					SELECT 1
+					FROM wp_postmeta pm
+					WHERE pm.post_id = e.ID
+						AND pm.meta_key = %s
+				)",
+				'_tutor_bundle_id'
+			);
+		}
 		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT DISTINCT post_parent
-			FROM 	{$wpdb->posts}
-			WHERE 	post_type = %s
-					AND post_status = %s
-					AND post_author = %d
-				ORDER BY post_date DESC;
+				"SELECT DISTINCT e.post_parent, e.post_date
+			FROM 	{$wpdb->posts} e
+			WHERE 	e.post_type = %s
+					AND e.post_status = %s
+					AND e.post_author = %d
+					{$with_bundle_enrolled_courses_clause}
+				ORDER BY e.post_date DESC;
 			",
 				'tutor_enrolled',
 				'completed',
@@ -5586,23 +5602,6 @@ class Utils {
 	}
 
 	/**
-	 * Check if the current page is the frontend's course list page
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return bool
-	 */
-	public function is_course_list_page(): bool {
-		$current_url    = trailingslashit( UrlHelper::current() );
-		$is_course_list = $this->course_archive_page_url() === $current_url;
-
-		return apply_filters(
-			'tutor_is_course_list_page',
-			$is_course_list
-		);
-	}
-
-	/**
 	 * Check if the current page is the part of learning area
 	 *
 	 * @since 4.0.0
@@ -6327,6 +6326,7 @@ class Utils {
 	 * Get purchase history by customer id
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 param $order added.
 	 *
 	 * @param integer $user_id user id.
 	 * @param string  $period period.
@@ -6334,14 +6334,16 @@ class Utils {
 	 * @param string  $end_date end date.
 	 * @param string  $offset offset.
 	 * @param string  $per_page per page.
+	 * @param string  $order order.
 	 *
 	 * @return mixed
 	 */
-	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '' ) {
+	public function get_orders_by_user_id( $user_id = 0, $period = '', $start_date = '', $end_date = '', $offset = '', $per_page = '', $order = 'DESC' ) {
 		global $wpdb;
 
 		$user_id     = $this->get_user_id( $user_id );
 		$monetize_by = $this->get_option( 'monetize_by' );
+		$order       = QueryHelper::get_valid_sort_order( $order );
 
 		$post_type = '';
 		$user_meta = '';
@@ -6390,7 +6392,7 @@ class Utils {
 					WHERE 	orders.type = %s 
 					  		AND orders.customer_id = %d 
 							{$period_query}
-					ORDER BY orders.id DESC
+					ORDER BY orders.id {$order}
 					{$offset_limit_query}",
 					$post_type,
 					$user_id
@@ -6410,7 +6412,7 @@ class Utils {
 				WHERE	post_type = %s
 						AND customer.meta_value = %d
 						{$period_query}
-				ORDER BY {$wpdb->posts}.id DESC
+				ORDER BY {$wpdb->posts}.id {$order}
 				{$offset_limit_query}
 				",
 					$post_type,
