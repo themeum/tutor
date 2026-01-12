@@ -339,8 +339,8 @@ final class Icon {
 	const SORT_MINOR                 = 'sort-minor';
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
-	const STAR                       = 'star';
-	const STAR_2                     = 'star-2';
+	const STAR_FILL                  = 'star-fill';
+	const STAR_HALF                  = 'star-half';
 	const STAR_LINE                  = 'star-line';
 	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
