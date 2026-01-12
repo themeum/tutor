@@ -77,11 +77,15 @@ $nav_items = array(
 	endforeach;
 	?>
 </div>
-<?php if ( $total_items > $item_per_page ) : ?>
-<div class="tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t">
-	<?php Pagination::make()->current( $current_page )->total( $total_items )->limit( $item_per_page )->render(); ?>
-</div>
-<?php endif; ?>
+
+<?php
+	Pagination::make()
+		->current( $current_page )
+		->total( $total_items )
+		->limit( $item_per_page )
+		->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
+		->render();
+?>
 
 <?php
 if ( ! empty( $questions ) ) {

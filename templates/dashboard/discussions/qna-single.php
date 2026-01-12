@@ -19,7 +19,6 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\InputField;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Components\Sorting;
-use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -53,7 +52,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		<div class="tutor-flex tutor-gap-2">
 			<button 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
-				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'solved')"
+				@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'solved')"
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved'">
@@ -74,7 +73,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 
 			<button 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
-				@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'important')"
+				@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'important')"
 				:disabled="qnaSingleActionMutation?.isPending"
 			>
 				<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important'">
@@ -97,7 +96,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 	</div>
 	<div class="tutor-qna-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
-			<?php Avatar::make()->size( 40 )->render(); ?>
+			<?php Avatar::make()->size( Size::SIZE_40 )->render(); ?>
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
 					<span class="tutor-qna-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
@@ -130,7 +129,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 						<div class="tutor-popover-menu" style="min-width: 120px;">
 							<button 
 								class="tutor-popover-menu-item"
-								@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'archived')"
+								@click="handleQnASingleAction(<?php echo esc_html( $question->comment_ID ); ?>, 'archived')"
 								:disabled="qnaSingleActionMutation?.isPending"
 							>
 								<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'archived'">
@@ -143,7 +142,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 							</button>
 							<button 
 								class="tutor-popover-menu-item"
-								@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( (int) $question->comment_ID ); ?> });"
+								@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question->comment_ID ); ?> });"
 							>
 								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
@@ -153,7 +152,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 				<?php else : ?>
 				<button
 					class="tutor-btn tutor-btn-secondary tutor-btn-icon tutor-btn-x-small"
-					@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( (int) $question->comment_ID ); ?> });"
+					@click="TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question->comment_ID ); ?> });"
 				>
 					<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
 				</button>

@@ -130,11 +130,6 @@ const discussionsPage = () => {
       const courseId = (data.course_id as number) || 0;
       const questionId = (data.question_id as number) || 0;
 
-      if (!answer.trim()) {
-        window.TutorCore.toast.error(__('Please enter a response', 'tutor'));
-        return;
-      }
-
       await this.createUpdateQnAMutation?.mutate({
         course_id: courseId,
         question_id: questionId,
