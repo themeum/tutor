@@ -2930,12 +2930,6 @@ class Utils {
 	 * @return mixed
 	 */
 	public function tutor_dashboard_pages() {
-		// @TODO need to make it dynamic with account view as mode.
-		// $view_mode = 'student';
-		// if ( User::is_admin() || User::is_instructor() ) {
-		// $view_mode = 'instructor';
-		// }
-
 		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
 		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
 
