@@ -89,7 +89,7 @@ $settings_tab_data = apply_filters( 'tutor_dashboard_settings_tabs', $settings_t
 			x-cloak
 			class="tutor-gap-8"
 		>
-			<div class="tutor-flex tutor-gap-8">
+			<div class="tutor-flex tutor-gap-8 tutor-mb-9">
 				<div x-ref="tablist" role="tablist" aria-orientation="vertical" class="tutor-tabs-nav tutor-profile-settings-tab">
 					<template x-for="tab in tabs" :key="tab.id">
 						<button
