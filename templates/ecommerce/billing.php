@@ -77,7 +77,7 @@ $default_values = array(
 				stateMapping: <?php echo esc_attr( wp_json_encode( $state_mapping ) ); ?>
 			}"
 			x-bind="getFormBindings()"
-			@submit="handleSubmit(handleSaveBillingInfo,)($event)"
+			@submit="handleSubmit(handleSaveBillingInfo)($event)"
 			class="tutor-flex tutor-flex-column tutor-gap-2"
 		>
 			<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">

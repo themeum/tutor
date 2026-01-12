@@ -63,17 +63,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
 		})'
 		x-bind="getFormBindings()"
-		@submit="handleSubmit(
-			(data) => { 
-				// @TODO: Handle form submission here
-				console.log('Billing address saved:', data);
-				alert('Billing address saved successfully!');
-			},
-			(errors) => { 
-				// @TODO: Handle form validation errors
-				console.log('Form validation errors:', errors); 
-			}
-		)($event)"
+		@submit="handleSubmit(handleUpdateProfile)($event)"
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 	>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">

@@ -169,6 +169,7 @@ const endpoints = {
 
   // Settings
   UPDATE_PROFILE: 'tutor_update_profile',
+  SAVE_SOCIAL_PROFILE: 'tutor_social_profile',
   SAVE_BILLING_INFO: 'tutor_save_billing_info',
 } as const;
 

@@ -34,15 +34,7 @@ foreach ( $social_fields as $key => $field ) {
 			defaultValues: <?php echo wp_json_encode( $social_links ); ?>
 		})'
 		x-bind="getFormBindings()"
-		@submit="handleSubmit(
-			(data) => { 
-				console.log('Social profiles saved:', data);
-				alert('Social profiles saved successfully!');
-			},
-			(errors) => { 
-				console.log('Form validation errors:', errors);
-			}
-		)($event)"
+		@submit="handleSubmit(handleSaveSocialProfile)($event)"
 		class="tutor-social-form"
 	>
 		<?php do_action( 'tutor_profile_edit_before_social_media', $user ); ?>
