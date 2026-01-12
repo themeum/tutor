@@ -19,6 +19,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
+use WP_Post;
 
 /**
  * Manage quiz operations.
@@ -27,6 +28,15 @@ use Tutor\Traits\JsonResponse;
  */
 class Quiz {
 	use JsonResponse;
+
+	/**
+	 * Quiz post type
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	private $post_type;
 
 	const META_QUIZ_OPTION = 'tutor_quiz_option';
 
@@ -65,10 +75,20 @@ class Quiz {
 	 * Register hooks
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 $register_hooks param added
+	 *
+	 * @param bool $register_hooks To register hooks.
 	 *
 	 * @return void
 	 */
-	public function __construct() {
+	public function __construct( $register_hooks = true ) {
+		$this->post_type = tutor()->quiz_post_type;
+		$this->prepare_allowed_html();
+
+		if ( ! $register_hooks ) {
+			return;
+		}
+
 		add_action( 'wp_ajax_tutor_quiz_timeout', array( $this, 'tutor_quiz_timeout' ) );
 
 		// User take the quiz.
@@ -100,8 +120,6 @@ class Quiz {
 		 */
 		add_action( 'wp_ajax_tutor_quiz_abandon', array( $this, 'tutor_quiz_abandon' ) );
 
-		$this->prepare_allowed_html();
-
 		/**
 		 * Delete quiz attempt
 		 *
@@ -110,6 +128,10 @@ class Quiz {
 		add_action( 'wp_ajax_tutor_attempt_delete', array( $this, 'attempt_delete' ) );
 
 		add_action( 'tutor_quiz/answer/review/after', array( $this, 'do_auto_course_complete' ), 10, 3 );
+
+		// Add quiz title as nav item & render single content on the learning area.
+		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
+		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
 	}
 
 	/**
@@ -1259,5 +1281,43 @@ class Quiz {
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Render quiz title as nav item to show on the learning area
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $quiz Quiz post object.
+	 * @param bool    $can_access Can user access this content.
+	 *
+	 * @return void
+	 */
+	public function render_nav_item( WP_Post $quiz, bool $can_access ): void {
+		tutor_load_template(
+			'learning-area.quiz.nav-item',
+			array(
+				'quiz'       => $quiz,
+				'can_access' => $can_access,
+			)
+		);
+	}
+
+	/**
+	 * Render content for the a single quiz
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $quiz Quiz post object.
+	 *
+	 * @return void
+	 */
+	public function render_single_content( WP_Post $quiz ): void {
+		tutor_load_template(
+			'learning-area.quiz.content',
+			array(
+				'quiz' => $quiz,
+			)
+		);
 	}
 }
