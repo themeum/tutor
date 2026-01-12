@@ -192,7 +192,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 						->placeholder( __( 'Enter your username', 'tutor' ) )
 						->attr( 'x-bind', "register('username')" )
 						->render();
-					
+
 					InputField::make()
 						->type( InputType::TEXT )
 						->label( __( 'Phone Number', 'tutor' ) )
@@ -213,19 +213,19 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 						->attr( 'x-bind', "register('occupation')" )
 						->render();
 
-					if ( ! User::is_admin() ) {
-						Inputfield::make()
-							->type( InputType::SELECT )
-							->label( __( 'Timezone', 'tutor' ) )
-							->name( 'timezone' )
-							->options( $timezone_options )
-							->searchable()
-							->clearable()
-							->id( 'timezone' )
-							->placeholder( __( 'Select your timezone', 'tutor' ) )
-							->attr( 'x-bind', "register('timezone')" )
-							->render();
-					}
+				if ( ! User::is_admin() ) {
+					Inputfield::make()
+						->type( InputType::SELECT )
+						->label( __( 'Timezone', 'tutor' ) )
+						->name( 'timezone' )
+						->options( $timezone_options )
+						->searchable()
+						->clearable()
+						->id( 'timezone' )
+						->placeholder( __( 'Select your timezone', 'tutor' ) )
+						->attr( 'x-bind', "register('timezone')" )
+						->render();
+				}
 				?>
 			</div>
 		</div>

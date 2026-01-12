@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use TUTOR\Icon;
 use TUTOR\BaseController;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
@@ -58,7 +59,8 @@ class BillingController extends BaseController {
 		$this->model = new BillingModel();
 
 		if ( $register_hooks ) {
-			add_filter( 'tutor_dashboard/nav_items/settings/nav_items', array( $this, 'register_nav' ) );
+			// @TODO: previously it was 'tutor_dashboard/nav_items/settings/nav_items' which gives 'phpcs' error
+			add_filter( 'tutor_dashboard_settings_tabs', array( $this, 'register_nav' ) );
 			add_filter( 'load_dashboard_template_part_from_other_location', array( $this, 'load_template' ) );
 
 			/**
@@ -87,15 +89,17 @@ class BillingController extends BaseController {
 	 * @return array
 	 */
 	public static function register_nav( $tabs ) {
-		$billing_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/billing' );
-
 		$new_tab = array(
-			'url'   => esc_url( $billing_url ),
-			'title' => __( 'Billing', 'tutor' ),
-			'role'  => false,
+			'id'              => 'billing-address',
+			'label'           => 'Billing Address',
+			'icon'            => Icon::BILLING,
+			'text'            => __( 'Your payment address', 'tutor' ),
+			'template'        => '',
+			'custom_template' => tutor()->path . 'templates/ecommerce/billing.php',
+			'role'            => false,
 		);
 
-		$tabs['billing'] = $new_tab;
+		$tabs = array_merge( $tabs, array( $new_tab ) );
 
 		return $tabs;
 	}

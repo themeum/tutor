@@ -13,55 +13,59 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 
-$profile_tab_data = array(
+$settings_tab_data = array(
 	array(
-		'id'       => 'account',
-		'label'    => 'Account',
-		'icon'     => Icon::USER_CIRCLE,
-		'text'     => __( 'Name, email, phone number, profiles', 'tutor' ),
-		'template' => 'dashboard.account.settings.account',
+		'id'              => 'account',
+		'label'           => 'Account',
+		'icon'            => Icon::USER_CIRCLE,
+		'text'            => __( 'Name, email, phone number, profiles', 'tutor' ),
+		'template'        => 'dashboard.account.settings.account',
+		'custom_template' => null,
+		'role'            => false,
 	),
 	array(
-		'id'       => 'social-accounts',
-		'label'    => 'Social Accounts',
-		'icon'     => Icon::GLOBE,
-		'text'     => __( 'Linked social media profiles', 'tutor' ),
-		'template' => 'dashboard.account.settings.social-accounts',
+		'id'              => 'social-accounts',
+		'label'           => 'Social Accounts',
+		'icon'            => Icon::GLOBE,
+		'text'            => __( 'Linked social media profiles', 'tutor' ),
+		'template'        => 'dashboard.account.settings.social-accounts',
+		'custom_template' => null,
+		'role'            => false,
 	),
 	array(
-		'id'       => 'billing-address',
-		'label'    => 'Billing Address',
-		'icon'     => Icon::BILLING,
-		'text'     => __( 'Your payment address', 'tutor' ),
-		'template' => 'dashboard.account.settings.billing-address',
+		'id'              => 'notifications',
+		'label'           => 'Notifications',
+		'icon'            => Icon::NOTIFICATION,
+		'text'            => __( 'Message, group, order', 'tutor' ),
+		'template'        => 'dashboard.account.settings.notifications',
+		'custom_template' => null,
+		'role'            => false,
 	),
 	array(
-		'id'       => 'notifications',
-		'label'    => 'Notifications',
-		'icon'     => Icon::NOTIFICATION,
-		'text'     => __( 'Message, group, order', 'tutor' ),
-		'template' => 'dashboard.account.settings.notifications',
-	),
-	array(
-		'id'       => 'preferences',
-		'label'    => 'Preferences',
-		'icon'     => Icon::PREFERENCE,
-		'text'     => __( 'Sound effects, animations, theme', 'tutor' ),
-		'template' => 'dashboard.account.settings.preferences',
+		'id'              => 'preferences',
+		'label'           => 'Preferences',
+		'icon'            => Icon::PREFERENCE,
+		'text'            => __( 'Sound effects, animations, theme', 'tutor' ),
+		'template'        => 'dashboard.account.settings.preferences',
+		'custom_template' => null,
+		'role'            => false,
 	),
 );
+
+// @TODO: previously it was 'tutor_dashboard/nav_items/settings/nav_items' which gives 'phpcs' error
+$settings_tab_data = apply_filters( 'tutor_dashboard_settings_tabs', $settings_tab_data );
 ?>
 
 <section 
 	x-data='tutorTabs({
-				tabs: <?php echo wp_json_encode( $profile_tab_data ); ?>,
-				orientation: "vertical",
-				defaultTab: window.innerWidth >= 576 ? "account" : "none",
-				urlParams: {
-					enabled: true,
-					paramName: "tab",
-				}
-			})'
+		tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
+		orientation: "vertical",
+		defaultTab: window.innerWidth >= 576 ? "account" : "none",
+		urlParams: {
+			enabled: true,
+			paramName: "tab",
+		}
+	})'
 	class="tutor-profile-settings-section"
 >
 	<?php tutor_load_template( 'dashboard.account.settings.header' ); ?>
@@ -109,13 +113,17 @@ $profile_tab_data = array(
 					:class="activeTab !== null && activeTab !== 'none' ? 'tutor-profile-tab-activated' : ''" 
 					class="tutor-profile-settings-tab-content tutor-w-full"
 				>
-					<?php foreach ( $profile_tab_data as $profile_tab ) : ?>
-						<div x-show="activeTab === '<?php echo esc_attr( $profile_tab['id'] ); ?>'" x-cloak class="tutor-tab-panel" role="tabpanel">
+					<?php foreach ( $settings_tab_data as $settings_tab ) : ?>
+						<div x-show="activeTab === '<?php echo esc_attr( $settings_tab['id'] ); ?>'" x-cloak class="tutor-tab-panel" role="tabpanel">
 							<?php
+							if ( $settings_tab['custom_template'] ) {
+								tutor_load_template_from_custom_path( $settings_tab['custom_template'] );
+							} else {
 								tutor_load_template(
-									$profile_tab['template'],
-									array( 'form_id' => "tutor-{$profile_tab['id']}-form" )
+									$settings_tab['template'],
+									array( 'form_id' => "tutor-{$settings_tab['id']}-form" )
 								);
+							}
 							?>
 						</div>
 					<?php endforeach; ?>
