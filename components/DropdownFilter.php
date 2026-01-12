@@ -21,11 +21,23 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example Usage:
  * ```
+ * // Basic dropdown with custom options
  * DropdownFilter::make()
  *     ->options( $options )
+ *     ->query_arg( 'status' )
  *     ->variant( Variant::PRIMARY )
  *     ->size( Size::SMALL )
  *     ->search( true )
+ *     ->render();
+ *
+ * // Course filter (convenience method)
+ * DropdownFilter::make()
+ *     ->courses( $courses )
+ *     ->count( $total_items )
+ *     ->query_arg( 'course_id' )
+ *     ->variant( Variant::PRIMARY_SOFT )
+ *     ->size( Size::X_SMALL )
+ *     ->placeholder( __( 'Search Course', 'tutor' ) )
  *     ->render();
  * ```
  *
@@ -288,13 +300,13 @@ class DropdownFilter extends BaseComponent {
 
 		$btn_class = $this->button_class;
 		if ( empty( $btn_class ) ) {
-			$size_class = 'tutor-btn-md';
-			if ( Size::SMALL === $this->size || Size::SM === $this->size ) {
+			$size_class = 'tutor-btn-medium';
+			if ( Size::SMALL === $this->size ) {
 				$size_class = 'tutor-btn-small';
 			} elseif ( Size::X_SMALL === $this->size ) {
 				$size_class = 'tutor-btn-x-small';
-			} elseif ( Size::LARGE === $this->size || Size::LG === $this->size ) {
-				$size_class = 'tutor-btn-lg';
+			} elseif ( Size::LARGE === $this->size ) {
+				$size_class = 'tutor-btn-large';
 			}
 
 			if ( Variant::PRIMARY === $this->variant ) {
