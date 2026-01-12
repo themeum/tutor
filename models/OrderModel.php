@@ -1093,7 +1093,7 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$course_clause     = '';
-		$group_clause      = ' GROUP BY DATE(date_format) ';
+		$group_clause      = ' GROUP BY MONTH(date_format) ';
 		$discount_clause   = 'o.coupon_amount as total';
 
 		if ( $start_date && $end_date ) {
@@ -1181,7 +1181,8 @@ class OrderModel {
 							0
 						)
 					) AS total,
-					o.created_at_gmt AS date_format
+					o.created_at_gmt AS date_format,
+					DATE_FORMAT( o.created_at_gmt, '%b' ) AS month_name
 					FROM {$this->table_name} AS o
 					WHERE 1 = %d
 					AND o.order_status = 'completed'
