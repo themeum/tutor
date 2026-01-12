@@ -91,6 +91,7 @@ final class Icon {
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';
+	const COMMISSION                 = 'commission';
 	const COMMAND                    = 'command';
 	const COMMENTS                   = 'comments';
 	const COMPLETED                  = 'completed';
@@ -158,6 +159,7 @@ final class Icon {
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
 	const FACEBOOK                   = 'facebook';
+	const FEES                       = 'fees';
 	const FEATHER                    = 'feather';
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
@@ -275,6 +277,7 @@ final class Icon {
 	const PROFILE                    = 'profile';
 	const PROFILE_CIRCLE             = 'profile-circle';
 	const PROFILE_CIRCLE_FILL        = 'profile-circle-fill';
+	const PROGRESS                   = 'progress';
 	const PSD                        = 'psd';
 	const PUBLISH                    = 'publish';
 	const QA                         = 'qa';
@@ -301,11 +304,13 @@ final class Icon {
 	const RELOAD                     = 'reload';
 	const RELOAD_2                   = 'reload-2';
 	const RELOAD_3                   = 'reload-3';
+	const RELOAD_4                   = 'reload-4';
 	const REMOVE_IMAGE               = 'remove-image';
 	const REPORT                     = 'report';
 	const RESOURCES                  = 'resources';
 	const ROTATE                     = 'rotate';
 	const RTF                        = 'rtf';
+	const SALE                       = 'sale';
 	const SALE_TYPE                  = 'sale-type';
 	const SAVE                       = 'save';
 	const SEARCH                     = 'search';
@@ -377,10 +382,12 @@ final class Icon {
 	const VIDEO_QUALITY              = 'video-quality';
 	const VIMEO                      = 'vimeo';
 	const VISITED                    = 'visited';
+	const WALLET                     = 'wallet';
 	const WARNING                    = 'warning';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
 	const WISHLIST                   = 'wishlist';
+	const WITHDRAW                   = 'withdraw';
 	const X                          = 'x';
 	const XLS                        = 'xls';
 	const XML                        = 'xml';

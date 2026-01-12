@@ -13,13 +13,13 @@ namespace TUTOR;
 use Tutor\Ecommerce\Tax;
 use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\UrlHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -3510,11 +3510,11 @@ class Utils {
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
-				FROM 	{$wpdb->posts} enrollment
-					INNER  JOIN {$wpdb->posts} AS course
-							ON enrollment.post_parent=course.ID
-					INNER  JOIN {$wpdb->users} AS user
-							ON user.ID = enrollment.post_author
+				FROM {$wpdb->posts} enrollment
+				INNER JOIN {$wpdb->posts} AS course
+					ON enrollment.post_parent=course.ID
+				INNER JOIN {$wpdb->users} AS user
+					ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
 					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
@@ -3523,11 +3523,9 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
-
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
-				LIMIT %d, %d
-			",
+				LIMIT %d, %d",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
@@ -3556,9 +3554,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 				GROUP BY enrollment.post_author
-				ORDER BY {$order_by} {$order}
-
-			",
+				ORDER BY {$order_by} {$order}",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
@@ -9546,7 +9542,7 @@ class Utils {
 	 */
 	public function default_menus(): array {
 		$items = array(
-			'index'            => array(
+			'index'   => array(
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),
@@ -10742,28 +10738,31 @@ class Utils {
 	 * Render SVG icon
 	 *
 	 * @since 3.7.0
+	 * @since 4.0.0 added $return parameter.
 	 *
 	 * @param string  $name Icon name.
 	 * @param integer $width Icon width.
 	 * @param integer $height Icon height.
 	 * @param array   $attributes Custom attributes.
+	 * @param bool    $return     Whether to return the SVG markup instead of echoing it.
+	 *                            Default false (echo).
 	 *
-	 * @return void
+	 * @return string|null Returns the SVG markup when `$return` is true, otherwise null.
 	 */
-	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array(), $return = false ): ?string {
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
-			return;
+			return null;
 		}
 
 		$svg = file_get_contents( $icon_path );
 		if ( ! $svg ) {
-			return;
+			return null;
 		}
 
 		preg_match( '/<svg[^>]*viewBox="([^"]+)"[^>]*>(.*?)<\/svg>/is', $svg, $matches );
 		if ( ! $matches ) {
-			return;
+			return null;
 		}
 
 		list( $svg_tag, $view_box, $inner_svg ) = $matches;
@@ -10779,7 +10778,12 @@ class Utils {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
 
-		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+		if ( ! $return ) {
+			printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
+			return null;
+		}
+
+		return '<svg ' . $attr_string . '>' . $inner_svg . '</svg>';
 	}
 
 	/**
@@ -10816,5 +10820,149 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Render a template and return its output as a string.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $template   Template file path or slug.
+	 * @param array  $data       Data to be passed to the template.
+	 * @param string $type       Template type. Allowed values:
+	 *                           - include
+	 *                           - custom_template
+	 *                           - template
+	 * @param bool   $tutor_pro  Whether to load Tutor Pro template.
+	 *
+	 * @return string Rendered template output.
+	 */
+	public function render_template( $template, $data, $type, $tutor_pro = false ) {
+
+		ob_start();
+
+		switch ( $type ) {
+			case 'include':
+				include $template;
+				break;
+
+			case 'custom_template':
+				tutor_load_template_from_custom_path( $template, $data );
+				break;
+
+			case 'template':
+				tutor_load_template( $template, $data, $tutor_pro );
+				break;
+
+			default:
+				break;
+		}
+
+		return (string) ob_get_clean();
+	}
+
+	/**
+	 * Get topic-wise progress data for a course and a student.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id   Course ID.
+	 * @param int $student_id Student ID.
+	 *
+	 * @return array[] Topic progress data.
+	 */
+	public function get_topic_progress_by_course_id( $course_id, $student_id ) {
+
+		$topics_query = $this->get_topics( $course_id );
+
+		$topic_list = array();
+
+		if ( empty( $topics_query ) || ! $topics_query->have_posts() ) {
+			return $topic_list;
+		}
+
+		foreach ( $topics_query->posts as $topic_post ) {
+			$topic_id = (int) $topic_post->ID;
+
+			$topic = array(
+				'topic_id'        => $topic_id,
+				'topic_summary'   => apply_filters( 'the_content', $topic_post->post_content ),
+				'topic_title'     => get_the_title( $topic_id ),
+				'items'           => array(),
+				'topic_completed' => true,
+				'topic_started'   => false,
+			);
+
+			$contents_query = tutor_utils()->get_course_contents_by_topic( $topic_id, -1 );
+
+			if ( ! empty( $contents_query ) && $contents_query->have_posts() ) {
+				foreach ( $contents_query->posts as $content_post ) {
+					$post_id      = (int) $content_post->ID;
+					$post_type    = $content_post->post_type;
+					$is_completed = true;
+
+					if ( 'tutor_quiz' === $post_type ) {
+
+						$is_completed = (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id );
+
+						$topic['items'][] = array(
+							'type'         => 'quiz',
+							'id'           => $post_id,
+							'link'         => esc_url( get_permalink( $post_id ) ),
+							'title'        => $content_post->post_title,
+							'is_completed' => $is_completed,
+							'time_limit'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
+							'time_type'    => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
+						);
+
+					} elseif ( 'tutor_assignments' === $post_type ) {
+
+						$submitted_count = (int) tutor_utils()->get_submitted_assignment_count( $post_id, $student_id );
+						$is_completed    = $submitted_count > 0;
+
+						$topic['items'][] = array(
+							'type'          => 'assignment',
+							'id'            => $post_id,
+							'link'          => esc_url( get_permalink( $post_id ) ),
+							'title'         => $content_post->post_title,
+							'is_completed'  => $is_completed,
+						);
+
+					} elseif ( 'tutor_zoom_meeting' === $post_type ) { //@todo Need to add more information.
+						$topic['items'][] = array(
+							'type' => 'zoom_meeting',
+							'id'   => $post_id,
+							'link' => esc_url( get_permalink( $post_id ) ),
+						);
+
+					} else {
+						$video        = tutor_utils()->get_video_info( $post_id );
+						$is_completed = (bool) tutor_utils()->is_completed_lesson( $post_id, $student_id );
+
+						$topic['items'][] = array(
+							'type'            => 'lesson',
+							'id'              => $post_id,
+							'link'            => esc_url( get_permalink( $post_id ) ),
+							'title'           => $content_post->post_title,
+							'video'           => $video,
+							'video_play_time' => isset( $video->playtime ) ? $video->playtime : '',
+							'is_completed'    => $is_completed,
+						);
+					}
+
+					if ( ! $is_completed ) {
+						$topic['topic_completed'] = false;
+					} else {
+						$topic['topic_started'] = true;
+					}
+				}
+			}
+
+			$topic_list[] = $topic;
+		}
+
+		wp_reset_postdata();
+
+		return $topic_list;
 	}
 }

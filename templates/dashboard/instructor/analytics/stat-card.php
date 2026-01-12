@@ -53,4 +53,3 @@ $change_display = ! empty( $change ) ? $change : '';
 		</div>
 	<?php endif; ?>
 </div>
-
