@@ -38,6 +38,7 @@ defined( 'ABSPATH' ) || exit;
  *     ->query_param( 'course_id' )
  *     ->variant( Variant::PRIMARY_SOFT )
  *     ->size( Size::X_SMALL )
+ *     ->popover_size( Size::MEDIUM )
  *     ->placeholder( __( 'Search Course', 'tutor' ) )
  *     ->render();
  * ```
