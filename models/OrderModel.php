@@ -1138,7 +1138,8 @@ class OrderModel {
 								0
 							)
 						) AS total,
-						o.created_at_gmt AS date_format
+						o.created_at_gmt AS date_format,
+						DATE_FORMAT( o.created_at_gmt, '%b' ) AS month_name
 					FROM 
 						{$this->table_name} o
 					JOIN 
