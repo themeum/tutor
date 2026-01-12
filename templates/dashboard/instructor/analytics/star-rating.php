@@ -28,8 +28,8 @@ $show_rating_average = isset( $show_rating_average ) ? (bool) $show_rating_avera
 		$is_half = ! $is_full && ( $rating >= ( $i - 0.5 ) );
 
 		$icon_name = $is_full
-			? Icon::STAR
-			: ( $is_half ? Icon::STAR_LINE : Icon::STAR_LINE ); // Todo: Half star icon.
+			? Icon::STAR_FILL
+			: ( $is_half ? Icon::STAR_HALF : Icon::STAR_LINE );
 
 		$icon_html = tutor_utils()->render_svg_icon( $icon_name, 16, 16, array(), true ); // phpcs:ignore
 		?>
