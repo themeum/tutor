@@ -99,7 +99,7 @@ if ( ! empty( $questions ) ) {
 		->title( __( 'Delete This Question?', 'tutor' ) )
 		->message( __( 'Are you sure you want to delete this question permanently? Please confirm your choice.', 'tutor' ) )
 		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
-		->confirm_handler( 'handleDeleteQnA(payload?.questionId)' )
+		->confirm_handler( 'deleteQnAMutation?.mutate({ question_id: payload?.questionId })' )
 		->mutation_state( 'deleteQnAMutation' )
 		->render();
 }

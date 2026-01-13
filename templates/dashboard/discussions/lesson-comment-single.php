@@ -166,7 +166,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 		->title( __( 'Delete This Comment?', 'tutor' ) )
 		->message( __( 'Are you sure you want to delete this comment permanently? Please confirm your choice.', 'tutor' ) )
 		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
-		->confirm_handler( 'handleDeleteComment(payload?.commentId)' )
+		->confirm_handler( 'deleteCommentMutation?.mutate({ comment_id: payload?.commentId })' )
 		->mutation_state( 'deleteCommentMutation' )
 		->render();
 	?>

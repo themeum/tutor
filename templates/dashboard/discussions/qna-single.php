@@ -168,7 +168,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		class="tutor-qna-single-reply-form tutor-p-6 tutor-border-b" 
 		x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $qna_form_id ); ?>' }), focused: false }"
 		x-bind="getFormBindings()"
-		@submit.prevent="handleSubmit((data) => handleSaveQnAReply({ ...data, course_id: <?php echo esc_html( $question->course_id ); ?>, question_id: <?php echo esc_html( $question->comment_ID ); ?> }))($event)"
+		@submit.prevent="handleSubmit((data) => replyQnAMutation?.mutate({ ...data, course_id: <?php echo esc_html( $question->course_id ); ?>, question_id: <?php echo esc_html( $question->comment_ID ); ?> }))($event)"
 	>
 		<?php
 		InputField::make()
@@ -197,7 +197,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 						->size( Size::X_SMALL )
 						->attr( 'type', 'button' )
 						->attr( '@click', 'reset(); focused = false' )
-						->attr( ':disabled', 'createUpdateQnAMutation?.isPending' )
+						->attr( ':disabled', 'replyQnAMutation?.isPending' )
 						->render();
 
 					Button::make()
@@ -205,8 +205,8 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 						->variant( Variant::PRIMARY_SOFT )
 						->size( Size::X_SMALL )
 						->attr( 'type', 'submit' )
-						->attr( ':disabled', 'createUpdateQnAMutation?.isPending' )
-						->attr( ':class', "{ 'tutor-btn-loading': createUpdateQnAMutation?.isPending }" )
+						->attr( ':disabled', 'replyQnAMutation?.isPending' )
+						->attr( ':class', "{ 'tutor-btn-loading': replyQnAMutation?.isPending }" )
 						->render();
 				?>
 			</div>
@@ -251,7 +251,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		->title( __( 'Delete This Question?', 'tutor' ) )
 		->message( __( 'Are you sure you want to delete this question permanently? Please confirm your choice.', 'tutor' ) )
 		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
-		->confirm_handler( 'handleDeleteQnA(payload?.questionId)' )
+		->confirm_handler( 'deleteQnAMutation?.mutate({ question_id: payload?.questionId })' )
 		->mutation_state( 'deleteQnAMutation' )
 		->render();
 	?>

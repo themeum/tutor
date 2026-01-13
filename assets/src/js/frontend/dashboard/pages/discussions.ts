@@ -3,16 +3,21 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { __ } from '@wordpress/i18n';
 
+interface ReplyCommentPayload {
+  comment_post_ID: number;
+  comment_parent: number;
+  comment: string;
+}
 interface QnASingleActionPayload {
   question_id: number;
   qna_action: string;
   [key: string]: string | number;
 }
 
-interface ReplyCommentPayload {
-  comment_post_ID: number;
-  comment_parent: number;
-  comment: string;
+interface ReplyQnAPayload {
+  course_id: number;
+  question_id: number;
+  answer: string;
 }
 
 /**
@@ -24,11 +29,11 @@ const discussionsPage = () => {
 
   return {
     query,
-    qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
-    deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
     replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
-    createUpdateQnAMutation: null as MutationState<unknown, unknown> | null,
+    qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
+    deleteQnAMutation: null as MutationState<unknown, unknown> | null,
+    replyQnAMutation: null as MutationState<unknown, unknown> | null,
     currentAction: null as string | null,
     currentQuestionId: null as number | null,
     isSolved: false,
@@ -36,6 +41,29 @@ const discussionsPage = () => {
     isArchived: false,
 
     init() {
+      // Lesson comment delete mutation.
+      this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
+        onSuccess: () => {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('id');
+          window.location.href = url.toString();
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to delete Comment', 'tutor'));
+        },
+      });
+
+      // Lesson comment reply mutation
+      this.replyCommentMutation = this.query.useMutation(this.replyComment, {
+        onSuccess: () => {
+          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+        },
+      });
+
       // Q&A single action mutation (read, unread, solved, important, archived).
       this.qnaSingleActionMutation = this.query.useMutation(this.qnaSingleAction, {
         onSuccess: (response, payload: QnASingleActionPayload) => {
@@ -71,20 +99,8 @@ const discussionsPage = () => {
         },
       });
 
-      // Lesson comment delete mutation.
-      this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
-        onSuccess: () => {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('id');
-          window.location.href = url.toString();
-        },
-        onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete Comment', 'tutor'));
-        },
-      });
-
-      // Lesson comment reply mutation
-      this.replyCommentMutation = this.query.useMutation(this.replyComment, {
+      // Q&A reply mutation.
+      this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: () => {
           window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
           window.location.reload();
@@ -93,25 +109,6 @@ const discussionsPage = () => {
           window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
         },
       });
-
-      // Q&A create/update mutation.
-      this.createUpdateQnAMutation = this.query.useMutation(this.createUpdateQnA, {
-        onSuccess: () => {
-          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
-          window.location.reload();
-        },
-        onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
-        },
-      });
-    },
-
-    qnaSingleAction(payload: QnASingleActionPayload) {
-      return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
-    },
-
-    deleteQnA(payload: { question_id: number }) {
-      return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
     },
 
     deleteComment(payload: { comment_id: number }) {
@@ -122,7 +119,15 @@ const discussionsPage = () => {
       return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
     },
 
-    createUpdateQnA(payload: { course_id: number; question_id: number; answer: string }) {
+    qnaSingleAction(payload: QnASingleActionPayload) {
+      return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
+    },
+
+    deleteQnA(payload: { question_id: number }) {
+      return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
+    },
+
+    replyQnA(payload: ReplyQnAPayload) {
       return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
@@ -139,26 +144,6 @@ const discussionsPage = () => {
         this.currentAction = null;
         this.currentQuestionId = null;
       }
-    },
-
-    async handleDeleteQnA(questionId: number) {
-      await this.deleteQnAMutation?.mutate({ question_id: questionId });
-    },
-
-    async handleDeleteComment(commentId: number) {
-      await this.deleteCommentMutation?.mutate({ comment_id: commentId });
-    },
-
-    async handleSaveQnAReply(data: Record<string, unknown>) {
-      const answer = (data.answer as string) || '';
-      const courseId = (data.course_id as number) || 0;
-      const questionId = (data.question_id as number) || 0;
-
-      await this.createUpdateQnAMutation?.mutate({
-        course_id: courseId,
-        question_id: questionId,
-        answer: answer,
-      });
     },
 
     handleKeydown(event: KeyboardEvent) {
