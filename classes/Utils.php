@@ -9490,6 +9490,10 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
+			'index'            => array(
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME,
+			),
 			'my-courses'    => array(
 				'title'    => __( 'Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
