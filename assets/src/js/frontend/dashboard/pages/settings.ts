@@ -145,6 +145,7 @@ const settings = () => {
         onSuccess: (data: TutorMutationResponse<string>) => {
           window.TutorCore.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
           window.TutorCore.modal.closeModal('reset-password-modal');
+          window.TutorCore.form.reset('tutor-reset-password-form');
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to update password', 'tutor'));

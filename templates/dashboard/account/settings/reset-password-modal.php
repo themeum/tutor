@@ -8,8 +8,11 @@
  * @since 4.0.0
  */
 
+use TUTOR\Icon;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
+
+$form_id = 'tutor-reset-password-form';
 
 $default_values = array(
 	'current_password'     => '',
@@ -48,6 +51,7 @@ $default_values = array(
 			->placeholder( __( 'Type Password', 'tutor' ) )
 			->required()
 			->attr( 'x-bind', "register('new_password', { required: true })" )
+			->show_strength()
 			->render();
 
 		InputField::make()

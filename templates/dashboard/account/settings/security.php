@@ -24,7 +24,13 @@ $form_id = 'tutor-reset-password-form';
 	<div class="tutor-flex tutor-flex-column tutor-gap-4">
 		<h5 class="tutor-h5"><?php esc_html_e( 'Login Info', 'tutor' ); ?></h5>
 
-		<div class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5">
+		<div 
+			class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5"
+			x-data='tutorForm({
+				mode: "onChange",
+				defaultValues: <?php echo wp_json_encode( array( 'account_email' => $user->user_email ) ); ?>
+			})'
+		>
 			<?php
 				InputField::make()
 					->type( InputType::EMAIL )
@@ -32,8 +38,8 @@ $form_id = 'tutor-reset-password-form';
 					->name( 'account_email' )
 					->id( 'account_email' )
 					->placeholder( __( 'Enter Your Email', 'tutor' ) )
-					->value( $user->user_email )
 					->disabled()
+					->attr( 'x-bind', "register('account_email', { required: true })" )
 					->render();
 
 				Button::make()
@@ -76,7 +82,7 @@ $modal_title = sprintf(
 Modal::make()
 	->id( 'reset-password-modal' )
 	->title( $modal_title, 'tutor_kses_html' )
-	->template( tutor_get_template( 'dashboard.account.settings.reset-password-modal', array( 'form_id' => $form_id ) ) )
+	->template( tutor_get_template( 'dashboard.account.settings.reset-password-modal' ) )
 	->footer_buttons( $modal_footer )
 	->footer_alignment( 'right' )
 	->width( '458px' )
