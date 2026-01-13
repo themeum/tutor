@@ -99,7 +99,11 @@ class BillingController extends BaseController {
 			'role'            => false,
 		);
 
-		$tabs = array_merge( $tabs, array( $new_tab ) );
+		$tabs = array_merge(
+			array_slice( $tabs, 0, -2 ),
+			array( $new_tab ),
+			array_slice( $tabs, -2 )
+		);
 
 		return $tabs;
 	}
