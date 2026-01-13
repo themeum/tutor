@@ -200,6 +200,7 @@ final class Icon {
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
 	const JSON_FILE                  = 'json-file';
+	const KEY                        = 'key';
 	const LANDSCAPE                  = 'landscape';
 	const LANDSCAPE_FILLED           = 'landscape-filled';
 	const LEAGUE                     = 'league';

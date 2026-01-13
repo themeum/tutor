@@ -184,6 +184,7 @@ export const icons = [
   'javascript',
   'jpg',
   'jsonFile',
+  'key',
   'landscape',
   'landscapeFilled',
   'league',
