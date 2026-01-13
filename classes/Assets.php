@@ -897,7 +897,7 @@ class Assets {
 	public function should_load_legacy_scripts(): bool {
 		$load = true;
 
-		if ( tutor_utils()->is_dashboard_page() && get_query_var( 'tutor_dashboard_sub_page', false ) ) {
+		if ( tutor_utils()->is_dashboard_page() ) {
 			$load = false;
 		} else {
 			$is_learning_area   = tutor_utils()->is_learning_area();
