@@ -148,7 +148,7 @@ class Lesson extends Tutor_Base {
 		}
 
 		$lesson_id = $comment->comment_post_ID;
-		if ( get_current_user_id() === $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
 			wp_delete_comment( $comment_id, true );
 			$this->json_response( __( 'Comment deleted successfully', 'tutor' ) );
 		} else {
