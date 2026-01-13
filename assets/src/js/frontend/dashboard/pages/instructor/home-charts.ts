@@ -544,7 +544,7 @@ export const overviewChart = (data: OverviewChartProps) => ({
   },
 
   createChartConfig(data: OverviewChartProps, colors: OverviewChartColors): ChartConfiguration<'line'> {
-    const dataLength = data.earnings.length;
+    const dataLength = data?.earnings?.length || data?.enrolled?.length;
 
     return {
       type: 'line',
