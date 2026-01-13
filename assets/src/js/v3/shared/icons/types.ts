@@ -365,6 +365,7 @@ export const icons = [
   'weightBox',
   'wifi',
   'wishlist',
+  'withdraw',
   'x',
   'xls',
   'xml',

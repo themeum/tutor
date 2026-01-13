@@ -381,6 +381,7 @@ final class Icon {
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
 	const WISHLIST                   = 'wishlist';
+	const WITHDRAW                   = 'withdraw';
 	const X                          = 'x';
 	const XLS                        = 'xls';
 	const XML                        = 'xml';
