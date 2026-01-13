@@ -157,6 +157,7 @@ final class Icon {
 	const EXPORT                     = 'export';
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
+	const EYE_OFF                    = 'eye-off';
 	const FACEBOOK                   = 'facebook';
 	const FEATHER                    = 'feather';
 	const FILE                       = 'file';

@@ -141,6 +141,7 @@ export const icons = [
   'export',
   'eye',
   'eyeLine',
+  'eyeOff',
   'facebook',
   'feather',
   'file',
