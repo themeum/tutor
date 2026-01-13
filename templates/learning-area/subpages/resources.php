@@ -10,16 +10,20 @@
 
 use TUTOR\Icon;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+global $tutor_course_id;
+
+$attachments    = tutor_utils()->get_attachments( $tutor_course_id );
+$open_mode_view = apply_filters( 'tutor_pro_attachment_open_mode', null ) === 'view' ? ' target="_blank" ' : null;
+
 $tabs_data = array(
 	array(
 		'id'    => 'downloads',
 		'label' => 'Downloads',
 		'icon'  => Icon::DOWNLOAD_2,
-	),
-	array(
-		'id'    => 'external_links',
-		'label' => 'External Links',
-		'icon'  => Icon::LINK,
 	),
 );
 
@@ -56,110 +60,36 @@ $tabs_data = array(
 			<div class="tutor-tabs-content">
 				<div x-show="activeTab === 'downloads'" x-cloak class="tutor-tab-panel" role="tabpanel">
 					<div class="tutor-resources-list">
-						<div class="tutor-card tutor-attachment-card">
-							<div class="tutor-attachment-card-icon" aria-hidden="true">
-								<?php tutor_utils()->render_svg_icon( Icon::RESOURCES, 24, 24 ); ?>
-							</div>
+						<?php if ( is_array( $attachments ) && count( $attachments ) ) : ?>
+							<?php foreach ( $attachments as $attachment ) : ?>
+								<div class="tutor-card tutor-attachment-card">
+									<div class="tutor-attachment-card-icon" aria-hidden="true">
+										<?php tutor_utils()->render_svg_icon( Icon::RESOURCES, 24, 24 ); ?>
+									</div>
 
-							<div class="tutor-attachment-card-body">
-								<div class="tutor-attachment-card-title">
-									Course Slides (PDF)
+									<div class="tutor-attachment-card-body">
+										<div class="tutor-attachment-card-title">
+											<?php echo esc_html( $attachment->title ); ?>
+										</div>
+										<span class="tutor-attachment-card-meta">
+											<?php
+											/* translators: %s: file size */
+											printf( esc_html__( 'Size: %s', 'tutor' ), esc_html( $attachment->size ) );
+											?>
+										</span>
+									</div>
+
+									<div class="tutor-attachment-card-actions">
+										<?php
+										$download_attr = $open_mode_view ? $open_mode_view : 'download="' . esc_attr( $attachment->name ) . '"';
+										?>
+										<a href="<?php echo esc_url( $attachment->url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" <?php echo esc_attr( $download_attr ); ?>>
+											<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2, 16, 16 ); ?>
+										</a>
+									</div>
 								</div>
-								<span class="tutor-attachment-card-meta">
-									Week 1–3 lecture slides
-								</span>
-							</div>
-
-							<div class="tutor-attachment-card-actions">
-								<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2, 16, 16 ); ?>
-								</button>
-							</div>
-						</div>
-						<div class="tutor-card tutor-attachment-card">
-							<div class="tutor-attachment-card-icon" aria-hidden="true">
-								<?php tutor_utils()->render_svg_icon( Icon::RESOURCES, 24, 24 ); ?>
-							</div>
-
-							<div class="tutor-attachment-card-body">
-								<div class="tutor-attachment-card-title">
-									Project Starter Code (ZIP)
-								</div>
-								<span class="tutor-attachment-card-meta">
-									Includes setup files & instructions
-								</span>
-							</div>
-
-							<div class="tutor-attachment-card-actions">
-								<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2, 16, 16 ); ?>
-								</button>
-							</div>
-						</div>
-						<div class="tutor-card tutor-attachment-card">
-							<div class="tutor-attachment-card-icon" aria-hidden="true">
-								<?php tutor_utils()->render_svg_icon( Icon::RESOURCES, 24, 24 ); ?>
-							</div>
-
-							<div class="tutor-attachment-card-body">
-								<div class="tutor-attachment-card-title">
-									Course Slides (PDF)
-								</div>
-								<span class="tutor-attachment-card-meta">
-									Week 1–3 lecture slides
-								</span>
-							</div>
-
-							<div class="tutor-attachment-card-actions">
-								<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::DOWNLOAD_2, 16, 16 ); ?>
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div x-show="activeTab === 'external_links'" x-cloak class="tutor-tab-panel" role="tabpanel">
-					<div class="tutor-resources-list">
-						<div class="tutor-card tutor-attachment-card">
-							<div class="tutor-attachment-card-icon" aria-hidden="true">
-								<?php tutor_utils()->render_svg_icon( Icon::LINK, 24, 24 ); ?>
-							</div>
-
-							<div class="tutor-attachment-card-body">
-								<div class="tutor-attachment-card-title">
-									Official Docs
-								</div>
-								<span class="tutor-attachment-card-meta">
-									React documentation
-								</span>
-							</div>
-
-							<div class="tutor-attachment-card-actions">
-								<a href="#" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::ARROW_RIGHT_2, 16, 16 ); ?>
-								</a>
-							</div>
-						</div>
-						<div class="tutor-card tutor-attachment-card">
-							<div class="tutor-attachment-card-icon" aria-hidden="true">
-								<?php tutor_utils()->render_svg_icon( Icon::LINK, 24, 24 ); ?>
-							</div>
-
-							<div class="tutor-attachment-card-body">
-								<div class="tutor-attachment-card-title">
-									Community Forum
-								</div>
-								<span class="tutor-attachment-card-meta">
-									Join discussion with peers
-								</span>
-							</div>
-
-							<div class="tutor-attachment-card-actions">
-								<a href="#" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-									<?php tutor_utils()->render_svg_icon( Icon::ARROW_RIGHT_2, 16, 16 ); ?>
-								</a>
-							</div>
-						</div>
+							<?php endforeach; ?>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
