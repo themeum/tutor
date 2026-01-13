@@ -40,7 +40,7 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 				$subpage = Input::get( 'subpage' );
 
 				if ( $subpage ) {
-					$subpage_template = tutor_get_template( 'learning-area.subpages.' . $subpage );
+					$subpage_template = apply_filters( 'tutor_learning_area_subpage_template', 'learning-area.subpages.' . $subpage, $subpage );
 					if ( file_exists( $subpage_template ) ) {
 						tutor_load_template( 'learning-area.subpages.' . $subpage );
 					} else {
