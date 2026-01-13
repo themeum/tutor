@@ -9556,7 +9556,6 @@ class Utils {
 	 * @return array array of menu items.
 	 */
 	public function default_menus(): array {
-		return [];
 		$items = array(
 			'index'            => array(
 				'title' => __( 'Home', 'tutor' ),

@@ -590,7 +590,8 @@ class User {
 	 */
 	public static function get_current_view_mode(): string {
 		$is_instructor = self::is_instructor( 0, true );
+		$has_admin_cap = current_user_can( 'manage_options' );
 
-		return get_option( 'tutor_instructor_view_mode', $is_instructor ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT );
+		return get_option( 'tutor_instructor_view_mode', $is_instructor || $has_admin_cap ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT );
 	}
 }
