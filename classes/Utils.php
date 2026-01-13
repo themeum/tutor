@@ -2930,8 +2930,14 @@ class Utils {
 	 * @return mixed
 	 */
 	public function tutor_dashboard_pages() {
-		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
-		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		$view_as = User::get_current_view_mode();
+
+		$nav_items = array();
+		if ( User::VIEW_AS_INSTRUCTOR === $view_as ) {
+			$nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		} else {
+			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+		}
 
 		/**
 		 * Miscellaneous menus pages
@@ -2943,7 +2949,7 @@ class Utils {
 			'account' => array( 'label' => __( 'Account', 'tutor' ) ),
 		);
 
-		$all_menus = array_merge( $student_nav_items, $instructor_nav_items, $misc_menus );
+		$all_menus = array_merge( $nav_items, $misc_menus );
 
 		return apply_filters( 'tutor_dashboard/nav_items_all', $all_menus );
 	}
@@ -9499,19 +9505,30 @@ class Utils {
 		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
 
 		$other_menus = array(
-			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
-			),
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => Icon::ANNOUNCEMENT,
 			),
+			'quiz-attempts' => array(
+				'title'    => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QUIZ,
+			),
 		);
 
-		return apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		if ( $this->should_show_dicussion_menu() ) {
+			$other_menus['discussions'] = array (
+				'title'    => __( 'Discussions', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QA,
+			);
+		}
+
+		$all_menus = apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		return $all_menus;
 	}
 
 	/**
@@ -9539,6 +9556,7 @@ class Utils {
 	 * @return array array of menu items.
 	 */
 	public function default_menus(): array {
+		return [];
 		$items = array(
 			'index'            => array(
 				'title' => __( 'Home', 'tutor' ),
