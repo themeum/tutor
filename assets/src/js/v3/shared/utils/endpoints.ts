@@ -175,6 +175,7 @@ const endpoints = {
   SAVE_SOCIAL_PROFILE: 'tutor_social_profile',
   SAVE_BILLING_INFO: 'tutor_save_billing_info',
   SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
+  RESET_PASSWORD: 'tutor_profile_password_reset',
 } as const;
 
 export default endpoints;

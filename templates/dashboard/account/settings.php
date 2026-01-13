@@ -25,6 +25,15 @@ $settings_tab_data = array(
 		'role'            => false,
 	),
 	array(
+		'id'              => 'security',
+		'label'           => 'Security',
+		'icon'            => Icon::SECURITY,
+		'text'            => __( 'Password, 2FA', 'tutor' ),
+		'template'        => 'dashboard.account.settings.security',
+		'custom_template' => null,
+		'role'            => false,
+	),
+	array(
 		'id'              => 'social-accounts',
 		'label'           => 'Social Accounts',
 		'icon'            => Icon::GLOBE,

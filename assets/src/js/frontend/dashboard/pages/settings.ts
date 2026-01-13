@@ -52,6 +52,12 @@ interface WithdrawMethodFormProps {
   [key: string]: string;
 }
 
+interface ResetPasswordFormProps {
+  current_password: string;
+  new_password: string;
+  confirm_new_password: string;
+}
+
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
@@ -67,6 +73,7 @@ const settings = () => {
     saveSocialProfileMutation: null as MutationState<unknown> | null,
     saveBillingInfoMutation: null as MutationState<unknown> | null,
     saveWithdrawMethodMutation: null as MutationState<unknown> | null,
+    resetPasswordMutation: null as MutationState<unknown> | null,
 
     init() {
       if (!this.$el) {
@@ -79,6 +86,7 @@ const settings = () => {
       this.handleSaveSocialProfile = this.handleSaveSocialProfile.bind(this);
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
+      this.handleResetPassword = this.handleResetPassword.bind(this);
 
       this.fetchCountriesQuery = this.query.useQuery('fetch-countries', () => this.fetchCountries());
 
@@ -130,6 +138,16 @@ const settings = () => {
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to save withdrawal method', 'tutor'));
+        },
+      });
+
+      this.resetPasswordMutation = this.query.useMutation(this.resetPassword, {
+        onSuccess: (data: TutorMutationResponse<string>) => {
+          window.TutorCore.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
+          window.TutorCore.modal.closeModal('reset-password-modal');
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to update password', 'tutor'));
         },
       });
     },
@@ -205,6 +223,19 @@ const settings = () => {
       });
 
       await this.saveWithdrawMethodMutation?.mutate(payload);
+    },
+
+    async resetPassword(payload: ResetPasswordFormProps) {
+      return wpAjaxInstance.post(endpoints.RESET_PASSWORD, payload).then((res) => res.data);
+    },
+
+    async handleResetPassword(data: ResetPasswordFormProps) {
+      if (data.new_password !== data.confirm_new_password) {
+        window.TutorCore.toast.error(__('Passwords do not match', 'tutor'));
+        return;
+      }
+
+      await this.resetPasswordMutation?.mutate(data);
     },
   };
 };
