@@ -630,6 +630,37 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
+	 * Get single comment
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $comment_id comment id.
+	 * @return mixed comment on success, false on failure
+	 */
+	public static function get_single_comment( int $comment_id ) {
+		return get_comment( $comment_id );
+	}
+
+	/**
+	 * Get comment replies
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $comment_id comment id.
+	 * @param string $order order.
+	 *
+	 * @return mixed comment replies on success, false on failure
+	 */
+	public static function get_comment_replies( int $comment_id, string $order = '' ) {
+		return get_comments(
+			array(
+				'parent' => $comment_id,
+				'order'  => $order,
+			)
+		);
+	}
+
+	/**
 	 * Create comment
 	 *
 	 * @since 1.0.0

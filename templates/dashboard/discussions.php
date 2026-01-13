@@ -45,7 +45,7 @@ $page_nav_items = array(
 	if ( $discussion_id ) {
 		$template = tutor()->path . 'templates/dashboard/discussions/qna-single.php';
 		if ( 'lesson-comments' === $current_tab ) {
-			$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-replies.php';
+			$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-single.php';
 		}
 		require_once $template;
 	} else {

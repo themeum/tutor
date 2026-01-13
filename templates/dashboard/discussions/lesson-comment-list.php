@@ -15,7 +15,6 @@ use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
-use TUTOR\Icon;
 use TUTOR\Lesson;
 
 $is_instructor = tutor_utils()->is_instructor( null, true );

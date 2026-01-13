@@ -9,6 +9,12 @@ interface QnASingleActionPayload {
   [key: string]: string | number;
 }
 
+interface ReplyCommentPayload {
+  comment_post_ID: number;
+  comment_parent: number;
+  comment: string;
+}
+
 /**
  * Discussions Page Component
  * Handles Q&A, Lesson comments related actions
@@ -21,6 +27,7 @@ const discussionsPage = () => {
     qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
     deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
+    replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
     createUpdateQnAMutation: null as MutationState<unknown, unknown> | null,
     currentAction: null as string | null,
     currentQuestionId: null as number | null,
@@ -67,10 +74,23 @@ const discussionsPage = () => {
       // Lesson comment delete mutation.
       this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
         onSuccess: () => {
-          window.location.reload();
+          const url = new URL(window.location.href);
+          url.searchParams.delete('id');
+          window.location.href = url.toString();
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to delete Comment', 'tutor'));
+        },
+      });
+
+      // Lesson comment reply mutation
+      this.replyCommentMutation = this.query.useMutation(this.replyComment, {
+        onSuccess: () => {
+          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
         },
       });
 
@@ -96,6 +116,10 @@ const discussionsPage = () => {
 
     deleteComment(payload: { comment_id: number }) {
       return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
+    },
+
+    replyComment(payload: ReplyCommentPayload) {
+      return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
     },
 
     createUpdateQnA(payload: { course_id: number; question_id: number; answer: string }) {

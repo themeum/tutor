@@ -79,6 +79,7 @@ const endpoints = {
   GET_LESSON_DETAILS: 'tutor_lesson_details',
   SAVE_LESSON: 'tutor_save_lesson',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
+  REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
 
   // Q&A
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
