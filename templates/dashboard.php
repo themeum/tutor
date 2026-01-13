@@ -101,7 +101,7 @@ $footer_links = array(
 
 					do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
 				} else {
-					if ( User::is_student() ) {
+					if ( User::VIEW_AS_STUDENT === User::get_current_view_mode() ) {
 						tutor_load_template( 'dashboard.student-dashboard' );
 					} else {
 						tutor_load_template( 'dashboard.dashboard' );
