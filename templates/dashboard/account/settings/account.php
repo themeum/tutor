@@ -78,10 +78,11 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 					})">
 						<div
 							x-data="tutorFileUploader({
-								name: 'profile_photo',
 								value: [getValue('profile_photo')],
 								variant: 'image-uploader',
 								accept: '.png,.jpg,.jpeg',
+								onFileSelect: handleUploadProfilePhoto,
+								imagePreviewPlaceholder: '<?php esc_attr( $settings_data['profile_placeholder'] ); ?>',
 							})"
 							class="tutor-account-avatar" 
 							:class="open ? 'active' : ''"
@@ -138,7 +139,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 											->variant( Variant::SECONDARY )
 											->size( Size::X_SMALL )
 											->attr( 'type', 'button' )
-											->attr( '@click', 'removeFile(), hide()' )
+											->attr( '@click', 'removeFile(), hide(), handleRemoveProfilePhoto()' )
 											->render();
 									?>
 								</div>

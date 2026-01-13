@@ -18,6 +18,7 @@ export interface FileUploaderProps {
   value?: (File | string)[];
   name?: string;
   required?: boolean | string;
+  imagePreviewPlaceholder?: string;
 }
 
 const defaultProps = {
@@ -28,6 +29,7 @@ const defaultProps = {
   value: [],
   name: '',
   required: false,
+  imagePreviewPlaceholder: '',
 } satisfies FileUploaderProps;
 
 export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
@@ -40,7 +42,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   imagePreview:
     props.variant === 'image-uploader' && typeof props.value?.[0] === 'string'
       ? props.value[0]
-      : (null as string | null),
+      : props.imagePreviewPlaceholder,
   selectedFiles: props.value || [],
   name: props.name || '',
   required: props.required || false,
@@ -181,7 +183,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
 
     // Clear preview if no files left
     if (this.selectedFiles.length === 0) {
-      this.imagePreview = null;
+      this.imagePreview = '';
     }
 
     // Reset file input and trigger events to notify form of change
@@ -345,7 +347,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
 
   updateImagePreview() {
     if (this.selectedFiles.length === 0) {
-      this.imagePreview = null;
+      this.imagePreview = '';
       return;
     }
 
