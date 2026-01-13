@@ -46,6 +46,7 @@ $default_values = array(
 	'display_name'  => $user->display_name,
 	'profile_photo' => $settings_data['profile_photo_src'],
 	'cover_photo'   => $settings_data['cover_photo_src'],
+	'signature'     => get_user_meta( $user->ID, '_tutor_signature', true ),
 );
 
 $default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );

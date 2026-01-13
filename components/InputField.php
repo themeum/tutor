@@ -433,6 +433,42 @@ class InputField extends BaseComponent {
 	protected $selection_time_mode = null;
 
 	/**
+	 * Whether to use WordPress media library instead of native file input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $use_wp_media = false;
+
+	/**
+	 * Title for WordPress media modal.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_title = '';
+
+	/**
+	 * Button text for WordPress media modal.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_button_text = '';
+
+	/**
+	 * Library type filter for WordPress media (image, video, audio, application).
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $wp_media_library_type = '';
+
+	/**
 	 * Set input type.
 	 *
 	 * @since 4.0.0
@@ -754,6 +790,66 @@ class InputField extends BaseComponent {
 	 */
 	public function uploader_button_text( $text ) {
 		$this->uploader_button_text = $text;
+
+		return $this;
+	}
+
+	/**
+	 * Enable WordPress media library instead of native file input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $use_wp_media Whether to use WordPress media library.
+	 *
+	 * @return $this
+	 */
+	public function use_wp_media( $use_wp_media = true ) {
+		$this->use_wp_media = (bool) $use_wp_media;
+
+		return $this;
+	}
+
+	/**
+	 * Set WordPress media modal title.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $title Modal title.
+	 *
+	 * @return $this
+	 */
+	public function wp_media_title( $title ) {
+		$this->wp_media_title = $title;
+
+		return $this;
+	}
+
+	/**
+	 * Set WordPress media modal button text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $text Button text.
+	 *
+	 * @return $this
+	 */
+	public function wp_media_button_text( $text ) {
+		$this->wp_media_button_text = $text;
+
+		return $this;
+	}
+
+	/**
+	 * Set WordPress media library type filter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $type Library type (image, video, audio, application).
+	 *
+	 * @return $this
+	 */
+	public function wp_media_library_type( $type ) {
+		$this->wp_media_library_type = $type;
 
 		return $this;
 	}
@@ -1715,6 +1811,10 @@ class InputField extends BaseComponent {
 				value: values.<?php echo esc_attr( $this->name ); ?>,
 				name: '<?php echo esc_attr( $this->name ); ?>',
 				required: <?php echo is_bool( $this->required ) ? ( $this->required ? 'true' : 'false' ) : "'" . esc_js( $this->required ) . "'"; ?>,
+				useWPMedia: <?php echo $this->use_wp_media ? 'true' : 'false'; ?>,
+				wpMediaTitle: '<?php echo esc_js( $this->wp_media_title ); ?>',
+				wpMediaButtonText: '<?php echo esc_js( $this->wp_media_button_text ); ?>',
+				wpMediaLibraryType: '<?php echo esc_js( $this->wp_media_library_type ); ?>',
 			})"
 		>
 			<template x-if="imagePreview">

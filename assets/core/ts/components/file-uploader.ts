@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 
 import { type FormControlMethods, type SetValueOptions, type ValidationRules } from '@Core/ts/components/form';
+import { type WPMedia, type WPMediaType } from '@Core/ts/services/WPMedia';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
 import { formatBytes } from '@TutorShared/utils/util';
@@ -11,14 +12,18 @@ export interface FileUploaderProps {
   multiple?: boolean;
   accept?: string;
   maxSize?: number; // in bytes
-  onFileSelect?: (files: (File | string)[]) => void;
+  onFileSelect?: (files: (File | WPMedia | string)[]) => void;
   onError?: (error: string) => void;
   disabled?: boolean;
   variant?: FileUploaderVariant;
-  value?: (File | string)[];
+  value?: (File | WPMedia | string)[];
   name?: string;
   required?: boolean | string;
   imagePreviewPlaceholder?: string;
+  useWPMedia?: boolean;
+  wpMediaTitle?: string;
+  wpMediaButtonText?: string;
+  wpMediaLibraryType?: WPMediaType;
 }
 
 const defaultProps = {
@@ -30,6 +35,10 @@ const defaultProps = {
   name: '',
   required: false,
   imagePreviewPlaceholder: '',
+  useWPMedia: false,
+  wpMediaTitle: '',
+  wpMediaButtonText: '',
+  wpMediaLibraryType: undefined,
 } satisfies FileUploaderProps;
 
 export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
@@ -46,6 +55,10 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   selectedFiles: props.value || [],
   name: props.name || '',
   required: props.required || false,
+  useWPMedia: props.useWPMedia || false,
+  wpMediaTitle: props.wpMediaTitle || __('Select File', 'tutor'),
+  wpMediaButtonText: props.wpMediaButtonText || __('Use this file', 'tutor'),
+  wpMediaLibraryType: props.wpMediaLibraryType,
   formatBytes,
   $refs: {} as { fileInput: HTMLInputElement },
 
@@ -86,7 +99,6 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
     const files = Array.from(input.files || []);
     this.processFiles(files);
 
-    // Reset input value to allow selecting the same file again
     try {
       input.value = '';
     } catch {
@@ -95,20 +107,58 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   },
 
   openFileDialog() {
-    if (!this.isDisabled) {
+    if (this.isDisabled) {
+      return;
+    }
+
+    if (this.useWPMedia) {
+      this.openWPMediaLibrary();
+    } else {
       this.$refs.fileInput.click();
     }
   },
 
-  processFiles(files: (File | string)[]) {
+  openWPMediaLibrary() {
+    const wpMediaService = window.TutorCore?.wpMedia;
+
+    if (!wpMediaService?.isAvailable()) {
+      this.showError(__('WordPress media library is not available', 'tutor'));
+      return;
+    }
+
+    const existingIds = this.selectedFiles
+      .filter((file): file is WPMedia => typeof file === 'object' && 'id' in file && typeof file.id === 'number')
+      .map((file) => file.id);
+
+    wpMediaService.open(
+      {
+        title: this.wpMediaTitle,
+        button: { text: this.wpMediaButtonText },
+        multiple: this.multiple,
+        library: this.wpMediaLibraryType ? { type: this.wpMediaLibraryType } : undefined,
+        maxFileSize: this.maxSize,
+      },
+      (files: WPMedia[]) => {
+        this.processFiles(files);
+      },
+      existingIds,
+    );
+  },
+
+  processFiles(files: (File | WPMedia | string)[]) {
     if (!files.length) {
       return;
     }
 
-    const validFiles: (File | string)[] = [];
+    const validFiles: (File | WPMedia | string)[] = [];
 
     for (const file of files) {
       if (typeof file === 'string') {
+        validFiles.push(file);
+        continue;
+      }
+
+      if (this.isWPMedia(file)) {
         validFiles.push(file);
         continue;
       }
@@ -153,21 +203,19 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
       this.updateFormValue();
       this.syncFileInput();
 
-      // If image uploader, generate preview
-      if (
-        this.variant === 'image-uploader' &&
-        this.selectedFiles.length > 0 &&
-        typeof this.selectedFiles[0] !== 'string' &&
-        this.selectedFiles[0].type.startsWith('image/')
-      ) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.imagePreview = e.target?.result as string;
-        };
-        reader.readAsDataURL(this.selectedFiles[0] as File);
+      if (this.variant === 'image-uploader' && this.selectedFiles.length > 0) {
+        const firstFile = this.selectedFiles[0];
+        if (this.isWPMedia(firstFile) && firstFile.url) {
+          this.imagePreview = firstFile.url;
+        } else if (firstFile instanceof File && firstFile.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.imagePreview = e.target?.result as string;
+          };
+          reader.readAsDataURL(firstFile);
+        }
       }
 
-      // Call the onFileSelect callback if provided
       if (props.onFileSelect) {
         props.onFileSelect(this.selectedFiles);
       }
@@ -181,21 +229,17 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
       this.selectedFiles = [];
     }
 
-    // Clear preview if no files left
     if (this.selectedFiles.length === 0) {
       this.imagePreview = '';
     }
 
-    // Reset file input and trigger events to notify form of change
     if (this.$refs.fileInput) {
       try {
-        // Only reset the value if the input is in a valid state
         this.$refs.fileInput.value = '';
       } catch {
         // Safe to ignore
       }
 
-      // Dispatch events regardless of whether value reset succeeded
       this.$refs.fileInput.dispatchEvent(new Event('change', { bubbles: true }));
       this.$refs.fileInput.dispatchEvent(new Event('input', { bubbles: true }));
     }
@@ -208,11 +252,14 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
     }
   },
 
-  mergeFileLists(previousList: (File | string)[] | null, newList: (File | string)[] | null): (File | string)[] {
+  mergeFileLists(
+    previousList: (File | WPMedia | string)[] | null,
+    newList: (File | WPMedia | string)[] | null,
+  ): (File | WPMedia | string)[] {
     const seen = new Set<string>();
-    const result: (File | string)[] = [];
+    const result: (File | WPMedia | string)[] = [];
 
-    const add = (files: (File | string)[] | null) => {
+    const add = (files: (File | WPMedia | string)[] | null) => {
       if (!files) return;
       for (const file of Array.from(files)) {
         const key = this.getFileKey(file);
@@ -227,18 +274,36 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
     return result;
   },
 
-  isFileListChanged(previousList: (File | string)[] | null, nextList: (File | string)[] | null): boolean {
-    if (previousList === nextList) return false;
-    if (!previousList || !nextList) return true;
-    if (previousList.length !== nextList.length) return true;
+  isFileListChanged(
+    previousList: (File | WPMedia | string)[] | null,
+    nextList: (File | WPMedia | string)[] | null,
+  ): boolean {
+    if (previousList === nextList) {
+      return false;
+    }
+    if (!previousList || !nextList) {
+      return true;
+    }
+    if (previousList.length !== nextList.length) {
+      return true;
+    }
 
     const prevKeys = new Set(Array.from(previousList, (file) => this.getFileKey(file)));
     return nextList.some((file) => !prevKeys.has(this.getFileKey(file)));
   },
 
-  getFileKey(file: File | string): string {
-    if (typeof file === 'string') return file;
+  getFileKey(file: File | WPMedia | string): string {
+    if (typeof file === 'string') {
+      return file;
+    }
+    if (this.isWPMedia(file)) {
+      return `wp:${file.id}`;
+    }
     return `${file.name}|${file.size}|${file.lastModified}|${file.type}`;
+  },
+
+  isWPMedia(file: File | WPMedia | string): file is WPMedia {
+    return typeof file === 'object' && 'id' in file && typeof (file as WPMedia).id === 'number';
   },
 
   isFileTypeAccepted(file: File): boolean {
@@ -330,7 +395,7 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
     }
 
     component.$watch(`values.${this.name}`, (newVal: unknown) => {
-      const normalized = Array.isArray(newVal) ? newVal : ((newVal ? [newVal] : []) as (File | string)[]);
+      const normalized = Array.isArray(newVal) ? newVal : ((newVal ? [newVal] : []) as (File | WPMedia | string)[]);
 
       if (!this.isFileListChanged(this.selectedFiles, normalized)) {
         return;
@@ -355,6 +420,12 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
 
     if (typeof firstFile === 'string') {
       this.imagePreview = firstFile;
+      return;
+    }
+
+    // Handle WPMedia objects
+    if (this.isWPMedia(firstFile) && firstFile.url) {
+      this.imagePreview = firstFile.url;
       return;
     }
 
