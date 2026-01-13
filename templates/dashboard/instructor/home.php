@@ -45,7 +45,7 @@ $stat_cards = array(
 		'variation' => 'success',
 		'title'     => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'      => Icon::EARNING,
-		'value'     => '$740.00',
+		'value'     => wp_kses_post( tutor_utils()->tutor_price( $earnings['total_earnings'] ?? 0 ) ),
 		'change'    => '+2',
 		'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
