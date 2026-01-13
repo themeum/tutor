@@ -174,6 +174,7 @@ const endpoints = {
   UPDATE_PROFILE: 'tutor_update_profile',
   SAVE_SOCIAL_PROFILE: 'tutor_social_profile',
   SAVE_BILLING_INFO: 'tutor_save_billing_info',
+  SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
 } as const;
 
 export default endpoints;

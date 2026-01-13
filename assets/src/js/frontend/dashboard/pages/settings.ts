@@ -47,6 +47,11 @@ interface SettingsFormProps {
   billing_address: string;
 }
 
+interface WithdrawMethodFormProps {
+  withdraw_method: string;
+  [key: string]: string;
+}
+
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
@@ -61,6 +66,7 @@ const settings = () => {
     updateProfileMutation: null as MutationState<unknown> | null,
     saveSocialProfileMutation: null as MutationState<unknown> | null,
     saveBillingInfoMutation: null as MutationState<unknown> | null,
+    saveWithdrawMethodMutation: null as MutationState<unknown> | null,
 
     init() {
       if (!this.$el) {
@@ -72,6 +78,7 @@ const settings = () => {
       this.handleRemoveProfilePhoto = this.handleRemoveProfilePhoto.bind(this);
       this.handleSaveSocialProfile = this.handleSaveSocialProfile.bind(this);
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
+      this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
 
       this.fetchCountriesQuery = this.query.useQuery('fetch-countries', () => this.fetchCountries());
 
@@ -114,6 +121,15 @@ const settings = () => {
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to save billing info', 'tutor'));
+        },
+      });
+
+      this.saveWithdrawMethodMutation = this.query.useMutation(this.saveWithdrawMethod, {
+        onSuccess: (data: TutorMutationResponse<string>) => {
+          window.TutorCore.toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to save withdrawal method', 'tutor'));
         },
       });
     },
@@ -168,6 +184,27 @@ const settings = () => {
 
     async handleSaveBillingInfo(data: SettingsFormProps) {
       await this.saveBillingInfoMutation?.mutate(data);
+    },
+
+    async saveWithdrawMethod(payload: Record<string, unknown>) {
+      return wpAjaxInstance.post(endpoints.SAVE_WITHDRAW_METHOD, payload).then((res) => res.data);
+    },
+
+    async handleSaveWithdrawMethod(data: WithdrawMethodFormProps) {
+      const selectedMethod = data.withdraw_method;
+
+      const payload: Record<string, string> = {
+        tutor_selected_withdraw_method: selectedMethod,
+      };
+
+      Object.keys(data).forEach((key) => {
+        if (key.startsWith(selectedMethod + '_')) {
+          const fieldName = key.replace(selectedMethod + '_', '');
+          payload[`withdraw_method_field[${selectedMethod}][${fieldName}]`] = data[key] || '';
+        }
+      });
+
+      await this.saveWithdrawMethodMutation?.mutate(payload);
     },
   };
 };
