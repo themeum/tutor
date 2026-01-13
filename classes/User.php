@@ -593,7 +593,7 @@ class User {
 		$public_display = array_unique( $public_display );
 		$max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 );
 
-		$profile_bio = get_user_meta( $user->ID, self::PROFILE_BIO_META, true );
+		$profile_bio = wp_strip_all_tags( get_user_meta( $user->ID, self::PROFILE_BIO_META, true ) );
 		$job_title   = get_user_meta( $user->ID, self::PROFILE_JOB_TITLE_META, true );
 		$phone       = get_user_meta( $user->ID, self::PHONE_NUMBER_META, true );
 

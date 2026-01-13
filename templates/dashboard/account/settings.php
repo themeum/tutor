@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use TUTOR\User;
 
 $settings_tab_data = array(
 	array(
@@ -31,6 +32,15 @@ $settings_tab_data = array(
 		'template'        => 'dashboard.account.settings.social-accounts',
 		'custom_template' => null,
 		'role'            => false,
+	),
+	array(
+		'id'              => 'withdraw',
+		'label'           => 'Withdraw',
+		'icon'            => Icon::WITHDRAW,
+		'text'            => __( 'Withdrawal and refund', 'tutor' ),
+		'template'        => 'dashboard.account.settings.withdraw',
+		'custom_template' => null,
+		'role'            => User::INSTRUCTOR,
 	),
 	array(
 		'id'              => 'notifications',
@@ -54,6 +64,15 @@ $settings_tab_data = array(
 
 // @TODO: previously it was 'tutor_dashboard/nav_items/settings/nav_items' which gives 'phpcs' error
 $settings_tab_data = apply_filters( 'tutor_dashboard_settings_tabs', $settings_tab_data );
+
+$settings_tab_data = array_values(
+	array_filter(
+		$settings_tab_data,
+		function ( $tab ) {
+			return 'account' === $tab['id'] || ! $tab['role'] || ( User::INSTRUCTOR === $tab['role'] && current_user_can( tutor()->instructor_role ) );
+		}
+	)
+);
 ?>
 
 <section x-data="tutorSettings()">

@@ -36,16 +36,16 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 }
 
 $default_values = array(
-	'first_name'    => $user->first_name,
-	'last_name'     => $user->last_name,
-	'username'      => $user->user_login,
-	'phone_number'  => $settings_data['phone_number'],
-	'timezone'      => $settings_data['timezone'],
-	'occupation'    => $settings_data['job_title'],
-	'bio'           => $settings_data['profile_bio'],
-	'display_name'  => $user->display_name,
-	'profile_photo' => $settings_data['profile_photo_src'],
-	'cover_photo'   => $settings_data['cover_photo_src'],
+	'first_name'              => $user->first_name,
+	'last_name'               => $user->last_name,
+	'username'                => $user->user_login,
+	'phone_number'            => $settings_data['phone_number'],
+	'timezone'                => $settings_data['timezone'],
+	'tutor_profile_job_title' => $settings_data['job_title'],
+	'tutor_profile_bio'       => $settings_data['profile_bio'],
+	'display_name'            => $user->display_name,
+	'profile_photo'           => $settings_data['profile_photo_src'],
+	'cover_photo'             => $settings_data['cover_photo_src'],
 );
 
 $default_values = (array) apply_filters( 'tutor_profile_default_values', $default_values, $user );
@@ -200,11 +200,11 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 					InputField::make()
 						->type( InputType::TEXT )
 						->label( __( 'Skill/Occupation', 'tutor' ) )
-						->name( 'occupation' )
+						->name( 'tutor_profile_job_title' )
 						->clearable()
-						->id( 'occupation' )
+						->id( 'tutor_profile_job_title' )
 						->placeholder( __( 'Enter your skill/occupation', 'tutor' ) )
-						->attr( 'x-bind', "register('occupation')" )
+						->attr( 'x-bind', "register('tutor_profile_job_title')" )
 						->render();
 
 					if ( ! User::is_admin() ) {
@@ -241,11 +241,11 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 					InputField::make()
 						->type( InputType::TEXTAREA )
 						->label( __( 'Bio', 'tutor' ) )
-						->name( 'bio' )
+						->name( 'tutor_profile_bio' )
 						->clearable()
-						->id( 'bio' )
+						->id( 'tutor_profile_bio' )
 						->placeholder( __( 'Enter your bio', 'tutor' ) )
-						->attr( 'x-bind', "register('bio')" )
+						->attr( 'x-bind', "register('tutor_profile_bio')" )
 						->render();
 				?>
 			</div>
