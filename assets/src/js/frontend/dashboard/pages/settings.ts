@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import { type MutationState, type QueryState } from '@Core/ts/services/Query';
 
+import { type WPMedia } from '@Core/ts/services/WPMedia';
 import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
@@ -11,6 +12,18 @@ import { type TutorMutationResponse } from '@TutorShared/utils/types';
 interface ProfilePhotoFormProps {
   photo_file: File;
   photo_type: 'profile_photo';
+}
+
+interface AccountFormProps {
+  first_name: string;
+  last_name: string;
+  username: string;
+  phone_number: string;
+  timezone: string;
+  occupation: string;
+  bio: string;
+  display_name: string;
+  tutor_pro_custom_signature_id: WPMedia | null;
 }
 
 interface SocialFormProps {
@@ -129,12 +142,16 @@ const settings = () => {
       await this.removeProfilePhotoMutation?.mutate({});
     },
 
-    async updateProfile(payload: SettingsFormProps) {
+    async updateProfile(payload: AccountFormProps) {
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE, payload).then((res) => res.data);
     },
 
-    async handleUpdateProfile(data: SettingsFormProps) {
-      await this.updateProfileMutation?.mutate(data);
+    async handleUpdateProfile(data: AccountFormProps) {
+      const payload = {
+        ...data,
+        tutor_pro_custom_signature_id: data.tutor_pro_custom_signature_id?.id || '',
+      };
+      await this.updateProfileMutation?.mutate(payload);
     },
 
     async saveSocialProfile(payload: SocialFormProps) {

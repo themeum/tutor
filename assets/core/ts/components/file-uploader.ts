@@ -16,7 +16,7 @@ export interface FileUploaderProps {
   onError?: (error: string) => void;
   disabled?: boolean;
   variant?: FileUploaderVariant;
-  value?: (File | WPMedia | string)[];
+  value?: File | WPMedia | string | (File | WPMedia | string)[] | null;
   name?: string;
   required?: boolean | string;
   imagePreviewPlaceholder?: string;
@@ -41,6 +41,42 @@ const defaultProps = {
   wpMediaLibraryType: undefined,
 } satisfies FileUploaderProps;
 
+const normalizeValue = (value: FileUploaderProps['value']): (File | WPMedia | string)[] => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return [value];
+};
+
+function getInitialImagePreview(
+  variant: FileUploaderVariant | undefined,
+  value: FileUploaderProps['value'],
+  placeholder: string,
+): string {
+  if (variant !== 'image-uploader') {
+    return placeholder || '';
+  }
+
+  if (typeof value === 'string' && value) {
+    return value;
+  }
+
+  if (value && typeof value === 'object' && !Array.isArray(value) && 'url' in value) {
+    return (value as WPMedia).url;
+  }
+
+  if (Array.isArray(value) && value.length > 0) {
+    const first = value[0];
+    if (typeof first === 'string') {
+      return first;
+    }
+    if (first && typeof first === 'object' && 'url' in first) {
+      return (first as WPMedia).url;
+    }
+  }
+
+  return placeholder || '';
+}
+
 export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   isDragOver: false,
   isDisabled: props.disabled,
@@ -48,11 +84,8 @@ export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   accept: props.accept,
   maxSize: props.maxSize || 52428800,
   variant: props.variant,
-  imagePreview:
-    props.variant === 'image-uploader' && typeof props.value?.[0] === 'string'
-      ? props.value[0]
-      : props.imagePreviewPlaceholder,
-  selectedFiles: props.value || [],
+  imagePreview: getInitialImagePreview(props.variant, props.value, props.imagePreviewPlaceholder || ''),
+  selectedFiles: normalizeValue(props.value),
   name: props.name || '',
   required: props.required || false,
   useWPMedia: props.useWPMedia || false,
