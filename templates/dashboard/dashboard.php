@@ -19,7 +19,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$incomplete_count   = count(
 		array_filter(
 			$profile_completion,
-			function( $data ) {
+			function ( $data ) {
 				return ! $data['is_set'];
 			}
 		)
@@ -101,7 +101,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 									</span>
 								</div>
 								<?php
-								$i++;
+								++$i;
 						}
 						?>
 					</div>
@@ -109,8 +109,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			</div>
 			<?php
 		}
-	} else {
-		if ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
+	} elseif ( ! $profile_completion['_tutor_profile_photo']['is_set'] ) {
 			$alert_message = sprintf(
 				'<div class="tutor-alert tutor-primary tutor-mb-20">
 					<div class="tutor-alert-text">
@@ -128,11 +127,13 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 			);
 
 			echo $alert_message; //phpcs:ignore
-		}
+
 	}
 }
 ?>
 <?php do_action( 'tutor_before_dashboard_content' ); ?>
+
+<?php tutor_load_template( 'dashboard.instructor.home' ); ?>
 <div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-text-capitalize tutor-mb-24 tutor-dashboard-title"><?php esc_html_e( 'Dashboard', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner">
 	<?php

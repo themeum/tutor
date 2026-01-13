@@ -19,7 +19,6 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\UrlHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -2241,12 +2240,12 @@ class Utils {
 		$with_bundle_enrolled_courses_clause = '';
 		if ( ! $with_bundle_enrolled_courses ) {
 			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
-				"AND NOT EXISTS (
+				'AND NOT EXISTS (
 					SELECT 1
 					FROM wp_postmeta pm
 					WHERE pm.post_id = e.ID
 						AND pm.meta_key = %s
-				)",
+				)',
 				'_tutor_bundle_id'
 			);
 		}
@@ -9546,7 +9545,7 @@ class Utils {
 	 */
 	public function default_menus(): array {
 		$items = array(
-			'index'            => array(
+			'index'   => array(
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),
@@ -10816,5 +10815,63 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Get sortable sections for the instructor home dashboard.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array[] {
+	 *     List of instructor dashboard sections.
+	 *
+	 *     @type array {
+	 *         @type string  $id        Unique section identifier.
+	 *         @type string  $label     Section display label (translated).
+	 *         @type bool    $is_active Whether the section is enabled.
+	 *         @type int     $order     Display order of the section.
+	 *     }
+	 * }
+	 */
+	public function get_instructor_home_sortable_section() {
+		return array(
+			array(
+				'id'        => 'current_stats',
+				'label'     => esc_html__( 'Current Stats', 'tutor' ),
+				'is_active' => true,
+				'order'     => 0,
+			),
+			array(
+				'id'        => 'overview_chart',
+				'label'     => esc_html__( 'Earning Over Time', 'tutor' ),
+				'is_active' => true,
+				'order'     => 1,
+			),
+			array(
+				'id'        => 'course_completion_and_leader',
+				'label'     => esc_html__( 'Course Completion and Leader', 'tutor' ),
+				'is_active' => true,
+				'order'     => 2,
+			),
+			array(
+				'id'        => 'top_performing_courses',
+				'label'     => esc_html__( 'Top Performing Courses', 'tutor' ),
+				'is_active' => true,
+				'order'     => 3,
+			),
+			// @todo Will be added in the next version.
+			// array(
+			// 'id'        => 'upcoming_tasks_and_activity',
+			// 'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+			// 'is_active' => true,
+			// 'order'     => 4,
+			// ),
+			array(
+				'id'        => 'recent_reviews',
+				'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),
+				'is_active' => true,
+				'order'     => 6,
+			),
+		);
 	}
 }

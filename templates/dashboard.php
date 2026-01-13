@@ -101,11 +101,12 @@ $footer_links = array(
 
 					do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
 				} else {
-					if ( User::is_student() ) {
-						tutor_load_template( 'dashboard.student-dashboard' );
-					} else {
+					// @TODO Need to update the condition to view dashboard.
+					// if ( User::is_student() ) {
+					// 	tutor_load_template( 'dashboard.student-dashboard' );
+					// } else {
 						tutor_load_template( 'dashboard.dashboard' );
-					}
+					//}
 				}
 				?>
 			</div>
