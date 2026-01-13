@@ -19,6 +19,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\InputField;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Components\Sorting;
+use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Lesson;
@@ -40,7 +41,10 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 ?>
 <div class="tutor-qna-single">
 	<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
-		<a href="<?php echo esc_url( $discussion_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
+		<a 
+			href="<?php echo esc_url( UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ) ); ?>" 
+			class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2"
+		>
 			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
