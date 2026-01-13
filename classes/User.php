@@ -594,4 +594,15 @@ class User {
 
 		return get_option( 'tutor_instructor_view_mode', $is_instructor || $has_admin_cap ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT );
 	}
+
+	/**
+	 * Get current view mode STUDENT/INSTRUCTOR
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public static function is_instructor_view(): string {
+		return self::VIEW_AS_INSTRUCTOR === self::get_current_view_mode();
+	}
 }

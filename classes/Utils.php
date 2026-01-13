@@ -2930,10 +2930,9 @@ class Utils {
 	 * @return mixed
 	 */
 	public function tutor_dashboard_pages() {
-		$view_as = User::get_current_view_mode();
 
 		$nav_items = array();
-		if ( User::VIEW_AS_INSTRUCTOR === $view_as ) {
+		if ( User::is_instructor_view() ) {
 			$nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
 		} else {
 			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
