@@ -469,6 +469,24 @@ class InputField extends BaseComponent {
 	protected $wp_media_library_type = '';
 
 	/**
+	 * Whether to show password strength meter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $show_strength = false;
+
+	/**
+	 * Minimum password strength required.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int
+	 */
+	protected $min_strength = 3;
+
+	/**
 	 * Set input type.
 	 *
 	 * @since 4.0.0
@@ -997,6 +1015,34 @@ class InputField extends BaseComponent {
 		$this->selection_time_mode = $mode;
 		return $this;
 	}
+	/**
+	 * Set whether to show password strength meter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_strength Whether to show strength meter.
+	 *
+	 * @return self
+	 */
+	public function show_strength( $show_strength = true ): self {
+		$this->show_strength = $show_strength;
+		return $this;
+	}
+
+	/**
+	 * Set minimum password strength.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $min_strength Minimum strength score (0-5).
+	 *
+	 * @return self
+	 */
+	public function min_strength( $min_strength = 3 ): self {
+		$this->min_strength = $min_strength;
+		return $this;
+	}
+
 
 
 	/**
@@ -1407,6 +1453,87 @@ class InputField extends BaseComponent {
 			$select_input_options
 		);
 	}
+	/**
+	 * Render password input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Password HTML.
+	 */
+	protected function render_password_input() {
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		$input_classes = 'tutor-input';
+		if ( Size::SM === $this->size ) {
+			$input_classes .= ' tutor-input-sm';
+		} elseif ( Size::LG === $this->size ) {
+			$input_classes .= ' tutor-input-lg';
+		}
+
+		// Password inputs always have a right icon (toggle button).
+		$input_classes .= ' tutor-input-content-right';
+
+		if ( ! empty( $this->left_icon ) ) {
+			$input_classes .= ' tutor-input-content-left';
+		}
+
+		$input_attrs = sprintf(
+			'type="password" id="%s" name="%s" class="%s" %s',
+			esc_attr( $input_id ),
+			esc_attr( $this->name ),
+			esc_attr( $input_classes ),
+			$this->render_attributes()
+		);
+
+		if ( ! empty( $this->placeholder ) ) {
+			$input_attrs .= sprintf( ' placeholder="%s"', esc_attr( $this->placeholder ) );
+		}
+
+		if ( ! empty( $this->value ) ) {
+			$input_attrs .= sprintf( ' value="%s"', esc_attr( $this->value ) );
+		}
+
+		if ( $this->disabled ) {
+			$input_attrs .= ' disabled';
+		}
+
+		$left_icon_html = '';
+		if ( ! empty( $this->left_icon ) ) {
+			$left_icon_html = sprintf(
+				'<div class="tutor-input-content tutor-input-content-left">%s</div>',
+				$this->left_icon
+			);
+		}
+
+		// Toggle button is always present for password fields.
+		$toggle_button = '
+			<button 
+				type="button" 
+				class="tutor-input-password-toggle"
+				x-bind="getToggleBindings()"
+			>
+				<span x-show="!showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE_OFF, 16, 16 ) . '</span>
+				<span x-show="showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE, 16, 16 ) . '</span>
+			</button>
+		';
+
+		$right_icon_html = sprintf(
+			'<div class="tutor-input-content tutor-input-content-right">%s</div>',
+			$toggle_button
+		);
+
+		return sprintf(
+			'<div class="tutor-input-wrapper">
+				<input %s>
+				%s
+				%s
+			</div>',
+			$input_attrs,
+			$left_icon_html,
+			$right_icon_html
+		);
+	}
+
 
 	/**
 	 * Render text/email/password/number input.
@@ -1944,7 +2071,18 @@ class InputField extends BaseComponent {
 
 		// Render input based on type.
 		$input_html = '';
+		$root_attrs = '';
 		switch ( $this->type ) {
+			case InputType::PASSWORD:
+				$input_html = $this->render_password_input();
+
+				$password_props = array(
+					'showStrength' => $this->show_strength,
+					'minStrength'  => $this->min_strength,
+				);
+				$alpine_data    = sprintf( 'tutorPasswordInput(%s)', htmlspecialchars( wp_json_encode( $password_props ), ENT_QUOTES, 'UTF-8' ) );
+				$root_attrs     = sprintf( ' x-data="%s"', $alpine_data );
+				break;
 			case InputType::TEXTAREA:
 				$input_html = $this->render_textarea();
 				break;
@@ -1993,14 +2131,28 @@ class InputField extends BaseComponent {
 			$this->esc( $this->help_text )
 		);
 
+		$strength_meter_html = '';
+		if ( InputType::PASSWORD === $this->type && $this->show_strength ) {
+			$strength_meter_html = sprintf(
+				'<div 
+					class="tutor-help-text" 
+					x-show="password.length > 0" 
+					x-cloak 
+					x-bind="getStrengthTextBindings()"
+				></div>'
+			);
+		}
+
 		$this->component_string = sprintf(
-			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }">%s%s%s%s</div>',
+			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }" %s>%s%s%s%s%s</div>',
 			esc_attr( $field_classes ),
 			esc_attr( $this->name ),
+			$root_attrs,
 			$label_html,
 			$input_html,
 			$error_html,
-			$help_html
+			$help_html,
+			$strength_meter_html
 		);
 
 		return $this->component_string;

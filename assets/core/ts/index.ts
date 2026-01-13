@@ -12,6 +12,7 @@ import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
+import { passwordInputMeta } from '@Core/ts/components/password-input';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { selectMeta } from '@Core/ts/components/select';
@@ -55,6 +56,7 @@ const initializePlugin = () => {
       previewTriggerMeta,
       starRatingMeta,
       toastMeta,
+      passwordInputMeta,
     ],
     services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, wpMediaServiceMeta],
   });
