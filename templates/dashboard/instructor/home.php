@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 use TUTOR\Icon;
+use TUTOR\Input;
+use TUTOR_REPORT\Analytics;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
@@ -30,6 +32,13 @@ $sortable_sections_ids = array_reduce(
 	},
 	array()
 );
+
+$user        = wp_get_current_user();
+$time_period = Input::get( 'period', '' );
+$start_date  = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
+$end_date    = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+
+$earnings = Analytics::get_earnings_by_user( $user->ID, $time_period, $start_date, $end_date );
 
 $stat_cards = array(
 	array(
