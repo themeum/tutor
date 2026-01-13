@@ -25,7 +25,7 @@ $user_id      = get_current_user_id();
 $display_name = tutor_utils()->display_name( $user_id );
 ?>
 
-<div class="tutor-dashboard-header">
+<div x-data="tutorHeader()" class="tutor-dashboard-header">
 	<div class="tutor-dashboard-header-inner">
 		<div class="tutor-dashboard-header-left">
 			<div class="tutor-h5 tutor-text-primary tutor-text-medium">
@@ -137,7 +137,9 @@ $display_name = tutor_utils()->display_name( $user_id );
 								->size( Size::MEDIUM )
 								->variant( Variant::PRIMARY_SOFT )
 								->icon( Icon::RELOAD )
-								->attr( 'data-id', 101 )
+								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
+								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
+								->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
 								->render();
 							}
 						}
