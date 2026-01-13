@@ -13,6 +13,7 @@ defined( 'ABSPATH' ) || exit;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
+use Tutor\Components\PreviewTrigger;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Lesson;
 
@@ -51,15 +52,20 @@ $single_url = UrlHelper::add_query_params(
 			<div class="tutor-qna-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
 			<div>
 				<span class="tutor-text-subdued"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
-				<div class="tutor-preview-trigger"><?php echo esc_html( $lesson_comment->post_title ); ?></div>
+				<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
 				<span class="tutor-text-subdued"><?php esc_html_e( 'in', 'tutor' ); ?></span> 
-				<div class="tutor-preview-trigger"><?php echo esc_html( $course->post_title ); ?></div>
+				<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
 			</div>
 		</div>
 		<h6 class="tutor-qna-card-title"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></h6>
 		<div class="tutor-qna-card-meta">
-			<button class="tutor-qna-card-meta-reply-button"><?php esc_html_e( 'Reply', 'tutor' ); ?></button>
-			<div class="tutor-flex tutor-items-center tutor-gap-2"><?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> <?php echo esc_html( count( $replies ) ); ?></div>
+			<button class="tutor-qna-card-meta-reply-button">
+				<?php esc_html_e( 'Reply', 'tutor' ); ?>
+			</button>
+			<div class="tutor-flex tutor-items-center tutor-gap-2">
+				<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?>
+				<?php echo esc_html( count( $replies ) ); ?>
+			</div>
 
 			<?php if ( $last_reply ) { ?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-ml-2">
@@ -80,23 +86,9 @@ $single_url = UrlHelper::add_query_params(
 		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
 		</a>
-		<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-flex">
-			<button 
-				x-ref="trigger" 
-				@click="toggle()" 
-				class="tutor-btn tutor-btn-text tutor-btn-x-small tutor-btn-icon tutor-qna-card-actions-more">
-				<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES ); ?>
-			</button>
-
-			<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
-				<div class="tutor-popover-menu">
-					<button class="tutor-popover-menu-item"
-						@click="hide(); TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> });">
-						<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
-						<?php esc_html_e( 'Delete', 'tutor' ); ?>
-					</button>
-				</div>
-			</div>
-		</div>
+		<button class="tutor-btn tutor-btn-text tutor-btn-x-small tutor-btn-icon"
+			@click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $lesson_comment->comment_ID ); ?> });">
+			<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
+		</button>
 	</div>
 </div>

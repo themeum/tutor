@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Components\ConfirmationModal;
+use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
@@ -56,7 +57,7 @@ $lesson_comments = Lesson::get_comments( $list_args );
 $total_items     = Lesson::get_comments( $count_args );
 ?>
 
-<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
+<div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 	<div class="tutor-small tutor-text-secondary">
 		<?php esc_html_e( 'Comments', 'tutor' ); ?>
 		<span class="tutor-text-primary tutor-font-medium">(<?php echo esc_html( $total_items ); ?>)</span>
@@ -66,7 +67,10 @@ $total_items     = Lesson::get_comments( $count_args );
 	</div>
 </div>
 
-<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
+<?php if ( empty( $lesson_comments ) ) : ?>
+	<?php EmptyState::make()->title( 'No Comments Found!' )->render(); ?>
+<?php else : ?>
+<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 	<?php
 	foreach ( $lesson_comments as $lesson_comment ) :
 		tutor_load_template(
@@ -79,11 +83,16 @@ $total_items     = Lesson::get_comments( $count_args );
 	endforeach;
 	?>
 </div>
-<div class="tutor-px-6 tutor-pb-6">
-	<?php if ( $total_items > $item_per_page ) : ?>
-		<?php Pagination::make()->current( $current_page )->total( $total_items )->limit( $item_per_page )->render(); ?>
-	<?php endif; ?>
-</div>
+<?php endif; ?>
+
+<?php
+Pagination::make()
+	->current( $current_page )
+	->total( $total_items )
+	->limit( $item_per_page )
+	->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
+	->render();
+?>
 
 <?php
 if ( ! empty( $lesson_comments ) ) {

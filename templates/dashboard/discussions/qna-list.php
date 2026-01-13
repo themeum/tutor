@@ -11,6 +11,7 @@
 
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\DropdownFilter;
+use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Input;
@@ -63,6 +64,9 @@ $nav_items = array(
 	</div>
 </div>
 
+<?php if ( empty( $questions ) ) : ?>
+	<?php EmptyState::make()->title( 'No Questions Found!' )->render(); ?>
+<?php else : ?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-sm-gap-none tutor-p-6 tutor-sm-p-none">
 	<?php
 	foreach ( $questions as $question ) :
@@ -77,14 +81,15 @@ $nav_items = array(
 	endforeach;
 	?>
 </div>
+<?php endif; ?>
 
 <?php
-	Pagination::make()
-		->current( $current_page )
-		->total( $total_items )
-		->limit( $item_per_page )
-		->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
-		->render();
+Pagination::make()
+	->current( $current_page )
+	->total( $total_items )
+	->limit( $item_per_page )
+	->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
+	->render();
 ?>
 
 <?php
