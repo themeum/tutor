@@ -42,9 +42,9 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 				if ( $subpage ) {
 					$subpage_template = apply_filters( 'tutor_learning_area_subpage_template', 'learning-area.subpages.' . $subpage, $subpage );
 					if ( file_exists( $subpage_template ) ) {
-						tutor_load_template( 'learning-area.subpages.' . $subpage );
+						include $subpage_template;
 					} else {
-						do_action( 'tutor_single_content_' . $tutor_post_type );
+						do_action( 'tutor_single_content_' . $tutor_current_post_type );
 					}
 				} else {
 					do_action( 'tutor_single_content_' . $tutor_current_post_type, $tutor_current_post );
