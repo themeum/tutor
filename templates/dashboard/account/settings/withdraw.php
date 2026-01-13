@@ -122,7 +122,7 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 				->attr( 'x-bind', "register('withdraw_method', { required: true })" )
 				->help_text(
 					sprintf(
-								/* translators: %s: minimum withdraw amount */
+						/* translators: %s: minimum withdraw amount */
 						__( 'Minimum withdraw amount is %s', 'tutor' ),
 						$formatted_min
 					)

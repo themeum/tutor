@@ -68,7 +68,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 	>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 			<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Account', 'tutor' ); ?></h5>
-			<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5">
+			<div class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5">
 				<?php do_action( 'tutor_profile_edit_input_before' ); ?>
 
 				<div class="tutor-account-avatar-wrapper">
@@ -226,7 +226,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">
 			<h5 class="tutor-h5"><?php echo esc_html__( 'Public Profile', 'tutor' ); ?></h5>
-			<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5">
+			<div class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5">
 				<?php
 					InputField::make()
 						->type( InputType::SELECT )
