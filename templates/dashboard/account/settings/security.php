@@ -16,16 +16,15 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Constants\InputType;
 
-$user                = wp_get_current_user();
-$reset_password_form = 'tutor-reset-password-form';
+$user    = wp_get_current_user();
+$form_id = 'tutor-reset-password-form';
 ?>
 
 <section class="tutor-flex tutor-flex-column tutor-gap-8">
-	<!-- Login Info Section -->
 	<div class="tutor-flex tutor-flex-column tutor-gap-4">
 		<h5 class="tutor-h5"><?php esc_html_e( 'Login Info', 'tutor' ); ?></h5>
 
-		<div class="tutor-card tutor-flex tutor-flex-column tutor-gap-5">
+		<div class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5">
 			<?php
 				InputField::make()
 					->type( InputType::EMAIL )
@@ -41,7 +40,7 @@ $reset_password_form = 'tutor-reset-password-form';
 					->label( __( 'Reset Password', 'tutor' ) )
 					->variant( Variant::SECONDARY )
 					->size( Size::SMALL )
-					->icon( Icon::LOCK )
+					->icon( Icon::KEY )
 					->attr( '@click', "TutorCore.modal.showModal('reset-password-modal')" )
 					->render();
 			?>
@@ -49,8 +48,8 @@ $reset_password_form = 'tutor-reset-password-form';
 	</div>
 </section>
 
-<!-- Reset Password Modal -->
 <?php
+$modal_footer = '';
 ob_start();
 Button::make()
 	->label( __( 'Cancel', 'tutor' ) )
@@ -63,17 +62,23 @@ Button::make()
 	->label( __( 'Update Password', 'tutor' ) )
 	->variant( Variant::PRIMARY )
 	->size( Size::SMALL )
-	->attr( 'form', $reset_password_form )
+	->attr( 'form', $form_id )
 	->attr( 'type', 'submit' )
 	->render();
 $modal_footer = ob_get_clean();
 
+$modal_title = sprintf(
+	'<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-pb-7">%s%s</div>',
+	tutor_utils()->get_svg_icon( Icon::LOCK_STROKE_2, 24, 24 ),
+	esc_html__( 'Change Account Password', 'tutor' )
+);
+
 Modal::make()
 	->id( 'reset-password-modal' )
-	->title( __( 'Change Account Password', 'tutor' ) )
-	->template( tutor()->path . 'templates/dashboard/account/settings/reset-password-modal.php' )
+	->title( $modal_title, 'tutor_kses_html' )
+	->template( tutor_get_template( 'dashboard.account.settings.reset-password-modal', array( 'form_id' => $form_id ) ) )
 	->footer_buttons( $modal_footer )
 	->footer_alignment( 'right' )
-	->width( '480px' )
+	->width( '458px' )
 	->render();
 ?>

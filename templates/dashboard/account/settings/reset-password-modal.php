@@ -11,8 +11,6 @@
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
-$reset_password_form = 'tutor-reset-password-form';
-
 $default_values = array(
 	'current_password'     => '',
 	'new_password'         => '',
@@ -21,15 +19,15 @@ $default_values = array(
 ?>
 
 <form
-	id="<?php echo esc_attr( $reset_password_form ); ?>"
+	id="<?php echo esc_attr( $form_id ); ?>"
 	x-data='tutorForm({ 
-		id: "<?php echo esc_attr( $reset_password_form ); ?>",
+		id: "<?php echo esc_attr( $form_id ); ?>",
 		mode: "onChange",
 		defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
 	})'
 	x-bind="getFormBindings()"
 	@submit="handleSubmit(handleResetPassword)($event)"
-	class="tutor-modal-body tutor-flex tutor-flex-column tutor-gap-5"
+	class="tutor-modal-body tutor-flex tutor-flex-column tutor-gap-5 tutor-border-t"
 >
 	<?php
 		InputField::make()
