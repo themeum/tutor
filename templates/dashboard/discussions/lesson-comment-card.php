@@ -1,6 +1,6 @@
 <?php
 /**
- * Tutor dashboard Q&A card.
+ * Tutor dashboard lesson comment card.
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
@@ -40,16 +40,16 @@ $single_url = UrlHelper::add_query_params(
 	)
 );
 ?>
-<div class="tutor-qna-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
+<div class="tutor-discussion-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
 	<?php
 		Avatar::make()
 			->src( tutor_utils()->get_user_avatar_url( $lesson_comment->user_id ) )
 			->size( Size::SIZE_32 )
 			->render();
 	?>
-	<div class="tutor-qna-card-content">
-		<div class="tutor-qna-card-top">
-			<div class="tutor-qna-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
+	<div class="tutor-discussion-card-content">
+		<div class="tutor-discussion-card-top">
+			<div class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
 			<div>
 				<span class="tutor-text-subdued"><?php esc_html_e( 'comment on', 'tutor' ); ?></span> 
 				<?php PreviewTrigger::make()->id( $lesson_comment->comment_post_ID )->render(); ?>
@@ -57,9 +57,9 @@ $single_url = UrlHelper::add_query_params(
 				<?php PreviewTrigger::make()->id( $course->ID )->render(); ?>
 			</div>
 		</div>
-		<h6 class="tutor-qna-card-title"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></h6>
-		<div class="tutor-qna-card-meta">
-			<button class="tutor-qna-card-meta-reply-button">
+		<h6 class="tutor-discussion-card-title"><?php echo wp_kses_post( $lesson_comment->comment_content ); ?></h6>
+		<div class="tutor-discussion-card-meta">
+			<button class="tutor-discussion-card-meta-reply-button">
 				<?php esc_html_e( 'Reply', 'tutor' ); ?>
 			</button>
 			<div class="tutor-flex tutor-items-center tutor-gap-2">
@@ -82,7 +82,7 @@ $single_url = UrlHelper::add_query_params(
 			<?php } ?>
 		</div>
 	</div>
-	<div class="tutor-qna-card-actions">
+	<div class="tutor-discussion-card-actions">
 		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
 		</a>

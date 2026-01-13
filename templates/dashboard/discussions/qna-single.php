@@ -42,7 +42,7 @@ $is_important = (int) tutor_utils()->array_get( 'tutor_qna_important', $question
 $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question->meta, 0 );
 
 ?>
-<div class="tutor-qna-single" x-init="isSolved = <?php echo $is_solved ? 'true' : 'false'; ?>; isImportant = <?php echo $is_important ? 'true' : 'false'; ?>; isArchived = <?php echo $is_archived ? 'true' : 'false'; ?>;">
+<div class="tutor-discussion-single" x-init="isSolved = <?php echo $is_solved ? 'true' : 'false'; ?>; isImportant = <?php echo $is_important ? 'true' : 'false'; ?>; isArchived = <?php echo $is_archived ? 'true' : 'false'; ?>;">
 	<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
 		<a href="<?php echo esc_url( $discussion_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
@@ -94,12 +94,12 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		</div>
 		<?php endif; ?>
 	</div>
-	<div class="tutor-qna-single-body tutor-p-6 tutor-border-b">
+	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 			<?php Avatar::make()->size( Size::SIZE_40 )->render(); ?>
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-qna-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
+					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></span> 
 					<span class="tutor-text-secondary">
 						<?php
 							// Translators: %s is the time of comment.
@@ -165,7 +165,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 	</div>
 	<?php $qna_form_id = 'qna-reply-form-' . $question->comment_ID; ?>
 	<form 
-		class="tutor-qna-single-reply-form tutor-p-6 tutor-border-b" 
+		class="tutor-discussion-single-reply-form tutor-p-6 tutor-border-b" 
 		x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $qna_form_id ); ?>' }), focused: false }"
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit((data) => replyQnAMutation?.mutate({ ...data, course_id: <?php echo esc_html( $question->course_id ); ?>, question_id: <?php echo esc_html( $question->comment_ID ); ?> }))($event)"
@@ -220,13 +220,13 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 		<?php Sorting::make()->order( $replies_order )->render(); ?>
 	</div>
 	<?php if ( ! empty( $replies ) ) : ?>
-	<div class="tutor-qna-single-reply-list tutor-border-t">
+	<div class="tutor-discussion-single-reply-list tutor-border-t">
 		<?php foreach ( $replies as $reply ) : ?>
-			<div class="tutor-qna-reply-list-item">
+			<div class="tutor-discussion-reply-list-item">
 				<?php Avatar::make()->size( 40 )->render(); ?>
 				<div>
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
-						<span class="tutor-qna-card-author">
+						<span class="tutor-discussion-card-author">
 							<?php echo esc_html( $reply->comment_author ); ?>
 						</span> 
 						<span class="tutor-text-secondary">

@@ -1,6 +1,6 @@
 <?php
 /**
- * Q&A replies template.
+ * Lesson comment replies template.
  *
  * @package Tutor\Templates
  * @subpackage Dashboard
@@ -39,7 +39,7 @@ $replies       = Lesson::get_comment_replies( $discussion_id, $replies_order );
 $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->comment_post_ID ) );
 
 ?>
-<div class="tutor-qna-single">
+<div class="tutor-discussion-single">
 	<div class="tutor-flex tutor-justify-between tutor-p-6 tutor-border-b">
 		<a 
 			href="<?php echo esc_url( UrlHelper::add_query_params( $discussion_url, array( 'tab' => 'lesson-comments' ) ) ); ?>" 
@@ -49,12 +49,12 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
 	</div>
-	<div class="tutor-qna-single-body tutor-p-6 tutor-border-b">
+	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
 			<?php Avatar::make()->size( Size::SIZE_40 )->render(); ?>
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
-					<span class="tutor-qna-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
+					<span class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
 					<span class="tutor-text-secondary">
 						<?php
 							// Translators: %s is the time of comment.
@@ -84,7 +84,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 	</div>
 	<?php $lesson_comment_form_id = 'lesson-comment-reply-form-' . $lesson_comment->comment_ID; ?>
 	<form 
-		class="tutor-qna-single-reply-form tutor-p-6 tutor-border-b" 
+		class="tutor-discussion-single-reply-form tutor-p-6 tutor-border-b" 
 		x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $lesson_comment_form_id ); ?>' }), focused: false }"
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit((data) => replyCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $course->ID ); ?>, comment_parent: <?php echo esc_html( $lesson_comment->comment_ID ); ?> }))($event)"
@@ -139,13 +139,13 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 		<?php Sorting::make()->order( $replies_order )->render(); ?>
 	</div>
 	<?php if ( ! empty( $replies ) ) : ?>
-	<div class="tutor-qna-single-reply-list tutor-border-t">
+	<div class="tutor-discussion-single-reply-list tutor-border-t">
 		<?php foreach ( $replies as $reply ) : ?>
-			<div class="tutor-qna-reply-list-item">
+			<div class="tutor-discussion-reply-list-item">
 				<?php Avatar::make()->size( 40 )->render(); ?>
 				<div>
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
-						<span class="tutor-qna-card-author">
+						<span class="tutor-discussion-card-author">
 							<?php echo esc_html( $reply->comment_author ); ?>
 						</span> 
 						<span class="tutor-text-secondary">

@@ -1,20 +1,20 @@
-// Question and Answer Single
+// Discussion Single
 
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-.tutor-qna-single {
+.tutor-discussion-single {
   background-color: $tutor-surface-l1;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-2xl;
 
-  .tutor-qna-single-reply-count {
+  .tutor-discussion-single-reply-count {
     @include tutor-typography(small, regular, secondary);
     @include tutor-flex(row, center, space-between);
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
 
-    .tutor-qna-avatar-list {
+    .tutor-discussion-avatar-list {
       @include tutor-flex();
 
       .tutor-avatar {
@@ -24,8 +24,8 @@
     }
   }
 
-  .tutor-qna-single-reply-list {
-    .tutor-qna-reply-list-item {
+  .tutor-discussion-single-reply-list {
+    .tutor-discussion-reply-list-item {
       @include tutor-flex(row);
       gap: $tutor-spacing-4;
       padding: $tutor-spacing-6;
@@ -36,7 +36,7 @@
     }
   }
 
-  .tutor-qna-thumb-button {
+  .tutor-discussion-thumb-button {
     @include tutor-button-reset();
     @include tutor-flex(0);
   }

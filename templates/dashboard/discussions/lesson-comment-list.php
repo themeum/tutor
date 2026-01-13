@@ -61,7 +61,7 @@ $total_items     = Lesson::get_comments( $count_args );
 		<?php esc_html_e( 'Comments', 'tutor' ); ?>
 		<span class="tutor-text-primary tutor-font-medium">(<?php echo esc_html( $total_items ); ?>)</span>
 	</div>
-	<div class="tutor-qna-filter-right">
+	<div class="tutor-discussion-filter-right">
 		<?php Sorting::make()->order( $order_filter )->render(); ?>
 	</div>
 </div>

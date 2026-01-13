@@ -48,7 +48,7 @@ $single_url = UrlHelper::add_query_params(
 );
 ?>
 <div 
-	class="tutor-qna-card"
+	class="tutor-discussion-card"
 	x-data="{ 
 		...tutorPopover({ placement: 'bottom-end' }),
 		isUnread: <?php echo $is_unread ? 'true' : 'false'; ?>, 
@@ -72,18 +72,18 @@ $single_url = UrlHelper::add_query_params(
 			->size( Size::SIZE_32 )
 			->render();
 	?>
-	<div class="tutor-qna-card-content">
-		<div class="tutor-qna-card-top">
-			<div class="tutor-qna-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
+	<div class="tutor-discussion-card-content">
+		<div class="tutor-discussion-card-top">
+			<div class="tutor-discussion-card-author"><?php echo esc_html( $question->comment_author ); ?></div>
 			<div class="tutor-flex tutor-gap-2">
 				<span class="tutor-text-subdued tutor-text-subdued tutor-flex-shrink-0">asked in</span>
 				<?php PreviewTrigger::make()->id( $question->course_id )->render(); ?>
 			</div>
 		</div>
-		<h6 class="tutor-qna-card-title"><?php echo wp_kses_post( $content ); ?></h6>
+		<h6 class="tutor-discussion-card-title"><?php echo wp_kses_post( $content ); ?></h6>
 		<div class="tutor-flex tutor-items-center tutor-justify-between">
-			<div class="tutor-qna-card-meta">
-				<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-qna-card-meta-reply-button">
+			<div class="tutor-discussion-card-meta">
+				<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-discussion-card-meta-reply-button">
 					<?php esc_html_e( 'Reply', 'tutor' ); ?>
 				</a>
 				<div class="tutor-flex tutor-items-center tutor-gap-2">
@@ -149,7 +149,7 @@ $single_url = UrlHelper::add_query_params(
 			<?php endif; ?>
 		</div>
 	</div>
-	<div class="tutor-qna-card-actions">
+	<div class="tutor-discussion-card-actions">
 		<a href="<?php echo esc_url( $single_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-sm-hidden">
 			<?php esc_html_e( 'Reply', 'tutor' ); ?>
 		</a>
@@ -157,7 +157,7 @@ $single_url = UrlHelper::add_query_params(
 			<button 
 				x-ref="trigger" 
 				@click="toggle()" 
-				class="tutor-btn tutor-btn-text tutor-btn-x-small tutor-btn-icon tutor-qna-card-actions-trigger">
+				class="tutor-btn tutor-btn-text tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger">
 				<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES ); ?>
 			</button>
 
