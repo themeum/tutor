@@ -105,7 +105,7 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 		})'
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(handleSaveWithdrawMethod)($event)"
-		class="tutor-card tutor-flex tutor-flex-column tutor-gap-5"
+		class="tutor-card tutor-card-rounded-2xl tutor-flex tutor-flex-column tutor-gap-5"
 	>
 		<?php
 			$min_withdraw_amount = tutor_utils()->get_option( 'min_withdraw_amount' );
@@ -120,10 +120,15 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 				->placeholder( __( 'Select a withdrawal method', 'tutor' ) )
 				->required()
 				->attr( 'x-bind', "register('withdraw_method', { required: true })" )
-				/* translators: %s: minimum withdraw amount */
-				->help_text( sprintf( __( 'Minimum withdraw amount is %s', 'tutor' ), $formatted_min ) )
+				->help_text(
+					sprintf(
+								/* translators: %s: minimum withdraw amount */
+						__( 'Minimum withdraw amount is %s', 'tutor' ),
+						$formatted_min
+					)
+				)
 				->render();
-		?>
+			?>
 
 		<?php foreach ( $withdrawal_methods as $method_id => $method ) : ?>
 			<?php
