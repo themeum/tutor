@@ -129,6 +129,17 @@
     &.tutor-input-content-right {
       @include right($tutor-spacing-5);
     }
+
+    .tutor-input-password-toggle {
+      @include tutor-button-reset;
+      pointer-events: auto;
+      cursor: pointer;
+      color: inherit;
+
+      &:hover {
+        color: $tutor-icon-hover;
+      }
+    }
   }
 
   .tutor-input-wrapper:has(.tutor-input-sm) {
