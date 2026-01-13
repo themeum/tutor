@@ -589,6 +589,8 @@ class User {
 	 * @return string
 	 */
 	public static function get_current_view_mode(): string {
-		return get_option( 'tutor_instructor_view_mode', self::VIEW_AS_INSTRUCTOR );
+		$is_instructor = self::is_instructor( 0, true );
+
+		return get_option( 'tutor_instructor_view_mode', $is_instructor ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT );
 	}
 }
