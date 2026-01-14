@@ -94,7 +94,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 							</div>
 						</div>
 						<?php
-						if ( ! User::is_instructor( $user_id ) ) {
+						if ( ! User::is_instructor( $user_id ) && ! User::is_admin( $user_id ) ) {
 							$instructor_status = tutor_utils()->instructor_status( 0, false );
 							$instructor_status = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
 
