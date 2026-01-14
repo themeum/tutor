@@ -52,6 +52,15 @@ class User {
 	const VIEW_AS_STUDENT    = 'student';
 
 	/**
+	 * Option name for storing view as mode
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const VIEW_MODE_OPT_NAME = 'tutor_instructor_view_mode';
+
+	/**
 	 * User model
 	 *
 	 * @since 3.0.0
@@ -101,6 +110,7 @@ class User {
 		add_action( 'wp_login', array( $this, 'set_timezone' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
+		add_action( 'wp_ajax_tutor_switch_profile', array( $this, 'ajax_switch_profile' ) );
 	}
 
 	/**
@@ -582,6 +592,52 @@ class User {
 	}
 
 	/**
+	 * Switch user profile ajax-handler
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_switch_profile() {
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_UNAUTHORIZED
+			);
+		}
+
+		$switch_mode  = '';
+		$current_mode = Input::post( 'current_mode' );
+
+		if ( ! in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		if ( self::VIEW_AS_INSTRUCTOR === $current_mode ) {
+			$switch_mode = self::VIEW_AS_STUDENT;
+		} elseif ( self::VIEW_AS_STUDENT === $current_mode ) {
+			$switch_mode = self::VIEW_AS_INSTRUCTOR;
+		}
+
+		if ( self::VIEW_AS_INSTRUCTOR === $switch_mode && ! self::is_instructor( $user_id, true ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_UNAUTHORIZED
+			);
+		}
+
+		update_option( self::VIEW_MODE_OPT_NAME, $switch_mode );
+
+		// translators:%s for switching mode.
+		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
+	}
+
+	/**
 	 * Get current view mode STUDENT/INSTRUCTOR
 	 *
 	 * @since 4.0.0
@@ -592,7 +648,7 @@ class User {
 		$is_instructor = self::is_instructor( 0, true );
 		$has_admin_cap = current_user_can( 'manage_options' );
 
-		return get_option( 'tutor_instructor_view_mode', $is_instructor || $has_admin_cap ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT );
+		return get_option( self::VIEW_MODE_OPT_NAME, $is_instructor || $has_admin_cap ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT );
 	}
 
 	/**
