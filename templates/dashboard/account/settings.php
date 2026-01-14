@@ -71,8 +71,8 @@ $settings_tab_data = array(
 	),
 );
 
-// @TODO: previously it was 'tutor_dashboard/nav_items/settings/nav_items' which gives 'phpcs' error
-$settings_tab_data = apply_filters( 'tutor_dashboard_settings_tabs', $settings_tab_data );
+// phpcs:ignore WordPress.NamingConventions.ValidHookName
+$settings_tab_data = apply_filters( 'tutor_dashboard/nav_items/settings/nav_items', $settings_tab_data );
 
 $settings_tab_data = array_values(
 	array_filter(
