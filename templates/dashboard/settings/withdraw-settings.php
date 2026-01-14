@@ -9,6 +9,8 @@
  * @since 1.4.3
  */
 
+// @TODO: Need to remove before v4.0.0 beta release.
+
 use Tutor\Models\WithdrawModel;
 
 $col_classes = array(

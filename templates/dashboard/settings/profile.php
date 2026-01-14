@@ -9,6 +9,8 @@
  * @since 1.6.2
  */
 
+// @TODO: Need to remove before v4.0.0 beta release.
+
 use TUTOR\User;
 
 $user = wp_get_current_user();

@@ -53,7 +53,7 @@ if ( empty( $withdrawal_methods ) ) {
 		<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Withdraw Method', 'tutor' ); ?></h5>
 		<?php
 			EmptyState::make()
-				->title( 'No Withdraw Method Selected' )
+				->title( "There's no Withdrawal method selected yet! To select a Withdraw method, please contact the Site Admin.", 'tutor' )
 				->render();
 		?>
 	</section>

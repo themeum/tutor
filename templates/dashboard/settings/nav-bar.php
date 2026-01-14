@@ -9,6 +9,8 @@
  * @since 1.6.2
  */
 
+// @TODO: Need to remove before v4.0.0 beta release.
+
 $settings_url   = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' );
 $withdraw       = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
 $reset_password = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/reset-password' );

@@ -9,6 +9,8 @@
  * @version 1.4.3
  */
 
+// @TODO: Need to remove before v4.0.0 beta release.
+
 ?>
 
 <div class="tutor-fs-4 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
