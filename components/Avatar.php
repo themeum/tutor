@@ -318,7 +318,7 @@ class Avatar extends BaseComponent {
 			);
 		} else {
 			$content = sprintf(
-				'<span class="tutor-avatar-text">%s</span>',
+				'<span class="tutor-avatar-initials">%s</span>',
 				esc_html( $this->initials ?? '' )
 			);
 		}
