@@ -41,12 +41,7 @@ $single_url = UrlHelper::add_query_params(
 );
 ?>
 <div class="tutor-discussion-card <?php echo esc_attr( $is_unread ? 'unread' : '' ); ?>">
-	<?php
-		Avatar::make()
-			->src( tutor_utils()->get_user_avatar_url( $lesson_comment->user_id ) )
-			->size( Size::SIZE_32 )
-			->render();
-	?>
+	<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_32 )->render(); ?>
 	<div class="tutor-discussion-card-content">
 		<div class="tutor-discussion-card-top">
 			<div class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></div>
@@ -69,12 +64,7 @@ $single_url = UrlHelper::add_query_params(
 
 			<?php if ( $last_reply ) { ?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3 tutor-sm-ml-2">
-				<?php
-				Avatar::make()
-					->src( tutor_utils()->get_user_avatar_url( $last_reply->user_id ) )
-					->size( Size::SIZE_20 )
-					->render();
-				?>
+				<?php Avatar::make()->user( $last_reply->user_id )->size( Size::SIZE_20 )->render(); ?>
 				<div class="tutor-text-small"><?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $last_reply->comment_date_gmt ) ) ) ); //phpcs:ignore ?></div>
 			</div>
 			<?php } else { ?>

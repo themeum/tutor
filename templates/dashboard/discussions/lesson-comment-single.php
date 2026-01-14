@@ -51,7 +51,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 	</div>
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-gap-5 tutor-mb-5">
-			<?php Avatar::make()->size( Size::SIZE_40 )->render(); ?>
+			<?php Avatar::make()->user( $lesson_comment->user_id )->size( Size::SIZE_40 )->render(); ?>
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-small">
 					<span class="tutor-discussion-card-author"><?php echo esc_html( $lesson_comment->comment_author ); ?></span> 
@@ -142,7 +142,7 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 	<div class="tutor-discussion-single-reply-list tutor-border-t">
 		<?php foreach ( $replies as $reply ) : ?>
 			<div class="tutor-discussion-reply-list-item">
-				<?php Avatar::make()->size( 40 )->render(); ?>
+				<?php Avatar::make()->user( $reply->user_id )->size( Size::SIZE_40 )->render(); ?>
 				<div>
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 						<span class="tutor-discussion-card-author">
