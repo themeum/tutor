@@ -12,8 +12,7 @@
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\DropdownFilter;
+use Tutor\Components\CourseFilter;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
@@ -76,18 +75,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 <div class="tutor-dashboard-announcements" x-data="tutorAnnouncements()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
-			<?php
-			DropdownFilter::make()
-				->options( CourseModel::get_course_filter_options( $courses ) )
-				->count( $total_announcements )
-				->query_param( 'course-id' )
-				->variant( Variant::PRIMARY_SOFT )
-				->size( Size::X_SMALL )
-				->popover_size( Size::MEDIUM )
-				->placeholder( __( 'Search Course', 'tutor' ) )
-				->search( true )
-				->render();
-			?>
+			<?php CourseFilter::make()->courses( $courses )->count( $total_announcements )->render(); ?>
 			<button 
 				type="button" 
 				class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"

@@ -1148,40 +1148,6 @@ class CourseModel {
 	}
 
 	/**
-	 * Get course filter options for DropdownFilter component.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array|null $courses Optional. Array of course objects.
-	 *                   If not provided, courses will be fetched based on user permissions.
-	 *
-	 * @return array
-	 */
-	public static function get_course_filter_options( $courses = null ) {
-		$course_options = array(
-			array(
-				'label' => __( 'All Courses', 'tutor' ),
-				'value' => '',
-			),
-		);
-
-		if ( null === $courses ) {
-			$courses = current_user_can( 'administrator' ) ? self::get_courses() : self::get_courses_by_instructor();
-		}
-
-		if ( ! empty( $courses ) ) {
-			foreach ( $courses as $course ) {
-				$course_options[] = array(
-					'label' => $course->post_title,
-					'value' => $course->ID,
-				);
-			}
-		}
-
-		return $course_options;
-	}
-
-	/**
 	 * Get category dropdown options
 	 *
 	 * @since 3.7.0
