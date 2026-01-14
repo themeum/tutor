@@ -161,12 +161,12 @@
   }
 
   .tutor-error-text {
-    @include tutor-typography('small', 'regular', 'critical');
+    @include tutor-typography('tiny', 'regular', 'critical');
     margin-top: $tutor-spacing-3;
   }
 
   .tutor-help-text {
-    @include tutor-typography('small', 'regular', 'subdued');
+    @include tutor-typography('tiny', 'regular', 'subdued');
     margin-top: $tutor-spacing-3;
   }
 
