@@ -2119,12 +2119,17 @@ class Course extends Tutor_Base {
 			die( esc_html__( 'Please Sign-In', 'tutor' ) );
 		}
 
+		if ( ! tutor_utils()->is_enrolled( $course_id, $user_id ) ) {
+			die( esc_html__( 'User is not enrolled in course', 'tutor' ) );
+		}
+
 		/**
 		 * Filter hook provided to restrict course completion. This is useful
 		 * for specific cases like prerequisites. WP_Error should be returned
 		 * from the filter value to prevent the completion.
 		 */
 		$can_complete = apply_filters( 'tutor_user_can_complete_course', true, $user_id, $course_id );
+
 		if ( is_wp_error( $can_complete ) ) {
 			tutor_utils()->redirect_to( $permalink, $can_complete->get_error_message(), 'error' );
 		} else {
@@ -2992,6 +2997,25 @@ class Course extends Tutor_Base {
 			if ( $password_protected ) {
 				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
 			}
+
+			/**
+			 * This check was added to address a security issue where users could
+			 * enroll in a course via an AJAX call without purchasing it.
+			 *
+			 * To prevent this, we now verify whether the course is paid.
+			 * Additionally, we check if the user is already enrolled, since
+			 * Tutor's default behavior enrolls users automatically upon purchase.
+			 *
+			 * @since 3.9.4
+			 */
+			if ( tutor_utils()->is_course_purchasable( $course_id ) ) {
+				$is_enrolled = (bool) tutor_utils()->is_enrolled( $course_id, $user_id );
+
+				if ( ! $is_enrolled ) {
+					wp_send_json_error( __( 'Please purchase the course before enrolling', 'tutor' ) );
+				}
+			}
+
 			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
