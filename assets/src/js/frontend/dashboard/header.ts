@@ -15,7 +15,9 @@ const header = () => {
         {
           onSuccess: (res: AjaxResponse) => {
             window.TutorCore.toast.success(res?.message);
-            window.location.reload();
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
           },
           onError: (error: Error) => {
             window.TutorCore.toast.error(error.message || __('Failed to switch the mode', 'tutor'));
