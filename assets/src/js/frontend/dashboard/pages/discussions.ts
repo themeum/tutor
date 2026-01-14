@@ -1,6 +1,24 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
+import { __ } from '@wordpress/i18n';
+
+interface ReplyCommentPayload {
+  comment_post_ID: number;
+  comment_parent: number;
+  comment: string;
+}
+interface QnASingleActionPayload {
+  question_id: number;
+  qna_action: string;
+  [key: string]: string | number;
+}
+
+interface ReplyQnAPayload {
+  course_id: number;
+  question_id: number;
+  answer: string;
+}
 
 /**
  * Discussions Page Component
@@ -11,43 +29,97 @@ const discussionsPage = () => {
 
   return {
     query,
-    readUnreadQnAMutation: null as MutationState<unknown, unknown> | null,
-    deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
+    replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
+    qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
+    deleteQnAMutation: null as MutationState<unknown, unknown> | null,
+    replyQnAMutation: null as MutationState<unknown, unknown> | null,
+    currentAction: null as string | null,
+    currentQuestionId: null as number | null,
+    isSolved: false,
+    isImportant: false,
+    isArchived: false,
 
     init() {
-      // Q&A read-unread mutation.
-      this.readUnreadQnAMutation = this.query.useMutation(this.readUnreadQnA, {
+      // Lesson comment delete mutation.
+      this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
         onSuccess: () => {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('id');
+          window.location.href = url.toString();
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to delete Comment', 'tutor'));
+        },
+      });
+
+      // Lesson comment reply mutation
+      this.replyCommentMutation = this.query.useMutation(this.replyComment, {
+        onSuccess: () => {
+          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to mark as read-unread');
+          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+        },
+      });
+
+      // Q&A single action mutation (read, unread, solved, important, archived).
+      this.qnaSingleActionMutation = this.query.useMutation(this.qnaSingleAction, {
+        onSuccess: (response, payload: QnASingleActionPayload) => {
+          const action = payload.qna_action;
+          if (action === 'solved') {
+            this.isSolved = !this.isSolved;
+          } else if (action === 'important') {
+            this.isImportant = !this.isImportant;
+          } else if (action === 'archived') {
+            this.isArchived = !this.isArchived;
+          }
+
+          window.dispatchEvent(
+            new CustomEvent('tutor-qna-action-success', {
+              detail: { questionId: payload.question_id, action },
+            }),
+          );
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Action failed', 'tutor'));
         },
       });
 
       // Q&A delete mutation.
       this.deleteQnAMutation = this.query.useMutation(this.deleteQnA, {
         onSuccess: () => {
-          window.location.reload();
+          const url = new URL(window.location.href);
+          url.searchParams.delete('id');
+          window.location.href = url.toString();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to delete Q&A');
+          window.TutorCore.toast.error(error.message || __('Failed to delete Q&A', 'tutor'));
         },
       });
 
-      // Lesson comment delete mutation.
-      this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
+      // Q&A reply mutation.
+      this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: () => {
+          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to delete Comment');
+          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
         },
       });
     },
 
-    readUnreadQnA(payload: { question_id: number; qna_action: string }) {
+    deleteComment(payload: { comment_id: number }) {
+      return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
+    },
+
+    replyComment(payload: ReplyCommentPayload) {
+      return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
+    },
+
+    qnaSingleAction(payload: QnASingleActionPayload) {
       return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
     },
 
@@ -55,24 +127,29 @@ const discussionsPage = () => {
       return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
     },
 
-    deleteComment(payload: { comment_id: number }) {
-      return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
+    replyQnA(payload: ReplyQnAPayload) {
+      return wpAjaxInstance.post(endpoints.CREATE_UPDATE_QNA, payload);
     },
 
-    async handleReadUnreadQnA(questionId: number, context: string) {
-      await this.readUnreadQnAMutation?.mutate({
-        context: context,
-        question_id: questionId,
-        qna_action: 'read',
-      });
+    async handleQnASingleAction(questionId: number, action: string, extras: Record<string, string> = {}) {
+      this.currentAction = action;
+      this.currentQuestionId = questionId;
+      try {
+        await this.qnaSingleActionMutation?.mutate({
+          question_id: questionId,
+          qna_action: action,
+          ...extras,
+        });
+      } finally {
+        this.currentAction = null;
+        this.currentQuestionId = null;
+      }
     },
 
-    async handleDeleteQnA(questionId: number) {
-      await this.deleteQnAMutation?.mutate({ question_id: questionId });
-    },
-
-    async handleDeleteComment(commentId: number) {
-      await this.deleteCommentMutation?.mutate({ comment_id: commentId });
+    handleKeydown(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
+        (event.target as HTMLFormElement).closest('form')?.requestSubmit();
+      }
     },
   };
 };
