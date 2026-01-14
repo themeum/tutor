@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
@@ -630,18 +631,6 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Get single comment
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param int $comment_id comment id.
-	 * @return mixed comment on success, false on failure
-	 */
-	public static function get_single_comment( int $comment_id ) {
-		return get_comment( $comment_id );
-	}
-
-	/**
 	 * Get comment replies
 	 *
 	 * @since 4.0.0
@@ -651,11 +640,11 @@ class Lesson extends Tutor_Base {
 	 *
 	 * @return mixed comment replies on success, false on failure
 	 */
-	public static function get_comment_replies( int $comment_id, string $order = '' ) {
+	public static function get_comment_replies( int $comment_id, string $order = 'DESC' ) {
 		return get_comments(
 			array(
 				'parent' => $comment_id,
-				'order'  => $order,
+				'order'  => QueryHelper::get_valid_sort_order( $order ),
 			)
 		);
 	}

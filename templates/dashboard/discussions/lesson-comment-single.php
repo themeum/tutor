@@ -27,13 +27,13 @@ use TUTOR\Lesson;
 defined( 'ABSPATH' ) || exit;
 
 
-$lesson_comment = Lesson::get_single_comment( (int) $discussion_id );
+$lesson_comment = get_comment( $discussion_id );
 if ( ! $lesson_comment ) {
 	EmptyState::make()->render();
 	return;
 }
 
-$replies_order = Input::get( 'order', '' );
+$replies_order = Input::get( 'order', 'DESC' );
 $replies       = Lesson::get_comment_replies( $discussion_id, $replies_order );
 
 $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->comment_post_ID ) );
