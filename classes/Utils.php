@@ -2995,7 +2995,8 @@ class Utils {
 				if ( isset( $nav_item['show_ui'] ) && ! $this->array_get( 'show_ui', $nav_item ) ) {
 					unset( $nav_items[ $key ] );
 				}
-				if ( isset( $nav_item['auth_cap'] ) && ! current_user_can( $nav_item['auth_cap'] ) ) {
+
+				if ( isset( $nav_item['auth_cap'] ) && ! User::is_admin() && ! current_user_can( $nav_item['auth_cap'] ) ) {
 					unset( $nav_items[ $key ] );
 				}
 			}
