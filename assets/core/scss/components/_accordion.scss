@@ -15,14 +15,14 @@
   }
 
   &-header {
+    @include tutor-flex(row, start, space-between);
     width: 100%;
     padding: $tutor-spacing-5 $tutor-spacing-6;
     background: none;
     border: none;
-    @include tutor-flex(row, start, space-between);
     text-align: left;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    @include tutor-transition(background-color);
 
     &:hover {
       background-color: $tutor-surface-l2;

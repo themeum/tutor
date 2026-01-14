@@ -1,0 +1,88 @@
+// Announcement-notice
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-announcement-notice {
+	display: flex;
+	align-items: flex-start;
+	gap: $tutor-spacing-6;
+	padding: $tutor-spacing-7;
+	background-color: $tutor-surface-brand-primary;
+	border-bottom: 2px solid $tutor-text-brand-secondary;
+	border-radius: 0px 0px $tutor-spacing-7 $tutor-spacing-7;
+	box-shadow: 0px 12px 14px 0px #0000000F;
+	position: relative;
+	@include tutor-breakpoint-down(lg) {
+		flex-direction: column;
+	}
+	.tutor-announcement-icon {
+		flex-shrink: 0;
+		svg {
+			display: block;
+			width: 112px;
+			height: 112px;
+		}
+	}
+	
+	.tutor-announcement-content {
+		flex: 1;
+		color:  $tutor-surface-l1;
+		padding-right: 92px;
+		@include tutor-breakpoint-down(lg) {
+			padding-right: $tutor-spacing-10;
+		}
+	}
+	
+	.tutor-announcement-title {
+		color: $tutor-surface-l1;
+	}
+	
+	.tutor-announcement-message {
+		color: $tutor-text-light;
+	}
+	
+	.tutor-announcement-author {
+		@include tutor-flex(row, center, flex-start);
+		flex-wrap: wrap;
+		gap: $tutor-spacing-4;
+	}
+	
+	.tutor-announcement-avatar {
+		width: 24px;
+		height: 24px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+	
+	.tutor-announcement-author-name {
+		color: #fff;
+	}
+	
+	.tutor-announcement-course {
+		text-decoration: underline;
+		text-decoration-style: dotted;
+		font-style: italic;
+		text-underline-offset: 3px;
+		text-decoration-thickness: 2px;
+	}
+	
+	.tutor-announcement-close {
+		@include tutor-flex(row, center, center);
+		position: absolute;
+		top: 24px;
+		right: 24px;
+		color: $tutor-text-secondary;
+		background: #fff;
+		border: none;
+		border-radius: 50%;
+		width: 32px;
+		height: 32px;
+		cursor: pointer;
+		@include tutor-transition(background-color);
+
+		&:hover {
+			opacity: 0.9;
+		}
+	}
+}

@@ -1,0 +1,35 @@
+// Dashboard styles index
+// Import all dashboard-related styles
+
+// Layout components
+@forward 'layout/layout';
+@forward 'layout/sidebar';
+@forward 'layout/header';
+@forward 'layout/nav-mobile';
+@forward 'layout/profile-header';
+@forward 'layout/profile-pages';
+@forward 'layout/account';
+
+// Dashboard components
+@forward "stat-card";
+@forward "progress-card";
+@forward "course-card";
+@forward "star-rating";
+
+// Page components
+@forward 'pages/my-courses';
+@forward 'pages/announcements';
+@forward 'assignments';
+@forward 'quiz-attempts';
+@forward 'certificates';
+@forward 'reviews';
+@forward 'settings';
+@forward 'profile';
+@forward 'enrollment-history';
+@forward 'billing';
+@forward 'subscription-history';
+@forward 'announcement-notice';
+@forward 'wishlist';
+
+// Instructor components
+@forward 'instructor/dashboard';

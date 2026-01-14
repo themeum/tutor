@@ -28,6 +28,15 @@ class Lesson extends Tutor_Base {
 	use JsonResponse;
 
 	/**
+	 * Lesson post type
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	private $post_type;
+
+	/**
 	 * Register hooks
 	 *
 	 * @since 1.0.0
@@ -39,6 +48,8 @@ class Lesson extends Tutor_Base {
 	 */
 	public function __construct( $register_hooks = true ) {
 		parent::__construct();
+
+		$this->post_type = tutor()->lesson_post_type;
 
 		if ( ! $register_hooks ) {
 			return;
@@ -85,7 +96,12 @@ class Lesson extends Tutor_Base {
 		 */
 		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
+		add_action( 'wp_ajax_tutor_delete_lesson_comment', array( $this, 'ajax_delete_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
+
+		// Add lesson title as nav item & render single content on the learning area.
+		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
+		add_action( "tutor_single_content_{$this->post_type}", array( $this, 'render_single_content' ) );
 	}
 
 	/**
@@ -110,6 +126,34 @@ class Lesson extends Tutor_Base {
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
 		wp_send_json_success( array( 'html' => $html ) );
+	}
+
+	/**
+	 * Delete lesson comment by AJAX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_delete_lesson_comment() {
+		tutor_utils()->check_nonce();
+		$comment_id = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$lesson_id = $comment->comment_post_ID;
+		if ( get_current_user_id() === $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+			wp_delete_comment( $comment_id, true );
+			$this->json_response( __( 'Comment deleted successfully', 'tutor' ) );
+		} else {
+			$this->response_bad_request( __( 'You are not allowed to delete this comment', 'tutor' ) );
+		}
 	}
 
 	/**
@@ -750,5 +794,43 @@ class Lesson extends Tutor_Base {
 		$nav_contents = apply_filters( 'tutor_lesson_single_nav_contents', $nav_contents );
 
 		return $nav_contents;
+	}
+
+	/**
+	 * Return lesson title as nav item to print on the learning area
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $lesson Lesson post object.
+	 * @param bool    $can_access Can user access this content.
+	 *
+	 * @return void
+	 */
+	public function render_nav_item( $lesson, $can_access ): void {
+		tutor_load_template(
+			'learning-area.lesson.nav-item',
+			array(
+				'lesson'     => $lesson,
+				'can_access' => $can_access,
+			)
+		);
+	}
+
+	/**
+	 * Render content for the a single lesson
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param WP_Post $lesson Lesson post object.
+	 *
+	 * @return void
+	 */
+	public function render_single_content( $lesson ): void {
+		tutor_load_template(
+			'learning-area.lesson.content',
+			array(
+				'lesson' => $lesson,
+			)
+		);
 	}
 }

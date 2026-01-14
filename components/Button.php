@@ -116,7 +116,7 @@ class Button extends BaseComponent {
 	 * @var string
 	 */
 	private const POSITION_LEFT  = 'left';
-	private const POSITION_RIGHT = 'left';
+	private const POSITION_RIGHT = 'right';
 
 	/**
 	 * The icon position relative to label. Accepts 'left' or 'right'.
@@ -178,21 +178,6 @@ class Button extends BaseComponent {
 	 */
 	public function variant( $variant ) {
 		$this->variant = sanitize_html_class( $variant );
-		return $this;
-	}
-
-	/**
-	 * Set custom HTML attribute.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $key   Attribute name.
-	 * @param string $value Attribute value.
-	 *
-	 * @return $this
-	 */
-	public function attr( $key, $value ) {
-		$this->attributes[ $key ] = esc_attr( $value );
 		return $this;
 	}
 

@@ -334,4 +334,69 @@ class Student {
 		wp_send_json_success( array( 'message' => __( 'Social Profile Updated', 'tutor' ) ) );
 		die();
 	}
+
+	/**
+	 * Get courses tab configuration for student dashboard
+	 *
+	 * Generates the tab structure for displaying student courses with dropdown options
+	 * for enrolled, active, and completed courses including counts and navigation URLs.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $active_tab              The currently active tab identifier.
+	 * @param array  $post_type_args          Query arguments for post type filtering.
+	 * @param int    $enrolled_course_count   Number of enrolled courses.
+	 * @param int    $active_course_count     Number of active courses.
+	 * @param int    $completed_course_count  Number of completed courses.
+	 *
+	 * @return array Array containing tab configuration with dropdown options
+	 */
+	public function get_courses_tab( $active_tab, $post_type_args, $enrolled_course_count, $active_course_count, $completed_course_count ) {
+		$courses_tab = array(
+			array(
+				'type'    => 'dropdown',
+				'icon'    => Icon::ENROLLED,
+				'active'  => ( ( 'courses' === $active_tab ) || ( 'courses/active-courses' === $active_tab ) || ( 'courses/completed-courses' === $active_tab ) ) ? true : false,
+				'options' => array(
+					array(
+						'label'  => __( 'Enrolled', 'tutor' ),
+						'icon'   => Icon::ENROLLED,
+						'url'    => esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'courses' ) ) ),
+						'active' => 'courses' === $active_tab ? true : false,
+						'count'  => $enrolled_course_count,
+					),
+					array(
+						'label'  => __( 'Active', 'tutor' ),
+						'icon'   => Icon::PLAY_LINE,
+						'url'    => esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'courses/active-courses' ) ) ),
+						'active' => 'courses/active-courses' === $active_tab ? true : false,
+						'count'  => $active_course_count,
+					),
+					array(
+						'label'  => __( 'Complete', 'tutor' ),
+						'icon'   => Icon::COMPLETED_CIRCLE,
+						'url'    => esc_url( add_query_arg( $post_type_args, tutor_utils()->get_tutor_dashboard_page_permalink( 'courses/completed-courses' ) ) ),
+						'active' => 'courses/completed-courses' === $active_tab ? true : false,
+						'count'  => $completed_course_count,
+					),
+				),
+			),
+			array(
+				'type' => 'link',
+				'label'  => __( 'Wishlist', 'tutor' ),
+				'icon'   => Icon::WISHLIST,
+				'url'    => esc_url( tutor_utils()->tutor_dashboard_url( 'courses/wishlist' ) ),
+				'active' => 'courses/wishlist' === $active_tab ? true : false,
+			),
+			array(
+				'type' => 'link',
+				'label'  => __( 'Quiz Attempts', 'tutor' ),
+				'icon'   => Icon::QUIZ_2,
+				'url'    => esc_url( tutor_utils()->tutor_dashboard_url( 'courses/my-quiz-attempts' ) ),
+				'active' => 'courses/my-quiz-attempts' === $active_tab ? true : false,
+			),
+		);
+
+		return $courses_tab;
+	}
 }

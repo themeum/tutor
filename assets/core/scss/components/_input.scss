@@ -1,5 +1,5 @@
-@use '../tokens' as *;
 @use '../mixins' as *;
+@use '../tokens' as *;
 
 .tutor-input-field {
   position: relative;
@@ -121,7 +121,6 @@
     @include tutor-flex(row, center, center);
     color: $tutor-icon-secondary;
     pointer-events: none;
-    z-index: 1;
 
     &.tutor-input-content-left {
       @include left($tutor-spacing-5);

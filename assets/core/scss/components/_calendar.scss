@@ -1,0 +1,96 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-vc-calendar {
+  .vc-date__btn {
+    font-size: $tutor-font-size-small;
+  }
+
+  .vc-date[data-vc-date-today] .vc-date__btn {
+    color: $tutor-text-primary !important;
+  }
+
+  .vc-date[data-vc-date-selected] .vc-date__btn,
+  .vc-date[data-vc-date-selected] .vc-date__btn:hover {
+    background-color: $tutor-surface-dark !important;
+    color: $tutor-text-primary-inverse !important;
+  }
+
+  .vc-date[data-vc-date-selected='middle'][data-vc-date-selected] .vc-date__btn {
+    background-color: $tutor-surface-l2 !important;
+    color: $tutor-text-primary !important;
+  }
+}
+
+.tutor-range-calendar-popover {
+  width: 700px;
+  max-width: 700px;
+
+  @include tutor-breakpoint-down(md) {
+    width: 300px;
+  }
+
+  [data-vc='calendar'] {
+    padding: $tutor-spacing-5;
+  }
+
+  .vc-layout {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: $tutor-spacing-6;
+
+    @include tutor-breakpoint-down(md) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .vc-presets {
+    @include tutor-flex(column);
+
+    button {
+      @include tutor-button-reset();
+      @include tutor-typography(tiny, medium);
+      @include tutor-flex(row, center, space-between);
+      border-radius: $tutor-radius-sm;
+      padding: $tutor-spacing-3 $tutor-spacing-5;
+      text-align: left;
+
+      .vc-preset-icon {
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      &:hover {
+        background-color: $tutor-tab-sidebar-l2-hover;
+      }
+
+      &[data-active] {
+        background-color: $tutor-tab-sidebar-l2-active;
+        color: $tutor-text-brand;
+
+        .vc-preset-icon {
+          opacity: 1;
+        }
+      }
+    }
+
+    @include tutor-breakpoint-down(md) {
+      flex-direction: row;
+      flex-wrap: wrap;
+      border-bottom: 1px solid $tutor-border-idle;
+      padding-bottom: $tutor-spacing-4;
+
+      button {
+        width: 50%;
+      }
+    }
+  }
+
+  .vc-main {
+    position: relative;
+  }
+
+  .vc-controls {
+    padding: $tutor-spacing-2 $tutor-spacing-none $tutor-spacing-none $tutor-spacing-none;
+  }
+}

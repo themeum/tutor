@@ -1,0 +1,37 @@
+// Learning Area Layout Styles
+
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-learning-area {
+  &-body {
+    padding-inline-start: 320px;
+    position: relative;
+    @include tutor-transition(padding);
+
+    @include tutor-breakpoint-down(lg) {
+      padding-inline-start: 0;
+    }
+  }
+
+  &.is-fullscreen &-body {
+    padding-inline-start: 0;
+  }
+
+  .tutor-expand-btn {
+    position: fixed;
+    inset-inline-start: $tutor-spacing-6;
+    bottom: $tutor-spacing-6;
+    color: $tutor-icon-secondary;
+
+    @include tutor-breakpoint-down(lg) {
+      display: none;
+    }
+  }
+
+  .tutor-learning-area-container {
+    max-width: 780px;
+    padding: 0 $tutor-spacing-6;
+    margin: 0 auto;
+  }
+}

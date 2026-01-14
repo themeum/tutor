@@ -1,0 +1,75 @@
+// Learning Area Header Styles
+
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-learning-header {
+  background-color: $tutor-surface-base;
+  padding: $tutor-spacing-4;
+  position: sticky;
+  top: 0;
+  z-index: $tutor-z-header;
+
+  .tutor-has-admin-bar & {
+    top: 32px;
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    padding: 0px $tutor-spacing-6 0px $tutor-spacing-6;
+  }
+
+  &-inner {
+    @include tutor-flex(row, center);
+
+    @include tutor-breakpoint-up(sm) {
+      gap: $tutor-spacing-5;
+      background-color: $tutor-surface-l1;
+      border-radius: $tutor-radius-md;
+      overflow: hidden;
+    }
+  }
+
+  &-back {
+    @include tutor-button-reset();
+    @include tutor-flex-center();
+    height: 44px;
+    width: 44px;
+
+    @include tutor-breakpoint-up(sm) {
+      border-inline-end: 1px solid $tutor-border-idle;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      height: 40px;
+      width: 40px;
+    }
+  }
+
+  &-title {
+    @include tutor-typography(h5, semibold, primary, heading);
+
+    @include tutor-breakpoint-down(sm) {
+      @include tutor-typography(medium, semibold);
+    }
+  }
+
+  &-mobile {
+    margin-inline-start: auto;
+  }
+
+  &-toggle-mobile {
+    @include tutor-button-reset();
+    @include tutor-flex-center();
+    height: 44px;
+    width: 44px;
+
+    @include tutor-breakpoint-up(lg) {
+      display: none;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      height: 40px;
+      width: 40px;
+    }
+  }
+}

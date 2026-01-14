@@ -13,8 +13,6 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Contracts\ComponentInterface;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -24,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 4.0.0
  */
-abstract class BaseComponent implements ComponentInterface {
+abstract class BaseComponent {
 
 	/**
 	 * Keep the component as string
@@ -36,13 +34,13 @@ abstract class BaseComponent implements ComponentInterface {
 	protected $component_string = '';
 
 	/**
-	 * Create a new Button instance.
+	 * Create a new component instance.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return ComponentInterface
+	 * @return static
 	 */
-	public static function make(): ComponentInterface {
+	public static function make() {
 		return new static();
 	}
 
@@ -56,6 +54,7 @@ abstract class BaseComponent implements ComponentInterface {
 	 * ]
 	 *
 	 * @since 4.0.0
+	 *
 	 * @var array
 	 */
 	protected $attributes = array();
@@ -69,10 +68,26 @@ abstract class BaseComponent implements ComponentInterface {
 	 * @since 4.0.0
 	 *
 	 * @param array $attrs Key–value pairs of HTML attributes.
-	 * @return self
+	 *
+	 * @return static
 	 */
-	public function attrs( array $attrs ): self {
+	public function attrs( array $attrs ) {
 		$this->attributes = array_merge( $this->attributes, $attrs );
+		return $this;
+	}
+
+	/**
+	 * Set a custom HTML attribute.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $key   Attribute name.
+	 * @param string $value Attribute value.
+	 *
+	 * @return static
+	 */
+	public function attr( $key, $value ) {
+		$this->attributes[ $key ] = $value;
 		return $this;
 	}
 
@@ -116,6 +131,18 @@ abstract class BaseComponent implements ComponentInterface {
 	}
 
 	/**
+	 * Get the component output as an HTML string.
+	 *
+	 * Note: Child classes must implement this method and are responsible
+	 * for preparing and properly sanitizing the component’s HTML output.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string The component HTML output.
+	 */
+	abstract public function get(): string;
+
+	/**
 	 * Render the component
 	 *
 	 * @since 4.0.0
@@ -123,7 +150,8 @@ abstract class BaseComponent implements ComponentInterface {
 	 * @return void
 	 */
 	public function render(): void {
-		echo $this->get(); // phpcs:ignore.
+		// phpcs:ignore -- Sanitization is performed within each child class’s `get` method implementation.
+		echo $this->get();
 	}
 
 }

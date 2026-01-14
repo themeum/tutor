@@ -271,8 +271,11 @@ class Assets {
 			if ( in_array( $subpage, $dashboard_pages, true ) ) {
 				$dashboard_css_path = tutor()->path . 'assets/css/tutor-dashboard.min.css';
 				$dashboard_css_url  = tutor()->url . 'assets/css/tutor-dashboard.min.css';
+				$dashboard_js_url   = tutor()->url . 'assets/js/tutor-dashboard.js';
+				$dashboard_js_path  = tutor()->path . 'assets/js/tutor-dashboard.js';
 
 				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), filemtime( $dashboard_css_path ), 'all' );
+				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array(), filemtime( $dashboard_js_path ), true );
 			}
 
 			// Learning area pages.
@@ -846,8 +849,9 @@ class Assets {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = tutor_utils()->is_learning_area();
+		$is_dashboard       = tutor_utils()->is_dashboard_page();
+		$is_learning_area   = tutor_utils()->is_learning_area();
+		$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
 
 		$core_css_url          = tutor()->assets_url . 'css/tutor-core.min.css';
 		$dashboard_css_url     = tutor()->assets_url . 'css/tutor-dashboard.min.css';
@@ -859,7 +863,7 @@ class Assets {
 
 		$version = TUTOR_ENV === 'DEV' ? time() : TUTOR_VERSION;
 
-		if ( $is_dashboard || $is_learning_area ) {
+		if ( $is_dashboard || ( $is_learning_area && ! $is_legacy_learning ) ) {
 			$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 
 			// Core.
@@ -891,13 +895,17 @@ class Assets {
 	 * @return boolean
 	 */
 	public function should_load_legacy_scripts(): bool {
-		if ( is_admin() ) {
-			return true;
+		$load = true;
+		if ( tutor_utils()->is_dashboard_page() ) {
+			$load = false;
+		} else {
+			$is_learning_area   = tutor_utils()->is_learning_area();
+			$is_legacy_learning = tutor_utils()->get_option( 'is_legacy_learning_mode' );
+			if ( $is_learning_area && ! $is_legacy_learning ) {
+				$load = false;
+			}
 		}
 
-		$is_dashboard     = tutor_utils()->is_dashboard_page();
-		$is_learning_area = tutor_utils()->is_learning_area();
-
-		return ! ( $is_dashboard || $is_learning_area );
+		return apply_filters( 'tutor_should_load_legacy_scripts', $load );
 	}
 }

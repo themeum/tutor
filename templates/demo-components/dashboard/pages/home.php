@@ -13,28 +13,28 @@ use TUTOR\Icon;
 // Define stat card variations with sample data matching the design.
 $stat_cards = array(
 	array(
-		'variation' => 'enrolled',
+		'variation' => 'brand',
 		'title'     => esc_html__( 'Enrolled Courses', 'tutor' ),
 		'icon'      => Icon::COURSES,
 		'value'     => '12',
 		'change'    => '+2',
 	),
 	array(
-		'variation' => 'active',
+		'variation' => 'exception1',
 		'title'     => esc_html__( 'Active', 'tutor' ),
 		'icon'      => Icon::PLAY_LINE,
 		'value'     => '3',
 		'change'    => '+2',
 	),
 	array(
-		'variation' => 'completed',
+		'variation' => 'success',
 		'title'     => esc_html__( 'Completed', 'tutor' ),
 		'icon'      => Icon::COMPLETED_CIRCLE,
 		'value'     => '5',
 		'change'    => '+2',
 	),
 	array(
-		'variation' => 'time-spent',
+		'variation' => 'exception4',
 		'title'     => esc_html__( 'Time Spent', 'tutor' ),
 		'icon'      => Icon::TIME,
 		'value'     => '375h+',
@@ -109,6 +109,9 @@ $upcoming_lessons = array(
 );
 
 ?>
+<!-- @TODO: need to load conditionally -->
+<?php tutor_load_template( 'demo-components.dashboard.pages.instructor.home' ); ?>
+
 <?php tutor_load_template( 'demo-components.dashboard.components.announcement-notice' ); ?>
 <div class="tutor-text-h3 tutor-color-black tutor-mb-6">
 	<?php esc_html_e( 'Welcome to TutorLMS Home', 'tutor' ); ?>
@@ -133,10 +136,6 @@ $upcoming_lessons = array(
 			</div>
 		<?php endforeach; ?>
 	</div>
-</div>
-
-<div class="tutor-mb-4">
-	<?php tutor_load_template( 'core-components.event-badge' ); ?>
 </div>
 
 <div class="tutor-mb-8">

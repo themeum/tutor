@@ -1,3 +1,15 @@
+<?php
+/**
+ * Dynamic component examples.
+ *
+ * @package Tutor\Templates
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +25,7 @@
 	use Tutor\Components\Avatar;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
+	use Tutor\Components\Constants\InputType;
 	use Tutor\Components\Constants\Positions;
 	use Tutor\Components\Constants\Size;
 	use Tutor\Components\Constants\Variant;
@@ -255,7 +268,7 @@
 				Button::make()->label( 'Another Modal' )->variant( 'destructive' )->attr( 'onclick', 'TutorCore.modal.showModal("another-modal")' )->render();
 				Button::make()->label( 'Headless Modal' )->variant( 'primary-soft' )->attr( 'onclick', 'TutorCore.modal.showModal("headless-modal")' )->render();
 			?>
-					
+		
 		</div>
 		<?php
 		Modal::make()
@@ -1103,6 +1116,28 @@
 							->clearable()
 							->help_text( 'This is a helper text.' )
 							->attr( 'x-bind', "register('name', { required: 'Name is required', minLength: { value: 2, message: 'Name must be at least 2 characters' } })" )
+							->render();
+
+						InputField::make()
+							->type( InputType::DATE )
+							->name( 'date' )
+							->label( 'Select Date' )
+							->placeholder( 'Enter your date' )
+							->required()
+							->clearable()
+							->help_text( 'This is a helper text.' )
+							->attr( 'x-bind', "register('date', { required: 'Date is required' })" )
+							->render();
+
+						InputField::make()
+							->type( InputType::DATE_TIME )
+							->name( 'date_time' )
+							->label( 'Select Date time' )
+							->placeholder( 'Enter your date' )
+							->required()
+							->clearable()
+							->help_text( 'This is a helper text.' )
+							->attr( 'x-bind', "register('date_time', { required: 'Date time is required' })" )
 							->render();
 
 						InputField::make()

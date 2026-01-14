@@ -1,0 +1,135 @@
+// Stat Card Component
+// Dashboard statistics card with variations
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-stat-card {
+  @include tutor-flex(column, stretch, space-between);
+  padding: $tutor-spacing-6;
+  height: 146px;
+  border: 1px solid $tutor-border-idle;
+  border-radius: $tutor-radius-2xl;
+  cursor: pointer;
+  @include tutor-transition(background-color);
+
+  &:hover {
+    background-color: $tutor-surface-l1-hover;
+  }
+
+  &-header {
+    @include tutor-flex(row, center, space-between);
+  }
+
+  &-title {
+    @include tutor-typography('small');
+    margin: 0;
+  }
+
+  &-value {
+    @include tutor-typography('h2', 'bold', 'primary', 'heading');
+    margin: 0;
+  }
+
+  &-change {
+    @include tutor-typography('tiny', 'regular', 'secondary', 'body');
+    margin-top: $tutor-spacing-1;
+    margin-bottom: 0;
+  }
+
+  // Color variations
+  &-enrolled {
+    .tutor-stat-card-icon {
+      color: $tutor-text-brand;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
+
+  &-active {
+    .tutor-stat-card-icon {
+      color: $tutor-exception-1;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-exception-1;
+    }
+  }
+
+  &-completed {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
+
+  // Color variations
+  &-brand {
+    .tutor-stat-card-icon {
+      color: $tutor-text-brand;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-brand;
+    }
+  }
+
+  &:has(canvas) {
+    height: 179px;
+    .tutor-stat-card {
+      &-content {
+        margin-top: 38px;
+      }
+
+      &-value {
+        @include tutor-text('h3');
+      }
+    }
+  }
+
+  &-exception1 {
+    .tutor-stat-card-icon {
+      color: $tutor-exception-1;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-exception-1;
+    }
+  }
+
+  &-success {
+    .tutor-stat-card-icon {
+      color: $tutor-text-success;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-success;
+    }
+  }
+
+  &-exception4,
+  &-time-spent {
+    .tutor-stat-card-icon {
+      color: $tutor-text-exception4;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception4;
+    }
+  }
+
+  &-exception5 {
+    .tutor-stat-card-icon {
+      color: $tutor-icon-exception5;
+    }
+
+    .tutor-stat-card-value {
+      color: $tutor-text-exception5;
+    }
+  }
+}

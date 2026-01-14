@@ -13,7 +13,7 @@
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-md;
   background-color: $tutor-surface-l1;
-  transition: all 0.2s ease;
+  @include tutor-transition(all);
 
   -moz-appearance: textfield;
 
@@ -68,11 +68,12 @@
   background-color: $tutor-surface-l1;
   cursor: pointer;
   position: relative;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease,
-    color 0.2s ease;
+  @include tutor-transition((
+    background-color,
+    border-color,
+    box-shadow,
+    color
+  ));
 
   color: $tutor-icon-idle;
 
@@ -89,9 +90,7 @@
     height: $svg-size;
     transform: translate(-50%, -50%) scale(0.6);
     opacity: 0;
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s ease;
+    @include tutor-transition((opacity, transform));
 
     background-color: currentColor;
     mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='black' d='M10.3 3.3a1 1 0 0 1 0 1.4L5.5 9.5a1 1 0 0 1-1.4 0L1.7 7.1a1 1 0 0 1 1.4-1.4L5 7.6l4.3-4.3a1 1 0 0 1 1.4 0z'/%3E%3C/svg%3E")
@@ -156,10 +155,11 @@
   background-color: $tutor-surface-l1;
   cursor: pointer;
   position: relative;
-  transition:
-    background-color 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  @include tutor-transition((
+    background-color,
+    border-color,
+    box-shadow
+  ));
 
   &:checked {
     background-color: $tutor-surface-brand-primary;
@@ -213,7 +213,7 @@
   outline: none;
   border-radius: $height;
   cursor: pointer;
-  transition: background-color 0.25s ease;
+  @include tutor-transition(background-color);
 
   &::before {
     display: none !important;
@@ -228,10 +228,8 @@
     height: $thumb;
     border-radius: 50%;
     background-color: $tutor-surface-l1;
-    transition:
-      transform 0.25s ease,
-      background-color 0.25s ease;
     box-shadow: $tutor-shadow-sm;
+    @include tutor-transition((transform, background-color));
   }
 
   &:focus {

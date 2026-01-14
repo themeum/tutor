@@ -27,6 +27,7 @@ final class Icon {
 	const ALL                        = 'all';
 	const ANGLES_RIGHT               = 'angles-right';
 	const ANIMATION                  = 'animation';
+	const ANNOUNCEMENT               = 'announcement';
 	const ARCHIVE                    = 'archive';
 	const ARROWS_IN                  = 'arrows-in';
 	const ARROWS_OUT                 = 'arrows-out';
@@ -40,6 +41,7 @@ final class Icon {
 	const AUDIO                      = 'audio';
 	const AVI                        = 'avi';
 	const BACK                       = 'back';
+	const BADGE                      = 'badge';
 	const BADGE_CHECK                = 'badge-check';
 	const BADGE_INFO                 = 'badge-info';
 	const BARS                       = 'bars';
@@ -124,6 +126,7 @@ final class Icon {
 	const DIVI_COLORIZED             = 'divi-colorized';
 	const DOC                        = 'doc';
 	const DOCUMENT                   = 'document';
+	const DOLLAR                     = 'dollar';
 	const DOLLAR_RECURRING           = 'dollar-recurring';
 	const DOT                        = 'dot';
 	const DOWNLOAD                   = 'download';
@@ -136,6 +139,7 @@ final class Icon {
 	const DROP                       = 'drop';
 	const DUPLICATE                  = 'duplicate';
 	const DWG                        = 'dwg';
+	const EARNING                    = 'earning';
 	const EDIT                       = 'edit';
 	const EDIT_2                     = 'edit-2';
 	const ELEMENTOR_COLORIZED        = 'elementor-colorized';
@@ -158,6 +162,7 @@ final class Icon {
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
 	const FILTER                     = 'filter';
+	const FILTER_2                   = 'filter-2';
 	const FIRE                       = 'fire';
 	const FIRE_DISABLED              = 'fire-disabled';
 	const FLA                        = 'fla';
@@ -329,12 +334,15 @@ final class Icon {
 	const SORT_MINOR                 = 'sort-minor';
 	const SPINNER                    = 'spinner';
 	const SPREADSHEET                = 'spreadsheet';
-	const STAR                       = 'star';
+	const STAR_FILL                  = 'star-fill';
+	const STAR_HALF                  = 'star-half';
+	const STAR_LINE                  = 'star-line';
 	const STEPPER                    = 'stepper';
 	const STOPWATCH                  = 'stopwatch';
 	const STORE_EYE                  = 'store-eye';
 	const STORE_EYE_SLASH            = 'store-eye-slash';
 	const STORE_IMAGE                = 'store-image';
+	const STUDENT                    = 'student';
 	const STYLE_NONE                 = 'style-none';
 	const SUBSCRIPTION               = 'subscription';
 	const SUBTITLE                   = 'subtitle';

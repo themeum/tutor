@@ -12,11 +12,11 @@
     "build-analysis": "RSDOCTOR=true npx rspack --mode=production",
     "watch": "rspack --watch --mode=development",
     "make-pot": "rspack --env=make-pot --mode=production && wp i18n make-pot . ./languages/tutor.pot --slug=tutor --domain=tutor --include='**/*.php,assets/js/*.js' --exclude='node_modules,vendor,build,tutor-droip,includes/droip'",
-    "eslint:fix": "npx eslint ./assets/react/v3 --fix",
+    "eslint:fix": "npx eslint ./assets/src/js/v3 --fix",
     "tutor-droip": "cd includes/droip && npm run build && cp -r dist/* ../../includes/droip",
     "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run",
-    "generate:icon-types": "tsx ./assets/react/v3/shared/icons/generate-icon-types.ts",
+    "generate:icon-types": "tsx ./assets/src/js/v3/shared/icons/generate-icon-types.ts",
     "prepare": "husky",
     "storybook": "storybook dev -p 6006 --no-open",
     "build-storybook": "storybook build"
@@ -57,7 +57,6 @@
     "@wordpress/eslint-plugin": "^22.12.0",
     "css-loader": "^7.1.2",
     "cypress": "^14.4.0",
-    "date-fns": "^2.25.0",
     "del": "^8.0.0",
     "error-stack-parser": "^2.1.4",
     "eslint": "^9.15.0",
@@ -98,6 +97,7 @@
     "@wordpress/i18n": "^4.49.0",
     "alpinejs": "^3.15.1",
     "axios": "^1.9.0",
+    "chart.js": "^4.5.1",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
     "immer": "^10.0.3",
@@ -112,6 +112,7 @@
     "react-use-measure": "^2.1.1",
     "stylis-plugin-rtl": "^2.1.1",
     "typescript": "^5.8.3",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "vanilla-calendar-pro": "^3.0.5"
   }
 }
