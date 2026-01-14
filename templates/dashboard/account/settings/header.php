@@ -9,10 +9,13 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
+
+$back_url = UrlHelper::back();
 
 ?>
 <div class="tutor-profile-header">
@@ -26,9 +29,17 @@ use Tutor\Components\Constants\Variant;
 			@resize.window="windowWidth = window.innerWidth"
 			@tutor-form-state-change.document="if ($event.detail.id === `tutor-${activeTab}-form`) isDirty[$event.detail.id] = $event.detail.isDirty"
 		>
-			<button @click="window.history.back()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-				<?php tutor_utils()->render_svg_icon( Icon::LEFT ); ?>
-			</button>
+			<?php
+				Button::make()
+					->label( __( 'Back', 'tutor' ) )
+					->variant( Variant::GHOST )
+					->size( Size::X_SMALL )
+					->icon( Icon::LEFT )
+					->tag( 'a' )
+					->icon_only()
+					->attr( 'href', esc_url( $back_url ) )
+					->render();
+			?>
 			<h4 
 				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4"
 				x-text="windowWidth <= 576 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab =>tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
@@ -68,7 +79,25 @@ use Tutor\Components\Constants\Variant;
 				?>
 			</div>
 			<div 
-				class="tutor-profile-header-close"
+				class="tutor-profile-header-close tutor-sm-hidden"
+				@click="activeTab = 'none'"
+				x-show="activeTab === 'none' || !isDirty[`tutor-${activeTab}-form`]"
+			>
+				<?php
+					Button::make()
+						->label( __( 'Close', 'tutor' ) )
+						->variant( Variant::GHOST )
+						->tag( 'a' )
+						->icon( Icon::CROSS )
+						->icon_only()
+						->size( Size::X_SMALL )
+						->attr( 'type', 'button' )
+						->attr( 'href', esc_url( $back_url ) )
+						->render();
+				?>
+			</div>
+			<div 
+				class="tutor-profile-header-close tutor-hidden tutor-sm-flex"
 				@click="activeTab = 'none'"
 				x-show="activeTab === 'none' || !isDirty[`tutor-${activeTab}-form`]"
 			>
