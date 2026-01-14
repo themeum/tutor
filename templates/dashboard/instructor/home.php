@@ -9,6 +9,7 @@
  */
 use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\Instructor;
 use TUTOR_REPORT\Analytics;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
@@ -33,21 +34,30 @@ $sortable_sections_ids = array_reduce(
 	array()
 );
 
-$user        = wp_get_current_user();
-$time_period = Input::get( 'period', '' );
-$start_date  = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
-$end_date    = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+$user              = wp_get_current_user();
+$start_date        = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
+$end_date          = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+$time_period       = '';
+$stat_card_content = '';
 
-$earnings = Analytics::get_earnings_by_user( $user->ID, $time_period, $start_date, $end_date );
+if ( empty( $start_date ) && empty( $end_date ) ) {
+	$time_period       = 'monthly';
+	$stat_card_content = __( ' this month', 'tutor' );
+}
+
+$total_earnings          = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date )['total_earnings'] ?? 0;
+$previous_dates          = Instructor::get_comparison_date_range( $start_date, $end_date );
+$previous_total_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
+
 
 $stat_cards = array(
 	array(
 		'variation' => 'success',
 		'title'     => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'      => Icon::EARNING,
-		'value'     => wp_kses_post( tutor_utils()->tutor_price( $earnings['total_earnings'] ?? 0 ) ),
-		'change'    => '+2',
-		'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ),
+		'value'     => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ) ),
+		'change'    => Instructor::get_stat_card_subtitle( $start_date, $end_date, $total_earnings, $previous_total_earnings ),
+		// 'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ), @todo will be added later.
 	),
 	array(
 		'variation' => 'brand',
@@ -55,7 +65,7 @@ $stat_cards = array(
 		'icon'      => Icon::COURSES,
 		'value'     => '12',
 		'change'    => '+2',
-		'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
+		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
 		'variation' => 'exception5',
@@ -63,7 +73,7 @@ $stat_cards = array(
 		'icon'      => Icon::PASSED,
 		'value'     => '3000',
 		'change'    => '+2',
-		'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
+		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
 		'variation' => 'exception4',
@@ -71,7 +81,7 @@ $stat_cards = array(
 		'icon'      => Icon::STAR_LINE,
 		'value'     => '4.2',
 		'change'    => '+2',
-		'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
+		// 'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
 	),
 );
 

@@ -10,6 +10,9 @@
 
 namespace TUTOR;
 
+use DateTime;
+use Tutor\Helpers\QueryHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -415,5 +418,135 @@ class Instructor {
 		update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'pending' ) );
 
 		do_action( 'tutor_new_instructor_after', $user_id );
+	}
+
+	public static function get_total_earnings_by_instructor( $user_id, $start_date, $end_date ) {
+
+		global $wpdb;
+		$user_id    = sanitize_text_field( $user_id );
+		$start_date = sanitize_text_field( $start_date );
+		$end_date   = sanitize_text_field( $end_date );
+
+		$period_query = '';
+		$group_query  = ' GROUP BY MONTH(date_format) ';
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$period_query = " AND DATE(earnings.created_at) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
+			$group_query  = ' GROUP BY MONTH(date_format) ';
+		}
+
+		if ( empty( $start_date ) && empty( $end_date ) ) {
+			$group_query = ' GROUP BY YEAR(date_format) ';
+		}
+
+		// Get statuses.
+		$complete_status = QueryHelper::prepare_in_clause( tutor_utils()->get_earnings_completed_statuses() );
+
+		$amount_type = current_user_can( 'administrator' ) ? 'earnings.admin_amount' : 'earnings.instructor_amount';
+		$amount_rate = current_user_can( 'administrator' ) ? 'earnings.admin_rate' : 'earnings.instructor_rate';
+
+		$amount_condition = "CASE
+			WHEN orders.tax_type = 'inclusive' AND earnings.course_price_grand_total > 0
+				THEN ( earnings.course_price_grand_total - orders.tax_amount ) * ( $amount_rate/100 )
+			ELSE $amount_type
+			END";
+
+		$select_columns = array( "SUM($amount_condition) AS total" );
+		$primary_table  = "{$wpdb->prefix}tutor_earnings";
+		$joining_table  = array(
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->prefix}tutor_orders",
+				'on'    => 'earnings.order_id = orders.id',
+			),
+		);
+
+		$result = QueryHelper::query(
+			$primary_table,
+			array(
+				'select' => $select_columns,
+				'alias'  => 'earnings',
+				'where'  => array(
+					'earnings.user_id'      => $user_id,
+					'earnings.order_status' => array( 'IN', $complete_status ),
+				),
+				'joins'  => $joining_table,
+			)
+		);
+
+		return $result[0]->total ?? 0;
+	}
+
+	public static function get_stat_card_subtitle( $start_date, $end_date, $current_data, $previous_data ) {
+
+		$current_time         = time();
+		$today                = gmdate( 'Y-m-d', $current_time );
+		$start                = new DateTime( 'now' );
+		$end                  = new DateTime( 'now' );
+		$days                 = $start->diff( $end )->days;
+		$first_day_last_month = strtotime( 'first day of previous month', $current_time );
+
+		if ( $start_date === $end_date === $today ) {
+			$time_span = 'today';
+		}
+
+		switch ( $days ) {
+
+			case 1:
+				$time_span = 'yesterday';
+				break;
+
+			case 6:
+				$time_span = 'last 7 days';
+				break;
+
+			case 13:
+				$time_span = 'last 14 days';
+				break;
+
+			case 29:
+				$time_span = 'last 30 days';
+				break;
+
+			case gmdate( 'Y-m-01', $current_time ) === $start_date && gmdate( 'Y-m-t', $current_time ) === $end_date:
+				$time_span = 'this-month';
+				break;
+
+			case gmdate( 'Y-m-d', $first_day_last_month ) === $start_date && gmdate( 'Y-m-t', $first_day_last_month ) === $end_date:
+				$time_span = 'last-month';
+				break;
+
+			case gmdate( 'Y-01-01', strtotime( '-1 year', $current_time ) ) === gmdate( 'Y-12-31', strtotime( '-1 year', $current_time ) ) === $end_date:
+				$time_span = 'last-year';
+				break;
+
+			default:
+				$start_format = date_i18n( 'M j', strtotime( $start_date ) );
+				$end_format   = date_i18n( 'M j', strtotime( $end_date ) );
+
+				$time_span = sprintf( __( ' from %1$s-%2$s', 'tutor' ), $start_format, $end_format );
+				break;
+
+		}
+
+		$data   = $current_data - $previous_data;
+		$symbol = $data < 0 ? '-' : '+';
+
+		return $symbol . wp_kses_post( tutor_utils()->tutor_price( abs( $data ) ?? 0 ) ) . $time_span;
+	}
+
+	public static function get_comparison_date_range( $selected_start_date, $selected_end_date ) {
+
+		$start = new DateTime( $selected_start_date );
+		$end   = new DateTime( $selected_end_date );
+		$days  = $start->diff( $end )->days;
+
+		$previous_start_date = gmdate( 'Y-m-d', strtotime( $start->format( 'Y-m-d H:i:s' ) . "- $days days" ) );
+		$previous_end_date   = gmdate( 'Y-m-d', strtotime( $end->format( 'Y-m-d H:i:s' ) . "- $days days" ) );
+
+		return array(
+			'previous_start_date' => $previous_start_date,
+			'previous_end_date'   => $previous_end_date,
+		);
 	}
 }
