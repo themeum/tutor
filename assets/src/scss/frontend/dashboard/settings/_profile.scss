@@ -18,22 +18,8 @@ body:has(#wpadminbar) {
 		display: block;
 	}
 
-	@media (max-width: 768px) {
-		.tutor-tabs-vertical .tutor-tabs-nav {
-			flex-direction: column;
-		}
-	}
-	@include tutor-breakpoint-down(sm) {
+	@include tutor-breakpoint-down(md) {
 		.tutor-dashboard-container {
-			.tutor-tabs-vertical .tutor-tabs-nav {
-				flex-direction: column;
-				gap: $tutor-spacing-6;
-				background: transparent;
-				border: 0px;
-				padding: 0px;
-				overflow: unset;
-			}
-	
 			.tutor-tabs-tab {
 				gap: $tutor-spacing-6;
 				&:hover:not(:disabled):not(.tutor-tabs-tab-active) {
@@ -43,6 +29,15 @@ body:has(#wpadminbar) {
 	
 			.tutor-profile-settings-tab { 
 				background: $tutor-surface-base;
+				height: 100dvh;
+				overflow-y: visible;
+				flex-direction: column;
+				width: fit-content;
+				flex-direction: column;
+				gap: $tutor-spacing-6;
+				background: transparent;
+				border: 0px;
+				overflow: unset;
 			}
 	
 			.tutor-profile-settings-tab button {
@@ -69,6 +64,9 @@ body:has(#wpadminbar) {
 			top: 60px;
 			height: 100vh;
 			display: none;
+			overflow-y: scroll;
+			padding: $tutor-spacing-6;
+
 			&.tutor-profile-tab-activated {
 				left: 0px;
 				display: block;

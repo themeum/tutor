@@ -8,30 +8,27 @@
   padding-block: $tutor-spacing-5;
   margin-bottom: $tutor-spacing-9;
 
-  @include tutor-breakpoint-down(sm) {
-    .tutor-profile-header {
-      border: unset;
-      margin-bottom: $tutor-spacing-4;
-      .tutor-dashboard-container {
-        position: relative;
-      }
+  @include tutor-breakpoint-down(md) {
+    border: unset;
+    padding-inline: $tutor-spacing-5;
+    margin-bottom: $tutor-spacing-4;
+    .tutor-dashboard-container {
+      position: relative;
+    }
 
-      &-left {
+    &-left {
+      width: 100%;
+
+      .tutor-profile-header-title {
         width: 100%;
-
-        .tutor-profile-header-title {
-          width: 100%;
-          text-align: center;
-          text-transform: capitalize;
-        }
+        text-align: center;
+        text-transform: capitalize;
       }
+    }
 
-      &-right {
-        position: absolute;
-        right: 0;
-        top: 0;
-        width: max-content;
-      }
+    &-right {
+      flex-shrink: 0;
+      width: max-content;
     }
   }
 }

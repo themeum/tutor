@@ -80,7 +80,7 @@ $settings_tab_data = array_values(
 		x-data='tutorTabs({
 			tabs: <?php echo wp_json_encode( $settings_tab_data ); ?>,
 			orientation: "vertical",
-			defaultTab: window.innerWidth >= 576 ? "account" : "none",
+			defaultTab: window.innerWidth >= 768 ? "account" : "none",
 			urlParams: {
 				enabled: true,
 				paramName: "tab",
@@ -93,16 +93,16 @@ $settings_tab_data = array_values(
 		<div class="tutor-dashboard-container">
 			<div 
 				x-init="$watch('$store.windowWidth', () => {
-					if (window.innerWidth >= 576 && activeTab === 'none') {
+					if (window.innerWidth >= 768 && activeTab === 'none') {
 						selectTab('account');
-					} else if (window.innerWidth < 576 && activeTab !== 'none') {
+					} else if (window.innerWidth < 768 && activeTab !== 'none') {
 						selectTab('none');
 					}
 				})"
 				@resize.window="
-					if (window.innerWidth >= 576 && activeTab === 'none') {
+					if (window.innerWidth >= 768 && activeTab === 'none') {
 						selectTab('account');
-					} else if (window.innerWidth < 576 && activeTab !== 'none') {
+					} else if (window.innerWidth < 768 && activeTab !== 'none') {
 						selectTab('none');
 					}
 				"
@@ -123,7 +123,7 @@ $settings_tab_data = array_values(
 								<span x-data="tutorIcon({ name: tab.icon, width: 20, height: 20})"></span>
 								<div class="tutor-flex tutor-flex-column tutor-items-start">
 									<span x-text="tab.label" class="tutor-text-small"></span>
-									<span x-text="tab.text" class="tutor-text-tiny tutor-hidden tutor-sm-block tutor-text-subdued"></span>
+									<span x-text="tab.text" class="tutor-text-tiny tutor-hidden tutor-md-block tutor-text-subdued"></span>
 								</div>
 							</button>
 						</template>

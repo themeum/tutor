@@ -42,7 +42,7 @@ $back_url = UrlHelper::back();
 			?>
 			<h4 
 				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4"
-				x-text="windowWidth <= 576 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab =>tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
+				x-text="windowWidth <= 768 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab =>tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
 			></h4>
 
 			<?php
@@ -52,7 +52,7 @@ $back_url = UrlHelper::back();
 					->label( __( 'Unsaved changes', 'tutor' ) )
 					->attr( 'x-show', 'activeTab !== "none" && isDirty[`tutor-${activeTab}-form`]' )
 					->attr( 'x-cloak', '' )
-					->attr( 'class', 'tutor-ml-5 tutor-sm-hidden' )
+					->attr( 'class', 'tutor-ml-5 tutor-md-hidden' )
 					->render();
 			?>
 		</div>
@@ -79,7 +79,7 @@ $back_url = UrlHelper::back();
 				?>
 			</div>
 			<div 
-				class="tutor-profile-header-close tutor-sm-hidden"
+				class="tutor-profile-header-close tutor-md-hidden"
 				@click="activeTab = 'none'"
 				x-show="activeTab === 'none' || !isDirty[`tutor-${activeTab}-form`]"
 			>
@@ -97,7 +97,7 @@ $back_url = UrlHelper::back();
 				?>
 			</div>
 			<div 
-				class="tutor-profile-header-close tutor-hidden tutor-sm-flex"
+				class="tutor-profile-header-close tutor-hidden tutor-md-flex"
 				@click="activeTab = 'none'"
 				x-show="activeTab === 'none' || !isDirty[`tutor-${activeTab}-form`]"
 			>

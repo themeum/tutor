@@ -50,7 +50,7 @@ $saved_account      = WithdrawModel::get_user_withdraw_method();
 if ( empty( $withdrawal_methods ) ) {
 	?>
 	<section class="tutor-flex tutor-flex-column tutor-gap-4">
-		<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Withdraw Method', 'tutor' ); ?></h5>
+		<h5 class="tutor-h5 tutomd-hidden"><?php echo esc_html__( 'Withdraw Method', 'tutor' ); ?></h5>
 		<?php
 			EmptyState::make()
 				->title( "There's no Withdrawal method selected yet! To select a Withdraw method, please contact the Site Admin.", 'tutor' )
@@ -96,7 +96,7 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 ?>
 
 <section class="tutor-flex tutor-flex-column tutor-gap-4">
-	<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Withdraw Method', 'tutor' ); ?></h5>
+	<h5 class="tutor-h5 tutor-md-hidden"><?php echo esc_html__( 'Withdraw Method', 'tutor' ); ?></h5>
 
 	<form
 		id="<?php echo esc_attr( $form_id ); ?>"
