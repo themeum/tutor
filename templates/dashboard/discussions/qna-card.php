@@ -43,7 +43,7 @@ $single_url = UrlHelper::add_query_params(
 	$discussion_url,
 	array(
 		'tab' => 'qna',
-		'id'  => $question->comment_ID,
+		'id'  => $question_id,
 	)
 );
 ?>
@@ -52,13 +52,13 @@ $single_url = UrlHelper::add_query_params(
 	x-data="{ 
 		...tutorPopover({ placement: 'bottom-end' }),
 		isUnread: <?php echo $is_unread ? 'true' : 'false'; ?>, 
-		isArchived: <?php echo (int) tutor_utils()->array_get( 'tutor_qna_archived', $meta, 0 ) ? 'true' : 'false'; ?>,
+		isArchived: <?php echo tutor_utils()->array_get( 'tutor_qna_archived', $meta, 0 ) ? 'true' : 'false'; ?>,
 		isSolved: <?php echo $is_solved ? 'true' : 'false'; ?>,
 		isImportant: <?php echo $is_important ? 'true' : 'false'; ?>
 	}"
 	:class="{ 'unread': isUnread, 'active': open }"
 	@tutor-qna-action-success.window="
-		if ($event.detail.questionId === <?php echo (int) $question_id; ?>) {
+		if ($event.detail.questionId === <?php echo esc_html( $question_id ); ?>) {
 			if ($event.detail.action === 'read') isUnread = !isUnread;
 			if ($event.detail.action === 'archived') isArchived = !isArchived;
 			if ($event.detail.action === 'solved') isSolved = !isSolved;
@@ -109,13 +109,13 @@ $single_url = UrlHelper::add_query_params(
 			<div class="tutor-flex tutor-gap-2 tutor-sm-hidden">
 				<button 
 					class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-btn-icon tutor-text-subdued"
-					@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'solved')"
+					@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'solved')"
 					:disabled="qnaSingleActionMutation?.isPending"
 				>
-					<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo (int) $question_id; ?>">
+					<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 						<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
 					</template>
-					<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+					<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
 						<span class="tutor-flex">
 							<template x-if="isSolved">
 								<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_FILL, 16, 16, array( 'class' => 'tutor-icon-success-primary' ) ); ?>
@@ -128,13 +128,13 @@ $single_url = UrlHelper::add_query_params(
 				</button>
 				<button 
 					class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-btn-icon tutor-text-subdued"
-					@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'important')"
+					@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'important')"
 					:disabled="qnaSingleActionMutation?.isPending"
 				>
-					<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo (int) $question_id; ?>">
+					<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 						<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
 					</template>
-					<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+					<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
 						<span class="tutor-flex">
 							<template x-if="isImportant">
 								<?php tutor_utils()->render_svg_icon( Icon::BOOKMARK_FILL, 16, 16, array( 'class' => 'tutor-icon-exception4' ) ); ?>
@@ -166,13 +166,13 @@ $single_url = UrlHelper::add_query_params(
 					<?php if ( ! $is_user_asker ) : ?>
 					<button 
 						class="tutor-popover-menu-item tutor-hidden tutor-sm-flex"
-						@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'solved')"
+						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'solved')"
 						:disabled="qnaSingleActionMutation?.isPending"
 					>
-						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo (int) $question_id; ?>">
+						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 							<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
 						</template>
-						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'solved' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
 							<span class="tutor-flex">
 								<template x-if="isSolved">
 									<?php tutor_utils()->render_svg_icon( Icon::COMPLETED_FILL, 16, 16, array( 'class' => 'tutor-icon-success-primary' ) ); ?>
@@ -187,13 +187,13 @@ $single_url = UrlHelper::add_query_params(
 
 					<button 
 						class="tutor-popover-menu-item tutor-hidden tutor-sm-flex"
-						@click="handleQnASingleAction(<?php echo (int) $question->comment_ID; ?>, 'important')"
+						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'important')"
 						:disabled="qnaSingleActionMutation?.isPending"
 					>
-						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo (int) $question_id; ?>">
+						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 							<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
 						</template>
-						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'important' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
 							<span class="tutor-flex">
 								<template x-if="isImportant">
 									<?php tutor_utils()->render_svg_icon( Icon::BOOKMARK_FILL, 16, 16, array( 'class' => 'tutor-icon-exception4' ) ); ?>
@@ -208,13 +208,13 @@ $single_url = UrlHelper::add_query_params(
 
 					<button 
 						class="tutor-popover-menu-item"
-						@click="handleQnASingleAction(<?php echo (int) $question_id; ?>, 'archived')"
+						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'archived')"
 						:disabled="qnaSingleActionMutation?.isPending"
 					>
-						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'archived' && currentQuestionId === <?php echo (int) $question_id; ?>">
+						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'archived' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 							<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
 						</template>
-						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'archived' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
 							<?php tutor_utils()->render_svg_icon( Icon::ARCHIVE_2 ); ?>
 						</template>
 						<span x-text="isArchived ? '<?php echo esc_js( __( 'Un-Archive', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Archive', 'tutor' ) ); ?>'"></span>
@@ -226,10 +226,10 @@ $single_url = UrlHelper::add_query_params(
 						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'read', { context: '<?php echo esc_html( $context ); ?>' })"
 						:disabled="qnaSingleActionMutation?.isPending"
 					>
-						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo (int) $question_id; ?>">
+						<template x-if="qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo esc_html( $question_id ); ?>">
 							<?php tutor_utils()->render_svg_icon( Icon::SPINNER, 14, 14, array( 'class' => 'tutor-animate-spin' ) ); ?>
 						</template>
-						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo (int) $question_id; ?>)">
+						<template x-if="!(qnaSingleActionMutation?.isPending && currentAction === 'read' && currentQuestionId === <?php echo esc_html( $question_id ); ?>)">
 							<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
 						</template>
 						<span x-text="isUnread ? '<?php echo esc_js( __( 'Mark as Read', 'tutor' ) ); ?>' : '<?php echo esc_js( __( 'Mark as Unread', 'tutor' ) ); ?>'"></span>
