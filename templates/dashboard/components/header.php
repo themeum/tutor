@@ -131,7 +131,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 
 						if ( User::is_instructor( $user_id ) || User::is_admin( $user_id ) ) {
 							$current_mode = User::get_current_view_mode();
-							$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'Switch to learner', 'tutor' ) : esc_html__( 'Switch to instructor', 'tutor' );
+							$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'View as student', 'tutor' ) : esc_html__( 'View as instructor', 'tutor' );
 
 							Button::make()
 							->label( $button_label )
