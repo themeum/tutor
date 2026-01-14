@@ -15,7 +15,7 @@ use TUTOR\Icon;
 use TUTOR\User;
 
 $settings_tab_data = array(
-	array(
+	'account'         => array(
 		'id'              => 'account',
 		'label'           => 'Account',
 		'icon'            => Icon::USER_CIRCLE,
@@ -24,7 +24,7 @@ $settings_tab_data = array(
 		'custom_template' => null,
 		'role'            => false,
 	),
-	array(
+	'security'        => array(
 		'id'              => 'security',
 		'label'           => 'Security',
 		'icon'            => Icon::SECURITY,
@@ -33,7 +33,7 @@ $settings_tab_data = array(
 		'custom_template' => null,
 		'role'            => false,
 	),
-	array(
+	'social-accounts' => array(
 		'id'              => 'social-accounts',
 		'label'           => 'Social Accounts',
 		'icon'            => Icon::GLOBE,
@@ -42,7 +42,7 @@ $settings_tab_data = array(
 		'custom_template' => null,
 		'role'            => false,
 	),
-	array(
+	'withdraw'        => array(
 		'id'              => 'withdraw',
 		'label'           => 'Withdraw',
 		'icon'            => Icon::WITHDRAW,
@@ -51,16 +51,7 @@ $settings_tab_data = array(
 		'custom_template' => null,
 		'role'            => User::INSTRUCTOR,
 	),
-	array(
-		'id'              => 'notifications',
-		'label'           => 'Notifications',
-		'icon'            => Icon::NOTIFICATION,
-		'text'            => __( 'Message, group, order', 'tutor' ),
-		'template'        => 'dashboard.account.settings.notifications',
-		'custom_template' => null,
-		'role'            => false,
-	),
-	array(
+	'preferences'     => array(
 		'id'              => 'preferences',
 		'label'           => 'Preferences',
 		'icon'            => Icon::PREFERENCE,

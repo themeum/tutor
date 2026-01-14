@@ -82,14 +82,17 @@ class BillingController extends BaseController {
 	 * Register billing nav menu for settings
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 update tabs order and data structure.
 	 *
 	 * @param array $tabs setting navigation tabs.
 	 *
 	 * @return array
 	 */
 	public static function register_nav( $tabs ) {
+		$id = 'billing-address';
+
 		$new_tab = array(
-			'id'              => 'billing-address',
+			'id'              => $id,
 			'label'           => 'Billing Address',
 			'icon'            => Icon::BILLING,
 			'text'            => __( 'Your payment address', 'tutor' ),
@@ -98,13 +101,16 @@ class BillingController extends BaseController {
 			'role'            => false,
 		);
 
-		$tabs = array_merge(
-			array_slice( $tabs, 0, -2 ),
-			array( $new_tab ),
-			array_slice( $tabs, -2 )
-		);
+		$position = array_search( 'social-accounts', array_keys( $tabs ), true );
 
-		return $tabs;
+		if ( false === $position ) {
+			$tabs[ $id ] = $new_tab;
+			return $tabs;
+		}
+
+		return array_slice( $tabs, 0, $position + 1, true )
+		+ array( $id => $new_tab )
+		+ array_slice( $tabs, $position + 1, null, true );
 	}
 
 	/**
