@@ -52,13 +52,13 @@ class User {
 	const VIEW_AS_STUDENT    = 'student';
 
 	/**
-	 * Option name for storing view as mode
+	 * User meta key for storing view as mode
 	 *
 	 * @since 4.0.0
 	 *
 	 * @var string
 	 */
-	const VIEW_MODE_OPT_NAME = 'tutor_instructor_view_mode';
+	const VIEW_MODE_USER_META = 'tutor_profile_view_mode';
 
 	/**
 	 * User model
@@ -602,7 +602,7 @@ class User {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		if ( ! $user_id ) {
+		if ( ! self::is_instructor( $user_id, true ) && ! self::is_admin( $user_id ) ) {
 			$this->json_response(
 				tutor_utils()->error_message(),
 				null,
@@ -623,15 +623,7 @@ class User {
 			$switch_mode = self::VIEW_AS_INSTRUCTOR;
 		}
 
-		if ( self::VIEW_AS_INSTRUCTOR === $switch_mode && ! self::is_instructor( $user_id, true ) ) {
-			$this->json_response(
-				tutor_utils()->error_message(),
-				null,
-				HttpHelper::STATUS_UNAUTHORIZED
-			);
-		}
-
-		update_option( self::VIEW_MODE_OPT_NAME, $switch_mode );
+		update_user_meta( $user_id, self::VIEW_MODE_USER_META, $switch_mode );
 
 		// translators:%s for switching mode.
 		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
@@ -645,10 +637,14 @@ class User {
 	 * @return string
 	 */
 	public static function get_current_view_mode(): string {
-		$is_instructor = self::is_instructor( 0, true );
-		$has_admin_cap = current_user_can( 'manage_options' );
+		$user_id       = get_current_user_id();
+		$is_instructor = self::is_instructor( $user_id, true );
+		$is_admin      = self::is_admin( $user_id );
 
-		return get_option( self::VIEW_MODE_OPT_NAME, $is_instructor || $has_admin_cap ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT );
+		$default_mode = $is_instructor || $is_admin ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
+		$current_mode = get_user_meta( $user_id, self::VIEW_MODE_USER_META, true );
+
+		return $current_mode ? $current_mode : $default_mode;
 	}
 
 	/**

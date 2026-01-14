@@ -94,7 +94,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 							</div>
 						</div>
 						<?php
-						if ( ! User::is_instructor() ) {
+						if ( ! User::is_instructor( $user_id ) ) {
 							$instructor_status = tutor_utils()->instructor_status( 0, false );
 							$instructor_status = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
 
@@ -127,21 +127,21 @@ $display_name = tutor_utils()->display_name( $user_id );
 								</a>
 								<?php
 							}
-						} else {
-							if ( User::is_student() ) {
-								$current_mode = User::get_current_view_mode();
-								$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'Switch to learner', 'tutor' ) : esc_html__( 'Switch to instructor', 'tutor' );
+						}
 
-								Button::make()
-								->label( $button_label )
-								->size( Size::MEDIUM )
-								->variant( Variant::PRIMARY_SOFT )
-								->icon( Icon::RELOAD )
-								->attr( ':disabled', 'profileSwitchMutation?.isPending' )
-								->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
-								->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
-								->render();
-							}
+						if ( User::is_instructor( $user_id ) || User::is_admin( $user_id ) ) {
+							$current_mode = User::get_current_view_mode();
+							$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'Switch to learner', 'tutor' ) : esc_html__( 'Switch to instructor', 'tutor' );
+
+							Button::make()
+							->label( $button_label )
+							->size( Size::MEDIUM )
+							->variant( Variant::PRIMARY_SOFT )
+							->icon( Icon::RELOAD )
+							->attr( ':disabled', 'profileSwitchMutation?.isPending' )
+							->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
+							->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
+							->render();
 						}
 						?>
 					</div>
