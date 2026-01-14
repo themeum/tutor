@@ -33,6 +33,8 @@ $default_values = array(
 	class="tutor-modal-body tutor-flex tutor-flex-column tutor-gap-5 tutor-border-t"
 >
 	<?php
+		do_action( 'tutor_reset_password_input_before' );
+
 		InputField::make()
 			->type( InputType::PASSWORD )
 			->label( __( 'Current Password', 'tutor' ) )
@@ -63,5 +65,7 @@ $default_values = array(
 			->required()
 			->attr( 'x-bind', "register('confirm_new_password', { required: true })" )
 			->render();
+
+		do_action( 'tutor_reset_password_input_after' );
 	?>
 </form>

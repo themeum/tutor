@@ -135,6 +135,7 @@ const settings = () => {
       this.saveWithdrawMethodMutation = this.query.useMutation(this.saveWithdrawMethod, {
         onSuccess: (data: TutorMutationResponse<string>) => {
           window.TutorCore.toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
+          window.location.reload();
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to save withdrawal method', 'tutor'));
@@ -144,8 +145,7 @@ const settings = () => {
       this.resetPasswordMutation = this.query.useMutation(this.resetPassword, {
         onSuccess: (data: TutorMutationResponse<string>) => {
           window.TutorCore.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
-          window.TutorCore.modal.closeModal('reset-password-modal');
-          window.TutorCore.form.reset('tutor-reset-password-form');
+          window.location.reload();
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to update password', 'tutor'));

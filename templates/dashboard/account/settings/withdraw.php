@@ -73,6 +73,8 @@ $method_options = array_map(
 $old_method_key = tutor_utils()->avalue_dot( 'withdraw_method_key', $saved_account );
 $default_values = array( 'withdraw_method' => $old_method_key ? $old_method_key : '' );
 
+do_action( 'tutor_withdraw_set_account_form_before' );
+
 foreach ( $withdrawal_methods as $method_id => $method ) {
 	$method_values = $get_saved_method_values( $method_id, $user_id );
 	$form_fields   = tutor_utils()->avalue_dot( 'form_fields', $method );
@@ -132,6 +134,8 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 
 		<?php foreach ( $withdrawal_methods as $method_id => $method ) : ?>
 			<?php
+			do_action( "tutor_withdraw_set_account_{$method_id}_before" );
+
 			$form_fields = tutor_utils()->avalue_dot( 'form_fields', $method );
 			if ( ! is_array( $form_fields ) || empty( $form_fields ) ) {
 				continue;
@@ -144,14 +148,17 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 			>
 				<?php foreach ( $form_fields as $field_name => $field ) : ?>
 					<?php
-					$field_key  = $get_field_key( $method_id, $field_name );
-					$input_type = $map_field_type( $field['type'] ?? 'text' );
+					$field_key        = $get_field_key( $method_id, $field_name );
+					$input_type       = $map_field_type( $field['type'] ?? 'text' );
+					$register_options = 'number' === $input_type
+						? '{ numberOnly: true }'
+						: '{}';
 
 					$input_field = InputField::make()
 						->type( $input_type )
 						->name( $field_key )
 						->id( $field_key )
-						->attr( 'x-bind', "register('{$field_key}')" );
+						->attr( 'x-bind', "register('{$field_key}', {$register_options})" );
 
 					if ( ! empty( $field['label'] ) ) {
 						$input_field->label( $field['label'] );
@@ -165,6 +172,10 @@ foreach ( $withdrawal_methods as $method_id => $method ) {
 					?>
 				<?php endforeach; ?>
 			</div>
+
+			<?php do_action( "tutor_withdraw_set_account_{$method_id}_after" ); ?>
 		<?php endforeach; ?>
+
+		<?php do_action( 'tutor_withdraw_set_account_form_after' ); ?>
 	</form>
 </section>
