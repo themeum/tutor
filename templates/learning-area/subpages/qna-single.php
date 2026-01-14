@@ -11,7 +11,7 @@
 use TUTOR\Icon;
 
 ?>
-<div class="tutor-learning-area-qna-single">
+<div class="tutor-qna-single">
 	<div class="tutor-qna-single-header tutor-p-6 tutor-border-b">
 		<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>

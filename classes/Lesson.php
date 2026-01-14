@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\LessonModel;
 use Tutor\Traits\JsonResponse;
@@ -148,7 +149,7 @@ class Lesson extends Tutor_Base {
 		}
 
 		$lesson_id = $comment->comment_post_ID;
-		if ( get_current_user_id() === $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
 			wp_delete_comment( $comment_id, true );
 			$this->json_response( __( 'Comment deleted successfully', 'tutor' ) );
 		} else {
@@ -627,6 +628,25 @@ class Lesson extends Tutor_Base {
 		$args['type'] = 'comment';
 		$comments     = get_comments( $args );
 		return $comments;
+	}
+
+	/**
+	 * Get comment replies
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $comment_id comment id.
+	 * @param string $order order.
+	 *
+	 * @return mixed comment replies on success, false on failure
+	 */
+	public static function get_comment_replies( int $comment_id, string $order = 'DESC' ) {
+		return get_comments(
+			array(
+				'parent' => $comment_id,
+				'order'  => QueryHelper::get_valid_sort_order( $order ),
+			)
+		);
 	}
 
 	/**
