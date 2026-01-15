@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
 					->tag( 'a' )
-					->icon( Icon::LEFT )
+					->icon( Icon::LEFT, '', 20, 20 )
 					->icon_only()
 					->attr( 'href', esc_url( $back_url ) )
 					->render();
@@ -38,7 +38,7 @@ defined( 'ABSPATH' ) || exit;
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
 					->tag( 'a' )
-					->icon( Icon::CROSS )
+					->icon( Icon::CROSS, '', 20, 20 )
 					->icon_only()
 					->attr( 'href', esc_url( $back_url ) )
 					->render();
