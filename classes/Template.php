@@ -535,11 +535,6 @@ class Template extends Tutor_Base {
 		}
 
 		$menu_items = array(
-			'resources'   => array(
-				'title' => esc_html__( 'Resources', 'tutor' ),
-				'icon'  => Icon::RESOURCES,
-				'url'   => esc_url( add_query_arg( 'subpage', 'resources', $base_url ) ),
-			),
 			'qna'         => array(
 				'title' => esc_html__( 'Q&A', 'tutor' ),
 				'icon'  => Icon::QA,
