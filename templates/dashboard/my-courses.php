@@ -191,7 +191,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 								<?php echo esc_html( get_the_date() ); ?> - <?php echo esc_html( get_the_time() ); ?>
 							</div>
 
-							<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-p2 tutor-font-medium tutor-block">
+							<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-p2 tutor-font-medium tutor-line-clamp-3">
 								<?php the_title(); ?>
 							</a>
 

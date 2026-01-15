@@ -75,7 +75,7 @@ $courses     = ( current_user_can( 'administrator' ) ) ? CourseModel::get_course
 <div class="tutor-dashboard-announcements" x-data="tutorAnnouncements()">
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
-			<?php CourseFilter::make()->courses( $courses )->count( $total_announcements )->button_class( 'tutor-btn tutor-btn-primary-soft tutor-btn-small' )->render(); ?>
+			<?php CourseFilter::make()->courses( $courses )->count( $total_announcements )->render(); ?>
 			<button 
 				type="button" 
 				class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"

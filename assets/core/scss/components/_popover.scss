@@ -81,13 +81,18 @@
       @include tutor-button-reset();
       @include tutor-flex(row, center, flex-start);
       @include tutor-typography(small);
-      gap: $tutor-spacing-4;
+      gap: $tutor-spacing-2;
       padding: $tutor-spacing-4 $tutor-spacing-5;
-      @include tutor-transition(background-color);
+      @include tutor-transition((color, background-color));
 
-      &:hover,
+      &:hover {
+        background-color: $tutor-tab-sidebar-l2-hover;
+      }
+
       &.tutor-active {
-        background-color: $tutor-surface-l1-hover;
+        background-color: $tutor-tab-sidebar-l2-active;
+        color: $tutor-text-brand;
+        opacity: 1;
       }
     }
   }
