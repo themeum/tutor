@@ -16,19 +16,19 @@ use Tutor\Components\Constants\Size;
 // Video quality options.
 $video_quality_options = array(
 	array(
-		'label' => esc_html__( 'Low (360p)', 'tutor' ),
+		'label' => __( 'Low (360p)', 'tutor' ),
 		'value' => '360p',
 	),
 	array(
-		'label' => esc_html__( 'Medium (480p)', 'tutor' ),
+		'label' => __( 'Medium (480p)', 'tutor' ),
 		'value' => '480p',
 	),
 	array(
-		'label' => esc_html__( 'High (720p)', 'tutor' ),
+		'label' => __( 'High (720p)', 'tutor' ),
 		'value' => '720p',
 	),
 	array(
-		'label' => esc_html__( 'Very High (1080p)', 'tutor' ),
+		'label' => __( 'Very High (1080p)', 'tutor' ),
 		'value' => '1080p',
 	),
 );
@@ -36,54 +36,54 @@ $video_quality_options = array(
 // Theme options.
 $theme_options = array(
 	array(
-		'label' => esc_html__( 'Light', 'tutor' ),
+		'label' => __( 'Light', 'tutor' ),
 		'value' => 'light',
 	),
 	array(
-		'label' => esc_html__( 'Dark', 'tutor' ),
+		'label' => __( 'Dark', 'tutor' ),
 		'value' => 'dark',
 	),
 	array(
-		'label' => esc_html__( 'System Default', 'tutor' ),
+		'label' => __( 'System Default', 'tutor' ),
 		'value' => 'system',
 	),
 );
 
 $font_size_options = array(
 	array(
-		'label' => esc_html__( '70%', 'tutor' ),
+		'label' => __( '70%', 'tutor' ),
 		'value' => 70,
 	),
 	array(
-		'label' => esc_html__( '80%', 'tutor' ),
+		'label' => __( '80%', 'tutor' ),
 		'value' => 80,
 	),
 	array(
-		'label' => esc_html__( '90%', 'tutor' ),
+		'label' => __( '90%', 'tutor' ),
 		'value' => 90,
 	),
 	array(
-		'label' => esc_html__( '100%', 'tutor' ),
+		'label' => __( '100%', 'tutor' ),
 		'value' => 100,
 	),
 	array(
-		'label' => esc_html__( '110%', 'tutor' ),
+		'label' => __( '110%', 'tutor' ),
 		'value' => 110,
 	),
 	array(
-		'label' => esc_html__( '120%', 'tutor' ),
+		'label' => __( '120%', 'tutor' ),
 		'value' => 120,
 	),
 	array(
-		'label' => esc_html__( '130%', 'tutor' ),
+		'label' => __( '130%', 'tutor' ),
 		'value' => 130,
 	),
 	array(
-		'label' => esc_html__( '140%', 'tutor' ),
+		'label' => __( '140%', 'tutor' ),
 		'value' => 140,
 	),
 	array(
-		'label' => esc_html__( '150%', 'tutor' ),
+		'label' => __( '150%', 'tutor' ),
 		'value' => 150,
 	),
 );
