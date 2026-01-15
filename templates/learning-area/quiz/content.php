@@ -9,6 +9,7 @@
  * @since 4.0.0
  */
 
+use Tutor\Components\Button;
 use Tutor\Components\Table;
 use TUTOR\Icon;
 use TUTOR\Quiz;
@@ -124,12 +125,10 @@ $quiz_item_readable = ! empty( $quiz_time ) ? $quiz_time['time_value'] . ' ' . $
 	</div>
 	<!-- Action Buttons -->
 	<div class="tutor-quiz-intro-actions tutor-flex tutor-justify-end tutor-gap-3 tutor-mt-8">
-		<button class="tutor-btn tutor-btn-ghost tutor-btn-md">
-			<?php esc_html_e( 'Skip Quiz', 'tutor' ); ?>
-		</button>
-		<button class="tutor-btn tutor-btn-primary tutor-btn-md">
-			<?php esc_html_e( 'Start Quiz', 'tutor' ); ?>
-		</button>
+		<?php
+			Button::make()->label( __( 'Skip Quiz', 'tutor' ) )->attr( 'class', 'tutor-btn-ghost' )->render();
+			Button::make()->label( __( 'Start Quiz', 'tutor' ) )->render();
+		?>
 	</div>
 	</div>
 	<?php tutor_load_template( 'learning-area.components.footer' ); ?>
