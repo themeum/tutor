@@ -29,7 +29,7 @@ $attempts_count  = $attempts_count ?? 0;
 				<?php if ( $attempts_count > 1 ) : ?>
 					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
 						<?php
-						echo sprintf(
+						printf(
 							/* translators: %d: number of attempts */
 							esc_html__( '%d Attempts', 'tutor' ),
 							esc_attr( $attempts_count )
@@ -102,7 +102,7 @@ $attempts_count  = $attempts_count ?? 0;
 	</div>
 
 	<div class="tutor-quiz-item-result">
-		<div class="tutor-badge <?php echo 'Passed' === ( $attempt['result'] ?? '' ) ? 'tutor-badge-completed' : 'tutor-badge-cancelled'; ?> tutor-badge-circle">
+		<div class="tutor-badge <?php echo 'Passed' === ( $attempt['result'] ?? '' ) ? 'tutor-badge-success' : 'tutor-badge-error'; ?> tutor-badge-rounded">
 			<?php echo esc_html( $attempt['result'] ?? '' ); ?>
 		</div>
 		<div x-data="tutorPopover({ placement: 'bottom', offset: 4 })" class="tutor-quiz-item-result-more">

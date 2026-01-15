@@ -29,14 +29,14 @@ $render_status_badge = function ( $status ) {
 			break;
 		case 'failed':
 		case 'expired':
-			$badge_class = 'cancelled';
+			$badge_class = 'error';
 			break;
 		case 'incomplete':
-			$badge_class = 'secondary';
+			$badge_class = '';
 			break;
 	}
 
-	return '<span class="tutor-capitalize tutor-badge tutor-badge-small tutor-badge-circle tutor-py-none tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
+	return '<span class="tutor-capitalize tutor-badge tutor-badge-rounded tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
 }
 
 ?>
