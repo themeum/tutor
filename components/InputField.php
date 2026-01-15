@@ -1977,14 +1977,11 @@ class InputField extends BaseComponent {
 						<template x-for="(file, index) in selectedFiles" :key="index">
 							<div class="tutor-attachment-card-wrapper">
 								<?php
-								tutor_load_template(
-									'core-components.attachment-card',
-									array(
-										'title_attr'  => 'x-text="file.name"',
-										'meta_attr'   => 'x-text="formatBytes(file.size)"',
-										'action_attr' => '@click.stop="removeFile(index)"',
-									)
-								);
+								AttachmentCard::make()
+									->title_attr( 'x-text', 'file.name' )
+									->meta_attr( 'x-text', 'formatBytes(file.size)' )
+									->action_attr( '@click.stop', 'removeFile(index)' )
+									->render();
 								?>
 							</div>
 						</template>
