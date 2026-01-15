@@ -34,24 +34,24 @@ $status_map = array(
 );
 
 // Set currently required course status fo rcurrent tab.
-$status    = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : CourseModel::STATUS_PUBLISH;
-$post_type = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );
+$course_status    = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : CourseModel::STATUS_PUBLISH;
+$course_post_type = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );
 
-$order  = Input::get( 'order', 'DESC' );
-$search = Input::get( 'search', '' );
+$order_filter = Input::get( 'order', 'DESC' );
+$search_term  = Input::get( 'search', '' );
 
 // Get counts for course tabs.
 $count_map = array(
-	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $post_type, $search ),
-	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $post_type, $search ),
-	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $post_type, $search ),
-	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $post_type, $search ),
+	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $course_post_type, $search_term ),
+	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $course_post_type, $search_term ),
+	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $course_post_type, $search_term ),
+	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $course_post_type, $search_term ),
 );
 
-$per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
+$item_per_page      = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page       = Input::get( 'current_page', 1, Input::TYPE_INT );
-$offset             = $per_page * ( $current_page - 1 );
-$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type, $search, $order );
+$offset             = $item_per_page * ( $current_page - 1 );
+$results            = CourseModel::get_courses_by_instructor( $current_user_id, $course_status, $offset, $item_per_page, false, $course_post_type, $search_term, $order_filter );
 $show_course_delete = true;
 $post_type_query    = Input::get( 'type', '' );
 $post_type_args     = $post_type_query ? array( 'type' => $post_type_query ) : array();
@@ -97,10 +97,27 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 ?>
 
 <div class="tutor-dashboard-my-courses" x-data="tutorMyCourses()">
+	<div class="tutor-hidden tutor-sm-flex tutor-items-center tutor-justify-between tutor-mb-6">
+		<h4 class="tutor-h4"><?php esc_html_e( 'Courses', 'tutor' ); ?></h4>
+		<?php ob_start(); ?>
+		<button 
+			class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"
+			:class="createMutation.isPending ? 'tutor-btn-loading' : ''"
+			@click="handleCreateCourse()"
+			:disabled="createMutation.isPending"
+		>
+			<?php tutor_utils()->render_svg_icon( Icon::ADD ); ?>
+			<?php esc_html_e( 'New Course', 'tutor' ); ?>
+		</button>
+		<?php echo apply_filters( 'tutor_course_create_mobile_button', ob_get_clean() ); //phpcs:ignore ?>
+	</div>
 	<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
 		<div class="tutor-flex tutor-flex-wrap tutor-gap-4 tutor-items-center tutor-justify-between tutor-p-6 tutor-sm-p-5 tutor-border-b">
 			<?php Nav::make()->variant( Variant::PRIMARY )->size( Size::SMALL )->items( $nav_items )->render(); ?>
-			<div class="tutor-flex tutor-items-center tutor-gap-5">
+			<div class="tutor-hidden tutor-sm-block">
+				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
+			</div>
+			<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-sm-hidden">
 				<?php do_action( 'tutor_course_create_button' ); ?>
 				<button 
 					class="tutor-btn tutor-btn-primary tutor-btn-x-small tutor-gap-2"
@@ -126,11 +143,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				->size( Size::SMALL )
 				->action( $current_url )
 				->hidden_inputs( $hidden_inputs )
+				->attr( 'class', 'tutor-sm-flex-1' )
 				->render();
 			?>
 			<div class="tutor-flex tutor-items-center tutor-gap-3">
-				<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
-				<?php Sorting::make()->order( $order )->render(); ?>
+				<div class="tutor-sm-hidden">
+					<?php do_action( 'tutor_dashboard_my_courses_filter' ); ?>
+				</div>
+				<?php Sorting::make()->order( $order_filter )->render(); ?>
 			</div>
 		</div>
 
@@ -350,17 +370,14 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 		</div>
 		<?php endif; ?>
 
-		<?php if ( $count_map[ $status ] > $per_page ) : ?>
-		<div class="tutor-p-6">
-			<?php
-			Pagination::make()
-				->current( $current_page )
-				->total( (int) $count_map[ $status ] )
-				->limit( $per_page )
-				->render();
-			?>
-		</div>
-		<?php endif; ?>
+		<?php
+		Pagination::make()
+			->current( $current_page )
+			->total( (int) $count_map[ $course_status ] )
+			->limit( $item_per_page )
+			->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-px-5 tutor-sm-pb-5' )
+			->render();
+		?>
 	</div>
 
 	<?php if ( ! empty( $results ) && $show_course_delete ) : ?>

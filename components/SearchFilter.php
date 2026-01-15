@@ -195,20 +195,16 @@ class SearchFilter extends BaseComponent {
 			$current_url = add_query_arg( $_GET, home_url( $wp->request ) );
 		}
 
+		$this->attributes['action']  = esc_url( $current_url );
+		$this->attributes['method']  = $method;
+		$this->attributes['id']      = $form_id;
+		$this->attributes['x-data']  = "tutorForm({ id: '" . esc_attr( $form_id ) . "', mode: 'onSubmit' })";
+		$this->attributes['x-bind']  = 'getFormBindings()';
+		$this->attributes['@submit'] = 'handleSubmit((data) => { $el.submit(); })($event)';
+
 		ob_start();
 		?>
-		<form 
-			action="<?php echo esc_url( $current_url ); ?>" 
-			method="<?php echo esc_attr( $method ); ?>" 
-			id="<?php echo esc_attr( $form_id ); ?>"
-			x-data="tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onSubmit' })"
-			x-bind="getFormBindings()"
-			@submit="handleSubmit(
-				(data) => { 
-					$el.submit();
-				}
-			)($event)"
-		>
+		<form <?php echo $this->render_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 			<input type="hidden" name="paged" value="1">
 
 			<?php foreach ( $this->hidden_inputs as $name => $value ) : ?>
