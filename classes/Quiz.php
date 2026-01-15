@@ -1323,7 +1323,7 @@ class Quiz {
 	}
 
 	/**
-	 * Render quiz summary table
+	 * Render quiz summary
 	 *
 	 * @since 4.0.0
 	 *
@@ -1333,7 +1333,7 @@ class Quiz {
 	 *
 	 * @return void
 	 */
-	public static function render_quiz_summary_table( $total_questions, $quiz_item_readable, $passing_grade ) {
+	public static function render_quiz_summary( $total_questions, $quiz_item_readable, $passing_grade ) {
 		$quiz_summary = array(
 			array(
 				'columns' => array(
@@ -1368,5 +1368,18 @@ class Quiz {
 		);
 
 		Table::make()->contents( $quiz_summary )->render();
+	}
+
+	/**
+	 * Render quiz attempts
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $quiz_id Quiz ID.
+	 *
+	 * @return void
+	 */
+	public static function render_quiz_attempts( $quiz_id ) {
+		// @TODO.
 	}
 }

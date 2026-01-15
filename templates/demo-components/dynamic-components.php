@@ -375,7 +375,7 @@ defined( 'ABSPATH' ) || exit;
 			echo Table::make()
 				->headings( $heading )
 				->contents( $content )
-				->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+				->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 				->render();
 		</code></pre>
 		<?php
@@ -404,7 +404,7 @@ defined( 'ABSPATH' ) || exit;
 		Table::make()
 			->headings( $heading )
 			->contents( $content )
-			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
 		?>
 		<pre><code>&lt;php
@@ -433,7 +433,7 @@ defined( 'ABSPATH' ) || exit;
 
 			echo Table::make()
 			->contents( $content )
-			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();php&gt;
 		</code></pre>
 
@@ -463,7 +463,7 @@ defined( 'ABSPATH' ) || exit;
 
 			Table::make()
 			->contents( $content )
-			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
+			->attr( 'class', 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();
 			?>
 

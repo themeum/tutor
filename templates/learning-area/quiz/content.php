@@ -48,7 +48,7 @@ $quiz_item_readable = ! empty( $quiz_time ) ? $quiz_time['time_value'] . ' ' . $
 	<!-- Quiz Parameters Table -->
 	<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-quiz-intro-params tutor-mb-8">
 		<?php
-			Quiz::render_quiz_summary_table( $total_questions, $quiz_item_readable, $passing_grade );
+			Quiz::render_quiz_summary( $total_questions, $quiz_item_readable, $passing_grade );
 		?>
 	</div>
 	<!-- Past Attempts Section -->
