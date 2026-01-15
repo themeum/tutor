@@ -12,6 +12,13 @@
   background-color: $tutor-actions-gray-secondary;
   color: $tutor-text-subdued;
 
+  img {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    object-position: center;
+  }
+
   svg {
     color: $tutor-icon-secondary;
   }
