@@ -12,6 +12,7 @@ use TUTOR\Icon;
 
 ?>
 <div class="tutor-learning-area-qna tutor-mb-9">
+
 	<div class="tutor-qna-search tutor-p-6 tutor-border-b">
 		<div class="tutor-input-field">
 			<div class="tutor-input-wrapper">
@@ -34,6 +35,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</div>
+
 	<form class="tutor-qna-form tutor-p-6 tutor-border-b" x-data="{ focused: false }">
 		<div class="tutor-input-field">
 			<label for="name" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4">Question & Answer</label>
@@ -64,6 +66,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</form>
+
 	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 		<div class="tutor-small tutor-text-secondary">
 			<?php esc_html_e( 'Questions', 'tutor' ); ?>
@@ -83,6 +86,7 @@ use TUTOR\Icon;
 			</button>
 		</div>
 	</div>
+	
 	<div class="tutor-qna-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
 		<div class="tutor-qna-card is-important">
 			<?php
@@ -174,6 +178,7 @@ use TUTOR\Icon;
 			</div>
 		</div>
 	</div>
+
 	<div class="tutor-px-6 tutor-pb-6">
 		<nav class="tutor-pagination" role="navigation" aria-label="Pagination Navigation">
 			<span class="tutor-pagination-info" aria-live="polite">
@@ -204,6 +209,7 @@ use TUTOR\Icon;
 			</ul>
 		</nav>
 	</div>
+	
 </div>
 
 <?php tutor_load_template( 'demo-components.learning-area.pages.qna-single' ); ?>

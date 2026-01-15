@@ -38,11 +38,14 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 			<div class="tutor-learning-area-container">
 				<?php
 				// Get requested page from query string and sanitize.
-				$subpage = Input::get( 'subpage' );
+				$subpage    = Input::get( 'subpage' );
+				$qna_single = Input::get( 'qna_id' );
 
 				if ( $subpage ) {
 					$subpage_template = tutor_get_template( 'learning-area.subpages.' . $subpage );
-					if ( file_exists( $subpage_template ) ) {
+					if ( $qna_single ) {
+						tutor_load_template( 'learning-area.subpages.qna-single' );
+					} elseif ( file_exists( $subpage_template ) ) {
 						tutor_load_template( 'learning-area.subpages.' . $subpage );
 					} else {
 						do_action( 'tutor_single_content_' . $tutor_post_type );
