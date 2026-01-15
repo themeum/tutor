@@ -11,7 +11,7 @@
 namespace TUTOR;
 
 use DateTime;
-use Tutor\Helpers\QueryHelper;
+use DateInterval;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -420,129 +420,97 @@ class Instructor {
 		do_action( 'tutor_new_instructor_after', $user_id );
 	}
 
-	public static function get_total_earnings_by_instructor( $user_id, $start_date, $end_date ) {
+	public static function get_stat_card_comparison_subtitle(
+		string $start_date,
+		string $end_date,
+		float $current_data,
+		float $previous_data,
+		bool $price = true
+	): string {
 
-		global $wpdb;
-		$user_id    = sanitize_text_field( $user_id );
-		$start_date = sanitize_text_field( $start_date );
-		$end_date   = sanitize_text_field( $end_date );
+		$diff   = $current_data - $previous_data;
+		$symbol = $diff < 0 ? '-' : ( $diff > 0 ? '+' : '' );
+		$diff   = $price ? wp_kses_post( tutor_utils()->tutor_price( abs( $diff ) ) ) : abs( $diff );
 
-		$period_query = '';
-		$group_query  = ' GROUP BY MONTH(date_format) ';
+		$start = new DateTime( $start_date );
+		$end   = new DateTime( $end_date );
+		$days  = (int) $start->diff( $end )->days;
 
-		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$period_query = " AND DATE(earnings.created_at) BETWEEN CAST('$start_date' AS DATE) AND CAST('$end_date' AS DATE) ";
-			$group_query  = ' GROUP BY MONTH(date_format) ';
-		}
+		$time_span = empty( $start_date ) && empty( $end_date )
+						? __( 'this month', 'tutor' )
+						: self::get_comparison_period_label( $start_date, $end_date, $days );
 
-		if ( empty( $start_date ) && empty( $end_date ) ) {
-			$group_query = ' GROUP BY YEAR(date_format) ';
-		}
-
-		// Get statuses.
-		$complete_status = QueryHelper::prepare_in_clause( tutor_utils()->get_earnings_completed_statuses() );
-
-		$amount_type = current_user_can( 'administrator' ) ? 'earnings.admin_amount' : 'earnings.instructor_amount';
-		$amount_rate = current_user_can( 'administrator' ) ? 'earnings.admin_rate' : 'earnings.instructor_rate';
-
-		$amount_condition = "CASE
-			WHEN orders.tax_type = 'inclusive' AND earnings.course_price_grand_total > 0
-				THEN ( earnings.course_price_grand_total - orders.tax_amount ) * ( $amount_rate/100 )
-			ELSE $amount_type
-			END";
-
-		$select_columns = array( "SUM($amount_condition) AS total" );
-		$primary_table  = "{$wpdb->prefix}tutor_earnings";
-		$joining_table  = array(
-			array(
-				'type'  => 'LEFT',
-				'table' => "{$wpdb->prefix}tutor_orders",
-				'on'    => 'earnings.order_id = orders.id',
-			),
-		);
-
-		$result = QueryHelper::query(
-			$primary_table,
-			array(
-				'select' => $select_columns,
-				'alias'  => 'earnings',
-				'where'  => array(
-					'earnings.user_id'      => $user_id,
-					'earnings.order_status' => array( 'IN', $complete_status ),
-				),
-				'joins'  => $joining_table,
-			)
-		);
-
-		return $result[0]->total ?? 0;
+		return "{$symbol}{$diff} {$time_span}";
 	}
 
-	public static function get_stat_card_subtitle( $start_date, $end_date, $current_data, $previous_data ) {
+	private static function get_comparison_period_label( string $start_date, string $end_date, int $days ): string {
 
-		$current_time         = time();
-		$today                = gmdate( 'Y-m-d', $current_time );
-		$start                = new DateTime( 'now' );
-		$end                  = new DateTime( 'now' );
-		$days                 = $start->diff( $end )->days;
-		$first_day_last_month = strtotime( 'first day of previous month', $current_time );
+		$time_zone = wp_timezone();
+		$now       = new DateTime( 'now', $time_zone );
+		$today     = wp_date( 'Y-m-d', null, $time_zone );
 
-		if ( $start_date === $end_date === $today ) {
-			$time_span = 'today';
+		$this_month_start = $now->modify( 'first day of this month' )->format( 'Y-m-d' );
+		$this_month_end   = $now->modify( 'last day of this month' )->format( 'Y-m-d' );
+
+		$last_month_start = $now->modify( 'first day of last month' )->format( 'Y-m-d' );
+		$last_month_end   = $now->modify( 'last day of last month' )->format( 'Y-m-d' );
+
+		$last_year_start = $now->modify( 'first day of January last year' )->format( 'Y-m-d' );
+		$last_year_end   = $now->modify( 'last day of December last year' )->format( 'Y-m-d' );
+
+		if ( $start_date === $today && $end_date === $today ) {
+			return __( 'today', 'tutor' );
 		}
 
-		switch ( $days ) {
+		switch ( true ) {
 
-			case 1:
-				$time_span = 'yesterday';
-				break;
+			case ( 0 === $days && $today !== $start_date ):
+				return __( 'from yesterday', 'tutor' );
 
-			case 6:
-				$time_span = 'last 7 days';
-				break;
+			case ( 6 === $days ):
+				return __( 'from last 7 days', 'tutor' );
 
-			case 13:
-				$time_span = 'last 14 days';
-				break;
+			case ( 13 === $days ):
+				return __( 'from last 14 days', 'tutor' );
 
-			case 29:
-				$time_span = 'last 30 days';
-				break;
+			case ( 29 === $days ):
+				return __( 'from last 30 days', 'tutor' );
 
-			case gmdate( 'Y-m-01', $current_time ) === $start_date && gmdate( 'Y-m-t', $current_time ) === $end_date:
-				$time_span = 'this-month';
-				break;
+			case ( $start_date === $this_month_start && $end_date === $this_month_end ):
+				return __( 'from this month', 'tutor' );
 
-			case gmdate( 'Y-m-d', $first_day_last_month ) === $start_date && gmdate( 'Y-m-t', $first_day_last_month ) === $end_date:
-				$time_span = 'last-month';
-				break;
+			case ( $start_date === $last_month_start && $end_date === $last_month_end ):
+				return __( 'from last month', 'tutor' );
 
-			case gmdate( 'Y-01-01', strtotime( '-1 year', $current_time ) ) === gmdate( 'Y-12-31', strtotime( '-1 year', $current_time ) ) === $end_date:
-				$time_span = 'last-year';
-				break;
+			case ( $start_date === $last_year_start && $end_date === $last_year_end ):
+				return __( 'from last year', 'tutor' );
 
 			default:
-				$start_format = date_i18n( 'M j', strtotime( $start_date ) );
-				$end_format   = date_i18n( 'M j', strtotime( $end_date ) );
-
-				$time_span = sprintf( __( ' from %1$s-%2$s', 'tutor' ), $start_format, $end_format );
-				break;
-
+				return sprintf(
+					/* translators: 1: formatted start date, 2: formatted end date */
+					__( 'from %1$s–%2$s', 'tutor' ),
+					wp_date( 'M j', strtotime( $start_date ), $time_zone ),
+					wp_date( 'M j', strtotime( $end_date ), $time_zone )
+				);
 		}
-
-		$data   = $current_data - $previous_data;
-		$symbol = $data < 0 ? '-' : '+';
-
-		return $symbol . wp_kses_post( tutor_utils()->tutor_price( abs( $data ) ?? 0 ) ) . $time_span;
 	}
 
 	public static function get_comparison_date_range( $selected_start_date, $selected_end_date ) {
 
+		if ( empty( $selected_start_date ) && empty( $selected_end_date ) ) {
+			$now = new DateTime();
+			return array(
+				'previous_start_date' => $now->modify( 'first day of this month' )->format( 'Y-m-d' ),
+				'previous_end_date'   => $now->modify( 'last day of this month' )->format( 'Y-m-d' ),
+			);
+		}
+
 		$start = new DateTime( $selected_start_date );
 		$end   = new DateTime( $selected_end_date );
-		$days  = $start->diff( $end )->days;
+		$days  = $start->diff( $end )->days + 1;
 
-		$previous_start_date = gmdate( 'Y-m-d', strtotime( $start->format( 'Y-m-d H:i:s' ) . "- $days days" ) );
-		$previous_end_date   = gmdate( 'Y-m-d', strtotime( $end->format( 'Y-m-d H:i:s' ) . "- $days days" ) );
+		$previous_start_date = $start->sub( DateInterval::createFromDateString( "$days days" ) )->format( 'Y-m-d' );
+		$previous_end_date   = $end->sub( DateInterval::createFromDateString( "$days days" ) )->format( 'Y-m-d' );
 
 		return array(
 			'previous_start_date' => $previous_start_date,

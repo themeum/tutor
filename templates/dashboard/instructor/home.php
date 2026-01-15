@@ -11,6 +11,7 @@ use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Instructor;
 use TUTOR_REPORT\Analytics;
+use Tutor\Models\CourseModel;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
@@ -34,21 +35,18 @@ $sortable_sections_ids = array_reduce(
 	array()
 );
 
-$user              = wp_get_current_user();
-$start_date        = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
-$end_date          = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
-$time_period       = '';
-$stat_card_content = '';
+$user           = wp_get_current_user();
+$start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
+$end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+$previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
 
-if ( empty( $start_date ) && empty( $end_date ) ) {
-	$time_period       = 'monthly';
-	$stat_card_content = __( ' this month', 'tutor' );
-}
+// Total Earnings.
+$total_earnings           = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date )['total_earnings'] ?? 0;
+$previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
 
-$total_earnings          = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date )['total_earnings'] ?? 0;
-$previous_dates          = Instructor::get_comparison_date_range( $start_date, $end_date );
-$previous_total_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
-
+// Total Courses.
+$total_courses           = CourseModel::get_courses_by_args( array( 'post_author' => $user->ID ) );
+$previous_period_courses = CourseModel::get_courses_by_between_dates( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 $stat_cards = array(
 	array(
@@ -56,16 +54,16 @@ $stat_cards = array(
 		'title'     => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'      => Icon::EARNING,
 		'value'     => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ) ),
-		'change'    => Instructor::get_stat_card_subtitle( $start_date, $end_date, $total_earnings, $previous_total_earnings ),
+		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_earnings, $previous_period_earnings ),
 		// 'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ), @todo will be added later.
 	),
 	array(
 		'variation' => 'brand',
 		'title'     => esc_html__( 'Total Courses', 'tutor' ),
 		'icon'      => Icon::COURSES,
-		'value'     => '12',
-		'change'    => '+2',
-		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
+		'value'     => $total_courses->post_count,
+		'change'    => $previous_period_courses,
+		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),  @todo will be added later.
 	),
 	array(
 		'variation' => 'exception5',
@@ -430,7 +428,7 @@ $recent_reviews = array(
 					'value'      => isset( $card['value'] ) ? $card['value'] : '',
 					'change'     => isset( $card['change'] ) ? $card['change'] : '',
 					'data'       => isset( $card['data'] ) ? $card['data'] : array( 0, 0, 0 ),
-					'show_graph' => true,
+					'show_graph' => false,
 				)
 			);
 			?>

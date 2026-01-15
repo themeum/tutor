@@ -327,12 +327,12 @@ class CourseModel {
 		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT $select_col
-			FROM 	$wpdb->posts
+			FROM $wpdb->posts
 			LEFT JOIN {$wpdb->usermeta}
-					ON $wpdb->usermeta.user_id = %d
-					AND $wpdb->usermeta.meta_key = %s
-					AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
-			WHERE	1 = 1 {$where_post_status}
+				ON $wpdb->usermeta.user_id = %d
+				AND $wpdb->usermeta.meta_key = %s
+				AND $wpdb->usermeta.meta_value = $wpdb->posts.ID
+			WHERE 1 = 1 {$where_post_status}
 				AND $wpdb->posts.post_type IN ({$post_types})
 				AND ($wpdb->posts.post_author = %d OR $wpdb->usermeta.user_id = %d)
 				{$search_sql}
@@ -1343,5 +1343,62 @@ class CourseModel {
 		}
 
 		return false;
+	}
+
+	public static function get_courses_by_between_dates( $start_date, $end_date, $user_id ) {
+
+		$by_date = self::get_courses_by_args(
+			array(
+				'post_author'    => $user_id,
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'date_query'     => array(
+					'column' => 'post_date_gmt',
+					'before' => $end_date,
+					'after'  => $start_date,
+				),
+			)
+		);
+
+		$ids = array();
+
+		foreach ( $by_date->posts as $post ) {
+			$date = get_post_meta( $post, '_wp_old_date', true );
+
+			if ( empty( $date ) ) {
+				$ids[] = $post;
+				continue;
+			}
+
+			$date = strtotime( $date );
+
+			if ( ! empty( $date ) && strtotime( $start_date ) <= $date && strtotime( $end_date ) >= $date ) {
+				$ids[] = $post;
+			}
+		}
+
+		$by_meta = self::get_courses_by_args(
+			array(
+				'post_author'    => $user_id,
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+				'meta_key'       => '_wp_old_date',
+				'meta_value'     => array( $start_date, $end_date ),
+				'meta_compare'   => 'BETWEEN',
+				'meta_type'      => 'DATE',
+			)
+		);
+
+		foreach ( $by_meta->posts as $post ) {
+			$date = get_post_meta( $post, '_wp_old_date', true );
+
+			$date = strtotime( $date );
+
+			if ( ! empty( $date ) && strtotime( $start_date ) <= $date && strtotime( $end_date ) >= $date ) {
+				$ids[] = $post;
+			}
+		}
+
+		return count( array_unique( $ids ) );
 	}
 }
