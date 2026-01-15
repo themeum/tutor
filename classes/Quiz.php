@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Components\Table;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -1319,5 +1320,53 @@ class Quiz {
 				'quiz' => $quiz,
 			)
 		);
+	}
+
+	/**
+	 * Render quiz summary table
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int    $total_questions Total questions.
+	 * @param string $quiz_item_readable Readable time.
+	 * @param string $passing_grade Passing grade.
+	 *
+	 * @return void
+	 */
+	public static function render_quiz_summary_table( $total_questions, $quiz_item_readable, $passing_grade ) {
+		$quiz_summary = array(
+			array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::QUESTION_CIRCLE ) . __( 'Questions', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => $total_questions ),
+				),
+			),
+			array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::CLOCK ) . __( 'Quiz Time', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => $quiz_item_readable ),
+				),
+			),
+			array(
+				'columns' => array(
+					array(
+						'content' => '<div class="tutor-flex tutor-gap-3 tutor-items-center">
+							' . tutor_utils()->get_svg_icon( Icon::PASSED ) . __( 'Passing Marks', 'tutor' ) . '
+						</div>',
+					),
+					array( 'content' => $passing_grade ),
+				),
+			),
+		);
+
+		Table::make()->contents( $quiz_summary )->render();
 	}
 }

@@ -5207,7 +5207,7 @@ class Utils {
 		$quiz_id = $this->get_post_id( $quiz_id );
 		global $wpdb;
 
-		$max_questions_count = (int) $this->get_quiz_option( get_the_ID(), 'max_questions_for_answer' );
+		$max_questions_count = (int) $this->get_quiz_option( $quiz_id, 'max_questions_for_answer' );
 		$total_question      = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT count(question_id)
