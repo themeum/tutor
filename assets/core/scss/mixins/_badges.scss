@@ -1,5 +1,6 @@
 @use '../tokens' as *;
 @use 'typography' as *;
+@use 'layout' as *;
 
 @mixin tutor-badge-base() {
   @include tutor-typography('tiny', 'medium');
@@ -12,7 +13,8 @@
   background-color: $tutor-actions-gray-secondary;
   color: $tutor-text-subdued;
 
-  img {
+  img, svg {
+    @include tutor-flex-center;
     width: 12px;
     height: 12px;
     object-fit: contain;

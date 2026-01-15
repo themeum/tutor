@@ -16,6 +16,7 @@ use TUTOR\Icon;
 			Primary
 		</span>
 		<span class="tutor-badge tutor-badge-info">
+			<img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/PayPal_Logo_Icon_2014.svg" alt="Paypal">
 			Info
 		</span>
 		<span class="tutor-badge tutor-badge-warning">
@@ -32,6 +33,7 @@ use TUTOR\Icon;
 		</span>
 		<span class="tutor-badge tutor-badge-highlight">
 			Highlight
+			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 		</span>
 	</div>
 
@@ -57,6 +59,7 @@ use TUTOR\Icon;
 		</span>
 		<span class="tutor-badge tutor-badge-rounded tutor-badge-highlight">
 			Rounded Highlight
+			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 		</span>
 	</div>
 </section>
