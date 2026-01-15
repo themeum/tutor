@@ -29,6 +29,7 @@ final class Icon {
 	const ANIMATION                  = 'animation';
 	const ANNOUNCEMENT               = 'announcement';
 	const ARCHIVE                    = 'archive';
+	const ARCHIVE_2                  = 'archive-2';
 	const ARROWS_IN                  = 'arrows-in';
 	const ARROWS_OUT                 = 'arrows-out';
 	const ARROW_LEFT                 = 'arrow-left';
@@ -50,6 +51,7 @@ final class Icon {
 	const BIN                        = 'bin';
 	const BOOK                       = 'book';
 	const BOOKMARK                   = 'bookmark';
+	const BOOKMARK_FILL              = 'bookmark-fill';
 	const BOOK_2                     = 'book-2';
 	const BOX_PRICE                  = 'box-price';
 	const BUDDY_PRESS                = 'buddy-press';
