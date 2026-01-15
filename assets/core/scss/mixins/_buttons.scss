@@ -247,11 +247,11 @@
     border: 2px solid currentColor;
     border-radius: 50%;
     border-top-color: transparent;
-    animation: tutor-spin 1s linear infinite;
+    animation: tutor-button-spin 1s linear infinite;
   }
 }
 
-@keyframes tutor-spin {
+@keyframes tutor-button-spin {
   0% {
     transform: translate(-50%, -50%) rotate(0deg);
   }
