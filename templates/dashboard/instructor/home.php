@@ -362,7 +362,7 @@ $recent_reviews = array(
 	<!-- Filters -->
 	<div class="tutor-flex tutor-justify-between tutor-align-center">
 			
-		<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-end' )->render(); ?>
+		<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-start' )->render(); ?>
 
 		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: 'bottom-end' })">
 			<button

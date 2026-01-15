@@ -428,7 +428,8 @@ class Instructor {
 		bool $price = true
 	): string {
 
-		$diff   = $current_data - $previous_data;
+		$diff   = (empty($start_date) && empty($end_date) && 0 === intval($previous_data))
+					? 0 : $current_data - $previous_data;
 		$symbol = $diff < 0 ? '-' : ( $diff > 0 ? '+' : '' );
 		$diff   = $price ? wp_kses_post( tutor_utils()->tutor_price( abs( $diff ) ) ) : abs( $diff );
 
