@@ -46,7 +46,11 @@ foreach ( $social_fields as $key => $field ) {
 					<?php tutor_utils()->render_svg_icon( $field['svg_icon'], 20, 20 ); ?>
 				</div>
 				<?php
-					$message = sprintf( /* translators: field label */ __( 'Please enter a valid %s URL', 'tutor' ), $field['label'] );
+					$message = sprintf(
+						/* translators: field label */
+						__( 'Please enter a valid %s URL', 'tutor' ),
+						$field['label']
+					);
 
 					InputField::make()
 						->type( InputType::TEXT )
