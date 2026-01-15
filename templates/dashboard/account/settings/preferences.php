@@ -121,7 +121,9 @@ $default_values = array(
 		)($event)"
 	>
 		<!-- Course Content Section -->
-		<h5 class="tutor-preferences-section-header tutor-color-black tutor-h5 tutor-md-hidden"><?php esc_html_e( 'Course Content', 'tutor' ); ?></h5>
+		<h5 class="tutor-preferences-section-header tutor-h5">
+			<?php esc_html_e( 'Course Content', 'tutor' ); ?>
+		</h5>
 		<div class="tutor-card tutor-card-rounded-2xl tutor-mb-7">
 			<div class="tutor-preferences-setting-item">
 				<div class="tutor-preferences-setting-content">

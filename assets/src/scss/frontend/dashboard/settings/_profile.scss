@@ -32,7 +32,7 @@ body:has(#wpadminbar) {
 				height: 100dvh;
 				overflow-y: visible;
 				flex-direction: column;
-				width: fit-content;
+				width: 100%;
 				flex-direction: column;
 				gap: $tutor-spacing-6;
 				background: transparent;
@@ -62,7 +62,7 @@ body:has(#wpadminbar) {
 			background: $tutor-surface-base;
 			position: absolute;
 			top: 60px;
-			height: 100vh;
+			height: 100dvh;
 			display: none;
 			overflow-y: scroll;
 			padding: $tutor-spacing-6;

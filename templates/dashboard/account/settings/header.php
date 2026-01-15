@@ -34,7 +34,7 @@ $back_url = UrlHelper::back();
 					->label( __( 'Back', 'tutor' ) )
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
-					->icon( Icon::LEFT )
+					->icon( Icon::LEFT, 'left', 20, 20 )
 					->tag( 'a' )
 					->icon_only()
 					->attr( 'href', esc_url( $back_url ) )
@@ -42,7 +42,7 @@ $back_url = UrlHelper::back();
 			?>
 			<h4 
 				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4"
-				x-text="windowWidth <= 768 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab =>tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
+				x-text="windowWidth <= 768 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab => tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
 			></h4>
 
 			<?php
@@ -88,7 +88,7 @@ $back_url = UrlHelper::back();
 						->label( __( 'Close', 'tutor' ) )
 						->variant( Variant::GHOST )
 						->tag( 'a' )
-						->icon( Icon::CROSS )
+						->icon( Icon::CROSS, 'left', 20, 20 )
 						->icon_only()
 						->size( Size::X_SMALL )
 						->attr( 'type', 'button' )
@@ -105,7 +105,7 @@ $back_url = UrlHelper::back();
 					Button::make()
 						->label( __( 'Close', 'tutor' ) )
 						->variant( Variant::GHOST )
-						->icon( Icon::CROSS )
+						->icon( Icon::CROSS, 'left', 20, 20 )
 						->icon_only()
 						->size( Size::X_SMALL )
 						->attr( 'type', 'button' )

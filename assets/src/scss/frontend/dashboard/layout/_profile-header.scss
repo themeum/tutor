@@ -7,14 +7,12 @@
   border-bottom: 1px solid $tutor-border-idle;
   padding-block: $tutor-spacing-5;
   margin-bottom: $tutor-spacing-9;
-
+  
   @include tutor-breakpoint-down(md) {
+    position: relative;
     border: unset;
     padding-inline: $tutor-spacing-5;
     margin-bottom: $tutor-spacing-4;
-    .tutor-dashboard-container {
-      position: relative;
-    }
 
     &-left {
       width: 100%;
@@ -29,6 +27,8 @@
     &-right {
       flex-shrink: 0;
       width: max-content;
+      position: absolute;
+      right: $tutor-spacing-6;
     }
   }
 }
