@@ -1,7 +1,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
-import { __ } from '@wordpress/i18n';
 import { type AjaxResponse } from '@FrontendTypes/index';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 const header = () => {
   const query = window.TutorCore.query;
@@ -20,7 +20,7 @@ const header = () => {
             }, 1000);
           },
           onError: (error: Error) => {
-            window.TutorCore.toast.error(error.message || __('Failed to switch the mode', 'tutor'));
+            window.TutorCore.toast.error(convertToErrorMessage(error));
           },
         },
       );
