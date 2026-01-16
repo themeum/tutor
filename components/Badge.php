@@ -203,6 +203,8 @@ class Badge extends BaseComponent {
 		if ( ! empty( $this->icon ) ) {
 			if ( false !== strpos( $this->icon, '<svg' ) ) {
 				$icon_html = $this->icon;
+			} elseif ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
+				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
 			} else {
 				ob_start();
 				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
