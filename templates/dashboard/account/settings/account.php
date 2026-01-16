@@ -63,7 +63,7 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
 		})'
 		x-bind="getFormBindings()"
-		@submit="handleSubmit(handleUpdateProfile)($event)"
+		@submit="handleSubmit((data) => handleUpdateProfile(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
 		class="tutor-flex tutor-flex-column tutor-gap-6"
 	>
 		<div class="tutor-flex tutor-flex-column tutor-gap-4">

@@ -29,7 +29,7 @@ $default_values = array(
 		defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
 	})'
 	x-bind="getFormBindings()"
-	@submit="handleSubmit(handleResetPassword)($event)"
+	@submit="handleSubmit((data) => handleResetPassword(data, '<?php echo esc_attr( $form_id ); ?>'))($event)"
 	class="tutor-modal-body tutor-flex tutor-flex-column tutor-gap-5 tutor-border-t"
 >
 	<?php

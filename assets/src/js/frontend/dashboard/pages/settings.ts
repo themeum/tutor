@@ -61,10 +61,12 @@ interface ResetPasswordFormProps {
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
+  const toast = window.TutorCore.toast;
 
   return {
     query,
     form,
+    toast,
     $el: null as HTMLElement | null,
     fetchCountriesQuery: null as QueryState<unknown> | null,
     uploadProfilePhotoMutation: null as MutationState<unknown> | null,
@@ -92,63 +94,58 @@ const settings = () => {
 
       this.uploadProfilePhotoMutation = this.query.useMutation(this.uploadProfilePhoto, {
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to update profile', 'tutor'));
+          this.toast.error(error.message || __('Failed to update profile', 'tutor'));
         },
       });
 
       this.removeProfilePhotoMutation = this.query.useMutation(this.removeProfilePhoto, {
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to update profile', 'tutor'));
+          this.toast.error(error.message || __('Failed to update profile', 'tutor'));
         },
       });
 
       this.updateProfileMutation = this.query.useMutation(this.updateProfile, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
-          window.location.reload();
+          this.toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to update profile', 'tutor'));
+          this.toast.error(error.message || __('Failed to update profile', 'tutor'));
         },
       });
 
       this.saveSocialProfileMutation = this.query.useMutation(this.saveSocialProfile, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
-          window.location.reload();
+          this.toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save social profile', 'tutor'));
+          this.toast.error(error.message || __('Failed to save social profile', 'tutor'));
         },
       });
 
       this.saveBillingInfoMutation = this.query.useMutation(this.saveBillingInfo, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
-          window.location.reload();
+          this.toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save billing info', 'tutor'));
+          this.toast.error(error.message || __('Failed to save billing info', 'tutor'));
         },
       });
 
       this.saveWithdrawMethodMutation = this.query.useMutation(this.saveWithdrawMethod, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
-          window.location.reload();
+          this.toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save withdrawal method', 'tutor'));
+          this.toast.error(error.message || __('Failed to save withdrawal method', 'tutor'));
         },
       });
 
       this.resetPasswordMutation = this.query.useMutation(this.resetPassword, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          window.TutorCore.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
-          window.location.reload();
+          this.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to update password', 'tutor'));
+          this.toast.error(error.message || __('Failed to update password', 'tutor'));
         },
       });
     },
@@ -181,35 +178,40 @@ const settings = () => {
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE, payload).then((res) => res.data);
     },
 
-    async handleUpdateProfile(data: AccountFormProps) {
+    async handleUpdateProfile(data: AccountFormProps, formId: string) {
       const payload = {
         ...data,
         tutor_pro_custom_signature_id: data.tutor_pro_custom_signature_id?.id || '',
       };
       await this.updateProfileMutation?.mutate(payload);
+      this.form.reset(formId, data as unknown as Record<string, unknown>);
     },
 
     async saveSocialProfile(payload: SocialFormProps) {
       return wpAjaxInstance.post(endpoints.SAVE_SOCIAL_PROFILE, payload).then((res) => res.data);
     },
 
-    async handleSaveSocialProfile(data: SocialFormProps) {
+    async handleSaveSocialProfile(data: SocialFormProps, formId: string) {
       await this.saveSocialProfileMutation?.mutate(data);
+      this.form.reset(formId, data as unknown as Record<string, unknown>);
     },
 
     async saveBillingInfo(payload: SettingsFormProps) {
       return wpAjaxInstance.post(endpoints.SAVE_BILLING_INFO, payload).then((res) => res.data);
     },
 
-    async handleSaveBillingInfo(data: SettingsFormProps) {
+    async handleSaveBillingInfo(data: SettingsFormProps, formId: string) {
       await this.saveBillingInfoMutation?.mutate(data);
+      if (this.form.hasForm(formId)) {
+        this.form.reset(formId, data as unknown as Record<string, unknown>);
+      }
     },
 
     async saveWithdrawMethod(payload: Record<string, unknown>) {
       return wpAjaxInstance.post(endpoints.SAVE_WITHDRAW_METHOD, payload).then((res) => res.data);
     },
 
-    async handleSaveWithdrawMethod(data: WithdrawMethodFormProps) {
+    async handleSaveWithdrawMethod(data: WithdrawMethodFormProps, formId: string) {
       const selectedMethod = data.withdraw_method;
 
       const payload: Record<string, string> = {
@@ -224,19 +226,21 @@ const settings = () => {
       });
 
       await this.saveWithdrawMethodMutation?.mutate(payload);
+      this.form.reset(formId, data as unknown as Record<string, unknown>);
     },
 
     async resetPassword(payload: ResetPasswordFormProps) {
       return wpAjaxInstance.post(endpoints.RESET_PASSWORD, payload).then((res) => res.data);
     },
 
-    async handleResetPassword(data: ResetPasswordFormProps) {
+    async handleResetPassword(data: ResetPasswordFormProps, formId: string) {
       if (data.new_password !== data.confirm_new_password) {
-        window.TutorCore.toast.error(__('Passwords do not match', 'tutor'));
+        this.toast.error(__('Passwords do not match', 'tutor'));
         return;
       }
 
       await this.resetPasswordMutation?.mutate(data);
+      this.form.reset(formId, data as unknown as Record<string, unknown>);
     },
   };
 };

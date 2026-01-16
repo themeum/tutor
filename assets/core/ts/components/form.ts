@@ -590,6 +590,13 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         // Update reactive object props instead of replacing it to maintain bindings
         Object.keys(this.values).forEach((key) => delete this.values[key]);
         Object.assign(this.values, values);
+
+        // Update baseline default values for all fields provided
+        Object.entries(values).forEach(([name, value]) => {
+          if (this.fields[name]) {
+            this.fields[name].defaultValue = value;
+          }
+        });
       } else {
         const defaultValues = Object.keys(this.fields).reduce(
           (acc, name) => {
