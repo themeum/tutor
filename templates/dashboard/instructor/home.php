@@ -41,7 +41,7 @@ $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', I
 $previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
 
 // Total Earnings.
-$total_earnings           = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date )['total_earnings'] ?? 0;
+$total_earnings           = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
 $previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
 
 // Total Courses.
@@ -62,8 +62,8 @@ $stat_cards = array(
 		'variation' => 'success',
 		'title'     => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'      => Icon::EARNING,
-		'value'     => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ) ),
-		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_earnings, $previous_period_earnings ),
+		'value'     => wp_kses_post( tutor_utils()->tutor_price( $total_earnings['total_earnings'] ?? 0 ) ),
+		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_earnings['total_earnings'] ?? 0, $previous_period_earnings ),
 		// 'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ), @todo will be added later.
 	),
 	array(
@@ -93,7 +93,7 @@ $stat_cards = array(
 );
 
 $overview_chart_data = array(
-	'earnings' => array( 30, 35, 45.2, 42.8, 41.5, 46.3, 52.1, 48.2, 45.8, 44.2, 46.5, 49.1, 52.8, 51.3 ),
+	'earnings' => Analytics::prepare_chart_data( $total_earnings['earnings'] ),
 	'enrolled' => array( 40, 60, 50.1, 48.5, 43.2, 48.9, 52.3, 49.7, 47.2, 48.8, 47.5, 49.2, 51.8, 53.2 ),
 	'labels'   => array( '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', '' ),
 );
