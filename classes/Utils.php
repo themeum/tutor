@@ -2241,12 +2241,12 @@ class Utils {
 		$with_bundle_enrolled_courses_clause = '';
 		if ( ! $with_bundle_enrolled_courses ) {
 			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
-				"AND NOT EXISTS (
+				'AND NOT EXISTS (
 					SELECT 1
 					FROM wp_postmeta pm
 					WHERE pm.post_id = e.ID
 						AND pm.meta_key = %s
-				)",
+				)',
 				'_tutor_bundle_id'
 			);
 		}
@@ -4772,16 +4772,26 @@ class Utils {
 	 * Get question and asnwer by question
 	 *
 	 * @since 1.0.0
-	 * @since 4.0.0 param $order is added.
+	 * @since 4.0.0 param $order and $context added.
 	 *
 	 * @param int    $question_id question id.
 	 * @param string $order order ASC or DESC.
+	 * @param string $context context frontend or dashboard.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_qa_answer_by_question( $question_id, $order = 'ASC' ) {
+	public function get_qa_answer_by_question( $question_id, $order = 'ASC', $context = '' ) {
 		global $wpdb;
 		$order = 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
+
+		$condition = '(_chat.comment_ID=%d OR _chat.comment_parent = %d)';
+		$params    = array( $question_id, $question_id );
+
+		if ( 'frontend' === $context ) {
+			$condition = '_chat.comment_parent = %d';
+			$params    = array( $question_id );
+		}
+
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT _chat.comment_ID,
@@ -4796,10 +4806,9 @@ class Utils {
 			FROM	{$wpdb->comments} _chat
 					INNER JOIN {$wpdb->users} ON _chat.user_id = {$wpdb->users}.ID
 			WHERE 	comment_type = 'tutor_q_and_a'
-					AND ( _chat.comment_ID=%d OR _chat.comment_parent = %d)
+					AND {$condition}
 			ORDER BY _chat.comment_ID {$order};",
-				$question_id,
-				$question_id
+				$params
 			)
 		);
 
@@ -6930,17 +6939,28 @@ class Utils {
 
 		$pagination_query = '';
 		$date_query       = '';
+		$search_query     = '';
 		$sort_query       = 'ORDER BY ID DESC';
 
 		if ( $this->count( $filter_data ) ) {
 			extract( $filter_data );//phpcs:ignore
 
+			if ( ! empty( $search_filter ) ) {
+				$like         = '%' . $wpdb->esc_like( $search_filter ) . '%';
+				$search_query = $wpdb->prepare(
+					' AND assignment.post_title LIKE %s ',
+					$like
+				);
+			}
+
 			if ( ! empty( $course_id ) ) {
 				$in_course_ids = $course_id;
 			}
-			if ( ! empty( $date_filter ) ) {
-				$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
-				$date_query  = " AND DATE(post_date) = '{$date_filter}'";
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$start_date = tutor_get_formated_date( 'Y-m-d', $start_date );
+				$end_date   = tutor_get_formated_date( 'Y-m-d', $end_date );
+
+				$date_query = $wpdb->prepare( 'AND DATE(post_date) BETWEEN %s AND %s', $start_date, $end_date );
 			}
 			if ( ! empty( $order_filter ) ) {
 				$order_filter = QueryHelper::get_valid_sort_order( $order_filter );
@@ -6963,6 +6983,7 @@ class Utils {
 					AND assignment.post_parent>0
 					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
+					{$search_query}
 			",
 				$assignment_post_type
 			)
@@ -6979,6 +7000,7 @@ class Utils {
 					AND assignment.post_parent>0
 					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
+					{$search_query}
 					{$sort_query}
 					{$pagination_query}
 			",
@@ -8517,16 +8539,23 @@ class Utils {
 	 * Check if current screen tutor frontend dashboard
 	 *
 	 * @since 1.9.4
+	 * @since 4.0.0 Subpage check support added.
+	 * 				Example: assignments/submitted	
 	 *
 	 * @param string $subpage subpage.
 	 *
 	 * @return boolean
 	 */
 	public function is_tutor_frontend_dashboard( $subpage = null ) {
-
 		global $wp_query;
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
+
+			$subpage_parts = explode( '/', $subpage, 2 );
+			if ( isset( $subpage_parts[1] ) ) {
+				$dashboard_subpage = $this->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+				return $dashboard_page == $subpage_parts[0] && $dashboard_subpage == $subpage_parts[1];
+			}
 
 			if ( $subpage ) {
 				return $dashboard_page == $subpage;
@@ -9567,7 +9596,7 @@ class Utils {
 	 */
 	public function default_menus(): array {
 		$items = array(
-			'index'            => array(
+			'index'   => array(
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),

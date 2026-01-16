@@ -19,7 +19,7 @@
   }
 
   .tutor-expand-btn {
-    position: absolute;
+    position: fixed;
     inset-inline-start: $tutor-spacing-6;
     bottom: $tutor-spacing-6;
     color: $tutor-icon-secondary;
