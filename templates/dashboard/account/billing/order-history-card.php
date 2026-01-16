@@ -11,17 +11,15 @@
 
 defined( 'ABSPATH' ) || exit;
 
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\ComponentHelper;
 use Tutor\Helpers\DateTimeHelper;
-use TUTOR\Icon;
 use Tutor\Models\OrderModel;
 ?>
 <div class="tutor-billing-card">
 	<div class="tutor-billing-card-left">
 		<div class="tutor-billing-card-title">
 			<div class="tutor-hidden tutor-sm-block">
-				<?php echo wp_kses_post( ComponentHelper::order_status_badge( $order->order_status ) ); ?>
+				<?php echo wp_kses_post( ComponentHelper::render_order_status_badge( $order->order_status ) ); ?>
 			</div>
 			<ul class="tutor-pl-1">
 				<?php
@@ -44,7 +42,7 @@ use Tutor\Models\OrderModel;
 				<?php endforeach; ?>
 			</ul>
 			<div class="tutor-sm-hidden">
-				<div class="tutor-ml-6"><?php echo wp_kses_post( ComponentHelper::order_status_badge( $order->order_status ) ); ?></div>
+				<div class="tutor-ml-6"><?php echo wp_kses_post( ComponentHelper::render_order_status_badge( $order->order_status ) ); ?></div>
 			</div>
 		</div>
 		<div class="tutor-billing-card-details">
@@ -59,10 +57,7 @@ use Tutor\Models\OrderModel;
 			<span class="tutor-section-separator-vertical tutor-sm-hidden"></span>
 
 			<div class="tutor-billing-card-payment-method">
-				<?php tutor_utils()->render_svg_icon( Icon::LESSON, 12, 12 ); ?>
-				<div class="tutor-sm-hidden">
-					<?php echo esc_html( Ecommerce::get_payment_method_label( $order->payment_method ?? '' ) ); ?>
-				</div>
+				<?php ComponentHelper::render_payment_method_badge( $order->payment_method ); ?>
 			</div>
 		</div>
 	</div>
