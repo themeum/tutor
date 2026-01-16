@@ -10,4 +10,4 @@
 
 ?>
 
-<div id="tutor-calendar-root"></div>
+<div id="tutor_calendar_wrapper"></div>

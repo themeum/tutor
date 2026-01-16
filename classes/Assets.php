@@ -102,7 +102,7 @@ class Assets {
 		 *
 		 * @since 4.0.0
 		 */
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), PHP_INT_MAX );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
