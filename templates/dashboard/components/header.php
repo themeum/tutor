@@ -5,6 +5,9 @@
  * @package tutor
  */
 
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use TUTOR\Dashboard;
 use TUTOR\Icon;
 use TUTOR\Instructors_List;
@@ -22,7 +25,7 @@ $user_id      = get_current_user_id();
 $display_name = tutor_utils()->display_name( $user_id );
 ?>
 
-<div class="tutor-dashboard-header">
+<div x-data="tutorHeader()" class="tutor-dashboard-header">
 	<div class="tutor-dashboard-header-inner">
 		<div class="tutor-dashboard-header-left">
 			<div class="tutor-h5 tutor-text-primary tutor-text-medium">
@@ -38,7 +41,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 			</ul> -->
 		</div>
 		<div class="tutor-dashboard-header-right">
-			<!-- @TODO -->
+			
 			<!-- <button class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-2">
 				24 
 				<?php
@@ -91,7 +94,7 @@ $display_name = tutor_utils()->display_name( $user_id );
 							</div>
 						</div>
 						<?php
-						if ( ! User::is_instructor() ) {
+						if ( ! User::is_instructor( $user_id ) && ! User::is_admin( $user_id ) ) {
 							$instructor_status = tutor_utils()->instructor_status( 0, false );
 							$instructor_status = is_string( $instructor_status ) ? strtolower( $instructor_status ) : '';
 
@@ -124,6 +127,21 @@ $display_name = tutor_utils()->display_name( $user_id );
 								</a>
 								<?php
 							}
+						}
+
+						if ( User::can_switch_mode( $user_id ) ) {
+							$current_mode = User::get_current_view_mode();
+							$button_label = User::VIEW_AS_INSTRUCTOR === $current_mode ? esc_html__( 'View as student', 'tutor' ) : esc_html__( 'View as instructor', 'tutor' );
+
+							Button::make()
+							->label( $button_label )
+							->size( Size::MEDIUM )
+							->variant( Variant::PRIMARY_SOFT )
+							->icon( Icon::RELOAD )
+							->attr( ':disabled', 'profileSwitchMutation?.isPending' )
+							->attr( ':class', "{ 'tutor-btn-loading': profileSwitchMutation?.isPending }" )
+							->attr( '@click', "profileSwitchMutation.mutate('{$current_mode}')" )
+							->render();
 						}
 						?>
 					</div>
