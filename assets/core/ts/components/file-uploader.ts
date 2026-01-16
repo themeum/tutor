@@ -80,7 +80,7 @@ function getInitialImagePreview(
 export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   isDragOver: false,
   isDisabled: props.disabled,
-  multiple: props.multiple,
+  multiple: !!props.multiple,
   accept: props.accept,
   maxSize: props.maxSize || 52428800,
   variant: props.variant,

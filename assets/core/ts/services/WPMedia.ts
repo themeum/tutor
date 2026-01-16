@@ -84,7 +84,7 @@ export class WPMediaService {
       button: {
         text: options.button?.text ?? __('Use this file', 'tutor'),
       },
-      multiple: options.multiple ?? false,
+      multiple: options.multiple ? 'add' : false,
       library: options.library ?? {},
     };
 
