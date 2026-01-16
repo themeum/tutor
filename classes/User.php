@@ -602,7 +602,7 @@ class User {
 		tutor_utils()->checking_nonce();
 
 		$user_id = get_current_user_id();
-		if ( ! self::is_instructor( $user_id, true ) && ! self::is_admin( $user_id ) ) {
+		if ( ! self::can_switch_mode( $user_id ) ) {
 			$this->json_response(
 				tutor_utils()->error_message(),
 				null,
@@ -656,5 +656,20 @@ class User {
 	 */
 	public static function is_instructor_view(): string {
 		return self::VIEW_AS_INSTRUCTOR === self::get_current_view_mode();
+	}
+
+	/**
+	 * Check if the user can switch mode
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer $user_id User id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_switch_mode( int $user_id = 0 ) : bool {
+		$user_id = tutor_utils()->get_user_id( $user_id );
+
+		return self::is_instructor( $user_id ) || self::is_admin( $user_id );
 	}
 }
