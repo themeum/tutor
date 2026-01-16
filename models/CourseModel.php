@@ -1345,22 +1345,41 @@ class CourseModel {
 		return false;
 	}
 
-	public static function get_courses_by_between_dates( $start_date, $end_date, $user_id ) {
+	/**
+	 * Get the number of courses created by a user within a given date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * If no date range is provided, all courses authored by the user are counted.
+	 * Courses without a `_wp_old_date` meta value are considered valid based on
+	 * their publish date.
+	 *
+	 * @param string|null $start_date Start date in Y-m-d format.
+	 * @param string|null $end_date   End date in Y-m-d format.
+	 * @param int         $user_id    Course author (user) ID.
+	 *
+	 * @return int Total number of matching courses.
+	 */
+	public static function get_course_count_by_date( $start_date, $end_date, $user_id ) {
 
-		$common_args = [
+		$common_args = array(
 			'post_author'    => $user_id,
 			'posts_per_page' => -1,
 			'fields'         => 'ids',
-		];
+		);
+
+		if ( empty( $start_date ) && empty( $end_date ) ) {
+			return self::get_courses_by_args( $common_args )->post_count;
+		}
 
 		$by_date = self::get_courses_by_args(
 			$common_args +
 			array(
-				'date_query'     => array(
-					'column' => 'post_date_gmt',
-					'before' => $end_date,
-					'after'  => $start_date,
-					'inclusive' => true
+				'date_query' => array(
+					'column'    => 'post_date_gmt',
+					'before'    => $end_date,
+					'after'     => $start_date,
+					'inclusive' => true,
 				),
 			)
 		);
@@ -1368,14 +1387,14 @@ class CourseModel {
 		$by_meta = self::get_courses_by_args(
 			$common_args +
 			array(
-				'meta_key'       => '_wp_old_date',
-				'meta_value'     => array( $start_date, $end_date ),
-				'meta_compare'   => 'BETWEEN',
-				'meta_type'      => 'DATE',
+				'meta_key'     => '_wp_old_date',
+				'meta_value'   => array( $start_date, $end_date ),
+				'meta_compare' => 'BETWEEN',
+				'meta_type'    => 'DATE',
 			)
 		);
 
-		$post_ids = array_unique(array_merge((array)$by_date->posts, (array)$by_meta->posts));
+		$post_ids = array_unique( array_merge( (array) $by_date->posts, (array) $by_meta->posts ) );
 
 		$filtered = array_filter(
 			$post_ids,
@@ -1386,10 +1405,10 @@ class CourseModel {
 					return true;
 				}
 
-				return strtotime( $start_date ) <= $old_date && strtotime( $end_date ) >= $old_date ;
+				return strtotime( $start_date ) <= $old_date && strtotime( $end_date ) >= $old_date;
 			}
 		);
 
-		return count( $filtered);
+		return count( $filtered );
 	}
 }

@@ -12,6 +12,8 @@ namespace TUTOR;
 
 use DateTime;
 use DateInterval;
+use Tutor\Models\CourseModel;
+use Tutor\Helpers\QueryHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -420,6 +422,20 @@ class Instructor {
 		do_action( 'tutor_new_instructor_after', $user_id );
 	}
 
+	/**
+	 * Generate a comparison subtitle for a stat card.
+	 * If no date range is provided, the subtitle defaults to "this month".
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $start_date     Selected start date (Y-m-d).
+	 * @param string $end_date       Selected end date (Y-m-d).
+	 * @param float  $current_data   Current period value.
+	 * @param float  $previous_data  Previous period value.
+	 * @param bool   $price          Whether to format the difference as a price.
+	 *
+	 * @return string Comparison subtitle string.
+	 */
 	public static function get_stat_card_comparison_subtitle(
 		string $start_date,
 		string $end_date,
@@ -428,8 +444,7 @@ class Instructor {
 		bool $price = true
 	): string {
 
-		$diff   = (empty($start_date) && empty($end_date) && 0 === intval($previous_data))
-					? 0 : $current_data - $previous_data;
+		$diff   = ! empty( $start_date ) && ! empty( $end_date ) ? $current_data - $previous_data : $previous_data;
 		$symbol = $diff < 0 ? '-' : ( $diff > 0 ? '+' : '' );
 		$diff   = $price ? wp_kses_post( tutor_utils()->tutor_price( abs( $diff ) ) ) : abs( $diff );
 
@@ -444,7 +459,18 @@ class Instructor {
 		return "{$symbol}{$diff} {$time_span}";
 	}
 
-	private static function get_comparison_period_label( string $start_date, string $end_date, int $days ): string {
+	/**
+	 * Get a human-readable label for a comparison date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $start_date Start date (Y-m-d).
+	 * @param string $end_date   End date (Y-m-d).
+	 * @param int    $days       Number of days between start and end dates.
+	 *
+	 * @return string Comparison period label.
+	 */
+	public static function get_comparison_period_label( string $start_date, string $end_date, int $days ): string {
 
 		$time_zone = wp_timezone();
 		$now       = new DateTime( 'now', $time_zone );
@@ -496,6 +522,19 @@ class Instructor {
 		}
 	}
 
+	/**
+	 * Calculate the previous comparison date range based on a selected date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string|null $selected_start_date Selected start date (Y-m-d).
+	 * @param string|null $selected_end_date   Selected end date (Y-m-d).
+	 *
+	 * @return array {
+	 *     @type string $previous_start_date Previous period start date (Y-m-d).
+	 *     @type string $previous_end_date   Previous period end date (Y-m-d).
+	 * }
+	 */
 	public static function get_comparison_date_range( $selected_start_date, $selected_end_date ) {
 
 		if ( empty( $selected_start_date ) && empty( $selected_end_date ) ) {
@@ -517,5 +556,60 @@ class Instructor {
 			'previous_start_date' => $previous_start_date,
 			'previous_end_date'   => $previous_end_date,
 		);
+	}
+
+	/**
+	 * Get the total number of students enrolled in an instructor's courses
+	 * within a given date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string|null $start_date Start date (Y-m-d).
+	 * @param string|null $end_date   End date (Y-m-d).
+	 * @param int         $user_id    Instructor user ID.
+	 *
+	 * @return int Total number of enrolled students.
+	 */
+	public static function get_instructor_total_students_by_date_range( $start_date, $end_date, $user_id ) {
+
+		global $wpdb;
+
+		$primary_table  = "{$wpdb->posts} AS enrollment";
+		$joining_table  = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} AS course",
+				'on'    => 'enrollment.post_parent=course.ID',
+			),
+		);
+		$select_columns = array( 'COUNT(enrollment.ID) AS students' );
+
+		$where = array(
+			'course.post_author'     => $user_id,
+			'course.post_type'       => tutor()->course_post_type,
+			'course.post_status'     => CourseModel::STATUS_PUBLISH,
+			'enrollment.post_type'   => 'tutor_enrolled',
+			'enrollment.post_status' => 'completed',
+		);
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$where['enrollment.post_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+		}
+
+		$result = QueryHelper::get_joined_data(
+			$primary_table,
+			$joining_table,
+			$select_columns,
+			$where,
+			array(),
+			'',
+			-1,
+			0,
+			'DESC',
+			OBJECT,
+			true
+		);
+
+		return $result->students ?? 0;
 	}
 }

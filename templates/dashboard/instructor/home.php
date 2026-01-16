@@ -45,8 +45,17 @@ $total_earnings           = Analytics::get_earnings_by_user( $user->ID, '', $sta
 $previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
 
 // Total Courses.
-$total_courses           = CourseModel::get_courses_by_args( array( 'post_author' => $user->ID ) );
-$previous_period_courses = CourseModel::get_courses_by_between_dates( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+$total_courses           = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
+$previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+
+// Total Students.
+$total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+$previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+
+// Total Ratings.
+$where                   = empty( $start_date ) && empty( $end_date ) ? array() : array( 'reviews.comment_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
+$total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $where );
+$previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
 
 $stat_cards = array(
 	array(
@@ -61,24 +70,24 @@ $stat_cards = array(
 		'variation' => 'brand',
 		'title'     => esc_html__( 'Total Courses', 'tutor' ),
 		'icon'      => Icon::COURSES,
-		'value'     => $total_courses->post_count,
-		'change'    => $previous_period_courses,
+		'value'     => $total_courses,
+		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_courses, $previous_period_courses, false ),
 		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),  @todo will be added later.
 	),
 	array(
 		'variation' => 'exception5',
 		'title'     => esc_html__( 'Total Students', 'tutor' ),
 		'icon'      => Icon::PASSED,
-		'value'     => '3000',
-		'change'    => '+2',
+		'value'     => $total_students,
+		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_students, $previous_period_students, false ),
 		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
 		'variation' => 'exception4',
 		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
 		'icon'      => Icon::STAR_LINE,
-		'value'     => '4.2',
-		'change'    => '+2',
+		'value'     => $total_ratings->rating_avg,
+		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_ratings->rating_avg, $previous_period_ratings->rating_avg, false ),
 		// 'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
 	),
 );

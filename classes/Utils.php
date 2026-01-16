@@ -3418,15 +3418,15 @@ class Utils {
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.ID)
-			FROM 	{$wpdb->posts} enrollment
-					INNER  JOIN {$wpdb->posts} course
-							ON enrollment.post_parent=course.ID
-			WHERE 	course.post_author = %d
+				FROM {$wpdb->posts} enrollment
+				INNER JOIN {$wpdb->posts} course
+					ON enrollment.post_parent=course.ID
+				WHERE course.post_author = %d
 					AND course.post_type = %s
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s;
-			",
+				",
 				$instructor_id,
 				$course_post_type,
 				'publish',
@@ -4359,12 +4359,14 @@ class Utils {
 	 * Get instructors rating
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 Added $where Parameter.
 	 *
-	 * @param int $instructor_id instructor id.
+	 * @param int   $instructor_id instructor id.
+	 * @param array $where       Optional additional WHERE conditions.
 	 *
 	 * @return object
 	 */
-	public function get_instructor_ratings( $instructor_id ) {
+	public function get_instructor_ratings( $instructor_id, $where = array() ) {
 		global $wpdb;
 
 		$ratings = array(
@@ -4373,23 +4375,27 @@ class Utils {
 			'rating_avg'   => 0.00,
 		);
 
-		$rating = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum
-			FROM 	{$wpdb->usermeta} courses
-					INNER JOIN {$wpdb->comments} reviews
-							ON courses.meta_value = reviews.comment_post_ID
-						   AND reviews.comment_type = 'tutor_course_rating'
-						   AND reviews.comment_approved = 'approved'
-					INNER JOIN {$wpdb->commentmeta} rating
-							ON reviews.comment_ID = rating.comment_id
-						   AND rating.meta_key = 'tutor_rating'
-			WHERE 	courses.user_id = %d
-					AND courses.meta_key = %s
-			",
-				$instructor_id,
-				'_tutor_instructor_course_id'
+		// Prepare where clause.
+		$where_clause = QueryHelper::prepare_where_clause(
+			$this->sanitize_array(
+				$where + array(
+					'courses.user_id'  => $instructor_id,
+					'courses.meta_key' => '_tutor_instructor_course_id',
+				)
 			)
+		);
+
+		$rating = $wpdb->get_row(
+			"SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum
+			FROM {$wpdb->usermeta} courses
+			INNER JOIN {$wpdb->comments} reviews
+				ON courses.meta_value = reviews.comment_post_ID
+				AND reviews.comment_type = 'tutor_course_rating'
+				AND reviews.comment_approved = 'approved'
+			INNER JOIN {$wpdb->commentmeta} rating
+				ON reviews.comment_ID = rating.comment_id
+				AND rating.meta_key = 'tutor_rating'
+		    WHERE {$where_clause}"
 		);
 
 		if ( $rating->rating_count ) {
@@ -10880,8 +10886,9 @@ class Utils {
 		);
 	}
 
-	
-	 /* Render a template and return its output as a string.
+
+	/*
+		Render a template and return its output as a string.
 	 *
 	 * @since 4.0.0
 	 *
@@ -10979,14 +10986,14 @@ class Utils {
 						$is_completed    = $submitted_count > 0;
 
 						$topic['items'][] = array(
-							'type'          => 'assignment',
-							'id'            => $post_id,
-							'link'          => esc_url( get_permalink( $post_id ) ),
-							'title'         => $content_post->post_title,
-							'is_completed'  => $is_completed,
+							'type'         => 'assignment',
+							'id'           => $post_id,
+							'link'         => esc_url( get_permalink( $post_id ) ),
+							'title'        => $content_post->post_title,
+							'is_completed' => $is_completed,
 						);
 
-					} elseif ( 'tutor_zoom_meeting' === $post_type ) { //@todo Need to add more information.
+					} elseif ( 'tutor_zoom_meeting' === $post_type ) { // @todo Need to add more information.
 						$topic['items'][] = array(
 							'type' => 'zoom_meeting',
 							'id'   => $post_id,
