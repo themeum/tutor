@@ -105,7 +105,6 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 							<?php
 								Button::make()
 									->label( __( 'Upload Photo', 'tutor' ) )
-									->variant( Variant::PRIMARY )
 									->size( Size::X_SMALL )
 									->icon( Icon::EDIT_2, 'left', 24, 24 )
 									->icon_only()
@@ -127,7 +126,6 @@ $default_values = (array) apply_filters( 'tutor_profile_default_values', $defaul
 									<?php
 										Button::make()
 											->label( __( 'Upload Photo', 'tutor' ) )
-											->variant( Variant::PRIMARY )
 											->size( Size::X_SMALL )
 											->attr( 'type', 'button' )
 											->attr( 'x-ref', 'upload' )

@@ -17,6 +17,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class AttachmentCard
  *
+ * Example Usage:
+ * AttachmentCard::make()
+ *     ->file_name( 'lesson-plan.pdf' )
+ *     ->file_size( '1.2 MB' )
+ *     ->is_downloadable( true )
+ *     ->action_attr( '@click', 'downloadFile()' )
+ *     ->render();
+ *
  * @since 4.0.0
  */
 class AttachmentCard extends BaseComponent {

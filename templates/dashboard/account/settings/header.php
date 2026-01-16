@@ -69,7 +69,6 @@ $back_url = UrlHelper::back();
 
 					Button::make()
 						->label( __( 'Save', 'tutor' ) )
-						->variant( Variant::PRIMARY )
 						->size( Size::X_SMALL )
 						->attr( 'type', 'submit' )
 						->attr( 'class', 'tutor-ml-4' )

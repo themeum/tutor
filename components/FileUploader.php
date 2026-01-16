@@ -21,6 +21,53 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Class FileUploader
  *
+ * Example Usage (Native Multiple):
+ * FileUploader::make()
+ *     ->name( 'course_attachments' )
+ *     ->uploader_title( __( 'Upload Assignments', 'tutor' ) )
+ *     ->uploader_subtitle( __( 'Support PDF, DOCX (Max 20MB)', 'tutor' ) )
+ *     ->accept( '.pdf,.docx' )
+ *     ->multiple( true )
+ *     ->max_size( 20 * 1024 * 1024 )
+ *     ->render();
+ *
+ * Example Usage (Native Single):
+ * FileUploader::make()
+ *     ->name( 'resume' )
+ *     ->accept( '.pdf,.doc' )
+ *     ->render();
+ *
+ * Example Usage (WP Media Image):
+ * FileUploader::make()
+ *     ->variant( Variant::IMAGE_UPLOADER )
+ *     ->use_wp_media( true )
+ *     ->wp_media_library_type( 'image' )
+ *     ->name( 'profile_photo' )
+ *     ->render();
+ *
+ * Example Usage (WP Media Multiple Documents):
+ * FileUploader::make()
+ *     ->use_wp_media( true )
+ *     ->multiple( true )
+ *     ->wp_media_library_type( 'application/pdf,application/msword' )
+ *     ->name( 'shared_files' )
+ *     ->render();
+ *
+ * Example Usage (Native Image):
+ * FileUploader::make()
+ *     ->variant( Variant::IMAGE_UPLOADER )
+ *     ->name( 'cover_photo' )
+ *     ->render();
+ *
+ * Example Usage (Custom UI):
+ * FileUploader::make()
+ *     ->name( 'custom_upload' )
+ *     ->uploader_icon( Icon::RESOURCES )
+ *     ->uploader_title( __( 'Resource Center', 'tutor' ) )
+ *     ->uploader_subtitle( __( 'Add any relevant documents here', 'tutor' ) )
+ *     ->uploader_button_text( __( 'Choose Resources', 'tutor' ) )
+ *     ->render();
+ *
  * @since 4.0.0
  */
 class FileUploader extends BaseComponent {
@@ -171,6 +218,9 @@ class FileUploader extends BaseComponent {
 
 	/**
 	 * Set uploader accept attribute.
+	 *
+	 * Common types: .pdf, .doc, .docx, .jpg, .jpeg, .png
+	 * For WP Media: image, video, audio, application
 	 *
 	 * @since 4.0.0
 	 *
@@ -324,6 +374,8 @@ class FileUploader extends BaseComponent {
 
 	/**
 	 * Set WP media library type.
+	 *
+	 * Common types: image, video, audio, application, text
 	 *
 	 * @since 4.0.0
 	 *
