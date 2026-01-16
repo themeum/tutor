@@ -26,14 +26,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  * ```php
  * DateFilter::make()
  *     ->type( DateFilter::TYPE_RANGE )
- *     ->placement( 'bottom-start' )
+ *     ->placement( DateFilter::PLACEMENT_BOTTOM_START )
  *     ->render();
  * ```
  *
  * ```php
  * DateFilter::make()
  *     ->type( DateFilter::TYPE_SINGLE )
- *     ->placement( 'bottom-end' )
+ *     ->placement( DateFilter::PLACEMENT_BOTTOM_END )
  *     ->render();
  * ```
  *
@@ -50,6 +50,16 @@ class DateFilter extends BaseComponent {
 	 * Date Filter Type Range
 	 */
 	const TYPE_RANGE = 'range';
+
+	/**
+	 * Placement Bottom Start
+	 */
+	const PLACEMENT_BOTTOM_START = 'bottom-start';
+
+	/**
+	 * Placement Bottom End
+	 */
+	const PLACEMENT_BOTTOM_END = 'bottom-end';
 
 	/**
 	 * Component Type
@@ -70,7 +80,7 @@ class DateFilter extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $placement = 'bottom-start';
+	protected $placement = self::PLACEMENT_BOTTOM_START;
 
 	/**
 	 * Button size.
@@ -161,6 +171,10 @@ class DateFilter extends BaseComponent {
 	public function get(): string {
 		$is_range = self::TYPE_RANGE === $this->type;
 
+		if ( empty( $this->label ) ) {
+			$this->label = $this->calculate_label();
+		}
+
 		// Default settings based on type.
 		$calendar_options = array(
 			'type' => 'default',
@@ -180,18 +194,13 @@ class DateFilter extends BaseComponent {
 				'type'               => 'multiple',
 				'selectionDatesMode' => 'multiple-ranged',
 			);
-			$button_classes  .= ' tutor-gap-2';
 			$popover_classes .= ' tutor-range-calendar-popover';
+		}
 
-			// Default label for range if not set.
-			if ( empty( $this->label ) ) {
-				$this->label = $this->calculate_label();
-			}
-		} else {
+		if ( empty( $this->label ) ) {
 			$button_classes .= ' tutor-btn-icon';
-			if ( 'bottom-start' === $this->placement ) {
-				$this->placement = 'bottom-end';
-			}
+		} else {
+			$button_classes .= ' tutor-gap-2';
 		}
 
 		$options_json = wp_json_encode( $calendar_options );
@@ -213,6 +222,12 @@ class DateFilter extends BaseComponent {
 				<?php if ( ! empty( $this->label ) ) : ?>
 					<span><?php echo esc_html( $this->label ); ?></span>
 				<?php endif; ?>
+
+				<?php if ( $this->has_selection() ) : ?>
+					<span @click.stop="$dispatch('tutor-calendar:clear')" class="tutor-cursor-pointer tutor-icon-secondary">
+						<?php tutor_utils()->render_svg_icon( Icon::CROSS_2 ); ?>
+					</span>
+				<?php endif; ?>
 			</button>
 
 			<div 
@@ -230,11 +245,27 @@ class DateFilter extends BaseComponent {
 	}
 
 	/**
+	 * Check if filter has active selection.
+	 *
+	 * @return bool
+	 */
+	protected function has_selection(): bool {
+		if ( self::TYPE_SINGLE === $this->type ) {
+			return ! empty( Input::get( 'date' ) );
+		}
+		return ! empty( Input::get( 'start_date' ) ) && ! empty( Input::get( 'end_date' ) );
+	}
+
+	/**
 	 * Calculate dynamic label based on URL parameters.
 	 *
 	 * @return string
 	 */
 	protected function calculate_label(): string {
+		if ( self::TYPE_SINGLE === $this->type ) {
+			return Input::get( 'date', '' );
+		}
+
 		$start_date = Input::get( 'start_date' );
 		$end_date   = Input::get( ( 'end_date' ) );
 

@@ -1,17 +1,28 @@
-// Question and Answer Card
+// Discussion Card
 
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
-.tutor-qna-card {
+.tutor-discussion-card {
   @include tutor-flex(row, flex-start);
-  gap: $tutor-spacing-5;
+  gap: $tutor-spacing-4;
   background-color: $tutor-surface-l1;
   border: 1px solid $tutor-border-idle;
   border-radius: $tutor-radius-lg;
   padding: $tutor-spacing-6;
+  padding-bottom: $tutor-spacing-4;
   position: relative;
   @include tutor-transition(background-color);
+
+  @include tutor-breakpoint-down(sm) {
+    padding: $tutor-spacing-5;
+    border: none;
+    border-radius: 0;
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+  }
 
   &.unread {
     background-color: $tutor-surface-brand-tertiary;
@@ -26,6 +37,11 @@
       top: 30px;
       background-color: $tutor-icon-critical;
       border-radius: $tutor-radius-lg;
+
+      @include tutor-breakpoint-down(sm) {
+        left: 4px;
+        top: 26px;
+      }
     }
   }
 
@@ -33,7 +49,7 @@
     background-color: $tutor-surface-brand-tertiary;
     border-color: $tutor-border-brand-secondary;
 
-    .tutor-qna-card-bookmark {
+    .tutor-discussion-card-bookmark {
       position: absolute;
       top: -3px;
       inset-inline-end: $tutor-spacing-5;
@@ -41,10 +57,15 @@
     }
   }
 
+  &-content {
+    width: 100%;
+  }
+
   &-top {
     @include tutor-typography(tiny);
     @include tutor-flex(row, center);
     gap: $tutor-spacing-5;
+    margin-block: $tutor-spacing-3;
 
     @include tutor-breakpoint-down(sm) {
       flex-direction: column;
@@ -56,31 +77,35 @@
 
   &-author {
     position: relative;
+    text-transform: capitalize;
 
-    &::after {
-      content: '';
-      width: 4px;
-      height: 4px;
-      position: absolute;
-      right: -8px;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: $tutor-text-subdued;
-      border-radius: $tutor-radius-lg;
+    @include tutor-breakpoint-up(sm) {
+      &::after {
+        content: '';
+        width: 4px;
+        height: 4px;
+        position: absolute;
+        right: -8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: $tutor-text-subdued;
+        border-radius: $tutor-radius-lg;
+      }
     }
   }
 
   &-title {
     @include tutor-typography(medium, semibold);
-    margin-bottom: $tutor-spacing-4;
+    margin-bottom: $tutor-spacing-3;
     margin-top: 0px;
-    @include tutor-transition();
+    @include tutor-transition(color);
   }
 
   &-meta {
     @include tutor-typography(small, regular, subdued);
     @include tutor-flex(row, center);
     gap: $tutor-spacing-6;
+    line-height: $tutor-line-height-h3;
 
     svg {
       color: $tutor-icon-secondary;
@@ -99,6 +124,7 @@
     @include tutor-breakpoint-down(sm) {
       @include tutor-typography(tiny, regular, subdued);
       gap: $tutor-spacing-5;
+      width: 100%;
 
       svg {
         height: 16px;
@@ -126,22 +152,26 @@
     }
 
     @include tutor-breakpoint-down(sm) {
-      &-more {
+      top: $tutor-spacing-5;
+      right: $tutor-spacing-5;
+
+      &-trigger {
         @include tutor-button-variant(ghost);
       }
     }
   }
 
+  &.active,
   &:hover {
     background-color: $tutor-surface-l1-hover;
     border-color: $tutor-border-idle;
 
-    .tutor-qna-card-title {
+    .tutor-discussion-card-title {
       color: $tutor-text-brand;
     }
 
     @include tutor-breakpoint-up(sm) {
-      .tutor-qna-card-actions {
+      .tutor-discussion-card-actions {
         visibility: visible;
         opacity: 1;
       }

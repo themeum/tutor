@@ -19,7 +19,7 @@
 		background-color: $tutor-surface-l1-hover;
 	}
 
-	.tutor-courses-thumb {
+	.tutor-progress-card-thumbnail {
 		position: relative;
 		flex: 0 0 200px;
 		aspect-ratio: 16 / 9;
@@ -133,11 +133,10 @@
 			background-color: transparent;
 		}
 
-		.tutor-courses-thumb {
+		.tutor-progress-card-thumbnail {
 			width: 100%;
 			max-width: 100%;
 			margin-bottom: $tutor-spacing-4;
-			aspect-ratio: 16 / 9;
 		}
 
 		&-kebab-overlay {

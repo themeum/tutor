@@ -4,7 +4,15 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-learning-header {
+  background-color: $tutor-surface-base;
   padding: $tutor-spacing-4;
+  position: sticky;
+  top: 0;
+  z-index: $tutor-z-header;
+
+  .tutor-has-admin-bar & {
+    top: 32px;
+  }
 
   @include tutor-breakpoint-down(sm) {
     padding: 0px $tutor-spacing-6 0px $tutor-spacing-6;
