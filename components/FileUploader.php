@@ -491,7 +491,7 @@ class FileUploader extends BaseComponent {
 								<?php
 								AttachmentCard::make()
 									->title_attr( 'x-text', 'file.name' )
-									->meta_attr( 'x-text', 'formatBytes(file.size)' )
+									->meta_attr( 'x-text', 'file.size' )
 									->action_attr( '@click.stop', 'removeFile(index)' )
 									->render();
 								?>
