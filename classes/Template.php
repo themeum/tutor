@@ -178,7 +178,6 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
-
 	}
 
 	/**
@@ -549,16 +548,6 @@ class Template extends Tutor_Base {
 				'title' => esc_html__( 'Course Info', 'tutor' ),
 				'icon'  => Icon::INFO_OCTAGON,
 				'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $base_url ) ),
-			),
-			'webinar'     => array(
-				'title' => esc_html__( 'Webinar', 'tutor' ),
-				'icon'  => Icon::VIDEO_CAMERA_2,
-				'url'   => esc_url( add_query_arg( 'subpage', 'webinar', $base_url ) ),
-			),
-			'certificate' => array(
-				'title' => esc_html__( 'Certificate', 'tutor' ),
-				'icon'  => Icon::CERTIFICATE_2,
-				'url'   => esc_url( add_query_arg( 'subpage', 'certificate', $base_url ) ),
 			),
 		);
 

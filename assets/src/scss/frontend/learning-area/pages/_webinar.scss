@@ -42,23 +42,19 @@
 
 	&-body {
         margin-top: $tutor-spacing-6;
-		max-height: min(32rem, 70vh);  //Can be changed to any value
-		overflow-y: auto;
-		overscroll-behavior: contain;
-		-webkit-overflow-scrolling: touch;
+		overflow-y: visible;
 		> .tutor-space-y-3 + .tutor-space-y-3 {
 			margin-top: $tutor-spacing-5;
 		}
 
 		@include tutor-breakpoint-down(sm) {
-			border-radius: $tutor-radius-2xl;
 			overflow-x: hidden;
 			overflow-y: auto;
 			background-color: $tutor-surface-l1;
-			margin-top: $tutor-spacing-4;
 			width: calc(100% + #{$tutor-spacing-6 * 2});
 			margin-left: -$tutor-spacing-6;
 			margin-right: -$tutor-spacing-6;
+			margin-top: 0;
 
 			> .tutor-space-y-3 + .tutor-space-y-3 {
 				margin-top: 0;
@@ -83,9 +79,22 @@
         }
 	}
 
+	.tutor-upcoming-lesson-card-title {
+		display: block;
+		margin-bottom: $tutor-spacing-5;
+	}
+
 	@include tutor-breakpoint-down(sm) {
 		.tutor-webinar-body > .tutor-space-y-3:last-child .tutor-upcoming-lesson-card:last-child {
 			border-bottom: 0;
+		}
+	}
+
+	@include tutor-breakpoint-up(sm) {
+		.tutor-upcoming-lesson-card-title{
+			text-decoration: none;
+			cursor: default;
+			pointer-events: none;
 		}
 	}
 
