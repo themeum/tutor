@@ -8,6 +8,7 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type TutorMutationResponse } from '@TutorShared/utils/types';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ProfilePhotoFormProps {
   photo_file: File;
@@ -68,14 +69,14 @@ const settings = () => {
     form,
     toast,
     $el: null as HTMLElement | null,
-    fetchCountriesQuery: null as QueryState<unknown> | null,
-    uploadProfilePhotoMutation: null as MutationState<unknown> | null,
-    removeProfilePhotoMutation: null as MutationState<unknown> | null,
-    updateProfileMutation: null as MutationState<unknown> | null,
-    saveSocialProfileMutation: null as MutationState<unknown> | null,
-    saveBillingInfoMutation: null as MutationState<unknown> | null,
-    saveWithdrawMethodMutation: null as MutationState<unknown> | null,
-    resetPasswordMutation: null as MutationState<unknown> | null,
+    fetchCountriesQuery: null as QueryState<TutorMutationResponse<string>> | null,
+    uploadProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    removeProfilePhotoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    updateProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    saveSocialProfileMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    saveBillingInfoMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    saveWithdrawMethodMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    resetPasswordMutation: null as MutationState<TutorMutationResponse<string>> | null,
 
     init() {
       if (!this.$el) {
@@ -94,13 +95,13 @@ const settings = () => {
 
       this.uploadProfilePhotoMutation = this.query.useMutation(this.uploadProfilePhoto, {
         onError: (error: Error) => {
-          this.toast.error(error.message || __('Failed to update profile', 'tutor'));
+          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
         },
       });
 
       this.removeProfilePhotoMutation = this.query.useMutation(this.removeProfilePhoto, {
         onError: (error: Error) => {
-          this.toast.error(error.message || __('Failed to update profile', 'tutor'));
+          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
         },
       });
 
@@ -109,7 +110,7 @@ const settings = () => {
           this.toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(error.message || __('Failed to update profile', 'tutor'));
+          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
         },
       });
 
@@ -118,7 +119,7 @@ const settings = () => {
           this.toast.success(data?.message ?? __('Success successfully saved social profile', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(error.message || __('Failed to save social profile', 'tutor'));
+          this.toast.error(convertToErrorMessage(error) || __('Failed to save social profile', 'tutor'));
         },
       });
 
@@ -127,7 +128,7 @@ const settings = () => {
           this.toast.success(data?.message ?? __('Success successfully saved billing info', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(error.message || __('Failed to save billing info', 'tutor'));
+          this.toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -136,7 +137,7 @@ const settings = () => {
           this.toast.success(data?.message ?? __('Withdrawal method saved successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(error.message || __('Failed to save withdrawal method', 'tutor'));
+          this.toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -145,7 +146,7 @@ const settings = () => {
           this.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(error.message || __('Failed to update password', 'tutor'));
+          this.toast.error(convertToErrorMessage(error));
         },
       });
     },
