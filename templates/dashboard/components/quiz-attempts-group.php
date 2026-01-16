@@ -9,7 +9,7 @@
  * @since 4.0.0
  */
 
-$attempts_count = count( $attempts );
+$attempts_count = tutor_utils()->count( $attempts );
 
 if ( empty( $attempts ) ) {
 	return;

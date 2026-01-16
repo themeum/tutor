@@ -76,7 +76,7 @@ class QuizModel {
 			$quiz_id   = $quiz_attempt->quiz_id ?? 0;
 			$course_id = $quiz_attempt->course_id ?? 0;
 
-			$course_title = get_the_title( $course_id ) ?? '';
+			$course_title = $quiz_attempt->course_title ?? '';
 			$quiz_title   = $quiz_attempt->post_title ?? '';
 
 			$quiz_attempt_result = $quiz_attempt->result ?? 'fail';
@@ -485,7 +485,7 @@ class QuizModel {
 		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
 
 		$result_clause  = '';
-		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
+		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name, course.post_title as course_title';
 		$limit_offset   = $count_only || ( 0 === $limit && 0 === $start ) ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
 
 		// Get attempts by instructor ID.

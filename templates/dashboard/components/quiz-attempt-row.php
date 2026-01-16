@@ -29,10 +29,7 @@ $attempt_number  = $attempt_number ?? null;
 $attempts_count  = $attempts_count ?? 0;
 $badge           = Badge::make()->label( 'Failed' )->variant( Variant::CANCELLED )->circle();
 $kebab_button    = Button::make()
-					->icon(
-						tutor_utils()
-						->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 )
-					)
+					->icon( Icon::THREE_DOTS_VERTICAL )
 					->attr( 'x-ref', 'trigger' )
 					->attr( '@click', 'toggle()' )
 					->attr( 'class', 'tutor-quiz-item-result-more' )
