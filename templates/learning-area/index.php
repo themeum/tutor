@@ -39,11 +39,31 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 				<?php
 				// Get requested page from query string and sanitize.
 				$subpage = Input::get( 'subpage' );
+				$is_pro  = false;
+
+				// Pro subpages.
+				$pro_subpages = array( 'webinar', 'certificate' );
+				$is_pro       = in_array( $subpage, $pro_subpages, true );
 
 				if ( $subpage ) {
-					$subpage_template = tutor_get_template( 'learning-area.subpages.' . $subpage );
+					$subpage_template = tutor_get_template( 'learning-area.subpages.' . $subpage, $is_pro );
 					if ( file_exists( $subpage_template ) ) {
-						tutor_load_template( 'learning-area.subpages.' . $subpage );
+						tutor_load_template(
+							'learning-area.subpages.' . $subpage,
+							array(
+								'base_url'                 => esc_url( add_query_arg( array( 'subpage' => $subpage ), get_permalink( $tutor_course_id ) ) ),
+								'tutor_current_post_type'  => $tutor_current_post_type,
+								'tutor_current_post'       => $tutor_current_post,
+								'tutor_current_content_id' => $tutor_current_content_id,
+								'tutor_course_id'          => $tutor_course_id,
+								'tutor_course'             => $tutor_course,
+								'tutor_course_list_url'    => $tutor_course_list_url,
+								'tutor_is_enrolled'        => $tutor_is_enrolled,
+								'tutor_is_public_course'   => $tutor_is_public_course,
+								'tutor_is_course_instructor' => $tutor_is_course_instructor,
+							),
+							$is_pro
+						);
 					} else {
 						do_action( 'tutor_single_content_' . $tutor_post_type );
 					}
