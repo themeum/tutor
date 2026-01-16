@@ -1139,7 +1139,7 @@ class OrderModel {
 							)
 						) AS total,
 						o.created_at_gmt AS date_format,
-						DATE_FORMAT( o.created_at_gmt, '%b' ) AS month_name
+						DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1182,7 +1182,7 @@ class OrderModel {
 						)
 					) AS total,
 					o.created_at_gmt AS date_format,
-					DATE_FORMAT( o.created_at_gmt, '%b' ) AS month_name
+					DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
 					FROM {$this->table_name} AS o
 					WHERE 1 = %d
 					AND o.order_status = 'completed'
