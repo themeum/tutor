@@ -10,8 +10,7 @@ const header = () => {
     query,
     profileSwitchMutation: null as MutationState<AjaxResponse> | null,
     init() {
-      this.profileSwitchMutation = this.query.useMutation(
-        (currentMode: string) => wpAjaxInstance.post('tutor_switch_profile', { current_mode: currentMode }),
+        this.profileSwitchMutation = this.query.useMutation(this.profileSwitch,
         {
           onSuccess: (res: AjaxResponse) => {
             window.TutorCore.toast.success(res?.message);
