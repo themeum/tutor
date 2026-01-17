@@ -109,17 +109,17 @@ defined( 'ABSPATH' ) || exit;
 		<pre><code>
 		&lt;?php
 			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
-			Badge::make()->label( 'Points: 20' )->variant( Variant::SECONDARY )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::COMPLETED )->circle()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::CANCELLED )->circle()->render();
+			Badge::make()->label( 'Points: 20' )->render();
+			Badge::make()->label( 'Completed' )->variant( Variant::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Variant::ERROR )->rounded()->render();
 		?&gt;
 		</code></pre>
 		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
 			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
-			Badge::make()->label( 'Points: 20' )->variant( Variant::SECONDARY )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::COMPLETED )->circle()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::CANCELLED )->circle()->render();
+			Badge::make()->label( 'Points: 20' )->render();
+			Badge::make()->label( 'Completed' )->variant( Variant::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Variant::ERROR )->rounded()->render();
 		?>
 		</div>
 	</div>

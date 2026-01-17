@@ -3,38 +3,32 @@
 
 .tutor-badge {
   @include tutor-badge-base;
-}
 
-.tutor-badge-small {
-  @include tutor-badge-base(small);
-}
+  &-primary {
+    @include tutor-badge-variant(primary);
+  }
 
-.tutor-badge-primary {
-  @include tutor-badge-variant(primary);
-}
+  &-info {
+    @include tutor-badge-variant(info);
+  }
 
-.tutor-badge-primary-soft {
-  @include tutor-badge-variant(primary-soft);
-}
+  &-warning {
+    @include tutor-badge-variant(warning);
+  }
 
-.tutor-badge-pending {
-  @include tutor-badge-variant(pending);
-}
+  &-success {
+    @include tutor-badge-variant(success);
+  }
 
-.tutor-badge-completed,
-.tutor-badge-passed {
-  @include tutor-badge-variant(completed);
-}
+  &-success-solid {
+    @include tutor-badge-variant(success-solid);
+  }
 
-.tutor-badge-cancelled,
-.tutor-badge-failed {
-  @include tutor-badge-variant(cancelled);
-}
+  &-error {
+    @include tutor-badge-variant(error);
+  }
 
-.tutor-badge-secondary {
-  @include tutor-badge-variant(secondary);
-}
-
-.tutor-badge-exception {
-  @include tutor-badge-variant(exception);
+  &-highlight {
+    @include tutor-badge-variant(highlight);
+  }
 }

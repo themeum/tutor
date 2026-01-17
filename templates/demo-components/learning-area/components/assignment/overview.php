@@ -22,14 +22,14 @@ $render_status = function ( $status ) {
 	$variant = 'secondary';
 
 	if ( 'not-started' === $status ) {
-		$variant = 'secondary';
+		$variant = '';
 	} elseif ( 'in-progress' === $status ) {
 		$variant = 'warning';
 	} elseif ( 'completed' === $status ) {
 		$variant = 'success';
 	}
 
-	return '<div class="tutor-badge tutor-badge-' . esc_attr( $variant ) . ' tutor-badge-small">' . esc_html( $status ) . '</div>';
+	return '<div class="tutor-badge tutor-badge-' . esc_attr( $variant ) . '">' . esc_html( $status ) . '</div>';
 };
 
 ?>

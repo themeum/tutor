@@ -9,17 +9,17 @@
  */
 
 $render_status = function ( $status ) {
-	$variant = 'secondary';
+	$variant = '';
 
 	if ( 'passed' === $status ) {
-		$variant = 'completed';
+		$variant = 'success';
 	} elseif ( 'failed' === $status ) {
-		$variant = 'cancelled';
+		$variant = 'error';
 	} elseif ( 'pending' === $status ) {
-		$variant = 'pending';
+		$variant = 'warning';
 	}
 
-	return '<div class="tutor-badge tutor-capitalize tutor-badge-small tutor-badge-circle tutor-badge-' . esc_attr( $variant ) . '">' . esc_html( $status ) . '</div>';
+	return '<div class="tutor-badge tutor-capitalize tutor-badge-rounded tutor-badge-' . esc_attr( $variant ) . '">' . esc_html( $status ) . '</div>';
 };
 
 // @TODO: Will be removed later

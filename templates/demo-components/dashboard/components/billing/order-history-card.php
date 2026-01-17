@@ -23,18 +23,18 @@ $render_status_badge = function ( $status ) {
 		case 'processing':
 		case 'pending':
 		case 'on-hold':
-			$badge_class = 'pending';
+			$badge_class = 'warning';
 			break;
 		case 'refunded':
 		case 'cancelled':
-			$badge_class = 'cancelled';
+			$badge_class = 'error';
 			break;
 		case 'incomplete':
-			$badge_class = 'secondary';
+			$badge_class = '';
 			break;
 	}
 
-	return '<span class="tutor-capitalize tutor-badge tutor-badge-small tutor-badge-circle tutor-py-none tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
+	return '<span class="tutor-capitalize tutor-badge tutor-badge-rounded tutor-badge-' . $badge_class . '">' . esc_html( $status ) . '</span>';
 }
 
 ?>
