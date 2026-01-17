@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Quiz;
 
@@ -51,6 +52,95 @@ class QuizModel {
 	 */
 	public static function get_manual_review_types() {
 		return array( 'open_ended', 'short_answer' );
+	}
+
+
+	/**
+	 * Format the quiz attempts result obtained from query.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array  $quiz_attempts the quiz_attempts result obtained from query.
+	 * @param string $filter filter quiz attempt based on result.
+	 *
+	 * @return array
+	 */
+	public static function format_quiz_attempts( array $quiz_attempts, string $filter = '' ): array {
+		$formatted_attempts = array();
+
+		if ( ! count( $quiz_attempts ) ) {
+			return $quiz_attempts;
+		}
+
+		foreach ( $quiz_attempts as $quiz_attempt ) {
+			$quiz_id   = $quiz_attempt->quiz_id ?? 0;
+			$course_id = $quiz_attempt->course_id ?? 0;
+
+			$course_title = $quiz_attempt->course_title ?? '';
+			$quiz_title   = $quiz_attempt->post_title ?? '';
+
+			$quiz_attempt_result = $quiz_attempt->result ?? 'fail';
+			$result_types        = array( self::RESULT_FAIL, self::RESULT_PASS, self::RESULT_PENDING );
+
+			if ( ! empty( $filter ) && in_array( $filter, $result_types, true ) && $quiz_attempt_result !== $filter ) {
+				continue;
+			}
+
+			if ( ! isset( $formatted_attempts[ $quiz_attempt->quiz_id ] ) ) {
+				$formatted_attempts[ $quiz_attempt->quiz_id ] = array(
+					'quiz_title'   => $quiz_title,
+					'course_title' => $course_title,
+					'course_id'    => $course_id,
+				);
+			}
+
+			$start_time = DateTimeHelper::get_gmt_to_user_timezone_date( $quiz_attempt->attempt_started_at ?? '', 'D j M Y, g:i A' );
+
+			$attempt_time = strtotime( $quiz_attempt->attempt_ended_at ) - strtotime( $quiz_attempt->attempt_started_at );
+			$attempt_time = tutor_utils()->playtime_string( $attempt_time );
+
+			$earned_percent = self::calculate_attempt_earned_percentage( $quiz_attempt );
+
+			$correct_answers   = 0;
+			$incorrect_answers = 0;
+
+			$answers = self::get_quiz_answers_by_attempt_id( $quiz_attempt->attempt_id );
+
+			if ( tutor_utils()->count( $answers ) ) {
+				foreach ( $answers as $answer ) {
+					$is_correct = (int) $answer->is_correct ?? 0;
+					if ( $is_correct ) {
+						++$correct_answers;
+					} else {
+						++$incorrect_answers;
+					}
+				}
+			}
+
+			$formatted_attempt = array(
+				'attempt_id'        => $quiz_attempt->attempt_id ?? 0,
+				'result'            => $quiz_attempt_result,
+				'marks_percent'     => $earned_percent ?? 0,
+				'correct_answers'   => $correct_answers,
+				'incorrect_answers' => $incorrect_answers,
+				'time_taken'        => $attempt_time ?? '',
+				'date'              => $start_time ?? '',
+				'student'           => $quiz_attempt->display_name ?? '',
+			);
+
+			if ( ! isset( $formatted_attempts[ $quiz_id ]['attempts'] ) ) {
+				$formatted_attempts[ $quiz_id ]['attempts'] = array(
+					$formatted_attempt,
+				);
+			} else {
+				array_push(
+					$formatted_attempts[ $quiz_id ]['attempts'],
+					$formatted_attempt
+				);
+			}
+		}
+
+		return $formatted_attempts;
 	}
 
 	/**
@@ -395,8 +485,8 @@ class QuizModel {
 		$date_filter = '' !== $date_filter ? $wpdb->prepare( ' AND  DATE(quiz_attempts.attempt_started_at) = %s ', $date_filter ) : '';
 
 		$result_clause  = '';
-		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name';
-		$limit_offset   = $count_only ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
+		$select_columns = $count_only ? 'COUNT(DISTINCT quiz_attempts.attempt_id)' : 'DISTINCT quiz_attempts.*, quiz.post_title, users.user_email, users.user_login, users.display_name, course.post_title as course_title';
+		$limit_offset   = $count_only || ( 0 === $limit && 0 === $start ) ? '' : $wpdb->prepare( ' LIMIT %d OFFSET %d', $limit, $start );
 
 		// Get attempts by instructor ID.
 		$instructor_clause = '';

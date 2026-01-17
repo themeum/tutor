@@ -223,6 +223,59 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Obtain nav data for quiz attempts.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array   $quiz_attempts the quiz attempts list.
+	 * @param integer $quiz_attempts_count the quiz attempts count.
+	 * @param string  $url the page url.
+	 * @param string  $result_filter filter to filter out results.
+	 *
+	 * @return array
+	 */
+	public function get_quiz_attempts_nav_data( array $quiz_attempts = array(), int $quiz_attempts_count = 0, string $url = '', string $result_filter = '' ): array {
+		$all_attempts     = count( QuizModel::format_quiz_attempts( $quiz_attempts ) );
+		$pending_attempts = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PENDING ) );
+		$passed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_PASS ) );
+		$failed_attempts  = count( QuizModel::format_quiz_attempts( $quiz_attempts, QuizModel::RESULT_FAIL ) );
+
+		$nav_links = array(
+			'type'    => 'dropdown',
+			'active'  => true,
+			'count'   => $quiz_attempts_count,
+			'options' => array(
+				array(
+					'label'  => __( 'All', 'tutor' ),
+					'count'  => $all_attempts,
+					'url'    => remove_query_arg( 'result' ),
+					'active' => '' === $result_filter,
+				),
+				array(
+					'label'  => __( 'Pending', 'tutor' ),
+					'url'    => add_query_arg( array( 'result' => QuizModel::RESULT_PENDING ), $url ),
+					'count'  => $pending_attempts,
+					'active' => QuizModel::RESULT_PENDING === $result_filter,
+				),
+				array(
+					'label'  => __( 'Failed', 'tutor' ),
+					'url'    => add_query_arg( array( 'result' => QuizModel::RESULT_FAIL ), $url ),
+					'count'  => $failed_attempts,
+					'active' => QuizModel::RESULT_FAIL === $result_filter,
+				),
+				array(
+					'label'  => __( 'Passed', 'tutor' ),
+					'url'    => add_query_arg( array( 'result' => QuizModel::RESULT_PASS ), $url ),
+					'count'  => $passed_attempts,
+					'active' => QuizModel::RESULT_PASS === $result_filter,
+				),
+			),
+		);
+
+		return $nav_links;
+	}
+
+	/**
 	 * Prepare bulk actions that will show on dropdown options
 	 *
 	 * @since 2.0.0
@@ -258,7 +311,7 @@ class Quiz_Attempts_List {
 		$bulk_ids    = Input::post( 'bulk-ids', '' );
 		$bulk_ids    = explode( ',', $bulk_ids );
 		$bulk_ids    = array_map(
-			function( $id ) {
+			function ( $id ) {
 				return (int) trim( $id );
 			},
 			$bulk_ids

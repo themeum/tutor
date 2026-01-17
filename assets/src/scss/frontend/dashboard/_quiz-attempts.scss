@@ -4,6 +4,12 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+.tutor-h4 {
+  @include tutor-breakpoint-up(sm) {
+    display: none;
+  }
+}
+
 .tutor-quiz-attempts {
   @include tutor-breakpoint-down(sm) {
     background-color: $tutor-surface-l1;
@@ -15,6 +21,26 @@
     @include tutor-flex(row, center, space-between);
     padding: $tutor-spacing-5 $tutor-spacing-6;
     border-bottom: 1px solid $tutor-border-idle;
+    display: grid;
+    grid-template-areas: 'nav search calender sort';
+    @include tutor-breakpoint-down(sm) {
+      padding: 0;
+    }
+
+    &-item {
+      &:nth-child(1) {
+        grid-area: nav;
+      }
+      &:nth-child(2) {
+        grid-area: search;
+      }
+      &:nth-child(3) {
+        grid-area: calender;
+      }
+      &:nth-child(4) {
+        grid-area: sort;
+      }
+    }
 
     &-button {
       @include tutor-button-reset();
@@ -27,6 +53,34 @@
       @include tutor-breakpoint-down(sm) {
         font-size: $tutor-font-size-tiny;
         line-height: $tutor-line-height-tiny;
+      }
+    }
+
+    @include tutor-breakpoint-up(sm) {
+      grid-template-columns: 1fr auto auto auto;
+      gap: $tutor-spacing-3;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-areas:
+        'search sort'
+        'nav calender';
+      grid-template-columns: 1fr auto;
+      &-item {
+        &:nth-child(2) {
+          border-bottom: 1px solid $tutor-border-idle;
+          padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
+        }
+        &:nth-child(4) {
+          border-bottom: 1px solid $tutor-border-idle;
+          padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
+        }
+        &:nth-child(1) {
+          padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
+        }
+        &:nth-child(3) {
+          padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
+        }
       }
     }
   }
@@ -135,6 +189,12 @@
               width: 16px;
               height: 16px;
             }
+          }
+        }
+
+        .tutor-flex {
+          @include tutor-breakpoint-down(sm) {
+            justify-content: space-between;
           }
         }
       }
@@ -253,6 +313,12 @@
       border-radius: $tutor-radius-sm;
       margin-top: $tutor-spacing-6;
 
+      .tutor-quiz-previous-attempts-title {
+        @include tutor-breakpoint-down(sm) {
+          padding: $tutor-spacing-5;
+        }
+      }
+
       .tutor-quiz-attempts-item {
         grid-template-columns: 324px 180px 1.5fr 1fr;
         padding: $tutor-spacing-6;
@@ -264,16 +330,55 @@
             'info info info'
             'marks time result'
             'buttons buttons buttons';
+          padding-top: $tutor-spacing-5;
+          padding-left: $tutor-spacing-5;
+          padding-right: $tutor-spacing-5;
+          padding-bottom: $tutor-spacing-2;
+          row-gap: $tutor-spacing-4;
         }
 
         &:hover {
           background-color: $tutor-surface-base;
         }
 
-        &:not(:last-child) {
-          border-bottom: 1px solid $tutor-border-idle;
+        /** for mobile there is button html 
+         * so need to capture second to last child 
+        **/
+        &:not(:nth-last-child(2)) {
+          @include tutor-breakpoint-up(sm) {
+            border-bottom: 1px solid $tutor-border-idle;
+          }
+        }
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        .tutor-quiz-item-actions {
+          padding-left: $tutor-spacing-5;
+          padding-right: $tutor-spacing-5;
+          padding-bottom: $tutor-spacing-5;
+          &:not(:last-child) {
+            border-bottom: 1px solid $tutor-border-idle;
+          }
         }
       }
     }
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+    }
+  }
+}
+
+.tutor-quiz-item-actions {
+  gap: $tutor-spacing-5;
+  padding-top: $tutor-spacing-2;
+
+  button,
+  a {
+    width: 100%;
+  }
+
+  @include tutor-breakpoint-up(sm) {
+    display: none;
   }
 }
