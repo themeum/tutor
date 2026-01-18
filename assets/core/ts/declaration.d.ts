@@ -55,12 +55,12 @@ declare global {
     Alpine: AlpineType;
     TutorComponentRegistry: typeof TutorComponentRegistry;
     TutorCore: TutorCore & {
-      toast: ToastService;
-      security: {
+      toast?: ToastService;
+      security?: {
         escapeHtml: (text: string) => string;
         escapeAttr: (text: string) => string;
       };
-      nonce: {
+      nonce?: {
         getNonceData: (sendKeyValue?: boolean) => Record<string, string> | { key: string; value: string };
       };
     };
