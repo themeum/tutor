@@ -17,6 +17,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   isCloseable: config.isCloseable ?? DEFAULT_CONFIG.isCloseable,
   id: config.id,
   cleanup: undefined as (() => void) | undefined,
+  $el: undefined as HTMLElement | undefined,
 
   init(): void {
     const onOpen = (event: CustomEvent) => {
@@ -58,8 +59,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   },
 
   getBackdropBindings() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const backdrop = (this as any).$el;
+    const backdrop = this.$el as HTMLElement;
     backdrop.classList.add('tutor-modal-backdrop');
 
     return {
@@ -74,8 +74,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   },
 
   getModalBindings() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const modal = (this as any).$el;
+    const modal = this.$el as HTMLElement;
     modal.classList.add('tutor-modal');
 
     return {
@@ -87,8 +86,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   },
 
   getModalContentBindings() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const modal = (this as any).$el;
+    const modal = this.$el as HTMLElement;
     modal.classList.add('tutor-modal-content');
 
     return {
@@ -105,8 +103,7 @@ export const modal = (config: ModalConfig = { ...DEFAULT_CONFIG }) => ({
   },
 
   getCloseButtonBindings() {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const closeButton = (this as any).$el;
+    const closeButton = this.$el as HTMLElement;
     closeButton.classList.add('tutor-modal-close');
 
     return {

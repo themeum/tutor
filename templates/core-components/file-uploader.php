@@ -21,13 +21,15 @@ $on_file_select = $on_file_select ?? 'null';
 $on_error       = $on_error ?? 'null';
 
 ?>
-<div x-data="tutorFileUploader({
-	multiple: <?php echo $multiple ? 'true' : 'false'; ?>,
-	accept: '<?php echo esc_attr( $accept ); ?>',
-	maxSize: <?php echo esc_attr( $max_size ); ?>,
-	onFileSelect: <?php echo esc_js( $on_file_select ); ?>,
-	onError: <?php echo esc_js( $on_error ); ?>,
-})">
+<div 
+	x-data="tutorFileUploader({
+		multiple: <?php echo $multiple ? 'true' : 'false'; ?>,
+		accept: '<?php echo esc_attr( $accept ); ?>',
+		maxSize: <?php echo esc_attr( $max_size ); ?>,
+		onFileSelect: <?php echo esc_js( $on_file_select ); ?>,
+		onError: <?php echo esc_js( $on_error ); ?>,
+	})"
+>
 	<!-- Upload Area -->
 	<div
 		class="tutor-file-uploader"

@@ -12,6 +12,7 @@ import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
+import { passwordInputMeta } from '@Core/ts/components/password-input';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { selectMeta } from '@Core/ts/components/select';
@@ -26,6 +27,7 @@ import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/Toast';
+import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { getNonceData } from '@Core/ts/utils/nonce';
@@ -54,8 +56,9 @@ const initializePlugin = () => {
       previewTriggerMeta,
       starRatingMeta,
       toastMeta,
+      passwordInputMeta,
     ],
-    services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta],
+    services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, wpMediaServiceMeta],
   });
 
   TutorComponentRegistry.initWithAlpine(Alpine);

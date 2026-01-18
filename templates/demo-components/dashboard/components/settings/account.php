@@ -22,7 +22,8 @@ foreach ( tutor_global_timezone_lists() as $key => $value ) {
 
 <div class="tutor-account-section">
 	<form
-		x-data="tutorForm({ id: 'account-settings-form', mode: 'onBlur', shouldFocusError: true })"
+		id="account-form"
+		x-data="tutorForm({ id: 'account-form', mode: 'onBlur', shouldFocusError: true })"
 		x-bind="getFormBindings()"
 		@submit="handleSubmit(
 			(data) => { 

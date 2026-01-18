@@ -51,7 +51,7 @@ $theme_options = array(
 <section class="tutor-preferences-section">
 	<!-- Course Content Section -->
 	<h5 class="tutor-preferences-section-header tutor-color-black tutor-h5 tutor-sm-hidden"><?php esc_html_e( 'Course Content', 'tutor' ); ?></h5>
-	<div class="tutor-card tutor-card--rounded-2xl tutor-mb-7">
+	<div class="tutor-card tutor-card-rounded-2xl tutor-mb-7">
 		<div class="tutor-preferences-setting-item">
 			<div class="tutor-preferences-setting-content">
 				<div class="tutor-preferences-setting-icon">
@@ -136,7 +136,7 @@ $theme_options = array(
 
 	<!-- Lesson Experience Section -->
 	<h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Lesson experience', 'tutor' ); ?></h5>
-	<div class="tutor-card tutor-card--rounded-2xl tutor-mb-6">
+	<div class="tutor-card tutor-card-rounded-2xl tutor-mb-6">
 		<div class="tutor-preferences-setting-item">
 			<div class="tutor-preferences-setting-content">
 				<div class="tutor-preferences-setting-icon">
@@ -184,7 +184,7 @@ $theme_options = array(
 
 	<!-- Appearance Section -->
 	<h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Appearance', 'tutor' ); ?></h5>
-	<div class="tutor-card tutor-card--rounded-2xl tutor-mb-6">
+	<div class="tutor-card tutor-card-rounded-2xl tutor-mb-6">
 		<div class="tutor-preferences-setting-item">
 			<div class="tutor-preferences-setting-content">
 				<div class="tutor-preferences-setting-icon">
@@ -210,7 +210,7 @@ $theme_options = array(
 
 	<!-- Accessibility Section -->
 	<h5 class="tutor-preferences-section-header tutor-color-black tutor-mb-7"><?php esc_html_e( 'Accessibility', 'tutor' ); ?></h5>
-	<div class="tutor-card tutor-card--rounded-2xl tutor-mb-6">
+	<div class="tutor-card tutor-card-rounded-2xl tutor-mb-6">
 		<div class="tutor-preferences-setting-item">
 			<div class="tutor-preferences-setting-content">
 				<div class="tutor-preferences-setting-icon">

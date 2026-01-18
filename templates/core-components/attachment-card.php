@@ -10,45 +10,43 @@ use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
 
-$file_name      = isset( $file_name ) ? $file_name : '';
-$file_size      = isset( $file_size ) ? $file_size : '';
-$is_downloading = ! empty( $is_downloading );
+$file_name       = isset( $file_name ) ? $file_name : '';
+$file_size       = isset( $file_size ) ? $file_size : '';
+$is_downloadable = ! empty( $is_downloadable );
+$title_attr      = isset( $title_attr ) ? $title_attr : '';
+$meta_attr       = isset( $meta_attr ) ? $meta_attr : '';
+$action_attr     = isset( $action_attr ) ? $action_attr : '';
 
-if ( '' === $file_name ) {
+if ( '' === $file_name && '' === $title_attr ) {
 	return;
 }
 
 $icon_classes = array( 'tutor-attachment-card-icon' );
 
-if ( $is_downloading ) {
-	$icon_classes[] = 'tutor-attachment-card-icon-loading';
-}
-
 $icon_class_attr = implode( ' ', $icon_classes );
 
-$icon_name    = $is_downloading ? Icon::LOADING : Icon::RESOURCES;
-$action_icon  = $is_downloading ? Icon::CROSS : Icon::DOWNLOAD_2;
-$action_label = $is_downloading ? __( 'Cancel download', 'tutor' ) : __( 'Download file', 'tutor' );
+$action_icon  = $is_downloadable ? Icon::DOWNLOAD_2 : Icon::CROSS;
+$action_label = $is_downloadable ? __( 'Download', 'tutor' ) : __( 'Remove file', 'tutor' );
+
 ?>
 <div class="tutor-card tutor-attachment-card">
 	<div class="<?php echo esc_attr( $icon_class_attr ); ?>" aria-hidden="true">
-		<?php tutor_utils()->render_svg_icon( $icon_name, 24, 24 ); ?>
+		<?php tutor_utils()->render_svg_icon( Icon::RESOURCES, 24, 24 ); ?>
 	</div>
 
 	<div class="tutor-attachment-card-body">
-		<div class="tutor-attachment-card-title">
+		<div class="tutor-attachment-card-title" <?php echo $title_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 			<?php echo esc_html( $file_name ); ?>
 		</div>
 
-		<?php if ( $file_size ) : ?>
-			<span class="tutor-attachment-card-meta">
+		<?php if ( $file_size || $meta_attr ) : ?>
+			<span class="tutor-attachment-card-meta" <?php echo $meta_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 				<?php echo esc_html( $file_size ); ?>
 			</span>
 		<?php endif; ?>
 	</div>
 
-	<div class="tutor-attachment-card-actions">
+	<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" <?php echo $action_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<?php tutor_utils()->render_svg_icon( $action_icon, 16, 16 ); ?>
-	</div>
+	</button>
 </div>
-

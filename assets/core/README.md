@@ -555,9 +555,9 @@ The TutorCore class provides factory methods for creating Alpine.js component da
 .tutor-card__subtitle
 
 /* Card variants */
-.tutor-card--elevated
-.tutor-card--outlined
-.tutor-card--interactive
+.tutor-card-elevated
+.tutor-card-outlined
+.tutor-card-interactive
 ```
 
 ### Form Classes

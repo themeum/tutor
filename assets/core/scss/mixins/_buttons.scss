@@ -8,6 +8,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: $tutor-spacing-2;
   border: none;
   border-radius: $tutor-radius-md;
   font-weight: $tutor-font-weight-medium;
@@ -230,25 +231,32 @@
 @mixin tutor-button-loading {
   position: relative;
   pointer-events: none;
-  gap: $tutor-spacing-3;
+  -webkit-text-fill-color: transparent;
+
+  & > * {
+    visibility: hidden;
+  }
 
   &::before {
     content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
     width: 16px;
     height: 16px;
     border: 2px solid currentColor;
     border-radius: 50%;
     border-top-color: transparent;
-    animation: tutor-spin 1s linear infinite;
+    animation: tutor-button-spin 1s linear infinite;
   }
 }
 
-@keyframes tutor-spin {
+@keyframes tutor-button-spin {
   0% {
-    transform: rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
   }
 }
 

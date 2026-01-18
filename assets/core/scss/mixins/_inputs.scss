@@ -203,6 +203,7 @@
   $thumb: if($size ==sm, 16px, 20px);
   $gap: $tutor-spacing-1;
 
+  appearance: none;
   position: relative;
   display: inline-flex;
   align-items: center;

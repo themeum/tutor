@@ -54,3 +54,42 @@
     border: 0;
   }
 }
+
+.tutor-file-preview {
+  @include tutor-flex(row, center, center);
+  position: relative;
+  width: 100%;
+  min-height: 228px;
+  border-radius: $tutor-radius-md;
+  overflow: hidden;
+  background-color: $tutor-surface-brand-tertiary;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  &-overlay {
+    @include tutor-flex(row, center, center);
+    position: absolute;
+    inset: 0;
+    background-color: rgba($color: $tutor-surface-dark, $alpha: 0.8);
+    opacity: 0;
+    pointer-events: none;
+    backdrop-filter: blur(4px);
+    @include tutor-transition(opacity);
+  }
+
+  &:hover {
+    .tutor-file-preview-overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &-actions {
+    @include tutor-flex(row, center, center);
+    gap: $tutor-spacing-3;
+  }
+}

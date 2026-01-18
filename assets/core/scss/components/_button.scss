@@ -43,10 +43,20 @@
 // Button sizes
 .tutor-btn-x-small {
   @include tutor-button-size(x-small);
+
+  &.tutor-btn-loading::before {
+    width: 12px;
+    height: 12px;
+  }
 }
 
 .tutor-btn-small {
   @include tutor-button-size(small);
+
+  &.tutor-btn-loading::before {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 .tutor-btn-medium {
@@ -55,6 +65,11 @@
 
 .tutor-btn-large {
   @include tutor-button-size(large);
+
+  &.tutor-btn-loading::before {
+    width: 20px;
+    height: 20px;
+  }
 }
 
 // Button states

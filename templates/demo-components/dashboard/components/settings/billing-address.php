@@ -16,7 +16,8 @@ use TUTOR\Icon;
 	<h5 class="tutor-h5 tutor-sm-hidden"><?php echo esc_html__( 'Billing Address', 'tutor' ); ?></h5>
 
 	<div class="tutor-surface-l1 tutor-rounded-2xl tutor-p-6 tutor-flex tutor-flex-column tutor-gap-5 tutor-border">
-		<form 
+		<form
+			id="billing-address-form"
 			x-data="tutorForm({ id: 'billing-address-form', mode: 'onBlur', shouldFocusError: true })"
 			x-bind="getFormBindings()"
 			@submit="handleSubmit(

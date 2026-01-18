@@ -34,7 +34,7 @@
 		</p>
 		<div class="tutor-p-6 tutor-bg-gray-50 tutor-rounded-md">
 			<div class="tutor-flex tutor-gap-4 tutor-flex-wrap">
-				<div class="tutor-card tutor-card--padding-small">
+				<div class="tutor-card tutor-card-padding-small">
 					<h4>Padding Small</h4>
 					<p>8px padding</p>
 				</div>
@@ -42,7 +42,7 @@
 					<h4>Padding Medium</h4>
 					<p>16px padding (default)</p>
 				</div>
-				<div class="tutor-card tutor-card--padding-large">
+				<div class="tutor-card tutor-card-padding-large">
 					<h4>Padding Large</h4>
 					<p>24px padding</p>
 				</div>
@@ -57,7 +57,7 @@
 		</p>
 		<div class="tutor-p-6 tutor-bg-gray-50 tutor-rounded-md">
 			<div class="tutor-flex tutor-gap-4 tutor-flex-wrap">
-				<div class="tutor-card tutor-card--rounded-md">
+				<div class="tutor-card tutor-card-rounded-md">
 					<h4 class="tutor-mt-0 tutor-mb-4">Rounded MD</h4>
 					<p class="tutor-mb-0 tutor-text-small">Medium radius</p>
 				</div>
@@ -65,7 +65,7 @@
 					<h4 class="tutor-mt-0 tutor-mb-4">Rounded LG</h4>
 					<p class="tutor-mb-0 tutor-text-small">Large radius (default)</p>
 				</div>
-				<div class="tutor-card tutor-card--rounded-2xl">
+				<div class="tutor-card tutor-card-rounded-2xl">
 					<h4 class="tutor-mt-0 tutor-mb-4">Rounded 2XL</h4>
 					<p class="tutor-mb-0 tutor-text-small">Extra large radius</p>
 				</div>
