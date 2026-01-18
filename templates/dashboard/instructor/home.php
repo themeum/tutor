@@ -92,10 +92,15 @@ $stat_cards = array(
 	),
 );
 
+//Graph.
+$labels = wp_list_pluck( $total_earnings['earnings'], 'label_name' );
+$graph_earnings = array_map( 'intval', wp_list_pluck( $total_earnings['earnings'], 'total' ) );
+$enrollments = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
+$graph_enrollments = array_map( 'intval', wp_list_pluck( $enrollments['enrollments'], 'total' ) );
 $overview_chart_data = array(
-	'earnings' => Analytics::prepare_chart_data( $total_earnings['earnings'] ),
-	'enrolled' => array( 40, 60, 50.1, 48.5, 43.2, 48.9, 52.3, 49.7, 47.2, 48.8, 47.5, 49.2, 51.8, 53.2 ),
-	'labels'   => array( '', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', '' ),
+	'earnings' => array_merge( array( 0 ), $graph_earnings, array( 0 ) ),
+	'enrolled' => array_merge( array( 0 ), $graph_enrollments, array( 0 ) ),
+	'labels'   => array_merge( array( '' ), $labels, array( '' ) ),
 );
 
 $course_completion_data = array(
