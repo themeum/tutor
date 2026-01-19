@@ -33,7 +33,7 @@ $current_user_id = get_current_user_id();
 $back_url        = remove_query_arg( 'question_id' );
 
 ?>
-<div class="tutor-discussion-single" data-question_id="<?php echo esc_attr( $question_id ); ?>" data-course_id="<?php echo esc_attr( $tutor_course_id ); ?>"  x-data="tutorQna()">
+<div class="tutor-discussion-single"  x-data="tutorQna()">
 	<div class="tutor-discussion-single-header tutor-p-6 tutor-border-b">
 		<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
 			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
@@ -74,7 +74,7 @@ $back_url        = remove_query_arg( 'question_id' );
 						<div class="tutor-popover-menu" style="min-width: 120px;">
 							<button 
 								class="tutor-popover-menu-item"
-								@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question->comment_ID ); ?> });"
+								@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question->comment_ID ); ?>, context: 'question' });"
 							>
 								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
@@ -88,7 +88,7 @@ $back_url        = remove_query_arg( 'question_id' );
 		</div>
 	</div>
 
-	<div class="tutor-qa-reply tutor-p-6 tutor-border-b" data-question_id="<?php echo esc_attr( $question_id ); ?>" data-course_id="<?php echo esc_attr( $tutor_course_id ); ?>" data-context="course-single-qna">
+	<div class="tutor-qa-reply tutor-p-6 tutor-border-b">
 		<form class="tutor-discussion-single-reply-form tutor-qna-reply-form"
 			x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $question_id ); ?>' }), focused : false }"
 			@submit.prevent="handleSubmit((data) => replyQnaMutation?.mutate({...data, course_id: <?php echo esc_html( $tutor_course_id ); ?>, question_id: <?php echo esc_html( $question_id ); ?> }))($event)"
@@ -179,7 +179,7 @@ $back_url        = remove_query_arg( 'question_id' );
 								<div class="tutor-popover-menu" style="min-width: 120px;">
 									<button 
 										class="tutor-popover-menu-item"
-										@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $answer->comment_ID ); ?> });"
+										@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $answer->comment_ID ); ?>, context: 'reply' });"
 									>
 										<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
 									</button>
@@ -204,8 +204,8 @@ $back_url        = remove_query_arg( 'question_id' );
 		->title( __( 'Delete This Question?', 'tutor' ) )
 		->message( __( 'Are you sure you want to delete this question permanently? Please confirm your choice.', 'tutor' ) )
 		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
-		->confirm_handler( 'deleteQnAMutation?.mutate({ question_id: payload?.questionId })' )
-		->mutation_state( 'deleteQnAMutation' )
+		->confirm_handler( 'deleteQnaMutation?.mutate({ question_id: payload?.questionId, context: payload?.context })' )
+		->mutation_state( 'deleteQnaMutation' )
 		->render();
 	?>
 

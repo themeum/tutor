@@ -59,8 +59,11 @@ $questions   = tutor_utils()->get_qa_questions(
 	)
 );
 
+
 ?>
 <div class="tutor-learning-area-qna tutor-mb-9" x-data="tutorQna()">
+
+	<!-- Question Search  -->
 	<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
 		<form method="get" action="">
 			<?php
@@ -96,10 +99,11 @@ $questions   = tutor_utils()->get_qa_questions(
 		</form>
 	</div>
 
+	<!-- Question submission form  -->
 	<form 
 		class="tutor-discussion-form tutor-p-6 tutor-border-b tutor-qna-form" 
 		x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $tutor_course_id ); ?>' }), focused : false }"
-		@submit.prevent="handleSubmit((data) => createQnAMutation?.mutate({...data, course_id: <?php echo esc_html( $tutor_course_id ); ?> }))($event)"
+		@submit.prevent="handleSubmit((data) => createQnaMutation?.mutate({...data, course_id: <?php echo esc_html( $tutor_course_id ); ?> }))($event)"
 		data-course_id="<?php echo esc_attr( $tutor_course_id ); ?>"
 	>
 		<div class="tutor-input-field">
@@ -110,7 +114,6 @@ $questions   = tutor_utils()->get_qa_questions(
 					->type( InputType::TEXTAREA )
 					->name( 'answer' )
 					->placeholder( 'Ask a question...' )
-					->clearable()
 					->attr( '@focus', 'focused = true' )
 					->attr( 'x-bind', "register('answer', { required: '" . esc_html( __( 'Please enter a response', 'tutor' ) ) . "' })" )
 					->render();
@@ -132,21 +135,22 @@ $questions   = tutor_utils()->get_qa_questions(
 					->size( Size::X_SMALL )
 					->attr( 'type', 'button' )
 					->attr( '@click', 'reset(); focused = false' )
-					->attr( ':disabled', 'createQnAMutation?.isPending' )
+					->attr( ':disabled', 'createQnaMutation?.isPending' )
 					->render();
 				Button::make()
 					->label( __( 'Save', 'tutor' ) )
 					->variant( Variant::PRIMARY_SOFT )
 					->size( Size::X_SMALL )
 					->attr( 'type', 'submit' )
-					->attr( ':disabled', 'createQnAMutation?.isPending' )
-					->attr( ':class', "{ 'tutor-btn-loading': createQnAMutation?.isPending }" )
+					->attr( ':disabled', 'createQnaMutation?.isPending' )
+					->attr( ':class', "{ 'tutor-btn-loading': createQnaMutation?.isPending }" )
 					->render();
 				?>
 			</div>
 		</div>
 	</form>
 
+	<!-- Question sorting -->
 	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 		<div class="tutor-small tutor-text-secondary">
 			<?php esc_html_e( 'Questions', 'tutor' ); ?>
@@ -163,10 +167,13 @@ $questions   = tutor_utils()->get_qa_questions(
 		</div>
 	</div>
 
+	<!-- Question Listing -->
 	<?php if ( is_array( $questions ) && count( $questions ) ) : ?>
 		<div class="tutor-discussion-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
 			<?php foreach ( $questions as $question ) : ?>
 				<?php
+				$meta         = $question->meta;
+				$is_important = (int) tutor_utils()->array_get( 'tutor_qna_important', $meta, 0 );
 				$question_url = add_query_arg(
 					array(
 						'subpage'     => 'qna',
@@ -190,15 +197,17 @@ $questions   = tutor_utils()->get_qa_questions(
 							<h6 class="tutor-discussion-card-title"><?php echo esc_html( $content ); ?></h6>
 						</a>
 						<div class="tutor-discussion-card-meta">
-							<a href="<?php echo esc_url( $question_url ); ?>" class="tutor-discussion-card-meta-reply-button">
-								<?php esc_html_e( 'Reply', 'tutor' ); ?>
-							</a>
 							<div class="tutor-flex tutor-items-center tutor-gap-2">
 								<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 
 								<?php echo esc_html( $question->answer_count ); ?>
 							</div>
 						</div>
 					</div>
+					<?php if ( $is_important ) : ?>
+						<span class="tutor-flex tutor-absolute tutor-right-6 tutor-top-0" style="top: -4px;">
+							<?php tutor_utils()->render_svg_icon( Icon::BOOKMARK_FILL, 25, 25, array( 'class' => 'tutor-icon-exception4' ) ); ?>
+						</span>
+					<?php endif; ?>
 				</div>
 			<?php endforeach; ?>
 		</div>
