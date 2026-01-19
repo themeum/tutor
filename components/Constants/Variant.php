@@ -35,11 +35,4 @@ abstract class Variant {
 	public const OUTLINE   = 'outline';
 	public const GHOST     = 'ghost';
 	public const LINK      = 'link';
-
-	// Badge-only variants.
-	public const PENDING   = 'pending';
-	public const COMPLETED = 'completed';
-	public const CANCELLED = 'cancelled';
-	public const EXCEPTION = 'exception';
-
 }

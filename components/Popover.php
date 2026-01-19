@@ -426,7 +426,7 @@ class Popover extends BaseComponent {
 
 			$this->attributes = tutor_utils()->count( $item['attr'] ) ? $item['attr'] : array();
 
-			$menu_item_attr = $this->render_attributes();
+			$menu_item_attr = $this->get_attributes_string();
 
 			if ( empty( $icon ) ) {
 				$menu_items .= sprintf(
@@ -436,26 +436,26 @@ class Popover extends BaseComponent {
 					$content,
 					$menu_item_attr
 				);
-			}
-
-			if ( Positions::RIGHT === $icon_alignment ) {
-				$menu_items .= sprintf(
-					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
-					$tag,
-					$class,
-					$content,
-					$icon,
-					$menu_item_attr
-				);
 			} else {
-				$menu_items .= sprintf(
-					'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
-					$tag,
-					$class,
-					$content,
-					$icon,
-					$menu_item_attr
-				);
+				if ( Positions::RIGHT === $icon_alignment ) {
+					$menu_items .= sprintf(
+						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%3$s%4$s</%1$s>',
+						$tag,
+						$class,
+						$content,
+						$icon,
+						$menu_item_attr
+					);
+				} else {
+					$menu_items .= sprintf(
+						'<%1$s class="tutor-popover-menu-item %2$s" %5$s>%4$s%3$s</%1$s>',
+						$tag,
+						$class,
+						$content,
+						$icon,
+						$menu_item_attr
+					);
+				}
 			}
 		}
 

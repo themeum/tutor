@@ -26,7 +26,7 @@
 	</div>
 
 	<?php if ( $show_question_mark ) : ?>
-		<span class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-text-secondary">
+		<span class="tutor-badge tutor-badge-rounded tutor-text-secondary">
 			<span class="tutor-text-subdued">
 				<?php esc_html_e( 'Points: ', 'tutor' ); ?>
 			</span>

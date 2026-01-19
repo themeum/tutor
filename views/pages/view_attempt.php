@@ -16,17 +16,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 
-$attempt_id   = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
-$attempt      = tutor_utils()->get_attempt( $attempt_id );
-$attempt_data = $attempt;
-$user_id      = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
-$quiz_id      = $attempt && isset( $attempt->quiz_id ) ? $attempt->quiz_id : 0;
+$attempt_id    = Input::get( 'view_quiz_attempt_id', 0, Input::TYPE_INT );
+$attempt       = tutor_utils()->get_attempt( $attempt_id );
+$attempt_data  = $attempt;
+$user_id       = tutor_utils()->avalue_dot( 'user_id', $attempt_data );
+$quiz_id       = $attempt && isset( $attempt->quiz_id ) ? $attempt->quiz_id : 0;
+$course_id     = tutor_utils()->avalue_dot( 'course_id', $attempt_data );
+$is_instructor = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
 if ( ! $attempt ) {
-	tutor_utils()->tutor_empty_state( __( 'Attemp not found', 'tutor' ) );
+	tutor_utils()->tutor_empty_state( __( 'Attempt not found', 'tutor' ) );
 	return;
 }
 if ( 0 === $quiz_id ) {
-	tutor_utils()->tutor_empty_state( __( 'Attemp not found', 'tutor' ) );
+	tutor_utils()->tutor_empty_state( __( 'Attempt not found', 'tutor' ) );
+	return;
+}
+
+if ( ! current_user_can( 'manage_options' ) && ! $is_instructor ) {
+	tutor_utils()->tutor_empty_state( __( 'Access denied!', 'tutor' ) );
 	return;
 }
 
