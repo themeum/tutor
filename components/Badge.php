@@ -13,8 +13,6 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Constants\Variant;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -24,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * Badge::make()
  *     ->label( 'Primary' )
- *     ->variant( Variant::PRIMARY )
+ *     ->variant( Badge::PRIMARY )
  *     ->icon( '<svg>...</svg>' )
  *     ->render();
  *
@@ -37,6 +35,19 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.0.0
  */
 class Badge extends BaseComponent {
+
+	/**
+	 * Variant constants.
+	 *
+	 * @since 4.0.0
+	 */
+	public const INFO          = 'info';
+	public const PRIMARY       = 'primary';
+	public const WARNING       = 'warning';
+	public const SUCCESS       = 'success';
+	public const SUCCESS_SOLID = 'success-solid';
+	public const ERROR         = 'error';
+	public const HIGHLIGHT     = 'highlight';
 
 	/**
 	 * Badge label text.
