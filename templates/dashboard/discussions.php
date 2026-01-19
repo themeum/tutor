@@ -16,7 +16,7 @@ use TUTOR\Input;
 defined( 'ABSPATH' ) || exit;
 
 $current_tab   = Input::get( 'tab' );
-$replies       = Input::get( 'replies', 0, Input::TYPE_INT );
+$discussion_id = Input::get( 'id', 0, Input::TYPE_INT );
 $order_filter  = Input::get( 'order', 'DESC' );
 $current_page  = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
@@ -40,28 +40,30 @@ $page_nav_items = array(
 	),
 );
 ?>
-<div class="tutor-dashboard-discussions tutor-surface-l1 tutor-border tutor-rounded-2xl" x-data="tutorDiscussions()">
+<div class="tutor-dashboard-discussions" x-data="tutorDiscussions()">
 	<?php
-	if ( $replies ) {
-		$template = tutor()->path . 'templates/dashboard/discussions/qna-replies.php';
+	if ( $discussion_id ) {
+		$template = tutor()->path . 'templates/dashboard/discussions/qna-single.php';
 		if ( 'lesson-comments' === $current_tab ) {
-			$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-replies.php';
+			$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-single.php';
 		}
 		require_once $template;
 	} else {
 		?>
-		<div class="tutor-p-6 tutor-border-b">
-			<?php Nav::make()->items( $page_nav_items )->render(); ?>
-		</div>
-		<div class="tutor-sm-border tutor-sm-rounded-2xl tutor-sm-mt-4">
-			<?php
-			$template = tutor()->path . 'templates/dashboard/discussions/qna-list.php';
-			if ( 'lesson-comments' === $current_tab ) {
-				$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-list.php';
-			}
+		<div class="tutor-dashboard-page-card">
+			<div class="tutor-dashboard-page-card-header">
+				<?php Nav::make()->items( $page_nav_items )->render(); ?>
+			</div>
+			<div class="tutor-dashboard-page-card-body">
+				<?php
+				$template = tutor()->path . 'templates/dashboard/discussions/qna-list.php';
+				if ( 'lesson-comments' === $current_tab ) {
+					$template = tutor()->path . 'templates/dashboard/discussions/lesson-comment-list.php';
+				}
 
-			require_once $template;
-			?>
+				require_once $template;
+				?>
+			</div>
 		</div>
 		<?php
 	}

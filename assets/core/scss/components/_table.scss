@@ -7,25 +7,36 @@
   display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+
+  &.tutor-table-bordered {
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-lg;
+  }
+
   table {
     min-width: 600px;
+    width: 100%;
   }
 }
 
 .tutor-table {
   @include tutor-typography('small', 'regular', 'secondary');
   width: 100%;
+  margin: 0px;
   border-collapse: collapse;
   border-spacing: 0;
+
   thead {
-    background-color: $tutor-surface-base;
+    background-color: $tutor-surface-l1-hover;
+
     th {
-      @include tutor-typography('small', 'medium', 'primary');
+      @include tutor-typography(tiny, regular, secondary);
       text-align: left;
       padding: $tutor-spacing-5;
       border-bottom: 1px solid $tutor-border-idle;
     }
   }
+
   tbody {
     tr {
       border-bottom: 1px solid $tutor-border-idle;
@@ -47,7 +58,7 @@
   th,
   td {
     border-right: 1px solid $tutor-border-idle;
-    &:last-child {
+    &:last-of-type {
       border-right: none;
     }
   }
