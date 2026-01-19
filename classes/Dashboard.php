@@ -27,8 +27,7 @@ class Dashboard {
 	 *
 	 * @since 4.0.0
 	 */
-	const ACCOUNT_PAGE_SLUG        = 'account';
-	const ACCOUNT_PAGE_QUERY_PARAM = 'subpage';
+	const ACCOUNT_PAGE_SLUG = 'account';
 
 	/**
 	 * Constructor
@@ -57,7 +56,7 @@ class Dashboard {
 			return $account_page_url;
 		}
 
-		return UrlHelper::add_query_params( $account_page_url, array( self::ACCOUNT_PAGE_QUERY_PARAM => $page ) );
+		return trailingslashit( $account_page_url ) . $page;
 	}
 
 	/**
