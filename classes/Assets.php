@@ -880,6 +880,11 @@ class Assets {
 			if ( $is_learning_area ) {
 				wp_enqueue_style( 'tutor-learning', $learning_area_css_url, array(), $version );
 				wp_enqueue_script( 'tutor-learning', $learning_area_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
+
+				if ( is_single_course( true ) ) {
+					wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
+					wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+				}
 			}
 		}
 	}

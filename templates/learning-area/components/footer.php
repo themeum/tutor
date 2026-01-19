@@ -30,7 +30,7 @@ $prev_link = $prev_is_locked || ! $previous_id ? '#' : get_the_permalink( $previ
 $next_link = $next_is_locked || ! $next_id ? '#' : get_the_permalink( $next_id );
 
 ?>
-<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-11">
+<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-6">
 	<a href="<?php echo esc_url( $prev_link ); ?>" type="button" class="tutor-btn tutor-btn-ghost tutor-btn-small">
 		<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_LEFT_2 ); ?>
 		<?php esc_html_e( 'Previous', 'tutor' ); ?>
