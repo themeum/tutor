@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 			<h4 class="tutor-account-header-title">
 				<?php echo esc_html( $page_data['title'] ?? '' ); ?>
 			</h4>
-			<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
+			<a href="<?php echo esc_url( $close_url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
 				<?php tutor_utils()->render_svg_icon( Icon::CROSS ); ?>
 			</a>
 		</div>

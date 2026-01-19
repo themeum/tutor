@@ -10,6 +10,7 @@
 
 namespace Tutor\Components;
 
+use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
 use TUTOR\Input;
 
@@ -90,6 +91,19 @@ class DateFilter extends BaseComponent {
 	 */
 	protected $icon_class;
 
+	/* Button size.
+	 *
+	 * @var string
+	 */
+	protected $size = Size::SMALL;
+
+	/**
+	 * Icon size.
+	 *
+	 * @var integer
+	 */
+	protected $icon_size = 20;
+
 	/**
 	 * Set filter type.
 	 *
@@ -99,6 +113,37 @@ class DateFilter extends BaseComponent {
 	 */
 	public function type( string $type ): self {
 		$this->type = $type;
+		return $this;
+	}
+
+	/**
+	 * Set Button Size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $size the size type (x-small|small|medium|large).
+	 *
+	 * @return self
+	 */
+	public function trigger_size( string $size ): self {
+		$allowed_sizes = array( Size::X_SMALL, Size::SMALL, Size::MEDIUM, Size::LARGE );
+		if ( in_array( $size, $allowed_sizes, true ) ) {
+			$this->size = $size;
+		}
+		return $this;
+	}
+
+	/**
+	 * Set the button icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $size the icon size.
+	 *
+	 * @return self
+	 */
+	public function icon_size( int $size ): self {
+		$this->icon_size = $size;
 		return $this;
 	}
 
@@ -156,9 +201,15 @@ class DateFilter extends BaseComponent {
 		$calendar_options = array(
 			'type' => 'default',
 		);
-		$button_classes   = 'tutor-btn tutor-btn-outline tutor-btn-x-small';
-		$popover_classes  = 'tutor-popover';
-		$icon             = Icon::CALENDAR_2;
+
+		$button_classes = 'tutor-btn tutor-btn-outline';
+
+		if ( $this->size ) {
+			$button_classes .= ' tutor-btn-' . $this->size;
+		}
+
+		$popover_classes = 'tutor-popover';
+		$icon            = Icon::CALENDAR_2;
 
 		if ( ! empty( $this->icon_class ) ) {
 			$button_classes .= " {$this->icon_class}";
@@ -191,7 +242,7 @@ class DateFilter extends BaseComponent {
 			>
 				<?php
 				if ( function_exists( 'tutor_utils' ) ) {
-					tutor_utils()->render_svg_icon( $icon, 16, 16, array( 'class' => 'tutor-icon-secondary' ) );
+					tutor_utils()->render_svg_icon( $icon, $this->icon_size, $this->icon_size );
 				}
 				?>
 				<?php if ( ! empty( $this->label ) ) : ?>

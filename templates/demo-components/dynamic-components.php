@@ -68,8 +68,8 @@ defined( 'ABSPATH' ) || exit;
 			Button::make()->label( 'I am a button' )->size( Size::X_SMALL )->variant( Variant::DESTRUCTIVE )->render();
 			Button::make()->label( 'I am a button' )->variant(Variant::DESTRUCTIVE_SOFT )->attr( 'class', 'tutor-btn-loading' )->render(); // phpcs:ignore 
 			Button::make()->label( 'I am a button' )->variant( Variant::OUTLINE )->render(); // phpcs:ignore 
-			Button::make()->label( 'I am a button' )->variant( Variant::PENDING )->render(); // phpcs:ignore 
-			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::COMPLETED )->render(); // phpcs:ignore
+			Button::make()->label( 'I am a button' )->variant( Variant::SECONDARY )->render(); // phpcs:ignore 
+			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::PRIMARY )->render(); // phpcs:ignore
 
 			Button::make()->attr( 'class', 'tutor-btn-block' )->label( 'I am a block button' )->variant( Variant::PRIMARY_SOFT )->render();
 			?>
@@ -108,18 +108,18 @@ defined( 'ABSPATH' ) || exit;
 		<h2>Badge</h2>
 		<pre><code>
 		&lt;?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
+			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::SUCCESS )->rounded()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::ERROR )->rounded()->render();
+			Badge::make()->label( 'Completed' )->variant( Badge::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?&gt;
 		</code></pre>
 		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
+			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::SUCCESS )->rounded()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::ERROR )->rounded()->render();
+			Badge::make()->label( 'Completed' )->variant( Badge::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?>
 		</div>
 	</div>
@@ -372,7 +372,7 @@ defined( 'ABSPATH' ) || exit;
 				),
 			);
 
-			echo Table::make()
+			Table::make()
 				->headings( $heading )
 				->contents( $content )
 				->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
@@ -431,7 +431,7 @@ defined( 'ABSPATH' ) || exit;
 				),
 			);
 
-			echo Table::make()
+			Table::make()
 			->contents( $content )
 			->attributes( 'tutor-table-wrapper tutor-table-column-borders tutor-mb-6' )
 			->render();php&gt;
@@ -475,7 +475,7 @@ defined( 'ABSPATH' ) || exit;
 		<h2>Popover</h2>
 		<h3>Basic Popover</h3>
 		<br>
-		<pre><code>echo Popover::make()
+		<pre><code>Popover::make()
 				->title( 'Basic' )
 				->body( '&lt;p&gt;This is a popover component&lt;/p&gt;' )
 				->closeable( true )
@@ -518,22 +518,22 @@ defined( 'ABSPATH' ) || exit;
 		$left_button   = $button->label( 'Left' )->get();
 		$bottom_button = $button->label( 'Bottom' )->get();
 
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Right component&lt;/p&gt;' )
 			->trigger( $right_button )
 			->placement( 'right' )
 			->render();
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Left component&lt;/p&gt;' )
 			->trigger( $left_button )
 			->placement( 'left' )
 			->render();
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Top component&lt;/p&gt;' )
 			->trigger( $top_button )
 			->placement( 'top' )
 			->render();
-		echo Popover::make()
+		Popover::make()
 			->body( '&lt;p&gt;Bottom component&lt;/p&gt;' )
 			->trigger( $bottom_button )
 			->placement( 'bottom' )
@@ -579,7 +579,7 @@ defined( 'ABSPATH' ) || exit;
 			Button::make()->label( 'Delete' )->size( 'medium' )->variant( 'destructive' )->attr( '@click', 'hide()' )->get(),
 		);
 
-		echo Popover::make()
+		Popover::make()
 		->title( 'Confirm Action' )
 		->body( '&lt;p&gt;Are you sure you want to delete this item? This action cannot be undone.&lt;/p&gt;' )
 		->footer( $footer_buttons )
@@ -623,7 +623,7 @@ defined( 'ABSPATH' ) || exit;
 		<h3>Popover with menu</h3>
 		<br>
 		<pre><code>$kebab_button = Button::make()->size( 'medium' )->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 24, 24 ) )->attr( 'x-ref', 'trigger' )->attr( '@click', 'toggle()' )->variant( 'secondary' )->get();
-			echo Popover::make()
+			Popover::make()
 				->trigger( $kebab_button )
 				->menu_item(
 					array(

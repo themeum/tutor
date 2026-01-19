@@ -4111,11 +4111,13 @@ class Utils {
 				WHERE	comments.comment_post_ID = %d
 						AND comments.comment_type = %s
 						AND commentmeta.meta_key = %s
+						AND comments.comment_approved = %s
 				GROUP BY CAST(commentmeta.meta_value AS SIGNED);
 				",
 					$course_id,
 					'tutor_course_rating',
-					'tutor_rating'
+					'tutor_rating',
+					'approved'
 				)
 			);
 

@@ -10,6 +10,10 @@
   border-bottom: 1px solid $tutor-border-idle;
   padding: $tutor-spacing-6 $tutor-spacing-8;
 
+  @include tutor-breakpoint-down(sm) {
+    display: none;
+  }
+
   &-inner {
     @include tutor-flex(row, center, space-between);
     height: 100%;

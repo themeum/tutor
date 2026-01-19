@@ -104,7 +104,7 @@ abstract class BaseComponent {
 	 *
 	 * @return string Escaped and concatenated attributes.
 	 */
-	protected function render_attributes(): string {
+	protected function get_attributes_string(): string {
 		$compiled = array();
 
 		foreach ( $this->attributes as $key => $value ) {
@@ -112,6 +112,17 @@ abstract class BaseComponent {
 		}
 
 		return implode( ' ', $compiled );
+	}
+
+	/**
+	 * Render attributes
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	protected function render_attributes(): void {
+		echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string method.
 	}
 
 	/**
