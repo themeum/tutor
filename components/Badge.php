@@ -205,7 +205,7 @@ class Badge extends BaseComponent {
 		// Merge with any custom class attribute.
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		// Build icon HTML if exists.
 		$icon_html = '';

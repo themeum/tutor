@@ -426,7 +426,7 @@ class Popover extends BaseComponent {
 
 			$this->attributes = tutor_utils()->count( $item['attr'] ) ? $item['attr'] : array();
 
-			$menu_item_attr = $this->render_attributes();
+			$menu_item_attr = $this->get_attributes_string();
 
 			if ( empty( $icon ) ) {
 				$menu_items .= sprintf(
