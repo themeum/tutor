@@ -627,19 +627,23 @@ class Instructor {
 	 *
 	 * @throws \Exception If a database error occurs while counting comments.
 	 */
-	public static function get_instructor_completed_students_course_count_by_date( $start_date, $end_date, $instructor_id ) {
+	public static function get_instructor_completed_students_course_count_by_date( $start_date, $end_date, $instructor_id, $course_ids = array() ) {
 
 		global $wpdb;
 
-		$common_args = array(
-			'post_author'    => $instructor_id,
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-		);
+		if ( empty( $course_ids ) ) {
+			$common_args = array(
+				'post_author'    => $instructor_id,
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			);
 
-		$courses = CourseModel::get_courses_by_args( $common_args );
-		$where   = array(
-			'comment_post_ID' => array( 'IN', $courses->posts ),
+			$courses    = CourseModel::get_courses_by_args( $common_args );
+			$course_ids = $courses->posts;
+		}
+
+		$where = array(
+			'comment_post_ID' => array( 'IN', $course_ids ),
 			'comment_type'    => CourseModel::COURSE_COMPLETED,
 		);
 
