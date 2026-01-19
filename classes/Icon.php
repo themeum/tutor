@@ -65,6 +65,7 @@ final class Icon {
 	const CALENDAR_2_FILL            = 'calendar-2-fill';
 	const CALENDAR_LINE              = 'calendar-line';
 	const CALENDAR_LINES             = 'calendar-lines';
+	const CALL_END                   = 'call-end';
 	const CART                       = 'cart';
 	const CERTIFICATE                = 'certificate';
 	const CERTIFICATE_2              = 'certificate-2';
