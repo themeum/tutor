@@ -68,8 +68,8 @@ defined( 'ABSPATH' ) || exit;
 			Button::make()->label( 'I am a button' )->size( Size::X_SMALL )->variant( Variant::DESTRUCTIVE )->render();
 			Button::make()->label( 'I am a button' )->variant(Variant::DESTRUCTIVE_SOFT )->attr( 'class', 'tutor-btn-loading' )->render(); // phpcs:ignore 
 			Button::make()->label( 'I am a button' )->variant( Variant::OUTLINE )->render(); // phpcs:ignore 
-			Button::make()->label( 'I am a button' )->variant( Variant::PENDING )->render(); // phpcs:ignore 
-			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::COMPLETED )->render(); // phpcs:ignore
+			Button::make()->label( 'I am a button' )->variant( Variant::SECONDARY )->render(); // phpcs:ignore 
+			Button::make()->size( Size::LARGE )->icon( Icon::CHECK )->variant( Variant::PRIMARY )->render(); // phpcs:ignore
 
 			Button::make()->attr( 'class', 'tutor-btn-block' )->label( 'I am a block button' )->variant( Variant::PRIMARY_SOFT )->render();
 			?>
@@ -108,18 +108,18 @@ defined( 'ABSPATH' ) || exit;
 		<h2>Badge</h2>
 		<pre><code>
 		&lt;?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
+			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::SUCCESS )->rounded()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::ERROR )->rounded()->render();
+			Badge::make()->label( 'Completed' )->variant( Badge::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?&gt;
 		</code></pre>
 		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
-			Badge::make()->label( 'Primary' )->variant( Variant::PRIMARY )->icon( Icon::CHECK )->render();
+			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->render();
-			Badge::make()->label( 'Completed' )->variant( Variant::SUCCESS )->rounded()->render();
-			Badge::make()->label( 'Cancelled' )->variant( Variant::ERROR )->rounded()->render();
+			Badge::make()->label( 'Completed' )->variant( Badge::SUCCESS )->rounded()->render();
+			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?>
 		</div>
 	</div>

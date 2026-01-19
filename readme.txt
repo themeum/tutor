@@ -319,6 +319,25 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.9.5 - Jan 08, 2025
+
+New: Certificate download button added for Admins and Instructors
+Update: Added support for PHP 8.4
+Update: Instructors can remove co-instructors from their own courses
+Update: Multiple improvements and fixes to gift course functionality
+Fix: Fixed security issues
+Fix: Users can now retry payment after a failed transaction
+Fix: Filters no longer stop working when the category filter is disabled on the course list page
+Fix: Fixed datepicker style conflict with WooCommerce coupon date picker UI
+Fix: Unpublished rating count no longer appears on the course details page
+Fix: Added some missing cities of Spain to the checkout page dropdown
+Fix: Gift course messages now support special characters
+
+= 3.9.4 - Dec 18, 2025
+
+Update: Compatibility with WordPress 6.9
+Fix: Security vulnerabilities
+
 = 3.9.3 - Nov 27, 2025
 
 Fix: Grades were auto-generated for all quizzes after a student attempted any quiz. (Pro)

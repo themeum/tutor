@@ -38,6 +38,9 @@ const endpoints = {
   DELETE_SUBSCRIPTION: 'tutor_subscription_plan_delete',
   DUPLICATE_SUBSCRIPTION: 'tutor_subscription_plan_duplicate',
   SORT_SUBSCRIPTION: 'tutor_subscription_plan_sort',
+  UPDATE_SUBSCRIPTION_STATUS: 'tutor_subscription_status_update',
+  RESUME_SUBSCRIPTION: 'tutor_subscription_resume',
+  EARLY_RENEW_SUBSCRIPTION: 'tutor_subscription_early_renew',
 
   // COURSE
   GET_COURSE_DETAILS: 'tutor_course_details',

@@ -268,7 +268,7 @@ class Button extends BaseComponent {
 
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		// Prepare icon HTML if exists.
 		$icon_html = '';
@@ -285,7 +285,7 @@ class Button extends BaseComponent {
 		if ( ! empty( $icon_html ) && empty( $this->label ) ) {
 			$this->attributes['class'] .= ' tutor-btn-icon';
 			// Re-render attributes to include updated class.
-			$attributes = $this->render_attributes();
+			$attributes = $this->get_attributes_string();
 		}
 
 		// Build button inner HTML depending on icon position.
