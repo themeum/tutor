@@ -177,7 +177,7 @@ $questions   = tutor_utils()->get_qa_questions(
 				$content      = wp_strip_all_tags( stripslashes( $question->comment_content ) );
 				$content      = strlen( $content ) > 100 ? substr( $content, 0, 100 ) . '...' : $content;
 				?>
-				<div class="tutor-discussion-card">
+				<div class="tutor-discussion-card" @click="window.location.href = '<?php echo esc_url( $question_url ); ?>'" style="cursor: pointer;">
 					<div class="tutor-avatar tutor-avatar-32">
 						<img src="<?php echo esc_url( get_avatar_url( $question->user_id ) ); ?>" alt="<?php echo esc_attr( $question->display_name ); ?>" class="tutor-avatar-image">
 					</div>
