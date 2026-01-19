@@ -1174,6 +1174,19 @@ class Course extends Tutor_Base {
 			delete_post_meta( $course_id, '_elementor_edit_mode' );
 		} elseif ( 'droip' === $builder ) {
 			delete_post_meta( $course_id, 'droip_editor_mode' );
+		} elseif ( 'divi' === $builder ) {
+			$old_post_content     = get_post_meta( $course_id, '_et_pb_old_content', true );
+			$course               = get_post( $course_id );
+			$course->post_content = $old_post_content;
+			$result               = wp_update_post( $course );
+
+			if ( $result && ! is_wp_error( $result ) ) {
+				update_post_meta( $course_id, '_et_pb_use_builder', 'off' );
+				update_post_meta( $course_id, '_et_pb_old_content', '' );
+				delete_post_meta( $course_id, '_et_dynamic_cached_shortcodes' );
+				delete_post_meta( $course_id, '_et_dynamic_cached_attributes' );
+				delete_post_meta( $course_id, '_et_builder_module_features_cache' );
+			}
 		}
 
 		$this->json_response(
@@ -1762,7 +1775,7 @@ class Course extends Tutor_Base {
 			if ( is_array( $order ) && count( $order ) ) {
 				$i = 0;
 				foreach ( $order as $topic ) {
-					$i++;
+					++$i;
 					$wpdb->update(
 						$wpdb->posts,
 						array( 'menu_order' => $i ),
@@ -2806,10 +2819,10 @@ class Course extends Tutor_Base {
 					}
 				}
 				if ( ! $has_passed ) {
-					$required_assignment_pass++;
+					++$required_assignment_pass;
 				}
 			} else {
-				$required_assignment_pass++;
+				++$required_assignment_pass;
 			}
 		}
 
@@ -2825,11 +2838,11 @@ class Course extends Tutor_Base {
 					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
-						$required_quiz_pass++;
+						++$required_quiz_pass;
 						$is_quiz_pass = false;
 					}
 				} else {
-					$required_quiz_pass++;
+					++$required_quiz_pass;
 					$is_quiz_pass = false;
 				}
 			}
