@@ -102,7 +102,6 @@ class ComponentHelper {
 		$label          = Ecommerce::get_payment_method_label( $payment_method ?? '' );
 
 		Badge::make()
-			->variant( Variant::SECONDARY )
 			->icon( $icon_url, 12, 12 )
 			->label( $label )
 			->render();
