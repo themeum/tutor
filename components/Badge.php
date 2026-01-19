@@ -30,7 +30,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * Badge::make()
  *     ->label( 'Points: 20' )
- *     ->variant( Variant::SECONDARY )
  *     ->circle()
  *     ->render();
  * ```
@@ -57,16 +56,16 @@ class Badge extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $variant = Variant::PRIMARY;
+	protected $variant = '';
 
 	/**
-	 * Whether badge has circle style.
+	 * Whether badge has rounded style.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @var bool
 	 */
-	protected $circle = false;
+	protected $rounded = false;
 
 	/**
 	 * Badge attributes.
@@ -137,7 +136,7 @@ class Badge extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $variant Badge variant (primary|pending|completed|cancelled|secondary|exception).
+	 * @param string $variant Badge variant (primary|info|warning|success|success-solid|error|highlight).
 	 *
 	 * @return $this
 	 */
@@ -147,14 +146,14 @@ class Badge extends BaseComponent {
 	}
 
 	/**
-	 * Enable circle style for badge.
+	 * Enable rounded style for badge.
 	 *
 	 * @since 4.0.0
 	 *
 	 * @return $this
 	 */
-	public function circle() {
-		$this->circle = true;
+	public function rounded() {
+		$this->rounded = true;
 		return $this;
 	}
 
@@ -184,13 +183,12 @@ class Badge extends BaseComponent {
 	 * @return string HTML output.
 	 */
 	public function get(): string {
-		$classes = sprintf(
-			'tutor-badge tutor-badge-%s',
-			esc_attr( $this->variant )
-		);
+		$classes = ! empty( $this->variant )
+		? sprintf( 'tutor-badge tutor-badge-%s', esc_attr( $this->variant ) )
+		: 'tutor-badge';
 
-		if ( $this->circle ) {
-			$classes .= ' tutor-badge-circle';
+		if ( $this->rounded ) {
+			$classes .= ' tutor-badge-rounded';
 		}
 
 		// Merge with any custom class attribute.
@@ -225,5 +223,4 @@ class Badge extends BaseComponent {
 
 		return $this->component_string;
 	}
-
 }

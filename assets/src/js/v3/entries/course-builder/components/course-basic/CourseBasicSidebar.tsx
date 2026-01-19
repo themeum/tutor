@@ -6,8 +6,6 @@ import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-
-import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import FormCategoriesInput from '@TutorShared/components/fields/FormCategoriesInput';
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
@@ -15,6 +13,8 @@ import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSelectUser, { type UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import FormTagsInput from '@TutorShared/components/fields/FormTagsInput';
 import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
+
+import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -291,6 +291,7 @@ const CourseBasicSidebar = () => {
               emptyStateText={__('No instructors added.', 'tutor')}
               isInstructorMode
               visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.INSTRUCTORS}
+              postAuthor={courseDetails?.post_author}
             />
           )}
         />

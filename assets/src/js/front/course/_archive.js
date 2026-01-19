@@ -136,9 +136,6 @@ window.jQuery(document).ready($ => {
                 });
                 filter_criteria['tutor-course-filter-category'] = [...new Set(category_ids)];
             }
-            else {
-                filter_criteria['tutor-course-filter-category'] = JSON.parse($("#course_filter_categories").val());
-            }
 
         }
 
