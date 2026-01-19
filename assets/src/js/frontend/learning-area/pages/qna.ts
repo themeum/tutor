@@ -53,7 +53,7 @@ const qnaPage = () => {
       this.deleteQnAMutation = this.query.useMutation(this.deleteQnA, {
         onSuccess: () => {
           const url = new URL(window.location.href);
-          url.searchParams.delete('id');
+          url.searchParams.delete('question_id');
           window.location.href = url.toString();
         },
         onError: (error: Error) => {
