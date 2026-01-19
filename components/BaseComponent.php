@@ -115,6 +115,17 @@ abstract class BaseComponent {
 	}
 
 	/**
+	 * Render attributes
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	protected function render_attributes(): void {
+		echo $this->get_attributes_string(); //phpcs:ignore -- Sanitization is performed inside get_attributes_string method.
+	}
+
+	/**
 	 * Escape a value for safe HTML output.
 	 *
 	 * Wrapper for WordPress `esc_html()` function.
