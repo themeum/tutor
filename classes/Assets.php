@@ -896,6 +896,7 @@ class Assets {
 	 */
 	public function should_load_legacy_scripts(): bool {
 		$load = true;
+
 		if ( tutor_utils()->is_dashboard_page() ) {
 			$load = false;
 		} else {

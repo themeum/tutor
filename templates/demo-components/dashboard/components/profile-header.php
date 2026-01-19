@@ -24,7 +24,7 @@ use TUTOR\Icon;
 				class="tutor-profile-header-title tutor-text-h4 tutor-font-semibold tutor-ml-4"
 				x-text="windowWidth <= 576 ? (activeTab === 'none' ? '<?php esc_html_e( 'Settings', 'tutor' ); ?>' : tabs.find(tab =>tab.id == activeTab).label) : '<?php esc_html_e( 'Settings', 'tutor' ); ?>'"
 			></h4>
-			<span class="tutor-badge tutor-badge-secondary tutor-badge-circle tutor-ml-5 tutor-sm-hidden">Unsaved changes</span>
+			<span class="tutor-badge tutor-badge-rounded tutor-ml-5 tutor-sm-hidden">Unsaved changes</span>
 		</div>
 		<div class="tutor-profile-header-right tutor-flex tutor-gap-4">
 			<div class="tutor-sm-hidden">

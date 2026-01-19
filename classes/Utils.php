@@ -2930,14 +2930,13 @@ class Utils {
 	 * @return mixed
 	 */
 	public function tutor_dashboard_pages() {
-		// @TODO need to make it dynamic with account view as mode.
-		// $view_mode = 'student';
-		// if ( User::is_admin() || User::is_instructor() ) {
-		// $view_mode = 'instructor';
-		// }
 
-		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
-		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		$nav_items = array();
+		if ( User::is_instructor_view() ) {
+			$nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		} else {
+			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+		}
 
 		/**
 		 * Miscellaneous menus pages
@@ -2949,7 +2948,7 @@ class Utils {
 			'account' => array( 'label' => __( 'Account', 'tutor' ) ),
 		);
 
-		$all_menus = array_merge( $student_nav_items, $instructor_nav_items, $misc_menus );
+		$all_menus = array_merge( $nav_items, $misc_menus );
 
 		return apply_filters( 'tutor_dashboard/nav_items_all', $all_menus );
 	}
@@ -2996,7 +2995,8 @@ class Utils {
 				if ( isset( $nav_item['show_ui'] ) && ! $this->array_get( 'show_ui', $nav_item ) ) {
 					unset( $nav_items[ $key ] );
 				}
-				if ( isset( $nav_item['auth_cap'] ) && ! current_user_can( $nav_item['auth_cap'] ) ) {
+
+				if ( isset( $nav_item['auth_cap'] ) && ! User::is_admin() && ! current_user_can( $nav_item['auth_cap'] ) ) {
 					unset( $nav_items[ $key ] );
 				}
 			}
@@ -5588,6 +5588,12 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_dashboard_page( $subpage = null ): bool {
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			// If user is not login then the dashboard slug show the login screen.
+			return false;
+		}
+
 		if ( $subpage ) {
 			return $this->is_tutor_frontend_dashboard( $subpage );
 		}
@@ -9515,6 +9521,10 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
+			'index'            => array(
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME,
+			),
 			'my-courses'    => array(
 				'title'    => __( 'Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9536,19 +9546,30 @@ class Utils {
 		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
 
 		$other_menus = array(
-			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
-			),
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => Icon::ANNOUNCEMENT,
 			),
+			'quiz-attempts' => array(
+				'title'    => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QUIZ,
+			),
 		);
 
-		return apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		if ( $this->should_show_dicussion_menu() ) {
+			$other_menus['discussions'] = array (
+				'title'    => __( 'Discussions', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QA,
+			);
+		}
+
+		$all_menus = apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		return $all_menus;
 	}
 
 	/**

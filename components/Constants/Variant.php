@@ -37,9 +37,10 @@ abstract class Variant {
 	public const LINK      = 'link';
 
 	// Badge-only variants.
-	public const PENDING   = 'pending';
-	public const COMPLETED = 'completed';
-	public const CANCELLED = 'cancelled';
-	public const EXCEPTION = 'exception';
-
+	public const INFO          = 'info';
+	public const WARNING       = 'warning';
+	public const SUCCESS       = 'success';
+	public const SUCCESS_SOLID = 'success-solid';
+	public const ERROR         = 'error';
+	public const HIGHLIGHT     = 'highlight';
 }
