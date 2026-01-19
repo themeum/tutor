@@ -613,7 +613,40 @@ class Instructor {
 		return $result->students ?? 0;
 	}
 
-	public function get_instructor_completed_students_count_by_date( $start_date, $end_date, $instructor_id ) {
-		
+	/**
+	 * Get the total number of students who completed courses for a given instructor
+	 * within an optional date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string|null $start_date    Start date (Y-m-d). Optional.
+	 * @param string|null $end_date      End date (Y-m-d). Optional.
+	 * @param int         $instructor_id Instructor ID.
+	 *
+	 * @return int Number of completed students for the instructor in the given date range.
+	 *
+	 * @throws \Exception If a database error occurs while counting comments.
+	 */
+	public static function get_instructor_completed_students_course_count_by_date( $start_date, $end_date, $instructor_id ) {
+
+		global $wpdb;
+
+		$common_args = array(
+			'post_author'    => $instructor_id,
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+		);
+
+		$courses = CourseModel::get_courses_by_args( $common_args );
+		$where   = array(
+			'comment_post_ID' => array( 'IN', $courses->posts ),
+			'comment_type'    => CourseModel::COURSE_COMPLETED,
+		);
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+		}
+
+		return QueryHelper::get_count( $wpdb->comments, $where, array(), 'comment_ID' );
 	}
 }

@@ -110,7 +110,7 @@ $course_completion_data = array(
 	),
 	'completed'   => array(
 		'label' => esc_html__( 'Completed', 'tutor' ),
-		'value' => 12000,
+		'value' => Instructor::get_instructor_completed_students_course_count_by_date( $start_date, $end_date, $user_id ),
 	),
 	'in_progress' => array(
 		'label' => esc_html__( 'In Progress', 'tutor' ),
@@ -126,38 +126,39 @@ $course_completion_data = array(
 	),
 );
 
-$leaderboard_data = array(
-	array(
-		'name'                  => esc_html__( 'John Doe', 'tutor' ),
-		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-		'no_of_courses'         => 10,
-		'completion_percentage' => 50,
-	),
-	array(
-		'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
-		'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
-		'no_of_courses'         => 20,
-		'completion_percentage' => 30,
-	),
-	array(
-		'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
-		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
-		'no_of_courses'         => 30,
-		'completion_percentage' => 70,
-	),
-	array(
-		'name'                  => esc_html__( 'Alice Doe', 'tutor' ),
-		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826752d',
-		'no_of_courses'         => 40,
-		'completion_percentage' => 10,
-	),
-	array(
-		'name'                  => esc_html__( 'Charlie Doe', 'tutor' ),
-		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d823712d',
-		'no_of_courses'         => 50,
-		'completion_percentage' => 40,
-	),
-);
+// @todo Will be added on later.
+// $leaderboard_data = array(
+// array(
+// 'name'                  => esc_html__( 'John Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 'no_of_courses'         => 10,
+// 'completion_percentage' => 50,
+// ),
+// array(
+// 'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
+// 'no_of_courses'         => 20,
+// 'completion_percentage' => 30,
+// ),
+// array(
+// 'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
+// 'no_of_courses'         => 30,
+// 'completion_percentage' => 70,
+// ),
+// array(
+// 'name'                  => esc_html__( 'Alice Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826752d',
+// 'no_of_courses'         => 40,
+// 'completion_percentage' => 10,
+// ),
+// array(
+// 'name'                  => esc_html__( 'Charlie Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d823712d',
+// 'no_of_courses'         => 50,
+// 'completion_percentage' => 40,
+// ),
+// );
 
 $top_performing_courses = array(
 	array(
@@ -475,26 +476,27 @@ $recent_reviews = array(
 		);
 		?>
 
+		<!-- @todo Will be added later. -->
 		<!-- Leaderboard -->
-		<div class="tutor-dashboard-home-card tutor-flex-1">
+		<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
 				<?php esc_html_e( 'Leaderboard', 'tutor' ); ?>
 			</div>
 
 			<div class="tutor-dashboard-home-card-body">
-				<?php foreach ( $leaderboard_data as $item_key => $item ) : ?>
+				<?php // foreach ( $leaderboard_data as $item_key => $item ) : ?>
 					<?php
-					tutor_load_template(
-						'demo-components.dashboard.components.instructor.home.leaderboard-item',
-						array(
-							'item_key' => $item_key,
-							'item'     => $item,
-						)
-					);
+					// tutor_load_template(
+					// 'demo-components.dashboard.components.instructor.home.leaderboard-item',
+					// array(
+					// 'item_key' => $item_key,
+					// 'item'     => $item,
+					// )
+					// );
 					?>
-				<?php endforeach; ?>
+				<?php // endforeach; ?>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 	<!-- Top Performing Courses -->
