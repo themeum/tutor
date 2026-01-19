@@ -56,13 +56,13 @@ const qnaPage = () => {
 
       // Q&A delete mutation.
       this.deleteQnaMutation = this.query.useMutation(this.deleteQnA, {
-        onSuccess: (result, variables) => {
-          if (variables?.context === 'question') {
+        onSuccess: (result, payload) => {
+          if (payload?.context === 'question') {
             window.TutorCore.toast.success(__('Question deleted successfully', 'tutor'));
             const url = new URL(window.location.href);
             url.searchParams.delete('question_id');
             window.location.href = url.toString();
-          } else if (variables?.context === 'reply') {
+          } else if (payload?.context === 'reply') {
             window.TutorCore.toast.success(__('Reply deleted successfully', 'tutor'));
             window.location.reload();
           } else {
