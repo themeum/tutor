@@ -101,8 +101,9 @@ $active_menu = Input::get( 'subpage', '' );
 							?>
 						</div>
 					</div>
-					<?
+					<?php
 				}
+				wp_reset_postdata();
 			}
 			?>
 		</div>
