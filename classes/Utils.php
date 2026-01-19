@@ -10919,14 +10919,13 @@ class Utils {
 				'label'     => esc_html__( 'Top Performing Courses', 'tutor' ),
 				'is_active' => true,
 				'order'     => 3,
+			),			
+			array(
+				'id'        => 'upcoming_tasks_and_activity',
+				'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
+				'is_active' => true,
+				'order'     => 4,
 			),
-			// @todo Will be added in the next version.
-			// array(
-			// 'id'        => 'upcoming_tasks_and_activity',
-			// 'label'     => esc_html__( 'Upcoming Tasks and Recent Activity', 'tutor' ),
-			// 'is_active' => true,
-			// 'order'     => 4,
-			// ),
 			array(
 				'id'        => 'recent_reviews',
 				'label'     => esc_html__( 'Recent Student Reviews', 'tutor' ),

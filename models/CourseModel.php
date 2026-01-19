@@ -1399,7 +1399,7 @@ class CourseModel {
 		$filtered = array_filter(
 			$post_ids,
 			function ( int $post_id ) use ( $start_date, $end_date ): bool {
-				$old_date = get_post_meta( $post_id, '_wp_old_date', true ); // first value
+				$old_date = get_post_meta( $post_id, '_wp_old_date', true ); // first value.
 
 				if ( empty( $old_date ) ) {
 					return true;

@@ -612,4 +612,8 @@ class Instructor {
 
 		return $result->students ?? 0;
 	}
+
+	public function get_instructor_completed_students_count_by_date( $start_date, $end_date, $instructor_id ) {
+		
+	}
 }
