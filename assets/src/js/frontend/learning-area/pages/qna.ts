@@ -71,7 +71,6 @@ const qnaPage = () => {
     },
 
     deleteQnA(payload: { question_id: number }) {
-      console.log('deleteQnA', payload);
       return wpAjaxInstance.post(endpoints.DELETE_DASHBOARD_QNA, payload);
     },
   };
