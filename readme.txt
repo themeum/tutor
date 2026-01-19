@@ -319,9 +319,6 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 4.0.0-dev - N/A
-
-Coming soon...
 = 3.9.5 - Jan 08, 2025
 
 New: Certificate download button added for Admins and Instructors
