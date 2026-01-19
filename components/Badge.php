@@ -13,8 +13,6 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Constants\Variant;
-
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -24,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * Badge::make()
  *     ->label( 'Primary' )
- *     ->variant( Variant::PRIMARY )
+ *     ->variant( Badge::PRIMARY )
  *     ->icon( '<svg>...</svg>' )
  *     ->render();
  *
@@ -37,6 +35,19 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.0.0
  */
 class Badge extends BaseComponent {
+
+	/**
+	 * Variant constants.
+	 *
+	 * @since 4.0.0
+	 */
+	public const INFO          = 'info';
+	public const PRIMARY       = 'primary';
+	public const WARNING       = 'warning';
+	public const SUCCESS       = 'success';
+	public const SUCCESS_SOLID = 'success-solid';
+	public const ERROR         = 'error';
+	public const HIGHLIGHT     = 'highlight';
 
 	/**
 	 * Badge label text.
@@ -194,13 +205,15 @@ class Badge extends BaseComponent {
 		// Merge with any custom class attribute.
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		// Build icon HTML if exists.
 		$icon_html = '';
 		if ( ! empty( $this->icon ) ) {
 			if ( false !== strpos( $this->icon, '<svg' ) ) {
 				$icon_html = $this->icon;
+			} elseif ( filter_var( $this->icon, FILTER_VALIDATE_URL ) !== false ) {
+				$icon_html = sprintf( '<img src="%s" style="width:%spx;height:%spx;"/>', $this->icon, $this->icon_width, $this->icon_height );
 			} else {
 				ob_start();
 				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );

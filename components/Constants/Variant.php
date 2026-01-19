@@ -35,12 +35,4 @@ abstract class Variant {
 	public const OUTLINE   = 'outline';
 	public const GHOST     = 'ghost';
 	public const LINK      = 'link';
-
-	// Badge-only variants.
-	public const INFO          = 'info';
-	public const WARNING       = 'warning';
-	public const SUCCESS       = 'success';
-	public const SUCCESS_SOLID = 'success-solid';
-	public const ERROR         = 'error';
-	public const HIGHLIGHT     = 'highlight';
 }
