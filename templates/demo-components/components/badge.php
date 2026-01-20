@@ -35,6 +35,10 @@ use TUTOR\Icon;
 			Highlight
 			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 		</span>
+		<span class="tutor-badge tutor-badge-disabled">
+			Disabled
+			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
+		</span>
 	</div>
 
 	<div class="tutor-rounded-lg tutor-flex tutor-gap-4">
@@ -59,6 +63,10 @@ use TUTOR\Icon;
 		</span>
 		<span class="tutor-badge tutor-badge-rounded tutor-badge-highlight">
 			Rounded Highlight
+			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
+		</span>
+		<span class="tutor-badge tutor-badge-rounded tutor-badge-disabled">
+			Rounded Disabled
 			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 		</span>
 	</div>
