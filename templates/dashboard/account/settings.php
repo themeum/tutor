@@ -21,7 +21,6 @@ $settings_tab_data = array(
 		'icon'     => Icon::USER_CIRCLE,
 		'text'     => __( 'Name, email, phone number, profiles', 'tutor' ),
 		'template' => 'dashboard.account.settings.account',
-		'is_pro'   => false,
 		'role'     => false,
 	),
 	'security'        => array(
@@ -30,7 +29,6 @@ $settings_tab_data = array(
 		'icon'     => Icon::SECURITY,
 		'text'     => __( 'Password, 2FA', 'tutor' ),
 		'template' => 'dashboard.account.settings.security',
-		'is_pro'   => false,
 		'role'     => false,
 	),
 	'social-accounts' => array(
@@ -39,7 +37,6 @@ $settings_tab_data = array(
 		'icon'     => Icon::GLOBE,
 		'text'     => __( 'Linked social media profiles', 'tutor' ),
 		'template' => 'dashboard.account.settings.social-accounts',
-		'is_pro'   => false,
 		'role'     => false,
 	),
 	'withdraw'        => array(
@@ -48,7 +45,6 @@ $settings_tab_data = array(
 		'icon'     => Icon::WITHDRAW,
 		'text'     => __( 'Withdrawal and refund', 'tutor' ),
 		'template' => 'dashboard.account.settings.withdraw',
-		'is_pro'   => false,
 		'role'     => User::INSTRUCTOR,
 	),
 	'preferences'     => array(
@@ -57,7 +53,6 @@ $settings_tab_data = array(
 		'icon'     => Icon::PREFERENCE,
 		'text'     => __( 'Sound effects, animations, theme', 'tutor' ),
 		'template' => 'dashboard.account.settings.preferences',
-		'is_pro'   => false,
 		'role'     => false,
 	),
 );
@@ -140,7 +135,7 @@ $settings_tab_data = array_values(
 								tutor_load_template(
 									$settings_tab['template'],
 									array( 'form_id' => $form_id ),
-									$settings_tab['is_pro']
+									isset( $settings_tab['is_pro'] ) && $settings_tab['is_pro'] ? true : false
 								);
 								?>
 							</div>

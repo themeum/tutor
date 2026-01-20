@@ -97,7 +97,6 @@ class BillingController extends BaseController {
 			'icon'     => Icon::BILLING,
 			'text'     => __( 'Your payment address', 'tutor' ),
 			'template' => 'ecommerce.billing',
-			'is_pro'   => false,
 			'role'     => false,
 		);
 
