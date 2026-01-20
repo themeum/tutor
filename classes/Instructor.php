@@ -617,8 +617,8 @@ class Instructor {
 	 * Get course completion distribution data for a specific instructor.
 	 *
 	 * @since 4.0.0
-	 *
-	 * @param int $instructor_id Instructor user ID.
+	 * 
+	 * @param array $instructor_course_ids    Optional list of course IDs.
 	 *
 	 * @return array {
 	 *     Enrollment distribution counts.
@@ -630,7 +630,7 @@ class Instructor {
 	 *     @type int $cancelled  Number of cancelled enrollments.
 	 * }
 	 */
-	public static function get_course_completion_distribution_data_by_instructor( $instructor_id ) {
+	public static function get_course_completion_distribution_data_by_instructor( $instructor_course_ids = array() ) {
 
 		global $wpdb;
 
@@ -643,18 +643,9 @@ class Instructor {
 		);
 
 		$cancel_statuses = array( 'cancel', 'canceled', 'cancelled' );
-
 		$post_statuses = array_merge( $cancel_statuses, array( 'completed' ) );
 
-		$instructor_course_ids = CourseModel::get_courses_by_args(
-			array(
-				'post_author'    => $instructor_id,
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			)
-		)->posts;
-
-		if ( empty( $instructor_course_ids ) ) {
+		if (empty($instructor_course_ids)){
 			return $counts;
 		}
 

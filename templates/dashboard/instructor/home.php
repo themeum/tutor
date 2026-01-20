@@ -15,6 +15,7 @@ use Tutor\Models\CourseModel;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
+use Tutor\Helpers\QueryHelper;
 
 $sortable_sections          = tutor_utils()->get_instructor_home_sortable_section();
 $sortable_sections_defaults = array_reduce(
@@ -34,6 +35,14 @@ $sortable_sections_ids = array_reduce(
 	},
 	array()
 );
+
+$instructor_course_ids = CourseModel::get_courses_by_args(
+	array(
+		'post_author'    => $instructor_id,
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+	)
+)->posts;
 
 $template_path = tutor()->path . 'templates/dashboard/instructor/home/';
 $user           = wp_get_current_user();
@@ -105,7 +114,7 @@ $overview_chart_data = array(
 );
 
 // Course Completion Distribution.
-$course_completion_distribution = Instructor::get_course_completion_distribution_data_by_instructor( $user->ID );
+$course_completion_distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
 
 $course_completion_data = array(
 	'enrolled'    => array(
@@ -327,44 +336,25 @@ $top_performing_courses = array_map(
 // );
 
 // Recent Reviews.
-$recent_reviews = Analytics::get_reviews();
-$recent_reviews = array(
-	array(
+$review_where = array('comment_post_ID' => array( 'IN', $instructor_course_ids));
+if (!empty($start_date) && !empty($end_date)) {
+	$review_where['comment_date'] = array('BETWEEN', array( $start_date, $end_date ));
+}
+$review_args = array('where' => QueryHelper::prepare_where_clause($review_where));
+$reviews = Analytics::get_reviews(3,$review_args);
+$recent_reviews = array_map(function($review){
+	return array(
 		'user'          => array(
-			'name'   => 'Sarah Johnson',
-			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
+			'name'   => $review->display_name,
+			'avatar' => get_avatar_url($review->user_id),
 		),
-		'course_name'   => 'Complete Web Development Bootcamp',
-		'date'          => '2022-01-01 08:00 AM',
-		'rating'        => 5,
-		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
-		'helpful_count' => 12,
-	),
-	array(
-		'user'          => array(
-			'name'   => 'Sarah Johnson',
-			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
-		),
-		'course_name'   => 'Complete Web Development Bootcamp',
-		'date'          => '2022-01-01 08:00 AM',
-		'rating'        => 5,
-		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
-		'helpful_count' => 12,
-	),
-	array(
-		'user'          => array(
-			'name'   => 'Sarah Johnson',
-			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
-		),
-		'course_name'   => 'Complete Web Development Bootcamp',
-		'date'          => '2022-01-01 08:00 AM',
-		'rating'        => 5,
-		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
-		'helpful_count' => 12,
-	),
-);
-
-	?>
+		'course_name'   => get_the_title($review->comment_post_ID),
+		'date'          => $review->comment_date,
+		'rating'        => $review->rating,
+		'review_text'   => $review->comment_content
+	);
+}, $reviews);
+?>
 
 <form x-data='tutorForm({
 		id: "sortable-sections",
@@ -569,27 +559,29 @@ $recent_reviews = array(
 		</div>
 
 		<!-- Recent Activity -->
-		<div class="tutor-dashboard-home-card tutor-flex-1">
+		 <!-- @todo Will be added later. -->
+		<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
-				<?php esc_html_e( 'Recent Activity', 'tutor' ); ?>
+				<?php //esc_html_e( 'Recent Activity', 'tutor' ); ?>
 			</div>
 
 			<div class="tutor-dashboard-home-card-body">
-				<?php foreach ( $recent_activity as $item ) : ?>
+				<?php //foreach ( $recent_activity as $item ) : ?>
 					<?php
-					tutor_load_template(
-						'demo-components.dashboard.components.instructor.home.recent-activity-item',
-						array(
-							'item' => $item,
-						)
-					);
+					// tutor_load_template(
+					// 	'demo-components.dashboard.components.instructor.home.recent-activity-item',
+					// 	array(
+					// 		'item' => $item,
+					// 	)
+					// );
 					?>
-				<?php endforeach; ?>
+				<?php //endforeach; ?>
 			</div>
-		</div>
+		</div> -->
 	</div>
 
 	<!-- Recent Student Reviews -->
+	<?php if ( !empty($recent_reviews)): ?>
 	<div 
 		data-section-id="recent_reviews" 
 		class="tutor-dashboard-home-card"
@@ -602,14 +594,14 @@ $recent_reviews = array(
 		<div class="tutor-dashboard-home-card-body tutor-gap-6">
 			<?php foreach ( $recent_reviews as $review ) : ?>
 				<?php
-				tutor_load_template(
-					'demo-components.dashboard.components.instructor.home.recent-student-review-item',
-					array(
-						'review' => $review,
-					)
+				tutor_load_template_from_custom_path(
+					$template_path . 'recent-student-review-item.php',
+					$review,				
+					false
 				);
 				?>
 			<?php endforeach; ?>
 		</div>
 	</div>
+	<?php endif; ?>
 </form>
