@@ -97,7 +97,7 @@ class PaypalConfig extends BaseConfig implements ConfigContract {
 	}
 
 	public function getClientSecret(): string {
-		return $this->secret_id;
+		return tutor_utils()->remove_white_space( $this->secret_id );
 	}
 
 	public function getName(): string {
@@ -105,11 +105,11 @@ class PaypalConfig extends BaseConfig implements ConfigContract {
 	}
 
 	public function getClientID(): string {
-		return $this->client_id;
+		return tutor_utils()->remove_white_space( $this->client_id );
 	}
 
 	public function getMerchantEmail(): string {
-		return $this->merchant_email;
+		return tutor_utils()->remove_white_space( $this->merchant_email );
 	}
 
 	public function getApiURL() {
@@ -135,7 +135,7 @@ class PaypalConfig extends BaseConfig implements ConfigContract {
 			'api_url'             => $this->getApiURL(),
 			'client_secret'       => $this->getClientSecret(),
 			'save_payment_method' => true,
-			'webhook_id'          => $this->webhook_id
+			'webhook_id'          => $this->webhook_id,
 		);
 
 		$this->updateConfig( $config );

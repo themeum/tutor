@@ -10703,4 +10703,17 @@ class Utils {
 
 		return null;
 	}
+
+	/**
+	 * Remove leading and trailing whitespace from a string in a Unicode-safe way.
+	 *
+	 * @since 3.9.6
+	 *
+	 * @param string $string Input string to be cleaned.
+	 *
+	 * @return string The string without leading or trailing whitespace.
+	 */
+	public function remove_white_space( $string ): string {
+		return preg_replace( '/^\s+|\s+$/u', '', $string ); // remove whitespace including NBSP. 
+	}
 }
