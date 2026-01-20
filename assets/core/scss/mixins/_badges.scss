@@ -3,7 +3,7 @@
 @use 'layout' as *;
 
 @mixin tutor-badge-base() {
-  @include tutor-typography('tiny', 'medium');
+  @include tutor-typography('tiny', 'medium', 'secondary');
   width: max-content;
   border-radius: $tutor-radius-sm;
   padding-inline: $tutor-spacing-4;
@@ -11,9 +11,9 @@
   align-items: center;
   gap: $tutor-spacing-3;
   background-color: $tutor-actions-gray-secondary;
-  color: $tutor-text-subdued;
 
-  img, svg {
+  img,
+  svg {
     @include tutor-flex-center;
     width: 12px;
     height: 12px;
@@ -22,7 +22,7 @@
   }
 
   svg {
-    color: $tutor-icon-secondary;
+    color: $tutor-icon-idle;
   }
 
   &.tutor-badge-rounded {
@@ -79,6 +79,13 @@
 
     svg {
       color: $tutor-icon-exception2;
+    }
+  } @else if $variant ==disabled {
+    background-color: $tutor-actions-gray-secondary;
+    color: $tutor-text-subdued;
+
+    svg {
+      color: $tutor-icon-secondary;
     }
   }
 }

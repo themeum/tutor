@@ -3,6 +3,12 @@
 @use '@Core/scss/tokens' as *;
 @use '@Core/scss/mixins' as *;
 
+body:has(#wpadminbar) {
+  .tutor-profile-settings-tab {
+    top: calc(57px + 32px + 32px);
+  }
+}
+
 .tutor-profile-settings-section {
 	background: $tutor-surface-base;
 	display: flex;
@@ -12,22 +18,8 @@
 		display: block;
 	}
 
-	@media (max-width: 768px) {
-		.tutor-tabs-vertical .tutor-tabs-nav {
-			flex-direction: column;
-		}
-	}
-	@include tutor-breakpoint-down(sm) {
+	@include tutor-breakpoint-down(md) {
 		.tutor-dashboard-container {
-			.tutor-tabs-vertical .tutor-tabs-nav {
-				flex-direction: column;
-				gap: $tutor-spacing-6;
-				background: transparent;
-				border: 0px;
-				padding: 0px;
-				overflow: unset;
-			}
-	
 			.tutor-tabs-tab {
 				gap: $tutor-spacing-6;
 				&:hover:not(:disabled):not(.tutor-tabs-tab-active) {
@@ -37,6 +29,15 @@
 	
 			.tutor-profile-settings-tab { 
 				background: $tutor-surface-base;
+				height: 100dvh;
+				overflow-y: visible;
+				flex-direction: column;
+				width: 100%;
+				flex-direction: column;
+				gap: $tutor-spacing-6;
+				background: transparent;
+				border: 0px;
+				overflow: unset;
 			}
 	
 			.tutor-profile-settings-tab button {
@@ -61,8 +62,11 @@
 			background: $tutor-surface-base;
 			position: absolute;
 			top: 60px;
-			height: 100vh;
+			height: 100dvh;
 			display: none;
+			overflow-y: scroll;
+			padding: $tutor-spacing-6;
+
 			&.tutor-profile-tab-activated {
 				left: 0px;
 				display: block;
@@ -76,6 +80,9 @@
 	padding: $tutor-spacing-5;
 	border-radius: $tutor-radius-2xl;
 	background-color: $tutor-surface-l1;
+	height: min-content;
+	position: sticky;
+	top: calc(57px + 32px);
 	button {
 		font-weight: $tutor-font-weight-regular;
 		height: unset;

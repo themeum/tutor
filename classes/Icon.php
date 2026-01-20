@@ -160,6 +160,7 @@ final class Icon {
 	const EXPORT                     = 'export';
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
+	const EYE_OFF                    = 'eye-off';
 	const FACEBOOK                   = 'facebook';
 	const FEATHER                    = 'feather';
 	const FILE                       = 'file';
@@ -203,6 +204,7 @@ final class Icon {
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
 	const JSON_FILE                  = 'json-file';
+	const KEY                        = 'key';
 	const LANDSCAPE                  = 'landscape';
 	const LANDSCAPE_FILLED           = 'landscape-filled';
 	const LEAGUE                     = 'league';
@@ -384,6 +386,7 @@ final class Icon {
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
 	const WISHLIST                   = 'wishlist';
+	const WITHDRAW                   = 'withdraw';
 	const X                          = 'x';
 	const XLS                        = 'xls';
 	const XML                        = 'xml';
