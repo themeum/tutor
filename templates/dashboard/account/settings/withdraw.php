@@ -17,11 +17,13 @@ use Tutor\Components\Constants\InputType;
 
 $get_field_key = fn( $method_id, $field_name ) => $method_id . '_' . $field_name;
 
-$map_field_type = fn( $field_type ) => match ( $field_type ) {
-	'email' => InputType::EMAIL,
-	'number' => InputType::NUMBER,
-	'textarea' => InputType::TEXTAREA,
-	default => InputType::TEXT,
+$map_field_type = function ( $field_type ) {
+	$types = array(
+		'email'    => InputType::EMAIL,
+		'number'   => InputType::NUMBER,
+		'textarea' => InputType::TEXTAREA,
+	);
+	return isset( $types[ $field_type ] ) ? $types[ $field_type ] : InputType::TEXT;
 };
 
 $get_saved_method_values = function ( $method_id, $user_id ) {
