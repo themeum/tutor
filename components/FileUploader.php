@@ -582,7 +582,7 @@ class FileUploader extends BaseComponent {
 					@change="handleFileSelect($event)"
 					name="<?php echo esc_attr( $this->name ); ?>"
 					id="<?php echo esc_attr( ! empty( $this->id ) ? $this->id : $this->name ); ?>"
-					<?php echo $this->render_attributes(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+					<?php echo $this->get_attributes_string(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				>
 				<div class="tutor-file-uploader-icon">
 					<?php tutor_utils()->render_svg_icon( $icon, 24, 24 ); ?>
