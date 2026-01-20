@@ -15,8 +15,6 @@ use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 use Tutor\Ecommerce\BillingController;
 
-$form_id = $data['form_id'] ?? 'tutor-billing-address-form';
-
 $billing_controller = new BillingController( false );
 $billing_info       = $billing_controller->get_billing_info();
 
