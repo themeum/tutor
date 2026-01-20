@@ -13,14 +13,14 @@
 
 namespace Tutor\Components;
 
+defined( 'ABSPATH' ) || exit;
+
 use ReflectionClass;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\Button;
 use TUTOR\Icon;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * InputField Component Class.
@@ -1728,9 +1728,13 @@ class InputField extends BaseComponent {
 		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
 
 		// Field wrapper classes.
-		$field_classes = 'tutor-input-field';
+		$field_classes = array( 'tutor-input-field' );
 		if ( ! empty( $this->error ) ) {
-			$field_classes .= ' tutor-input-field-error';
+			$field_classes[] = ' tutor-input-field-error';
+		}
+
+		if ( isset( $this->attributes['class'] ) ) {
+			$field_classes[] = $this->attributes['class'];
 		}
 
 		// Render label for text inputs.
@@ -1818,7 +1822,7 @@ class InputField extends BaseComponent {
 
 		$this->component_string = sprintf(
 			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }" %s>%s%s%s%s%s</div>',
-			esc_attr( $field_classes ),
+			esc_attr( implode( ' ', $field_classes ) ),
 			esc_attr( $this->name ),
 			$root_attrs,
 			$label_html,
