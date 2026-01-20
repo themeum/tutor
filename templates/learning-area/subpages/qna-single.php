@@ -60,9 +60,17 @@ $back_url        = remove_query_arg( 'question_id' );
 			</div>
 			<?php if ( $current_user_id == $question->user_id || current_user_can( 'manage_tutor' ) ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-ml-auto">
-					<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
-						<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL ); ?>
-					</button>
+
+					<?php
+					Button::make()
+						->variant( Variant::GHOST )
+						->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
+						->size( Size::SMALL )
+						->attr( 'type', 'button' )
+						->attr( 'x-ref', 'trigger' )
+						->attr( '@click', 'toggle()' )
+						->render();
+					?>
 
 					<div 
 						x-ref="content"

@@ -1,6 +1,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
 interface CreateQnaPayload {
@@ -40,7 +41,7 @@ const qnaPage = () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save question', 'tutor'));
+          window.TutorCore.toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -50,11 +51,10 @@ const qnaPage = () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+          window.TutorCore.toast.error(convertToErrorMessage(error));
         },
       });
 
-      // Q&A delete mutation.
       this.deleteQnaMutation = this.query.useMutation(this.deleteQnA, {
         onSuccess: (result, payload) => {
           if (payload?.context === 'question') {
@@ -70,7 +70,7 @@ const qnaPage = () => {
           }
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete Q&A', 'tutor'));
+          window.TutorCore.toast.error(convertToErrorMessage(error));
         },
       });
     },
