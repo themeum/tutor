@@ -37,6 +37,7 @@ defined( 'ABSPATH' ) || exit;
 	use Tutor\Components\Progress;
 	use Tutor\Components\Tabs;
 	use Tutor\Components\Table;
+	use Tutor\Components\Tooltip;
 	use TUTOR\Icon;
 
 	?>
@@ -1177,7 +1178,71 @@ defined( 'ABSPATH' ) || exit;
 					</button>
 				</div>
 			</form>
+	</div>
+	<div class="tooltip-wrapper tutor-mb-12">
+		<h2>Tooltip</h2>
+		<pre><code>&lt;?php
+Tooltip::make()
+	->content( 'This is a small tooltip' )
+	->placement( Tooltip::PLACEMENT_TOP )
+	->trigger_element( '&lt;button class="tutor-btn tutor-btn-primary"&gt;Small Tooltip&lt;/button&gt;' )
+	->render();
+
+Tooltip::make()
+	->content( 'This is a large tooltip with centered arrow' )
+	->placement( Tooltip::PLACEMENT_BOTTOM )
+	->size( Size::LARGE )
+	->arrow( Tooltip::ARROW_CENTER )
+	->trigger_element( '&lt;button class="tutor-btn tutor-btn-secondary"&gt;Large Tooltip&lt;/button&gt;' )
+	->render();
+?&gt;</code></pre>
+		<div class="tutor-flex tutor-gap-4 tutor-flex-wrap tutor-mt-4">
+			<?php
+			Tooltip::make()
+				->content( 'Top Placement' )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Top</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Bottom Placement' )
+				->placement( Tooltip::PLACEMENT_BOTTOM )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Bottom</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Start (Left) Placement' )
+				->placement( Tooltip::PLACEMENT_START )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Start</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'End (Right) Placement' )
+				->placement( Tooltip::PLACEMENT_END )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">End</button>' )
+				->render();
+			?>
 		</div>
+
+		<div class="tutor-flex tutor-gap-4 tutor-flex-wrap tutor-mt-6">
+			<?php
+			Tooltip::make()
+				->content( 'Large tooltip with centered arrow alignment' )
+				->size( Size::LARGE )
+				->arrow( Tooltip::ARROW_CENTER )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-primary">Large Centered</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Click to toggle tooltip' )
+				->trigger( Tooltip::TRIGGER_CLICK )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-secondary">Click Me</button>' )
+				->render();
+			?>
+		</div>
+	</div>
 </div>
 
 
