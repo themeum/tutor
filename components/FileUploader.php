@@ -39,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example Usage (WP Media Image):
  * FileUploader::make()
- *     ->variant( Variant::IMAGE_UPLOADER )
+ *     ->variant( FileUploader::IMAGE_UPLOADER )
  *     ->use_wp_media( true )
  *     ->wp_media_library_type( 'image' )
  *     ->name( 'profile_photo' )
@@ -55,7 +55,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Example Usage (Native Image):
  * FileUploader::make()
- *     ->variant( Variant::IMAGE_UPLOADER )
+ *     ->variant( FileUploader::IMAGE_UPLOADER )
  *     ->name( 'cover_photo' )
  *     ->render();
  *
@@ -71,6 +71,15 @@ defined( 'ABSPATH' ) || exit;
  * @since 4.0.0
  */
 class FileUploader extends BaseComponent {
+
+	/**
+	 * Variant constants.
+	 *
+	 * @since 4.0.0
+	 */
+	public const FILE_UPLOADER  = 'file-uploader';
+	public const IMAGE_UPLOADER = 'image-uploader';
+
 
 	/**
 	 * File uploader accept attribute.
@@ -133,7 +142,7 @@ class FileUploader extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $variant = '';
+	protected $variant = self::FILE_UPLOADER;
 
 	/**
 	 * Whether to use WordPress media library instead of native file input.
@@ -317,7 +326,7 @@ class FileUploader extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $variant Component variant.
+	 * @param string $variant Component variant (file-uploader|image-uploader).
 	 *
 	 * @return $this
 	 */
@@ -479,7 +488,7 @@ class FileUploader extends BaseComponent {
 		$button_text         = ! empty( $this->uploader_button_text ) ? $this->uploader_button_text : __( 'Select Files', 'tutor' );
 		$on_file_select      = $this->attributes['onFileSelect'] ?? 'null';
 		$on_error            = $this->attributes['onError'] ?? 'null';
-		$variant             = ! empty( $this->variant ) ? $this->variant : Variant::FILE_UPLOADER;
+		$variant             = $this->variant;
 		$uploader_attributes = $this->attributes;
 
 		// Remove Alpine specific attributes from HTML attributes.
@@ -570,7 +579,7 @@ class FileUploader extends BaseComponent {
 				@dragover.prevent="handleDragOver($event)"
 				@dragleave.prevent="handleDragLeave($event)"
 				@drop.prevent="handleDrop($event)"
-				<?php echo Variant::IMAGE_UPLOADER === $variant ? 'data-image-uploader' : ''; ?>
+				<?php echo self::IMAGE_UPLOADER === $variant ? 'data-image-uploader' : ''; ?>
 			>
 				<input 
 					type="file" 

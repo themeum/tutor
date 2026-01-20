@@ -35,7 +35,4 @@ abstract class Variant {
 	public const OUTLINE   = 'outline';
 	public const GHOST     = 'ghost';
 	public const LINK      = 'link';
-	// File Uploader variants.
-	public const FILE_UPLOADER  = 'file-uploader';
-	public const IMAGE_UPLOADER = 'image-uploader';
 }
