@@ -147,13 +147,13 @@ class AttachmentCard extends BaseComponent {
 	}
 
 	/**
-	 * Render custom attributes
+	 * Get custom attributes string
 	 *
 	 * @param array $attributes attributes.
 	 *
 	 * @return string
 	 */
-	private function render_custom_attributes( array $attributes ): string {
+	private function get_custom_attributes_string( array $attributes ): string {
 		$compiled = array();
 
 		foreach ( $attributes as $key => $value ) {
@@ -172,9 +172,9 @@ class AttachmentCard extends BaseComponent {
 		$file_name       = $this->file_name;
 		$file_size       = $this->file_size;
 		$is_downloadable = $this->is_downloadable;
-		$title_attr      = $this->render_custom_attributes( $this->title_attr );
-		$meta_attr       = $this->render_custom_attributes( $this->meta_attr );
-		$action_attr     = $this->render_custom_attributes( $this->action_attr );
+		$title_attr      = $this->get_custom_attributes_string( $this->title_attr );
+		$meta_attr       = $this->get_custom_attributes_string( $this->meta_attr );
+		$action_attr     = $this->get_custom_attributes_string( $this->action_attr );
 
 		if ( '' === $file_name && '' === $title_attr ) {
 			return '';
@@ -193,18 +193,18 @@ class AttachmentCard extends BaseComponent {
 			</div>
 
 			<div class="tutor-attachment-card-body">
-				<div class="tutor-attachment-card-title" <?php echo $title_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+				<div class="tutor-attachment-card-title" <?php echo $title_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 					<?php echo esc_html( $file_name ); ?>
 				</div>
 
 				<?php if ( $file_size || $meta_attr ) : ?>
-					<span class="tutor-attachment-card-meta" <?php echo $meta_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+					<span class="tutor-attachment-card-meta" <?php echo $meta_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 						<?php echo esc_html( $file_size ); ?>
 					</span>
 				<?php endif; ?>
 			</div>
 
-			<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" <?php echo $action_attr; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
+			<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon" <?php echo $action_attr; // phpcs:ignore --already-escaped WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 				<?php tutor_utils()->render_svg_icon( $action_icon, 16, 16 ); ?>
 			</button>
 		</div>
