@@ -91,10 +91,10 @@ class LessonPlayer {
 
     if (completedPercentage >= requiredPercentage) {
       btn.disabled = false;
-      if (btn.nextElementSibling?.classList.contains('tooltip-txt')) {
+      if (btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
         btn.nextElementSibling.remove();
       }
-      if (btn.parentElement?.classList.contains('tooltip-wrap')) {
+      if (btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
         btn.parentElement.replaceWith(btn);
       }
     }
@@ -111,21 +111,28 @@ class LessonPlayer {
       const btn = document.querySelector('button[name="complete_lesson_btn"]') as HTMLButtonElement;
       if (btn && !btn.disabled) {
         btn.disabled = true;
-        if (!btn.parentElement?.classList.contains('tooltip-wrap')) {
+        if (!btn.parentElement?.classList.contains('tutor-tooltip-wrap')) {
           const wrapper = document.createElement('div');
-          wrapper.className = 'tooltip-wrap';
+          wrapper.className = 'tutor-tooltip-wrap';
+          wrapper.setAttribute('x-data', 'tutorTooltip({ placement: "top" })');
           btn.parentNode?.insertBefore(wrapper, btn);
           wrapper.appendChild(btn);
+          btn.setAttribute('x-ref', 'trigger');
         }
-        if (!btn.nextElementSibling?.classList.contains('tooltip-txt')) {
+
+        if (!btn.nextElementSibling?.classList.contains('tutor-tooltip')) {
           btn.insertAdjacentHTML(
             'afterend',
-            `<span class="tooltip-txt tooltip-bottom">${sprintf(
+            `<div x-ref="content" class="tutor-tooltip" x-show="open" x-cloak x-transition>${sprintf(
               /* translators: %s is the required watch percentage (e.g., 80) */
               __('Watch at least %s%% to complete the lesson.', 'tutor'),
               required_percentage,
-            )}</span>`,
+            )}</div>`,
           );
+
+          if (window.Alpine) {
+            window.Alpine.initTree(btn.parentElement as HTMLElement);
+          }
         }
       }
     }

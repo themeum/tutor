@@ -745,27 +745,47 @@ class Lesson extends Tutor_Base {
 	public static function get_nav_items( $lesson_id ) {
 		$nav_items = array();
 
-		if ( self::has_lesson_content( $lesson_id ) ) {
-			$nav_items['overview'] = array(
-				'label' => __( 'Overview', 'tutor' ),
-				'value' => 'overview',
-				'icon'  => 'document-text',
-			);
+		if ( tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+			if ( self::has_lesson_content( $lesson_id ) ) {
+				$nav_items['overview'] = array(
+					'label' => __( 'Overview', 'tutor' ),
+					'value' => 'overview',
+					'icon'  => 'document-text',
+				);
+			}
+
+			if ( self::has_lesson_attachment( $lesson_id ) ) {
+				$nav_items['files'] = array(
+					'label' => __( 'Exercise Files', 'tutor' ),
+					'value' => 'files',
+					'icon'  => 'paperclip',
+				);
+			}
+
+			if ( self::is_comment_enabled() ) {
+				$nav_items['comments'] = array(
+					'label' => __( 'Comments', 'tutor' ),
+					'value' => 'comments',
+					'icon'  => 'comment',
+				);
+			}
 		}
 
-		if ( self::has_lesson_attachment( $lesson_id ) ) {
-			$nav_items['files'] = array(
-				'label' => __( 'Exercise Files', 'tutor' ),
-				'value' => 'files',
-				'icon'  => 'paperclip',
+		if ( self::has_lesson_content( $lesson_id ) ) {
+			$nav_items['overview'] = array(
+				'id'            => 'overview',
+				'label'         => __( 'Overview', 'tutor' ),
+				'icon'          => Icon::COURSES,
+				'template_path' => 'learning-area.lesson.overview',
 			);
 		}
 
 		if ( self::is_comment_enabled() ) {
 			$nav_items['comments'] = array(
-				'label' => __( 'Comments', 'tutor' ),
-				'value' => 'comments',
-				'icon'  => 'comment',
+				'id'            => 'comments',
+				'label'         => __( 'Comments', 'tutor' ),
+				'icon'          => Icon::COMMENTS,
+				'template_path' => 'learning-area.lesson.comments',
 			);
 		}
 

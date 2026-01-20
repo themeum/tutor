@@ -1,0 +1,12 @@
+// Learning Area Footer Styles
+
+@use '@Core/scss/mixins' as *;
+@use '@Core/scss/tokens' as *;
+
+.tutor-learning-footer {
+  @include tutor-flex(row, center, space-between);
+  background-color: $tutor-surface-base;
+  padding-block: $tutor-spacing-6;
+  position: sticky;
+  bottom: 0;
+}
