@@ -873,9 +873,8 @@ class Assets {
 			wp_localize_script( 'tutor-core', '_tutorobject', $localize_data );
 
 			if ( $is_dashboard ) {
-				wp_enqueue_media();
 				wp_enqueue_style( 'tutor-dashboard', $dashboard_css_url, array(), $version );
-				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n', 'media-editor' ), $version, true );
+				wp_enqueue_script( 'tutor-dashboard', $dashboard_js_url, array( 'tutor-core', 'wp-i18n' ), $version, true );
 			}
 
 			if ( $is_learning_area ) {

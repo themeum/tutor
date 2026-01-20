@@ -8,12 +8,13 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 
-defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="tutor-account-header">
