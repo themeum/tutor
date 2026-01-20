@@ -160,6 +160,7 @@ final class Icon {
 	const EXPORT                     = 'export';
 	const EYE                        = 'eye';
 	const EYE_LINE                   = 'eye-line';
+	const EYE_OFF                    = 'eye-off';
 	const FACEBOOK                   = 'facebook';
 	const FEES                       = 'fees';
 	const FEATHER                    = 'feather';
@@ -204,6 +205,7 @@ final class Icon {
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
 	const JSON_FILE                  = 'json-file';
+	const KEY                        = 'key';
 	const LANDSCAPE                  = 'landscape';
 	const LANDSCAPE_FILLED           = 'landscape-filled';
 	const LEAGUE                     = 'league';

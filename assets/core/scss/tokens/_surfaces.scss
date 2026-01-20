@@ -10,16 +10,19 @@ $tutor-surface-l1: var(--tutor-surface-l1);
 $tutor-surface-l1-hover: var(--tutor-surface-l1-hover);
 $tutor-surface-l2: var(--tutor-surface-l2);
 $tutor-surface-l2-hover: var(--tutor-surface-l2-hover);
-$tutor-surface-l3: var(--tutor-surface-l3);
-$tutor-surface-l4: var(--tutor-surface-l4);
 $tutor-surface-brand-dark: var(--tutor-surface-brand-dark);
 $tutor-surface-brand-primary: var(--tutor-surface-brand-primary);
 $tutor-surface-brand-secondary: var(--tutor-surface-brand-secondary);
 $tutor-surface-brand-tertiary: var(--tutor-surface-brand-tertiary);
+$tutor-surface-brand-quaternary: var(--tutor-surface-brand-quaternary);
 $tutor-surface-sidebar-l1: var(--tutor-surface-sidebar-l1);
 $tutor-surface-exception2-secondary: var(--tutor-surface-exception2-secondary);
 $tutor-surface-dark: var(--tutor-surface-dark);
 $tutor-surface-exception7: var(--tutor-surface-exception7);
+$tutor-surface-warning: var(--tutor-surface-warning);
+$tutor-surface-warning-hover: var(--tutor-surface-warning-hover);
+$tutor-surface-success: var(--tutor-surface-success);
+$tutor-surface-critical: var(--tutor-surface-critical);
 
 // =============================================================================
 // SURFACE COLOR MAP (for utility generation)
@@ -31,14 +34,17 @@ $tutor-surfaces: (
   l1-hover: $tutor-surface-l1-hover,
   l2: $tutor-surface-l2,
   l2-hover: $tutor-surface-l2-hover,
-  l3: $tutor-surface-l3,
-  l4: $tutor-surface-l4,
   brand-dark: $tutor-surface-brand-dark,
   brand-primary: $tutor-surface-brand-primary,
   brand-secondary: $tutor-surface-brand-secondary,
   brand-tertiary: $tutor-surface-brand-tertiary,
+  brand-quaternary: $tutor-surface-brand-quaternary,
   sidebar-l1: $tutor-surface-sidebar-l1,
   exception2-secondary: $tutor-surface-exception2-secondary,
   dark: $tutor-surface-dark,
-  exception7: $tutor-surface-exception7
+  exception7: $tutor-surface-exception7,
+  warning: $tutor-surface-warning,
+  warning-hover: $tutor-surface-warning-hover,
+  success: $tutor-surface-success,
+  critical: $tutor-surface-critical,
 );

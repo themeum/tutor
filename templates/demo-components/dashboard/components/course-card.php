@@ -28,7 +28,7 @@ $original_price  = isset( $original_price ) ? $original_price : '';
 $permalink       = isset( $permalink ) ? $permalink : '#';
 
 ?>
-<div class="tutor-card tutor-card--rounded-2xl tutor-card--padding-small tutor-course-card">
+<div class="tutor-card tutor-card-rounded-2xl tutor-card-padding-small tutor-course-card">
 	<a href="<?php echo esc_url( $permalink ); ?>" class="tutor-course-card-thumbnail">
 		<div class="tutor-ratio tutor-ratio-16x9">
 			<img 

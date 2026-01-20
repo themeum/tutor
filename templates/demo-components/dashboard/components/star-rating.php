@@ -20,6 +20,12 @@ $rating              = isset( $rating ) ? floatval( $rating ) : 0.00;
 $wrapper_class       = isset( $wrapper_class ) ? $wrapper_class : 'tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2';
 $icon_class          = ! empty( $icon_class ) ? $icon_class : 'tutor-icon-exception4';
 $show_rating_average = isset( $show_rating_average ) ? (bool) $show_rating_average : false;
+$icon_size           = 16;
+
+
+$star_fill = tutor_utils()->get_svg_icon( Icon::STAR_FILL, $icon_size, $icon_size );
+$star_half = tutor_utils()->get_svg_icon( Icon::STAR_HALF, $icon_size, $icon_size );
+$star      = tutor_utils()->get_svg_icon( Icon::STAR_LINE, $icon_size, $icon_size );
 ?>
 <div class="<?php echo esc_attr( $wrapper_class ); ?>" data-rating-value="<?php echo esc_attr( $rating ); ?>">
 	<?php for ( $i = 1; $i <= 5; $i++ ) : ?>

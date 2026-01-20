@@ -8,23 +8,42 @@
  * @since 4.0.0
  */
 
-use TUTOR\Icon;
-
 defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+
 
 ?>
 <div class="tutor-account-header">
 	<div class="tutor-account-container">
 		<div class="tutor-flex tutor-items-center tutor-justify-between">
-			<a href="<?php echo esc_url( $back_url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-				<?php tutor_utils()->render_svg_icon( Icon::LEFT ); ?>
-			</a>
+			<?php
+				Button::make()
+					->label( __( 'Back', 'tutor' ) )
+					->variant( Variant::GHOST )
+					->size( Size::X_SMALL )
+					->tag( 'a' )
+					->icon( Icon::LEFT, 'left', 20, 20 )
+					->icon_only()
+					->attr( 'href', esc_url( $back_url ) )
+					->render();
+			?>
 			<h4 class="tutor-account-header-title">
 				<?php echo esc_html( $page_data['title'] ?? '' ); ?>
 			</h4>
-			<a href="<?php echo esc_url( $close_url ); ?>" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-				<?php tutor_utils()->render_svg_icon( Icon::CROSS ); ?>
-			</a>
+			<?php
+				Button::make()
+					->variant( Variant::GHOST )
+					->size( Size::X_SMALL )
+					->tag( 'a' )
+					->icon( Icon::CROSS, 'left', 20, 20 )
+					->icon_only()
+					->attr( 'href', esc_url( $close_url ) )
+					->render();
+			?>
 		</div>
 	</div>
 </div>

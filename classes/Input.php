@@ -228,6 +228,44 @@ class Input {
 	}
 
 	/**
+	 * Check input has any keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $keys keys.
+	 *
+	 * @return boolean
+	 */
+	public static function has_any( array $keys ) {
+		foreach ( $keys as $key ) {
+			if ( self::has( $key ) ) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Check input has all keys.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $keys keys.
+	 *
+	 * @return boolean
+	 */
+	public static function has_all( array $keys ) {
+		foreach ( $keys as $key ) {
+			if ( ! self::has( $key ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * Sanitize & unslash a request data
 	 *
 	 * @since 2.1.3

@@ -9,6 +9,7 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\AttachmentCard;
 
 $assignment_title = 'React Fundamentals: Building Your First Component';
 
@@ -85,7 +86,12 @@ $attempts_url = add_query_arg(
 		<?php if ( ! empty( $attempt['attachments'] ) ) : ?>
 			<div class="tutor-assignment-attachments-cards tutor-mt-6">
 				<?php foreach ( $attempt['attachments'] as $attachment ) : ?>
-					<?php tutor_load_template( 'core-components.attachment-card', $attachment ); ?>
+					<?php
+					AttachmentCard::make()
+						->file_name( $attachment['file_name'] )
+						->file_size( $attachment['file_size'] )
+						->render();
+					?>
 				<?php endforeach; ?>
 			</div>
 		<?php endif; ?>

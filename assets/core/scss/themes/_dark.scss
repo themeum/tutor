@@ -13,16 +13,19 @@
   --tutor-surface-l1-hover: #{$tutor-gray-800};
   --tutor-surface-l2: #{$tutor-gray-900};
   --tutor-surface-l2-hover: #{$tutor-gray-800};
-  --tutor-surface-l3: #{$tutor-gray-900};
-  --tutor-surface-l4: #{$tutor-gray-800};
   --tutor-surface-brand-dark: #{$tutor-brand-950};
   --tutor-surface-brand-primary: #{$tutor-brand-600};
   --tutor-surface-brand-secondary: #{$tutor-brand-300};
   --tutor-surface-brand-tertiary: #{$tutor-gray-900};
+  --tutor-surface-brand-quaternary: #{$tutor-brand-900};
   --tutor-surface-sidebar-l1: #{$tutor-gray-950};
   --tutor-surface-exception2-secondary: #{$tutor-exception-2-tertiary};
   --tutor-surface-dark: #{$tutor-gray-800};
   --tutor-surface-exception7: #{$tutor-brand-900};
+  --tutor-surface-warning: #{$tutor-warning-950};
+  --tutor-surface-warning-hover: #{$tutor-warning-900};
+  --tutor-surface-success: #{$tutor-success-950};
+  --tutor-surface-critical: #{$tutor-error-950};
 
   // =============================================================================
   // TEXT COLORS
@@ -34,12 +37,13 @@
   --tutor-text-subdued: #{$tutor-gray-500};
   --tutor-text-disabled: #{$tutor-gray-600};
   --tutor-text-brand: #{$tutor-brand-600};
-  --tutor-text-brand-secondary: #{$tutor-brand-600};
+  --tutor-text-brand-hover: #{$tutor-brand-700};
+  --tutor-text-brand-secondary: #{$tutor-brand-400};
   --tutor-text-light: #{$tutor-gray-25};
   --tutor-text-success: #{$tutor-success-600};
   --tutor-text-critical: #{$tutor-error-600};
   --tutor-text-warning: #{$tutor-warning-600};
-  --tutor-text-caution: #{$tutor-brand-600};
+  --tutor-text-caution: #{$tutor-yellow-600};
   --tutor-text-exception1: #{$tutor-exception-1};
   --tutor-text-exception2: #{$tutor-exception-2};
   --tutor-text-exception4: #{$tutor-warning-400};
@@ -57,6 +61,7 @@
   --tutor-icon-subdued: #{$tutor-gray-600};
   --tutor-icon-disabled: #{$tutor-gray-600};
   --tutor-icon-brand: #{$tutor-brand-600};
+  --tutor-icon-brand-hover: #{$tutor-brand-700};
   --tutor-icon-exception1: #{$tutor-exception-1};
   --tutor-icon-exception2: #{$tutor-exception-2};
   --tutor-icon-success-primary: #{$tutor-success-600};
@@ -106,8 +111,9 @@
   --tutor-border-dark: #{$tutor-gray-700};
   --tutor-border-success: #{$tutor-success-300};
   --tutor-border-success-secondary: #{$tutor-success-700};
-  --tutor-border-warning: #{$tutor-yellow-200};
-  --tutor-border-warning-secondary: #{$tutor-yellow-700};
+  --tutor-border-warning: #{$tutor-warning-200};
+  --tutor-border-warning-secondary: #{$tutor-warning-600};
+  --tutor-border-warning-tertiary: #{$tutor-warning-400};
   --tutor-border-error: #{$tutor-error-300};
   --tutor-border-error-secondary: #{$tutor-error-700};
 
@@ -138,10 +144,12 @@
   --tutor-actions-brand-tertiary: #{$tutor-brand-950};
   --tutor-actions-gray-empty: #{$tutor-gray-750};
   --tutor-actions-gray-secondary: #{$tutor-gray-900};
+  --tutor-actions-gray-tertiary: #{$tutor-gray-800};
   --tutor-actions-critical-primary: #{$tutor-error-500};
   --tutor-actions-critical-secondary: #{$tutor-error-950};
   --tutor-actions-exception3-highlight: #{$tutor-exception-3};
-  --tutor-actions-caution: #{$tutor-yellow-100};
+  --tutor-actions-caution: #{$tutor-yellow-400};
+  --tutor-actions-caution-secondary: #{$tutor-yellow-100};
   --tutor-actions-inverse: #{$tutor-gray-1};
   --tutor-actions-exception5: #{$tutor-exception-5};
   --tutor-actions-exception6: #{$tutor-exception-6};

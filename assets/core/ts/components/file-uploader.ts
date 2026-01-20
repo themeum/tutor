@@ -1,24 +1,107 @@
+import { __, sprintf } from '@wordpress/i18n';
+
+import { type FormControlMethods, type SetValueOptions, type ValidationRules } from '@Core/ts/components/form';
+import { type WPMedia, type WPMediaType } from '@Core/ts/services/WPMedia';
 import { type AlpineComponentMeta } from '@Core/ts/types';
+import { tutorConfig } from '@TutorShared/config/config';
+import { formatBytes } from '@TutorShared/utils/util';
+
+type FileUploaderVariant = 'file-uploader' | 'image-uploader';
 
 export interface FileUploaderProps {
   multiple?: boolean;
   accept?: string;
   maxSize?: number; // in bytes
-  onFileSelect?: (files: File[]) => void;
+  onFileSelect?: (files: (File | WPMedia | string)[]) => void;
   onError?: (error: string) => void;
   disabled?: boolean;
+  variant?: FileUploaderVariant;
+  value?: File | WPMedia | string | (File | WPMedia | string)[] | null;
+  name?: string;
+  required?: boolean | string;
+  imagePreviewPlaceholder?: string;
+  useWPMedia?: boolean;
+  wpMediaTitle?: string;
+  wpMediaButtonText?: string;
+  wpMediaLibraryType?: WPMediaType;
 }
 
-export const fileUploader = (props: FileUploaderProps = {}) => ({
+const defaultProps = {
+  multiple: false,
+  accept: '.pdf,.doc,.docx,.jpg,.jpeg,.png',
+  maxSize: Number(tutorConfig.max_upload_size),
+  variant: 'file-uploader',
+  value: [],
+  name: '',
+  required: false,
+  imagePreviewPlaceholder: '',
+  useWPMedia: false,
+  wpMediaTitle: '',
+  wpMediaButtonText: '',
+  wpMediaLibraryType: undefined,
+} satisfies FileUploaderProps;
+
+const normalizeValue = (value: FileUploaderProps['value']): (File | WPMedia | string)[] => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return [value];
+};
+
+function getInitialImagePreview(
+  variant: FileUploaderVariant | undefined,
+  value: FileUploaderProps['value'],
+  placeholder: string,
+): string {
+  if (variant !== 'image-uploader') {
+    return placeholder || '';
+  }
+
+  if (typeof value === 'string' && value) {
+    return value;
+  }
+
+  if (value && typeof value === 'object' && !Array.isArray(value) && 'url' in value) {
+    return (value as WPMedia).url;
+  }
+
+  if (Array.isArray(value) && value.length > 0) {
+    const first = value[0];
+    if (typeof first === 'string') {
+      return first;
+    }
+    if (first && typeof first === 'object' && 'url' in first) {
+      return (first as WPMedia).url;
+    }
+  }
+
+  return placeholder || '';
+}
+
+export const fileUploader = (props: FileUploaderProps = defaultProps) => ({
   isDragOver: false,
-  isDisabled: props.disabled || false,
-  multiple: props.multiple || false,
-  accept: props.accept || '.pdf,.doc,.docx,.jpg,.jpeg,.png',
-  maxSize: props.maxSize || 50 * 1024 * 1024, // 50MB default
+  isDisabled: props.disabled,
+  multiple: !!props.multiple,
+  accept: props.accept,
+  maxSize: props.maxSize || 52428800,
+  variant: props.variant,
+  imagePreview: getInitialImagePreview(props.variant, props.value, props.imagePreviewPlaceholder || ''),
+  selectedFiles: normalizeValue(props.value),
+  name: props.name || '',
+  required: props.required || false,
+  useWPMedia: props.useWPMedia || false,
+  wpMediaTitle: props.wpMediaTitle || __('Select File', 'tutor'),
+  wpMediaButtonText: props.wpMediaButtonText || __('Use this file', 'tutor'),
+  wpMediaLibraryType: props.wpMediaLibraryType,
+  formatBytes,
   $refs: {} as { fileInput: HTMLInputElement },
 
   init() {
-    this.$refs.fileInput.addEventListener('change', (e: Event) => this.handleFileSelect(e));
+    this.$refs.fileInput.addEventListener('change', (event: Event) => this.handleFileSelect(event));
+    this.setupFormIntegration();
+  },
+
+  destroy() {
+    this.$refs.fileInput.removeEventListener('change', (event: Event) => this.handleFileSelect(event));
   },
 
   handleDragOver(event: DragEvent) {
@@ -44,44 +127,216 @@ export const fileUploader = (props: FileUploaderProps = {}) => ({
   },
 
   handleFileSelect(event: Event) {
+    event.preventDefault();
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files || []);
     this.processFiles(files);
-    // Reset input value to allow selecting the same file again
-    input.value = '';
+
+    try {
+      input.value = '';
+    } catch {
+      // InvalidStateError can occur in certain browser states, safe to ignore
+    }
   },
 
-  processFiles(files: File[]) {
-    if (!files.length) return;
+  openFileDialog() {
+    if (this.isDisabled) {
+      return;
+    }
 
-    const validFiles: File[] = [];
+    if (this.useWPMedia) {
+      this.openWPMediaLibrary();
+    } else {
+      this.$refs.fileInput.click();
+    }
+  },
+
+  openWPMediaLibrary() {
+    const wpMediaService = window.TutorCore?.wpMedia;
+
+    if (!wpMediaService?.isAvailable()) {
+      this.showError(__('WordPress media library is not available', 'tutor'));
+      return;
+    }
+
+    const existingIds = this.selectedFiles
+      .filter((file): file is WPMedia => typeof file === 'object' && 'id' in file && typeof file.id === 'number')
+      .map((file) => file.id);
+
+    wpMediaService.open(
+      {
+        title: this.wpMediaTitle,
+        button: { text: this.wpMediaButtonText },
+        multiple: this.multiple,
+        library: this.wpMediaLibraryType ? { type: this.wpMediaLibraryType } : undefined,
+        maxFileSize: this.maxSize,
+      },
+      (files: WPMedia[]) => {
+        this.processFiles(files);
+      },
+      existingIds,
+    );
+  },
+
+  processFiles(files: (File | WPMedia | string)[]) {
+    if (!files.length) {
+      return;
+    }
+
+    const validFiles: (File | WPMedia | string)[] = [];
 
     for (const file of files) {
-      // Check file size
-      if (file.size > this.maxSize) {
-        this.showError(`File "${file.name}" is too large. Maximum size is ${this.formatFileSize(this.maxSize)}`);
+      if (typeof file === 'string') {
+        validFiles.push(file);
         continue;
       }
 
-      // Check file type if accept is specified
+      if (this.isWPMedia(file)) {
+        validFiles.push(file);
+        continue;
+      }
+
+      if (file.size > this.maxSize) {
+        this.showError(
+          sprintf(
+            // translators: %1$s is the file name, %2$s is the maximum allowed size
+            __('File %1$s is too large. Maximum allowed size is %2$s.', 'tutor'),
+            file.name,
+            formatBytes(this.maxSize),
+          ),
+        );
+        continue;
+      }
+
       if (this.accept && !this.isFileTypeAccepted(file)) {
-        this.showError(`File type "${file.type}" is not allowed`);
+        this.showError(
+          sprintf(
+            // translators: %s is the file type
+            __('File type %s is not allowed', 'tutor'),
+            file.type,
+          ),
+        );
         continue;
       }
 
       validFiles.push(file);
     }
 
-    // Call the onFileSelect callback if provided
-    if (props.onFileSelect && validFiles.length > 0) {
-      props.onFileSelect(validFiles);
+    if (validFiles.length > 0) {
+      if (!this.isFileListChanged(this.selectedFiles, validFiles)) {
+        return;
+      }
+
+      if (this.multiple) {
+        this.selectedFiles = this.mergeFileLists(this.selectedFiles, validFiles);
+      } else {
+        this.selectedFiles = [validFiles[0]];
+      }
+
+      this.updateFormValue();
+      this.syncFileInput();
+
+      if (this.variant === 'image-uploader' && this.selectedFiles.length > 0) {
+        const firstFile = this.selectedFiles[0];
+        if (this.isWPMedia(firstFile) && firstFile.url) {
+          this.imagePreview = firstFile.url;
+        } else if (firstFile instanceof File && firstFile.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.imagePreview = e.target?.result as string;
+          };
+          reader.readAsDataURL(firstFile);
+        }
+      }
+
+      if (props.onFileSelect) {
+        props.onFileSelect(this.selectedFiles);
+      }
     }
   },
 
-  openFileDialog() {
-    if (!this.isDisabled) {
-      this.$refs.fileInput.click();
+  removeFile(index?: number) {
+    if (this.multiple && typeof index === 'number') {
+      this.selectedFiles = this.selectedFiles.filter((_, i) => i !== index);
+    } else {
+      this.selectedFiles = [];
     }
+
+    if (this.selectedFiles.length === 0) {
+      this.imagePreview = '';
+    }
+
+    if (this.$refs.fileInput) {
+      try {
+        this.$refs.fileInput.value = '';
+      } catch {
+        // Safe to ignore
+      }
+
+      this.$refs.fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+      this.$refs.fileInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+
+    this.updateFormValue();
+    this.syncFileInput();
+
+    if (props.onFileSelect) {
+      props.onFileSelect(this.selectedFiles);
+    }
+  },
+
+  mergeFileLists(
+    previousList: (File | WPMedia | string)[] | null,
+    newList: (File | WPMedia | string)[] | null,
+  ): (File | WPMedia | string)[] {
+    const seen = new Set<string>();
+    const result: (File | WPMedia | string)[] = [];
+
+    const add = (files: (File | WPMedia | string)[] | null) => {
+      if (!files) return;
+      for (const file of Array.from(files)) {
+        const key = this.getFileKey(file);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        result.push(file);
+      }
+    };
+
+    add(previousList);
+    add(newList);
+    return result;
+  },
+
+  isFileListChanged(
+    previousList: (File | WPMedia | string)[] | null,
+    nextList: (File | WPMedia | string)[] | null,
+  ): boolean {
+    if (previousList === nextList) {
+      return false;
+    }
+    if (!previousList || !nextList) {
+      return true;
+    }
+    if (previousList.length !== nextList.length) {
+      return true;
+    }
+
+    const prevKeys = new Set(Array.from(previousList, (file) => this.getFileKey(file)));
+    return nextList.some((file) => !prevKeys.has(this.getFileKey(file)));
+  },
+
+  getFileKey(file: File | WPMedia | string): string {
+    if (typeof file === 'string') {
+      return file;
+    }
+    if (this.isWPMedia(file)) {
+      return `wp:${file.id}`;
+    }
+    return `${file.name}|${file.size}|${file.lastModified}|${file.type}`;
+  },
+
+  isWPMedia(file: File | WPMedia | string): file is WPMedia {
+    return typeof file === 'object' && 'id' in file && typeof (file as WPMedia).id === 'number';
   },
 
   isFileTypeAccepted(file: File): boolean {
@@ -99,22 +354,184 @@ export const fileUploader = (props: FileUploaderProps = {}) => ({
     });
   },
 
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  getFormElement(): HTMLElement | null {
+    const $el = (this as unknown as { $el: HTMLElement }).$el;
+    return $el.closest('form[x-data*="tutorForm"], form[x-data*="form("]');
+  },
+  setupFormIntegration() {
+    if (!this.name) {
+      return;
+    }
+
+    const formElement = this.getFormElement();
+    if (!formElement) {
+      return;
+    }
+
+    try {
+      const alpine = window.Alpine;
+      const alpineData = alpine?.$data(formElement) as FormControlMethods & { values: Record<string, unknown> };
+
+      if (!alpineData || typeof alpineData.register !== 'function') {
+        return;
+      }
+
+      this.registerFormField(alpineData);
+      this.syncInitialValue(alpineData);
+      this.watchFormChanges();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        sprintf(
+          // translators: %s is the error message
+          __('Failed to integrate with form: %s', 'tutor'),
+          err,
+        ),
+      );
+    }
+  },
+
+  registerFormField(alpineData: FormControlMethods & { values: Record<string, unknown> }) {
+    const rules: ValidationRules = {
+      numberOnly: false,
+    };
+
+    if (this.required) {
+      rules.required = this.required;
+    }
+
+    alpineData.register(this.name, rules);
+  },
+
+  syncInitialValue(alpineData: FormControlMethods & { values: Record<string, unknown> }) {
+    const formValue = alpineData.values?.[this.name];
+    const hasFormValue = formValue !== undefined && formValue !== null && formValue !== '';
+
+    if (hasFormValue) {
+      this.selectedFiles = Array.isArray(formValue) ? formValue : [formValue];
+      this.syncFileInput();
+      return;
+    }
+
+    this.updateFormValue({
+      shouldValidate: false,
+      shouldTouch: false,
+      shouldDirty: false,
+    });
+  },
+
+  watchFormChanges() {
+    const component = this as unknown as { $watch: (path: string, cb: (val: unknown) => void) => void };
+
+    if (!component.$watch) {
+      return;
+    }
+
+    component.$watch(`values.${this.name}`, (newVal: unknown) => {
+      const normalized = Array.isArray(newVal) ? newVal : ((newVal ? [newVal] : []) as (File | WPMedia | string)[]);
+
+      if (!this.isFileListChanged(this.selectedFiles, normalized)) {
+        return;
+      }
+
+      this.selectedFiles = normalized;
+      this.syncFileInput();
+
+      if (this.variant === 'image-uploader') {
+        this.updateImagePreview();
+      }
+    });
+  },
+
+  updateImagePreview() {
+    if (this.selectedFiles.length === 0) {
+      this.imagePreview = '';
+      return;
+    }
+
+    const firstFile = this.selectedFiles[0];
+
+    if (typeof firstFile === 'string') {
+      this.imagePreview = firstFile;
+      return;
+    }
+
+    // Handle WPMedia objects
+    if (this.isWPMedia(firstFile) && firstFile.url) {
+      this.imagePreview = firstFile.url;
+      return;
+    }
+
+    if (firstFile instanceof File && firstFile.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        this.imagePreview = e.target?.result as string;
+      };
+      reader.readAsDataURL(firstFile);
+    }
+  },
+
+  updateFormValue(options?: SetValueOptions) {
+    options = options ?? {
+      shouldValidate: true,
+      shouldTouch: true,
+      shouldDirty: true,
+    };
+
+    if (!this.name) {
+      return;
+    }
+
+    const formElement = this.getFormElement();
+    if (!formElement) {
+      return;
+    }
+
+    try {
+      const alpineData = window.Alpine?.$data(formElement) as FormControlMethods & { values: Record<string, unknown> };
+
+      if (alpineData && typeof alpineData.setValue === 'function') {
+        const value = this.multiple ? this.selectedFiles : this.selectedFiles[0] || null;
+        alpineData.setValue(this.name, value, options);
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        sprintf(
+          // translators: %s is the error message
+          __('Failed to update form value: %s', 'tutor'),
+          err,
+        ),
+      );
+    }
+  },
+
+  syncFileInput() {
+    if (this.$refs.fileInput) {
+      const dt = new DataTransfer();
+      this.selectedFiles.forEach((file) => {
+        if (file instanceof File) {
+          dt.items.add(file);
+        }
+      });
+
+      try {
+        this.$refs.fileInput.files = dt.files;
+      } catch {
+        // Safe to ignore
+      }
+
+      // Dispatch events to notify listeners (including Alpine's x-model if any)
+      this.$refs.fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+      this.$refs.fileInput.dispatchEvent(new Event('input', { bubbles: true }));
+    }
   },
 
   showError(message: string) {
     if (props.onError) {
       props.onError(message);
     } else {
-      // @TODO: Add toast when it's ready.
-      // Fallback to console.error if no error handler provided
-      // eslint-disable-next-line no-console
-      console.error('File Uploader Error:', message);
+      window.TutorCore.toast.error(message);
     }
   },
 });
