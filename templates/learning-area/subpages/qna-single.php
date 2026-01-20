@@ -32,7 +32,7 @@ $order_by    = Input::get( 'order', 'DESC' );
 $question = tutor_utils()->get_qa_question( $question_id );
 
 // Get answers.
-$answers         = tutor_utils()->get_qa_answer_by_question( $question_id, $order_by );
+$answers         = tutor_utils()->get_qa_answer_by_question( $question_id, $order_by, 'frontend' );
 $current_user_id = get_current_user_id();
 $back_url        = remove_query_arg( 'question_id' );
 
