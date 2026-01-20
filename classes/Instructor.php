@@ -614,47 +614,23 @@ class Instructor {
 	}
 
 	/**
-	 * Get the total number of students who completed courses for a given instructor
-	 * within an optional date range.
+	 * Get course completion distribution data for a specific instructor.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string|null $start_date    Start date (Y-m-d). Optional.
-	 * @param string|null $end_date      End date (Y-m-d). Optional.
-	 * @param int         $instructor_id Instructor ID.
+	 * @param int $instructor_id Instructor user ID.
 	 *
-	 * @return int Number of completed students for the instructor in the given date range.
+	 * @return array {
+	 *     Enrollment distribution counts.
 	 *
-	 * @throws \Exception If a database error occurs while counting comments.
+	 *     @type int $enrolled   Total number of enrollments.
+	 *     @type int $completed  Number of fully completed enrollments (100% progress).
+	 *     @type int $inprogress Number of enrollments with partial progress (>0 and <100).
+	 *     @type int $inactive   Number of enrollments with no progress (0%).
+	 *     @type int $cancelled  Number of cancelled enrollments.
+	 * }
 	 */
-	public static function get_instructor_completed_students_course_count_by_date( $start_date, $end_date, $instructor_id, $course_ids = array() ) {
-
-		global $wpdb;
-
-		if ( empty( $course_ids ) ) {
-			$common_args = array(
-				'post_author'    => $instructor_id,
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			);
-
-			$courses    = CourseModel::get_courses_by_args( $common_args );
-			$course_ids = $courses->posts;
-		}
-
-		$where = array(
-			'comment_post_ID' => array( 'IN', $course_ids ),
-			'comment_type'    => CourseModel::COURSE_COMPLETED,
-		);
-
-		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
-		}
-
-		return QueryHelper::get_count( $wpdb->comments, $where, array(), 'comment_ID' );
-	}
-
-	public static function get_course_completion_distribution_data_by_instructor($instructor_id) {
+	public static function get_course_completion_distribution_data_by_instructor( $instructor_id ) {
 
 		global $wpdb;
 
@@ -666,11 +642,11 @@ class Instructor {
 			'cancelled'  => 0,
 		);
 
-		$cancel_statuses = array('cancel', 'canceled', 'cancelled');
+		$cancel_statuses = array( 'cancel', 'canceled', 'cancelled' );
 
-		$post_statuses = array_merge($cancel_statuses, array('completed'));
+		$post_statuses = array_merge( $cancel_statuses, array( 'completed' ) );
 
-		$instructor_course_ids  = CourseModel::get_courses_by_args(
+		$instructor_course_ids = CourseModel::get_courses_by_args(
 			array(
 				'post_author'    => $instructor_id,
 				'posts_per_page' => -1,
@@ -678,45 +654,120 @@ class Instructor {
 			)
 		)->posts;
 
-		if(empty($instructor_course_ids)){
+		if ( empty( $instructor_course_ids ) ) {
 			return $counts;
 		}
 
 		$where = array(
-			'post_type' => 'tutor_enrolled',
-			'post_status' => array('IN', $post_statuses),
-			'post_parent' => array('IN', $instructor_course_ids)
+			'post_type'   => 'tutor_enrolled',
+			'post_status' => array( 'IN', $post_statuses ),
+			'post_parent' => array( 'IN', $instructor_course_ids ),
 		);
 
 		$args = array(
-			'select' => array('id','post_status','post_author','post_parent'),
-			'where' => $where
+			'select' => array( 'id', 'post_status', 'post_author', 'post_parent' ),
+			'where'  => $where,
 		);
 
-		$enrollments = QueryHelper::query($wpdb->posts, $args);
+		$enrollments = QueryHelper::query( $wpdb->posts, $args );
 
-		if ( empty($enrollments)) {
+		if ( empty( $enrollments ) ) {
 			return $counts;
 		}
 
-		foreach ($enrollments as $enrollment) {
+		foreach ( $enrollments as $enrollment ) {
 
-			if (in_array($enrollment->post_status, $cancel_statuses, true)) {
-				$counts['cancelled']++;
+			if ( in_array( $enrollment->post_status, $cancel_statuses, true ) ) {
+				++$counts['cancelled'];
 				continue;
 			}
 
 			$course_progress = tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
 
-			if ( 100 == $course_progress ) {
-				$counts['completed']++;
-			} elseif ($course_progress > 0 && $course_progress < 100) {
-				$counts['inprogress']++;
-			} else{
-				$counts['inactive']++;
-			}			
+			if ( 100 === $course_progress ) {
+				++$counts['completed'];
+			} elseif ( $course_progress > 0 && $course_progress < 100 ) {
+				++$counts['inprogress'];
+			} else {
+				++$counts['inactive'];
+			}
 		}
 
 		return $counts;
+	}
+
+	/**
+	 * Retrieve the top-performing courses for a given instructor.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $instructor_id Instructor  user ID.
+	 * @param int $limit         Maximum number of courses to return. Default 4.
+	 *
+	 * @return array List of course objects containing:
+	 *               - course_id (int)
+	 *               - course_title (string)
+	 *               - total_revenue (float)
+	 *               - total_student (int)
+	 *
+	 * @throws \Exception When a database error occurs.
+	 */
+	public static function get_top_performing_courses_by_instructor( $instructor_id, $limit = 4 ) {
+
+		global $wpdb;
+
+		$complete_status = QueryHelper::prepare_in_clause( tutor_utils()->get_earnings_completed_statuses() );
+
+		$amount_type = current_user_can( 'administrator' ) ? 'earnings.admin_amount' : 'earnings.instructor_amount';
+		$amount_rate = current_user_can( 'administrator' ) ? 'earnings.admin_rate' : 'earnings.instructor_rate';
+
+		$amount_condition = "CASE
+			WHEN orders.tax_type = 'inclusive' AND earnings.course_price_grand_total > 0
+				THEN ( earnings.course_price_grand_total - orders.tax_amount ) * ( $amount_rate/100 )
+			ELSE $amount_type
+			END";
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT
+					post.ID AS course_id,
+					post.post_title AS course_title,
+					COALESCE(earnings.total_revenue, 0)  AS total_revenue,
+					COALESCE(enrollments.total_student, 0) AS total_student
+				FROM wp_posts post
+				LEFT JOIN (
+					SELECT
+						earnings.course_id,
+						SUM($amount_condition) AS total_revenue
+					FROM {$wpdb->tutor_earnings} earnings
+					LEFT JOIN {$wpdb->tutor_orders} orders ON orders.id = earnings.order_id
+					WHERE earnings.user_id = %d
+						AND earnings.order_status IN ({$complete_status})
+					GROUP BY earnings.course_id
+				) earnings ON earnings.course_id = post.ID
+				LEFT JOIN (
+					SELECT 
+						post_parent AS course_id, 
+						COUNT(ID) AS total_student
+					FROM {$wpdb->posts}
+					WHERE post_type = %s
+					GROUP BY post_parent
+				) enrollments ON enrollments.course_id = post.ID
+				WHERE post.post_type = %s
+				ORDER BY total_revenue DESC
+				LIMIT %d",
+				$instructor_id,
+				'tutor_enrolled',
+				tutor()->course_post_type,
+				$limit
+			)
+		);
+
+		// If error occurred then throw new exception.
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error ); //phpcs:ignore.
+		}
+
+		return $result;
 	}
 }
