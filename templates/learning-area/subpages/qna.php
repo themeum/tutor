@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Avatar;
 use TUTOR\Icon;
 use TUTOR\Input;
@@ -20,10 +22,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
+use Tutor\Helpers\UrlHelper;
 
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 
@@ -37,6 +36,7 @@ global $tutor_course_id;
 
 // Pagination setup.
 $question_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+$question_per_page = 1;
 $current_page      = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset            = ( $current_page - 1 ) * $question_per_page;
 $search_query      = Input::get( 'search', '' );
@@ -72,37 +72,27 @@ $questions   = tutor_utils()->get_qa_questions(
 	)
 );
 
-
 ?>
 <div class="tutor-learning-area-qna tutor-mb-9" x-data="tutorQna()">
 
 	<!-- Question Search  -->
 	<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
-		<form method="get" action="">
-			<?php
-			// Preserve existing query parameters.
-			foreach ( $_GET as $key => $value ) { //phpcs:ignore
-				if ( 'search' !== $key && 'current_page' !== $key && 'paged' !== $key ) {
-					echo '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
-				}
-			}
-			?>
-			<?php
-			SearchFilter::make()
-				->placeholder( 'Search questions, topics...' )
-				->input_name( 'search' )
-				->method( 'GET' )
-				->size( 'large' )
-				->render();
-			?>
-		</form>
+		<?php
+		SearchFilter::make()
+			->form_id( 'tutor-qna-search-form' )
+			->placeholder( 'Search questions, topics...' )
+			->action( UrlHelper::current() )
+			->hidden_inputs( array( 'subpage' => 'qna' ) )
+			->size( 'large' )
+			->render();
+		?>
 	</div>
 
 	<!-- Question submission form  -->
 	<form
 		class="tutor-discussion-form tutor-p-6 tutor-border-b tutor-qna-form"
-		x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $tutor_course_id ); ?>' }), focused : false }"
-		@submit.prevent="handleSubmit((data) => createQnaMutation?.mutate({...data, course_id: <?php echo esc_html( $tutor_course_id ); ?> }))($event)"
+		x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $tutor_course_id ); ?>', defaultValues: { course_id: <?php echo esc_html( $tutor_course_id ); ?> } }), focused : false }"
+		@submit.prevent="handleSubmit((data) => createQnaMutation?.mutate(data))($event)"
 	>
 		<div class="tutor-input-field">
 			<label for="tutor-qna-question" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'Question & Answer', 'tutor' ); ?></label>
