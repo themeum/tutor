@@ -1,6 +1,7 @@
 // Dashboard Entry Point
 // Initializes dashboard functionality based on current page
 
+import { initializeHeader } from './header';
 import { initializeAnnouncements } from './pages/announcements';
 import { initializeAssignments } from './pages/assignments';
 import { initializeCertificates } from './pages/certificates';
@@ -72,6 +73,8 @@ const getCurrentPage = (): string => {
 };
 
 const initializeDashboard = () => {
+  initializeHeader();
+
   const currentPage = getCurrentPage();
 
   // Initialize page-specific functionality

@@ -2242,12 +2242,12 @@ class Utils {
 		$with_bundle_enrolled_courses_clause = '';
 		if ( ! $with_bundle_enrolled_courses ) {
 			$with_bundle_enrolled_courses_clause = $wpdb->prepare(
-				"AND NOT EXISTS (
+				'AND NOT EXISTS (
 					SELECT 1
 					FROM wp_postmeta pm
 					WHERE pm.post_id = e.ID
 						AND pm.meta_key = %s
-				)",
+				)',
 				'_tutor_bundle_id'
 			);
 		}
@@ -2931,14 +2931,13 @@ class Utils {
 	 * @return mixed
 	 */
 	public function tutor_dashboard_pages() {
-		// @TODO need to make it dynamic with account view as mode.
-		// $view_mode = 'student';
-		// if ( User::is_admin() || User::is_instructor() ) {
-		// $view_mode = 'instructor';
-		// }
 
-		$student_nav_items    = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
-		$instructor_nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		$nav_items = array();
+		if ( User::is_instructor_view() ) {
+			$nav_items = apply_filters( 'tutor_dashboard/instructor_nav_items', $this->instructor_menus() );
+		} else {
+			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
+		}
 
 		/**
 		 * Miscellaneous menus pages
@@ -2950,7 +2949,7 @@ class Utils {
 			'account' => array( 'label' => __( 'Account', 'tutor' ) ),
 		);
 
-		$all_menus = array_merge( $student_nav_items, $instructor_nav_items, $misc_menus );
+		$all_menus = array_merge( $nav_items, $misc_menus );
 
 		return apply_filters( 'tutor_dashboard/nav_items_all', $all_menus );
 	}
@@ -2997,7 +2996,8 @@ class Utils {
 				if ( isset( $nav_item['show_ui'] ) && ! $this->array_get( 'show_ui', $nav_item ) ) {
 					unset( $nav_items[ $key ] );
 				}
-				if ( isset( $nav_item['auth_cap'] ) && ! current_user_can( $nav_item['auth_cap'] ) ) {
+
+				if ( isset( $nav_item['auth_cap'] ) && ! User::is_admin() && ! current_user_can( $nav_item['auth_cap'] ) ) {
 					unset( $nav_items[ $key ] );
 				}
 			}
@@ -4116,11 +4116,13 @@ class Utils {
 				WHERE	comments.comment_post_ID = %d
 						AND comments.comment_type = %s
 						AND commentmeta.meta_key = %s
+						AND comments.comment_approved = %s
 				GROUP BY CAST(commentmeta.meta_value AS SIGNED);
 				",
 					$course_id,
 					'tutor_course_rating',
-					'tutor_rating'
+					'tutor_rating',
+					'approved'
 				)
 			);
 
@@ -4773,16 +4775,26 @@ class Utils {
 	 * Get question and asnwer by question
 	 *
 	 * @since 1.0.0
-	 * @since 4.0.0 param $order is added.
+	 * @since 4.0.0 param $order and $context added.
 	 *
 	 * @param int    $question_id question id.
 	 * @param string $order order ASC or DESC.
+	 * @param string $context context frontend or dashboard.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_qa_answer_by_question( $question_id, $order = 'ASC' ) {
+	public function get_qa_answer_by_question( $question_id, $order = 'ASC', $context = '' ) {
 		global $wpdb;
 		$order = 'ASC' === strtoupper( $order ) ? 'ASC' : 'DESC';
+
+		$condition = '(_chat.comment_ID=%d OR _chat.comment_parent = %d)';
+		$params    = array( $question_id, $question_id );
+
+		if ( 'frontend' === $context ) {
+			$condition = '_chat.comment_parent = %d';
+			$params    = array( $question_id );
+		}
+
 		$query = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT _chat.comment_ID,
@@ -4797,10 +4809,9 @@ class Utils {
 			FROM	{$wpdb->comments} _chat
 					INNER JOIN {$wpdb->users} ON _chat.user_id = {$wpdb->users}.ID
 			WHERE 	comment_type = 'tutor_q_and_a'
-					AND ( _chat.comment_ID=%d OR _chat.comment_parent = %d)
+					AND {$condition}
 			ORDER BY _chat.comment_ID {$order};",
-				$question_id,
-				$question_id
+				$params
 			)
 		);
 
@@ -5578,6 +5589,12 @@ class Utils {
 	 * @return bool
 	 */
 	public function is_dashboard_page( $subpage = null ): bool {
+		$user_id = get_current_user_id();
+		if ( ! $user_id ) {
+			// If user is not login then the dashboard slug show the login screen.
+			return false;
+		}
+
 		if ( $subpage ) {
 			return $this->is_tutor_frontend_dashboard( $subpage );
 		}
@@ -6936,17 +6953,28 @@ class Utils {
 
 		$pagination_query = '';
 		$date_query       = '';
+		$search_query     = '';
 		$sort_query       = 'ORDER BY ID DESC';
 
 		if ( $this->count( $filter_data ) ) {
 			extract( $filter_data );//phpcs:ignore
 
+			if ( ! empty( $search_filter ) ) {
+				$like         = '%' . $wpdb->esc_like( $search_filter ) . '%';
+				$search_query = $wpdb->prepare(
+					' AND assignment.post_title LIKE %s ',
+					$like
+				);
+			}
+
 			if ( ! empty( $course_id ) ) {
 				$in_course_ids = $course_id;
 			}
-			if ( ! empty( $date_filter ) ) {
-				$date_filter = tutor_get_formated_date( 'Y-m-d', $date_filter );
-				$date_query  = " AND DATE(post_date) = '{$date_filter}'";
+			if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+				$start_date = tutor_get_formated_date( 'Y-m-d', $start_date );
+				$end_date   = tutor_get_formated_date( 'Y-m-d', $end_date );
+
+				$date_query = $wpdb->prepare( 'AND DATE(post_date) BETWEEN %s AND %s', $start_date, $end_date );
 			}
 			if ( ! empty( $order_filter ) ) {
 				$order_filter = QueryHelper::get_valid_sort_order( $order_filter );
@@ -6969,6 +6997,7 @@ class Utils {
 					AND assignment.post_parent>0
 					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
+					{$search_query}
 			",
 				$assignment_post_type
 			)
@@ -6985,6 +7014,7 @@ class Utils {
 					AND assignment.post_parent>0
 					AND post_meta.meta_value IN({$in_course_ids})
 					{$date_query}
+					{$search_query}
 					{$sort_query}
 					{$pagination_query}
 			",
@@ -8523,16 +8553,23 @@ class Utils {
 	 * Check if current screen tutor frontend dashboard
 	 *
 	 * @since 1.9.4
+	 * @since 4.0.0 Subpage check support added.
+	 * 				Example: assignments/submitted	
 	 *
 	 * @param string $subpage subpage.
 	 *
 	 * @return boolean
 	 */
 	public function is_tutor_frontend_dashboard( $subpage = null ) {
-
 		global $wp_query;
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
+
+			$subpage_parts = explode( '/', $subpage, 2 );
+			if ( isset( $subpage_parts[1] ) ) {
+				$dashboard_subpage = $this->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+				return $dashboard_page == $subpage_parts[0] && $dashboard_subpage == $subpage_parts[1];
+			}
 
 			if ( $subpage ) {
 				return $dashboard_page == $subpage;
@@ -9496,6 +9533,10 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
+			'index'            => array(
+				'title' => __( 'Home', 'tutor' ),
+				'icon'  => Icon::HOME,
+			),
 			'my-courses'    => array(
 				'title'    => __( 'Courses', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
@@ -9517,19 +9558,30 @@ class Utils {
 		$menus = apply_filters( 'tutor_after_instructor_menu_my_courses', $menus );
 
 		$other_menus = array(
-			'quiz-attempts' => array(
-				'title'    => __( 'Quiz Attempts', 'tutor' ),
-				'auth_cap' => tutor()->instructor_role,
-				'icon'     => Icon::QUIZ,
-			),
 			'announcements' => array(
 				'title'    => __( 'Announcements', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => Icon::ANNOUNCEMENT,
 			),
+			'quiz-attempts' => array(
+				'title'    => __( 'Quiz Attempts', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QUIZ,
+			),
 		);
 
-		return apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		if ( $this->should_show_dicussion_menu() ) {
+			$other_menus['discussions'] = array (
+				'title'    => __( 'Discussions', 'tutor' ),
+				'auth_cap' => tutor()->instructor_role,
+				'icon'     => Icon::QA,
+			);
+		}
+
+		$all_menus = apply_filters( 'tutor_instructor_dashboard_nav', array_merge( $menus, $other_menus ) );
+
+		return $all_menus;
 	}
 
 	/**
@@ -9558,7 +9610,7 @@ class Utils {
 	 */
 	public function default_menus(): array {
 		$items = array(
-			'index'            => array(
+			'index'   => array(
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),

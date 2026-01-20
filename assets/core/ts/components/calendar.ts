@@ -88,7 +88,7 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
           displayDatesOutside: false,
           ...(selectedDates.length ? { selectedDates } : {}),
           ...(selectedTime ? { selectedTime } : {}),
-          onClickDate: (self) => this.handleDateClick(self),
+          onClickDate: (self, event) => this.handleDateClick(self, event as MouseEvent),
           styles: {
             calendar: 'vc tutor-vc-calendar',
           },
@@ -97,7 +97,14 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
               <div class="vc-layout">
                 <aside class="vc-presets">
                   ${(Object.entries(PRESET_LABELS) as [Preset, string][])
-                    .map(([key, label]) => `<button type="button" data-preset="${key}">${label}</button>`)
+                    .map(
+                      ([key, label]) => `
+                      <button type="button" data-preset="${key}">
+                        <span>${label}</span>
+                        <span class="vc-preset-icon" x-data="tutorIcon({ name: 'check-2' })"></span>
+                      </button>
+                    `,
+                    )
                     .join('')}
                 </aside>
 
@@ -142,6 +149,15 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
                   </div>
 
                   <#ControlTime />
+
+                  <div class="vc-footer tutor-flex tutor-justify-end tutor-gap-5 tutor-mt-6">
+                    <button type="button" data-calendar-action="clear" class="tutor-btn tutor-btn-secondary tutor-btn-small">
+                    ${__('Clear Selection', 'tutor')}
+                    </button>
+                    <button type="button" data-calendar-action="apply" class="tutor-btn tutor-btn-primary tutor-btn-small">
+                    ${__('Apply', 'tutor')}
+                    </button>
+                  </div>
                 </div>
               </div>
             `,
@@ -152,7 +168,9 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
         this.updateActivePreset();
 
         el.addEventListener('click', (e) => this.handlePresetClick(e));
+        el.addEventListener('click', (e) => this.handleActionClick(e));
         window.addEventListener('popstate', this.updateActivePreset);
+        window.addEventListener('tutor-calendar:clear', () => this.clear());
       });
     },
 
@@ -160,6 +178,19 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       this.calendar?.destroy();
       this.calendar = null;
       window.removeEventListener('popstate', this.updateActivePreset);
+      window.removeEventListener('tutor-calendar:clear', () => this.clear());
+    },
+
+    handleActionClick(e: Event) {
+      const target = (e.target as HTMLElement).closest('[data-calendar-action]');
+      if (!target) return;
+
+      const action = target.getAttribute('data-calendar-action');
+      if (action === 'apply') {
+        this.applyRange();
+      } else if (action === 'clear') {
+        this.clear();
+      }
     },
 
     handlePresetClick(e: Event) {
@@ -172,11 +203,15 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       }
     },
 
-    handleDateClick(self: Calendar) {
+    handleDateClick(self: Calendar, event: MouseEvent) {
       if (self.context.inputElement) {
         this.handleInputSelection(self);
       } else if (self.selectionDatesMode === 'multiple-ranged') {
-        this.handleRangeSelection(self);
+        const date = (event.target as HTMLElement).closest('[data-vc-date]')?.getAttribute('data-vc-date');
+
+        if (date && self.context.selectedDates.length === 2 && !self.context.selectedDates[0]) {
+          this.calendar?.set({ selectedDates: [date, date] });
+        }
       } else {
         this.handleSingleDateSelection(self);
       }
@@ -196,13 +231,13 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       }
     },
 
-    handleRangeSelection(self: Calendar) {
-      if (self.context.selectedDates.length !== 2) return;
+    applyRange() {
+      if (!this.calendar || this.calendar.context.selectedDates.length !== 2) return;
 
       hidePopover?.();
       this.navigateWithParams({
-        start_date: self.context.selectedDates[0],
-        end_date: self.context.selectedDates[1],
+        start_date: this.calendar.context.selectedDates[0],
+        end_date: this.calendar.context.selectedDates[1],
       });
     },
 
@@ -225,6 +260,14 @@ export function calendar({ options, hidePopover }: { options: OptionsCalendar; h
       });
 
       window.location.href = url.toString();
+    },
+
+    clear() {
+      this.navigateWithParams({
+        start_date: null,
+        end_date: null,
+        date: null,
+      });
     },
 
     getPresetDates(preset: Preset): string[] {

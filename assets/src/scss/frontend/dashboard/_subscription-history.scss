@@ -40,7 +40,7 @@
       }
 
       &-amount {
-        span {
+        span:nth-child(2) {
           color: $tutor-text-subdued;
         }
       }
@@ -137,6 +137,9 @@
 
         span {
           @include tutor-typography('tiny', 'regular', 'subdued');
+        }
+        .tutor-price-amount{
+          @include tutor-typography('medium', 'semibold');
         }
       }
     }

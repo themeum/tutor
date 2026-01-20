@@ -27,7 +27,7 @@ $paged_filter = Input::get( 'paged', 1, Input::TYPE_INT );
 $limit        = (int) tutor_utils()->get_option( 'pagination_per_page', 10 );
 $offset       = ( $limit * $paged_filter ) - $limit;
 
-$order_controller = new OrderController();
+$order_controller = new OrderController( false );
 
 $get_orders  = $order_controller->get_orders( $limit, $offset );
 $orders      = $get_orders['results'];

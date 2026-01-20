@@ -132,7 +132,7 @@ class Progress extends BaseComponent {
 		// Merge classes.
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		return sprintf(
 			'<div %s><div class="tutor-progress-bar-fill" style="--tutor-progress-width: %d%%;"></div></div>',
@@ -165,7 +165,7 @@ class Progress extends BaseComponent {
 		// Merge attributes.
 		$this->attributes['x-data'] = sprintf( 'tutorStatics(%s)', $alpine_json );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		return sprintf(
 			'<div %s><div x-html="render()"></div></div>',

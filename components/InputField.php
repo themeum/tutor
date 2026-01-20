@@ -1260,7 +1260,7 @@ class InputField extends BaseComponent {
 			</div>',
 			$props_json,
 			$size_class,
-			$this->render_attributes(),
+			$this->get_attributes_string(),
 			$select_input_buttons,
 			$select_input_options
 		);
@@ -1381,7 +1381,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->placeholder ) ) {
@@ -1477,7 +1477,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->placeholder ) ) {
@@ -1544,7 +1544,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->value ) ) {
@@ -1591,7 +1591,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->value ) ) {
@@ -1641,7 +1641,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->value ) ) {

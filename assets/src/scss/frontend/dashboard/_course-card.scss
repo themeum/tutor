@@ -5,6 +5,7 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-course-card {
+  @include tutor-flex(column, flex-start, flex-start);
   height: 100%;
   @include tutor-transition(background-color);
 
@@ -86,6 +87,7 @@
     @include tutor-flex(row, center, flex-start);
     gap: $tutor-spacing-5;
     @include tutor-typography('small', 'medium', 'primary');
+    margin-top: auto;
     del {
       @include tutor-typography('tiny', 'regular', 'subdued');
     }
