@@ -8,12 +8,13 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 
-defined( 'ABSPATH' ) || exit;
 
 ?>
 <div class="tutor-account-header">
@@ -25,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
 					->tag( 'a' )
-					->icon( Icon::LEFT )
+					->icon( Icon::LEFT, 'left', 20, 20 )
 					->icon_only()
 					->attr( 'href', esc_url( $back_url ) )
 					->render();
@@ -38,7 +39,7 @@ defined( 'ABSPATH' ) || exit;
 					->variant( Variant::GHOST )
 					->size( Size::X_SMALL )
 					->tag( 'a' )
-					->icon( Icon::CROSS )
+					->icon( Icon::CROSS, 'left', 20, 20 )
 					->icon_only()
 					->attr( 'href', esc_url( $close_url ) )
 					->render();

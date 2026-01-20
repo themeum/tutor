@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * Badge::make()
  *     ->label( 'Points: 20' )
- *     ->circle()
+ *     ->rounded()
  *     ->render();
  * ```
  *

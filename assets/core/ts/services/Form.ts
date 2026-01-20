@@ -1,4 +1,5 @@
-import { type FormControlMethods } from '@Core/ts/components/form';
+import { type FormControlMethods, type FormState } from '@Core/ts/components/form';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type ServiceMeta } from '@Core/ts/types';
 
 /**
@@ -7,6 +8,23 @@ import { type ServiceMeta } from '@Core/ts/types';
  */
 export class FormService {
   private forms: Map<string, FormControlMethods> = new Map();
+
+  constructor() {
+    this.setupEventListeners();
+  }
+
+  /** Setup event listeners for form events */
+  private setupEventListeners(): void {
+    document.addEventListener(TUTOR_CUSTOM_EVENTS.FORM_REGISTER, ((event: CustomEvent) => {
+      const { id, instance } = event.detail;
+      this.register(id, instance);
+    }) as EventListener);
+
+    document.addEventListener(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, ((event: CustomEvent) => {
+      const { id } = event.detail;
+      this.unregister(id);
+    }) as EventListener);
+  }
 
   /**
    * Register a form instance with the service
@@ -42,8 +60,7 @@ export class FormService {
    * @returns Object containing all form values
    */
   getValues(id: string): Record<string, unknown> {
-    const form = this.getForm(id);
-    return form.watch() as Record<string, unknown>;
+    return this.getForm(id).watch() as Record<string, unknown>;
   }
 
   /**
@@ -53,8 +70,7 @@ export class FormService {
    * @returns The field value
    */
   getValue(id: string, name: string): unknown {
-    const form = this.getForm(id);
-    return form.getValue(name);
+    return this.getForm(id).getValue(name);
   }
 
   /**
@@ -70,8 +86,7 @@ export class FormService {
     value: unknown,
     options?: { shouldValidate?: boolean; shouldTouch?: boolean; shouldDirty?: boolean },
   ): void {
-    const form = this.getForm(id);
-    form.setValue(name, value, options);
+    this.getForm(id).setValue(name, value, options);
   }
 
   /**
@@ -97,8 +112,7 @@ export class FormService {
    * @param values - Optional values to reset to (defaults to initial values)
    */
   reset(id: string, values?: Record<string, unknown>): void {
-    const form = this.getForm(id);
-    form.reset(values);
+    this.getForm(id).reset(values);
   }
 
   /**
@@ -108,8 +122,7 @@ export class FormService {
    * @returns Promise resolving to true if valid, false otherwise
    */
   async trigger(id: string, name?: string | string[]): Promise<boolean> {
-    const form = this.getForm(id);
-    return form.trigger(name);
+    return this.getForm(id).trigger(name);
   }
 
   /**
@@ -118,19 +131,17 @@ export class FormService {
    * @param name - Optional field name or array of field names. Omit to clear all errors.
    */
   clearErrors(id: string, name?: string | string[]): void {
-    const form = this.getForm(id);
-    form.clearErrors(name);
+    this.getForm(id).clearErrors(name);
   }
 
   /**
    * Set an error for a specific field
    * @param id - The form ID
    * @param name - The field name
-   * @param error - The error object with type and message
+   * @param error: { type: string; message: string }
    */
   setError(id: string, name: string, error: { type: string; message: string }): void {
-    const form = this.getForm(id);
-    form.setError(name, error);
+    this.getForm(id).setError(name, error);
   }
 
   /**
@@ -140,37 +151,26 @@ export class FormService {
    * @param options - Optional settings for selection behavior
    */
   setFocus(id: string, name: string, options?: { shouldSelect?: boolean }): void {
-    const form = this.getForm(id);
-    form.setFocus(name, options);
+    this.getForm(id).setFocus(name, options);
   }
 
   /**
-   * Get the complete form state
+   * Get the complete form state snapshot
    * @param id - The form ID
-   * @returns Object containing all form state (values, errors, touched, dirty, validity, etc.)
+   * @returns Object containing all form state
    */
-  getFormState(id: string): {
-    values: Record<string, unknown>;
-    errors: Record<string, { type: string; message: string }>;
-    touchedFields: Record<string, boolean>;
-    dirtyFields: Record<string, boolean>;
-    isValid: boolean;
-    isSubmitting: boolean;
-    isValidating: boolean;
-  } {
-    const form = this.getForm(id);
-    return form.getFormState();
+  getFormState(id: string): FormState {
+    return this.getForm(id).getFormState();
   }
 
   /**
-   * Watch a specific field value (returns the value)
+   * Watch a specific field value
    * @param id - The form ID
    * @param name - The field name
    * @returns The current field value
    */
   watch(id: string, name: string): unknown {
-    const form = this.getForm(id);
-    return form.watch(name);
+    return this.getForm(id).watch(name);
   }
 
   /**
