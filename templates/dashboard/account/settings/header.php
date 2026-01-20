@@ -48,7 +48,7 @@ $back_url = UrlHelper::back();
 			<?php
 				Badge::make()
 					->variant( Variant::SECONDARY )
-					->circle()
+					->rounded()
 					->label( __( 'Unsaved changes', 'tutor' ) )
 					->attr( 'x-show', 'activeTab !== "none" && isDirty[`tutor-${activeTab}-form`]' )
 					->attr( 'x-cloak', '' )
