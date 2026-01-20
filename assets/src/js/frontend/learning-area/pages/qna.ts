@@ -89,7 +89,7 @@ const qnaPage = () => {
   };
 };
 
-export const initializeQnA = () => {
+export const initializeQna = () => {
   window.TutorComponentRegistry.register({
     type: 'component',
     meta: {

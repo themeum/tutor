@@ -4,7 +4,7 @@
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeCoursePlayer } from './pages/course-player';
 import { initializeLessonContent } from './pages/lesson-content';
-import { initializeQnA } from './pages/qna';
+import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './pages/quiz';
 
 const initializeLearningArea = () => {
@@ -25,7 +25,7 @@ const initializeLearningArea = () => {
       initializeAssignmentView();
       break;
     case 'qna':
-      initializeQnA();
+      initializeQna();
       break;
     default:
       // eslint-disable-next-line no-console
