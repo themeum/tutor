@@ -16,6 +16,7 @@ $tutor-border-success: var(--tutor-border-success);
 $tutor-border-success-secondary: var(--tutor-border-success-secondary);
 $tutor-border-warning: var(--tutor-border-warning);
 $tutor-border-warning-secondary: var(--tutor-border-warning-secondary);
+$tutor-border-warning-tertiary: var(--tutor-border-warning-tertiary);
 $tutor-border-error: var(--tutor-border-error);
 $tutor-border-error-secondary: var(--tutor-border-error-secondary);
 
@@ -34,7 +35,6 @@ $tutor-radius-4xl: 20px;
 $tutor-radius-5xl: 24px;
 $tutor-radius-full: 1000px;
 
-
 // =============================================================================
 // BORDER COLOR MAP (for utility generation)
 // =============================================================================
@@ -48,8 +48,12 @@ $tutor-border-colors: (
   brand-tertiary: $tutor-border-brand-tertiary,
   dark: $tutor-border-dark,
   success: $tutor-border-success,
+  success-secondary: $tutor-border-success-secondary,
   warning: $tutor-border-warning,
-  error: $tutor-border-error
+  warning-secondary: $tutor-border-warning-secondary,
+  warning-tertiary: $tutor-border-warning-tertiary,
+  error: $tutor-border-error,
+  error-secondary: $tutor-border-error-secondary,
 );
 
 // =============================================================================
@@ -66,5 +70,5 @@ $tutor-radius: (
   3xl: $tutor-radius-3xl,
   4xl: $tutor-radius-4xl,
   5xl: $tutor-radius-5xl,
-  full: $tutor-radius-full
+  full: $tutor-radius-full,
 );

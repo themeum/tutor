@@ -10,6 +10,7 @@ $tutor-text-primary-inverse: var(--tutor-text-primary-inverse);
 $tutor-text-secondary: var(--tutor-text-secondary);
 $tutor-text-subdued: var(--tutor-text-subdued);
 $tutor-text-brand: var(--tutor-text-brand);
+$tutor-text-brand-hover: var(--tutor-text-brand-hover);
 $tutor-text-brand-secondary: var(--tutor-text-brand-secondary);
 $tutor-text-light: var(--tutor-text-light);
 $tutor-text-success: var(--tutor-text-success);
@@ -32,6 +33,7 @@ $tutor-text-colors: (
   secondary: $tutor-text-secondary,
   subdued: $tutor-text-subdued,
   brand: $tutor-text-brand,
+  brand-hover: $tutor-text-brand-hover,
   brand-secondary: $tutor-text-brand-secondary,
   light: $tutor-text-light,
   success: $tutor-text-success,
