@@ -1265,6 +1265,7 @@ class InputField extends BaseComponent {
 			$select_input_options
 		);
 	}
+
 	/**
 	 * Render password input.
 	 *
@@ -1294,7 +1295,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->placeholder ) ) {
