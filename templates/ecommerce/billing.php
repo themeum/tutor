@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
@@ -159,7 +161,6 @@ $default_values = array(
 			<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 				<?php
 					InputField::make()
-						->type( InputType::TEXT )
 						->name( 'billing_city' )
 						->label( __( 'City', 'tutor' ) )
 						->clearable()
@@ -170,7 +171,6 @@ $default_values = array(
 						->render();
 
 					InputField::make()
-						->type( InputType::TEXT )
 						->name( 'billing_zip_code' )
 						->label( __( 'Postcode/ Zip', 'tutor' ) )
 						->clearable()
