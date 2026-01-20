@@ -12,10 +12,10 @@
 
 namespace Tutor\Components;
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\components\Constants\Size;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Class StarRatingInput
@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * Example Usage:
  * ```
  * StarRatingInput::make()
- *     ->fieldName('rating')
- *     ->currentRating(4.5)
+ *     ->field_name('rating')
+ *     ->current_rating(4.5)
  *     ->render();
  * ```
  *
@@ -74,7 +74,7 @@ class StarRatingInput extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function fieldName( string $name ): self {
+	public function field_name( string $name ): self {
 		$this->field_name = $name;
 		return $this;
 	}
@@ -86,7 +86,7 @@ class StarRatingInput extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function currentRating( float $rating ): self {
+	public function current_rating( float $rating ): self {
 		$this->current_rating = $rating;
 		return $this;
 	}
@@ -98,7 +98,7 @@ class StarRatingInput extends BaseComponent {
 	 *
 	 * @return self
 	 */
-	public function onChange( string $callback ): self {
+	public function on_change( string $callback ): self {
 		$this->on_change = $callback;
 		return $this;
 	}

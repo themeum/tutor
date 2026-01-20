@@ -12,9 +12,9 @@
 
 namespace Tutor\Components;
 
-use TUTOR\Icon;
-
 defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
 
 /**
  * Class StarRating
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * StarRating::make()
  *     ->rating(4.5)
- *     ->showAverage(true)
+ *     ->show_average(true)
  *     ->render();
  * ```
  *
