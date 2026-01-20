@@ -8,6 +8,7 @@
  * @since 4.0.0
  */
 
+use Tutor\Components\Avatar;
 use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Components\Constants\InputType;
@@ -17,7 +18,19 @@ use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
+use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+$question_id = Input::get( 'question_id' );
+
+if ( $question_id ) {
+	tutor_load_template( 'learning-area.subpages.qna-single' );
+	return;
+}
 
 // Get course ID from global variable set in learning-area/index.php .
 global $tutor_course_id;
@@ -67,44 +80,29 @@ $questions   = tutor_utils()->get_qa_questions(
 	<div class="tutor-discussion-search tutor-p-6 tutor-border-b">
 		<form method="get" action="">
 			<?php
-			// Preserve existing query parameters .
+			// Preserve existing query parameters.
 			foreach ( $_GET as $key => $value ) { //phpcs:ignore
 				if ( 'search' !== $key && 'current_page' !== $key && 'paged' !== $key ) {
 					echo '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" />';
 				}
 			}
 			?>
-			<div class="tutor-input-field">
-				<div class="tutor-input-wrapper">
-					<input 
-						type="text"
-						name="search"
-						value="<?php echo esc_attr( $search_query ); ?>"
-						placeholder="<?php esc_attr_e( 'Search questions, topics...', 'tutor' ); ?>"
-						class="tutor-input tutor-input-content-left tutor-input-content-clear"
-					>
-					<div class="tutor-input-content tutor-input-content-left">
-						<?php tutor_utils()->render_svg_icon( Icon::SEARCH_2, 20, 20 ); ?>
-					</div>
-					<button 
-						type="button"
-						class="tutor-input-clear-button"
-						aria-label="<?php esc_attr_e( 'Clear input', 'tutor' ); ?>"
-						onclick="this.previousElementSibling.previousElementSibling.value=''; this.form.submit();"
-					>
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
-					</button>
-				</div>
-			</div>
+			<?php
+				SearchFilter::make()
+				->placeholder( 'Search items...' )
+				->input_name( 'search' )
+				->method( 'GET' )
+				->size( 'large' )
+				->render();
+			?>
 		</form>
 	</div>
 
 	<!-- Question submission form  -->
-	<form 
-		class="tutor-discussion-form tutor-p-6 tutor-border-b tutor-qna-form" 
+	<form
+		class="tutor-discussion-form tutor-p-6 tutor-border-b tutor-qna-form"
 		x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $tutor_course_id ); ?>' }), focused : false }"
 		@submit.prevent="handleSubmit((data) => createQnaMutation?.mutate({...data, course_id: <?php echo esc_html( $tutor_course_id ); ?> }))($event)"
-		data-course_id="<?php echo esc_attr( $tutor_course_id ); ?>"
 	>
 		<div class="tutor-input-field">
 			<label for="tutor-qna-question" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'Question & Answer', 'tutor' ); ?></label>
@@ -116,6 +114,7 @@ $questions   = tutor_utils()->get_qa_questions(
 					->placeholder( 'Ask a question...' )
 					->attr( '@focus', 'focused = true' )
 					->attr( 'x-bind', "register('answer', { required: '" . esc_html( __( 'Please enter a response', 'tutor' ) ) . "' })" )
+					->attr( 'rows', 4 )
 					->render();
 				?>
 			</div>
@@ -160,18 +159,16 @@ $questions   = tutor_utils()->get_qa_questions(
 			<?php
 			Sorting::make()
 				->order( Input::get( 'order', 'DESC' ) )
-				->label_asc( __( 'Newest First', 'tutor' ) )
-				->label_desc( __( 'Oldest First', 'tutor' ) )
 				->render();
 			?>
 		</div>
 	</div>
 
 	<!-- Question Listing -->
-	<?php if ( is_array( $questions ) && count( $questions ) ) : ?>
+	<?php if ( tutor_utils()->count( $questions ) ) : ?>
 		<div class="tutor-discussion-list tutor-flex tutor-flex-column tutor-gap-4 tutor-p-6">
-			<?php foreach ( $questions as $question ) : ?>
-				<?php
+			<?php
+			foreach ( $questions as $question ) :
 				$meta         = $question->meta;
 				$is_important = (int) tutor_utils()->array_get( 'tutor_qna_important', $meta, 0 );
 				$question_url = add_query_arg(
@@ -185,9 +182,13 @@ $questions   = tutor_utils()->get_qa_questions(
 				$content      = strlen( $content ) > 100 ? substr( $content, 0, 100 ) . '...' : $content;
 				?>
 				<div class="tutor-discussion-card" @click="window.location.href = '<?php echo esc_url( $question_url ); ?>'" style="cursor: pointer;">
-					<div class="tutor-avatar tutor-avatar-32">
-						<img src="<?php echo esc_url( get_avatar_url( $question->user_id ) ); ?>" alt="<?php echo esc_attr( $question->display_name ); ?>" class="tutor-avatar-image">
-					</div>
+					<?php
+					Avatar::make()
+						->user( $question->user_id )
+						->size( Size::SIZE_32 )
+						->attr( 'alt', $question->display_name )
+						->render();
+					?>
 					<div class="tutor-discussion-card-content">
 						<div class="tutor-discussion-card-top">
 							<div class="tutor-discussion-card-author"><?php echo esc_html( $question->display_name ); ?></div>
@@ -198,7 +199,7 @@ $questions   = tutor_utils()->get_qa_questions(
 						</a>
 						<div class="tutor-discussion-card-meta">
 							<div class="tutor-flex tutor-items-center tutor-gap-2">
-								<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20 ); ?> 
+								<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 16, 16 ); ?> 
 								<?php echo esc_html( $question->answer_count ); ?>
 							</div>
 						</div>
@@ -215,7 +216,7 @@ $questions   = tutor_utils()->get_qa_questions(
 		<?php
 		Pagination::make()
 			->current( $current_page )
-			->total( (int) $total_items )
+			->total( $total_items )
 			->limit( $question_per_page )
 			->attr( 'class', 'tutor-px-6 tutor-pb-6 tutor-sm-p-5 tutor-sm-border-t' )
 			->render();

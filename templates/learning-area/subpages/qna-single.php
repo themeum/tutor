@@ -25,7 +25,7 @@ $question_id = Input::get( 'question_id', null, Input::TYPE_INT );
 $order_by    = Input::get( 'order', 'DESC' );
 
 // Get question data.
-$question = tutor_utils()->get_qa_question( (int) $question_id );
+$question = tutor_utils()->get_qa_question( $question_id );
 
 // Get answers.
 $answers         = tutor_utils()->get_qa_answer_by_question( $question_id, $order_by );
@@ -60,13 +60,11 @@ $back_url        = remove_query_arg( 'question_id' );
 			</div>
 			<?php if ( $current_user_id == $question->user_id || current_user_can( 'manage_tutor' ) ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-ml-auto">
-
 					<?php
 					Button::make()
 						->variant( Variant::GHOST )
 						->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
 						->size( Size::SMALL )
-						->attr( 'type', 'button' )
 						->attr( 'x-ref', 'trigger' )
 						->attr( '@click', 'toggle()' )
 						->render();
@@ -103,18 +101,16 @@ $back_url        = remove_query_arg( 'question_id' );
 		>
 			<div class="tutor-input-field">
 				<label for="tutor-qna-reply" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'Reply', 'tutor' ); ?></label>
-				<div class="tutor-input-wrapper">
-					<?php
-					InputField::make()
-					->type( InputType::TEXTAREA )
-					->name( 'response' )
-					->placeholder( __( 'Just drop your response here!', 'tutor' ) )
-					->clearable()
-					->attr( '@focus', 'focused = true' )
-					->attr( 'x-bind', "register('answer', { required: '" . esc_html( __( 'Please enter a response', 'tutor' ) ) . "' })" )
-					->render();
-					?>
-				</div>
+				<?php
+				InputField::make()
+				->type( InputType::TEXTAREA )
+				->name( 'response' )
+				->placeholder( __( 'Just drop your response here!', 'tutor' ) )
+				->clearable()
+				->attr( '@focus', 'focused = true' )
+				->attr( 'x-bind', "register('answer', { required: '" . esc_html( __( 'Please enter a response', 'tutor' ) ) . "' })" )
+				->render();
+				?>
 			</div>
 			<div class="tutor-flex tutor-items-center tutor-justify-end tutor-gap-2 tutor-mt-5"  x-cloak :class="{ 'tutor-hidden': !focused }">
 				<?php
@@ -148,14 +144,12 @@ $back_url        = remove_query_arg( 'question_id' );
 			<?php
 			Sorting::make()
 				->order( Input::get( 'order', 'DESC' ) )
-				->label_asc( __( 'Newest First', 'tutor' ) )
-				->label_desc( __( 'Oldest First', 'tutor' ) )
 				->render();
 			?>
 		</div>
 	</div>
 
-	<?php if ( is_array( $answers ) && count( $answers ) ) : ?>
+	<?php if ( tutor_utils()->count( $answers ) ) : ?>
 		<div class="tutor-discussion-single-reply-list">
 			<?php foreach ( $answers as $answer ) : ?>
 				<div class="tutor-discussion-reply-list-item" data-answer_id="<?php echo esc_attr( $answer->comment_ID ); ?>">
@@ -173,10 +167,15 @@ $back_url        = remove_query_arg( 'question_id' );
 					</div>
 					<?php if ( $current_user_id == $answer->user_id || current_user_can( 'manage_tutor' ) ) : ?>
 						<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-ml-auto">
-							<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
-								<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL ); ?>
-							</button>
-
+							<?php
+							Button::make()
+								->variant( Variant::GHOST )
+								->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
+								->size( Size::SMALL )
+								->attr( 'x-ref', 'trigger' )
+								->attr( '@click', 'toggle()' )
+								->render();
+							?>
 							<div 
 								x-ref="content"
 								x-show="open"

@@ -22,7 +22,7 @@ interface DeleteQnaPayload {
 
 /**
  * Q&A Page Component
- * Handles Q&A question creation in learning area
+ * Handles Q&A related action in learning area
  */
 const qnaPage = () => {
   const query = window.TutorCore.query;
