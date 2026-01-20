@@ -35,6 +35,7 @@ $sortable_sections_ids = array_reduce(
 	array()
 );
 
+$template_path = tutor()->path . 'templates/dashboard/instructor/home/';
 $user           = wp_get_current_user();
 $start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
 $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
@@ -164,7 +165,12 @@ $course_completion_data = array(
 // );
 
 // Top Performing Courses.
-$top_courses            = Instructor::get_top_performing_courses_by_instructor( $user->ID );
+$args = array(
+	'start_date' => $start_date,
+	'end_date' => $end_date,
+	'order_by' => Input::get( 'type', 'revenue' ),
+);
+$top_courses            = Instructor::get_top_performing_courses_by_instructor( $user->ID, $args);
 $top_performing_courses = array_map(
 	function ( $course ) {
 		return array(
@@ -504,26 +510,33 @@ $recent_reviews = array(
 				<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
 			</div>
 
+			<!-- Sorting -->
 			<?php
-			// Sorting::make()
-			// 		->label_asc( 'Revenue' )
-			// 		->label_desc( 'Students' )
-			// 		->order( $order_filter )
-			// 		->render();
+			$data = array(
+				'options'  => array(
+					'revenue' => __( 'Revenue', 'tutor' ),
+					'student' => __( 'Student', 'tutor' ),
+				),
+				'selected' => Input::get( 'type', 'revenue' ),
+			);
+			tutor_load_template_from_custom_path(
+				$template_path . 'top-performing-course-filter.php',
+				$data,
+				false
+			);
 			?>
 		</div>
 
 		<div class="tutor-dashboard-home-card-body tutor-gap-4">
 			<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
 				<?php
-				$template_path = tutor()->path . 'templates/dashboard/instructor/home/top-performing-course-item.php';
-				echo tutor_utils()->render_template(
-					$template_path,
+				tutor_load_template_from_custom_path(
+					$template_path . 'top-performing-course-item.php',
 					array(
 						'item_key' => $item_key,
 						'item'     => $item,
 					),
-					'include'
+					false
 				)
 				?>
 			<?php endforeach; ?>

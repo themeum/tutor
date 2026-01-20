@@ -702,6 +702,14 @@ class Instructor {
 	 * @since 4.0.0
 	 *
 	 * @param int $instructor_id Instructor  user ID.
+	 * @param array $args {
+	 *     Optional query arguments.
+	 *
+	 *     @type string $start_date Optional start date (Y-m-d).
+	 *     @type string $end_date   Optional end date (Y-m-d).
+	 *     @type string $order_by   Sorting criteria. Accepts 'revenue' or 'student'.
+	 *}
+
 	 * @param int $limit         Maximum number of courses to return. Default 4.
 	 *
 	 * @return array List of course objects containing:
@@ -712,10 +720,14 @@ class Instructor {
 	 *
 	 * @throws \Exception When a database error occurs.
 	 */
-	public static function get_top_performing_courses_by_instructor( $instructor_id, $limit = 4 ) {
+	public static function get_top_performing_courses_by_instructor( $instructor_id, $args, $limit = 4 ) {
 
 		global $wpdb;
 
+		$start_date = $args['start_date'] ?? null;
+		$end_date = $args['end_date'] ?? null;
+		$order_by = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
+ 
 		$complete_status = QueryHelper::prepare_in_clause( tutor_utils()->get_earnings_completed_statuses() );
 
 		$amount_type = current_user_can( 'administrator' ) ? 'earnings.admin_amount' : 'earnings.instructor_amount';
@@ -726,6 +738,38 @@ class Instructor {
 				THEN ( earnings.course_price_grand_total - orders.tax_amount ) * ( $amount_rate/100 )
 			ELSE $amount_type
 			END";
+		
+		$earning_where_clause = QueryHelper::prepare_where_clause(
+			array(
+				'earnings.user_id' => $instructor_id,
+				'earnings.order_status' => array('IN', $complete_status),			
+			)
+		);
+
+		$enrollment_where_clause = QueryHelper::prepare_where_clause(array('post_type' => 'tutor_enrolled'));
+
+		if (!empty($start_date) && !empty($end_date)) {
+			$earning_where_clause['earnings.created_at'] = array('BETWEEN', array($start_date, $end_date));
+			$enrollment_where_clause['post_date'] = array('BETWEEN', array($start_date, $end_date));
+		}
+
+		$earnings_sql = "SELECT
+							earnings.course_id,
+							SUM($amount_condition) AS total_revenue
+						FROM {$wpdb->tutor_earnings} earnings
+						LEFT JOIN {$wpdb->tutor_orders} orders ON orders.id = earnings.order_id
+						WHERE {$earning_where_clause}
+						GROUP BY earnings.course_id";
+
+		$enrollment_sql = QueryHelper::prepare_raw_query(
+							"SELECT 
+								post_parent AS course_id, 
+								COUNT(ID) AS total_student
+							FROM {$wpdb->posts}
+							WHERE {$enrollment_where_clause}
+							GROUP BY post_parent", 
+							array()
+						);
 
 		$result = $wpdb->get_results(
 			$wpdb->prepare(
@@ -735,29 +779,13 @@ class Instructor {
 					COALESCE(earnings.total_revenue, 0)  AS total_revenue,
 					COALESCE(enrollments.total_student, 0) AS total_student
 				FROM wp_posts post
-				LEFT JOIN (
-					SELECT
-						earnings.course_id,
-						SUM($amount_condition) AS total_revenue
-					FROM {$wpdb->tutor_earnings} earnings
-					LEFT JOIN {$wpdb->tutor_orders} orders ON orders.id = earnings.order_id
-					WHERE earnings.user_id = %d
-						AND earnings.order_status IN ({$complete_status})
-					GROUP BY earnings.course_id
-				) earnings ON earnings.course_id = post.ID
-				LEFT JOIN (
-					SELECT 
-						post_parent AS course_id, 
-						COUNT(ID) AS total_student
-					FROM {$wpdb->posts}
-					WHERE post_type = %s
-					GROUP BY post_parent
-				) enrollments ON enrollments.course_id = post.ID
+				LEFT JOIN ({$earnings_sql}) earnings 
+					ON earnings.course_id = post.ID
+				LEFT JOIN ({$enrollment_sql}) enrollments 
+					ON enrollments.course_id = post.ID
 				WHERE post.post_type = %s
-				ORDER BY total_revenue DESC
+				ORDER BY {$order_by} DESC
 				LIMIT %d",
-				$instructor_id,
-				'tutor_enrolled',
 				tutor()->course_post_type,
 				$limit
 			)
