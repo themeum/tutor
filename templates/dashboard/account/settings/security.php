@@ -57,23 +57,26 @@ $form_id = 'tutor-reset-password-form';
 </section>
 
 <?php
-$modal_footer = '';
-ob_start();
-Button::make()
+$cancel_button = Button::make()
 	->label( __( 'Cancel', 'tutor' ) )
 	->variant( Variant::SECONDARY )
 	->size( Size::SMALL )
 	->attr( '@click', "TutorCore.modal.closeModal('reset-password-modal')" )
-	->render();
+	->get();
 
-Button::make()
+$update_button = Button::make()
 	->label( __( 'Update Password', 'tutor' ) )
 	->variant( Variant::PRIMARY )
 	->size( Size::SMALL )
 	->attr( 'form', $form_id )
 	->attr( 'type', 'submit' )
-	->render();
-$modal_footer = ob_get_clean();
+	->get();
+
+$modal_footer = sprintf(
+	'%s %s',
+	$cancel_button,
+	$update_button,
+);
 
 $modal_title = sprintf(
 	'<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-pb-7">%s%s</div>',

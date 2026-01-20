@@ -27,7 +27,7 @@ $show_quiz_title = $show_quiz_title ?? false;
 $show_course     = $show_course ?? false;
 $attempt_number  = $attempt_number ?? null;
 $attempts_count  = $attempts_count ?? 0;
-$badge           = Badge::make()->label( 'Failed' )->variant( Variant::CANCELLED )->circle();
+$badge           = Badge::make()->label( 'Failed' )->variant( Variant::CANCELLED )->rounded();
 $kebab_button    = Button::make()
 					->icon( Icon::THREE_DOTS_VERTICAL )
 					->attr( 'x-ref', 'trigger' )
