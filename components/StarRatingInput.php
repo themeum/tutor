@@ -35,12 +35,16 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Form field name
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $field_name = 'rating';
 
 	/**
 	 * Current rating value
+	 *
+	 * @since 4.0.0
 	 *
 	 * @var float
 	 */
@@ -49,12 +53,16 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * On change callback function name or js snippet
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $on_change = '';
 
 	/**
 	 * Alpine register function binding
+	 *
+	 * @since 4.0.0
 	 *
 	 * @var string
 	 */
@@ -70,6 +78,8 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Set field name
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param string $name field name.
 	 *
 	 * @return self
@@ -81,6 +91,8 @@ class StarRatingInput extends BaseComponent {
 
 	/**
 	 * Set current rating
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param float $rating rating.
 	 *
@@ -94,6 +106,8 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Set on change callback
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param string $callback callback.
 	 *
 	 * @return self
@@ -106,6 +120,8 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Set register binding
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param string $register register.
 	 *
 	 * @return self
@@ -117,6 +133,8 @@ class StarRatingInput extends BaseComponent {
 
 	/**
 	 * Get component content
+	 *
+	 * @since 4.0.0
 	 *
 	 * @return string
 	 */

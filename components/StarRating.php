@@ -34,12 +34,16 @@ class StarRating extends BaseComponent {
 	/**
 	 * Rating value
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var float
 	 */
 	protected $rating = 0;
 
 	/**
 	 * Whether to show numerical rating
+	 *
+	 * @since 4.0.0
 	 *
 	 * @var bool
 	 */
@@ -48,6 +52,8 @@ class StarRating extends BaseComponent {
 	/**
 	 * Star icon size
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var int
 	 */
 	protected $icon_size = 16;
@@ -55,12 +61,16 @@ class StarRating extends BaseComponent {
 	/**
 	 * Review count
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var int|null
 	 */
 	protected $count = null;
 
 	/**
 	 * Set rating value
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param float $rating rating.
 	 *
@@ -74,6 +84,8 @@ class StarRating extends BaseComponent {
 	/**
 	 * Set whether to show average rating text
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param bool $show show average.
 	 *
 	 * @return self
@@ -85,6 +97,8 @@ class StarRating extends BaseComponent {
 
 	/**
 	 * Set icon size
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param int $size size.
 	 *
@@ -98,6 +112,8 @@ class StarRating extends BaseComponent {
 	/**
 	 * Set review count
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param int $count count.
 	 *
 	 * @return self
@@ -109,6 +125,8 @@ class StarRating extends BaseComponent {
 
 	/**
 	 * Get component content
+	 *
+	 * @since 4.0.0
 	 *
 	 * @return string
 	 */
