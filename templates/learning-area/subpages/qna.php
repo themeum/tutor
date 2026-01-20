@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$question_id = Input::get( 'question_id' );
+$question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 
 if ( $question_id ) {
 	tutor_load_template( 'learning-area.subpages.qna-single' );

@@ -22,7 +22,7 @@ use Tutor\Components\Sorting;
 
 // Get course ID and question ID.
 global $tutor_course_id;
-$question_id = Input::get( 'question_id', null, Input::TYPE_INT );
+$question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 $order_by    = Input::get( 'order', 'DESC' );
 
 // Get question data.
