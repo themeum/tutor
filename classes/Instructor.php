@@ -728,7 +728,7 @@ class Instructor {
 		$end_date = $args['end_date'] ?? null;
 		$order_by = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
  
-		$complete_status = QueryHelper::prepare_in_clause( tutor_utils()->get_earnings_completed_statuses() );
+		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 
 		$amount_type = current_user_can( 'administrator' ) ? 'earnings.admin_amount' : 'earnings.instructor_amount';
 		$amount_rate = current_user_can( 'administrator' ) ? 'earnings.admin_rate' : 'earnings.instructor_rate';
@@ -739,19 +739,20 @@ class Instructor {
 			ELSE $amount_type
 			END";
 		
-		$earning_where_clause = QueryHelper::prepare_where_clause(
-			array(
-				'earnings.user_id' => $instructor_id,
-				'earnings.order_status' => array('IN', $complete_status),			
-			)
-		);
-
-		$enrollment_where_clause = QueryHelper::prepare_where_clause(array('post_type' => 'tutor_enrolled'));
+		$earning_where_clause = array(
+								'earnings.user_id' => $instructor_id,
+								'earnings.order_status' => array('IN', $complete_status),			
+							);
+		
+		$enrollment_where_clause = array('post_type' => 'tutor_enrolled');
 
 		if (!empty($start_date) && !empty($end_date)) {
-			$earning_where_clause['earnings.created_at'] = array('BETWEEN', array($start_date, $end_date));
-			$enrollment_where_clause['post_date'] = array('BETWEEN', array($start_date, $end_date));
+			$earning_where_clause['earnings.created_at'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+			$enrollment_where_clause['post_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
 		}
+
+		$earning_where_clause = QueryHelper::prepare_where_clause($earning_where_clause);
+		$enrollment_where_clause = QueryHelper::prepare_where_clause($enrollment_where_clause);
 
 		$earnings_sql = "SELECT
 							earnings.course_id,
