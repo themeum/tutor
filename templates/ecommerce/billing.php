@@ -83,7 +83,6 @@ $default_values = array(
 			<div class="tutor-grid tutor-md-grid-cols-1 tutor-grid-cols-2 tutor-gap-5">
 				<?php
 					InputField::make()
-						->type( InputType::TEXT )
 						->name( 'billing_first_name' )
 						->label( __( 'First Name', 'tutor' ) )
 						->clearable()
@@ -94,7 +93,6 @@ $default_values = array(
 						->render();
 
 					InputField::make()
-						->type( InputType::TEXT )
 						->name( 'billing_last_name' )
 						->label( __( 'Last Name', 'tutor' ) )
 						->clearable()
@@ -119,7 +117,6 @@ $default_values = array(
 					->render();
 
 				InputField::make()
-					->type( InputType::TEXT )
 					->name( 'billing_phone' )
 					->label( __( 'Phone', 'tutor' ) )
 					->clearable()
