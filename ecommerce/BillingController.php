@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use TUTOR\Icon;
 use TUTOR\BaseController;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
@@ -81,23 +82,34 @@ class BillingController extends BaseController {
 	 * Register billing nav menu for settings
 	 *
 	 * @since 3.0.0
+	 * @since 4.0.0 update tabs order and data structure.
 	 *
 	 * @param array $tabs setting navigation tabs.
 	 *
 	 * @return array
 	 */
 	public static function register_nav( $tabs ) {
-		$billing_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/billing' );
+		$id = 'billing-address';
 
 		$new_tab = array(
-			'url'   => esc_url( $billing_url ),
-			'title' => __( 'Billing', 'tutor' ),
-			'role'  => false,
+			'id'       => $id,
+			'label'    => 'Billing Address',
+			'icon'     => Icon::BILLING,
+			'text'     => __( 'Your payment address', 'tutor' ),
+			'template' => 'ecommerce.billing',
+			'role'     => false,
 		);
 
-		$tabs['billing'] = $new_tab;
+		$position = array_search( 'social-accounts', array_keys( $tabs ), true );
 
-		return $tabs;
+		if ( false === $position ) {
+			$tabs[ $id ] = $new_tab;
+			return $tabs;
+		}
+
+		return array_slice( $tabs, 0, $position + 1, true )
+		+ array( $id => $new_tab )
+		+ array_slice( $tabs, $position + 1, null, true );
 	}
 
 	/**
@@ -157,7 +169,7 @@ class BillingController extends BaseController {
 			);
 		}
 
-		$data = $this->get_allowed_fields( $_POST );
+		$data = $this->get_allowed_fields( $_POST ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
 		$user_id         = get_current_user_id();
 		$data['user_id'] = $user_id;
