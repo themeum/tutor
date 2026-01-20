@@ -2938,19 +2938,7 @@ class Utils {
 			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
 		}
 
-		/**
-		 * Miscellaneous menus pages
-		 * Which are not visible to any nav.
-		 *
-		 * @since 4.0.0
-		 */
-		$misc_menus = array(
-			'account' => array( 'label' => __( 'Account', 'tutor' ) ),
-		);
-
-		$all_menus = array_merge( $nav_items, $misc_menus );
-
-		return apply_filters( 'tutor_dashboard/nav_items_all', $all_menus );
+		return apply_filters( 'tutor_dashboard/nav_items_all', $nav_items );
 	}
 
 	/**
@@ -9606,6 +9594,10 @@ class Utils {
 				'title' => __( 'Courses', 'tutor' ),
 				'icon'  => Icon::COURSES,
 			),
+			'account' => array( 
+				'label' => __( 'Account', 'tutor' ), 
+				'show_ui' => false 
+			)
 		);
 
 		if ( $this->should_show_dicussion_menu() ) {
