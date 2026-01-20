@@ -17,7 +17,7 @@ use TUTOR\User;
 $settings_tab_data = array(
 	'account'         => array(
 		'id'              => 'account',
-		'label'           => 'Account',
+		'label'           => __( 'Account', 'tutor' ),
 		'icon'            => Icon::USER_CIRCLE,
 		'text'            => __( 'Name, email, phone number, profiles', 'tutor' ),
 		'template'        => 'dashboard.account.settings.account',
@@ -26,7 +26,7 @@ $settings_tab_data = array(
 	),
 	'security'        => array(
 		'id'              => 'security',
-		'label'           => 'Security',
+		'label'           => __( 'Security', 'tutor' ),
 		'icon'            => Icon::SECURITY,
 		'text'            => __( 'Password, 2FA', 'tutor' ),
 		'template'        => 'dashboard.account.settings.security',
@@ -35,7 +35,7 @@ $settings_tab_data = array(
 	),
 	'social-accounts' => array(
 		'id'              => 'social-accounts',
-		'label'           => 'Social Accounts',
+		'label'           => __( 'Social Accounts', 'tutor' ),
 		'icon'            => Icon::GLOBE,
 		'text'            => __( 'Linked social media profiles', 'tutor' ),
 		'template'        => 'dashboard.account.settings.social-accounts',
@@ -44,7 +44,7 @@ $settings_tab_data = array(
 	),
 	'withdraw'        => array(
 		'id'              => 'withdraw',
-		'label'           => 'Withdraw',
+		'label'           => __( 'Withdraw', 'tutor' ),
 		'icon'            => Icon::WITHDRAW,
 		'text'            => __( 'Withdrawal and refund', 'tutor' ),
 		'template'        => 'dashboard.account.settings.withdraw',
@@ -53,7 +53,7 @@ $settings_tab_data = array(
 	),
 	'preferences'     => array(
 		'id'              => 'preferences',
-		'label'           => 'Preferences',
+		'label'           => __( 'Preferences', 'tutor' ),
 		'icon'            => Icon::PREFERENCE,
 		'text'            => __( 'Sound effects, animations, theme', 'tutor' ),
 		'template'        => 'dashboard.account.settings.preferences',
