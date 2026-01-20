@@ -48,6 +48,7 @@ class Badge extends BaseComponent {
 	public const SUCCESS_SOLID = 'success-solid';
 	public const ERROR         = 'error';
 	public const HIGHLIGHT     = 'highlight';
+	public const DISABLED      = 'disabled';
 
 	/**
 	 * Badge label text.
