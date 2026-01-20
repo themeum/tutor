@@ -10,6 +10,7 @@ import { initializeHome } from './pages/instructor/home';
 import { initializeMyCourses } from './pages/my-courses';
 import { initializeOverview } from './pages/overview';
 import { initializeQuizAttempts } from './pages/quiz-attempts';
+import { initializeReviews } from './pages/reviews';
 import { initializeSettings } from './pages/settings';
 
 /**
@@ -24,7 +25,7 @@ const getCurrentPage = (): string => {
   const params = new URLSearchParams(window.location.search);
 
   // Check for subpage parameter - if not 'dashboard', return early
-  const subpage = params.get('subpage');
+  const subpage = params.get('page') ? params.get('subpage') : '';
   if (subpage && subpage !== 'dashboard') {
     return ''; // Not on dashboard, will be handled by early return in initializeDashboard
   }
@@ -62,6 +63,9 @@ const getCurrentPage = (): string => {
   }
   if (path.includes('/discussions')) {
     return 'discussions';
+  }
+  if (path.includes('/reviews')) {
+    return 'reviews';
   }
 
   // Default to home when subpage=dashboard
@@ -102,6 +106,9 @@ const initializeDashboard = () => {
       break;
     case 'discussions':
       initializeDiscussions();
+      break;
+    case 'reviews':
+      initializeReviews();
       break;
     default:
       // eslint-disable-next-line no-console

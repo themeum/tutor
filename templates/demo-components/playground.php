@@ -43,7 +43,6 @@ use TUTOR\Input;
 		'learning-area'      => 'Learning Area',
 		'user-profile'       => 'User Profile',
 		'certificates'       => 'Certificates',
-		'reviews'            => 'Reviews',
 		'profile-settings'   => 'Account Settings',
 		'billing'            => 'Billing',
 		'quiz'               => 'Quiz',

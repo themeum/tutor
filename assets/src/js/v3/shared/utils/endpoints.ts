@@ -167,6 +167,10 @@ const endpoints = {
   // Announcement
   CREATE_ANNOUNCEMENT: 'tutor_announcement_create',
   DELETE_ANNOUNCEMENT: 'tutor_announcement_delete',
+
+  //Reviews
+  PLACE_RATING: 'tutor_place_rating',
+  DELETE_REVIEW: 'delete_tutor_review',
 } as const;
 
 export default endpoints;

@@ -12,9 +12,7 @@
     background-color: $tutor-surface-l1;
     border: 1px solid $tutor-border-idle;
     border-radius: $tutor-radius-lg;
-    transition-property: background-color, border-color, opacity;
-    transition-duration: 0.2s;
-    transition-timing-function: ease-in-out;
+    @include tutor-transition((background-color, border-color, opacity));
 
     &:hover {
       background-color: $tutor-surface-l1-hover;
@@ -59,16 +57,30 @@
   &-actions {
     @include tutor-flex(row);
     gap: $tutor-spacing-4;
+    @include tutor-transition(opacity);
     opacity: 0;
-
-    &-button {
-      @include tutor-button-base;
-      @include tutor-button-variant(secondary);
-      @include tutor-button-icon-size(x-small)
-    }
   }
 
   &-text {
     @include tutor-typography('p1', 'regular', 'secondary');
+  }
+
+  &-form {
+    @include tutor-flex(column);
+    background-color: $tutor-surface-l1-hover;
+    gap: $tutor-spacing-5;
+    padding: $tutor-spacing-6;
+
+    &-fields {
+      @include tutor-flex(column);
+      gap: $tutor-spacing-6;
+      width: 100%;
+    }
+  }
+
+  &-student {
+    @include tutor-flex(row, center);
+    gap: $tutor-spacing-4;
+    margin-top: $tutor-spacing-4;
   }
 }
