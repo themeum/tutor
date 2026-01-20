@@ -70,9 +70,7 @@ $back_url        = remove_query_arg( 'question_id' );
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->display_name ); ?></span> 
-					<span class="tutor-text-secondary">
-						<?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ) ); ?>
-					</span>
+					<span class="tutor-text-secondary"> <?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ) ); //phpcs:ignore ?></span>
 				</div>
 			</div>
 			<?php if ( $current_user_id == $question->user_id || current_user_can( 'manage_tutor' ) ) : ?>
@@ -178,7 +176,7 @@ $back_url        = remove_query_arg( 'question_id' );
 					<div>
 						<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 							<span class="tutor-discussion-card-author"><?php echo esc_html( $answer->display_name ); ?></span> 
-							<span class="tutor-text-subdued"><?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ) ); ?></span>
+							<span class="tutor-text-subdued"> <?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ) ); // phpcs:ignore ?></span>
 						</div>
 						<div class="tutor-p2 tutor-text-secondary tutor-mb-6">
 							<?php echo wp_kses_post( stripslashes( $answer->comment_content ) ); ?>
