@@ -88,8 +88,8 @@ $questions   = tutor_utils()->get_qa_questions(
 			}
 			?>
 			<?php
-				SearchFilter::make()
-				->placeholder( 'Search items...' )
+			SearchFilter::make()
+				->placeholder( 'Search questions, topics...' )
 				->input_name( 'search' )
 				->method( 'GET' )
 				->size( 'large' )
@@ -111,7 +111,7 @@ $questions   = tutor_utils()->get_qa_questions(
 				InputField::make()
 					->type( InputType::TEXTAREA )
 					->name( 'answer' )
-					->placeholder( 'Ask a question...' )
+					->placeholder( 'Asked questions...' )
 					->attr( '@focus', 'focused = true' )
 					->attr( 'x-bind', "register('answer', { required: '" . esc_html( __( 'Please enter a response', 'tutor' ) ) . "' })" )
 					->attr( 'rows', 4 )

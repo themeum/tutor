@@ -17,6 +17,7 @@ use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\EmptyState;
+use Tutor\Components\Popover;
 use Tutor\Components\Sorting;
 
 // Get course ID and question ID.
@@ -59,33 +60,31 @@ $back_url        = remove_query_arg( 'question_id' );
 				</div>
 			</div>
 			<?php if ( $current_user_id == $question->user_id || current_user_can( 'manage_tutor' ) ) : ?>
-				<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-ml-auto">
+				<div class="tutor-ml-auto">
 					<?php
-					Button::make()
-						->variant( Variant::GHOST )
-						->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
-						->size( Size::SMALL )
-						->attr( 'x-ref', 'trigger' )
-						->attr( '@click', 'toggle()' )
+					Popover::make()
+						->placement( 'bottom-end' )
+						->trigger(
+							Button::make()
+								->variant( Variant::GHOST )
+								->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
+								->size( Size::SMALL )
+								->attr( 'x-ref', 'trigger' )
+								->attr( '@click', 'toggle()' )
+								->get()
+						)
+						->menu_item(
+							array(
+								'tag'     => 'button',
+								'content' => esc_html__( 'Delete', 'tutor' ),
+								'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+								'attr'    => array(
+									'@click' => "hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: " . esc_html( $question->comment_ID ) . ", context: 'question' });",
+								),
+							)
+						)
 						->render();
 					?>
-
-					<div 
-						x-ref="content"
-						x-show="open"
-						x-cloak
-						@click.outside="handleClickOutside()"
-						class="tutor-popover"
-					>
-						<div class="tutor-popover-menu" style="min-width: 120px;">
-							<button 
-								class="tutor-popover-menu-item"
-								@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $question->comment_ID ); ?>, context: 'question' });"
-							>
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
-							</button>
-						</div>
-					</div>
 				</div>
 			<?php endif; ?>
 		</div>
@@ -166,32 +165,31 @@ $back_url        = remove_query_arg( 'question_id' );
 						</div>
 					</div>
 					<?php if ( $current_user_id == $answer->user_id || current_user_can( 'manage_tutor' ) ) : ?>
-						<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-ml-auto">
+						<div class="tutor-ml-auto">
 							<?php
-							Button::make()
-								->variant( Variant::GHOST )
-								->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
-								->size( Size::SMALL )
-								->attr( 'x-ref', 'trigger' )
-								->attr( '@click', 'toggle()' )
+							Popover::make()
+								->placement( 'bottom-end' )
+								->trigger(
+									Button::make()
+										->variant( Variant::GHOST )
+										->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
+										->size( Size::SMALL )
+										->attr( 'x-ref', 'trigger' )
+										->attr( '@click', 'toggle()' )
+										->get()
+								)
+								->menu_item(
+									array(
+										'tag'     => 'button',
+										'content' => esc_html__( 'Delete', 'tutor' ),
+										'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+										'attr'    => array(
+											'@click' => "hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: " . esc_html( $answer->comment_ID ) . ", context: 'reply' });",
+										),
+									)
+								)
 								->render();
 							?>
-							<div 
-								x-ref="content"
-								x-show="open"
-								x-cloak
-								@click.outside="handleClickOutside()"
-								class="tutor-popover"
-							>
-								<div class="tutor-popover-menu" style="min-width: 120px;">
-									<button 
-										class="tutor-popover-menu-item"
-										@click="hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: <?php echo esc_html( $answer->comment_ID ); ?>, context: 'reply' });"
-									>
-										<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?> <?php esc_html_e( 'Delete', 'tutor' ); ?>
-									</button>
-								</div>
-							</div>
 						</div>
 					<?php endif; ?>
 				</div>
