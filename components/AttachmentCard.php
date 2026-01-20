@@ -10,9 +10,9 @@
 
 namespace Tutor\Components;
 
-use TUTOR\Icon;
-
 defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
 
 /**
  * Class AttachmentCard

@@ -10,13 +10,14 @@
 
 namespace Tutor\Components;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use TUTOR\Icon;
 use Tutor\Components\Button;
 use Tutor\Components\AttachmentCard;
 
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Class FileUploader
