@@ -36,7 +36,6 @@ global $tutor_course_id;
 
 // Pagination setup.
 $question_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
-$question_per_page = 1;
 $current_page      = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset            = ( $current_page - 1 ) * $question_per_page;
 $search_query      = Input::get( 'search', '' );
