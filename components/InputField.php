@@ -1120,18 +1120,6 @@ class InputField extends BaseComponent {
 		$select_input_buttons = $this->render_select_input_button() ?? '';
 		$select_input_options = $this->render_select_input_options() ?? '';
 
-		$error_html = sprintf(
-			'<div 
-				class="tutor-error-text" 
-				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
-				role="alert" 
-				aria-live="polite"
-			></div>',
-			esc_attr( $this->name )
-		);
-
 		return sprintf(
 			'<div
 				x-data="tutorSelect(%s)"
@@ -1141,14 +1129,12 @@ class InputField extends BaseComponent {
 			>
 				%s
 				%s
-			</div>
-			%s',
+			</div>',
 			$props_json,
 			$size_class,
 			$this->get_attributes_string(),
 			$select_input_buttons,
-			$select_input_options,
-			$error_html
+			$select_input_options
 		);
 	}
 
@@ -1240,18 +1226,6 @@ class InputField extends BaseComponent {
 			);
 		}
 
-		$error_html = sprintf(
-			'<div 
-				class="tutor-error-text" 
-				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
-				role="alert" 
-				aria-live="polite"
-			></div>',
-			esc_attr( $this->name )
-		);
-
 		return sprintf(
 			'<div class="tutor-input-wrapper">
 				<input %s>
@@ -1259,13 +1233,11 @@ class InputField extends BaseComponent {
 				%s
 				%s
 			</div>
-			%s
 			',
 			$input_attrs,
 			$left_icon_html,
 			$right_icon_html,
-			$clear_button_html,
-			$error_html
+			$clear_button_html
 		);
 	}
 
@@ -1329,28 +1301,14 @@ class InputField extends BaseComponent {
 			);
 		}
 
-		$error_html = sprintf(
-			'<div 
-				class="tutor-error-text" 
-				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
-				role="alert" 
-				aria-live="polite"
-			></div>',
-			esc_attr( $this->name )
-		);
-
 		return sprintf(
 			'<div class="tutor-input-wrapper">
 				<textarea %s>%s</textarea>
 				%s
-			</div>
-			%s',
+			</div>',
 			$input_attrs,
 			esc_textarea( $this->value ),
 			$clear_button_html,
-			$error_html
 		);
 	}
 
@@ -1601,25 +1559,34 @@ class InputField extends BaseComponent {
 				break;
 		}
 
-		// Render help text or error.
-		$help_html = '';
-		if ( ! empty( $this->error ) ) {
-			$help_html = sprintf(
-				'<div class="tutor-error-text" role="alert" aria-live="polite">%s</div>',
-				$this->esc( $this->error )
-			);
-		} elseif ( ! empty( $this->help_text ) ) {
-			$help_html = sprintf(
-				'<div class="tutor-help-text">%s</div>',
-				$this->esc( $this->help_text )
-			);
-		}
+		$error_html = sprintf(
+			'<div 
+				class="tutor-error-text" 
+				x-cloak 
+				x-show="errors.%1$s" 
+				x-text="errors?.%1$s?.message" 
+				role="alert" 
+				aria-live="polite"
+			></div>',
+			esc_attr( $this->name )
+		);
+
+		$help_html = sprintf(
+			'<div
+				class="tutor-help-text"
+				x-show="!errors?.%1$s?.message"
+			>%2$s</div>',
+			esc_attr( $this->name ),
+			esc_html( $this->help_text )
+		);
 
 		$this->component_string = sprintf(
-			'<div class="%s">%s%s%s</div>',
+			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }">%s%s%s%s</div>',
 			esc_attr( $field_classes ),
+			esc_attr( $this->name ),
 			$label_html,
 			$input_html,
+			$error_html,
 			$help_html
 		);
 

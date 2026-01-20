@@ -16,6 +16,7 @@ import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { selectMeta } from '@Core/ts/components/select';
 import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
+import { starRatingMeta } from '@Core/ts/components/star-rating';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
@@ -51,6 +52,7 @@ const initializePlugin = () => {
       stepperDropdownMeta,
       selectMeta,
       previewTriggerMeta,
+      starRatingMeta,
       toastMeta,
     ],
     services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta],

@@ -1,10 +1,19 @@
 @use '@Core/scss/mixins' as *;
 @use '@Core/scss/tokens' as *;
 
+body:has(#wpadminbar) {
+  .tutor-profile-header {
+    top: 32px;
+  }
+}
+
 .tutor-profile-header {
   background-color: $tutor-surface-base;
   border-bottom: 1px solid $tutor-border-idle;
   padding-block: $tutor-spacing-5;
+  position: sticky;
+  top: 0;
+  z-index: $tutor-z-positive;
 
   &-title {
     @include tutor-typography(h4, semibold, primary, heading);
