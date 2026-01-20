@@ -38,6 +38,9 @@ const endpoints = {
   DELETE_SUBSCRIPTION: 'tutor_subscription_plan_delete',
   DUPLICATE_SUBSCRIPTION: 'tutor_subscription_plan_duplicate',
   SORT_SUBSCRIPTION: 'tutor_subscription_plan_sort',
+  UPDATE_SUBSCRIPTION_STATUS: 'tutor_subscription_status_update',
+  RESUME_SUBSCRIPTION: 'tutor_subscription_resume',
+  EARLY_RENEW_SUBSCRIPTION: 'tutor_subscription_early_renew',
 
   // COURSE
   GET_COURSE_DETAILS: 'tutor_course_details',
@@ -79,10 +82,12 @@ const endpoints = {
   GET_LESSON_DETAILS: 'tutor_lesson_details',
   SAVE_LESSON: 'tutor_save_lesson',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
+  REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
 
   // Q&A
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
   DELETE_DASHBOARD_QNA: 'tutor_delete_dashboard_question',
+  CREATE_UPDATE_QNA: 'tutor_qna_create_update',
 
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',

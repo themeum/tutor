@@ -40,7 +40,7 @@ defined( 'ABSPATH' ) || exit;
 					->tag( 'a' )
 					->icon( Icon::CROSS )
 					->icon_only()
-					->attr( 'href', esc_url( $back_url ) )
+					->attr( 'href', esc_url( $close_url ) )
 					->render();
 			?>
 		</div>

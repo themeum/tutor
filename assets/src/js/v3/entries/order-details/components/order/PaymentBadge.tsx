@@ -8,8 +8,9 @@ const badgeMap: Record<PaymentStatus, { label: string; type: Variant }> = {
   'partially-refunded': { label: __('Partially refunded', 'tutor'), type: 'secondary' },
   refunded: { label: __('Refunded', 'tutor'), type: 'critical' },
   unpaid: { label: __('Unpaid', 'tutor'), type: 'warning' },
+  pending: { label: __('Pending', 'tutor'), type: 'warning' },
 };
 
 export function PaymentBadge({ status }: { status: PaymentStatus }) {
-  return <TutorBadge variant={badgeMap[status].type}>{badgeMap[status].label}</TutorBadge>;
+  return <TutorBadge variant={badgeMap[status]?.type ?? 'secondary'}>{badgeMap[status]?.label ?? status}</TutorBadge>;
 }

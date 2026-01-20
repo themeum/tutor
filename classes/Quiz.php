@@ -305,6 +305,12 @@ class Quiz {
 		$attempt_details = self::attempt_details( Input::post( 'attempt_id', 0, Input::TYPE_INT ) );
 		$feedback        = Input::post( 'feedback', '', Input::TYPE_KSES_POST );
 		$attempt_info    = isset( $attempt_details->attempt_info ) ? $attempt_details->attempt_info : false;
+		$course_id       = tutor_utils()->avalue_dot( 'course_id', $attempt_details, 0 );
+		$is_instructor   = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
+		if ( ! current_user_can( 'manage_options' ) && ! $is_instructor ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		if ( $attempt_info ) {
 			//phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
 			$unserialized = unserialize( $attempt_details->attempt_info );

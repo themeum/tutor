@@ -89,7 +89,7 @@ use Tutor\Icon;
 				<span x-show="usersQuery.data && !usersQuery.error" class="tutor-badge tutor-badge-success" x-cloak>
 					Success
 				</span>
-				<span x-show="usersQuery.error" class="tutor-badge tutor-badge-danger" x-cloak>
+				<span x-show="usersQuery.error" class="tutor-badge tutor-badge-error" x-cloak>
 					Error
 				</span>
 			</div>
@@ -256,7 +256,7 @@ use Tutor\Icon;
 				<span x-show="createMutation.isSuccess" class="tutor-badge tutor-badge-success" x-cloak>
 					Success
 				</span>
-				<span x-show="createMutation.isError" class="tutor-badge tutor-badge-danger" x-cloak>
+				<span x-show="createMutation.isError" class="tutor-badge tutor-badge-error" x-cloak>
 					Error
 				</span>
 			</div>

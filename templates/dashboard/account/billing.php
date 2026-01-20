@@ -38,6 +38,7 @@ $page_nav_items = array(
 
 $tab_template   = tutor_get_template( 'dashboard.account.billing.order-history' );
 $tab_template   = apply_filters( 'tutor_dashboard_account_billing_tab_template', $tab_template, $current_tab );
+$show_tab_nav   = apply_filters( 'tutor_dashboard_account_billing_show_tab_nav', true );
 $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items', $page_nav_items );
 ?>
 
@@ -47,9 +48,11 @@ $page_nav_items = apply_filters( 'tutor_dashboard_account_billing_page_nav_items
 	<div class="tutor-billing-container">
 		<div class="tutor-flex tutor-flex-column tutor-gap-5 tutor-mt-9">
 			<div class="tutor-surface-l1 tutor-border tutor-rounded-2xl">
+				<?php if ( $show_tab_nav ) { ?>
 				<div class="tutor-p-6 tutor-border-b">
 					<?php Nav::make()->items( $page_nav_items )->render(); ?>
 				</div>
+				<?php } ?>
 				<div class="tutor-sm-border tutor-sm-rounded-2xl tutor-sm-mt-4">
 					<?php
 					if ( file_exists( $tab_template ) ) {

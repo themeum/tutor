@@ -1,0 +1,77 @@
+// Transition Utilities
+// Utilities for transition properties
+
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+// Transition property utilities
+.tutor-transition-none {
+  transition-property: none;
+}
+
+.tutor-transition-all {
+  @include tutor-transition(all);
+}
+
+.tutor-transition {
+  @include tutor-transition((background-color, border-color, color, fill, stroke, opacity, box-shadow, transform));
+}
+
+.tutor-transition-colors {
+  @include tutor-transition((background-color, border-color, color, fill, stroke));
+}
+
+.tutor-transition-opacity {
+  @include tutor-transition(opacity);
+}
+
+.tutor-transition-shadow {
+  @include tutor-transition(box-shadow);
+}
+
+.tutor-transition-transform {
+  @include tutor-transition(transform);
+}
+
+// Transition duration utilities
+$tutor-transition-values: (
+  75: 75ms,
+  100: 100ms,
+  150: 150ms,
+  200: 200ms,
+  300: 300ms,
+  500: 500ms,
+  700: 700ms,
+  1000: 1000ms,
+);
+
+@each $key, $value in $tutor-transition-values {
+  .tutor-duration-#{$key} {
+    transition-duration: $value;
+  }
+}
+
+@each $key, $value in $tutor-transition-values {
+  .tutor-delay-#{$key} {
+    transition-delay: $value;
+  }
+}
+
+// Animation utilities
+.tutor-animate-none {
+  animation: none;
+}
+
+.tutor-animate-spin {
+  animation: tutor-spin 1s linear infinite;
+}
+
+// Keyframe definitions
+@keyframes tutor-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

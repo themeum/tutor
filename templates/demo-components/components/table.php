@@ -12,7 +12,7 @@ use TUTOR\Icon;
 <section class="tutor-bg-white tutor-py-6 tutor-px-8">
 	<h2>Table</h2>
 	
-	<div class="tutor-table-wrapper tutor-table-column-borders">
+	<div class="tutor-table-wrapper tutor-table-bordered tutor-table-column-borders">
 		<table class="tutor-table">
 			<thead>
 				<tr>
@@ -35,7 +35,7 @@ use TUTOR\Icon;
 						<span class="tutor-text-secondary">1:15</span>
 					</td>
 					<td>
-						<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+						<span class="tutor-badge tutor-badge-success tutor-badge-rounded">
 							Passed
 						</span>
 					</td>
@@ -52,7 +52,7 @@ use TUTOR\Icon;
 						<span class="tutor-text-secondary">2:15</span>
 					</td>
 					<td>
-						<span class="tutor-badge tutor-badge-exception tutor-badge-circle">
+						<span class="tutor-badge tutor-badge-highlight tutor-badge-rounded">
 							Bundle
 						</span>
 					</td>
@@ -69,7 +69,7 @@ use TUTOR\Icon;
 						<span class="tutor-text-secondary">1:15</span>
 					</td>
 					<td>
-						<span class="tutor-badge tutor-badge-completed tutor-badge-circle">
+						<span class="tutor-badge tutor-badge-success tutor-badge-rounded">
 							Passed
 						</span>
 					</td>

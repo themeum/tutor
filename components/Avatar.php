@@ -11,6 +11,7 @@
 namespace Tutor\Components;
 
 use Tutor\Components\Constants\Size;
+use Tutor\Cache\TutorCache;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -23,7 +24,13 @@ defined( 'ABSPATH' ) || exit;
  * Example usage:
  *
  * ```php
- * Avatar with image
+ * Avatar with user object/ID
+ * Avatar::make()
+ *     ->user($user_id)
+ *     ->size(Size::SIZE_56)
+ *     ->render();
+ *
+ * Avatar with image source
  * Avatar::make()
  *     ->src('https://example.com/avatar.jpg')
  *     ->size(Size::SIZE_20)
@@ -78,6 +85,24 @@ class Avatar extends BaseComponent {
 	 * @var string|null
 	 */
 	protected $initials = null;
+
+	/**
+	 * User object or ID.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int|object|null
+	 */
+	protected $user = null;
+
+	/**
+	 * Avatar alt text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string|null
+	 */
+	protected $alt = null;
 
 	/**
 	 * Border enabled flag.
@@ -166,6 +191,88 @@ class Avatar extends BaseComponent {
 	}
 
 	/**
+	 * Set alt text for the avatar.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $alt Alt text.
+	 * @return $this
+	 */
+	public function alt( string $alt ): self {
+		$this->alt = $alt;
+		return $this;
+	}
+
+	/**
+	 * Set user for the avatar.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int|object $user User ID or object.
+	 * @return $this
+	 */
+	public function user( $user ): self {
+		if ( ! $user ) {
+			return $this;
+		}
+
+		$user_id    = is_object( $user ) ? $user->ID : (int) $user;
+		$cache_key  = 'avatar_component_user_data_' . $user_id;
+		$cache_data = TutorCache::get( $cache_key );
+
+		if ( false !== $cache_data ) {
+			if ( $cache_data['src'] ) {
+				$this->src( $cache_data['src'] );
+			}
+			$this->type( $cache_data['type'] );
+			$this->initials( $cache_data['initials'] );
+			$this->alt( $cache_data['alt'] );
+			return $this;
+		}
+
+		if ( ! is_object( $user ) ) {
+			$user = get_userdata( $user_id );
+		}
+
+		if ( is_a( $user, 'WP_User' ) ) {
+			$profile_photo = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+			$avatar_src    = '';
+
+			if ( $profile_photo ) {
+				$url = wp_get_attachment_image_url( $profile_photo, 'thumbnail' );
+				if ( $url ) {
+					$avatar_src = $url;
+				}
+			}
+
+			// Generate initials.
+			$name        = $user->display_name;
+			$arr         = explode( ' ', trim( $name ) );
+			$first_char  = ! empty( $arr[0] ) ? mb_substr( $arr[0], 0, 1, 'UTF-8' ) : '';
+			$second_char = ! empty( $arr[1] ) ? mb_substr( $arr[1], 0, 1, 'UTF-8' ) : '';
+			$initials    = $first_char . $second_char;
+
+			$data = array(
+				'src'      => $avatar_src,
+				'type'     => $avatar_src ? 'image' : 'initials',
+				'initials' => $initials,
+				'alt'      => $name,
+			);
+
+			// Store in cache.
+			TutorCache::set( $cache_key, $data );
+
+			// Apply to current instance.
+			$this->src( $data['src'] );
+			$this->type( $data['type'] );
+			$this->initials( $data['initials'] );
+			$this->alt( $data['alt'] );
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Enable or disable border.
 	 *
 	 * @since 4.0.0
@@ -201,13 +308,13 @@ class Avatar extends BaseComponent {
 
 		$this->attributes['class'] = trim( implode( ' ', $classes ) . ' ' . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		if ( 'image' === $this->type && $this->src ) {
 			$content = sprintf(
 				'<img src="%1$s" alt="%2$s" class="tutor-avatar-image" />',
 				esc_url( $this->src ),
-				esc_attr( $this->initials ?? _x( 'User Avatar', 'image alter text', 'tutor' ) )
+				esc_attr( $this->alt ?? $this->initials ?? _x( 'User Avatar', 'image alter text', 'tutor' ) )
 			);
 		} else {
 			$content = sprintf(
@@ -216,7 +323,11 @@ class Avatar extends BaseComponent {
 			);
 		}
 
-		$this->component_string = sprintf( '<div %1$s>%2$s</div>', $attributes, $content );
+		$this->component_string = sprintf(
+			'<div %1$s><div class="tutor-ratio tutor-ratio-1x1">%2$s</div></div>',
+			$attributes,
+			$content
+		);
 
 		return $this->component_string;
 	}
