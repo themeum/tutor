@@ -184,7 +184,7 @@ $questions   = tutor_utils()->get_qa_questions(
 				<div class="tutor-discussion-card" @click="window.location.href = '<?php echo esc_url( $question_url ); ?>'" style="cursor: pointer;">
 					<?php
 					Avatar::make()
-						->user( $question->user_id )
+						->src( esc_url( get_avatar_url( $question->user_id ) ) )
 						->size( Size::SIZE_32 )
 						->attr( 'alt', $question->display_name )
 						->render();

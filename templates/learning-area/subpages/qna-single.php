@@ -8,6 +8,7 @@
  * @since 4.0.0
  */
 
+use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use TUTOR\Icon;
@@ -50,9 +51,13 @@ $back_url        = remove_query_arg( 'question_id' );
 
 	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
 		<div class="tutor-flex tutor-justify-between tutor-gap-6 tutor-mb-5">
-			<div class="tutor-avatar tutor-avatar-40">
-				<img src="<?php echo esc_url( get_avatar_url( $question->user_id ) ); ?>" alt="<?php echo esc_attr( $question->display_name ); ?>" class="tutor-avatar-image">
-			</div>
+			<?php
+			Avatar::make()
+				->src( esc_url( get_avatar_url( $question->user_id ) ) )
+				->size( Size::SIZE_32 )
+				->attr( 'alt', $question->display_name )
+				->render();
+			?>
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->display_name ); ?></span> 
@@ -152,9 +157,13 @@ $back_url        = remove_query_arg( 'question_id' );
 		<div class="tutor-discussion-single-reply-list">
 			<?php foreach ( $answers as $answer ) : ?>
 				<div class="tutor-discussion-reply-list-item" data-answer_id="<?php echo esc_attr( $answer->comment_ID ); ?>">
-					<div class="tutor-avatar tutor-avatar-40">
-						<img src="<?php echo esc_url( get_avatar_url( $answer->user_id ) ); ?>" alt="<?php echo esc_attr( $answer->display_name ); ?>" class="tutor-avatar-image">
-					</div>
+					<?php
+						Avatar::make()
+							->src( esc_url( get_avatar_url( $answer->user_id ) ) )
+							->size( Size::SIZE_32 )
+							->attr( 'alt', $answer->display_name )
+							->render();
+					?>
 					<div>
 						<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 							<span class="tutor-discussion-card-author"><?php echo esc_html( $answer->display_name ); ?></span> 
