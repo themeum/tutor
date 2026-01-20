@@ -216,144 +216,147 @@ $top_performing_courses = array_map(
 		),
 	);
 
-	$recent_activity = array(
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-		array(
-			'course_name' => 'Complete Web Development Bootcamp',
-			'course_url'  => '#',
-			'date'        => '2022-01-01 10:00 AM',
-			'meta'        => 'enrolled in',
-			'user'        => array(
-				'name'   => 'John Doe',
-				'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-			),
-		),
-	);
+// @todo will be added later.
+// $recent_activity = array(
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// 	array(
+// 		'course_name' => 'Complete Web Development Bootcamp',
+// 		'course_url'  => '#',
+// 		'date'        => '2022-01-01 10:00 AM',
+// 		'meta'        => 'enrolled in',
+// 		'user'        => array(
+// 			'name'   => 'John Doe',
+// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		),
+// 	),
+// );
 
-	$recent_reviews = array(
-		array(
-			'user'          => array(
-				'name'   => 'Sarah Johnson',
-				'avatar' => 'https://i.pravatar.cc/300?u=sarah',
-			),
-			'course_name'   => 'Complete Web Development Bootcamp',
-			'date'          => '2022-01-01 08:00 AM',
-			'rating'        => 5,
-			'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
-			'helpful_count' => 12,
+// Recent Reviews.
+$recent_reviews = Analytics::get_reviews();
+$recent_reviews = array(
+	array(
+		'user'          => array(
+			'name'   => 'Sarah Johnson',
+			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
 		),
-		array(
-			'user'          => array(
-				'name'   => 'Sarah Johnson',
-				'avatar' => 'https://i.pravatar.cc/300?u=sarah',
-			),
-			'course_name'   => 'Complete Web Development Bootcamp',
-			'date'          => '2022-01-01 08:00 AM',
-			'rating'        => 5,
-			'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
-			'helpful_count' => 12,
+		'course_name'   => 'Complete Web Development Bootcamp',
+		'date'          => '2022-01-01 08:00 AM',
+		'rating'        => 5,
+		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
+		'helpful_count' => 12,
+	),
+	array(
+		'user'          => array(
+			'name'   => 'Sarah Johnson',
+			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
 		),
-		array(
-			'user'          => array(
-				'name'   => 'Sarah Johnson',
-				'avatar' => 'https://i.pravatar.cc/300?u=sarah',
-			),
-			'course_name'   => 'Complete Web Development Bootcamp',
-			'date'          => '2022-01-01 08:00 AM',
-			'rating'        => 5,
-			'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
-			'helpful_count' => 12,
+		'course_name'   => 'Complete Web Development Bootcamp',
+		'date'          => '2022-01-01 08:00 AM',
+		'rating'        => 5,
+		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
+		'helpful_count' => 12,
+	),
+	array(
+		'user'          => array(
+			'name'   => 'Sarah Johnson',
+			'avatar' => 'https://i.pravatar.cc/300?u=sarah',
 		),
-	);
+		'course_name'   => 'Complete Web Development Bootcamp',
+		'date'          => '2022-01-01 08:00 AM',
+		'rating'        => 5,
+		'review_text'   => 'Outstanding course! The instructor explains complex concepts in a very clear and practical way. I landed my first dev job within 3 months of completing this course.',
+		'helpful_count' => 12,
+	),
+);
 
 	?>
 
