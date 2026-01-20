@@ -653,4 +653,70 @@ class Instructor {
 
 		return QueryHelper::get_count( $wpdb->comments, $where, array(), 'comment_ID' );
 	}
+
+	public static function get_course_completion_distribution_data_by_instructor($instructor_id) {
+
+		global $wpdb;
+
+		$counts = array(
+			'enrolled'   => 0,
+			'completed'  => 0,
+			'inprogress' => 0,
+			'inactive'   => 0,
+			'cancelled'  => 0,
+		);
+
+		$cancel_statuses = array('cancel', 'canceled', 'cancelled');
+
+		$post_statuses = array_merge($cancel_statuses, array('completed'));
+
+		$instructor_course_ids  = CourseModel::get_courses_by_args(
+			array(
+				'post_author'    => $instructor_id,
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		)->posts;
+
+		if(empty($instructor_course_ids)){
+			return $counts;
+		}
+
+		$where = array(
+			'post_type' => 'tutor_enrolled',
+			'post_status' => array('IN', $post_statuses),
+			'post_parent' => array('IN', $instructor_course_ids)
+		);
+
+		$args = array(
+			'select' => array('id','post_status','post_author','post_parent'),
+			'where' => $where
+		);
+
+		$enrollments = QueryHelper::query($wpdb->posts, $args);
+
+		if ( empty($enrollments)) {
+			return $counts;
+		}
+
+		foreach ($enrollments as $enrollment) {
+
+			if (in_array($enrollment->post_status, $cancel_statuses, true)) {
+				$counts['cancelled']++;
+				continue;
+			}
+
+			$course_progress = tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
+
+			if ( 100 == $course_progress ) {
+				$counts['completed']++;
+			} elseif ($course_progress > 0 && $course_progress < 100) {
+				$counts['inprogress']++;
+			} else{
+				$counts['inactive']++;
+			}			
+		}
+
+		return $counts;
+	}
 }

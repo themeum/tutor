@@ -103,14 +103,8 @@ $overview_chart_data = array(
 	'labels'   => array_merge( array( '' ), $labels, array( '' ) ),
 );
 
+$r = Instructor::get_course_completion_distribution_data_by_instructor($user->ID);
 // Course Completion Distribution.
-$instructor_course_ids  = CourseModel::get_courses_by_args(
-	array(
-		'post_author'    => $user_id,
-		'posts_per_page' => -1,
-		'fields'         => 'ids',
-	)
-)->posts;
 $course_completion_data = array(
 	'enrolled'    => array(
 		'label' => esc_html__( 'Enrolled', 'tutor' ),
@@ -118,7 +112,7 @@ $course_completion_data = array(
 	),
 	'completed'   => array(
 		'label' => esc_html__( 'Completed', 'tutor' ),
-		'value' => Instructor::get_instructor_completed_students_course_count_by_date( $start_date, $end_date, $user_id, $instructor_course_ids ),
+		'value' => 90//Instructor::get_instructor_completed_students_course_count_by_date( $start_date, $end_date, $user_id, $instructor_course_ids ),
 	),
 	'in_progress' => array(
 		'label' => esc_html__( 'In Progress', 'tutor' ),

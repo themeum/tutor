@@ -1346,7 +1346,7 @@ class CourseModel {
 	}
 
 	/**
-	 * Get the number of courses created by a user within a given date range.
+	 * Get the number of courses created by an instructor within a given date range.
 	 *
 	 * @since 4.0.0
 	 *
