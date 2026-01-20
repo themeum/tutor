@@ -92,13 +92,13 @@ class BillingController extends BaseController {
 		$id = 'billing-address';
 
 		$new_tab = array(
-			'id'              => $id,
-			'label'           => 'Billing Address',
-			'icon'            => Icon::BILLING,
-			'text'            => __( 'Your payment address', 'tutor' ),
-			'template'        => '',
-			'custom_template' => tutor()->path . 'templates/ecommerce/billing.php',
-			'role'            => false,
+			'id'       => $id,
+			'label'    => 'Billing Address',
+			'icon'     => Icon::BILLING,
+			'text'     => __( 'Your payment address', 'tutor' ),
+			'template' => 'ecommerce.billing',
+			'is_pro'   => false,
+			'role'     => false,
 		);
 
 		$position = array_search( 'social-accounts', array_keys( $tabs ), true );

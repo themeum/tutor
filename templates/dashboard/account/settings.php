@@ -16,49 +16,49 @@ use TUTOR\User;
 
 $settings_tab_data = array(
 	'account'         => array(
-		'id'              => 'account',
-		'label'           => __( 'Account', 'tutor' ),
-		'icon'            => Icon::USER_CIRCLE,
-		'text'            => __( 'Name, email, phone number, profiles', 'tutor' ),
-		'template'        => 'dashboard.account.settings.account',
-		'custom_template' => null,
-		'role'            => false,
+		'id'       => 'account',
+		'label'    => __( 'Account', 'tutor' ),
+		'icon'     => Icon::USER_CIRCLE,
+		'text'     => __( 'Name, email, phone number, profiles', 'tutor' ),
+		'template' => 'dashboard.account.settings.account',
+		'is_pro'   => false,
+		'role'     => false,
 	),
 	'security'        => array(
-		'id'              => 'security',
-		'label'           => __( 'Security', 'tutor' ),
-		'icon'            => Icon::SECURITY,
-		'text'            => __( 'Password, 2FA', 'tutor' ),
-		'template'        => 'dashboard.account.settings.security',
-		'custom_template' => null,
-		'role'            => false,
+		'id'       => 'security',
+		'label'    => __( 'Security', 'tutor' ),
+		'icon'     => Icon::SECURITY,
+		'text'     => __( 'Password, 2FA', 'tutor' ),
+		'template' => 'dashboard.account.settings.security',
+		'is_pro'   => false,
+		'role'     => false,
 	),
 	'social-accounts' => array(
-		'id'              => 'social-accounts',
-		'label'           => __( 'Social Accounts', 'tutor' ),
-		'icon'            => Icon::GLOBE,
-		'text'            => __( 'Linked social media profiles', 'tutor' ),
-		'template'        => 'dashboard.account.settings.social-accounts',
-		'custom_template' => null,
-		'role'            => false,
+		'id'       => 'social-accounts',
+		'label'    => __( 'Social Accounts', 'tutor' ),
+		'icon'     => Icon::GLOBE,
+		'text'     => __( 'Linked social media profiles', 'tutor' ),
+		'template' => 'dashboard.account.settings.social-accounts',
+		'is_pro'   => false,
+		'role'     => false,
 	),
 	'withdraw'        => array(
-		'id'              => 'withdraw',
-		'label'           => __( 'Withdraw', 'tutor' ),
-		'icon'            => Icon::WITHDRAW,
-		'text'            => __( 'Withdrawal and refund', 'tutor' ),
-		'template'        => 'dashboard.account.settings.withdraw',
-		'custom_template' => null,
-		'role'            => User::INSTRUCTOR,
+		'id'       => 'withdraw',
+		'label'    => __( 'Withdraw', 'tutor' ),
+		'icon'     => Icon::WITHDRAW,
+		'text'     => __( 'Withdrawal and refund', 'tutor' ),
+		'template' => 'dashboard.account.settings.withdraw',
+		'is_pro'   => false,
+		'role'     => User::INSTRUCTOR,
 	),
 	'preferences'     => array(
-		'id'              => 'preferences',
-		'label'           => __( 'Preferences', 'tutor' ),
-		'icon'            => Icon::PREFERENCE,
-		'text'            => __( 'Sound effects, animations, theme', 'tutor' ),
-		'template'        => 'dashboard.account.settings.preferences',
-		'custom_template' => null,
-		'role'            => false,
+		'id'       => 'preferences',
+		'label'    => __( 'Preferences', 'tutor' ),
+		'icon'     => Icon::PREFERENCE,
+		'text'     => __( 'Sound effects, animations, theme', 'tutor' ),
+		'template' => 'dashboard.account.settings.preferences',
+		'is_pro'   => false,
+		'role'     => false,
 	),
 );
 
@@ -137,17 +137,11 @@ $settings_tab_data = array_values(
 							<div x-show="activeTab === '<?php echo esc_attr( $settings_tab['id'] ); ?>'" x-cloak class="tutor-tab-panel" role="tabpanel">
 								<?php
 								$form_id = "tutor-{$settings_tab['id']}-form";
-								if ( $settings_tab['custom_template'] ) {
-									tutor_load_template_from_custom_path(
-										$settings_tab['custom_template'],
-										array( 'form_id' => $form_id )
-									);
-								} else {
-									tutor_load_template(
-										$settings_tab['template'],
-										array( 'form_id' => $form_id )
-									);
-								}
+								tutor_load_template(
+									$settings_tab['template'],
+									array( 'form_id' => $form_id ),
+									$settings_tab['is_pro']
+								);
 								?>
 							</div>
 						<?php endforeach; ?>
