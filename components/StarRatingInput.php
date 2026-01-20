@@ -12,10 +12,10 @@
 
 namespace Tutor\Components;
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use Tutor\components\Constants\Size;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Class StarRatingInput
@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
  * Example Usage:
  * ```
  * StarRatingInput::make()
- *     ->fieldName('rating')
- *     ->currentRating(4.5)
+ *     ->field_name('rating')
+ *     ->current_rating(4.5)
  *     ->render();
  * ```
  *
@@ -35,12 +35,16 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Form field name
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $field_name = 'rating';
 
 	/**
 	 * Current rating value
+	 *
+	 * @since 4.0.0
 	 *
 	 * @var float
 	 */
@@ -49,12 +53,16 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * On change callback function name or js snippet
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var string
 	 */
 	protected $on_change = '';
 
 	/**
 	 * Alpine register function binding
+	 *
+	 * @since 4.0.0
 	 *
 	 * @var string
 	 */
@@ -70,11 +78,13 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Set field name
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param string $name field name.
 	 *
 	 * @return self
 	 */
-	public function fieldName( string $name ): self {
+	public function field_name( string $name ): self {
 		$this->field_name = $name;
 		return $this;
 	}
@@ -82,11 +92,13 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Set current rating
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param float $rating rating.
 	 *
 	 * @return self
 	 */
-	public function currentRating( float $rating ): self {
+	public function current_rating( float $rating ): self {
 		$this->current_rating = $rating;
 		return $this;
 	}
@@ -94,17 +106,21 @@ class StarRatingInput extends BaseComponent {
 	/**
 	 * Set on change callback
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param string $callback callback.
 	 *
 	 * @return self
 	 */
-	public function onChange( string $callback ): self {
+	public function on_change( string $callback ): self {
 		$this->on_change = $callback;
 		return $this;
 	}
 
 	/**
 	 * Set register binding
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param string $register register.
 	 *
@@ -117,6 +133,8 @@ class StarRatingInput extends BaseComponent {
 
 	/**
 	 * Get component content
+	 *
+	 * @since 4.0.0
 	 *
 	 * @return string
 	 */

@@ -12,9 +12,9 @@
 
 namespace Tutor\Components;
 
-use TUTOR\Icon;
-
 defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Icon;
 
 /**
  * Class StarRating
@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * ```
  * StarRating::make()
  *     ->rating(4.5)
- *     ->showAverage(true)
+ *     ->show_average(true)
  *     ->render();
  * ```
  *
@@ -34,12 +34,16 @@ class StarRating extends BaseComponent {
 	/**
 	 * Rating value
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var float
 	 */
 	protected $rating = 0;
 
 	/**
 	 * Whether to show numerical rating
+	 *
+	 * @since 4.0.0
 	 *
 	 * @var bool
 	 */
@@ -48,6 +52,8 @@ class StarRating extends BaseComponent {
 	/**
 	 * Star icon size
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var int
 	 */
 	protected $icon_size = 16;
@@ -55,12 +61,16 @@ class StarRating extends BaseComponent {
 	/**
 	 * Review count
 	 *
+	 * @since 4.0.0
+	 *
 	 * @var int|null
 	 */
 	protected $count = null;
 
 	/**
 	 * Set rating value
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param float $rating rating.
 	 *
@@ -74,6 +84,8 @@ class StarRating extends BaseComponent {
 	/**
 	 * Set whether to show average rating text
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param bool $show show average.
 	 *
 	 * @return self
@@ -85,6 +97,8 @@ class StarRating extends BaseComponent {
 
 	/**
 	 * Set icon size
+	 *
+	 * @since 4.0.0
 	 *
 	 * @param int $size size.
 	 *
@@ -98,6 +112,8 @@ class StarRating extends BaseComponent {
 	/**
 	 * Set review count
 	 *
+	 * @since 4.0.0
+	 *
 	 * @param int $count count.
 	 *
 	 * @return self
@@ -109,6 +125,8 @@ class StarRating extends BaseComponent {
 
 	/**
 	 * Get component content
+	 *
+	 * @since 4.0.0
 	 *
 	 * @return string
 	 */
@@ -128,11 +146,11 @@ class StarRating extends BaseComponent {
 					<span class="tutor-icon-exception4 tutor-flex-center">
 						<?php
 						if ( (int) $rating >= $i ) {
-							echo $star_fill; // phpcs:ignore
+							echo $star_fill; // phpcs:ignore -- get_svg_icon returns escaped html
 						} elseif ( ( $rating - $i ) >= -0.5 ) {
-							echo $star_half; // phpcs:ignore
+							echo $star_half; // phpcs:ignore -- get_svg_icon returns escaped html
 						} else {
-							echo $star; // phpcs:ignore
+							echo $star; // phpcs:ignore -- get_svg_icon returns escaped html
 						}
 						?>
 					</span>

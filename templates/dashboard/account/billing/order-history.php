@@ -11,6 +11,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
@@ -35,16 +36,22 @@ if ( tutor_utils()->is_monetize_by_tutor() ) {
 	<?php require_once tutor_get_template( 'dashboard.account.billing.order-history-filters' ); ?>
 </div>
 
+<?php
+if ( empty( $orders ) ) :
+	EmptyState::make()->title( 'No Orders Found!' )->render();
+else :
+	?>
 <div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-order-history">
 	<?php foreach ( $orders as $order ) : //phpcs:ignore ?>
 		<?php include tutor_get_template( 'dashboard.account.billing.order-history-card' ); ?>	
 	<?php endforeach; ?>
 </div>
 
-<?php Pagination::make()
+	<?php
+	Pagination::make()
 	->attr( 'class', 'tutor-px-6 tutor-py-6 tutor-border-t' )
 	->current( $current_page )
 	->total( $total_items )
 	->limit( $item_per_page )
 	->render();
-?>
+endif;

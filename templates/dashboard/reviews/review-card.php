@@ -169,8 +169,8 @@ $delete_modal_id = 'review-delete-modal';
 			>
 				<?php
 					StarRatingInput::make()
-						->fieldName( 'rating' )
-						->currentRating( $review['rating'] ?? 0 )
+						->field_name( 'rating' )
+						->current_rating( $review['rating'] ?? 0 )
 						->render();
 				?>
 

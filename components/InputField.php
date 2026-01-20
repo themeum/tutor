@@ -1801,7 +1801,7 @@ class InputField extends BaseComponent {
 				x-show="!errors?.%1$s?.message"
 			>%2$s</div>',
 			esc_attr( $this->name ),
-			$this->esc( $this->help_text )
+			esc_html( $this->help_text )
 		);
 
 		$strength_meter_html = '';
