@@ -171,6 +171,16 @@ const endpoints = {
   //Reviews
   PLACE_RATING: 'tutor_place_rating',
   DELETE_REVIEW: 'delete_tutor_review',
+
+  // Settings
+  FETCH_COUNTRIES: '/assets/json/countries.json',
+  UPLOAD_PROFILE_PHOTO: 'tutor_user_photo_upload',
+  REMOVE_PROFILE_PHOTO: 'tutor_user_photo_remove',
+  UPDATE_PROFILE: 'tutor_update_profile',
+  SAVE_SOCIAL_PROFILE: 'tutor_social_profile',
+  SAVE_BILLING_INFO: 'tutor_save_billing_info',
+  SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
+  RESET_PASSWORD: 'tutor_profile_password_reset',
 } as const;
 
 export default endpoints;

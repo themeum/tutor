@@ -1,6 +1,6 @@
 import { __, sprintf } from '@wordpress/i18n';
 
-import { formServiceMeta } from '@Core/ts/services/Form';
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { parseNumberOnly } from '@TutorShared/utils/util';
 
@@ -16,9 +16,10 @@ interface FieldConfig {
   rules?: ValidationRules;
   defaultValue?: unknown;
   ref?: HTMLInputElement;
+  type?: string;
 }
 
-interface ValidationRules {
+export interface ValidationRules {
   required?: boolean | string;
   minLength?: number | { value: number; message: string };
   maxLength?: number | { value: number; message: string };
@@ -29,12 +30,12 @@ interface ValidationRules {
   validate?: (value: unknown) => boolean | string | Promise<boolean | string>;
 }
 
-interface FieldError {
+export interface FieldError {
   type: string;
   message: string;
 }
 
-interface SetValueOptions {
+export interface SetValueOptions {
   shouldValidate?: boolean;
   shouldTouch?: boolean;
   shouldDirty?: boolean;
@@ -44,12 +45,13 @@ interface FocusOptions {
   shouldSelect?: boolean;
 }
 
-interface FormState {
+export interface FormState {
   values: Record<string, unknown>;
   errors: Record<string, FieldError>;
   touchedFields: Record<string, boolean>;
   dirtyFields: Record<string, boolean>;
   isValid: boolean;
+  isDirty: boolean;
   isSubmitting: boolean;
   isValidating: boolean;
 }
@@ -215,7 +217,11 @@ const DOMUtils = {
   },
 
   updateElementValue(element: HTMLElement, value: unknown): void {
-    if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement) {
+    if (
+      element instanceof HTMLInputElement ||
+      element instanceof HTMLTextAreaElement ||
+      element instanceof HTMLSelectElement
+    ) {
       element.value = String(value ?? '');
     }
   },
@@ -314,25 +320,26 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
     isValid: true,
     isSubmitting: false,
     isValidating: false,
+    isResetting: false,
     cleanup: undefined as (() => void) | undefined,
+    lastIsDirty: false,
 
     init(): void {
       this.isValid = true;
       this.isSubmitting = false;
       this.isValidating = false;
+      this.lastIsDirty = false;
 
       if (this.formId) {
-        const globalFormService = window.TutorCore?.form;
-        const service =
-          globalFormService && typeof globalFormService.register === 'function'
-            ? globalFormService
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (formServiceMeta.instance as any);
-
-        service.register(this.formId, this as unknown as FormControlMethods);
+        document.dispatchEvent(
+          new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_REGISTER, {
+            detail: { id: this.formId, instance: this as unknown as FormControlMethods },
+          }),
+        );
       }
 
       this.setupFormListeners();
+      this.dispatchStateChange(); // Initial dispatch
     },
 
     destroy(): void {
@@ -340,41 +347,80 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.clearAllState();
     },
 
+    dispatchStateChange(): void {
+      if (!this.formId) {
+        return;
+      }
+
+      const isDirty = Object.values(this.dirtyFields).some(Boolean);
+
+      if (isDirty === this.lastIsDirty) {
+        return;
+      }
+
+      this.lastIsDirty = isDirty;
+
+      document.dispatchEvent(
+        new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_STATE_CHANGE, {
+          detail: { id: this.formId, isDirty },
+        }),
+      );
+    },
+
     register(name: string, rules?: ValidationRules): Record<string, unknown> {
       const component = this as unknown as AlpineComponent;
+      const element = component.$el as HTMLInputElement;
+
+      const type = element?.type ?? 'text';
+      const isCheckbox = type === 'checkbox';
+      const isFile = type === 'file';
+
+      const defaultValue = this.values[name] ?? (isCheckbox ? false : '');
+
       this.fields[name] = {
         name,
         rules,
-        defaultValue: this.values[name] || '',
-        ref: component.$el as HTMLInputElement,
+        defaultValue,
+        ref: element,
+        type,
       };
 
-      if (!(name in this.values)) {
-        this.values[name] = this.fields[name].defaultValue;
-      }
+      this.values[name] ??= defaultValue;
 
-      return {
+      const valueExpression = isCheckbox ? '$event.target.checked' : '$event.target.value';
+
+      const bindings: Record<string, unknown> = {
         name,
-        'x-model': `values.${name}`,
-        '@input': `handleFieldInput('${name}', $event.target.value)`,
-        '@blur': `handleFieldBlur('${name}', $event.target.value)`,
         'x-ref': name,
-        ':aria-invalid': `errors.${name} ? 'true' : 'false'`,
+        ':aria-invalid': `!!errors.${name}`,
         ':class': `{
           'tutor-input-error': errors.${name},
           'tutor-input-touched': touchedFields.${name},
           'tutor-input-dirty': dirtyFields.${name}
         }`,
       };
+
+      if (!isFile) {
+        bindings['x-model'] = `values.${name}`;
+        bindings['@input'] = `handleFieldInput('${name}', ${valueExpression})`;
+        bindings['@blur'] = `handleFieldBlur('${name}', ${valueExpression})`;
+      }
+
+      return bindings;
     },
 
     handleFieldInput(name: string, value: unknown): void {
-      const isNumber = this.fields[name].rules?.numberOnly;
+      const field = this.fields[name];
+      const isNumber = field?.rules?.numberOnly;
       const allowNegative = typeof isNumber === 'object' && isNumber.allowNegative;
       const whole = typeof isNumber === 'object' && isNumber.whole;
-      const parsedValue = parseNumberOnly(value as string, allowNegative, whole);
-      this.values[name] = isNumber ? parsedValue : value;
-      this.dirtyFields[name] = true;
+      const parsedValue = isNumber ? parseNumberOnly(value as string, allowNegative, whole) : value;
+
+      // Only mark as dirty if the value is different from the baseline
+      const isActuallyChanged = String(parsedValue) !== String(field?.defaultValue ?? '');
+
+      this.values[name] = parsedValue;
+      this.dirtyFields[name] = isActuallyChanged;
       this.updateFieldRef(name);
 
       if (isNumber) {
@@ -388,7 +434,9 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
 
       if (shouldValidate) {
-        this.validateField(name, value);
+        this.validateField(name, isNumber ? parsedValue : value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -400,6 +448,8 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       if (shouldValidate) {
         this.validateField(name, value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -413,15 +463,20 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.values[name] = value;
 
       if (shouldTouch) this.touchedFields[name] = true;
-      if (shouldDirty) this.dirtyFields[name] = true;
+      if (shouldDirty) {
+        const field = this.fields[name];
+        this.dirtyFields[name] = String(value) !== String(field?.defaultValue ?? '');
+      }
 
       const fieldElement = this.fields[name]?.ref;
-      if (fieldElement) {
+      if (fieldElement && this.fields[name].type !== 'file') {
         DOMUtils.updateElementValue(fieldElement, value);
       }
 
       if (shouldValidate) {
         this.validateField(name, value);
+      } else {
+        this.dispatchStateChange();
       }
     },
 
@@ -456,6 +511,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         return await this.validateAllFields();
       } finally {
         this.isValidating = false;
+        this.dispatchStateChange();
       }
     },
 
@@ -471,6 +527,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
 
       this.updateAriaInvalidState(name);
       this.updateFormValidState();
+      this.dispatchStateChange();
 
       return !error;
     },
@@ -516,19 +573,30 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       }
 
       this.updateFormValidState();
+      this.dispatchStateChange();
     },
 
     setError(name: string, error: FieldError): void {
       this.errors[name] = error;
       this.updateAriaInvalidState(name);
       this.updateFormValidState();
+      this.dispatchStateChange();
     },
 
     reset(values?: Record<string, unknown>): void {
+      this.isResetting = true;
+
       if (values) {
         // Update reactive object props instead of replacing it to maintain bindings
         Object.keys(this.values).forEach((key) => delete this.values[key]);
         Object.assign(this.values, values);
+
+        // Update baseline default values for all fields provided
+        Object.entries(values).forEach(([name, value]) => {
+          if (this.fields[name]) {
+            this.fields[name].defaultValue = value;
+          }
+        });
       } else {
         const defaultValues = Object.keys(this.fields).reduce(
           (acc, name) => {
@@ -548,6 +616,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.isValid = true;
       this.isSubmitting = false;
       this.isValidating = false;
+      this.dispatchStateChange();
+
+      setTimeout(() => {
+        this.isResetting = false;
+      }, 0);
     },
 
     handleSubmit(
@@ -572,19 +645,19 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
           }
         } finally {
           this.isSubmitting = false;
+          this.dispatchStateChange();
         }
       };
     },
 
     getFormState(): FormState {
-      this.validateAllFields();
-
       return {
         values: { ...this.values },
         errors: { ...this.errors },
         touchedFields: { ...this.touchedFields },
         dirtyFields: { ...this.dirtyFields },
         isValid: this.isValid,
+        isDirty: Object.values(this.dirtyFields).some(Boolean),
         isSubmitting: this.isSubmitting,
         isValidating: this.isValidating,
       };
@@ -610,8 +683,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       if (!formElement) {
         this.cleanup = () => {
           if (this.formId) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (formServiceMeta.instance as any).unregister(this.formId);
+            document.dispatchEvent(
+              new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, {
+                detail: { id: this.formId },
+              }),
+            );
           }
         };
         return;
@@ -626,8 +702,11 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.cleanup = () => {
         formElement.removeEventListener('submit', handleFormSubmit);
         if (this.formId) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (formServiceMeta.instance as any).unregister(this.formId);
+          document.dispatchEvent(
+            new CustomEvent(TUTOR_CUSTOM_EVENTS.FORM_UNREGISTER, {
+              detail: { id: this.formId },
+            }),
+          );
         }
       };
     },
