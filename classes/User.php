@@ -733,14 +733,13 @@ class User {
 	 * @return string
 	 */
 	public static function get_current_view_mode(): string {
-		$user_id       = get_current_user_id();
-		$is_instructor = self::is_instructor( $user_id, true );
-		$is_admin      = self::is_admin( $user_id );
-
-		$default_mode = $is_instructor || $is_admin ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
+		$user_id      = get_current_user_id();
+		$default_mode = self::can_switch_mode( $user_id ) ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
 		$current_mode = get_user_meta( $user_id, self::VIEW_MODE_USER_META, true );
 
-		return $current_mode ? $current_mode : $default_mode;
+		return in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true )
+				? $current_mode
+				: $default_mode;
 	}
 
 	/**
