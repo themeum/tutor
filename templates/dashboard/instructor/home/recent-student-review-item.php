@@ -12,7 +12,6 @@ use TUTOR\Icon;
 use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
 
-$review = $data;
 ?>
 
 <div class="tutor-dashboard-home-review">

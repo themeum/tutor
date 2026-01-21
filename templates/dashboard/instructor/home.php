@@ -49,7 +49,7 @@ $instructor_course_ids = CourseModel::get_courses_by_args(
 	)
 )->posts;
 
-$template_path  = tutor()->path . 'templates/dashboard/instructor/home/';
+
 $start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
 $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
 $previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
@@ -485,7 +485,7 @@ $recent_reviews = array_map(
 			<div class="tutor-flex-1">
 			<?php
 			tutor_load_template(
-				'demo-components.dashboard.components.stat-card',
+				'dashboard.instructor.analytics.stat-card',
 				array(
 					'variation'  => isset( $card['variation'] ) ? $card['variation'] : 'enrolled',
 					'card_title' => isset( $card['title'] ) ? $card['title'] : '',
@@ -504,7 +504,7 @@ $recent_reviews = array_map(
 	<!-- Overview Chart -->
 	<?php
 	tutor_load_template(
-		'demo-components.dashboard.components.instructor.home.overview-chart',
+		'dashboard.instructor.home.overview-chart',
 		array(
 			'overview_chart_data' => $overview_chart_data,
 		)
@@ -519,7 +519,7 @@ $recent_reviews = array_map(
 		<!-- Course Completion Chart -->
 		<?php
 		tutor_load_template(
-			'demo-components.dashboard.components.instructor.home.course-completion-chart',
+			'dashboard.instructor.home.course-completion-chart',
 			array(
 				'course_completion_data' => $course_completion_data,
 			)
@@ -569,10 +569,9 @@ $recent_reviews = array_map(
 				),
 				'selected' => Input::get( 'type', 'revenue' ),
 			);
-			tutor_load_template_from_custom_path(
-				$template_path . 'top-performing-course-filter.php',
+			tutor_load_template(
+				'dashboard.instructor.home.top-performing-course-filter',
 				$data,
-				false
 			);
 			?>
 		</div>
@@ -580,13 +579,12 @@ $recent_reviews = array_map(
 		<div class="tutor-dashboard-home-card-body tutor-gap-4">
 			<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
 				<?php
-				tutor_load_template_from_custom_path(
-					$template_path . 'top-performing-course-item.php',
+				tutor_load_template(
+					'dashboard.instructor.home.top-performing-course-item',
 					array(
 						'item_key' => $item_key,
 						'item'     => $item,
 					),
-					false
 				)
 				?>
 			<?php endforeach; ?>
@@ -609,10 +607,9 @@ $recent_reviews = array_map(
 				<div class="tutor-dashboard-home-card-body tutor-gap-4">
 					<?php foreach ( $upcoming_tasks as $item ) : ?>
 						<?php
-						tutor_load_template_from_custom_path(
-							$template_path . 'upcoming-task-item.php',
-							$item,
-							false
+						tutor_load_template(
+							'dashboard.instructor.home.upcoming-task-item',
+							array( 'item' => $item )
 						);
 						?>
 					<?php endforeach; ?>
@@ -655,10 +652,9 @@ $recent_reviews = array_map(
 		<div class="tutor-dashboard-home-card-body tutor-gap-6">
 			<?php foreach ( $recent_reviews as $review ) : ?>
 				<?php
-				tutor_load_template_from_custom_path(
-					$template_path . 'recent-student-review-item.php',
-					$review,
-					false
+				tutor_load_template(
+					'dashboard.instructor.home.recent-student-review-item',
+					array( 'review' => $review ),
 				);
 				?>
 			<?php endforeach; ?>

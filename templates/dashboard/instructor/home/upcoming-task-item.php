@@ -10,7 +10,6 @@
 
 use TUTOR\Icon;
 
-$item                  = $data;
 $get_icon_by_post_type = function ( $post_type ) {
 	switch ( $post_type ) {
 		case 'tutor_assignments':

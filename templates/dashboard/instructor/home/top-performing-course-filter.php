@@ -11,9 +11,6 @@
 
 use TUTOR\Icon;
 
-$options  = isset( $data['options'] ) ? $data['options'] : array();
-$selected = isset( $data['selected'] ) ? $data['selected'] : '';
-
 ?>
 
 <div

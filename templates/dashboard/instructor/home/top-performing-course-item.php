@@ -9,8 +9,6 @@
  */
 
 use TUTOR\Icon;
-$item_key = $data['item_key'];
-$item     = $data['item'];
 ?>
 
 <div class="tutor-dashboard-home-course">

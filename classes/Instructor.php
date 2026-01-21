@@ -666,6 +666,8 @@ class Instructor {
 			return $counts;
 		}
 
+		$counts['enrolled'] = count( $enrollments );
+
 		foreach ( $enrollments as $enrollment ) {
 
 			if ( in_array( $enrollment->post_status, $cancel_statuses, true ) ) {
