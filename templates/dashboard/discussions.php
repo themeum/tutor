@@ -9,11 +9,11 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Nav;
 use TUTOR\Icon;
 use TUTOR\Input;
-
-defined( 'ABSPATH' ) || exit;
 
 $current_tab   = Input::get( 'tab' );
 $discussion_id = Input::get( 'id', 0, Input::TYPE_INT );

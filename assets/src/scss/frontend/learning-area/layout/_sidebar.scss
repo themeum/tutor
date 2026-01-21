@@ -7,9 +7,8 @@
   @include tutor-flex(column);
   gap: $tutor-spacing-6;
   padding: $tutor-spacing-4;
-  position: fixed;
-  height: calc(100vh - 62px);
-  top: 62px;
+  position: absolute;
+  min-height: 100%;
   width: 320px;
   inset-inline-start: 0;
   overflow: hidden;
