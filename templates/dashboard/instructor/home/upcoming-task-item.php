@@ -48,13 +48,15 @@ $get_icon_by_post_type = function ( $post_type ) {
 		<div class="tutor-small tutor-font-medium">
 			<?php echo esc_html( $item['name'] ); ?>
 		</div>
-		<div class="tutor-dashboard-home-task-badge tutor-flex tutor-row tutor-items-center" data-meta>
-			<?php
-			echo esc_html(
-				tutor_utils()->render_svg_icon( $get_icon_by_post_type( $item['post_type'] ) ) .
-				__( 'Live Session', 'tutor' )
-			);
-			?>
+		<div class="tutor-dashboard-home-task-live-tag" data-meta>
+			<div class="tutor-dashboard-home-task-live-tag-badge">
+				<?php 
+				tutor_load_template(
+					'core-components.event-badge', 
+					array( 'text' => __( 'Live Session', 'tutor' ) ),
+				);
+				?>
+			</div>
 		</div>
 		<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-dashboard-home-task-link" data-link>
 			<?php esc_html_e( 'Open', 'tutor' ); ?>

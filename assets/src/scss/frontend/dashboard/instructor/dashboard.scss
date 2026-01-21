@@ -227,11 +227,17 @@
       width: fit-content;
     }
 
-    &-badge {
-      @include tutor-flex(row, center);
-      padding: $tutor-spacing-2 $tutor-spacing-3;
-      background: $tutor-brand-200;
-      border-radius: $tutor-radius-full;
+    &-live-tag {
+      position: relative;
+      margin-top: $tutor-spacing-5;
+
+      &-badge {
+        @include tutor-flex(row, center, flex-start);
+        opacity: 1;
+        visibility: visible;
+        z-index: $tutor-z-positive;
+        @include tutor-transition((opacity, visibility));
+      }
     }
   }
 
