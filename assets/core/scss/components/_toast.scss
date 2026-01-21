@@ -71,7 +71,6 @@
     height: 36px;
     @include tutor-flex(row, center, center);
     border-radius: $tutor-radius-full;
-    color: $tutor-icon-idle-inverse;
   }
 
   &-content {
@@ -98,14 +97,10 @@
 
   // Type variants
   &-success {
-    background-color: $tutor-actions-success-tertiary;
+    background-color: $tutor-surface-success;
 
     .tutor-toast-icon {
-      background-color: $tutor-actions-success-primary;
-      box-shadow:
-        0px 0px 0px 2px #36cf4224,
-        0px 1px 2px 0px #1018280f,
-        0px 1px 3px 0px #1018281a;
+      background-color: $tutor-icon-success-primary;
     }
 
     .tutor-toast-title {
@@ -114,14 +109,10 @@
   }
 
   &-warning {
-    background-color: $tutor-actions-warning-tertiary;
+    background-color: $tutor-surface-warning;
 
     .tutor-toast-icon {
-      background-color: $tutor-button-caution;
-      box-shadow:
-        0px 0px 0px 2px #dee52624,
-        0px 1px 2px 0px #1018280f,
-        0px 1px 3px 0px #1018281a;
+      background-color: $tutor-icon-caution;
     }
 
     .tutor-toast-title {
@@ -130,13 +121,10 @@
   }
 
   &-error {
-    background-color: $tutor-button-destructive-soft;
+    background-color: $tutor-surface-critical;
 
     .tutor-toast-icon {
-      background-color: $tutor-button-destructive;
-      box-shadow:
-        0px 0px 0px 2px #f044383d,
-        0px 1px 2px 0px #1018280d;
+      background-color: $tutor-icon-critical;
     }
 
     .tutor-toast-title {
@@ -145,11 +133,10 @@
   }
 
   &-info {
-    background-color: $tutor-button-primary-soft-focused;
+    background-color: $tutor-surface-brand-quaternary;
 
     .tutor-toast-icon {
-      background-color: $tutor-surface-brand-primary;
-      box-shadow: 0px 0px 0px 2px #90a0f7;
+      background-color: $tutor-icon-brand;
     }
 
     .tutor-toast-title {

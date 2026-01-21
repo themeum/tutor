@@ -549,6 +549,92 @@ class User {
 	}
 
 	/**
+	 * Get profile settings data
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return array
+	 */
+	public static function get_profile_settings_data( $user_id = 0 ) {
+		$user_id = tutor_utils()->get_user_id( $user_id );
+		$user    = get_userdata( $user_id );
+
+		// Prepare profile pic.
+		$profile_placeholder = apply_filters( 'tutor_login_default_avatar', tutor()->url . 'assets/images/profile-photo.png' );
+		$profile_photo_src   = $profile_placeholder;
+		$profile_photo_id    = get_user_meta( $user->ID, self::PROFILE_PHOTO_META, true );
+
+		if ( $profile_photo_id ) {
+			$url = wp_get_attachment_image_url( $profile_photo_id, 'full' );
+			if ( ! empty( $url ) ) {
+				$profile_photo_src = $url;
+			}
+		}
+
+		$timezone = self::get_user_timezone_string( $user );
+
+		// Prepare cover photo.
+		$cover_placeholder = tutor()->url . 'assets/images/cover-photo.jpg';
+		$cover_photo_src   = $cover_placeholder;
+		$cover_photo_id    = get_user_meta( $user->ID, self::COVER_PHOTO_META, true );
+
+		if ( $cover_photo_id ) {
+			$url = wp_get_attachment_image_url( $cover_photo_id, 'full' );
+			if ( ! empty( $url ) ) {
+				$cover_photo_src = $url;
+			}
+		}
+
+		// Prepare display name.
+		$public_display                     = array();
+		$public_display['display_nickname'] = $user->nickname;
+		$public_display['display_username'] = $user->user_login;
+
+		if ( ! empty( $user->first_name ) ) {
+			$public_display['display_firstname'] = $user->first_name;
+		}
+
+		if ( ! empty( $user->last_name ) ) {
+			$public_display['display_lastname'] = $user->last_name;
+		}
+
+		if ( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
+			$public_display['display_firstlast'] = $user->first_name . ' ' . $user->last_name;
+			$public_display['display_lastfirst'] = $user->last_name . ' ' . $user->first_name;
+		}
+
+		if ( ! in_array( $user->display_name, $public_display, true ) ) { // Only add this if it isn't duplicated elsewhere.
+			$public_display = array( 'display_displayname' => $user->display_name ) + $public_display;
+		}
+
+		$public_display = array_map( 'trim', $public_display );
+		$public_display = array_unique( $public_display );
+		$max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 );
+
+		$profile_bio = wp_strip_all_tags( get_user_meta( $user->ID, self::PROFILE_BIO_META, true ) );
+		$job_title   = get_user_meta( $user->ID, self::PROFILE_JOB_TITLE_META, true );
+		$phone       = get_user_meta( $user->ID, self::PHONE_NUMBER_META, true );
+
+		return array(
+			'user'                => $user,
+			'profile_placeholder' => $profile_placeholder,
+			'profile_photo_src'   => $profile_photo_src,
+			'profile_photo_id'    => $profile_photo_id,
+			'cover_placeholder'   => $cover_placeholder,
+			'cover_photo_src'     => $cover_photo_src,
+			'cover_photo_id'      => $cover_photo_id,
+			'timezone'            => $timezone,
+			'public_display'      => $public_display,
+			'max_filesize'        => $max_filesize,
+			'profile_bio'         => $profile_bio,
+			'job_title'           => $job_title,
+			'phone_number'        => $phone,
+		);
+	}
+
+	/**
 	 * Get user list with pagination & support
 	 * search term
 	 *

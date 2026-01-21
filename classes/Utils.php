@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use TUTOR\Icon;
 use Tutor\Ecommerce\Tax;
 use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
@@ -2938,19 +2939,7 @@ class Utils {
 			$nav_items = apply_filters( 'tutor_dashboard/nav_items', $this->default_menus() );
 		}
 
-		/**
-		 * Miscellaneous menus pages
-		 * Which are not visible to any nav.
-		 *
-		 * @since 4.0.0
-		 */
-		$misc_menus = array(
-			'account' => array( 'label' => __( 'Account', 'tutor' ) ),
-		);
-
-		$all_menus = array_merge( $nav_items, $misc_menus );
-
-		return apply_filters( 'tutor_dashboard/nav_items_all', $all_menus );
+		return apply_filters( 'tutor_dashboard/nav_items_all', $nav_items );
 	}
 
 	/**
@@ -5894,6 +5883,7 @@ class Utils {
 	 * Get the user social icons
 	 *
 	 * @since 1.3.7
+	 * @since 4.0.0 added svg_icon and pattern
 	 *
 	 * @return array $array
 	 */
@@ -5903,26 +5893,36 @@ class Utils {
 				'label'        => __( 'Facebook', 'tutor' ),
 				'placeholder'  => 'https://facebook.com/username',
 				'icon_classes' => 'tutor-icon-brand-facebook',
+				'svg_icon'     => Icon::FACEBOOK,
+				'pattern'      => '^https?:\/\/(www\.|m\.|web\.|mobile\.)?facebook\.com\/([A-Za-z0-9._-]+)\/?$',
 			),
 			'_tutor_profile_twitter'  => array(
 				'label'        => __( 'X', 'tutor' ),
 				'placeholder'  => 'https://x.com/username',
 				'icon_classes' => 'tutor-icon-brand-x-twitter',
+				'svg_icon'     => Icon::X,
+				'pattern'      => '^https?:\/\/(www\.)?(x\.com|twitter\.com)\/([A-Za-z0-9_]+)\/?$',
 			),
 			'_tutor_profile_linkedin' => array(
 				'label'        => __( 'Linkedin', 'tutor' ),
 				'placeholder'  => 'https://linkedin.com/username',
 				'icon_classes' => 'tutor-icon-brand-linkedin',
-			),
-			'_tutor_profile_website'  => array(
-				'label'        => __( 'Website', 'tutor' ),
-				'placeholder'  => 'https://example.com/',
-				'icon_classes' => 'tutor-icon-earth',
+				'svg_icon'     => Icon::LINKEDIN,
+				'pattern'      => '^https?:\/\/(www\.)?linkedin\.com\/(in|company|school)\/([A-Za-z0-9_-]+)\/?$',
 			),
 			'_tutor_profile_github'   => array(
 				'label'        => __( 'Github', 'tutor' ),
 				'placeholder'  => 'https://github.com/username',
 				'icon_classes' => 'tutor-icon-brand-github',
+				'svg_icon'     => Icon::GITHUB,
+				'pattern'      => '^https?:\/\/(www\.)?github\.com\/([A-Za-z0-9_-]+)\/?$',
+			),
+			'_tutor_profile_website'  => array(
+				'label'        => __( 'Website', 'tutor' ),
+				'placeholder'  => 'https://example.com/',
+				'icon_classes' => 'tutor-icon-earth',
+				'svg_icon'     => Icon::GLOBE,
+				'pattern'      => '^https?:\/\/(www\.)?[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*\.[A-Za-z]{2,}(\/.*)?$',
 			),
 		);
 
@@ -9606,6 +9606,10 @@ class Utils {
 				'title' => __( 'Courses', 'tutor' ),
 				'icon'  => Icon::COURSES,
 			),
+			'account' => array( 
+				'label' => __( 'Account', 'tutor' ), 
+				'show_ui' => false 
+			)
 		);
 
 		if ( $this->should_show_dicussion_menu() ) {

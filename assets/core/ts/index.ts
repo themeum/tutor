@@ -12,11 +12,13 @@ import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
+import { passwordInputMeta } from '@Core/ts/components/password-input';
 import { playerMeta } from '@Core/ts/components/player';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { selectMeta } from '@Core/ts/components/select';
 import { selectDropdownMeta } from '@Core/ts/components/select-dropdown';
+import { starRatingMeta } from '@Core/ts/components/star-rating';
 import { staticsMeta } from '@Core/ts/components/statics';
 import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
@@ -27,6 +29,7 @@ import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/Toast';
+import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { getNonceData } from '@Core/ts/utils/nonce';
@@ -54,10 +57,12 @@ const initializePlugin = () => {
       stepperDropdownMeta,
       selectMeta,
       previewTriggerMeta,
+      starRatingMeta,
       toastMeta,
       playerMeta,
+      passwordInputMeta,
     ],
-    services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta],
+    services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, wpMediaServiceMeta],
   });
 
   TutorComponentRegistry.initWithAlpine(Alpine);
