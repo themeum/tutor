@@ -155,7 +155,7 @@ tutor_load_template(
 				foreach ( $nav_contents as $key => $content ) {
 					$is_pro = isset( $content['is_pro'] ) && true === $content['is_pro'];
 					tutor_load_template(
-						$content['template_path'],
+						$content['template'],
 						array(
 							'is_active' => $content['value'] === $active_tab,
 							'post'      => $post,
