@@ -49,7 +49,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,
 			defaultTab: "overview",
 			urlParams: {
-				paramName: "tab",
+				paramName: "page_tab",
 			}
 		})'
 		class="tutor-surface-l1 tutor-border tutor-rounded-lg tutor-overflow-hidden"
@@ -92,7 +92,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		<?php endif; ?>
 
 		<?php if ( ! empty( $tabs_data ) ) : ?>
-		<div class="tutor-tabs-content tutor-p-6">
+		<div class="tutor-tabs-content">
 			<?php
 			foreach ( $tabs_data as $key => $content ) {
 				$is_pro = isset( $content['is_pro'] ) && true === $content['is_pro'];
