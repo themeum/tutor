@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
@@ -23,9 +25,6 @@ use Tutor\Helpers\UrlHelper;
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Lesson;
-
-defined( 'ABSPATH' ) || exit;
-
 
 $lesson_comment = get_comment( $discussion_id );
 if ( ! $lesson_comment ) {
