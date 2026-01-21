@@ -550,46 +550,48 @@ $recent_reviews = array_map(
 	</div>
 
 	<!-- Top Performing Courses -->
-	<div 
-		data-section-id="top_performing_courses"
-		class="tutor-dashboard-home-card"
-		:class="{ 'tutor-hidden':  !watch('top_performing_courses')}"
-	> 
-		<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
-			<div class="tutor-small">
-				<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
+	<?php if ( ! empty( $top_performing_courses ) ) : ?>
+		<div 
+			data-section-id="top_performing_courses"
+			class="tutor-dashboard-home-card"
+			:class="{ 'tutor-hidden':  !watch('top_performing_courses')}"
+		> 
+			<div class="tutor-flex tutor-row tutor-justify-between tutor-align-center tutor-gap-9">
+				<div class="tutor-small">
+					<?php esc_html_e( 'Top Performing Courses', 'tutor' ); ?>
+				</div>
+
+				<!-- Sorting -->
+				<?php
+				$data = array(
+					'options'  => array(
+						'revenue' => __( 'Revenue', 'tutor' ),
+						'student' => __( 'Student', 'tutor' ),
+					),
+					'selected' => Input::get( 'type', 'revenue' ),
+				);
+				tutor_load_template(
+					'dashboard.instructor.home.top-performing-course-filter',
+					$data,
+				);
+				?>
 			</div>
 
-			<!-- Sorting -->
-			<?php
-			$data = array(
-				'options'  => array(
-					'revenue' => __( 'Revenue', 'tutor' ),
-					'student' => __( 'Student', 'tutor' ),
-				),
-				'selected' => Input::get( 'type', 'revenue' ),
-			);
-			tutor_load_template(
-				'dashboard.instructor.home.top-performing-course-filter',
-				$data,
-			);
-			?>
+			<div class="tutor-dashboard-home-card-body tutor-gap-4">
+				<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
+					<?php
+					tutor_load_template(
+						'dashboard.instructor.home.top-performing-course-item',
+						array(
+							'item_key' => $item_key,
+							'item'     => $item,
+						),
+					)
+					?>
+				<?php endforeach; ?>
+			</div>
 		</div>
-
-		<div class="tutor-dashboard-home-card-body tutor-gap-4">
-			<?php foreach ( $top_performing_courses as $item_key => $item ) : ?>
-				<?php
-				tutor_load_template(
-					'dashboard.instructor.home.top-performing-course-item',
-					array(
-						'item_key' => $item_key,
-						'item'     => $item,
-					),
-				)
-				?>
-			<?php endforeach; ?>
-		</div>
-	</div>
+	<?php endif; ?>
 
 	<!-- Upcoming Task And Activity -->
 	<?php if ( ! empty( $upcoming_tasks ) ) : ?>
