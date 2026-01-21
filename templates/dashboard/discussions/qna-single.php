@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
@@ -22,9 +24,6 @@ use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\User;
-
-defined( 'ABSPATH' ) || exit;
-
 
 $question = tutor_utils()->get_qa_question( (int) $discussion_id );
 if ( ! $question ) {

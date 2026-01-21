@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
