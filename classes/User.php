@@ -754,6 +754,17 @@ class User {
 	}
 
 	/**
+	 * Check if the user is in student view
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_student_view(): bool {
+		return self::VIEW_AS_STUDENT === self::get_current_view_mode();
+	}
+
+	/**
 	 * Check if the user can switch mode
 	 *
 	 * @since 1.0.0
