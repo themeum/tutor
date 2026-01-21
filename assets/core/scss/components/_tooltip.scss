@@ -18,13 +18,11 @@
 }
 
 .tutor-tooltip {
+  @include tutor-typography('tiny', 'regular', 'primary-inverse');
   position: fixed;
   z-index: 1070;
   max-width: 200px;
   padding: $tutor-spacing-4;
-  font-size: $tutor-font-size-tiny;
-  line-height: $tutor-line-height-tiny;
-  color: $tutor-text-primary-inverse;
   background-color: $tutor-surface-dark;
   border-radius: $tutor-radius-sm;
   box-shadow: $tutor-shadow-md;
@@ -118,10 +116,6 @@
 
 // Animation classes for Alpine.js
 .tutor-tooltip {
-  &[x-cloak] {
-    display: none !important;
-  }
-
   &-enter {
     opacity: 0;
     transform: scale(0.8);
