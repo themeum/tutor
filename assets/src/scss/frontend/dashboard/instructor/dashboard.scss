@@ -226,6 +226,13 @@
       color: $tutor-text-brand;
       width: fit-content;
     }
+
+    &-badge {
+      @include tutor-flex(row, center);
+      padding: $tutor-spacing-2 $tutor-spacing-3;
+      background: $tutor-brand-200;
+      border-radius: $tutor-radius-full;
+    }
   }
 
   &-activity {

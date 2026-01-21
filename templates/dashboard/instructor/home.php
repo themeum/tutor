@@ -242,7 +242,6 @@ if ( empty( $start_date ) && empty( $end_date ) ) {
 					'date'      => wp_date( 'Y-m-d h:i A', strtotime( $start_date ) ),
 					'url'       => $url,
 					'post_type' => $task->post_type,
-					'meta_info' => $task->post_content,
 				);
 			},
 			$get_upcoming_live_tasks

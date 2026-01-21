@@ -29,7 +29,7 @@ $get_icon_by_post_type = function ( $post_type ) {
 
 <div class="tutor-dashboard-home-task">
 	<div class="tutor-dashboard-home-task-icon">
-		<?php tutor_utils()->render_svg_icon( $get_icon_by_post_type( $item['post_type'] ) ); ?>
+		<?php tutor_utils()->render_svg_icon( Icon::VIDEO_CAMERA ); ?>
 	</div>
 	<div class="tutor-flex tutor-flex-column tutor-mt-1">
 		<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-tiny tutor-text-secondary">
@@ -48,8 +48,13 @@ $get_icon_by_post_type = function ( $post_type ) {
 		<div class="tutor-small tutor-font-medium">
 			<?php echo esc_html( $item['name'] ); ?>
 		</div>
-		<div class="tutor-badge tutor-mt-5" data-meta>
-			<?php echo esc_html( $item['meta_info'] ); ?>
+		<div class="tutor-dashboard-home-task-badge tutor-flex tutor-row tutor-items-center" data-meta>
+			<?php
+			echo esc_html(
+				tutor_utils()->render_svg_icon( $get_icon_by_post_type( $item['post_type'] ) ) .
+				__( 'Live Session', 'tutor' )
+			);
+			?>
 		</div>
 		<a href="<?php echo esc_url( $item['url'] ); ?>" class="tutor-dashboard-home-task-link" data-link>
 			<?php esc_html_e( 'Open', 'tutor' ); ?>
