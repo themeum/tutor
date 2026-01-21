@@ -382,6 +382,7 @@ final class Icon {
 	const VIMEO                      = 'vimeo';
 	const VISITED                    = 'visited';
 	const WARNING                    = 'warning';
+	const WARNING_LINE               = 'warning-line';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
 	const WISHLIST                   = 'wishlist';

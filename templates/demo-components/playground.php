@@ -70,6 +70,7 @@ use TUTOR\Input;
 		<?php else : ?>
 		<section>
 			<?php require 'components/table.php'; ?>
+			<?php require 'components/alert.php'; ?>
 			<?php require 'components/avatar.php'; ?>
 			<?php require 'components/pagination.php'; ?>
 			<?php require 'components/button.php'; ?>
