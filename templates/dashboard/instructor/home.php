@@ -17,6 +17,7 @@ use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
 
+
 $sortable_sections          = tutor_utils()->get_instructor_home_sortable_section();
 $sortable_sections_defaults = array_reduce(
 	$sortable_sections,
@@ -36,16 +37,19 @@ $sortable_sections_ids = array_reduce(
 	array()
 );
 
+$upcoming_tasks          = array();
+$get_upcoming_live_tasks = array();
+
+$user                  = wp_get_current_user();
 $instructor_course_ids = CourseModel::get_courses_by_args(
 	array(
-		'post_author'    => $instructor_id,
+		'post_author'    => $user->ID,
 		'posts_per_page' => -1,
 		'fields'         => 'ids',
 	)
 )->posts;
 
 $template_path  = tutor()->path . 'templates/dashboard/instructor/home/';
-$user           = wp_get_current_user();
 $start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
 $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
 $previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
@@ -192,55 +196,97 @@ $top_performing_courses = array_map(
 	$top_courses
 );
 
-$upcoming_live_tasks = get_posts(
-	array(
-		'post_type'   => array( tutor()->zoom_post_type, tutor()->meet_post_type ),
-		'post_status' => 'publish',
-		'date_query'  => array(
-			array(
-				'after' => current_time( 'mysql' ),
+if ( empty( $start_date ) && empty( $end_date ) ) {
+	$get_upcoming_live_tasks = get_posts(
+		array(
+			'post_type'   => array( tutor()->zoom_post_type, tutor()->meet_post_type ),
+			'post_status' => 'publish',
+			'post_author' => $user->ID,
+			'numberposts' => 5,
+			'meta_query'  => array(
+				array(
+					'key'     => array( '_tutor_zm_start_datetime', 'tutor-google-meet-start-datetime' ),
+					'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+					'compare' => '>=',
+					'type'    => 'DATETIME',
+				),
 			),
-		),
-	)
-);
+		)
+	);
 
-$upcoming_tasks = array(
-	array(
-		'name'      => 'Complete Web Development Bootcamp',
-		'date'      => '2022-01-01 10:00 AM',
-		'url'       => '#',
-		'post_type' => 'tutor_assignments',
-		'meta_info' => 'Web Dev 101',
-	),
-	array(
-		'name'      => 'Live Q&A: React Hooks',
-		'date'      => '2022-01-02 10:00 AM',
-		'url'       => '#',
-		'post_type' => 'tutor-google-meet',
-		'meta_info' => '67 registered',
-	),
-	array(
-		'name'      => 'Quiz Closes: Python Functions',
-		'date'      => '2022-01-03 10:00 AM',
-		'url'       => '#',
-		'post_type' => 'tutor_quiz',
-		'meta_info' => 'Python Basics',
-	),
-	array(
-		'name'      => 'Live Q&A: Python Functions',
-		'date'      => '2022-01-04 10:00 AM',
-		'url'       => '#',
-		'post_type' => 'tutor_zoom_meeting',
-		'meta_info' => '67 registered',
-	),
-	array(
-		'name'      => 'Lesson Closes: Python Functions',
-		'date'      => '2022-01-05 10:00 AM',
-		'url'       => '#',
-		'post_type' => 'lesson',
-		'meta_info' => 'Python Basics',
-	),
-);
+	if ( ! empty( $get_upcoming_live_tasks ) ) {
+		$upcoming_tasks = array_map(
+			function ( $task ) {
+
+				switch ( $task->post_type ) {
+					case tutor()->zoom_post_type:
+						$meta_key = '_tutor_zm_start_datetime';
+						$url      = json_decode( get_post_meta( $task->ID, '_tutor_zm_data' )[0] )->join_url ?? '';
+						break;
+
+					case tutor()->meet_post_type:
+						$meta_key = 'tutor-google-meet-start-datetime';
+						$url      = get_post_meta( $task->ID, 'tutor-google-meet-link', true );
+						break;
+
+					default:
+						$meta_key = null;
+						$url      = '';
+						break;
+				}
+
+				$start_date = get_post_meta( $task->ID, $meta_key, true );
+
+				return array(
+					'name'      => $task->post_title,
+					'date'      => wp_date( 'Y-m-d h:i A', strtotime( $start_date ) ),
+					'url'       => $url,
+					'post_type' => $task->post_type,
+					'meta_info' => $task->post_content,
+				);
+			},
+			$get_upcoming_live_tasks
+		);
+	}
+}
+
+// $upcoming_tasks = array(
+// array(
+// 'name'      => 'Complete Web Development Bootcamp',
+// 'date'      => '2022-01-01 10:00 AM',
+// 'url'       => '#',
+// 'post_type' => 'tutor_assignments',
+// 'meta_info' => 'Web Dev 101',
+// ),
+// array(
+// 'name'      => 'Live Q&A: React Hooks',
+// 'date'      => '2022-01-02 10:00 AM',
+// 'url'       => '#',
+// 'post_type' => 'tutor-google-meet',
+// 'meta_info' => '67 registered',
+// ),
+// array(
+// 'name'      => 'Quiz Closes: Python Functions',
+// 'date'      => '2022-01-03 10:00 AM',
+// 'url'       => '#',
+// 'post_type' => 'tutor_quiz',
+// 'meta_info' => 'Python Basics',
+// ),
+// array(
+// 'name'      => 'Live Q&A: Python Functions',
+// 'date'      => '2022-01-04 10:00 AM',
+// 'url'       => '#',
+// 'post_type' => 'tutor_zoom_meeting',
+// 'meta_info' => '67 registered',
+// ),
+// array(
+// 'name'      => 'Lesson Closes: Python Functions',
+// 'date'      => '2022-01-05 10:00 AM',
+// 'url'       => '#',
+// 'post_type' => 'lesson',
+// 'meta_info' => 'Python Basics',
+// ),
+// );
 
 // @todo will be added later.
 // $recent_activity = array(
@@ -547,34 +593,35 @@ $recent_reviews = array_map(
 		</div>
 	</div>
 
-	<div
-		data-section-id="upcoming_tasks_and_activity"
-		class="tutor-flex tutor-gap-6"
-		:class="{ 'tutor-hidden':  !watch('upcoming_tasks_and_activity')}"
-	>
-		<!-- Upcoming Tasks -->
-		<div class="tutor-dashboard-home-card tutor-flex-1">
-			<div class="tutor-small">
-				<?php esc_html_e( 'Upcoming Tasks', 'tutor' ); ?>
+	<!-- Upcoming Task And Activity -->
+	<?php if ( ! empty( $upcoming_tasks ) ) : ?>
+		<div
+			data-section-id="upcoming_tasks_and_activity"
+			class="tutor-flex tutor-gap-6"
+			:class="{ 'tutor-hidden':  !watch('upcoming_tasks_and_activity')}"
+		>
+			<!-- Upcoming Tasks -->
+			<div class="tutor-dashboard-home-card tutor-flex-1">
+				<div class="tutor-small">
+					<?php esc_html_e( 'Upcoming Tasks', 'tutor' ); ?>
+				</div>
+
+				<div class="tutor-dashboard-home-card-body tutor-gap-4">
+					<?php foreach ( $upcoming_tasks as $item ) : ?>
+						<?php
+						tutor_load_template_from_custom_path(
+							$template_path . 'upcoming-task-item.php',
+							$item,
+							false
+						);
+						?>
+					<?php endforeach; ?>
+				</div>
 			</div>
 
-			<div class="tutor-dashboard-home-card-body tutor-gap-4">
-				<?php foreach ( $upcoming_tasks as $item ) : ?>
-					<?php
-					tutor_load_template(
-						'demo-components.dashboard.components.instructor.home.upcoming-task-item',
-						array(
-							'item' => $item,
-						)
-					);
-					?>
-				<?php endforeach; ?>
-			</div>
-		</div>
-
-		<!-- Recent Activity -->
-		<!-- @todo Will be added later. -->
-		<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
+			<!-- Recent Activity -->
+			<!-- @todo Will be added later. -->
+			<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
 				<?php // esc_html_e( 'Recent Activity', 'tutor' ); ?>
 			</div>
@@ -590,9 +637,9 @@ $recent_reviews = array_map(
 					// );
 					?>
 				<?php // endforeach; ?>
-			</div>
-		</div> -->
-	</div>
+			</div> -->
+		</div>
+	<?php endif; ?>
 
 	<!-- Recent Student Reviews -->
 	<?php if ( ! empty( $recent_reviews ) ) : ?>
