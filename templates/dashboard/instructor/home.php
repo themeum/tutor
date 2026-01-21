@@ -192,44 +192,53 @@ $top_performing_courses = array_map(
 	$top_courses
 );
 
+$upcoming_live_tasks =  get_posts( array(
+	'post_type'   => array(tutor()->zoom_post_type, tutor()->meet_post_type),
+	'post_status' => 'publish',
+	'date_query'  => array(
+		array(
+			'after' => current_time( 'mysql' ),
+		),
+	),
+));
 
-	$upcoming_tasks = array(
-		array(
-			'name'      => 'Complete Web Development Bootcamp',
-			'date'      => '2022-01-01 10:00 AM',
-			'url'       => '#',
-			'post_type' => 'tutor_assignments',
-			'meta_info' => 'Web Dev 101',
-		),
-		array(
-			'name'      => 'Live Q&A: React Hooks',
-			'date'      => '2022-01-02 10:00 AM',
-			'url'       => '#',
-			'post_type' => 'tutor-google-meet',
-			'meta_info' => '67 registered',
-		),
-		array(
-			'name'      => 'Quiz Closes: Python Functions',
-			'date'      => '2022-01-03 10:00 AM',
-			'url'       => '#',
-			'post_type' => 'tutor_quiz',
-			'meta_info' => 'Python Basics',
-		),
-		array(
-			'name'      => 'Live Q&A: Python Functions',
-			'date'      => '2022-01-04 10:00 AM',
-			'url'       => '#',
-			'post_type' => 'tutor_zoom_meeting',
-			'meta_info' => '67 registered',
-		),
-		array(
-			'name'      => 'Lesson Closes: Python Functions',
-			'date'      => '2022-01-05 10:00 AM',
-			'url'       => '#',
-			'post_type' => 'lesson',
-			'meta_info' => 'Python Basics',
-		),
-	);
+$upcoming_tasks = array(
+	array(
+		'name'      => 'Complete Web Development Bootcamp',
+		'date'      => '2022-01-01 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor_assignments',
+		'meta_info' => 'Web Dev 101',
+	),
+	array(
+		'name'      => 'Live Q&A: React Hooks',
+		'date'      => '2022-01-02 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor-google-meet',
+		'meta_info' => '67 registered',
+	),
+	array(
+		'name'      => 'Quiz Closes: Python Functions',
+		'date'      => '2022-01-03 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor_quiz',
+		'meta_info' => 'Python Basics',
+	),
+	array(
+		'name'      => 'Live Q&A: Python Functions',
+		'date'      => '2022-01-04 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'tutor_zoom_meeting',
+		'meta_info' => '67 registered',
+	),
+	array(
+		'name'      => 'Lesson Closes: Python Functions',
+		'date'      => '2022-01-05 10:00 AM',
+		'url'       => '#',
+		'post_type' => 'lesson',
+		'meta_info' => 'Python Basics',
+	),
+);
 
 // @todo will be added later.
 // $recent_activity = array(
