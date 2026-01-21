@@ -1,3 +1,4 @@
+import { initializeLessonComments } from './comments';
 import { initializeLessonPlayer } from './player';
 
 /**
@@ -5,4 +6,5 @@ import { initializeLessonPlayer } from './player';
  */
 export const initializeLesson = () => {
   initializeLessonPlayer();
+  initializeLessonComments();
 };

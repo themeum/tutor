@@ -81,6 +81,7 @@ const endpoints = {
   // LESSON
   GET_LESSON_DETAILS: 'tutor_lesson_details',
   SAVE_LESSON: 'tutor_save_lesson',
+  CREATE_LESSON_COMMENT: 'tutor_create_lesson_comment',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
   REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
 
