@@ -375,10 +375,11 @@ class User {
 		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
 		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
 
+		// Check if the image uploaded is by the same user.
 		if ( is_numeric( $_tutor_profile_image ) ) {
 			$attachment = get_post( $_tutor_profile_image );
-
-			if ( 'attachment' === $attachment->post_type && $user_id !== $attachment->post_author ) {
+			$author_id  = (int) $attachment->post_author ?? 0;
+			if ( 'attachment' === $attachment->post_type && $user_id !== $author_id ) {
 				return;
 			}
 		}
