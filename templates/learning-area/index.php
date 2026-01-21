@@ -67,4 +67,5 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 		</button>
 	</div>
 </div>
+
 <?php wp_footer(); ?>

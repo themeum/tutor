@@ -28,13 +28,16 @@ global $tutor_course_id;
 $question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
 $order_by    = Input::get( 'order', 'DESC' );
 
-// Get question data.
-$question = tutor_utils()->get_qa_question( $question_id );
+if ( $question_id ) {
+	// Get question data.
+	$question = tutor_utils()->get_qa_question( $question_id );
 
-// Get answers.
-$answers         = tutor_utils()->get_qa_answer_by_question( $question_id, $order_by, 'frontend' );
-$current_user_id = get_current_user_id();
-$back_url        = remove_query_arg( 'question_id' );
+	// Get answers.
+	$answers         = tutor_utils()->get_qa_answer_by_question( $question_id, $order_by, 'frontend' );
+	$current_user_id = get_current_user_id();
+}
+
+$back_url = remove_query_arg( 'question_id' );
 
 ?>
 <div class="tutor-discussion-single"  x-data="tutorQna()">
@@ -52,7 +55,7 @@ $back_url        = remove_query_arg( 'question_id' );
 		?>
 	</div>
 	<?php
-	if ( ! $question ) {
+	if ( ! $question_id ) {
 		EmptyState::make()->title( 'Question not found!' )->render();
 		return;
 	}
@@ -62,15 +65,19 @@ $back_url        = remove_query_arg( 'question_id' );
 		<div class="tutor-flex tutor-justify-between tutor-gap-6 tutor-mb-5">
 			<?php
 			Avatar::make()
-				->src( esc_url( get_avatar_url( $question->user_id ) ) )
+				->user( $question->user_id )
 				->size( Size::SIZE_32 )
-				->attr( 'alt', $question->display_name )
 				->render();
 			?>
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->display_name ); ?></span> 
-					<span class="tutor-text-secondary"> <?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ) ); //phpcs:ignore ?></span>
+					<span class="tutor-text-secondary"> 
+					<?php
+						/* translators: %s: time difference */
+						echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ) );
+					?>
+					</span>
 				</div>
 			</div>
 			<?php if ( $current_user_id == $question->user_id || current_user_can( 'manage_tutor' ) ) : ?>
@@ -109,8 +116,8 @@ $back_url        = remove_query_arg( 'question_id' );
 
 	<div class="tutor-qa-reply tutor-p-6 tutor-border-b">
 		<form class="tutor-discussion-single-reply-form tutor-qna-reply-form"
-			x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $question_id ); ?>' }), focused : false }"
-			@submit.prevent="handleSubmit((data) => replyQnaMutation?.mutate({...data, course_id: <?php echo esc_html( $tutor_course_id ); ?>, question_id: <?php echo esc_html( $question_id ); ?> }))($event)"
+			x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $question_id ); ?>', defaultValues : { course_id: <?php echo esc_html( $tutor_course_id ); ?>, question_id: <?php echo esc_html( $question_id ); ?> }}), focused : false }"
+			@submit.prevent="handleSubmit((data) => replyQnaMutation?.mutate(data))($event)"
 		>
 			<div class="tutor-input-field">
 				<label for="tutor-qna-reply" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'Reply', 'tutor' ); ?></label>
@@ -156,7 +163,7 @@ $back_url        = remove_query_arg( 'question_id' );
 		<div>
 			<?php
 			Sorting::make()
-				->order( Input::get( 'order', 'DESC' ) )
+				->order( $order_by )
 				->render();
 			?>
 		</div>
@@ -167,16 +174,20 @@ $back_url        = remove_query_arg( 'question_id' );
 			<?php foreach ( $answers as $answer ) : ?>
 				<div class="tutor-discussion-reply-list-item" data-answer_id="<?php echo esc_attr( $answer->comment_ID ); ?>">
 					<?php
-						Avatar::make()
-							->src( esc_url( get_avatar_url( $answer->user_id ) ) )
-							->size( Size::SIZE_32 )
-							->attr( 'alt', $answer->display_name )
-							->render();
+					Avatar::make()
+						->user( $answer->user_id )
+						->size( Size::SIZE_32 )
+						->render();
 					?>
 					<div>
 						<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
 							<span class="tutor-discussion-card-author"><?php echo esc_html( $answer->display_name ); ?></span> 
-							<span class="tutor-text-subdued"> <?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ) ); // phpcs:ignore ?></span>
+							<span class="tutor-text-subdued"> 
+							<?php
+								/* translators: %s: time difference */
+								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ) );
+							?>
+							</span>
 						</div>
 						<div class="tutor-p2 tutor-text-secondary tutor-mb-6">
 							<?php echo wp_kses_post( stripslashes( $answer->comment_content ) ); ?>
@@ -214,10 +225,8 @@ $back_url        = remove_query_arg( 'question_id' );
 			<?php endforeach; ?>
 		</div>
 	<?php else : ?>
-		<div class="tutor-p-6">
-			<div class="tutor-text-center tutor-text-secondary">
-				<?php EmptyState::make()->title( 'No replies yet. Be the first to reply!' )->render(); ?>
-			</div>
+		<div class="tutor-text-center tutor-text-secondary tutor-p-6">
+			<?php EmptyState::make()->title( 'No replies yet. Be the first to reply!' )->render(); ?>
 		</div>
 	<?php endif; ?>
 

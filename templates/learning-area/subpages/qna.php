@@ -110,9 +110,9 @@ $questions   = tutor_utils()->get_qa_questions(
 		</div>
 		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5" x-cloak :class="{ 'tutor-hidden': !focused }">
 			<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
-				<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
+				<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?>
 				<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-				<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?> 
+				<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?>
 				<?php esc_html_e( 'Enter to Save', 'tutor' ); ?>
 			</div>
 			<div class="tutor-flex tutor-items-center tutor-gap-4">
@@ -147,7 +147,7 @@ $questions   = tutor_utils()->get_qa_questions(
 		<div>
 			<?php
 			Sorting::make()
-				->order( Input::get( 'order', 'DESC' ) )
+				->order( $order_by )
 				->render();
 			?>
 		</div>
@@ -170,12 +170,11 @@ $questions   = tutor_utils()->get_qa_questions(
 				$content      = wp_strip_all_tags( stripslashes( $question->comment_content ) );
 				$content      = strlen( $content ) > 100 ? substr( $content, 0, 100 ) . '...' : $content;
 				?>
-				<div class="tutor-discussion-card" @click="window.location.href = '<?php echo esc_url( $question_url ); ?>'" style="cursor: pointer;">
+				<div class="tutor-discussion-card <?php echo $is_important ? 'is-important' : ''; ?>" @click="window.location.href = '<?php echo esc_url( $question_url ); ?>'" style="cursor: pointer;">
 					<?php
 					Avatar::make()
-						->src( esc_url( get_avatar_url( $question->user_id ) ) )
+						->user( $question->user_id )
 						->size( Size::SIZE_32 )
-						->attr( 'alt', $question->display_name )
 						->render();
 					?>
 					<div class="tutor-discussion-card-content">
@@ -194,7 +193,7 @@ $questions   = tutor_utils()->get_qa_questions(
 						</div>
 					</div>
 					<?php if ( $is_important ) : ?>
-						<span class="tutor-flex tutor-absolute tutor-right-6 tutor-top-0" style="top: -4px;">
+						<span class="tutor-discussion-card-bookmark">
 							<?php tutor_utils()->render_svg_icon( Icon::BOOKMARK_FILL, 25, 25, array( 'class' => 'tutor-icon-exception4' ) ); ?>
 						</span>
 					<?php endif; ?>
