@@ -743,13 +743,13 @@ class User {
 	}
 
 	/**
-	 * Get current view mode STUDENT/INSTRUCTOR
+	 * Check if the user is in instructor view
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return string
+	 * @return bool
 	 */
-	public static function is_instructor_view(): string {
+	public static function is_instructor_view(): bool {
 		return self::VIEW_AS_INSTRUCTOR === self::get_current_view_mode();
 	}
 
