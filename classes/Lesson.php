@@ -769,24 +769,24 @@ class Lesson extends Tutor_Base {
 					'icon'  => 'comment',
 				);
 			}
-		}
+		} else {
+			if ( self::has_lesson_content( $lesson_id ) ) {
+				$nav_items['overview'] = array(
+					'id'            => 'overview',
+					'label'         => __( 'Overview', 'tutor' ),
+					'icon'          => Icon::COURSES,
+					'template_path' => 'learning-area.lesson.overview',
+				);
+			}
 
-		if ( self::has_lesson_content( $lesson_id ) ) {
-			$nav_items['overview'] = array(
-				'id'            => 'overview',
-				'label'         => __( 'Overview', 'tutor' ),
-				'icon'          => Icon::COURSES,
-				'template_path' => 'learning-area.lesson.overview',
-			);
-		}
-
-		if ( self::is_comment_enabled() ) {
-			$nav_items['comments'] = array(
-				'id'            => 'comments',
-				'label'         => __( 'Comments', 'tutor' ),
-				'icon'          => Icon::COMMENTS,
-				'template_path' => 'learning-area.lesson.comments',
-			);
+			if ( self::is_comment_enabled() ) {
+				$nav_items['comments'] = array(
+					'id'            => 'comments',
+					'label'         => __( 'Comments', 'tutor' ),
+					'icon'          => Icon::COMMENTS,
+					'template_path' => 'learning-area.lesson.comments',
+				);
+			}
 		}
 
 		$nav_items = apply_filters( 'tutor_lesson_single_nav_items', $nav_items );
