@@ -369,6 +369,7 @@ export const icons = [
   'visited',
   'wallet',
   'warning',
+  'warningLine',
   'weightBox',
   'wifi',
   'wishlist',
