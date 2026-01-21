@@ -617,7 +617,7 @@ class Instructor {
 	 * Get course completion distribution data for a specific instructor.
 	 *
 	 * @since 4.0.0
-	 * 
+	 *
 	 * @param array $instructor_course_ids    Optional list of course IDs.
 	 *
 	 * @return array {
@@ -643,9 +643,9 @@ class Instructor {
 		);
 
 		$cancel_statuses = array( 'cancel', 'canceled', 'cancelled' );
-		$post_statuses = array_merge( $cancel_statuses, array( 'completed' ) );
+		$post_statuses   = array_merge( $cancel_statuses, array( 'completed' ) );
 
-		if (empty($instructor_course_ids)){
+		if ( empty( $instructor_course_ids ) ) {
 			return $counts;
 		}
 
@@ -692,16 +692,16 @@ class Instructor {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param int $instructor_id Instructor  user ID.
+	 * @param int   $instructor_id Instructor  user ID.
 	 * @param array $args {
 	 *     Optional query arguments.
 	 *
 	 *     @type string $start_date Optional start date (Y-m-d).
 	 *     @type string $end_date   Optional end date (Y-m-d).
 	 *     @type string $order_by   Sorting criteria. Accepts 'revenue' or 'student'.
-	 *}
+	 * }
 
-	 * @param int $limit         Maximum number of courses to return. Default 4.
+	 * @param int   $limit         Maximum number of courses to return. Default 4.
 	 *
 	 * @return array List of course objects containing:
 	 *               - course_id (int)
@@ -716,9 +716,9 @@ class Instructor {
 		global $wpdb;
 
 		$start_date = $args['start_date'] ?? null;
-		$end_date = $args['end_date'] ?? null;
-		$order_by = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
- 
+		$end_date   = $args['end_date'] ?? null;
+		$order_by   = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
+
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 
 		$amount_type = current_user_can( 'administrator' ) ? 'earnings.admin_amount' : 'earnings.instructor_amount';
@@ -729,21 +729,21 @@ class Instructor {
 				THEN ( earnings.course_price_grand_total - orders.tax_amount ) * ( $amount_rate/100 )
 			ELSE $amount_type
 			END";
-		
-		$earning_where_clause = array(
-								'earnings.user_id' => $instructor_id,
-								'earnings.order_status' => array('IN', $complete_status),			
-							);
-		
-		$enrollment_where_clause = array('post_type' => 'tutor_enrolled');
 
-		if (!empty($start_date) && !empty($end_date)) {
+		$earning_where_clause = array(
+			'earnings.user_id'      => $instructor_id,
+			'earnings.order_status' => array( 'IN', $complete_status ),
+		);
+
+		$enrollment_where_clause = array( 'post_type' => 'tutor_enrolled' );
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 			$earning_where_clause['earnings.created_at'] = array( 'BETWEEN', array( $start_date, $end_date ) );
-			$enrollment_where_clause['post_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+			$enrollment_where_clause['post_date']        = array( 'BETWEEN', array( $start_date, $end_date ) );
 		}
 
-		$earning_where_clause = QueryHelper::prepare_where_clause($earning_where_clause);
-		$enrollment_where_clause = QueryHelper::prepare_where_clause($enrollment_where_clause);
+		$earning_where_clause    = QueryHelper::prepare_where_clause( $earning_where_clause );
+		$enrollment_where_clause = QueryHelper::prepare_where_clause( $enrollment_where_clause );
 
 		$earnings_sql = "SELECT
 							earnings.course_id,
@@ -754,14 +754,14 @@ class Instructor {
 						GROUP BY earnings.course_id";
 
 		$enrollment_sql = QueryHelper::prepare_raw_query(
-							"SELECT 
-								post_parent AS course_id, 
-								COUNT(ID) AS total_student
-							FROM {$wpdb->posts}
-							WHERE {$enrollment_where_clause}
-							GROUP BY post_parent", 
-							array()
-						);
+			"SELECT 
+				post_parent AS course_id, 
+				COUNT(ID) AS total_student
+			FROM {$wpdb->posts}
+			WHERE {$enrollment_where_clause}
+			GROUP BY post_parent",
+			array()
+		);
 
 		$result = $wpdb->get_results(
 			$wpdb->prepare(

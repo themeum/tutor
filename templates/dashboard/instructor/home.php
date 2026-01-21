@@ -12,10 +12,10 @@ use TUTOR\Input;
 use TUTOR\Instructor;
 use TUTOR_REPORT\Analytics;
 use Tutor\Models\CourseModel;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
-use Tutor\Helpers\QueryHelper;
 
 $sortable_sections          = tutor_utils()->get_instructor_home_sortable_section();
 $sortable_sections_defaults = array_reduce(
@@ -44,7 +44,7 @@ $instructor_course_ids = CourseModel::get_courses_by_args(
 	)
 )->posts;
 
-$template_path = tutor()->path . 'templates/dashboard/instructor/home/';
+$template_path  = tutor()->path . 'templates/dashboard/instructor/home/';
 $user           = wp_get_current_user();
 $start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
 $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
@@ -174,12 +174,12 @@ $course_completion_data = array(
 // );
 
 // Top Performing Courses.
-$args = array(
+$args                   = array(
 	'start_date' => $start_date,
-	'end_date' => $end_date,
-	'order_by' => Input::get( 'type', 'revenue' ),
+	'end_date'   => $end_date,
+	'order_by'   => Input::get( 'type', 'revenue' ),
 );
-$top_courses            = Instructor::get_top_performing_courses_by_instructor( $user->ID, $args);
+$top_courses            = Instructor::get_top_performing_courses_by_instructor( $user->ID, $args );
 $top_performing_courses = array_map(
 	function ( $course ) {
 		return array(
@@ -192,15 +192,17 @@ $top_performing_courses = array_map(
 	$top_courses
 );
 
-$upcoming_live_tasks =  get_posts( array(
-	'post_type'   => array(tutor()->zoom_post_type, tutor()->meet_post_type),
-	'post_status' => 'publish',
-	'date_query'  => array(
-		array(
-			'after' => current_time( 'mysql' ),
+$upcoming_live_tasks = get_posts(
+	array(
+		'post_type'   => array( tutor()->zoom_post_type, tutor()->meet_post_type ),
+		'post_status' => 'publish',
+		'date_query'  => array(
+			array(
+				'after' => current_time( 'mysql' ),
+			),
 		),
-	),
-));
+	)
+);
 
 $upcoming_tasks = array(
 	array(
@@ -242,127 +244,130 @@ $upcoming_tasks = array(
 
 // @todo will be added later.
 // $recent_activity = array(
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
-// 	array(
-// 		'course_name' => 'Complete Web Development Bootcamp',
-// 		'course_url'  => '#',
-// 		'date'        => '2022-01-01 10:00 AM',
-// 		'meta'        => 'enrolled in',
-// 		'user'        => array(
-// 			'name'   => 'John Doe',
-// 			'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		),
-// 	),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
+// array(
+// 'course_name' => 'Complete Web Development Bootcamp',
+// 'course_url'  => '#',
+// 'date'        => '2022-01-01 10:00 AM',
+// 'meta'        => 'enrolled in',
+// 'user'        => array(
+// 'name'   => 'John Doe',
+// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// ),
+// ),
 // );
 
 // Recent Reviews.
-$review_where = array('comment_post_ID' => array( 'IN', $instructor_course_ids));
-if (!empty($start_date) && !empty($end_date)) {
-	$review_where['comment_date'] = array('BETWEEN', array( $start_date, $end_date ));
+$review_where = array( 'comment_post_ID' => array( 'IN', $instructor_course_ids ) );
+if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+	$review_where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
 }
-$review_args = array('where' => QueryHelper::prepare_where_clause($review_where));
-$reviews = Analytics::get_reviews(3,$review_args);
-$recent_reviews = array_map(function($review){
-	return array(
-		'user'          => array(
-			'name'   => $review->display_name,
-			'avatar' => get_avatar_url($review->user_id),
-		),
-		'course_name'   => get_the_title($review->comment_post_ID),
-		'date'          => $review->comment_date,
-		'rating'        => $review->rating,
-		'review_text'   => $review->comment_content
-	);
-}, $reviews);
+$review_args    = array( 'where' => QueryHelper::prepare_where_clause( $review_where ) );
+$reviews        = Analytics::get_reviews( 3, $review_args );
+$recent_reviews = array_map(
+	function ( $review ) {
+		return array(
+			'user'        => array(
+				'name'   => $review->display_name,
+				'avatar' => get_avatar_url( $review->user_id ),
+			),
+			'course_name' => get_the_title( $review->comment_post_ID ),
+			'date'        => $review->comment_date,
+			'rating'      => $review->rating,
+			'review_text' => $review->comment_content,
+		);
+	},
+	$reviews
+);
 ?>
 
 <form x-data='tutorForm({
@@ -568,29 +573,29 @@ $recent_reviews = array_map(function($review){
 		</div>
 
 		<!-- Recent Activity -->
-		 <!-- @todo Will be added later. -->
+		<!-- @todo Will be added later. -->
 		<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
-				<?php //esc_html_e( 'Recent Activity', 'tutor' ); ?>
+				<?php // esc_html_e( 'Recent Activity', 'tutor' ); ?>
 			</div>
 
 			<div class="tutor-dashboard-home-card-body">
-				<?php //foreach ( $recent_activity as $item ) : ?>
+				<?php // foreach ( $recent_activity as $item ) : ?>
 					<?php
 					// tutor_load_template(
-					// 	'demo-components.dashboard.components.instructor.home.recent-activity-item',
-					// 	array(
-					// 		'item' => $item,
-					// 	)
+					// 'demo-components.dashboard.components.instructor.home.recent-activity-item',
+					// array(
+					// 'item' => $item,
+					// )
 					// );
 					?>
-				<?php //endforeach; ?>
+				<?php // endforeach; ?>
 			</div>
 		</div> -->
 	</div>
 
 	<!-- Recent Student Reviews -->
-	<?php if ( !empty($recent_reviews)): ?>
+	<?php if ( ! empty( $recent_reviews ) ) : ?>
 	<div 
 		data-section-id="recent_reviews" 
 		class="tutor-dashboard-home-card"
@@ -605,7 +610,7 @@ $recent_reviews = array_map(function($review){
 				<?php
 				tutor_load_template_from_custom_path(
 					$template_path . 'recent-student-review-item.php',
-					$review,				
+					$review,
 					false
 				);
 				?>
