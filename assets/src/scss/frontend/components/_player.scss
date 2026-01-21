@@ -10,8 +10,8 @@
     position: absolute;
     inset: 0;
     background: $tutor-surface-base;
-    border-radius: 3px;
-    z-index: 10;
+    border-radius: $tutor-radius-sm;
+    z-index: $tutor-z-positive;
     @include tutor-loading-spinner($tutor-actions-brand-primary, $tutor-surface-base);
 
     &::before {
