@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\UrlHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -535,22 +537,25 @@ class Template extends Tutor_Base {
 
 		$menu_items = array(
 			'resources'   => array(
-				'title' => esc_html__( 'Resources', 'tutor' ),
-				'icon'  => Icon::RESOURCES,
-				'url'   => esc_url( add_query_arg( 'subpage', 'resources', $base_url ) ),
+				'title'  => __( 'Resources', 'tutor' ),
+				'icon'   => Icon::RESOURCES,
+				'url'    => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'resources' ) ),
+				'is_pro' => false,
 			),
 			'qna'         => array(
-				'title' => esc_html__( 'Q&A', 'tutor' ),
-				'icon'  => Icon::QA,
-				'url'   => esc_url( add_query_arg( 'subpage', 'qna', $base_url ) ),
+				'title'  => __( 'Q&A', 'tutor' ),
+				'icon'   => Icon::QA,
+				'url'    => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
+				'is_pro' => false,
 			),
 			'course-info' => array(
-				'title' => esc_html__( 'Course Info', 'tutor' ),
-				'icon'  => Icon::INFO_OCTAGON,
-				'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $base_url ) ),
+				'title'  => __( 'Course Info', 'tutor' ),
+				'icon'   => Icon::INFO_OCTAGON,
+				'url'    => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
+				'is_pro' => false,
 			),
 		);
 
-		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items );
+		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items, $base_url );
 	}
 }
