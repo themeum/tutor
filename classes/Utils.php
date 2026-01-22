@@ -10949,34 +10949,16 @@ class Utils {
 	 *
 	 * @param string $template   Template file path or slug.
 	 * @param array  $data       Data to be passed to the template.
-	 * @param string $type       Template type. Allowed values:
-	 *                           - include
-	 *                           - custom_template
-	 *                           - template
-	 * @param bool   $tutor_pro  Whether to load Tutor Pro template.
+	 * @param bool   $once       Whether the template should be loaded only once.
+ 	 *                           Defaults to true.
 	 *
 	 * @return string Rendered template output.
 	 */
-	public function render_template( $template, $data, $type, $tutor_pro = false ) {
+	public function render_template( $template, $data, $once = true ) {
 
 		ob_start();
 
-		switch ( $type ) {
-			case 'include':
-				include $template;
-				break;
-
-			case 'custom_template':
-				tutor_load_template_from_custom_path( $template, $data );
-				break;
-
-			case 'template':
-				tutor_load_template( $template, $data, $tutor_pro );
-				break;
-
-			default:
-				break;
-		}
+		tutor_load_template_from_custom_path( $template, $data, $once );
 
 		return (string) ob_get_clean();
 	}
