@@ -15,11 +15,11 @@ $get_icon_by_post_type = function ( $post_type ) {
 		case 'tutor_assignments':
 			return Icon::ASSIGNMENT;
 		case 'tutor-google-meet':
-			return Icon::GOOGLE_MEET;
+			return Icon::GOOGLE_MEET_COLORIZE;
 		case 'tutor_quiz':
 			return Icon::QUIZ;
 		case 'tutor_zoom_meeting':
-			return Icon::ZOOM;
+			return Icon::ZOOM_COLORIZE;
 		case 'lesson':
 			return Icon::LESSON;
 	}
@@ -53,7 +53,10 @@ $get_icon_by_post_type = function ( $post_type ) {
 				<?php
 				tutor_load_template(
 					'core-components.event-badge',
-					array( 'text' => __( 'Live Session', 'tutor' ) ),
+					array(
+						'text' => __( 'Live Session', 'tutor' ),
+						'icon' => $get_icon_by_post_type( $item['post_type'] ),
+					),
 				);
 				?>
 			</div>
