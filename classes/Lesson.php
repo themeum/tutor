@@ -748,25 +748,28 @@ class Lesson extends Tutor_Base {
 		if ( tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
 			if ( self::has_lesson_content( $lesson_id ) ) {
 				$nav_items['overview'] = array(
-					'label' => __( 'Overview', 'tutor' ),
-					'value' => 'overview',
-					'icon'  => 'document-text',
+					'label'    => __( 'Overview', 'tutor' ),
+					'value'    => 'overview',
+					'icon'     => 'document-text',
+					'template' => 'single.lesson.parts.overview',
 				);
 			}
 
 			if ( self::has_lesson_attachment( $lesson_id ) ) {
 				$nav_items['files'] = array(
-					'label' => __( 'Exercise Files', 'tutor' ),
-					'value' => 'files',
-					'icon'  => 'paperclip',
+					'label'    => __( 'Exercise Files', 'tutor' ),
+					'value'    => 'files',
+					'icon'     => 'paperclip',
+					'template' => 'single.lesson.parts.files',
 				);
 			}
 
 			if ( self::is_comment_enabled() ) {
 				$nav_items['comments'] = array(
-					'label' => __( 'Comments', 'tutor' ),
-					'value' => 'comments',
-					'icon'  => 'comment',
+					'label'    => __( 'Comments', 'tutor' ),
+					'value'    => 'comments',
+					'icon'     => 'comment',
+					'template' => 'single.lesson.parts.comments',
 				);
 			}
 		} else {
@@ -793,47 +796,6 @@ class Lesson extends Tutor_Base {
 		$nav_items = array_values( $nav_items );
 
 		return $nav_items;
-	}
-
-	/**
-	 * Get navigation contents for lesson single page
-	 *
-	 * @since 3.9.0
-	 *
-	 * @param int $lesson_id Lesson ID.
-	 *
-	 * @return array navigation contents array
-	 */
-	public static function get_nav_contents( $lesson_id ) {
-		$nav_contents = array();
-
-		if ( self::has_lesson_content( $lesson_id ) ) {
-			$nav_contents['overview'] = array(
-				'label'    => __( 'Overview', 'tutor' ),
-				'value'    => 'overview',
-				'template' => 'single.lesson.parts.overview',
-			);
-		}
-
-		if ( self::has_lesson_attachment( $lesson_id ) ) {
-			$nav_contents['files'] = array(
-				'label'    => __( 'Files', 'tutor' ),
-				'value'    => 'files',
-				'template' => 'single.lesson.parts.files',
-			);
-		}
-
-		if ( self::is_comment_enabled() ) {
-			$nav_contents['comments'] = array(
-				'label'    => __( 'Comments', 'tutor' ),
-				'value'    => 'comments',
-				'template' => 'single.lesson.parts.comments',
-			);
-		}
-
-		$nav_contents = apply_filters( 'tutor_lesson_single_nav_contents', $nav_contents );
-
-		return $nav_contents;
 	}
 
 	/**
