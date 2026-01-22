@@ -111,6 +111,13 @@ class DropdownFilter extends BaseComponent {
 	protected $popover_size = Size::SMALL;
 
 	/**
+	 * Icon size
+	 *
+	 * @var int|null
+	 */
+	protected $icon_size = null;
+
+	/**
 	 * Set options list
 	 *
 	 * @param array $options list of options. Each item: array( 'label' => string, 'url' => string, 'count' => int|null, 'active' => bool, 'value' => mixed ).
@@ -203,6 +210,18 @@ class DropdownFilter extends BaseComponent {
 	 */
 	public function popover_size( string $size ): self {
 		$this->popover_size = $size;
+		return $this;
+	}
+
+	/**
+	 * Set icon size
+	 *
+	 * @param int $size icon size.
+	 *
+	 * @return self
+	 */
+	public function icon_size( int $size ): self {
+		$this->icon_size = $size;
 		return $this;
 	}
 
@@ -325,7 +344,13 @@ class DropdownFilter extends BaseComponent {
 						(<?php echo esc_html( $count ); ?>)
 					</span>
 				<?php endif; ?>
-				<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+				<?php
+				$icon_size = $this->icon_size;
+				if ( null === $icon_size ) {
+					$icon_size = in_array( $this->variant, array( Variant::PRIMARY, Variant::PRIMARY_SOFT ), true ) ? 16 : 20;
+				}
+				tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN_2, $icon_size, $icon_size, array( 'class' => 'tutor-icon-secondary' ) );
+				?>
 			</button>
 
 			<div 

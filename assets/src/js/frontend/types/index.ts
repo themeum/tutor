@@ -1,7 +1,6 @@
-// Frontend Types
-// TODO: Define TypeScript interfaces and types
-
-// Example types (to be implemented):
-// export interface User { ... }
-// export interface Course { ... }
-// export interface Lesson { ... }
+export interface AjaxResponse<T = unknown> {
+  status_code: number;
+  success: boolean;
+  message: string;
+  data?: T;
+}

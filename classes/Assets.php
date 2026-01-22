@@ -102,7 +102,7 @@ class Assets {
 		 *
 		 * @since 4.0.0
 		 */
-		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ), PHP_INT_MAX );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 	}
 
 	/**
@@ -896,6 +896,7 @@ class Assets {
 	 */
 	public function should_load_legacy_scripts(): bool {
 		$load = true;
+
 		if ( tutor_utils()->is_dashboard_page() ) {
 			$load = false;
 		} else {

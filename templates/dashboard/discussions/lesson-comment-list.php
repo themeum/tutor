@@ -16,6 +16,7 @@ use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
 use TUTOR\Lesson;
+use TUTOR\User;
 
 $is_instructor = tutor_utils()->is_instructor( null, true );
 
@@ -37,7 +38,7 @@ $list_args = array(
 	'order'    => $order_filter,
 );
 
-if ( ! $is_instructor ) {
+if ( User::is_student_view() ) {
 	$list_args['user_id'] = get_current_user_id();
 }
 
@@ -48,7 +49,7 @@ $count_args = array(
 	'count'    => true,
 );
 
-if ( ! $is_instructor ) {
+if ( User::is_student_view() ) {
 	$count_args['user_id'] = get_current_user_id();
 }
 

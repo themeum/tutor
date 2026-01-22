@@ -150,6 +150,8 @@ const styles = {
     position: absolute;
     right: ${spacing[0]};
     top: ${spacing[0]};
+    min-height: auto;
+    padding-inline: ${spacing[4]};
 
     &:hover,
     &:active,

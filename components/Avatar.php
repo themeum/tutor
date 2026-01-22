@@ -308,7 +308,7 @@ class Avatar extends BaseComponent {
 
 		$this->attributes['class'] = trim( implode( ' ', $classes ) . ' ' . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		if ( 'image' === $this->type && $this->src ) {
 			$content = sprintf(

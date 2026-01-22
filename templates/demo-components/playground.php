@@ -43,7 +43,6 @@ use TUTOR\Input;
 		'learning-area'      => 'Learning Area',
 		'user-profile'       => 'User Profile',
 		'certificates'       => 'Certificates',
-		'reviews'            => 'Reviews',
 		'profile-settings'   => 'Account Settings',
 		'billing'            => 'Billing',
 		'quiz'               => 'Quiz',
@@ -71,6 +70,7 @@ use TUTOR\Input;
 		<?php else : ?>
 		<section>
 			<?php require 'components/table.php'; ?>
+			<?php require 'components/alert.php'; ?>
 			<?php require 'components/avatar.php'; ?>
 			<?php require 'components/pagination.php'; ?>
 			<?php require 'components/button.php'; ?>

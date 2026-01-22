@@ -137,6 +137,15 @@ class Button extends BaseComponent {
 	protected $disabled = false;
 
 	/**
+	 * Whether button is an icon-only button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $icon_only = false;
+
+	/**
 	 * Set button label text.
 	 *
 	 * @since 4.0.0
@@ -206,6 +215,20 @@ class Button extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
+	 * @param bool $icon_only Whether the button is icon-only.
+	 *
+	 * @return $this
+	 */
+	public function icon_only( bool $icon_only = true ): self {
+		$this->icon_only = $icon_only;
+		return $this;
+	}
+
+	/**
+	 * Set the HTML tag for rendering.
+	 *
+	 * @since 4.0.0
+	 *
 	 * @param string $tag HTML tag (button|a).
 	 *
 	 * @return $this
@@ -266,9 +289,16 @@ class Button extends BaseComponent {
 			$classes                     .= ' is-disabled';
 		}
 
+		if ( $this->icon_only ) {
+			$classes .= ' tutor-btn-icon';
+			if ( ! empty( $this->label ) && empty( $this->attributes['aria-label'] ) ) {
+				$this->attributes['aria-label'] = $this->label;
+			}
+		}
+
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
-		$attributes = $this->render_attributes();
+		$attributes = $this->get_attributes_string();
 
 		// Prepare icon HTML if exists.
 		$icon_html = '';
@@ -285,13 +315,17 @@ class Button extends BaseComponent {
 		if ( ! empty( $icon_html ) && empty( $this->label ) ) {
 			$this->attributes['class'] .= ' tutor-btn-icon';
 			// Re-render attributes to include updated class.
-			$attributes = $this->render_attributes();
+			$attributes = $this->get_attributes_string();
 		}
 
 		// Build button inner HTML depending on icon position.
-		$content = self::POSITION_RIGHT === ( $this->icon_position ? $this->icon_position : self::POSITION_LEFT )
-			? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
-			: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
+		if ( $this->icon_only ) {
+			$content = $icon_html;
+		} else {
+			$content = self::POSITION_RIGHT === ( $this->icon_position ? $this->icon_position : self::POSITION_LEFT )
+				? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
+				: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
+		}
 
 		$this->component_string = sprintf(
 			'<%1$s %2$s>%3$s</%1$s>',

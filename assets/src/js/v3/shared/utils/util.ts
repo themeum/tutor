@@ -206,7 +206,7 @@ export const makeFirstCharacterUpperCase = (word: string) => {
 
 export const formatBytes = (bytes: number, decimals = 2) => {
   if (!bytes || bytes <= 1) {
-    return '0 Bytes';
+    return __('0 Bytes', __TUTOR_TEXT_DOMAIN__);
   }
 
   const kilobit = 1024;

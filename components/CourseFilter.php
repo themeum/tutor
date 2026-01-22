@@ -40,7 +40,6 @@ class CourseFilter extends DropdownFilter {
 	 * Set default values for course filter.
 	 */
 	public function __construct() {
-
 		$this->query_param( 'course-id' );
 		$this->variant( Variant::PRIMARY_SOFT );
 		$this->size( Size::X_SMALL );
@@ -60,6 +59,19 @@ class CourseFilter extends DropdownFilter {
 		$options = self::get_course_filter_options( $courses );
 		$this->options( $options );
 		return $this;
+	}
+
+	/**
+	 * Get component content.
+	 *
+	 * @return string
+	 */
+	public function get(): string {
+		if ( empty( $this->options ) ) {
+			$this->courses();
+		}
+
+		return parent::get();
 	}
 
 	/**

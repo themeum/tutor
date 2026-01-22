@@ -84,7 +84,7 @@ class OrderController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_order_details', array( $this, 'get_order_by_id' ) );
+			add_action( 'wp_ajax_tutor_order_details', array( $this, 'ajax_get_order_details' ) );
 
 			/**
 			 * Handle AJAX request for marking an order as paid by order ID.
@@ -258,10 +258,9 @@ class OrderController {
 	 *
 	 * @return void
 	 */
-	public function get_order_by_id() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+	public function ajax_get_order_details() {
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
 
 		$order_id = Input::post( 'order_id' );
 
@@ -732,6 +731,10 @@ class OrderController {
 		$where = array(
 			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
 		);
+
+		if ( ! is_admin() ) {
+			$where['o.user_id'] = get_current_user_id();
+		}
 
 		if ( ! empty( $date ) ) {
 			$where['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );

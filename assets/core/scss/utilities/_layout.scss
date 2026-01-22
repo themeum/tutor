@@ -348,5 +348,19 @@ $overflow-types: auto, hidden, visible, scroll;
         grid-template-columns: repeat($count, minmax(0, 1fr));
       }
     }
+
+    // Flex shorthand
+    .tutor-#{$breakpoint}-flex-1 {
+      flex: 1 1 0%;
+    }
+    .tutor-#{$breakpoint}-flex-auto {
+      flex: 1 1 auto;
+    }
+    .tutor-#{$breakpoint}-flex-initial {
+      flex: 0 1 auto;
+    }
+    .tutor-#{$breakpoint}-flex-none {
+      flex: none;
+    }
   }
 }

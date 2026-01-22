@@ -52,6 +52,15 @@ class User {
 	const VIEW_AS_STUDENT    = 'student';
 
 	/**
+	 * User meta key for storing view as mode
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const VIEW_MODE_USER_META = 'tutor_profile_view_mode';
+
+	/**
 	 * User model
 	 *
 	 * @since 3.0.0
@@ -101,6 +110,7 @@ class User {
 		add_action( 'wp_login', array( $this, 'set_timezone' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
+		add_action( 'wp_ajax_tutor_switch_profile', array( $this, 'ajax_switch_profile' ) );
 	}
 
 	/**
@@ -253,7 +263,9 @@ class User {
 	private function delete_existing_user_photo( $user_id, $type ) {
 		$meta_key = 'cover_photo' == $type ? '_tutor_cover_photo' : '_tutor_profile_photo';
 		$photo_id = get_user_meta( $user_id, $meta_key, true );
-		is_numeric( $photo_id ) ? wp_delete_attachment( $photo_id, true ) : 0;
+		if ( is_numeric( $photo_id ) ) {
+			wp_delete_attachment( $photo_id, true );
+		}
 		delete_user_meta( $user_id, $meta_key );
 	}
 
@@ -289,7 +301,7 @@ class User {
 		/**
 		 * Photo Update from profile
 		 */
-		$photo      = tutor_utils()->array_get( 'photo_file', $_FILES );
+		$photo      = tutor_utils()->array_get( 'photo_file', $_FILES ); //phpcs:ignore -- already sanitized.
 		$photo_size = tutor_utils()->array_get( 'size', $photo );
 		$photo_type = tutor_utils()->array_get( 'type', $photo );
 
@@ -380,6 +392,14 @@ class User {
 		$_tutor_profile_job_title = Input::post( self::PROFILE_JOB_TITLE_META, '' );
 		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
 		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
+
+		if ( is_numeric( $_tutor_profile_image ) ) {
+			$attachment = get_post( $_tutor_profile_image );
+
+			if ( 'attachment' === $attachment->post_type && $user_id !== $attachment->post_author ) {
+				return;
+			}
+		}
 
 		update_user_meta( $user_id, self::PROFILE_JOB_TITLE_META, $_tutor_profile_job_title );
 		update_user_meta( $user_id, self::PROFILE_BIO_META, $_tutor_profile_bio );
@@ -529,6 +549,92 @@ class User {
 	}
 
 	/**
+	 * Get profile settings data
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $user_id user id.
+	 *
+	 * @return array
+	 */
+	public static function get_profile_settings_data( $user_id = 0 ) {
+		$user_id = tutor_utils()->get_user_id( $user_id );
+		$user    = get_userdata( $user_id );
+
+		// Prepare profile pic.
+		$profile_placeholder = apply_filters( 'tutor_login_default_avatar', tutor()->url . 'assets/images/profile-photo.png' );
+		$profile_photo_src   = $profile_placeholder;
+		$profile_photo_id    = get_user_meta( $user->ID, self::PROFILE_PHOTO_META, true );
+
+		if ( $profile_photo_id ) {
+			$url = wp_get_attachment_image_url( $profile_photo_id, 'full' );
+			if ( ! empty( $url ) ) {
+				$profile_photo_src = $url;
+			}
+		}
+
+		$timezone = self::get_user_timezone_string( $user );
+
+		// Prepare cover photo.
+		$cover_placeholder = tutor()->url . 'assets/images/cover-photo.jpg';
+		$cover_photo_src   = $cover_placeholder;
+		$cover_photo_id    = get_user_meta( $user->ID, self::COVER_PHOTO_META, true );
+
+		if ( $cover_photo_id ) {
+			$url = wp_get_attachment_image_url( $cover_photo_id, 'full' );
+			if ( ! empty( $url ) ) {
+				$cover_photo_src = $url;
+			}
+		}
+
+		// Prepare display name.
+		$public_display                     = array();
+		$public_display['display_nickname'] = $user->nickname;
+		$public_display['display_username'] = $user->user_login;
+
+		if ( ! empty( $user->first_name ) ) {
+			$public_display['display_firstname'] = $user->first_name;
+		}
+
+		if ( ! empty( $user->last_name ) ) {
+			$public_display['display_lastname'] = $user->last_name;
+		}
+
+		if ( ! empty( $user->first_name ) && ! empty( $user->last_name ) ) {
+			$public_display['display_firstlast'] = $user->first_name . ' ' . $user->last_name;
+			$public_display['display_lastfirst'] = $user->last_name . ' ' . $user->first_name;
+		}
+
+		if ( ! in_array( $user->display_name, $public_display, true ) ) { // Only add this if it isn't duplicated elsewhere.
+			$public_display = array( 'display_displayname' => $user->display_name ) + $public_display;
+		}
+
+		$public_display = array_map( 'trim', $public_display );
+		$public_display = array_unique( $public_display );
+		$max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 );
+
+		$profile_bio = wp_strip_all_tags( get_user_meta( $user->ID, self::PROFILE_BIO_META, true ) );
+		$job_title   = get_user_meta( $user->ID, self::PROFILE_JOB_TITLE_META, true );
+		$phone       = get_user_meta( $user->ID, self::PHONE_NUMBER_META, true );
+
+		return array(
+			'user'                => $user,
+			'profile_placeholder' => $profile_placeholder,
+			'profile_photo_src'   => $profile_photo_src,
+			'profile_photo_id'    => $profile_photo_id,
+			'cover_placeholder'   => $cover_placeholder,
+			'cover_photo_src'     => $cover_photo_src,
+			'cover_photo_id'      => $cover_photo_id,
+			'timezone'            => $timezone,
+			'public_display'      => $public_display,
+			'max_filesize'        => $max_filesize,
+			'profile_bio'         => $profile_bio,
+			'job_title'           => $job_title,
+			'phone_number'        => $phone,
+		);
+	}
+
+	/**
 	 * Get user list with pagination & support
 	 * search term
 	 *
@@ -579,5 +685,97 @@ class User {
 			__( 'User list fetched successfully!', 'tutor' ),
 			$response
 		);
+	}
+
+	/**
+	 * Switch user profile ajax-handler
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_switch_profile() {
+		tutor_utils()->checking_nonce();
+
+		$user_id = get_current_user_id();
+		if ( ! self::can_switch_mode( $user_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_UNAUTHORIZED
+			);
+		}
+
+		$switch_mode  = '';
+		$current_mode = Input::post( 'current_mode' );
+
+		if ( ! in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true ) ) {
+			$this->response_bad_request( tutor_utils()->error_message( 'invalid_req' ) );
+		}
+
+		if ( self::VIEW_AS_INSTRUCTOR === $current_mode ) {
+			$switch_mode = self::VIEW_AS_STUDENT;
+		} elseif ( self::VIEW_AS_STUDENT === $current_mode ) {
+			$switch_mode = self::VIEW_AS_INSTRUCTOR;
+		}
+
+		update_user_meta( $user_id, self::VIEW_MODE_USER_META, $switch_mode );
+
+		// translators:%s for switching mode.
+		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
+	}
+
+	/**
+	 * Get current view mode STUDENT/INSTRUCTOR
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string
+	 */
+	public static function get_current_view_mode(): string {
+		$user_id      = get_current_user_id();
+		$default_mode = self::can_switch_mode( $user_id ) ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
+		$current_mode = get_user_meta( $user_id, self::VIEW_MODE_USER_META, true );
+
+		return in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true )
+				? $current_mode
+				: $default_mode;
+	}
+
+	/**
+	 * Check if the user is in instructor view
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_instructor_view(): bool {
+		return self::VIEW_AS_INSTRUCTOR === self::get_current_view_mode();
+	}
+
+	/**
+	 * Check if the user is in student view
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_student_view(): bool {
+		return self::VIEW_AS_STUDENT === self::get_current_view_mode();
+	}
+
+	/**
+	 * Check if the user can switch mode
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer $user_id User id.
+	 *
+	 * @return boolean
+	 */
+	public static function can_switch_mode( int $user_id = 0 ) : bool {
+		$user_id = tutor_utils()->get_user_id( $user_id );
+
+		return self::is_instructor( $user_id ) || self::is_admin( $user_id );
 	}
 }
