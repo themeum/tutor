@@ -10,6 +10,9 @@
  */
 
 use TUTOR\Icon;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 
 global $tutor_course_id,
 $tutor_current_post,
@@ -33,35 +36,49 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 
 ?>
 <div class="tutor-learning-footer">
-	<a href="<?php echo esc_url( $prev_link ); ?>" type="button" class="tutor-btn tutor-btn-ghost tutor-btn-small">
-		<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_LEFT_2 ); ?>
-		<?php esc_html_e( 'Previous', 'tutor' ); ?>
-	</a>
+	<?php
+	Button::make()
+		->tag( 'a' )
+		->variant( Variant::GHOST )
+		->size( Size::SMALL )
+		->label( __( 'Previous', 'tutor' ) )
+		->icon( Icon::CHEVRON_LEFT_2, 'left' )
+		->attr( 'href', esc_url( $prev_link ) )
+		->render();
+	?>
 	<form method="post" class="tutor-mb-none">
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce, false ); ?>
 		<input type="hidden" value="<?php echo esc_attr( get_the_ID() ); ?>" name="lesson_id" />
 		<input type="hidden" value="tutor_complete_lesson" name="tutor_action" />
-		<button 
-			type="submit" 
-			name="complete_lesson_btn"
-			class="tutor-btn tutor-btn-secondary tutor-btn-large tutor-rounded-full tutor-gap-5" 
-			<?php echo esc_attr( $is_completed_lesson ? 'disabled' : '' ); ?>
-		>
-			<?php esc_html_e( 'Mark as complete', 'tutor' ); ?>
-			<?php
-			tutor_utils()->render_svg_icon(
+		<?php
+		Button::make()
+			->variant( Variant::SECONDARY )
+			->size( Size::LARGE )
+			->label( __( 'Mark as complete', 'tutor' ) )
+			->icon(
 				Icon::CHECK_2,
+				'right',
 				20,
 				20,
 				array(
 					'class' => $is_completed_lesson ? 'tutor-icon-success-primary' : 'tutor-icon-secondary',
 				)
-			);
-			?>
-		</button>
+			)
+			->attr( 'type', 'submit' )
+			->attr( 'name', 'complete_lesson_btn' )
+			->attr( 'class', 'tutor-rounded-full tutor-gap-5' )
+			->disabled( $is_completed_lesson )
+			->render();
+		?>
 	</form>
-	<a href="<?php echo esc_url( $next_link ); ?>" type="button" class="tutor-btn tutor-btn-ghost tutor-btn-small">
-		<?php esc_html_e( 'Next', 'tutor' ); ?>
-		<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_RIGHT_2 ); ?>
-	</a>
+	<?php
+	Button::make()
+		->tag( 'a' )
+		->variant( Variant::GHOST )
+		->size( Size::SMALL )
+		->label( __( 'Next', 'tutor' ) )
+		->icon( Icon::CHEVRON_RIGHT_2, 'right' )
+		->attr( 'href', esc_url( $next_link ) )
+		->render();
+	?>
 </div>
