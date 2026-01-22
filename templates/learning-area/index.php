@@ -45,7 +45,7 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 				if ( $subpage ) {
 					$is_pro           = isset( $subpages[ $subpage ] ) && $subpages[ $subpage ]['is_pro'];
 					$subpage_template = ! $is_pro ? tutor_get_template( 'learning-area.subpages.' . $subpage ) : '';
-					if ( file_exists( $subpage_template ) && ! $is_pro ) {
+					if ( file_exists( $subpage_template ) ) {
 						tutor_load_template( 'learning-area.subpages.' . $subpage );
 					} else {
 						do_action( 'tutor_single_content_' . $tutor_current_post_type, $subpage );
