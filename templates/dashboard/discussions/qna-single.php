@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
@@ -21,9 +23,7 @@ use Tutor\Components\PreviewTrigger;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Input;
-
-defined( 'ABSPATH' ) || exit;
-
+use TUTOR\User;
 
 $question = tutor_utils()->get_qa_question( (int) $discussion_id );
 if ( ! $question ) {
@@ -48,7 +48,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
 			<?php esc_html_e( 'Back', 'tutor' ); ?>
 		</a>
-		<?php if ( ! $is_user_asker ) : ?>
+		<?php if ( User::is_instructor_view() ) : ?>
 		<div class="tutor-flex tutor-gap-2">
 			<button 
 				class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-gap-2 tutor-text-subdued"
@@ -113,7 +113,7 @@ $is_archived  = (int) tutor_utils()->array_get( 'tutor_qna_archived', $question-
 				</div>
 			</div>
 			<div class="tutor-ml-auto">
-				<?php if ( ! $is_user_asker ) : ?>
+				<?php if ( User::is_instructor_view() ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end', offset: 4 })" class="tutor-quiz-item-result-more">
 					<button class="tutor-btn tutor-btn-ghost tutor-btn-icon tutor-btn-x-small" x-ref="trigger" @click="toggle()">
 						<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL ); ?>
