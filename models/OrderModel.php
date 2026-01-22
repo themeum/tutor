@@ -1093,7 +1093,7 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$course_clause     = '';
-		$group_clause      = ' GROUP BY MONTH(date_format) ';
+		$group_clause      = ' GROUP BY DATE(date_format) ';
 		$discount_clause   = 'o.coupon_amount as total';
 
 		if ( $start_date && $end_date ) {
