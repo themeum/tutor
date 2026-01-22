@@ -3,11 +3,37 @@
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { isRTL } from '@TutorShared/config/constants';
 
+const TOOLTIP_PLACEMENTS = {
+  TOP: 'top',
+  BOTTOM: 'bottom',
+  START: 'start',
+  END: 'end',
+} as const;
+
+const TOOLTIP_TRIGGERS = {
+  HOVER: 'hover',
+  FOCUS: 'focus',
+  CLICK: 'click',
+} as const;
+
+const TOOLTIP_SIZES = {
+  SMALL: 'small',
+  LARGE: 'large',
+} as const;
+
+const TOOLTIP_ARROWS = {
+  START: 'start',
+  CENTER: 'center',
+  END: 'end',
+} as const;
+
+const DEFAULT_TOOLTIP_OFFSET = 8;
+
 export interface TooltipProps {
-  placement?: 'top' | 'bottom' | 'start' | 'end';
-  trigger?: 'hover' | 'focus' | 'click';
-  size?: 'small' | 'large';
-  arrow?: 'start' | 'center' | 'end';
+  placement?: (typeof TOOLTIP_PLACEMENTS)[keyof typeof TOOLTIP_PLACEMENTS];
+  trigger?: (typeof TOOLTIP_TRIGGERS)[keyof typeof TOOLTIP_TRIGGERS];
+  size?: (typeof TOOLTIP_SIZES)[keyof typeof TOOLTIP_SIZES];
+  arrow?: (typeof TOOLTIP_ARROWS)[keyof typeof TOOLTIP_ARROWS];
   offset?: number;
   delay?: {
     show?: number;
@@ -17,11 +43,11 @@ export interface TooltipProps {
 
 export const tooltip = (props: TooltipProps = {}) => ({
   open: false,
-  placement: props.placement || 'top',
-  trigger: props.trigger || 'hover',
-  size: props.size || 'small',
-  arrow: props.arrow || 'start',
-  offset: props.offset ?? 8,
+  placement: props.placement || TOOLTIP_PLACEMENTS.TOP,
+  trigger: props.trigger || TOOLTIP_TRIGGERS.HOVER,
+  size: props.size || TOOLTIP_SIZES.SMALL,
+  arrow: props.arrow || TOOLTIP_ARROWS.START,
+  offset: props.offset ?? DEFAULT_TOOLTIP_OFFSET,
   delay: props.delay || { show: 0, hide: 0 },
   actualPlacement: '',
   $nextTick: undefined as ((callback: () => void) => void) | undefined,
@@ -77,13 +103,13 @@ export const tooltip = (props: TooltipProps = {}) => ({
     const trigger = this.$refs.trigger || this.$el;
     if (!trigger) return;
 
-    if (this.trigger === 'hover') {
+    if (this.trigger === TOOLTIP_TRIGGERS.HOVER) {
       trigger.addEventListener('mouseenter', () => this.showWithDelay());
       trigger.addEventListener('mouseleave', () => this.hideWithDelay());
-    } else if (this.trigger === 'focus') {
+    } else if (this.trigger === TOOLTIP_TRIGGERS.FOCUS) {
       trigger.addEventListener('focus', () => this.show());
       trigger.addEventListener('blur', () => this.hide());
-    } else if (this.trigger === 'click') {
+    } else if (this.trigger === TOOLTIP_TRIGGERS.CLICK) {
       trigger.addEventListener('click', () => this.toggle());
     }
 
@@ -213,15 +239,15 @@ export const tooltip = (props: TooltipProps = {}) => ({
     const placement = this.actualPlacement;
 
     switch (placement) {
-      case 'top':
+      case TOOLTIP_PLACEMENTS.TOP:
         top = triggerRect.top - contentHeight - this.offset;
         left = triggerRect.left + (triggerRect.width - contentWidth) / 2;
         break;
-      case 'bottom':
+      case TOOLTIP_PLACEMENTS.BOTTOM:
         top = triggerRect.bottom + this.offset;
         left = triggerRect.left + (triggerRect.width - contentWidth) / 2;
         break;
-      case 'start':
+      case TOOLTIP_PLACEMENTS.START:
         top = triggerRect.top + (triggerRect.height - contentHeight) / 2;
         if (!isRTL) {
           left = triggerRect.left - contentWidth - this.offset;
@@ -229,7 +255,7 @@ export const tooltip = (props: TooltipProps = {}) => ({
           left = triggerRect.right + this.offset;
         }
         break;
-      case 'end':
+      case TOOLTIP_PLACEMENTS.END:
         top = triggerRect.top + (triggerRect.height - contentHeight) / 2;
         if (!isRTL) {
           left = triggerRect.right + this.offset;
@@ -260,7 +286,7 @@ export const tooltip = (props: TooltipProps = {}) => ({
 
     content.classList.add(`tutor-tooltip-${placement}`);
 
-    if (this.size === 'large') {
+    if (this.size === TOOLTIP_SIZES.LARGE) {
       content.classList.add('tutor-tooltip-large');
     }
 
