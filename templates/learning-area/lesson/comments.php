@@ -112,7 +112,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 						<span class="tutor-discussion-card-author">
 							<?php echo esc_html( $comment_item->comment_author ); ?>
 						</span> 
-						<span class="tutor-text-secondary">
+						<span class="tutor-text-subdued">
 							<?php
 								// Translators: %s is the time of comment.
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $comment_item->comment_date_gmt ) ) ) );
@@ -129,7 +129,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 						</button>
 					</div>
 					<form 
-						class="tutor-comment-reply-form" 
+						class="tutor-comment-reply-form tutor-mt-6" 
 						x-show="showReplyForm" 
 						x-collapse
 						x-data="{ ...tutorForm({ id: 'lesson-comment-reply-form' }), focused: false }"
@@ -160,7 +160,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 									->variant( Variant::GHOST )
 									->size( Size::X_SMALL )
 									->attr( 'type', 'button' )
-									->attr( '@click', 'reset(); focused = false' )
+									->attr( '@click', 'reset(); focused = false; showReplyForm = false' )
 									->attr( ':disabled', 'replyCommentMutation?.isPending' )
 									->render();
 
@@ -197,7 +197,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 										<span class="tutor-discussion-card-author">
 											<?php echo esc_html( $reply_item->comment_author ); ?>
 										</span> 
-										<span class="tutor-text-secondary">
+										<span class="tutor-text-subdued">
 											<?php
 												// Translators: %s is the time of comment.
 												echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $reply_item->comment_date_gmt ) ) ) );
@@ -224,7 +224,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 								echo esc_html(
 									sprintf(
 										/* translators: %d: number of replies */
-										_n( '%d reply', '%d replies', $reply_count, 'tutor' ),
+										_n( '%d more reply', '%d more replies', $reply_count, 'tutor' ),
 										$reply_count
 									)
 								);
