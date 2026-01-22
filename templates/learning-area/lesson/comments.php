@@ -45,7 +45,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 ?>
 <div x-show="activeTab === 'comments'" x-cloak x-data="tutorLessonComments()" class="tutor-tab-panel" role="tabpanel">
 	<form 
-		class="tutor-p-6 tutor-border-b" 
+		class="tutor-p-6" 
 		x-data="{ ...tutorForm({ id: 'lesson-comment-form' }), focused: false }"
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit((data) => createCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: 0 }))($event)"
@@ -95,14 +95,14 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 			</div>
 		</div>
 	</form>
-	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5">
+	<?php if ( ! empty( $comment_list ) ) : ?>
+	<div class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-t">
 		<div class="tutor-small tutor-text-secondary">
 			<?php esc_html_e( 'Comments', 'tutor' ); ?>
 			<span class="tutor-text-primary tutor-font-medium">(<?php echo esc_html( $comments_count ); ?>)</span>
 		</div>
 		<?php Sorting::make()->order( Input::get( 'order', 'DESC' ) )->render(); ?>
 	</div>
-	<?php if ( ! empty( $comment_list ) ) : ?>
 	<div class="tutor-comments-list tutor-border-t">
 		<?php foreach ( $comment_list as $comment_item ) : ?>
 			<div class="tutor-comment" x-data="{showReplyForm: false, repliesExpanded: false}">
