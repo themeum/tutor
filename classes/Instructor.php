@@ -10,10 +10,13 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use DateTime;
 use DateInterval;
 use Tutor\Models\CourseModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\DateTimeHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -446,7 +449,7 @@ class Instructor {
 
 		$diff   = ! empty( $start_date ) && ! empty( $end_date ) ? $current_data - $previous_data : $previous_data;
 		$symbol = $diff < 0 ? '-' : ( $diff > 0 ? '+' : '' );
-		$diff   = $price ? wp_kses_post( tutor_utils()->tutor_price( abs( $diff ) ) ) : abs( $diff );
+		$diff   = $price ? tutor_utils()->tutor_price( abs( $diff ) ) : abs( $diff );
 
 		$start = new DateTime( $start_date );
 		$end   = new DateTime( $end_date );
@@ -473,17 +476,18 @@ class Instructor {
 	public static function get_comparison_period_label( string $start_date, string $end_date, int $days ): string {
 
 		$time_zone = wp_timezone();
-		$now       = new DateTime( 'now', $time_zone );
-		$today     = wp_date( 'Y-m-d', null, $time_zone );
+		$format    = DateTimeHelper::FORMAT_DATE;
+		$now       = DateTimeHelper::now()->set_timezone( $time_zone );
+		$today     = $now->format( $format );
 
-		$this_month_start = $now->modify( 'first day of this month' )->format( 'Y-m-d' );
-		$this_month_end   = $now->modify( 'last day of this month' )->format( 'Y-m-d' );
+		$this_month_start = $now->create( 'first day of this month' )->format( $format );
+		$this_month_end   = $now->create( 'last day of this month' )->format( $format );
 
-		$last_month_start = $now->modify( 'first day of last month' )->format( 'Y-m-d' );
-		$last_month_end   = $now->modify( 'last day of last month' )->format( 'Y-m-d' );
+		$last_month_start = $now->create( 'first day of last month' )->format( $format );
+		$last_month_end   = $now->create( 'last day of last month' )->format( $format );
 
-		$last_year_start = $now->modify( 'first day of January last year' )->format( 'Y-m-d' );
-		$last_year_end   = $now->modify( 'last day of December last year' )->format( 'Y-m-d' );
+		$last_year_start = $now->create( 'first day of January last year' )->format( $format );
+		$last_year_end   = $now->create( 'last day of December last year' )->format( $format );
 
 		if ( $start_date === $today && $end_date === $today ) {
 			return __( 'today', 'tutor' );
@@ -537,11 +541,14 @@ class Instructor {
 	 */
 	public static function get_comparison_date_range( $selected_start_date, $selected_end_date ) {
 
+		$format = DateTimeHelper::FORMAT_DATE;
+
 		if ( empty( $selected_start_date ) && empty( $selected_end_date ) ) {
-			$now = new DateTime();
+
+			$now = DateTimeHelper::now();
 			return array(
-				'previous_start_date' => $now->modify( 'first day of this month' )->format( 'Y-m-d' ),
-				'previous_end_date'   => $now->modify( 'last day of this month' )->format( 'Y-m-d' ),
+				'previous_start_date' => $now->create( 'first day of this month' )->format( $format ),
+				'previous_end_date'   => $now->create( 'last day of this month' )->format( $format ),
 			);
 		}
 
@@ -549,8 +556,8 @@ class Instructor {
 		$end   = new DateTime( $selected_end_date );
 		$days  = $start->diff( $end )->days + 1;
 
-		$previous_start_date = $start->sub( DateInterval::createFromDateString( "$days days" ) )->format( 'Y-m-d' );
-		$previous_end_date   = $end->sub( DateInterval::createFromDateString( "$days days" ) )->format( 'Y-m-d' );
+		$previous_start_date = $start->sub( DateInterval::createFromDateString( "$days days" ) )->format( $format );
+		$previous_end_date   = $end->sub( DateInterval::createFromDateString( "$days days" ) )->format( $format );
 
 		return array(
 			'previous_start_date' => $previous_start_date,
