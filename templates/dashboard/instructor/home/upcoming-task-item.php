@@ -50,9 +50,9 @@ $get_icon_by_post_type = function ( $post_type ) {
 		</div>
 		<div class="tutor-dashboard-home-task-live-tag" data-meta>
 			<div class="tutor-dashboard-home-task-live-tag-badge">
-				<?php 
+				<?php
 				tutor_load_template(
-					'core-components.event-badge', 
+					'core-components.event-badge',
 					array( 'text' => __( 'Live Session', 'tutor' ) ),
 				);
 				?>
