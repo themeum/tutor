@@ -97,7 +97,7 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 			foreach ( $tabs_data as $key => $content ) {
 				$is_pro = isset( $content['is_pro'] ) && true === $content['is_pro'];
 				tutor_load_template(
-					$content['template_path'],
+					$content['template'],
 					array(
 						'is_active' => $content['id'] === $active_tab,
 						'post'      => $post,

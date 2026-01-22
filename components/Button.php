@@ -128,6 +128,13 @@ class Button extends BaseComponent {
 	protected $icon_position = 'left';
 
 	/**
+	 * Icon attributes.
+	 *
+	 * @var array
+	 */
+	protected $icon_attributes = array();
+
+	/**
 	 * Whether button is disabled.
 	 *
 	 * @since 4.0.0
@@ -135,6 +142,15 @@ class Button extends BaseComponent {
 	 * @var bool
 	 */
 	protected $disabled = false;
+
+	/**
+	 * Whether button is an icon-only button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $icon_only = false;
 
 	/**
 	 * Set button label text.
@@ -186,18 +202,34 @@ class Button extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $icon     SVG icon name or markup.
-	 * @param string $position Optional. Icon position: 'left' or 'right'.
-	 * @param int    $width    Optional. Icon width.
-	 * @param int    $height   Optional. Icon height.
+	 * @param string $icon       SVG icon name or markup.
+	 * @param string $position   Optional. Icon position: 'left' or 'right'.
+	 * @param int    $width      Optional. Icon width.
+	 * @param int    $height     Optional. Icon height.
+	 * @param array  $attributes Optional. Icon attributes.
 	 *
 	 * @return $this
 	 */
-	public function icon( string $icon, string $position = 'left', int $width = 16, int $height = 16 ): self {
-		$this->icon          = $icon;
-		$this->icon_position = in_array( $position, array( self::POSITION_LEFT, self::POSITION_RIGHT ), true ) ? $position : 'left';
-		$this->icon_width    = $width;
-		$this->icon_height   = $height;
+	public function icon( string $icon, string $position = 'left', int $width = 16, int $height = 16, array $attributes = array() ): self {
+		$this->icon            = $icon;
+		$this->icon_position   = in_array( $position, array( self::POSITION_LEFT, self::POSITION_RIGHT ), true ) ? $position : 'left';
+		$this->icon_width      = $width;
+		$this->icon_height     = $height;
+		$this->icon_attributes = $attributes;
+		return $this;
+	}
+
+	/**
+	 * Set the HTML tag for rendering.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $icon_only Whether the button is icon-only.
+	 *
+	 * @return $this
+	 */
+	public function icon_only( bool $icon_only = true ): self {
+		$this->icon_only = $icon_only;
 		return $this;
 	}
 
@@ -266,6 +298,13 @@ class Button extends BaseComponent {
 			$classes                     .= ' is-disabled';
 		}
 
+		if ( $this->icon_only ) {
+			$classes .= ' tutor-btn-icon';
+			if ( ! empty( $this->label ) && empty( $this->attributes['aria-label'] ) ) {
+				$this->attributes['aria-label'] = $this->label;
+			}
+		}
+
 		$this->attributes['class'] = trim( "{$classes} " . ( $this->attributes['class'] ?? '' ) );
 
 		$attributes = $this->get_attributes_string();
@@ -277,7 +316,7 @@ class Button extends BaseComponent {
 				$icon_html = $this->icon;
 			} else {
 				ob_start();
-				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
+				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height, $this->icon_attributes );
 				$icon_html = ob_get_clean();
 			}
 		}
@@ -289,9 +328,13 @@ class Button extends BaseComponent {
 		}
 
 		// Build button inner HTML depending on icon position.
-		$content = self::POSITION_RIGHT === ( $this->icon_position ? $this->icon_position : self::POSITION_LEFT )
-			? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
-			: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
+		if ( $this->icon_only ) {
+			$content = $icon_html;
+		} else {
+			$content = self::POSITION_RIGHT === ( $this->icon_position ? $this->icon_position : self::POSITION_LEFT )
+				? sprintf( '%1$s%2$s', esc_html( $this->label ), $icon_html )
+				: sprintf( '%1$s%2$s', $icon_html, esc_html( $this->label ) );
+		}
 
 		$this->component_string = sprintf(
 			'<%1$s %2$s>%3$s</%1$s>',

@@ -732,6 +732,10 @@ class OrderController {
 			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
 		);
 
+		if ( ! is_admin() ) {
+			$where['o.user_id'] = get_current_user_id();
+		}
+
 		if ( ! empty( $date ) ) {
 			$where['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
 		}

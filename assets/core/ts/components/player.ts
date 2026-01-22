@@ -1,3 +1,4 @@
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type AlpineComponentMeta } from '@Core/ts/types';
 import { isMobileDevice } from '@Core/ts/utils/util';
 import { isVimeoPlyr } from '@FrontendTypes/index';
@@ -30,9 +31,6 @@ export const player = (props: PlayerProps = {}): AlpinePlayerData => ({
     this.plyr = new window.Plyr(this.$el, props.config);
 
     if (this.plyr) {
-      /**
-       * Fix: Mobile Vimeo autoplay sound issue
-       */
       this.plyr.on('ready', () => {
         // Remove loading spinner
         this.$el?.closest('.tutor-video-player')?.querySelector('.loading-spinner')?.remove();
@@ -75,7 +73,7 @@ export const player = (props: PlayerProps = {}): AlpinePlayerData => ({
 
     // Dispatch custom event when player is ready
     this.$el.dispatchEvent(
-      new CustomEvent('tutorPlayerReady', {
+      new CustomEvent(TUTOR_CUSTOM_EVENTS.TUTOR_PLAYER_READY, {
         detail: {
           plyr: this.plyr,
           component: this,

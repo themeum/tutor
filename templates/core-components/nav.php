@@ -32,39 +32,37 @@ $icon_sizes = array(
 );
 $icon_size  = $icon_sizes[ $size ];
 
-if ( ! function_exists( 'get_active_dropdown_label' ) ) {
-	/**
-	 * Get the label of the active dropdown option.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param array $options Array of dropdown options.
-	 * @return array The label and count of the active option, or the first option's label if none are active.
-	 */
-	function get_active_dropdown_label( $options ) {
-		$active_info = array(
-			'label' => $options[0]['label'],
-			'count' => $options[0]['count'] ?? 0,
-		);
-		foreach ( $options as $option ) {
-			if ( ! empty( $option['active'] ) ) {
-				$active_info['label'] = $option['label'];
-			}
-			if ( ! empty( $option['active'] ) && ! empty( $option['count'] ) ) {
-				$active_info['count'] = $option['count'];
-			}
+/**
+ * Get the label of the active dropdown option.
+ *
+ * @since 4.0.0
+ *
+ * @param array $options Array of dropdown options.
+ * @return array The label and count of the active option, or the first option's label if none are active.
+ */
+$get_active_dropdown_label = function ( $options ) {
+	$active_info = array(
+		'label' => $options[0]['label'],
+		'count' => $options[0]['count'] ?? 0,
+	);
+	foreach ( $options as $option ) {
+		if ( ! empty( $option['active'] ) ) {
+			$active_info['label'] = $option['label'];
 		}
-		return $active_info;
+		if ( ! empty( $option['active'] ) && ! empty( $option['count'] ) ) {
+			$active_info['count'] = $option['count'];
+		}
 	}
-}
+	return $active_info;
+};
 ?>
 
 <div class="tutor-nav tutor-nav-<?php echo esc_attr( $size ); ?> tutor-nav-<?php echo esc_attr( $variant ); ?>">
 	<?php foreach ( $items as $item ) : ?>
 		<?php if ( 'dropdown' === $item['type'] ) : ?>
 			<?php
-			$options     = $item['options'] ?? array();
-			$active_info = get_active_dropdown_label( $options );
+			$options      = $item['options'] ?? array();
+			$active_info = $get_active_dropdown_label( $options );
 			?>
 			<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })">
 				<button x-ref="trigger" @click="toggle()"

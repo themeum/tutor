@@ -358,7 +358,7 @@ class ConfirmationModal extends BaseComponent {
 		if ( empty( $confirm_html ) ) {
 			$confirm_html = sprintf(
 				'<button 
-					class="tutor-btn tutor-btn-secondary tutor-btn-small"
+					class="tutor-btn tutor-btn-destructive tutor-btn-small"
 					:class="%s?.isPending ? \'tutor-btn-loading\' : \'\'"
 					@click="%s"
 					:disabled="%s?.isPending"
@@ -377,7 +377,7 @@ class ConfirmationModal extends BaseComponent {
 		if ( empty( $cancel_html ) ) {
 			$cancel_html = sprintf(
 				'<button 
-					class="tutor-btn tutor-btn-primary tutor-btn-small" 
+					class="tutor-btn tutor-btn-secondary tutor-btn-small" 
 					@click="TutorCore.modal.closeModal(\'%s\')"
 				>
 					%s
@@ -418,8 +418,8 @@ class ConfirmationModal extends BaseComponent {
 			$icon_html,
 			esc_html( $this->title ?? __( 'Are you sure?', 'tutor' ) ),
 			esc_html( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ) ),
+			$cancel_html,
 			$confirm_html,
-			$cancel_html
 		);
 
 		return $this->component_string;

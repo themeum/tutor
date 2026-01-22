@@ -3,6 +3,7 @@
 
 import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
+import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './pages/quiz';
 
 const initializeLearningArea = () => {
@@ -15,6 +16,9 @@ const initializeLearningArea = () => {
       break;
     case 'assignment-view':
       initializeAssignmentView();
+      break;
+    case 'qna':
+      initializeQna();
       break;
     default:
       // eslint-disable-next-line no-console

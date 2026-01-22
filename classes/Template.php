@@ -398,7 +398,7 @@ class Template extends Tutor_Base {
 						 * @since 4.0.0
 						 */
 						if ( Dashboard::ACCOUNT_PAGE_SLUG === $dashboard_page ) {
-							$subpage       = Input::get( Dashboard::ACCOUNT_PAGE_QUERY_PARAM, 'profile' );
+							$subpage       = tutor_utils()->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars, 'profile' );
 							$account_pages = Dashboard::get_account_pages();
 							$page_data     = $account_pages[ $subpage ] ?? array();
 							$page_template = $page_data['template'] ?? '';

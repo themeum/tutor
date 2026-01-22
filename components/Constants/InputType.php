@@ -26,18 +26,19 @@ abstract class InputType {
 	 *
 	 * @var string
 	 */
-	public const TEXT     = 'text';
-	public const SELECT   = 'select';
-	public const RADIO    = 'radio';
-	public const SWITCH   = 'switch';
-	public const CHECKBOX = 'checkbox';
-	public const TEXTAREA = 'textarea';
-	public const EMAIL    = 'email';
-	public const PASSWORD = 'password';
-	public const NUMBER   = 'number';
-	public const COLOR    = 'color';
-	public const DROPDOWN = 'dropdown';
-	public const LINK     = 'link';
-	public const DATE     = 'date';
+	public const TEXT      = 'text';
+	public const SELECT    = 'select';
+	public const RADIO     = 'radio';
+	public const SWITCH    = 'switch';
+	public const CHECKBOX  = 'checkbox';
+	public const TEXTAREA  = 'textarea';
+	public const EMAIL     = 'email';
+	public const PASSWORD  = 'password';
+	public const NUMBER    = 'number';
+	public const COLOR     = 'color';
+	public const DROPDOWN  = 'dropdown';
+	public const LINK      = 'link';
+	public const DATE      = 'date';
 	public const DATE_TIME = 'date-time';
+	public const FILE      = 'file';
 }

@@ -13,9 +13,9 @@
 
 namespace Tutor\Components;
 
-use Tutor\Components\Constants\Size;
-
 defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\Constants\Size;
 
 /**
  * Tooltip Component Class.
