@@ -16,7 +16,7 @@ const header = () => {
           onSuccess: (res: AjaxResponse) => {
             window.TutorCore.toast.success(res?.message);
             setTimeout(() => {
-              window.location.reload();
+              window.location.href = window._tutorobject.tutor_frontend_dashboard_url;
             }, 1000);
           },
           onError: (error: Error) => {
