@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 		class="tutor-p-6" 
 		x-data="{ ...tutorForm({ id: 'lesson-comment-form' }), focused: false }"
 		x-bind="getFormBindings()"
-		@submit.prevent="handleSubmit((data) => createCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: 0 }))($event)"
+		@submit.prevent="handleSubmit((data) => createCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: 0, order: currentOrder }))($event)"
 	>
 		<div class="tutor-text-medium tutor-font-semibold tutor-mb-4">
 			<?php esc_html_e( 'Join The Conversation', 'tutor' ); ?>

@@ -858,6 +858,7 @@ class Lesson extends Tutor_Base {
 	public function load_lesson_comments() {
 		$lesson_id    = Input::post( 'lesson_id' ?? 0 );
 		$current_page = Input::post( 'current_page', '1' );
+		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 
 		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 
@@ -867,6 +868,7 @@ class Lesson extends Tutor_Base {
 				'parent'  => 0,
 				'paged'   => $current_page,
 				'number'  => $item_per_page,
+				'order'   => $order,
 			)
 		);
 

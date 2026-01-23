@@ -23,8 +23,7 @@ if ( empty( $comment_list ) ) {
 	return;
 }
 ?>
-<div x-ref="commentItems" class="tutor-comments-list tutor-border-t">
-	<?php foreach ( $comment_list as $comment_item ) : ?>
+<?php foreach ( $comment_list as $comment_item ) : ?>
 	<div class="tutor-comment" x-data="{showReplyForm: false, repliesExpanded: false}">
 		<?php Avatar::make()->user( $comment_item->user_id )->size( Size::SIZE_40 )->render(); ?>
 		<div class="tutor-flex-1">
@@ -54,7 +53,7 @@ if ( empty( $comment_list ) ) {
 				x-collapse
 				x-data="{ ...tutorForm({ id: 'lesson-comment-reply-form' }), focused: false }"
 				x-bind="getFormBindings()"
-				@submit.prevent="handleSubmit((data) => replyCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: <?php echo esc_html( $comment_item->comment_ID ); ?> }))($event)"
+				@submit.prevent="handleSubmit((data) => replyCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: <?php echo esc_html( $comment_item->comment_ID ); ?>, order: currentOrder }))($event)"
 			>
 				<?php
 				InputField::make()
@@ -109,5 +108,4 @@ if ( empty( $comment_list ) ) {
 			?>
 		</div>
 	</div>
-	<?php endforeach; ?>
-</div>
+<?php endforeach; ?>

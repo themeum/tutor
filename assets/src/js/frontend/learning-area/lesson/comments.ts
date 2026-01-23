@@ -22,6 +22,8 @@ const lessonComments = (lessonId?: number) => {
     currentPage: 1,
     loading: false,
     hasMore: true,
+    currentOrder: 'DESC' as 'ASC' | 'DESC',
+    isReloading: false,
     $el: null as unknown as HTMLElement,
     $refs: {} as {
       commentList: HTMLElement;
@@ -33,6 +35,11 @@ const lessonComments = (lessonId?: number) => {
     replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
 
     init() {
+      // Initialize order from URL.
+      const url = new URL(window.location.href);
+      const orderParam = url.searchParams.get('order');
+      this.currentOrder = orderParam === 'ASC' ? 'ASC' : 'DESC';
+
       this.initInfiniteScroll();
 
       // Lesson comment create mutation.
@@ -95,6 +102,44 @@ const lessonComments = (lessonId?: number) => {
       return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
     },
 
+    handleChangeOrder(newOrder: 'ASC' | 'DESC') {
+      if (this.currentOrder === newOrder) return;
+
+      this.currentOrder = newOrder;
+      this.updateURL(newOrder);
+      this.reloadComments();
+    },
+
+    updateURL(order: 'ASC' | 'DESC') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('order', order);
+      window.history.pushState({}, '', url);
+    },
+
+    reloadComments() {
+      this.isReloading = true;
+      this.currentPage = 1;
+      this.hasMore = true;
+
+      wpAjaxInstance
+        .post(endpoints.LOAD_LESSON_COMMENTS, {
+          lesson_id: this.lessonId,
+          current_page: 1,
+          order: this.currentOrder,
+        })
+        .then((response) => {
+          // Replace entire comment list.
+          this.$refs.commentItems.innerHTML = response.data.html;
+          this.hasMore = response.data.has_more;
+        })
+        .catch((error) => {
+          window.TutorCore.toast.error(convertToErrorMessage(error));
+        })
+        .finally(() => {
+          this.isReloading = false;
+        });
+    },
+
     loadNextPage() {
       if (!this.lessonId || this.loading || !this.hasMore) {
         return;
@@ -106,6 +151,7 @@ const lessonComments = (lessonId?: number) => {
         .post(endpoints.LOAD_LESSON_COMMENTS, {
           lesson_id: this.lessonId,
           current_page: this.currentPage + 1,
+          order: this.currentOrder,
         })
         .then((response) => {
           if (response.data.has_more !== undefined) {
