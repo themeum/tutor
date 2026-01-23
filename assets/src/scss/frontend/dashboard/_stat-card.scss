@@ -112,7 +112,7 @@
 		}
 	}
 
-
+  &-passed,
 	&-students {
     .tutor-stat-card-icon {
         color: $tutor-text-brand;
@@ -123,6 +123,7 @@
 		}
 	}
 
+  &-star-fill,
 	&-reviews {
     .tutor-stat-card-icon {
         color: $tutor-warning-400;

@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
 
 // Default values.
 $icon_size  = $icon_size ?? 24;
-$variation  = isset( $variation ) ? $variation : 'enrolled';
 $value      = isset( $value ) ? $value : 0;
 $change     = isset( $change ) ? $change : '';
 $show_graph = isset( $show_graph ) ? $show_graph : false;
@@ -30,7 +29,7 @@ if ( ! isset( $icon ) || empty( $icon ) ) {
 $change_display = ! empty( $change ) ? $change : '';
 
 ?>
-<div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $variation ); ?>">
+<div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $icon ); ?>">
 	<div class="tutor-stat-card-header">
 		<div class="tutor-stat-card-title">
 			<?php echo esc_html( $card_title ); ?>
