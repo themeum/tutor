@@ -10,13 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\UserModel;
 use Tutor\Traits\JsonResponse;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * User class
@@ -720,6 +718,7 @@ class User {
 		}
 
 		update_user_meta( $user_id, self::VIEW_MODE_USER_META, $switch_mode );
+		flush_rewrite_rules();
 
 		// translators:%s for switching mode.
 		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
