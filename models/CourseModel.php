@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use TUTOR\Icon;
 use TUTOR\Course;
 use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
@@ -1464,6 +1465,8 @@ class CourseModel {
 							'is_completed' => $is_completed,
 							'time_limit'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
 							'time_type'    => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_type' ),
+							'label'        => __( 'Quiz', 'tutor' ),
+							'icon'         => Icon::QUIZ_2,
 						);
 
 					} elseif ( 'tutor_assignments' === $post_type ) {
@@ -1477,6 +1480,8 @@ class CourseModel {
 							'link'         => esc_url( get_permalink( $post_id ) ),
 							'title'        => $content_post->post_title,
 							'is_completed' => $is_completed,
+							'label'        => __( 'Assignment', 'tutor' ),
+							'icon'         => Icon::BOOK_2,
 						);
 
 					} elseif ( tutor()->zoom_post_type === $post_type ) {
@@ -1485,6 +1490,8 @@ class CourseModel {
 							'id'    => $post_id,
 							'title' => $content_post->post_title,
 							'link'  => esc_url( get_permalink( $post_id ) ),
+							'label' => __( 'Live Class', 'tutor' ),
+							'icon'  => Icon::ZOOM,
 						);
 
 					} elseif ( tutor()->meet_post_type === $post_type ) {
@@ -1493,6 +1500,8 @@ class CourseModel {
 							'id'    => $post_id,
 							'title' => $content_post->post_title,
 							'link'  => esc_url( get_permalink( $post_id ) ),
+							'label' => __( 'Live Class', 'tutor' ),
+							'icon'  => Icon::GOOGLE_MEET,
 						);
 
 					} else {
@@ -1507,6 +1516,8 @@ class CourseModel {
 							'video'           => $video,
 							'video_play_time' => isset( $video->playtime ) ? $video->playtime : '',
 							'is_completed'    => $is_completed,
+							'label'           => __( 'Reading', 'tutor' ),
+							'icon'            => Icon::COURSES,
 						);
 					}
 
