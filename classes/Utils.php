@@ -8553,10 +8553,12 @@ class Utils {
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 
-			$subpage_parts = explode( '/', $subpage, 2 );
-			if ( isset( $subpage_parts[1] ) ) {
-				$dashboard_subpage = $this->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
-				return $dashboard_page == $subpage_parts[0] && $dashboard_subpage == $subpage_parts[1];
+			if ($subpage) {
+				$subpage_parts = explode( '/', $subpage, 2 );
+				if ( isset( $subpage_parts[1] ) ) {
+					$dashboard_subpage = $this->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
+					return $dashboard_page == $subpage_parts[0] && $dashboard_subpage == $subpage_parts[1];
+				}
 			}
 
 			if ( $subpage ) {
