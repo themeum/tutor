@@ -151,9 +151,29 @@ class Lesson extends Tutor_Base {
 		}
 
 		$lesson_id = $comment->comment_post_ID;
+		$parent_id = $comment->comment_parent;
+		$is_reply  = $parent_id > 0;
+
 		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
 			wp_delete_comment( $comment_id, true );
-			$this->json_response( __( 'Comment deleted successfully', 'tutor' ) );
+
+			$total_comments = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'message'    => __( 'Comment deleted successfully', 'tutor' ),
+					'count'      => $total_comments,
+					'is_reply'   => $is_reply,
+					'parent_id'  => $parent_id,
+					'comment_id' => $comment_id,
+				)
+			);
 		} else {
 			$this->response_bad_request( __( 'You are not allowed to delete this comment', 'tutor' ) );
 		}
@@ -190,7 +210,41 @@ class Lesson extends Tutor_Base {
 					),
 				)
 			);
-			$this->json_response( __( 'Comment updated successfully', 'tutor' ) );
+
+			$updated_comment = get_comment( $comment_id );
+			$is_reply        = $updated_comment->comment_parent > 0;
+			$user_id         = get_current_user_id();
+
+			ob_start();
+			if ( $is_reply ) {
+				tutor_load_template(
+					'learning-area.lesson.comment-replies',
+					array(
+						'lesson_id'    => $lesson_id,
+						'comment_item' => get_comment( $updated_comment->comment_parent ),
+						'user_id'      => $user_id,
+					)
+				);
+			} else {
+				tutor_load_template(
+					'learning-area.lesson.comment-list',
+					array(
+						'comment_list' => array( $updated_comment ),
+						'lesson_id'    => $lesson_id,
+						'user_id'      => $user_id,
+					)
+				);
+			}
+			$html = ob_get_clean();
+
+			wp_send_json_success(
+				array(
+					'html'       => $html,
+					'is_reply'   => $is_reply,
+					'parent_id'  => $is_reply ? $updated_comment->comment_parent : 0,
+					'comment_id' => $comment_id,
+				)
+			);
 		} else {
 			$this->response_bad_request( __( 'You are not allowed to update this comment', 'tutor' ) );
 		}
@@ -626,6 +680,38 @@ class Lesson extends Tutor_Base {
 		}
 		$reply = get_comment( $comment_id );
 		do_action( 'tutor_reply_lesson_comment_thread', $comment_id, $comment_data );
+
+		if ( ! tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+			$lesson_id    = $comment_data['comment_post_ID'];
+			$comment_item = get_comment( $comment_data['comment_parent'] );
+			$user_id      = get_current_user_id();
+
+			ob_start();
+			tutor_load_template(
+				'learning-area.lesson.comment-replies',
+				array(
+					'lesson_id'    => $lesson_id,
+					'comment_item' => $comment_item,
+					'user_id'      => $user_id,
+				)
+			);
+			$html = ob_get_clean();
+
+			$total_comments = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'html'  => $html,
+					'count' => $total_comments,
+				)
+			);
+		}
 
 		ob_start();
 		?>

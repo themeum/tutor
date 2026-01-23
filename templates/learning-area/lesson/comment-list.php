@@ -24,10 +24,15 @@ if ( empty( $comment_list ) ) {
 }
 ?>
 <?php foreach ( $comment_list as $comment_item ) : ?>
-<div class="tutor-comment-item" x-data="{showEditForm: false}">
-	<div class="tutor-comment" x-data="{showReplyForm: false, repliesExpanded: false}" x-show="!showEditForm">
+<div class="tutor-comment-item" id="tutor-comment-<?php echo esc_attr( $comment_item->comment_ID ); ?>" x-data="{showEditForm: false}">
+	<div 
+		class="tutor-comment" 
+		x-data="{showReplyForm: false, repliesExpanded: false}" 
+		x-show="!showEditForm"
+		@tutor:comment:replied.window="if ($event.detail.parentId === <?php echo (int) $comment_item->comment_ID; ?>) { repliesExpanded = true; showReplyForm = false; }"
+	>
 		<?php Avatar::make()->user( $comment_item->user_id )->size( Size::SIZE_40 )->render(); ?>
-		<div class="tutor-flex-1">
+		<div class="tutor-comment-content tutor-flex-1">
 			<div class="tutor-flex tutor-justify-between">
 				<div>
 					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
@@ -75,7 +80,7 @@ if ( empty( $comment_list ) ) {
 				class="tutor-comment-reply-form tutor-mt-6" 
 				x-show="showReplyForm" 
 				x-collapse
-				x-data="{ ...tutorForm({ id: 'lesson-comment-reply-form', mode: 'onChange' }), focused: false }"
+				x-data="tutorForm({ id: 'lesson-comment-reply-form-<?php echo (int) $comment_item->comment_ID; ?>', mode: 'onChange' })"
 				x-bind="getFormBindings()"
 				@submit.prevent="handleSubmit((data) => replyCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: <?php echo esc_html( $comment_item->comment_ID ); ?>, order: currentOrder }))($event)"
 			>
@@ -85,11 +90,10 @@ if ( empty( $comment_list ) ) {
 					->name( 'comment' )
 					->placeholder( __( 'Write your reply', 'tutor' ) )
 					->attr( 'x-bind', "register('comment', { required: '" . esc_js( __( 'Please enter a reply', 'tutor' ) ) . "' })" )
-					->attr( '@focus', 'focused = true' )
 					->attr( '@keydown', 'handleKeydown($event)' )
 					->render();
 				?>
-				<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5" x-cloak :class="{ 'tutor-hidden': !focused }">
+				<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5">
 					<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
 						<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
 						<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
@@ -103,7 +107,7 @@ if ( empty( $comment_list ) ) {
 							->variant( Variant::GHOST )
 							->size( Size::X_SMALL )
 							->attr( 'type', 'button' )
-							->attr( '@click', 'reset(); focused = false; showReplyForm = false' )
+							->attr( '@click', 'reset(); showReplyForm = false' )
 							->attr( ':disabled', 'replyCommentMutation?.isPending' )
 							->render();
 

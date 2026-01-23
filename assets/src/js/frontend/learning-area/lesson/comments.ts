@@ -61,9 +61,27 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
       // Lesson comment edit mutation.
       this.editCommentMutation = this.query.useMutation(this.updateComment, {
-        onSuccess: () => {
+        onSuccess: (response) => {
           window.TutorCore.toast.success(__('Comment updated successfully.', 'tutor'));
-          this.reloadComments();
+          const data = response.data;
+          const targetId = data.is_reply
+            ? `tutor-comment-reply-${data.comment_id}`
+            : `tutor-comment-${data.comment_id}`;
+          const targetEl = document.getElementById(targetId);
+
+          if (targetEl && data.html) {
+            if (data.is_reply) {
+              // If it's a reply, we refresh the whole replies container to keep counts/UI in sync.
+              const repliesContainer = document.getElementById(`tutor-comment-replies-${data.parent_id}`);
+              if (repliesContainer) {
+                repliesContainer.outerHTML = data.html;
+              }
+            } else {
+              targetEl.outerHTML = data.html;
+            }
+          } else {
+            this.reloadComments();
+          }
         },
         onError: (error) => {
           window.TutorCore.toast.error(convertToErrorMessage(error));
@@ -72,10 +90,31 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
       // Lesson comment delete mutation.
       this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
-        onSuccess: () => {
+        onSuccess: (response) => {
           window.TutorCore.toast.success(__('Comment deleted successfully.', 'tutor'));
           window.TutorCore.modal.closeModal('delete-comment-modal');
-          this.reloadComments();
+
+          const data = response.data;
+          const targetId = data.is_reply
+            ? `tutor-comment-reply-${data.comment_id}`
+            : `tutor-comment-${data.comment_id}`;
+          const targetEl = document.getElementById(targetId);
+
+          if (targetEl) {
+            targetEl.remove();
+          }
+
+          if (data.is_reply) {
+            // Check if there are any replies left. If not, remove the replies container.
+            const repliesContainer = document.getElementById(`tutor-comment-replies-${data.parent_id}`);
+            if (repliesContainer && repliesContainer.querySelectorAll('.tutor-comment-reply-item').length === 0) {
+              repliesContainer.remove();
+            }
+          }
+
+          if (data.count !== undefined) {
+            this.totalComments = data.count;
+          }
         },
         onError: (error) => {
           window.TutorCore.toast.error(convertToErrorMessage(error));
@@ -84,9 +123,38 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
       // Lesson comment reply mutation
       this.replyCommentMutation = this.query.useMutation(this.replyComment, {
-        onSuccess: () => {
+        onSuccess: (response, payload) => {
           window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
-          this.reloadComments();
+          const data = response.data;
+          const parentId = payload.comment_parent;
+          const repliesContainer = document.getElementById(`tutor-comment-replies-${parentId}`);
+
+          if (data.html) {
+            if (repliesContainer) {
+              repliesContainer.outerHTML = data.html;
+            } else {
+              // Append to parent flex container if replies wrapper doesn't exist yet
+              const parentComment = document.getElementById(`tutor-comment-${parentId}`);
+              const commentContent = parentComment?.querySelector('.tutor-comment-content');
+              commentContent?.insertAdjacentHTML('beforeend', data.html);
+            }
+
+            // Notify Alpine to expand the replies and hide the form via custom event.
+            window.dispatchEvent(new CustomEvent('tutor:comment:replied', { detail: { parentId } }));
+
+            // Reset the specific reply form.
+            const replyFormId = `lesson-comment-reply-form-${parentId}`;
+            if (window.TutorCore.form.hasForm(replyFormId)) {
+              window.TutorCore.form.reset(replyFormId);
+            }
+          } else {
+            // Fallback to reload if container not found
+            this.reloadComments();
+          }
+
+          if (data.count !== undefined) {
+            this.totalComments = data.count;
+          }
         },
         onError: (error) => {
           window.TutorCore.toast.error(convertToErrorMessage(error));
