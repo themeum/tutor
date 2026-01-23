@@ -34,6 +34,7 @@ $hide_footer_init = $hide_footer_init ?? false;
 	<?php if ( $x_show ) : ?>
 		x-show="<?php echo esc_attr( $x_show ); ?>" 
 		x-collapse
+		x-init="$watch('<?php echo esc_js( $x_show ); ?>', value => value && $nextTick(() => $refs.commentInput.focus()))"
 	<?php endif; ?>
 	x-data="tutorForm({ id: '<?php echo esc_attr( $form_id ); ?>', mode: 'onChange', defaultValues: <?php echo esc_js( wp_json_encode( $default_values ) ); ?> })"
 	x-bind="getFormBindings()"
@@ -45,6 +46,7 @@ $hide_footer_init = $hide_footer_init ?? false;
 		->name( 'comment' )
 		->placeholder( $placeholder )
 		->attr( 'x-bind', "register('comment', { required: '" . esc_js( __( 'Please enter a comment', 'tutor' ) ) . "' })" )
+		->attr( 'x-ref', 'commentInput' )
 		->attr( '@keydown', 'handleKeydown($event)' );
 
 	if ( $hide_footer_init ) {
