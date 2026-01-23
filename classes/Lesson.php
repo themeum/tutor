@@ -127,8 +127,34 @@ class Lesson extends Tutor_Base {
 
 		$is_legacy_learning_mode = tutor_utils()->get_option( 'is_legacy_learning_mode' );
 
+		// Prepare data for template.
+		$lesson_id     = Input::post( 'comment_post_ID', get_the_ID(), Input::TYPE_INT );
+		$current_page  = max( 1, Input::post( 'current_page', 0, Input::TYPE_INT ) );
+		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+		$order_filter  = Input::get( 'order' ) ?? Input::post( 'order' ) ?? 'DESC';
+
+		$comments_list_args = array(
+			'post_id' => $lesson_id,
+			'parent'  => 0,
+			'paged'   => $current_page,
+			'number'  => $item_per_page,
+			'order'   => $order_filter,
+		);
+
+		$comment_count_args = array(
+			'post_id' => $lesson_id,
+			'parent'  => 0,
+			'count'   => true,
+		);
+
+		$comments_count = self::get_comments( $comment_count_args );
+		$comment_list   = self::get_comments( $comments_list_args );
+
 		ob_start();
-		tutor_load_template( $is_legacy_learning_mode ? 'single.lesson.comment' : 'learning-area.lesson.comment-list' );
+		tutor_load_template(
+			$is_legacy_learning_mode ? 'single.lesson.comment' : 'learning-area.lesson.comment-items',
+			compact( 'comment_list', 'comments_count', 'lesson_id', 'order_filter' )
+		);
 		$html = ob_get_clean();
 		wp_send_json_success( array( 'html' => $html ) );
 	}
@@ -883,7 +909,7 @@ class Lesson extends Tutor_Base {
 
 		ob_start();
 		tutor_load_template(
-			'learning-area.lesson.comment-items',
+			'learning-area.lesson.comment-list',
 			compact( 'comment_list', 'lesson_id' )
 		);
 		$html = ob_get_clean();
@@ -896,6 +922,7 @@ class Lesson extends Tutor_Base {
 			array(
 				'html'     => $html,
 				'has_more' => $has_more,
+				'count'    => $total_comments,
 			)
 		);
 	}

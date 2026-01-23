@@ -13,12 +13,13 @@ interface ReplyCommentPayload {
 /**
  * Lesson Comments Component
  */
-const lessonComments = (lessonId?: number) => {
+const lessonComments = (lessonId?: number, initialCount: number = 0) => {
   const query = window.TutorCore.query;
 
   return {
     query,
     lessonId: lessonId || null,
+    totalComments: initialCount,
     currentPage: 1,
     loading: false,
     hasMore: true,
@@ -27,7 +28,6 @@ const lessonComments = (lessonId?: number) => {
     $el: null as unknown as HTMLElement,
     $refs: {} as {
       commentList: HTMLElement;
-      commentItems: HTMLElement;
       loadMoreTrigger: HTMLElement;
     },
     createCommentMutation: null as MutationState<unknown, unknown> | null,
@@ -44,13 +44,9 @@ const lessonComments = (lessonId?: number) => {
 
       // Lesson comment create mutation.
       this.createCommentMutation = this.query.useMutation(this.createComment, {
-        onSuccess: (response) => {
+        onSuccess: () => {
           window.TutorCore.toast.success(__('Comment added successfully.', 'tutor'));
-          this.$refs.commentList.innerHTML = response.data.html;
-
-          // Reset pagination state when new comment is added
-          this.currentPage = 1;
-          this.hasMore = true;
+          this.reloadComments();
 
           const formId = 'lesson-comment-form';
           if (window.TutorCore.form.hasForm(formId)) {
@@ -76,13 +72,9 @@ const lessonComments = (lessonId?: number) => {
 
       // Lesson comment reply mutation
       this.replyCommentMutation = this.query.useMutation(this.replyComment, {
-        onSuccess: (response) => {
+        onSuccess: () => {
           window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
-          this.$refs.commentList.innerHTML = response.data.html;
-
-          // Reset pagination state when reply is added
-          this.currentPage = 1;
-          this.hasMore = true;
+          this.reloadComments();
         },
         onError: (error) => {
           window.TutorCore.toast.error(convertToErrorMessage(error));
@@ -129,8 +121,12 @@ const lessonComments = (lessonId?: number) => {
         })
         .then((response) => {
           // Replace entire comment list.
-          this.$refs.commentItems.innerHTML = response.data.html;
+          this.$refs.commentList.innerHTML = response.data.html;
           this.hasMore = response.data.has_more;
+
+          if (response.data.count !== undefined) {
+            this.totalComments = response.data.count;
+          }
         })
         .catch((error) => {
           window.TutorCore.toast.error(convertToErrorMessage(error));
@@ -160,7 +156,7 @@ const lessonComments = (lessonId?: number) => {
 
           if (response.data.html?.trim()) {
             this.currentPage++;
-            this.$refs.commentItems.insertAdjacentHTML('beforeend', response.data.html);
+            this.$refs.commentList.insertAdjacentHTML('beforeend', response.data.html);
           }
         })
         .catch((error) => {
