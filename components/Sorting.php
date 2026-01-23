@@ -13,6 +13,7 @@
 
 namespace Tutor\Components;
 
+use Tutor\Helpers\QueryHelper;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -26,6 +27,8 @@ defined( 'ABSPATH' ) || exit;
  *     ->order( 'DESC' )
  *     ->label_asc( 'Oldest' )
  *     ->label_desc( 'Newest' )
+ *     ->on_change( 'changeOrder' )
+ *     ->bind_active_order( 'currentOrder' )
  *     ->render();
  * ```
  *
@@ -55,6 +58,20 @@ class Sorting extends BaseComponent {
 	protected $label_desc;
 
 	/**
+	 * On change callback function name
+	 *
+	 * @var string
+	 */
+	protected $on_change = '';
+
+	/**
+	 * Alpine.js variable name for active state
+	 *
+	 * @var string
+	 */
+	protected $active_order = '';
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -70,7 +87,7 @@ class Sorting extends BaseComponent {
 	 * @return self
 	 */
 	public function order( string $order ): self {
-		$this->order = $order;
+		$this->order = QueryHelper::get_valid_sort_order( $order );
 		return $this;
 	}
 
@@ -99,12 +116,38 @@ class Sorting extends BaseComponent {
 	}
 
 	/**
+	 * Set JS callback on change
+	 *
+	 * @param string $method_name JS method name.
+	 *
+	 * @return self
+	 */
+	public function on_change( string $method_name ): self {
+		$this->on_change = $method_name;
+		return $this;
+	}
+
+	/**
+	 * Set Alpine.js active state binding
+	 *
+	 * @param string $active_order Alpine variable name.
+	 * @return self
+	 */
+	public function bind_active_order( string $active_order ): self {
+		$this->active_order = $active_order;
+		return $this;
+	}
+
+	/**
 	 * Get component content
 	 *
 	 * @return string
 	 */
 	public function get(): string {
-		$order = $this->order;
+		$orders = array(
+			'DESC' => $this->label_desc,
+			'ASC'  => $this->label_asc,
+		);
 
 		ob_start();
 		?>
@@ -114,10 +157,16 @@ class Sorting extends BaseComponent {
 				offset: 4,
 			})"
 		>
-			<button type="button" x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon">
+			<button
+				type="button"
+				x-ref="trigger"
+				@click="toggle()"
+				class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-btn-icon"
+			>
 				<?php tutor_utils()->render_svg_icon( Icon::STEPPER, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
 			</button>
-			<div 
+
+			<div
 				x-ref="content"
 				x-show="open"
 				x-cloak
@@ -125,18 +174,27 @@ class Sorting extends BaseComponent {
 				class="tutor-popover"
 			>
 				<div class="tutor-popover-menu" style="min-width: 108px;">
-					<a 
-						href="<?php echo esc_attr( add_query_arg( 'order', 'DESC' ) ); ?>" 
-						class="tutor-popover-menu-item<?php echo esc_attr( 'DESC' === $order ? ' tutor-active' : '' ); ?>"
-					>
-						<?php echo esc_html( $this->label_desc ); ?>
-					</a>
-					<a 
-						href="<?php echo esc_attr( add_query_arg( 'order', 'ASC' ) ); ?>" 
-						class="tutor-popover-menu-item<?php echo esc_attr( 'ASC' === $order ? ' tutor-active' : '' ); ?>"
-					>
-						<?php echo esc_html( $this->label_asc ); ?>
-					</a>
+					<?php foreach ( $orders as $order => $label ) : ?>
+						<?php if ( $this->on_change ) : ?>
+							<button
+								type="button"
+								@click="<?php echo esc_js( $this->on_change ); ?>('<?php echo esc_attr( $order ); ?>'); hide()"
+								class="tutor-popover-menu-item <?php echo esc_attr( ! $this->active_order && $this->order === $order ? ' tutor-active' : '' ); ?>"
+								<?php if ( $this->active_order ) : ?>
+									:class="{ 'tutor-active': (<?php echo esc_attr( $this->active_order ); ?> || '') === '<?php echo esc_attr( $order ); ?>' }"
+								<?php endif; ?>
+							>
+								<?php echo esc_html( $label ); ?>
+							</button>
+						<?php else : ?>
+							<a
+								href="<?php echo esc_attr( add_query_arg( 'order', $order ) ); ?>"
+								class="tutor-popover-menu-item <?php echo esc_attr( $this->order === $order ? ' tutor-active' : '' ); ?>"
+							>
+								<?php echo esc_html( $label ); ?>
+							</a>
+						<?php endif; ?>
+					<?php endforeach; ?>
 				</div>
 			</div>
 		</div>
