@@ -9,7 +9,6 @@
  */
 
 defined( 'ABSPATH' ) || exit;
-
 ?>
 
 <!-- Overview Chart -->
