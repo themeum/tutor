@@ -1,6 +1,6 @@
 <?php
 /**
- * Lesson comment replies template.
+ * Lesson Comment Replies Template.
  *
  * @package Tutor\Templates
  * @subpackage Single\Lesson
@@ -10,11 +10,7 @@
  */
 
 use Tutor\Components\Avatar;
-use Tutor\Components\Button;
-use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\InputField;
 use TUTOR\Icon;
 use TUTOR\Lesson;
 
@@ -72,53 +68,21 @@ $reply_count = is_array( $replies ) ? count( $replies ) : 0;
 					<?php endif; ?>
 				</div>
 				<?php if ( $user_id === (int) $reply_item->user_id ) : ?>
-				<form 
-					class="tutor-comment-edit-form tutor-mt-6" 
-					x-show="showReplyEditForm" 
-					x-collapse
-					x-data="tutorForm({ id: 'lesson-comment-edit-form', mode: 'onChange', defaultValues: { comment: '<?php echo esc_js( $reply_item->comment_content ); ?>' } })"
-					x-bind="getFormBindings()"
-					@submit.prevent="handleSubmit((data) => editCommentMutation?.mutate({ ...data, comment_id: <?php echo esc_html( $reply_item->comment_ID ); ?> }))($event)"
-				>
 					<?php
-					InputField::make()
-						->type( InputType::TEXTAREA )
-						->name( 'comment' )
-						->placeholder( __( 'Write your reply', 'tutor' ) )
-						->attr( 'x-bind', "register('comment', { required: '" . esc_js( __( 'Please enter a reply', 'tutor' ) ) . "' })" )
-						->attr( '@keydown', 'handleKeydown($event)' )
-						->render();
+					tutor_load_template(
+						'learning-area.lesson.comment-form',
+						array(
+							'form_id'        => 'lesson-comment-edit-form-' . (int) $reply_item->comment_ID,
+							'placeholder'    => __( 'Write your reply', 'tutor' ),
+							'submit_handler' => 'editCommentMutation?.mutate({ ...data, comment_id: ' . (int) $reply_item->comment_ID . ' })',
+							'cancel_handler' => 'reset(); showReplyEditForm = false',
+							'is_pending'     => 'editCommentMutation?.isPending',
+							'class'          => 'tutor-comment-edit-form',
+							'x_show'         => 'showReplyEditForm',
+							'default_values' => array( 'comment' => $reply_item->comment_content ),
+						)
+					);
 					?>
-					<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5">
-						<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
-							<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
-							<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-							<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?> 
-							<?php esc_html_e( 'Enter to Save	', 'tutor' ); ?>
-						</div>
-						<div class="tutor-flex tutor-items-center tutor-gap-4">
-							<?php
-							Button::make()
-								->label( __( 'Cancel', 'tutor' ) )
-								->variant( Variant::GHOST )
-								->size( Size::X_SMALL )
-								->attr( 'type', 'button' )
-								->attr( '@click', 'reset(); showReplyEditForm = false' )
-								->attr( ':disabled', 'editCommentMutation?.isPending' )
-								->render();
-
-							Button::make()
-								->label( __( 'Save', 'tutor' ) )
-								->variant( Variant::PRIMARY_SOFT )
-								->size( Size::X_SMALL )
-								->attr( 'type', 'submit' )
-								->attr( ':disabled', 'editCommentMutation?.isPending' )
-								->attr( ':class', "{ 'tutor-btn-loading': editCommentMutation?.isPending }" )
-								->render();
-							?>
-						</div>
-					</div>
-				</form>
 				<?php endif; ?>
 			</div>
 		<?php endforeach; ?>

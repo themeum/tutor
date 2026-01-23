@@ -1,6 +1,6 @@
 <?php
 /**
- * Lesson comment list template.
+ * Lesson Comment List Template.
  *
  * @package Tutor\Templates
  * @subpackage Single\Lesson
@@ -10,11 +10,7 @@
  */
 
 use Tutor\Components\Avatar;
-use Tutor\Components\Button;
-use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\InputField;
 use TUTOR\Icon;
 
 defined( 'ABSPATH' ) || exit;
@@ -76,53 +72,20 @@ if ( empty( $comment_list ) ) {
 					<?php esc_html_e( 'Reply', 'tutor' ); ?>
 				</button>
 			</div>
-			<form 
-				class="tutor-comment-reply-form tutor-mt-6" 
-				x-show="showReplyForm" 
-				x-collapse
-				x-data="tutorForm({ id: 'lesson-comment-reply-form-<?php echo (int) $comment_item->comment_ID; ?>', mode: 'onChange' })"
-				x-bind="getFormBindings()"
-				@submit.prevent="handleSubmit((data) => replyCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: <?php echo esc_html( $comment_item->comment_ID ); ?>, order: currentOrder }))($event)"
-			>
-				<?php
-				InputField::make()
-					->type( InputType::TEXTAREA )
-					->name( 'comment' )
-					->placeholder( __( 'Write your reply', 'tutor' ) )
-					->attr( 'x-bind', "register('comment', { required: '" . esc_js( __( 'Please enter a reply', 'tutor' ) ) . "' })" )
-					->attr( '@keydown', 'handleKeydown($event)' )
-					->render();
-				?>
-				<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5">
-					<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
-						<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
-						<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-						<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?> 
-						<?php esc_html_e( 'Enter to Save	', 'tutor' ); ?>
-					</div>
-					<div class="tutor-flex tutor-items-center tutor-gap-4">
-						<?php
-						Button::make()
-							->label( __( 'Cancel', 'tutor' ) )
-							->variant( Variant::GHOST )
-							->size( Size::X_SMALL )
-							->attr( 'type', 'button' )
-							->attr( '@click', 'reset(); showReplyForm = false' )
-							->attr( ':disabled', 'replyCommentMutation?.isPending' )
-							->render();
-
-						Button::make()
-							->label( __( 'Save', 'tutor' ) )
-							->variant( Variant::PRIMARY_SOFT )
-							->size( Size::X_SMALL )
-							->attr( 'type', 'submit' )
-							->attr( ':disabled', 'replyCommentMutation?.isPending' )
-							->attr( ':class', "{ 'tutor-btn-loading': replyCommentMutation?.isPending }" )
-							->render();
-						?>
-					</div>
-				</div>
-			</form>
+			<?php
+			tutor_load_template(
+				'learning-area.lesson.comment-form',
+				array(
+					'form_id'        => 'lesson-comment-reply-form-' . (int) $comment_item->comment_ID,
+					'placeholder'    => __( 'Write your reply', 'tutor' ),
+					'submit_handler' => 'replyCommentMutation?.mutate({ ...data, comment_post_ID: ' . (int) $lesson_id . ', comment_parent: ' . (int) $comment_item->comment_ID . ', order: currentOrder })',
+					'cancel_handler' => 'reset(); showReplyForm = false',
+					'is_pending'     => 'replyCommentMutation?.isPending',
+					'class'          => 'tutor-mt-6',
+					'x_show'         => 'showReplyForm',
+				)
+			);
+			?>
 
 			<!-- Display Comment Replies -->
 			<?php
@@ -138,53 +101,21 @@ if ( empty( $comment_list ) ) {
 		</div>
 	</div>
 	<?php if ( $user_id === (int) $comment_item->user_id ) : ?>
-	<form 
-		class="tutor-comment-edit-form" 
-		x-show="showEditForm" 
-		x-collapse
-		x-data="tutorForm({ id: 'lesson-comment-edit-form', mode: 'onChange', defaultValues: { comment: '<?php echo esc_js( $comment_item->comment_content ); ?>' } })"
-		x-bind="getFormBindings()"
-		@submit.prevent="handleSubmit((data) => editCommentMutation?.mutate({ ...data, comment_id: <?php echo esc_html( $comment_item->comment_ID ); ?> }))($event)"
-	>
 		<?php
-		InputField::make()
-			->type( InputType::TEXTAREA )
-			->name( 'comment' )
-			->placeholder( __( 'Write your comment', 'tutor' ) )
-			->attr( 'x-bind', "register('comment', { required: '" . esc_js( __( 'Please enter a comment', 'tutor' ) ) . "' })" )
-			->attr( '@keydown', 'handleKeydown($event)' )
-			->render();
+		tutor_load_template(
+			'learning-area.lesson.comment-form',
+			array(
+				'form_id'        => 'lesson-comment-edit-form-' . (int) $comment_item->comment_ID,
+				'placeholder'    => __( 'Write your comment', 'tutor' ),
+				'submit_handler' => 'editCommentMutation?.mutate({ ...data, comment_id: ' . (int) $comment_item->comment_ID . ' })',
+				'cancel_handler' => 'reset(); showEditForm = false',
+				'is_pending'     => 'editCommentMutation?.isPending',
+				'class'          => 'tutor-comment-edit-form',
+				'x_show'         => 'showEditForm',
+				'default_values' => array( 'comment' => $comment_item->comment_content ),
+			)
+		);
 		?>
-		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5">
-			<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
-				<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
-				<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-				<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?> 
-				<?php esc_html_e( 'Enter to Save	', 'tutor' ); ?>
-			</div>
-			<div class="tutor-flex tutor-items-center tutor-gap-4">
-				<?php
-				Button::make()
-					->label( __( 'Cancel', 'tutor' ) )
-					->variant( Variant::GHOST )
-					->size( Size::X_SMALL )
-					->attr( 'type', 'button' )
-					->attr( '@click', 'reset(); showEditForm = false' )
-					->attr( ':disabled', 'editCommentMutation?.isPending' )
-					->render();
-
-				Button::make()
-					->label( __( 'Save', 'tutor' ) )
-					->variant( Variant::PRIMARY_SOFT )
-					->size( Size::X_SMALL )
-					->attr( 'type', 'submit' )
-					->attr( ':disabled', 'editCommentMutation?.isPending' )
-					->attr( ':class', "{ 'tutor-btn-loading': editCommentMutation?.isPending }" )
-					->render();
-				?>
-			</div>
-		</div>
-	</form>
 	<?php endif; ?>
 </div>
 <?php endforeach; ?>
