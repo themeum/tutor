@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for bundle filter in dashboard.
+ * Template for Top Performing Course filter in Instructor dashboard.
  *
  * @package TutorPro\CourseBundle
  * @subpackage Templates
@@ -9,8 +9,9 @@
  * @since 4.0.0
  */
 
-use TUTOR\Icon;
+defined( 'ABSPATH' ) || exit;
 
+use TUTOR\Icon;
 ?>
 
 <div

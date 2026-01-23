@@ -8,6 +8,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Avatar;
 use Tutor\Components\StarRating;
 use Tutor\Components\Constants\Size;
@@ -45,27 +47,6 @@ use Tutor\Components\Constants\Size;
 			<div class="tutor-tiny tutor-text-secondary">
 				<?php echo esc_html( $review['review_text'] ); ?>
 			</div>
-
-			<!-- Actions -->
-			<!-- @todo Will be added later -->
-			<!-- <div class="tutor-flex tutor-items-center tutor-gap-6">
-				<button class="tutor-dashboard-home-review-action">
-					<?php // tutor_utils()->render_svg_icon( Icon::THUMB, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-					<span>
-						<?php
-						// printf(
-						// translators: %d: Number of helpful votes.
-						// esc_html__( 'Helpful (%d)', 'tutor' ),
-						// esc_html( $review['helpful_count'] ?? 0 )
-						// );
-						?>
-					</span>
-				</button>
-				<button class="tutor-dashboard-home-review-action">
-					<?php // tutor_utils()->render_svg_icon( Icon::COMMENTS, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-					<span><?php // esc_html_e( 'Reply', 'tutor' ); ?></span>
-				</button>
-			</div> -->
 		</div>
 	</div>
 </div>

@@ -8,7 +8,10 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
+use Tutor\Components\Badge;
 
 $get_icon_by_post_type = function ( $post_type ) {
 	switch ( $post_type ) {
@@ -25,6 +28,7 @@ $get_icon_by_post_type = function ( $post_type ) {
 	}
 };
 
+$label = __( 'Live Session', 'tutor' );
 ?>
 
 <div class="tutor-dashboard-home-task">
@@ -50,14 +54,11 @@ $get_icon_by_post_type = function ( $post_type ) {
 		</div>
 		<div class="tutor-dashboard-home-task-live-tag" data-meta>
 			<div class="tutor-dashboard-home-task-live-tag-badge">
-				<?php
-				tutor_load_template(
-					'core-components.event-badge',
-					array(
-						'text' => __( 'Live Session', 'tutor' ),
-						'icon' => $get_icon_by_post_type( $item['post_type'] ),
-					),
-				);
+				<?php Badge::make() // phpcs:ignore
+					->icon( $get_icon_by_post_type( $item['post_type'] ) )
+					->label( $label )
+					->rounded()
+					->render();
 				?>
 			</div>
 		</div>

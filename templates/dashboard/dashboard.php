@@ -9,8 +9,7 @@
  * @since 1.4.3
  */
 
-use Tutor\Models\CourseModel;
-use Tutor\Models\WithdrawModel;
+defined( 'ABSPATH' ) || exit;
 
 if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 	$profile_completion = tutor_utils()->user_profile_completion();
@@ -101,7 +100,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 									</span>
 								</div>
 								<?php
-								++$i;
+								$i++;
 						}
 						?>
 					</div>

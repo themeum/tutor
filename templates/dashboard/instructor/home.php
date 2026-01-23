@@ -7,6 +7,9 @@
  * @link https://themeum.com
  * @since 4.0.0
  */
+
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Instructor;
@@ -183,36 +186,24 @@ $course_completion_data = array(
 
 // @todo Will be added on later.
 // $leaderboard_data = array(
-// array(
-// 'name'                  => esc_html__( 'John Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 'no_of_courses'         => 10,
-// 'completion_percentage' => 50,
-// ),
-// array(
-// 'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
-// 'no_of_courses'         => 20,
-// 'completion_percentage' => 30,
-// ),
-// array(
-// 'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
-// 'no_of_courses'         => 30,
-// 'completion_percentage' => 70,
-// ),
-// array(
-// 'name'                  => esc_html__( 'Alice Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826752d',
-// 'no_of_courses'         => 40,
-// 'completion_percentage' => 10,
-// ),
-// array(
-// 'name'                  => esc_html__( 'Charlie Doe', 'tutor' ),
-// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d823712d',
-// 'no_of_courses'         => 50,
-// 'completion_percentage' => 40,
-// ),
+// 	array(
+// 		'name'                  => esc_html__( 'John Doe', 'tutor' ),
+// 		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 		'no_of_courses'         => 10,
+// 		'completion_percentage' => 50,
+// 	),
+// 	array(
+// 		'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
+// 		'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
+// 		'no_of_courses'         => 20,
+// 		'completion_percentage' => 30,
+// 	),
+// 	array(
+// 		'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
+// 		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
+// 		'no_of_courses'         => 30,
+// 		'completion_percentage' => 70,
+// 	),
 // );
 
 // Top Performing Courses.
@@ -287,116 +278,8 @@ if ( empty( $start_date ) && empty( $end_date ) ) {
 	}
 }
 
-// $upcoming_tasks = array(
-// array(
-// 'name'      => 'Complete Web Development Bootcamp',
-// 'date'      => '2022-01-01 10:00 AM',
-// 'url'       => '#',
-// 'post_type' => 'tutor_assignments',
-// 'meta_info' => 'Web Dev 101',
-// ),
-// array(
-// 'name'      => 'Live Q&A: React Hooks',
-// 'date'      => '2022-01-02 10:00 AM',
-// 'url'       => '#',
-// 'post_type' => 'tutor-google-meet',
-// 'meta_info' => '67 registered',
-// ),
-// array(
-// 'name'      => 'Quiz Closes: Python Functions',
-// 'date'      => '2022-01-03 10:00 AM',
-// 'url'       => '#',
-// 'post_type' => 'tutor_quiz',
-// 'meta_info' => 'Python Basics',
-// ),
-// array(
-// 'name'      => 'Live Q&A: Python Functions',
-// 'date'      => '2022-01-04 10:00 AM',
-// 'url'       => '#',
-// 'post_type' => 'tutor_zoom_meeting',
-// 'meta_info' => '67 registered',
-// ),
-// array(
-// 'name'      => 'Lesson Closes: Python Functions',
-// 'date'      => '2022-01-05 10:00 AM',
-// 'url'       => '#',
-// 'post_type' => 'lesson',
-// 'meta_info' => 'Python Basics',
-// ),
-// );
-
 // @todo will be added later.
 // $recent_activity = array(
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
-// array(
-// 'course_name' => 'Complete Web Development Bootcamp',
-// 'course_url'  => '#',
-// 'date'        => '2022-01-01 10:00 AM',
-// 'meta'        => 'enrolled in',
-// 'user'        => array(
-// 'name'   => 'John Doe',
-// 'avatar' => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// ),
-// ),
 // array(
 // 'course_name' => 'Complete Web Development Bootcamp',
 // 'course_url'  => '#',
@@ -567,7 +450,7 @@ $recent_reviews = array_map(
 		<!-- Leaderboard -->
 		<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
-				<?php esc_html_e( 'Leaderboard', 'tutor' ); ?>
+				<?php //esc_html_e( 'Leaderboard', 'tutor' ); ?>
 			</div>
 
 			<div class="tutor-dashboard-home-card-body">

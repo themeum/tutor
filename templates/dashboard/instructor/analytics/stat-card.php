@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 // Default values.
 $icon_size  = $icon_size ?? 24;
 $variation  = isset( $variation ) ? $variation : 'enrolled';

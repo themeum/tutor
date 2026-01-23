@@ -8,6 +8,7 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
 ?>
 
 <!-- Course Completion Chart -->
