@@ -537,22 +537,19 @@ class Template extends Tutor_Base {
 
 		$menu_items = array(
 			'resources'   => array(
-				'title'  => __( 'Resources', 'tutor' ),
-				'icon'   => Icon::RESOURCES,
-				'url'    => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'resources' ) ),
-				'is_pro' => false,
+				'title' => __( 'Resources', 'tutor' ),
+				'icon'  => Icon::RESOURCES,
+				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'resources' ) ),
 			),
 			'qna'         => array(
-				'title'  => __( 'Q&A', 'tutor' ),
-				'icon'   => Icon::QA,
-				'url'    => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
-				'is_pro' => false,
+				'title' => __( 'Q&A', 'tutor' ),
+				'icon'  => Icon::QA,
+				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
 			),
 			'course-info' => array(
-				'title'  => __( 'Course Info', 'tutor' ),
-				'icon'   => Icon::INFO_OCTAGON,
-				'url'    => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
-				'is_pro' => false,
+				'title' => __( 'Course Info', 'tutor' ),
+				'icon'  => Icon::INFO_OCTAGON,
+				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
 			),
 		);
 
