@@ -8,8 +8,8 @@
  * @since 4.0.0
  */
 
-use TUTOR\Icon;
 use Tutor\Components\Avatar;
+use Tutor\Components\StarRating;
 use Tutor\Components\Constants\Size;
 
 ?>
@@ -37,16 +37,7 @@ use Tutor\Components\Constants\Size;
 
 				<!-- Star Rating -->
 				<div>
-					<?php
-					tutor_load_template(
-						'demo-components.dashboard.components.star-rating',
-						array(
-							'rating'        => $review['rating'] ?? 0,
-							'wrapper_class' => 'tutor-ratings-stars tutor-flex tutor-items-center tutor-gap-2',
-							'icon_class'    => 'tutor-icon-exception4',
-						)
-					);
-					?>
+					<?php StarRating::make()->rating( $review['rating'] ?? 0 )->render(); ?>
 				</div>
 			</div>
 
@@ -59,20 +50,20 @@ use Tutor\Components\Constants\Size;
 			<!-- @todo Will be added later -->
 			<!-- <div class="tutor-flex tutor-items-center tutor-gap-6">
 				<button class="tutor-dashboard-home-review-action">
-					<?php //tutor_utils()->render_svg_icon( Icon::THUMB, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+					<?php // tutor_utils()->render_svg_icon( Icon::THUMB, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
 					<span>
 						<?php
 						// printf(
-						// 	// translators: %d: Number of helpful votes.
-						// 	esc_html__( 'Helpful (%d)', 'tutor' ),
-						// 	esc_html( $review['helpful_count'] ?? 0 )
+						// translators: %d: Number of helpful votes.
+						// esc_html__( 'Helpful (%d)', 'tutor' ),
+						// esc_html( $review['helpful_count'] ?? 0 )
 						// );
 						?>
 					</span>
 				</button>
 				<button class="tutor-dashboard-home-review-action">
-					<?php //tutor_utils()->render_svg_icon( Icon::COMMENTS, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-					<span><?php //esc_html_e( 'Reply', 'tutor' ); ?></span>
+					<?php // tutor_utils()->render_svg_icon( Icon::COMMENTS, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
+					<span><?php // esc_html_e( 'Reply', 'tutor' ); ?></span>
 				</button>
 			</div> -->
 		</div>

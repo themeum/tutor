@@ -42,7 +42,7 @@ if ( isset( $data['layout'] ) && 'load_more' == $data['layout']['type'] ) {
 }
 
 if ( ( isset( $data['total_page'] ) && $data['total_page'] ) || ( isset( $data['total_items'] ) && $data['total_items'] ) ) : ?>
-	<nav class="tutor-pagination tutor-mt-10 <?php echo esc_attr( $pagination_enabled_class ); ?>" 
+	<nav class="tutor-pagination tutor-mt-40 <?php echo esc_attr( $pagination_enabled_class ); ?>" 
 			<?php
 			echo isset( $data['ajax'] ) ? ' data-tutor_pagination_ajax="' . esc_attr( json_encode( $data['ajax'] ) ) . '" ' : '';
 			echo $dataset_attr; //phpcs:ignore

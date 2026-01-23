@@ -10,17 +10,15 @@
 
 namespace TUTOR;
 
-defined( 'ABSPATH' ) || exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 use DateTime;
 use DateInterval;
 use Tutor\Models\CourseModel;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * Instructor class
