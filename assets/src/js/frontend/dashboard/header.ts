@@ -1,5 +1,6 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { type AjaxResponse } from '@FrontendTypes/index';
+import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
@@ -16,7 +17,7 @@ const header = () => {
           onSuccess: (res: AjaxResponse) => {
             window.TutorCore.toast.success(res?.message);
             setTimeout(() => {
-              window.location.href = window._tutorobject.tutor_frontend_dashboard_url;
+              window.location.href = tutorConfig.tutor_frontend_dashboard_url;
             }, 1000);
           },
           onError: (error: Error) => {
