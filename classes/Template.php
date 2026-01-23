@@ -537,19 +537,22 @@ class Template extends Tutor_Base {
 
 		$menu_items = array(
 			'resources'   => array(
-				'title' => __( 'Resources', 'tutor' ),
-				'icon'  => Icon::RESOURCES,
-				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'resources' ) ),
+				'title'    => __( 'Resources', 'tutor' ),
+				'icon'     => Icon::RESOURCES,
+				'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'resources' ) ),
+				'template' => tutor_get_template( 'learning-area.subpages.resources' ),
 			),
 			'qna'         => array(
 				'title' => __( 'Q&A', 'tutor' ),
 				'icon'  => Icon::QA,
 				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
+				'template' => tutor_get_template( 'learning-area.subpages.qna' ),
 			),
 			'course-info' => array(
 				'title' => __( 'Course Info', 'tutor' ),
 				'icon'  => Icon::INFO_OCTAGON,
 				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
+				'template' => tutor_get_template( 'learning-area.subpages.course-info' ),
 			),
 		);
 

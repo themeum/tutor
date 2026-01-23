@@ -44,9 +44,8 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 
 				if ( $subpage ) {
 					$template         = $subpages[ $subpage ]['template'] ?? '';
-					$subpage_template = ! empty( $template ) ? $template : tutor_get_template( 'learning-area.subpages.' . $subpage );
-					if ( file_exists( $subpage_template ) ) {
-						tutor_load_template_from_custom_path( $subpage_template );
+					if ( file_exists( $template ) ) {
+						tutor_load_template_from_custom_path( $template );
 					} else {
 						do_action( 'tutor_single_content_' . $tutor_current_post_type );
 					}
