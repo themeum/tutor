@@ -83,6 +83,7 @@ const endpoints = {
   SAVE_LESSON: 'tutor_save_lesson',
   LOAD_LESSON_COMMENTS: 'tutor_load_lesson_comments',
   CREATE_LESSON_COMMENT: 'tutor_create_lesson_comment',
+  UPDATE_LESSON_COMMENT: 'tutor_update_lesson_comment',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
   REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
 

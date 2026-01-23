@@ -10,6 +10,7 @@
  */
 
 use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Sorting;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
@@ -21,6 +22,7 @@ use TUTOR\Lesson;
 
 defined( 'ABSPATH' ) || exit;
 
+$user_id       = get_current_user_id();
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 $current_page  = max( 1, Input::post( 'current_page', 0, Input::TYPE_INT ) );
 $order_filter  = Input::get( 'order' ) ?? Input::post( 'order' ) ?? 'DESC';
@@ -45,7 +47,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 <div x-show="activeTab === 'comments'" x-cloak x-data="tutorLessonComments(<?php echo esc_js( $lesson_id ); ?>, <?php echo esc_js( $comments_count ); ?>)" class="tutor-tab-panel" role="tabpanel">
 	<form 
 		class="tutor-p-6" 
-		x-data="{ ...tutorForm({ id: 'lesson-comment-form' }), focused: false }"
+		x-data="{ ...tutorForm({ id: 'lesson-comment-form', mode: 'onChange' }), focused: false }"
 		x-bind="getFormBindings()"
 		@submit.prevent="handleSubmit((data) => createCommentMutation?.mutate({ ...data, comment_post_ID: <?php echo esc_html( $lesson_id ); ?>, comment_parent: 0, order: currentOrder }))($event)"
 	>
@@ -96,25 +98,40 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 	</form>
 
 	<?php if ( ! empty( $comment_list ) ) : ?>
-	<div 
-		class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-t"
-		:class="{ 'tutor-loading-spinner': isReloading }"
-	>
-		<div class="tutor-small tutor-text-secondary">
-			<?php esc_html_e( 'Comments', 'tutor' ); ?>
-			<span class="tutor-text-primary tutor-font-medium" x-text="'(' + totalComments + ')'"></span>
+		<div 
+			class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-t"
+			:class="{ 'tutor-loading-spinner': isReloading }"
+		>
+			<div class="tutor-small tutor-text-secondary">
+				<?php esc_html_e( 'Comments', 'tutor' ); ?>
+				<span class="tutor-text-primary tutor-font-medium" x-text="'(' + totalComments + ')'"></span>
+			</div>
+			<?php
+			Sorting::make()
+				->order( $order_filter )
+				->on_change( 'handleChangeOrder' )
+				->bind_active_order( 'currentOrder' )
+				->render();
+			?>
+		</div>
+		<div x-ref="commentList" class="tutor-comments-list tutor-border-t">
+			<?php
+			tutor_load_template(
+				'learning-area.lesson.comment-list',
+				compact( 'comment_list', 'lesson_id', 'user_id' )
+			);
+			?>
 		</div>
 		<?php
-		Sorting::make()
-			->order( $order_filter )
-			->on_change( 'handleChangeOrder' )
-			->bind_active_order( 'currentOrder' )
+		ConfirmationModal::make()
+			->id( 'delete-comment-modal' )
+			->title( 'Delete This Item?' )
+			->message( 'This action cannot be undone.' )
+			->icon( Icon::DELETE_2, 80, 80 )
+			->mutation_state( 'deleteCommentMutation' )
+			->confirm_handler( 'deleteCommentMutation?.mutate({ comment_id: payload?.commentId })' )
 			->render();
 		?>
-	</div>
-	<div x-ref="commentList" class="tutor-comments-list tutor-border-t">
-		<?php tutor_load_template( 'learning-area.lesson.comment-list', compact( 'comment_list', 'lesson_id' ) ); ?>
-	</div>
 	<?php endif; ?>
 
 	<div x-ref="loadMoreTrigger" aria-hidden="true">

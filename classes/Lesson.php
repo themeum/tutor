@@ -98,6 +98,7 @@ class Lesson extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_delete_lesson_comment', array( $this, 'ajax_delete_lesson_comment' ) );
+		add_action( 'wp_ajax_tutor_update_lesson_comment', array( $this, 'ajax_update_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_load_lesson_comments', array( $this, 'load_lesson_comments' ) );
 
@@ -155,6 +156,43 @@ class Lesson extends Tutor_Base {
 			$this->json_response( __( 'Comment deleted successfully', 'tutor' ) );
 		} else {
 			$this->response_bad_request( __( 'You are not allowed to delete this comment', 'tutor' ) );
+		}
+	}
+
+	/**
+	 * Update lesson comment by AJAX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_update_lesson_comment() {
+		tutor_utils()->check_nonce();
+		$comment_id = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$lesson_id = $comment->comment_post_ID;
+		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+			wp_update_comment(
+				array(
+					'comment_ID'      => $comment_id,
+					'comment_content' => Input::post(
+						'comment',
+						'',
+						Input::TYPE_KSES_POST
+					),
+				)
+			);
+			$this->json_response( __( 'Comment updated successfully', 'tutor' ) );
+		} else {
+			$this->response_bad_request( __( 'You are not allowed to update this comment', 'tutor' ) );
 		}
 	}
 
@@ -849,6 +887,8 @@ class Lesson extends Tutor_Base {
 		$current_page = Input::post( 'current_page', '1' );
 		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 
+		$user_id = get_current_user_id();
+
 		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 
 		$comment_list = self::get_comments(
@@ -873,7 +913,7 @@ class Lesson extends Tutor_Base {
 		ob_start();
 		tutor_load_template(
 			'learning-area.lesson.comment-list',
-			compact( 'comment_list', 'lesson_id' )
+			compact( 'comment_list', 'lesson_id', 'user_id' )
 		);
 		$html = ob_get_clean();
 

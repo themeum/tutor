@@ -31,6 +31,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
       loadMoreTrigger: HTMLElement;
     },
     createCommentMutation: null as MutationState<unknown, unknown> | null,
+    editCommentMutation: null as MutationState<unknown, unknown> | null,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
     replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
 
@@ -58,12 +59,23 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
         },
       });
 
+      // Lesson comment edit mutation.
+      this.editCommentMutation = this.query.useMutation(this.updateComment, {
+        onSuccess: () => {
+          window.TutorCore.toast.success(__('Comment updated successfully.', 'tutor'));
+          this.reloadComments();
+        },
+        onError: (error) => {
+          window.TutorCore.toast.error(convertToErrorMessage(error));
+        },
+      });
+
       // Lesson comment delete mutation.
       this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
         onSuccess: () => {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('id');
-          window.location.href = url.toString();
+          window.TutorCore.toast.success(__('Comment deleted successfully.', 'tutor'));
+          window.TutorCore.modal.closeModal('delete-comment-modal');
+          this.reloadComments();
         },
         onError: (error) => {
           window.TutorCore.toast.error(convertToErrorMessage(error));
@@ -86,6 +98,10 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
       return wpAjaxInstance.post(endpoints.CREATE_LESSON_COMMENT, payload);
     },
 
+    updateComment(payload: { comment_id: number; comment: string }) {
+      return wpAjaxInstance.post(endpoints.UPDATE_LESSON_COMMENT, payload);
+    },
+
     deleteComment(payload: { comment_id: number }) {
       return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
     },
@@ -100,6 +116,10 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
       this.currentOrder = newOrder;
       this.updateURL(newOrder);
       this.reloadComments();
+    },
+
+    handleDeleteComment(payload: { commentId: number }) {
+      window.TutorCore.modal.showModal('delete-comment-modal', { commentId: payload.commentId });
     },
 
     updateURL(order: 'ASC' | 'DESC') {

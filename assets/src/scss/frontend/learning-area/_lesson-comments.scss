@@ -2,15 +2,22 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-comments-list {
+  .tutor-comment-item {
+    &:not(:last-of-type) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+  }
+
+  .tutor-comment-edit-form {
+    background-color: $tutor-surface-l1-hover;
+    padding: $tutor-spacing-6;
+  }
+
   .tutor-comment {
     @include tutor-flex(row, flex-start, flex-start);
     gap: $tutor-spacing-5;
     padding: $tutor-spacing-6;
     position: relative;
-
-    &:not(:last-of-type) {
-      border-bottom: 1px solid $tutor-border-idle;
-    }
 
     &:has(.tutor-comment-replies)::before {
       content: '';
@@ -56,6 +63,10 @@
       @include tutor-flex(column);
       gap: $tutor-spacing-6;
       margin-top: $tutor-spacing-6;
+
+      .tutor-comment-edit-form {
+        border-radius: $tutor-radius-sm;
+      }
     }
 
     &-replies-toggle {
