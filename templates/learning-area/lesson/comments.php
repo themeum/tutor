@@ -60,7 +60,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 		?>
 	</div>
 
-	<?php if ( ! empty( $comment_list ) ) : ?>
+	<div x-show="totalComments > 0">
 		<div 
 			class="tutor-flex tutor-items-center tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-t"
 			:class="{ 'tutor-loading-spinner': isReloading }"
@@ -85,19 +85,20 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 			);
 			?>
 		</div>
-		<?php
-		ConfirmationModal::make()
-			->id( 'delete-comment-modal' )
-			->title( 'Delete This Item?' )
-			->message( 'This action cannot be undone.' )
-			->icon( Icon::DELETE_2, 80, 80 )
-			->mutation_state( 'deleteCommentMutation' )
-			->confirm_handler( 'deleteCommentMutation?.mutate({ comment_id: payload?.commentId })' )
-			->render();
-		?>
-	<?php endif; ?>
 
-	<div x-ref="loadMoreTrigger" aria-hidden="true">
-		<span x-show="loading" class="tutor-loading-spinner tutor-border-t"></span>
+		<div x-ref="loadMoreTrigger" x-show="hasMore" aria-hidden="true">
+			<span x-show="loading" class="tutor-loading-spinner tutor-border-t"></span>
+		</div>
 	</div>
+
+	<?php
+	ConfirmationModal::make()
+		->id( 'delete-comment-modal' )
+		->title( 'Delete This Item?' )
+		->message( 'This action cannot be undone.' )
+		->icon( Icon::DELETE_2, 80, 80 )
+		->mutation_state( 'deleteCommentMutation' )
+		->confirm_handler( 'deleteCommentMutation?.mutate({ comment_id: payload?.commentId })' )
+		->render();
+	?>
 </div>

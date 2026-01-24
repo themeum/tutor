@@ -114,6 +114,14 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
           if (data.count !== undefined) {
             this.totalComments = data.count;
+            const mainCommentsCount = this.$refs.commentList.querySelectorAll(':scope > .tutor-comment-item').length;
+            this.hasMore = this.totalComments > mainCommentsCount;
+
+            // If we deleted a main comment and there are more items on the server,
+            // trigger a load to fill the gap.
+            if (!data.is_reply && this.hasMore) {
+              this.loadNextPage();
+            }
           }
         },
         onError: (error) => {
@@ -231,10 +239,13 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
       this.loading = true;
 
+      // Calculate offset based on main comments in DOM.
+      const offset = this.$refs.commentList.querySelectorAll(':scope > .tutor-comment-item').length;
+
       wpAjaxInstance
         .post(endpoints.LOAD_LESSON_COMMENTS, {
           lesson_id: this.lessonId,
-          current_page: this.currentPage + 1,
+          offset,
           order: this.currentOrder,
         })
         .then((response) => {

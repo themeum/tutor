@@ -971,21 +971,27 @@ class Lesson extends Tutor_Base {
 	public function load_lesson_comments() {
 		$lesson_id    = Input::post( 'lesson_id' ?? 0 );
 		$current_page = Input::post( 'current_page', '1' );
+		$offset       = Input::post( 'offset', -1, Input::TYPE_INT );
 		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 
 		$user_id = get_current_user_id();
 
 		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
 
-		$comment_list = self::get_comments(
-			array(
-				'post_id' => $lesson_id,
-				'parent'  => 0,
-				'paged'   => $current_page,
-				'number'  => $item_per_page,
-				'order'   => $order,
-			)
+		$query_args = array(
+			'post_id' => $lesson_id,
+			'parent'  => 0,
+			'number'  => $item_per_page,
+			'order'   => $order,
 		);
+
+		if ( $offset >= 0 ) {
+			$query_args['offset'] = $offset;
+		} else {
+			$query_args['paged'] = $current_page;
+		}
+
+		$comment_list = self::get_comments( $query_args );
 
 		// Get total comment count to determine if there are more pages.
 		$total_comments = self::get_comments(
@@ -1003,9 +1009,13 @@ class Lesson extends Tutor_Base {
 		);
 		$html = ob_get_clean();
 
-		// Calculate if there are more items beyond current page.
-		$items_loaded = $current_page * $item_per_page;
-		$has_more     = $items_loaded < $total_comments;
+		// Calculate if there are more items.
+		if ( $offset >= 0 ) {
+			$items_loaded = $offset + count( $comment_list );
+		} else {
+			$items_loaded = $current_page * $item_per_page;
+		}
+		$has_more = $items_loaded < $total_comments;
 
 		wp_send_json_success(
 			array(
