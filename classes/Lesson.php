@@ -115,16 +115,52 @@ class Lesson extends Tutor_Base {
 	 */
 	public function tutor_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
-		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+
+		$comment_id = 0;
+		$comment    = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
 			$comment_data = array(
 				'comment_content' => $comment,
-				'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
+				'comment_post_ID' => $lesson_id,
 				'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 			);
-			self::create_comment( $comment_data );
+			$comment_id   = self::create_comment( $comment_data );
 			do_action( 'tutor_new_comment_added', $comment_data );
 		}
+
+		if ( ! tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+			$html = '';
+			if ( $comment_id ) {
+				ob_start();
+				tutor_load_template(
+					'learning-area.lesson.comment-card',
+					array(
+						'comment_item' => get_comment( $comment_id ),
+						'lesson_id'    => $lesson_id,
+						'user_id'      => get_current_user_id(),
+					)
+				);
+				$html = ob_get_clean();
+			}
+
+			$count = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'html'  => $html,
+					'count' => $count,
+				)
+			);
+		}
+
 		ob_start();
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
@@ -673,18 +709,43 @@ class Lesson extends Tutor_Base {
 
 		if ( ! tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
 			$lesson_id    = $comment_data['comment_post_ID'];
-			$comment_item = get_comment( $comment_data['comment_parent'] );
+			$parent_id    = $comment_data['comment_parent'];
+			$comment_item = get_comment( $parent_id );
 			$user_id      = get_current_user_id();
 
-			ob_start();
-			tutor_load_template(
-				'learning-area.lesson.comment-replies',
+			$replies = self::get_comments(
 				array(
-					'lesson_id'    => $lesson_id,
-					'comment_item' => $comment_item,
-					'user_id'      => $user_id,
+					'post_id' => $lesson_id,
+					'parent'  => $parent_id,
 				)
 			);
+
+			$is_first_reply = ( is_array( $replies ) ? count( $replies ) : 0 ) === 1;
+
+			ob_start();
+			if ( $is_first_reply ) {
+				// For the first reply, we need the wrapper and the toggle button.
+				tutor_load_template(
+					'learning-area.lesson.comment-replies',
+					array(
+						'lesson_id'    => $lesson_id,
+						'comment_item' => $comment_item,
+						'user_id'      => $user_id,
+						'replies'      => $replies,
+					)
+				);
+			} else {
+				// Just the card for subsequent replies.
+				tutor_load_template(
+					'learning-area.lesson.comment-card',
+					array(
+						'comment_item' => get_comment( $comment_id ),
+						'lesson_id'    => $lesson_id,
+						'user_id'      => $user_id,
+						'is_reply'     => true,
+					)
+				);
+			}
 			$html = ob_get_clean();
 
 			$total_comments = self::get_comments(
@@ -697,8 +758,9 @@ class Lesson extends Tutor_Base {
 
 			wp_send_json_success(
 				array(
-					'html'  => $html,
-					'count' => $total_comments,
+					'html'           => $html,
+					'count'          => $total_comments,
+					'is_first_reply' => $is_first_reply,
 				)
 			);
 		}

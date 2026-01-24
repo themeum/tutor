@@ -45,9 +45,21 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
       // Lesson comment create mutation.
       this.createCommentMutation = this.query.useMutation(this.createComment, {
-        onSuccess: () => {
+        onSuccess: (response) => {
           window.TutorCore.toast.success(__('Comment added successfully.', 'tutor'));
-          this.reloadComments();
+          const data = response.data;
+
+          if (data.html) {
+            if (this.currentOrder === 'DESC') {
+              this.$refs.commentList.insertAdjacentHTML('afterbegin', data.html);
+            } else if (!this.hasMore) {
+              this.$refs.commentList.insertAdjacentHTML('beforeend', data.html);
+            }
+          }
+
+          if (data.count !== undefined) {
+            this.totalComments = data.count;
+          }
 
           const formId = 'lesson-comment-form';
           if (window.TutorCore.form.hasForm(formId)) {
@@ -127,16 +139,18 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
           const data = response.data;
           const parentId = payload.comment_parent;
-          const repliesContainer = document.getElementById(`tutor-comment-replies-${parentId}`);
+          const repliesWrapper = document.getElementById(`tutor-comment-replies-${parentId}`);
+          const repliesList = repliesWrapper?.querySelector('.tutor-comment-replies');
 
           if (data.html) {
-            if (repliesContainer) {
-              repliesContainer.outerHTML = data.html;
-            } else {
+            if (data.is_first_reply || !repliesList) {
               // Append to parent flex container if replies wrapper doesn't exist yet
               const parentComment = document.getElementById(`tutor-comment-${parentId}`);
               const commentContent = parentComment?.querySelector('.tutor-comment-content');
               commentContent?.insertAdjacentHTML('beforeend', data.html);
+            } else {
+              // Append item directly if wrapper exists
+              repliesList.insertAdjacentHTML('beforeend', data.html);
             }
 
             // Notify Alpine to expand the replies and hide the form via custom event.
@@ -148,7 +162,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
               window.TutorCore.form.reset(replyFormId);
             }
           } else {
-            // Fallback to reload if container not found
+            // Fallback to reload if something went wrong
             this.reloadComments();
           }
 

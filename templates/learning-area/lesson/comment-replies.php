@@ -16,7 +16,7 @@ use TUTOR\Lesson;
 
 defined( 'ABSPATH' ) || exit;
 
-$replies     = Lesson::get_comments(
+$replies     = $replies ?? Lesson::get_comments(
 	array(
 		'post_id' => $lesson_id,
 		'parent'  => $comment_item->comment_ID,

@@ -9,10 +9,6 @@
  * @since 4.0.0
  */
 
-use Tutor\Components\Avatar;
-use Tutor\Components\Constants\Size;
-use TUTOR\Icon;
-
 defined( 'ABSPATH' ) || exit;
 
 if ( empty( $comment_list ) ) {
