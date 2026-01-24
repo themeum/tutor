@@ -54,6 +54,7 @@ $comment_list   = Lesson::get_comments( $comments_list_args );
 				'submit_handler'   => 'createCommentMutation?.mutate({ ...data, comment_post_ID: ' . (int) $lesson_id . ', comment_parent: 0, order: currentOrder })',
 				'cancel_handler'   => 'reset(); focused = false',
 				'is_pending'       => 'createCommentMutation?.isPending',
+				'class'            => 'tutor-comment-form',
 				'hide_footer_init' => true,
 			)
 		);

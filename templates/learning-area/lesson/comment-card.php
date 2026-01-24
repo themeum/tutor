@@ -97,7 +97,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 						'submit_handler' => 'replyCommentMutation?.mutate({ ...data, comment_post_ID: ' . (int) $lesson_id . ', comment_parent: ' . (int) $comment_item->comment_ID . ', order: currentOrder })',
 						'cancel_handler' => 'reset(); showReplyForm = false',
 						'is_pending'     => 'replyCommentMutation?.isPending',
-						'class'          => 'tutor-mt-6',
+						'class'          => 'tutor-comment-reply-form tutor-mt-6',
 						'x_show'         => 'showReplyForm',
 					)
 				);
@@ -128,7 +128,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 				'submit_handler' => 'editCommentMutation?.mutate({ ...data, comment_id: ' . (int) $comment_item->comment_ID . ' })',
 				'cancel_handler' => 'reset(); showEditForm = false',
 				'is_pending'     => 'editCommentMutation?.isPending',
-				'class'          => $is_reply ? 'tutor-comment-edit-form tutor-mt-6' : 'tutor-comment-edit-form',
+				'class'          => 'tutor-comment-edit-form',
 				'x_show'         => 'showEditForm',
 				'default_values' => array( 'comment' => $comment_item->comment_content ),
 			)

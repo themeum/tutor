@@ -86,7 +86,7 @@ $hide_footer_init = $hide_footer_init ?? false;
 				->size( Size::X_SMALL )
 				->attr( 'type', 'submit' )
 				->attr( ':disabled', $is_pending )
-				->attr( ':class', "{ 'tutor-btn-loading': " . $is_pending . ' }' )
+				->attr( ':class', $is_pending . " ? 'tutor-btn-loading' : ''" )
 				->render();
 			?>
 		</div>
