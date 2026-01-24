@@ -18,104 +18,14 @@ defined( 'ABSPATH' ) || exit;
 if ( empty( $comment_list ) ) {
 	return;
 }
-?>
-<?php foreach ( $comment_list as $comment_item ) : ?>
-<div class="tutor-comment-item" id="tutor-comment-<?php echo esc_attr( $comment_item->comment_ID ); ?>" x-data="{showEditForm: false}">
-	<div 
-		class="tutor-comment" 
-		x-data="{showReplyForm: false, repliesExpanded: false}" 
-		x-show="!showEditForm"
-		@tutor:comment:replied.window="if ($event.detail.parentId === <?php echo (int) $comment_item->comment_ID; ?>) { repliesExpanded = true; showReplyForm = false; }"
-	>
-		<?php Avatar::make()->user( $comment_item->user_id )->size( Size::SIZE_40 )->render(); ?>
-		<div class="tutor-comment-content tutor-flex-1">
-			<div class="tutor-flex tutor-justify-between">
-				<div>
-					<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
-						<span class="tutor-discussion-card-author">
-							<?php echo esc_html( $comment_item->comment_author ); ?>
-						</span> 
-						<span class="tutor-text-subdued">
-							<?php
-								// Translators: %s is the time of comment.
-								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $comment_item->comment_date_gmt ) ) ) );
-							?>
-						</span>
-					</div>
-					<div class="tutor-p2 tutor-text-secondary">
-						<?php echo wp_kses_post( $comment_item->comment_content ); ?>
-					</div>
-				</div>
-				<?php if ( $user_id === (int) $comment_item->user_id ) : ?>
-				<div x-data="tutorPopover({ placement: 'bottom-end' })">
-					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-						<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-					</button>
-					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
-						<div class="tutor-popover-menu" style="min-width: 104px;">
-							<button class="tutor-popover-menu-item" @click="showEditForm = true; hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
-								<?php esc_html_e( 'Edit', 'tutor' ); ?>
-							</button>
-							<button class="tutor-popover-menu-item" @click="handleDeleteComment({commentId: <?php echo esc_html( $comment_item->comment_ID ); ?>}); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
-								<?php esc_html_e( 'Delete', 'tutor' ); ?>
-							</button>
-						</div>
-					</div>
-				</div>
-				<?php endif; ?>
-			</div>
-			<div class="tutor-mt-6">
-				<button class="tutor-comment-action-btn tutor-comment-action-btn-reply" @click="showReplyForm = !showReplyForm">
-					<?php tutor_utils()->render_svg_icon( Icon::COMMENTS ); ?>
-					<?php esc_html_e( 'Reply', 'tutor' ); ?>
-				</button>
-			</div>
-			<?php
-			tutor_load_template(
-				'learning-area.lesson.comment-form',
-				array(
-					'form_id'        => 'lesson-comment-reply-form-' . (int) $comment_item->comment_ID,
-					'placeholder'    => __( 'Write your reply', 'tutor' ),
-					'submit_handler' => 'replyCommentMutation?.mutate({ ...data, comment_post_ID: ' . (int) $lesson_id . ', comment_parent: ' . (int) $comment_item->comment_ID . ', order: currentOrder })',
-					'cancel_handler' => 'reset(); showReplyForm = false',
-					'is_pending'     => 'replyCommentMutation?.isPending',
-					'class'          => 'tutor-mt-6',
-					'x_show'         => 'showReplyForm',
-				)
-			);
-			?>
 
-			<!-- Display Comment Replies -->
-			<?php
-			tutor_load_template(
-				'learning-area.lesson.comment-replies',
-				array(
-					'lesson_id'    => $lesson_id,
-					'comment_item' => $comment_item,
-					'user_id'      => $user_id,
-				)
-			);
-			?>
-		</div>
-	</div>
-	<?php if ( $user_id === (int) $comment_item->user_id ) : ?>
-		<?php
-		tutor_load_template(
-			'learning-area.lesson.comment-form',
-			array(
-				'form_id'        => 'lesson-comment-edit-form-' . (int) $comment_item->comment_ID,
-				'placeholder'    => __( 'Write your comment', 'tutor' ),
-				'submit_handler' => 'editCommentMutation?.mutate({ ...data, comment_id: ' . (int) $comment_item->comment_ID . ' })',
-				'cancel_handler' => 'reset(); showEditForm = false',
-				'is_pending'     => 'editCommentMutation?.isPending',
-				'class'          => 'tutor-comment-edit-form',
-				'x_show'         => 'showEditForm',
-				'default_values' => array( 'comment' => $comment_item->comment_content ),
-			)
-		);
-		?>
-	<?php endif; ?>
-</div>
-<?php endforeach; ?>
+foreach ( $comment_list as $comment_item ) {
+	tutor_load_template(
+		'learning-area.lesson.comment-card',
+		array(
+			'comment_item' => $comment_item,
+			'lesson_id'    => $lesson_id,
+			'user_id'      => $user_id,
+		)
+	);
+}

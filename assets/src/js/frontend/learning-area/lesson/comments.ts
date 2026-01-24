@@ -70,15 +70,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           const targetEl = document.getElementById(targetId);
 
           if (targetEl && data.html) {
-            if (data.is_reply) {
-              // If it's a reply, we refresh the whole replies container to keep counts/UI in sync.
-              const repliesContainer = document.getElementById(`tutor-comment-replies-${data.parent_id}`);
-              if (repliesContainer) {
-                repliesContainer.outerHTML = data.html;
-              }
-            } else {
-              targetEl.outerHTML = data.html;
-            }
+            targetEl.outerHTML = data.html;
           } else {
             this.reloadComments();
           }

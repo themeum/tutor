@@ -216,25 +216,15 @@ class Lesson extends Tutor_Base {
 			$user_id         = get_current_user_id();
 
 			ob_start();
-			if ( $is_reply ) {
-				tutor_load_template(
-					'learning-area.lesson.comment-replies',
-					array(
-						'lesson_id'    => $lesson_id,
-						'comment_item' => get_comment( $updated_comment->comment_parent ),
-						'user_id'      => $user_id,
-					)
-				);
-			} else {
-				tutor_load_template(
-					'learning-area.lesson.comment-list',
-					array(
-						'comment_list' => array( $updated_comment ),
-						'lesson_id'    => $lesson_id,
-						'user_id'      => $user_id,
-					)
-				);
-			}
+			tutor_load_template(
+				'learning-area.lesson.comment-card',
+				array(
+					'comment_item' => $updated_comment,
+					'lesson_id'    => $lesson_id,
+					'user_id'      => $user_id,
+					'is_reply'     => $is_reply,
+				)
+			);
 			$html = ob_get_clean();
 
 			wp_send_json_success(

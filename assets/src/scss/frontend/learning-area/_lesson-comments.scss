@@ -64,6 +64,10 @@
       gap: $tutor-spacing-6;
       margin-top: $tutor-spacing-6;
 
+      .tutor-comment {
+        padding: $tutor-spacing-none;
+      }
+
       .tutor-comment-edit-form {
         border-radius: $tutor-radius-sm;
       }
