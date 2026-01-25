@@ -717,6 +717,7 @@ class Lesson extends Tutor_Base {
 				array(
 					'post_id' => $lesson_id,
 					'parent'  => $parent_id,
+					'order'   => 'ASC',
 				)
 			);
 

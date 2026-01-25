@@ -20,6 +20,7 @@ $replies     = $replies ?? Lesson::get_comments(
 	array(
 		'post_id' => $lesson_id,
 		'parent'  => $comment_item->comment_ID,
+		'order'   => 'ASC',
 	)
 );
 $reply_count = is_array( $replies ) ? count( $replies ) : 0;
