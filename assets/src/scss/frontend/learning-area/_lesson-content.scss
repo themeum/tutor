@@ -1,7 +1,45 @@
 // Lesson Content Styles
-// Individual lesson content display and formatting
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
 
 .tutor-lesson-content {
-  // Lesson content styles will go here
-  // Text content, images, embedded media, formatting
+  @include tutor-breakpoint-up(sm) {
+    margin-top: $tutor-spacing-4;
+
+    .tutor-lesson-content-tab {
+      background-color: $tutor-surface-l1;
+      border: 1px solid $tutor-border-idle;
+      border-radius: $tutor-radius-lg;
+      overflow: hidden;
+    }
+  }
+
+  @include tutor-breakpoint-down(sm) {
+    .tutor-lesson-content-tab {
+      padding-inline: $tutor-spacing-6;
+
+      .tutor-lesson-video-wrapper {
+        margin-inline: -$tutor-spacing-6;
+        margin-bottom: $tutor-spacing-6;
+      }
+
+      .tutor-tabs-nav {
+        background-color: $tutor-surface-l1;
+        padding: $tutor-spacing-2;
+        border: 1px solid $tutor-border-idle;
+        border-radius: $tutor-radius-2xl;
+        margin-bottom: $tutor-spacing-5;
+      }
+
+      .tutor-tabs-tab {
+        flex: 1;
+      }
+
+      .tutor-tabs-content {
+        background-color: $tutor-surface-l1;
+        border: 1px solid $tutor-border-idle;
+        border-radius: $tutor-radius-2xl;
+      }
+    }
+  }
 }

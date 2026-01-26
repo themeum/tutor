@@ -4,7 +4,7 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-learning-area {
-  &-body {
+  .tutor-learning-area-body {
     padding-inline-start: 320px;
     position: relative;
     @include tutor-transition(padding);
@@ -14,7 +14,7 @@
     }
   }
 
-  &.is-fullscreen &-body {
+  &.is-fullscreen .tutor-learning-area-body {
     padding-inline-start: 0;
   }
 
@@ -31,7 +31,14 @@
 
   .tutor-learning-area-container {
     max-width: 780px;
-    padding: 0 $tutor-spacing-6;
     margin: 0 auto;
+
+    @include tutor-breakpoint-up(sm) {
+      padding-inline: $tutor-spacing-6;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      padding-bottom: 62px;
+    }
   }
 }

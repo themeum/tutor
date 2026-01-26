@@ -9,4 +9,19 @@
   padding-block: $tutor-spacing-6;
   position: sticky;
   bottom: 0;
+
+  @include tutor-breakpoint-down(sm) {
+    position: fixed;
+    padding-block: $tutor-spacing-5;
+    width: 100%;
+
+    a.tutor-btn {
+      @include tutor-button-size(x-small);
+    }
+
+    button.tutor-btn {
+      @include tutor-button-size(medium);
+      gap: $tutor-spacing-4;
+    }
+  }
 }

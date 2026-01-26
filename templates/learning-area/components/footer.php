@@ -81,6 +81,7 @@ $is_completed_lesson = tutor_utils()->is_completed_lesson();
 		->label( __( 'Next', 'tutor' ) )
 		->icon( Icon::CHEVRON_RIGHT_2, 'right' )
 		->attr( 'href', esc_url( $next_link ) )
+		->attr( 'class', 'tutor-sm-btn-tiny' )
 		->render();
 	?>
 </div>
