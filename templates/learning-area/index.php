@@ -12,10 +12,12 @@
 use TUTOR\Course_List;
 use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\Template;
 
 wp_head();
 
 $current_user_id = get_current_user_id();
+$subpages        = Template::make_learning_area_sub_page_nav_items();
 
 // Tutor global variable for using inside learning area.
 $tutor_current_post_type    = get_post_type();
@@ -41,11 +43,11 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 				$subpage = Input::get( 'subpage' );
 
 				if ( $subpage ) {
-					$subpage_template = tutor_get_template( 'learning-area.subpages.' . $subpage );
-					if ( file_exists( $subpage_template ) ) {
-						tutor_load_template( 'learning-area.subpages.' . $subpage );
+					$template         = $subpages[ $subpage ]['template'] ?? '';
+					if ( file_exists( $template ) ) {
+						tutor_load_template_from_custom_path( $template );
 					} else {
-						do_action( 'tutor_single_content_' . $tutor_post_type );
+						do_action( 'tutor_single_content_' . $tutor_current_post_type );
 					}
 				} else {
 					do_action( 'tutor_single_content_' . $tutor_current_post_type, $tutor_current_post );
