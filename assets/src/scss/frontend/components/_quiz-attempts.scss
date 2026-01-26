@@ -1,0 +1,384 @@
+// Quiz Attempts Page Styles
+// Student quiz history, results, and retake options
+
+@use '@Core/scss/tokens' as *;
+@use '@Core/scss/mixins' as *;
+
+.tutor-h4 {
+  @include tutor-breakpoint-up(sm) {
+    display: none;
+  }
+}
+
+.tutor-quiz-attempts {
+  @include tutor-breakpoint-down(sm) {
+    background-color: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;
+    border-radius: $tutor-radius-2xl;
+  }
+
+  &-filter {
+    @include tutor-flex(row, center, space-between);
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    border-bottom: 1px solid $tutor-border-idle;
+    display: grid;
+    grid-template-areas: 'nav search calender sort';
+    @include tutor-breakpoint-down(sm) {
+      padding: 0;
+    }
+
+    &-item {
+      &:nth-child(1) {
+        grid-area: nav;
+      }
+      &:nth-child(2) {
+        grid-area: search;
+      }
+      &:nth-child(3) {
+        grid-area: calender;
+      }
+      &:nth-child(4) {
+        grid-area: sort;
+      }
+    }
+
+    &-button {
+      @include tutor-button-reset();
+      @include tutor-flex(row, center);
+      gap: $tutor-spacing-2;
+      @include tutor-typography(small, regular, secondary);
+      cursor: pointer;
+      white-space: nowrap;
+
+      @include tutor-breakpoint-down(sm) {
+        font-size: $tutor-font-size-tiny;
+        line-height: $tutor-line-height-tiny;
+      }
+    }
+
+    @include tutor-breakpoint-up(sm) {
+      grid-template-columns: 1fr auto auto auto;
+      gap: $tutor-spacing-3;
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      grid-template-areas:
+        'search sort'
+        'nav calender';
+      grid-template-columns: 1fr auto;
+      &-item {
+        &:nth-child(2) {
+          border-bottom: 1px solid $tutor-border-idle;
+          padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
+        }
+        &:nth-child(4) {
+          border-bottom: 1px solid $tutor-border-idle;
+          padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
+        }
+        &:nth-child(1) {
+          padding: $tutor-spacing-5 $tutor-spacing-4 $tutor-spacing-5 $tutor-spacing-5;
+        }
+        &:nth-child(3) {
+          padding: $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-5 $tutor-spacing-4;
+        }
+      }
+    }
+  }
+
+  &-header {
+    display: grid;
+    grid-template-columns: 340px 180px 1.5fr 1fr;
+    gap: $tutor-spacing-4;
+    background-color: $tutor-surface-base;
+    border-bottom: 1px solid $tutor-border-idle;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    @include tutor-typography(tiny);
+    color: $tutor-text-secondary;
+
+    @include tutor-breakpoint-down(sm) {
+      display: none;
+    }
+  }
+
+  .tutor-quiz-attempts-item-wrapper {
+    padding: $tutor-spacing-6;
+    @include tutor-transition(background-color);
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $tutor-border-idle;
+    }
+
+    &:hover {
+      background-color: $tutor-surface-l1-hover;
+    }
+
+    &.tutor-quiz-previous-attempts {
+      background-color: $tutor-surface-l1-hover;
+
+      .tutor-quiz-attempts-expand-icon {
+        transform: rotate(180deg);
+      }
+    }
+
+    .tutor-quiz-attempts-item {
+      display: grid;
+      grid-template-columns: 340px 180px 1.5fr 1fr;
+      grid-template-areas: 'info marks time result';
+      gap: $tutor-spacing-4;
+      align-items: center;
+
+      @include tutor-breakpoint-down(sm) {
+        grid-template-columns: 2fr 1fr 1fr;
+        grid-template-areas:
+          'info info info'
+          'marks time result'
+          'buttons buttons buttons';
+        row-gap: $tutor-spacing-4;
+        column-gap: 0px;
+      }
+
+      .tutor-quiz-item-info {
+        grid-area: info;
+
+        &-title {
+          @include tutor-typography(medium, semibold);
+
+          @include tutor-breakpoint-down(sm) {
+            font-size: $tutor-font-size-small;
+            line-height: $tutor-line-height-small;
+          }
+        }
+
+        &-course {
+          @include tutor-typography(small, regular, secondary);
+
+          @include tutor-breakpoint-down(sm) {
+            font-size: $tutor-font-size-tiny;
+            line-height: $tutor-line-height-tiny;
+          }
+        }
+
+        &-date {
+          @include tutor-typography(tiny, regular, secondary);
+
+          @include tutor-breakpoint-down(sm) {
+            color: $tutor-text-subdued;
+          }
+        }
+
+        .tutor-quiz-attempts-expand-btn {
+          @include tutor-button-reset();
+          @include tutor-flex(row, center);
+          gap: $tutor-spacing-2;
+          @include tutor-typography(small, medium, brand);
+          cursor: pointer;
+          white-space: nowrap;
+
+          @include tutor-breakpoint-down(sm) {
+            font-size: $tutor-font-size-tiny;
+            line-height: $tutor-line-height-tiny;
+          }
+        }
+
+        .tutor-quiz-attempts-expand-icon {
+          display: flex;
+          @include tutor-transition(transform, 0.3s);
+
+          @include tutor-breakpoint-down(sm) {
+            svg {
+              width: 16px;
+              height: 16px;
+            }
+          }
+        }
+
+        .tutor-flex {
+          @include tutor-breakpoint-down(sm) {
+            justify-content: space-between;
+          }
+        }
+      }
+
+      .tutor-quiz-item-marks {
+        grid-area: marks;
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-4;
+
+        @include tutor-breakpoint-down(sm) {
+          background-color: $tutor-surface-l1-hover;
+          border-start-start-radius: $tutor-radius-lg;
+          border-end-start-radius: $tutor-radius-lg;
+          padding-block: $tutor-spacing-5;
+          padding-inline-start: $tutor-spacing-5;
+        }
+
+        .tutor-quiz-marks-breakdown {
+          @include tutor-flex(column, stretch, center);
+          gap: $tutor-spacing-1;
+
+          .tutor-quiz-marks-correct,
+          .tutor-quiz-marks-incorrect {
+            @include tutor-typography(tiny, medium, secondary);
+            @include tutor-flex(row, center);
+            gap: $tutor-spacing-3;
+            background-color: $tutor-surface-l2;
+            padding: 0 $tutor-spacing-2;
+            border-radius: 40px;
+
+            &::before {
+              content: '';
+              display: inline-block;
+              width: 8px;
+              height: 8px;
+              border-radius: 100%;
+              background-color: $tutor-icon-success-primary;
+              margin-inline-start: $tutor-spacing-3;
+            }
+          }
+
+          .tutor-quiz-marks-incorrect {
+            &::before {
+              background-color: $tutor-icon-critical;
+            }
+          }
+        }
+      }
+
+      .tutor-quiz-item-time {
+        grid-area: time;
+        @include tutor-flex(row, center);
+        gap: $tutor-spacing-2;
+        @include tutor-typography(medium, regular, secondary);
+        white-space: nowrap;
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-typography(small, regular, subdued);
+          height: 100%;
+          background-color: $tutor-surface-l1-hover;
+          padding-inline: $tutor-spacing-4;
+        }
+      }
+
+      .tutor-quiz-item-result {
+        grid-area: result;
+        @include tutor-flex(column, center, center);
+
+        @include tutor-breakpoint-down(sm) {
+          height: 100%;
+          background-color: $tutor-surface-l1-hover;
+          border-start-end-radius: $tutor-radius-lg;
+          border-end-end-radius: $tutor-radius-lg;
+          padding-block: $tutor-spacing-5;
+          padding-inline-end: $tutor-spacing-5;
+        }
+
+        .tutor-quiz-item-result-more {
+          display: none;
+        }
+      }
+
+      .tutor-quiz-item-buttons {
+        grid-area: buttons;
+        display: none;
+
+        @include tutor-breakpoint-down(sm) {
+          @include tutor-flex(row, center, center);
+          gap: $tutor-spacing-5;
+          margin-top: $tutor-spacing-2;
+
+          button {
+            flex: 1;
+            gap: $tutor-spacing-2;
+          }
+        }
+      }
+
+      @include tutor-breakpoint-up(sm) {
+        &:hover {
+          .tutor-quiz-item-result {
+            .tutor-badge {
+              display: none;
+            }
+
+            .tutor-quiz-item-result-more {
+              display: block;
+            }
+          }
+        }
+      }
+    }
+
+    .tutor-quiz-previous-attempts {
+      background-color: $tutor-surface-l1;
+      border-radius: $tutor-radius-sm;
+      margin-top: $tutor-spacing-6;
+
+      .tutor-quiz-previous-attempts-title {
+        @include tutor-breakpoint-down(sm) {
+          padding: $tutor-spacing-5;
+        }
+      }
+
+      .tutor-quiz-attempts-item {
+        grid-template-columns: 324px 180px 1.5fr 1fr;
+        padding: $tutor-spacing-6;
+        @include tutor-transition(background-color);
+
+        @include tutor-breakpoint-down(sm) {
+          grid-template-columns: 2.5fr 1fr 1fr;
+          grid-template-areas:
+            'info info info'
+            'marks time result'
+            'buttons buttons buttons';
+          padding-top: $tutor-spacing-5;
+          padding-left: $tutor-spacing-5;
+          padding-right: $tutor-spacing-5;
+          padding-bottom: $tutor-spacing-2;
+          row-gap: $tutor-spacing-4;
+        }
+
+        &:hover {
+          background-color: $tutor-surface-base;
+        }
+
+        /** for mobile there is button html 
+         * so need to capture second to last child 
+        **/
+        &:not(:nth-last-child(2)) {
+          @include tutor-breakpoint-up(sm) {
+            border-bottom: 1px solid $tutor-border-idle;
+          }
+        }
+      }
+
+      @include tutor-breakpoint-down(sm) {
+        .tutor-quiz-item-actions {
+          padding-left: $tutor-spacing-5;
+          padding-right: $tutor-spacing-5;
+          padding-bottom: $tutor-spacing-5;
+          &:not(:last-child) {
+            border-bottom: 1px solid $tutor-border-idle;
+          }
+        }
+      }
+    }
+
+    @include tutor-breakpoint-down(sm) {
+      padding: $tutor-spacing-5;
+    }
+  }
+}
+
+.tutor-quiz-item-actions {
+  gap: $tutor-spacing-5;
+  padding-top: $tutor-spacing-2;
+
+  button,
+  a {
+    width: 100%;
+  }
+
+  @include tutor-breakpoint-up(sm) {
+    display: none;
+  }
+}
