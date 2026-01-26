@@ -12,9 +12,10 @@
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Constants\Positions;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 use Tutor\Components\DateFilter;
+use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
-use Tutor\Components\Nav;
 use Tutor\Components\Pagination;
 use Tutor\Components\SearchFilter;
 use Tutor\Components\Sorting;
@@ -61,10 +62,11 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 			<div class="tutor-quiz-attempts-filter">
 				<div class="tutor-quiz-attempts-filter-item">
 					<?php
-						Nav::make()
-						->items( array( $nav_links ) )
-						->size( Size::SMALL )
-						->render();
+						DropdownFilter::make()
+							->options( $nav_links['options'] )
+							->query_param( 'result' )
+							->variant( Variant::PRIMARY_SOFT )
+							->render();
 					?>
 				</div>
 				<div class="tutor-quiz-attempts-filter-item">

@@ -12,7 +12,6 @@
 use Tutor\Components\Badge;
 use Tutor\Components\Button;
 use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
 use Tutor\Components\Popover;
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
@@ -53,13 +52,40 @@ $delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
 					->attr( '@click', $delete_attr )
 					->variant( 'secondary' );
 
+$details_item = array(
+	'tag'     => 'a',
+	'content' => __( 'Details', 'tutor' ),
+	'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES ),
+	'attr'    => array( 'href' => $review_url ),
+);
+
+$delete_item = array(
+	'tag'     => 'a',
+	'content' => __( 'Delete', 'tutor' ),
+	'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+	'attr'    => array(
+		'href'   => '#',
+		'@click' => $click_attr,
+	),
+);
+
+$retry_item = array(
+	'tag'     => 'a',
+	'content' => __( 'Retry', 'tutor' ),
+	'icon'    => tutor_utils()->get_svg_icon( Icon::RELOAD ),
+	'attr'    => array( 'href' => get_post_permalink( $quiz_id ) ),
+);
 
 ?>
 <div class="tutor-quiz-attempts-item">
 	<div class="tutor-quiz-item-info">
-		<?php if ( $show_quiz_title && ! empty( $quiz_title ) ) : ?>
+		<?php
+		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
+			?>
 			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
-				<div class="tutor-quiz-item-info-title"><?php echo esc_html( $quiz_title ); ?></div>
+				<div class="tutor-quiz-item-info-title">
+					<?php echo esc_html( $quiz_title ); ?>
+				</div>
 				<?php if ( $attempts_count > 1 ) : ?>
 					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
 						<?php
@@ -73,17 +99,31 @@ $delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
 							<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 18, 18 ); ?>
 						</span>
 					</button>
+				<?php elseif ( $is_student ) : ?>
+					<a href="<?php echo esc_url( $review_url ); ?>" class="tutor-text-medium-tiny tutor-student-attempt-detail"><?php echo esc_html__( 'See Details', 'tutor' ); ?></a>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
 		<?php if ( $attempt_number ) : ?>
+			<?php if ( $is_student ) : ?>
+			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
+				<div class="tutor-quiz-item-info-title">
+					<?php
+					/* translators: %d: attempt number */
+					echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
+					?>
+				</div>
+				<a href="<?php echo esc_url( $review_url ); ?>" class="tutor-text-medium-tiny tutor-student-attempt-detail"><?php echo esc_html__( 'See Details', 'tutor' ); ?></a>
+			</div>
+			<?php else : ?>
 			<div class="tutor-quiz-item-info-title">
 				<?php
 				/* translators: %d: attempt number */
 				echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
 				?>
 			</div>
+			<?php endif; ?>
 		<?php endif; ?>
 
 		<div class="tutor-quiz-item-info-course">
@@ -142,35 +182,36 @@ $delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
 			$badge->render();
 		}
 
-
-		Popover::make()
+		if ( $is_student && ! $should_retry ) {
+			Popover::make()
 			->trigger( $kebab_button )
 			->placement( 'bottom' )
 			->menu_item(
-				array(
-					'tag'     => 'a',
-					'content' => __( 'Details', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES ),
-					'attr'    => array( 'href' => $review_url ),
-				)
+				$details_item
+			)
+			->render();
+		} else {
+			Popover::make()
+			->trigger( $kebab_button )
+			->placement( 'bottom' )
+			->menu_item(
+				$is_student ? $retry_item : $details_item
 			)
 			->menu_item(
-				array(
-					'tag'     => 'a',
-					'content' => __( 'Delete', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
-					'attr'    => array(
-						'href'   => '#',
-						'@click' => $click_attr,
-					),
-				)
+				$is_student ? $details_item : $delete_item
 			)
-			->render()
+			->render();
+		}
+
+
 		?>
 		
 	</div>
 </div>
+
+<?php if ( ! $is_student ) : ?>
 <div class="tutor-quiz-item-actions tutor-flex tutor-justify-between">
 	<?php $details_button->render(); ?>
 	<?php $delete_button->render(); ?>
 </div>
+<?php endif; ?>

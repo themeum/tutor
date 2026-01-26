@@ -8548,7 +8548,7 @@ class Utils {
 	 *
 	 * @return boolean
 	 */
-	public function is_tutor_frontend_dashboard( $subpage = null ) {
+	public function is_tutor_frontend_dashboard( $subpage = '' ) {
 		global $wp_query;
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
