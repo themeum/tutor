@@ -15,9 +15,6 @@ global $tutor_course_id;
 
 ?>
 <div x-show="activeTab === 'overview'" x-cloak class="tutor-tab-panel tutor-p-6 tutor-sm-p-5" role="tabpanel"> 
-	<h4 class="tutor-h4 tutor-mb-4">
-		<?php the_title(); ?>
-	</h4>
 	<div class="tutor-lesson-content-body">
 		<?php do_action( 'tutor_lesson_before_the_content', $post, $tutor_course_id ); ?>
 		<?php the_content(); ?>
