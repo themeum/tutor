@@ -367,6 +367,7 @@ export const icons = [
   'vimeo',
   'visited',
   'warning',
+  'warningLine',
   'weightBox',
   'wifi',
   'wishlist',

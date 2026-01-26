@@ -10,13 +10,11 @@
 
 namespace TUTOR;
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\UserModel;
 use Tutor\Traits\JsonResponse;
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
-}
 
 /**
  * User class
@@ -720,6 +718,7 @@ class User {
 		}
 
 		update_user_meta( $user_id, self::VIEW_MODE_USER_META, $switch_mode );
+		flush_rewrite_rules();
 
 		// translators:%s for switching mode.
 		$this->response_success( sprintf( __( 'Profile switched to %s!', 'tutor' ), $switch_mode ) );
@@ -733,25 +732,35 @@ class User {
 	 * @return string
 	 */
 	public static function get_current_view_mode(): string {
-		$user_id       = get_current_user_id();
-		$is_instructor = self::is_instructor( $user_id, true );
-		$is_admin      = self::is_admin( $user_id );
-
-		$default_mode = $is_instructor || $is_admin ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
+		$user_id      = get_current_user_id();
+		$default_mode = self::can_switch_mode( $user_id ) ? self::VIEW_AS_INSTRUCTOR : self::VIEW_AS_STUDENT;
 		$current_mode = get_user_meta( $user_id, self::VIEW_MODE_USER_META, true );
 
-		return $current_mode ? $current_mode : $default_mode;
+		return in_array( $current_mode, array( self::VIEW_AS_INSTRUCTOR, self::VIEW_AS_STUDENT ), true )
+				? $current_mode
+				: $default_mode;
 	}
 
 	/**
-	 * Get current view mode STUDENT/INSTRUCTOR
+	 * Check if the user is in instructor view
 	 *
 	 * @since 4.0.0
 	 *
-	 * @return string
+	 * @return bool
 	 */
-	public static function is_instructor_view(): string {
+	public static function is_instructor_view(): bool {
 		return self::VIEW_AS_INSTRUCTOR === self::get_current_view_mode();
+	}
+
+	/**
+	 * Check if the user is in student view
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return bool
+	 */
+	public static function is_student_view(): bool {
+		return self::VIEW_AS_STUDENT === self::get_current_view_mode();
 	}
 
 	/**

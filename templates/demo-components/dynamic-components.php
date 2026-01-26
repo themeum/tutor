@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 	use Tutor\Components\Accordion;
 	use Tutor\Components\Avatar;
+	use Tutor\Components\Alert;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
 	use Tutor\Components\Constants\InputType;
@@ -114,7 +115,6 @@ defined( 'ABSPATH' ) || exit;
 			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?&gt;
 		</code></pre>
-		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
 			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->render();
@@ -122,6 +122,82 @@ defined( 'ABSPATH' ) || exit;
 			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?>
 		</div>
+	</div>
+<br>
+	<div class="alert-wrapper tutor-mb-12">
+		<h2>Alert</h2>
+		<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-mb-4">
+		<?php
+			Alert::make()
+				->text( 'Default alert: This is a neutral alert message for general information.' )
+				->icon( Icon::INFO )
+				->render();
+
+			Alert::make()
+				->variant( Alert::INFO )
+				->text( 'Info alert: This is an informational alert message using brand colors.' )
+				->icon( Icon::INFO_FILL )
+				->render();
+
+			Alert::make()
+				->variant( Alert::SUCCESS )
+				->text( 'Success alert: Your action was completed successfully.' )
+				->icon( Icon::PRIME_CHECK_CIRCLE )
+				->render();
+
+			Alert::make()
+				->variant( Alert::WARNING )
+				->text( 'Your plan will be cancelled on 15 Feb, 2026, 06:30 am. You’ll have access until then and can resume anytime before that.' )
+				->icon( Icon::WARNING_LINE )
+				->action( Button::make()->label( 'Resume plan' )->variant( Variant::PRIMARY )->size( Size::X_SMALL )->get() )
+				->render();
+
+			Alert::make()
+				->variant( Alert::ERROR )
+				->text( 'Error alert: Something went wrong, please try again.' )
+				->icon( Icon::ALERT )
+				->action(
+					Button::make()
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::CROSS_2 )
+						->get()
+				)
+				->render();
+			?>
+		</div>
+		<pre><code>
+&lt;?php
+	// Success Alert
+	Alert::make()
+		->variant( Alert::SUCCESS )
+		->text( 'Success! Your changes have been saved.' )
+		->icon( Icon::PRIME_CHECK_CIRCLE )
+		->render();
+
+	// Warning with Action
+	Alert::make()
+		->variant( Alert::WARNING )
+		->text( 'Your plan will expire soon.' )
+		->icon( Icon::WARNING_LINE )
+		->action( Button::make()->label( 'Renew Plan' )->variant( Variant::PRIMARY )->size( Size::X_SMALL )->get() )
+		->render();
+
+	// Dismissible Alert
+	Alert::make()
+		->variant( Alert::ERROR )
+		->text( 'An error occurred.' )
+		->icon( Icon::ALERT )
+		->action(
+			Button::make()
+				->variant( Variant::GHOST )
+				->size( Size::X_SMALL )
+				->icon( Icon::CROSS_2 )
+				->get()
+		)
+		->render();
+?&gt;
+		</code></pre>
 	</div>
 
 	<div class="progress-wrapper tutor-mb-12">

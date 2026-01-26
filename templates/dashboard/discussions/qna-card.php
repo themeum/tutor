@@ -15,6 +15,7 @@ use TUTOR\Icon;
 use Tutor\Components\Avatar;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Helpers\UrlHelper;
+use TUTOR\User;
 
 $current_user_id = get_current_user_id();
 $is_user_asker   = $current_user_id === (int) $question->user_id;
@@ -95,7 +96,7 @@ $single_url = UrlHelper::add_query_params(
 					<div class="tutor-text-small"><?php echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date_gmt ) ) ) ); //phpcs:ignore ?></div>
 				<?php } ?>
 			</div>
-			<?php if ( ! $is_user_asker ) : ?>
+			<?php if ( User::is_instructor_view() ) : ?>
 			<div class="tutor-flex tutor-gap-2 tutor-sm-hidden">
 				<button 
 					class="tutor-btn tutor-btn-link tutor-btn-x-small tutor-btn-icon tutor-text-subdued"
@@ -153,7 +154,7 @@ $single_url = UrlHelper::add_query_params(
 
 			<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 				<div class="tutor-popover-menu">
-					<?php if ( ! $is_user_asker ) : ?>
+					<?php if ( User::is_instructor_view() ) : ?>
 					<button 
 						class="tutor-popover-menu-item tutor-hidden tutor-sm-flex"
 						@click="handleQnASingleAction(<?php echo esc_html( $question_id ); ?>, 'solved')"
