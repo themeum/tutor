@@ -201,8 +201,15 @@ class Table extends BaseComponent {
 	 * @return string HTML
 	 */
 	public function get(): string {
-		$this->attributes['class'] = 'tutor-table';
+		if ( isset( $this->attributes['class'] ) && ! empty( $this->attributes['class'] ) ) {
+			$this->attributes['class'] = 'tutor-table ' . $this->attributes['class'];
+		} else {
+			$this->attributes['class'] = 'tutor-table';
+		}
 
+		ob_start();
+		$this->render_attributes();
+		$attrs = ob_get_clean();
 		return sprintf(
 			'<table %s>
 					<thead>
@@ -213,7 +220,7 @@ class Table extends BaseComponent {
 					</tbody>
 				</table>
 			',
-			$this->render_attributes(),
+			$attrs,
 			$this->render_table_headings(),
 			$this->render_table_body()
 		);
