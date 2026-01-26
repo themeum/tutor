@@ -4,6 +4,8 @@
 @use '@Core/scss/tokens' as *;
 
 .tutor-learning-area {
+  background-color: $tutor-surface-base;
+
   .tutor-learning-area-body {
     padding-inline-start: 320px;
     position: relative;
