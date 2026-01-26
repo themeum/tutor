@@ -375,7 +375,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const isCheckbox = type === 'checkbox';
       const isFile = type === 'file';
 
-      const defaultValue = this.values[name] ?? (isCheckbox ? false : '');
+      const defaultValue = this.values[name] ?? (isCheckbox ? element?.checked ?? false : '');
 
       this.fields[name] = {
         name,

@@ -77,6 +77,7 @@ const settings = () => {
     saveBillingInfoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveWithdrawMethodMutation: null as MutationState<TutorMutationResponse<string>> | null,
     resetPasswordMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    handleUpdateNotification: null as MutationState<unknown, unknown> | null,
 
     init() {
       if (!this.$el) {
@@ -90,6 +91,15 @@ const settings = () => {
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
       this.handleResetPassword = this.handleResetPassword.bind(this);
+
+      this.handleUpdateNotification = this.query.useMutation(this.updateNotification, {
+        onSuccess: (data: TutorMutationResponse<string>) => {
+          this.toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
+        },
+        onError: (error: Error) => {
+          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+        },
+      });
 
       this.fetchCountriesQuery = this.query.useQuery('fetch-countries', () => this.fetchCountries());
 
@@ -149,6 +159,34 @@ const settings = () => {
           this.toast.error(convertToErrorMessage(error));
         },
       });
+    },
+
+    async updateNotification(payload: Record<string, boolean>) {
+      // Transform boolean values to "on"/"off" strings and restructure keys
+      const transformedPayload = Object.keys(payload).reduce(
+        (formattedPayload, key) => {
+          const value = payload[key];
+          const stringValue = typeof value === 'boolean' ? (value ? 'on' : 'off') : value;
+
+          // Check if key contains double underscore
+          if (key.includes('__')) {
+            const [firstPart, secondPart] = key.split('__');
+            if (firstPart && secondPart) {
+              const transformedKey = `tutor_notification_preference[email][${firstPart}][${secondPart}]`;
+              formattedPayload[transformedKey] = stringValue;
+            }
+          } else {
+            const transformedKey = `tutor_notification_preference[${key}]`;
+            formattedPayload[transformedKey] = stringValue;
+          }
+
+          return formattedPayload;
+        },
+        {} as Record<string, string>,
+      );
+
+      console.log('noti', transformedPayload);
+      return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
     },
 
     async fetchCountries() {
