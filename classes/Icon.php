@@ -25,6 +25,7 @@ final class Icon {
 	const ALARM                      = 'alarm';
 	const ALERT                      = 'alert';
 	const ALL                        = 'all';
+	const ANDROID_PHONE              = 'android-phone';
 	const ANGLES_RIGHT               = 'angles-right';
 	const ANIMATION                  = 'animation';
 	const ANNOUNCEMENT               = 'announcement';
@@ -200,6 +201,8 @@ final class Icon {
 	const INFO_OCTAGON               = 'info-octagon';
 	const INSTRUCTOR                 = 'instructor';
 	const INTERACTIVE_QUIZ           = 'interactive-quiz';
+	const IOS_PHONE                  = 'ios-phone';
+	const IPAD_TABLET                = 'ipad-tablet';
 	const ISO                        = 'iso';
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
@@ -224,6 +227,7 @@ final class Icon {
 	const LOCK_STROKE                = 'lock-stroke';
 	const LOCK_STROKE_2              = 'lock-stroke-2';
 	const LOGOUT                     = 'logout';
+	const MAC                        = 'mac';
 	const MAGE_FILTER                = 'mage-filter';
 	const MAGIC_AI                   = 'magic-ai';
 	const MAGIC_AI_COLORIZE          = 'magic-ai-colorize';
@@ -386,6 +390,7 @@ final class Icon {
 	const WARNING_LINE               = 'warning-line';
 	const WEIGHT_BOX                 = 'weight-box';
 	const WIFI                       = 'wifi';
+	const WINDOWS                    = 'windows';
 	const WISHLIST                   = 'wishlist';
 	const WITHDRAW                   = 'withdraw';
 	const X                          = 'x';
