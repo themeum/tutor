@@ -305,9 +305,11 @@ class LessonPlayer {
        * Send to tutor backend about video playing time in this interval
        */
       const intervalSeconds = 10;
-      this.syncInterval = setInterval(() => {
-        this.syncTime();
-      }, intervalSeconds * 1000);
+      if (tutorConfig.tutor_pro_url) {
+        this.syncInterval = setInterval(() => {
+          this.syncTime();
+        }, intervalSeconds * 1000);
+      }
 
       /**
        * Unmute automatically after first user interaction
@@ -340,7 +342,9 @@ class LessonPlayer {
     this.player.on('pause', () => {
       if (this.syncInterval) clearInterval(this.syncInterval);
 
-      this.syncTime();
+      if (tutorConfig.tutor_pro_url) {
+        this.syncTime();
+      }
     });
 
     this.player.on('ended', (event: Plyr.PlyrEvent) => {

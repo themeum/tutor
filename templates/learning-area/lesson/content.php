@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Input;
 use TUTOR\Lesson;
 
@@ -43,7 +45,7 @@ $source_key = is_object( $video_info ) && 'html5' !== $video_info->source ? 'sou
 $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( isset( $source_key ) ? $video_info->$source_key : null );
 
 ?>
-<div class="tutor-lesson-content tutor-pt-6">
+<div class="tutor-lesson-content tutor-pt-4">
 	<div 
 		x-data='tutorTabs({
 			tabs: <?php echo wp_json_encode( $tabs_data ); ?>,

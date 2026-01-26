@@ -52,9 +52,9 @@ class Tooltip extends BaseComponent {
 	/**
 	 * Trigger constants.
 	 */
-	public const TRIGGER_HOVER = 'hover';
-	public const TRIGGER_CLICK = 'click';
-	public const TRIGGER_FOCUS = 'focus';
+	public const HOVER = 'hover';
+	public const CLICK = 'click';
+	public const FOCUS = 'focus';
 
 	/**
 	 * Tooltip content (HTML or text).
@@ -89,7 +89,7 @@ class Tooltip extends BaseComponent {
 	 *
 	 * @var string
 	 */
-	protected $trigger = self::TRIGGER_HOVER;
+	protected $trigger = self::HOVER;
 
 	/**
 	 * The element that triggers the tooltip.
@@ -188,11 +188,11 @@ class Tooltip extends BaseComponent {
 	 *
 	 * @return $this
 	 */
-	public function trigger( string $trigger ): self {
+	public function trigger_on( string $trigger ): self {
 		$allowed = array(
-			self::TRIGGER_HOVER,
-			self::TRIGGER_FOCUS,
-			self::TRIGGER_CLICK,
+			self::HOVER,
+			self::FOCUS,
+			self::CLICK,
 		);
 		if ( in_array( $trigger, $allowed, true ) ) {
 			$this->trigger = $trigger;
