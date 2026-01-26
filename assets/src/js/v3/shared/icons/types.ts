@@ -108,6 +108,7 @@ export const icons = [
   'dbf',
   'delete',
   'delete2',
+  'devices',
   'discountType',
   'diviColorized',
   'doc',

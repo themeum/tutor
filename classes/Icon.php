@@ -124,6 +124,7 @@ final class Icon {
 	const DBF                        = 'dbf';
 	const DELETE                     = 'delete';
 	const DELETE_2                   = 'delete-2';
+	const DEVICES                    = 'devices';
 	const DISCOUNT_TYPE              = 'discount-type';
 	const DIVI_COLORIZED             = 'divi-colorized';
 	const DOC                        = 'doc';
