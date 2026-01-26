@@ -94,10 +94,10 @@ const settings = () => {
 
       this.handleUpdateNotification = this.query.useMutation(this.updateNotification, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Successfully updated profile', 'tutor'));
+          this.toast.success(data?.message ?? __('Notification settings updated', 'tutor'));
         },
         onError: (error: Error) => {
-          this.toast.error(convertToErrorMessage(error) || __('Failed to update profile', 'tutor'));
+          this.toast.error(convertToErrorMessage(error) || __('Failed to update notification settings', 'tutor'));
         },
       });
 
