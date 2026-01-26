@@ -27,7 +27,7 @@ $show_quiz_title = $show_quiz_title ?? false;
 $show_course     = $show_course ?? false;
 $attempt_number  = $attempt_number ?? null;
 $attempts_count  = $attempts_count ?? 0;
-$badge           = Badge::make()->label( 'Failed' )->variant( Variant::CANCELLED )->rounded();
+$badge           = Badge::make()->label( 'Failed' )->variant( Badge::ERROR )->rounded();
 $kebab_button    = Button::make()
 					->icon( Icon::THREE_DOTS_VERTICAL )
 					->attr( 'x-ref', 'trigger' )
@@ -131,12 +131,12 @@ $delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
 		if ( QuizModel::RESULT_PASS === $attempt['result'] ) {
 			$badge
 				->label( __( 'Passed', 'tutor' ) )
-				->variant( Variant::COMPLETED )
+				->variant( Badge::SUCCESS )
 				->render();
 		} elseif ( QuizModel::RESULT_PENDING === $attempt['result'] ) {
 			$badge
 				->label( __( 'Pending', 'tutor' ) )
-				->variant( Variant::PENDING )
+				->variant( Badge::WARNING )
 				->render();
 		} else {
 			$badge->render();
