@@ -123,6 +123,17 @@ final class DateTimeHelper {
 	}
 
 	/**
+	 * Get DateTime obj.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return DateTime
+	 */
+	public function get() {
+		return $this->datetime;
+	}
+
+	/**
 	 * Check date time is past
 	 *
 	 * @return boolean
