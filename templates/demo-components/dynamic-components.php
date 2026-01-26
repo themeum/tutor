@@ -1312,7 +1312,7 @@ Tooltip::make()
 
 			Tooltip::make()
 				->content( 'Click to toggle tooltip' )
-				->trigger( Tooltip::TRIGGER_CLICK )
+				->trigger_on( Tooltip::CLICK )
 				->placement( Tooltip::PLACEMENT_TOP )
 				->trigger_element( '<button class="tutor-btn tutor-btn-secondary">Click Me</button>' )
 				->render();
