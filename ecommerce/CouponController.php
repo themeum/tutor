@@ -577,10 +577,7 @@ class CouponController extends BaseController {
 	 */
 	public function bulk_action_handler() {
 		tutor_utils()->checking_nonce();
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			tutor_utils()->error_message();
-		}
+		tutor_utils()->check_current_user_capability();
 
 		// Get and sanitize input data.
 		$request     = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized already
@@ -630,9 +627,7 @@ class CouponController extends BaseController {
 	public function coupon_permanent_delete() {
 		tutor_utils()->checking_nonce();
 
-		if ( ! current_user_can( 'manage_options' ) ) {
-			tutor_utils()->error_message();
-		}
+		tutor_utils()->check_current_user_capability();
 
 		// Get and sanitize input data.
 		$id = Input::post( 'id', 0, Input::TYPE_INT );

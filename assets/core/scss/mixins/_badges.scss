@@ -1,25 +1,31 @@
-// Badge Mixins
-// Reusable Badge styles with variants and sizes
-
 @use '../tokens' as *;
 @use 'typography' as *;
+@use 'layout' as *;
 
-@mixin tutor-badge-base($size: medium) {
-  @include tutor-typography('tiny', 'medium');
+@mixin tutor-badge-base() {
+  @include tutor-typography('tiny', 'medium', 'secondary');
   width: max-content;
   border-radius: $tutor-radius-sm;
-  padding: $tutor-spacing-1 $tutor-spacing-4;
+  padding-inline: $tutor-spacing-4;
   display: flex;
   align-items: center;
   gap: $tutor-spacing-3;
-
   background-color: $tutor-actions-gray-secondary;
 
-  @if $size == 'small' {
-    padding: 0 $tutor-spacing-4;
+  img,
+  svg {
+    @include tutor-flex-center;
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    object-position: center;
   }
 
-  &.tutor-badge-circle {
+  svg {
+    color: $tutor-icon-idle;
+  }
+
+  &.tutor-badge-rounded {
     border-radius: $tutor-radius-full;
   }
 }
@@ -28,23 +34,58 @@
   @if $variant ==primary {
     background-color: $tutor-actions-brand-primary;
     color: $tutor-text-primary-inverse;
-  } @else if $variant ==primary-soft {
+
+    svg {
+      color: $tutor-icon-idle-inverse;
+    }
+  } @else if $variant ==info {
     background-color: $tutor-actions-brand-tertiary;
-    color: $tutor-actions-brand-primary;
-  } @else if $variant ==pending {
+    color: $tutor-text-brand;
+
+    svg {
+      color: $tutor-icon-brand;
+    }
+  } @else if $variant ==warning {
     background-color: $tutor-actions-warning-secondary;
     color: $tutor-text-warning;
-  } @else if $variant ==completed {
+
+    svg {
+      color: $tutor-icon-warning;
+    }
+  } @else if $variant ==success {
     background-color: $tutor-actions-success-tertiary;
     color: $tutor-text-success;
-  } @else if $variant ==cancelled {
+
+    svg {
+      color: $tutor-icon-success-primary;
+    }
+  } @else if $variant ==success-solid {
+    background-color: $tutor-actions-success-primary;
+    color: $tutor-text-primary-inverse;
+
+    svg {
+      color: $tutor-icon-idle-inverse;
+    }
+  } @else if $variant ==error {
     background-color: $tutor-actions-critical-secondary;
     color: $tutor-text-critical;
-  } @else if $variant ==secondary {
-    background-color: $tutor-actions-gray-secondary;
-    color: $tutor-gray-500;
-  } @else if $variant ==exception {
+
+    svg {
+      color: $tutor-icon-critical;
+    }
+  } @else if $variant ==highlight {
     background-color: $tutor-surface-exception2-secondary;
     color: $tutor-text-exception2;
+
+    svg {
+      color: $tutor-icon-exception2;
+    }
+  } @else if $variant ==disabled {
+    background-color: $tutor-actions-gray-secondary;
+    color: $tutor-text-subdued;
+
+    svg {
+      color: $tutor-icon-secondary;
+    }
   }
 }

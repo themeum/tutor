@@ -40,7 +40,7 @@ $icon_size  = $icon_sizes[ $size ];
  * @param array $options Array of dropdown options.
  * @return array The label and count of the active option, or the first option's label if none are active.
  */
-function get_active_dropdown_label( $options ) {
+$get_active_dropdown_label = function ( $options ) {
 	$active_info = array(
 		'label' => $options[0]['label'],
 		'count' => $options[0]['count'] ?? 0,
@@ -54,7 +54,7 @@ function get_active_dropdown_label( $options ) {
 		}
 	}
 	return $active_info;
-}
+};
 ?>
 
 <div class="tutor-nav tutor-nav-<?php echo esc_attr( $size ); ?> tutor-nav-<?php echo esc_attr( $variant ); ?>">
@@ -62,7 +62,7 @@ function get_active_dropdown_label( $options ) {
 		<?php if ( 'dropdown' === $item['type'] ) : ?>
 			<?php
 			$options      = $item['options'] ?? array();
-			$active_info = get_active_dropdown_label( $options );
+			$active_info = $get_active_dropdown_label( $options );
 			?>
 			<div x-data="tutorPopover({ placement: 'bottom-start', offset: 4 })">
 				<button x-ref="trigger" @click="toggle()"

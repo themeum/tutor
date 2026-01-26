@@ -13,12 +13,14 @@
 
 namespace Tutor\Components;
 
+defined( 'ABSPATH' ) || exit;
+
 use ReflectionClass;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\Button;
 use TUTOR\Icon;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * InputField Component Class.
@@ -304,6 +306,8 @@ class InputField extends BaseComponent {
 	 */
 	protected $options = array();
 
+
+
 	/**
 	 * Grouped option for input field.
 	 *
@@ -366,6 +370,26 @@ class InputField extends BaseComponent {
 	 * @var int|null
 	 */
 	protected $selection_time_mode = null;
+
+
+
+	/**
+	 * Whether to show password strength meter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	protected $show_strength = false;
+
+	/**
+	 * Minimum password strength required.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int
+	 */
+	protected $min_strength = 3;
 
 	/**
 	 * Set input type.
@@ -595,7 +619,83 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function intermediate( $intermediate = true ) {
-		$this->intermediate = (bool) $intermediate;
+		$this->intermediate = $intermediate;
+
+		return $this;
+	}
+
+	/**
+	 * Enable WordPress media library instead of native file input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $use_wp_media Whether to use WordPress media library.
+	 *
+	 * @return $this
+	 */
+	public function use_wp_media( $use_wp_media = true ) {
+		$this->use_wp_media = (bool) $use_wp_media;
+
+		return $this;
+	}
+
+	/**
+	 * Set WordPress media modal title.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $title Modal title.
+	 *
+	 * @return $this
+	 */
+	public function wp_media_title( $title ) {
+		$this->wp_media_title = $title;
+
+		return $this;
+	}
+
+	/**
+	 * Set WordPress media modal button text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $text Button text.
+	 *
+	 * @return $this
+	 */
+	public function wp_media_button_text( $text ) {
+		$this->wp_media_button_text = $text;
+
+		return $this;
+	}
+
+	/**
+	 * Set WordPress media library type filter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $type Library type (image, video, audio, application).
+	 *
+	 * @return $this
+	 */
+	public function wp_media_library_type( $type ) {
+		$this->wp_media_library_type = $type;
+
+		return $this;
+	}
+
+	/**
+	 * Set component variant.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $variant Component variant.
+	 *
+	 * @return $this
+	 */
+	public function variant( $variant ) {
+		$this->variant = $variant;
+
 		return $this;
 	}
 
@@ -727,6 +827,34 @@ class InputField extends BaseComponent {
 		$this->selection_time_mode = $mode;
 		return $this;
 	}
+	/**
+	 * Set whether to show password strength meter.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param bool $show_strength Whether to show strength meter.
+	 *
+	 * @return self
+	 */
+	public function show_strength( $show_strength = true ): self {
+		$this->show_strength = $show_strength;
+		return $this;
+	}
+
+	/**
+	 * Set minimum password strength.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $min_strength Minimum strength score (0-5).
+	 *
+	 * @return self
+	 */
+	public function min_strength( $min_strength = 3 ): self {
+		$this->min_strength = $min_strength;
+		return $this;
+	}
+
 
 
 	/**
@@ -1120,18 +1248,6 @@ class InputField extends BaseComponent {
 		$select_input_buttons = $this->render_select_input_button() ?? '';
 		$select_input_options = $this->render_select_input_options() ?? '';
 
-		$error_html = sprintf(
-			'<div 
-				class="tutor-error-text" 
-				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
-				role="alert" 
-				aria-live="polite"
-			></div>',
-			esc_attr( $this->name )
-		);
-
 		return sprintf(
 			'<div
 				x-data="tutorSelect(%s)"
@@ -1141,16 +1257,96 @@ class InputField extends BaseComponent {
 			>
 				%s
 				%s
-			</div>
-			%s',
+			</div>',
 			$props_json,
 			$size_class,
-			$this->render_attributes(),
+			$this->get_attributes_string(),
 			$select_input_buttons,
-			$select_input_options,
-			$error_html
+			$select_input_options
 		);
 	}
+
+	/**
+	 * Render password input.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return string Password HTML.
+	 */
+	protected function render_password_input() {
+		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
+
+		$input_classes = 'tutor-input';
+		if ( Size::SM === $this->size ) {
+			$input_classes .= ' tutor-input-sm';
+		} elseif ( Size::LG === $this->size ) {
+			$input_classes .= ' tutor-input-lg';
+		}
+
+		// Password inputs always have a right icon (toggle button).
+		$input_classes .= ' tutor-input-content-right';
+
+		if ( ! empty( $this->left_icon ) ) {
+			$input_classes .= ' tutor-input-content-left';
+		}
+
+		$input_attrs = sprintf(
+			'type="password" id="%s" name="%s" class="%s" %s',
+			esc_attr( $input_id ),
+			esc_attr( $this->name ),
+			esc_attr( $input_classes ),
+			$this->get_attributes_string()
+		);
+
+		if ( ! empty( $this->placeholder ) ) {
+			$input_attrs .= sprintf( ' placeholder="%s"', esc_attr( $this->placeholder ) );
+		}
+
+		if ( ! empty( $this->value ) ) {
+			$input_attrs .= sprintf( ' value="%s"', esc_attr( $this->value ) );
+		}
+
+		if ( $this->disabled ) {
+			$input_attrs .= ' disabled';
+		}
+
+		$left_icon_html = '';
+		if ( ! empty( $this->left_icon ) ) {
+			$left_icon_html = sprintf(
+				'<div class="tutor-input-content tutor-input-content-left">%s</div>',
+				$this->left_icon
+			);
+		}
+
+		// Toggle button is always present for password fields.
+		$toggle_button = '
+			<button 
+				type="button" 
+				class="tutor-input-password-toggle"
+				x-bind="getToggleBindings()"
+			>
+				<span x-show="!showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE_OFF, 16, 16 ) . '</span>
+				<span x-show="showPassword" x-cloak>' . tutor_utils()->get_svg_icon( Icon::EYE, 16, 16 ) . '</span>
+			</button>
+		';
+
+		$right_icon_html = sprintf(
+			'<div class="tutor-input-content tutor-input-content-right">%s</div>',
+			$toggle_button
+		);
+
+		return sprintf(
+			'<div class="tutor-input-wrapper">
+				<input %s>
+				%s
+				%s
+			</div>',
+			$input_attrs,
+			$left_icon_html,
+			$right_icon_html
+		);
+	}
+
 
 	/**
 	 * Render text/email/password/number input.
@@ -1176,7 +1372,7 @@ class InputField extends BaseComponent {
 		if ( ! empty( $this->right_icon ) ) {
 			$input_classes .= ' tutor-input-content-right';
 		}
-		if ( $this->clearable ) {
+		if ( ! $this->disabled && $this->clearable ) {
 			$input_classes .= ' tutor-input-content-clear';
 		}
 
@@ -1186,7 +1382,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->placeholder ) ) {
@@ -1218,7 +1414,7 @@ class InputField extends BaseComponent {
 		}
 
 		$clear_button_html = '';
-		if ( $this->clearable ) {
+		if ( ! $this->disabled && $this->clearable ) {
 			$clear_icon = '';
 			if ( function_exists( 'tutor_utils' ) ) {
 				ob_start();
@@ -1240,18 +1436,6 @@ class InputField extends BaseComponent {
 			);
 		}
 
-		$error_html = sprintf(
-			'<div 
-				class="tutor-error-text" 
-				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
-				role="alert" 
-				aria-live="polite"
-			></div>',
-			esc_attr( $this->name )
-		);
-
 		return sprintf(
 			'<div class="tutor-input-wrapper">
 				<input %s>
@@ -1259,13 +1443,11 @@ class InputField extends BaseComponent {
 				%s
 				%s
 			</div>
-			%s
 			',
 			$input_attrs,
 			$left_icon_html,
 			$right_icon_html,
-			$clear_button_html,
-			$error_html
+			$clear_button_html
 		);
 	}
 
@@ -1296,7 +1478,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->placeholder ) ) {
@@ -1329,28 +1511,14 @@ class InputField extends BaseComponent {
 			);
 		}
 
-		$error_html = sprintf(
-			'<div 
-				class="tutor-error-text" 
-				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
-				role="alert" 
-				aria-live="polite"
-			></div>',
-			esc_attr( $this->name )
-		);
-
 		return sprintf(
 			'<div class="tutor-input-wrapper">
 				<textarea %s>%s</textarea>
 				%s
-			</div>
-			%s',
+			</div>',
 			$input_attrs,
 			esc_textarea( $this->value ),
 			$clear_button_html,
-			$error_html
 		);
 	}
 
@@ -1377,7 +1545,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->value ) ) {
@@ -1424,7 +1592,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->value ) ) {
@@ -1474,7 +1642,7 @@ class InputField extends BaseComponent {
 			esc_attr( $input_id ),
 			esc_attr( $this->name ),
 			esc_attr( $input_classes ),
-			$this->render_attributes()
+			$this->get_attributes_string()
 		);
 
 		if ( ! empty( $this->value ) ) {
@@ -1543,6 +1711,8 @@ class InputField extends BaseComponent {
 		return $html;
 	}
 
+
+
 	/**
 	 * Get the input field HTML.
 	 *
@@ -1558,9 +1728,13 @@ class InputField extends BaseComponent {
 		$input_id = ! empty( $this->id ) ? $this->id : $this->name;
 
 		// Field wrapper classes.
-		$field_classes = 'tutor-input-field';
+		$field_classes = array( 'tutor-input-field' );
 		if ( ! empty( $this->error ) ) {
-			$field_classes .= ' tutor-input-field-error';
+			$field_classes[] = ' tutor-input-field-error';
+		}
+
+		if ( isset( $this->attributes['class'] ) ) {
+			$field_classes[] = $this->attributes['class'];
 		}
 
 		// Render label for text inputs.
@@ -1576,7 +1750,18 @@ class InputField extends BaseComponent {
 
 		// Render input based on type.
 		$input_html = '';
+		$root_attrs = '';
 		switch ( $this->type ) {
+			case InputType::PASSWORD:
+				$input_html = $this->render_password_input();
+
+				$password_props = array(
+					'showStrength' => $this->show_strength,
+					'minStrength'  => $this->min_strength,
+				);
+				$alpine_data    = sprintf( 'tutorPasswordInput(%s)', htmlspecialchars( wp_json_encode( $password_props ), ENT_QUOTES, 'UTF-8' ) );
+				$root_attrs     = sprintf( ' x-data="%s"', $alpine_data );
+				break;
 			case InputType::TEXTAREA:
 				$input_html = $this->render_textarea();
 				break;
@@ -1596,31 +1781,55 @@ class InputField extends BaseComponent {
 			case InputType::SELECT:
 				$input_html = $this->render_select_input();
 				break;
+
 			default:
 				$input_html = $this->render_text_input();
 				break;
 		}
 
-		// Render help text or error.
-		$help_html = '';
-		if ( ! empty( $this->error ) ) {
-			$help_html = sprintf(
-				'<div class="tutor-error-text" role="alert" aria-live="polite">%s</div>',
-				$this->esc( $this->error )
-			);
-		} elseif ( ! empty( $this->help_text ) ) {
-			$help_html = sprintf(
-				'<div class="tutor-help-text">%s</div>',
-				$this->esc( $this->help_text )
+		$error_html = sprintf(
+			'<div 
+				class="tutor-error-text" 
+				x-cloak 
+				x-show="errors.%1$s" 
+				x-text="errors?.%1$s?.message" 
+				role="alert" 
+				aria-live="polite"
+			></div>',
+			esc_attr( $this->name )
+		);
+
+		$help_html = sprintf(
+			'<div
+				class="tutor-help-text"
+				x-show="!errors?.%1$s?.message"
+			>%2$s</div>',
+			esc_attr( $this->name ),
+			esc_html( $this->help_text )
+		);
+
+		$strength_meter_html = '';
+		if ( InputType::PASSWORD === $this->type && $this->show_strength ) {
+			$strength_meter_html = sprintf(
+				'<div 
+					class="tutor-help-text" 
+					x-show="password.length > 0" 
+					x-cloak 
+					x-bind="getStrengthTextBindings()"
+				></div>'
 			);
 		}
 
 		$this->component_string = sprintf(
-			'<div class="%s">%s%s%s</div>',
-			esc_attr( $field_classes ),
+			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }" %s>%s%s%s%s%s</div>',
+			esc_attr( implode( ' ', $field_classes ) ),
+			esc_attr( $this->name ),
+			$root_attrs,
 			$label_html,
 			$input_html,
-			$help_html
+			$error_html,
+			$help_html,
+			$strength_meter_html
 		);
 
 		return $this->component_string;

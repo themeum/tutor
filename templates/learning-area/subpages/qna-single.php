@@ -1,6 +1,6 @@
 <?php
 /**
- * Tutor learning area Q&A.
+ * Tutor learning area Q&A single.
  *
  * @package Tutor\Templates
  * @author Themeum <support@themeum.com>
@@ -8,185 +8,239 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
+use Tutor\Components\Avatar;
+use Tutor\Components\Button;
+use Tutor\Components\ConfirmationModal;
 use TUTOR\Icon;
+use TUTOR\Input;
+use Tutor\Components\InputField;
+use Tutor\Components\Constants\InputType;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
+use Tutor\Components\EmptyState;
+use Tutor\Components\Popover;
+use Tutor\Components\Sorting;
+
+// Get course ID and question ID.
+global $tutor_course_id;
+$question_id = Input::get( 'question_id', 0, Input::TYPE_INT );
+$order_by    = Input::get( 'order', 'DESC' );
+
+if ( $question_id ) {
+	// Get question data.
+	$question = tutor_utils()->get_qa_question( $question_id );
+
+	// Get answers.
+	if ( $question ) {
+		$answers         = tutor_utils()->get_qa_answer_by_question( $question_id, $order_by, 'frontend' );
+		$current_user_id = get_current_user_id();
+	}
+}
+
+$back_url = remove_query_arg( 'question_id' );
 
 ?>
-<div class="tutor-qna-single">
-	<div class="tutor-qna-single-header tutor-p-6 tutor-border-b">
-		<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-small tutor-gap-2">
-			<?php tutor_utils()->render_svg_icon( Icon::ARROW_LEFT_2 ); ?>
-			<?php esc_html_e( 'Back', 'tutor' ); ?>
-		</button>
+<div class="tutor-discussion-single"  x-data="tutorQna()">
+	<div class="tutor-discussion-single-header tutor-p-6 tutor-border-b">
+		<?php
+		Button::make()
+			->label( __( 'Back', 'tutor' ) )
+			->tag( 'a' )
+			->variant( 'secondary' )
+			->size( Size::SMALL )
+			->icon( Icon::ARROW_LEFT_2 )
+			->attr( 'href', esc_url( $back_url ) )
+			->attr( 'class', 'tutor-gap-2' )
+			->render();
+		?>
 	</div>
-	<div class="tutor-qna-single-body tutor-p-6 tutor-border-b">
-		<div class="tutor-flex tutor-gap-6 tutor-mb-5">
-			<div class="tutor-avatar tutor-avatar-40">
-				<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-			</div>
+	<?php
+	if ( ! $question_id || ! $question ) {
+		EmptyState::make()->title( 'Question not found!' )->render();
+		return;
+	}
+	?>
+
+	<div class="tutor-discussion-single-body tutor-p-6 tutor-border-b">
+		<div class="tutor-flex tutor-justify-between tutor-gap-6 tutor-mb-5">
+			<?php
+			Avatar::make()
+				->user( $question->user_id )
+				->size( Size::SIZE_32 )
+				->render();
+			?>
 			<div>
 				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
-					<span class="tutor-qna-card-author">Annathoms</span> 
-					<span class="tutor-text-secondary">2 days ago</span>
-				</div>
-				<div>
-					<span class="tutor-text-secondary">asked in</span> 
-					<div class="tutor-preview-trigger">Camera Skills & Photo Theory</div>
+					<span class="tutor-discussion-card-author"><?php echo esc_html( $question->display_name ); ?></span> 
+					<span class="tutor-text-secondary"> 
+					<?php
+						/* translators: %s: time difference */
+						echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $question->comment_date ) ) ) );
+					?>
+					</span>
 				</div>
 			</div>
-			<div class="tutor-ml-auto">
-				<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
-					<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL ); ?>
-				</button>
-			</div>
+			<?php if ( $current_user_id == $question->user_id || current_user_can( 'manage_tutor' ) ) : ?>
+				<div class="tutor-ml-auto">
+					<?php
+					Popover::make()
+						->placement( 'bottom-end' )
+						->trigger(
+							Button::make()
+								->variant( Variant::GHOST )
+								->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
+								->size( Size::SMALL )
+								->attr( 'x-ref', 'trigger' )
+								->attr( '@click', 'toggle()' )
+								->get()
+						)
+						->menu_item(
+							array(
+								'tag'     => 'button',
+								'content' => esc_html__( 'Delete', 'tutor' ),
+								'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+								'attr'    => array(
+									'@click' => "hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: " . esc_html( $question->comment_ID ) . ", context: 'question' });",
+								),
+							)
+						)
+						->render();
+					?>
+				</div>
+			<?php endif; ?>
 		</div>
-		<div class="tutor-p1 tutor-font-medium tutor-text-secondary">Blocked by “Verification Limit Exceeded” on SheerID (Figma Education), Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)Blocked by “Verification Limit Exceeded” on SheerID (Figma Education)</div>
-	</div>
-	<div class="tutor-qna-single-reply-count">
-		<div class="tutor-flex tutor-items-center tutor-gap-6">
-			<div class="tutor-flex tutor-items-center tutor-gap-2">
-				<button class="tutor-qna-thumb-button">
-					<?php tutor_utils()->render_svg_icon( Icon::THUMB_FILL, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-				</button>
-				5
-			</div>
-			<div class="tutor-flex tutor-items-center tutor-gap-2">
-				<?php tutor_utils()->render_svg_icon( Icon::COMMENTS, 20, 20, array( 'class' => 'tutor-icon-secondary' ) ); ?>
-				4
-			</div>
-		</div>
-		<div class="tutor-flex tutor-items-center tutor-gap-4">
-			<div class="tutor-qna-avatar-list">
-				<div class="tutor-avatar tutor-avatar-24">
-					<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-				</div>
-				<div class="tutor-avatar tutor-avatar-24">
-					<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-				</div>
-				<div class="tutor-avatar tutor-avatar-24">
-					<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-				</div>
-			</div>
-			& 5 people like this
+		<div class="tutor-p1 tutor-font-medium tutor-text-secondary">
+			<?php echo wp_kses_post( stripslashes( $question->comment_content ) ); ?>
 		</div>
 	</div>
-	<form class="tutor-qna-single-reply-form tutor-p-6 tutor-border-b" x-data="{ focused: false }">
-		<div class="tutor-input-field">
-			<label for="name" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4">Reply</label>
-			<div class="tutor-input-wrapper">
-				<textarea 
-					type="text"
-					id="name"
-					placeholder="<?php esc_attr_e( 'Just drop your response here!', 'tutor' ); ?>"
-					class="tutor-input tutor-text-area"
-					@focus="focused = true"
-				></textarea>
+
+	<div class="tutor-qa-reply tutor-p-6 tutor-border-b">
+		<form class="tutor-discussion-single-reply-form tutor-qna-reply-form"
+			x-data="{ ...tutorForm({ id: '<?php echo esc_attr( $question_id ); ?>', defaultValues : { course_id: <?php echo esc_html( $tutor_course_id ); ?>, question_id: <?php echo esc_html( $question_id ); ?> }}), focused : false }"
+			@submit.prevent="handleSubmit((data) => replyQnaMutation?.mutate(data))($event)"
+		>
+			<div class="tutor-input-field">
+				<label for="tutor-qna-reply" class="tutor-block tutor-medium tutor-font-semibold tutor-mb-4"><?php esc_html_e( 'Reply', 'tutor' ); ?></label>
+				<?php
+				InputField::make()
+				->type( InputType::TEXTAREA )
+				->name( 'response' )
+				->placeholder( __( 'Just drop your response here!', 'tutor' ) )
+				->clearable()
+				->attr( '@focus', 'focused = true' )
+				->attr( 'x-bind', "register('answer', { required: '" . esc_html( __( 'Please enter a response', 'tutor' ) ) . "' })" )
+				->render();
+				?>
 			</div>
-		</div>
-		<div class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5" x-cloak :class="{ 'tutor-hidden': !focused }">
-			<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
-				<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
-				<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
-				<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?> 
-				<?php esc_html_e( 'Enter to Save	', 'tutor' ); ?>
+			<div class="tutor-flex tutor-items-center tutor-justify-end tutor-gap-2 tutor-mt-5"  x-cloak :class="{ 'tutor-hidden': !focused }">
+				<?php
+				Button::make()
+					->label( __( 'Cancel', 'tutor' ) )
+					->variant( Variant::GHOST )
+					->size( Size::X_SMALL )
+					->attr( 'type', 'button' )
+					->attr( '@click', 'reset(); focused = false' )
+					->attr( ':disabled', 'replyQnaMutation?.isPending' )
+					->render();
+				Button::make()
+					->label( __( 'Save', 'tutor' ) )
+					->variant( Variant::PRIMARY_SOFT )
+					->size( Size::X_SMALL )
+					->attr( 'type', 'submit' )
+					->attr( ':disabled', 'replyQnaMutation?.isPending' )
+					->attr( ':class', "{ 'tutor-btn-loading': replyQnaMutation?.isPending }" )
+					->render();
+				?>
 			</div>
-			<div class="tutor-flex tutor-items-center tutor-gap-4">
-				<button type="button" class="tutor-btn tutor-btn-ghost tutor-btn-x-small" @click="focused = false">
-					<?php esc_html_e( 'Cancel', 'tutor' ); ?>
-				</button>
-				<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-btn-x-small">
-					<?php esc_html_e( 'Save', 'tutor' ); ?>
-				</button>
-			</div>
-		</div>
-	</form>
+		</form>
+	</div>
+
 	<div class="tutor-flex tutor-justify-between tutor-px-6 tutor-py-5 tutor-border-b">
 		<div class="tutor-small tutor-text-secondary">
 			<?php esc_html_e( 'Replies', 'tutor' ); ?>
-			<span class="tutor-text-primary tutor-font-medium">(4)</span>
+			<span class="tutor-text-primary tutor-font-medium">(<?php echo esc_html( is_array( $answers ) ? count( $answers ) : 0 ); ?>)</span>
 		</div>
-		<div class="tutor-qna-filter-right">
-			<button class="tutor-btn tutor-btn-outline tutor-btn-x-small tutor-gap-4 tutor-pr-3">
-				<?php esc_html_e( 'Newest First', 'tutor' ); ?>
-				<?php
-				tutor_utils()->render_svg_icon(
-					Icon::STEPPER,
-					16,
-					16,
-					array( 'class' => 'tutor-icon-secondary' )
-				);
-				?>
-			</button>
+		<div>
+			<?php
+			Sorting::make()
+				->order( $order_by )
+				->render();
+			?>
 		</div>
 	</div>
-	<div class="tutor-qna-single-reply-list">
-		<div class="tutor-qna-reply-list-item">
-			<div class="tutor-avatar tutor-avatar-40">
-				<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-			</div>
-			<div>
-				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
-					<span class="tutor-qna-card-author">Annathoms</span> 
-					<span class="tutor-text-subdued">2 days ago</span>
+
+	<?php if ( tutor_utils()->count( $answers ) ) : ?>
+		<div class="tutor-discussion-single-reply-list">
+			<?php foreach ( $answers as $answer ) : ?>
+				<div class="tutor-discussion-reply-list-item" data-answer_id="<?php echo esc_attr( $answer->comment_ID ); ?>">
+					<?php
+					Avatar::make()
+						->user( $answer->user_id )
+						->size( Size::SIZE_32 )
+						->render();
+					?>
+					<div>
+						<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
+							<span class="tutor-discussion-card-author"><?php echo esc_html( $answer->display_name ); ?></span> 
+							<span class="tutor-text-subdued"> 
+							<?php
+								/* translators: %s: time difference */
+								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $answer->comment_date ) ) ) );
+							?>
+							</span>
+						</div>
+						<div class="tutor-p2 tutor-text-secondary tutor-mb-6">
+							<?php echo wp_kses_post( stripslashes( $answer->comment_content ) ); ?>
+						</div>
+					</div>
+					<?php if ( $current_user_id == $answer->user_id || current_user_can( 'manage_tutor' ) ) : ?>
+						<div class="tutor-ml-auto">
+							<?php
+							Popover::make()
+								->placement( 'bottom-end' )
+								->trigger(
+									Button::make()
+										->variant( Variant::GHOST )
+										->icon( tutor_utils()->get_svg_icon( Icon::THREE_DOTS_VERTICAL, 16, 16 ) )
+										->size( Size::SMALL )
+										->attr( 'x-ref', 'trigger' )
+										->attr( '@click', 'toggle()' )
+										->get()
+								)
+								->menu_item(
+									array(
+										'tag'     => 'button',
+										'content' => esc_html__( 'Delete', 'tutor' ),
+										'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
+										'attr'    => array(
+											'@click' => "hide(); TutorCore.modal.showModal('tutor-qna-delete-modal', { questionId: " . esc_html( $answer->comment_ID ) . ", context: 'reply' });",
+										),
+									)
+								)
+								->render();
+							?>
+						</div>
+					<?php endif; ?>
 				</div>
-				<div class="tutor-p2 tutor-text-secondary tutor-mb-6">It's so nerve-racking. :(</div>
-				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-text-subdued">
-					<button class="tutor-qna-thumb-button">
-						<?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20, array( 'class' => 'tutor-icon-subdued' ) ); ?>
-					</button>
-					5
-				</div>
-			</div>
-			<div class="tutor-ml-auto">
-				<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-icon-secondary">
-					<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL ); ?>
-				</button>
-			</div>
+			<?php endforeach; ?>
 		</div>
-		<div class="tutor-qna-reply-list-item">
-			<div class="tutor-avatar tutor-avatar-40">
-				<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-			</div>
-			<div>
-				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
-					<span class="tutor-qna-card-author">Annathoms</span> 
-					<span class="tutor-text-subdued">2 days ago</span>
-				</div>
-				<div class="tutor-p2 tutor-text-secondary tutor-mb-6">Hi I’m facing exactly the same problems than ​@af2cb64c_8cb4 Is it possible to fall back to previous august 7th previous update for Figma Desktop to check if that issues are caused by that update ?</div>
-				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-text-subdued">
-					<button class="tutor-qna-thumb-button">
-						<?php tutor_utils()->render_svg_icon( Icon::THUMB, 20, 20, array( 'class' => 'tutor-icon-subdued' ) ); ?>
-					</button>
-					5
-				</div>
-			</div>
-			<div class="tutor-ml-auto">
-				<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-icon-secondary">
-					<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL ); ?>
-				</button>
-			</div>
+	<?php else : ?>
+		<div class="tutor-text-center tutor-text-secondary tutor-p-6">
+			<?php EmptyState::make()->title( 'No replies yet. Be the first to reply!' )->render(); ?>
 		</div>
-		<div class="tutor-qna-reply-list-item">
-			<div class="tutor-avatar tutor-avatar-40">
-				<img src="https://i.pravatar.cc/150?u=a04258a2462d826712d" alt="User Avatar" class="tutor-avatar-image">
-			</div>
-			<div>
-				<div class="tutor-flex tutor-items-center tutor-gap-5 tutor-mb-2 tutor-small">
-					<span class="tutor-qna-card-author">Annathoms</span> 
-					<span class="tutor-text-subdued">2 days ago</span>
-				</div>
-				<div class="tutor-p2 tutor-text-secondary tutor-mb-6">Hi I’m facing exactly the same problems than ​@af2cb64c_8cb4 Is it possible to fall back to previous august 7th previous update for Figma Desktop to check if that issues are caused by that update ?</div>
-				<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-text-subdued">
-					<button class="tutor-qna-thumb-button">
-						<?php tutor_utils()->render_svg_icon( Icon::THUMB_FILL, 20, 20, array( 'class' => 'tutor-icon-subdued' ) ); ?>
-					</button>
-					5
-				</div>
-			</div>
-			<div class="tutor-ml-auto">
-				<button class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon tutor-icon-secondary">
-					<?php tutor_utils()->render_svg_icon( Icon::THREE_DOTS_VERTICAL ); ?>
-				</button>
-			</div>
-		</div>
-	</div>
+	<?php endif; ?>
+
+	<?php
+	ConfirmationModal::make()
+		->id( 'tutor-qna-delete-modal' )
+		->title( __( 'Delete This Question?', 'tutor' ) )
+		->message( __( 'Are you sure you want to delete this question permanently? Please confirm your choice.', 'tutor' ) )
+		->confirm_text( __( 'Yes, Delete This', 'tutor' ) )
+		->confirm_handler( 'deleteQnaMutation?.mutate({ question_id: payload?.questionId, context: payload?.context })' )
+		->mutation_state( 'deleteQnaMutation' )
+		->render();
+	?>
+
 </div>

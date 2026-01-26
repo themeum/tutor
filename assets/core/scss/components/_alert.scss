@@ -1,0 +1,56 @@
+@use '../tokens' as *;
+@use '../mixins' as *;
+
+.tutor-alert {
+  @include tutor-flex(row, center, space-between);
+  gap: $tutor-spacing-5;
+  padding: $tutor-spacing-4;
+  border-radius: $tutor-radius-sm;
+  min-height: 48px;
+
+  .tutor-alert-content {
+    @include tutor-flex(row, start);
+    gap: $tutor-spacing-3;
+  }
+
+  .tutor-alert-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $tutor-icon-idle;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .tutor-alert-text {
+    @include tutor-typography('tiny', 'regular', 'secondary');
+  }
+
+  .tutor-alert-action {
+    flex-shrink: 0;
+  }
+
+  &.tutor-alert-default {
+    background-color: $tutor-surface-l1-hover;
+  }
+
+  &.tutor-alert-info {
+    background-color: $tutor-surface-brand-quaternary;
+  }
+
+  &.tutor-alert-success {
+    background-color: $tutor-surface-success;
+  }
+
+  &.tutor-alert-warning {
+    background-color: $tutor-surface-warning-hover;
+  }
+
+  &.tutor-alert-error {
+    background-color: $tutor-surface-critical;
+  }
+}

@@ -161,7 +161,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 							<?php echo esc_html__( "You've dedicated over", 'tutor' ); ?>
 						</div>
 
-						<h2 class="tutor-h2 tutor-text-exception4 tutor-py-6 tutor-surface-l3 tutor-rounded-lg tutor-mb-6">375+ hours</h2>
+						<h2 class="tutor-h2 tutor-text-exception4 tutor-py-6 tutor-surface-warning tutor-rounded-lg tutor-mb-6">375+ hours</h2>
 
 						<p class="tutor-p2 tutor-mb-7">That's <span class="tutor-font-medium">1,350,000</span> minutes, and <span class="tutor-font-medium">81,000,000</span> seconds! Incredible!</p>
 
