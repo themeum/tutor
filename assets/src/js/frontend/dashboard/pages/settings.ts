@@ -162,28 +162,6 @@ const settings = () => {
     },
 
     async updateNotification(payload: Record<string, boolean>) {
-      // Transform boolean values to "on"/"off" strings and restructure keys
-      // const transformedPayload = Object.keys(payload).reduce(
-      //   (formattedPayload, key) => {
-      //     const value = payload[key];
-      //     const stringValue = typeof value === 'boolean' ? (value ? 'on' : 'off') : value;
-
-      //     // Check if key contains double underscore
-      //     if (key.includes('__')) {
-      //       const [firstPart, secondPart] = key.split('__');
-      //       if (firstPart && secondPart) {
-      //         const transformedKey = `tutor_notification_preference[email][${firstPart}][${secondPart}]`;
-      //         formattedPayload[transformedKey] = stringValue;
-      //       }
-      //     } else {
-      //       const transformedKey = `tutor_notification_preference[${key}]`;
-      //       formattedPayload[transformedKey] = stringValue;
-      //     }
-
-      //     return formattedPayload;
-      //   },
-      //   {} as Record<string, string>,
-      // );
       const transformedPayload = Object.keys(payload).reduce(
         (formattedPayload, key) => {
           const value = payload[key];
