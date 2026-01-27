@@ -160,8 +160,8 @@ $stat_cards = array(
 
 // Graph.
 if ( $tutor_pro_enabled && $report_addon_enabled ) {
-	$labels              = wp_list_pluck( $total_earnings['earnings'], 'label_name' );
-	$graph_earnings      = array_map( 'intval', wp_list_pluck( $total_earnings['earnings'], 'total' ) );
+	$labels              = wp_list_pluck( $total_earnings, 'label_name' );
+	$graph_earnings      = array_map( 'intval', wp_list_pluck( $total_earnings, 'total' ) );
 	$enrollments         = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
 	$graph_enrollments   = array_map( 'intval', wp_list_pluck( $enrollments['enrollments'], 'total' ) );
 	$overview_chart_data = array(
