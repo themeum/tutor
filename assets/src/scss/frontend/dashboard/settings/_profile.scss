@@ -122,7 +122,8 @@ body:has(#wpadminbar) {
 		}
 
 		svg {
-			@include tutor-transition(transform);
+			@include tutor-transition(transform); 
+      
 
 			path {
 				transform: translate(0px, 2px);
