@@ -72,6 +72,15 @@ class ConfirmationModal extends BaseComponent {
 	protected $message;
 
 	/**
+	 * Confirmation message HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	protected $message_html;
+
+	/**
 	 * Icon name from Icon class.
 	 *
 	 * @since 4.0.0
@@ -200,6 +209,20 @@ class ConfirmationModal extends BaseComponent {
 	 */
 	public function message( string $message ) {
 		$this->message = $message;
+		return $this;
+	}
+
+	/**
+	 * Set confirmation message HTML.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $html Confirmation message HTML.
+	 *
+	 * @return $this
+	 */
+	public function message_html( string $html ) {
+		$this->message_html = $html;
 		return $this;
 	}
 
@@ -353,6 +376,12 @@ class ConfirmationModal extends BaseComponent {
 		tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
 		$icon_html = ob_get_clean();
 
+		// Prepare message HTML.
+		$message_html = $this->message_html;
+		if ( empty( $message_html ) ) {
+			$message_html = esc_html( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ) );
+		}
+
 		// Prepare confirm button HTML.
 		$confirm_html = $this->confirm_btn;
 		if ( empty( $confirm_html ) ) {
@@ -417,7 +446,7 @@ class ConfirmationModal extends BaseComponent {
 			$style_attr,
 			$icon_html,
 			esc_html( $this->title ?? __( 'Are you sure?', 'tutor' ) ),
-			esc_html( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ) ),
+			$message_html,
 			$cancel_html,
 			$confirm_html,
 		);
