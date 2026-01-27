@@ -110,9 +110,10 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 	<?php
 	ConfirmationModal::make()
 			->id( 'tutor-retry-modal' )
-			->title( 'Retry Quiz ?' )
-			->message( 'Are you sure to retry this quiz attempt' )
+			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ))
 			->confirm_handler( 'handleRetryAttempt({...payload?.data})' )
+			->confirm_text( __( 'Retry Quiz', 'tutor' ))
 			->mutation_state( 'retryMutation' )
 			->render();
 	?>
