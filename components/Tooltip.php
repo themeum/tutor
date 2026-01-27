@@ -278,7 +278,7 @@ class Tooltip extends BaseComponent {
 			esc_attr( $this->attributes['class'] ?? '' ),
 			$this->get_attributes_string(),
 			$trigger_html,
-			$this->content // Note: allowing HTML for flexibility, user responsible for sanitizing if needed.
+			wp_kses_post( $this->content )
 		);
 
 		return $this->component_string;

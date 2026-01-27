@@ -19,8 +19,7 @@ if ( ! $lesson || ! is_a( $lesson, 'WP_Post' ) ) {
 	return;
 }
 
-global $tutor_course_id;
-global $post;
+global $tutor_course_id, $tutor_current_content_id, $post;
 
 $tabs_data = Lesson::get_nav_items( $lesson->ID );
 
@@ -31,11 +30,11 @@ if ( ! in_array( $active_tab, $valid_tabs, true ) && ! empty( $tabs_data ) ) {
 }
 
 $json_data                                 = array();
-$json_data['post_id']                      = get_the_ID();
+$json_data['post_id']                      = $tutor_current_content_id;
 $json_data['best_watch_time']              = 0;
 $json_data['autoload_next_course_content'] = (bool) get_tutor_option( 'autoload_next_course_content' );
 
-$best_watch_time = tutor_utils()->get_lesson_reading_info( get_the_ID(), 0, 'video_best_watched_time' );
+$best_watch_time = tutor_utils()->get_lesson_reading_info( $tutor_current_content_id, 0, 'video_best_watched_time' );
 if ( $best_watch_time > 0 ) {
 	$json_data['best_watch_time'] = $best_watch_time;
 }
@@ -114,5 +113,5 @@ $has_source = ( is_object( $video_info ) && $video_info->source_video_id ) || ( 
 		<?php endif; ?>
 	</div>
 
-	<?php tutor_load_template( 'learning-area.components.footer' ); ?>
+	<?php tutor_load_template( 'learning-area.lesson.footer' ); ?>
 </div>
