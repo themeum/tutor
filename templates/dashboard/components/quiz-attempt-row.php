@@ -70,10 +70,12 @@ $delete_item = array(
 );
 
 $retry_item = array(
-	'tag'     => 'a',
+	'tag'     => 'button',
 	'content' => __( 'Retry', 'tutor' ),
 	'icon'    => tutor_utils()->get_svg_icon( Icon::RELOAD ),
-	'attr'    => array( 'href' => get_post_permalink( $quiz_id ) ),
+	'attr'    => array(
+		'@click' => $retry_attr,
+	),
 );
 
 ?>

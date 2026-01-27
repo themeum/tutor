@@ -9,6 +9,7 @@
  * @since 1.1.2
  */
 
+use Tutor\Components\ConfirmationModal;
 use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
@@ -43,65 +44,76 @@ $quiz_attempts_count     = (int) count( $quiz_attempts_formatted );
 $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $quiz_attempts_count, get_pagenum_link(), $result_filter );
 
 ?>
+<div class="tutor-my-quiz-attempts-wrapper" x-data="tutorQuizAttempts()">
+	<?php if ( $quiz_attempts_count ) : ?>
+		<div class="tutor-quiz-attempts">
+			<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-sm-p-5 tutor-p-6 tutor-items-center tutor-sm-border-b">
+				<div class="tutor-quiz-students-attempts-filter-item">
+				<?php
+					DropdownFilter::make()
+						->options( $nav_links['options'] )
+						->query_param( 'result' )
+						->render();
+				?>
+				</div>
+				<div class="tutor-quiz-students-attempts-filter-item">
+					<?php Sorting::make()->order( $order_filter )->render(); ?>
+				</div>
+			</div>
+			<div class="tutor-quiz-attempts-header">
+				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
+				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
+				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
+				<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
+			</div>
+			<div class="tutor-quiz-attempts-list">
+				<?php
+				foreach ( $quiz_attempts_list as $quiz_index => $quiz_attempt ) {
+					$attempts       = $quiz_attempt['attempts'];
+					$attempts_count = count( $attempts );
 
-<?php if ( $quiz_attempts_count ) : ?>
-<div class="tutor-quiz-attempts">
-	<div class="tutor-quiz-students-attempts-filter tutor-flex tutor-justify-between tutor-sm-p-5 tutor-p-6 tutor-items-center tutor-sm-border-b">
-		<div class="tutor-quiz-students-attempts-filter-item">
+					tutor_load_template(
+						'dashboard.components.quiz-attempts-group',
+						array(
+							'quiz_id'      => $quiz_index,
+							'quiz_title'   => $quiz_attempt['quiz_title'],
+							'course_title' => $quiz_attempt['course_title'],
+							'attempts'     => $attempts,
+							'course_id'    => $quiz_attempt['course_id'],
+						)
+					);
+				}
+				?>
+			</div>
+		</div>
+	<?php else : ?>
 		<?php
-			DropdownFilter::make()
-				->options( $nav_links['options'] )
-				->query_param( 'result' )
+		EmptyState::make()
+			->title( __( 'No Quiz Attempts Found', 'tutor' ) )
+			->render();
+		?>
+	<?php endif; ?>
+		<div class="tutor-p-6">
+			<?php
+			if ( $quiz_attempts_count > $item_per_page ) {
+				Pagination::make()
+				->current( $current_page )
+				->total( $quiz_attempts_count )
+				->limit( $item_per_page )
+				->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+				->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
 				->render();
-		?>
+			}
+			?>
 		</div>
-		<div class="tutor-quiz-students-attempts-filter-item">
-			<?php Sorting::make()->order( $order_filter )->render(); ?>
-		</div>
-	</div>
-	<div class="tutor-quiz-attempts-header">
-		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
-		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
-		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
-		<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
-	</div>
-	<div class="tutor-quiz-attempts-list">
-		<?php
-		foreach ( $quiz_attempts_list as $quiz_index => $quiz_attempt ) {
-			$attempts       = $quiz_attempt['attempts'];
-			$attempts_count = count( $attempts );
 
-			tutor_load_template(
-				'dashboard.components.quiz-attempts-group',
-				array(
-					'quiz_id'      => $quiz_index,
-					'quiz_title'   => $quiz_attempt['quiz_title'],
-					'course_title' => $quiz_attempt['course_title'],
-					'attempts'     => $attempts,
-					'course_id'    => $quiz_attempt['course_id'],
-				)
-			);
-		}
-		?>
-	</div>
-</div>
-<?php else : ?>
 	<?php
-	EmptyState::make()
-		->title( __( 'No Quiz Attempts Found', 'tutor' ) )
-		->render();
-	?>
-<?php endif; ?>
-<div class="tutor-p-6">
-	<?php
-	if ( $quiz_attempts_count > $item_per_page ) {
-		Pagination::make()
-		->current( $current_page )
-		->total( $quiz_attempts_count )
-		->limit( $item_per_page )
-		->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-		->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
-		->render();
-	}
+	ConfirmationModal::make()
+			->id( 'tutor-retry-modal' )
+			->title( 'Retry Quiz ?' )
+			->message( 'Are you sure to retry this quiz attempt' )
+			->confirm_handler( 'handleRetryAttempt({...payload?.data})' )
+			->mutation_state( 'retryMutation' )
+			->render();
 	?>
 </div>

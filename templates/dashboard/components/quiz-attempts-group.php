@@ -24,12 +24,20 @@ if ( empty( $attempts ) ) {
 $first_attempt      = $attempts[0];
 $remaining_attempts = array_slice( $attempts, 1 );
 
+$retry_attr   = sprintf(
+	'TutorCore.modal.showModal("tutor-retry-modal", { data: %s });',
+	wp_json_encode(
+		array(
+			'quizID'      => $quiz_id,
+			'redirectURL' => get_post_permalink( $quiz_id ),
+		)
+	)
+);
 $retry_button = Button::make()->label( __( 'Retry', 'tutor' ) )
 					->icon( Icon::RELOAD )
 					->size( Size::MEDIUM )
-					->tag( 'a' )
 					->variant( 'primary' )
-					->attr( 'href', get_post_permalink( $quiz_id ) );
+					->attr( '@click', $retry_attr );
 
 $attempt_info = $first_attempt['attempt_info'] ?? array();
 
@@ -58,6 +66,7 @@ if ( tutor_utils()->count( $attempt_info ) ) {
 			'attempt_id'      => $first_attempt['attempt_id'] ?? 0,
 			'is_student'      => $is_student,
 			'should_retry'    => $should_retry,
+			'retry_attr'      => $retry_attr,
 		)
 	);
 	?>
@@ -80,6 +89,7 @@ if ( tutor_utils()->count( $attempt_info ) ) {
 						'course_id'      => $course_id,
 						'is_student'     => $is_student,
 						'should_retry'   => $should_retry,
+						'retry_attr'     => $retry_attr,
 					)
 				);
 				?>

@@ -181,6 +181,9 @@ const endpoints = {
   SAVE_BILLING_INFO: 'tutor_save_billing_info',
   SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
   RESET_PASSWORD: 'tutor_profile_password_reset',
+
+  // Quiz Attempts
+  START_QUIZ: 'tutor_start_quiz',
 } as const;
 
 export default endpoints;
