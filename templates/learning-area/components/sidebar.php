@@ -26,6 +26,14 @@ $active_menu = Input::get( 'subpage', '' );
 
 ?>
 <div class="tutor-learning-sidebar" :class="{ 'is-open': sidebarOpen }" @click.outside="sidebarOpen = false">
+	<div class="tutor-hidden tutor-lg-flex tutor-items-center tutor-px-4">
+		<h5 class="tutor-learning-header-title">
+			<?php echo esc_html( $tutor_course->post_title ); ?>
+		</h5>
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
+			<?php tutor_utils()->render_svg_icon( Icon::CROSS_2, 20, 20 ); ?>
+		</button>
+	</div>
 	<div class="tutor-learning-sidebar-curriculum">
 		<div class="tutor-learning-progress">
 			<div class="tutor-learning-progress-content">
@@ -101,8 +109,9 @@ $active_menu = Input::get( 'subpage', '' );
 							?>
 						</div>
 					</div>
-					<?
+					<?php
 				}
+				wp_reset_postdata();
 			}
 			?>
 		</div>

@@ -1,9 +1,8 @@
 // Learning Area Entry Point
 // Initializes learning area functionality based on current page
 
+import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
-import { initializeCoursePlayer } from './pages/course-player';
-import { initializeLessonContent } from './pages/lesson-content';
 import { initializeQna } from './pages/qna';
 import { initializeQuizInterface } from './pages/quiz';
 
@@ -12,12 +11,6 @@ const initializeLearningArea = () => {
   const currentPage = params.get('subpage');
 
   switch (currentPage) {
-    case 'course-player':
-      initializeCoursePlayer();
-      break;
-    case 'lesson-content':
-      initializeLessonContent();
-      break;
     case 'quiz':
       initializeQuizInterface();
       break;
@@ -30,7 +23,12 @@ const initializeLearningArea = () => {
     default:
       // eslint-disable-next-line no-console
       console.warn('Unknown learning area page:', currentPage);
-      initializeCoursePlayer(); // Fallback
+  }
+
+  // Initialized lesson contents
+  const lessonContentWrapper = document.querySelector('.tutor-lesson-content');
+  if (lessonContentWrapper) {
+    initializeLesson();
   }
 };
 
