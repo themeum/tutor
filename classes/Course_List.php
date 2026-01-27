@@ -273,7 +273,6 @@ class Course_List {
 		$the_query = self::course_list_query( $args, $user_id, $status );
 
 		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
-
 	}
 
 	/**
@@ -291,6 +290,8 @@ class Course_List {
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
+			$course_ids = explode( ',', $bulk_ids );
+
 			if ( current_user_can( 'edit_tutor_course' ) ) {
 				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
 
@@ -300,6 +301,17 @@ class Course_List {
 			} else {
 				wp_send_json_error( tutor_utils()->error_message() );
 			}
+
+			// Check if the course ids are instructors own course.
+			$course_ids = array_filter(
+				$course_ids,
+				function ( $course_id ) {
+					return tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $course_id );
+				}
+			);
+
+			$bulk_ids = implode( ',', $course_ids );
+
 		}
 
 		if ( '' === $action || '' === $bulk_ids ) {

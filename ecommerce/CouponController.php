@@ -659,6 +659,8 @@ class CouponController extends BaseController {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
+		tutor_utils()->check_current_user_capability();
+
 		$coupon_id = Input::post( 'id' );
 
 		if ( empty( $coupon_id ) ) {
