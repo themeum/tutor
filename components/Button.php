@@ -128,6 +128,13 @@ class Button extends BaseComponent {
 	protected $icon_position = 'left';
 
 	/**
+	 * Icon attributes.
+	 *
+	 * @var array
+	 */
+	protected $icon_attributes = array();
+
+	/**
 	 * Whether button is disabled.
 	 *
 	 * @since 4.0.0
@@ -195,18 +202,20 @@ class Button extends BaseComponent {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $icon     SVG icon name or markup.
-	 * @param string $position Optional. Icon position: 'left' or 'right'.
-	 * @param int    $width    Optional. Icon width.
-	 * @param int    $height   Optional. Icon height.
+	 * @param string $icon       SVG icon name or markup.
+	 * @param string $position   Optional. Icon position: 'left' or 'right'.
+	 * @param int    $width      Optional. Icon width.
+	 * @param int    $height     Optional. Icon height.
+	 * @param array  $attributes Optional. Icon attributes.
 	 *
 	 * @return $this
 	 */
-	public function icon( string $icon, string $position = 'left', int $width = 16, int $height = 16 ): self {
-		$this->icon          = $icon;
-		$this->icon_position = in_array( $position, array( self::POSITION_LEFT, self::POSITION_RIGHT ), true ) ? $position : 'left';
-		$this->icon_width    = $width;
-		$this->icon_height   = $height;
+	public function icon( string $icon, string $position = 'left', int $width = 16, int $height = 16, array $attributes = array() ): self {
+		$this->icon            = $icon;
+		$this->icon_position   = in_array( $position, array( self::POSITION_LEFT, self::POSITION_RIGHT ), true ) ? $position : 'left';
+		$this->icon_width      = $width;
+		$this->icon_height     = $height;
+		$this->icon_attributes = $attributes;
 		return $this;
 	}
 
@@ -307,7 +316,7 @@ class Button extends BaseComponent {
 				$icon_html = $this->icon;
 			} else {
 				ob_start();
-				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
+				tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height, $this->icon_attributes );
 				$icon_html = ob_get_clean();
 			}
 		}

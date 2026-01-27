@@ -75,6 +75,7 @@ use TUTOR\Input;
 			<?php require 'components/pagination.php'; ?>
 			<?php require 'components/button.php'; ?>
 			<?php require 'components/popover.php'; ?>
+			<?php require 'components/tooltip.php'; ?>
 			<?php require 'components/file-uploader.php'; ?>
 			<?php require 'components/preview-trigger.php'; ?>
 			<?php require 'components/tabs.php'; ?>

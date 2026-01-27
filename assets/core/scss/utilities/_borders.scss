@@ -60,15 +60,6 @@ $radius-directions: (
 // =============================================================================
 // SMART BORDER UTILITIES
 // =============================================================================
-
-// Base borders
-.tutor-border {
-  border: 1px solid $tutor-border-idle;
-}
-.tutor-border-0 {
-  border: none;
-}
-
 // Generate border-width utilities
 @each $width-key, $width-value in $border-widths {
   .tutor-border-#{$width-key} {

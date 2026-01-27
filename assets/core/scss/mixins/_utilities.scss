@@ -115,6 +115,26 @@
   }
 }
 
+// Loading Spinner
+@mixin tutor-loading-spinner($lineColor: #ababab, $lineBgColor: #f1f1f1, $size: 20px) {
+	&::before {
+		content: '';
+		box-sizing: border-box;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: #{$size};
+		height: #{$size};
+		margin-top: calc(-1 * #{$size} / 2);
+		margin-left: calc(-1 * #{$size} / 2);
+		border-radius: 50%;
+		border: 2px solid $lineBgColor;
+		border-top-color: $lineColor;
+		animation: tutor-spin 0.8s linear infinite;
+	}
+}
+
+
 // Animation and Transition Mixins for consistent motion design
 @mixin tutor-fade-in($duration: 0.3s, $timing: ease-out) {
   opacity: 0;

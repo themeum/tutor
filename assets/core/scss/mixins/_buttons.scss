@@ -47,10 +47,12 @@
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-primary-soft-hover;
+      color: $tutor-text-brand;
     }
 
     &:focus:not(:disabled) {
       background-color: $tutor-button-primary-soft-focused;
+      color: $tutor-text-brand;
     }
 
     &:disabled {
@@ -63,10 +65,12 @@
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-destructive-hover;
+      color: $tutor-text-primary-inverse;
     }
 
     &:focus:not(:disabled) {
       background-color: $tutor-button-destructive-focused;
+      color: $tutor-text-primary-inverse;
     }
 
     &:disabled {
@@ -79,10 +83,12 @@
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-destructive-soft-hover;
+      color: $tutor-text-critical;
     }
 
     &:focus:not(:disabled) {
       background-color: $tutor-button-destructive-soft-focused;
+      color: $tutor-text-critical;
     }
 
     &:disabled {
@@ -95,10 +101,12 @@
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-secondary-hover;
+      color: $tutor-text-primary;
     }
 
     &:focus:not(:disabled) {
       background-color: $tutor-button-secondary-focused;
+      color: $tutor-text-primary;
     }
 
     &:disabled {
@@ -130,6 +138,7 @@
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-ghost-hover;
+      color: $tutor-text-primary;
     }
 
     &:disabled {

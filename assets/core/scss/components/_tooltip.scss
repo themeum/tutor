@@ -1,280 +1,138 @@
 // Tooltip Component
 // RTL-aware tooltip positioning and styling
 
+@use '../tokens' as *;
 @use '../mixins' as *;
 @use '../mixins/rtl' as rtl;
 
+.tutor-tooltip-wrap {
+  position: relative;
+  display: inline-block;
+
+  &:hover {
+    .tutor-tooltip:not([x-data]) {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+}
+
 .tutor-tooltip {
-  position: absolute;
+  @include tutor-typography('tiny', 'regular', 'primary-inverse');
+  position: fixed;
   z-index: 1070;
   max-width: 200px;
-  padding: var(--tutor-spacing-2, 4px) var(--tutor-spacing-3, 6px);
-  font-size: var(--tutor-font-size-p3, 12px);
-  line-height: var(--tutor-line-height-p3, 18px);
-  color: var(--tutor-text-inverse);
-  background-color: var(--tutor-gray-900);
-  border-radius: var(--tutor-radius-sm, 4px);
-  box-shadow: var(--tutor-shadow-md);
+  padding: $tutor-spacing-4;
+  background-color: $tutor-surface-dark;
+  border-radius: $tutor-radius-sm;
+  box-shadow: $tutor-shadow-md;
   word-wrap: break-word;
-  
-  // Default text alignment
-  @include rtl.text-align-start();
+  text-align: start;
 
-  // Arrow base styles
+  &-large {
+    max-width: 320px;
+    padding: $tutor-spacing-5;
+  }
+
+  &-arrow-start {
+    &.tutor-tooltip-top,
+    &.tutor-tooltip-bottom {
+      &::before {
+        @include rtl.arrow-start($tutor-spacing-5);
+      }
+    }
+  }
+
+  &-arrow-center {
+    &.tutor-tooltip-top,
+    &.tutor-tooltip-bottom {
+      &::before {
+        left: 50%;
+        right: auto;
+        transform: translateX(-50%);
+      }
+    }
+  }
+
+  &-arrow-end {
+    &.tutor-tooltip-top,
+    &.tutor-tooltip-bottom {
+      &::before {
+        @include rtl.arrow-end($tutor-spacing-5);
+      }
+    }
+  }
+
   &::before {
     content: '';
     position: absolute;
     width: 0;
     height: 0;
-    border: 4px solid transparent;
+    border: 6px solid transparent;
   }
 
-  // Top positioning
-  &--top {
-    margin-bottom: 4px;
-    
+  &-top {
+    margin-bottom: $tutor-spacing-2;
+
     &::before {
       top: 100%;
-      border-top-color: var(--tutor-gray-900);
+      border-top-color: $tutor-surface-dark;
       border-bottom: none;
-      
-      @include rtl.arrow-start(12px);
-    }
-    
-    &.tutor-tooltip--center::before {
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-    }
-    
-    &.tutor-tooltip--end::before {
-      @include rtl.arrow-end(12px);
     }
   }
 
-  // Bottom positioning
-  &--bottom {
-    margin-top: 4px;
-    
+  &-bottom {
+    margin-top: $tutor-spacing-2;
+
     &::before {
       bottom: 100%;
-      border-bottom-color: var(--tutor-gray-900);
+      border-bottom-color: $tutor-surface-dark;
       border-top: none;
-      
-      @include rtl.arrow-start(12px);
-    }
-    
-    &.tutor-tooltip--center::before {
-      left: 50%;
-      right: auto;
-      transform: translateX(-50%);
-    }
-    
-    &.tutor-tooltip--end::before {
-      @include rtl.arrow-end(12px);
     }
   }
 
-  // Left positioning (start in RTL context)
-  &--start {
-    [dir="ltr"] & {
-      margin-right: 4px;
-    }
-    [dir="rtl"] & {
-      margin-left: 4px;
-    }
-    
+  &-start {
+    margin-inline-end: $tutor-spacing-2;
+
     &::before {
       top: 50%;
+      inset-inline-start: 100%;
+      border-inline-start-color: $tutor-surface-dark;
       transform: translateY(-50%);
-      
-      [dir="ltr"] & {
-        left: 100%;
-        border-left-color: var(--tutor-gray-900);
-        border-right: none;
-      }
-      [dir="rtl"] & {
-        right: 100%;
-        border-right-color: var(--tutor-gray-900);
-        border-left: none;
-      }
     }
   }
 
-  // Right positioning (end in RTL context)
-  &--end {
-    [dir="ltr"] & {
-      margin-left: 4px;
-    }
-    [dir="rtl"] & {
-      margin-right: 4px;
-    }
-    
+  &-end {
+    margin-inline-start: $tutor-spacing-2;
+
     &::before {
       top: 50%;
+      inset-inline-end: 100%;
+      border-inline-end-color: $tutor-surface-dark;
       transform: translateY(-50%);
-      
-      [dir="ltr"] & {
-        right: 100%;
-        border-right-color: var(--tutor-gray-900);
-        border-left: none;
-      }
-      [dir="rtl"] & {
-        left: 100%;
-        border-left-color: var(--tutor-gray-900);
-        border-right: none;
-      }
-    }
-  }
-
-  // Theme variants
-  &--light {
-    color: var(--tutor-text-primary);
-    background-color: var(--tutor-surface-l1);
-    border: 1px solid var(--tutor-border-idle);
-    
-    &.tutor-tooltip--top::before {
-      border-top-color: var(--tutor-surface-l1);
-    }
-    
-    &.tutor-tooltip--bottom::before {
-      border-bottom-color: var(--tutor-surface-l1);
-    }
-    
-    &.tutor-tooltip--start::before {
-      [dir="ltr"] & {
-        border-left-color: var(--tutor-surface-l1);
-      }
-      [dir="rtl"] & {
-        border-right-color: var(--tutor-surface-l1);
-      }
-    }
-    
-    &.tutor-tooltip--end::before {
-      [dir="ltr"] & {
-        border-right-color: var(--tutor-surface-l1);
-      }
-      [dir="rtl"] & {
-        border-left-color: var(--tutor-surface-l1);
-      }
-    }
-  }
-
-  &--error {
-    background-color: var(--tutor-error);
-    
-    &.tutor-tooltip--top::before {
-      border-top-color: var(--tutor-error);
-    }
-    
-    &.tutor-tooltip--bottom::before {
-      border-bottom-color: var(--tutor-error);
-    }
-    
-    &.tutor-tooltip--start::before {
-      [dir="ltr"] & {
-        border-left-color: var(--tutor-error);
-      }
-      [dir="rtl"] & {
-        border-right-color: var(--tutor-error);
-      }
-    }
-    
-    &.tutor-tooltip--end::before {
-      [dir="ltr"] & {
-        border-right-color: var(--tutor-error);
-      }
-      [dir="rtl"] & {
-        border-left-color: var(--tutor-error);
-      }
-    }
-  }
-
-  &--success {
-    background-color: var(--tutor-success);
-    
-    &.tutor-tooltip--top::before {
-      border-top-color: var(--tutor-success);
-    }
-    
-    &.tutor-tooltip--bottom::before {
-      border-bottom-color: var(--tutor-success);
-    }
-    
-    &.tutor-tooltip--start::before {
-      [dir="ltr"] & {
-        border-left-color: var(--tutor-success);
-      }
-      [dir="rtl"] & {
-        border-right-color: var(--tutor-success);
-      }
-    }
-    
-    &.tutor-tooltip--end::before {
-      [dir="ltr"] & {
-        border-right-color: var(--tutor-success);
-      }
-      [dir="rtl"] & {
-        border-left-color: var(--tutor-success);
-      }
-    }
-  }
-
-  &--warning {
-    background-color: var(--tutor-warning);
-    
-    &.tutor-tooltip--top::before {
-      border-top-color: var(--tutor-warning);
-    }
-    
-    &.tutor-tooltip--bottom::before {
-      border-bottom-color: var(--tutor-warning);
-    }
-    
-    &.tutor-tooltip--start::before {
-      [dir="ltr"] & {
-        border-left-color: var(--tutor-warning);
-      }
-      [dir="rtl"] & {
-        border-right-color: var(--tutor-warning);
-      }
-    }
-    
-    &.tutor-tooltip--end::before {
-      [dir="ltr"] & {
-        border-right-color: var(--tutor-warning);
-      }
-      [dir="rtl"] & {
-        border-left-color: var(--tutor-warning);
-      }
     }
   }
 }
 
 // Animation classes for Alpine.js
 .tutor-tooltip {
-  &[x-cloak] {
-    display: none !important;
-  }
-  
-  // Fade and scale animation
-  &.tutor-tooltip-enter {
+  &-enter {
     opacity: 0;
     transform: scale(0.8);
   }
-  
-  &.tutor-tooltip-enter-active {
+
+  &-enter-active {
     opacity: 1;
     transform: scale(1);
     @include tutor-transition((opacity, transform), 0.15s);
   }
-  
-  &.tutor-tooltip-leave {
+
+  &-leave {
     opacity: 1;
     transform: scale(1);
   }
-  
-  &.tutor-tooltip-leave-active {
+
+  &-leave-active {
     opacity: 0;
     transform: scale(0.8);
     @include tutor-transition((opacity, transform), 0.15s);
