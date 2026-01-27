@@ -4247,16 +4247,18 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 1.4.0 $course_id $date_filter param added.
 	 * @since 1.9.9 Course id & date filter is sorting with specific course and date.
+	 * @since 4.0.0 $args parameter added.
 	 *
 	 * @param int    $instructor_id user id.
 	 * @param int    $offset offset.
 	 * @param int    $limit limit.
 	 * @param string $course_id course id.
 	 * @param string $date_filter date filter.
+	 * @param array  $args Optional query arguments.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '' ) {
+	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '', $args = array() ) {
 		global $wpdb;
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$offset        = sanitize_text_field( $offset );
@@ -4264,9 +4266,16 @@ class Utils {
 		$course_id     = sanitize_text_field( $course_id );
 		$date_filter   = sanitize_text_field( $date_filter );
 		$instructor_id = $this->get_user_id( $instructor_id );
+		$args          = $this->sanitize_array( $args );
 
 		$course_query = '';
 		$date_query   = '';
+
+		$where_clause = '';
+
+		if ( ! empty( $args['where'] ) ) {
+			$where_clause = ' AND ' . $args['where'];
+		}
 
 		if ( '' !== $course_id ) {
 			$course_query = " AND {$wpdb->comments}.comment_post_ID = {$course_id} ";
@@ -4298,6 +4307,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
+						{$where_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4306,6 +4316,8 @@ class Utils {
 				)
 			);
 
+			$order_by = $args['order_by'] ?? 'comment_ID';
+			
 			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
@@ -4320,21 +4332,21 @@ class Utils {
 						{$wpdb->users}.display_name,
 						{$wpdb->posts}.post_title as course_title
 
-				FROM 	{$wpdb->comments}
-						INNER JOIN {$wpdb->commentmeta}
-								ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-						INNER JOIN {$wpdb->users}
-								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-						INNER JOIN {$wpdb->posts}
-								ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID
-				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
+					FROM {$wpdb->comments}
+					INNER JOIN {$wpdb->commentmeta}
+						ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+					INNER JOIN {$wpdb->users}
+						ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+					INNER JOIN {$wpdb->posts}
+						ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID
+					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
+						{$where_clause}
 						{$course_query}
 						{$date_query}
-				ORDER BY comment_ID DESC
-				LIMIT %d, %d;
-				",
+					ORDER BY {$order_by} DESC
+					LIMIT %d, %d",
 					'tutor_course_rating',
 					'tutor_rating',
 					$offset,

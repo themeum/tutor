@@ -16,10 +16,10 @@ use TUTOR\Instructor;
 use TUTOR_REPORT\Analytics;
 use Tutor\Models\CourseModel;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\WithdrawModel;
 use Tutor\Components\DateFilter;
 use Tutor\Components\InputField;
 use Tutor\Components\Constants\InputType;
-
 
 $sortable_sections = array(
 	array(
@@ -80,6 +80,7 @@ $sortable_sections_ids = array_reduce(
 
 $upcoming_tasks          = array();
 $get_upcoming_live_tasks = array();
+$overview_chart_data     = array();
 
 $user                  = wp_get_current_user();
 $instructor_course_ids = CourseModel::get_courses_by_args(
@@ -90,35 +91,45 @@ $instructor_course_ids = CourseModel::get_courses_by_args(
 	)
 )->posts;
 
+$tutor_pro_enabled    = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
+$report_addon_enabled = tutor_utils()->is_addon_enabled( 'tutor-report' );
 
-$start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
-$end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
-$previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
+$start_date = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
+$end_date   = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+// @todo Implementation is on hold until the new designs are ready."
+// $previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
 
 // Total Earnings.
-$total_earnings           = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
-$previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
+$total_earnings = $tutor_pro_enabled && $report_addon_enabled
+					? ( Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date )['total_earnings'] ?? 0 )
+					: ( WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0 );
+
+// @todo Implementation is on hold until the new designs are ready.
+// $previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
 
 // Total Courses.
-$total_courses           = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
-$previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+$total_courses = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
+// @todo Implementation is on hold until the new designs are ready.
+// $previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Students.
-$total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
-$previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+$total_students = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+// @todo Implementation is on hold until the new designs are ready.
+// $previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Ratings.
-$where                   = empty( $start_date ) && empty( $end_date ) ? array() : array( 'reviews.comment_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
-$total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $where );
-$previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
+$where         = empty( $start_date ) && empty( $end_date ) ? array() : array( 'reviews.comment_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
+$total_ratings = tutor_utils()->get_instructor_ratings( $user->ID, $where );
+// @todo Implementation is on hold until the new designs are ready.
+// $previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
 
 $stat_cards = array(
 	array(
 		'variation' => 'success',
 		'title'     => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'      => Icon::EARNING,
-		'value'     => wp_kses_post( tutor_utils()->tutor_price( $total_earnings['total_earnings'] ?? 0 ) ),
-		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_earnings['total_earnings'] ?? 0, $previous_period_earnings ),
+		'value'     => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0 ) ),
+		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_earnings['total_earnings'] ?? 0, $previous_period_earnings ),
 		// 'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ), @todo will be added later.
 	),
 	array(
@@ -126,7 +137,7 @@ $stat_cards = array(
 		'title'     => esc_html__( 'Total Courses', 'tutor' ),
 		'icon'      => Icon::COURSES,
 		'value'     => $total_courses,
-		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_courses, $previous_period_courses, false ),
+		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_courses, $previous_period_courses, false ),
 		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),  @todo will be added later.
 	),
 	array(
@@ -134,7 +145,7 @@ $stat_cards = array(
 		'title'     => esc_html__( 'Total Students', 'tutor' ),
 		'icon'      => Icon::PASSED,
 		'value'     => $total_students,
-		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_students, $previous_period_students, false ),
+		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_students, $previous_period_students, false ),
 		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
@@ -142,21 +153,23 @@ $stat_cards = array(
 		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
 		'icon'      => Icon::STAR_LINE,
 		'value'     => $total_ratings->rating_avg,
-		'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_ratings->rating_avg, $previous_period_ratings->rating_avg, false ),
+		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_ratings->rating_avg, $previous_period_ratings->rating_avg, false ),
 		// 'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
 	),
 );
 
 // Graph.
-$labels              = wp_list_pluck( $total_earnings['earnings'], 'label_name' );
-$graph_earnings      = array_map( 'intval', wp_list_pluck( $total_earnings['earnings'], 'total' ) );
-$enrollments         = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
-$graph_enrollments   = array_map( 'intval', wp_list_pluck( $enrollments['enrollments'], 'total' ) );
-$overview_chart_data = array(
-	'earnings' => array_merge( array( 0 ), $graph_earnings, array( 0 ) ),
-	'enrolled' => array_merge( array( 0 ), $graph_enrollments, array( 0 ) ),
-	'labels'   => array_merge( array( '' ), $labels, array( '' ) ),
-);
+if ( $tutor_pro_enabled && $report_addon_enabled ) {
+	$labels              = wp_list_pluck( $total_earnings['earnings'], 'label_name' );
+	$graph_earnings      = array_map( 'intval', wp_list_pluck( $total_earnings['earnings'], 'total' ) );
+	$enrollments         = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
+	$graph_enrollments   = array_map( 'intval', wp_list_pluck( $enrollments['enrollments'], 'total' ) );
+	$overview_chart_data = array(
+		'earnings' => array_merge( array( 0 ), $graph_earnings, array( 0 ) ),
+		'enrolled' => array_merge( array( 0 ), $graph_enrollments, array( 0 ) ),
+		'labels'   => array_merge( array( '' ), $labels, array( '' ) ),
+	);
+}
 
 // Course Completion Distribution.
 $course_completion_distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
@@ -186,24 +199,24 @@ $course_completion_data = array(
 
 // @todo Will be added on later.
 // $leaderboard_data = array(
-// 	array(
-// 		'name'                  => esc_html__( 'John Doe', 'tutor' ),
-// 		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
-// 		'no_of_courses'         => 10,
-// 		'completion_percentage' => 50,
-// 	),
-// 	array(
-// 		'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
-// 		'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
-// 		'no_of_courses'         => 20,
-// 		'completion_percentage' => 30,
-// 	),
-// 	array(
-// 		'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
-// 		'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
-// 		'no_of_courses'         => 30,
-// 		'completion_percentage' => 70,
-// 	),
+// array(
+// 'name'                  => esc_html__( 'John Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826712d',
+// 'no_of_courses'         => 10,
+// 'completion_percentage' => 50,
+// ),
+// array(
+// 'name'                  => esc_html__( 'Jane Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a042581f4e29026704d',
+// 'no_of_courses'         => 20,
+// 'completion_percentage' => 30,
+// ),
+// array(
+// 'name'                  => esc_html__( 'Bob Doe', 'tutor' ),
+// 'avatar'                => 'https://i.pravatar.cc/300?u=a04258a2462d826732d',
+// 'no_of_courses'         => 30,
+// 'completion_percentage' => 70,
+// ),
 // );
 
 // Top Performing Courses.
@@ -225,46 +238,48 @@ $top_performing_courses = array_map(
 	$top_courses
 );
 
-if ( empty( $start_date ) && empty( $end_date ) ) {
-	$get_upcoming_live_tasks = get_posts(
+if ( empty( $start_date ) && empty( $end_date ) && $tutor_pro_enabled ) {
+
+	$meta_keys = array_filter(
 		array(
-			'post_type'   => array( tutor()->zoom_post_type, tutor()->meet_post_type ),
-			'post_status' => 'publish',
-			'post_author' => $user->ID,
-			'numberposts' => 5,
-			'meta_query'  => array(
-				array(
-					'key'     => array( '_tutor_zm_start_datetime', 'tutor-google-meet-start-datetime' ),
-					'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
-					'compare' => '>=',
-					'type'    => 'DATETIME',
-				),
-			),
+			tutor_utils()->is_addon_enabled( 'google-meet' ) ? 'tutor-google-meet-start-datetime' : null,
+			tutor_utils()->is_addon_enabled( 'tutor-zoom' ) ? '_tutor_zm_start_datetime' : null,
 		)
 	);
+
+	if ( ! empty( $meta_key ) ) {
+		$get_upcoming_live_tasks = get_posts(
+			array(
+				'post_type'   => array( tutor()->zoom_post_type, tutor()->meet_post_type ),
+				'post_status' => 'publish',
+				'post_author' => $user->ID,
+				'numberposts' => 5,
+				'meta_query'  => array(
+					array(
+						'key'     => array( '_tutor_zm_start_datetime', 'tutor-google-meet-start-datetime' ),
+						'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+						'compare' => '>=',
+						'type'    => 'DATETIME',
+					),
+				),
+			)
+		);
+	}
 
 	if ( ! empty( $get_upcoming_live_tasks ) ) {
 		$upcoming_tasks = array_map(
 			function ( $task ) {
 
-				switch ( $task->post_type ) {
-					case tutor()->zoom_post_type:
-						$meta_key = '_tutor_zm_start_datetime';
-						$url      = json_decode( get_post_meta( $task->ID, '_tutor_zm_data' )[0] )->join_url ?? '';
-						break;
+				$is_zoom = tutor()->zoom_post_type === $task->post_type;
+				$is_meet = tutor()->meet_post_type === $task->post_type;
 
-					case tutor()->meet_post_type:
-						$meta_key = 'tutor-google-meet-start-datetime';
-						$url      = get_post_meta( $task->ID, 'tutor-google-meet-link', true );
-						break;
+				$live_meta_key = $is_zoom ? '_tutor_zm_start_datetime'
+								: ( $is_meet ? 'tutor-google-meet-start-datetime' : '' );
 
-					default:
-						$meta_key = null;
-						$url      = '';
-						break;
-				}
+				$url = $is_zoom ? ( json_decode( get_post_meta( $task->ID, '_tutor_zm_data' )[0] )->join_url ?? '' )
+								: ( $is_meet ? get_post_meta( $task->ID, 'tutor-google-meet-link', true ) : '' );
 
-				$start_date = get_post_meta( $task->ID, $meta_key, true );
+				$start_date = get_post_meta( $task->ID, $live_meta_key, true );
 
 				return array(
 					'name'      => $task->post_title,
@@ -317,23 +332,26 @@ $review_where = array( 'comment_post_ID' => array( 'IN', $instructor_course_ids 
 if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 	$review_where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
 }
-$review_args    = array( 'where' => QueryHelper::prepare_where_clause( $review_where ) );
-$reviews        = Analytics::get_reviews( 3, $review_args );
-$recent_reviews = array_map(
-	function ( $review ) {
-		return array(
-			'user'        => array(
-				'name'   => $review->display_name,
-				'avatar' => get_avatar_url( $review->user_id ),
-			),
-			'course_name' => get_the_title( $review->comment_post_ID ),
-			'date'        => $review->comment_date,
-			'rating'      => $review->rating,
-			'review_text' => $review->comment_content,
-		);
-	},
-	$reviews
-);
+$review_args = array( 'where' => QueryHelper::prepare_where_clause( $review_where ) );
+$reviews     = tutor_utils()->get_reviews_by_instructor( $user->ID, 0, 3, '', '', $review_args );
+
+if ( ! empty( $reviews->results ) ) {
+	$recent_reviews = array_map(
+		function ( $review ) {
+			return array(
+				'user'        => array(
+					'name'   => $review->display_name,
+					'avatar' => get_avatar_url( $review->user_id ),
+				),
+				'course_name' => get_the_title( $review->comment_post_ID ),
+				'date'        => $review->comment_date,
+				'rating'      => $review->rating,
+				'review_text' => $review->comment_content,
+			);
+		},
+		$reviews->results
+	);
+}
 ?>
 
 <form x-data='tutorForm({
@@ -346,6 +364,8 @@ $recent_reviews = array_map(
 >
 	<!-- Filters -->
 	<div class="tutor-flex tutor-justify-between tutor-align-center">
+
+
 			
 		<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-start' )->render(); ?>
 
@@ -450,7 +470,7 @@ $recent_reviews = array_map(
 		<!-- Leaderboard -->
 		<!-- <div class="tutor-dashboard-home-card tutor-flex-1">
 			<div class="tutor-small">
-				<?php //esc_html_e( 'Leaderboard', 'tutor' ); ?>
+				<?php // esc_html_e( 'Leaderboard', 'tutor' ); ?>
 			</div>
 
 			<div class="tutor-dashboard-home-card-body">
@@ -562,25 +582,25 @@ $recent_reviews = array_map(
 
 	<!-- Recent Student Reviews -->
 	<?php if ( ! empty( $recent_reviews ) ) : ?>
-	<div 
-		data-section-id="recent_reviews" 
-		class="tutor-dashboard-home-card"
-		:class="{ 'tutor-hidden':  !watch('recent_reviews')}"
-	>
-		<div class="tutor-small">
-			<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
-		</div>
+		<div 
+			data-section-id="recent_reviews" 
+			class="tutor-dashboard-home-card"
+			:class="{ 'tutor-hidden':  !watch('recent_reviews')}"
+		>
+			<div class="tutor-small">
+				<?php esc_html_e( 'Recent Student Reviews', 'tutor' ); ?>
+			</div>
 
-		<div class="tutor-dashboard-home-card-body tutor-gap-6">
-			<?php foreach ( $recent_reviews as $review ) : ?>
-				<?php
-				tutor_load_template(
-					'dashboard.instructor.home.recent-student-review-item',
-					array( 'review' => $review ),
-				);
-				?>
-			<?php endforeach; ?>
+			<div class="tutor-dashboard-home-card-body tutor-gap-6">
+				<?php foreach ( $recent_reviews as $review ) : ?>
+					<?php
+					tutor_load_template(
+						'dashboard.instructor.home.recent-student-review-item',
+						array( 'review' => $review ),
+					);
+					?>
+				<?php endforeach; ?>
+			</div>
 		</div>
-	</div>
 	<?php endif; ?>
 </form>

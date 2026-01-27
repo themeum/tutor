@@ -12,6 +12,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <!-- Overview Chart -->
+<?php if ( $overview_chart_data ) : ?>
 <div 
 	data-section-id="overview_chart"
 	class="tutor-dashboard-home-chart"
@@ -32,3 +33,4 @@ defined( 'ABSPATH' ) || exit;
 	</div>
 	<canvas class="tutor-dashboard-home-chart-canvas" x-data='tutorOverviewChart(<?php echo wp_json_encode( $overview_chart_data ); ?>)' x-ref="canvas"></canvas>
 </div>
+<?php endif; ?>
