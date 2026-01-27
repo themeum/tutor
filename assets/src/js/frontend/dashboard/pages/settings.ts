@@ -184,7 +184,6 @@ const settings = () => {
         {} as Record<string, string>,
       );
 
-      console.log('noti', transformedPayload);
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
     },
 
