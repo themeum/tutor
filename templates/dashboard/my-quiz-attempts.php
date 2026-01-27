@@ -97,24 +97,24 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 			<?php
 			if ( $quiz_attempts_count > $item_per_page ) {
 				Pagination::make()
-				->current( $current_page )
-				->total( $quiz_attempts_count )
-				->limit( $item_per_page )
-				->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-				->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
-				->render();
+					->current( $current_page )
+					->total( $quiz_attempts_count )
+					->limit( $item_per_page )
+					->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
+					->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+					->render();
 			}
 			?>
 		</div>
 
 	<?php
 	ConfirmationModal::make()
-			->id( 'tutor-retry-modal' )
-			->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-			->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ))
-			->confirm_handler( 'handleRetryAttempt({...payload?.data})' )
-			->confirm_text( __( 'Retry Quiz', 'tutor' ))
-			->mutation_state( 'retryMutation' )
-			->render();
+		->id( 'tutor-retry-modal' )
+		->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
+		->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ))
+		->confirm_handler( 'handleRetryAttempt({...payload?.data})' )
+		->confirm_text( __( 'Retry Quiz', 'tutor' ))
+		->mutation_state( 'retryMutation' )
+		->render();
 	?>
 </div>
