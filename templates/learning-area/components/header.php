@@ -21,10 +21,8 @@ global $tutor_course;
 		<h5 class="tutor-learning-header-title">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
-		<div class="tutor-learning-header-mobile">
-			<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
-				<?php tutor_utils()->render_svg_icon( Icon::MENU, 20, 20 ); ?>
-			</button>
-		</div>
+		<button class="tutor-learning-header-toggle-mobile" @click.stop="sidebarOpen = !sidebarOpen">
+			<?php tutor_utils()->render_svg_icon( Icon::MENU, 20, 20 ); ?>
+		</button>
 	</div>
 </div>

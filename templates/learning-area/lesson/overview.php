@@ -1,0 +1,22 @@
+<?php
+/**
+ * Lesson overview template.
+ *
+ * @package Tutor\Templates
+ * @subpackage Single\Lesson
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 4.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+global $tutor_course_id;
+
+?>
+<div x-show="activeTab === 'overview'" x-cloak class="tutor-tab-panel tutor-p-6 tutor-sm-p-5" role="tabpanel"> 
+	<?php do_action( 'tutor_lesson_before_the_content', $post, $tutor_course_id ); ?>
+	<div class="tutor-lesson-wrapper">
+		<?php the_content(); ?>
+	</div>
+</div>
