@@ -3,7 +3,7 @@
 @use '@Core/scss/mixins' as *;
 
 .tutor-lesson-content {
-  .tutor-lesson-content-body {
+  .tutor-lesson-wrapper {
     @include tutor-typography('p1', 'regular', 'secondary');
 
     h1 {
