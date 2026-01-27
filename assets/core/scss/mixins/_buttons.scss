@@ -19,7 +19,12 @@
   @include tutor-transition();
 
   &:disabled {
+    color: $tutor-text-subdued;
     cursor: not-allowed;
+
+    svg {
+      color: $tutor-icon-disabled;
+    }
   }
 }
 
@@ -27,6 +32,10 @@
   @if $variant == primary {
     background-color: $tutor-button-primary;
     color: $tutor-text-primary-inverse;
+
+    svg {
+      color: $tutor-icon-idle-inverse;
+    }
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-primary-hover;
@@ -40,10 +49,19 @@
 
     &:disabled {
       background-color: $tutor-button-primary-disabled;
+      color: $tutor-text-primary-inverse;
+
+      svg {
+        color: $tutor-icon-idle-inverse;
+      }
     }
   } @else if $variant == primary-soft {
     background-color: $tutor-button-primary-soft;
     color: $tutor-text-brand;
+
+    svg {
+      color: $tutor-icon-brand;
+    }
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-primary-soft-hover;
@@ -55,11 +73,14 @@
 
     &:disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-subdued;
     }
   } @else if $variant == destructive {
     background-color: $tutor-button-destructive;
     color: $tutor-text-primary-inverse;
+
+    svg {
+      color: $tutor-icon-idle-inverse;
+    }
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-destructive-hover;
@@ -71,11 +92,14 @@
 
     &:disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-subdued;
     }
   } @else if $variant == destructive-soft {
     background-color: $tutor-button-destructive-soft;
     color: $tutor-text-critical;
+
+    svg {
+      color: $tutor-icon-critical;
+    }
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-destructive-soft-hover;
@@ -87,11 +111,14 @@
 
     &:disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-subdued;
     }
   } @else if $variant == secondary {
     background-color: $tutor-button-secondary;
     color: $tutor-text-primary;
+
+    svg {
+      color: $tutor-icon-idle;
+    }
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-secondary-hover;
@@ -103,12 +130,15 @@
 
     &:disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-subdued;
     }
   } @else if $variant == outline {
     background-color: $tutor-button-outline-inverse;
     color: $tutor-text-primary;
     box-shadow: inset 0 0 0 1px $tutor-border-idle;
+
+    svg {
+      color: $tutor-icon-idle;
+    }
 
     &:hover:not(:disabled) {
       background-color: $tutor-button-outline-hover;
@@ -122,25 +152,73 @@
 
     &:disabled {
       background-color: $tutor-button-disabled;
-      color: $tutor-text-subdued;
     }
   } @else if $variant == ghost {
     background-color: transparent;
     color: $tutor-text-primary;
 
+    svg {
+      color: $tutor-icon-idle;
+    }
+
     &:hover:not(:disabled) {
       background-color: $tutor-button-ghost-hover;
     }
+  } @else if $variant == ghost-brand {
+    background-color: transparent;
+    color: $tutor-text-brand;
 
-    &:disabled {
-      color: $tutor-text-subdued;
+    svg {
+      color: $tutor-icon-brand;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: $tutor-button-primary-soft;
     }
   } @else if $variant == link {
     background-color: transparent;
-    color: $tutor-text-primary;
+    color: $tutor-text-brand;
 
-    &:disabled {
-      color: $tutor-text-subdued;
+    svg {
+      color: $tutor-icon-brand;
+    }
+
+    &:hover:not(:disabled) {
+      color: $tutor-text-brand-hover;
+
+      svg {
+        color: $tutor-icon-brand-hover;
+      }
+    }
+  } @else if $variant == link-gray {
+    background-color: transparent;
+    color: $tutor-text-subdued;
+
+    svg {
+      color: $tutor-icon-subdued;
+    }
+
+    &:hover:not(:disabled) {
+      color: $tutor-text-secondary;
+
+      svg {
+        color: $tutor-icon-secondary;
+      }
+    }
+  } @else if $variant == link-destructive {
+    background-color: transparent;
+    color: $tutor-text-critical;
+
+    svg {
+      color: $tutor-icon-critical;
+    }
+
+    &:hover:not(:disabled) {
+      color: $tutor-text-critical-hover;
+
+      svg {
+        color: $tutor-icon-critical-hover;
+      }
     }
   }
 }

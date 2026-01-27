@@ -42,6 +42,7 @@
   --tutor-text-light: #{$tutor-gray-25};
   --tutor-text-success: #{$tutor-success-600};
   --tutor-text-critical: #{$tutor-error-600};
+  --tutor-text-critical-hover: #{$tutor-error-700};
   --tutor-text-warning: #{$tutor-warning-600};
   --tutor-text-caution: #{$tutor-yellow-600};
   --tutor-text-exception1: #{$tutor-exception-1};
@@ -69,6 +70,7 @@
   --tutor-icon-exception5: #{$tutor-exception-5};
   --tutor-icon-caution: #{$tutor-yellow-400};
   --tutor-icon-critical: #{$tutor-error-600};
+  --tutor-icon-critical-hover: #{$tutor-error-700};
   --tutor-icon-warning: #{$tutor-warning-600};
 
   // =============================================================================
