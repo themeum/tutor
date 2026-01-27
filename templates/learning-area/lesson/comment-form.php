@@ -57,13 +57,13 @@ $hide_footer_init = $hide_footer_init ?? false;
 	?>
 
 	<div 
-		class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5" 
+		class="tutor-flex tutor-items-center tutor-justify-between tutor-mt-5 tutor-sm-justify-end" 
 		<?php if ( $hide_footer_init ) : ?>
 			x-cloak 
 			:class="{ 'tutor-hidden': !focused }"
 		<?php endif; ?>
 	>
-		<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2">
+		<div class="tutor-tiny tutor-text-subdued tutor-flex tutor-items-center tutor-gap-2 tutor-sm-hidden">
 			<?php tutor_utils()->render_svg_icon( Icon::COMMAND, 12, 12 ); ?> 
 			<?php esc_html_e( 'Cmd/Ctrl +', 'tutor' ); ?>
 			<?php tutor_utils()->render_svg_icon( Icon::ENTER, 12, 12 ); ?> 
