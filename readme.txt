@@ -3,9 +3,9 @@ Contributors: themeum
 Donate link: https://tutorlms.com
 Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.9.5
+Stable tag: 3.9.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -318,6 +318,15 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.9.6 - Jan 28, 2025
+
+Update: Remove autoload option from `email_template_data` for faster site loads. (Pro)
+Update: Edited Divi courses can now be reverted to original content from tutor course builder.
+Fix: Verify user email against a token with user use login with Google. (Pro)
+Fix: Email verification link generation is updated to make it more secure. (Pro)
+Fix: Added capability check in coupon details ajax request.
+Fix: Restrict instructors to delete courses that created by other Admin or other instructors. (Pro)
 
 = 3.9.5 - Jan 08, 2025
 
