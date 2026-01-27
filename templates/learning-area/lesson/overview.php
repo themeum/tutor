@@ -14,10 +14,9 @@ defined( 'ABSPATH' ) || exit;
 global $tutor_course_id;
 
 ?>
-<div x-show="activeTab === 'overview'" x-cloak class="tutor-tab-panel tutor-p-6" role="tabpanel">
-	<h4 class="tutor-heading-4 tutor-mb-4">
-		<?php the_title(); ?>
-	</h4>
+<div x-show="activeTab === 'overview'" x-cloak class="tutor-tab-panel tutor-p-6 tutor-sm-p-5" role="tabpanel"> 
 	<?php do_action( 'tutor_lesson_before_the_content', $post, $tutor_course_id ); ?>
-	<?php the_content(); ?>
+	<div class="tutor-lesson-wrapper">
+		<?php the_content(); ?>
+	</div>
 </div>
