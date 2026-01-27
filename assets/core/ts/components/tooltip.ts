@@ -1,126 +1,245 @@
 // Tooltip Component
-// Alpine.js tooltip with RTL-aware positioning and accessibility
 
-import { type AlpineTooltipData, type TooltipConfig } from '../types/components';
+import { type AlpineComponentMeta } from '@Core/ts/types';
+import { isRTL } from '@TutorShared/config/constants';
 
-export function createTooltip(config: TooltipConfig = {}): AlpineTooltipData {
+const TOOLTIP_PLACEMENTS = {
+  TOP: 'top',
+  BOTTOM: 'bottom',
+  START: 'start',
+  END: 'end',
+} as const;
+
+const TOOLTIP_TRIGGERS = {
+  HOVER: 'hover',
+  FOCUS: 'focus',
+  CLICK: 'click',
+} as const;
+
+const TOOLTIP_SIZES = {
+  SMALL: 'small',
+  LARGE: 'large',
+} as const;
+
+const TOOLTIP_ARROWS = {
+  START: 'start',
+  CENTER: 'center',
+  END: 'end',
+} as const;
+
+const DEFAULT_TOOLTIP_OFFSET = 8;
+
+export interface TooltipProps {
+  placement?: (typeof TOOLTIP_PLACEMENTS)[keyof typeof TOOLTIP_PLACEMENTS];
+  trigger?: (typeof TOOLTIP_TRIGGERS)[keyof typeof TOOLTIP_TRIGGERS];
+  size?: (typeof TOOLTIP_SIZES)[keyof typeof TOOLTIP_SIZES];
+  arrow?: (typeof TOOLTIP_ARROWS)[keyof typeof TOOLTIP_ARROWS];
+  offset?: number;
+  delay?: {
+    show?: number;
+    hide?: number;
+  };
+}
+
+const defaultProps: Required<TooltipProps> = {
+  placement: TOOLTIP_PLACEMENTS.TOP,
+  trigger: TOOLTIP_TRIGGERS.HOVER,
+  size: TOOLTIP_SIZES.SMALL,
+  arrow: TOOLTIP_ARROWS.START,
+  offset: DEFAULT_TOOLTIP_OFFSET,
+  delay: { show: 0, hide: 0 },
+};
+
+export const tooltip = (props: TooltipProps = {}) => {
+  const config = { ...defaultProps, ...props };
+
   return {
-    visible: false,
-    placement: config.placement || 'top',
-    trigger: config.trigger || 'hover',
+    open: false,
+    placement: config.placement,
+    trigger: config.trigger,
+    size: config.size,
+    arrow: config.arrow,
+    offset: config.offset,
+    delay: config.delay,
+    actualPlacement: '',
+    $nextTick: undefined as ((callback: () => void) => void) | undefined,
     $el: undefined as HTMLElement | undefined,
+    $refs: {} as { trigger: HTMLElement; content: HTMLElement },
+
+    scrollHandler: null as (() => void) | null,
+    resizeHandler: null as (() => void) | null,
 
     init() {
-      this.setupRTL();
-      this.setupTriggers();
+      this.actualPlacement = this.getActualPlacement();
       this.setupAccessibility();
+      this.setupTriggers();
+      this.setupEventListeners();
     },
 
-    show(): void {
-      this.visible = true;
-      this.updatePosition();
+    destroy() {
+      this.removeEventListeners();
     },
 
-    hide(): void {
-      this.visible = false;
+    setupEventListeners() {
+      this.scrollHandler = () => {
+        if (this.open) {
+          this.updatePosition();
+        }
+      };
+
+      this.resizeHandler = () => {
+        if (this.open) {
+          this.updatePosition();
+        }
+      };
+
+      window.addEventListener('scroll', this.scrollHandler, true);
+      window.addEventListener('resize', this.resizeHandler);
     },
 
-    handleMouseEnter(): void {
-      if (this.trigger === 'hover' || !this.trigger) {
-        const delay = config.delay?.show || 0;
-        setTimeout(() => this.show(), delay);
+    removeEventListeners() {
+      if (this.scrollHandler) {
+        window.removeEventListener('scroll', this.scrollHandler, true);
+      }
+      if (this.resizeHandler) {
+        window.removeEventListener('resize', this.resizeHandler);
       }
     },
 
-    handleMouseLeave(): void {
-      if (this.trigger === 'hover' || !this.trigger) {
-        const delay = config.delay?.hide || 0;
-        setTimeout(() => this.hide(), delay);
-      }
+    getActualPlacement() {
+      return this.placement;
     },
 
-    handleFocus(): void {
-      if (this.trigger === 'focus' || !this.trigger) {
+    setupTriggers() {
+      // If trigger is not explicitly defined via x-ref, use $el as trigger
+      const trigger = this.$refs.trigger || this.$el;
+      if (!trigger) return;
+
+      if (this.trigger === TOOLTIP_TRIGGERS.HOVER) {
+        trigger.addEventListener('mouseenter', () => this.showWithDelay());
+        trigger.addEventListener('mouseleave', () => this.hideWithDelay());
+      } else if (this.trigger === TOOLTIP_TRIGGERS.FOCUS) {
+        trigger.addEventListener('focus', () => this.show());
+        trigger.addEventListener('blur', () => this.hide());
+      } else if (this.trigger === TOOLTIP_TRIGGERS.CLICK) {
+        trigger.addEventListener('click', () => this.toggle());
+      }
+
+      trigger.addEventListener('keydown', (e: KeyboardEvent) => {
+        if (e.key === 'Escape' && this.open) {
+          this.hide();
+        }
+      });
+    },
+
+    showWithDelay() {
+      const delay = this.delay.show || 0;
+      if (delay) {
+        setTimeout(() => {
+          if (!this.open) this.show();
+        }, delay);
+      } else {
         this.show();
       }
     },
 
-    handleBlur(): void {
-      if (this.trigger === 'focus' || !this.trigger) {
+    hideWithDelay() {
+      const delay = this.delay.hide || 0;
+      if (delay) {
+        setTimeout(() => {
+          if (this.open) this.hide();
+        }, delay);
+      } else {
         this.hide();
       }
     },
 
-    handleClick(): void {
-      if (this.trigger === 'click') {
-        if (this.visible) {
-          this.hide();
-        } else {
-          this.show();
+    show() {
+      const content = this.$refs.content;
+      if (content) {
+        content.style.visibility = 'hidden';
+      }
+
+      this.open = true;
+
+      const afterShow = () => {
+        this.updatePosition();
+        if (content) {
+          content.style.visibility = 'visible';
         }
+      };
+
+      if (this.$nextTick) {
+        this.$nextTick(afterShow);
+      } else {
+        requestAnimationFrame(afterShow);
       }
     },
 
-    handleKeydown(event: KeyboardEvent): void {
-      if (event.key === 'Escape' && this.visible) {
+    hide() {
+      this.open = false;
+      const content = this.$refs.content;
+      if (content) {
+        content.style.visibility = 'hidden';
+      }
+    },
+
+    toggle() {
+      if (this.open) {
         this.hide();
+      } else {
+        this.show();
       }
     },
 
-    setupRTL(): void {
-      const isRTL = document.dir === 'rtl' || document.documentElement.dir === 'rtl';
-      if (isRTL) {
-        const rtlAdaptations: Record<string, string> = {
-          left: 'right',
-          right: 'left',
-        };
-        const newPlacement = rtlAdaptations[this.placement] || this.placement;
-        this.placement = newPlacement as typeof this.placement;
-      }
-    },
+    setupAccessibility() {
+      const trigger = this.$refs.trigger || this.$el;
+      const content = this.$refs.content;
 
-    setupTriggers(): void {
-      const trigger = this.$el;
-      if (!trigger) return;
-
-      switch (this.trigger) {
-        case 'hover':
-          trigger.addEventListener('mouseenter', () => this.handleMouseEnter());
-          trigger.addEventListener('mouseleave', () => this.handleMouseLeave());
-          break;
-        case 'focus':
-          trigger.addEventListener('focus', () => this.handleFocus());
-          trigger.addEventListener('blur', () => this.handleBlur());
-          break;
-        case 'click':
-          trigger.addEventListener('click', () => this.handleClick());
-          break;
-      }
-
-      // Always listen for keyboard events for accessibility
-      trigger.addEventListener('keydown', (e: KeyboardEvent) => this.handleKeydown(e));
-    },
-
-    setupAccessibility(): void {
-      const trigger = this.$el;
-      const tooltip = this.$el?.querySelector('.tutor-tooltip__content');
-
-      if (trigger && tooltip) {
+      if (trigger && content) {
         const tooltipId = `tooltip-${Date.now()}`;
-        tooltip.setAttribute('id', tooltipId);
-        tooltip.setAttribute('role', 'tooltip');
+        content.setAttribute('id', tooltipId);
+        content.setAttribute('role', 'tooltip');
         trigger.setAttribute('aria-describedby', tooltipId);
       }
     },
 
-    updatePosition(): void {
-      const trigger = this.$el as HTMLElement;
-      const tooltip = this.$el?.querySelector('.tutor-tooltip__content') as HTMLElement;
+    updatePosition() {
+      const trigger = this.$refs.trigger || (this.$el as HTMLElement);
+      const content = this.$refs.content as HTMLElement;
 
-      if (!trigger || !tooltip) return;
+      if (!trigger || !content) return;
+
+      // Ensure fixed position before measurement to avoid container constraints
+      content.style.position = 'fixed';
+
+      // Temporarily reset transforms/transitions for accurate measurement
+      const originalTransform = content.style.transform;
+      const originalTransition = content.style.transition;
+      content.style.transform = 'none';
+      content.style.transition = 'none';
+
+      // Force layout if display is none (though it should be open now)
+      const originalDisplay = content.style.display;
+      if (window.getComputedStyle(content).display === 'none') {
+        content.style.display = 'block';
+      }
 
       const triggerRect = trigger.getBoundingClientRect();
-      const tooltipRect = tooltip.getBoundingClientRect();
+      const contentWidth = content.offsetWidth;
+      const contentHeight = content.offsetHeight;
+
+      // Restore styles
+      content.style.display = originalDisplay;
+      content.style.transform = originalTransform;
+      content.style.transition = originalTransition;
+
+      // If measurement failed (0 size), retry on next frame
+      if (contentWidth === 0 && contentHeight === 0 && this.open) {
+        requestAnimationFrame(() => this.updatePosition());
+        return;
+      }
+
       const viewport = {
         width: window.innerWidth,
         height: window.innerHeight,
@@ -129,33 +248,71 @@ export function createTooltip(config: TooltipConfig = {}): AlpineTooltipData {
       let top = 0;
       let left = 0;
 
-      switch (this.placement) {
-        case 'top':
-          top = triggerRect.top - tooltipRect.height - 8;
-          left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
+      const placement = this.actualPlacement;
+
+      switch (placement) {
+        case TOOLTIP_PLACEMENTS.TOP:
+          top = triggerRect.top - contentHeight - this.offset;
+          left = triggerRect.left + (triggerRect.width - contentWidth) / 2;
           break;
-        case 'bottom':
-          top = triggerRect.bottom + 8;
-          left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
+        case TOOLTIP_PLACEMENTS.BOTTOM:
+          top = triggerRect.bottom + this.offset;
+          left = triggerRect.left + (triggerRect.width - contentWidth) / 2;
           break;
-        case 'left':
-          top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
-          left = triggerRect.left - tooltipRect.width - 8;
+        case TOOLTIP_PLACEMENTS.START:
+          top = triggerRect.top + (triggerRect.height - contentHeight) / 2;
+          if (!isRTL) {
+            left = triggerRect.left - contentWidth - this.offset;
+          } else {
+            left = triggerRect.right + this.offset;
+          }
           break;
-        case 'right':
-          top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
-          left = triggerRect.right + 8;
+        case TOOLTIP_PLACEMENTS.END:
+          top = triggerRect.top + (triggerRect.height - contentHeight) / 2;
+          if (!isRTL) {
+            left = triggerRect.right + this.offset;
+          } else {
+            left = triggerRect.left - contentWidth - this.offset;
+          }
           break;
       }
 
-      // Keep tooltip within viewport
-      top = Math.max(8, Math.min(top, viewport.height - tooltipRect.height - 8));
-      left = Math.max(8, Math.min(left, viewport.width - tooltipRect.width - 8));
+      // Keep within viewport
+      top = Math.max(8, Math.min(top, viewport.height - contentHeight - 8));
+      left = Math.max(8, Math.min(left, viewport.width - contentWidth - 8));
 
-      tooltip.style.position = 'fixed';
-      tooltip.style.top = `${top}px`;
-      tooltip.style.left = `${left}px`;
-      tooltip.style.zIndex = '9999';
+      content.style.position = 'fixed';
+      content.style.top = `${top}px`;
+      content.style.left = `${left}px`;
+      content.style.zIndex = '1070';
+
+      this.updatePlacementClasses(content, placement);
+    },
+
+    updatePlacementClasses(content: HTMLElement, placement: string) {
+      const placementClasses = [
+        'tutor-tooltip-top',
+        'tutor-tooltip-bottom',
+        'tutor-tooltip-start',
+        'tutor-tooltip-end',
+      ];
+      const sizeClasses = ['tutor-tooltip-large'];
+      const arrowClasses = ['tutor-tooltip-arrow-start', 'tutor-tooltip-arrow-center', 'tutor-tooltip-arrow-end'];
+
+      content.classList.remove(...placementClasses, ...sizeClasses, ...arrowClasses);
+
+      content.classList.add(`tutor-tooltip-${placement}`);
+
+      if (this.size === TOOLTIP_SIZES.LARGE) {
+        content.classList.add('tutor-tooltip-large');
+      }
+
+      content.classList.add(`tutor-tooltip-arrow-${this.arrow}`);
     },
   };
-}
+};
+
+export const tooltipMeta: AlpineComponentMeta<TooltipProps> = {
+  name: 'tooltip',
+  component: tooltip,
+};
