@@ -23,6 +23,7 @@ defined( 'ABSPATH' ) || exit;
 
 	use Tutor\Components\Accordion;
 	use Tutor\Components\Avatar;
+	use Tutor\Components\Alert;
 	use Tutor\Components\Badge;
 	use Tutor\Components\Button;
 	use Tutor\Components\Constants\InputType;
@@ -37,6 +38,7 @@ defined( 'ABSPATH' ) || exit;
 	use Tutor\Components\Progress;
 	use Tutor\Components\Tabs;
 	use Tutor\Components\Table;
+	use Tutor\Components\Tooltip;
 	use TUTOR\Icon;
 
 	?>
@@ -114,7 +116,6 @@ defined( 'ABSPATH' ) || exit;
 			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?&gt;
 		</code></pre>
-		<div class="tutor-flex tutor-gap-3 tutor-items-center tutor-flex-wrap">
 		<?php
 			Badge::make()->label( 'Primary' )->variant( Badge::PRIMARY )->icon( Icon::CHECK )->render();
 			Badge::make()->label( 'Points: 20' )->render();
@@ -122,6 +123,82 @@ defined( 'ABSPATH' ) || exit;
 			Badge::make()->label( 'Cancelled' )->variant( Badge::ERROR )->rounded()->render();
 		?>
 		</div>
+	</div>
+<br>
+	<div class="alert-wrapper tutor-mb-12">
+		<h2>Alert</h2>
+		<div class="tutor-flex tutor-flex-column tutor-gap-4 tutor-mb-4">
+		<?php
+			Alert::make()
+				->text( 'Default alert: This is a neutral alert message for general information.' )
+				->icon( Icon::INFO )
+				->render();
+
+			Alert::make()
+				->variant( Alert::INFO )
+				->text( 'Info alert: This is an informational alert message using brand colors.' )
+				->icon( Icon::INFO_FILL )
+				->render();
+
+			Alert::make()
+				->variant( Alert::SUCCESS )
+				->text( 'Success alert: Your action was completed successfully.' )
+				->icon( Icon::PRIME_CHECK_CIRCLE )
+				->render();
+
+			Alert::make()
+				->variant( Alert::WARNING )
+				->text( 'Your plan will be cancelled on 15 Feb, 2026, 06:30 am. You’ll have access until then and can resume anytime before that.' )
+				->icon( Icon::WARNING_LINE )
+				->action( Button::make()->label( 'Resume plan' )->variant( Variant::PRIMARY )->size( Size::X_SMALL )->get() )
+				->render();
+
+			Alert::make()
+				->variant( Alert::ERROR )
+				->text( 'Error alert: Something went wrong, please try again.' )
+				->icon( Icon::ALERT )
+				->action(
+					Button::make()
+						->variant( Variant::GHOST )
+						->size( Size::X_SMALL )
+						->icon( Icon::CROSS_2 )
+						->get()
+				)
+				->render();
+			?>
+		</div>
+		<pre><code>
+&lt;?php
+	// Success Alert
+	Alert::make()
+		->variant( Alert::SUCCESS )
+		->text( 'Success! Your changes have been saved.' )
+		->icon( Icon::PRIME_CHECK_CIRCLE )
+		->render();
+
+	// Warning with Action
+	Alert::make()
+		->variant( Alert::WARNING )
+		->text( 'Your plan will expire soon.' )
+		->icon( Icon::WARNING_LINE )
+		->action( Button::make()->label( 'Renew Plan' )->variant( Variant::PRIMARY )->size( Size::X_SMALL )->get() )
+		->render();
+
+	// Dismissible Alert
+	Alert::make()
+		->variant( Alert::ERROR )
+		->text( 'An error occurred.' )
+		->icon( Icon::ALERT )
+		->action(
+			Button::make()
+				->variant( Variant::GHOST )
+				->size( Size::X_SMALL )
+				->icon( Icon::CROSS_2 )
+				->get()
+		)
+		->render();
+?&gt;
+		</code></pre>
 	</div>
 
 	<div class="progress-wrapper tutor-mb-12">
@@ -1177,7 +1254,71 @@ defined( 'ABSPATH' ) || exit;
 					</button>
 				</div>
 			</form>
+	</div>
+	<div class="tooltip-wrapper tutor-mb-12">
+		<h2>Tooltip</h2>
+		<pre><code>&lt;?php
+Tooltip::make()
+	->content( 'This is a small tooltip' )
+	->placement( Tooltip::PLACEMENT_TOP )
+	->trigger_element( '&lt;button class="tutor-btn tutor-btn-primary"&gt;Small Tooltip&lt;/button&gt;' )
+	->render();
+
+Tooltip::make()
+	->content( 'This is a large tooltip with centered arrow' )
+	->placement( Tooltip::PLACEMENT_BOTTOM )
+	->size( Size::LARGE )
+	->arrow( Tooltip::ARROW_CENTER )
+	->trigger_element( '&lt;button class="tutor-btn tutor-btn-secondary"&gt;Large Tooltip&lt;/button&gt;' )
+	->render();
+?&gt;</code></pre>
+		<div class="tutor-flex tutor-gap-4 tutor-flex-wrap tutor-mt-4">
+			<?php
+			Tooltip::make()
+				->content( 'Top Placement' )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Top</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Bottom Placement' )
+				->placement( Tooltip::PLACEMENT_BOTTOM )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Bottom</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Start (Left) Placement' )
+				->placement( Tooltip::PLACEMENT_START )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">Start</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'End (Right) Placement' )
+				->placement( Tooltip::PLACEMENT_END )
+				->trigger_element( '<button class="tutor-btn tutor-btn-outline-primary">End</button>' )
+				->render();
+			?>
 		</div>
+
+		<div class="tutor-flex tutor-gap-4 tutor-flex-wrap tutor-mt-6">
+			<?php
+			Tooltip::make()
+				->content( 'Large tooltip with centered arrow alignment' )
+				->size( Size::LARGE )
+				->arrow( Tooltip::ARROW_CENTER )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-primary">Large Centered</button>' )
+				->render();
+
+			Tooltip::make()
+				->content( 'Click to toggle tooltip' )
+				->trigger_on( Tooltip::CLICK )
+				->placement( Tooltip::PLACEMENT_TOP )
+				->trigger_element( '<button class="tutor-btn tutor-btn-secondary">Click Me</button>' )
+				->render();
+			?>
+		</div>
+	</div>
 </div>
 
 

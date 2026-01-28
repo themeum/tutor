@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\UrlHelper;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -178,7 +180,6 @@ class Template extends Tutor_Base {
 		}
 
 		return $template;
-
 	}
 
 	/**
@@ -536,32 +537,25 @@ class Template extends Tutor_Base {
 
 		$menu_items = array(
 			'resources'   => array(
-				'title' => esc_html__( 'Resources', 'tutor' ),
-				'icon'  => Icon::RESOURCES,
-				'url'   => esc_url( add_query_arg( 'subpage', 'resources', $base_url ) ),
+				'title'    => __( 'Resources', 'tutor' ),
+				'icon'     => Icon::RESOURCES,
+				'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'resources' ) ),
+				'template' => tutor_get_template( 'learning-area.subpages.resources' ),
 			),
 			'qna'         => array(
-				'title' => esc_html__( 'Q&A', 'tutor' ),
+				'title' => __( 'Q&A', 'tutor' ),
 				'icon'  => Icon::QA,
-				'url'   => esc_url( add_query_arg( 'subpage', 'qna', $base_url ) ),
+				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
+				'template' => tutor_get_template( 'learning-area.subpages.qna' ),
 			),
 			'course-info' => array(
-				'title' => esc_html__( 'Course Info', 'tutor' ),
+				'title' => __( 'Course Info', 'tutor' ),
 				'icon'  => Icon::INFO_OCTAGON,
-				'url'   => esc_url( add_query_arg( 'subpage', 'course-info', $base_url ) ),
-			),
-			'webinar'     => array(
-				'title' => esc_html__( 'Webinar', 'tutor' ),
-				'icon'  => Icon::VIDEO_CAMERA_2,
-				'url'   => esc_url( add_query_arg( 'subpage', 'webinar', $base_url ) ),
-			),
-			'certificate' => array(
-				'title' => esc_html__( 'Certificate', 'tutor' ),
-				'icon'  => Icon::CERTIFICATE_2,
-				'url'   => esc_url( add_query_arg( 'subpage', 'certificate', $base_url ) ),
+				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
+				'template' => tutor_get_template( 'learning-area.subpages.course-info' ),
 			),
 		);
 
-		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items );
+		return apply_filters( 'tutor_learning_area_sub_page_nav_item', $menu_items, $base_url );
 	}
 }

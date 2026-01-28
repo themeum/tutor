@@ -16,9 +16,11 @@ $tutor-actions-brand-secondary: var(--tutor-actions-brand-secondary);
 $tutor-actions-brand-tertiary: var(--tutor-actions-brand-tertiary);
 $tutor-actions-gray-empty: var(--tutor-actions-gray-empty);
 $tutor-actions-gray-secondary: var(--tutor-actions-gray-secondary);
+$tutor-actions-gray-tertiary: var(--tutor-actions-gray-secondary-tertiary);
 $tutor-actions-critical-primary: var(--tutor-actions-critical-primary);
 $tutor-actions-critical-secondary: var(--tutor-actions-critical-secondary);
 $tutor-actions-caution: var(--tutor-actions-caution);
+$tutor-actions-caution-secondary: var(--tutor-actions-caution-secondary);
 $tutor-actions-inverse: var(--tutor-actions-inverse);
 $tutor-actions-exception3-highlight: var(--tutor-actions-exception3-highlight);
 $tutor-actions-exception5: var(--tutor-actions-exception5);
@@ -40,10 +42,13 @@ $tutor-actions: (
   brand-tertiary: $tutor-actions-brand-tertiary,
   gray-empty: $tutor-actions-gray-empty,
   gray-secondary: $tutor-actions-gray-secondary,
+  gray-tertiary: $tutor-actions-gray-tertiary,
   critical-primary: $tutor-actions-critical-primary,
   critical-secondary: $tutor-actions-critical-secondary,
   caution: $tutor-actions-caution,
+  caution-secondary: $tutor-actions-caution-secondary,
   inverse: $tutor-actions-inverse,
   exception3-highlight: $tutor-actions-exception3-highlight,
-  exception6: $tutor-actions-exception6
+  exception5: $tutor-actions-exception5,
+  exception6: $tutor-actions-exception6,
 );

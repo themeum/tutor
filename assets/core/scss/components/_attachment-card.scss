@@ -2,7 +2,7 @@
 @use '../mixins' as *;
 
 .tutor-attachment-card {
-  @include tutor-flex(row, stretch, flex-start);
+  @include tutor-flex(row, center, flex-start);
   width: 100%;
   gap: $tutor-spacing-5;
   padding: $tutor-spacing-4 $tutor-spacing-5;
@@ -47,14 +47,6 @@
 
   &-meta {
     @include tutor-typography('tiny', 'regular', 'secondary', 'body');
-  }
-
-  &-actions {
-    @include tutor-flex(row, center, flex-end);
-    gap: $tutor-spacing-2;
-    flex-shrink: 0;
-    opacity: 0;
-    @include tutor-transition(opacity);
   }
 
   &:hover &-actions,

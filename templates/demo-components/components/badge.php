@@ -11,7 +11,8 @@ use TUTOR\Icon;
 <section class="tutor-bg-white tutor-py-6 tutor-px-8 tutor-flex tutor-flex-column tutor-gap-4">
 	<h2>Badges</h2>
 	<div class="tutor-rounded-lg tutor-flex tutor-gap-4">
-		<span class="tutor-badge">
+		<span class="tutor-badge">Default</span>
+		<span class="tutor-badge tutor-badge-primary">
 			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 			Primary
 		</span>
@@ -35,12 +36,20 @@ use TUTOR\Icon;
 			Highlight
 			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 		</span>
+		<span class="tutor-badge tutor-badge-disabled">
+			Disabled
+			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
+		</span>
 	</div>
 
 	<div class="tutor-rounded-lg tutor-flex tutor-gap-4">
 		<span class="tutor-badge tutor-badge-rounded">
 			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 			Rounded
+		</span>
+		<span class="tutor-badge tutor-badge-primary tutor-badge-rounded">
+			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
+			Rounded Primary
 		</span>
 		<span class="tutor-badge tutor-badge-rounded tutor-badge-info">
 			Rounded Info
@@ -59,6 +68,10 @@ use TUTOR\Icon;
 		</span>
 		<span class="tutor-badge tutor-badge-rounded tutor-badge-highlight">
 			Rounded Highlight
+			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
+		</span>
+		<span class="tutor-badge tutor-badge-rounded tutor-badge-disabled">
+			Rounded Disabled
 			<?php tutor_utils()->render_svg_icon( Icon::INFO ); ?>
 		</span>
 	</div>

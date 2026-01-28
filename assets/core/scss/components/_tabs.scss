@@ -8,7 +8,7 @@
     gap: $tutor-spacing-2;
     overflow-x: auto;
     overflow-y: hidden;
-
+    position: relative;
     scrollbar-width: none;
     -ms-overflow-style: none;
 
@@ -49,15 +49,19 @@
         color: $tutor-text-brand;
       }
 
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: $tutor-tab-l3-active-hover;
         color: $tutor-text-primary;
+        box-shadow: none;
       }
     }
 
-    &:hover:not(:disabled):not(.tutor-tabs-tab-active) {
+    &:hover:not(:disabled):not(.tutor-tabs-tab-active),
+    &:focus:not(:disabled):not(.tutor-tabs-tab-active) {
       color: $tutor-text-primary;
       background-color: $tutor-tab-l3-active-hover;
+      box-shadow: none;
 
       svg {
         color: $tutor-text-primary;

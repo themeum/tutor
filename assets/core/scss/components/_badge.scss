@@ -31,4 +31,8 @@
   &-highlight {
     @include tutor-badge-variant(highlight);
   }
+
+  &-disabled {
+    @include tutor-badge-variant(disabled);
+  }
 }

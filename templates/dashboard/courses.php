@@ -78,10 +78,14 @@ $courses_list = $courses_list_array[ $active_tab ];
 		<!-- courses list  -->
 		<?php
 		if ( 'courses/wishlist' === $active_tab || 'courses/my-quiz-attempts' === $active_tab ) :
-			match ( $active_tab ) {
-				'courses/wishlist' => tutor_load_template( 'dashboard.wishlist' ),
-				'courses/my-quiz-attempts' => tutor_load_template( 'dashboard.my-quiz-attempts' ),
-			};
+			switch ( $active_tab ) {
+				case 'courses/wishlist':
+					tutor_load_template( 'dashboard.wishlist' );
+					break;
+				case 'courses/my-quiz-attempts':
+					tutor_load_template( 'dashboard.my-quiz-attempts' );
+					break;
+			}
 		elseif ( 'courses' === $active_tab || 'courses/active-courses' === $active_tab || 'courses/completed-courses' === $active_tab ) :
 			// Prepare course list based on page tab.
 			$courses_list = $courses_list_array[ $active_tab ];

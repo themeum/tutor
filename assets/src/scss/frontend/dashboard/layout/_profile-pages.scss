@@ -5,6 +5,12 @@ body:has(#wpadminbar) {
   .tutor-profile-header {
     top: 32px;
   }
+
+  @include tutor-breakpoint-down(md) {
+    .tutor-profile-header {
+      top: 0;
+    }
+  }
 }
 
 .tutor-profile-header {
@@ -12,8 +18,8 @@ body:has(#wpadminbar) {
   border-bottom: 1px solid $tutor-border-idle;
   padding-block: $tutor-spacing-5;
   position: sticky;
-  top: 0;
   z-index: $tutor-z-positive;
+  width: 100%;
 
   &-title {
     @include tutor-typography(h4, semibold, primary, heading);

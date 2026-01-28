@@ -26,6 +26,10 @@
       background-color: $tutor-surface-l1;
     }
 
+    &:has(.tutor-select-value-text):not(:has(.tutor-select-value-placeholder)) {
+      background-color: $tutor-surface-l1;
+    }
+
     &[disabled] {
       background-color: $tutor-surface-l1-hover;
       cursor: not-allowed;

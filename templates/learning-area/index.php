@@ -12,10 +12,12 @@
 use TUTOR\Course_List;
 use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\Template;
 
 wp_head();
 
 $current_user_id = get_current_user_id();
+$subpages        = Template::make_learning_area_sub_page_nav_items();
 
 // Tutor global variable for using inside learning area.
 $tutor_current_post_type    = get_post_type();
@@ -30,41 +32,43 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<div class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>" x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
-	<?php tutor_load_template( 'learning-area.components.header' ); ?>
-	<div class="tutor-learning-area-body">
-		<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
-		<div class="tutor-learning-area-content">
-			<div class="tutor-learning-area-container">
-				<?php
-				// Get requested page from query string and sanitize.
-				$subpage = Input::get( 'subpage' );
+<body class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>">
+	<div x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
+		<?php tutor_load_template( 'learning-area.components.header' ); ?>
+		<div class="tutor-learning-area-body">
+			<?php tutor_load_template( 'learning-area.components.sidebar' ); ?>
+			<div class="tutor-learning-area-content">
+				<div class="tutor-learning-area-container">
+					<?php
+					// Get requested page from query string and sanitize.
+					$subpage = Input::get( 'subpage' );
 
-				if ( $subpage ) {
-					$subpage_template = tutor_get_template( 'learning-area.subpages.' . $subpage );
-					if ( file_exists( $subpage_template ) ) {
-						tutor_load_template( 'learning-area.subpages.' . $subpage );
+					if ( $subpage ) {
+						$template         = $subpages[ $subpage ]['template'] ?? '';
+						if ( file_exists( $template ) ) {
+							tutor_load_template_from_custom_path( $template );
+						} else {
+							do_action( 'tutor_single_content_' . $tutor_current_post_type );
+						}
 					} else {
-						do_action( 'tutor_single_content_' . $tutor_post_type );
+						do_action( 'tutor_single_content_' . $tutor_current_post_type, $tutor_current_post );
 					}
-				} else {
-					do_action( 'tutor_single_content_' . $tutor_current_post_type, $tutor_current_post );
-				}
-				?>
+					?>
+				</div>
 			</div>
-		</div>
-		<button 
-			class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
-			@click="isFullScreen = !isFullScreen"
-		>
-			<template x-if="!isFullScreen">
-				<?php tutor_utils()->render_svg_icon( Icon::EXPAND ); ?>
-			</template>
+			<button 
+				class="tutor-btn tutor-btn-outline tutor-btn-small tutor-btn-icon tutor-expand-btn"
+				@click="isFullScreen = !isFullScreen"
+			>
+				<template x-if="!isFullScreen">
+					<?php tutor_utils()->render_svg_icon( Icon::EXPAND ); ?>
+				</template>
 
-			<template x-if="isFullScreen">
-				<?php tutor_utils()->render_svg_icon( Icon::COLLAPSED ); ?>
-			</template>
-		</button>
+				<template x-if="isFullScreen">
+					<?php tutor_utils()->render_svg_icon( Icon::COLLAPSED ); ?>
+				</template>
+			</button>
+		</div>
 	</div>
-</div>
-<?php wp_footer(); ?>
+	<?php wp_footer(); ?>
+</body>

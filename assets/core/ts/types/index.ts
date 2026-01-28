@@ -11,6 +11,7 @@ import { type FormService } from '@Core/ts/services/Form';
 import { type ModalService } from '@Core/ts/services/Modal';
 import { type QueryService } from '@Core/ts/services/Query';
 import { type ToastService } from '@Core/ts/services/Toast';
+import { type WPMediaService } from '../services/WPMedia';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface AlpineComponentMeta<TProps = any> {
@@ -41,6 +42,7 @@ export interface TutorCore {
   toast: ToastService;
   query: QueryService;
   modal: ModalService;
+  wpMedia: WPMediaService;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
