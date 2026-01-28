@@ -1,4 +1,5 @@
 {
   "*.{ts,tsx}": ["eslint --fix"],
-  "*.{ts,tsx,jsonc,md}": ["prettier --write"]
+  "*.{ts,tsx,jsonc,md}": ["prettier --write"],
+  "*.php": ["./vendor/bin/phpstan analyze --memory-limit=-1"]
 }
