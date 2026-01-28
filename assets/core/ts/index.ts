@@ -13,6 +13,7 @@ import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
 import { modalMeta } from '@Core/ts/components/modal';
 import { passwordInputMeta } from '@Core/ts/components/password-input';
+import { playerMeta } from '@Core/ts/components/player';
 import { popoverMeta } from '@Core/ts/components/popover';
 import { previewTriggerMeta } from '@Core/ts/components/preview-trigger';
 import { selectMeta } from '@Core/ts/components/select';
@@ -22,6 +23,7 @@ import { staticsMeta } from '@Core/ts/components/statics';
 import { stepperDropdownMeta } from '@Core/ts/components/stepper-dropdown';
 import { tabsMeta } from '@Core/ts/components/tabs';
 import { toastMeta } from '@Core/ts/components/toast';
+import { tooltipMeta } from '@Core/ts/components/tooltip';
 
 import { formServiceMeta } from '@Core/ts/services/Form';
 import { modalServiceMeta } from '@Core/ts/services/Modal';
@@ -50,12 +52,14 @@ const initializePlugin = () => {
       staticsMeta,
       accordionMeta,
       formMeta,
+      tooltipMeta,
       selectDropdownMeta,
       stepperDropdownMeta,
       selectMeta,
       previewTriggerMeta,
       starRatingMeta,
       toastMeta,
+      playerMeta,
       passwordInputMeta,
     ],
     services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, wpMediaServiceMeta],
