@@ -9,6 +9,8 @@
  * @since 4.0.0
  */
 
+use TUTOR_REPORT\Analytics;
+
 defined( 'ABSPATH' ) || exit;
 
 // Default values.
@@ -29,6 +31,11 @@ if ( ! isset( $icon ) || empty( $icon ) ) {
 	return;
 }
 
+if ( $change_display_on_hover) {
+	$template_path = tutor()->path . 'templates/dashboard/instructor/analytics/stat-card-hover.php';
+	$hover_template = Analytics::get_template_output($template_path, array());
+}
+
 ?>
 <div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $icon ); ?>">
 	<div class="tutor-stat-card-header">
@@ -43,18 +50,18 @@ if ( ! isset( $icon ) || empty( $icon ) ) {
 		<div class="tutor-stat-card-value">
 			<?php echo esc_html( $value ); ?>
 		</div>
-		<?php if ( ! empty( $change_display ) ) : ?>
-			<p class="<?php echo esc_attr( $change_class ); ?>">
-				<?php echo esc_html( $change_display ); ?>
-			</p>
-			<?php if ( ! empty( $change_icon ) ) : ?>
-				<?php tutor_utils()->render_svg_icon( $change_icon ); ?>
-			<?php endif; ?>
+
+		<p class="<?php echo esc_attr( $change_class ); ?>">
+			<?php echo esc_html( $change_display ); ?>
+		</p>
+		<?php if ( ! empty( $change_icon ) ) : ?>
+			<?php tutor_utils()->render_svg_icon( $change_icon ); ?>
 		<?php endif; ?>
-		<?php if ( ! empty( $change_display_on_hover ) ) : ?>
-			<p class="tutor-stat-card-hover-content">
-				<?php echo esc_html( $change_display_on_hover ); ?>
-			</p>
+
+		<?php if ( $change_display_on_hover ) : ?>
+
+			<?php 
+				//echo $hover_template; ?>
 		<?php endif; ?>
 	</div>
 	<?php if ( $show_graph ) : ?>

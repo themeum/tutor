@@ -846,18 +846,22 @@ class Instructor {
 	public static function get_stat_card_details( float $current_data, float $previous_data ) {
 
 		if ( empty( $previous_data ) && empty( $current_data ) ) {
-			return '-';
+			return array(
+				'percentage' => '',
+				'icon'       => Icon::MINUS,
+				'class'      => 'tutor-text-primary',
+			);
 		}
 
 		if ( empty( $previous_data ) ) {
-			$percentage = $current_data > 0 ? 100 : 0;
+			$percentage = 100;
 		} else {
 			$percentage = ( ( $current_data - $previous_data ) / $previous_data ) * 100;
 		}
 
 		$is_negative = $percentage < 0;
-		$icon        = empty( $percentage ) ? Icon::MINUS : ( $is_negative ? Icon::ARROW_DOWN : Icon::ARROW_UP );
-		$class       = empty( $percentage ) ? '' : ( $is_negative ? 'tutor-p2 tutor-actions-critical-primary' : 'tutor-p2 tutor-actions-success-primary' );
+		$icon        = $is_negative ? Icon::ARROW_DOWN : Icon::ARROW_UP;
+		$class       = $is_negative ? 'tutor-p2 tutor-actions-critical-primary' : 'tutor-p2 tutor-actions-success-primary';
 
 		return array(
 			'percentage' => abs( $percentage ) . '%',

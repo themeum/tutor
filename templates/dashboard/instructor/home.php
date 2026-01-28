@@ -361,7 +361,8 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 					'change'       => $card['change'] ?? '',
 					'data'         => $card['data'] ?? array( 0, 0, 0 ),
 					'change_class' => $card['change_class'] ?? '',
-					'class_icon'   => $card['change_icon'] ?? '',
+					'change_icon'  => $card['change_icon'] ?? '',
+					'change_display_on_hover' => true,
 				)
 			);
 			?>
