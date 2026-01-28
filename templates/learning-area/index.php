@@ -16,9 +16,6 @@ use TUTOR\Template;
 
 wp_head();
 
-$current_user_id = get_current_user_id();
-$subpages        = Template::make_learning_area_sub_page_nav_items();
-
 // Tutor global variable for using inside learning area.
 $tutor_current_post_type    = get_post_type();
 $tutor_current_post         = get_post();
@@ -29,7 +26,9 @@ $tutor_course_list_url      = tutor_utils()->course_archive_page_url();
 $tutor_is_enrolled          = tutor_utils()->is_enrolled( $tutor_course_id );
 $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
 $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $current_user_id, $tutor_course_id );
+$current_user_id            = get_current_user_id();
 
+$subpages = Template::make_learning_area_sub_page_nav_items();
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <body class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>">
