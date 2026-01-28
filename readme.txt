@@ -321,12 +321,13 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.9.6 - Jan 28, 2025
 
-Update: Remove autoload option from `email_template_data` for faster site loads. (Pro)
-Update: Edited Divi courses can now be reverted to original content from tutor course builder.
-Fix: Verify user email against a token with user use login with Google. (Pro)
-Fix: Email verification link generation is updated to make it more secure. (Pro)
-Fix: Added capability check in coupon details ajax request.
-Fix: Restrict instructors to delete courses that created by other Admin or other instructors. (Pro)
+Update: Removed the autoload option from ‘email_template_data’ to improve site load performance. (Pro)
+Fix: Course content edited with Divi can now be reverted to its original content from the Tutor Course Builder.
+Fix: Improved user email verification by validating the token during Google login. (Pro)
+Fix: Enhanced the security of email verification link generation. (Pro)
+Fix: Added a capability check to the coupon details AJAX request.
+Fix: Restricted instructors from deleting courses created by other admins or instructors. (Pro)
+Fix: Improved WPML compatibility. (Pro)
 
 = 3.9.5 - Jan 08, 2025
 
