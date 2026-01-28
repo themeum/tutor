@@ -536,12 +536,6 @@ class Template extends Tutor_Base {
 		}
 
 		$menu_items = array(
-			'resources'   => array(
-				'title'    => __( 'Resources', 'tutor' ),
-				'icon'     => Icon::RESOURCES,
-				'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'resources' ) ),
-				'template' => tutor_get_template( 'learning-area.subpages.resources' ),
-			),
 			'qna'         => array(
 				'title' => __( 'Q&A', 'tutor' ),
 				'icon'  => Icon::QA,

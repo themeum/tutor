@@ -184,6 +184,7 @@ const endpoints = {
 
   // Quiz Attempts
   START_QUIZ: 'tutor_start_quiz',
+  UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
 } as const;
 
 export default endpoints;
