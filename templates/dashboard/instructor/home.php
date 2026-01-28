@@ -122,8 +122,8 @@ $total_students = Instructor::get_instructor_total_students_by_date_range( $star
 // $previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Ratings.
-$where         = empty( $start_date ) && empty( $end_date ) ? array() : array( 'reviews.comment_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
-$total_ratings = tutor_utils()->get_instructor_ratings( $user->ID, $where );
+$total_ratings_where = empty( $start_date ) && empty( $end_date ) ? array() : array( 'reviews.comment_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
+$total_ratings       = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
 // @todo Implementation is on hold until the new designs are ready.
 // $previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
 
@@ -234,8 +234,8 @@ $top_performing_courses = Instructor::format_instructor_top_performing_courses( 
 
 if ( empty( $start_date ) && empty( $end_date ) && $tutor_pro_enabled ) {
 
-	$get_upcoming_live_tasks = Instructor::get_instructor_upcoming_live_tasks( $user->ID );
-	$upcoming_tasks          = Instructor::format_instructor_upcoming_live_tasks( $get_upcoming_live_tasks );
+	$upcoming_live_tasks = Instructor::get_instructor_upcoming_live_tasks( $user->ID );
+	$upcoming_tasks      = Instructor::format_instructor_upcoming_live_tasks( $upcoming_live_tasks );
 }
 
 // @todo will be added later.
