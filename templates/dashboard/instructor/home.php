@@ -116,7 +116,6 @@ $total_courses = CourseModel::get_course_count_by_date( $start_date, $end_date, 
 // $previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Students.
-$total_students_where = empty( $start_date ) && empty( $end_date ) ? array() : array( 'enrollment.post_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
 $total_students       = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
 // @todo Implementation is on hold until the new designs are ready.
 // $previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
