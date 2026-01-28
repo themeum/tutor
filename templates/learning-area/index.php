@@ -42,9 +42,8 @@ $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $cu
 					<?php
 					// Get requested page from query string and sanitize.
 					$subpage = Input::get( 'subpage' );
-
 					if ( $subpage ) {
-						$template         = $subpages[ $subpage ]['template'] ?? '';
+						$template = $subpages[ $subpage ]['template'] ?? '';
 						if ( file_exists( $template ) ) {
 							tutor_load_template_from_custom_path( $template );
 						} else {
