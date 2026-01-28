@@ -319,7 +319,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.9.6 - Jan 28, 2025
+= 3.9.6 - Jan 28, 2026
 
 Update: Removed the autoload option from ‘email_template_data’ to improve site load performance. (Pro)
 Fix: Course content edited with Divi can now be reverted to its original content from the Tutor Course Builder.
