@@ -11,6 +11,7 @@
 
 use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\User;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
@@ -29,7 +30,7 @@ $all_reviews   = tutor_utils()->get_reviews_by_user( 0, $offset, $item_per_page,
 $review_count  = $all_reviews->count;
 $reviews       = $all_reviews->results;
 $is_instructor = tutor_utils()->is_instructor( 0, true );
-$is_editable   = $is_instructor ? false : true;
+$is_editable   = User::is_student_view();
 
 foreach ( $reviews as $review ) {
 	$review->is_editable = $is_editable;
