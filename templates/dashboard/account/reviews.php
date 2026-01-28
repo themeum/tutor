@@ -11,6 +11,7 @@
 
 use TUTOR\Icon;
 use TUTOR\Input;
+use TUTOR\User;
 use Tutor\Components\Button;
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\EmptyState;
@@ -25,11 +26,10 @@ $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page  = max( 1, Input::get( 'current_page', 0, Input::TYPE_INT ) );
 $offset        = ( $current_page - 1 ) * $item_per_page;
 
-$all_reviews   = tutor_utils()->get_reviews_by_user( 0, $offset, $item_per_page, true );
-$review_count  = $all_reviews->count;
-$reviews       = $all_reviews->results;
-$is_instructor = tutor_utils()->is_instructor( 0, true );
-$is_editable   = $is_instructor ? false : true;
+$all_reviews  = tutor_utils()->get_reviews_by_user( 0, $offset, $item_per_page, true );
+$review_count = $all_reviews->count;
+$reviews      = $all_reviews->results;
+$is_editable  = User::is_student_view();
 
 foreach ( $reviews as $review ) {
 	$review->is_editable = $is_editable;
