@@ -356,4 +356,64 @@ class Input {
 		);
 		return $tags;
 	}
+
+	/**
+	 * This method is used with wp_kses_allowed_html filter
+	 * to allow svg tags.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $allowed_tags allowed HTML tags.
+	 *
+	 * @return array
+	 */
+	public static function allow_svg( $allowed_tags ) {
+		$svg_tags = array(
+			'svg'      => array(
+				'class'       => true,
+				'aria-hidden' => true,
+				'aria-label'  => true,
+				'role'        => true,
+				'xmlns'       => true,
+				'width'       => true,
+				'height'      => true,
+				'viewbox'     => true,
+				'fill'        => true,
+			),
+			'g'        => array(
+				'fill' => true,
+			),
+			'path'     => array(
+				'd'            => true,
+				'fill'         => true,
+				'stroke'       => true,
+				'stroke-width' => true,
+			),
+			'circle'   => array(
+				'cx' => true,
+				'cy' => true,
+				'r'  => true,
+			),
+			'rect'     => array(
+				'x'      => true,
+				'y'      => true,
+				'width'  => true,
+				'height' => true,
+			),
+			'line'     => array(
+				'x1' => true,
+				'x2' => true,
+				'y1' => true,
+				'y2' => true,
+			),
+			'polyline' => array(
+				'points' => true,
+			),
+			'polygon'  => array(
+				'points' => true,
+			),
+		);
+
+		return array_merge( $allowed_tags, $svg_tags );
+	}
 }
