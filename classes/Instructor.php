@@ -797,4 +797,150 @@ class Instructor {
 
 		return $result;
 	}
+
+	/**
+	 * Format top performing instructor courses for presentation.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $top_courses List of course objects returned from analytics.
+	 * @return array Formatted top performing courses data.
+	 */
+	public static function format_instructor_top_performing_courses( $top_courses ) {
+
+		if ( empty( $top_courses ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $course ) {
+				return array(
+					'name'     => $course->course_title,
+					'url'      => get_permalink( $course->course_id ),
+					'revenue'  => wp_kses_post( tutor_utils()->tutor_price( $course->total_revenue ?? 0 ) ),
+					'students' => $course->total_student ?? 0,
+				);
+			},
+			$top_courses
+		);
+	}
+
+	/**
+	 * Retrieve upcoming live session tasks (Zoom / Google Meet) for an instructor.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $instructor_id Instructor (author) user ID.
+	 * @return array List of upcoming live task posts.
+	 */
+	public static function get_instructor_upcoming_live_tasks( $instructor_id ) {
+
+		$is_google_meet_enable = tutor_utils()->is_addon_enabled( 'google-meet' );
+		$is_zoom_enable        = tutor_utils()->is_addon_enabled( 'tutor-zoom' );
+
+		$meta_keys = array_filter(
+			array(
+				$is_google_meet_enable ? 'tutor-google-meet-start-datetime' : null,
+				$is_zoom_enable ? '_tutor_zm_start_datetime' : null,
+			)
+		);
+
+		$post_types = array_filter(
+			array(
+				$is_google_meet_enable ? tutor()->meet_post_type : null,
+				$is_zoom_enable ? tutor()->zoom_post_type : null,
+			)
+		);
+
+		if ( empty( $meta_keys ) ) {
+			return array();
+		}
+
+		return get_posts(
+			array(
+				'post_type'   => $post_types,
+				'post_status' => 'publish',
+				'post_author' => $instructor_id,
+				'numberposts' => 5,
+				'meta_query'  => array(
+					array(
+						'key'     => $meta_keys,
+						'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+						'compare' => '>=',
+						'type'    => 'DATETIME',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Format upcoming instructor live tasks for presentation.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $upcoming_live_tasks List of live task post objects.
+	 * @return array Formatted upcoming live tasks data.
+	 */
+	public static function format_instructor_upcoming_live_tasks( $upcoming_live_tasks ) {
+
+		if ( empty( $upcoming_live_tasks ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $task ) {
+
+				$is_zoom = tutor()->zoom_post_type === $task->post_type;
+				$is_meet = tutor()->meet_post_type === $task->post_type;
+
+				$live_meta_key = $is_zoom ? '_tutor_zm_start_datetime'
+								: ( $is_meet ? 'tutor-google-meet-start-datetime' : '' );
+
+				$url = $is_zoom ? ( json_decode( get_post_meta( $task->ID, '_tutor_zm_data' )[0] )->join_url ?? '' )
+								: ( $is_meet ? get_post_meta( $task->ID, 'tutor-google-meet-link', true ) : '' );
+
+				$start_date = get_post_meta( $task->ID, $live_meta_key, true );
+
+				return array(
+					'name'      => $task->post_title,
+					'date'      => wp_date( 'Y-m-d h:i A', strtotime( $start_date ) ),
+					'url'       => $url,
+					'post_type' => $task->post_type,
+				);
+			},
+			$upcoming_live_tasks
+		);
+	}
+
+	/**
+	 * Format recent instructor reviews for display.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $reviews List of review objects.
+	 * @return array Formatted recent reviews data.
+	 */
+	public static function format_instructor_recent_reviews( $reviews ) {
+
+		if ( empty( $reviews ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $review ) {
+				return array(
+					'user'        => array(
+						'name'   => $review->display_name,
+						'avatar' => get_avatar_url( $review->user_id ),
+					),
+					'course_name' => get_the_title( $review->comment_post_ID ),
+					'date'        => $review->comment_date,
+					'rating'      => $review->rating,
+					'review_text' => $review->comment_content,
+				);
+			},
+			$reviews
+		);
+	}
 }

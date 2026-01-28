@@ -81,6 +81,7 @@ $sortable_sections_ids = array_reduce(
 $upcoming_tasks          = array();
 $get_upcoming_live_tasks = array();
 $overview_chart_data     = array();
+$recent_reviews          = array();
 
 $user                  = wp_get_current_user();
 $instructor_course_ids = CourseModel::get_courses_by_args(
@@ -116,7 +117,7 @@ $total_courses = CourseModel::get_course_count_by_date( $start_date, $end_date, 
 // $previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Students.
-$total_students       = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+$total_students = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
 // @todo Implementation is on hold until the new designs are ready.
 // $previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
@@ -229,71 +230,12 @@ $args                   = array(
 	'order_by'   => Input::get( 'type', 'revenue' ),
 );
 $top_courses            = Instructor::get_top_performing_courses_by_instructor( $user->ID, $args );
-$top_performing_courses = array_map(
-	function ( $course ) {
-		return array(
-			'name'     => $course->course_title,
-			'url'      => get_permalink( $course->course_id ),
-			'revenue'  => wp_kses_post( tutor_utils()->tutor_price( $course->total_revenue ?? 0 ) ),
-			'students' => $course->total_student ?? 0,
-		);
-	},
-	$top_courses
-);
+$top_performing_courses = Instructor::format_instructor_top_performing_courses( $top_courses );
 
 if ( empty( $start_date ) && empty( $end_date ) && $tutor_pro_enabled ) {
 
-	$meta_keys = array_filter(
-		array(
-			tutor_utils()->is_addon_enabled( 'google-meet' ) ? 'tutor-google-meet-start-datetime' : null,
-			tutor_utils()->is_addon_enabled( 'tutor-zoom' ) ? '_tutor_zm_start_datetime' : null,
-		)
-	);
-
-	if ( ! empty( $meta_key ) ) {
-		$get_upcoming_live_tasks = get_posts(
-			array(
-				'post_type'   => array( tutor()->zoom_post_type, tutor()->meet_post_type ),
-				'post_status' => 'publish',
-				'post_author' => $user->ID,
-				'numberposts' => 5,
-				'meta_query'  => array(
-					array(
-						'key'     => array( '_tutor_zm_start_datetime', 'tutor-google-meet-start-datetime' ),
-						'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
-						'compare' => '>=',
-						'type'    => 'DATETIME',
-					),
-				),
-			)
-		);
-	}
-
-	if ( ! empty( $get_upcoming_live_tasks ) ) {
-		$upcoming_tasks = array_map(
-			function ( $task ) {
-
-				$is_zoom = tutor()->zoom_post_type === $task->post_type;
-				$is_meet = tutor()->meet_post_type === $task->post_type;
-
-				$live_meta_key = $is_zoom ? '_tutor_zm_start_datetime'
-								: ( $is_meet ? 'tutor-google-meet-start-datetime' : '' );
-
-				$url = $is_zoom ? ( json_decode( get_post_meta( $task->ID, '_tutor_zm_data' )[0] )->join_url ?? '' )
-								: ( $is_meet ? get_post_meta( $task->ID, 'tutor-google-meet-link', true ) : '' );
-
-				$start_date = get_post_meta( $task->ID, $live_meta_key, true );
-
-				return array(
-					'name'      => $task->post_title,
-					'date'      => wp_date( 'Y-m-d h:i A', strtotime( $start_date ) ),
-					'url'       => $url,
-					'post_type' => $task->post_type,
-				);
-			},
-			$get_upcoming_live_tasks
-		);
-	}
+	$get_upcoming_live_tasks = Instructor::get_instructor_upcoming_live_tasks( $user->ID );
+	$upcoming_tasks          = Instructor::format_instructor_upcoming_live_tasks( $get_upcoming_live_tasks );
 }
 
 // @todo will be added later.
@@ -335,26 +277,9 @@ $review_where = array( 'comment_post_ID' => array( 'IN', $instructor_course_ids 
 if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
 	$review_where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
 }
-$review_args = array( 'where' => QueryHelper::prepare_where_clause( $review_where ) );
-$reviews     = tutor_utils()->get_reviews_by_instructor( $user->ID, 0, 3, '', '', $review_args );
-
-if ( ! empty( $reviews->results ) ) {
-	$recent_reviews = array_map(
-		function ( $review ) {
-			return array(
-				'user'        => array(
-					'name'   => $review->display_name,
-					'avatar' => get_avatar_url( $review->user_id ),
-				),
-				'course_name' => get_the_title( $review->comment_post_ID ),
-				'date'        => $review->comment_date,
-				'rating'      => $review->rating,
-				'review_text' => $review->comment_content,
-			);
-		},
-		$reviews->results
-	);
-}
+$review_args    = array( 'where' => QueryHelper::prepare_where_clause( $review_where ) );
+$reviews        = tutor_utils()->get_reviews_by_instructor( $user->ID, 0, 3, '', '', $review_args );
+$recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->results );
 ?>
 
 <form x-data='tutorForm({
