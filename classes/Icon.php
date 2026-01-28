@@ -32,10 +32,12 @@ final class Icon {
 	const ARCHIVE_2                  = 'archive-2';
 	const ARROWS_IN                  = 'arrows-in';
 	const ARROWS_OUT                 = 'arrows-out';
+	const ARROW_DOWN                 = 'arrow-down';
 	const ARROW_LEFT                 = 'arrow-left';
 	const ARROW_LEFT_2               = 'arrow-left-2';
 	const ARROW_LEFT_ALT             = 'arrow-left-alt';
 	const ARROW_RIGHT_2              = 'arrow-right-2';
+	const ARROW_UP                   = 'arrow-up';
 	const ASSIGNMENT                 = 'assignment';
 	const ATTACH                     = 'attach';
 	const ATTACHMENT_LINE            = 'attachment-line';
@@ -93,9 +95,9 @@ final class Icon {
 	const CODING                     = 'coding';
 	const COLLAPSED                  = 'collapsed';
 	const COLOR_OPTION               = 'color-option';
-	const COMMISSION                 = 'commission';
 	const COMMAND                    = 'command';
 	const COMMENTS                   = 'comments';
+	const COMMISSION                 = 'commission';
 	const COMPLETED                  = 'completed';
 	const COMPLETED_CIRCLE           = 'completed-circle';
 	const COMPLETED_COLORIZE         = 'completed-colorize';
@@ -162,8 +164,8 @@ final class Icon {
 	const EYE_LINE                   = 'eye-line';
 	const EYE_OFF                    = 'eye-off';
 	const FACEBOOK                   = 'facebook';
-	const FEES                       = 'fees';
 	const FEATHER                    = 'feather';
+	const FEES                       = 'fees';
 	const FILE                       = 'file';
 	const FILE_ATTACHEMENT           = 'file-attachement';
 	const FILTER                     = 'filter';

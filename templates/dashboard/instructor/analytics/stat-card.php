@@ -12,11 +12,14 @@
 defined( 'ABSPATH' ) || exit;
 
 // Default values.
-$icon_size  = $icon_size ?? 24;
-$value      = isset( $value ) ? $value : 0;
-$change     = isset( $change ) ? $change : '';
-$show_graph = isset( $show_graph ) ? $show_graph : false;
-$data       = isset( $data ) ? $data : array( 0, 0, 0 );
+$icon_size               = $icon_size ?? 24;
+$value                   = $value ?? 0;
+$change_display          = $change ?? '';
+$show_graph              = $show_graph ?? false;
+$data                    = $data ?? array( 0, 0, 0 );
+$change_class            = $change_class ?? 'tutor-stat-card-change ';
+$change_icon             = $change_icon ?? '';
+$change_display_on_hover = $change_display_on_hover ?? false;
 
 // Required fields validation.
 if ( ! isset( $card_title ) || empty( $card_title ) ) {
@@ -25,8 +28,6 @@ if ( ! isset( $card_title ) || empty( $card_title ) ) {
 if ( ! isset( $icon ) || empty( $icon ) ) {
 	return;
 }
-
-$change_display = ! empty( $change ) ? $change : '';
 
 ?>
 <div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $icon ); ?>">
@@ -43,8 +44,16 @@ $change_display = ! empty( $change ) ? $change : '';
 			<?php echo esc_html( $value ); ?>
 		</div>
 		<?php if ( ! empty( $change_display ) ) : ?>
-			<p class="tutor-stat-card-change">
+			<p class="<?php echo esc_attr( $change_class ); ?>">
 				<?php echo esc_html( $change_display ); ?>
+			</p>
+			<?php if ( ! empty( $change_icon ) ) : ?>
+				<?php tutor_utils()->render_svg_icon( $change_icon ); ?>
+			<?php endif; ?>
+		<?php endif; ?>
+		<?php if ( ! empty( $change_display_on_hover ) ) : ?>
+			<p class="tutor-stat-card-hover-content">
+				<?php echo esc_html( $change_display_on_hover ); ?>
 			</p>
 		<?php endif; ?>
 	</div>

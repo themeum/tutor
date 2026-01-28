@@ -424,107 +424,6 @@ class Instructor {
 	}
 
 	/**
-	 * Generate a comparison subtitle for a stat card.
-	 * If no date range is provided, the subtitle defaults to "this month".
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $start_date     Selected start date (Y-m-d).
-	 * @param string $end_date       Selected end date (Y-m-d).
-	 * @param float  $current_data   Current period value.
-	 * @param float  $previous_data  Previous period value.
-	 * @param bool   $price          Whether to format the difference as a price.
-	 *
-	 * @return string Comparison subtitle string.
-	 */
-	public static function get_stat_card_comparison_subtitle(
-		string $start_date,
-		string $end_date,
-		float $current_data,
-		float $previous_data,
-		bool $price = true
-	): string {
-
-		$diff   = ! empty( $start_date ) && ! empty( $end_date ) ? $current_data - $previous_data : $previous_data;
-		$symbol = $diff < 0 ? '-' : ( $diff > 0 ? '+' : '' );
-		$diff   = $price ? tutor_utils()->tutor_price( abs( $diff ) ) : abs( $diff );
-
-		$start = new DateTime( $start_date );
-		$end   = new DateTime( $end_date );
-		$days  = (int) $start->diff( $end )->days;
-
-		$time_span = empty( $start_date ) && empty( $end_date )
-						? __( 'this month', 'tutor' )
-						: self::get_comparison_period_label( $start_date, $end_date, $days );
-
-		return "{$symbol}{$diff} {$time_span}";
-	}
-
-	/**
-	 * Get a human-readable label for a comparison date range.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $start_date Start date (Y-m-d).
-	 * @param string $end_date   End date (Y-m-d).
-	 * @param int    $days       Number of days between start and end dates.
-	 *
-	 * @return string Comparison period label.
-	 */
-	public static function get_comparison_period_label( string $start_date, string $end_date, int $days ): string {
-
-		$time_zone = wp_timezone();
-		$format    = DateTimeHelper::FORMAT_DATE;
-		$now       = DateTimeHelper::now()->set_timezone( $time_zone );
-		$today     = $now->format( $format );
-
-		$this_month_start = $now->create( 'first day of this month' )->format( $format );
-		$this_month_end   = $now->create( 'last day of this month' )->format( $format );
-
-		$last_month_start = $now->create( 'first day of last month' )->format( $format );
-		$last_month_end   = $now->create( 'last day of last month' )->format( $format );
-
-		$last_year_start = $now->create( 'first day of January last year' )->format( $format );
-		$last_year_end   = $now->create( 'last day of December last year' )->format( $format );
-
-		if ( $start_date === $today && $end_date === $today ) {
-			return __( 'today', 'tutor' );
-		}
-
-		switch ( true ) {
-
-			case ( 0 === $days && $today !== $start_date ):
-				return __( 'from yesterday', 'tutor' );
-
-			case ( 6 === $days ):
-				return __( 'from last 7 days', 'tutor' );
-
-			case ( 13 === $days ):
-				return __( 'from last 14 days', 'tutor' );
-
-			case ( 29 === $days ):
-				return __( 'from last 30 days', 'tutor' );
-
-			case ( $start_date === $this_month_start && $end_date === $this_month_end ):
-				return __( 'from this month', 'tutor' );
-
-			case ( $start_date === $last_month_start && $end_date === $last_month_end ):
-				return __( 'from last month', 'tutor' );
-
-			case ( $start_date === $last_year_start && $end_date === $last_year_end ):
-				return __( 'from last year', 'tutor' );
-
-			default:
-				return sprintf(
-					/* translators: 1: formatted start date, 2: formatted end date */
-					__( 'from %1$s–%2$s', 'tutor' ),
-					wp_date( 'M j', strtotime( $start_date ), $time_zone ),
-					wp_date( 'M j', strtotime( $end_date ), $time_zone )
-				);
-		}
-	}
-
-	/**
 	 * Calculate the previous comparison date range based on a selected date range.
 	 *
 	 * @since 4.0.0
@@ -728,8 +627,8 @@ class Instructor {
 
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 
-		$amount_type = current_user_can( 'administrator' ) ? 'earnings.admin_amount' : 'earnings.instructor_amount';
-		$amount_rate = current_user_can( 'administrator' ) ? 'earnings.admin_rate' : 'earnings.instructor_rate';
+		$amount_type = is_admin() ? 'earnings.admin_amount' : 'earnings.instructor_amount';
+		$amount_rate = is_admin() ? 'earnings.admin_rate' : 'earnings.instructor_rate';
 
 		$amount_condition = "CASE
 			WHEN orders.tax_type = 'inclusive' AND earnings.course_price_grand_total > 0
@@ -941,6 +840,29 @@ class Instructor {
 				);
 			},
 			$reviews
+		);
+	}
+
+	public static function get_stat_card_details( float $current_data, float $previous_data ) {
+
+		if ( empty( $previous_data ) && empty( $current_data ) ) {
+			return '-';
+		}
+
+		if ( empty( $previous_data ) ) {
+			$percentage = $current_data > 0 ? 100 : 0;
+		} else {
+			$percentage = ( ( $current_data - $previous_data ) / $previous_data ) * 100;
+		}
+
+		$is_negative = $percentage < 0;
+		$icon        = empty( $percentage ) ? Icon::MINUS : ( $is_negative ? Icon::ARROW_DOWN : Icon::ARROW_UP );
+		$class       = empty( $percentage ) ? '' : ( $is_negative ? 'tutor-p2 tutor-actions-critical-primary' : 'tutor-p2 tutor-actions-success-primary' );
+
+		return array(
+			'percentage' => abs( $percentage ) . '%',
+			'icon'       => $icon,
+			'class'      => $class,
 		);
 	}
 }

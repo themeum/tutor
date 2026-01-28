@@ -95,46 +95,48 @@ $instructor_course_ids = CourseModel::get_courses_by_args(
 $tutor_pro_enabled    = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
 $report_addon_enabled = tutor_utils()->is_addon_enabled( 'tutor-report' );
 
-$start_date = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
-$end_date   = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
-// @todo Implementation is on hold until the new designs are ready."
-// $previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
+$start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
+$end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+$previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
+$is_all_time    = empty( $start_date ) && empty( $end_date );
+
+$date_range = fn( $from, $to, $column ) => array(
+	$column => array( 'BETWEEN', array( $from, $to ) ),
+);
 
 // Total Earnings.
 if ( $tutor_pro_enabled && $report_addon_enabled ) {
-	$earnings       = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
-	$total_earnings = $earnings['total_earnings'] ?? 0;
+	$earnings                          = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
+	$total_earnings                    = $earnings['total_earnings'] ?? 0;
+	$previous_period_earnings          = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
+	$total_earnings_state_card_details = Instructor::get_stat_card_details( $total_earnings, $previous_period_earnings );
 } else {
 	$total_earnings = WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0;
 }
 
-// @todo Implementation is on hold until the new designs are ready.
-// $previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
 
 // Total Courses.
-$total_courses = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
-// @todo Implementation is on hold until the new designs are ready.
-// $previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+$total_courses           = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
+$previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Students.
-$total_students = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
-// @todo Implementation is on hold until the new designs are ready.
-// $previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+$total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+$previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Ratings.
-$total_ratings_where = empty( $start_date ) && empty( $end_date ) ? array() : array( 'reviews.comment_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
-$total_ratings       = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
-// @todo Implementation is on hold until the new designs are ready.
-// $previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
+$total_ratings_where     = ! $is_all_time ? $date_range( $start_date, $end_date, 'reviews.comment_date' ) : array();
+$total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
+$previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
 
 $stat_cards = array(
 	array(
-		'variation' => 'success',
-		'title'     => esc_html__( 'Total Earnings', 'tutor' ),
-		'icon'      => Icon::EARNING,
-		'value'     => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0 ) ),
-		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_earnings['total_earnings'] ?? 0, $previous_period_earnings ),
-		// 'data'      => array( 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ), @todo will be added later.
+		'variation'    => 'success',
+		'title'        => esc_html__( 'Total Earnings', 'tutor' ),
+		'icon'         => Icon::EARNING,
+		'value'        => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0 ) ),
+		'change'       => ! $is_all_time ? $total_earnings_state_card_details['percentage'] : '',
+		'change_class' => ! $is_all_time ? $total_earnings_state_card_details['class'] : '',
+		'change_icon'  => ! $is_all_time ? $total_earnings_state_card_details['icon'] : '',
 	),
 	array(
 		'variation' => 'brand',
@@ -142,7 +144,7 @@ $stat_cards = array(
 		'icon'      => Icon::COURSES,
 		'value'     => $total_courses,
 		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_courses, $previous_period_courses, false ),
-		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),  @todo will be added later.
+
 	),
 	array(
 		'variation' => 'exception5',
@@ -150,7 +152,6 @@ $stat_cards = array(
 		'icon'      => Icon::PASSED,
 		'value'     => $total_students,
 		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_students, $previous_period_students, false ),
-		// 'data'      => array( 0, 8, 5, 2, 3, 4, 5, 6, 7, 8, 9 ),
 	),
 	array(
 		'variation' => 'exception4',
@@ -158,7 +159,6 @@ $stat_cards = array(
 		'icon'      => Icon::STAR_LINE,
 		'value'     => $total_ratings->rating_avg,
 		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_ratings->rating_avg, $previous_period_ratings->rating_avg, false ),
-		// 'data'      => array( 4.5, 4.2, 3, 3, 2.8, 2, 4.5, 4.2, 3, 2, 1, 0 ),
 	),
 );
 
@@ -232,7 +232,7 @@ $args                   = array(
 $top_courses            = Instructor::get_top_performing_courses_by_instructor( $user->ID, $args );
 $top_performing_courses = Instructor::format_instructor_top_performing_courses( $top_courses );
 
-if ( empty( $start_date ) && empty( $end_date ) && $tutor_pro_enabled ) {
+if ( $is_all_time && $tutor_pro_enabled ) {
 
 	$upcoming_live_tasks = Instructor::get_instructor_upcoming_live_tasks( $user->ID );
 	$upcoming_tasks      = Instructor::format_instructor_upcoming_live_tasks( $upcoming_live_tasks );
@@ -274,7 +274,7 @@ if ( empty( $start_date ) && empty( $end_date ) && $tutor_pro_enabled ) {
 
 // Recent Reviews.
 $review_where = array( 'comment_post_ID' => array( 'IN', $instructor_course_ids ) );
-if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+if ( ! $is_all_time ) {
 	$review_where['comment_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
 }
 $review_args    = array( 'where' => QueryHelper::prepare_where_clause( $review_where ) );
@@ -354,13 +354,14 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 			tutor_load_template(
 				'dashboard.instructor.analytics.stat-card',
 				array(
-					'variation'  => isset( $card['variation'] ) ? $card['variation'] : 'enrolled',
-					'card_title' => isset( $card['title'] ) ? $card['title'] : '',
-					'icon'       => isset( $card['icon'] ) ? $card['icon'] : '',
-					'value'      => isset( $card['value'] ) ? $card['value'] : '',
-					'change'     => isset( $card['change'] ) ? $card['change'] : '',
-					'data'       => isset( $card['data'] ) ? $card['data'] : array( 0, 0, 0 ),
-					'show_graph' => false,
+					'variation'    => $card['variation'] ?? 'enrolled',
+					'card_title'   => $card['title'] ?? '',
+					'icon'         => $card['icon'] ?? '',
+					'value'        => $card['value'] ?? '',
+					'change'       => $card['change'] ?? '',
+					'data'         => $card['data'] ?? array( 0, 0, 0 ),
+					'change_class' => $card['change_class'] ?? '',
+					'class_icon'   => $card['change_icon'] ?? '',
 				)
 			);
 			?>
