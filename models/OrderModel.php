@@ -1338,7 +1338,8 @@ class OrderModel {
 				$wpdb->prepare(
 					"SELECT 
 					COALESCE(SUM(o.refund_amount), 0) AS total,
-					created_at_gmt AS date_format
+					created_at_gmt AS date_format,
+					DATE_FORMAT(o.created_at_gmt, '%b') AS label_name
 					FROM {$this->table_name} AS o
 					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
 					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id

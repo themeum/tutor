@@ -100,9 +100,12 @@ $end_date   = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input
 // $previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
 
 // Total Earnings.
-$total_earnings = $tutor_pro_enabled && $report_addon_enabled
-					? ( Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date )['total_earnings'] ?? 0 )
-					: ( WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0 );
+if ( $tutor_pro_enabled && $report_addon_enabled ) {
+	$earnings       = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
+	$total_earnings = $earnings['total_earnings'] ?? 0;
+} else {
+	$total_earnings = WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0;
+}
 
 // @todo Implementation is on hold until the new designs are ready.
 // $previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
@@ -113,7 +116,8 @@ $total_courses = CourseModel::get_course_count_by_date( $start_date, $end_date, 
 // $previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
 // Total Students.
-$total_students = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
+$total_students_where = empty( $start_date ) && empty( $end_date ) ? array() : array( 'enrollment.post_date' => array( 'BETWEEN', array( $start_date, $end_date ) ) );
+$total_students       = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
 // @todo Implementation is on hold until the new designs are ready.
 // $previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
 
@@ -160,8 +164,8 @@ $stat_cards = array(
 
 // Graph.
 if ( $tutor_pro_enabled && $report_addon_enabled ) {
-	$labels              = wp_list_pluck( $total_earnings, 'label_name' );
-	$graph_earnings      = array_map( 'intval', wp_list_pluck( $total_earnings, 'total' ) );
+	$labels              = wp_list_pluck( $earnings['earnings'], 'label_name' );
+	$graph_earnings      = array_map( 'intval', wp_list_pluck( $earnings['earnings'], 'total' ) );
 	$enrollments         = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
 	$graph_enrollments   = array_map( 'intval', wp_list_pluck( $enrollments['enrollments'], 'total' ) );
 	$overview_chart_data = array(
@@ -364,11 +368,10 @@ if ( ! empty( $reviews->results ) ) {
 >
 	<!-- Filters -->
 	<div class="tutor-flex tutor-justify-between tutor-align-center">
-
-
-			
-		<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-start' )->render(); ?>
-
+		<?php if ( $tutor_pro_enabled ) : ?>
+			<?php DateFilter::make()->type( DateFilter::TYPE_RANGE )->placement( 'bottom-start' )->render(); ?>
+		<?php endif; ?>
+		
 		<div class="tutor-dashboard-home-sort" x-data="tutorPopover({ placement: 'bottom-end' })">
 			<button
 				x-ref="trigger"
