@@ -31,7 +31,6 @@ $tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
 $tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $current_user_id, $tutor_course_id );
 
 ?>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <body class="tutor-learning-area<?php echo esc_attr( is_admin_bar_showing() ? ' tutor-has-admin-bar' : '' ); ?>">
 	<div x-data="{ sidebarOpen: false, isFullScreen: false }" :class="{ 'is-fullscreen': isFullScreen }">
 		<?php tutor_load_template( 'learning-area.components.header' ); ?>
