@@ -11,6 +11,7 @@
 use TUTOR\Icon;
 use Tutor\Components\Avatar;
 use Tutor\Components\Button;
+use Tutor\Components\Badge;
 use Tutor\Components\InputField;
 use Tutor\Components\StarRating;
 use Tutor\Components\StarRatingInput;
@@ -49,19 +50,21 @@ $delete_modal_id = 'review-delete-modal';
 		<div class="tutor-review-header">
 			<!-- Type Badge with Icon -->
 			<?php if ( ! empty( $review['is_bundle'] ) ) : ?>
-				<div class="tutor-badge tutor-badge-exception tutor-badge-circle">
-					<?php tutor_utils()->render_svg_icon( Icon::BUNDLE, 16, 16 ); ?>
-					<span class="tutor-text-sm tutor-font-medium">
-						<?php esc_html_e( 'Bundle', 'tutor' ); ?>
-					</span>
-				</div>
+				<?php
+					Badge::make()
+						->variant( Badge::HIGHLIGHT )
+						->icon( Icon::BUNDLE )
+						->label( __( 'Bundle', 'tutor' ) )
+						->render();
+				?>
 			<?php else : ?>
-				<div class="tutor-badge tutor-badge-primary-soft tutor-badge-circle">
-					<?php tutor_utils()->render_svg_icon( Icon::COURSES, 16, 16 ); ?>
-					<span class="tutor-text-sm tutor-font-medium">
-						<?php esc_html_e( 'Course', 'tutor' ); ?>
-					</span>
-				</div>
+				<?php
+					Badge::make()
+						->variant( Badge::INFO )
+						->icon( Icon::COURSES )
+						->label( __( 'Course', 'tutor' ) )
+						->render();
+				?>
 			<?php endif; ?>
 
 			<!-- Course Title -->
