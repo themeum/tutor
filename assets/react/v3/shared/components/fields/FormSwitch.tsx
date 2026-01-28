@@ -10,7 +10,7 @@ import FormFieldWrapper from './FormFieldWrapper';
 
 export type labelPositionType = 'left' | 'right';
 
-interface FormSwitchProps extends FormControllerProps<boolean> {
+interface FormSwitchProps extends FormControllerProps<boolean | undefined> {
   label?: string | ReactNode;
   title?: string;
   subTitle?: string;

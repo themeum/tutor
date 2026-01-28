@@ -91,7 +91,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
   const hasEmptyFields = form
     .getValues(`payment_methods.${paymentIndex}.fields`)
-    .some((field) => !['icon', 'webhook_url'].includes(field.name) && !field.value);
+    ?.some((field) => !['icon', 'webhook_url'].includes(field.name) && !field.value);
 
   useEffect(() => {
     if (hasEmptyFields) {
@@ -256,6 +256,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           return (
                             <FormInput
                               {...controllerProps}
+                              field={{
+                                ...controllerProps.field,
+                                onChange: (value) =>
+                                  controllerProps.field.onChange(typeof value === 'string' ? value.trim() : value),
+                              }}
                               type="password"
                               isPassword
                               label={field.label}
