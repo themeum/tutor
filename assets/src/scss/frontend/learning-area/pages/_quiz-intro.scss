@@ -3,22 +3,13 @@
 
 .tutor-quiz-intro {
 	@include tutor-container(748px);
-
-	&-card {
-		width: 100%;
-	}
+	width: 100%;
 
 	&-icon {
 		@include tutor-flex-center;
-		height: 330px;
-		background-color: $tutor-surface-l1-hover;
-
-		&-image {
-			max-width: 100%;
-			height: auto;
-			display: block;
-			mix-blend-mode: darken;
-		}
+		padding-block: $tutor-spacing-8;
+		background-color: $tutor-surface-brand-tertiary;
+		border-radius: $tutor-radius-lg;
 	}
 
 	&-title {
