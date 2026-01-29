@@ -8,6 +8,7 @@ import { accordionMeta } from '@Core/ts/components/accordion';
 import { buttonMeta } from '@Core/ts/components/button';
 import { calendarMeta } from '@Core/ts/components/calendar';
 import { commentMeta } from '@Core/ts/components/comments';
+import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
@@ -61,6 +62,7 @@ const initializePlugin = () => {
       toastMeta,
       playerMeta,
       passwordInputMeta,
+      copyToClipboardMeta,
     ],
     services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, wpMediaServiceMeta],
   });

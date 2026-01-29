@@ -5619,11 +5619,8 @@ class Utils {
 		if ( is_single() && ! empty( $current_post_type ) ) {
 			if ( in_array( $current_post_type, $post_types, true ) ) {
 				return true;
-			} elseif ( tutor()->course_post_type === $current_post_type ) {
-				// Check if the subpage is belongs to learning area.
-				$learning_subpage = Input::get( 'subpage' );
-				$allowed_subpages = array_keys( Template::make_learning_area_sub_page_nav_items() );
-				return in_array( $learning_subpage, $allowed_subpages, true );
+			} elseif ( tutor()->course_post_type === $current_post_type && Input::has( 'subpage' ) ) {
+				return true;
 			}
 		}
 
@@ -8542,7 +8539,7 @@ class Utils {
 	 *
 	 * @since 1.9.4
 	 * @since 4.0.0 Subpage check support added.
-	 * 				Example: assignments/submitted	
+	 *              Example: assignments/submitted
 	 *
 	 * @param string $subpage subpage.
 	 *
@@ -9521,7 +9518,7 @@ class Utils {
 	 */
 	public function instructor_menus(): array {
 		$menus = array(
-			'index'            => array(
+			'index'         => array(
 				'title' => __( 'Home', 'tutor' ),
 				'icon'  => Icon::HOME,
 			),
@@ -9558,9 +9555,8 @@ class Utils {
 			),
 		);
 
-
 		if ( $this->should_show_dicussion_menu() ) {
-			$other_menus['discussions'] = array (
+			$other_menus['discussions'] = array(
 				'title'    => __( 'Discussions', 'tutor' ),
 				'auth_cap' => tutor()->instructor_role,
 				'icon'     => Icon::QA,
@@ -9606,10 +9602,10 @@ class Utils {
 				'title' => __( 'Courses', 'tutor' ),
 				'icon'  => Icon::COURSES,
 			),
-			'account' => array( 
-				'label' => __( 'Account', 'tutor' ), 
-				'show_ui' => false 
-			)
+			'account' => array(
+				'label'   => __( 'Account', 'tutor' ),
+				'show_ui' => false,
+			),
 		);
 
 		if ( $this->should_show_dicussion_menu() ) {
