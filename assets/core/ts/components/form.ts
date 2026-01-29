@@ -431,7 +431,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
         }
       }
 
-      const shouldValidate = this.config.mode === 'onChange' || this.touchedFields[name];
+      const shouldValidate = this.config.mode === 'onChange' && this.touchedFields[name];
 
       if (shouldValidate) {
         this.validateField(name, isNumber ? parsedValue : value);
@@ -444,7 +444,7 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       this.touchedFields[name] = true;
       this.updateFieldRef(name);
 
-      const shouldValidate = this.config.mode === 'onBlur' || this.touchedFields[name];
+      const shouldValidate = this.config.mode === 'onBlur' && this.touchedFields[name];
 
       if (shouldValidate) {
         this.validateField(name, value);

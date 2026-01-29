@@ -1,0 +1,9 @@
+@use '../tokens/' as *;
+@use '../mixins/' as *;
+
+.tutor-loading-spinner {
+  @include tutor-flex();
+  @include tutor-loading-spinner();
+  padding: $tutor-spacing-8;
+  position: relative;
+}

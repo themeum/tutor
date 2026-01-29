@@ -98,7 +98,9 @@ class Lesson extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_single_course_lesson_load_more', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_create_lesson_comment', array( $this, 'tutor_single_course_lesson_load_more' ) );
 		add_action( 'wp_ajax_tutor_delete_lesson_comment', array( $this, 'ajax_delete_lesson_comment' ) );
+		add_action( 'wp_ajax_tutor_update_lesson_comment', array( $this, 'ajax_update_lesson_comment' ) );
 		add_action( 'wp_ajax_tutor_reply_lesson_comment', array( $this, 'reply_lesson_comment' ) );
+		add_action( 'wp_ajax_tutor_load_lesson_comments', array( $this, 'load_lesson_comments' ) );
 
 		// Add lesson title as nav item & render single content on the learning area.
 		add_action( "tutor_learning_area_nav_item_{$this->post_type}", array( $this, 'render_nav_item' ), 10, 2 );
@@ -113,16 +115,52 @@ class Lesson extends Tutor_Base {
 	 */
 	public function tutor_single_course_lesson_load_more() {
 		tutor_utils()->checking_nonce();
-		$comment = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+
+		$comment_id = 0;
+		$comment    = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$lesson_id  = Input::post( 'comment_post_ID', 0, Input::TYPE_INT );
+
 		if ( 'tutor_create_lesson_comment' === Input::post( 'action' ) && strlen( $comment ) > 0 ) {
 			$comment_data = array(
 				'comment_content' => $comment,
-				'comment_post_ID' => Input::post( 'comment_post_ID', 0, Input::TYPE_INT ),
+				'comment_post_ID' => $lesson_id,
 				'comment_parent'  => Input::post( 'comment_parent', 0, Input::TYPE_INT ),
 			);
-			self::create_comment( $comment_data );
+			$comment_id   = self::create_comment( $comment_data );
 			do_action( 'tutor_new_comment_added', $comment_data );
 		}
+
+		if ( ! tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+			$html = '';
+			if ( $comment_id ) {
+				ob_start();
+				tutor_load_template(
+					'learning-area.lesson.comment-card',
+					array(
+						'comment_item' => get_comment( $comment_id ),
+						'lesson_id'    => $lesson_id,
+						'user_id'      => get_current_user_id(),
+					)
+				);
+				$html = ob_get_clean();
+			}
+
+			$count = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'html'  => $html,
+					'count' => $count,
+				)
+			);
+		}
+
 		ob_start();
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
@@ -149,11 +187,92 @@ class Lesson extends Tutor_Base {
 		}
 
 		$lesson_id = $comment->comment_post_ID;
+		$parent_id = $comment->comment_parent;
+		$is_reply  = $parent_id > 0;
+
 		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
 			wp_delete_comment( $comment_id, true );
-			$this->json_response( __( 'Comment deleted successfully', 'tutor' ) );
+
+			$total_comments = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'message'    => __( 'Comment deleted successfully', 'tutor' ),
+					'count'      => $total_comments,
+					'is_reply'   => $is_reply,
+					'parent_id'  => $parent_id,
+					'comment_id' => $comment_id,
+				)
+			);
 		} else {
 			$this->response_bad_request( __( 'You are not allowed to delete this comment', 'tutor' ) );
+		}
+	}
+
+	/**
+	 * Update lesson comment by AJAX
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_update_lesson_comment() {
+		tutor_utils()->check_nonce();
+		$comment_id = Input::post( 'comment_id', 0, Input::TYPE_INT );
+		if ( ! $comment_id ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$comment = get_comment( $comment_id );
+		if ( ! $comment ) {
+			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
+		}
+
+		$lesson_id = $comment->comment_post_ID;
+		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+			wp_update_comment(
+				array(
+					'comment_ID'      => $comment_id,
+					'comment_content' => Input::post(
+						'comment',
+						'',
+						Input::TYPE_KSES_POST
+					),
+				)
+			);
+
+			$updated_comment = get_comment( $comment_id );
+			$is_reply        = $updated_comment->comment_parent > 0;
+			$user_id         = get_current_user_id();
+
+			ob_start();
+			tutor_load_template(
+				'learning-area.lesson.comment-card',
+				array(
+					'comment_item' => $updated_comment,
+					'lesson_id'    => $lesson_id,
+					'user_id'      => $user_id,
+					'is_reply'     => $is_reply,
+				)
+			);
+			$html = ob_get_clean();
+
+			wp_send_json_success(
+				array(
+					'html'       => $html,
+					'is_reply'   => $is_reply,
+					'parent_id'  => $is_reply ? $updated_comment->comment_parent : 0,
+					'comment_id' => $comment_id,
+				)
+			);
+		} else {
+			$this->response_bad_request( __( 'You are not allowed to update this comment', 'tutor' ) );
 		}
 	}
 
@@ -588,6 +707,65 @@ class Lesson extends Tutor_Base {
 		$reply = get_comment( $comment_id );
 		do_action( 'tutor_reply_lesson_comment_thread', $comment_id, $comment_data );
 
+		if ( ! tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+			$lesson_id    = $comment_data['comment_post_ID'];
+			$parent_id    = $comment_data['comment_parent'];
+			$comment_item = get_comment( $parent_id );
+			$user_id      = get_current_user_id();
+
+			$replies = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => $parent_id,
+					'order'   => 'ASC',
+				)
+			);
+
+			$is_first_reply = ( is_array( $replies ) ? count( $replies ) : 0 ) === 1;
+
+			ob_start();
+			if ( $is_first_reply ) {
+				// For the first reply, we need the wrapper and the toggle button.
+				tutor_load_template(
+					'learning-area.lesson.comment-replies',
+					array(
+						'lesson_id'    => $lesson_id,
+						'comment_item' => $comment_item,
+						'user_id'      => $user_id,
+						'replies'      => $replies,
+					)
+				);
+			} else {
+				// Just the card for subsequent replies.
+				tutor_load_template(
+					'learning-area.lesson.comment-card',
+					array(
+						'comment_item' => get_comment( $comment_id ),
+						'lesson_id'    => $lesson_id,
+						'user_id'      => $user_id,
+						'is_reply'     => true,
+					)
+				);
+			}
+			$html = ob_get_clean();
+
+			$total_comments = self::get_comments(
+				array(
+					'post_id' => $lesson_id,
+					'parent'  => 0,
+					'count'   => true,
+				)
+			);
+
+			wp_send_json_success(
+				array(
+					'html'           => $html,
+					'count'          => $total_comments,
+					'is_first_reply' => $is_first_reply,
+				)
+			);
+		}
+
 		ob_start();
 		?>
 		<div class="tutor-comments-list tutor-child-comment tutor-mt-32" id="lesson-comment-<?php echo esc_attr( $reply->comment_ID ); ?>">
@@ -832,6 +1010,71 @@ class Lesson extends Tutor_Base {
 			'learning-area.lesson.content',
 			array(
 				'lesson' => $lesson,
+			)
+		);
+	}
+
+	/**
+	 * Load lesson comments
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return void
+	 */
+	public function load_lesson_comments() {
+		$lesson_id    = Input::post( 'lesson_id' ?? 0 );
+		$current_page = Input::post( 'current_page', '1' );
+		$offset       = Input::post( 'offset', -1, Input::TYPE_INT );
+		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
+
+		$user_id = get_current_user_id();
+
+		$item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );
+
+		$query_args = array(
+			'post_id' => $lesson_id,
+			'parent'  => 0,
+			'number'  => $item_per_page,
+			'order'   => $order,
+		);
+
+		if ( $offset >= 0 ) {
+			$query_args['offset'] = $offset;
+		} else {
+			$query_args['paged'] = $current_page;
+		}
+
+		$comment_list = self::get_comments( $query_args );
+
+		// Get total comment count to determine if there are more pages.
+		$total_comments = self::get_comments(
+			array(
+				'post_id' => $lesson_id,
+				'parent'  => 0,
+				'count'   => true,
+			)
+		);
+
+		ob_start();
+		tutor_load_template(
+			'learning-area.lesson.comment-list',
+			compact( 'comment_list', 'lesson_id', 'user_id' )
+		);
+		$html = ob_get_clean();
+
+		// Calculate if there are more items.
+		if ( $offset >= 0 ) {
+			$items_loaded = $offset + count( $comment_list );
+		} else {
+			$items_loaded = $current_page * $item_per_page;
+		}
+		$has_more = $items_loaded < $total_comments;
+
+		wp_send_json_success(
+			array(
+				'html'     => $html,
+				'has_more' => $has_more,
+				'count'    => $total_comments,
 			)
 		);
 	}
