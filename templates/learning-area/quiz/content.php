@@ -58,16 +58,15 @@ $attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
 		</div>
 
 		<!-- Past Attempts Section -->
-		<div class="tutor-dashboard-page-card">
-			<div class="tutor-quiz-attempts">
-				<div class="tutor-quiz-attempts-header">
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
-					<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
-				</div>
-
-				<?php if ( ! empty( $attempts ) ) : ?>
+		<?php if ( ! empty( $attempts ) ) : ?>
+			<div class="tutor-dashboard-page-card">
+				<div class="tutor-quiz-attempts">
+					<div class="tutor-quiz-attempts-header">
+						<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Quiz info', 'tutor' ); ?></div>
+						<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Marks', 'tutor' ); ?></div>
+						<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Time', 'tutor' ); ?></div>
+						<div class="tutor-quiz-attempts-header-item"><?php esc_html_e( 'Result', 'tutor' ); ?></div>
+					</div>
 					<div class="tutor-quiz-attempts-list">
 						<?php
 						foreach ( $attempts as $index => $attempt ) :
@@ -205,9 +204,9 @@ $attempts   = $quiz_model->quiz_attempts( $quiz_id, $user_id );
 						</div>
 						<?php endforeach; ?>
 					</div>
-				<?php endif; ?>
+				</div>
 			</div>
-		</div>
+		<?php endif; ?>
 		
 		<!-- Action Buttons -->
 		<div class="tutor-quiz-intro-actions tutor-flex tutor-justify-end tutor-gap-3 tutor-mt-8">
