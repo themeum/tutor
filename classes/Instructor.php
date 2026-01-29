@@ -864,9 +864,10 @@ class Instructor {
 		$class       = $is_negative ? 'tutor-p2 tutor-actions-critical-primary' : 'tutor-p2 tutor-actions-success-primary';
 
 		return array(
-			'percentage' => abs( $percentage ) . '%',
+			'percentage' => number_format( abs( $percentage ), 2 ) . '%',
 			'icon'       => $icon,
 			'class'      => $class,
+			'icon_class' => '-tutor-mb-1',
 		);
 	}
 }

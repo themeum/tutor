@@ -106,14 +106,12 @@ $date_range = fn( $from, $to, $column ) => array(
 
 // Total Earnings.
 if ( $tutor_pro_enabled && $report_addon_enabled ) {
-	$earnings                          = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
-	$total_earnings                    = $earnings['total_earnings'] ?? 0;
-	$previous_period_earnings          = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
-	$total_earnings_state_card_details = Instructor::get_stat_card_details( $total_earnings, $previous_period_earnings );
+	$earnings                 = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
+	$total_earnings           = $earnings['total_earnings'] ?? 0;
+	$previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
 } else {
 	$total_earnings = WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0;
 }
-
 
 // Total Courses.
 $total_courses           = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
@@ -128,22 +126,27 @@ $total_ratings_where     = ! $is_all_time ? $date_range( $start_date, $end_date,
 $total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
 $previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
 
+// if ( $tutor_pro_enabled && $report_addon_enabled ) {
+// 	$total_earnings_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_earnings, $previous_period_earnings ) );
+// 	$total_courses_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_courses, $previous_period_courses ) );
+// 	$total_students_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_students, $previous_period_students ) );
+// 	$total_ratings_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_ratings, $previous_period_ratings ) );
+// }
+
 $stat_cards = array(
 	array(
-		'variation'    => 'success',
-		'title'        => esc_html__( 'Total Earnings', 'tutor' ),
-		'icon'         => Icon::EARNING,
-		'value'        => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0 ) ),
-		'change'       => ! $is_all_time ? $total_earnings_state_card_details['percentage'] : '',
-		'change_class' => ! $is_all_time ? $total_earnings_state_card_details['class'] : '',
-		'change_icon'  => ! $is_all_time ? $total_earnings_state_card_details['icon'] : '',
+		'variation'     => 'success',
+		'title'         => esc_html__( 'Total Earnings', 'tutor' ),
+		'icon'          => Icon::EARNING,
+		'value'         => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0 ) ),
+		'hover_content' => ! $is_all_time ? $total_earnings_state_card_details : '',
 	),
 	array(
-		'variation' => 'brand',
+		'variation' => 'exception1',
 		'title'     => esc_html__( 'Total Courses', 'tutor' ),
 		'icon'      => Icon::COURSES,
 		'value'     => $total_courses,
-		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_courses, $previous_period_courses, false ),
+		// 'content'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_courses, $previous_period_courses, false ),
 
 	),
 	array(
@@ -151,14 +154,14 @@ $stat_cards = array(
 		'title'     => esc_html__( 'Total Students', 'tutor' ),
 		'icon'      => Icon::PASSED,
 		'value'     => $total_students,
-		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_students, $previous_period_students, false ),
+		// 'content'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_students, $previous_period_students, false ),
 	),
 	array(
 		'variation' => 'exception4',
 		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
 		'icon'      => Icon::STAR_LINE,
 		'value'     => $total_ratings->rating_avg,
-		// 'change'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_ratings->rating_avg, $previous_period_ratings->rating_avg, false ),
+		// 'content'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_ratings->rating_avg, $previous_period_ratings->rating_avg, false ),
 	),
 );
 
@@ -345,7 +348,7 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 	<!-- Stat cards -->
 	<div 
 		data-section-id="current_stats" 
-		class="tutor-flex tutor-gap-5"					
+		class="tutor-flex tutor-gap-5 tutor-z-positive"					
 		:class="{ 'tutor-hidden':  !watch('current_stats')}"
 	>
 		<?php foreach ( $stat_cards as $card ) : ?>
@@ -354,15 +357,12 @@ $recent_reviews = Instructor::format_instructor_recent_reviews( $reviews->result
 			tutor_load_template(
 				'dashboard.instructor.analytics.stat-card',
 				array(
-					'variation'    => $card['variation'] ?? 'enrolled',
-					'card_title'   => $card['title'] ?? '',
-					'icon'         => $card['icon'] ?? '',
-					'value'        => $card['value'] ?? '',
-					'change'       => $card['change'] ?? '',
-					'data'         => $card['data'] ?? array( 0, 0, 0 ),
-					'change_class' => $card['change_class'] ?? '',
-					'change_icon'  => $card['change_icon'] ?? '',
-					'change_display_on_hover' => true,
+					'variation'     => $card['variation'] ?? 'enrolled',
+					'card_title'    => $card['title'] ?? '',
+					'icon'          => $card['icon'] ?? '',
+					'value'         => $card['value'] ?? '',
+					'content'       => $card['content'] ?? '',
+					'hover_content' => $card['hover_content'] ?? array(),
 				)
 			);
 			?>

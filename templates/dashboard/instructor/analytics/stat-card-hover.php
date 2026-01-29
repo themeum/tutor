@@ -8,29 +8,45 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$hover_period_current = $hover_period_current ?? 'Jan-Dec 2025';
-$hover_period_prev    = $hover_period_prev ?? 'Jan-Dec 2024';
-$hover_amount         = $hover_amount ?? '$740.00';
-$hover_percent        = $hover_percent ?? '48%';
-$hover_direction      = $hover_direction ?? 'up';
+$start_date          = $data['start_date'];
+$end_date            = $data['end_date'];
+$hover_content       = $data['hover_content'];
+$hover_amount        = $data['hover_amount'];
+$time_zone           = wp_timezone();
+$previous_start_date = $hover_content['previous_start_date'];
+$previous_end_date   = $hover_content['previous_end_date'];
 
-$arrow_icon = 'up' === $hover_direction ? TUTOR\Icon::ARROW_UP : TUTOR\Icon::ARROW_DOWN;
-$arrow_class = 'up' === $hover_direction ? 'tutor-text-success' : 'tutor-text-danger';
 ?>
 
-<div class="tutor-stat-card-hover-contents tutor-flex tutor-flex-column tutor-gap-2">
-	<div class="tutor-flex tutor-items-center tutor-gap-2 tutor-text-tiny tutor-text-secondary">
-		<span><?php echo esc_html( $hover_period_current ); ?></span>
-		<span><?php esc_html_e( 'vs', 'tutor' ); ?></span>
-		<span><?php echo esc_html( $hover_period_prev ); ?></span>
-	</div>
-	<div class="tutor-flex tutor-items-center tutor-justify-between">
-		<span class="tutor-text-base tutor-font-bold tutor-text-primary">
-			<?php echo esc_html( $hover_amount ); ?>
+<div class="tutor-stat-card-hover tutor-m-1">
+	<div class="tutor-stat-card-hover-wrap">
+		<span class="stat-hover-trigger <?php echo $hover_content['class'] ?? ''; //phpcs:ignore ?>">
+			<?php echo $hover_content['percentage']; //phpcs:ignore ?>
+			<?php tutor_utils()->render_svg_icon( $hover_content['icon'], 16, 16, array( 'class' => $hover_content['icon_class'] ?? '' ) ); ?>
 		</span>
-		<span class="tutor-flex tutor-items-center tutor-gap-1 tutor-text-base tutor-font-bold <?php echo esc_attr( $arrow_class ); ?>">
-			<?php echo esc_html( $hover_percent ); ?>
-			<?php tutor_utils()->render_svg_icon( $arrow_icon, 16, 16 ); ?>
-		</span>
+
+		<div class="tutor-stat-card-hover-card">
+			<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-tiny tutor-text-secondary">
+				<span>
+					<?php echo esc_html( tutor_i18n_get_formated_date( $previous_start_date, 'M j' ) ); ?> -
+					<?php echo esc_html( tutor_i18n_get_formated_date( $previous_end_date, 'M j Y' ) ); ?>
+				</span>
+				<span class="tutor-text-subdued"><?php echo __( 'vs', 'tutor-pro' ); ?></span>
+				<span>
+					<?php echo esc_html( tutor_i18n_get_formated_date( $start_date, 'M j' ) ); ?> -
+					<?php echo esc_html( tutor_i18n_get_formated_date( $end_date, 'M j Y' ) ); ?>
+				</span>
+			</div>
+			<div class="tutor-flex tutor-items-center tutor-gap-4 tutor-justify-between tutor-mt-5">
+				<span class="tutor-font-semibold tutor-text-primary tutor-tiny">
+					<?php echo esc_html( $hover_amount ); ?>
+				</span>
+				<span class="stat-hover-trigger <?php echo $hover_content['class'] ?? ''; //phpcs:ignore ?>">
+					<?php echo $hover_content['percentage']; ?>
+					<?php tutor_utils()->render_svg_icon( $hover_content['icon'], 16, 16, array( 'class' => $hover_content['icon_class'] ?? '' ) ); ?>
+				</span>
+			</div>
+		</div>
 	</div>
 </div>
+

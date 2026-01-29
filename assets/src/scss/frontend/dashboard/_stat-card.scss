@@ -286,3 +286,30 @@
     }
   }
 }
+
+.tutor-stat-card-hover {
+
+  &-wrap{
+    position: relative;
+    display: inline-block;
+    margin-top: $tutor-spacing-1;
+
+    &:hover .tutor-stat-card-hover-card  {
+      display: block;
+    }
+  }
+
+  &-card {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    min-width: 213px;
+    background: $tutor-surface-l1;
+    border: 1px solid $tutor-border-idle;;
+    border-radius: $tutor-radius-lg;
+    box-shadow: $tutor-shadow-lg;
+    padding: $tutor-spacing-5 $tutor-spacing-6;
+    white-space: nowrap;
+  }
+}

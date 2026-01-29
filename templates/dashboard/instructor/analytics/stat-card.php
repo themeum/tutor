@@ -9,19 +9,20 @@
  * @since 4.0.0
  */
 
+use TUTOR\Input;
 use TUTOR_REPORT\Analytics;
+
 
 defined( 'ABSPATH' ) || exit;
 
 // Default values.
-$icon_size               = $icon_size ?? 24;
-$value                   = $value ?? 0;
-$change_display          = $change ?? '';
-$show_graph              = $show_graph ?? false;
-$data                    = $data ?? array( 0, 0, 0 );
-$change_class            = $change_class ?? 'tutor-stat-card-change ';
-$change_icon             = $change_icon ?? '';
-$change_display_on_hover = $change_display_on_hover ?? false;
+$icon_size       = $icon_size ?? 24;
+$value           = $value ?? 0;
+$content_display = $content ?? '';
+$show_graph      = $show_graph ?? false;
+$data            = $data ?? array( 0, 0, 0 );
+$hover_content   = $hover_content ?? array();
+$variation       = $variation ?? $icon;
 
 // Required fields validation.
 if ( ! isset( $card_title ) || empty( $card_title ) ) {
@@ -31,13 +32,23 @@ if ( ! isset( $icon ) || empty( $icon ) ) {
 	return;
 }
 
-if ( $change_display_on_hover) {
-	$template_path = tutor()->path . 'templates/dashboard/instructor/analytics/stat-card-hover.php';
-	$hover_template = Analytics::get_template_output($template_path, array());
+if ( ! empty( $hover_content ) ) {
+	$start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
+	$end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
+	$template_path  = tutor()->path . 'templates/dashboard/instructor/analytics/stat-card-hover.php';
+	$hover_template = Analytics::get_template_output(
+		$template_path,
+		array(
+			'start_date'    => $start_date,
+			'end_date'      => $end_date,
+			'hover_content' => $hover_content,
+			'hover_amount'  => $value,
+		)
+	);
 }
 
 ?>
-<div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $icon ); ?>">
+<div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $variation ); ?>">
 	<div class="tutor-stat-card-header">
 		<div class="tutor-stat-card-title">
 			<?php echo esc_html( $card_title ); ?>
@@ -51,17 +62,14 @@ if ( $change_display_on_hover) {
 			<?php echo esc_html( $value ); ?>
 		</div>
 
-		<p class="<?php echo esc_attr( $change_class ); ?>">
-			<?php echo esc_html( $change_display ); ?>
+		<?php if ( ! empty( $content_display ) ) : ?>
+		<p class="tutor-stat-card-change">
+			<?php echo esc_html( $content_display ); ?>
 		</p>
-		<?php if ( ! empty( $change_icon ) ) : ?>
-			<?php tutor_utils()->render_svg_icon( $change_icon ); ?>
 		<?php endif; ?>
 
-		<?php if ( $change_display_on_hover ) : ?>
-
-			<?php 
-				//echo $hover_template; ?>
+		<?php if ( ! empty( $hover_content ) ) : ?>
+			<?php echo $hover_template; //phpcs:ignore ?>
 		<?php endif; ?>
 	</div>
 	<?php if ( $show_graph ) : ?>
