@@ -204,9 +204,9 @@ class UserPreference {
 
 		if ( false === $preference_data ) {
 			$this->json_response(
-				tutor_utils()->error_message( 'forbidden' ),
+				'Something went wrong!!',
 				null,
-				HttpHelper::STATUS_FORBIDDEN
+				HttpHelper::STATUS_NOT_FOUND
 			);
 		}
 

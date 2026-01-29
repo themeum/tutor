@@ -1,19 +1,23 @@
 import { type ServiceMeta } from '@Core/ts/types';
 
 export class PreferenceService {
-  theme: string = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  fontScale: string = '100';
+  defaultTheme: string = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  private mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  private systemThemeListener?: (e: MediaQueryListEvent) => void;
+
   applyTheme(theme: string): void {
     const wrapper = document.querySelector('[data-theme]') || document.body;
-    const currentTheme = wrapper.getAttribute('data-theme');
-    if (!theme) {
-      return;
+
+    if (!theme) return;
+
+    if (this.systemThemeListener) {
+      this.mediaQuery.removeEventListener('change', this.systemThemeListener);
+      this.systemThemeListener = undefined;
     }
 
     const updateTheme = () => {
       if (theme === 'system') {
-        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        wrapper.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        wrapper.setAttribute('data-theme', this.mediaQuery.matches ? 'dark' : 'light');
       } else {
         wrapper.setAttribute('data-theme', theme);
       }
@@ -21,9 +25,12 @@ export class PreferenceService {
 
     updateTheme();
 
-    if (currentTheme === 'system') {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme);
+    if (theme === 'system') {
+      this.systemThemeListener = () => updateTheme();
+      this.mediaQuery.addEventListener('change', this.systemThemeListener);
     }
+
+    this.defaultTheme = theme;
   }
   applyFontScale(fontScale: string): void {
     const head = document.head || document.getElementsByTagName('head')[0];

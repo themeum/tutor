@@ -113,5 +113,8 @@ if (document.readyState === 'loading') {
 export { Alpine, TutorComponentRegistry };
 
 function ApplyTheme() {
-  preferenceServiceMeta.instance.applyTheme(preferenceServiceMeta.instance.theme);
+  const wrapper = document.querySelector('[data-theme]') || document.body;
+  const attrTheme = wrapper.getAttribute('data-theme');
+  const initialTheme = attrTheme || preferenceServiceMeta.instance.defaultTheme;
+  preferenceServiceMeta.instance.applyTheme(initialTheme);
 }
