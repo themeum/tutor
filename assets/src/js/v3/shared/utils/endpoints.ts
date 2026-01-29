@@ -57,6 +57,7 @@ const endpoints = {
   QUIZ_IMPORT_DATA: 'quiz_import_data',
   QUIZ_EXPORT_DATA: 'quiz_export_data',
   DELETE_QUIZ: 'tutor_quiz_delete',
+  START_QUIZ: 'tutor_start_quiz',
 
   // ZOOM
   GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
@@ -182,8 +183,6 @@ const endpoints = {
   SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
   RESET_PASSWORD: 'tutor_profile_password_reset',
 
-  // Quiz Attempts
-  START_QUIZ: 'tutor_start_quiz',
   UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
 } as const;
 

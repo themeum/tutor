@@ -108,11 +108,13 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 					tutor_load_template(
 						'dashboard.components.quiz-attempts-group',
 						array(
-							'quiz_id'      => $quiz_index,
-							'quiz_title'   => $quiz_attempt['quiz_title'],
-							'course_title' => $quiz_attempt['course_title'],
-							'attempts'     => $attempts,
-							'course_id'    => $quiz_attempt['course_id'],
+							'quiz_id'          => $quiz_index,
+							'quiz_title'       => $quiz_attempt['quiz_title'],
+							'course_title'     => $quiz_attempt['course_title'],
+							'attempts'         => $attempts,
+							'course_id'        => $quiz_attempt['course_id'],
+							'quiz_attempt_obj' => $quiz_attempt_obj,
+							'attempts_count'   => $attempts_count,
 						)
 					);
 				}

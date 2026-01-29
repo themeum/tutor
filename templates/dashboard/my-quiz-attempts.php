@@ -14,7 +14,6 @@ use Tutor\Components\DropdownFilter;
 use Tutor\Components\EmptyState;
 use Tutor\Components\Pagination;
 use Tutor\Components\Sorting;
-use TUTOR\Icon;
 use TUTOR\Input;
 use Tutor\Models\QuizModel;
 use TUTOR\Quiz_Attempts_List;
@@ -75,11 +74,13 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 					tutor_load_template(
 						'dashboard.components.quiz-attempts-group',
 						array(
-							'quiz_id'      => $quiz_index,
-							'quiz_title'   => $quiz_attempt['quiz_title'],
-							'course_title' => $quiz_attempt['course_title'],
-							'attempts'     => $attempts,
-							'course_id'    => $quiz_attempt['course_id'],
+							'quiz_id'          => $quiz_index,
+							'quiz_title'       => $quiz_attempt['quiz_title'],
+							'course_title'     => $quiz_attempt['course_title'],
+							'attempts'         => $attempts,
+							'course_id'        => $quiz_attempt['course_id'],
+							'quiz_attempt_obj' => $quiz_attempt_obj,
+							'attempts_count'   => $attempts_count,
 						)
 					);
 				}
@@ -93,27 +94,24 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 			->render();
 		?>
 	<?php endif; ?>
-		<div class="tutor-p-6">
 			<?php
 			if ( $quiz_attempts_count > $item_per_page ) {
 				Pagination::make()
 					->current( $current_page )
 					->total( $quiz_attempts_count )
 					->limit( $item_per_page )
-					->prev( tutor_utils()->get_svg_icon( Icon::CHEVRON_LEFT_2 ) )
-					->next( tutor_utils()->get_svg_icon( Icon::CHEVRON_RIGHT_2 ) )
+					->attr( 'class', 'tutor-p-6' )
 					->render();
 			}
 			?>
-		</div>
 
 	<?php
 	ConfirmationModal::make()
 		->id( 'tutor-retry-modal' )
 		->title( __( 'Retry This Quiz Attempt?', 'tutor' ) )
-		->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ))
-		->confirm_handler( 'handleRetryAttempt({...payload?.data})' )
-		->confirm_text( __( 'Retry Quiz', 'tutor' ))
+		->message( __( 'Retrying this quiz will reset your current attempt. Your answers and score from this attempt will be lost.', 'tutor' ) )
+		->confirm_handler( 'retryMutation?.mutate({...payload?.data})' )
+		->confirm_text( __( 'Retry Quiz', 'tutor' ) )
 		->mutation_state( 'retryMutation' )
 		->render();
 	?>

@@ -2,6 +2,7 @@
 import { type MutationState } from '@Core/ts/services/Query';
 import { tutorConfig } from '@TutorShared/config/config';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 import axios from 'axios';
 
 interface RetryAttempt {
@@ -24,7 +25,7 @@ const quizAttemptsPage = () => {
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to delete quiz attempt');
+          window.TutorCore.toast.error(convertToErrorMessage(error));
         },
       });
 
@@ -33,7 +34,7 @@ const quizAttemptsPage = () => {
           window.location.href = payload.redirectURL;
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || 'Failed to retry quiz attempt');
+          window.TutorCore.toast.error(convertToErrorMessage(error));
         },
       });
     },
@@ -54,10 +55,6 @@ const quizAttemptsPage = () => {
         tutor_action: 'tutor_start_quiz',
         _tutor_nonce: tutorConfig._tutor_nonce,
       });
-    },
-
-    async handleRetryAttempt(payload: RetryAttempt) {
-      await this.retryMutation?.mutate(payload);
     },
   };
 };
