@@ -59,6 +59,12 @@ interface ResetPasswordFormProps {
   confirm_new_password: string;
 }
 
+interface PreferencesFormProps {
+  auto_play_next: boolean;
+  theme: string;
+  font_scale: number;
+}
+
 const settings = () => {
   const query = window.TutorCore.query;
   const form = window.TutorCore.form;
@@ -78,6 +84,7 @@ const settings = () => {
     saveWithdrawMethodMutation: null as MutationState<TutorMutationResponse<string>> | null,
     resetPasswordMutation: null as MutationState<TutorMutationResponse<string>> | null,
     handleUpdateNotification: null as MutationState<unknown, unknown> | null,
+    savePreferencesMutation: null as MutationState<TutorMutationResponse<PreferencesFormProps>> | null,
 
     init() {
       if (!this.$el) {
@@ -153,12 +160,27 @@ const settings = () => {
 
       this.resetPasswordMutation = this.query.useMutation(this.resetPassword, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
+          this.toast.success(data?.message ?? __('Password updated successfully asdf', 'tutor'));
         },
         onError: (error: Error) => {
           this.toast.error(convertToErrorMessage(error));
         },
       });
+
+      this.savePreferencesMutation = this.query.useMutation(this.updatePreferences, {
+        onSuccess: (data: TutorMutationResponse<PreferencesFormProps>) => {
+          this.toast.success(data?.message ?? __('Preferences saved successfully', 'tutor'));
+        },
+        onError: (error: Error) => {
+          this.toast.error(convertToErrorMessage(error));
+        },
+      });
+    },
+
+    async updatePreferences(payload: Record<string, unknown>) {
+      return wpAjaxInstance.post(endpoints.UPDATE_USER_PREFERENCES, payload) as unknown as Promise<
+        TutorMutationResponse<PreferencesFormProps>
+      >;
     },
 
     async updateNotification(payload: Record<string, boolean>) {
@@ -184,7 +206,6 @@ const settings = () => {
         {} as Record<string, string>,
       );
 
-      console.log('noti', transformedPayload);
       return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
     },
 

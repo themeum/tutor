@@ -30,6 +30,7 @@ import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/Toast';
 import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
+import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { getNonceData } from '@Core/ts/utils/nonce';
@@ -62,7 +63,14 @@ const initializePlugin = () => {
       playerMeta,
       passwordInputMeta,
     ],
-    services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, wpMediaServiceMeta],
+    services: [
+      formServiceMeta,
+      modalServiceMeta,
+      queryServiceMeta,
+      toastServiceMeta,
+      wpMediaServiceMeta,
+      preferenceServiceMeta,
+    ],
   });
 
   TutorComponentRegistry.initWithAlpine(Alpine);
@@ -73,6 +81,7 @@ const initializePlugin = () => {
   // Expose TutorCore with services and utilities
   // Use Object.assign to extend existing TutorCore instead of overwriting
   window.TutorCore = Object.assign(window.TutorCore || {}, {
+    preference: preferenceServiceMeta.instance,
     toast: toastServiceMeta.instance,
     security: {
       escapeHtml,
@@ -81,6 +90,9 @@ const initializePlugin = () => {
     nonce: {
       getNonceData,
     },
+    App: {
+      ApplyTheme,
+    },
   });
 
   // Register legacy functions for backward compatibility
@@ -88,12 +100,19 @@ const initializePlugin = () => {
   registerLegacyFunctions();
 
   Alpine.start();
+  ApplyTheme();
 };
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializePlugin);
+  document.addEventListener('DOMContentLoaded', () => {
+    initializePlugin();
+  });
 } else {
   initializePlugin();
 }
 
 export { Alpine, TutorComponentRegistry };
+
+function ApplyTheme() {
+  preferenceServiceMeta.instance.applyTheme(preferenceServiceMeta.instance.theme);
+}

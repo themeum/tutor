@@ -233,6 +233,15 @@ final class Tutor extends Singleton {
 	private $user;
 
 	/**
+	 * UserPreference class object
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var object
+	 */
+	private $user_preference;
+
+	/**
 	 * Theme_Compatibility class object
 	 *
 	 * @since 1.1.0
@@ -495,6 +504,7 @@ final class Tutor extends Singleton {
 		$this->quiz                  = new Quiz();
 		$this->tools                 = new Tools();
 		$this->user                  = new User();
+		$this->user_preference       = new UserPreference();
 		$this->theme_compatibility   = new Theme_Compatibility();
 		$this->gutenberg             = new Gutenberg();
 		$this->course_settings_tabs  = new Course_Settings_Tabs();

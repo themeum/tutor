@@ -9,15 +9,18 @@
  */
 
 use TUTOR\User;
+?>
 
-$is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
-if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
-	?>
-	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<?php
-	wp_head();
-}
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title><?php bloginfo( 'name' ); ?></title>
+	<?php wp_head(); ?>
+</head>
+<body <?php body_class( '' ); ?>>
+<?php
 global $wp_query;
 
 $dashboard_page_slug = '';
@@ -114,10 +117,6 @@ $footer_links = array(
 	<?php tutor_load_template( 'demo-components.dashboard.components.nav-mobile' ); ?>
 </div>
 <?php do_action( 'tutor_dashboard/after/wrap' ); ?>
-<?php
-if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) {
-	wp_footer();
-}
-
-
-
+</body>
+<?php wp_footer(); ?>
+</html>
