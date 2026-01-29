@@ -72,13 +72,13 @@ class ConfirmationModal extends BaseComponent {
 	protected $message;
 
 	/**
-	 * Confirmation message HTML.
+	 * Allowed HTML tags and attributes. Keys are tag names and values are allowed attributes.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $message_html;
+	protected $allowed_html_tags = array();
 
 	/**
 	 * Icon name from Icon class.
@@ -199,30 +199,18 @@ class ConfirmationModal extends BaseComponent {
 	}
 
 	/**
-	 * Set confirmation message.
+	 * Sets the confirmation message.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @param string $message Confirmation message.
+	 * @param string $message The confirmation message text.
+	 * @param array  $allowed_html_tags Optional. Allowed HTML tags and attributes. Keys are tag names and values are allowed attributes.
 	 *
 	 * @return $this
 	 */
-	public function message( string $message ) {
-		$this->message = $message;
-		return $this;
-	}
-
-	/**
-	 * Set confirmation message HTML.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @param string $html Confirmation message HTML.
-	 *
-	 * @return $this
-	 */
-	public function message_html( string $html ) {
-		$this->message_html = $html;
+	public function message( string $message, array $allowed_html_tags = array() ) {
+		$this->message           = $message;
+		$this->allowed_html_tags = $allowed_html_tags;
 		return $this;
 	}
 
@@ -376,11 +364,8 @@ class ConfirmationModal extends BaseComponent {
 		tutor_utils()->render_svg_icon( $this->icon, $this->icon_width, $this->icon_height );
 		$icon_html = ob_get_clean();
 
-		// Prepare message HTML.
-		$message_html = $this->message_html;
-		if ( empty( $message_html ) ) {
-			$message_html = esc_html( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ) );
-		}
+		// Prepare message HTML with allowed HTML tags.
+		$message_html = wp_kses( $this->message ?? __( 'Are you sure you want to perform this action? Please confirm your choice.', 'tutor' ), $this->allowed_html_tags );
 
 		// Prepare confirm button HTML.
 		$confirm_html = $this->confirm_btn;
