@@ -75,7 +75,7 @@ $back_url = UrlHelper::back();
 					->attr( 'type', 'submit' )
 					->attr( 'class', 'tutor-ml-4' )
 					->attr( 'x-bind:form', 'activeTab === "none" ? "" : `tutor-${activeTab}-form`' )
-					->attr( ':class', '{ \'tutor-btn-loading\': saveBillingInfoMutation?.isPending || updateProfileMutation?.isPending || saveSocialProfileMutation?.isPending || savePreferencesMutation?.isPending }' )
+					->attr( ':class', '{ \'tutor-btn-loading\': saveBillingInfoMutation?.isPending || updateProfileMutation?.isPending || saveSocialProfileMutation?.isPending || handleUpdateNotification?.isPending || savePreferencesMutation?.isPending }' )
 					->render();
 				?>
 			</div>
