@@ -145,6 +145,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 			</div>
 	</div>
 
+	<!-- TODO: sticky behaviour -->
 	<div class="tutor-course-sticky-card tutor-mt-9">
 		<div class="tutor-course-thumb">
 			<img src="<?php echo esc_url( $course_thumbnail ); ?>" alt="course thumb" />
@@ -203,7 +204,7 @@ $metadata = apply_filters( 'tutor_learning_area_course_info_metadata', $default_
 		</div>
 	</div>
 
-	<div class="tutor-course-info-table tutor-table-wrapper tutor-table-column-borders tutor-mt-6">
+	<div class="tutor-course-info-table tutor-table-wrapper tutor-table-bordered tutor-table-column-borders tutor-mt-6">
 		<table class="tutor-table tutor-surface-l1">
 			<?php foreach ( $metadata as $meta ) : ?>
 				<tr>
