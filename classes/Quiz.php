@@ -736,6 +736,24 @@ class Quiz {
 						// 	$is_answer_was_correct = ( strtolower( maybe_serialize( array_values( $image_inputs ) ) ) == strtolower( maybe_serialize( $db_answer ) ) );
 						// }
 						//phpcs:enable
+					} elseif ( 'draw_image' === $question_type ) {
+						// Student-submitted mask for draw-on-image question type.
+						// $answers structure originates from the quiz attempt POST:
+						// attempt[attempt_id][quiz_question][question_id][answers][mask].
+						$given_answer = '';
+
+						if ( is_array( $answers ) ) {
+							// Backward-compat / direct structure: ['mask' => 'data:image/png;base64,...'].
+							if ( isset( $answers['mask'] ) ) {
+								$given_answer = sanitize_textarea_field( wp_unslash( $answers['mask'] ) );
+							} elseif ( isset( $answers['answers']['mask'] ) ) {
+								// Nested structure from the current template: ['answers' => ['mask' => ...]].
+								$given_answer = sanitize_textarea_field( wp_unslash( $answers['answers']['mask'] ) );
+							}
+						}
+
+						// Base correctness is determined later via filters (e.g., in Tutor Pro).
+						$is_answer_was_correct = false;
 					}
 
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
@@ -765,6 +783,16 @@ class Quiz {
 					}
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
+
+					// For Pro-powered draw-image questions, adjust total marks after
+					// add-ons have had a chance to modify achieved_mark via filters.
+					if ( 'draw_image' === $question_type ) {
+						// Remove the previously added base question_mark (typically 0
+						// for draw_image in core) and add the final achieved_mark
+						// decided by Pro (or other filters).
+						$total_marks -= $question_mark;
+						$total_marks += (float) $answers_data['achieved_mark'];
+					}
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				}

@@ -50,6 +50,10 @@ const questionTypes = {
     label: __('Ordering', 'tutor'),
     icon: 'quizOrdering',
   },
+  draw_image: {
+    label: __('Draw on Image (R&D)', 'tutor'),
+    icon: 'quizImageAnswer',
+  },
   h5p: {
     label: __('H5P', 'tutor'),
     icon: 'quizTrueFalse',

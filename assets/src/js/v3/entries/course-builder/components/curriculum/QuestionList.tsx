@@ -103,6 +103,12 @@ const questionTypeOptions: {
     icon: 'quizOrdering',
     isPro: true,
   },
+  {
+    label: __('Draw on Image (R&D)', 'tutor'),
+    value: 'draw_image',
+    icon: 'quizImageAnswer',
+    isPro: true,
+  },
 ];
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -208,7 +214,22 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                   is_correct: '0',
                 },
               ]
-            : [],
+            : questionType === 'draw_image'
+              ? [
+                  {
+                    _data_status: QuizDataStatus.NEW,
+                    is_saved: true,
+                    answer_id: nanoid(),
+                    answer_title: '',
+                    belongs_question_id: questionId,
+                    belongs_question_type: 'draw_image',
+                    answer_two_gap_match: '',
+                    answer_view_format: 'draw_image',
+                    answer_order: 0,
+                    is_correct: '1',
+                  },
+                ]
+              : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,
