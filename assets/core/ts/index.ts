@@ -92,9 +92,6 @@ const initializePlugin = () => {
     nonce: {
       getNonceData,
     },
-    App: {
-      ApplyTheme,
-    },
   });
 
   // Register legacy functions for backward compatibility
