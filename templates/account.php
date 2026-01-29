@@ -8,11 +8,11 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Dashboard;
 use Tutor\Helpers\UrlHelper;
-use TUTOR\Input;
 
-defined( 'ABSPATH' ) || exit;
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -11,16 +11,21 @@
 use TUTOR\User;
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php bloginfo( 'name' ); ?></title>
-	<?php wp_head(); ?>
-</head>
-<body <?php body_class( '' ); ?>>
 <?php
+$is_by_short_code = isset( $is_shortcode ) && true === $is_shortcode;
+if ( ! $is_by_short_code && ! defined( 'OTLMS_VERSION' ) ) :
+	?>
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title><?php bloginfo( 'name' ); ?></title>
+		<?php wp_head(); ?>
+	</head>
+	<body <?php body_class( '' ); ?>>
+	<?php
+endif;
 global $wp_query;
 
 $dashboard_page_slug = '';
@@ -103,12 +108,10 @@ $footer_links = array(
 					}
 
 					do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
-				} else {
-					if ( User::is_instructor_view() ) {
+				} elseif ( User::is_instructor_view() ) {
 						tutor_load_template( 'dashboard.dashboard' );
-					} else {
-						tutor_load_template( 'dashboard.student-dashboard' );
-					}
+				} else {
+					tutor_load_template( 'dashboard.student-dashboard' );
 				}
 				?>
 			</div>
