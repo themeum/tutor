@@ -16,7 +16,6 @@ if ( empty( $attempt ) ) {
 	return;
 }
 
-
 $show_quiz_title = $show_quiz_title ?? false;
 $show_course     = $show_course ?? false;
 $attempt_number  = $attempt_number ?? null;
@@ -45,16 +44,21 @@ $attempts_count  = $attempts_count ?? 0;
 							<?php tutor_utils()->render_svg_icon( Icon::CHEVRON_DOWN, 18, 18 ); ?>
 						</span>
 					</button>
+				<?php else : ?>
+				<a href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>" class="tutor-text-medium-tiny tutor-student-attempt-detail tutor-text-brand"><?php echo esc_html__( 'See Details', 'tutor' ); ?></a>
 				<?php endif; ?>
 			</div>
 		<?php endif; ?>
 
 		<?php if ( $attempt_number ) : ?>
-			<div class="tutor-quiz-item-info-title">
-				<?php
-				/* translators: %d: attempt number */
-				echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
-				?>
+			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
+				<div class="tutor-quiz-item-info-title">
+					<?php
+					/* translators: %d: attempt number */
+					echo esc_html( sprintf( __( 'Attempt %d', 'tutor' ), $attempt_number ) );
+					?>
+				</div>
+				<a href="<?php echo esc_url( $quiz_attempt_obj->get_review_url( $attempt ) ); ?>" class="tutor-text-medium-tiny tutor-student-attempt-detail tutor-text-brand"><?php echo esc_html__( 'See Details', 'tutor' ); ?></a>
 			</div>
 		<?php endif; ?>
 
@@ -68,7 +72,9 @@ $attempts_count  = $attempts_count ?? 0;
 		</div>
 
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
+		<?php if ( ! empty( $attempt['student'] ) ) : ?>
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html__( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
+		<?php endif; ?>
 	</div>
 
 	<div class="tutor-quiz-item-marks">
@@ -99,12 +105,8 @@ $attempts_count  = $attempts_count ?? 0;
 	<div class="tutor-quiz-item-result">
 		<?php
 		$quiz_attempt_obj->render_quiz_attempt_list_badge( $attempt );
-		$quiz_attempt_obj->render_quiz_attempt_popover( $attempt );
+		$quiz_attempt_obj->render_student_attempt_popover( $attempt, $attempts_count, $quiz_id );
 		?>
-
+		
 	</div>
-</div>
-
-<div class="tutor-quiz-item-actions tutor-flex tutor-justify-between">
-	<?php $quiz_attempt_obj->render_quiz_attempt_buttons( $attempt ); ?>
 </div>

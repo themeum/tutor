@@ -197,6 +197,13 @@
             justify-content: space-between;
           }
         }
+
+        .tutor-student-attempt-detail {
+          text-decoration: none;
+          @include tutor-breakpoint-up(sm) {
+            display: none;
+          }
+        }
       }
 
       .tutor-quiz-item-marks {

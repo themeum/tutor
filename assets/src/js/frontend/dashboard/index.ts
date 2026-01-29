@@ -52,7 +52,7 @@ const getCurrentPage = (): string => {
   if (path.includes('/assignments')) {
     return 'assignments';
   }
-  if (path.includes('/quiz-attempts')) {
+  if (path.includes('/quiz-attempts') || path.includes('/my-quiz-attempts')) {
     return 'quiz-attempts';
   }
   if (path.includes('/settings')) {

@@ -126,6 +126,7 @@ class QuizModel {
 				'time_taken'        => $attempt_time ?? '',
 				'date'              => $start_time ?? '',
 				'student'           => $quiz_attempt->display_name ?? '',
+				'attempt_info'      => maybe_unserialize( $quiz_attempt->attempt_info ) ?? array(),
 			);
 
 			if ( ! isset( $formatted_attempts[ $quiz_id ]['attempts'] ) ) {
@@ -606,8 +607,8 @@ class QuizModel {
 		$date_filter   = '' != $date_filter ? " AND  DATE(quiz_attempts.attempt_started_at) = '$date_filter' " : '';
 		$user_filter   = $user_id ? ' AND user_id=\'' . esc_sql( $user_id ) . '\' ' : '';
 
-		$limit_offset = $count_only ? '' : " LIMIT 	{$start}, {$limit} ";
-		$select_col   = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, users.*, quiz.* ';
+		$limit_offset = $count_only || ( 0 === $limit && 0 === $start ) ? '' : " LIMIT 	{$start}, {$limit} ";
+		$select_col   = $count_only ? ' COUNT(DISTINCT quiz_attempts.attempt_id) ' : ' quiz_attempts.*, quiz.* ';
 
 		$attempt_type = $all_attempt ? '' : " AND quiz_attempts.attempt_status != 'attempt_started' ";
 
