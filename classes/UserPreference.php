@@ -8,7 +8,7 @@
  * @package Tutor\User
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 1.0.0
+ * @since 4.0.0
  */
 
 namespace TUTOR;
@@ -21,7 +21,7 @@ use Tutor\Traits\JsonResponse;
 /**
  * Class UserPreference
  *
- * @since 1.0.0
+ * @since 4.0.0
  */
 class UserPreference {
 
@@ -30,7 +30,7 @@ class UserPreference {
 	/**
 	 * User meta key for storing all Tutor user preferences.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @var string
 	 */
@@ -39,7 +39,7 @@ class UserPreference {
 	/**
 	 * Available theme options.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @var array<string>
 	 */
@@ -48,7 +48,7 @@ class UserPreference {
 	/**
 	 * Register hooks.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @param bool $register_hooks Whether to register WordPress hooks.
 	 */
@@ -66,7 +66,7 @@ class UserPreference {
 	/**
 	 * Apply font scale to the document root.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @return void
 	 */
@@ -104,7 +104,7 @@ class UserPreference {
 	 *
 	 * Keep this method very small and declarative so it is easy to extend.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @return array
 	 */
@@ -124,7 +124,7 @@ class UserPreference {
 	 *
 	 * Stored values override defaults; unknown keys are ignored.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @param int $user_id Optional. User ID. Defaults to current user.
 	 *
@@ -146,7 +146,7 @@ class UserPreference {
 	/**
 	 * Persist preferences to user meta.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @param array<string,mixed> $prefs   Raw preferences to save.
 	 * @param int                 $user_id Optional. User ID. Defaults to current user.
@@ -175,7 +175,7 @@ class UserPreference {
 	/**
 	 * AJAX handler: save current user's preferences.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
 	 * @return void
 	 */
