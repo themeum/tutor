@@ -91,81 +91,119 @@ $instructor_course_ids = CourseModel::get_courses_by_args(
 		'fields'         => 'ids',
 	)
 )->posts;
-
-$tutor_pro_enabled    = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
-$report_addon_enabled = tutor_utils()->is_addon_enabled( 'tutor-report' );
+$tutor_pro_enabled  = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
+$is_pro_reports 	= $tutor_pro_enabled && tutor_utils()->is_addon_enabled( 'tutor-report' );
 
 $start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
 $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
-$previous_dates = Instructor::get_comparison_date_range( $start_date, $end_date );
 $is_all_time    = empty( $start_date ) && empty( $end_date );
+$previous_dates = $is_all_time ? array() : Instructor::get_comparison_date_range( $start_date, $end_date );
 
 $date_range = fn( $from, $to, $column ) => array(
 	$column => array( 'BETWEEN', array( $from, $to ) ),
 );
 
+$stat = function ( $current, $previous, $previous_dates ) {
+	return array_merge( $previous_dates, Instructor::get_stat_card_details( (float) $current, (float) $previous ) );
+};
+
 // Total Earnings.
-if ( $tutor_pro_enabled && $report_addon_enabled ) {
-	$earnings                 = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
-	$total_earnings           = $earnings['total_earnings'] ?? 0;
-	$previous_period_earnings = Analytics::get_earnings_by_user( $user->ID, '', $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] )['total_earnings'] ?? 0;
+if ( $is_pro_reports ) {
+	$earnings 		= Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
+	$total_earnings = $earnings['total_earnings'] ?? 0;
+
+	if ( ! $is_all_time ) {
+		$previous_period_earnings = Analytics::get_earnings_by_user(
+			$user->ID,
+			'',
+			$previous_dates['previous_start_date'],
+			$previous_dates['previous_end_date']
+		)['total_earnings'] ?? 0;
+	}
 } else {
 	$total_earnings = WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0;
 }
 
 // Total Courses.
 $total_courses           = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
-$previous_period_courses = CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+$previous_period_courses = ! $is_all_time 
+							? CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
+							: 0;
 
 // Total Students.
 $total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
-$previous_period_students = Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID );
+$previous_period_students = ! $is_all_time 
+							? Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
+							: 0;
 
 // Total Ratings.
 $total_ratings_where     = ! $is_all_time ? $date_range( $start_date, $end_date, 'reviews.comment_date' ) : array();
 $total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
-$previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
+$previous_period_ratings = ! $is_all_time 
+							? tutor_utils()->get_instructor_ratings( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], 'reviews.comment_date' ) )
+							: (object) array( 'rating_avg' => 0 );;
 
-if ( $tutor_pro_enabled && $report_addon_enabled ) {
- 	$total_earnings_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_earnings, $previous_period_earnings ) );
- 	$total_courses_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_courses, $previous_period_courses ) );
- 	$total_students_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_students, $previous_period_students ) );
- 	$total_ratings_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_ratings->rating_avg, $previous_period_ratings->rating_avg ) );
+/**
+ * -------------------------
+ * Hover (comparison) data
+ * Only when pro reports + date range and if all-time is not selected.
+ * -------------------------
+ */
+$total_earnings_state_card_details = array();
+$total_courses_state_card_details  = array();
+$total_students_state_card_details = array();
+$total_ratings_state_card_details  = array();
+
+if ( $is_pro_reports && ! $is_all_time ) {
+ 	$total_earnings_state_card_details = $stat( $total_earnings, $previous_period_earnings, $previous_dates );
+	$total_courses_state_card_details  = $stat( $total_courses, $previous_period_courses, $previous_dates );
+	$total_students_state_card_details = $stat( $total_students, $previous_period_students, $previous_dates );
+	$total_ratings_state_card_details  = $stat( $total_ratings->rating_avg, $previous_period_ratings->rating_avg, $previous_dates );
 }
 
+/**
+ * -------------------------
+ * Stat cards
+ * -------------------------
+ */
 $stat_cards = array(
 	array(
 		'variation'     => 'success',
 		'title'         => esc_html__( 'Total Earnings', 'tutor' ),
 		'icon'          => Icon::EARNING,
 		'value'         => wp_kses_post( tutor_utils()->tutor_price( $total_earnings ?? 0 ) ),
-		'hover_content' => ! $is_all_time ? $total_earnings_state_card_details : '',
+		'hover_content' => $total_earnings_state_card_details,
 	),
 	array(
 		'variation' => 'exception1',
 		'title'     => esc_html__( 'Total Courses', 'tutor' ),
 		'icon'      => Icon::COURSES,
 		'value'     => $total_courses,
-		'hover_content' => ! $is_all_time ? $total_courses_state_card_details : '',
+		'hover_content' => $total_courses_state_card_details,
 	),
 	array(
 		'variation' => 'exception5',
 		'title'     => esc_html__( 'Total Students', 'tutor' ),
 		'icon'      => Icon::PASSED,
 		'value'     => $total_students,
-		'hover_content' => ! $is_all_time ? $total_students_state_card_details : '',
+		'hover_content' => $total_students_state_card_details,
 	),
 	array(
 		'variation' => 'exception4',
 		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
 		'icon'      => Icon::STAR_LINE,
 		'value'     => $total_ratings->rating_avg,
-		'hover_content' => ! $is_all_time ? $total_ratings_state_card_details : '',
+		'hover_content' => $total_ratings_state_card_details,
 	),
 );
 
-// Graph.
-if ( $tutor_pro_enabled && $report_addon_enabled ) {
+
+/**
+ * -------------------------
+ * Graph data (only for pro)
+ * -------------------------
+ */
+if ( $is_pro_reports ) {
 	$labels              = wp_list_pluck( $earnings['earnings'], 'label_name' );
 	$graph_earnings      = array_map( 'intval', wp_list_pluck( $earnings['earnings'], 'total' ) );
 	$enrollments         = Analytics::get_total_students_by_user( $user->ID, '', $start_date, $end_date );
@@ -178,28 +216,28 @@ if ( $tutor_pro_enabled && $report_addon_enabled ) {
 }
 
 // Course Completion Distribution.
-$course_completion_distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
+$distribution = Instructor::get_course_completion_distribution_data_by_instructor( $instructor_course_ids );
 
 $course_completion_data = array(
 	'enrolled'    => array(
 		'label' => esc_html__( 'Enrolled', 'tutor' ),
-		'value' => $course_completion_distribution['enrolled'],
+		'value' => $distribution['enrolled'],
 	),
 	'completed'   => array(
 		'label' => esc_html__( 'Completed', 'tutor' ),
-		'value' => $course_completion_distribution['completed'],
+		'value' => $distribution['completed'],
 	),
 	'in_progress' => array(
 		'label' => esc_html__( 'In Progress', 'tutor' ),
-		'value' => $course_completion_distribution['inprogress'],
+		'value' => $distribution['inprogress'],
 	),
 	'inactive'    => array(
 		'label' => esc_html__( 'Inactive', 'tutor' ),
-		'value' => $course_completion_distribution['inactive'],
+		'value' => $distribution['inactive'],
 	),
 	'cancelled'   => array(
 		'label' => esc_html__( 'Cancelled', 'tutor' ),
-		'value' => $course_completion_distribution['cancelled'],
+		'value' => $distribution['cancelled'],
 	),
 );
 
@@ -231,13 +269,16 @@ $args                   = array(
 	'end_date'   => $end_date,
 	'order_by'   => Input::get( 'type', 'revenue' ),
 );
-$top_courses            = Instructor::get_top_performing_courses_by_instructor( $user->ID, $args );
-$top_performing_courses = Instructor::format_instructor_top_performing_courses( $top_courses );
 
+$top_performing_courses = Instructor::format_instructor_top_performing_courses(
+	Instructor::get_top_performing_courses_by_instructor( $user->ID, $args )
+);
+
+// Upcoming Live Tasks (all-time + pro only).
 if ( $is_all_time && $tutor_pro_enabled ) {
-
-	$upcoming_live_tasks = Instructor::get_instructor_upcoming_live_tasks( $user->ID );
-	$upcoming_tasks      = Instructor::format_instructor_upcoming_live_tasks( $upcoming_live_tasks );
+	$upcoming_tasks = Instructor::format_instructor_upcoming_live_tasks(
+		Instructor::get_instructor_upcoming_live_tasks( $user->ID )
+	);
 }
 
 // @todo will be added later.
