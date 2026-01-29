@@ -14,6 +14,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use DateTime;
+use DateInterval;
+use Tutor\Models\CourseModel;
+use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\DateTimeHelper;
+
 /**
  * Instructor class
  *
@@ -415,5 +421,452 @@ class Instructor {
 		update_user_meta( $user_id, '_tutor_instructor_status', apply_filters( 'tutor_initial_instructor_status', 'pending' ) );
 
 		do_action( 'tutor_new_instructor_after', $user_id );
+	}
+
+	/**
+	 * Calculate the previous comparison date range based on a selected date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string|null $selected_start_date Selected start date (Y-m-d).
+	 * @param string|null $selected_end_date   Selected end date (Y-m-d).
+	 *
+	 * @return array {
+	 *     @type string $previous_start_date Previous period start date (Y-m-d).
+	 *     @type string $previous_end_date   Previous period end date (Y-m-d).
+	 * }
+	 */
+	public static function get_comparison_date_range( $selected_start_date, $selected_end_date ) {
+
+		$format = DateTimeHelper::FORMAT_DATE;
+
+		if ( empty( $selected_start_date ) && empty( $selected_end_date ) ) {
+
+			$now = DateTimeHelper::now();
+			return array(
+				'previous_start_date' => $now->create( 'first day of this month' )->format( $format ),
+				'previous_end_date'   => $now->create( 'last day of this month' )->format( $format ),
+			);
+		}
+
+		$start = new DateTime( $selected_start_date );
+		$end   = new DateTime( $selected_end_date );
+		$days  = $start->diff( $end )->days + 1;
+
+		$previous_start_date = $start->sub( DateInterval::createFromDateString( "$days days" ) )->format( $format );
+		$previous_end_date   = $end->sub( DateInterval::createFromDateString( "$days days" ) )->format( $format );
+
+		return array(
+			'previous_start_date' => $previous_start_date,
+			'previous_end_date'   => $previous_end_date,
+		);
+	}
+
+	/**
+	 * Get the total number of students enrolled in an instructor's courses
+	 * within a given date range.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string|null $start_date Start date (Y-m-d).
+	 * @param string|null $end_date   End date (Y-m-d).
+	 * @param int         $user_id    Instructor user ID.
+	 *
+	 * @return int Total number of enrolled students.
+	 */
+	public static function get_instructor_total_students_by_date_range( $start_date, $end_date, $user_id ) {
+
+		global $wpdb;
+
+		$primary_table  = "{$wpdb->posts} AS enrollment";
+		$joining_table  = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} AS course",
+				'on'    => 'enrollment.post_parent=course.ID',
+			),
+		);
+		$select_columns = array( 'COUNT(enrollment.ID) AS students' );
+
+		$where = array(
+			'course.post_author'     => $user_id,
+			'course.post_type'       => tutor()->course_post_type,
+			'course.post_status'     => CourseModel::STATUS_PUBLISH,
+			'enrollment.post_type'   => 'tutor_enrolled',
+			'enrollment.post_status' => 'completed',
+		);
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$where['enrollment.post_date'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+		}
+
+		$result = QueryHelper::get_joined_data(
+			$primary_table,
+			$joining_table,
+			$select_columns,
+			$where,
+			array(),
+			'',
+			-1,
+			0,
+			'DESC',
+			OBJECT,
+			true
+		);
+
+		return $result->students ?? 0;
+	}
+
+	/**
+	 * Get course completion distribution data for a specific instructor.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $instructor_course_ids    Optional list of course IDs.
+	 *
+	 * @return array {
+	 *     Enrollment distribution counts.
+	 *
+	 *     @type int $enrolled   Total number of enrollments.
+	 *     @type int $completed  Number of fully completed enrollments (100% progress).
+	 *     @type int $inprogress Number of enrollments with partial progress (>0 and <100).
+	 *     @type int $inactive   Number of enrollments with no progress (0%).
+	 *     @type int $cancelled  Number of cancelled enrollments.
+	 * }
+	 */
+	public static function get_course_completion_distribution_data_by_instructor( $instructor_course_ids = array() ) {
+
+		global $wpdb;
+
+		$counts = array(
+			'enrolled'   => 0,
+			'completed'  => 0,
+			'inprogress' => 0,
+			'inactive'   => 0,
+			'cancelled'  => 0,
+		);
+
+		$cancel_statuses = array( 'cancel', 'canceled', 'cancelled' );
+		$post_statuses   = array_merge( $cancel_statuses, array( 'completed' ) );
+
+		if ( empty( $instructor_course_ids ) ) {
+			return $counts;
+		}
+
+		$where = array(
+			'post_type'   => 'tutor_enrolled',
+			'post_status' => array( 'IN', $post_statuses ),
+			'post_parent' => array( 'IN', $instructor_course_ids ),
+		);
+
+		$args = array(
+			'select' => array( 'id', 'post_status', 'post_author', 'post_parent' ),
+			'where'  => $where,
+		);
+
+		$enrollments = QueryHelper::query( $wpdb->posts, $args );
+
+		if ( empty( $enrollments ) ) {
+			return $counts;
+		}
+
+		$counts['enrolled'] = count( $enrollments );
+
+		foreach ( $enrollments as $enrollment ) {
+
+			if ( in_array( $enrollment->post_status, $cancel_statuses, true ) ) {
+				++$counts['cancelled'];
+				continue;
+			}
+
+			$course_progress = tutor_utils()->get_course_completed_percent( $enrollment->post_parent, $enrollment->post_author );
+
+			if ( 100 === $course_progress ) {
+				++$counts['completed'];
+			} elseif ( $course_progress > 0 && $course_progress < 100 ) {
+				++$counts['inprogress'];
+			} else {
+				++$counts['inactive'];
+			}
+		}
+
+		return $counts;
+	}
+
+	/**
+	 * Retrieve the top-performing courses for a given instructor.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int   $instructor_id Instructor  user ID.
+	 * @param array $args {
+	 *     Optional query arguments.
+	 *
+	 *     @type string $start_date Optional start date (Y-m-d).
+	 *     @type string $end_date   Optional end date (Y-m-d).
+	 *     @type string $order_by   Sorting criteria. Accepts 'revenue' or 'student'.
+	 * }
+
+	 * @param int   $limit         Maximum number of courses to return. Default 4.
+	 *
+	 * @return array List of course objects containing:
+	 *               - course_id (int)
+	 *               - course_title (string)
+	 *               - total_revenue (float)
+	 *               - total_student (int)
+	 *
+	 * @throws \Exception When a database error occurs.
+	 */
+	public static function get_top_performing_courses_by_instructor( $instructor_id, $args, $limit = 4 ) {
+
+		global $wpdb;
+
+		$start_date = $args['start_date'] ?? null;
+		$end_date   = $args['end_date'] ?? null;
+		$order_by   = 'revenue' === $args['order_by'] ? 'total_revenue' : 'total_student';
+
+		$complete_status = tutor_utils()->get_earnings_completed_statuses();
+
+		$amount_type = is_admin() ? 'earnings.admin_amount' : 'earnings.instructor_amount';
+		$amount_rate = is_admin() ? 'earnings.admin_rate' : 'earnings.instructor_rate';
+
+		$amount_condition = "CASE
+			WHEN orders.tax_type = 'inclusive' AND earnings.course_price_grand_total > 0
+				THEN ( earnings.course_price_grand_total - orders.tax_amount ) * ( $amount_rate/100 )
+			ELSE $amount_type
+			END";
+
+		$earning_where_clause = array(
+			'earnings.user_id'      => $instructor_id,
+			'earnings.order_status' => array( 'IN', $complete_status ),
+		);
+
+		$enrollment_where_clause = array( 'post_type' => 'tutor_enrolled' );
+
+		if ( ! empty( $start_date ) && ! empty( $end_date ) ) {
+			$earning_where_clause['earnings.created_at'] = array( 'BETWEEN', array( $start_date, $end_date ) );
+			$enrollment_where_clause['post_date']        = array( 'BETWEEN', array( $start_date, $end_date ) );
+		}
+
+		$earning_where_clause    = QueryHelper::prepare_where_clause( $earning_where_clause );
+		$enrollment_where_clause = QueryHelper::prepare_where_clause( $enrollment_where_clause );
+
+		$earnings_sql = "SELECT
+							earnings.course_id,
+							SUM($amount_condition) AS total_revenue
+						FROM {$wpdb->tutor_earnings} earnings
+						LEFT JOIN {$wpdb->tutor_orders} orders ON orders.id = earnings.order_id
+						WHERE {$earning_where_clause}
+						GROUP BY earnings.course_id";
+
+		$enrollment_sql = QueryHelper::prepare_raw_query(
+			"SELECT 
+				post_parent AS course_id, 
+				COUNT(ID) AS total_student
+			FROM {$wpdb->posts}
+			WHERE {$enrollment_where_clause}
+			GROUP BY post_parent",
+			array()
+		);
+
+		$result = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT
+					post.ID AS course_id,
+					post.post_title AS course_title,
+					COALESCE(earnings.total_revenue, 0)  AS total_revenue,
+					COALESCE(enrollments.total_student, 0) AS total_student
+				FROM wp_posts post
+				INNER JOIN ({$earnings_sql}) earnings 
+					ON earnings.course_id = post.ID
+				LEFT JOIN ({$enrollment_sql}) enrollments 
+					ON enrollments.course_id = post.ID
+				WHERE post.post_type = %s
+				ORDER BY {$order_by} DESC
+				LIMIT %d",
+				tutor()->course_post_type,
+				$limit
+			)
+		);
+
+		// If error occurred then throw new exception.
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error ); //phpcs:ignore.
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Format top performing instructor courses for presentation.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $top_courses List of course objects returned from analytics.
+	 * @return array Formatted top performing courses data.
+	 */
+	public static function format_instructor_top_performing_courses( $top_courses ) {
+
+		if ( empty( $top_courses ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $course ) {
+				return array(
+					'name'     => $course->course_title,
+					'url'      => get_permalink( $course->course_id ),
+					'revenue'  => wp_kses_post( tutor_utils()->tutor_price( $course->total_revenue ?? 0 ) ),
+					'students' => $course->total_student ?? 0,
+				);
+			},
+			$top_courses
+		);
+	}
+
+	/**
+	 * Retrieve upcoming live session tasks (Zoom / Google Meet) for an instructor.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $instructor_id Instructor (author) user ID.
+	 * @return array List of upcoming live task posts.
+	 */
+	public static function get_instructor_upcoming_live_tasks( $instructor_id ) {
+
+		$is_google_meet_enable = tutor_utils()->is_addon_enabled( 'google-meet' );
+		$is_zoom_enable        = tutor_utils()->is_addon_enabled( 'tutor-zoom' );
+
+		$meta_keys = array_filter(
+			array(
+				$is_google_meet_enable ? 'tutor-google-meet-start-datetime' : null,
+				$is_zoom_enable ? '_tutor_zm_start_datetime' : null,
+			)
+		);
+
+		$post_types = array_filter(
+			array(
+				$is_google_meet_enable ? tutor()->meet_post_type : null,
+				$is_zoom_enable ? tutor()->zoom_post_type : null,
+			)
+		);
+
+		if ( empty( $meta_keys ) ) {
+			return array();
+		}
+
+		return get_posts(
+			array(
+				'post_type'   => $post_types,
+				'post_status' => 'publish',
+				'post_author' => $instructor_id,
+				'numberposts' => 5,
+				'meta_query'  => array(
+					array(
+						'key'     => $meta_keys,
+						'value'   => gmdate( 'Y-m-d H:i:s', strtotime( 'now' ) ),
+						'compare' => '>=',
+						'type'    => 'DATETIME',
+					),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Format upcoming instructor live tasks for presentation.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $upcoming_live_tasks List of live task post objects.
+	 * @return array Formatted upcoming live tasks data.
+	 */
+	public static function format_instructor_upcoming_live_tasks( $upcoming_live_tasks ) {
+
+		if ( empty( $upcoming_live_tasks ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $task ) {
+
+				$is_zoom = tutor()->zoom_post_type === $task->post_type;
+				$is_meet = tutor()->meet_post_type === $task->post_type;
+
+				$live_meta_key = $is_zoom ? '_tutor_zm_start_datetime'
+								: ( $is_meet ? 'tutor-google-meet-start-datetime' : '' );
+
+				$url = $is_zoom ? ( json_decode( get_post_meta( $task->ID, '_tutor_zm_data' )[0] )->join_url ?? '' )
+								: ( $is_meet ? get_post_meta( $task->ID, 'tutor-google-meet-link', true ) : '' );
+
+				$start_date = get_post_meta( $task->ID, $live_meta_key, true );
+
+				return array(
+					'name'      => $task->post_title,
+					'date'      => wp_date( 'Y-m-d h:i A', strtotime( $start_date ) ),
+					'url'       => $url,
+					'post_type' => $task->post_type,
+				);
+			},
+			$upcoming_live_tasks
+		);
+	}
+
+	/**
+	 * Format recent instructor reviews for display.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $reviews List of review objects.
+	 * @return array Formatted recent reviews data.
+	 */
+	public static function format_instructor_recent_reviews( $reviews ) {
+
+		if ( empty( $reviews ) ) {
+			return array();
+		}
+
+		return array_map(
+			function ( $review ) {
+				return array(
+					'user'        => array(
+						'name'   => $review->display_name,
+						'avatar' => get_avatar_url( $review->user_id ),
+					),
+					'course_name' => get_the_title( $review->comment_post_ID ),
+					'date'        => $review->comment_date,
+					'rating'      => $review->rating,
+					'review_text' => $review->comment_content,
+				);
+			},
+			$reviews
+		);
+	}
+
+	public static function get_stat_card_details( float $current_data, float $previous_data ) {
+
+		if ( empty( $previous_data ) && empty( $current_data ) ) {
+			return array(
+				'percentage' => '',
+				'icon'       => Icon::MINUS,
+				'class'      => 'tutor-text-primary',
+			);
+		}
+
+		if ( empty( $previous_data ) ) {
+			$percentage = 100;
+		} else {
+			$percentage = ( ( $current_data - $previous_data ) / $previous_data ) * 100;
+		}
+
+		$is_negative = $percentage < 0;
+		$icon        = $is_negative ? Icon::ARROW_DOWN : Icon::ARROW_UP;
+		$class       = $is_negative ? 'tutor-p2 tutor-actions-critical-primary' : 'tutor-p2 tutor-actions-success-primary';
+
+		return array(
+			'percentage' => abs( $percentage ) . '%',
+			'icon'       => $icon,
+			'class'      => $class,
+		);
 	}
 }

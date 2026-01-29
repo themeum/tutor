@@ -109,6 +109,54 @@ class Tabs extends BaseComponent {
 	);
 
 	/**
+	 * CSS class for the main tabs wrapper element.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected string $wrapper_class = '';
+
+	/**
+	 * CSS class for the tab list container.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected string $tab_list_class = '';
+
+	/**
+	 * CSS class applied to each tab button element.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected string $tab_button_class = '';
+
+	/**
+	 * CSS class for the inner content wrapper inside a tab button
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected string $tab_button_content_class = '';
+
+	/**
+	 * CSS class for the tab label text.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected string $tab_label_class = '';
+
+	/**
+	 * CSS class for the sub-label text.
+	 *
+	 * @since 4.0.0
+	 * @var string
+	 */
+	protected string $tab_sub_label_class = '';
+
+	/**
 	 * Set the tab data.
 	 *
 	 * @since 4.0.0
@@ -173,6 +221,101 @@ class Tabs extends BaseComponent {
 	}
 
 	/**
+	 * Set the CSS class for the main tabs wrapper element.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $wrapper_class CSS class name(s) for the wrapper.
+	 * @return $this
+	 */
+	public function wrapper_class( string $wrapper_class ) {
+
+		$this->wrapper_class = ! empty( $wrapper_class )
+								? sprintf( ' class="%s"', esc_attr( $wrapper_class ) )
+								: '';
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the CSS class for the tab list container.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $tab_list_class CSS class name(s) for the tab list.
+	 * @return $this
+	 */
+	public function tab_list_class( string $tab_list_class ) {
+
+		$this->tab_list_class = esc_attr( $tab_list_class );
+
+		return $this;
+	}
+
+
+	/**
+	 * Set the CSS class for each tab button element.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $tab_button_class CSS class name(s) for the tab button.
+	 * @return $this
+	 */
+	public function tab_button_class( string $tab_button_class ) {
+		$this->tab_button_class = ! empty( $tab_button_class )
+								? sprintf( ' class="%s"', esc_attr( $tab_button_class ) )
+								: '';
+		return $this;
+	}
+
+	/**
+	 * Set the CSS class for the inner content wrapper inside a tab button.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $tab_button_content_class CSS class name(s) for the tab button content.
+	 * @return $this
+	 */
+	public function tab_button_content_class( string $tab_button_content_class ) {
+		$this->tab_button_content_class = ! empty( $tab_button_content_class )
+								? sprintf( ' class="%s"', esc_attr( $tab_button_content_class ) )
+								: '';
+		return $this;
+	}
+
+	/**
+	 * Set the CSS class for the tab label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $tab_label_class CSS class name(s) for the tab label.
+	 * @return $this
+	 */
+	public function tab_label_class( string $tab_label_class ) {
+		$this->tab_label_class = ! empty( $tab_label_class )
+								? sprintf( ' class="%s"', esc_attr( $tab_label_class ) )
+								: '';
+		return $this;
+	}
+
+
+	/**
+	 * Set the CSS class for the tab sub-label text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $tab_sub_label_class CSS class name(s) for the tab sub-label.
+	 * @return $this
+	 */
+	public function tab_sub_label_class( string $tab_sub_label_class ) {
+		$this->tab_sub_label_class = ! empty( $tab_sub_label_class )
+								? sprintf( ' class="%s"', esc_attr( $tab_sub_label_class ) )
+								: '';
+		return $this;
+	}
+
+	/**
 	 * Get the tabs component.
 	 *
 	 * @since 4.0.0
@@ -194,8 +337,9 @@ class Tabs extends BaseComponent {
 				defaultTab: "<?php echo $default; // phpcs:ignore ?>",
 				urlParams: <?php echo $url_params; // phpcs:ignore ?>
 			})'
+			<?php echo $this->wrapper_class; // phpcs:ignore ?>
 		>
-			<div x-ref="tablist" class="tutor-tabs-nav" role="tablist" aria-orientation="<?php echo $orientation; // phpcs:ignore ?>">
+			<div x-ref="tablist" class="tutor-tabs-nav <?php echo $this->tab_list_class; ?>" role="tablist" aria-orientation="<?php echo $orientation; // phpcs:ignore ?>">
 				<template x-for="tab in tabs" :key="tab.id">
 					<button
 						type="button"
@@ -204,9 +348,17 @@ class Tabs extends BaseComponent {
 						x-bind:aria-selected="isActive(tab.id)"
 						:disabled="tab.disabled ? true : false"
 						@click="selectTab(tab.id)"
+						<?php echo $this->tab_button_class; // phpcs:ignore ?>
 					>
-						<span x-data="tutorIcon({ name: tab.icon, width: 24, height: 24 })"></span>
-						<span x-text="tab.label"></span>
+						<template x-if="tab.icon">
+							<span x-data="tutorIcon({ name: tab.icon, width: 24, height: 24 })"></span>
+						</template>
+
+						<div <?php echo $this->tab_button_content_class; //phpcs:ignore ?>>
+							<span x-text="tab.label" <?php echo $this->tab_label_class; //phpcs:ignore ?>></span>
+							<span x-text="tab.sub_label" <?php echo $this->tab_sub_label_class; //phpcs:ignore?>></span>
+						</div>
+
 					</button>
 				</template>
 			</div>

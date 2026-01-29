@@ -14,13 +14,13 @@ use TUTOR\Icon;
 use Tutor\Ecommerce\Tax;
 use Tutor\Cache\TutorCache;
 use Tutor\Models\QuizModel;
+use Tutor\Helpers\UrlHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
 use Tutor\Helpers\DateTimeHelper;
-use Tutor\Helpers\UrlHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -3407,15 +3407,15 @@ class Utils {
 		$count = $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.ID)
-			FROM 	{$wpdb->posts} enrollment
-					INNER  JOIN {$wpdb->posts} course
-							ON enrollment.post_parent=course.ID
-			WHERE 	course.post_author = %d
+				FROM {$wpdb->posts} enrollment
+				INNER JOIN {$wpdb->posts} course
+					ON enrollment.post_parent=course.ID
+				WHERE course.post_author = %d
 					AND course.post_type = %s
 					AND course.post_status = %s
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s;
-			",
+				",
 				$instructor_id,
 				$course_post_type,
 				'publish',
@@ -3499,11 +3499,11 @@ class Utils {
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
-				FROM 	{$wpdb->posts} enrollment
-					INNER  JOIN {$wpdb->posts} AS course
-							ON enrollment.post_parent=course.ID
-					INNER  JOIN {$wpdb->users} AS user
-							ON user.ID = enrollment.post_author
+				FROM {$wpdb->posts} enrollment
+				INNER JOIN {$wpdb->posts} AS course
+					ON enrollment.post_parent=course.ID
+				INNER JOIN {$wpdb->users} AS user
+					ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
 					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
@@ -3512,11 +3512,9 @@ class Utils {
 					{$course_query}
 					{$date_query}
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
-
 				GROUP BY enrollment.post_author
 				ORDER BY {$order_by} {$order}
-				LIMIT %d, %d
-			",
+				LIMIT %d, %d",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
@@ -3545,9 +3543,7 @@ class Utils {
 					{$course_query}
 					{$date_query}
 				GROUP BY enrollment.post_author
-				ORDER BY {$order_by} {$order}
-
-			",
+				ORDER BY {$order_by} {$order}",
 				$course_post_type,
 				'tutor_enrolled',
 				'completed',
@@ -4251,16 +4247,18 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 1.4.0 $course_id $date_filter param added.
 	 * @since 1.9.9 Course id & date filter is sorting with specific course and date.
+	 * @since 4.0.0 $args parameter added.
 	 *
 	 * @param int    $instructor_id user id.
 	 * @param int    $offset offset.
 	 * @param int    $limit limit.
 	 * @param string $course_id course id.
 	 * @param string $date_filter date filter.
+	 * @param array  $args Optional query arguments.
 	 *
 	 * @return array|null|object
 	 */
-	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '' ) {
+	public function get_reviews_by_instructor( $instructor_id = 0, $offset = 0, $limit = 150, $course_id = '', $date_filter = '', $args = array() ) {
 		global $wpdb;
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$offset        = sanitize_text_field( $offset );
@@ -4268,9 +4266,16 @@ class Utils {
 		$course_id     = sanitize_text_field( $course_id );
 		$date_filter   = sanitize_text_field( $date_filter );
 		$instructor_id = $this->get_user_id( $instructor_id );
+		$args          = $this->sanitize_array( $args );
 
 		$course_query = '';
 		$date_query   = '';
+
+		$where_clause = '';
+
+		if ( ! empty( $args['where'] ) ) {
+			$where_clause = ' AND ' . $args['where'];
+		}
 
 		if ( '' !== $course_id ) {
 			$course_query = " AND {$wpdb->comments}.comment_post_ID = {$course_id} ";
@@ -4302,6 +4307,7 @@ class Utils {
 				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
+						{$where_clause}
 						{$course_query}
 						{$date_query}
 				",
@@ -4310,6 +4316,8 @@ class Utils {
 				)
 			);
 
+			$order_by = $args['order_by'] ?? 'comment_ID';
+			
 			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
@@ -4324,21 +4332,21 @@ class Utils {
 						{$wpdb->users}.display_name,
 						{$wpdb->posts}.post_title as course_title
 
-				FROM 	{$wpdb->comments}
-						INNER JOIN {$wpdb->commentmeta}
-								ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
-						INNER JOIN {$wpdb->users}
-								ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
-						INNER JOIN {$wpdb->posts}
-								ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID
-				WHERE 	{$wpdb->comments}.comment_post_ID IN({$implode_ids})
+					FROM {$wpdb->comments}
+					INNER JOIN {$wpdb->commentmeta}
+						ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
+					INNER JOIN {$wpdb->users}
+						ON {$wpdb->comments}.user_id = {$wpdb->users}.ID
+					INNER JOIN {$wpdb->posts}
+						ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID
+					WHERE {$wpdb->comments}.comment_post_ID IN({$implode_ids})
 						AND comment_type = %s
 						AND meta_key = %s
+						{$where_clause}
 						{$course_query}
 						{$date_query}
-				ORDER BY comment_ID DESC
-				LIMIT %d, %d;
-				",
+					ORDER BY {$order_by} DESC
+					LIMIT %d, %d",
 					'tutor_course_rating',
 					'tutor_rating',
 					$offset,
@@ -4354,12 +4362,14 @@ class Utils {
 	 * Get instructors rating
 	 *
 	 * @since 1.0.0
+	 * @since 4.0.0 Added $where Parameter.
 	 *
-	 * @param int $instructor_id instructor id.
+	 * @param int   $instructor_id instructor id.
+	 * @param array $where       Optional additional WHERE conditions.
 	 *
 	 * @return object
 	 */
-	public function get_instructor_ratings( $instructor_id ) {
+	public function get_instructor_ratings( $instructor_id, $where = array() ) {
 		global $wpdb;
 
 		$ratings = array(
@@ -4368,23 +4378,27 @@ class Utils {
 			'rating_avg'   => 0.00,
 		);
 
-		$rating = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum
-			FROM 	{$wpdb->usermeta} courses
-					INNER JOIN {$wpdb->comments} reviews
-							ON courses.meta_value = reviews.comment_post_ID
-						   AND reviews.comment_type = 'tutor_course_rating'
-						   AND reviews.comment_approved = 'approved'
-					INNER JOIN {$wpdb->commentmeta} rating
-							ON reviews.comment_ID = rating.comment_id
-						   AND rating.meta_key = 'tutor_rating'
-			WHERE 	courses.user_id = %d
-					AND courses.meta_key = %s
-			",
-				$instructor_id,
-				'_tutor_instructor_course_id'
+		// Prepare where clause.
+		$where_clause = QueryHelper::prepare_where_clause(
+			$this->sanitize_array(
+				$where + array(
+					'courses.user_id'  => $instructor_id,
+					'courses.meta_key' => '_tutor_instructor_course_id',
+				)
 			)
+		);
+
+		$rating = $wpdb->get_row(
+			"SELECT COUNT(rating.meta_value) as rating_count, SUM(rating.meta_value) as rating_sum
+			FROM {$wpdb->usermeta} courses
+			INNER JOIN {$wpdb->comments} reviews
+				ON courses.meta_value = reviews.comment_post_ID
+				AND reviews.comment_type = 'tutor_course_rating'
+				AND reviews.comment_approved = 'approved'
+			INNER JOIN {$wpdb->commentmeta} rating
+				ON reviews.comment_ID = rating.comment_id
+				AND rating.meta_key = 'tutor_rating'
+		    WHERE {$where_clause}"
 		);
 
 		if ( $rating->rating_count ) {
@@ -8550,7 +8564,7 @@ class Utils {
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 
-			$subpage_parts = explode( '/', $subpage, 2 );
+			$subpage_parts = $subpage ? explode( '/', $subpage, 2 ) : array();
 			if ( isset( $subpage_parts[1] ) ) {
 				$dashboard_subpage = $this->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
 				return $dashboard_page == $subpage_parts[0] && $dashboard_subpage == $subpage_parts[1];
@@ -10802,7 +10816,7 @@ class Utils {
 	 *
 	 * @return void
 	 */
-	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ){
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
 			return;
@@ -10830,6 +10844,7 @@ class Utils {
 		foreach ( $attributes as $key => $value ) {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
+
 
 		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}

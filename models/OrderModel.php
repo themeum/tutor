@@ -1138,7 +1138,8 @@ class OrderModel {
 								0
 							)
 						) AS total,
-						o.created_at_gmt AS date_format
+						o.created_at_gmt AS date_format,
+						DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
 					FROM 
 						{$this->table_name} o
 					JOIN 
@@ -1180,7 +1181,8 @@ class OrderModel {
 							0
 						)
 					) AS total,
-					o.created_at_gmt AS date_format
+					o.created_at_gmt AS date_format,
+					DATE_FORMAT( o.created_at_gmt, '%b' ) AS label_name
 					FROM {$this->table_name} AS o
 					WHERE 1 = %d
 					AND o.order_status = 'completed'
@@ -1336,7 +1338,8 @@ class OrderModel {
 				$wpdb->prepare(
 					"SELECT 
 					COALESCE(SUM(o.refund_amount), 0) AS total,
-					created_at_gmt AS date_format
+					created_at_gmt AS date_format,
+					DATE_FORMAT(o.created_at_gmt, '%b') AS label_name
 					FROM {$this->table_name} AS o
 					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
 					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
@@ -1909,17 +1912,20 @@ class OrderModel {
 	 * Retrieves statements for a specific user.
 	 *
 	 * @since 3.5.0
+	 * @since 4.0.0 Added $order_by and $order option.
 	 *
-	 * @param string $post_type_in_clause SQL clause to filter the course post types.
-	 * @param string $course_query SQL query string to further filter the courses .
-	 * @param string $date_query SQL query string to filter by date range.
-	 * @param int    $user_id The user ID for which the statements are being retrieved.
-	 * @param int    $offset The offset for pagination.
-	 * @param int    $limit The number of rows to return.
+	 * @param string $post_type_in_clause Prepared SQL IN clause containing allowed course post types.
+	 * @param string $course_query        Optional SQL fragment to filter by course ID.
+	 * @param string $date_query          Optional SQL fragment to filter by statement date.
+	 * @param int    $user_id             User (instructor) ID.
+	 * @param int    $offset              Number of records to skip (pagination offset).
+	 * @param int    $limit               Maximum number of records to return.
+	 * @param string $order_by            Column name to order results by.
+	 * @param string $order               Sort direction. Accepts 'ASC' or 'DESC'.
 	 *
 	 * @return array
 	 */
-	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit ): array {
+	public function get_statements( $post_type_in_clause, $course_query, $date_query, $user_id, $offset, $limit, $order_by, $order ): array {
 		global $wpdb;
 
 		//phpcs:disable
@@ -1943,9 +1949,8 @@ class OrderModel {
 				WHERE statements.user_id = %d
 				{$course_query}
 				{$date_query}
-				ORDER BY statements.created_at DESC
-				LIMIT %d, %d
-			",
+				ORDER BY {$order_by} {$order}
+				LIMIT %d, %d",
 				$user_id,
 				$offset,
 				$limit
@@ -1960,8 +1965,7 @@ class OrderModel {
 					AND course.post_type IN ({$post_type_in_clause})
 				WHERE statements.user_id = %d
 				{$course_query}
-				{$date_query}
-			",
+				{$date_query}",
 				$user_id
 			)
 		);
