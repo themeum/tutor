@@ -77,6 +77,7 @@ const settings = () => {
     saveBillingInfoMutation: null as MutationState<TutorMutationResponse<string>> | null,
     saveWithdrawMethodMutation: null as MutationState<TutorMutationResponse<string>> | null,
     resetPasswordMutation: null as MutationState<TutorMutationResponse<string>> | null,
+    handleUpdateNotification: null as MutationState<unknown, unknown> | null,
 
     init() {
       if (!this.$el) {
@@ -90,6 +91,15 @@ const settings = () => {
       this.handleSaveBillingInfo = this.handleSaveBillingInfo.bind(this);
       this.handleSaveWithdrawMethod = this.handleSaveWithdrawMethod.bind(this);
       this.handleResetPassword = this.handleResetPassword.bind(this);
+
+      this.handleUpdateNotification = this.query.useMutation(this.updateNotification, {
+        onSuccess: (data: TutorMutationResponse<string>) => {
+          this.toast.success(data?.message ?? __('Notification settings updated', 'tutor'));
+        },
+        onError: (error: Error) => {
+          this.toast.error(convertToErrorMessage(error) || __('Failed to update notification settings', 'tutor'));
+        },
+      });
 
       this.fetchCountriesQuery = this.query.useQuery('fetch-countries', () => this.fetchCountries());
 
@@ -149,6 +159,32 @@ const settings = () => {
           this.toast.error(convertToErrorMessage(error));
         },
       });
+    },
+
+    async updateNotification(payload: Record<string, boolean>) {
+      const transformedPayload = Object.keys(payload).reduce(
+        (formattedPayload, key) => {
+          const value = payload[key];
+          const stringValue = typeof value === 'boolean' ? (value ? 'on' : 'off') : value;
+
+          if (!key.includes('__')) {
+            formattedPayload[`tutor_notification_preference[${key}]`] = stringValue;
+            return formattedPayload;
+          }
+
+          const [firstPart, secondPart] = key.split('__');
+          if (!firstPart && !secondPart) {
+            return formattedPayload;
+          }
+
+          formattedPayload[`tutor_notification_preference[email][${firstPart}][${secondPart}]`] = stringValue;
+
+          return formattedPayload;
+        },
+        {} as Record<string, string>,
+      );
+
+      return wpAjaxInstance.post(endpoints.UPDATE_PROFILE_NOTIFICATION, transformedPayload).then((res) => res.data);
     },
 
     async fetchCountries() {
