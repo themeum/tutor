@@ -126,12 +126,12 @@ $total_ratings_where     = ! $is_all_time ? $date_range( $start_date, $end_date,
 $total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
 $previous_period_ratings = tutor_utils()->get_instructor_ratings( $user->ID, array( 'reviews.comment_date' => array( 'BETWEEN', array( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'] ) ) ) );
 
-// if ( $tutor_pro_enabled && $report_addon_enabled ) {
-// 	$total_earnings_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_earnings, $previous_period_earnings ) );
-// 	$total_courses_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_courses, $previous_period_courses ) );
-// 	$total_students_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_students, $previous_period_students ) );
-// 	$total_ratings_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_ratings, $previous_period_ratings ) );
-// }
+if ( $tutor_pro_enabled && $report_addon_enabled ) {
+ 	$total_earnings_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_earnings, $previous_period_earnings ) );
+ 	$total_courses_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_courses, $previous_period_courses ) );
+ 	$total_students_state_card_details = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_students, $previous_period_students ) );
+ 	$total_ratings_state_card_details  = array_merge( $previous_dates, Instructor::get_stat_card_details( $total_ratings->rating_avg, $previous_period_ratings->rating_avg ) );
+}
 
 $stat_cards = array(
 	array(
@@ -146,22 +146,21 @@ $stat_cards = array(
 		'title'     => esc_html__( 'Total Courses', 'tutor' ),
 		'icon'      => Icon::COURSES,
 		'value'     => $total_courses,
-		// 'content'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_courses, $previous_period_courses, false ),
-
+		'hover_content' => ! $is_all_time ? $total_courses_state_card_details : '',
 	),
 	array(
 		'variation' => 'exception5',
 		'title'     => esc_html__( 'Total Students', 'tutor' ),
 		'icon'      => Icon::PASSED,
 		'value'     => $total_students,
-		// 'content'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_students, $previous_period_students, false ),
+		'hover_content' => ! $is_all_time ? $total_students_state_card_details : '',
 	),
 	array(
 		'variation' => 'exception4',
 		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
 		'icon'      => Icon::STAR_LINE,
 		'value'     => $total_ratings->rating_avg,
-		// 'content'    => Instructor::get_stat_card_comparison_subtitle( $start_date, $end_date, $total_ratings->rating_avg, $previous_period_ratings->rating_avg, false ),
+		'hover_content' => ! $is_all_time ? $total_ratings_state_card_details : '',
 	),
 );
 

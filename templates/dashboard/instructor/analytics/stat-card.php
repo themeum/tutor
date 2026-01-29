@@ -43,7 +43,8 @@ if ( ! empty( $hover_content ) ) {
 			'end_date'      => $end_date,
 			'hover_content' => $hover_content,
 			'hover_amount'  => $value,
-		)
+		),
+		false
 	);
 }
 
