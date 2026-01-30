@@ -9,12 +9,9 @@
  * @since 4.0.0
  */
 
-use Tutor\Components\Avatar;
-use Tutor\Components\Constants\Size;
-use TUTOR\Icon;
-use TUTOR\Lesson;
-
 defined( 'ABSPATH' ) || exit;
+
+use TUTOR\Lesson;
 
 $replies     = $replies ?? Lesson::get_comments(
 	array(

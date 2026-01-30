@@ -38,6 +38,15 @@ class Lesson extends Tutor_Base {
 	private $post_type;
 
 	/**
+	 * Determine if legacy mode is enabled or not
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var bool
+	 */
+	private $is_legacy_learning_mode = false;
+
+	/**
 	 * Register hooks
 	 *
 	 * @since 1.0.0
@@ -51,6 +60,8 @@ class Lesson extends Tutor_Base {
 		parent::__construct();
 
 		$this->post_type = tutor()->lesson_post_type;
+
+		$this->is_legacy_learning_mode = tutor_utils()->get_option( 'is_legacy_learning_mode' );
 
 		if ( ! $register_hooks ) {
 			return;
@@ -111,6 +122,9 @@ class Lesson extends Tutor_Base {
 	 * Manage load more & comment create
 	 *
 	 * @since 2.0.6
+	 *
+	 * @since 4.0.0 different template returned
+	 *
 	 * @return void  send wp json data
 	 */
 	public function tutor_single_course_lesson_load_more() {
@@ -130,7 +144,7 @@ class Lesson extends Tutor_Base {
 			do_action( 'tutor_new_comment_added', $comment_data );
 		}
 
-		if ( ! tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+		if ( ! $this->is_legacy_learning_mode ) {
 			$html = '';
 			if ( $comment_id ) {
 				ob_start();
@@ -224,6 +238,7 @@ class Lesson extends Tutor_Base {
 	 */
 	public function ajax_update_lesson_comment() {
 		tutor_utils()->check_nonce();
+
 		$comment_id = Input::post( 'comment_id', 0, Input::TYPE_INT );
 		if ( ! $comment_id ) {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
@@ -234,28 +249,27 @@ class Lesson extends Tutor_Base {
 			$this->response_bad_request( __( 'Invalid comment ID', 'tutor' ) );
 		}
 
-		$lesson_id = $comment->comment_post_ID;
-		if ( get_current_user_id() === (int) $comment->user_id || tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+		$comment_content = Input::post( 'comment', '', Input::TYPE_KSES_POST );
+		$user_id         = get_current_user_id();
+
+		if ( $user_id === (int) $comment->user_id ) {
 			wp_update_comment(
 				array(
 					'comment_ID'      => $comment_id,
-					'comment_content' => Input::post(
-						'comment',
-						'',
-						Input::TYPE_KSES_POST
-					),
+					'comment_content' => $comment_content,
 				)
 			);
 
-			$updated_comment = get_comment( $comment_id );
-			$is_reply        = $updated_comment->comment_parent > 0;
-			$user_id         = get_current_user_id();
+			$comment->comment_content = $comment_content;
+
+			$lesson_id = $comment->comment_post_ID;
+			$is_reply  = $comment->comment_parent > 0;
 
 			ob_start();
 			tutor_load_template(
 				'learning-area.lesson.comment-card',
 				array(
-					'comment_item' => $updated_comment,
+					'comment_item' => $comment,
 					'lesson_id'    => $lesson_id,
 					'user_id'      => $user_id,
 					'is_reply'     => $is_reply,
@@ -267,12 +281,12 @@ class Lesson extends Tutor_Base {
 				array(
 					'html'       => $html,
 					'is_reply'   => $is_reply,
-					'parent_id'  => $is_reply ? $updated_comment->comment_parent : 0,
+					'parent_id'  => $is_reply ? $comment->comment_parent : 0,
 					'comment_id' => $comment_id,
 				)
 			);
 		} else {
-			$this->response_bad_request( __( 'You are not allowed to update this comment', 'tutor' ) );
+			$this->response_bad_request( tutor_utils()->error_message() );
 		}
 	}
 
@@ -707,7 +721,7 @@ class Lesson extends Tutor_Base {
 		$reply = get_comment( $comment_id );
 		do_action( 'tutor_reply_lesson_comment_thread', $comment_id, $comment_data );
 
-		if ( ! tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+		if ( ! $this->is_legacy_learning_mode ) {
 			$lesson_id    = $comment_data['comment_post_ID'];
 			$parent_id    = $comment_data['comment_parent'];
 			$comment_item = get_comment( $parent_id );
@@ -923,7 +937,7 @@ class Lesson extends Tutor_Base {
 	public static function get_nav_items( $lesson_id ) {
 		$nav_items = array();
 
-		if ( tutor_utils()->get_option( 'is_legacy_learning_mode' ) ) {
+		if ( ( new self( false ) )->is_legacy_learning_mode ) {
 			if ( self::has_lesson_content( $lesson_id ) ) {
 				$nav_items['overview'] = array(
 					'label'    => __( 'Overview', 'tutor' ),
@@ -1022,8 +1036,8 @@ class Lesson extends Tutor_Base {
 	 * @return void
 	 */
 	public function load_lesson_comments() {
-		$lesson_id    = Input::post( 'lesson_id' ?? 0 );
-		$current_page = Input::post( 'current_page', '1' );
+		$lesson_id    = Input::post( 'lesson_id', 0, Input::TYPE_INT );
+		$current_page = Input::post( 'current_page', 1, Input::TYPE_INT );
 		$offset       = Input::post( 'offset', -1, Input::TYPE_INT );
 		$order        = QueryHelper::get_valid_sort_order( Input::post( 'order', 'DESC' ) );
 

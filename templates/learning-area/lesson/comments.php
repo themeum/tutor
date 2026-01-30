@@ -9,13 +9,13 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\ConfirmationModal;
 use Tutor\Components\Sorting;
 use TUTOR\Icon;
 use TUTOR\Input;
 use TUTOR\Lesson;
-
-defined( 'ABSPATH' ) || exit;
 
 $user_id       = get_current_user_id();
 $item_per_page = tutor_utils()->get_option( 'pagination_per_page', 10 );

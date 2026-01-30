@@ -9,11 +9,11 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Avatar;
 use Tutor\Components\Constants\Size;
 use TUTOR\Icon;
-
-defined( 'ABSPATH' ) || exit;
 
 /**
  * Variables available:
@@ -49,7 +49,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 						</span> 
 						<span class="tutor-text-subdued">
 							<?php
-								// Translators: %s is the time of comment.
+								// translators: %s is the time of comment.
 								echo esc_html( sprintf( __( '%s ago', 'tutor' ), human_time_diff( strtotime( $comment_item->comment_date_gmt ) ) ) );
 							?>
 						</span>

@@ -9,4 +9,5 @@ export const TUTOR_CUSTOM_EVENTS = {
   FORM_UNREGISTER: 'tutor-form-unregister',
   FORM_STATE_CHANGE: 'tutor-form-state-change',
   TUTOR_PLAYER_READY: 'tutor-player-ready',
+  COMMENT_REPLIED: 'tutor:comment:replied',
 };

@@ -9,14 +9,14 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use Tutor\Components\Button;
 use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 use Tutor\Components\Constants\Variant;
 use Tutor\Components\InputField;
 use TUTOR\Icon;
-
-defined( 'ABSPATH' ) || exit;
 
 $form_id          = $form_id ?? '';
 $placeholder      = $placeholder ?? '';

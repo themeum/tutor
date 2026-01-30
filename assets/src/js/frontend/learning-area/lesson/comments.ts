@@ -1,3 +1,4 @@
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
@@ -10,11 +11,16 @@ interface ReplyCommentPayload {
   comment: string;
 }
 
+type OrderTypes = 'ASC' | 'DESC';
+
 /**
  * Lesson Comments Component
  */
 const lessonComments = (lessonId?: number, initialCount: number = 0) => {
   const query = window.TutorCore.query;
+  const toast = window.TutorCore.toast;
+  const form = window.TutorCore.form;
+  const modal = window.TutorCore.modal;
 
   return {
     query,
@@ -23,7 +29,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
     currentPage: 1,
     loading: false,
     hasMore: true,
-    currentOrder: 'DESC' as 'ASC' | 'DESC',
+    currentOrder: 'DESC' as OrderTypes,
     isReloading: false,
     $el: null as unknown as HTMLElement,
     $refs: {} as {
@@ -46,7 +52,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
       // Lesson comment create mutation.
       this.createCommentMutation = this.query.useMutation(this.createComment, {
         onSuccess: (response) => {
-          window.TutorCore.toast.success(__('Comment added successfully.', 'tutor'));
+          toast.success(__('Comment added successfully.', 'tutor'));
           const data = response.data;
 
           if (data.html) {
@@ -62,19 +68,19 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           }
 
           const formId = 'lesson-comment-form';
-          if (window.TutorCore.form.hasForm(formId)) {
-            window.TutorCore.form.reset(formId);
+          if (form.hasForm(formId)) {
+            form.reset(formId);
           }
         },
         onError: (error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Lesson comment edit mutation.
       this.editCommentMutation = this.query.useMutation(this.updateComment, {
         onSuccess: (response) => {
-          window.TutorCore.toast.success(__('Comment updated successfully.', 'tutor'));
+          toast.success(__('Comment updated successfully.', 'tutor'));
           const data = response.data;
           const targetId = data.is_reply
             ? `tutor-comment-reply-${data.comment_id}`
@@ -88,15 +94,15 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           }
         },
         onError: (error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Lesson comment delete mutation.
       this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
         onSuccess: (response) => {
-          window.TutorCore.toast.success(__('Comment deleted successfully.', 'tutor'));
-          window.TutorCore.modal.closeModal('delete-comment-modal');
+          toast.success(__('Comment deleted successfully.', 'tutor'));
+          modal.closeModal('delete-comment-modal');
 
           const data = response.data;
           const targetId = data.is_reply
@@ -129,14 +135,14 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           }
         },
         onError: (error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
 
       // Lesson comment reply mutation
       this.replyCommentMutation = this.query.useMutation(this.replyComment, {
         onSuccess: (response, payload) => {
-          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
+          toast.success(__('Reply saved successfully', 'tutor'));
           const data = response.data;
           const parentId = payload.comment_parent;
           const repliesWrapper = document.getElementById(`tutor-comment-replies-${parentId}`);
@@ -154,12 +160,12 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
             }
 
             // Notify Alpine to expand the replies and hide the form via custom event.
-            window.dispatchEvent(new CustomEvent('tutor:comment:replied', { detail: { parentId } }));
+            window.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.COMMENT_REPLIED, { detail: { parentId } }));
 
             // Reset the specific reply form.
             const replyFormId = `lesson-comment-reply-form-${parentId}`;
-            if (window.TutorCore.form.hasForm(replyFormId)) {
-              window.TutorCore.form.reset(replyFormId);
+            if (form.hasForm(replyFormId)) {
+              form.reset(replyFormId);
             }
           } else {
             // Fallback to reload if something went wrong
@@ -171,7 +177,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           }
         },
         onError: (error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         },
       });
     },
@@ -192,7 +198,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
       return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
     },
 
-    handleChangeOrder(newOrder: 'ASC' | 'DESC') {
+    handleChangeOrder(newOrder: OrderTypes) {
       if (this.currentOrder === newOrder) return;
 
       this.currentOrder = newOrder;
@@ -201,10 +207,10 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
     },
 
     handleDeleteComment(payload: { commentId: number }) {
-      window.TutorCore.modal.showModal('delete-comment-modal', { commentId: payload.commentId });
+      modal.showModal('delete-comment-modal', { commentId: payload.commentId });
     },
 
-    updateURL(order: 'ASC' | 'DESC') {
+    updateURL(order: OrderTypes) {
       const url = new URL(window.location.href);
       url.searchParams.set('order', order);
       window.history.pushState({}, '', url);
@@ -231,7 +237,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           }
         })
         .catch((error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         })
         .finally(() => {
           this.isReloading = false;
@@ -265,7 +271,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
           }
         })
         .catch((error) => {
-          window.TutorCore.toast.error(convertToErrorMessage(error));
+          toast.error(convertToErrorMessage(error));
         })
         .finally(() => {
           this.loading = false;
