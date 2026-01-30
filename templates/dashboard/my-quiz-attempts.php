@@ -95,16 +95,13 @@ $nav_links = $quiz_attempt_obj->get_quiz_attempts_nav_data( $quiz_attempts, $qui
 		?>
 	<?php endif; ?>
 			<?php
-			if ( $quiz_attempts_count > $item_per_page ) {
-				Pagination::make()
-					->current( $current_page )
-					->total( $quiz_attempts_count )
-					->limit( $item_per_page )
-					->attr( 'class', 'tutor-p-6' )
-					->render();
-			}
+			Pagination::make()
+				->current( $current_page )
+				->total( $quiz_attempts_count )
+				->limit( $item_per_page )
+				->attr( 'class', 'tutor-p-6' )
+				->render();
 			?>
-
 	<?php
 	ConfirmationModal::make()
 		->id( 'tutor-retry-modal' )

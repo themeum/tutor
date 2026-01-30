@@ -357,6 +357,22 @@ class Quiz_Attempts_List {
 	}
 
 	/**
+	 * Check whether to show instructor or student quiz attempt.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param integer $course_id the course id.
+	 *
+	 * @return bool
+	 */
+	private function check_is_student( $course_id = 0 ): bool {
+		$is_student_view = User::VIEW_AS_STUDENT === User::get_current_view_mode();
+		$is_student      = tutor_utils()->is_enrolled( $course_id, get_current_user_id(), false ) && $is_student_view;
+
+		return $is_student;
+	}
+
+	/**
 	 * Get attempt row template for quiz attempts.
 	 *
 	 * @since 4.0.0
@@ -366,9 +382,8 @@ class Quiz_Attempts_List {
 	 * @return string
 	 */
 	public function get_quiz_attempt_row_template( $course_id = 0 ): string {
-		$view_mode  = User::VIEW_AS_STUDENT === User::get_current_view_mode();
-		$is_student = ( User::is_student( get_current_user_id() ) && tutor_utils()->is_enrolled( $course_id, get_current_user_id(), false ) ) || $view_mode;
-		$template   = $is_student ? 'dashboard.components.student-quiz-attempt-row' : 'dashboard.components.quiz-attempt-row';
+		$template = $this->check_is_student( $course_id ) ? 'dashboard.components.student-quiz-attempt-row'
+		: 'dashboard.components.quiz-attempt-row';
 		return $template;
 	}
 
@@ -421,10 +436,7 @@ class Quiz_Attempts_List {
 	 * @return void
 	 */
 	public function render_retry_button( $course_id = 0, $quiz_id = 0, $attempt = array(), $attempts_count = 0 ) {
-		$view_mode  = User::VIEW_AS_STUDENT === User::get_current_view_mode();
-		$is_student = ( User::is_student( get_current_user_id() ) && tutor_utils()->is_enrolled( $course_id, get_current_user_id(), false ) ) || $view_mode;
-
-		if ( $is_student && $this->should_retry( $attempt, $attempts_count ) ) {
+		if ( $this->check_is_student( $course_id ) && $this->should_retry( $attempt, $attempts_count ) ) {
 			Button::make()
 			->label( __( 'Retry', 'tutor' ) )
 			->icon( Icon::RELOAD )
