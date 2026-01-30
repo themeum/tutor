@@ -94,7 +94,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 					array(
 						'form_id'        => 'lesson-comment-reply-form-' . (int) $comment_item->comment_ID,
 						'placeholder'    => __( 'Write your reply', 'tutor' ),
-						'submit_handler' => 'replyCommentMutation?.mutate({ ...data, comment_post_ID: ' . (int) $lesson_id . ', comment_parent: ' . (int) $comment_item->comment_ID . ', order: currentOrder })',
+						'submit_handler' => 'handleReplyComment(data, ' . (int) $comment_item->comment_ID . ')',
 						'cancel_handler' => 'reset(); showReplyForm = false',
 						'is_pending'     => 'replyCommentMutation?.isPending',
 						'class'          => 'tutor-comment-reply-form tutor-mt-6',
@@ -125,7 +125,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 			array(
 				'form_id'        => $id_prefix . 'edit-form-' . (int) $comment_item->comment_ID,
 				'placeholder'    => $is_reply ? __( 'Write your reply', 'tutor' ) : __( 'Write your comment', 'tutor' ),
-				'submit_handler' => 'editCommentMutation?.mutate({ ...data, comment_id: ' . (int) $comment_item->comment_ID . ' })',
+				'submit_handler' => 'handelEditComment(data,' . (int) $comment_item->comment_ID . ')',
 				'cancel_handler' => 'reset(); showEditForm = false',
 				'is_pending'     => 'editCommentMutation?.isPending',
 				'class'          => 'tutor-comment-edit-form',

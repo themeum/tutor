@@ -9,6 +9,7 @@ interface ReplyCommentPayload {
   comment_post_ID: number;
   comment_parent: number;
   comment: string;
+  order: string;
 }
 
 type OrderTypes = 'ASC' | 'DESC';
@@ -16,7 +17,7 @@ type OrderTypes = 'ASC' | 'DESC';
 /**
  * Lesson Comments Component
  */
-const lessonComments = (lessonId?: number, initialCount: number = 0) => {
+const lessonComments = (lessonId: number, initialCount: number = 0) => {
   const query = window.TutorCore.query;
   const toast = window.TutorCore.toast;
   const form = window.TutorCore.form;
@@ -24,7 +25,7 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
   return {
     query,
-    lessonId: lessonId || null,
+    lessonId: lessonId,
     totalComments: initialCount,
     currentPage: 1,
     loading: false,
@@ -196,6 +197,22 @@ const lessonComments = (lessonId?: number, initialCount: number = 0) => {
 
     replyComment(payload: ReplyCommentPayload) {
       return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
+    },
+
+    handleReplyComment(data: { comment: string }, commentId: number) {
+      this.replyCommentMutation?.mutate({
+        comment_post_ID: this.lessonId,
+        comment_parent: commentId,
+        comment: data.comment,
+        order: this.currentOrder,
+      });
+    },
+
+    handelEditComment(data: { comment: string }, commentId: number) {
+      this.editCommentMutation?.mutate({
+        comment_id: commentId,
+        comment: data.comment,
+      });
     },
 
     handleChangeOrder(newOrder: OrderTypes) {
