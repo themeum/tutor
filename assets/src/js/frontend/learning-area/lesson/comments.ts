@@ -5,6 +5,29 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 
+const COMMENT_ID_PREFIX = 'tutor-comment-';
+const COMMENT_REPLY_ID_PREFIX = 'tutor-comment-reply-';
+const COMMENT_REPLIES_ID_PREFIX = 'tutor-comment-replies-';
+const COMMENT_REPLY_FORM_ID_PREFIX = 'lesson-comment-reply-form-';
+const COMMENT_FORM_ID = 'lesson-comment-form';
+
+const CLASSES = {
+  COMMENT_ITEM: 'tutor-comment-item',
+  REPLY_ITEM: 'tutor-comment-reply-item',
+  REPLIES_WRAPPER: 'tutor-comment-replies',
+  COMMENT_CONTENT: 'tutor-comment-content',
+};
+
+/**
+ * Get comment or reply DOM ID
+ *
+ * @param id Comment ID
+ * @param isReply Whether it's a reply
+ */
+const getCommentElementId = (id: number | string, isReply: boolean) => {
+  return isReply ? `${COMMENT_REPLY_ID_PREFIX}${id}` : `${COMMENT_ID_PREFIX}${id}`;
+};
+
 interface ReplyCommentPayload {
   comment_post_ID: number;
   comment_parent: number;
@@ -68,9 +91,8 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
             this.totalComments = data.count;
           }
 
-          const formId = 'lesson-comment-form';
-          if (form.hasForm(formId)) {
-            form.reset(formId);
+          if (form.hasForm(COMMENT_FORM_ID)) {
+            form.reset(COMMENT_FORM_ID);
           }
         },
         onError: (error) => {
@@ -83,9 +105,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
         onSuccess: (response) => {
           toast.success(__('Comment updated successfully.', 'tutor'));
           const data = response.data;
-          const targetId = data.is_reply
-            ? `tutor-comment-reply-${data.comment_id}`
-            : `tutor-comment-${data.comment_id}`;
+          const targetId = getCommentElementId(data.comment_id, data.is_reply);
           const targetEl = document.getElementById(targetId);
 
           if (targetEl && data.html) {
@@ -106,9 +126,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
           modal.closeModal('delete-comment-modal');
 
           const data = response.data;
-          const targetId = data.is_reply
-            ? `tutor-comment-reply-${data.comment_id}`
-            : `tutor-comment-${data.comment_id}`;
+          const targetId = getCommentElementId(data.comment_id, data.is_reply);
           const targetEl = document.getElementById(targetId);
 
           if (targetEl) {
@@ -117,15 +135,17 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
 
           if (data.is_reply) {
             // Check if there are any replies left. If not, remove the replies container.
-            const repliesContainer = document.getElementById(`tutor-comment-replies-${data.parent_id}`);
-            if (repliesContainer && repliesContainer.querySelectorAll('.tutor-comment-reply-item').length === 0) {
+            const repliesContainer = document.getElementById(`${COMMENT_REPLIES_ID_PREFIX}${data.parent_id}`);
+            if (repliesContainer && repliesContainer.querySelectorAll(`.${CLASSES.REPLY_ITEM}`).length === 0) {
               repliesContainer.remove();
             }
           }
 
           if (data.count !== undefined) {
             this.totalComments = data.count;
-            const mainCommentsCount = this.$refs.commentList.querySelectorAll(':scope > .tutor-comment-item').length;
+            const mainCommentsCount = this.$refs.commentList.querySelectorAll(
+              `:scope > .${CLASSES.COMMENT_ITEM}`,
+            ).length;
             this.hasMore = this.totalComments > mainCommentsCount;
 
             // If we deleted a main comment and there are more items on the server,
@@ -146,14 +166,14 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
           toast.success(__('Reply saved successfully', 'tutor'));
           const data = response.data;
           const parentId = payload.comment_parent;
-          const repliesWrapper = document.getElementById(`tutor-comment-replies-${parentId}`);
-          const repliesList = repliesWrapper?.querySelector('.tutor-comment-replies');
+          const repliesWrapper = document.getElementById(`${COMMENT_REPLIES_ID_PREFIX}${parentId}`);
+          const repliesList = repliesWrapper?.querySelector(`.${CLASSES.REPLIES_WRAPPER}`);
 
           if (data.html) {
             if (data.is_first_reply || !repliesList) {
               // Append to parent flex container if replies wrapper doesn't exist yet
-              const parentComment = document.getElementById(`tutor-comment-${parentId}`);
-              const commentContent = parentComment?.querySelector('.tutor-comment-content');
+              const parentComment = document.getElementById(`${COMMENT_ID_PREFIX}${parentId}`);
+              const commentContent = parentComment?.querySelector(`.${CLASSES.COMMENT_CONTENT}`);
               commentContent?.insertAdjacentHTML('beforeend', data.html);
             } else {
               // Append item directly if wrapper exists
@@ -164,7 +184,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
             window.dispatchEvent(new CustomEvent(TUTOR_CUSTOM_EVENTS.COMMENT_REPLIED, { detail: { parentId } }));
 
             // Reset the specific reply form.
-            const replyFormId = `lesson-comment-reply-form-${parentId}`;
+            const replyFormId = `${COMMENT_REPLY_FORM_ID_PREFIX}${parentId}`;
             if (form.hasForm(replyFormId)) {
               form.reset(replyFormId);
             }
@@ -269,7 +289,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
       this.loading = true;
 
       // Calculate offset based on main comments in DOM.
-      const offset = this.$refs.commentList.querySelectorAll(':scope > .tutor-comment-item').length;
+      const offset = this.$refs.commentList.querySelectorAll(`:scope > .${CLASSES.COMMENT_ITEM}`).length;
 
       wpAjaxInstance
         .post(endpoints.LOAD_LESSON_COMMENTS, {
