@@ -116,5 +116,7 @@ function ApplyTheme() {
   const wrapper = document.querySelector('[data-theme]') || document.body;
   const attrTheme = wrapper.getAttribute('data-theme');
   const initialTheme = attrTheme || preferenceServiceMeta.instance.defaultTheme;
-  preferenceServiceMeta.instance.applyTheme(initialTheme);
+  if (initialTheme === 'system') {
+    preferenceServiceMeta.instance.applyTheme(initialTheme);
+  }
 }
