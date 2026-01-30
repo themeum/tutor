@@ -18,6 +18,8 @@ const CLASSES = {
   COMMENT_CONTENT: 'tutor-comment-content',
 };
 
+const DELETE_COMMENT_MODAL_ID = 'delete-comment-modal';
+
 /**
  * Get comment or reply DOM ID
  *
@@ -123,7 +125,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
       this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
         onSuccess: (response) => {
           toast.success(__('Comment deleted successfully.', 'tutor'));
-          modal.closeModal('delete-comment-modal');
+          modal.closeModal(DELETE_COMMENT_MODAL_ID);
 
           const data = response.data;
           const targetId = getCommentElementId(data.comment_id, data.is_reply);
@@ -244,7 +246,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
     },
 
     handleDeleteComment(payload: { commentId: number }) {
-      modal.showModal('delete-comment-modal', { commentId: payload.commentId });
+      modal.showModal(DELETE_COMMENT_MODAL_ID, { commentId: payload.commentId });
     },
 
     updateURL(order: OrderTypes) {
