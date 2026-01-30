@@ -3,28 +3,31 @@ type Theme = 'dark' | 'light' | 'system';
 
 class PreferenceService {
   private readonly THEME = { DARK: 'dark', LIGHT: 'light' } as const;
-  activeTheme: Theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? this.THEME.DARK : this.THEME.LIGHT;
-  private mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+  activeTheme: Theme;
+  private mediaQuery: MediaQueryList;
   private systemThemeListener?: (e: MediaQueryListEvent) => void;
   private readonly BASE_FONT_SIZE = 16;
   private readonly SCALE_PERCENTAGE_BASE = 100;
   private readonly STYLE_ID = 'tutor-font-scale';
+  private readonly DATA_THEME_ATTR = 'data-theme';
 
   constructor() {
+    this.mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    this.activeTheme = this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT;
     this.initialize();
   }
 
   initialize(): void {
-    const wrapper = document.querySelector('[data-theme]') || document.body;
-    const attrTheme = wrapper.getAttribute('data-theme');
+    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.body;
+    const attrTheme = wrapper.getAttribute(this.DATA_THEME_ATTR);
     if (attrTheme === 'system') {
       this.applyTheme('system');
     }
   }
 
-  applyTheme(theme: string): void {
+  applyTheme(theme: Theme): void {
     if (!theme) return;
-    const wrapper = document.querySelector('[data-theme]') || document.body;
+    const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.body;
 
     if (this.systemThemeListener) {
       this.mediaQuery.removeEventListener('change', this.systemThemeListener);
@@ -33,9 +36,9 @@ class PreferenceService {
 
     const updateTheme = () => {
       if (theme === 'system') {
-        wrapper.setAttribute('data-theme', this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT);
+        wrapper.setAttribute(this.DATA_THEME_ATTR, this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT);
       } else {
-        wrapper.setAttribute('data-theme', theme);
+        wrapper.setAttribute(this.DATA_THEME_ATTR, theme);
       }
     };
 
@@ -46,12 +49,12 @@ class PreferenceService {
       this.mediaQuery.addEventListener('change', this.systemThemeListener);
     }
 
-    const applied = wrapper.getAttribute('data-theme');
+    const applied = wrapper.getAttribute(this.DATA_THEME_ATTR);
     if (applied === this.THEME.DARK || applied === this.THEME.LIGHT) {
       this.activeTheme = applied;
     }
   }
-  applyFontScale(fontScale: string): void {
+  applyFontScale(fontScale: string | number): void {
     const head = document.head || document.getElementsByTagName('head')[0];
     let styleEl = document.getElementById(this.STYLE_ID) as HTMLStyleElement | null;
 
