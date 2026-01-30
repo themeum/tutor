@@ -2,7 +2,7 @@ import { type ServiceMeta } from '@Core/ts/types';
 type Theme = 'dark' | 'light' | 'system';
 
 class PreferenceService {
-  private readonly THEME = { DARK: 'dark', LIGHT: 'light' } as const;
+  private readonly THEME = { DARK: 'dark', LIGHT: 'light', SYSTEM: 'system' } as const;
   activeTheme: Theme;
   private mediaQuery: MediaQueryList;
   private systemThemeListener?: (e: MediaQueryListEvent) => void;
@@ -20,8 +20,8 @@ class PreferenceService {
   initialize(): void {
     const wrapper = document.querySelector(`[${this.DATA_THEME_ATTR}]`) || document.body;
     const attrTheme = wrapper.getAttribute(this.DATA_THEME_ATTR);
-    if (attrTheme === 'system') {
-      this.applyTheme('system');
+    if (attrTheme === this.THEME.SYSTEM) {
+      this.applyTheme(this.THEME.SYSTEM);
     }
   }
 
@@ -35,7 +35,7 @@ class PreferenceService {
     }
 
     const updateTheme = () => {
-      if (theme === 'system') {
+      if (theme === this.THEME.SYSTEM) {
         wrapper.setAttribute(this.DATA_THEME_ATTR, this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT);
       } else {
         wrapper.setAttribute(this.DATA_THEME_ATTR, theme);
@@ -44,7 +44,7 @@ class PreferenceService {
 
     updateTheme();
 
-    if (theme === 'system') {
+    if (theme === this.THEME.SYSTEM) {
       this.systemThemeListener = () => updateTheme();
       this.mediaQuery.addEventListener('change', this.systemThemeListener);
     }
