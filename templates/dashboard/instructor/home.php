@@ -91,8 +91,9 @@ $instructor_course_ids = CourseModel::get_courses_by_args(
 		'fields'         => 'ids',
 	)
 )->posts;
-$tutor_pro_enabled  = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
-$is_pro_reports 	= $tutor_pro_enabled && tutor_utils()->is_addon_enabled( 'tutor-report' );
+
+$tutor_pro_enabled = tutor_utils()->is_plugin_active( 'tutor-pro/tutor-pro.php' );
+$is_pro_reports    = $tutor_pro_enabled && tutor_utils()->is_addon_enabled( 'tutor-report' );
 
 $start_date     = Input::has( 'start_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'start_date' ) ) : '';
 $end_date       = Input::has( 'end_date' ) ? tutor_get_formated_date( 'Y-m-d', Input::get( 'end_date' ) ) : '';
@@ -109,7 +110,7 @@ $stat = function ( $current, $previous, $previous_dates ) {
 
 // Total Earnings.
 if ( $is_pro_reports ) {
-	$earnings 		= Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
+	$earnings       = Analytics::get_earnings_by_user( $user->ID, '', $start_date, $end_date );
 	$total_earnings = $earnings['total_earnings'] ?? 0;
 
 	if ( ! $is_all_time ) {
@@ -122,26 +123,34 @@ if ( $is_pro_reports ) {
 	}
 } else {
 	$total_earnings = WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0;
+
+	if ( ! $is_all_time ) {
+		$previous_period_earnings = WithdrawModel::get_withdraw_summary(
+			$user->ID,
+			$date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], 'created_at' )
+		)->total_income ?? 0;
+	}
 }
 
 // Total Courses.
 $total_courses           = CourseModel::get_course_count_by_date( $start_date, $end_date, $user->ID );
-$previous_period_courses = ! $is_all_time 
+$previous_period_courses = ! $is_all_time
 							? CourseModel::get_course_count_by_date( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
 							: 0;
 
 // Total Students.
 $total_students           = Instructor::get_instructor_total_students_by_date_range( $start_date, $end_date, $user->ID );
-$previous_period_students = ! $is_all_time 
+$previous_period_students = ! $is_all_time
 							? Instructor::get_instructor_total_students_by_date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], $user->ID )
 							: 0;
 
 // Total Ratings.
 $total_ratings_where     = ! $is_all_time ? $date_range( $start_date, $end_date, 'reviews.comment_date' ) : array();
 $total_ratings           = tutor_utils()->get_instructor_ratings( $user->ID, $total_ratings_where );
-$previous_period_ratings = ! $is_all_time 
+$previous_period_ratings = ! $is_all_time
 							? tutor_utils()->get_instructor_ratings( $user->ID, $date_range( $previous_dates['previous_start_date'], $previous_dates['previous_end_date'], 'reviews.comment_date' ) )
-							: (object) array( 'rating_avg' => 0 );;
+							: (object) array( 'rating_avg' => 0 );
+
 
 /**
  * -------------------------
@@ -154,8 +163,8 @@ $total_courses_state_card_details  = array();
 $total_students_state_card_details = array();
 $total_ratings_state_card_details  = array();
 
-if ( $is_pro_reports && ! $is_all_time ) {
- 	$total_earnings_state_card_details = $stat( $total_earnings, $previous_period_earnings, $previous_dates );
+if ( $tutor_pro_enabled && ! $is_all_time ) {
+	$total_earnings_state_card_details = $stat( $total_earnings, $previous_period_earnings, $previous_dates );
 	$total_courses_state_card_details  = $stat( $total_courses, $previous_period_courses, $previous_dates );
 	$total_students_state_card_details = $stat( $total_students, $previous_period_students, $previous_dates );
 	$total_ratings_state_card_details  = $stat( $total_ratings->rating_avg, $previous_period_ratings->rating_avg, $previous_dates );
@@ -175,24 +184,24 @@ $stat_cards = array(
 		'hover_content' => $total_earnings_state_card_details,
 	),
 	array(
-		'variation' => 'exception1',
-		'title'     => esc_html__( 'Total Courses', 'tutor' ),
-		'icon'      => Icon::COURSES,
-		'value'     => $total_courses,
+		'variation'     => 'exception1',
+		'title'         => esc_html__( 'Total Courses', 'tutor' ),
+		'icon'          => Icon::COURSES,
+		'value'         => $total_courses,
 		'hover_content' => $total_courses_state_card_details,
 	),
 	array(
-		'variation' => 'exception5',
-		'title'     => esc_html__( 'Total Students', 'tutor' ),
-		'icon'      => Icon::PASSED,
-		'value'     => $total_students,
+		'variation'     => 'exception5',
+		'title'         => esc_html__( 'Total Students', 'tutor' ),
+		'icon'          => Icon::PASSED,
+		'value'         => $total_students,
 		'hover_content' => $total_students_state_card_details,
 	),
 	array(
-		'variation' => 'exception4',
-		'title'     => esc_html__( 'Avg. Rating', 'tutor' ),
-		'icon'      => Icon::STAR_LINE,
-		'value'     => $total_ratings->rating_avg,
+		'variation'     => 'exception4',
+		'title'         => esc_html__( 'Avg. Rating', 'tutor' ),
+		'icon'          => Icon::STAR_LINE,
+		'value'         => $total_ratings->rating_avg,
 		'hover_content' => $total_ratings_state_card_details,
 	),
 );
@@ -264,7 +273,7 @@ $course_completion_data = array(
 // );
 
 // Top Performing Courses.
-$args                   = array(
+$args = array(
 	'start_date' => $start_date,
 	'end_date'   => $end_date,
 	'order_by'   => Input::get( 'type', 'revenue' ),

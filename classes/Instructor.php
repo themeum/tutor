@@ -870,4 +870,25 @@ class Instructor {
 			'icon_class' => '-tutor-mb-1',
 		);
 	}
+
+	/**
+	 * Render a template and return its output as a string.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $template   Template file path or slug.
+	 * @param array  $data       Data to be passed to the template.
+	 * @param bool   $once       Whether the template should be loaded only once.
+	 *                           Defaults to true.
+	 *
+	 * @return string Rendered template output.
+	 */
+	public static function get_template_output( $template, $data, $once = true ) {
+
+		ob_start();
+
+		tutor_load_template_from_custom_path( $template, $data, $once );
+
+		return (string) ob_get_clean();
+	}
 }
