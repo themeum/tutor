@@ -63,7 +63,7 @@ $font_scale_options = array(
 $user_preferences = ( new UserPreference( false ) )->get_preferences();
 
 $default_values = array(
-	'auto_play_next' => isset( $user_preferences['auto_play_next'] ) ? (bool) $user_preferences['auto_play_next'] : true,
+	'auto_play_next' => isset( $user_preferences['auto_play_next'] ) ? (bool) $user_preferences['auto_play_next'] : false,
 	'theme'          => isset( $user_preferences['theme'] ) ? $user_preferences['theme'] : 'light',
 	'font_scale'     => isset( $user_preferences['font_scale'] ) ? (int) $user_preferences['font_scale'] : 100,
 );

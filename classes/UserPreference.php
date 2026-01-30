@@ -133,7 +133,7 @@ class UserPreference {
 	public function get_preferences( $user_id = 0 ) {
 		$user_id = tutor_utils()->get_user_id( $user_id );
 		if ( ! $user_id ) {
-			return false;
+			return array();
 		}
 
 		$preferences = get_user_meta( $user_id, self::META_KEY, true );
@@ -160,16 +160,16 @@ class UserPreference {
 			return false;
 		}
 
-		$current    = $this->get_preferences( $user_id );
-		$final_data = array_merge( $current, $prefs );
+		$current_preferences = $this->get_preferences( $user_id );
+		$preferences         = array_merge( $current_preferences, $prefs );
 
-		$final_data = apply_filters( 'tutor_user_preferences_data', $final_data, $user_id );
+		$preferences = apply_filters( 'tutor_user_preference_data', $preferences, $user_id );
 
-		update_user_meta( $user_id, self::META_KEY, $final_data );
+		update_user_meta( $user_id, self::META_KEY, $preferences );
 
-		do_action( 'tutor_user_preferences_data', $user_id, $final_data );
+		do_action( 'tutor_user_preference_data', $user_id, $preferences );
 
-		return $final_data;
+		return $preferences;
 	}
 
 	/**
