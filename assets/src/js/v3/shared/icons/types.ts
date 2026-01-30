@@ -51,6 +51,7 @@ export const icons = [
   'calendar2Fill',
   'calendarLine',
   'calendarLines',
+  'callEnd',
   'cart',
   'certificate',
   'certificate2',
