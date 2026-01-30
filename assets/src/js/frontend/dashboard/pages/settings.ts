@@ -160,7 +160,7 @@ const settings = () => {
 
       this.resetPasswordMutation = this.query.useMutation(this.resetPassword, {
         onSuccess: (data: TutorMutationResponse<string>) => {
-          this.toast.success(data?.message ?? __('Password updated successfully asdf', 'tutor'));
+          this.toast.success(data?.message ?? __('Password updated successfully', 'tutor'));
         },
         onError: (error: Error) => {
           this.toast.error(convertToErrorMessage(error));

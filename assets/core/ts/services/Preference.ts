@@ -1,14 +1,30 @@
 import { type ServiceMeta } from '@Core/ts/types';
+type Theme = 'dark' | 'light' | 'system';
 
-export class PreferenceService {
-  defaultTheme: string = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+class PreferenceService {
+  private readonly THEME = { DARK: 'dark', LIGHT: 'light' } as const;
+  activeTheme: Theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? this.THEME.DARK : this.THEME.LIGHT;
   private mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
   private systemThemeListener?: (e: MediaQueryListEvent) => void;
+  private readonly BASE_FONT_SIZE = 16;
+  private readonly SCALE_PERCENTAGE_BASE = 100;
+  private readonly STYLE_ID = 'tutor-font-scale';
+
+  constructor() {
+    this.initialize();
+  }
+
+  initialize(): void {
+    const wrapper = document.querySelector('[data-theme]') || document.body;
+    const attrTheme = wrapper.getAttribute('data-theme');
+    if (attrTheme === 'system') {
+      this.applyTheme('system');
+    }
+  }
 
   applyTheme(theme: string): void {
-    const wrapper = document.querySelector('[data-theme]') || document.body;
-
     if (!theme) return;
+    const wrapper = document.querySelector('[data-theme]') || document.body;
 
     if (this.systemThemeListener) {
       this.mediaQuery.removeEventListener('change', this.systemThemeListener);
@@ -17,7 +33,7 @@ export class PreferenceService {
 
     const updateTheme = () => {
       if (theme === 'system') {
-        wrapper.setAttribute('data-theme', this.mediaQuery.matches ? 'dark' : 'light');
+        wrapper.setAttribute('data-theme', this.mediaQuery.matches ? this.THEME.DARK : this.THEME.LIGHT);
       } else {
         wrapper.setAttribute('data-theme', theme);
       }
@@ -30,12 +46,14 @@ export class PreferenceService {
       this.mediaQuery.addEventListener('change', this.systemThemeListener);
     }
 
-    this.defaultTheme = theme;
+    const applied = wrapper.getAttribute('data-theme');
+    if (applied === this.THEME.DARK || applied === this.THEME.LIGHT) {
+      this.activeTheme = applied;
+    }
   }
   applyFontScale(fontScale: string): void {
     const head = document.head || document.getElementsByTagName('head')[0];
-    const styleId = 'tutor-font-scale';
-    let styleEl = document.getElementById(styleId) as HTMLStyleElement | null;
+    let styleEl = document.getElementById(this.STYLE_ID) as HTMLStyleElement | null;
 
     if (!fontScale) {
       return;
@@ -46,14 +64,13 @@ export class PreferenceService {
       if (Number.isNaN(scaleNum) || scaleNum <= 0) {
         return;
       }
-      const base = 16;
-      const px = (base * scaleNum) / 100;
+      const scaledFontSize = (this.BASE_FONT_SIZE * scaleNum) / this.SCALE_PERCENTAGE_BASE;
       if (!styleEl) {
         styleEl = document.createElement('style');
-        styleEl.id = styleId;
+        styleEl.id = this.STYLE_ID;
         head.appendChild(styleEl);
       }
-      styleEl.textContent = `:root { font-size: ${px}px; }`;
+      styleEl.textContent = `:root { font-size: ${scaledFontSize}px; }`;
     };
     updateFontScale();
   }

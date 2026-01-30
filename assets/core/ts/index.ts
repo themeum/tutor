@@ -83,7 +83,6 @@ const initializePlugin = () => {
   // Expose TutorCore with services and utilities
   // Use Object.assign to extend existing TutorCore instead of overwriting
   window.TutorCore = Object.assign(window.TutorCore || {}, {
-    preference: preferenceServiceMeta.instance,
     toast: toastServiceMeta.instance,
     security: {
       escapeHtml,
@@ -99,7 +98,6 @@ const initializePlugin = () => {
   registerLegacyFunctions();
 
   Alpine.start();
-  ApplyTheme();
 };
 
 if (document.readyState === 'loading') {
@@ -111,12 +109,3 @@ if (document.readyState === 'loading') {
 }
 
 export { Alpine, TutorComponentRegistry };
-
-function ApplyTheme() {
-  const wrapper = document.querySelector('[data-theme]') || document.body;
-  const attrTheme = wrapper.getAttribute('data-theme');
-  const initialTheme = attrTheme || preferenceServiceMeta.instance.defaultTheme;
-  if (initialTheme === 'system') {
-    preferenceServiceMeta.instance.applyTheme(initialTheme);
-  }
-}

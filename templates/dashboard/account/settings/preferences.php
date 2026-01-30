@@ -32,32 +32,7 @@ $theme_options = array(
 	),
 );
 
-$font_scale_options = array(
-	array(
-		'label' => __( '70%', 'tutor' ),
-		'value' => 70,
-	),
-	array(
-		'label' => __( '80%', 'tutor' ),
-		'value' => 80,
-	),
-	array(
-		'label' => __( '90%', 'tutor' ),
-		'value' => 90,
-	),
-	array(
-		'label' => __( '100%', 'tutor' ),
-		'value' => 100,
-	),
-	array(
-		'label' => __( '110%', 'tutor' ),
-		'value' => 110,
-	),
-	array(
-		'label' => __( '120%', 'tutor' ),
-		'value' => 120,
-	),
-);
+$font_scale_options = UserPreference::get_font_scale_options();
 
 // Load current user preferences to seed the form.
 $user_preferences = ( new UserPreference( false ) )->get_preferences();

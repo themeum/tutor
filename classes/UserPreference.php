@@ -62,6 +62,28 @@ class UserPreference {
 		add_action( 'wp_head', array( $this, 'apply_font_scale' ) );
 	}
 
+	/**
+	 * Get font scale options for UI selects.
+	 *
+	 * Uses a filter to allow customization of available values.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:int}>
+	 */
+	public static function get_font_scale_options() {
+		$values = apply_filters( 'tutor_user_preference_font_scale_values', array( 70, 80, 90, 100, 110, 120 ) );
+		$options = array();
+		foreach ( $values as $value ) {
+			$value   = (int) $value;
+			$options[] = array(
+				'label' => $value . '%',
+				'value' => $value,
+			);
+		}
+		return $options;
+	}
+
 
 	/**
 	 * Apply font scale to the document root.
