@@ -31,6 +31,7 @@ const discussionsPage = () => {
     query,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
     replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
+    editCommentMutation: null as MutationState<unknown, { comment_id: number; comment: string }> | null,
     qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
     deleteQnAMutation: null as MutationState<unknown, unknown> | null,
     replyQnAMutation: null as MutationState<unknown, unknown> | null,
@@ -39,6 +40,7 @@ const discussionsPage = () => {
     isSolved: false,
     isImportant: false,
     isArchived: false,
+    editingId: null as number | null,
 
     init() {
       // Lesson comment delete mutation.
@@ -61,6 +63,23 @@ const discussionsPage = () => {
         },
         onError: (error: Error) => {
           window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+        },
+      });
+
+      // Lesson comment edit mutation.
+      this.editCommentMutation = this.query.useMutation(this.updateComment, {
+        onSuccess: (response, payload) => {
+          window.TutorCore.toast.success(__('Comment updated successfully.', 'tutor'));
+
+          const element = document.getElementById(`tutor-lesson-comment-text-${payload.comment_id}`);
+          if (element) {
+            element.innerHTML = payload.comment;
+          }
+
+          this.editingId = null;
+        },
+        onError: (error: Error) => {
+          window.TutorCore.toast.error(error.message || __('Failed to update comment', 'tutor'));
         },
       });
 
@@ -119,6 +138,10 @@ const discussionsPage = () => {
       return wpAjaxInstance.post(endpoints.REPLY_LESSON_COMMENT, payload);
     },
 
+    updateComment(payload: { comment_id: number; comment: string }) {
+      return wpAjaxInstance.post(endpoints.UPDATE_LESSON_COMMENT, payload);
+    },
+
     qnaSingleAction(payload: QnASingleActionPayload) {
       return wpAjaxInstance.post(endpoints.QNA_SINGLE_ACTION, payload);
     },
@@ -144,6 +167,13 @@ const discussionsPage = () => {
         this.currentAction = null;
         this.currentQuestionId = null;
       }
+    },
+
+    handleEditComment(data: { comment: string }, commentId: number) {
+      this.editCommentMutation?.mutate({
+        comment_id: commentId,
+        comment: data.comment,
+      });
     },
 
     handleKeydown(event: KeyboardEvent) {
