@@ -29,13 +29,14 @@ $id_prefix = $is_reply ? 'tutor-comment-reply-' : 'tutor-comment-';
 $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 ?>
 
-<div class="<?php echo esc_attr( $class ); ?>" id="<?php echo esc_attr( $id_prefix . $comment_item->comment_ID ); ?>" x-data="{showEditForm: false}">
+<div class="<?php echo esc_attr( $class ); ?>" id="<?php echo esc_attr( $id_prefix . $comment_item->comment_ID ); ?>">
 	<div 
 		class="tutor-comment"
-		x-data="{showReplyForm: false, repliesExpanded: false}"
-		x-show="!showEditForm"
+		x-data="{ repliesExpanded: false }"
+		x-show="editingId !== <?php echo (int) $comment_item->comment_ID; ?>"
+		x-cloak
 		<?php if ( ! $is_reply ) : ?>
-			@tutor:comment:replied.window="if ($event.detail.parentId === <?php echo (int) $comment_item->comment_ID; ?>) { repliesExpanded = true; showReplyForm = false; }"
+			@tutor:comment:replied.window="if ($event.detail.parentId === <?php echo (int) $comment_item->comment_ID; ?>) { repliesExpanded = true; replyingId = null; }"
 		<?php endif; ?>
 	>
 		<?php Avatar::make()->user( $comment_item->user_id )->size( Size::SIZE_40 )->render(); ?>
@@ -66,7 +67,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
-							<button class="tutor-popover-menu-item" @click="showEditForm = true; hide()">
+							<button class="tutor-popover-menu-item" @click="editingId = <?php echo (int) $comment_item->comment_ID; ?>; $nextTick(() => $dispatch('tutor-focus-form-<?php echo esc_attr( $id_prefix . 'edit-form-' . (int) $comment_item->comment_ID ); ?>')); hide()">
 								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
@@ -82,7 +83,7 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 
 			<?php if ( ! $is_reply ) : ?>
 				<div class="tutor-mt-6">
-					<button class="tutor-comment-action-btn tutor-comment-action-btn-reply" @click="showReplyForm = !showReplyForm">
+					<button class="tutor-comment-action-btn tutor-comment-action-btn-reply" @click="replyingId = replyingId === <?php echo (int) $comment_item->comment_ID; ?> ? null : <?php echo (int) $comment_item->comment_ID; ?>; if (replyingId) $nextTick(() => $dispatch('tutor-focus-form-lesson-comment-reply-form-<?php echo (int) $comment_item->comment_ID; ?>'))">
 						<?php tutor_utils()->render_svg_icon( Icon::COMMENTS ); ?>
 						<?php esc_html_e( 'Reply', 'tutor' ); ?>
 					</button>
@@ -95,10 +96,10 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 						'form_id'        => 'lesson-comment-reply-form-' . (int) $comment_item->comment_ID,
 						'placeholder'    => __( 'Write your reply', 'tutor' ),
 						'submit_handler' => 'handleReplyComment(data, ' . (int) $comment_item->comment_ID . ')',
-						'cancel_handler' => 'reset(); showReplyForm = false',
+						'cancel_handler' => 'reset(); replyingId = null',
 						'is_pending'     => 'replyCommentMutation?.isPending',
 						'class'          => 'tutor-comment-reply-form tutor-mt-6',
-						'x_show'         => 'showReplyForm',
+						'x_show'         => 'replyingId === ' . (int) $comment_item->comment_ID,
 					)
 				);
 				?>
@@ -125,11 +126,11 @@ $class     = $is_reply ? 'tutor-comment-reply-item' : 'tutor-comment-item';
 			array(
 				'form_id'        => $id_prefix . 'edit-form-' . (int) $comment_item->comment_ID,
 				'placeholder'    => $is_reply ? __( 'Write your reply', 'tutor' ) : __( 'Write your comment', 'tutor' ),
-				'submit_handler' => 'handelEditComment(data,' . (int) $comment_item->comment_ID . ')',
-				'cancel_handler' => 'reset(); showEditForm = false',
+				'submit_handler' => 'handleEditComment(data,' . (int) $comment_item->comment_ID . ')',
+				'cancel_handler' => 'reset(); editingId = null',
 				'is_pending'     => 'editCommentMutation?.isPending',
 				'class'          => 'tutor-comment-edit-form',
-				'x_show'         => 'showEditForm',
+				'x_show'         => 'editingId === ' . (int) $comment_item->comment_ID,
 				'default_values' => array( 'comment' => $comment_item->comment_content ),
 			)
 		);

@@ -62,6 +62,8 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
       commentList: HTMLElement;
       loadMoreTrigger: HTMLElement;
     },
+    editingId: null as number | null,
+    replyingId: null as number | null,
     createCommentMutation: null as MutationState<unknown, unknown> | null,
     editCommentMutation: null as MutationState<unknown, unknown> | null,
     deleteCommentMutation: null as MutationState<unknown, unknown> | null,
@@ -115,6 +117,8 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
           } else {
             this.reloadComments();
           }
+
+          this.editingId = null;
         },
         onError: (error) => {
           toast.error(convertToErrorMessage(error));
@@ -198,6 +202,8 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
           if (data.count !== undefined) {
             this.totalComments = data.count;
           }
+
+          this.replyingId = null;
         },
         onError: (error) => {
           toast.error(convertToErrorMessage(error));
@@ -230,7 +236,7 @@ const lessonComments = (lessonId: number, initialCount: number = 0) => {
       });
     },
 
-    handelEditComment(data: { comment: string }, commentId: number) {
+    handleEditComment(data: { comment: string }, commentId: number) {
       this.editCommentMutation?.mutate({
         comment_id: commentId,
         comment: data.comment,
