@@ -76,13 +76,13 @@ $question = array(
 			<div class="tutor-quiz-question-option">
 				<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
 				<div class="tutor-input-field">
-			<input 
-			type="text"
-			id="<?php echo esc_attr( $question['question_id'] ); ?>"
-			placeholder="Enter answer"
-			class="tutor-input"
-			>
-		</div>
+					<input 
+						type="text"
+						id="<?php echo esc_attr( $question['question_id'] ); ?>"
+						placeholder="Enter answer"
+						class="tutor-input"
+					>
+				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>

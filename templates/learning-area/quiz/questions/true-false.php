@@ -11,21 +11,21 @@
 use TUTOR\Icon;
 
 $question = array(
-	'index'             => 1,
-	'question_id'       => 1,
-	'question_title'    => __( 'Is the Earth round?', 'tutor' ),
+	'index'                => 1,
+	'question_id'          => 1,
+	'question_title'       => __( 'Is the Earth round?', 'tutor' ),
 	'question_description' => __( 'This is a description of the question.', 'tutor' ),
-	'question_type'     => 'true_false',
-	'answer_required'   => true,
-	'question_mark'     => 10,
-	'question_settings' => array(
+	'question_type'        => 'true_false',
+	'answer_required'      => true,
+	'question_mark'        => 10,
+	'question_settings'    => array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'true_false',
 		'randomize_question' => '0',
 		'show_question_mark' => '1',
 	),
-	'question_answers'  => array(
+	'question_answers'     => array(
 		array(
 			'answer_title' => __( 'True', 'tutor' ),
 			'is_correct'   => true,
@@ -74,11 +74,11 @@ $is_correct = function ( $answer ) {
 	tutor_load_template(
 		'demo-components.learning-area.components.quiz.question-header',
 		array(
-			'index'              => $question['index'],
-			'question_title'     => $question['question_title'],
+			'index'                => $question['index'],
+			'question_title'       => $question['question_title'],
 			'question_description' => $question['question_description'],
-			'question_mark'      => $question['question_mark'],
-			'show_question_mark' => $question['question_settings']['show_question_mark'],
+			'question_mark'        => $question['question_mark'],
+			'show_question_mark'   => $question['question_settings']['show_question_mark'],
 		)
 	);
 	?>

@@ -63,22 +63,22 @@ $question = array(
 	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
-			<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_url'] ) ) : ?>
-			<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
-		<?php else : ?>
-			<div data-title>
-			<div class="tutor-quiz-question-option-number">
-				<?php echo esc_html( $answer['answer_order'] ); ?>
-			</div>
-			<?php echo esc_html( $answer['answer_title'] ); ?>
-			</div>
-		<?php endif; ?>
-		<div placeholder="Drop here" class="tutor-quiz-question-option-drop-zone">
-			<span data-drop-placeholder class="tutor-text-subdued">Drop here</span>
-			<button type="button" class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small">
-				<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
-			</button>
-		</div>
+				<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_url'] ) ) : ?>
+					<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+				<?php else : ?>
+					<div data-title>
+						<div class="tutor-quiz-question-option-number">
+							<?php echo esc_html( $answer['answer_order'] ); ?>
+						</div>
+						<?php echo esc_html( $answer['answer_title'] ); ?>
+					</div>
+				<?php endif; ?>
+				<div placeholder="Drop here" class="tutor-quiz-question-option-drop-zone">
+					<span data-drop-placeholder class="tutor-text-subdued">Drop here</span>
+					<button type="button" class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small">
+						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
+					</button>
+				</div>
 			</div>
 		<?php endforeach; ?>
 	</div>

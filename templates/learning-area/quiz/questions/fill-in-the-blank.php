@@ -47,7 +47,7 @@ $question = array(
 	);
 	?>
 
-	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
+	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
 				<?php

@@ -44,15 +44,15 @@ $question = array(
 
 	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
 		<div class="tutor-input-field">
-		<div class="tutor-input-wrapper">
-		<textarea 
-			type="text"
-			id="name"
-			placeholder="Type your answer here"
-			class="tutor-input tutor-text-area tutor-input-content-clear"
-		></textarea>
+			<div class="tutor-input-wrapper">
+				<textarea 
+					type="text"
+					id="name"
+					placeholder="Type your answer here"
+					class="tutor-input tutor-text-area tutor-input-content-clear"
+				></textarea>
+			</div>
+			<div class="tutor-help-text">This is a helper text.</div>
 		</div>
-		<div class="tutor-help-text">This is a helper text.</div>
-	</div>
 	</div>
 </div>
