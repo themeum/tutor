@@ -17,20 +17,7 @@ use Tutor\Components\Constants\InputType;
 use Tutor\Components\Constants\Size;
 
 // Theme options.
-$theme_options = array(
-	array(
-		'label' => __( 'Light', 'tutor' ),
-		'value' => 'light',
-	),
-	array(
-		'label' => __( 'Dark', 'tutor' ),
-		'value' => 'dark',
-	),
-	array(
-		'label' => __( 'System Default', 'tutor' ),
-		'value' => 'system',
-	),
-);
+$theme_options = UserPreference::get_theme_options();
 
 $font_scale_options = UserPreference::get_font_scale_options();
 
@@ -39,8 +26,8 @@ $user_preferences = ( new UserPreference( false ) )->get_preferences();
 
 $default_values = array(
 	'auto_play_next' => isset( $user_preferences['auto_play_next'] ) ? (bool) $user_preferences['auto_play_next'] : false,
-	'theme'          => isset( $user_preferences['theme'] ) ? $user_preferences['theme'] : 'light',
-	'font_scale'     => isset( $user_preferences['font_scale'] ) ? (int) $user_preferences['font_scale'] : 100,
+	'theme'          => isset( $user_preferences['theme'] ) ? $user_preferences['theme'] : UserPreference::DEFAULT_THEME,
+	'font_scale'     => isset( $user_preferences['font_scale'] ) ? (int) $user_preferences['font_scale'] : UserPreference::DEFAULT_FONT_SCALE,
 );
 
 ?>
@@ -134,6 +121,5 @@ $default_values = array(
 				</div>
 			</div>
 		</div>
-
 	</form>
 </section>

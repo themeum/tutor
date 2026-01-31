@@ -1,8 +1,8 @@
-<?php #phpcs:ignore
+<?php
 /**
  * User preference manager
  *
- * Handles storing and retrieving per–user preferences (e.g. theme, playback)
+ * Handles storing and retrieving per–user preferences (e.g. theme, playback, font scale)
  * in a reusable and extensible way using WordPress user meta.
  *
  * @package Tutor\User
@@ -46,6 +46,33 @@ class UserPreference {
 	const THEMES = array( 'light', 'dark', 'system' );
 
 	/**
+	 * Default theme value.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const DEFAULT_THEME = 'light';
+
+	/**
+	 * Default font scale value.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var int
+	 */
+	const DEFAULT_FONT_SCALE = 100;
+
+	/**
+	 * Available font scale options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array<int>
+	 */
+	const FONT_SCALE_OPTIONS = array( 70, 80, 90, 100, 110, 120 );
+
+	/**
 	 * Register hooks.
 	 *
 	 * @since 4.0.0
@@ -63,29 +90,6 @@ class UserPreference {
 	}
 
 	/**
-	 * Get font scale options for UI selects.
-	 *
-	 * Uses a filter to allow customization of available values.
-	 *
-	 * @since 4.0.0
-	 *
-	 * @return array<int,array{label:string,value:int}>
-	 */
-	public static function get_font_scale_options() {
-		$values  = apply_filters( 'tutor_user_preference_font_scale_values', array( 70, 80, 90, 100, 110, 120 ) );
-		$options = array();
-		foreach ( $values as $value ) {
-			$value     = (int) $value;
-			$options[] = array(
-				'label' => $value . '%',
-				'value' => $value,
-			);
-		}
-		return $options;
-	}
-
-
-	/**
 	 * Apply font scale to the document root.
 	 *
 	 * @since 4.0.0
@@ -94,9 +98,9 @@ class UserPreference {
 	 */
 	public function apply_font_scale() {
 		$prefs          = $this->get_preferences();
-		$font_scale     = isset( $prefs['font_scale'] ) ? (int) $prefs['font_scale'] : 100;
+		$font_scale     = isset( $prefs['font_scale'] ) ? (int) $prefs['font_scale'] : self::DEFAULT_FONT_SCALE;
 		$base_font_size = 16;
-		$font_size      = ( $base_font_size * $font_scale ) / 100;
+		$font_size      = ( $base_font_size * $font_scale ) / self::DEFAULT_FONT_SCALE;
 		echo '<style>:root { font-size: ' . esc_attr( $font_size ) . 'px; }</style>';
 	}
 
@@ -113,9 +117,9 @@ class UserPreference {
 	 */
 	public function add_theme_attribute( $classes ) {
 		$prefs = $this->get_preferences();
-		$theme = isset( $prefs['theme'] ) ? (string) $prefs['theme'] : 'light';
+		$theme = isset( $prefs['theme'] ) ? (string) $prefs['theme'] : self::DEFAULT_THEME;
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
-			$theme = 'light';
+			$theme = self::DEFAULT_THEME;
 		}
 		echo ' data-theme="' . esc_attr( $theme ) . '"';
 		return $classes;
@@ -135,8 +139,8 @@ class UserPreference {
 			'tutor_user_preference_defaults',
 			array(
 				'auto_play_next' => true,
-				'theme'          => 'light',
-				'font_scale'     => 100,
+				'theme'          => self::DEFAULT_THEME,
+				'font_scale'     => self::DEFAULT_FONT_SCALE,
 			)
 		);
 	}
@@ -150,7 +154,7 @@ class UserPreference {
 	 *
 	 * @param int $user_id Optional. User ID. Defaults to current user.
 	 *
-	 * @return array|false
+	 * @return array
 	 */
 	public function get_preferences( $user_id = 0 ) {
 		$user_id = tutor_utils()->get_user_id( $user_id );
@@ -213,8 +217,8 @@ class UserPreference {
 		}
 
 		$auto_play_next = Input::post( 'auto_play_next', false, INPUT::TYPE_BOOL );
-		$theme          = Input::post( 'theme', 'light', INPUT::TYPE_STRING );
-		$font_scale     = Input::post( 'font_scale', 100, INPUT::TYPE_INT );
+		$theme          = Input::post( 'theme', self::DEFAULT_THEME, INPUT::TYPE_STRING );
+		$font_scale     = Input::post( 'font_scale', self::DEFAULT_FONT_SCALE, INPUT::TYPE_INT );
 
 		$preferences_settings = array(
 			'auto_play_next' => $auto_play_next,
@@ -226,7 +230,7 @@ class UserPreference {
 
 		if ( false === $preference_data ) {
 			$this->json_response(
-				'Something went wrong!!',
+				__( 'Failed to save preferences', 'tutor' ),
 				null,
 				HttpHelper::STATUS_NOT_FOUND
 			);
@@ -236,5 +240,51 @@ class UserPreference {
 			__( 'Preferences saved successfully', 'tutor' ),
 			$preference_data
 		);
+	}
+
+	/**
+	 * Get theme options for UI selects.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:string}>
+	 */
+	public static function get_theme_options() {
+		return array(
+			array(
+				'label' => __( 'Light', 'tutor' ),
+				'value' => 'light',
+			),
+			array(
+				'label' => __( 'Dark', 'tutor' ),
+				'value' => 'dark',
+			),
+			array(
+				'label' => __( 'System Default', 'tutor' ),
+				'value' => 'system',
+			),
+		);
+	}
+
+	/**
+	 * Get font scale options for UI selects.
+	 *
+	 * Uses a filter to allow customization of available values.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array<int,array{label:string,value:int}>
+	 */
+	public static function get_font_scale_options() {
+		$values  = apply_filters( 'tutor_user_preference_font_scale_values', self::FONT_SCALE_OPTIONS );
+		$options = array();
+		foreach ( $values as $value ) {
+			$value     = (int) $value;
+			$options[] = array(
+				'label' => $value . '%',
+				'value' => $value,
+			);
+		}
+		return $options;
 	}
 }

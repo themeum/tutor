@@ -55,27 +55,20 @@ class PreferenceService {
     }
   }
   applyFontScale(fontScale: string | number): void {
-    const head = document.head || document.getElementsByTagName('head')[0];
+    if (!fontScale) return;
+
+    const head = document.head;
     let styleEl = document.getElementById(this.STYLE_ID) as HTMLStyleElement | null;
+    const scaleNum = typeof fontScale === 'string' ? parseInt(fontScale, 10) : Number(fontScale);
+    if (Number.isNaN(scaleNum) || scaleNum <= 0) return;
 
-    if (!fontScale) {
-      return;
+    const scaledFontSize = (this.BASE_FONT_SIZE * scaleNum) / this.SCALE_PERCENTAGE_BASE;
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = this.STYLE_ID;
+      head.appendChild(styleEl);
     }
-
-    const updateFontScale = () => {
-      const scaleNum = typeof fontScale === 'string' ? parseInt(fontScale, 10) : Number(fontScale);
-      if (Number.isNaN(scaleNum) || scaleNum <= 0) {
-        return;
-      }
-      const scaledFontSize = (this.BASE_FONT_SIZE * scaleNum) / this.SCALE_PERCENTAGE_BASE;
-      if (!styleEl) {
-        styleEl = document.createElement('style');
-        styleEl.id = this.STYLE_ID;
-        head.appendChild(styleEl);
-      }
-      styleEl.textContent = `:root { font-size: ${scaledFontSize}px; }`;
-    };
-    updateFontScale();
+    styleEl.textContent = `:root { font-size: ${scaledFontSize}px; }`;
   }
 }
 
