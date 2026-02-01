@@ -8,6 +8,12 @@ interface ReplyCommentPayload {
   comment_parent: number;
   comment: string;
 }
+
+interface DeleteCommentPayload {
+  comment_id: number;
+  is_reply?: boolean;
+}
+
 interface QnASingleActionPayload {
   question_id: number;
   qna_action: string;
@@ -20,16 +26,39 @@ interface ReplyQnAPayload {
   answer: string;
 }
 
+const FORM_ID_PREFIXES = {
+  COMMENT_EDIT: 'lesson-comment-edit-',
+  COMMENT_REPLY: 'lesson-comment-reply-form-',
+};
+
+const MODALS = {
+  COMMENT_DELETE: 'tutor-comment-delete-modal',
+  QNA_DELETE: 'tutor-qna-delete-modal',
+};
+
+const ELEMENT_IDS = {
+  COMMENT_TEXT_PREFIX: 'tutor-lesson-comment-text-',
+  REPLIES_LIST_CONTAINER: 'tutor-discussion-replies-list',
+};
+
+const URL_PARAMS = {
+  ID: 'id',
+  ORDER: 'order',
+};
+
 /**
  * Discussions Page Component
  * Handles Q&A, Lesson comments related actions
  */
 const discussionsPage = () => {
   const query = window.TutorCore.query;
+  const form = window.TutorCore.form;
+  const toast = window.TutorCore.toast;
+  const modal = window.TutorCore.modal;
 
   return {
     query,
-    deleteCommentMutation: null as MutationState<unknown, unknown> | null,
+    deleteCommentMutation: null as MutationState<unknown, DeleteCommentPayload> | null,
     replyCommentMutation: null as MutationState<unknown, ReplyCommentPayload> | null,
     editCommentMutation: null as MutationState<unknown, { comment_id: number; comment: string }> | null,
     qnaSingleActionMutation: null as MutationState<unknown, unknown> | null,
@@ -41,45 +70,69 @@ const discussionsPage = () => {
     isImportant: false,
     isArchived: false,
     editingId: null as number | null,
+    editingFormId: null as string | null,
+    loadingReplies: false,
+    repliesOrder: 'DESC',
+    $nextTick: undefined as ((callback: () => void) => void) | undefined,
 
     init() {
+      // Set initial state from URL
+      const url = new URL(window.location.href);
+      this.repliesOrder = url.searchParams.get(URL_PARAMS.ORDER) || 'DESC';
+
       // Lesson comment delete mutation.
       this.deleteCommentMutation = this.query.useMutation(this.deleteComment, {
-        onSuccess: () => {
-          const url = new URL(window.location.href);
-          url.searchParams.delete('id');
-          window.location.href = url.toString();
+        onSuccess: (_, payload) => {
+          if (payload.is_reply) {
+            toast.success(__('Reply deleted successfully', 'tutor'));
+            modal.closeModal(MODALS.COMMENT_DELETE);
+            this.reloadReplies();
+          } else {
+            const url = new URL(window.location.href);
+            url.searchParams.delete(URL_PARAMS.ID);
+            window.location.href = url.toString();
+          }
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete Comment', 'tutor'));
+          toast.error(error.message || __('Failed to delete Comment', 'tutor'));
         },
       });
 
       // Lesson comment reply mutation
       this.replyCommentMutation = this.query.useMutation(this.replyComment, {
-        onSuccess: () => {
-          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
-          window.location.reload();
+        onSuccess: (_, payload) => {
+          toast.success(__('Reply saved successfully', 'tutor'));
+          this.reloadReplies();
+
+          const formId = `${FORM_ID_PREFIXES.COMMENT_REPLY}${payload.comment_parent}`;
+          if (form.hasForm(formId)) {
+            form.reset(formId);
+          }
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+          toast.error(error.message || __('Failed to save reply', 'tutor'));
         },
       });
 
       // Lesson comment edit mutation.
       this.editCommentMutation = this.query.useMutation(this.updateComment, {
-        onSuccess: (response, payload) => {
-          window.TutorCore.toast.success(__('Comment updated successfully.', 'tutor'));
+        onSuccess: (_, payload) => {
+          toast.success(__('Comment updated successfully.', 'tutor'));
 
-          const element = document.getElementById(`tutor-lesson-comment-text-${payload.comment_id}`);
+          const element = document.getElementById(`${ELEMENT_IDS.COMMENT_TEXT_PREFIX}${payload.comment_id}`);
           if (element) {
             element.innerHTML = payload.comment;
+          }
+
+          if (this.editingFormId && form.hasForm(this.editingFormId)) {
+            form.reset(this.editingFormId);
+            this.editingFormId = null;
           }
 
           this.editingId = null;
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to update comment', 'tutor'));
+          toast.error(error.message || __('Failed to update comment', 'tutor'));
         },
       });
 
@@ -102,7 +155,7 @@ const discussionsPage = () => {
           );
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Action failed', 'tutor'));
+          toast.error(error.message || __('Action failed', 'tutor'));
         },
       });
 
@@ -110,27 +163,61 @@ const discussionsPage = () => {
       this.deleteQnAMutation = this.query.useMutation(this.deleteQnA, {
         onSuccess: () => {
           const url = new URL(window.location.href);
-          url.searchParams.delete('id');
+          url.searchParams.delete(URL_PARAMS.ID);
           window.location.href = url.toString();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to delete Q&A', 'tutor'));
+          toast.error(error.message || __('Failed to delete Q&A', 'tutor'));
         },
       });
 
       // Q&A reply mutation.
       this.replyQnAMutation = this.query.useMutation(this.replyQnA, {
         onSuccess: () => {
-          window.TutorCore.toast.success(__('Reply saved successfully', 'tutor'));
+          toast.success(__('Reply saved successfully', 'tutor'));
           window.location.reload();
         },
         onError: (error: Error) => {
-          window.TutorCore.toast.error(error.message || __('Failed to save reply', 'tutor'));
+          toast.error(error.message || __('Failed to save reply', 'tutor'));
         },
       });
     },
 
-    deleteComment(payload: { comment_id: number }) {
+    async reloadReplies(order?: string) {
+      if (order) {
+        this.repliesOrder = order;
+      }
+
+      const url = new URL(window.location.href);
+      const commentId = parseInt(url.searchParams.get(URL_PARAMS.ID) || '0');
+
+      if (!commentId) return;
+
+      this.loadingReplies = true;
+      try {
+        const response = await wpAjaxInstance.post(endpoints.LOAD_DISCUSSION_REPLIES, {
+          comment_id: commentId,
+          order: this.repliesOrder,
+        });
+
+        const container = document.getElementById(ELEMENT_IDS.REPLIES_LIST_CONTAINER);
+        if (container && typeof response.data?.html === 'string') {
+          container.innerHTML = response.data.html;
+
+          // Update URL without reload
+          const url = new URL(window.location.href);
+          url.searchParams.set(URL_PARAMS.ORDER, this.repliesOrder);
+          window.history.pushState({}, '', url.toString());
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Failed to reload replies:', error);
+      } finally {
+        this.loadingReplies = false;
+      }
+    },
+
+    deleteComment(payload: DeleteCommentPayload) {
       return wpAjaxInstance.post(endpoints.DELETE_LESSON_COMMENT, payload);
     },
 
@@ -169,8 +256,16 @@ const discussionsPage = () => {
       }
     },
 
+    handleReplyComment(data: { comment: string }, commentId: number, courseId: number) {
+      return this.replyCommentMutation?.mutate({
+        comment: data.comment,
+        comment_parent: commentId,
+        comment_post_ID: courseId,
+      });
+    },
+
     handleEditComment(data: { comment: string }, commentId: number) {
-      this.editCommentMutation?.mutate({
+      return this.editCommentMutation?.mutate({
         comment_id: commentId,
         comment: data.comment,
       });
@@ -179,6 +274,20 @@ const discussionsPage = () => {
     handleKeydown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key === 'Enter') {
         (event.target as HTMLFormElement).closest('form')?.requestSubmit();
+      }
+    },
+
+    setEditing(id: number | null) {
+      this.editingId = id;
+      const formId = id ? `${FORM_ID_PREFIXES.COMMENT_EDIT}${id}` : null;
+      this.editingFormId = formId;
+
+      if (id && formId) {
+        this.$nextTick?.(() => {
+          if (form.hasForm(formId)) {
+            form.setFocus(formId, 'comment');
+          }
+        });
       }
     },
   };

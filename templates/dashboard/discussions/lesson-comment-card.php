@@ -16,10 +16,6 @@ use Tutor\Components\Avatar;
 use Tutor\Components\PreviewTrigger;
 use Tutor\Helpers\UrlHelper;
 use TUTOR\Lesson;
-use Tutor\Components\Constants\InputType;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\InputField;
-use Tutor\Components\Button;
 
 // Comment read-unread feature does not exist currently, will be added in future.
 $is_unread  = 0;
@@ -88,7 +84,7 @@ $single_url = UrlHelper::add_query_params(
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
-							<button class="tutor-popover-menu-item" @click="editingId = <?php echo (int) $lesson_comment->comment_ID; ?>; hide()">
+							<button class="tutor-popover-menu-item" @click="setEditing(<?php echo (int) $lesson_comment->comment_ID; ?>); hide()">
 								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
@@ -109,12 +105,12 @@ $single_url = UrlHelper::add_query_params(
 				tutor_load_template(
 					'dashboard.discussions.comment-form',
 					array(
-						'form_id'         => 'lesson-comment-card-edit-' . (int) $lesson_comment->comment_ID,
-						'default_value'   => $lesson_comment->comment_content,
-						'submit_handler'  => '(data) => handleEditComment(data, ' . (int) $lesson_comment->comment_ID . ')',
-						'cancel_handler'  => 'reset(); editingId = null',
-						'is_pending_prop' => 'editCommentMutation?.isPending',
-						'placeholder'     => __( 'Write your comment', 'tutor' ),
+						'form_id'        => 'lesson-comment-edit-' . (int) $lesson_comment->comment_ID,
+						'default_value'  => $lesson_comment->comment_content,
+						'submit_handler' => '(data) => handleEditComment(data, ' . (int) $lesson_comment->comment_ID . ')',
+						'cancel_handler' => 'reset(); editingId = null; focused = false',
+						'is_pending'     => 'editCommentMutation?.isPending',
+						'placeholder'    => __( 'Write your comment', 'tutor' ),
 					)
 				);
 			?>

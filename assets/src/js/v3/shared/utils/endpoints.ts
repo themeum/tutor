@@ -86,6 +86,7 @@ const endpoints = {
   UPDATE_LESSON_COMMENT: 'tutor_update_lesson_comment',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
   REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
+  LOAD_DISCUSSION_REPLIES: 'tutor_load_discussion_replies',
 
   // Q&A
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
