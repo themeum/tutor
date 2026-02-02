@@ -1399,6 +1399,7 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_question( $question ) {
+		global $tutor_is_started_quiz;
 		$question_settings = maybe_unserialize( $question->question_settings );
 
 		// Normalize question type + settings.
@@ -1439,8 +1440,26 @@ class Quiz {
 		tutor_load_template(
 			'learning-area.quiz.questions.' . $template,
 			array(
-				'question' => (array) $question,
+				'question'       => (array) $question,
+				'attempt_status' => $tutor_is_started_quiz->attempt_status,
 			)
 		);
+	}
+
+	/**
+	 * Show Correct Answers
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $attempt_status attempt status.
+	 *
+	 * @return bool
+	 */
+	public static function show_correct_answers( $attempt_status ) {
+		if ( QuizModel::ATTEMPT_STARTED === $attempt_status || QuizModel::ATTEMPT_TIMEOUT === $attempt_status ) {
+			return false;
+		}
+
+		return true;
 	}
 }

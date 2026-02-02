@@ -32,11 +32,11 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 <div class="tutor-quiz tutor-quiz-submission">
 	<?php tutor_load_template( 'learning-area.quiz.progress-bar' ); ?>
 	<div class="tutor-quiz-questions">
-		<?php foreach ( $questions as $index => $question ) : ?>
-			<?php
+		<?php
+		foreach ( $questions as $index => $question ) {
 				Quiz::render_question( $question );
-			?>
-		<?php endforeach; ?>
+		}
+		?>
 	</div>
 
 	<?php

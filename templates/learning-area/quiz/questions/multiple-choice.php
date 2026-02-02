@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Quiz;
+
 $default_question = array(
 	'index'             => 1,
 	'question_id'       => 0,
@@ -67,7 +69,10 @@ $is_correct = function ( $answer ) {
  */
 $has_image = function ( $answer ) {
 	return array_key_exists( 'image_id', $answer ) && ! empty( $answer['image_id'] );
-}
+};
+
+$show_correct_answers = Quiz::show_correct_answers( $attempt_status );
+
 
 ?>
 
@@ -87,7 +92,12 @@ $has_image = function ( $answer ) {
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option" data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>">
+			<div
+				class="tutor-quiz-question-option"
+				<?php if ( $show_correct_answers ) : ?>
+					data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>"
+				<?php endif; ?>
+			>
 				<div class="tutor-input-field <?php echo $has_image( $answer ) ? 'tutor-hidden' : ''; ?>">
 					<div class="tutor-input-wrapper">
 						<!-- @TODO: Disable checkbox when viewing quiz attempt -->
@@ -96,8 +106,7 @@ $has_image = function ( $answer ) {
 							id="<?php echo esc_attr( $question['question_id'] ); ?>"
 							placeholder="Enter your full name"
 							class="tutor-checkbox"
-							checked
-							<?php if ( $is_correct( $answer ) ) : ?>
+							<?php if ( $show_correct_answers ) : ?>
 								disabled
 							<?php endif; ?>
 						>
