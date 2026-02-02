@@ -89,7 +89,12 @@ class QuizBuilder {
 		$answer_title         = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
 		$is_correct           = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
 		$image_id             = Input::sanitize( $input['image_id'] ?? null );
-		$answer_two_gap_match = Input::sanitize( $input['answer_two_gap_match'] ?? '' );
+		// Draw image: pass raw base64 to save_quiz_draw_image_mask (sanitize would corrupt base64); store returned URL.
+		if ( 'draw_image' === $question_type && isset( $input['answer_two_gap_match'] ) ) {
+			$answer_two_gap_match = tutor_utils()->save_quiz_draw_image_mask( wp_unslash( $input['answer_two_gap_match'] ) );
+		} else {
+			$answer_two_gap_match = Input::sanitize( $input['answer_two_gap_match'] ?? '', '' );
+		}
 		$answer_view_format   = Input::sanitize( $input['answer_view_format'] ?? '' );
 		$answer_settings      = null;
 

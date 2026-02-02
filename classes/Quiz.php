@@ -751,6 +751,10 @@ class Quiz {
 								$given_answer = sanitize_textarea_field( wp_unslash( $answers['answers']['mask'] ) );
 							}
 						}
+						// Save base64 mask to uploads and store file URL in DB.
+						if ( '' !== $given_answer ) {
+							$given_answer = tutor_utils()->save_quiz_draw_image_mask( $given_answer );
+						}
 
 						// Base correctness is determined later via filters (e.g., in Tutor Pro).
 						$is_answer_was_correct = false;

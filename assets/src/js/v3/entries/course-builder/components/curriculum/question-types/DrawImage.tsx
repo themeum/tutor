@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
@@ -19,6 +19,8 @@ import { nanoid } from '@TutorShared/utils/util';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { type QuizForm } from '@CourseBuilderServices/quiz';
 
+const BRUSH_SIZE = 15;
+
 const DrawImage = () => {
   const form = useFormContext<QuizForm>();
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
@@ -31,8 +33,8 @@ const DrawImage = () => {
     defaultValue: [] as QuizQuestionOption[],
   }) as QuizQuestionOption[];
 
-  const [brushSize, setBrushSize] = useState(15);
   const [isDrawing, setIsDrawing] = useState(false);
+  const [isDrawModeActive, setIsDrawModeActive] = useState(false);
 
   const imageRef = useRef<HTMLImageElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -100,7 +102,7 @@ const DrawImage = () => {
         : null,
   });
 
-  const syncCanvasWithImage = () => {
+  const syncCanvasWithImage = useCallback((maskUrl?: string) => {
     const img = imageRef.current;
     const canvas = canvasRef.current;
 
@@ -112,29 +114,26 @@ const DrawImage = () => {
       return;
     }
 
-    const imgWidth = img.clientWidth || img.offsetWidth || img.naturalWidth;
-    const imgHeight = img.clientHeight || img.offsetHeight || img.naturalHeight;
-
-    if (!imgWidth || !imgHeight) {
+    const container = img.parentElement;
+    if (!container) {
       return;
     }
 
-    canvas.width = imgWidth;
-    canvas.height = imgHeight;
+    const rect = container.getBoundingClientRect();
+    const w = Math.round(rect.width);
+    const h = Math.round(rect.height);
 
-    canvas.style.width = `${imgWidth}px`;
-    canvas.style.height = `${imgHeight}px`;
-
-    const parentRect = img.parentElement?.getBoundingClientRect();
-    const imgRect = img.getBoundingClientRect();
-
-    if (parentRect) {
-      const left = imgRect.left - parentRect.left;
-      const top = imgRect.top - parentRect.top;
-      canvas.style.position = 'absolute';
-      canvas.style.left = `${left}px`;
-      canvas.style.top = `${top}px`;
+    if (!w || !h) {
+      return;
     }
+
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.position = 'absolute';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
 
     const ctx = canvas.getContext('2d');
     if (!ctx) {
@@ -146,13 +145,20 @@ const DrawImage = () => {
     ctx.fillStyle = 'rgba(255, 0, 0, 0.9)';
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.lineWidth = brushSize;
-  };
+    ctx.lineWidth = BRUSH_SIZE;
+
+    if (maskUrl) {
+      const maskImg = new Image();
+      maskImg.onload = () => {
+        ctx.drawImage(maskImg, 0, 0, canvas.width, canvas.height);
+      };
+      maskImg.src = maskUrl;
+    }
+  }, []);
 
   useEffect(() => {
-    syncCanvasWithImage();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [option?.image_url, brushSize]);
+    syncCanvasWithImage(option?.answer_two_gap_match || undefined);
+  }, [option?.image_url, option?.answer_two_gap_match, syncCanvasWithImage]);
 
   useEffect(() => {
     const img = imageRef.current;
@@ -161,7 +167,7 @@ const DrawImage = () => {
     }
 
     const handleLoad = () => {
-      syncCanvasWithImage();
+      syncCanvasWithImage(option?.answer_two_gap_match || undefined);
     };
 
     img.addEventListener('load', handleLoad);
@@ -169,8 +175,30 @@ const DrawImage = () => {
     return () => {
       img.removeEventListener('load', handleLoad);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [option?.answer_two_gap_match, syncCanvasWithImage]);
+
+  useEffect(() => {
+    const img = imageRef.current;
+    const canvas = canvasRef.current;
+    if (!img || !canvas) {
+      return;
+    }
+
+    const container = img.parentElement;
+    if (!container) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      syncCanvasWithImage(option?.answer_two_gap_match || undefined);
+    });
+
+    resizeObserver.observe(container);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [option?.image_url, option?.answer_two_gap_match, syncCanvasWithImage]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -202,6 +230,8 @@ const DrawImage = () => {
     };
 
     const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      if (!isDrawModeActive) return;
+
       event.preventDefault();
       if (!option?.image_url) {
         return;
@@ -217,7 +247,7 @@ const DrawImage = () => {
       lastPointRef.current = coords;
 
       ctx.beginPath();
-      ctx.arc(coords.x, coords.y, brushSize / 2, 0, Math.PI * 2);
+      ctx.arc(coords.x, coords.y, BRUSH_SIZE / 2, 0, Math.PI * 2);
       ctx.fill();
     };
 
@@ -272,9 +302,30 @@ const DrawImage = () => {
       canvas.removeEventListener('touchmove', handleTouchMove);
       canvas.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [brushSize, isDrawing, option?.image_url]);
+  }, [isDrawing, isDrawModeActive, option?.image_url]);
 
-  const handleClearDrawing = () => {
+  const handleSave = () => {
+    const canvas = canvasRef.current;
+    if (!canvas || !option) return;
+
+    const dataUrl = canvas.toDataURL('image/png');
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width;
+    blank.height = canvas.height;
+    const isEmpty = dataUrl === blank.toDataURL();
+
+    const updated: QuizQuestionOption = {
+      ...option,
+      ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+      }),
+      answer_two_gap_match: isEmpty ? '' : dataUrl,
+      is_saved: true,
+    };
+    form.setValue(answersPath, [updated]);
+  };
+
+  const handleClear = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -283,9 +334,7 @@ const DrawImage = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if (!option) {
-      return;
-    }
+    if (!option) return;
 
     const updated: QuizQuestionOption = {
       ...option,
@@ -295,29 +344,19 @@ const DrawImage = () => {
       answer_two_gap_match: '',
       is_saved: true,
     };
-
     form.setValue(answersPath, [updated]);
   };
 
-  const handleSaveZone = () => {
+  const handleDraw = () => {
+    setIsDrawModeActive(true);
+
     const canvas = canvasRef.current;
-    if (!canvas || !option) {
-      return;
-    }
+    if (!canvas) return;
 
-    const dataUrl = canvas.toDataURL('image/png');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    const updated: QuizQuestionOption = {
-      ...option,
-      ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
-        _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-      }),
-      // Store instructor's mask in the same field used by the prototype.
-      answer_two_gap_match: dataUrl,
-      is_saved: true,
-    };
-
-    form.setValue(answersPath, [updated]);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   };
 
   const clearImage = () => {
@@ -344,7 +383,8 @@ const DrawImage = () => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.controlsRow}>
+      {/* Section 1: Image upload only — one reference shown in Mark the correct area */}
+      <div css={styles.card}>
         <div css={styles.imageInputWrapper}>
           <ImageInput
             value={
@@ -364,69 +404,69 @@ const DrawImage = () => {
             previewImageCss={styles.imageInput}
           />
         </div>
-
-        <div css={styles.brushControls}>
-          <label htmlFor="draw-image-brush-size">{__('Brush Size', 'tutor')}</label>
-          <div css={styles.brushRangeWrapper}>
-            <input
-              id="draw-image-brush-size"
-              type="range"
-              min={5}
-              max={50}
-              value={brushSize}
-              onChange={(event) => setBrushSize(Number(event.target.value))}
-            />
-            <span css={styles.brushSizeValue}>{brushSize}px</span>
-          </div>
-        </div>
       </div>
 
+      {/* Section 2: Mark the correct area — single reference image + drawing canvas; Save / Clear / Draw buttons */}
       <Show when={option?.image_url}>
-        <div css={styles.canvasContainer}>
+        <div css={styles.card}>
+          <div css={styles.answerHeader}>
+            <span css={styles.answerHeaderTitle}>
+              <SVGIcon name="edit" width={20} height={20} css={styles.headerIcon} aria-hidden />
+              {__('Mark the correct area', 'tutor')}
+            </span>
+          </div>
           <div css={styles.canvasInner}>
             <img
               ref={imageRef}
               src={option?.image_url}
-              alt={__('Background image for draw-on-image question', 'tutor')}
-              css={styles.image}
+              alt={__('Background image for marking correct area', 'tutor')}
+              css={[styles.image, styles.answerImage]}
             />
-            <canvas ref={canvasRef} css={styles.canvas} />
+            <canvas
+              ref={canvasRef}
+              css={[styles.canvas, isDrawModeActive ? styles.canvasDrawMode : styles.canvasIdleMode]}
+              aria-label={__('Draw the correct area with the brush', 'tutor')}
+            />
           </div>
-        </div>
-
-        <div css={styles.actionsRow}>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={handleClearDrawing}
-            icon={<SVGIcon name="refresh" width={20} height={20} />}
-          >
-            {__('Clear Drawing', 'tutor')}
-          </Button>
-          <Button
-            variant="primary"
-            size="small"
-            onClick={handleSaveZone}
-            icon={<SVGIcon name="save" width={20} height={20} />}
-          >
-            {__('Save Answer Zone', 'tutor')}
-          </Button>
-        </div>
-
-        <Show when={option?.answer_two_gap_match}>
-          <p css={styles.hint}>
-            {__(
-              'An answer zone mask has been saved for this question. Students will be graded against this mask.',
-              'tutor',
-            )}
+          <div css={styles.actionsRow}>
+            <Button
+              variant="primary"
+              size="small"
+              onClick={handleSave}
+              icon={<SVGIcon name="save" width={20} height={20} />}
+            >
+              {__('Save', 'tutor')}
+            </Button>
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={handleClear}
+              icon={<SVGIcon name="delete" width={20} height={20} />}
+            >
+              {__('Clear', 'tutor')}
+            </Button>
+            <Button
+              variant="tertiary"
+              size="small"
+              onClick={handleDraw}
+              icon={<SVGIcon name="edit" width={20} height={20} />}
+            >
+              {__('Draw', 'tutor')}
+            </Button>
+          </div>
+          <p css={styles.brushHint}>
+            {__('Use the brush to draw on the image, then click Save to store the answer zone.', 'tutor')}
           </p>
-        </Show>
+          <Show when={option?.answer_two_gap_match}>
+            <p css={styles.savedHint}>{__('Answer zone saved. Students will be graded against this area.', 'tutor')}</p>
+          </Show>
+        </div>
       </Show>
 
       <Show when={!option?.image_url}>
         <p css={styles.placeholder}>
           {__(
-            'Upload an image to define the area students must draw on. Then paint the correct zone on top of the image.',
+            'Upload an image to define the area students must draw on. Then mark the correct zone in the next section.',
             'tutor',
           )}
         </p>
@@ -440,53 +480,67 @@ export default DrawImage;
 const styles = {
   wrapper: css`
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[16]};
+    gap: ${spacing[24]};
     padding-left: ${spacing[40]};
 
     ${Breakpoint.smallMobile} {
       padding-left: ${spacing[8]};
     }
   `,
-  controlsRow: css`
-    ${styleUtils.display.flex('row')};
-    flex-wrap: wrap;
+  card: css`
+    ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
-    align-items: flex-end;
+    padding: ${spacing[20]};
+    background: ${colorTokens.surface.tutor};
+    border: 1px solid ${colorTokens.stroke.border};
+    border-radius: ${borderRadius.card};
   `,
   imageInputWrapper: css`
-    max-width: 320px;
+    max-width: 100%;
   `,
   imageInput: css`
     border-radius: ${borderRadius.card};
   `,
-  brushControls: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[8]};
-    min-width: 220px;
-
-    label {
-      ${typography.caption('medium')};
-      color: ${colorTokens.text.subdued};
-    }
+  answerHeader: css`
+    ${styleUtils.display.flex('row')};
+    align-items: center;
+    justify-content: space-between;
+    gap: ${spacing[12]};
   `,
-  brushRangeWrapper: css`
+  answerHeaderTitle: css`
+    ${typography.body('medium')};
+    color: ${colorTokens.text.primary};
     ${styleUtils.display.flex('row')};
     align-items: center;
     gap: ${spacing[8]};
-
-    input[type='range'] {
-      flex: 1;
-    }
   `,
-  brushSizeValue: css`
-    ${typography.caption('medium')};
+  headerIcon: css`
+    flex-shrink: 0;
     color: ${colorTokens.text.subdued};
-    min-width: 48px;
-    text-align: right;
   `,
-  canvasContainer: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[8]};
+  deleteButton: css`
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: ${spacing[8]};
+    background: transparent;
+    border: none;
+    border-radius: ${borderRadius.button};
+    color: ${colorTokens.text.subdued};
+    cursor: pointer;
+    transition:
+      color 0.15s ease,
+      background 0.15s ease;
+
+    &:hover {
+      color: ${colorTokens.text.primary};
+      background: ${colorTokens.background.hover};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.action.primary.focus};
+      outline-offset: 2px;
+    }
   `,
   canvasInner: css`
     position: relative;
@@ -505,18 +559,36 @@ const styles = {
     max-width: 100%;
     height: auto;
   `,
+  answerImage: css`
+    filter: grayscale(0.15);
+  `,
   canvas: css`
+    position: absolute;
     top: 0;
     left: 0;
+  `,
+  canvasIdleMode: css`
+    pointer-events: none;
+    cursor: default;
+  `,
+  canvasDrawMode: css`
     pointer-events: auto;
+    cursor: crosshair;
   `,
   actionsRow: css`
     ${styleUtils.display.flex('row')};
     gap: ${spacing[12]};
+    flex-wrap: wrap;
   `,
-  hint: css`
+  brushHint: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
+    margin: 0;
+  `,
+  savedHint: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.success};
+    margin: 0;
   `,
   placeholder: css`
     ${typography.caption()};

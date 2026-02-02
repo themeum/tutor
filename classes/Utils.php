@@ -5138,6 +5138,11 @@ class Utils {
 				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-ordering tutor-icon-ordering-z-a"></i></span>',
 				'is_pro' => true,
 			),
+			'draw_image'        => array(
+				'name'   => __( 'Draw on Image', 'tutor' ),
+				'icon'   => '<span class="tooltip-btn"><i class="tutor-quiz-type-icon tutor-quiz-type-draw-image tutor-icon-image"></i></span>',
+				'is_pro' => true,
+			),
 		);
 
 		if ( isset( $types[ $type ] ) ) {
@@ -10577,6 +10582,60 @@ class Utils {
 		}
 
 		return apply_filters( 'tutor_course_builder_editor_used', $editor, $post_id );
+	}
+
+	/**
+	 * Save quiz draw-image mask (base64) to uploads and return URL.
+	 *
+	 * Stores the file under wp-content/uploads/tutor/quiz-type/ with a unique
+	 * filename. Used for both instructor reference mask and student attempt mask.
+	 *
+	 * @since 3.8.3
+	 *
+	 * @param string $base64_or_url base64 image string (data:image/...;base64,...) or existing URL.
+	 *
+	 * @return string URL of the saved file, or original value if not base64 / save failed.
+	 */
+	public function save_quiz_draw_image_mask( $base64_or_url ) {
+		$value = is_string( $base64_or_url ) ? trim( $base64_or_url ) : '';
+		if ( '' === $value ) {
+			return $value;
+		}
+		// Already a URL (e.g. previously saved file or legacy).
+		if ( preg_match( '#^https?://#i', $value ) ) {
+			return $value;
+		}
+		if ( ! preg_match( '#^data:image/(\w+);base64,(.+)$#is', $value, $m ) ) {
+			return $value;
+		}
+		$ext     = strtolower( $m[1] );
+		$ext     = 'jpeg' === $ext ? 'jpg' : $ext;
+		$decoded = base64_decode( $m[2], true );
+		if ( false === $decoded || '' === $decoded ) {
+			return $value;
+		}
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return $value;
+		}
+		$subdir    = 'tutor/quiz-type';
+		$base_path = $upload_dir['basedir'] . '/' . $subdir;
+		$base_url  = $upload_dir['baseurl'] . '/' . $subdir;
+		if ( ! wp_mkdir_p( $base_path ) ) {
+			return $value;
+		}
+		// Prevent directory listing.
+		$index_file = $base_path . '/index.php';
+		if ( ! file_exists( $index_file ) ) {
+			file_put_contents( $index_file, '<?php // Silence is golden.' );
+		}
+		$basename = 'draw-mask-' . gmdate( 'Y-m-d-His' ) . '-' . wp_rand( 1000, 9999 ) . '.' . $ext;
+		$filename = wp_unique_filename( $base_path, $basename );
+		$filepath = $base_path . '/' . $filename;
+		if ( false === file_put_contents( $filepath, $decoded ) ) {
+			return $value;
+		}
+		return $base_url . '/' . $filename;
 	}
 
 	/**

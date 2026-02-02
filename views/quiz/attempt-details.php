@@ -354,6 +354,11 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true ) ) {
 						$answer_status = null === $answer->is_correct ? 'pending' : 'wrong';
 					}
+
+					// Draw image: auto-graded, so correct or wrong only.
+					elseif ( 'draw_image' === $answer->question_type ) {
+						$answer_status = (bool) $answer->is_correct ? 'correct' : 'wrong';
+					}
 					?>
 
 							<tr class="tutor-quiz-answer-status-<?php echo esc_html( $answer_status ); ?>">
@@ -526,6 +531,38 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													}
 
 													tutor_render_answer_list( $answers );
+												} elseif ( 'draw_image' === $answer->question_type ) {
+
+													// Student's submitted drawing: show background image with their mask overlaid (same as attempt).
+													// Mask can be stored as file URL (wp-content/uploads/tutor/quiz-type/) or legacy base64.
+													$given_mask = ! empty( $answer->given_answer ) ? stripslashes( $answer->given_answer ) : '';
+													$has_mask   = '' !== $given_mask;
+
+													if ( $has_mask ) {
+														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
+														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
+														$given_bg_url      = '';
+														if ( $instructor_answer ) {
+															if ( ! empty( $instructor_answer->image_id ) ) {
+																$given_bg_url = wp_get_attachment_image_url( $instructor_answer->image_id, 'full' );
+															} elseif ( ! empty( $instructor_answer->image_url ) ) {
+																$given_bg_url = $instructor_answer->image_url;
+															}
+														}
+														echo '<div class="tutor-draw-image-given-answer tutor-mb-12">';
+														echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Your drawing:', 'tutor' ) . '</p>';
+														echo '<div style="position: relative; display: inline-block;">';
+														if ( $given_bg_url ) {
+															echo '<img src="' . esc_url( $given_bg_url ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
+															echo '<img src="' . ( 0 === strpos( $given_mask, 'data:' ) ? esc_attr( $given_mask ) : esc_url( $given_mask ) ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
+														} else {
+															echo '<img src="' . ( 0 === strpos( $given_mask, 'data:' ) ? esc_attr( $given_mask ) : esc_url( $given_mask ) ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
+														}
+														echo '</div>';
+														echo '</div>';
+													} else {
+														echo '<span class="tutor-fs-7 tutor-color-secondary">' . esc_html__( 'No drawing submitted.', 'tutor' ) . '</span>';
+													}
 												}
 												?>
 												</div>
@@ -694,6 +731,36 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																<?php
 														}
 														echo '</div>';
+													}
+
+													// Draw image: show instructor reference (correct answer zones).
+													elseif ( 'draw_image' === $answer->question_type ) {
+
+														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
+														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
+
+														if ( $instructor_answer && ! empty( $instructor_answer->answer_two_gap_match ) ) {
+															$ref_mask = $instructor_answer->answer_two_gap_match;
+															$ref_bg   = '';
+															if ( ! empty( $instructor_answer->image_id ) ) {
+																$ref_bg = wp_get_attachment_image_url( $instructor_answer->image_id, 'full' );
+															} elseif ( ! empty( $instructor_answer->image_url ) ) {
+																$ref_bg = $instructor_answer->image_url;
+															}
+															echo '<div class="tutor-draw-image-correct-answer">';
+															echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Reference (correct answer zones):', 'tutor' ) . '</p>';
+															if ( $ref_bg ) {
+																echo '<div style="position: relative; display: inline-block;">';
+																echo '<img src="' . esc_url( $ref_bg ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
+																echo '<img src="' . ( 0 === strpos( $ref_mask, 'data:' ) ? esc_attr( $ref_mask ) : esc_url( $ref_mask ) ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
+																echo '</div>';
+															} else {
+																echo '<img src="' . ( 0 === strpos( $ref_mask, 'data:' ) ? esc_attr( $ref_mask ) : esc_url( $ref_mask ) ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
+															}
+															echo '</div>';
+														} else {
+															echo '<span class="tutor-fs-7 tutor-color-secondary">' . esc_html__( 'No reference available.', 'tutor' ) . '</span>';
+														}
 													}
 												}
 												?>
