@@ -51,8 +51,9 @@ $default_question = array(
 				<?php
 				$answer_title = $answer['answer_title'];
 				$dash_fields  = substr_count( $answer_title, '{dash}' );
+				$dash_input   = '<input type="text" class="tutor-quiz-question-input" placeholder="' . esc_attr__( 'Type your answer here', 'tutor' ) . '" name="attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . '][quiz_question][' . esc_attr( $question['question_id'] ) . '][]" x-bind="register(\'attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . '][quiz_question][' . esc_attr( $question['question_id'] ) . '][]\')" />';
 				if ( $dash_fields ) {
-					$answer_title = str_replace( '{dash}', '<input type="text" class="tutor-quiz-question-input" placeholder="Type your answer here" name="attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . '][quiz_question][' . esc_attr( $question['question_id'] ) . '][]" />', $answer_title );
+					$answer_title = str_replace( '{dash}', $dash_input, $answer_title );
 				}
 				echo wp_kses(
 					$answer_title,
@@ -62,6 +63,7 @@ $default_question = array(
 							'class'       => true,
 							'name'        => true,
 							'placeholder' => true,
+							'x-bind'      => true,	
 						),
 					)
 				);

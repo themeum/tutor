@@ -51,12 +51,16 @@ $question = wp_parse_args( $question, $default_question );
 	?>
 
 	<div class="tutor-quiz-question-options">
-		<?php
-			InputField::make()
-				->type( InputType::TEXTAREA )
-				->name( 'attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . '][quiz_question][' . esc_attr( $question['question_id'] ) . ']' )
-				->placeholder( __( 'Type your answer here', 'tutor' ) )
-				->render();
-		?>
+		<div class="tutor-input-field">
+			<div class="tutor-input-wrapper">
+				<textarea 
+					placeholder="<?php echo esc_attr_e( 'Type your answer here', 'tutor' ); ?>"
+					class="tutor-input tutor-text-area tutor-input-content-clear"
+					id="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]"
+					name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]"
+					x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]')"
+				></textarea>
+			</div>
+		</div>
 	</div>
 </div>

@@ -71,6 +71,7 @@ $question = wp_parse_args( $question, $default_question );
 						class="tutor-hidden"
 						name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]"
 						value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+						x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]')"
 					>
 					<span data-drop-placeholder class="tutor-text-subdued">
 						<?php esc_html_e( 'Drop here', 'tutor' ); ?>
