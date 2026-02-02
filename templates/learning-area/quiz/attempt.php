@@ -39,5 +39,10 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 		<?php endforeach; ?>
 	</div>
 
-	<?php Button::make()->label( __( 'Submit Quiz', 'tutor' ) )->attr( 'style', 'display: block; margin: 0 auto;' )->render(); ?>
+	<?php
+		Button::make()
+			->label( __( 'Submit Quiz', 'tutor' ) )
+			->attr( 'style', 'display: block; margin: 0 auto;' )
+			->render();
+	?>
 </div>
