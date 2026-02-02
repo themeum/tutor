@@ -220,7 +220,7 @@ class ConfirmationModal extends BaseComponent {
 	 */
 	public function message( string $message, array $allowed_html_tags = array() ) {
 		$this->message           = $message;
-		$this->allowed_html_tags = array_replace_recursive( $this->allowed_html_tags, $allowed_html_tags );
+		$this->allowed_html_tags = wp_parse_args( $allowed_html_tags, $this->allowed_html_tags );
 		return $this;
 	}
 
