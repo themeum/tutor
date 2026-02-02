@@ -533,12 +533,11 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													tutor_render_answer_list( $answers );
 												} elseif ( 'draw_image' === $answer->question_type ) {
 
-													// Student's submitted drawing: show background image with their mask overlaid (same as attempt).
-													// Mask can be stored as file URL (wp-content/uploads/tutor/quiz-type/) or legacy base64.
-													$given_mask = ! empty( $answer->given_answer ) ? stripslashes( $answer->given_answer ) : '';
-													$has_mask   = '' !== $given_mask;
+													// Student's submitted drawing: mask is stored as local file URL only 
+													$given_mask         = ! empty( $answer->given_answer ) ? stripslashes( $answer->given_answer ) : '';
+													$given_mask_is_url  = is_string( $given_mask ) && preg_match( '#^https?://#i', $given_mask );
 
-													if ( $has_mask ) {
+													if ( $given_mask_is_url ) {
 														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
 														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
 														$given_bg_url      = '';
@@ -554,9 +553,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														echo '<div style="position: relative; display: inline-block;">';
 														if ( $given_bg_url ) {
 															echo '<img src="' . esc_url( $given_bg_url ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
-															echo '<img src="' . ( 0 === strpos( $given_mask, 'data:' ) ? esc_attr( $given_mask ) : esc_url( $given_mask ) ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
+															echo '<img src="' . esc_url( $given_mask ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
 														} else {
-															echo '<img src="' . ( 0 === strpos( $given_mask, 'data:' ) ? esc_attr( $given_mask ) : esc_url( $given_mask ) ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
+															echo '<img src="' . esc_url( $given_mask ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
 														}
 														echo '</div>';
 														echo '</div>';
@@ -733,15 +732,16 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														echo '</div>';
 													}
 
-													// Draw image: show instructor reference (correct answer zones).
+													// Draw image: show instructor reference (correct answer zones). Mask is local file URL only.
 													elseif ( 'draw_image' === $answer->question_type ) {
 
 														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
 														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
+														$ref_mask           = $instructor_answer && ! empty( $instructor_answer->answer_two_gap_match ) ? $instructor_answer->answer_two_gap_match : '';
+														$ref_mask_is_url    = is_string( $ref_mask ) && preg_match( '#^https?://#i', $ref_mask );
 
-														if ( $instructor_answer && ! empty( $instructor_answer->answer_two_gap_match ) ) {
-															$ref_mask = $instructor_answer->answer_two_gap_match;
-															$ref_bg   = '';
+														if ( $instructor_answer && $ref_mask_is_url ) {
+															$ref_bg = '';
 															if ( ! empty( $instructor_answer->image_id ) ) {
 																$ref_bg = wp_get_attachment_image_url( $instructor_answer->image_id, 'full' );
 															} elseif ( ! empty( $instructor_answer->image_url ) ) {
@@ -752,10 +752,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 															if ( $ref_bg ) {
 																echo '<div style="position: relative; display: inline-block;">';
 																echo '<img src="' . esc_url( $ref_bg ) . '" alt="" style="display: block; max-width: 100%; height: auto;" />';
-																echo '<img src="' . ( 0 === strpos( $ref_mask, 'data:' ) ? esc_attr( $ref_mask ) : esc_url( $ref_mask ) ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
+																echo '<img src="' . esc_url( $ref_mask ) . '" alt="" role="presentation" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;" />';
 																echo '</div>';
 															} else {
-																echo '<img src="' . ( 0 === strpos( $ref_mask, 'data:' ) ? esc_attr( $ref_mask ) : esc_url( $ref_mask ) ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
+																echo '<img src="' . esc_url( $ref_mask ) . '" alt="" style="max-width: 100%; height: auto; border: 1px solid #ddd;" />';
 															}
 															echo '</div>';
 														} else {
