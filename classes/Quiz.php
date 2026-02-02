@@ -1399,6 +1399,7 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_question( $question ) {
+		$index             = 0;
 		$question_settings = maybe_unserialize( $question->question_settings );
 
 		// Normalize question type + settings.

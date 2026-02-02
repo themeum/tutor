@@ -94,7 +94,7 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 					class="tutor-hidden"
 					type="radio"
 					name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]"
-					value="<?php echo esc_attr( $answer->answer_id ); ?>"
+					value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 					<?php if ( $show_correct_answers ) : ?>
 						checked
 					<?php endif; ?>

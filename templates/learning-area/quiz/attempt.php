@@ -34,7 +34,7 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 	<div class="tutor-quiz-questions">
 		<?php
 		foreach ( $questions as $index => $question ) {
-				Quiz::render_question( $question );
+			Quiz::render_question( $question );
 		}
 		?>
 	</div>

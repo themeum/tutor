@@ -108,7 +108,7 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 							type="<?php echo esc_attr( $has_multiple_correct_answer ? 'checkbox' : 'radio' ); ?>"
 							id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
 							name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]<?php echo $has_multiple_correct_answer ? '[]' : ''; ?>"
-							value="<?php echo esc_attr( $answer->answer_id ); ?>"
+							value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 							class="<?php echo esc_attr( $has_multiple_correct_answer ? 'tutor-checkbox' : 'tutor-radio' ); ?>"
 							<?php if ( $show_correct_answers ) : ?>
 								disabled
