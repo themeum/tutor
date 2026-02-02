@@ -8,10 +8,12 @@
  * @since 4.0.0
  */
 
-$question = array(
+defined( 'ABSPATH' ) || exit;
+
+$default_question = array(
 	'index'             => 1,
-	'question_id'       => 1,
-	'question_title'    => __( 'What is the capital of France?', 'tutor' ),
+	'question_id'       => 0,
+	'question_title'    => '',
 	'question_type'     => 'multiple_choice',
 	'answer_required'   => true,
 	'question_mark'     => 10,
@@ -23,25 +25,9 @@ $question = array(
 		'has_multiple_correct_answer' => '1',
 		'show_question_mark'          => '1',
 	),
-	'question_answers'  => array(
-		array(
-			'answer_title' => __( 'Paris', 'tutor' ),
-			'is_correct'   => true,
-		),
-		array(
-			'answer_title' => __( 'London', 'tutor' ),
-			'is_correct'   => false,
-		),
-		array(
-			'answer_title' => __( 'Berlin', 'tutor' ),
-			'is_correct'   => '',
-		),
-		array(
-			'answer_title' => __( 'Rome', 'tutor' ),
-			'is_correct'   => false,
-		),
-	),
 );
+
+$question = wp_parse_args( $question, $default_question );
 
 /** Check if current answer is correct
  *
@@ -80,7 +66,7 @@ $is_correct = function ( $answer ) {
  * @return bool
  */
 $has_image = function ( $answer ) {
-	return array_key_exists( 'image_url', $answer );
+	return array_key_exists( 'image_id', $answer ) && ! empty( $answer['image_id'] );
 }
 
 ?>
@@ -88,12 +74,13 @@ $has_image = function ( $answer ) {
 <div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
 	<?php
 	tutor_load_template(
-		'demo-components.learning-area.components.quiz.question-header',
+		'learning-area.quiz.question-header',
 		array(
-			'index'              => $question['index'],
-			'question_title'     => $question['question_title'],
-			'question_mark'      => $question['question_mark'],
-			'show_question_mark' => $question['question_settings']['show_question_mark'],
+			'index'                => $question['index'],
+			'question_title'       => $question['question_title'],
+			'question_description' => $question['question_description'],
+			'question_mark'        => $question['question_mark'],
+			'show_question_mark'   => $question['question_settings']['show_question_mark'],
 		)
 	);
 	?>
@@ -122,7 +109,7 @@ $has_image = function ( $answer ) {
 					</div>
 				</div>
 				<?php if ( $has_image( $answer ) ) : ?>
-					<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+					<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
 					<div data-title>
 						<?php echo esc_html( $answer['answer_title'] ); ?>
 					</div>

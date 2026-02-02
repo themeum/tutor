@@ -8,10 +8,12 @@
  * @since 4.0.0
  */
 
-$question = array(
+defined( 'ABSPATH' ) || exit;
+
+$default_question = array(
 	'index'             => 1,
-	'question_id'       => 1,
-	'question_title'    => __( 'Fill In The Blanks', 'tutor' ),
+	'question_id'       => 0,
+	'question_title'    => '',
 	'question_type'     => 'fill_in_the_blank',
 	'answer_required'   => true,
 	'question_mark'     => 10,
@@ -23,13 +25,6 @@ $question = array(
 		'show_question_mark' => '1',
 		'is_image_matching'  => '0',
 	),
-	'question_answers'  => array(
-		array(
-			'answer_title'         => 'Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
-			'answer_two_gap_match' => 'dash | dash',
-			'answer_order'         => 1,
-		),
-	),
 );
 
 ?>
@@ -37,12 +32,13 @@ $question = array(
 <div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
 	<?php
 	tutor_load_template(
-		'demo-components.learning-area.components.quiz.question-header',
+		'learning-area.quiz.question-header',
 		array(
-			'index'              => $question['index'],
-			'question_title'     => $question['question_title'],
-			'question_mark'      => $question['question_mark'],
-			'show_question_mark' => $question['question_settings']['show_question_mark'],
+			'index'                => $question['index'],
+			'question_title'       => $question['question_title'],
+			'question_description' => $question['question_description'],
+			'question_mark'        => $question['question_mark'],
+			'show_question_mark'   => $question['question_settings']['show_question_mark'],
 		)
 	);
 	?>

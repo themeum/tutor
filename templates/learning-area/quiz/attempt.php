@@ -13,6 +13,8 @@
  */
 
 use Tutor\Components\Button;
+use Tutor\Models\QuizModel;
+use Tutor\Quiz;
 
 global $tutor_is_started_quiz;
 
@@ -30,14 +32,9 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 <div class="tutor-quiz tutor-quiz-submission">
 	<?php tutor_load_template( 'learning-area.quiz.progress-bar' ); ?>
 	<div class="tutor-quiz-questions">
-		<?php foreach ( $questions as $question ) : ?>
+		<?php foreach ( $questions as $index => $question ) : ?>
 			<?php
-			$template      = str_replace( '_', '-', $question->question_type ) . '.php';
-			$template_path = __DIR__ . '/questions/' . $template;
-
-			if ( file_exists( $template_path ) ) {
-				require $template_path;
-			}
+				Quiz::render_question( $question );
 			?>
 		<?php endforeach; ?>
 	</div>

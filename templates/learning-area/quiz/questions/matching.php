@@ -8,12 +8,14 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 
-$question = array(
+$default_question = array(
 	'index'             => 1,
-	'question_id'       => 1,
-	'question_title'    => __( 'Matching', 'tutor' ),
+	'question_id'       => 0,
+	'question_title'    => '',
 	'question_type'     => 'matching',
 	'answer_required'   => true,
 	'question_mark'     => 10,
@@ -25,37 +27,22 @@ $question = array(
 		'show_question_mark' => '1',
 		'is_image_matching'  => '0',
 	),
-	'question_answers'  => array(
-		array(
-			'answer_id'            => 1,
-			'answer_title'         => __( 'Option 1', 'tutor' ),
-			'is_correct'           => true,
-			'answer_two_gap_match' => 'Matched Option 1',
-			'image_url'            => 'https://placehold.co/600x400',
-			'answer_order'         => 1,
-		),
-		array(
-			'answer_id'            => 2,
-			'answer_title'         => __( 'Option 2', 'tutor' ),
-			'is_correct'           => false,
-			'answer_two_gap_match' => 'Matched Option 2',
-			'image_url'            => 'https://placehold.co/600x400',
-			'answer_order'         => 2,
-		),
-	),
 );
+
+$question = wp_parse_args( $question, $default_question );
 
 ?>
 
 <div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>" x-data="tutorQuestionMatching('question-<?php echo esc_attr( $question['question_id'] ); ?>')">
 	<?php
 	tutor_load_template(
-		'demo-components.learning-area.components.quiz.question-header',
+		'learning-area.quiz.question-header',
 		array(
-			'index'              => $question['index'],
-			'question_title'     => $question['question_title'],
-			'question_mark'      => $question['question_mark'],
-			'show_question_mark' => $question['question_settings']['show_question_mark'],
+			'index'                => $question['index'],
+			'question_title'       => $question['question_title'],
+			'question_description' => $question['question_description'],
+			'question_mark'        => $question['question_mark'],
+			'show_question_mark'   => $question['question_settings']['show_question_mark'],
 		)
 	);
 	?>
@@ -63,8 +50,8 @@ $question = array(
 	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
-				<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_url'] ) ) : ?>
-					<img src="<?php echo esc_url( $answer['image_url'] ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
+				<?php if ( $question['question_settings']['is_image_matching'] && ! empty( $answer['image_id'] ) ) : ?>
+					<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
 				<?php else : ?>
 					<div data-title>
 						<div class="tutor-quiz-question-option-number">

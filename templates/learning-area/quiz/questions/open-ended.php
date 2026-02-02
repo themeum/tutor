@@ -8,12 +8,14 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 
-$question = array(
+$default_question = array(
 	'index'             => 1,
 	'question_id'       => 1,
-	'question_title'    => __( 'Openended Short Answer', 'tutor' ),
+	'question_title'    => '',
 	'question_type'     => 'open_ended',
 	'answer_required'   => true,
 	'question_mark'     => 10,
@@ -27,17 +29,20 @@ $question = array(
 	),
 );
 
+$question = wp_parse_args( $question, $default_question );
+
 ?>
 
 <div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
 	<?php
 	tutor_load_template(
-		'demo-components.learning-area.components.quiz.question-header',
+		'learning-area.quiz.question-header',
 		array(
-			'index'              => $question['index'],
-			'question_title'     => $question['question_title'],
-			'question_mark'      => $question['question_mark'],
-			'show_question_mark' => $question['question_settings']['show_question_mark'],
+			'index'                => $question['index'],
+			'question_title'       => $question['question_title'],
+			'question_description' => $question['question_description'],
+			'question_mark'        => $question['question_mark'],
+			'show_question_mark'   => $question['question_settings']['show_question_mark'],
 		)
 	);
 	?>

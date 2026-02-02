@@ -1388,4 +1388,59 @@ class Quiz {
 	public static function render_quiz_attempts( $quiz_id ) {
 		// @TODO.
 	}
+
+	/**
+	 * Render individual question template
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $question Question data.
+	 *
+	 * @return void
+	 */
+	public static function render_question( $question ) {
+		$question_settings = maybe_unserialize( $question->question_settings );
+
+		// Normalize question type + settings.
+		switch ( $question->question_type ) {
+			case 'short_answer':
+				$question->question_type = 'open_ended';
+				break;
+
+			case 'single_choice':
+				$question->question_type                          = 'multiple_choice';
+				$question_settings['has_multiple_correct_answer'] = '0';
+				break;
+
+			case 'image_matching':
+				$question->question_type                = 'matching';
+				$question_settings['is_image_matching'] = '1';
+				break;
+		}
+
+		$template = str_replace( '_', '-', $question->question_type );
+
+		$rand_choice = ! empty( $question_settings['randomize_question'] )
+		&& '1' === $question_settings['randomize_question'];
+
+		$question->index             = $index + 1;
+		$question->question_settings = $question_settings;
+
+		$answers = QuizModel::get_answers_by_quiz_question(
+			$question->question_id,
+			$rand_choice
+		);
+
+		$question->question_answers = array_map(
+			static fn( $answer ) => (array) $answer,
+			$answers
+		);
+
+		tutor_load_template(
+			'learning-area.quiz.questions.' . $template,
+			array(
+				'question' => (array) $question,
+			)
+		);
+	}
 }

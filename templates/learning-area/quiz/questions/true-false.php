@@ -8,13 +8,15 @@
  * @since 4.0.0
  */
 
+defined( 'ABSPATH' ) || exit;
+
 use TUTOR\Icon;
 
-$question = array(
+$default_question = array(
 	'index'                => 1,
-	'question_id'          => 1,
-	'question_title'       => __( 'Is the Earth round?', 'tutor' ),
-	'question_description' => __( 'This is a description of the question.', 'tutor' ),
+	'question_id'          => 0,
+	'question_title'       => '',
+	'question_description' => '',
 	'question_type'        => 'true_false',
 	'answer_required'      => true,
 	'question_mark'        => 10,
@@ -22,20 +24,12 @@ $question = array(
 		'answer_required'    => '0',
 		'question_mark'      => '1',
 		'question_type'      => 'true_false',
-		'randomize_question' => '0',
+		'randomize_question' => '1',
 		'show_question_mark' => '1',
 	),
-	'question_answers'     => array(
-		array(
-			'answer_title' => __( 'True', 'tutor' ),
-			'is_correct'   => true,
-		),
-		array(
-			'answer_title' => __( 'False', 'tutor' ),
-			'is_correct'   => false,
-		),
-	),
 );
+
+$question = wp_parse_args( $question, $default_question );
 
 /*
 Check if current answer is correct
@@ -72,7 +66,7 @@ $is_correct = function ( $answer ) {
 <div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
 	<?php
 	tutor_load_template(
-		'demo-components.learning-area.components.quiz.question-header',
+		'learning-area.quiz.question-header',
 		array(
 			'index'                => $question['index'],
 			'question_title'       => $question['question_title'],
