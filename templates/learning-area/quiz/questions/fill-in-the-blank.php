@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+global $tutor_is_started_quiz;
+
 $default_question = array(
 	'index'             => 1,
 	'question_id'       => 0,
@@ -48,8 +50,21 @@ $default_question = array(
 			<div class="tutor-quiz-question-option">
 				<?php
 				$answer_title = $answer['answer_title'];
-				$answer_title = str_replace( '{dash}', '<input type="text" class="tutor-quiz-question-input" placeholder="Type your answer here" />', $answer_title );
-				echo $answer_title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$dash_fields  = substr_count( $answer_title, '{dash}' );
+				if ( $dash_fields ) {
+					$answer_title = str_replace( '{dash}', '<input type="text" class="tutor-quiz-question-input" placeholder="Type your answer here" name="attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . '][quiz_question][' . esc_attr( $question['question_id'] ) . '][]" />', $answer_title );
+				}
+				echo wp_kses(
+					$answer_title,
+					array(
+						'input' => array(
+							'type'        => true,
+							'class'       => true,
+							'name'        => true,
+							'placeholder' => true,
+						),
+					)
+				);
 				?>
 			</div>
 		<?php endforeach; ?>

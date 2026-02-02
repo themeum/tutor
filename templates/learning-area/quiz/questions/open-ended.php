@@ -11,6 +11,10 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\InputField;
+use Tutor\Components\Constants\InputType;
+
+global $tutor_is_started_quiz;
 
 $default_question = array(
 	'index'             => 1,
@@ -25,7 +29,6 @@ $default_question = array(
 		'question_type'      => 'open_ended',
 		'randomize_question' => '0',
 		'show_question_mark' => '1',
-		'is_image_matching'  => '0',
 	),
 );
 
@@ -47,17 +50,13 @@ $question = wp_parse_args( $question, $default_question );
 	);
 	?>
 
-	<div class="tutor-quiz-question-options" data-image-matching="<?php echo esc_attr( $question['question_settings']['is_image_matching'] ); ?>">
-		<div class="tutor-input-field">
-			<div class="tutor-input-wrapper">
-				<textarea 
-					type="text"
-					id="name"
-					placeholder="Type your answer here"
-					class="tutor-input tutor-text-area tutor-input-content-clear"
-				></textarea>
-			</div>
-			<div class="tutor-help-text">This is a helper text.</div>
-		</div>
+	<div class="tutor-quiz-question-options">
+		<?php
+			InputField::make()
+				->type( InputType::TEXTAREA )
+				->name( 'attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . '][quiz_question][' . esc_attr( $question['question_id'] ) . ']' )
+				->placeholder( __( 'Type your answer here', 'tutor' ) )
+				->render();
+		?>
 	</div>
 </div>

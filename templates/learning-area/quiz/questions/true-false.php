@@ -35,7 +35,7 @@ $default_question = array(
 $question = wp_parse_args( $question, $default_question );
 
 /*
-Check if current answer is correct
+ * Check if current answer is correct
  *
  * @param array $answer Answer data.
  *
@@ -93,7 +93,7 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 				<input
 					class="tutor-hidden"
 					type="radio"
-					name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question->question_id ); ?>]"
+					name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]"
 					value="<?php echo esc_attr( $answer->answer_id ); ?>"
 					<?php if ( $show_correct_answers ) : ?>
 						checked

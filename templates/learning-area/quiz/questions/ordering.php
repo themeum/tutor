@@ -12,6 +12,8 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 
+global $tutor_is_started_quiz;
+
 $default_question = array(
 	'index'             => 1,
 	'question_id'       => 1,
@@ -32,7 +34,12 @@ $question = wp_parse_args( $question, $default_question );
 
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>" data-question-id="question-<?php echo esc_attr( $question['question_id'] ); ?>" x-data="tutorQuestionOrdering('question-<?php echo esc_attr( $question['question_id'] ); ?>')">
+<div 
+	class="tutor-quiz-question"
+	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
+	data-question-id="question-<?php echo esc_attr( $question['question_id'] ); ?>"
+	x-data="tutorQuestionOrdering('question-<?php echo esc_attr( $question['question_id'] ); ?>')"
+>
 	<?php
 	tutor_load_template(
 		'learning-area.quiz.question-header',
@@ -48,7 +55,11 @@ $question = wp_parse_args( $question, $default_question );
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div class="tutor-quiz-question-option" data-option="draggable" data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>">
+			<div
+				class="tutor-quiz-question-option"
+				data-option="draggable"
+				data-id="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+			>
 				<div data-option-order="<?php echo esc_attr( $answer['answer_order'] ); ?>">
 					<?php echo esc_html( $answer['answer_order'] ); ?>
 				</div>
@@ -58,6 +69,12 @@ $question = wp_parse_args( $question, $default_question );
 					<?php endif; ?>
 					<?php echo esc_html( $answer['answer_title'] ); ?>
 				</div>
+
+				<input
+					type="hidden"
+					name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]"
+					value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+				>
 
 				<button type="button" data-grab-handle>
 					<?php tutor_utils()->render_svg_icon( Icon::GRAB_HANDLE, 40, 40 ); ?>

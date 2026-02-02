@@ -12,6 +12,8 @@ defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
 
+global $tutor_is_started_quiz;
+
 $default_question = array(
 	'index'             => 1,
 	'question_id'       => 0,
@@ -33,7 +35,11 @@ $question = wp_parse_args( $question, $default_question );
 
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>" x-data="tutorQuestionMatching('question-<?php echo esc_attr( $question['question_id'] ); ?>')">
+<div 
+	class="tutor-quiz-question" 
+	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
+	x-data="tutorQuestionMatching('question-<?php echo esc_attr( $question['question_id'] ); ?>')"
+>
 	<?php
 	tutor_load_template(
 		'learning-area.quiz.question-header',
@@ -60,8 +66,15 @@ $question = wp_parse_args( $question, $default_question );
 						<?php echo esc_html( $answer['answer_title'] ); ?>
 					</div>
 				<?php endif; ?>
-				<div placeholder="Drop here" class="tutor-quiz-question-option-drop-zone">
-					<span data-drop-placeholder class="tutor-text-subdued">Drop here</span>
+				<div class="tutor-quiz-question-option-drop-zone">
+					<input
+						class="tutor-hidden"
+						name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]"
+						value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
+					>
+					<span data-drop-placeholder class="tutor-text-subdued">
+						<?php esc_html_e( 'Drop here', 'tutor' ); ?>
+					</span>
 					<button type="button" class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small">
 						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
 					</button>

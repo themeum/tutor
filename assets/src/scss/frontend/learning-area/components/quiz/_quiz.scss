@@ -120,7 +120,9 @@
       transition-timing-function: ease;
       overflow: hidden;
 
-      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not([data-option='draggable']) {
+      &:hover:not(:has(:checked)):not([data-option='correct']):not([data-option='incorrect']):not(
+          [data-option='draggable']
+        ) {
         border-color: $tutor-border-hover;
         background-color: $tutor-surface-l1-hover;
       }
@@ -347,7 +349,9 @@
       }
 
       &-option {
+        @include tutor-flex(column);
         padding: $tutor-spacing-4;
+        gap: $tutor-spacing-3;
         background-color: $tutor-surface-base;
         cursor: default;
 
@@ -443,7 +447,6 @@
         &-option {
           @include tutor-flex(row, center, space-between);
           padding: 0;
-          gap: $tutor-spacing-3;
           border: none;
           background-color: transparent !important;
 

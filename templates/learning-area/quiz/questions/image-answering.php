@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+global $tutor_is_started_quiz;
+
 $default_question = array(
 	'index'                => 1,
 	'question_id'          => 0,
@@ -54,9 +56,10 @@ $question = wp_parse_args( $question, $default_question );
 				<div class="tutor-input-field">
 					<input 
 						type="text"
-						id="<?php echo esc_attr( $question['question_id'] ); ?>"
-						placeholder="Enter answer"
 						class="tutor-input"
+						id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $answer['answer_id'] ); ?>"
+						name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answer_id][<?php echo esc_attr( $answer['answer_id'] ); ?>]"
+						placeholder="<?php esc_attr_e( 'Write your answer here', 'tutor' ); ?>"
 					>
 				</div>
 			</div>
