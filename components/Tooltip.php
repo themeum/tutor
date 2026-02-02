@@ -116,6 +116,15 @@ class Tooltip extends BaseComponent {
 	);
 
 	/**
+	 * Allowed HTML tags and Alpine.js attributes for wp_kses sanitization.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	protected $allow_alpine_attributes = array();
+
+	/**
 	 * Set the tooltip content.
 	 *
 	 * @param string $content HTML or text content.
@@ -241,6 +250,44 @@ class Tooltip extends BaseComponent {
 	}
 
 	/**
+	 * Adds Alpine.js attributes to the wp_kses allow-list.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param array $attributes attribute map.
+	 *
+	 * @return $this
+	 */
+	public function allow_alpine_attributes( array $attributes ) {
+
+		$this->allow_alpine_attributes = wp_kses_allowed_html( 'post' );
+
+		foreach ( $attributes as $key => $attr ) {
+			if ( ! isset( $this->allow_alpine_attributes[ $key ][ $attr ] ) ) {
+				$this->allow_alpine_attributes[ $key ][ $attr ] = true;
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Returns the allowed HTML configuration for wp_kses().
+	 *
+	 * @since 4.0.0
+	 *
+	 * @return array
+	 */
+	private function allowed_attributes() {
+
+		if ( empty( $this->allow_alpine_attributes ) ) {
+			return wp_kses_allowed_html( 'post' );
+		}
+
+		return $this->allow_alpine_attributes;
+	}
+
+	/**
 	 * Get the final tooltip HTML.
 	 *
 	 * @return string HTML output.
@@ -278,7 +325,7 @@ class Tooltip extends BaseComponent {
 			esc_attr( $this->attributes['class'] ?? '' ),
 			$this->get_attributes_string(),
 			$trigger_html,
-			wp_kses_post( $this->content )
+			wp_kses( $this->content, $this->allowed_attributes() )
 		);
 
 		return $this->component_string;

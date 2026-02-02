@@ -1438,7 +1438,7 @@ class CourseModel {
 
 			$topic = array(
 				'topic_id'        => $topic_id,
-				'topic_summary'   => apply_filters( 'the_content', $topic_post->post_content ),
+				'topic_summary'   => $topic_post->post_content,
 				'topic_title'     => get_the_title( $topic_id ),
 				'items'           => array(),
 				'topic_completed' => true,
