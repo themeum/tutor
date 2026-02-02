@@ -78,7 +78,17 @@ class ConfirmationModal extends BaseComponent {
 	 *
 	 * @var array
 	 */
-	protected $allowed_html_tags = array();
+	protected $allowed_html_tags = array(
+		'span'   => array(
+			'class'  => true,
+			'x-text' => true,
+		),
+		'b'      => array(),
+		'strong' => array(),
+		'i'      => array(),
+		'em'     => array(),
+		'br'     => array(),
+	);
 
 	/**
 	 * Icon name from Icon class.
@@ -210,7 +220,7 @@ class ConfirmationModal extends BaseComponent {
 	 */
 	public function message( string $message, array $allowed_html_tags = array() ) {
 		$this->message           = $message;
-		$this->allowed_html_tags = $allowed_html_tags;
+		$this->allowed_html_tags = array_replace_recursive( $this->allowed_html_tags, $allowed_html_tags );
 		return $this;
 	}
 
