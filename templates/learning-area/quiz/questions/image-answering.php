@@ -58,8 +58,8 @@ $question = wp_parse_args( $question, $default_question );
 						type="text"
 						class="tutor-input"
 						id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $answer['answer_id'] ); ?>"
-						name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answer_id][<?php echo esc_attr( $answer['answer_id'] ); ?>]"
-						x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answer_id][<?php echo esc_attr( $answer['answer_id'] ); ?>]')"
+						name="attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>_answer_id_<?php echo esc_attr( $answer['answer_id'] ); ?>"
+						x-bind="register('attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>_answer_id_<?php echo esc_attr( $answer['answer_id'] ); ?>')"
 						placeholder="<?php esc_attr_e( 'Write your answer here', 'tutor' ); ?>"
 					>
 				</div>

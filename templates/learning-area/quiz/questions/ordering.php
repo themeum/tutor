@@ -72,8 +72,8 @@ $question = wp_parse_args( $question, $default_question );
 
 				<input
 					type="hidden"
-					name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]"
-					x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]')"
+					name="attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>_answers__"
+					x-bind="register('attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>_answers__')"
 					value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				>
 

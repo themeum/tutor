@@ -108,9 +108,9 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 							type="<?php echo esc_attr( $has_multiple_correct_answer ? 'checkbox' : 'radio' ); ?>"
 							class="<?php echo esc_attr( $has_multiple_correct_answer ? 'tutor-checkbox' : 'tutor-radio' ); ?>"
 							id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
-							name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]<?php echo $has_multiple_correct_answer ? '[]' : ''; ?>"
+							name="attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>"
 							value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-							x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]<?php echo $has_multiple_correct_answer ? '[]' : ''; ?>')"
+							x-bind="register('attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>')"
 							<?php if ( $show_correct_answers ) : ?>
 								disabled
 							<?php endif; ?>

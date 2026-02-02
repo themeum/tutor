@@ -69,9 +69,9 @@ $question = wp_parse_args( $question, $default_question );
 				<div class="tutor-quiz-question-option-drop-zone">
 					<input
 						class="tutor-hidden"
-						name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]"
+						name="attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>_answers__"
 						value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-						x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]')"
+						x-bind="register('attempt_<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>_quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>_answers__')"
 					>
 					<span data-drop-placeholder class="tutor-text-subdued">
 						<?php esc_html_e( 'Drop here', 'tutor' ); ?>
