@@ -737,19 +737,9 @@ class Quiz {
 						// }
 						//phpcs:enable
 					} elseif ( 'draw_image' === $question_type ) {
-						// Student-submitted mask for draw-on-image question type.
-						// $answers structure originates from the quiz attempt POST:
-						// attempt[attempt_id][quiz_question][question_id][answers][mask].
 						$given_answer = '';
-
-						if ( is_array( $answers ) ) {
-							// Backward-compat / direct structure: ['mask' => 'data:image/png;base64,...'].
-							if ( isset( $answers['mask'] ) ) {
-								$given_answer = sanitize_textarea_field( wp_unslash( $answers['mask'] ) );
-							} elseif ( isset( $answers['answers']['mask'] ) ) {
-								// Nested structure from the current template: ['answers' => ['mask' => ...]].
-								$given_answer = sanitize_textarea_field( wp_unslash( $answers['answers']['mask'] ) );
-							}
+						if ( is_array( $answers ) && isset( $answers['answers']['mask'] ) ) {
+							$given_answer = sanitize_textarea_field( wp_unslash( $answers['answers']['mask'] ) );
 						}
 						// Save base64 mask to uploads and store file URL in DB.
 						if ( '' !== $given_answer ) {
