@@ -104,7 +104,7 @@ const questionTypeOptions: {
     isPro: true,
   },
   {
-    label: __('Draw on Image (R&D)', 'tutor'),
+    label: __('Draw on Image', 'tutor'),
     value: 'draw_image',
     icon: 'quizImageAnswer',
     isPro: true,
