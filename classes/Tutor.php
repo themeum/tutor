@@ -4,7 +4,7 @@
  *
  * @package Tutor
  * @author Themeum <support@themeum.com>
- * @link https://themeum.com
+ * @link https://www.themeum.com/
  * @since 1.0.0
  */
 
@@ -237,7 +237,7 @@ final class Tutor extends Singleton {
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var object
+	 * @var UserPreference
 	 */
 	private $user_preference;
 

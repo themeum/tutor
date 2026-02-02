@@ -5,9 +5,9 @@
  * Handles storing and retrieving per–user preferences (e.g. theme, playback, font scale)
  * in a reusable and extensible way using WordPress user meta.
  *
- * @package Tutor\User
+ * @package Tutor\UserPreference
  * @author Themeum <support@themeum.com>
- * @link https://themeum.com
+ * @link https://www.themeum.com/
  * @since 4.0.0
  */
 
@@ -37,13 +37,31 @@ class UserPreference {
 	const META_KEY = 'tutor_user_preferences';
 
 	/**
-	 * Available theme options.
+	 * Theme option: light.
 	 *
 	 * @since 4.0.0
 	 *
-	 * @var array<string>
+	 * @var string
 	 */
-	const THEMES = array( 'light', 'dark', 'system' );
+	const THEME_LIGHT = 'light';
+
+	/**
+	 * Theme option: dark.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const THEME_DARK = 'dark';
+
+	/**
+	 * Theme option: system.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var string
+	 */
+	const THEME_SYSTEM = 'system';
 
 	/**
 	 * Default theme value.
@@ -52,7 +70,16 @@ class UserPreference {
 	 *
 	 * @var string
 	 */
-	const DEFAULT_THEME = 'light';
+	const DEFAULT_THEME = self::THEME_LIGHT;
+
+	/**
+	 * Available theme options.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array<string>
+	 */
+	const THEMES = array( self::THEME_LIGHT, self::THEME_DARK, self::THEME_SYSTEM );
 
 	/**
 	 * Default font scale value.
@@ -84,7 +111,7 @@ class UserPreference {
 			return;
 		}
 
-		add_action( 'wp_ajax_tutor_save_user_preferences', array( $this, 'tutor_save_user_preferences' ) );
+		add_action( 'wp_ajax_tutor_save_user_preferences', array( $this, 'ajax_save_user_preferences' ) );
 		add_filter( 'body_class', array( $this, 'add_theme_attribute' ) );
 		add_action( 'wp_head', array( $this, 'apply_font_scale' ) );
 	}
@@ -97,6 +124,9 @@ class UserPreference {
 	 * @return void
 	 */
 	public function apply_font_scale() {
+		if ( ! tutor_utils()->is_dashboard_page() ) {
+			return;
+		}
 		$prefs          = $this->get_preferences();
 		$font_scale     = isset( $prefs['font_scale'] ) ? (int) $prefs['font_scale'] : self::DEFAULT_FONT_SCALE;
 		$base_font_size = 16;
@@ -116,6 +146,9 @@ class UserPreference {
 	 * @return array
 	 */
 	public function add_theme_attribute( $classes ) {
+		if ( ! tutor_utils()->is_dashboard_page() ) {
+			return $classes;
+		}
 		$prefs = $this->get_preferences();
 		$theme = isset( $prefs['theme'] ) ? (string) $prefs['theme'] : self::DEFAULT_THEME;
 		if ( ! in_array( $theme, self::THEMES, true ) ) {
@@ -193,7 +226,7 @@ class UserPreference {
 
 		update_user_meta( $user_id, self::META_KEY, $preferences );
 
-		do_action( 'tutor_user_preference_data', $user_id, $preferences );
+		do_action( 'tutor_user_preference_after_saved', $user_id, $preferences );
 
 		return $preferences;
 	}
@@ -205,7 +238,7 @@ class UserPreference {
 	 *
 	 * @return void
 	 */
-	public function tutor_save_user_preferences() {
+	public function ajax_save_user_preferences() {
 		tutor_utils()->check_nonce();
 
 		if ( ! is_user_logged_in() ) {
@@ -217,7 +250,7 @@ class UserPreference {
 		}
 
 		$auto_play_next = Input::post( 'auto_play_next', false, INPUT::TYPE_BOOL );
-		$theme          = Input::post( 'theme', self::DEFAULT_THEME, INPUT::TYPE_STRING );
+		$theme          = Input::post( 'theme', self::DEFAULT_THEME );
 		$font_scale     = Input::post( 'font_scale', self::DEFAULT_FONT_SCALE, INPUT::TYPE_INT );
 
 		$preferences_settings = array(
@@ -253,15 +286,15 @@ class UserPreference {
 		return array(
 			array(
 				'label' => __( 'Light', 'tutor' ),
-				'value' => 'light',
+				'value' => self::THEME_LIGHT,
 			),
 			array(
 				'label' => __( 'Dark', 'tutor' ),
-				'value' => 'dark',
+				'value' => self::THEME_DARK,
 			),
 			array(
 				'label' => __( 'System Default', 'tutor' ),
-				'value' => 'system',
+				'value' => self::THEME_SYSTEM,
 			),
 		);
 	}
