@@ -95,7 +95,7 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
-			<div
+			<label
 				class="tutor-quiz-question-option"
 				<?php if ( $show_correct_answers ) : ?>
 					data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>"
@@ -127,7 +127,7 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 						<?php echo esc_html( $answer['answer_title'] ); ?>
 					</div>
 				<?php endif; ?>
-			</div>
+			</label>
 		<?php endforeach; ?>
 	</div>
 </div>
