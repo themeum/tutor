@@ -1399,7 +1399,6 @@ class Quiz {
 	 * @return void
 	 */
 	public static function render_question( $question ) {
-		global $tutor_is_started_quiz;
 		$question_settings = maybe_unserialize( $question->question_settings );
 
 		// Normalize question type + settings.
@@ -1440,8 +1439,7 @@ class Quiz {
 		tutor_load_template(
 			'learning-area.quiz.questions.' . $template,
 			array(
-				'question'       => (array) $question,
-				'attempt_status' => $tutor_is_started_quiz->attempt_status,
+				'question' => (array) $question,
 			)
 		);
 	}

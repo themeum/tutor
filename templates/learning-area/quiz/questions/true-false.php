@@ -13,6 +13,8 @@ defined( 'ABSPATH' ) || exit;
 use TUTOR\Icon;
 use Tutor\Quiz;
 
+global $tutor_is_started_quiz;
+
 $default_question = array(
 	'index'                => 1,
 	'question_id'          => 0,
@@ -62,7 +64,7 @@ $is_correct = function ( $answer ) {
 	return $map[ $value ] ?? '';
 };
 
-$show_correct_answers = Quiz::show_correct_answers( $attempt_status );
+$show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->attempt_status );
 
 ?>
 
@@ -82,15 +84,24 @@ $show_correct_answers = Quiz::show_correct_answers( $attempt_status );
 
 	<div class="tutor-quiz-question-options">
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
-			<div 
+			<label 
 				class="tutor-quiz-question-option" 
 				<?php if ( $show_correct_answers ) : ?>
 					data-option="<?php echo esc_attr( $is_correct( $answer ) ); ?>"
 				<?php endif; ?>
 			>
+				<input
+					class="tutor-hidden"
+					type="radio"
+					name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question->question_id ); ?>]"
+					value="<?php echo esc_attr( $answer->answer_id ); ?>"
+					<?php if ( $show_correct_answers ) : ?>
+						checked
+					<?php endif; ?>
+				>
 				<?php tutor_utils()->render_svg_icon( $answer['is_correct'] ? Icon::CHECK_2 : Icon::CROSS, 20, 20 ); ?>
 				<?php echo esc_html( $answer['answer_title'] ); ?>
-			</div>
+			</label>
 		<?php endforeach; ?>
 	</div>
 </div>

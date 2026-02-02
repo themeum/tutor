@@ -12,6 +12,8 @@ defined( 'ABSPATH' ) || exit;
 
 use Tutor\Quiz;
 
+global $tutor_is_started_quiz;
+
 $default_question = array(
 	'index'             => 1,
 	'question_id'       => 0,
@@ -71,8 +73,9 @@ $has_image = function ( $answer ) {
 	return array_key_exists( 'image_id', $answer ) && ! empty( $answer['image_id'] );
 };
 
-$show_correct_answers = Quiz::show_correct_answers( $attempt_status );
+$has_multiple_correct_answer = isset( $question['question_settings']['has_multiple_correct_answer'] ) && '1' === $question['question_settings']['has_multiple_correct_answer'];
 
+$show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->attempt_status );
 
 ?>
 
@@ -91,7 +94,7 @@ $show_correct_answers = Quiz::show_correct_answers( $attempt_status );
 	?>
 
 	<div class="tutor-quiz-question-options">
-		<?php foreach ( $question['question_answers'] as $answer ) : ?>
+		<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
 			<div
 				class="tutor-quiz-question-option"
 				<?php if ( $show_correct_answers ) : ?>
@@ -102,16 +105,17 @@ $show_correct_answers = Quiz::show_correct_answers( $attempt_status );
 					<div class="tutor-input-wrapper">
 						<!-- @TODO: Disable checkbox when viewing quiz attempt -->
 						<input 
-							type="<?php echo esc_attr( '1' === $question['question_settings']['has_multiple_correct_answer'] ? 'checkbox' : 'radio' ); ?>"
-							id="<?php echo esc_attr( $question['question_id'] ); ?>"
-							placeholder="Enter your full name"
-							class="tutor-checkbox"
+							type="<?php echo esc_attr( $has_multiple_correct_answer ? 'checkbox' : 'radio' ); ?>"
+							id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
+							name="attempt[<?php echo esc_attr( $is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question->question_id ); ?>]<?php echo $has_multiple_correct_answer ? '[]' : ''; ?>"
+							value="<?php echo esc_attr( $answer->answer_id ); ?>"
+							class="<?php echo esc_attr( $has_multiple_correct_answer ? 'tutor-checkbox' : 'tutor-radio' ); ?>"
 							<?php if ( $show_correct_answers ) : ?>
 								disabled
 							<?php endif; ?>
 						>
 						<label 
-							for="<?php echo esc_attr( $question['question_id'] ); ?>" class="tutor-label"
+							for="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
 						>
 							<?php echo esc_html( $answer['answer_title'] ); ?>
 						</label>
