@@ -181,7 +181,8 @@ const endpoints = {
   SAVE_BILLING_INFO: 'tutor_save_billing_info',
   SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
   RESET_PASSWORD: 'tutor_profile_password_reset',
-  UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference'
+  UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
+  UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
 } as const;
 
 export default endpoints;
