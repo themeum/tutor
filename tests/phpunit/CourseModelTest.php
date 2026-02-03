@@ -8,7 +8,7 @@ use Tutor\Models\CourseModel;
  *
  * @since 2.1.0
  */
-class InputClassTest extends \WP_UnitTestCase {
+class CourseModelTest extends \WP_UnitTestCase {
 
 	/**
 	 * Test cases added with different scenarios
