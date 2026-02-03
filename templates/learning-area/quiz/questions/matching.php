@@ -11,6 +11,9 @@
 defined( 'ABSPATH' ) || exit;
 
 use TUTOR\Icon;
+use Tutor\Components\Button;
+use Tutor\Components\Constants\Size;
+use Tutor\Components\Constants\Variant;
 
 global $tutor_is_started_quiz;
 
@@ -87,13 +90,20 @@ $answer_field_name = sprintf(
 					<span data-drop-placeholder class="tutor-text-subdued">
 						<?php esc_html_e( 'Drop here', 'tutor' ); ?>
 					</span>
-					<button
-						type="button"
-						class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small"
-						@click.prevent="clearDropZone"
-					>
-						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
-					</button>
+					<?php
+						Button::make()
+							->variant( Variant::GHOST )
+							->size( Size::X_SMALL )
+							->icon( Icon::CROSS )
+							->icon_only()
+							->attrs(
+								array(
+									'class'          => 'tutor-hidden',
+									'@click.prevent' => 'clearDropZone',
+								)
+							)
+							->render();
+					?>
 				</div>
 			</div>
 		<?php endforeach; ?>
