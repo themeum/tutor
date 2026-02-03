@@ -1334,10 +1334,6 @@ class QuizModel {
 			return $value;
 		}
 
-		$subdir    = 'tutor/quiz-type';
-		$base_path = trailingslashit( $upload_dir['basedir'] ) . $subdir;
-		$base_url  = trailingslashit( $upload_dir['baseurl'] ) . $subdir;
-
 		// Already a URL (e.g. previously saved file or legacy) – only allow local uploads URLs.
 		if ( preg_match( '#^https?://#i', $value ) ) {
 			$uploads_base = trailingslashit( $upload_dir['baseurl'] );
@@ -1351,44 +1347,28 @@ class QuizModel {
 			return '';
 		}
 
-		// Expect a data:image/*;base64,... URI from the canvas.
+		// Expect a data:image/*;base64,... URI from the canvas. Save to tutor/quiz-image (not wp media).
 		if ( ! preg_match( '#^data:image/(\w+);base64,(.+)$#is', $value, $m ) ) {
 			return $value;
 		}
 
-		// Decode image data. Frontend uses PNG; we always persist as .png on disk.
-		$decoded = base64_decode( $m[2], true );
-		if ( false === $decoded || '' === $decoded ) {
+		$subdir_path       = 'tutor/quiz-image';
+		$filter_upload_dir = function ( $uploads ) use ( $subdir_path ) {
+			$uploads['path']   = trailingslashit( $uploads['basedir'] ) . $subdir_path;
+			$uploads['url']    = trailingslashit( $uploads['baseurl'] ) . $subdir_path;
+			$uploads['subdir'] = '/' . $subdir_path;
+			return $uploads;
+		};
+
+		add_filter( 'upload_dir', $filter_upload_dir, 10, 1 );
+		try {
+			$basename = 'draw-mask-' . gmdate( 'Y-m-d-His' ) . '-' . wp_rand( 1000, 9999 ) . '.png';
+			$result   = tutor_utils()->upload_base64_image( $value, $basename, false );
+			return $result->url;
+		} catch ( \Exception $e ) {
 			return $value;
+		} finally {
+			remove_filter( 'upload_dir', $filter_upload_dir, 10 );
 		}
-
-		if ( ! wp_mkdir_p( $base_path ) ) {
-			return $value;
-		}
-
-		if ( ! function_exists( 'WP_Filesystem' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/file.php';
-		}
-		WP_Filesystem();
-		global $wp_filesystem;
-		if ( ! is_object( $wp_filesystem ) ) {
-			return $value;
-		}
-
-		// Prevent directory listing.
-		$index_file = $base_path . '/index.php';
-		if ( ! $wp_filesystem->exists( $index_file ) ) {
-			$wp_filesystem->put_contents( $index_file, '<?php // Silence is golden.' );
-		}
-
-		// Force PNG extension on disk, regardless of reported subtype.
-		$basename = 'draw-mask-' . gmdate( 'Y-m-d-His' ) . '-' . wp_rand( 1000, 9999 ) . '.png';
-		$filename = wp_unique_filename( $base_path, $basename );
-		$filepath = $base_path . '/' . $filename;
-		if ( ! $wp_filesystem->put_contents( $filepath, $decoded ) ) {
-			return $value;
-		}
-
-		return trailingslashit( $base_url ) . $filename;
 	}
 }
