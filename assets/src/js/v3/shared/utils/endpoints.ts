@@ -92,6 +92,8 @@ const endpoints = {
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
   DELETE_DASHBOARD_QNA: 'tutor_delete_dashboard_question',
   CREATE_UPDATE_QNA: 'tutor_qna_create_update',
+  UPDATE_QNA: 'tutor_qna_update',
+  LOAD_QNA_REPLIES: 'tutor_qna_load_replies',
 
   // ASSIGNMENT
   GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',
