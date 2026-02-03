@@ -540,14 +540,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													if ( $given_mask_is_url ) {
 														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
 														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
-														$given_bg_url      = '';
-														if ( $instructor_answer ) {
-															if ( ! empty( $instructor_answer->image_id ) ) {
-																$given_bg_url = wp_get_attachment_image_url( $instructor_answer->image_id, 'full' );
-															} elseif ( ! empty( $instructor_answer->image_url ) ) {
-																$given_bg_url = $instructor_answer->image_url;
-															}
-														}
+														$given_bg_url       = QuizModel::get_answer_image_url( $instructor_answer );
 														echo '<div class="tutor-draw-image-given-answer tutor-mb-12">';
 														echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Your drawing:', 'tutor' ) . '</p>';
 														echo '<div style="position: relative; display: inline-block;">';
@@ -741,12 +734,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$ref_mask_is_url    = is_string( $ref_mask ) && false !== wp_http_validate_url( $ref_mask );
 
 														if ( $instructor_answer && $ref_mask_is_url ) {
-															$ref_bg = '';
-															if ( ! empty( $instructor_answer->image_id ) ) {
-																$ref_bg = wp_get_attachment_image_url( $instructor_answer->image_id, 'full' );
-															} elseif ( ! empty( $instructor_answer->image_url ) ) {
-																$ref_bg = $instructor_answer->image_url;
-															}
+															$ref_bg = QuizModel::get_answer_image_url( $instructor_answer );
 															echo '<div class="tutor-draw-image-correct-answer">';
 															echo '<p class="tutor-fs-7 tutor-fw-medium tutor-color-black tutor-mb-8">' . esc_html__( 'Reference (correct answer zones):', 'tutor' ) . '</p>';
 															if ( $ref_bg ) {

@@ -778,6 +778,10 @@ class Quiz {
 
 					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
+					if ( 'draw_image' === $question_type ) {
+						$answers_data = apply_filters( 'tutor_filter_draw_image_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
+					}
+
 					// For Pro-powered draw-image questions, adjust total marks after
 					// add-ons have had a chance to modify achieved_mark via filters.
 					if ( 'draw_image' === $question_type ) {

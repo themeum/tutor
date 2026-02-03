@@ -1131,8 +1131,38 @@ class QuizModel {
 				$answer->image_url = wp_get_attachment_url( $answer->image_id );
 			}
 		}
-
 		return $answers;
+	}
+
+	/**
+	 * Get full image URL for a quiz answer.
+	 *
+	 * Uses attachment ID if present; falls back to stored image URL.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param object $answer Quiz answer object.
+	 * @param string $size   Image size to retrieve. Default full.
+	 *
+	 * @return string
+	 */
+	public static function get_answer_image_url( $answer, $size = 'full' ) {
+		if ( empty( $answer ) ) {
+			return '';
+		}
+
+		if ( ! empty( $answer->image_id ) ) {
+			$url = wp_get_attachment_image_url( $answer->image_id, $size );
+			if ( $url ) {
+				return $url;
+			}
+		}
+
+		if ( ! empty( $answer->image_url ) ) {
+			return $answer->image_url;
+		}
+
+		return '';
 	}
 
 	/**
