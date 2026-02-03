@@ -10,6 +10,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Components\InputField;
+
 global $tutor_is_started_quiz;
 
 $default_question = array(
@@ -53,16 +55,15 @@ $question = wp_parse_args( $question, $default_question );
 		<?php foreach ( $question['question_answers'] as $answer ) : ?>
 			<div class="tutor-quiz-question-option">
 				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
-				<div class="tutor-input-field">
-					<input 
-						type="text"
-						class="tutor-input"
-						id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $answer['answer_id'] ); ?>"
-						name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answer_id_<?php echo esc_attr( $answer['answer_id'] ); ?>]"
-						x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][][<?php echo esc_attr( $answer['answer_id'] ); ?>]')"
-						placeholder="<?php esc_attr_e( 'Write your answer here', 'tutor' ); ?>"
-					>
-				</div>
+				<?php
+					$input_name = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . '][answers][][' . $answer['answer_id'] . ']';
+					InputField::make()
+						->name( $input_name )
+						->clearable()
+						->attr( 'x-bind', 'register("' . $input_name . '")' )
+						->placeholder( __( 'Write your answer here', 'tutor' ) )
+						->render();
+				?>
 			</div>
 		<?php endforeach; ?>
 	</div>

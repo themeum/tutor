@@ -432,7 +432,7 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function name( $name ) {
-		$this->name = sanitize_key( $name );
+		$this->name = sanitize_text_field( $name );
 		return $this;
 	}
 
@@ -446,7 +446,7 @@ class InputField extends BaseComponent {
 	 * @return $this
 	 */
 	public function id( $id ) {
-		$this->id = sanitize_key( $id );
+		$this->id = sanitize_text_field( $id );
 		return $this;
 	}
 
@@ -1428,7 +1428,7 @@ class InputField extends BaseComponent {
 					class="tutor-input-clear-button"
 					aria-label="Clear input"
 					x-cloak
-					x-show="values.%1$s && String(values.%1$s).length > 0"
+					x-show="values[\'%1$s\'] && String(values[\'%1$s\']).length > 0"
 					@click="setValue(\'%1$s\', \'\')"
 				>%2$s</button>',
 				esc_attr( $this->name ),
@@ -1503,7 +1503,7 @@ class InputField extends BaseComponent {
 					class="tutor-input-clear-button" 
 					aria-label="Clear input"
 					x-cloak
-					x-show="values.%1$s && String(values.%1$s).length > 0"
+					x-show="values[\'%1$s\'] && String(values[\'%1$s\']).length > 0"
 					@click="setValue(\'%1$s\', \'\')"
 				>%2$s</button>',
 				esc_attr( $this->name ),
@@ -1791,8 +1791,8 @@ class InputField extends BaseComponent {
 			'<div 
 				class="tutor-error-text" 
 				x-cloak 
-				x-show="errors.%1$s" 
-				x-text="errors?.%1$s?.message" 
+				x-show="errors[\'%1$s\']" 
+				x-text="errors?.[\'%1$s\']?.message" 
 				role="alert" 
 				aria-live="polite"
 			></div>',
@@ -1802,7 +1802,7 @@ class InputField extends BaseComponent {
 		$help_html = sprintf(
 			'<div
 				class="tutor-help-text"
-				x-show="!errors?.%1$s?.message"
+				x-show="!errors?.[\'%1$s\']?.message"
 			>%2$s</div>',
 			esc_attr( $this->name ),
 			esc_html( $this->help_text )
@@ -1821,7 +1821,7 @@ class InputField extends BaseComponent {
 		}
 
 		$this->component_string = sprintf(
-			'<div class="%s" :class="{ \'tutor-input-field-error\': errors.%s }" %s>%s%s%s%s%s</div>',
+			'<div class="%s" :class="{ \'tutor-input-field-error\': errors[\'%s\'] }" %s>%s%s%s%s%s</div>',
 			esc_attr( implode( ' ', $field_classes ) ),
 			esc_attr( $this->name ),
 			$root_attrs,
