@@ -15,9 +15,11 @@ use TUTOR\Icon;
 	<?php esc_html_e( 'Statistics', 'tutor' ); ?>
 </h5>
 
-<?php foreach ( $statistics as $stat ) : ?>
+
 <div class="tutor-statistic-cards">
-	<div class="tutor-statistic-card-icon">
+	<?php foreach ( $statistics as $stat ) : ?>
+	<div class="tutor-statistic-card">
+		<div class="tutor-statistic-card-icon">
 		<?php
 		tutor_utils()->render_svg_icon(
 			$stat['icon'],
@@ -26,10 +28,11 @@ use TUTOR\Icon;
 			array( 'class' => $stat['icon_class'] )
 		);
 		?>
+		</div>
+		<div class="tutor-statistic-card-content">
+			<h3 class="tutor-statistic-card-value"><?php echo esc_html( $stat['value'] ); ?></h3>
+			<div class="tutor-statistic-card-label"><?php echo esc_html( $stat['label'] ); ?></div>
+		</div>
 	</div>
-	<div class="tutor-statistic-card-content">
-		<h3 class="tutor-statistic-card-value"><?php echo esc_html( $stat['value'] ); ?></h3>
-		<div class="tutor-statistic-card-label"><?php echo esc_html( $stat['label'] ); ?></div>
-	</div>
+	<?php endforeach; ?>
 </div>
-<?php endforeach; ?>

@@ -143,6 +143,7 @@ final class Icon {
 	const DUPLICATE                  = 'duplicate';
 	const DWG                        = 'dwg';
 	const EARNING                    = 'earning';
+	const EARNING_FILL               = 'earning-fill';
 	const EDIT                       = 'edit';
 	const EDIT_2                     = 'edit-2';
 	const ELEMENTOR_COLORIZED        = 'elementor-colorized';
@@ -255,6 +256,7 @@ final class Icon {
 	const OPEN                       = 'open';
 	const OUTLINE_NONE               = 'outline-none';
 	const PASSED                     = 'passed';
+	const PASSED_FILL                = 'passed-fill';
 	const PASSING                    = 'passing';
 	const PAUSE_CIRCLE               = 'pause-circle';
 	const PDF                        = 'pdf';

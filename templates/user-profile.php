@@ -21,7 +21,7 @@ $edit_profile_url = tutor_utils()->tutor_dashboard_url( 'account/settings' );
 $statistics = array(
 	array(
 		'value'      => WithdrawModel::get_withdraw_summary( $user->ID )->total_income ?? 0,
-		'icon'       => Icon::EARNING,
+		'icon'       => Icon::EARNING_FILL,
 		'label'      => __( 'Total Earnings', 'tutor' ),
 		'icon_class' => 'tutor-actions-success-primary',
 	),
@@ -39,7 +39,7 @@ $statistics = array(
 	),
 	array(
 		'value'      => tutor_utils()->get_total_students_by_instructor( $user->ID ) ?? 0,
-		'icon'       => Icon::PASSED,
+		'icon'       => Icon::PASSED_FILL,
 		'label'      => __( 'Total Students', 'tutor' ),
 		'icon_class' => 'tutor-text-exception5',
 	),
