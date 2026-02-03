@@ -15,6 +15,7 @@ $tutor-text-brand-secondary: var(--tutor-text-brand-secondary);
 $tutor-text-light: var(--tutor-text-light);
 $tutor-text-success: var(--tutor-text-success);
 $tutor-text-critical: var(--tutor-text-critical);
+$tutor-text-critical-hover: var(--tutor-text-critical-hover);
 $tutor-text-warning: var(--tutor-text-warning);
 $tutor-text-caution: var(--tutor-text-caution);
 $tutor-text-exception1: var(--tutor-text-exception1);
@@ -38,6 +39,7 @@ $tutor-text-colors: (
   light: $tutor-text-light,
   success: $tutor-text-success,
   critical: $tutor-text-critical,
+  critical-hover: $tutor-text-critical-hover,
   warning: $tutor-text-warning,
   caution: $tutor-text-caution,
   exception1: $tutor-text-exception1,
