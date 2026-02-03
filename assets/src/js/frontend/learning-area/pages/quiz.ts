@@ -225,20 +225,27 @@ const questionMatching = (
     onClear: config.onClear,
   },
   $el: null as HTMLElement | null,
+  $event: null as Event | null,
   initialized: false,
 
   _getValuesFromMatches(): string[] {
     return this._dropZoneOrder.map((id) => this._matches[id] ?? '');
   },
-  clearDropZone(element: HTMLElement) {
-    const droppedOption = element.querySelector(`[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DROPPED}"]`);
+  clearDropZone() {
+    const target = this.$event?.target as HTMLElement | null;
+    const dropZone = target?.closest(`.${QUIZ_CONSTANTS.CLASSES.DROP_ZONE}`) as HTMLElement | null;
+    if (!dropZone) {
+      return;
+    }
+
+    const droppedOption = dropZone.querySelector(`[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DROPPED}"]`);
     if (droppedOption) {
       droppedOption.remove();
     }
 
-    this._restoreDropPlaceholder(element);
+    this._restoreDropPlaceholder(dropZone);
 
-    const dropZoneId = element.dataset[QUIZ_CONSTANTS.DATASET.DROP_ZONE_ID];
+    const dropZoneId = dropZone.dataset[QUIZ_CONSTANTS.DATASET.DROP_ZONE_ID];
     if (dropZoneId && this._matches[dropZoneId]) {
       delete this._matches[dropZoneId];
     }

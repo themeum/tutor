@@ -90,7 +90,7 @@ $answer_field_name = sprintf(
 					<button
 						type="button"
 						class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small"
-						@click.prevent="clearDropZone($el.closest('.tutor-quiz-question-option-drop-zone'))"
+						@click.prevent="clearDropZone"
 					>
 						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
 					</button>
