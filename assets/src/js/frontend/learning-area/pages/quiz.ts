@@ -93,7 +93,7 @@ export const quizTimerMeta = {
 const questionOrdering = (
   config: {
     questionId?: string;
-    onOrder?: (values: string[], context: { element: HTMLElement | null; questionId?: string }) => void;
+    onOrder?: (values: string[]) => void;
   } = {},
 ) => ({
   _sortables: [] as Sortable[],
@@ -103,33 +103,6 @@ const questionOrdering = (
   },
   initialized: false,
   $el: null as HTMLElement | null,
-
-  _emitOrder(values: string[]) {
-    if (!this._callbacks.onOrder) {
-      return;
-    }
-
-    this._callbacks.onOrder(values, {
-      element: this.$el,
-      questionId: this._questionId,
-    });
-  },
-
-  _updateAnswerInputs() {
-    const container = this.$el;
-    if (!container) {
-      return;
-    }
-
-    const options = Array.from(
-      container.querySelectorAll<HTMLElement>(
-        `.${QUIZ_CONSTANTS.CLASSES.QUESTION_OPTION}[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DRAGGABLE}"]`,
-      ),
-    );
-    const values = options.map((option) => option.dataset[QUIZ_CONSTANTS.DATASET.ID] ?? '').filter(Boolean);
-
-    this._emitOrder(values);
-  },
 
   init() {
     if (!this.initialized) {
@@ -199,19 +172,23 @@ const questionOrdering = (
       }
 
       sourceElement.setAttribute(QUIZ_CONSTANTS.ATTRS.OPTION, QUIZ_CONSTANTS.VALUES.DRAGGABLE);
-      this._updateAnswerInputs();
+      this._callbacks.onOrder?.(this.getOrder());
     });
   },
 
-  // @TODO: Will be removed if not needed
   getOrder() {
     const container = this.$el;
     if (!container) {
       return [];
     }
-    return Array.from(container.querySelectorAll<HTMLElement>(`.${QUIZ_CONSTANTS.CLASSES.QUESTION_OPTION}`)).map(
-      (el) => el.dataset[QUIZ_CONSTANTS.DATASET.ID],
+
+    const options = Array.from(
+      container.querySelectorAll<HTMLElement>(
+        `.${QUIZ_CONSTANTS.CLASSES.QUESTION_OPTION}[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DRAGGABLE}"]`,
+      ),
     );
+
+    return options.map((option) => option.dataset[QUIZ_CONSTANTS.DATASET.ID] ?? '').filter(Boolean);
   },
 
   destroy() {
@@ -249,21 +226,6 @@ const questionMatching = (
   },
   $el: null as HTMLElement | null,
   initialized: false,
-  _emitDrop(values: string[]) {
-    if (!this._callbacks.onDrop) {
-      return;
-    }
-
-    this._callbacks.onDrop(values);
-  },
-
-  _emitClear(values: string[]) {
-    if (!this._callbacks.onClear) {
-      return;
-    }
-
-    this._callbacks.onClear(values);
-  },
 
   _getValuesFromMatches(): string[] {
     return this._dropZoneOrder.map((id) => this._matches[id] ?? '');
@@ -282,7 +244,7 @@ const questionMatching = (
     }
 
     const values = this._getValuesFromMatches();
-    this._emitClear(values);
+    this._callbacks.onClear?.(values);
   },
 
   _restoreDropPlaceholder(dropZoneEl: HTMLElement) {
@@ -405,14 +367,9 @@ const questionMatching = (
 
         this._matches[targetDropZone.id] = String(sourceId);
         const values = this._getValuesFromMatches();
-        this._emitDrop(values);
+        this._callbacks.onDrop?.(values);
       }
     });
-  },
-
-  // @TODO: Will be removed if not needed
-  getMatches() {
-    return this._matches;
   },
 
   // @TODO: Will be removed if not needed
