@@ -31,14 +31,23 @@ $default_question = array(
 	),
 );
 
-$question = wp_parse_args( $question, $default_question );
+$question          = wp_parse_args( $question, $default_question );
+$answer_field_name = sprintf(
+	'attempt[%d][quiz_question][%d][answers][]',
+	$tutor_is_started_quiz->attempt_id,
+	$question['question_id']
+);
 
 ?>
 
 <div 
 	class="tutor-quiz-question" 
 	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
-	x-data="tutorQuestionMatching('question-<?php echo esc_attr( $question['question_id'] ); ?>')"
+	x-data="tutorQuestionMatching({
+		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
+		onDrop: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
+		onClear: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
+	})"
 >
 	<?php
 	tutor_load_template(
@@ -66,17 +75,23 @@ $question = wp_parse_args( $question, $default_question );
 						<?php echo esc_html( $answer['answer_title'] ); ?>
 					</div>
 				<?php endif; ?>
-				<div class="tutor-quiz-question-option-drop-zone">
+				<div
+					class="tutor-quiz-question-option-drop-zone"
+					data-drop-placeholder-text="<?php echo esc_attr__( 'Drop here', 'tutor' ); ?>"
+				>
 					<input
 						class="tutor-hidden"
-						name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]"
-						value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-						x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>][answers][]')"
+						name="<?php echo esc_attr( $answer_field_name ); ?>"
+						x-bind="register('<?php echo esc_attr( $answer_field_name ); ?>')"
 					>
 					<span data-drop-placeholder class="tutor-text-subdued">
 						<?php esc_html_e( 'Drop here', 'tutor' ); ?>
 					</span>
-					<button type="button" class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small">
+					<button
+						type="button"
+						class="tutor-hidden tutor-btn tutor-btn-icon tutor-btn-ghost tutor-btn-x-small"
+						@click.prevent="clearDropZone($el.closest('.tutor-quiz-question-option-drop-zone'))"
+					>
 						<?php tutor_utils()->render_svg_icon( Icon::CROSS, 16, 16 ); ?>
 					</button>
 				</div>

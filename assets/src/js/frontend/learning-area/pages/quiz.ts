@@ -1,6 +1,7 @@
+import type { AlpineComponentMeta } from '@Core/ts/types';
 import { DragDropManager, Draggable, Droppable, KeyboardSensor, PointerSensor } from '@dnd-kit/dom';
 import { Sortable } from '@dnd-kit/dom/sortable';
-import type { AlpineComponentMeta } from '@Core/ts/types';
+import { __ } from '@wordpress/i18n';
 
 /**
  * Quiz Timer Component
@@ -60,10 +61,42 @@ export const quizTimerMeta = {
  * Question Ordering Component
  * Handles drag-and-drop reordering of quiz question options
  */
-const questionOrdering = () => ({
+const questionOrdering = (
+  config: {
+    questionId?: string;
+    onOrder?: (values: string[], context: { element: HTMLElement | null; questionId?: string }) => void;
+  } = {},
+) => ({
   _sortables: [] as Sortable[],
+  _questionId: config.questionId,
+  _callbacks: {
+    onOrder: config.onOrder,
+  },
   initialized: false,
   $el: null as HTMLElement | null,
+  _emitOrder(values: string[]) {
+    if (!this._callbacks.onOrder) {
+      return;
+    }
+
+    this._callbacks.onOrder(values, {
+      element: this.$el,
+      questionId: this._questionId,
+    });
+  },
+  _updateAnswerInputs() {
+    const container = this.$el;
+    if (!container) {
+      return;
+    }
+
+    const options = Array.from(
+      container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
+    );
+    const values = options.map((option) => option.dataset.id ?? '').filter(Boolean);
+
+    this._emitOrder(values);
+  },
 
   init() {
     if (!this.initialized) {
@@ -131,6 +164,7 @@ const questionOrdering = () => ({
       }
 
       sourceElement.setAttribute('data-option', 'draggable');
+      this._updateAnswerInputs();
     });
   },
 
@@ -162,12 +196,72 @@ export const questionOrderingMeta: AlpineComponentMeta = {
  * Question Matching Component
  * Handles drag-and-drop matching of quiz question options to drop zones
  */
-const questionMatching = () => ({
+const questionMatching = (
+  config: {
+    questionId?: string;
+    onDrop?: (values: string[]) => void;
+    onClear?: (values: string[]) => void;
+  } = {},
+) => ({
   _draggables: [] as Draggable[],
   _dropZones: [] as Droppable[],
   _matches: {} as Record<string, string>,
+  _dropZoneOrder: [] as string[],
+  _questionId: config.questionId,
+  _callbacks: {
+    onDrop: config.onDrop,
+    onClear: config.onClear,
+  },
   $el: null as HTMLElement | null,
   initialized: false,
+  _emitDrop(values: string[]) {
+    if (!this._callbacks.onDrop) {
+      return;
+    }
+
+    this._callbacks.onDrop(values);
+  },
+
+  _emitClear(values: string[]) {
+    if (!this._callbacks.onClear) {
+      return;
+    }
+
+    this._callbacks.onClear(values);
+  },
+
+  _getValuesFromMatches(): string[] {
+    return this._dropZoneOrder.map((id) => this._matches[id] ?? '');
+  },
+  clearDropZone(element: HTMLElement) {
+    const droppedOption = element.querySelector('[data-option="dropped"]');
+    if (droppedOption) {
+      droppedOption.remove();
+    }
+
+    this._restoreDropPlaceholder(element);
+
+    const dropZoneId = element.dataset.dropZoneId;
+    if (dropZoneId && this._matches[dropZoneId]) {
+      delete this._matches[dropZoneId];
+    }
+
+    const values = this._getValuesFromMatches();
+    this._emitClear(values);
+  },
+
+  _restoreDropPlaceholder(dropZoneEl: HTMLElement) {
+    const existingPlaceholder = dropZoneEl.querySelector('[data-drop-placeholder]');
+    if (existingPlaceholder) {
+      return;
+    }
+
+    const placeholder = document.createElement('span');
+    placeholder.setAttribute('data-drop-placeholder', '');
+    placeholder.className = 'tutor-text-subdued';
+    placeholder.textContent = dropZoneEl.dataset.dropPlaceholderText || __('Drop here', 'tutor');
+    dropZoneEl.prepend(placeholder);
+  },
 
   init() {
     if (!this.initialized) {
@@ -213,6 +307,8 @@ const questionMatching = () => ({
 
     dropZoneElements.forEach((element, idx) => {
       const id = element.dataset.id ?? String(idx);
+      element.dataset.dropZoneId = id;
+      this._dropZoneOrder.push(id);
 
       const droppable = new Droppable(
         {
@@ -268,6 +364,8 @@ const questionMatching = () => ({
         }
 
         this._matches[targetDropZone.id] = String(sourceId);
+        const values = this._getValuesFromMatches();
+        this._emitDrop(values);
       }
     });
   },
@@ -292,6 +390,7 @@ const questionMatching = () => ({
     });
 
     this._matches = {};
+    this._dropZoneOrder = [];
   },
 
   destroy() {
@@ -302,6 +401,7 @@ const questionMatching = () => ({
     this._dropZones = [];
 
     this._matches = {};
+    this._dropZoneOrder = [];
 
     this.initialized = false;
   },

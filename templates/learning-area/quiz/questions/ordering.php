@@ -30,7 +30,12 @@ $default_question = array(
 	),
 );
 
-$question = wp_parse_args( $question, $default_question );
+$question          = wp_parse_args( $question, $default_question );
+$answer_field_name = sprintf(
+	'attempt[%d][quiz_question_%d][answers][]',
+	$tutor_is_started_quiz->attempt_id,
+	$question['question_id']
+);
 
 ?>
 
@@ -38,7 +43,10 @@ $question = wp_parse_args( $question, $default_question );
 	class="tutor-quiz-question"
 	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
 	data-question-id="question-<?php echo esc_attr( $question['question_id'] ); ?>"
-	x-data="tutorQuestionOrdering('question-<?php echo esc_attr( $question['question_id'] ); ?>')"
+	x-data="tutorQuestionOrdering({
+		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
+		onOrder: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
+	})"
 >
 	<?php
 	tutor_load_template(
@@ -72,8 +80,8 @@ $question = wp_parse_args( $question, $default_question );
 
 				<input
 					type="hidden"
-					name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>][answers][]"
-					x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question_<?php echo esc_attr( $question['question_id'] ); ?>][answers][]')"
+					name="<?php echo esc_attr( $answer_field_name ); ?>"
+					x-bind="register('<?php echo esc_attr( $answer_field_name ); ?>')"
 					value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				>
 
