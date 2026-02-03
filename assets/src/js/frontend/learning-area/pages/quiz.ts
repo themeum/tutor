@@ -3,6 +3,35 @@ import { DragDropManager, Draggable, Droppable, KeyboardSensor, PointerSensor } 
 import { Sortable } from '@dnd-kit/dom/sortable';
 import { __ } from '@wordpress/i18n';
 
+const QUIZ_CONSTANTS = {
+  CLASSES: {
+    PROGRESS_ANIMATE: 'tutor-quiz-progress-animate',
+    QUESTION_OPTION: 'tutor-quiz-question-option',
+    DROP_ZONE: 'tutor-quiz-question-option-drop-zone',
+    TEXT_SUBDUED: 'tutor-text-subdued',
+    DROPPED: 'dropped',
+  },
+  ATTRS: {
+    OPTION: 'data-option',
+    ID: 'data-id',
+    GRAB_HANDLE: 'data-grab-handle',
+    DROP_ZONE_ID: 'data-drop-zone-id',
+    DROP_PLACEHOLDER: 'data-drop-placeholder',
+    DROP_PLACEHOLDER_TEXT: 'data-drop-placeholder-text',
+  },
+  VALUES: {
+    DRAGGABLE: 'draggable',
+    DRAGGING: 'dragging',
+    DROPPED: 'dropped',
+  },
+  DATASET: {
+    ID: 'id',
+    OPTION: 'option',
+    DROP_ZONE_ID: 'dropZoneId',
+    DROP_PLACEHOLDER_TEXT: 'dropPlaceholderText',
+  },
+} as const;
+
 /**
  * Quiz Timer Component
  * Manages countdown timer for quiz attempts
@@ -28,14 +57,14 @@ const quizTimer = (duration: number) => ({
       }
     }, 1000);
 
-    this.$el?.classList.add('tutor-quiz-progress-animate');
+    this.$el?.classList.add(QUIZ_CONSTANTS.CLASSES.PROGRESS_ANIMATE);
   },
 
   stop() {
     if (this.timer) {
       clearInterval(this.timer);
       this.timer = null;
-      this.$el?.classList.remove('tutor-quiz-progress-animate');
+      this.$el?.classList.remove(QUIZ_CONSTANTS.CLASSES.PROGRESS_ANIMATE);
     }
   },
 
@@ -74,6 +103,7 @@ const questionOrdering = (
   },
   initialized: false,
   $el: null as HTMLElement | null,
+
   _emitOrder(values: string[]) {
     if (!this._callbacks.onOrder) {
       return;
@@ -84,6 +114,7 @@ const questionOrdering = (
       questionId: this._questionId,
     });
   },
+
   _updateAnswerInputs() {
     const container = this.$el;
     if (!container) {
@@ -91,9 +122,11 @@ const questionOrdering = (
     }
 
     const options = Array.from(
-      container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
+      container.querySelectorAll<HTMLElement>(
+        `.${QUIZ_CONSTANTS.CLASSES.QUESTION_OPTION}[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DRAGGABLE}"]`,
+      ),
     );
-    const values = options.map((option) => option.dataset.id ?? '').filter(Boolean);
+    const values = options.map((option) => option.dataset[QUIZ_CONSTANTS.DATASET.ID] ?? '').filter(Boolean);
 
     this._emitOrder(values);
   },
@@ -116,14 +149,16 @@ const questionOrdering = (
     });
 
     const items = Array.from(
-      container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
+      container.querySelectorAll<HTMLElement>(
+        `.${QUIZ_CONSTANTS.CLASSES.QUESTION_OPTION}[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DRAGGABLE}"]`,
+      ),
     );
 
     this._sortables = [];
 
     items.forEach((element, idx) => {
-      const handle = element.querySelector('[data-grab-handle]') as HTMLElement | null;
-      const id = element.dataset.id ?? String(idx);
+      const handle = element.querySelector(`[${QUIZ_CONSTANTS.ATTRS.GRAB_HANDLE}]`) as HTMLElement | null;
+      const id = element.dataset[QUIZ_CONSTANTS.DATASET.ID] ?? String(idx);
 
       const sortable = new Sortable(
         {
@@ -149,7 +184,7 @@ const questionOrdering = (
         return;
       }
 
-      sourceElement.setAttribute('data-option', 'dragging');
+      sourceElement.setAttribute(QUIZ_CONSTANTS.ATTRS.OPTION, QUIZ_CONSTANTS.VALUES.DRAGGING);
     });
 
     manager.monitor.addEventListener('dragend', (event) => {
@@ -163,7 +198,7 @@ const questionOrdering = (
         return;
       }
 
-      sourceElement.setAttribute('data-option', 'draggable');
+      sourceElement.setAttribute(QUIZ_CONSTANTS.ATTRS.OPTION, QUIZ_CONSTANTS.VALUES.DRAGGABLE);
       this._updateAnswerInputs();
     });
   },
@@ -174,8 +209,8 @@ const questionOrdering = (
     if (!container) {
       return [];
     }
-    return Array.from(container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option')).map(
-      (el) => el.dataset.id,
+    return Array.from(container.querySelectorAll<HTMLElement>(`.${QUIZ_CONSTANTS.CLASSES.QUESTION_OPTION}`)).map(
+      (el) => el.dataset[QUIZ_CONSTANTS.DATASET.ID],
     );
   },
 
@@ -234,14 +269,14 @@ const questionMatching = (
     return this._dropZoneOrder.map((id) => this._matches[id] ?? '');
   },
   clearDropZone(element: HTMLElement) {
-    const droppedOption = element.querySelector('[data-option="dropped"]');
+    const droppedOption = element.querySelector(`[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DROPPED}"]`);
     if (droppedOption) {
       droppedOption.remove();
     }
 
     this._restoreDropPlaceholder(element);
 
-    const dropZoneId = element.dataset.dropZoneId;
+    const dropZoneId = element.dataset[QUIZ_CONSTANTS.DATASET.DROP_ZONE_ID];
     if (dropZoneId && this._matches[dropZoneId]) {
       delete this._matches[dropZoneId];
     }
@@ -251,15 +286,16 @@ const questionMatching = (
   },
 
   _restoreDropPlaceholder(dropZoneEl: HTMLElement) {
-    const existingPlaceholder = dropZoneEl.querySelector('[data-drop-placeholder]');
+    const existingPlaceholder = dropZoneEl.querySelector(`[${QUIZ_CONSTANTS.ATTRS.DROP_PLACEHOLDER}]`);
     if (existingPlaceholder) {
       return;
     }
 
     const placeholder = document.createElement('span');
-    placeholder.setAttribute('data-drop-placeholder', '');
-    placeholder.className = 'tutor-text-subdued';
-    placeholder.textContent = dropZoneEl.dataset.dropPlaceholderText || __('Drop here', 'tutor');
+    placeholder.setAttribute(QUIZ_CONSTANTS.ATTRS.DROP_PLACEHOLDER, '');
+    placeholder.className = QUIZ_CONSTANTS.CLASSES.TEXT_SUBDUED;
+    placeholder.textContent =
+      dropZoneEl.dataset[QUIZ_CONSTANTS.DATASET.DROP_PLACEHOLDER_TEXT] || __('Drop here', 'tutor');
     dropZoneEl.prepend(placeholder);
   },
 
@@ -281,12 +317,14 @@ const questionMatching = (
     });
 
     const draggableEls = Array.from(
-      container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option[data-option="draggable"]'),
+      container.querySelectorAll<HTMLElement>(
+        `.${QUIZ_CONSTANTS.CLASSES.QUESTION_OPTION}[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DRAGGABLE}"]`,
+      ),
     );
 
     draggableEls.forEach((element, idx) => {
-      const handle = element.querySelector('[data-grab-handle]') as HTMLElement | null;
-      const id = element.dataset.id ?? String(idx);
+      const handle = element.querySelector(`[${QUIZ_CONSTANTS.ATTRS.GRAB_HANDLE}]`) as HTMLElement | null;
+      const id = element.dataset[QUIZ_CONSTANTS.DATASET.ID] ?? String(idx);
 
       const draggable = new Draggable(
         {
@@ -302,12 +340,12 @@ const questionMatching = (
     });
 
     const dropZoneElements = Array.from(
-      container.querySelectorAll<HTMLElement>('.tutor-quiz-question-option-drop-zone'),
+      container.querySelectorAll<HTMLElement>(`.${QUIZ_CONSTANTS.CLASSES.DROP_ZONE}`),
     );
 
     dropZoneElements.forEach((element, idx) => {
-      const id = element.dataset.id ?? String(idx);
-      element.dataset.dropZoneId = id;
+      const id = element.dataset[QUIZ_CONSTANTS.DATASET.ID] ?? String(idx);
+      element.dataset[QUIZ_CONSTANTS.DATASET.DROP_ZONE_ID] = id;
       this._dropZoneOrder.push(id);
 
       const droppable = new Droppable(
@@ -329,7 +367,7 @@ const questionMatching = (
 
       const sourceElement = operation.source.element;
       if (sourceElement) {
-        sourceElement.setAttribute('data-option', 'dragging');
+        sourceElement.setAttribute(QUIZ_CONSTANTS.ATTRS.OPTION, QUIZ_CONSTANTS.VALUES.DRAGGING);
       }
     });
 
@@ -343,7 +381,7 @@ const questionMatching = (
       const targetDropZone = operation.target;
 
       if (sourceElement) {
-        sourceElement.setAttribute('data-option', 'draggable');
+        sourceElement.setAttribute(QUIZ_CONSTANTS.ATTRS.OPTION, QUIZ_CONSTANTS.VALUES.DRAGGABLE);
       }
 
       if (targetDropZone) {
@@ -351,12 +389,14 @@ const questionMatching = (
         const sourceId = operation.source.id;
 
         const clone = document.createElement('div');
-        clone.setAttribute('data-option', 'dropped');
-        clone.setAttribute('data-id', String(sourceId));
+        clone.setAttribute(QUIZ_CONSTANTS.ATTRS.OPTION, QUIZ_CONSTANTS.VALUES.DROPPED);
+        clone.setAttribute(QUIZ_CONSTANTS.ATTRS.ID, String(sourceId));
         clone.textContent = sourceElement?.textContent ?? '';
 
-        const placeholder = dropZoneEl?.querySelector('[data-drop-placeholder]');
-        const droppedOption = dropZoneEl?.querySelector('[data-option="dropped"]');
+        const placeholder = dropZoneEl?.querySelector(`[${QUIZ_CONSTANTS.ATTRS.DROP_PLACEHOLDER}]`);
+        const droppedOption = dropZoneEl?.querySelector(
+          `[${QUIZ_CONSTANTS.ATTRS.OPTION}="${QUIZ_CONSTANTS.VALUES.DROPPED}"]`,
+        );
         if (placeholder) {
           placeholder.replaceWith(clone);
         } else if (droppedOption) {
@@ -385,8 +425,8 @@ const questionMatching = (
     });
 
     this._draggables.forEach((draggable: Draggable) => {
-      draggable.element?.setAttribute('data-option', 'draggable');
-      draggable.element?.classList.remove('dropped');
+      draggable.element?.setAttribute(QUIZ_CONSTANTS.ATTRS.OPTION, QUIZ_CONSTANTS.VALUES.DRAGGABLE);
+      draggable.element?.classList.remove(QUIZ_CONSTANTS.CLASSES.DROPPED);
     });
 
     this._matches = {};
