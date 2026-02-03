@@ -12,21 +12,39 @@
 use TUTOR\Course_List;
 use TUTOR\Icon;
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 use TUTOR\Template;
 
-wp_head();
-
 // Tutor global variable for using inside learning area.
-$current_user_id            = get_current_user_id();
-$tutor_current_post_type    = get_post_type();
-$tutor_current_post         = get_post();
-$tutor_current_content_id   = get_the_ID();
-$tutor_course_id            = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
-$tutor_course               = get_post( $tutor_course_id );
-$tutor_course_list_url      = tutor_utils()->course_archive_page_url();
-$tutor_is_enrolled          = tutor_utils()->is_enrolled( $tutor_course_id );
-$tutor_is_public_course     = Course_List::is_public( $tutor_course_id );
-$tutor_is_course_instructor = tutor_utils()->has_user_course_content_access( $current_user_id, $tutor_course_id );
+$current_user_id          = get_current_user_id();
+$tutor_current_post_type  = get_post_type();
+$tutor_current_post       = get_post();
+$tutor_current_content_id = get_the_ID();
+$tutor_course_id          = tutor()->course_post_type === $tutor_current_post_type ? $tutor_current_content_id : tutor_utils()->get_course_id_by_subcontent( $tutor_current_content_id );
+$tutor_course             = get_post( $tutor_course_id );
+$tutor_course_list_url    = tutor_utils()->course_archive_page_url();
+$tutor_is_enrolled        = tutor_utils()->is_enrolled( $tutor_course_id );
+$tutor_is_public_course   = Course_List::is_public( $tutor_course_id );
+
+$args = array(
+	'current_post_type' => $tutor_current_post_type,
+	'current_post_id'   => $tutor_current_content_id,
+	'course_id'         => $tutor_course_id,
+	'is_public'         => $tutor_is_public_course,
+	'is_enrolled'       => $tutor_is_enrolled,
+);
+
+$tutor_course_content_access = CourseModel::has_course_content_access( $args );
+if ( ! $tutor_course_content_access ) {
+	if ( $current_user_id ) {
+		tutor_load_template( 'single.lesson.required-enroll' );
+	} else {
+		tutor_load_template( 'login' );
+	}
+	return;
+}
+
+wp_head();
 
 $subpages = Template::make_learning_area_sub_page_nav_items();
 ?>
