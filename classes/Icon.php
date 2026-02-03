@@ -203,6 +203,7 @@ final class Icon {
 	const ISO                        = 'iso';
 	const JAVASCRIPT                 = 'javascript';
 	const JPG                        = 'jpg';
+	const JSON                       = 'json';
 	const JSON_FILE                  = 'json-file';
 	const KEY                        = 'key';
 	const LANDSCAPE                  = 'landscape';

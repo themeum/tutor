@@ -67,6 +67,8 @@ const endpoints = {
   GET_GOOGLE_MEET_DETAILS: 'tutor_google_meet_meeting_details',
   SAVE_GOOGLE_MEET: 'tutor_google_meet_new_meeting',
   DELETE_GOOGLE_MEET: 'tutor_google_meet_delete',
+  UPLOAD_GOOGLE_MEET_CREDENTIALS: 'tutor_pro_google_meet_credential_upload',
+  RESET_GOOGLE_MEET_CREDENTIALS: 'tutor_google_meet_reset_cred',
 
   // TOPIC
   GET_COURSE_CONTENTS: 'tutor_course_contents',
@@ -181,7 +183,7 @@ const endpoints = {
   SAVE_BILLING_INFO: 'tutor_save_billing_info',
   SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
   RESET_PASSWORD: 'tutor_profile_password_reset',
-  UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference'
+  UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
 } as const;
 
 export default endpoints;

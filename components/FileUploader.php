@@ -227,6 +227,24 @@ class FileUploader extends BaseComponent {
 	protected $value = '';
 
 	/**
+	 * Upload icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var integer
+	 */
+	protected $upload_icon_size = 24;
+
+	/**
+	 * Whether to show subtitle.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var boolean
+	 */
+	protected $show_subtitle = true;
+
+	/**
 	 * Set uploader accept attribute.
 	 *
 	 * Common types: .pdf, .doc, .docx, .jpg, .jpeg, .png
@@ -273,6 +291,33 @@ class FileUploader extends BaseComponent {
 	 */
 	public function uploader_icon( $icon ) {
 		$this->uploader_icon = $icon;
+
+		return $this;
+	}
+
+	/**
+	 * Set whether to show subtitle.
+	 *
+	 * @param boolean $show_subtitle show subtitle or not.
+	 *
+	 * @return self
+	 */
+	public function show_subtitle( $show_subtitle = true ) {
+		$this->show_subtitle = $show_subtitle;
+		return $this;
+	}
+
+	/**
+	 * Set uploader icon size.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $size Icon size.
+	 *
+	 * @return $this
+	 */
+	public function uploader_icon_size( $size ) {
+		$this->upload_icon_size = $size;
 
 		return $this;
 	}
@@ -562,7 +607,7 @@ class FileUploader extends BaseComponent {
 					</div>
 					<div class="tutor-mt-1">
 						<button type="button" class="tutor-btn tutor-btn-primary-soft tutor-btn-sm" @click="openFileDialog()">
-							<?php esc_html_e( 'Upload More Files', 'tutor' ); ?>
+							<?php $this->multiple ? esc_html_e( 'Upload More Files', 'tutor' ) : esc_html_e( 'Upload Again', 'tutor' ); ?>
 						</button>
 					</div>
 				</div>
@@ -595,11 +640,13 @@ class FileUploader extends BaseComponent {
 					<?php echo $this->get_attributes_string(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 				>
 				<div class="tutor-file-uploader-icon">
-					<?php tutor_utils()->render_svg_icon( $icon, 24, 24 ); ?>
+					<?php tutor_utils()->render_svg_icon( $icon, $this->upload_icon_size, $this->upload_icon_size ); ?>
 				</div>
 				<div class="tutor-file-uploader-content">
 					<p class="tutor-file-uploader-title"><?php echo esc_html( $title ); ?></p>
+					<?php if ( $this->show_subtitle ) : ?>
 					<p class="tutor-file-uploader-subtitle"><?php echo esc_html( $subtitle ); ?></p>
+					<?php endif; ?>
 				</div>
 				<button type="button" class="tutor-btn tutor-btn-primary-soft" :disabled="isDisabled">
 					<?php echo esc_html( $button_text ); ?>

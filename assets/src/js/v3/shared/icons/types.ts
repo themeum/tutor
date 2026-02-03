@@ -187,6 +187,7 @@ export const icons = [
   'iso',
   'javascript',
   'jpg',
+  'json',
   'jsonFile',
   'key',
   'landscape',
