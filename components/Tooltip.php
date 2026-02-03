@@ -122,7 +122,7 @@ class Tooltip extends BaseComponent {
 	 *
 	 * @var array
 	 */
-	protected $allow_alpine_attributes = array();
+	protected $allowed_attributes = array();
 
 	/**
 	 * Allowed Alpine.js HTML attributes.
@@ -276,13 +276,13 @@ class Tooltip extends BaseComponent {
 	 */
 	public function add_alpine_attributes( array $attributes ) {
 
-		$this->allow_alpine_attributes = wp_kses_allowed_html( 'post' );
+		$this->allowed_attributes = wp_kses_allowed_html( 'post' );
 
 		foreach ( $attributes as $tag => $attr ) {
 			$tag = sanitize_key( $tag );
 
-			if ( ! isset( $this->allow_alpine_attributes[ $tag ][ $attr ] ) && in_array( $attr, self::ALLOWED_ALPINE_ATTRS, true ) ) {
-				$this->allow_alpine_attributes[ $tag ][ $attr ] = true;
+			if ( ! isset( $this->allowed_attributes[ $tag ][ $attr ] ) && in_array( $attr, self::ALLOWED_ALPINE_ATTRS, true ) ) {
+				$this->allowed_attributes[ $tag ][ $attr ] = true;
 			}
 		}
 
@@ -298,11 +298,11 @@ class Tooltip extends BaseComponent {
 	 */
 	private function allowed_attributes() {
 
-		if ( empty( $this->allow_alpine_attributes ) ) {
+		if ( empty( $this->allowed_attributes ) ) {
 			return wp_kses_allowed_html( 'post' );
 		}
 
-		return $this->allow_alpine_attributes;
+		return $this->allowed_attributes;
 	}
 
 	/**
