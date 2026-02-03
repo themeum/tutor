@@ -534,8 +534,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												} elseif ( 'draw_image' === $answer->question_type ) {
 
 													// Student's submitted drawing: mask is stored as local file URL only 
-													$given_mask         = ! empty( $answer->given_answer ) ? stripslashes( $answer->given_answer ) : '';
-													$given_mask_is_url  = is_string( $given_mask ) && preg_match( '#^https?://#i', $given_mask );
+													$given_mask        = ! empty( $answer->given_answer ) ? stripslashes( $answer->given_answer ) : '';
+													$given_mask_is_url = is_string( $given_mask ) && false !== wp_http_validate_url( $given_mask );
 
 													if ( $given_mask_is_url ) {
 														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
@@ -738,7 +738,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$draw_image_answers = QuizModel::get_answers_by_quiz_question( $answer->question_id, false );
 														$instructor_answer  = is_array( $draw_image_answers ) && ! empty( $draw_image_answers ) ? reset( $draw_image_answers ) : null;
 														$ref_mask           = $instructor_answer && ! empty( $instructor_answer->answer_two_gap_match ) ? $instructor_answer->answer_two_gap_match : '';
-														$ref_mask_is_url    = is_string( $ref_mask ) && preg_match( '#^https?://#i', $ref_mask );
+														$ref_mask_is_url    = is_string( $ref_mask ) && false !== wp_http_validate_url( $ref_mask );
 
 														if ( $instructor_answer && $ref_mask_is_url ) {
 															$ref_bg = '';
