@@ -4,7 +4,7 @@
  *
  * @package Tutor
  * @author Themeum <support@themeum.com>
- * @link https://themeum.com
+ * @link https://www.themeum.com/
  * @since 1.0.0
  */
 
@@ -231,6 +231,15 @@ final class Tutor extends Singleton {
 	 * @var object
 	 */
 	private $user;
+
+	/**
+	 * UserPreference class object
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var UserPreference
+	 */
+	private $user_preference;
 
 	/**
 	 * Theme_Compatibility class object
@@ -495,6 +504,7 @@ final class Tutor extends Singleton {
 		$this->quiz                  = new Quiz();
 		$this->tools                 = new Tools();
 		$this->user                  = new User();
+		$this->user_preference       = new UserPreference();
 		$this->theme_compatibility   = new Theme_Compatibility();
 		$this->gutenberg             = new Gutenberg();
 		$this->course_settings_tabs  = new Course_Settings_Tabs();
