@@ -125,6 +125,22 @@ class Tooltip extends BaseComponent {
 	protected $allow_alpine_attributes = array();
 
 	/**
+	 * Allowed Alpine.js HTML attributes.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @var array
+	 */
+	private const ALLOWED_ALPINE_ATTRS = array(
+		'x-data',
+		'x-text',
+		'x-show',
+		'x-cloak',
+		'x-ref',
+		'x-transition',
+	);
+
+	/**
 	 * Set the tooltip content.
 	 *
 	 * @param string $content HTML or text content.
@@ -262,9 +278,11 @@ class Tooltip extends BaseComponent {
 
 		$this->allow_alpine_attributes = wp_kses_allowed_html( 'post' );
 
-		foreach ( $attributes as $key => $attr ) {
-			if ( ! isset( $this->allow_alpine_attributes[ $key ][ $attr ] ) ) {
-				$this->allow_alpine_attributes[ $key ][ $attr ] = true;
+		foreach ( $attributes as $tag => $attr ) {
+			$tag = sanitize_key( $tag );
+
+			if ( ! isset( $this->allow_alpine_attributes[ $tag ][ $attr ] ) && in_array( $attr, self::ALLOWED_ALPINE_ATTRS, true ) ) {
+				$this->allow_alpine_attributes[ $tag ][ $attr ] = true;
 			}
 		}
 
