@@ -4,6 +4,7 @@ import { type ToastConfig } from '@Core/ts/types/toast';
 
 export class ToastService {
   private hasContainer = false;
+  private readonly TUTOR_TOAST_CONTAINER = '.tutor-toast-container';
 
   constructor() {
     this.initFullscreenListener();
@@ -11,7 +12,7 @@ export class ToastService {
 
   private initFullscreenListener(): void {
     const handleFullscreenChange = () => {
-      const container = document.querySelector('.tutor-toast-container');
+      const container = document.querySelector(this.TUTOR_TOAST_CONTAINER);
       if (container) {
         const target = document.fullscreenElement || document.body;
         if (container.parentElement !== target) {
@@ -24,7 +25,7 @@ export class ToastService {
   }
 
   private ensureContainer(): void {
-    if (this.hasContainer || document.querySelector('.tutor-toast-container')) {
+    if (this.hasContainer || document.querySelector(this.TUTOR_TOAST_CONTAINER)) {
       this.hasContainer = true;
       return;
     }
