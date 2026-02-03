@@ -11,17 +11,21 @@
 
 // Default values.
 $icon_size  = $icon_size ?? 24;
-$variation  = $variation ?? 'enrolled';
-$value      = $value ?? 0;
-$change     = $change ?? '';
-$show_graph = $show_graph ?? false;
-$data       = $data ?? array( 0, 0, 0 );
+$variation  = isset( $variation ) ? $variation : 'enrolled';
+$value      = isset( $value ) ? $value : 0;
+$change     = isset( $change ) ? $change : '';
+$show_graph = isset( $show_graph ) ? $show_graph : false;
+$data       = isset( $data ) ? $data : array( 0, 0, 0 );
 
 // Required fields validation.
-if ( empty( $card_title ) || empty( $icon ) ) {
+if ( ! isset( $card_title ) || empty( $card_title ) ) {
 	return;
 }
-$change_display = $change ?? '';
+if ( ! isset( $icon ) || empty( $icon ) ) {
+	return;
+}
+
+$change_display = ! empty( $change ) ? $change : '';
 
 ?>
 <div class="tutor-card tutor-stat-card tutor-stat-card-<?php echo esc_attr( $variation ); ?>">
