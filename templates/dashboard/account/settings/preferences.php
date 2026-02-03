@@ -41,9 +41,8 @@ $default_values = array(
 			shouldFocusError: true,
 			defaultValues: <?php echo wp_json_encode( $default_values ); ?>
 		})'
-
 		x-bind="getFormBindings()"
-		@submit="handleSubmit((data) => { savePreferencesMutation?.mutate(data); })($event)"
+		@submit="handleSubmit((data) => { savePreferencesMutation?.mutate({...data, formId: '<?php echo esc_attr( $form_id ); ?>'}); })($event)"
 	>
 		<!-- Course Content Section -->
 		<h5 class="tutor-preferences-section-header tutor-h5">
