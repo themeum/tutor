@@ -22,7 +22,7 @@ $content_display = $content ?? '';
 $show_graph      = $show_graph ?? false;
 $data            = $data ?? array( 0, 0, 0 );
 $hover_content   = $hover_content ?? array();
-$variation       = $variation ?? $icon;
+$variation       = empty( $variation ) ? $icon : $variation;
 
 // Required fields validation.
 if ( ! isset( $card_title ) || empty( $card_title ) ) {
