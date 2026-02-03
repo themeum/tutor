@@ -210,7 +210,7 @@ jQuery(document).ready(function($) {
 							detail: { player: instance }
 						});
 						window.dispatchEvent(customEvent);
-						window.tutorLessonPlayer = player;
+						window.TutorLessonPlayer = player;
 					}
 				});
 				
