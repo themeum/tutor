@@ -25,7 +25,7 @@ $time_limit_seconds                 = tutor_utils()->avalue_dot( 'time_limit.tim
 $remaining_time_secs                = ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
 $remaining_time_context             = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
 
-$form_id = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
+$form_id   = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
 $questions = tutor_utils()->get_random_questions_by_quiz();
 
 ?>
@@ -37,6 +37,10 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 		id: '<?php echo esc_attr( $form_id ); ?>',
 		mode: 'onSubmit',
 	})"
+	x-bind="getFormBindings()"
+	@submit.prevent="handleSubmit((data) => {
+		console.log(data);
+	})($event)"
 >
 	<?php tutor_load_template( 'learning-area.quiz.progress-bar' ); ?>
 	<div class="tutor-quiz-questions">

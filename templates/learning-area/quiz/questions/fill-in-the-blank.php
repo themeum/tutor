@@ -50,11 +50,46 @@ $default_question = array(
 			<div class="tutor-quiz-question-option">
 				<?php
 				$answer_title = $answer['answer_title'];
-				$dash_fields  = substr_count( $answer_title, '{dash}' );
-				$dash_input   = '<input type="text" class="tutor-quiz-question-input" placeholder="' . esc_attr__( 'Type your answer here', 'tutor' ) . '" name="attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . ']quiz_question[' . esc_attr( $question['question_id'] ) . '[]" x-bind="register(\'attempt[' . esc_attr( $tutor_is_started_quiz->attempt_id ) . ']quiz_question[' . esc_attr( $question['question_id'] ) . '[]\')" />';
-				if ( $dash_fields ) {
-					$answer_title = str_replace( '{dash}', $dash_input, $answer_title );
+				$dash_count   = substr_count( $answer_title, '{dash}' );
+
+				if ( $dash_count > 0 ) {
+					$input_index = 0;
+
+					$answer_title = preg_replace_callback(
+						'/{dash}/',
+						function () use ( &$input_index, $tutor_is_started_quiz, $question ) {
+
+							$attempt_id  = (int) $tutor_is_started_quiz->attempt_id;
+							$question_id = (int) $question['question_id'];
+
+							$input_name = sprintf(
+								'attempt[%d]quiz_question[%d][][%d]',
+								$attempt_id,
+								$question_id,
+								$input_index
+							);
+
+							$input_html = sprintf(
+								'<input
+									type="text"
+									class="tutor-quiz-question-input"
+									placeholder="%s"
+									name="%s"
+									x-bind="register(\'%s\')"
+								/>',
+								esc_attr__( 'Type your answer here', 'tutor' ),
+								$input_name,
+								$input_name
+							);
+
+							$input_index++;
+
+							return $input_html;
+						},
+						$answer_title
+					);
 				}
+
 				echo wp_kses(
 					$answer_title,
 					array(
