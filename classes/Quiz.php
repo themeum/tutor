@@ -739,14 +739,14 @@ class Quiz {
 					} elseif ( 'draw_image' === $question_type ) {
 						$given_answer = '';
 						if ( is_array( $answers ) && isset( $answers['answers']['mask'] ) ) {
-							$given_answer = sanitize_textarea_field( wp_unslash( $answers['answers']['mask'] ) );
+							$given_answer = Input::sanitize( $answers['answers']['mask'] ?? '', '' );
 						}
 						// Save base64 mask to uploads and store file URL in DB.
 						if ( '' !== $given_answer ) {
-							$given_answer = tutor_utils()->save_quiz_draw_image_mask( $given_answer );
+							$given_answer = QuizModel::save_quiz_draw_image_mask( $given_answer );
 						}
 
-						// Base correctness is determined later via filters (e.g., in Tutor Pro).
+						// Base correctness is determined later via filters in Tutor Pro.
 						$is_answer_was_correct = false;
 					}
 

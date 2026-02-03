@@ -1310,4 +1310,85 @@ class QuizModel {
 
 		return false;
 	}
+
+	/**
+	 * Save draw-image question mask (base64 or URL) to uploads and return file URL.
+	 *
+	 * Stores the file under wp-content/uploads/tutor/quiz-type/ with a unique
+	 * filename. Used for both instructor reference mask and student attempt mask.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $base64_or_url base64 image string (data:image/...;base64,...) or existing URL.
+	 *
+	 * @return string URL of the saved file, or original value if not base64 / save failed.
+	 */
+	public static function save_quiz_draw_image_mask( $base64_or_url ) {
+		$value = is_string( $base64_or_url ) ? trim( $base64_or_url ) : '';
+		if ( '' === $value ) {
+			return $value;
+		}
+
+		$upload_dir = wp_upload_dir();
+		if ( ! empty( $upload_dir['error'] ) ) {
+			return $value;
+		}
+
+		$subdir    = 'tutor/quiz-type';
+		$base_path = trailingslashit( $upload_dir['basedir'] ) . $subdir;
+		$base_url  = trailingslashit( $upload_dir['baseurl'] ) . $subdir;
+
+		// Already a URL (e.g. previously saved file or legacy) – only allow local uploads URLs.
+		if ( preg_match( '#^https?://#i', $value ) ) {
+			$uploads_base = trailingslashit( $upload_dir['baseurl'] );
+
+			// Only trust URLs that point to the site's uploads directory.
+			if ( 0 === strpos( $value, $uploads_base ) ) {
+				return $value;
+			}
+
+			// Reject external/unknown URLs for security – data should live on instructor server only.
+			return '';
+		}
+
+		// Expect a data:image/*;base64,... URI from the canvas.
+		if ( ! preg_match( '#^data:image/(\w+);base64,(.+)$#is', $value, $m ) ) {
+			return $value;
+		}
+
+		// Decode image data. Frontend uses PNG; we always persist as .png on disk.
+		$decoded = base64_decode( $m[2], true );
+		if ( false === $decoded || '' === $decoded ) {
+			return $value;
+		}
+
+		if ( ! wp_mkdir_p( $base_path ) ) {
+			return $value;
+		}
+
+		if ( ! function_exists( 'WP_Filesystem' ) ) {
+			require_once ABSPATH . 'wp-admin/includes/file.php';
+		}
+		WP_Filesystem();
+		global $wp_filesystem;
+		if ( ! is_object( $wp_filesystem ) ) {
+			return $value;
+		}
+
+		// Prevent directory listing.
+		$index_file = $base_path . '/index.php';
+		if ( ! $wp_filesystem->exists( $index_file ) ) {
+			$wp_filesystem->put_contents( $index_file, '<?php // Silence is golden.' );
+		}
+
+		// Force PNG extension on disk, regardless of reported subtype.
+		$basename = 'draw-mask-' . gmdate( 'Y-m-d-His' ) . '-' . wp_rand( 1000, 9999 ) . '.png';
+		$filename = wp_unique_filename( $base_path, $basename );
+		$filepath = $base_path . '/' . $filename;
+		if ( ! $wp_filesystem->put_contents( $filepath, $decoded ) ) {
+			return $value;
+		}
+
+		return trailingslashit( $base_url ) . $filename;
+	}
 }
