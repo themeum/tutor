@@ -7,7 +7,6 @@ import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 import { accordionMeta } from '@Core/ts/components/accordion';
 import { buttonMeta } from '@Core/ts/components/button';
 import { calendarMeta } from '@Core/ts/components/calendar';
-import { commentMeta } from '@Core/ts/components/comments';
 import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { formMeta } from '@Core/ts/components/form';
@@ -45,7 +44,6 @@ const initializePlugin = () => {
     components: [
       buttonMeta,
       calendarMeta,
-      commentMeta,
       fileUploaderMeta,
       tabsMeta,
       iconMeta,
