@@ -416,16 +416,16 @@ export const form = (config: FormControlConfig & { id?: string } = {}) => {
       const bindings: Record<string, unknown> = {
         name,
         'x-ref': name,
-        ':aria-invalid': `!!errors.${name}`,
+        ':aria-invalid': `!!errors["${name}"]`,
         ':class': `{
-          'tutor-input-error': errors.${name},
-          'tutor-input-touched': touchedFields.${name},
-          'tutor-input-dirty': dirtyFields.${name}
+          'tutor-input-error': errors["${name}"],
+          'tutor-input-touched': touchedFields["${name}"],
+          'tutor-input-dirty': dirtyFields["${name}"]
         }`,
       };
 
       if (!isFile) {
-        bindings['x-model'] = `values.${name}`;
+        bindings['x-model'] = `values["${name}"]`;
 
         bindings['@input'] = `handleFieldInput('${name}', ${valueExpression}, $event.target)`;
 
