@@ -4,7 +4,7 @@
 import { initializeLesson } from './lesson';
 import { initializeAssignmentView } from './pages/assignment-view';
 import { initializeQna } from './pages/qna';
-import { initializeQuizInterface } from './pages/quiz';
+import { initializeQuizInterface } from './quiz';
 
 const initializeLearningArea = () => {
   const { pathname, search } = window.location;
