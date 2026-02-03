@@ -1453,14 +1453,14 @@ class CourseModel {
 					$post_type    = $content_post->post_type;
 					$is_completed = true;
 
-					if ( 'tutor_quiz' === $post_type ) {
+					if ( tutor()->quiz_post_type === $post_type ) {
 
 						$is_completed = (bool) tutor_utils()->has_attempted_quiz( $student_id, $post_id );
 
 						$topic['items'][] = array(
 							'type'         => 'quiz',
 							'id'           => $post_id,
-							'link'         => esc_url( get_permalink( $post_id ) ),
+							'link'         => esc_url_raw( get_permalink( $post_id ) ),
 							'title'        => $content_post->post_title,
 							'is_completed' => $is_completed,
 							'time_limit'   => tutor_utils()->get_quiz_option( $post_id, 'time_limit.time_value' ),
@@ -1469,15 +1469,15 @@ class CourseModel {
 							'icon'         => Icon::QUIZ_2,
 						);
 
-					} elseif ( 'tutor_assignments' === $post_type ) {
+					} elseif ( tutor()->assignment_post_type === $post_type ) {
 
-						$submitted_count = (int) tutor_utils()->get_submitted_assignment_count( $post_id, $student_id );
+						$submitted_count = tutor_utils()->get_submitted_assignment_count( $post_id, $student_id );
 						$is_completed    = $submitted_count > 0;
 
 						$topic['items'][] = array(
 							'type'         => 'assignment',
 							'id'           => $post_id,
-							'link'         => esc_url( get_permalink( $post_id ) ),
+							'link'         => esc_url_raw( get_permalink( $post_id ) ),
 							'title'        => $content_post->post_title,
 							'is_completed' => $is_completed,
 							'label'        => __( 'Assignment', 'tutor' ),
@@ -1489,7 +1489,7 @@ class CourseModel {
 							'type'  => 'zoom_meeting',
 							'id'    => $post_id,
 							'title' => $content_post->post_title,
-							'link'  => esc_url( get_permalink( $post_id ) ),
+							'link'  => esc_url_raw( get_permalink( $post_id ) ),
 							'label' => __( 'Live Class', 'tutor' ),
 							'icon'  => Icon::ZOOM,
 						);
@@ -1499,7 +1499,7 @@ class CourseModel {
 							'type'  => 'google_meet',
 							'id'    => $post_id,
 							'title' => $content_post->post_title,
-							'link'  => esc_url( get_permalink( $post_id ) ),
+							'link'  => esc_url_raw( get_permalink( $post_id ) ),
 							'label' => __( 'Live Class', 'tutor' ),
 							'icon'  => Icon::GOOGLE_MEET,
 						);
@@ -1511,7 +1511,7 @@ class CourseModel {
 						$topic['items'][] = array(
 							'type'            => 'lesson',
 							'id'              => $post_id,
-							'link'            => esc_url( get_permalink( $post_id ) ),
+							'link'            => esc_url_raw( get_permalink( $post_id ) ),
 							'title'           => $content_post->post_title,
 							'video'           => $video,
 							'video_play_time' => isset( $video->playtime ) ? $video->playtime : '',
