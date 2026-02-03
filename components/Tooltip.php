@@ -274,7 +274,7 @@ class Tooltip extends BaseComponent {
 	 *
 	 * @return $this
 	 */
-	public function allow_alpine_attributes( array $attributes ) {
+	public function add_alpine_attributes( array $attributes ) {
 
 		$this->allow_alpine_attributes = wp_kses_allowed_html( 'post' );
 
