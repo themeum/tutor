@@ -4,9 +4,28 @@ import { type ToastConfig } from '@Core/ts/types/toast';
 
 export class ToastService {
   private hasContainer = false;
+  private readonly TUTOR_TOAST_CONTAINER = '.tutor-toast-container';
+
+  constructor() {
+    this.initFullscreenListener();
+  }
+
+  private initFullscreenListener(): void {
+    const handleFullscreenChange = () => {
+      const container = document.querySelector(this.TUTOR_TOAST_CONTAINER);
+      if (container) {
+        const target = document.fullscreenElement || document.body;
+        if (container.parentElement !== target) {
+          target.appendChild(container);
+        }
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+  }
 
   private ensureContainer(): void {
-    if (this.hasContainer || document.querySelector('.tutor-toast-container')) {
+    if (this.hasContainer || document.querySelector(this.TUTOR_TOAST_CONTAINER)) {
       this.hasContainer = true;
       return;
     }
@@ -67,7 +86,9 @@ export class ToastService {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = containerHTML;
     const container = tempDiv.firstElementChild as HTMLElement;
-    document.body.appendChild(container);
+
+    const target = document.fullscreenElement || document.body;
+    target.appendChild(container);
 
     // Initialize Alpine on the new element
     if (window.Alpine) {
