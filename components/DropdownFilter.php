@@ -111,6 +111,21 @@ class DropdownFilter extends BaseComponent {
 	protected $popover_size = Size::SMALL;
 
 	/**
+	 * On change callback function name
+	 *
+	 * @var string
+	 */
+	protected $on_change = '';
+
+	/**
+	 * Alpine.js variable name for active state
+	 *
+	 * @var string
+	 */
+	protected $active_value = '';
+
+
+	/**
 	 * Icon size
 	 *
 	 * @var int|null
@@ -257,6 +272,31 @@ class DropdownFilter extends BaseComponent {
 	}
 
 	/**
+	 * Set JS callback on change
+	 *
+	 * @param string $method_name JS method name.
+	 *
+	 * @return self
+	 */
+	public function on_change( string $method_name ): self {
+		$this->on_change = $method_name;
+		return $this;
+	}
+
+	/**
+	 * Set Alpine.js active state binding
+	 *
+	 * @param string $active_value Alpine variable name.
+	 *
+	 * @return self
+	 */
+	public function bind_active_value( string $active_value ): self {
+		$this->active_value = $active_value;
+		return $this;
+	}
+
+
+	/**
 	 * Get component content
 	 *
 	 * @return string
@@ -325,10 +365,16 @@ class DropdownFilter extends BaseComponent {
 		?>
 		<div
 			class="tutor-dropdown-filter"
-			x-data="tutorPopover({
-				placement: 'bottom-start',
-				offset: 4,
-			})"
+			x-data="{
+				...tutorPopover({
+					placement: 'bottom-start',
+					offset: 4,
+				}),
+				<?php if ( $this->active_value ) : ?>
+					labels: <?php echo esc_attr( wp_json_encode( array_column( $options, 'label', 'value' ) ) ); ?>,
+					counts: <?php echo esc_attr( wp_json_encode( array_column( $options, 'count', 'value' ) ) ); ?>
+				<?php endif; ?>
+			}"
 		>
 			<button 
 				type="button" 
@@ -336,12 +382,21 @@ class DropdownFilter extends BaseComponent {
 				@click="toggle()" 
 				class="<?php echo esc_attr( $btn_class ); ?>"
 			>
-				<span class="tutor-truncate" style="max-width: 150px;">
+				<span class="tutor-truncate" style="max-width: 150px;"
+					<?php if ( $this->active_value ) : ?>
+						x-text="labels[<?php echo esc_attr( $this->active_value ); ?>] || '<?php echo esc_js( $label ); ?>'"
+					<?php endif; ?>
+				>
 					<?php echo esc_html( $label ); ?>
 				</span>
-				<?php if ( null !== $count ) : ?>
-					<span class="tutor-font-medium">
-						(<?php echo esc_html( $count ); ?>)
+				<?php if ( null !== $count || $this->active_value ) : ?>
+					<span class="tutor-font-medium"
+						<?php if ( $this->active_value ) : ?>
+							x-text="'(' + (counts[<?php echo esc_attr( $this->active_value ); ?>] ?? '0') + ')'"
+							x-show="counts[<?php echo esc_attr( $this->active_value ); ?>] !== null"
+						<?php endif; ?>
+					>
+						<?php echo null !== $count ? '(' . esc_html( $count ) . ')' : ''; ?>
 					</span>
 				<?php endif; ?>
 				<?php
@@ -386,23 +441,47 @@ class DropdownFilter extends BaseComponent {
 							$opt_url   = $option['url'] ?? '#';
 							$opt_count = $option['count'] ?? null;
 							$is_active = ! empty( $option['active'] );
+							$val       = isset( $option['value'] ) ? $option['value'] : '';
 							?>
-							<a 
-								href="<?php echo esc_url( $opt_url ); ?>" 
-								class="tutor-popover-menu-item <?php echo $is_active ? 'tutor-active' : ''; ?>"
-								<?php if ( $this->show_search ) : ?>
-									x-show="search === '' || '<?php echo esc_js( $opt_label ); ?>'.toLowerCase().includes(search.toLowerCase())"
-								<?php endif; ?>
-							>
-								<span class="tutor-truncate">
-									<?php echo esc_html( $opt_label ); ?>
-								</span>
-								<?php if ( null !== $opt_count ) : ?>
-									<span>
-										(<?php echo esc_html( $opt_count ); ?>)
+							<?php if ( $this->on_change ) : ?>
+								<button
+									type="button"
+									@click="<?php echo esc_js( $this->on_change ); ?>('<?php echo esc_attr( $val ); ?>'); hide()"
+									class="tutor-popover-menu-item <?php echo esc_attr( ! $this->active_value && $is_active ? ' tutor-active' : '' ); ?>"
+									<?php if ( $this->active_value ) : ?>
+										:class="{ 'tutor-active': (<?php echo esc_attr( $this->active_value ); ?> || '') === '<?php echo esc_attr( $val ); ?>' }"
+									<?php endif; ?>
+									<?php if ( $this->show_search ) : ?>
+										x-show="search === '' || '<?php echo esc_js( $opt_label ); ?>'.toLowerCase().includes(search.toLowerCase())"
+									<?php endif; ?>
+								>
+									<span class="tutor-truncate">
+										<?php echo esc_html( $opt_label ); ?>
 									</span>
-								<?php endif; ?>
-							</a>
+									<?php if ( null !== $opt_count ) : ?>
+										<span>
+											(<?php echo esc_html( $opt_count ); ?>)
+										</span>
+									<?php endif; ?>
+								</button>
+							<?php else : ?>
+								<a 
+									href="<?php echo esc_url( $opt_url ); ?>" 
+									class="tutor-popover-menu-item <?php echo $is_active ? 'tutor-active' : ''; ?>"
+									<?php if ( $this->show_search ) : ?>
+										x-show="search === '' || '<?php echo esc_js( $opt_label ); ?>'.toLowerCase().includes(search.toLowerCase())"
+									<?php endif; ?>
+								>
+									<span class="tutor-truncate">
+										<?php echo esc_html( $opt_label ); ?>
+									</span>
+									<?php if ( null !== $opt_count ) : ?>
+										<span>
+											(<?php echo esc_html( $opt_count ); ?>)
+										</span>
+									<?php endif; ?>
+								</a>
+							<?php endif; ?>
 						<?php endforeach; ?>
 
 						<?php if ( $this->show_search ) : ?>

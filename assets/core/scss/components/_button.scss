@@ -36,8 +36,20 @@
   @include tutor-button-variant(ghost);
 }
 
+.tutor-btn-ghost-brand {
+  @include tutor-button-variant(ghost-brand);
+}
+
 .tutor-btn-link {
   @include tutor-button-variant(link);
+}
+
+.tutor-btn-link-gray {
+  @include tutor-button-variant(link-gray);
+}
+
+.tutor-btn-link-destructive {
+  @include tutor-button-variant(link-destructive);
 }
 
 // Button sizes

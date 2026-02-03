@@ -155,12 +155,6 @@ class LessonPlayer {
       ...options,
     };
 
-    // Include nonce if available
-    const nonceKey = window._tutorobject?.nonce_key;
-    if (nonceKey && window._tutorobject?.[nonceKey as keyof typeof window._tutorobject]) {
-      data[nonceKey] = window._tutorobject[nonceKey as keyof typeof window._tutorobject];
-    }
-
     wpAjaxInstance.post('sync_video_playback', data);
 
     const currentTime = this.player.currentTime;

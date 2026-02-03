@@ -166,11 +166,7 @@ class Template extends Tutor_Base {
 		global $wp_query;
 		if ( $wp_query->is_single && ! empty( $wp_query->query_vars['post_type'] ) && $wp_query->query_vars['post_type'] === $this->course_post_type ) {
 			// Check if the slug contains subpage of learning area.
-			$learning_area_subpages = self::make_learning_area_sub_page_nav_items();
-			$subpage                = Input::get( 'subpage' );
-			$subpage_slugs          = array_keys( $learning_area_subpages );
-
-			if ( in_array( $subpage, $subpage_slugs, true ) ) {
+			if ( Input::has( 'subpage' ) ) {
 				$template = tutor_get_template( 'learning-area.index' );
 			} else {
 				do_action( 'single_course_template_before_load', get_the_ID() );
@@ -537,15 +533,15 @@ class Template extends Tutor_Base {
 
 		$menu_items = array(
 			'qna'         => array(
-				'title' => __( 'Q&A', 'tutor' ),
-				'icon'  => Icon::QA,
-				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
+				'title'    => __( 'Q&A', 'tutor' ),
+				'icon'     => Icon::QA,
+				'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'qna' ) ),
 				'template' => tutor_get_template( 'learning-area.subpages.qna' ),
 			),
 			'course-info' => array(
-				'title' => __( 'Course Info', 'tutor' ),
-				'icon'  => Icon::INFO_OCTAGON,
-				'url'   => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
+				'title'    => __( 'Course Info', 'tutor' ),
+				'icon'     => Icon::INFO_OCTAGON,
+				'url'      => UrlHelper::add_query_params( $base_url, array( 'subpage' => 'course-info' ) ),
 				'template' => tutor_get_template( 'learning-area.subpages.course-info' ),
 			),
 		);

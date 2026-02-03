@@ -15,9 +15,9 @@ global $tutor_course;
 ?>
 <div class="tutor-learning-header">
 	<div class="tutor-learning-header-inner">
-		<button class="tutor-learning-header-back">
+		<a class="tutor-learning-header-back" href="<?php echo esc_url( tutor_utils()->tutor_dashboard_url() ); ?>">
 			<?php tutor_utils()->render_svg_icon( Icon::LEFT, 20, 20 ); ?>
-		</button>
+		</a>
 		<h5 class="tutor-learning-header-title">
 			<?php echo esc_html( $tutor_course->post_title ); ?>
 		</h5>
