@@ -26,7 +26,10 @@
 				<button class="tutor-btn tutor-btn-secondary">Secondary</button>
 				<button class="tutor-btn tutor-btn-outline">Outline</button>
 				<button class="tutor-btn tutor-btn-ghost">Ghost</button>
+				<button class="tutor-btn tutor-btn-ghost-brand">Ghost Brand</button>
 				<button class="tutor-btn tutor-btn-link">Link</button>
+				<button class="tutor-btn tutor-btn-link-gray">Link Gray</button>
+				<button class="tutor-btn tutor-btn-link-destructive">Link Destructive</button>
 			</div>
 		</div>
 	</div>
