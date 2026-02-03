@@ -843,6 +843,21 @@ class Instructor {
 		);
 	}
 
+	/**
+	 * Calculates percentage change and UI metadata for a statistics card.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param float $current_data  Current period value.
+	 * @param float $previous_data Previous period value.
+	 *
+	 * @return array{
+	 *     percentage: string,
+	 *     icon: string,
+	 *     class: string,
+	 *     icon_class: string
+	 * }
+	 */
 	public static function get_stat_card_details( float $current_data, float $previous_data ) {
 
 		if ( empty( $previous_data ) && empty( $current_data ) ) {
