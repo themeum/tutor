@@ -11,7 +11,7 @@ export interface FormControllerProps<ValueType> {
   field: {
     onChange: (value: ValueType) => void;
     onBlur: (e?: FocusEvent) => void;
-    value: ValueType;
+    value: ValueType | undefined;
     name: string;
     ref: React.RefCallback<HTMLElement>;
   };

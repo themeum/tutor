@@ -132,10 +132,9 @@ $course = get_post( tutor_utils()->get_course_id_by( 'lesson', $lesson_comment->
 		tutor_load_template(
 			'dashboard.discussions.comment-replies',
 			array(
-				'replies'        => $replies,
-				'replies_order'  => $replies_order,
-				'lesson_comment' => $lesson_comment,
-				'user_id'        => $user_id,
+				'replies'       => $replies,
+				'replies_order' => $replies_order,
+				'user_id'       => $user_id,
 			)
 		);
 		?>

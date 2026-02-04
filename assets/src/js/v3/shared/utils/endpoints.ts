@@ -86,7 +86,7 @@ const endpoints = {
   UPDATE_LESSON_COMMENT: 'tutor_update_lesson_comment',
   DELETE_LESSON_COMMENT: 'tutor_delete_lesson_comment',
   REPLY_LESSON_COMMENT: 'tutor_reply_lesson_comment',
-  LOAD_DISCUSSION_REPLIES: 'tutor_load_discussion_replies',
+  LOAD_COMMENT_REPLIES: 'tutor_load_comment_replies',
 
   // Q&A
   QNA_SINGLE_ACTION: 'tutor_qna_single_action',
@@ -188,6 +188,9 @@ const endpoints = {
   SAVE_WITHDRAW_METHOD: 'tutor_save_withdraw_account',
   RESET_PASSWORD: 'tutor_profile_password_reset',
   UPDATE_PROFILE_NOTIFICATION: 'tutor_save_notification_preference',
+  UPDATE_USER_PREFERENCES: 'tutor_save_user_preferences',
+  REMOVE_DEVICE_MANUALLY: 'tutor_remove_device_manually',
+  REMOVE_ALL_ACTIVE_LOGINS: 'tutor_remove_all_active_logins',
 } as const;
 
 export default endpoints;

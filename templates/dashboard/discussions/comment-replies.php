@@ -53,7 +53,7 @@ use TUTOR\Icon;
 						<?php echo wp_kses_post( $reply->comment_content ); ?>
 					</div>
 				</div>
-				<?php if ( (int) get_current_user_id() === (int) $reply->user_id ) : ?>
+				<?php if ( $user_id === (int) $reply->user_id ) : ?>
 				<div x-data="tutorPopover({ placement: 'bottom-end' })" class="tutor-ml-auto">
 					<button x-ref="trigger" @click="toggle()" class="tutor-btn tutor-btn-ghost tutor-btn-x-small tutor-btn-icon">
 						<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES, 16, 16, array( 'class' => 'tutor-icon-secondary' ) ); ?>
@@ -74,7 +74,7 @@ use TUTOR\Icon;
 				<?php endif; ?>
 			</div>
 
-			<?php if ( (int) get_current_user_id() === (int) $reply->user_id ) : ?>
+			<?php if ( $user_id === (int) $reply->user_id ) : ?>
 				<div x-show="editingId === <?php echo (int) $reply->comment_ID; ?>" x-cloak class="tutor-mt-5 tutor-w-full">
 					<?php
 					tutor_load_template(
