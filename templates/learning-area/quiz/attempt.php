@@ -33,14 +33,30 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 <form 
 	id="<?php echo esc_attr( $form_id ); ?>"
 	class="tutor-quiz tutor-quiz-submission"
-	x-data="tutorForm({
-		id: '<?php echo esc_attr( $form_id ); ?>',
-		mode: 'onSubmit',
-	})"
+	x-data="(() => {
+		const form = tutorForm({
+			id: '<?php echo esc_attr( $form_id ); ?>',
+			mode: 'onSubmit',
+		});
+		const submission = tutorQuizSubmission({
+			formId: '<?php echo esc_attr( $form_id ); ?>',
+			attemptId: '<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>',
+		});
+
+		return {
+			...form,
+			...submission,
+			init() {
+				form.init?.call(this);
+				submission.init?.call(this);
+			},
+		};
+	})()"
 	x-bind="getFormBindings()"
-	@submit.prevent="handleSubmit((data) => {
-		console.log(data);
-	})($event)"
+	@submit.prevent="handleSubmit(
+		(data) => handleQuizSubmit(data),
+		(errors) => handleQuizError(errors)
+	)($event)"
 >
 	<?php tutor_load_template( 'learning-area.quiz.progress-bar' ); ?>
 	<div class="tutor-quiz-questions">
@@ -54,6 +70,8 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 	<?php
 		Button::make()
 			->label( __( 'Submit Quiz', 'tutor' ) )
+			->attr( 'form', $form_id )
+			->attr( 'type', 'submit' )
 			->attr( 'style', 'display: block; margin: 0 auto;' )
 			->render();
 	?>
