@@ -21,17 +21,18 @@
   @include tutor-typography('tiny', 'regular', 'primary-inverse');
   position: fixed;
   z-index: 1070;
-  max-width: 200px;
+  max-width: 180px;
   padding: $tutor-spacing-4;
   background-color: $tutor-surface-dark;
   border-radius: $tutor-radius-sm;
   box-shadow: $tutor-shadow-md;
   word-wrap: break-word;
-  text-align: start;
+  text-align: center;
 
   &-large {
     max-width: 320px;
     padding: $tutor-spacing-5;
+    text-align: start;
   }
 
   &-arrow-start {
