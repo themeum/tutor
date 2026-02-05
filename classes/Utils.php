@@ -4317,7 +4317,6 @@ class Utils {
 			);
 
 			$order_by = $args['order_by'] ?? 'comment_ID';
-			
 			// Results.
 			$results['results'] = $wpdb->get_results(
 				$wpdb->prepare(
@@ -8564,7 +8563,7 @@ class Utils {
 		if ( $wp_query->is_page ) {
 			$dashboard_page = $this->array_get( 'tutor_dashboard_page', $wp_query->query_vars );
 
-			if ($subpage) {
+			if ( $subpage ) {
 				$subpage_parts = explode( '/', $subpage, 2 );
 				if ( isset( $subpage_parts[1] ) ) {
 					$dashboard_subpage = $this->array_get( 'tutor_dashboard_sub_page', $wp_query->query_vars );
@@ -10818,7 +10817,7 @@ class Utils {
 	 *
 	 * @return void
 	 */
-	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ){
+	public function render_svg_icon( $name, $width = 16, $height = 16, $attributes = array() ) {
 		$icon_path = tutor()->path . 'assets/icons/' . $name . '.svg';
 		if ( ! file_exists( $icon_path ) ) {
 			return;
@@ -10846,7 +10845,6 @@ class Utils {
 		foreach ( $attributes as $key => $value ) {
 			$attr_string .= ' ' . esc_attr( $key ) . '="' . esc_attr( $value ) . '"';
 		}
-
 
 		printf( '<svg %s>%s</svg>', $attr_string, $inner_svg );
 	}
@@ -10885,5 +10883,17 @@ class Utils {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Normalizes WooCommerce monetization output to plain text.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param string $value WooCommerce price HTML or encoded string.
+	 * @return string Plain text monetary value.
+	 */
+	public function fix_wc_monetization_format( $value ): string {
+		return wp_strip_all_tags( wp_specialchars_decode( $value ) );
 	}
 }
