@@ -1,10 +1,12 @@
+import { TUTOR_CUSTOM_EVENTS } from '@Core/ts/constant';
 import { type MutationState } from '@Core/ts/services/Query';
 import type { AlpineComponentMeta } from '@Core/ts/types';
 import { tutorConfig } from '@TutorShared/config/config';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
-import axios, { type AxiosResponse } from 'axios';
+import axios from 'axios';
 
 interface QuizSubmissionConfig {
   formId: string;
@@ -13,7 +15,6 @@ interface QuizSubmissionConfig {
 
 interface QuizAutoStartConfig {
   quizID: number;
-  autoStart: boolean;
 }
 
 interface StartQuizPayload {
@@ -28,19 +29,31 @@ const ERROR_MESSAGES = {
 const quizSubmission = (config: QuizSubmissionConfig) => {
   const query = window.TutorCore.query;
   const toast = window.TutorCore.toast;
+  const form = window.TutorCore.form;
 
   return {
     formId: config.formId,
     attemptId: config.attemptId,
     submitQuizMutation: null as MutationState<{ success?: boolean; data?: unknown }, Record<string, unknown>> | null,
+    abandonQuizMutation: null as MutationState<{ success?: boolean }, Record<string, unknown>> | null,
     $el: null as HTMLFormElement | null,
 
     init() {
       this.handleQuizSubmit = this.handleQuizSubmit.bind(this);
       this.handleQuizError = this.handleQuizError.bind(this);
+      this.handleQuizTimeout = this.handleQuizTimeout.bind(this);
+
+      document.addEventListener(TUTOR_CUSTOM_EVENTS.QUIZ_TIME_EXPIRED, ((event: Event) => {
+        const detail = (event as CustomEvent)?.detail ?? {};
+        if (detail?.formId && detail.formId !== this.formId) {
+          return;
+        }
+        this.handleQuizTimeout(detail);
+      }) as EventListener);
+
       this.submitQuizMutation = query.useMutation(this.submitQuizAttempt, {
-        onSuccess: (response: AxiosResponse<{ success?: boolean }>) => {
-          if (response?.data?.success === false) {
+        onSuccess: (response: { success?: boolean }) => {
+          if (response?.success === false) {
             toast.error(ERROR_MESSAGES.SUBMIT_FAILED);
             return;
           }
@@ -48,6 +61,15 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         },
         onError: (error: Error) => {
           toast.error(convertToErrorMessage(error));
+        },
+      });
+
+      this.abandonQuizMutation = query.useMutation(this.abandonQuizAttempt, {
+        onSuccess: () => {
+          window.location.reload();
+        },
+        onError: (error: Error) => {
+          toast.error(convertToErrorMessage(error) || ERROR_MESSAGES.SUBMIT_FAILED);
         },
       });
     },
@@ -59,6 +81,38 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
 
     handleQuizError() {
       toast.error(ERROR_MESSAGES.REQUIRED_QUESTIONS);
+    },
+
+    handleAbandonQuiz() {
+      if (!this.formId || !form.hasForm(this.formId)) {
+        return;
+      }
+
+      const data = form.getFormState?.(this.formId)?.values ?? {};
+      const payload = this.buildSubmitPayload(data);
+      this.abandonQuizMutation?.mutate(payload);
+    },
+
+    handleQuizTimeout(detail: { action?: string; formId?: string }) {
+      const action = detail?.action;
+      if (!action || !this.formId || !form.hasForm(this.formId)) {
+        return;
+      }
+
+      if (this.submitQuizMutation?.isPending || this.abandonQuizMutation?.isPending) {
+        return;
+      }
+
+      const data = form.getFormState?.(this.formId)?.values ?? {};
+
+      if (action === 'auto_submit') {
+        this.handleQuizSubmit(data);
+        return;
+      }
+
+      if (action === 'auto_abandon') {
+        this.handleAbandonQuiz();
+      }
     },
 
     buildSubmitPayload(data: Record<string, unknown>): Record<string, unknown> {
@@ -115,6 +169,15 @@ const quizSubmission = (config: QuizSubmissionConfig) => {
         })
         .then((res) => res.data);
     },
+
+    abandonQuizAttempt(payload: Record<string, unknown>) {
+      return wpAjaxInstance
+        .post(endpoints.QUIZ_ABANDON, {
+          tutor_action: endpoints.QUIZ_ATTEMPT_SUBMIT,
+          ...payload,
+        })
+        .then((data) => data as { success?: boolean; data?: unknown });
+    },
   };
 };
 
@@ -144,9 +207,11 @@ const quizAutoStart = (config: QuizAutoStartConfig) => ({
       return;
     }
 
-    this.startQuizMutation?.mutate({
-      quizID: this.quizID,
-    });
+    this.startQuizMutation?.mutate({ quizID: this.quizID });
+  },
+
+  handleStartQuiz() {
+    this.startQuizMutation?.mutate({ quizID: this.quizID });
   },
 
   startQuiz(payload: StartQuizPayload) {
