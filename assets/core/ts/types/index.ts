@@ -26,6 +26,13 @@ export interface ServiceMeta<T = unknown> {
   instance: T;
 }
 
+export interface AjaxResponse<T = unknown> {
+  status_code: number;
+  success: boolean;
+  message: string;
+  data?: T;
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ExtractComponent<T extends AlpineComponentMeta<any>> = T['component'];
 

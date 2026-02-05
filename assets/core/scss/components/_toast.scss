@@ -71,6 +71,7 @@
     height: 36px;
     @include tutor-flex(row, center, center);
     border-radius: $tutor-radius-full;
+    color: $tutor-icon-idle-inverse;
   }
 
   &-content {
