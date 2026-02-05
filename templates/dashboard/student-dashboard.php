@@ -250,7 +250,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 					</div>
 				</div>
 				<div class="tutor-progress-card-actions">
-					<?php echo wp_kses_post( tutor_dashboard_course_card_buttons() ); ?>
+					<?php echo wp_kses_post( tutor_course_action_button_backup() ); ?>
 				</div>
 			</div>
 			<?php endwhile; ?>

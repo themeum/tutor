@@ -120,7 +120,7 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 		<!-- course meta  -->
 	</div>
 	<div class="tutor-card-footer">
-		<a href="<?php the_permalink(); ?>" class="<?php echo esc_attr( apply_filters( 'tutor_course_loop_button_class', 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block', get_the_ID() ) ); ?> " target="_parent">
+		<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block" target="_parent">
 			<?php esc_html_e( 'View Details', 'tutor' ); ?>
 		</a>
 	</div>

@@ -90,8 +90,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 		<?php endif; ?>
 	</div>
 
-
 	<div class="tutor-progress-card-actions">
-		<?php echo wp_kses_post( tutor_dashboard_course_card_buttons() ); ?>
+		<?php echo wp_kses_post( tutor_course_action_button_backup( $course_id ) ); ?>
 	</div>
 </div>

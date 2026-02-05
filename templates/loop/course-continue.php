@@ -25,7 +25,7 @@ $lesson_url          = tutor_utils()->get_course_first_lesson();
 $completed_percent   = tutor_utils()->get_course_completed_percent();
 $is_completed_course = tutor_utils()->is_completed_course();
 $retake_course       = tutor_utils()->can_user_retake_course();
-$button_class        = apply_filters( 'tutor_course_loop_button_class', 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block', $course_id );
+$button_class        = 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block';
 $can_complete_course = CourseModel::can_complete_course( $course_id, $user_id );
 $completion_mode     = tutor_utils()->get_option( 'course_completion_process' );
 
@@ -35,16 +35,16 @@ if ( $retake_course && $can_complete_course && CourseModel::MODE_FLEXIBLE === $c
 
 if ( $lesson_url && ! $is_completed_course ) {
 	ob_start();
-	$link_text = apply_filters( 'tutor_course_loop_continue_button_text', __( 'Continue Learning', 'tutor' ), $course_id );
+	$link_text = __( 'Continue Learning', 'tutor' );
 	if ( 0 === (int) $completed_percent ) {
-		$link_text = apply_filters( 'tutor_course_loop_start_button_text', __( 'Start Learning', 'tutor' ), $course_id );
+		$link_text = __( 'Start Learning', 'tutor' );
 	} elseif ( $completed_percent > 0 && $completed_percent < 100 ) {
-		$link_text = apply_filters( 'tutor_course_loop_continue_button_text', __( 'Continue Learning', 'tutor' ), $course_id );
+		$link_text = __( 'Continue Learning', 'tutor' );
 	} elseif ( 100 === (int) $completed_percent && false === $can_complete_course ) {
 		$lesson_url = CourseModel::get_review_progress_link( $course_id, $user_id );
-		$link_text  = apply_filters( 'tutor_course_loop_review_button_text', __( 'Review Progress', 'tutor' ), $course_id );
+		$link_text  = __( 'Review Progress', 'tutor' );
 	} else {
-		$link_text = apply_filters( 'tutor_course_loop_continue_button_text', __( 'Continue Learning', 'tutor' ), $course_id );
+		$link_text = __( 'Continue Learning', 'tutor' );
 	}
 	?>
 	<a 	href="<?php echo esc_url( $lesson_url ); ?>" 

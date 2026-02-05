@@ -9,6 +9,7 @@
  */
 
 use Tutor\Models\CourseModel;
+use TUTOR_CERT\Certificate;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -663,67 +664,73 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 	echo apply_filters( 'tutor_course_loop_price', ob_get_clean(), $course_id ); //phpcs:ignore -- already escaped inside template file
 	}
 }
-if ( ! function_exists( 'tutor_dashboard_course_card_buttons' ) ) {
+
+if ( ! function_exists( 'tutor_course_action_button_backup' ) ) {
 	/**
-	 * Get dashboard course card buttons.
+	 * Get course loop action button based on course state.
 	 *
-	 * @since 1.0.0
+	 * @since 4.0.0
 	 *
-	 * @return mixed|void
+	 * @param int  $course_id       Course ID.
+	 * @param bool $should_echo     Whether to echo or return.
+	 * @param bool $return_raw      Whether to return raw data (url, text, target).
+	 *
+	 * @return string|array|void
 	 */
-	function tutor_dashboard_course_card_buttons() {
-		add_filter(
-			'tutor_course_loop_button_class',
-			function () {
-				return 'tutor-btn tutor-btn-primary tutor-btn-small';
-			},
-			20,
-			2
-		);
-		add_filter(
-			'tutor_course_loop_continue_button_text',
-			function () {
-				return 'Resume';
-			},
-			20,
-			2
-		);
-		add_filter(
-			'tutor_course_loop_start_button_text',
-			function () {
-				return 'Start';
-			},
-			20,
-			2
-		);
-		add_filter(
-			'tutor_course_loop_download_button_text',
-			function () {
-				return 'Download';
-			},
-			20,
-			2
-		);
-		add_filter(
-			'tutor_course_loop_bundle_button_text',
-			function () {
-				return 'Bundle';
-			},
-			20,
-			2
-		);
+	function tutor_course_action_button_backup( $course_id = 0, $should_echo = false, $return_raw = false ) {
+		$course_id = $course_id ? $course_id : get_the_ID();
+
+		$button_text  = __( 'Start', 'tutor' );
+		$button_url   = tutor_utils()->get_course_first_lesson( $course_id );
+		$target_blank = false;
+
+		if ( ! $button_url ) {
+			$button_url = get_the_permalink( $course_id );
+		}
+
+		$is_completed    = tutor_utils()->is_completed_course( $course_id );
+		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+
+		if ( $is_completed ) {
+			$button_text = __( 'Completed', 'tutor' );
+			$button_url  = get_the_permalink( $course_id );
+
+			if ( function_exists( 'TUTOR_CERT' ) && class_exists( '\TUTOR_CERT\Certificate' ) ) {
+				$cert_addon = new Certificate();
+				if ( ! $cert_addon->disable_certificate_for_individual_courses( $course_id ) && $cert_addon->has_course_certificate_template( $course_id ) ) {
+					$cert_url = $cert_addon->get_certificate( $course_id );
+					if ( $cert_url ) {
+						$button_text  = __( 'Get Certificate', 'tutor' );
+						$button_url   = $cert_url;
+						$target_blank = true;
+					}
+				}
+			}
+		} elseif ( $course_progress['completed_percent'] > 0 ) {
+			$button_text = __( 'Resume', 'tutor' );
+		}
+
+		if ( $return_raw ) {
+			return array(
+				'text'   => $button_text,
+				'url'    => $button_url,
+				'target' => $target_blank ? '_blank' : '_self',
+			);
+		}
+
 		ob_start();
-		tutor_course_loop_price();
-		$content = ob_get_clean();
+		?>
+		<a href="<?php echo esc_url( $button_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-small" <?php echo $target_blank ? 'target="_blank"' : ''; ?>>
+			<?php echo esc_html( $button_text ); ?>
+		</a>
+		<?php
+		$output = ob_get_clean();
 
-		// Remove all filters to avoid any side effects.
-		remove_all_filters( 'tutor_course_loop_button_class', 20 );
-		remove_all_filters( 'tutor_course_loop_continue_button_text', 20 );
-		remove_all_filters( 'tutor_course_loop_start_button_text', 20 );
-		remove_all_filters( 'tutor_course_loop_download_button_text', 20 );
-		remove_all_filters( 'tutor_course_loop_bundle_button_text', 20 );
+		if ( $should_echo ) {
+			echo $output; //phpcs:ignore
+		}
 
-		return $content;
+		return $output;
 	}
 }
 
