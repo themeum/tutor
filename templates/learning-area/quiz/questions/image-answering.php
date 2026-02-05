@@ -33,11 +33,22 @@ $default_question = array(
 	),
 );
 
-$question = wp_parse_args( $question, $default_question );
+$question           = wp_parse_args( $question, $default_question );
+$answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
+$required_message   = __( 'The answer for this question is required', 'tutor' );
+$field_name         = '';
+$register_rules     = '';
+if ( $answer_is_required ) {
+	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
+}
 
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
+<div 
+	class="tutor-quiz-question" 
+	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
+	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
+>
 	<?php
 	tutor_load_template(
 		'learning-area.quiz.question-header',
@@ -52,19 +63,26 @@ $question = wp_parse_args( $question, $default_question );
 	?>
 
 	<div class="tutor-quiz-question-options">
-		<?php foreach ( $question['question_answers'] as $answer ) : ?>
+		<?php foreach ( $question['question_answers'] as $index => $answer ) : ?>
 			<div class="tutor-quiz-question-option">
 				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
 				<?php
-					$input_name = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . '][answers][][' . $answer['answer_id'] . ']';
-					InputField::make()
-						->name( $input_name )
-						->clearable()
-						->attr( 'x-bind', 'register("' . $input_name . '")' )
-						->placeholder( __( 'Write your answer here', 'tutor' ) )
-						->render();
+				$input_name    = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . '][answers][][' . $answer['answer_id'] . ']';
+				$rules_suffix  = $register_rules;
+				$register_attr = "register('{$input_name}'{$rules_suffix})";
+
+				if ( 0 === $index ) {
+					$field_name = $input_name;
+				}
+
+				InputField::make()
+					->name( $input_name )
+					->clearable()
+					->attr( 'x-bind', $register_attr )
+					->placeholder( __( 'Write your answer here', 'tutor' ) )
+					->render();
 				?>
 			</div>
-		<?php endforeach; ?>
+	<?php endforeach; ?>
 	</div>
 </div>

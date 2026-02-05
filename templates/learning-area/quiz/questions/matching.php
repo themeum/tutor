@@ -34,18 +34,26 @@ $default_question = array(
 	),
 );
 
-$question          = wp_parse_args( $question, $default_question );
-$answer_field_name = sprintf(
+$question           = wp_parse_args( $question, $default_question );
+$answer_field_name  = sprintf(
 	'attempt[%d][quiz_question][%d][answers][]',
 	$tutor_is_started_quiz->attempt_id,
 	$question['question_id']
 );
+$answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
+$required_message   = __( 'The answer for this question is required', 'tutor' );
+$register_rules     = '';
+if ( $answer_is_required ) {
+	$register_rules = ", { validate: (value) => Array.isArray(value) && value.every((item) => item) || '" . esc_js( $required_message ) . "' }";
+}
+$register_attr = "register('{$answer_field_name}'{$register_rules})";
 
 ?>
 
 <div 
 	class="tutor-quiz-question" 
 	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
+	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
 	x-data="tutorQuestionMatching({
 		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
 		onDrop: (values) => setValue('<?php echo esc_attr( $answer_field_name ); ?>', values, { shouldDirty: true }),
@@ -85,7 +93,7 @@ $answer_field_name = sprintf(
 					<input
 						class="tutor-hidden"
 						name="<?php echo esc_attr( $answer_field_name ); ?>"
-						x-bind="register('<?php echo esc_attr( $answer_field_name ); ?>')"
+						x-bind="<?php echo esc_attr( $register_attr ); ?>"
 					>
 					<span data-drop-placeholder class="tutor-text-subdued">
 						<?php esc_html_e( 'Drop here', 'tutor' ); ?>
@@ -108,6 +116,12 @@ $answer_field_name = sprintf(
 			</div>
 		<?php endforeach; ?>
 	</div>
+	<div
+		class="tutor-quiz-questions-error"
+		x-cloak
+		x-show="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+		x-text="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+	></div>
 
 	<div class="tutor-quiz-question-draggable">
 		<div class="tutor-quiz-question-draggable-header">

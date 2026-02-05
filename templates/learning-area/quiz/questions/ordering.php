@@ -30,18 +30,26 @@ $default_question = array(
 	),
 );
 
-$question          = wp_parse_args( $question, $default_question );
-$answer_field_name = sprintf(
-	'attempt[%d][quiz_question_%d][answers][]',
+$question           = wp_parse_args( $question, $default_question );
+$answer_field_name  = sprintf(
+	'attempt[%d][quiz_question][%d][answers][]',
 	$tutor_is_started_quiz->attempt_id,
 	$question['question_id']
 );
+$answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
+$required_message   = __( 'The answer for this question is required', 'tutor' );
+$register_rules     = '';
+if ( $answer_is_required ) {
+	$register_rules = ", { validate: (value) => Array.isArray(value) && value.length > 0 || '" . esc_js( $required_message ) . "' }";
+}
+$register_attr = "register('{$answer_field_name}'{$register_rules})";
 
 ?>
 
 <div 
 	class="tutor-quiz-question"
 	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
+	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
 	data-question-id="question-<?php echo esc_attr( $question['question_id'] ); ?>"
 	x-data="tutorQuestionOrdering({
 		questionId: 'question-<?php echo esc_attr( $question['question_id'] ); ?>',
@@ -81,7 +89,7 @@ $answer_field_name = sprintf(
 				<input
 					type="hidden"
 					name="<?php echo esc_attr( $answer_field_name ); ?>"
-					x-bind="register('<?php echo esc_attr( $answer_field_name ); ?>')"
+					x-bind="<?php echo esc_attr( $register_attr ); ?>"
 					value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
 				>
 
@@ -91,4 +99,10 @@ $answer_field_name = sprintf(
 			</div>
 		<?php endforeach; ?>
 	</div>
+	<div
+		class="tutor-quiz-questions-error"
+		x-cloak
+		x-show="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+		x-text="errors?.['<?php echo esc_attr( $answer_field_name ); ?>']?.message"
+	></div>
 </div>

@@ -29,9 +29,22 @@ $default_question = array(
 	),
 );
 
+$question           = wp_parse_args( $question, $default_question );
+$answer_is_required = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
+$required_message   = __( 'The answer for this question is required', 'tutor' );
+$field_name         = '';
+$register_rules     = '';
+if ( $answer_is_required ) {
+	$register_rules = ", { required: '" . esc_js( $required_message ) . "' }";
+}
+
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
+<div 
+	class="tutor-quiz-question" 
+	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
+	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
+>
 	<?php
 	tutor_load_template(
 		'learning-area.quiz.question-header',
@@ -57,32 +70,36 @@ $default_question = array(
 
 					$answer_title = preg_replace_callback(
 						'/{dash}/',
-						function () use ( &$input_index, $tutor_is_started_quiz, $question ) {
+						function () use ( &$input_index, $tutor_is_started_quiz, $question, $register_rules, &$field_name ) {
 
 							$attempt_id  = (int) $tutor_is_started_quiz->attempt_id;
 							$question_id = (int) $question['question_id'];
 
 							$input_name = sprintf(
-								'attempt[%d]quiz_question[%d][][%d]',
+								'attempt[%d][quiz_question][%d][][%d]',
 								$attempt_id,
 								$question_id,
 								$input_index
 							);
 
-							$input_html = sprintf(
+							$register_attr = "register('{$input_name}'{$register_rules})";
+							$input_html    = sprintf(
 								'<input
 									type="text"
 									class="tutor-quiz-question-input"
 									placeholder="%s"
 									name="%s"
-									x-bind="register(\'%s\')"
+									x-bind="%s"
 								/>',
 								esc_attr__( 'Type your answer here', 'tutor' ),
 								$input_name,
-								$input_name
+								esc_attr( $register_attr )
 							);
 
 							$input_index++;
+							if ( '' === $field_name ) {
+								$field_name = $input_name;
+							}
 
 							return $input_html;
 						},
@@ -106,4 +123,12 @@ $default_question = array(
 			</div>
 		<?php endforeach; ?>
 	</div>
+	<?php if ( $field_name ) : ?>
+		<div
+			class="tutor-quiz-questions-error"
+			x-cloak
+			x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+			x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+		></div>
+	<?php endif; ?>
 </div>

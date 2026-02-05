@@ -74,12 +74,29 @@ $has_image = function ( $answer ) {
 };
 
 $has_multiple_correct_answer = isset( $question['question_settings']['has_multiple_correct_answer'] ) && '1' === $question['question_settings']['has_multiple_correct_answer'];
+$answer_is_required          = isset( $question['question_settings']['answer_required'] ) && '1' === $question['question_settings']['answer_required'];
+$radio_required_message      = __( 'Please select an option to answer', 'tutor' );
+$checkbox_required_message   = __( 'Please select at least one option to answer.', 'tutor' );
+$field_name                  = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . ']' . ( $has_multiple_correct_answer ? '[]' : '' );
+$register_rules              = '';
+if ( $answer_is_required ) {
+	if ( $has_multiple_correct_answer ) {
+		$register_rules = ", { validate: (value) => Array.isArray(value) && value.length > 0 || '" . esc_js( $checkbox_required_message ) . "' }";
+	} else {
+		$register_rules = ", { required: '" . esc_js( $radio_required_message ) . "' }";
+	}
+}
+$register_attr = "register('{$field_name}'{$register_rules})";
 
 $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->attempt_status );
 
 ?>
 
-<div class="tutor-quiz-question" data-question="<?php echo esc_attr( $question['question_type'] ); ?>">
+<div 
+	class="tutor-quiz-question" 
+	data-question="<?php echo esc_attr( $question['question_type'] ); ?>"
+	data-answer-required="<?php echo esc_attr( $question['question_settings']['answer_required'] ?? '0' ); ?>"
+>
 	<?php
 	tutor_load_template(
 		'learning-area.quiz.question-header',
@@ -108,9 +125,9 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 							type="<?php echo esc_attr( $has_multiple_correct_answer ? 'checkbox' : 'radio' ); ?>"
 							class="<?php echo esc_attr( $has_multiple_correct_answer ? 'tutor-checkbox' : 'tutor-radio' ); ?>"
 							id="<?php echo esc_attr( $question['question_id'] ) . esc_attr( $index ); ?>"
-							name="attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]<?php echo $has_multiple_correct_answer ? '[]' : ''; ?>"
+							name="<?php echo esc_attr( $field_name ); ?>"
 							value="<?php echo esc_attr( $answer['answer_id'] ); ?>"
-							x-bind="register('attempt[<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>][quiz_question][<?php echo esc_attr( $question['question_id'] ); ?>]<?php echo $has_multiple_correct_answer ? '[]' : ''; ?>')"
+							x-bind="<?php echo esc_attr( $register_attr ); ?>"
 							<?php if ( $show_correct_answers ) : ?>
 								disabled
 							<?php endif; ?>
@@ -131,4 +148,10 @@ $show_correct_answers = Quiz::show_correct_answers( $tutor_is_started_quiz->atte
 			</label>
 		<?php endforeach; ?>
 	</div>
+	<div
+		class="tutor-quiz-questions-error"
+		x-cloak
+		x-show="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+		x-text="errors?.['<?php echo esc_attr( $field_name ); ?>']?.message"
+	></div>
 </div>

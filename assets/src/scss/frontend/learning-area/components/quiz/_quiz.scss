@@ -188,6 +188,11 @@
     }
   }
 
+  &-questions-error {
+    @include tutor-typography('tiny', 'regular', 'critical');
+    margin-top: $tutor-spacing-3;
+  }
+
   [data-question='true_false'] {
     .tutor-quiz-question {
       &-options {
@@ -530,6 +535,15 @@
     }
   }
 
+  [data-question='open_ended'],
+  [data-question='short_answer'] {
+    .tutor-quiz-question {
+      &-options {
+        @include tutor-grid-auto-columns(1, 1);
+        gap: $tutor-spacing-3;
+      }
+    }
+  }
   &-submission-modal {
     &-content {
       @include tutor-flex(column, stretch, space-between);
