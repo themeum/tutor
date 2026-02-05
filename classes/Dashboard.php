@@ -10,8 +10,6 @@
 
 namespace TUTOR;
 
-use Tutor\Helpers\UrlHelper;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
