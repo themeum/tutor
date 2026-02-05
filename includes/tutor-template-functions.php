@@ -9,7 +9,6 @@
  */
 
 use Tutor\Models\CourseModel;
-use TUTOR_CERT\Certificate;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -661,7 +660,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 				tutor_load_template( 'loop.course-price' );
 			}
 		}
-	echo apply_filters( 'tutor_course_loop_price', ob_get_clean(), $course_id ); //phpcs:ignore -- already escaped inside template file
+		echo apply_filters( 'tutor_course_loop_price', ob_get_clean(), $course_id ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -1148,6 +1147,7 @@ if ( ! function_exists( 'tutor_lesson_lead_info' ) ) {
 		}
 
 		return $output;
+
 	}
 }
 
