@@ -67,7 +67,7 @@ if ( $answer_is_required ) {
 			<div class="tutor-quiz-question-option">
 				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer['image_id'], 'full' ) ); ?>" alt="<?php echo esc_attr( $answer['answer_title'] ); ?>">
 				<?php
-				$input_name    = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . '][answers][][' . $answer['answer_id'] . ']';
+				$input_name    = 'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question][' . $question['question_id'] . '][answer_id][' . $answer['answer_id'] . ']';
 				$rules_suffix  = $register_rules;
 				$register_attr = "register('{$input_name}'{$rules_suffix})";
 

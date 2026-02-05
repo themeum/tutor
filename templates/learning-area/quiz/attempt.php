@@ -26,22 +26,31 @@ $time_limit_seconds                 = tutor_utils()->avalue_dot( 'time_limit.tim
 $remaining_time_secs                = ( strtotime( $tutor_is_started_quiz->attempt_started_at ) + $time_limit_seconds ) - strtotime( $quiz_attempt_info['date_time_now'] );
 $remaining_time_context             = tutor_utils()->seconds_to_time_context( $remaining_time_secs );
 
-$form_id   = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
-$questions = tutor_utils()->get_random_questions_by_quiz();
+$form_id        = 'quiz-attempt-form-' . $tutor_is_started_quiz->attempt_id;
+$questions      = tutor_utils()->get_random_questions_by_quiz();
+$default_values = array(
+	'attempt[' . $tutor_is_started_quiz->attempt_id . '][quiz_question_ids][]' => array_map(
+		function ( $question ) {
+			return $question->question_id;
+		},
+		$questions
+	),
+);
 
 ?>
 
 <form 
 	id="<?php echo esc_attr( $form_id ); ?>"
 	class="tutor-quiz tutor-quiz-submission"
-	x-data="(() => {
+	x-data='(() => {
 		const form = tutorForm({
-			id: '<?php echo esc_attr( $form_id ); ?>',
-			mode: 'onSubmit',
+			id: "<?php echo esc_attr( $form_id ); ?>",
+			mode: "onSubmit",
+			defaultValues: <?php echo wp_json_encode( $default_values ); ?>,
 		});
 		const submission = tutorQuizSubmission({
-			formId: '<?php echo esc_attr( $form_id ); ?>',
-			attemptId: '<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>',
+			formId: "<?php echo esc_attr( $form_id ); ?>",
+			attemptId: "<?php echo esc_attr( $tutor_is_started_quiz->attempt_id ); ?>",
 		});
 
 		return {
@@ -52,7 +61,7 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 				submission.init?.call(this);
 			},
 		};
-	})()"
+	})()'
 	x-bind="getFormBindings()"
 	@submit.prevent="handleSubmit(
 		(data) => handleQuizSubmit(data),
@@ -75,6 +84,7 @@ $questions = tutor_utils()->get_random_questions_by_quiz();
 				->size( Size::LARGE )
 				->attr( 'form', $form_id )
 				->attr( 'type', 'submit' )
+				->attr( ':class', '{ \'tutor-btn-loading\': submitQuizMutation?.isPending }' )
 				->attr( 'style', 'display: block; margin: 0 auto; min-width: 290px;' )
 				->render();
 		?>
