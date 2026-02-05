@@ -60,12 +60,12 @@ use TUTOR\Icon;
 					</button>
 					<div x-ref="content" x-show="open" x-cloak @click.outside="handleClickOutside()" class="tutor-popover">
 						<div class="tutor-popover-menu" style="min-width: 104px;">
-							<button class="tutor-popover-menu-item" @click="setEditing(<?php echo (int) $reply->comment_ID; ?>); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2 ); ?>
+							<button class="tutor-popover-menu-item tutor-gap-5" @click="setEditing(<?php echo (int) $reply->comment_ID; ?>); hide()">
+								<?php tutor_utils()->render_svg_icon( Icon::EDIT_2, 20, 20 ); ?>
 								<?php esc_html_e( 'Edit', 'tutor' ); ?>
 							</button>
-							<button class="tutor-popover-menu-item" @click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $reply->comment_ID ); ?>, isReply: true }); hide()">
-								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2 ); ?>
+							<button class="tutor-popover-menu-item tutor-gap-5" @click="TutorCore.modal.showModal('tutor-comment-delete-modal', { commentId: <?php echo esc_html( $reply->comment_ID ); ?>, isReply: true }); hide()">
+								<?php tutor_utils()->render_svg_icon( Icon::DELETE_2, 20, 20 ); ?>
 								<?php esc_html_e( 'Delete', 'tutor' ); ?>
 							</button>
 						</div>
