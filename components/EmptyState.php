@@ -151,20 +151,26 @@ class EmptyState extends BaseComponent {
 			$icon = $this->get_default_icon();
 		}
 
-		ob_start();
-		?>
-		<div class="tutor-px-9 tutor-py-12 tutor-text-center">
-			<?php echo $icon; // phpcs:ignore ?>
-			<h6 class="tutor-medium tutor-font-bold tutor-mt-8">
-				<?php echo esc_html( $title ); ?>
-			</h6>
-			<?php if ( ! empty( $subtitle ) ) : ?>
-				<p class="tutor-small tutor-text-subdued tutor-mt-2 tutor-mb-0">
-					<?php echo esc_html( $subtitle ); ?>
-				</p>
-			<?php endif; ?>
-		</div>
-		<?php
-		return ob_get_clean();
+		$subtitle_html = '';
+		if ( ! empty( $subtitle ) ) {
+			$subtitle_html = sprintf(
+				'<p class="tutor-small tutor-text-subdued tutor-mt-2 tutor-mb-0">%s</p>',
+				esc_html( $subtitle )
+			);
+		}
+
+		$this->component_string = sprintf(
+			'<div class="tutor-px-9 tutor-py-12 tutor-text-center" %s>
+				%s
+				<h6 class="tutor-medium tutor-font-bold tutor-mt-8">%s</h6>
+				%s
+			</div>',
+			$this->get_attributes_string(),
+			$icon,
+			esc_html( $title ),
+			$subtitle_html
+		);
+
+		return $this->component_string;
 	}
 }

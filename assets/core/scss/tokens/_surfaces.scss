@@ -17,6 +17,7 @@ $tutor-surface-brand-tertiary: var(--tutor-surface-brand-tertiary);
 $tutor-surface-brand-quaternary: var(--tutor-surface-brand-quaternary);
 $tutor-surface-sidebar-l1: var(--tutor-surface-sidebar-l1);
 $tutor-surface-exception2-secondary: var(--tutor-surface-exception2-secondary);
+$tutor-surface-exception3-highlight: var(--tutor-surface-exception3-highlight);
 $tutor-surface-dark: var(--tutor-surface-dark);
 $tutor-surface-exception7: var(--tutor-surface-exception7);
 $tutor-surface-warning: var(--tutor-surface-warning);
@@ -41,6 +42,7 @@ $tutor-surfaces: (
   brand-quaternary: $tutor-surface-brand-quaternary,
   sidebar-l1: $tutor-surface-sidebar-l1,
   exception2-secondary: $tutor-surface-exception2-secondary,
+  exception3-highlight: $tutor-surface-exception3-highlight,
   dark: $tutor-surface-dark,
   exception7: $tutor-surface-exception7,
   warning: $tutor-surface-warning,

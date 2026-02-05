@@ -7,7 +7,7 @@ import { TutorComponentRegistry } from '@Core/ts/ComponentRegistry';
 import { accordionMeta } from '@Core/ts/components/accordion';
 import { buttonMeta } from '@Core/ts/components/button';
 import { calendarMeta } from '@Core/ts/components/calendar';
-import { commentMeta } from '@Core/ts/components/comments';
+import { copyToClipboardMeta } from '@Core/ts/components/copy-to-clipboard';
 import { fileUploaderMeta } from '@Core/ts/components/file-uploader';
 import { formMeta } from '@Core/ts/components/form';
 import { iconMeta } from '@Core/ts/components/icon';
@@ -30,6 +30,7 @@ import { modalServiceMeta } from '@Core/ts/services/Modal';
 import { queryServiceMeta } from '@Core/ts/services/Query';
 import { toastServiceMeta } from '@Core/ts/services/Toast';
 import { wpMediaServiceMeta } from '@Core/ts/services/WPMedia';
+import { preferenceServiceMeta } from '@Core/ts/services/Preference';
 
 import { registerLegacyFunctions } from '@Core/ts/legacy';
 import { getNonceData } from '@Core/ts/utils/nonce';
@@ -43,7 +44,6 @@ const initializePlugin = () => {
     components: [
       buttonMeta,
       calendarMeta,
-      commentMeta,
       fileUploaderMeta,
       tabsMeta,
       iconMeta,
@@ -61,8 +61,16 @@ const initializePlugin = () => {
       toastMeta,
       playerMeta,
       passwordInputMeta,
+      copyToClipboardMeta,
     ],
-    services: [formServiceMeta, modalServiceMeta, queryServiceMeta, toastServiceMeta, wpMediaServiceMeta],
+    services: [
+      formServiceMeta,
+      modalServiceMeta,
+      queryServiceMeta,
+      toastServiceMeta,
+      wpMediaServiceMeta,
+      preferenceServiceMeta,
+    ],
   });
 
   TutorComponentRegistry.initWithAlpine(Alpine);
@@ -91,7 +99,9 @@ const initializePlugin = () => {
 };
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializePlugin);
+  document.addEventListener('DOMContentLoaded', () => {
+    initializePlugin();
+  });
 } else {
   initializePlugin();
 }

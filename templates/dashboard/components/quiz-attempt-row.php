@@ -9,14 +9,8 @@
  * @since 4.0.0
  */
 
-use Tutor\Components\Badge;
-use Tutor\Components\Button;
-use Tutor\Components\Constants\Size;
-use Tutor\Components\Constants\Variant;
-use Tutor\Components\Popover;
 use Tutor\Components\PreviewTrigger;
 use TUTOR\Icon;
-use Tutor\Models\QuizModel;
 
 if ( empty( $attempt ) ) {
 	return;
@@ -27,39 +21,17 @@ $show_quiz_title = $show_quiz_title ?? false;
 $show_course     = $show_course ?? false;
 $attempt_number  = $attempt_number ?? null;
 $attempts_count  = $attempts_count ?? 0;
-$badge           = Badge::make()->label( 'Failed' )->variant( Badge::ERROR )->rounded();
-$kebab_button    = Button::make()
-					->icon( Icon::THREE_DOTS_VERTICAL )
-					->attr( 'x-ref', 'trigger' )
-					->attr( '@click', 'toggle()' )
-					->attr( 'class', 'tutor-quiz-item-result-more' )
-					->variant( 'secondary' )
-					->size( Size::X_SMALL )
-					->get();
-
-$review_url     = add_query_arg( array( 'view_quiz_attempt_id' => $attempt_id ), get_pagenum_link() );
-$click_attr     = sprintf( 'hide(); TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt_id );
-$delete_attr    = sprintf( 'TutorCore.modal.showModal("tutor-quiz-attempt-delete-modal", { attemptID: %d });', $attempt_id );
-$details_button = Button::make()->label( __( 'Details', 'tutor' ) )
-					->icon( Icon::RESOURCES, 'left', 20, 20 )
-					->size( Size::MEDIUM )
-					->tag( 'a' )
-					->attr( 'href', $review_url )
-					->variant( 'primary' );
-
-$delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
-					->icon( Icon::DELETE_2, 'left', 20, 20 )
-					->size( Size::MEDIUM )
-					->attr( '@click', $delete_attr )
-					->variant( 'secondary' );
-
 
 ?>
 <div class="tutor-quiz-attempts-item">
 	<div class="tutor-quiz-item-info">
-		<?php if ( $show_quiz_title && ! empty( $quiz_title ) ) : ?>
+		<?php
+		if ( $show_quiz_title && ! empty( $quiz_title ) ) :
+			?>
 			<div class="tutor-flex tutor-items-start tutor-justify-start tutor-gap-4">
-				<div class="tutor-quiz-item-info-title"><?php echo esc_html( $quiz_title ); ?></div>
+				<div class="tutor-quiz-item-info-title">
+					<?php echo esc_html( $quiz_title ); ?>
+				</div>
 				<?php if ( $attempts_count > 1 ) : ?>
 					<button @click="expanded = !expanded" class="tutor-quiz-attempts-expand-btn">
 						<?php
@@ -96,9 +68,7 @@ $delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
 		</div>
 
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html( $attempt['date'] ?? '' ); ?></div>
-		<?php if ( ! empty( $attempt['student'] ) ) : ?>
 		<div class="tutor-quiz-item-info-date tutor-text-subdued"><?php echo esc_html__( 'Student Name: ', 'tutor' ) . esc_html( $attempt['student'] ); ?></div>
-		<?php endif; ?>
 	</div>
 
 	<div class="tutor-quiz-item-marks">
@@ -128,49 +98,13 @@ $delete_button = Button::make()->label( __( 'Delete', 'tutor' ) )
 
 	<div class="tutor-quiz-item-result">
 		<?php
-		if ( QuizModel::RESULT_PASS === $attempt['result'] ) {
-			$badge
-				->label( __( 'Passed', 'tutor' ) )
-				->variant( Badge::SUCCESS )
-				->render();
-		} elseif ( QuizModel::RESULT_PENDING === $attempt['result'] ) {
-			$badge
-				->label( __( 'Pending', 'tutor' ) )
-				->variant( Badge::WARNING )
-				->render();
-		} else {
-			$badge->render();
-		}
-
-
-		Popover::make()
-			->trigger( $kebab_button )
-			->placement( 'bottom' )
-			->menu_item(
-				array(
-					'tag'     => 'a',
-					'content' => __( 'Details', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::RESOURCES ),
-					'attr'    => array( 'href' => $review_url ),
-				)
-			)
-			->menu_item(
-				array(
-					'tag'     => 'a',
-					'content' => __( 'Delete', 'tutor' ),
-					'icon'    => tutor_utils()->get_svg_icon( Icon::DELETE_2 ),
-					'attr'    => array(
-						'href'   => '#',
-						'@click' => $click_attr,
-					),
-				)
-			)
-			->render()
+		$quiz_attempt_obj->render_quiz_attempt_list_badge( $attempt );
+		$quiz_attempt_obj->render_quiz_attempt_popover( $attempt );
 		?>
-		
+
 	</div>
 </div>
+
 <div class="tutor-quiz-item-actions tutor-flex tutor-justify-between">
-	<?php $details_button->render(); ?>
-	<?php $delete_button->render(); ?>
+	<?php $quiz_attempt_obj->render_quiz_attempt_buttons( $attempt ); ?>
 </div>
