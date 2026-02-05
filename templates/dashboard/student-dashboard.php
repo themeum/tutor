@@ -250,14 +250,7 @@ $courses_in_progress = CourseModel::get_active_courses_by_user( $user_id, 0, 2 )
 					</div>
 				</div>
 				<div class="tutor-progress-card-actions">
-					<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-primary tutor-btn-small">
-						<?php esc_html_e( 'Resume', 'tutor' ); ?>
-					</a>
-				</div>
-				<div class="tutor-progress-card-footer">
-					<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-primary tutor-btn-block">
-						<?php esc_html_e( 'Resume', 'tutor' ); ?>
-					</a>
+					<?php echo wp_kses_post( tutor_dashboard_course_card_buttons() ); ?>
 				</div>
 			</div>
 			<?php endwhile; ?>

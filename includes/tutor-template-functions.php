@@ -660,7 +660,70 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 				tutor_load_template( 'loop.course-price' );
 			}
 		}
-		echo apply_filters( 'tutor_course_loop_price', ob_get_clean(), $course_id ); //phpcs:ignore -- already escaped inside template file
+	echo apply_filters( 'tutor_course_loop_price', ob_get_clean(), $course_id ); //phpcs:ignore -- already escaped inside template file
+	}
+}
+if ( ! function_exists( 'tutor_dashboard_course_card_buttons' ) ) {
+	/**
+	 * Get dashboard course card buttons.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return mixed|void
+	 */
+	function tutor_dashboard_course_card_buttons() {
+		add_filter(
+			'tutor_course_loop_button_class',
+			function () {
+				return 'tutor-btn tutor-btn-primary tutor-btn-small';
+			},
+			20,
+			2
+		);
+		add_filter(
+			'tutor_course_loop_continue_button_text',
+			function () {
+				return 'Resume';
+			},
+			20,
+			2
+		);
+		add_filter(
+			'tutor_course_loop_start_button_text',
+			function () {
+				return 'Start';
+			},
+			20,
+			2
+		);
+		add_filter(
+			'tutor_course_loop_download_button_text',
+			function () {
+				return 'Download';
+			},
+			20,
+			2
+		);
+		add_filter(
+			'tutor_course_loop_bundle_button_text',
+			function () {
+				return 'Bundle';
+			},
+			20,
+			2
+		);
+		ob_start();
+		tutor_course_loop_price();
+		$content = ob_get_clean();
+
+		// Remove all filters to avoid any side effects.
+		remove_all_filters( 'tutor_course_loop_button_class', 20 );
+		remove_all_filters( 'tutor_course_loop_continue_button_text', 20 );
+		remove_all_filters( 'tutor_course_loop_start_button_text', 20 );
+		remove_all_filters( 'tutor_course_loop_download_button_text', 20 );
+		remove_all_filters( 'tutor_course_loop_bundle_button_text', 20 );
+
+		return $content;
 	}
 }
 
@@ -1147,7 +1210,6 @@ if ( ! function_exists( 'tutor_lesson_lead_info' ) ) {
 		}
 
 		return $output;
-
 	}
 }
 

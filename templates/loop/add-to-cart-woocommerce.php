@@ -43,7 +43,7 @@ $defaults = array(
 		' ',
 		array_filter(
 			array(
-				'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ',
+				apply_filters( 'tutor_course_loop_button_class', 'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block', $course_id ) . ' ',
 				'product_type_' . $product->get_type(),
 				$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button ' : '',
 				$ajax_add_to_cart_class,
