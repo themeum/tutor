@@ -1457,7 +1457,7 @@ class Quiz {
 	 *
 	 * @return void
 	 */
-	public static function render_question( $question, $index = 1 ) {
+	public static function render_question( $question, $index = 0 ) {
 		$question_settings = maybe_unserialize( $question->question_settings );
 
 		// Normalize question type + settings.
@@ -1482,7 +1482,7 @@ class Quiz {
 		$rand_choice = ! empty( $question_settings['randomize_question'] )
 		&& '1' === $question_settings['randomize_question'];
 
-		$question->index             = $index;
+		$question->index             = $index + 1;
 		$question->question_settings = $question_settings;
 
 		$answers = QuizModel::get_answers_by_quiz_question(
