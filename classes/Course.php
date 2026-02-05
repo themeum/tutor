@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use stdClass;
+use Tutor\Components\Button;
 use TUTOR\Input;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\QuizModel;
@@ -300,6 +301,8 @@ class Course extends Tutor_Base {
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
 		add_filter( 'the_preview', array( $this, 'handle_schedule_courses' ) );
+
+		add_action( 'tutor_course_action_btn', array( $this, 'render_course_action_btn' ) );
 	}
 
 	/**
@@ -1775,7 +1778,7 @@ class Course extends Tutor_Base {
 			if ( is_array( $order ) && count( $order ) ) {
 				$i = 0;
 				foreach ( $order as $topic ) {
-					$i++;
+					++$i;
 					$wpdb->update(
 						$wpdb->posts,
 						array( 'menu_order' => $i ),
@@ -2819,10 +2822,10 @@ class Course extends Tutor_Base {
 					}
 				}
 				if ( ! $has_passed ) {
-					$required_assignment_pass++;
+					++$required_assignment_pass;
 				}
 			} else {
-				$required_assignment_pass++;
+				++$required_assignment_pass;
 			}
 		}
 
@@ -2838,11 +2841,11 @@ class Course extends Tutor_Base {
 					$earned_percentage = QuizModel::calculate_attempt_earned_percentage( $attempt );
 
 					if ( $earned_percentage < $passing_grade ) {
-						$required_quiz_pass++;
+						++$required_quiz_pass;
 						$is_quiz_pass = false;
 					}
 				} else {
-					$required_quiz_pass++;
+					++$required_quiz_pass;
 					$is_quiz_pass = false;
 				}
 			}
@@ -3243,5 +3246,40 @@ class Course extends Tutor_Base {
 		// Set course regular & sale price.
 		update_post_meta( $post_ID, self::COURSE_PRICE_META, $regular_price );
 		update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $sale_price );
+	}
+
+	/**
+	 * Render start/resume button in enrolled course action btn.
+	 *
+	 * @since 4.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return void
+	 */
+	public function render_course_action_btn( int $course_id ) {
+		$is_completed = tutor_utils()->is_completed_course( $course_id );
+		if ( $is_completed ) {
+			return;
+		}
+
+		$course_progress = tutor_utils()->get_course_completed_percent( $course_id, 0, true );
+
+		$button_text = $course_progress['completed_percent'] > 0 ? __( 'Resume', 'tutor' ) : __( 'Start', 'tutor' );
+		$button_url  = tutor_utils()->get_course_first_lesson( $course_id );
+
+		if ( ! $button_url ) {
+			$button_url = get_the_permalink( $course_id );
+		}
+
+		ob_start();
+		?>
+		<a href="<?php echo esc_url( $button_url ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-x-small">
+			<?php echo esc_html( $button_text ); ?>
+		</a>
+		<?php
+		$button = ob_get_clean();
+
+		echo wp_kses_post( $button );
 	}
 }

@@ -27,7 +27,7 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 
 ?>
 
-<div class="tutor-card tutor-progress-card" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>'">
+<div class="tutor-card tutor-progress-card" onclick="window.location.href = '<?php echo esc_url( $course_learning_url ); ?>';">
 	<div class="tutor-progress-card-thumbnail">
 		<?php do_action( 'tutor_my_courses_before_thumbnail', $course_id ); ?>
 		<?php if ( ! empty( $tutor_course_img ) ) : ?>
@@ -91,6 +91,6 @@ if ( get_post_type() !== tutor()->course_post_type ) {
 	</div>
 
 	<div class="tutor-progress-card-actions">
-		<?php echo wp_kses_post( tutor_course_action_button_backup( $course_id ) ); ?>
+		<?php do_action( 'tutor_course_action_btn', $course_id ); ?>
 	</div>
 </div>
