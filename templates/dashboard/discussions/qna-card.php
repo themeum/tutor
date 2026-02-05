@@ -149,7 +149,7 @@ $single_url = UrlHelper::add_query_params(
 			<button 
 				x-ref="trigger" 
 				@click="toggle()" 
-				class="tutor-btn tutor-btn-text tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger">
+				class="tutor-btn tutor-btn-secondary tutor-btn-x-small tutor-btn-icon tutor-discussion-card-actions-trigger">
 				<?php tutor_utils()->render_svg_icon( Icon::ELLIPSES ); ?>
 			</button>
 
