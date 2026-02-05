@@ -10,12 +10,21 @@
 
 defined( 'ABSPATH' ) || exit;
 
+global $tutor_is_started_quiz;
+
+$quiz_id                       = $quiz_id ?? ( $tutor_is_started_quiz->quiz_id ?? 0 );
+$quiz_options                  = $quiz_id ? tutor_utils()->get_quiz_option( (int) $quiz_id ) : array();
+$hide_question_number_overview = (string) ( $quiz_options['hide_question_number_overview'] ?? '0' );
+$show_question_number          = '1' !== $hide_question_number_overview;
+
 ?>
 
 <div class="tutor-quiz-question-header">
-	<div class="tutor-quiz-question-number">
-		<?php echo esc_html( $index ); ?>
-	</div>
+	<?php if ( $show_question_number ) : ?>
+		<div class="tutor-quiz-question-number">
+			<?php echo esc_html( $index ); ?>
+		</div>
+	<?php endif; ?>
 
 	<div class="tutor-quiz-question-title">
 		<?php echo esc_html( $question_title ); ?>

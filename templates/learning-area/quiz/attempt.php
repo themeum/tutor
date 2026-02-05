@@ -72,7 +72,7 @@ $default_values = array(
 	<div class="tutor-quiz-questions">
 		<?php
 		foreach ( $questions as $index => $question ) {
-			Quiz::render_question( $question );
+			Quiz::render_question( $question, $index + 1 );
 		}
 		?>
 	</div>
